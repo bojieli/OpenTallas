@@ -53,10 +53,13 @@
    "layer_delta_vs_tp4": 34.0,
    "embed_cycles": 273,
    "l0_extra": 222,
-   "token_cycles": 219200.0,
-   "tok_s": 5474.5,
-   "vs_tp4": -0.0033,
-   "vs_sysdie_1a_model": 0.0015,
+   "token_cycles": 226237.0,
+   "tok_s": 5304.2,
+   "split_station_cycles": 7037,
+   "vs_tp4_published": -0.0343,
+   "vs_tp4": -0.0032,
+   "tp4_same_structure_tok_s": 5321.3,
+   "vs_sysdie_1a_model": -0.0297,
    "bench_exact": true
   },
   "best": {
@@ -70,10 +73,13 @@
    "layer_delta_vs_tp4": 32.0,
    "embed_cycles": 269,
    "l0_extra": 222,
-   "token_cycles": 219124.0,
-   "tok_s": 5476.4,
-   "vs_tp4": -0.003,
-   "vs_sysdie_1a_model": 0.0018,
+   "token_cycles": 226161.0,
+   "tok_s": 5306.0,
+   "split_station_cycles": 7037,
+   "vs_tp4_published": -0.034,
+   "vs_tp4": -0.0029,
+   "tp4_same_structure_tok_s": 5321.3,
+   "vs_sysdie_1a_model": -0.0294,
    "bench_exact": true
   },
   "worst": {
@@ -87,20 +93,23 @@
    "layer_delta_vs_tp4": 46.0,
    "embed_cycles": 600,
    "l0_extra": 222,
-   "token_cycles": 219959.0,
-   "tok_s": 5455.6,
-   "vs_tp4": -0.0068,
-   "vs_sysdie_1a_model": -0.002,
+   "token_cycles": 226996.0,
+   "tok_s": 5286.4,
+   "split_station_cycles": 7037,
+   "vs_tp4_published": -0.0376,
+   "vs_tp4": -0.0066,
+   "tp4_same_structure_tok_s": 5321.3,
+   "vs_sysdie_1a_model": -0.0329,
    "bench_exact": true
   }
  },
  "headline": {
-  "tok_s": 5474.5,
-  "token_cycles": 219200.0,
-  "vs_tp4": -0.0033,
+  "tok_s": 5304.2,
+  "token_cycles": 226237.0,
+  "vs_tp4": -0.0032,
   "range_tok_s": [
-   5455.6,
-   5476.4
+   5286.4,
+   5306.0
   ],
   "status": "priced candidate: the attention layer step is MEASURED through the link RTL (bit-exact), the relay stages come from the r22k / KV-die placements; the near-HBM attention elements are not closed physically"
  },
@@ -117,10 +126,21 @@
   "interposer_reticles": 3.9,
   "status": "row engines sized from synthesis (re-cut D); stack aggregators / landings / centre blocks: see frames.json (review-0528 item 4)"
  },
+ "split_structure": {
+  "source": [
+   "results/rtl/token_exact_20261009/qwen_rom/L3_base.json",
+   "results/rtl/token_exact_20261009/qwen_rom/L3_s22ml7.json"
+  ],
+  "l0_delta": 107,
+  "layer_delta": 198,
+  "token_delta": 7037,
+  "note": "measured in RTL by stream token-exact (L0-L2 chained, exact): +107 on L0, +198 on every later layer. It is a ROM-die cost (stations / compensation / SU ML 7), present with or without the KV die, so the KV-die decision is judged against the TP4 die on the same structure (vs_tp4); vs_tp4_published compares with the published TP4 basis, which predates the split. Bound: the SU-ML share (ML 4 -> 7 = +48 a layer) may partly fall on SU ops of the removed tile softmax_norm; it is charged in full here."
+ },
  "per_user_cost": {
-  "vs_tp4": -0.0033,
-  "vs_tp4_pct": -0.33,
-  "statement": "-0.33 % per user against TP4 r21c (5474.5 vs 5492.7 tok/s), for a 962.4 mm2 die pair on a ~3.9-reticle interposer"
+  "vs_tp4": -0.0032,
+  "vs_tp4_pct": -0.32,
+  "vs_tp4_published_pct": -3.43,
+  "statement": "-0.32 % per user against TP4 on the same split structure (5304.2 vs 5321.3 tok/s; -3.43 % against the published TP4 5492.7), for a 962.4 mm2 die pair on a ~3.9-reticle interposer"
  },
  "notes": [
   "The decision record priced option 1a at 219,522 cycles assuming the TILE attention (1,756 cycles a layer) stays and only 2 x 14-cycle crossings are added.  Moving attention to the KV die means NEAR-HBM attention (row engines beside the HBM PHYs: KV never crosses), whose measured step is the layer_step here.",
