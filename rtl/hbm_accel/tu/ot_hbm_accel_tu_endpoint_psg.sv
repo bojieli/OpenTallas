@@ -300,8 +300,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         for (genvar c = 0; c < NC; c = c + 1) begin : g_l0
             assign lvl[0][c] = opsel[c];
         end
-        wire SINGLE = !LEG && NA == 1;
-        assign lvv[0] = issue && !SINGLE;
+        assign lvv[0] = issue;
         for (genvar l = 1; l <= LV; l = l + 1) begin : g_lv
             localparam integer NN = NC >> l;
             wire [NN*LANES-1:0] vv;
@@ -317,15 +316,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
         end
         wire        ti_v;
         wire [15:0] ti_d;
-        (* keep_hierarchy *) ot_hcoll_shdelay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue && !SINGLE), .d_in(16'(rptr)),
+        (* keep_hierarchy *) ot_hcoll_shdelay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue), .d_in(16'(rptr)),
             .v_out(ti_v), .d_out(ti_d));
         function automatic [15:0] bf16(input [31:0] b);
             reg [32:0] s;
             s = {1'b0, b} + 33'h7FFF + {32'b0, b[16]};
             bf16 = s[31:16];
         endfunction
-        wire [FW-1:0] reduced_value = SINGLE ? opsel[0] : lvl[LV][0];
-        wire [15:0] reduced_index = SINGLE ? 16'(rptr) : ti_d;
         reg [FW-1:0] hold;
         reg          r_v;
         reg [15:0]   r_m;
@@ -334,20 +331,20 @@ module ot_hbm_accel_tu_endpoint_psg #(
             if (!rst_n) r_v <= 1'b0;
             else begin
                 r_v <= 1'b0;
-                if (NC > 1 && (SINGLE ? issue : lvv[LV])) begin
+                if (NC > 1 && lvv[LV]) begin
                     if (BF16) begin
-                        if (!reduced_index[0]) for (integer ln = 0; ln < LANES; ln = ln + 1)
-                            hold[16*ln +: 16] <= bf16(reduced_value[32*ln +: 32]);
+                        if (!ti_d[0]) for (integer ln = 0; ln < LANES; ln = ln + 1)
+                            hold[16*ln +: 16] <= bf16(lvl[LV][0][32*ln +: 32]);
                         else begin
                             r_v <= 1'b1;
-                            r_m <= reduced_index >> 1;
+                            r_m <= ti_d >> 1;
                             for (integer ln = 0; ln < LANES; ln = ln + 1) begin
                                 r_d[16*ln +: 16] <= hold[16*ln +: 16];
-                                r_d[16*(LANES+ln) +: 16] <= bf16(reduced_value[32*ln +: 32]);
+                                r_d[16*(LANES+ln) +: 16] <= bf16(lvl[LV][0][32*ln +: 32]);
                             end
                         end
                     end else begin
-                        r_v <= 1'b1; r_m <= reduced_index; r_d <= reduced_value;
+                        r_v <= 1'b1; r_m <= ti_d; r_d <= lvl[LV][0];
                     end
                 end
             end
