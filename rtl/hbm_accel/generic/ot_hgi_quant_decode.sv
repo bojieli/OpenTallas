@@ -6,12 +6,14 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0)(
  input wire clk,rst_n,v,generic_enable,legacy_fp4,
  input wire [127:0] header,input wire [1023:0] x,
  output wire vo,output wire [511:0] y,output wire fault,
- output wire decode_fault);
+ output reg decode_fault);
  wire [3:0] unit_code=header[127:124];
  wire [5:0] op=header[123:118];
  wire e4=generic_enable && op==6;
  wire legal=(unit_code==4) && (op==4 || op==5 || (op==6 && header[71:64]==16));
- assign decode_fault=v && generic_enable && !legal;
+ always @(posedge clk or negedge rst_n) begin
+  if(!rst_n) decode_fault<=0; else decode_fault<=v && generic_enable && !legal;
+ end
  wire take=v && (!generic_enable || legal);
  wire fp4=generic_enable ? ((op==5) ^ (MUTANT==1)) : legacy_fp4;
  wire av,af,bv,bf; wire [511:0] ay,by;wire [255:0] q;wire signed [9:0] exponent;
