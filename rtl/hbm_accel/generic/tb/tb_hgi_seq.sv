@@ -36,6 +36,37 @@ module tb_hgi_seq;
     wire cpl_v; reg cpl_rdy = 0; wire [17:0] cpl_token; wire [19:0] cpl_pos; wire [31:0] cpl_job, cpl_cycles;
     wire [3:0] cpl_gen, cpl_status; wire busy; wire [4:0] cpl_ntok; wire [287:0] cpl_toks;
     reg [31:0] tks [0:NCASE*16-1];
+`ifdef SEQ_CP
+    // the die command processor (config path + sequencer): the case's cp_vocab / cp_ctx_max / image words go in through
+    // the CFG window and CFG_COMMIT (busy / range checked, broadcast, settled) instead of being forced
+    reg cmd_we = 0; reg [5:0] cmd_addr = 0; reg [63:0] cmd_wdata = 0;
+    wire [39:0] cfg_bus; wire cfg_loaded; wire [2:0] cfg_err; wire [63:0] cfg_cp_act;
+    ot_hgi_cp #(.USE_MACRO(`ifdef SEQ_MACRO 1 `else 0 `endif)) dut (.clk(clk), .rst_n(rst_n), .cmd_we(cmd_we),
+        .cmd_addr(cmd_addr), .cmd_wdata(cmd_wdata), .units_busy(1'b0), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded),
+        .cfg_err(cfg_err), .cfg_cp_act(cfg_cp_act), .rank(rank),
+        .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(32'h1234),
+        .db_gen(4'h5), .db_entry(2'd0), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
+        .f_rsp_v(f_rsp_v), .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
+        .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
+        .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
+        .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
+        .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles),
+        .cpl_ntok(cpl_ntok), .cpl_toks(cpl_toks));
+    assign busy = dut.u_seq.busy;
+    task automatic cfg_pair(input [4:0] pr, input [31:0] lo, input [31:0] hi);
+        begin @(negedge clk); cmd_we = 1; cmd_addr = {1'b1, pr}; cmd_wdata = {hi, lo}; @(negedge clk); cmd_we = 0; end
+    endtask
+    task automatic cfg_load(input [31:0] voc, input [31:0] ctx, input [31:0] grp, input [31:0] entry);
+        integer w; begin
+            cfg_pair(5'd20, voc, ctx); cfg_pair(5'd23, grp, 0); cfg_pair(5'd28, entry, 0); cfg_pair(5'd30, PAGE, 1);
+            @(negedge clk); cmd_we = 1; cmd_addr = 6'h3F; @(negedge clk); cmd_we = 0; repeat (4) @(negedge clk);
+            w = 0; while ((dut.u_cfg.st_hold || !cfg_loaded) && w < 2000) begin @(negedge clk); w = w + 1; end
+            repeat (3) @(negedge clk);
+            if (cfg_err != 0 || !cfg_loaded) begin $display("FAIL cfg load err %0d loaded %0d", cfg_err, cfg_loaded); fails = fails + 1; end
+            if (cfg_cp_act !== {ctx, voc}) begin $display("FAIL cfg read-back %h", cfg_cp_act); fails = fails + 1; end
+        end
+    endtask
+`else
     ot_hgi_seq #(.USE_MACRO(`ifdef SEQ_MACRO 1 `else 0 `endif)) dut (.clk(clk), .rst_n(rst_n), .md_d(md_d), .cfg_vocab(vocab), .cfg_ctx_max(ctxmax), .rank(rank),
         .hold(1'b0), .busy(busy), .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(32'h1234),
         .db_gen(4'h5), .db_entry(2'd0), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
@@ -45,6 +76,7 @@ module tb_hgi_seq;
         .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
         .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles),
         .cpl_ntok(cpl_ntok), .cpl_toks(cpl_toks));
+`endif
     reg [127:0] img [0:NW-1];
     reg [95:0] vmi [0:CONF_NVMI-1];
     reg [255:0] ex [0:NEXP-1];
@@ -174,6 +206,9 @@ module tb_hgi_seq;
 `endif
             md_d = {32'd1, PAGE, 32'd0, 32'd0, cfg[c*12 + 0]};
             vocab = cfg[c*12 + 4]; ctxmax = cfg[c*12 + 5]; rank = cfg[c*12 + 3];
+`ifdef SEQ_CP
+            cfg_load(cfg[c*12 + 4], cfg[c*12 + 5], (cfg[c*12 + 4] == 129280) ? 96 : 4, cfg[c*12 + 0]);
+`endif
             fault_at = (cfg[c*12 + 9] == 32'hFFFF) ? -1 : cfg[c*12 + 10] + cfg[c*12 + 9];
             n0 = nd; ei = cfg[c*12 + 10] * 11;
             if (nd != cfg[c*12 + 10]) begin $display("FAIL case %0d starts at dispatch %0d, expected %0d", c, nd, cfg[c*12 + 10]);
