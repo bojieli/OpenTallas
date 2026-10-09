@@ -1,0 +1,27 @@
+{
+  "job": "mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+  "original_host": "ot-epyc1tb",
+  "destination_host": "ot-epyc3",
+  "original_preserved": true,
+  "transfer_exit": 0,
+  "verification": "Sorted relative paths/kinds/modes and every regular-file SHA256; complete tree equality",
+  "original": {
+    "bytes": 3266217386,
+    "dirs": 2837,
+    "files": 28571,
+    "links": 0,
+    "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+    "tree_sha256": "e302fc21d6de33dd63a76a1b1dac3302550d91d03d837dcf5c7654fe7c64cfc6"
+  },
+  "copy": {
+    "bytes": 3266217386,
+    "dirs": 2837,
+    "files": 28571,
+    "links": 0,
+    "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+    "tree_sha256": "e302fc21d6de33dd63a76a1b1dac3302550d91d03d837dcf5c7654fe7c64cfc6"
+  },
+  "all10_preserved": true,
+  "standalone_negative_unstarted": true,
+  "action": "No independent launch; fleet will rehome same READY stage_idx1 under named lock and release transfer hold"
+}
