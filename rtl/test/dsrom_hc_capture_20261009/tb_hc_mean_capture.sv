@@ -61,7 +61,7 @@ module tb_hc_mean_capture;
 `else
     localparam integer RP=1;
 `endif
-    ot_dsrom_hc_input_reader #(.ECC_PIPE(EP),.PROTECT(RP)) reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
+    ot_dsrom_hc_input_reader #(.ECC_PIPE(EP),.PROTECT(RP),.ADDR_REG(RP==0)) reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
       .cmd_capture(cmd_capture),.cmd_user(cmd_user),.cmd_position(cmd_position),.cmd_epoch(cmd_epoch),
       .cmd_h_row(bad==7?14'd16300:14'd512),.cmd_rank(rank[1:0]),.cmd_region_rows(bad==8?15'd319:15'd1280),
       .mean_cmd_valid(mcv),.mean_cmd_ready(mcr),.mean_cmd_capture(mcc),.mean_cmd_user(mcu),

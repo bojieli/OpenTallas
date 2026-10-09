@@ -13,6 +13,9 @@ module ot_dsrom_hc_input_reader #(
     // response (REVIEW_20261009 S4: flop state gets no SECDED; the VM SRAM it was read from keeps its own SECDED).
     // Same states / cycles as PROTECT=1 ECC_PIPE=0; mean_residuals = the held row directly.
     parameter integer PROTECT=1,
+    // ADDR_REG=1 (sys-takeover, opt-in): req_row from a register stepped +320 per copy, -960 at the copy wrap and +1
+    // per row (= base + copy*320 + rank*80 + row at every REQ) instead of the 51-level combinational sum to the pin.
+    parameter integer ADDR_REG=0,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -104,7 +107,8 @@ module ot_dsrom_hc_input_reader #(
     assign mean_cmd_capture=capture_q;assign mean_cmd_user=user_q;
     assign mean_cmd_position=position_q;assign mean_cmd_epoch=epoch_q;
     assign req_valid=state==REQ&&!fault;
-    assign req_row=requested_row[13:0];
+    reg [14:0] addr_q;
+    assign req_row=ADDR_REG ? addr_q[13:0] : requested_row[13:0];
     assign mean_valid=state==SEND&&!fault&&!(|ue);
     assign mean_beat={row_q,half_q};
     assign busy=state!=IDLE;
@@ -118,7 +122,7 @@ module ot_dsrom_hc_input_reader #(
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=IDLE;fault<=0;capture_q<=0;copy_q<=0;user_q<=0;
-            position_q<=0;epoch_q<=0;base_q<=0;rank_q<=0;row_q<=0;half_q<=0;
+            position_q<=0;epoch_q<=0;base_q<=0;rank_q<=0;row_q<=0;half_q<=0;addr_q<=0;
             for(k=0;k<4;k=k+1) rows[k]<=0;
         end else if(!fault) begin
             if(rsp_fault || (rsp_valid&&state!=WAIT)) fault<=1;
@@ -127,6 +131,7 @@ module ot_dsrom_hc_input_reader #(
                     if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || cmd_region_rows<1280 || end_row>16384) fault<=1;
                     else begin capture_q<=cmd_capture;user_q<=cmd_user;
                         position_q<=cmd_position;epoch_q<=cmd_epoch;base_q<=cmd_h_row;rank_q<=cmd_rank;
+                        addr_q<={1'b0,cmd_h_row}+{13'd0,cmd_rank}*15'd80;
                         row_q<=0;copy_q<=0;half_q<=0;state<=MCMD;end
                 end
                 MCMD: if(mean_cmd_ready) state<=REQ;
@@ -136,14 +141,14 @@ module ot_dsrom_hc_input_reader #(
                     else if(ECC_PIPE) state<=EWAIT;
                     else begin
                         rows[copy_q]<=rsp_encoded;
-                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=ECC_PIPE?DECODE:SEND;end
-                        else begin copy_q<=copy_q+1'b1;state<=REQ;end
+                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=ECC_PIPE?DECODE:SEND;addr_q<=addr_q-15'd960;end
+                        else begin copy_q<=copy_q+1'b1;state<=REQ;addr_q<=addr_q+15'd320;end
                     end
                 end
                 EWAIT: if(&encode_valid) begin
                     rows[copy_q]<=rsp_encoded;
-                    if(copy_q==3) begin copy_q<=0;half_q<=0;state<=DECODE;end
-                    else begin copy_q<=copy_q+1'b1;state<=REQ;end
+                    if(copy_q==3) begin copy_q<=0;half_q<=0;state<=DECODE;addr_q<=addr_q-15'd960;end
+                    else begin copy_q<=copy_q+1'b1;state<=REQ;addr_q<=addr_q+15'd320;end
                 end
                 DECODE: state<=DWAIT;
                 DWAIT: if(&decode_valid) state<=SEND;
@@ -151,7 +156,7 @@ module ot_dsrom_hc_input_reader #(
                     else if(mean_ready) begin
                         if(!half_q) half_q<=1;
                         else if(row_q==79) state<=IDLE;
-                        else begin row_q<=row_q+1'b1;half_q<=0;state<=REQ;end
+                        else begin row_q<=row_q+1'b1;half_q<=0;state<=REQ;addr_q<=addr_q+15'd1;end
                     end
                 default: fault<=1;
             endcase
