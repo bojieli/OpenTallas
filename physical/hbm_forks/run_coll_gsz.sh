@@ -26,7 +26,9 @@ def nb(shape, seed):                    # + -0 contributors (review-0427 HF-5): 
             q = [G.add(q[i], q[i + 1]) for i in range(0, len(q), 2)]
         zr[og] = q[0]
     return s, parts, zr
-HF.build = nb
+import os
+if os.environ.get('NEGZ', '1') == '1':
+    HF.build = nb
 for n in (2, 4, 8):
     HF.SHAPES[f'g{n}'] = dict(GS=n, NG=max(1, 8 // n), NC=n, NOG=8 // n, E=256, LANES=16, ONESHOT=0, BF16=1)
     HF.write(Path(sys.argv[1]) / 'fx' / f'g{n}', f'g{n}', 20261009 + n)

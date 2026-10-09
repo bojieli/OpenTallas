@@ -34,7 +34,7 @@ sim() {   # sim <label> <st> <fam> <ps lib file> <defines...>
   vvp -n $O/$L.vvp > $O/$L.log 2>&1
 }
 # every simulation in parallel (single-threaded each), then the verdicts
-sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
+sed 's/  wire \[1:0\] slot = bb_r\[1:0\] ^ (ixm ? t_r\[3:2\] : rr\[1:0\]);/  wire [1:0] slot = bb_r[1:0] ^ (ixm ? t_r[3:2] : 2'"'"'b00);/' $PSLIB > $O/ps_mut_slot.sv
 sed 's/&& pdone && !di_v;/\&\& !di_v;/' $PSLIB > $O/ps_mut_done.sv
 sed 's/mine <= di_d\[PCID\]; act <= di_d\[PCID\];/mine <= di_d[PCID] \&\& PCID == 0; act <= di_d[PCID] \&\& PCID == 0;/' $PSLIB > $O/ps_mut_pc.sv
 for m in slot done pc; do cmp -s $O/ps_mut_$m.sv $PSLIB && { echo "$m mutant not applied" >> $O/summary.txt; rc=1; }; done
