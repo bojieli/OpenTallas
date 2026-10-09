@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hgi_token18.ports.v1",
-  "source": "11f1f5722",
+  "source": "77f87268c core/fullport; f4babd572 acceptbench; 4bffda75f acceptseatRTL",
   "model_commit": "416766277",
   "model": "tools/uarch_model.py:hgi_token18_contract_model",
   "legacy_default": "GENERIC18=0,TW17",
@@ -26,7 +26,9 @@
       "bench": "rtl/test/hbm_generic/tb_hgi_accept18.sv",
       "gate": "PINREG1 108PASS+truncation/bonus mutantsFAIL; rtl_boundary0/0PASS",
       "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
-      "simulator_vectors": "pendingprovider"
+      "simulator_vectors": "pendingprovider",
+      "model": "757907078 tools/uarch_model.py:hgi_token18_accept_seat_model",
+      "route_status": "PD48/55 spec075a3182a pendingexclusivefleetintake; sourcef4 runnerstdout-safe"
     },
     "ot_hgi_mtp_ctl18": {
       "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
@@ -74,8 +76,10 @@
       "ports": "same hfd_mtp_x except p_tok/f_tok/e_tok/cmd_tok1/am_idx/sa_tok18 and cmd_toks144",
       "new_cycles_vs_qualified_fullcore": 0,
       "new_cycles_vs_bare_controller": 4,
-      "gate": "matching fullcore TW18 XSEL1 traces/rollback mutant and boundary pending",
-      "exact_state_warning": "039ca63d6 recipe is SPECF0; physical hfd_mtp_x SPECF1 evidence cannot substitute"
+      "gate": "SPECF0 matchingforcedTW18/XSEL1 positive livePID1984091; rollbackMUT1 terminalFAIL COMMAND#378pos10vs9,rc1",
+      "exact_state_warning": "039ca63d6 recipe is SPECF0; physical hfd_mtp_x SPECF1 evidence cannot substitute",
+      "route_status": "owninitialsynth/floorplanE4source77driver2005401live;2routevariantsnotyetqueued",
+      "model": "a28dcab37 tools/uarch_model.py:hgi_token18_fullcore_model"
     }
   },
   "route_jobs": [],
