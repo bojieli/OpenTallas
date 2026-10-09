@@ -1,0 +1,30 @@
+{
+  "model": "tools/uarch_model.py:hgi_quant_vm_transport_model",
+  "source_RTL": "6529f2bd2",
+  "slot_um": [
+    1800,
+    600
+  ],
+  "replicas": 1,
+  "cellarea_status": "actual adapter synth pending; originalcore18541.0944um2 is only nearest measuredreference",
+  "outputflopqueue_bits": 16384,
+  "inputassembly_bits": 1024,
+  "request_boundary_bits": 338,
+  "channelplan": {
+    "cmd_bottom_2layers": 0.4002840909090909,
+    "req_right_2layers": 0.30089285714285713,
+    "rsp_left_2layers": 0.24375
+  },
+  "IOcontract": "provisional standalone833.333ps 60/25 TTreference allports150psinter H1 and80fF outputload; finalgenericdie budget pending",
+  "adopted": false,
+  "routevariants": [
+    "pd50",
+    "pd55"
+  ],
+  "unready_gates": [
+    "actualsynthfit",
+    "registeredboundary",
+    "submitpinlint",
+    "exactfaultbench"
+  ]
+}
