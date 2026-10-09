@@ -1,0 +1,29 @@
+MTP_SEED_ALIGNED PASS K=15360 rows=2 phases=4 adds=6 joinLAT=8 quant_cycles=253 first_cycles=237 last_cycles=1262 join_cycles=54 complete_column_cycles=1688
+- /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/positive/tb.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.131 s; speed 14.094 us/s
+- Verilator: cpu 0.131 s on 1 threads; allocated 9 MB
+
+	Command being timed: "python3 tools/dsrom_mtp_seed_qs5f.py --snapshot /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/snapshot --ref /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/ref --work /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/positive --jobs 12"
+	User time (seconds): 47.60
+	System time (seconds): 2.82
+	Percent of CPU this job got: 384%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:13.12
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 376592
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 1407980
+	Voluntary context switches: 558
+	Involuntary context switches: 1713
+	Swaps: 0
+	File system inputs: 16
+	File system outputs: 406504
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

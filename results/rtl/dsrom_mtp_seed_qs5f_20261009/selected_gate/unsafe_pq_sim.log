@@ -1,0 +1,4 @@
+SEED_QS5F_PROVENANCE cyc=304 pq_fault=1 ffault=0 bk_fault=00 go=0 walking=1 sh_free=1 bank_free=1
+[254000] %Fatal: tb.sv:31: Assertion failed in tb_mtp_seed: element fault
+%Error: /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/unsafe_pq/tb.sv:31: Verilog $stop
+Aborting...

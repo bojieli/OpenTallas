@@ -1,0 +1,5 @@
+MTP_SEED_ALIGNED PASS K=15360 rows=2 phases=4 adds=6 joinLAT=8 quant_cycles=253 first_cycles=237 last_cycles=1262 join_cycles=54 complete_column_cycles=1688
+- /srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817/positive/tb.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.131 s; speed 14.094 us/s
+- Verilator: cpu 0.131 s on 1 threads; allocated 9 MB
