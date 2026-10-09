@@ -46,8 +46,9 @@ mean_mc)
     grep -h PASS $W/p.log $W/d.log; ok
   else ivl tb_hc_mean_capture $W/n.vvp $DEF -DHC_MUT_TREE $SRC; vvp $W/n.vvp $V > $W/n.log 2>&1
     grep -q 'mean/identity/order mismatch' $W/n.log && ! grep -q '^PASS full shape' $W/n.log && bad; tail $W/n.log; nok "mutant escaped"; fi ;;
-reader_plain)
-  MC=$D/ot_dsrom_hc_mean_capture.sv; R=$D/ot_dsrom_hc_input_reader.sv; DEF="-DHC_ECC_PIPE -DHC_MACRO_CAP -DHC_VM_READER -DHC_PLAIN_ROWS"
+reader_plain|reader_ecc)
+  MC=$D/ot_dsrom_hc_mean_capture.sv; R=$D/ot_dsrom_hc_input_reader.sv; DEF="-DHC_ECC_PIPE -DHC_MACRO_CAP -DHC_VM_READER"
+  [ $E = reader_plain ] && DEF="$DEF -DHC_PLAIN_ROWS"
   if [ $M = pos ]; then
     ivl tb_hc_mean_capture $W/p.vvp $DEF $COMMON $FP $MC $R $T/tb_hc_mean_capture.sv
     vvp $W/p.vvp $V > $W/p.log 2>&1; grep -q '^PASS full shape' $W/p.log || { tail $W/p.log; nok positive; }
