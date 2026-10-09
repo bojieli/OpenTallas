@@ -1,0 +1,48 @@
+{
+ "x_preload": true,
+ "layer_x": {
+  "L0_die0": true,
+  "L0_die1": true,
+  "L0_die2": true,
+  "L0_die3": true,
+  "L1_die0": true,
+  "L1_die1": true,
+  "L1_die2": true,
+  "L1_die3": true,
+  "L2_die0": true,
+  "L2_die1": true,
+  "L2_die2": true,
+  "L2_die3": true
+ },
+ "kv_pre": {
+  "L0_die0": true,
+  "L0_die1": true,
+  "L0_die2": true,
+  "L0_die3": true,
+  "L1_die0": true,
+  "L1_die1": true,
+  "L1_die2": true,
+  "L1_die3": true,
+  "L2_die0": true,
+  "L2_die1": true,
+  "L2_die2": true,
+  "L2_die3": true
+ },
+ "kv_at_P": {
+  "L0_die0": true,
+  "L0_die1": true,
+  "L0_die2": true,
+  "L0_die3": true,
+  "L1_die0": true,
+  "L1_die1": true,
+  "L1_die2": true,
+  "L1_die3": true,
+  "L2_die0": true,
+  "L2_die1": true,
+  "L2_die2": true,
+  "L2_die3": true
+ },
+ "history_L0_die0_pin": true,
+ "verdict": "PASS",
+ "note": "token-exact 2026-10-09: L0-L2 KV history from realmem-ctx8k P8191 kv_pre (sha-equal to the committed oracle), L3-L35 synthetic links to L0"
+}

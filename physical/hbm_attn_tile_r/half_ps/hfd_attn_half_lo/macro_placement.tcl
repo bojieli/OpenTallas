@@ -70,10 +70,19 @@ place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -loc
 place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {15.000 598.596} -orientation MY -exact
 place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1743.408 458.596} -orientation R0 -exact
 place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1743.408 598.596} -orientation R0 -exact
-foreach ot_i [[ord::get_db_block] getInsts] {
-  if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }
-}
-puts "OT_ATTN_HALF_PLACED hfd_attn_half_lo banks=69"
 # hbm-forks RQ-HF-4: the PS entry row port ks lands in two SN pin banks under its pins (x 1062.0-1273.4, S face)
 place_macro -macro_name {u_pks.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {1056.096 0.024} -orientation R0 -exact
 place_macro -macro_name {u_pks.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {1163.616 0.024} -orientation R0 -exact
+# hbm-forks: the ks pin pipe (1 + NK = 5 stages x 3 banks: 1,102 b > 2 x 544) -- stages 1-4 in free slots on the way to ROOT
+place_macro -macro_name {u_pks.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {570.360 94.488} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[1\].g_c\[1\].g_sn.u_b} -location {570.360 108.456} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {799.700 308.712} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[2\].g_c\[1\].g_sn.u_b} -location {799.700 322.680} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {955.220 542.984} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[3\].g_c\[1\].g_sn.u_b} -location {955.220 556.952} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {799.700 735.912} -orientation R0 -exact
+place_macro -macro_name {u_pks.gn.g_s\[4\].g_c\[1\].g_sn.u_b} -location {799.700 749.880} -orientation R0 -exact
+foreach ot_i [[ord::get_db_block] getInsts] {
+  if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }
+}
+puts "OT_ATTN_HALF_PLACED hfd_attn_half_lo banks=79"

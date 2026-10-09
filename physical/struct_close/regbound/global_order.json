@@ -1,0 +1,7 @@
+{"src": "rtl/hbm_accel/index/ot_hbm_index_global_order.sv", "module": "ot_hbm_index_global_order", "core": "ot_hbm_index_global_order_core",
+ "clk": "clk", "reset": "por_n",
+ "why": "sp-gorder-006e20771 TT -634.6 (in->out -635, in->reg -526, reg->out -296): unregistered boundary; start / rsp in and read / out through pin FIFOs.",
+ "in_hs": [{"v": "start", "r": "start_r", "data": ["start_frame"]},
+           {"v": "rsp_v", "r": "rsp_r", "data": ["rsp_frame", "rsp_rank", "rsp_ordinal", "rsp_tuple", "rsp_last", "rsp_empty"]}],
+ "out_hs": [{"v": "read_v", "r": "read_r", "data": ["read_frame", "read_rank", "read_ordinal"]},
+            {"v": "out_v", "r": "out_r", "data": ["out_tuple", "out_frame", "out_rank"]}]}

@@ -152,7 +152,7 @@
   "source": "pin -> view centre Manhattan, max over the port bits (no placed core yet)"
  },
  "contracts": {
-  "ep.inj_data": "SU-quarter ownership: for the inject index inj_idx (broadcast to all four quarters on t_su_q[546:580]) exactly the quarter holding that flit drives its 1024-bit f_su_q (hfd_su t_coll); the other three drive 0, so the OR is the owner data (SU obligation; hbm-forks notified)."
+  "ep.inj_data": "SU-quarter ownership (hgi-takeover 2026-10-09, defined by the die-integration owner): inject flit i (inj_idx, broadcast to all four quarters on t_su_q[546:580]) is owned by quarter i mod 4 in the order SW, NW, SE, NE; the owner drives its 1024-bit f_su_q (hfd_su t_coll), the other three drive 0, so the OR is the owner data. The functional SU inject gate is one AND per quarter (the physical envelope hfd_su has no inject select); hfd_coll rtl_hgi asserts at most one non-zero quarter."
  },
  "ties": {
   "die:llk_N3[967:974]": {
@@ -163,5 +163,6 @@
    "class": "by_design",
    "reason": "spare TX lanes: 9 x 487 b uniform stripes hold 4,376 b"
   }
- }
+ },
+ "replaced_when_hgi": "coll"
 }

@@ -2,7 +2,7 @@
 set -eu
 src=${1:?pinnedsource};out=${2:?output}
 mkdir -p "$out"
-for mut in GOLDEN MUT_OWNER MUT_ORDER MUT_WRITTEN MUT_ID_BOUND;do
+for mut in GOLDEN MUT_OWNER MUT_ORDER MUT_WRITTEN MUT_ID_BOUND MUT_PROGRESS;do
  flags=();if [ "$mut" != GOLDEN ];then flags=(-P "tb_hgi_coll_row_formatter.$mut=1");fi
  iverilog -g2012 -s tb_hgi_coll_row_formatter "${flags[@]}" -o "$out/$mut.vvp" "$src/rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv" "$src/rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv"
  set +e

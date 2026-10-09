@@ -1338,7 +1338,10 @@ module ot_hbm_accel_smh_front_s #(
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,
     parameter integer NFMT = SUB * LBS * 8 + SUB,
-    parameter integer REQCR = 1
+    parameter integer REQCR = 1,
+    parameter integer PT4 = 1           // hbm-forks 2026-10-09: = ot_hbm_accel_smh_tile PT4 (m3h: a 4th row-bundle register per
+                                        //   tile hop, so a column's results arrive 1 more cycle per hop: the result deskew is
+                                        //   (5 + PT4) a hop; m3h left it at 5 and columns at hop >= 2 merged a wrong row)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -1431,9 +1434,9 @@ module ot_hbm_accel_smh_front_s #(
                     .d(lin[QLW-1 -: 2]), .q(land[QLW-1 -: 2]));
                 ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_ld (.clk(clk), .rst_n(rst_n), .en(1'b1),
                     .d(lin[QLW-3:0]), .q(land[QLW-3:0]));
-                ot_hbm_accel_smv_chain #(.W(2), .D(5*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(2), .D((5+PT4)*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-1 -: 2]), .q(al[COLN*QLW + QLW - 2 +: 2]));
-                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(5*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(QLW-2), .D((5+PT4)*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-3:0]), .q(al[COLN*QLW +: QLW-2]));
             end
         end

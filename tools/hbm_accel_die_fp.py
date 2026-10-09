@@ -463,7 +463,11 @@ def _vmerge(*vs):
 
 R25SPS = dict(R25S, split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
               attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True)
-R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True))
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_exact=True))   # router_exact: hgi-takeover die gap 1e
+# hbm-forks 2026-10-09: R25G on the QUALIFIED 4 x 2 SM grid (no fmt3 wide retile): valid when the INT8 front fits the
+# nominal 432-um front_c strip (route line hgi_smh_front_c_int8_nom).  787.15 mm2, 30.59 x 25.73 mm (H on the 26-mm
+# axis), full network build (not a probe), margin lint PASS, SM path stages = R25S.
+R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True))
 ADOPTED = R25
 
 
@@ -600,7 +604,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         yy += hs[n] + ghi
     for n, y_ in place:
         it = Inst(f'hb_{n}', f'hfd_{n}', sx0, up(y_, GY), spine_w - SHAVE, hs[n] - SHAVE, kind='spine', region='hub',
-                  domain='serial_0p9' if n == 'quant' else 'stream_1p2')
+                  domain='serial_0p9' if n == 'quant' and 'quant' not in (variant.get('hgi_dispatch') or []) else 'stream_1p2')   # hgi quant unit: stream 1.2 GHz (the record path and the VM are stream)
         insts.append(it)
         hub[n] = it
     # r16i (hub REQUEST 12:10 PT): one-per-die SU slots stacked above the top spine block (quant) in the free top
@@ -2373,8 +2377,9 @@ def buses(m):
         sn = _cxy(svc, 'N' if side == 'S' else 'S', (cc + 80.0 - svc.x) / svc.w)
         ye_ = ylane(side, 'ef', ych[side] + 100.0 * sgn)
         pts = [p0, (xr, p0[1]), (xr, ye_), (cc + 80.0, ye_), sn]
-        chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
-              fc=(128,))
+        if 'cp' not in (m['variant'].get('hgi_dispatch') or []):   # HGI (review 10:45): expert weights stream by id
+            chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
+                  fc=(128,))
         lmem = m['variant'].get('ld_mem')
         if lmem:
             # r25m (MTP-DIE, RQ-ING-4): the loader's memory side (memory AXI m_* + request / response req_* / rsp_*,
@@ -2490,8 +2495,10 @@ def buses(m):
         hl_ = [('cmdproc', 'coll', 8 + 16 + 1), ('coll', 'cmdproc', 1 + 32)]
     else:
         hl_ = [('cmdproc', 'coll', 64)]
-    hl_ += [('loader', 'cmdproc', 341), ('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
-            ('vm', 'quant', 1024), ('vm', 'router', 512)] + ([] if crtl else [('vm', 'coll', 512)])
+    hgi_q = 'quant' in (V.get('hgi_dispatch') or [])      # hgi-takeover: the hgi quant unit reads / writes VM by packets
+    hgi_cp_ = 'cp' in (V.get('hgi_dispatch') or [])    # hgi-takeover: the loader <-> CP link replaces the program-store bus
+    hl_ += ([] if hgi_cp_ else [('loader', 'cmdproc', 341), ('router', 'cmdproc', 64)]) + [('barrier', 'cmdproc', 64),
+            ('vm', 'router', 512)] + ([] if hgi_q else [('vm', 'quant', 1024)]) + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
@@ -2509,8 +2516,11 @@ def buses(m):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
         hl_ += [('vm', f'su_{q}', 2048), (f'su_{q}', 'vm', 2048), (f'su_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'hc_{q}', 1024),
-                (f'su_{q}', 'coll', 1024), ('coll', f'su_{q}', 580 if crtl else 1024), ('quant', f'su_{q}', 512),
-                ('cmdproc', f'su_{q}', 64), (f'su_{q}', 'router', 256)]
+                (f'su_{q}', 'coll', 1024), ('coll', f'su_{q}', 580 if crtl else 1024)] + ([] if hgi_q else [('quant', f'su_{q}', 512)]) + [
+                ('cmdproc', f'su_{q}', 64)] + ([] if V.get('router_exact') and q != 'SW' else
+                                               [(f'su_{q}', 'router', 2 if V.get('router_exact') else 256)])
+        # router_exact (hgi-takeover 2026-10-09, die gap 1e): the router RTL takes only in_valid / in_last from the SU (SW);
+        # the other quarters' 256 b and SW's 254 spare bits carried nothing (wrapper ledger: dropped die inputs)
         if V.get('hub_io'):     # r15 (H10): HC (mHC / Sinkhorn) and SFU results return to the SU
             hl_ += [(f'hc_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'su_{q}', 1024)]
     hl_ += [('su_SW', 'su_SE', 1024), ('su_SE', 'su_SW', 1024), ('su_SW', 'su_NW', 1024), ('su_NW', 'su_SW', 1024),
@@ -3461,7 +3471,19 @@ def clock_regions(m):
     out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
         retiled = bool(m['variant'].get('sm_physical_grid'))
-        cuts = [(f'c{c}', (c,)) for c in range(3)] if retiled else [('w', (0, 1)), ('e', (2, 3))]
+        if retiled:
+            # hbm-forks 2026-10-09 (SM-group clock distribution for the 3 x 3 retile): ONE region per SM group covering
+            # the whole group rect (SM sites + the column / row channels, so the x / result / control tree stations in
+            # the channels are inside it).  The clock plan splits it at the median into <= 4 mm sub-regions G<st>.k,
+            # which share ONE family root at the group centre (clock_plan.clock_nets: fk = G<st>): a common trunk down
+            # to the group and a balanced sub-tree per sub-region (the planned root pads equalise their insertion).
+            g_ = m['geo']
+            x0, y0 = G['x'], G['y']
+            x1, y1 = x0 + g_['grp_w'], y0 + g_['grp_h']
+            out.append(dict(name=f'G{st}', clock='clk_stream', rect=[round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
+                            extent_um=round(max(x1 - x0, y1 - y0), 1), sms=[s.name for s in G['sms']]))
+            continue
+        cuts = [('w', (0, 1)), ('e', (2, 3))]
         for h, cols in cuts:
             ss = [s for s in G['sms'] if s.sm['physical_col' if retiled else 'col'] in cols]
             x0 = min(s.x for s in ss)
@@ -3693,7 +3715,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

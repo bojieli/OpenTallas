@@ -2,7 +2,7 @@
 // Opt-in successor minimum bundle. Real B produces n=4*k+q roots; A and
 // Markov share released global row identity. Native pre-Markov argmax is unused.
 module ot_dsrom_markov_head_bundle #(
- parameter bit ENABLE=0,parameter integer PINREG=0,CACHE_PINREG=0,
+ parameter bit ENABLE=0,parameter bit LOOKUP_PP=0,parameter integer PINREG=0,CACHE_PINREG=0,
  parameter integer VALID_ROWS=128,A_INPUT_STAGES=0,
  parameter [8:0] CUT=511,parameter integer SPLIT9=1,
  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9
@@ -18,9 +18,15 @@ module ot_dsrom_markov_head_bundle #(
  wire accept=start&&start_ready;
  assign start_ready=ENABLE&&!busy&&(&sr)&&qr&&!fault;
  assign head_go=&mg;
+ generate if(LOOKUP_PP)begin:g_lookup_pp
+ ot_dsrom_markov_embed_rom_pp #(.ENABLE(ENABLE)) lookup(
+ .clk(clk),.rst_n(rst_n),.req_valid(accept),.req_ready(qr),.req_token(d_i),.req_id(transaction),
+ .out_valid(ev),.out_ready(&er),.out_data(ed),.out_beat(eb),.out_id(ei),.out_last(el),.fault_valid(lookup_fault),.fault_id());
+ end else begin:g_lookup_legacy
  ot_dsrom_markov_embed_rom #(.ENABLE(ENABLE)) lookup(
  .clk(clk),.rst_n(rst_n),.req_valid(accept),.req_ready(qr),.req_token(d_i),.req_id(transaction),
  .out_valid(ev),.out_ready(&er),.out_data(ed),.out_beat(eb),.out_id(ei),.out_last(el),.fault_valid(lookup_fault),.fault_id());
+ end endgenerate
  wire[255:0] xsa,xsb;
  genvar j,q;
  generate for(j=0;j<16;j=j+1)begin:g_sk

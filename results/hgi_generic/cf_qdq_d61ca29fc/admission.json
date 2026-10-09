@@ -1,0 +1,11 @@
+{
+  "host": "ot-epyc3",
+  "source_commit": "d61ca29fc554af44f9ac48c57c9b57a240d3b84b",
+  "remote_root": "/srv/opentallas-scratch/codex/hgi-qdq-d61ca29fc",
+  "admission_command": "/srv/opentallas-scratch/admit.sh 1 -- /usr/bin/time -v python3 tools/hgi_qdq_vectors.py --source-commit d61ca29fc --out vectors",
+  "prelaunch_memavailable_kib": 278884148,
+  "measured_peak_rss_kib": 40532,
+  "exit_code": 0,
+  "scope": "Released DS arithmetic golden vector generation only; does not assert RTL or simulator conformance",
+  "simulator_note": "The pinned hgi_sim/lib.py and machine.py contain no QDQ dispatch; benches use released hdc_golden_v41.py directly."
+}

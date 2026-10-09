@@ -1,0 +1,5 @@
+PASS QUANT_TRANSPORT cases=201 words=10768 arbitraryCPstall ACKdelay tail16/48 illegalUE
+- rtl/test/hbm_accel/generic/tb_hgi_quant_vm_transport.sv:157: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 33us; walltime 1.121 s; speed 30.879 us/s
+- Verilator: cpu 1.079 s on 1 threads; alloced 1018 MB

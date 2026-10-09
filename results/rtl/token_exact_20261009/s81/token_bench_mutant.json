@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.s81.token_bench_l20.v1",
+ "layer": 20,
+ "rank": 0,
+ "token_position": 1048575,
+ "mapping": "1,792 HALF dedicated + router K split (half_dedicated_ksplit)",
+ "binding_sha256": {
+  "inventory.json": "37e1429b3213f458dd8b2863ec6b2ff3629b069e7239e083237ae2f9e67b0a56",
+  "mapping_verdict.json": "1cb20da3494062d791e130c92d6870089881940372b903e169db26f02d845aa9",
+  "matrix_map.jsonl.gz": "d9f84be93d9d701b445ffd70d0c2f3f54e78d1b2f9a54111a22355abc540da56",
+  "providers.json": "8536c9d911de79e160d1f635b4b335375685236cca8b7cd1c7d877c05e3f8035",
+  "stage_map.json": "85fba9b16e50167a10b160c7dfeb88c50789d40fecca5bdaea71ca1aa095d02f"
+ },
+ "field_build": {
+  "steps": [
+   {
+    "name": "verilate",
+    "seconds": 172.1,
+    "returncode": 0
+   },
+   {
+    "name": "make",
+    "seconds": 352.9,
+    "returncode": 0
+   },
+   {
+    "name": "link",
+    "seconds": 14.0,
+    "returncode": 0
+   }
+  ],
+  "params": [
+   "-GFAST=1",
+   "-GPP=1",
+   "-GBP=0",
+   "-GNP=32",
+   "-GR=1",
+   "-GNBF=5",
+   "-GPHW=2",
+   "-GVAW=16",
+   "-GQELEM=1",
+   "-GQXV=10"
+  ],
+  "qelem": 10,
+  "tb_sha256": "36801d5407172b41117d54bf2f556c7288875db5a6a76a18a0633a9bc5b9b028",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+ },
+ "select": {
+  "unit": "ot_hdc_v41x_sel (S81 dsfd_bk_selector core, unchanged)",
+  "params": {
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 8
+  },
+  "n_keys": 1048576,
+  "k": 512,
+  "rtl_pass": true,
+  "errors": 0,
+  "unit_reference_equals_golden_lexsort": true,
+  "cycles": 16491,
+  "replays": 0,
+  "wall_s": 36.0,
+  "rtl_sha256": {
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "3716c56efe4dcd751d1dfa501de364b36b8357b03c4a10f0d93f9d6cb7971e6b",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf"
+  },
+  "exact": true
+ },
+ "chain": {
+  "field_phases": 24,
+  "field_region_runs": 2864,
+  "field_region_runs_missing": 0,
+  "field_region_runs_failed": 0,
+  "field_failed_first": [],
+  "ops": 143,
+  "field_ops_rtl": 26,
+  "field_rows_rtl": 34880,
+  "golden_composed_ops": 117,
+  "chain_ok": false,
+  "first_bad": {
+   "pc": 7,
+   "addrs": [
+    419776
+   ]
+  },
+  "final_expect_vm_words": 450479,
+  "final_mismatch_words": 1
+ },
+ "source_commit": "4dc3e0062",
+ "mutant": true,
+ "verdict": "FAIL"
+}

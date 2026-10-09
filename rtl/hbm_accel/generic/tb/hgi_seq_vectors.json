@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hgi_seq_vectors.v2",
  "spec": "HGI-1 v1.0 normative (docs/HBM_GENERIC_INTERFACE.md, results/arch/hbm_generic_iface_20261009/spec.json)",
- "words128": 1640,
+ "words128": 1754,
  "ring_words": 512,
  "programs": {
   "qwen": {
@@ -28,68 +28,104 @@
    "entry": 738,
    "words": 11
   },
-  "ctl_tokx": {
+  "ctl_amax": {
    "entry": 749,
    "words": 11
   },
-  "dyn_rsv9": {
+  "idx_rsv1": {
    "entry": 760,
+   "words": 11
+  },
+  "idx_rsv3": {
+   "entry": 771,
+   "words": 11
+  },
+  "tokx_15": {
+   "entry": 782,
+   "words": 13
+  },
+  "tokx_3": {
+   "entry": 795,
+   "words": 13
+  },
+  "tokx_twice": {
+   "entry": 808,
+   "words": 16
+  },
+  "tokx_k_gt_ncol": {
+   "entry": 824,
+   "words": 13
+  },
+  "tokx_0": {
+   "entry": 837,
+   "words": 13
+  },
+  "tokx_vocab": {
+   "entry": 850,
+   "words": 13
+  },
+  "tokx_no_A": {
+   "entry": 863,
+   "words": 11
+  },
+  "dyn_rsv9": {
+   "entry": 874,
    "words": 15
   },
   "dyn_rsv41": {
-   "entry": 775,
+   "entry": 889,
    "words": 15
   },
   "idx_no_I": {
-   "entry": 790,
+   "entry": 904,
    "words": 15
   },
   "idx_id_range": {
-   "entry": 805,
+   "entry": 919,
    "words": 17
   },
   "idx_vm_range": {
-   "entry": 822,
+   "entry": 936,
    "words": 19
   },
   "nvm_range": {
-   "entry": 841,
+   "entry": 955,
    "words": 17
   },
   "vm_base_range": {
-   "entry": 858,
+   "entry": 972,
    "words": 15
   },
   "loop0": {
-   "entry": 873,
+   "entry": 987,
    "words": 11
   },
   "loop3": {
-   "entry": 884,
+   "entry": 998,
    "words": 13
   },
   "loop_samelvl": {
-   "entry": 897,
+   "entry": 1011,
    "words": 12
   },
   "endloop_only": {
-   "entry": 909,
+   "entry": 1023,
    "words": 11
   },
   "end_no_A": {
-   "entry": 920,
+   "entry": 1034,
    "words": 8
   },
   "end_tok_vocab": {
-   "entry": 928,
+   "entry": 1042,
    "words": 10
   },
   "end_tok_ok": {
-   "entry": 938,
+   "entry": 1052,
    "words": 10
   },
   "ring_overflow": {
-   "entry": 948,
+   "entry": 1062,
    "words": 692
   }
  },
@@ -213,7 +249,7 @@
     0,
     3
    ],
-   "fault": "absent unit / op"
+   "fault": "absent unit / op (or a reserved op code)"
   },
   {
    "name": "rsv_unit13",
@@ -229,7 +265,7 @@
     0,
     3
    ],
-   "fault": "absent unit / op"
+   "fault": "absent unit / op (or a reserved op code)"
   },
   {
    "name": "op_range",
@@ -245,10 +281,10 @@
     0,
     3
    ],
-   "fault": "absent unit / op"
+   "fault": "absent unit / op (or a reserved op code)"
   },
   {
-   "name": "ctl_tokx",
+   "name": "ctl_amax",
    "set": "main",
    "entry": 749,
    "token": 1,
@@ -264,9 +300,153 @@
    "fault": "reserved CTL op"
   },
   {
-   "name": "dyn_rsv9",
+   "name": "idx_rsv1",
    "set": "main",
    "entry": 760,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "absent unit / op (or a reserved op code)"
+  },
+  {
+   "name": "idx_rsv3",
+   "set": "main",
+   "entry": 771,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "absent unit / op (or a reserved op code)"
+  },
+  {
+   "name": "tokx_15",
+   "set": "main",
+   "entry": 782,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    4242,
+    0
+   ],
+   "fault": null
+  },
+  {
+   "name": "tokx_3",
+   "set": "main",
+   "entry": 795,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    4242,
+    0
+   ],
+   "fault": null
+  },
+  {
+   "name": "tokx_twice",
+   "set": "main",
+   "entry": 808,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    4242,
+    0
+   ],
+   "fault": null
+  },
+  {
+   "name": "tokx_k_gt_ncol",
+   "set": "main",
+   "entry": 824,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "TOKX count out of range"
+  },
+  {
+   "name": "tokx_0",
+   "set": "main",
+   "entry": 837,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "TOKX count out of range"
+  },
+  {
+   "name": "tokx_vocab",
+   "set": "main",
+   "entry": 850,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "TOKX token out of range"
+  },
+  {
+   "name": "tokx_no_A",
+   "set": "main",
+   "entry": 863,
+   "token": 1,
+   "pos": 100,
+   "rank": 0,
+   "vocab": 151936,
+   "ctxmax": 40960,
+   "ndisp": 1,
+   "cpl": [
+    0,
+    3
+   ],
+   "fault": "TOKX without a VM A"
+  },
+  {
+   "name": "dyn_rsv9",
+   "set": "main",
+   "entry": 874,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -282,7 +462,7 @@
   {
    "name": "dyn_rsv41",
    "set": "main",
-   "entry": 775,
+   "entry": 889,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -298,7 +478,7 @@
   {
    "name": "idx_no_I",
    "set": "main",
-   "entry": 790,
+   "entry": 904,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -314,7 +494,7 @@
   {
    "name": "idx_id_range",
    "set": "main",
-   "entry": 805,
+   "entry": 919,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -330,7 +510,7 @@
   {
    "name": "idx_vm_range",
    "set": "main",
-   "entry": 822,
+   "entry": 936,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -346,7 +526,7 @@
   {
    "name": "nvm_range",
    "set": "main",
-   "entry": 841,
+   "entry": 955,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -362,7 +542,7 @@
   {
    "name": "vm_base_range",
    "set": "main",
-   "entry": 858,
+   "entry": 972,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -378,7 +558,7 @@
   {
    "name": "loop0",
    "set": "main",
-   "entry": 873,
+   "entry": 987,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -394,7 +574,7 @@
   {
    "name": "loop3",
    "set": "main",
-   "entry": 884,
+   "entry": 998,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -410,7 +590,7 @@
   {
    "name": "loop_samelvl",
    "set": "main",
-   "entry": 897,
+   "entry": 1011,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -426,7 +606,7 @@
   {
    "name": "endloop_only",
    "set": "main",
-   "entry": 909,
+   "entry": 1023,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -442,7 +622,7 @@
   {
    "name": "end_no_A",
    "set": "main",
-   "entry": 920,
+   "entry": 1034,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -458,7 +638,7 @@
   {
    "name": "end_tok_vocab",
    "set": "main",
-   "entry": 928,
+   "entry": 1042,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -474,7 +654,7 @@
   {
    "name": "end_tok_ok",
    "set": "main",
-   "entry": 938,
+   "entry": 1052,
    "token": 1,
    "pos": 100,
    "rank": 0,
@@ -490,7 +670,7 @@
   {
    "name": "ring_overflow",
    "set": "main",
-   "entry": 948,
+   "entry": 1062,
    "token": 1,
    "pos": 100,
    "rank": 0,

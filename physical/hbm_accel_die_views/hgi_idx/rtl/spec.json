@@ -1,0 +1,23 @@
+{
+ "master": "hfd_hgi_idx",
+ "hgi_unit": "idx",
+ "note": "HGI-1 IDX unit v1 (hgi-takeover 2026-10-09): ot_hgi_idx_unit = record decode + Codex full-K TOPK engine + VM stream reader / writer (hfd_hgi_vm client 2). INDEX_Q / INDEX_SCORES / SELECT / EHASH fault until the G18 frame record is confirmed. Bench rtl/hbm_accel/generic/idx/tb_hgi_idx_unit.sv: all CF-TOPK vectors exact.",
+ "instances": [
+  {
+   "name": "ix",
+   "module": "ot_hgi_idx_unit",
+   "file": "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv",
+   "params": {},
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec": "die:f_hgi_cmdproc[0:1237]",
+    "ret": "die:t_hgi_cmdproc[0:3]",
+    "vmq": "die:t_hgi_vmq[0:338]",
+    "vmr": "die:f_hgi_vmr[0:274]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}

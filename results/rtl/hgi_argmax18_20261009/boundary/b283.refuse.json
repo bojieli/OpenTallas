@@ -1,0 +1,60 @@
+{
+  "source_commit": "b2837a331",
+  "recipe": {
+    "top": "ot_hgi_argmax18_m",
+    "sources": [
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv"
+    ],
+    "params": {
+      "LP": "8",
+      "FLAT": "7",
+      "FAST": "1",
+      "GENERIC18": "1"
+    },
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "key": "bfb368f18878408ab3f7bcc7",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n",
+  "result": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 39,
+    "reg_to_out_max": 1,
+    "reg_to_out_example": "out_range_fault",
+    "cells": 64163,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ],
+    "top": "ot_hgi_argmax18_m",
+    "levels": 16,
+    "strict": true,
+    "verdict": "REFUSE",
+    "message": "rtl_boundary ot_hgi_argmax18_m (registered_io): input->register 39 gate levels > 16"
+  },
+  "cache_entry": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 39,
+    "reg_to_out_max": 1,
+    "reg_to_out_example": "out_range_fault",
+    "cells": 64163,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "cache_path": "../boundary_cache/rtl_boundary_cache.json"
+}
