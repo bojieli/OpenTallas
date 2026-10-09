@@ -1,0 +1,7 @@
+TUCFG seed=1 rank=2 NC=1 NOG=8 PF=16 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=0.833333 TOT=8
+TUTIMEOUT got=0 of 8 ndep=0 narr=0
+- rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv:254: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 34.303 s; speed 11.661 us/s
+- Verilator: cpu 33.932 s on 1 threads; allocated 13 MB
+g1 pos +VEC=fx/g1 +PF=16 +RANK=2 +SEED=1
