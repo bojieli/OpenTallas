@@ -1,0 +1,138 @@
+{
+  "schema": "opentallas.qwen-r25-tau-blend.v1",
+  "status": "INCOMPLETE",
+  "primary_key": "tau_bf16_S7_B4",
+  "source_pins": {
+    "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+    "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+    "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+    "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+    "compute_dtype": "float32",
+    "max_new_tokens": 512,
+    "device": "cpu",
+    "prompts_sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+    "class_map": {
+      "chat": [
+        "chat_mt_bench"
+      ],
+      "reasoning": [
+        "reasoning_math500"
+      ],
+      "coding": [
+        "reasoning_humaneval"
+      ],
+      "agentic": [
+        "agentic_swe_agent",
+        "agentic_tau_bench",
+        "agentic_mind2web"
+      ],
+      "assistant_fc": [
+        "agentic_bfcl",
+        "agentic_json_mode"
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/ag1.json",
+      "sha256": "c4ef17c5db0333664f54c1290a6e924436ec0919b91387c39cf2d1f3555c586e"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/ag3.json",
+      "sha256": "2e51df9da97da61814791ceccaeb45ed13e71167ee13052af9ab17f2a06ef9f2"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/ag4.json",
+      "sha256": "5d5b891bb6cdc7c0ba10a43735acea231a38b57f46528e8e783f691329ba3719"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/ag5.json",
+      "sha256": "3f6b19544315d00e9c2934e4227b0dcc9e60f6ced79cf0c5bb2aa9a24796eef3"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/as0.json",
+      "sha256": "eb333a24f92dd58f3ab8c94d564d79d5e3713d55bec9cf57c0e35f89449bc061"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/as1.json",
+      "sha256": "126551374137baf327bfdbed401a8ea5589aab78df42827685426d3faaff049b"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/as3.json",
+      "sha256": "000d26dce2b5796ffdb04192a49023f64e8ebebb311aba10fac1b7a21c695416"
+    },
+    {
+      "path": "results/speculative/qwen_r25_dspark_tau_20261009/snapshots/20261009T0602Z/raw/cr0.json",
+      "sha256": "8094889dfe9bb0e8cb0cfec146e2ce6913cfad0f992f7f500b1ceafc67b45f73"
+    }
+  ],
+  "errors": [],
+  "missing_shards": [
+    "ag0",
+    "ag2",
+    "as2",
+    "re0",
+    "re1",
+    "co0",
+    "co1",
+    "ch0"
+  ],
+  "classes": {
+    "chat": {
+      "samples": 0,
+      "expected": 12,
+      "complete": false,
+      "median": null,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "reasoning": {
+      "samples": 0,
+      "expected": 24,
+      "complete": false,
+      "median": null,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "coding": {
+      "samples": 0,
+      "expected": 24,
+      "complete": false,
+      "median": null,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "agentic": {
+      "samples": 4,
+      "expected": 72,
+      "complete": false,
+      "median": 2.8,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "assistant_fc": {
+      "samples": 4,
+      "expected": 48,
+      "complete": false,
+      "median": 3.5022222222222226,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "creative": {
+      "samples": 2,
+      "expected": 3,
+      "complete": false,
+      "median": 2.2422586520947174,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    }
+  },
+  "blend_owner6": null,
+  "envelope": null,
+  "deployment_qualified": false,
+  "limitations": [
+    "FP32-upcast released BF16 target, not the r25 INT8 target",
+    "drafter reference comparison covers the first step of each prompt only",
+    "quality and RTL accept/rollback gates remain separate"
+  ]
+}
