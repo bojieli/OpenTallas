@@ -1,0 +1,101 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "all actual ROM graph ranges cover 42 slots",
+      "verdict": "PASS"
+    },
+    {
+      "name": "OWNER74 boundary tokens and query tails",
+      "verdict": "PASS"
+    },
+    {
+      "name": "invalid token 151936",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "invalid token -1",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "invalid job 4294967296",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "invalid generation 16",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "invalid position 8221",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "invalid queries 3",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "unresolved ME",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "native ROM PC cannot be emitted as SM launch",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "resolved SU registry keeps unresolved graph failclosed",
+      "verdict": "PASS"
+    },
+    {
+      "name": "host holds actual launch under backpressure",
+      "verdict": "PASS"
+    },
+    {
+      "name": "host owner",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "host visibility",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "host boolean",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "host fault",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "host stale",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "host query4 without actual downstream release",
+      "verdict": "MUTANT_REJECTED"
+    },
+    {
+      "name": "corrupted installed ROM",
+      "verdict": "MUTANT_REJECTED"
+    }
+  ],
+  "actual_quarter_RTL": false,
+  "full_decode_executable": false,
+  "physical_qualification": false,
+  "source_pins": {
+    "dispatcher": {
+      "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-query1-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+      "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+    },
+    "provider": {
+      "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-query1-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+      "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+    }
+  },
+  "ROM_sha256": {
+    "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+    "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+    "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+    "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+    "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+  }
+}

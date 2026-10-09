@@ -51,7 +51,7 @@ def gate(rom,dispatcher,provider):
         def drive(self,p):self.drives.append(p)
         def tick(self):self.t+=1
     def run(mutation=None):
-        pins=Pins(mutation);h=B.NativeSUHost(pins,c,'softmax',**args)
+        pins=Pins(mutation);h=B.NativeSUHost(pins,c,'softmax',**dict(args,queries=1))
         for _ in range(9):
             if h.step()=='DONE':break
         assert h.state=='DONE'
@@ -59,7 +59,8 @@ def gate(rom,dispatcher,provider):
         assert len(held)==2 and held[0]==held[1]
         assert pins.drives[-1]['finished_rdy']==1
     check('host holds actual launch under backpressure',run)
-    for m in ('owner','visibility','query_gate','boolean','fault','stale'):reject('host '+m,lambda m=m:run(m))
+    for m in ('owner','visibility','boolean','fault','stale'):reject('host '+m,lambda m=m:run(m))
+    reject('host query4 without actual downstream release',lambda:B.NativeSUHost(Pins(),c,'softmax',**args))
     with tempfile.TemporaryDirectory() as tmp:
         dest=Path(tmp)
         for f in Path(rom).iterdir():

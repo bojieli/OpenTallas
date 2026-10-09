@@ -103,6 +103,8 @@ class NativeSUHost:
     def __init__(self,pins,contract,kernel,**identity):
         self.pins=pins;self.contract=contract;self.kernel=kernel
         self.request=launch(contract,kernel,**identity);self.state='PREPARE'
+        if self.request['launch_queries']!=1:
+            raise ValueError('native host requires one query and actual downstream drain between launches')
     def step(self):
         if self.state=='DONE':return self.state
         if self.state=='FAILED':raise RuntimeError('terminal native host failure')
