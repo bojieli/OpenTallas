@@ -43,7 +43,7 @@ module ot_hbm_index_line_cdc #(parameter KEYLEG=24,MUT=0)(
   wire full_,empty_,wf,rf;wire[2:0]freed;
   wire[1152:0]injected=code ^ ((p==0&&MUT==1)?1153'd1:
    (p==0&&MUT==2)?(1153'd1<<256):(p==0&&MUT==3)?1153'd3:1153'd0);
-  wire read_=!empty_&&!rf;
+  wire read_=!empty_&&!rf&&!fault;
   ot_hbm_accel_cdc_fifo_p2 #(.W(1153),.AW(3)) cross_line(
    .wclk(hclk),.wrst_n(rst_n),.we(cv&&!fault),.wdata(injected),.full(full_),.rd_freed(freed),.w_fault(wf),
    .rclk(sclk),.rrst_n(rst_n),.re(read_),.rdata(received),.empty(empty_),.r_fault(rf));
@@ -74,14 +74,15 @@ module ot_hbm_index_line_cdc #(parameter KEYLEG=24,MUT=0)(
    .clk(sclk),.rst_n(rst_n),.v(landing_credit[p]),.d(2'b01),
    .qv(cr_v),.q(cr_packet),.fault(cr_pipe_fault));
   wire cr_full,cr_empty,cr_wfault,cr_rfault;wire[1:0]cr_received;
-  wire cr_read=!cr_empty&&!cr_rfault;
+  wire cr_offer=!cr_empty&&!cr_rfault;
+  wire cr_read=cr_offer&&!fault;
   ot_hbm_accel_cdc_fifo_p2 #(.W(2),.AW(6)) cross_credit(
    .wclk(sclk),.wrst_n(rst_n),.we(cr_v&&!fault),.wdata(cr_packet),.full(cr_full),.rd_freed(),.w_fault(cr_wfault),
    .rclk(hclk),.rrst_n(rst_n),.re(cr_read),.rdata(cr_received),.empty(cr_empty),.r_fault(cr_rfault));
   reg cr_overflow,cr_bad;
   always@(posedge sclk or negedge rst_n)if(!rst_n)cr_overflow<=0;else if(cr_v&&cr_full)cr_overflow<=1;
   always@(posedge hclk or negedge rst_n)if(!rst_n)cr_bad<=0;else if(cr_read&&cr_received!=2'b01)cr_bad<=1;
-  assign cf[p]=cr_pipe_fault||cr_wfault||cr_rfault||cr_overflow||cr_bad||(cr_read&&cr_received!=2'b01);
+  assign cf[p]=cr_pipe_fault||cr_wfault||cr_rfault||cr_overflow||cr_bad||(cr_offer&&cr_received!=2'b01);
   assign source_credit[p]=cr_read&&cr_received==2'b01&&!fault;
  end
 endmodule
