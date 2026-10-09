@@ -600,8 +600,11 @@ MODES = {
     "e_full_w8": ("contract", "w8", "fp8"),
     # qwen_r25: the O4 INT8 contract + FP8 KV in the r25 HBM die's summation order (Qwen3(order="r25"))
     "r25_full_w8": ("contract", "w8", "fp8"),
+    # Successor graph: raw released projections, explicit pre-matvec RMSNorm.
+    # Historical r25_full_w8 remains the folded/NAM characterization only.
+    "r25_prenorm_full_w8": ("contract", "w8", "fp8"),
 }
-R25_MODES = ("r25_full_w8",)
+R25_MODES = ("r25_full_w8", "r25_prenorm_full_w8")
 
 
 def find_snapshot(name="Qwen--Qwen3-8B"):
@@ -625,7 +628,11 @@ def load_state(path, device):
 
 
 class Qwen3:
-    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None, order="contract", tp=4):
+    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None, order="contract", tp=4,
+                 prenorm=False):
+        if prenorm and (order != "r25" or arith != "contract" or wfile is not None):
+            raise ValueError("pre-norm r25 requires released checkpoint matrices and r25 arithmetic")
+        self.prenorm = prenorm
         self.cfg = json.loads((Path(path) / "config.json").read_text())
         c = self.cfg
         self.L, self.H = c["num_hidden_layers"], c["hidden_size"]
@@ -651,7 +658,7 @@ class Qwen3:
         # final norm weight, ones when folded into lm_head), "pre" ({"<i>.qkv"|"<i>.gu": the
         # FP32 input channel scale applied before the product}) and "down_had" (the +-1
         # signs of the online randomised Hadamard applied to the down projection input).
-        fold_w = self.wfile["fold"] if self.wfile is not None else arith == "contract"
+        fold_w = self.wfile["fold"] if self.wfile is not None else arith == "contract" and not prenorm
         extra = self.wfile or {}
         pre = extra.get("pre") or {}
         self.down_had = extra.get("down_had")
@@ -926,8 +933,11 @@ class Qwen3:
         scale = torch.tensor(f32c(1.0 / np.sqrt(self.HD)), device=dev)
         grp = self.NH // self.KV
         for i, lay in enumerate(self.layers):
-            r = rstd_g(x, self.eps)[:, None]
-            qkv = mul(self.mv(mul(x, lay["pre_qkv"]) if "pre_qkv" in lay else x, lay["qkv"]), r)
+            if getattr(self, "prenorm", False):
+                qkv = self.mv(rmsnorm_g(x, lay["ln1"].to(F32), self.eps), lay["qkv"])
+            else:
+                r = rstd_g(x, self.eps)[:, None]
+                qkv = mul(self.mv(mul(x, lay["pre_qkv"]) if "pre_qkv" in lay else x, lay["qkv"]), r)
             q, k, v = qkv.split([self.NH * self.HD, self.KV * self.HD, self.KV * self.HD], -1)
             q = rmsnorm_g(q.reshape(B, T, self.NH, self.HD), lay["qn"], self.eps).transpose(1, 2)   # [B, NH, T, HD]
             k = rmsnorm_g(k.reshape(B, T, self.KV, self.HD), lay["kn"], self.eps).transpose(1, 2)
@@ -940,8 +950,11 @@ class Qwen3:
                                 P, T, qpos.repeat_interleave(self.KV, 0), s_sc, s_pv, scale)   # [B*KV, grp, T, HD]
             attn = attn.reshape(B, self.NH, T, self.HD).transpose(1, 2).reshape(B * T, -1)
             x = add(x, self.mv(attn, lay["o"], self.tp))
-            r = rstd_g(x, self.eps)[:, None]
-            gu = mul(self.mv(mul(x, lay["pre_gu"]) if "pre_gu" in lay else x, lay["gu"]), r)
+            if getattr(self, "prenorm", False):
+                gu = self.mv(rmsnorm_g(x, lay["ln2"].to(F32), self.eps), lay["gu"])
+            else:
+                r = rstd_g(x, self.eps)[:, None]
+                gu = mul(self.mv(mul(x, lay["pre_gu"]) if "pre_gu" in lay else x, lay["gu"]), r)
             gt, up = gu.split([self.FF, self.FF], -1)
             act = silu_r25(gt) if self.order == "r25" else silu_g(gt)
             x = add(x, self.mv(self.had_down(mul(act, up)), lay["down"], self.tp))
@@ -1472,7 +1485,8 @@ def main():
         torch.cuda.empty_cache()
     gptq_meta = {k: v for k, v in wsrc.items() if k != "w"} if isinstance(wsrc, dict) else None
     model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=wsrc,
-                  order="r25" if args.mode in R25_MODES else "contract")
+                  order="r25" if args.mode in R25_MODES else "contract",
+                  prenorm=args.mode == "r25_prenorm_full_w8")
     del wsrc
     if args.wfile or args.gptq_inline:
         wf = model.wfmt + "_gptq"
