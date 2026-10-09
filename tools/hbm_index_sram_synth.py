@@ -17,7 +17,7 @@ rec={'source_commit':os.environ['PINNED_SOURCE_COMMIT'],'source_sha256':{s:hashl
 script=work/'synth.ys'
 script.write_text('\n'.join([
  'read_verilog -sv -I'+str(ROOT/'rtl/common')+' '+str(ROOT/src[0])+' '+str(ROOT/src[2])+' '+str(ROOT/src[3]),
- 'hierarchy -check -top ot_hbm_index_lines_sram -chparam ENABLE 1',
+ 'hierarchy -check -top ot_hbm_index_lines_sram -chparam ENABLE 1 -chparam ROTATE_REMAP '+os.environ.get('ROTATE_REMAP','0'),
  'synth -top ot_hbm_index_lines_sram -flatten',
  'dfflibmap -liberty '+str(combined),
  'abc -liberty '+str(combined),

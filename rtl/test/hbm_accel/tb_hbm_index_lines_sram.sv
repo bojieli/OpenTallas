@@ -1,9 +1,9 @@
 `timescale 1ps/1fs
-module tb_hbm_index_lines_sram #(parameter integer MODE=0);
+module tb_hbm_index_lines_sram #(parameter integer MODE=0,ROTATE=0);
  reg clk=0,rst_n=0,start=0;always #416 clk=~clk;
  reg[8:0]blocks=342;reg[31:0]v=0;reg[383:0]sj=0;reg[8191:0]sd=0;reg[7:0]credit=0;
  wire[8791:0]lines;wire[63:0]pop,corrected;wire done,fault,retained;
- ot_hbm_index_lines_sram #(.ENABLE(1),.CRED(64),.MUT_DATA(MODE==1),.MUT_CHECK(MODE==2),.MUT_DOUBLE(MODE==3),.MUT_SCOREBOARD(MODE==4))
+ ot_hbm_index_lines_sram #(.ENABLE(1),.CRED(64),.ROTATE_REMAP(ROTATE),.MUT_DATA(MODE==1),.MUT_CHECK(MODE==2),.MUT_DOUBLE(MODE==3),.MUT_SCOREBOARD(MODE==4))
  dut(.clk(clk),.rst_n(rst_n),.start(start),.blocks(blocks),.sector_v(v),.sector_j(sj),.sector_data(sd),.credit(credit),
  .lines(lines),.pop(pop),.done(done),.fault(fault),.retained(retained),.corrected(corrected));
  integer nextj[0:31],avail[0:31],owed[0:7];integer p,j,b,g,l,got=0,cyc=0,rep_=0,delay_=1,cecount=0,rs=0;

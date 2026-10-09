@@ -7,13 +7,13 @@ ROOT=Path(__file__).resolve().parents[1]
 SRC=['rtl/common/ot_secded.sv','rtl/common/ot_secded_cols.svh','physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
 'physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv','rtl/test/hbm_accel/tb_hbm_index_lines_sram.sv']
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);a=ap.parse_args();a.work.mkdir(parents=True,exist_ok=False)
+ ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--rotate',type=int,default=0);a=ap.parse_args();a.work.mkdir(parents=True,exist_ok=False)
  v=str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
- rec={'schema':'opentallas.hbm_index_sram_gate.v1','source_commit':os.environ['PINNED_SOURCE_COMMIT'],'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC},'verdict':'INCOMPLETE','cases':[],'scope':'native macro ports+capture+SECDED+remap full component; not physical closure'}
+ rec={'schema':'opentallas.hbm_index_sram_gate.v1','rotate':a.rotate,'source_commit':os.environ['PINNED_SOURCE_COMMIT'],'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC},'verdict':'INCOMPLETE','cases':[],'scope':'native macro ports+capture+SECDED+remap full component; not physical closure'}
  (a.work/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
  def run(mode):
   w=a.work/f'mode{mode}';w.mkdir()
-  cmd=[v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','--top-module','tb_hbm_index_lines_sram',f'-GMODE={mode}','-I'+str(ROOT/'rtl/common'),'--Mdir',str(w/'obj')]+[str(ROOT/s) for s in SRC if not s.endswith('.svh')]
+  cmd=[v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','--top-module','tb_hbm_index_lines_sram',f'-GMODE={mode}',f'-GROTATE={a.rotate}','-I'+str(ROOT/'rtl/common'),'--Mdir',str(w/'obj')]+[str(ROOT/s) for s in SRC if not s.endswith('.svh')]
   with(w/'build.log').open('w')as log:cp=subprocess.run(['/srv/opentallas-scratch/admit.sh','8','--','/usr/bin/time','-v']+cmd,stdout=log,stderr=subprocess.STDOUT)
   result={'mode':mode,'build_returncode':cp.returncode,'runs':[]}
   if not cp.returncode:
