@@ -69,9 +69,9 @@ def composed_model():
         MACs_per_cycle=0,FP32_adder_lanes=16,replicas=20,
         SRAM128x256_macros_per_replica=12,
         slot_mm2_per_replica=.144+.250+.040,array_slot_mm2=20*(.144+.250+.040),
-        producer_fill_cycles_upper=240,producer_ordered_drain_cycles_lower_bound=243,
-        modeled_serial_cycles_upper=240+243+6240+400,
-        modeled_serial_us_upper=(240+243+6240+400)/1200,
+        producer_fill_cycles_upper=240,producer_forwarding_cycles_upper=240*3,
+        modeled_serial_cycles_upper=240+720+6240+400,
+        modeled_serial_us_upper=(240+720+6240+400)/1200,
         overlap_credit=0,primary_shared_LAST_cycles=None,primary_receive_CDC_cycles=None,
         protocol='one atomic start to producer and arithmetic; retain context through final native output handshake; either fault aborts both',
         qualification='no token rate claim until source caller/shared producer/primary CDC are bound and minimum composed gate passes')
