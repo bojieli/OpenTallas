@@ -23,6 +23,7 @@
 module ot_hbm_kvwb_hub #(
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
   parameter integer SLOT_ROWS = 2,
+  parameter integer KEY_CONTIGUOUS = 0,
   parameter integer RI_AW = 5,            // row beat FIFO 2^RI_AW (credits held by the producer)
   parameter integer SO_DEPTH = 8,         // the service's sector FIFO depth (credits per stack)
   parameter integer MUT = 0
@@ -90,7 +91,7 @@ module ot_hbm_kvwb_hub #(
   reg [5:0] ack_n;
   wire wq_r;
   ot_hbm_accel_dskv_wb #(.ENABLE(1), .STACK(0), .ALL_STACKS(1), .WIN_ROW0(WIN_ROW0), .CKV_ROW0(CKV_ROW0),
-    .KEY_ROW0(KEY_ROW0), .SLOT_ROWS(SLOT_ROWS)) u_wb (
+    .KEY_ROW0(KEY_ROW0), .SLOT_ROWS(SLOT_ROWS), .KEY_CONTIGUOUS(KEY_CONTIGUOUS)) u_wb (
     .clk(clk), .rst_n(rst_n), .die(die), .pos(cur_pos),
     .row_v(row_v), .row_kind(h_kind), .row_slot(h_slot), .row_r2(h_r2), .row_data(buf_), .row_r(row_r),
     .sh_v(sh_v), .sh_slot(h_slot[2:0]), .sh_data(buf_),

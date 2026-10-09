@@ -131,6 +131,8 @@ module ot_hbm_svc_core #(
   // beats leave on its OWN lane kvs[p] = {data256, j12, v} (one sector a clock a PC: the PHY rate), so a stack
   // delivers up to 32 sectors a clock.  kvs_done pulses when every PC finished.  KVS = 0: the single-PC kind 1.
   parameter integer KVS = 0,
+  parameter integer IKS = 0, // opt-in kind2 stripe: blocks chd[69:61], row0 chd[16:2], all32PCs
+
   parameter integer KNO = 15              // 4-sector reads outstanding per PC (60 of the controller's 64 queued beats)
 )(
   input  wire ck, input wire rst,          // rst: active-low die reset (por_hbm)
@@ -152,7 +154,8 @@ module ot_hbm_svc_core #(
   input  wire [291:0] wq_d, input wire wq_fclk, output wire [15:0] wq_g, input wire [NPC-1:0] k_wr_done,
   input wire [1:0] wq_source, output wire [31:0] wq_source_g, output wire wq_source_fault, output wire [NPC-1:0] wq_source_busy, output wire wq_pending,
   // KVS = 1: per-PC KV stream lanes (launched on ck, forwarded with fclk) and the stream-complete pulse
-  output wire [NPC*269-1:0] kvs, output wire kvs_done
+  output wire [NPC*269-1:0] kvs, output wire kvs_done,
+  input wire [7:0] ik_credit, output wire [8791:0] ik_lines, output wire ik_done,ik_fault
 );
   genvar i, p;
   // ---------------------------------------------------------------- clock / reset
@@ -172,6 +175,7 @@ module ot_hbm_svc_core #(
   wire [NPC-1:0] sacc;                 // KVS: PC p's stream read was accepted
   wire [NPC*30-1:0] s_addr;            // KVS: PC p's next stream read address
   wire [NPC*10-1:0] s_jt;              // KVS: its j >> 2 (carried in the read's tag)
+  wire index_stream;
   wire c_kvs;                          // KVS: the stream descriptor is taken
   reg rdy_q; always @(posedge ck or negedge rn) if (!rn) rdy_q <= 1'b0; else rdy_q <= 1'b1;
   // MARGIN: PHY control inputs land in raw capture flops at the pin; all gating happens after them
@@ -266,7 +270,7 @@ module ot_hbm_svc_core #(
 
   // ---------------------------------------------------------------- K port: one request register per PC
   wire c_kv = (KVS == 0) && chv && (c_kind == 2'd1) && !pc_busy[KV_PC] && !wreq[KV_PC];
-  wire c_ik = chv && (c_kind == 2'd2) && !pc_busy[IK_PC] && !wreq[IK_PC];
+  wire c_ik = (IKS == 0) && chv && (c_kind == 2'd2) && !pc_busy[IK_PC] && !wreq[IK_PC];
   assign c_take = w_issue || c_kv || c_kvs || c_ik || (chv && (c_kind == 2'd3));    // kind 3: reserved, dropped
   generate for (i = 0; i < NSM; i = i + 1) begin : gd       // SM i: round robin over its four PCs
     localparam integer B = SM_PC0[i*5 +: 5];
@@ -293,7 +297,7 @@ module ot_hbm_svc_core #(
     localparam integer S = own(p);
     wire ckv = (p == KV_PC) && c_kv, cik = (p == IK_PC) && c_ik, any = ckv || cik || sm_iss[p];
     wire wiss = (WB != 0) && wreq[p] && !busy;                    // reads hold off while wreq[p]: any = 0 here
-    wire siss = (KVS != 0) && sreq[p] && !busy && !wreq[p];        // stream read (SM reads hold off while sreq[p])
+    wire siss = ((KVS != 0) || (IKS != 0)) && sreq[p] && !busy && !wreq[p];        // stream read (SM reads hold off while sreq[p])
     reg v, busy, pend, v_d, we, sr; reg [29:0] a; reg [3:0] ln; reg [16:0] t;
     assign wacc[p] = pend && v_d && k_rdy_q[p] && we;
     assign sacc[p] = pend && v_d && k_rdy_q[p] && sr;
@@ -313,7 +317,7 @@ module ot_hbm_svc_core #(
       if (ckv || cik) begin a <= c_addr; ln <= 4'd4; t <= {ckv ? 2'b01 : 2'b10, 5'd0, c_tag}; end
       else if (sm_iss[p]) begin a <= rq_d[S*42 +: 30]; ln <= 4'd5; t <= {2'b00, 3'(S), 2'b00, rq_d[S*42+32 +: 10]}; end
       else if (wiss) begin a <= wl_a; ln <= 4'd1; t <= {2'b11, 15'd0}; end
-      else if (siss) begin a <= s_addr[p*30 +: 30]; ln <= 4'd4; t <= {2'b01, s_jt[p*10 +: 10], 5'd0}; end
+      else if (siss) begin a <= s_addr[p*30 +: 30]; ln <= 4'd4; t <= {index_stream ? 2'b10 : 2'b01, s_jt[p*10 +: 10], 5'd0}; end
     if (WB != 0) begin : gw
       assign k_we[p] = we; assign k_wdata[p*256 +: 256] = wl_d; assign k_wstrb[p*32 +: 32] = {32{we}};
     end else begin : gnw
@@ -398,7 +402,7 @@ module ot_hbm_svc_core #(
   end endgenerate
   generate if (1) begin : gik
     wire sv; wire [276:0] sq; wire full_; wire [12:0] t13; wire [1023:0] dd;
-    ot_svc_vpipe #(.W(277), .N(IK_ST), .X(XST)) u_p (.ck(ck), .rst_n(rn), .v(b_v[IK_PC] && (b_t[IK_PC*17+15 +: 2] == 2'b10)),
+    ot_svc_vpipe #(.W(277), .N(IK_ST), .X(XST)) u_p (.ck(ck), .rst_n(rn), .v((IKS == 0) && b_v[IK_PC] && (b_t[IK_PC*17+15 +: 2] == 2'b10)),
       .d({b_t[IK_PC*17 +: 17], b_b[IK_PC*4 +: 4], b_d[IK_PC*256 +: 256]}), .qv(sv), .q(sq));
     ot_svc_asm #(.NB(4), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv), .btag(sq[272:260]), .bbeat({1'b0, sq[259:256]}),
       .bdata(sq[255:0]), .full(full_), .tag(t13), .data(dd), .take(1'b1));
@@ -487,19 +491,36 @@ module ot_hbm_svc_core #(
   end endgenerate
 
   // ---------------------------------------------------------------- KVS: per-PC KV stream engine
-  generate if (KVS != 0) begin : gkvs
-    reg act; reg [14:0] row0; reg [11:0] nsec; reg [NPC-1:0] mask; reg dn;
+  generate if ((KVS != 0) || (IKS != 0)) begin : gkvs
+    wire idx_busy;
+    reg act,idx;
+    assign index_stream=idx;
+    reg [8:0] blocks; reg [14:0] row0; reg [11:0] nsec; reg [NPC-1:0] mask; reg dn;
     wire [11:0] nsec4 = (nsec + 12'd3) & ~12'd3;     // reads are 4 sectors; a partial last group reads pad sectors
     wire [NPC-1:0] pdone;
-    assign c_kvs = chv && (c_kind == 2'd1) && !act && !dn;
+    assign c_kvs = chv && (((KVS != 0) && (c_kind == 2'd1)) || ((IKS != 0) && (c_kind == 2'd2))) && !act && !dn && !idx_busy;
+    wire [NPC*269-1:0] sectors;wire [63:0] idx_pop;
+    wire [31:0] idx_v;wire [383:0] idx_j;wire [8191:0] idx_data;
+    for(genvar ip=0;ip<32;ip=ip+1)begin
+      assign idx_v[ip]=idx && sectors[ip*269];
+      assign idx_j[ip*12+:12]=sectors[ip*269+1+:12];
+      assign idx_data[ip*256+:256]=sectors[ip*269+13+:256];
+    end
+    if (IKS != 0) begin : gi
+    ot_hbm_index_lines #(.ENABLE(IKS)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && c_kind==2'd2),
+      .blocks(chd[69:61]),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
+      .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(ik_fault),.retained(idx_busy));
+    end else begin : gni
+      assign ik_lines=0;assign ik_done=0;assign ik_fault=0;assign idx_busy=0;assign idx_pop=0;
+    end
     always @(posedge ck or negedge rn)
-      if (!rn) begin act <= 1'b0; dn <= 1'b0; end
+      if (!rn) begin act <= 1'b0; dn <= 1'b0; idx <= 1'b0; blocks <= 0; end
       else begin
         dn <= 1'b0;
-        if (c_kvs) act <= 1'b1;
+        if (c_kvs) begin act <= 1'b1; idx <= c_kind==2'd2; blocks <= chd[69:61]; end
         else if (act && &pdone) begin act <= 1'b0; dn <= 1'b1; end
       end
-    always @(posedge ck) if (c_kvs) begin row0 <= chd[16:2]; nsec <= chd[28:17]; mask <= chd[60:29]; end
+    always @(posedge ck) if (c_kvs) begin row0 <= chd[16:2]; nsec <= (c_kind==2'd2) ? 12'((17*chd[69:61]+31)/32) : chd[28:17]; mask <= (c_kind==2'd2) ? {NPC{1'b1}} : chd[60:29]; end
     assign kvs_done = dn;
     for (p = 0; p < NPC; p = p + 1) begin : gs
       reg [11:0] jn;          // reads requested x 4
@@ -508,23 +529,25 @@ module ot_hbm_svc_core #(
       wire [9:0] rq = jn[11:2];
       wire [11:0] jq = {rq, 2'b00};
       reg [12:0] jr;          // beats received
+      reg [6:0] slots;
       reg [6:0] nob;          // beats requested (accepted) and not yet returned
       wire on = act && mask[p];
-      assign sreq[p] = on && (jn < nsec) && (nob <= 7'(4 * KNO - 4));
+      assign sreq[p] = on && (jn < nsec) && (nob <= 7'(4 * KNO - 4)) && (!idx || (slots >= 4)) && !ik_fault;
       wire [29:0] sa; wire sf;
       ot_hbm_kport_map u_m (.pc(5'(p)), .bank({jq[9:7], jq[1:0]}), .row({4'd0, row0} + 19'(jq >> 10)), .col(jq[6:2]),
         .s(sa), .fault(sf));
       assign s_addr[p*30 +: 30] = {sa[29:2], 2'b00};               // 4-aligned: one read = j[1:0] 0..3
       assign s_jt[p*10 +: 10] = rq;
       // a returned beat: tag 01 + j >> 2 (reads may return out of order under FR-FCFS: j comes from the tag)
-      wire bv = b_v[p] && (b_t[p*17+15 +: 2] == 2'b01);
+      wire bv = b_v[p] && (b_t[p*17+15 +: 2] == (idx ? 2'b10 : 2'b01));
       wire [11:0] bj4 = {b_t[p*17+5 +: 10], 2'b00};
       wire [14:0] rr = row0 + 15'(bj4 >> 10);
       always @(posedge ck or negedge rn)
-        if (!rn) begin jn <= 0; jr <= 0; nob <= 0; end
-        else if (c_kvs) begin jn <= 0; jr <= 0; nob <= 0; end
+        if (!rn) begin jn <= 0; jr <= 0; nob <= 0; slots <= 64; end
+        else if (c_kvs) begin jn <= 0; jr <= 0; nob <= 0; slots <= 64; end
         else begin
           if (sacc[p]) jn <= jn + 12'd4;
+          if(idx)slots <= slots - (sacc[p] ? 7'd4 : 0) + 7'(idx_pop[p*2+:2]);
           if (bv) jr <= jr + 13'd1;
           nob <= nob + (sacc[p] ? 7'd4 : 7'd0) - (bv ? 7'd1 : 7'd0);
         end
@@ -532,13 +555,15 @@ module ot_hbm_svc_core #(
       // lane: j = (tag j >> 2) * 4 + (beat ^ row[1:0]) (the read returns its sectors in s order)
       reg lv; reg [11:0] lj; reg [255:0] ld;
       wire [11:0] bj = {bj4[11:2], b_b[p*4 +: 2] ^ rr[1:0]};
-      always @(posedge ck or negedge rn) if (!rn) lv <= 1'b0; else lv <= bv && (bj < nsec);   // pad sectors dropped
+      always @(posedge ck or negedge rn) if (!rn) lv <= 1'b0; else lv <= bv && (idx || (bj < nsec));   // pad sectors dropped
       always @(posedge ck) if (bv) begin lj <= bj; ld <= b_d[p*256 +: 256]; end
-      assign kvs[p*269 +: 269] = {ld, lj, lv};
+      assign sectors[p*269 +: 269] = {ld, lj, lv};
+      assign kvs[p*269 +: 269] = {ld, lj, lv && !idx};
     end
   end else begin : gnkvs
     assign sreq = {NPC{1'b0}}; assign s_addr = {NPC*30{1'b0}}; assign s_jt = {NPC*10{1'b0}}; assign c_kvs = 1'b0;
     assign kvs = {NPC*269{1'b0}}; assign kvs_done = 1'b0;
+    assign ik_lines=0;assign ik_done=0;assign ik_fault=0;assign index_stream=0;
   end endgenerate
 endmodule
 `default_nettype wire

@@ -30,6 +30,7 @@
 module ot_hbm_accel_dskv_wb #(
   parameter integer ENABLE = 0,
   parameter integer STACK = 0,
+  parameter integer KEY_CONTIGUOUS = 0,      // opt-in indexer quarter placement: 342 whole blocks/stack
   parameter integer ALL_STACKS = 0,           // 1 (hfd hub write-back unit, 2026-10-08): emit every stack's sectors, wq_stk says which
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
   parameter integer SLOT_ROWS = 2
@@ -62,8 +63,14 @@ module ot_hbm_accel_dskv_wb #(
     reg [15:0] iss, ack;
     // ---- address map of sector t (combinational from registered state) ----
     wire [20:0] S = (kind == 2'd0) ? 21'(pos[6:0]) : s0 + 21'(t);
-    wire [6:0]  pcg = S[6:0];
-    wire [13:0] jj = (kind == 2'd0) ? 14'(t) : 14'(S >> 7);
+    // Preserve the shadow's die-global S/ksec; remap only the physical destination.
+    wire contig_key = (KEY_CONTIGUOUS != 0) && (kind == 2'd2);
+    wire [1:0] key_stack = (k[13:3] >= 11'd1026) ? 2'd3 :
+                            (k[13:3] >= 11'd684) ? 2'd2 :
+                            (k[13:3] >= 11'd342) ? 2'd1 : 2'd0;
+    wire [20:0] key_sector = S - 21'(key_stack) * 21'd5814;
+    wire [6:0] pcg = contig_key ? {key_stack, key_sector[4:0]} : S[6:0];
+    wire [13:0] jj = (kind == 2'd0) ? 14'(t) : contig_key ? 14'(key_sector >> 5) : 14'(S >> 7);
     wire [18:0] rbase = (kind == 2'd0) ? 19'(WIN_ROW0) : (kind == 2'd1) ? 19'(CKV_ROW0) : 19'(KEY_ROW0);
     wire [18:0] wrow_a = rbase + 19'(slot) * 19'(SLOT_ROWS) + 19'(jj >> 10);
     wire [4:0]  ksec = 5'(S - 21'(kb_s));           // key: sector within the block (0..16)
