@@ -50,7 +50,8 @@ module tb_hbm_token_loop #(parameter integer MUT = 0);
       @(posedge clk); job_v <= 1;
       @(posedge clk); while (!job_rdy) @(posedge clk); job_v <= 0;
       it = 0; ib = 0; steps = 0; seen_last = 0;
-      if (job_id == 1000) stall_host = 100;
+      if (job_id == 1000 || job_id == 1002) stall_host = 100;
+      if (job_id == 1001) stall_host = 1000;
       fork : run
         begin   // AR cmdproc / MTP commit
           while (busy || job_v) begin

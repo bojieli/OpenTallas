@@ -79,6 +79,8 @@ def scenarios(rng):
     jobs.append((jid, 5, (1 << 20) - 3, 50, EOS, 1, 1 << 20, 0, 0, [9] * 80)); jid += 1
     jobs.append((jid, 5, 10, 50, EOS, 0, 1 << 20, 0, 0, [EOS, EOS, 3] + [4] * 77)); jid += 1
     jobs.append((1000, 5, 10, 18, EOS, 0, 1 << 20, 1, 0, [(6, [3,4,5,6,7,8])] * 3))
+    jobs.append((1001, 5, 10, 18, EOS, 0, 1 << 20, 0, 0, list(range(3, 21))))
+    jobs.append((1002, 5, 10, 18, EOS, 1, 1 << 20, 1, 0, [(6, [3,4,5,6,7,8]), (6, [9,10,11,EOS,13,14])]))
     return jobs
 
 
