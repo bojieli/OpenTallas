@@ -63,7 +63,7 @@
       "peak_ram_gb": 10
     },
     "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.020 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
       "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
       "logs": [
         "{RUN}/routes/{NAME}/flow.log"
@@ -86,7 +86,7 @@
     "reason": "New fullgeneric128-bit record/control interface absent from legacyhfd_quant budget. Explicit standalone route_master allinter150ps measuredTT reference/H1 boundary80fF load150ps transition used for pathfinding. Genericdie integration must supply and approve finalbudget before adoption."
   },
   "route_hold_corners": "mm",
-  "route_hold_margin_ns": 0.01,
+  "route_hold_margin_ns": 0.02,
   "cycles_added": 15,
   "cycles_note": "E4M3 native8edges aligned by15edges to23edges; DSnative23edges unchanged; physicaldensityvariant adds0edges; illegaldecode_fault1edge",
   "bench_memory_basis": "95eba5a81 actual five whole-PG samples max1002060KiB;2GiB conservative admissionenvelope for sequential8workerbuilds,not a cap/routepeak",
@@ -127,5 +127,6 @@
       "to": "physical/hgi_quant_generic_20261009/results/pd55"
     }
   ],
-  "merge_target": null
+  "merge_target": null,
+  "physical_variant": "HM20 vs siblingHM10. RequestedPD.55 is overridden by currentflowLB_ADDON.05 to actualinitialdensity.079; keep completed/progressing calibration unchanged. No clock/uncertainty/latencychange."
 }

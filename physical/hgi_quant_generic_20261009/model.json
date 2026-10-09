@@ -47,10 +47,12 @@
       "N": 0.08,
       "S": 1.28
     },
-    "density_note": "Average face load is not the local maximum. The actual flow orders each assigned pin region on one layer; measured submit estimate localpeak7.82 remains below12. Runtimepin/floorplanlint still mandatory."
+    "density_note": "Average face load is not the local maximum. The actual flow orders each assigned pin region on one layer; measured submit estimate localpeak7.82 remains below12. Runtimepin/floorplanlint still mandatory.",
+    "actual_runtime_peak_bits_per_um_per_layer": 10.24
   },
   "area_status": "Mapped FF sizing18541.0944um2 and actual pd50TTsynthesis18509.99526um2; provisional1.08mm2floorplan intentionallynot an adopted die-area claim",
   "io_contract": "standalone existing route_master 833.333ps signoff,60/25uncertainty,166.667ps outside boundary +150ps inter-region,measured clock reference,H1 hold; output80fF,input150ps; all ports timed. This is not an hfd_quant die-budget match; generic record boundary approval required before adoption",
   "legacy_memory_claim_gib": 60,
-  "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak"
+  "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak",
+  "variant_realization": "CurrentflowLB_ADDON=.05 overridesPD.50/.55; actualinitialGPdensity .079. Preserve progressing runs; second futurefullroute requestsHM20 vs firstHM10. No adoption untildistinctphysicalrepairtargetsactuallyverified."
 }
