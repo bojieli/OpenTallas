@@ -1,0 +1,96 @@
+{
+  "items": [
+    {
+      "spec": "hgi-att-record-g12-320-630558368-tc-cx",
+      "source": "630558368c2a02e3a16d96bd3e908f6ec80d55b6",
+      "recipe": {
+        "top": "ot_hgi_att_record_adapter",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "key": "6fd814591a13e81c8ab1ab20",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 9,
+        "reg_to_out_max": 3,
+        "reg_to_out_example": "rows_cmd_v",
+        "cells": 12764,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "top": "ot_hgi_att_record_adapter",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_record_adapter: registered boundary (in->reg 9, reg->out 3 levels)"
+      },
+      "file_sha": {
+        "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv": "20394ed5d0fb594eedb485ec7e556424c558525386af71d354398781d229535b",
+        "physical/qwen_die_masters/cfg/hgi_att_record_g12_320.env": "48a1380dbe28ddd4e1c775758aaabe2918869ebabe4af974da9e5f7ae967caf5"
+      }
+    },
+    {
+      "spec": "hgi-att-record-g12-360-630558368-tc-cx",
+      "source": "630558368c2a02e3a16d96bd3e908f6ec80d55b6",
+      "recipe": {
+        "top": "ot_hgi_att_record_adapter",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "key": "6fd814591a13e81c8ab1ab20",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 9,
+        "reg_to_out_max": 3,
+        "reg_to_out_example": "rows_cmd_v",
+        "cells": 12764,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "cached": true,
+        "top": "ot_hgi_att_record_adapter",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_record_adapter: registered boundary (in->reg 9, reg->out 3 levels)"
+      },
+      "file_sha": {
+        "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv": "20394ed5d0fb594eedb485ec7e556424c558525386af71d354398781d229535b",
+        "physical/qwen_die_masters/cfg/hgi_att_record_g12_360.env": "ee7d546dd01592314a029fd539a1b212f7cb6c1cab181487971dc9649b60f684"
+      }
+    }
+  ],
+  "helper_sha": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "host": "ot-pve1",
+  "admitted_GiB": 1,
+  "pinned_source_cfg_hash_check": "PASS metadata git.show SHA256 against remote elaborated inventory",
+  "exact_a5_proof_reuse": {
+    "source": "76bb97ff2",
+    "target_source": "630558368",
+    "files_byte_identical": {
+      "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv": "20394ed5d0fb594eedb485ec7e556424c558525386af71d354398781d229535b",
+      "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv": "dbf07403ab5009f6e4f01c97ade3afcbc0523fd0cf9820744bfb1e137d11a96b",
+      "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv": "bc5b20517bc8ac2e59c571aef83ed0aa30cccf4fba996bce0abcf0dc1b202802",
+      "rtl/test/hgi/tb_hgi_att_record_adapter.sv": "d2531cc39df92259cb6f0c97124accf0df95482c86971c604c620fe8aa27cd2a",
+      "tools/hgi/run_att_record_adapter.sh": "28275da78c333527118dcf192d3379653ce8ecc56c340bd4e92e99f09ba9ebb7"
+    },
+    "reason": "Only pin config changes; exact gate applies unchanged mechanism and bench"
+  }
+}
