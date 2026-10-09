@@ -1,0 +1,812 @@
+{
+ "schema": "opentallas.qwen-kv-die.bench.v1",
+ "date": "2026-10-09",
+ "source_commit": "94e90770c7",
+ "bench": "rtl/test/qwen_kv_die/ot_qkvd_layer_tb.sv + tb_qkvd_layer.cpp (build_qkvd_tb.sh, bench_run.sh)",
+ "golden": "tools/hdc_golden.py via tools/qwen_nearhbm_attn_ref.py vectors (TP4 die share: 8 q heads, 2 KV heads, head_dim 128, FP8 E4M3 KV, scale F(1/sqrt 128))",
+ "attention_rtl": "ot_qwen_nearhbm_attn_stack_p + ot_qwen_nearhbm_attn_hub_p (timing successors, via the bench shims), R = 8 row engines a stack, DPI host-float FP32 add / mul stand-ins (the repo precedent: identical to the real units at head_dim 16, real_vs_dpi_hd16.json)",
+ "hbm_model": "per-engine in-order queues, 750 B / cycle / stack, 16-cycle latency; t = T-1 rows poisoned",
+ "checks": "RES (1,024 FP32) bit-exact vs gold, the 4 posted KV rows, 65 EMBQ / EMBD words in order, 2 HCTL words, the TOKEN word, every fault flag 0; stall = 1 withholds the VM RES credits 300 cycles",
+ "params": {
+  "ROM_ST": 28,
+  "KV_ST": 1,
+  "LINK": 7,
+  "QX": 29,
+  "RX": 28,
+  "KVL": 34
+ },
+ "cases": {
+  "typical": {
+   "params": {
+    "ROM_ST": 28,
+    "KV_ST": 1,
+    "LINK": 7,
+    "QX": 29,
+    "RX": 28,
+    "KVL": 34,
+    "PHY_LAT": 5
+   },
+   "adapter_plus_phy": 11,
+   "exact_all": true,
+   "runs": 14,
+   "layer_step_8192": 1879,
+   "vectors": [
+    {
+     "vec": "129_tiny",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1319,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 902,
+      "attn_out_last": 1277,
+      "res_first_at_vm": 944,
+      "res_last_at_vm": 1319,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "129_tiny",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1319,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 902,
+      "attn_out_last": 1277,
+      "res_first_at_vm": 944,
+      "res_last_at_vm": 1319,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1003,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 736,
+      "attn_out_last": 961,
+      "res_first_at_vm": 778,
+      "res_last_at_vm": 1003,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1003,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 736,
+      "attn_out_last": 961,
+      "res_first_at_vm": 778,
+      "res_last_at_vm": 1003,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1399,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 982,
+      "attn_out_last": 1357,
+      "res_first_at_vm": 1024,
+      "res_last_at_vm": 1399,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1399,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 982,
+      "attn_out_last": 1357,
+      "res_first_at_vm": 1024,
+      "res_last_at_vm": 1399,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1599,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1182,
+      "attn_out_last": 1557,
+      "res_first_at_vm": 1224,
+      "res_last_at_vm": 1599,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1599,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1182,
+      "attn_out_last": 1557,
+      "res_first_at_vm": 1224,
+      "res_last_at_vm": 1599,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1919,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 101,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1504,
+      "res_last_at_vm": 1919,
+      "emb_req_at_gw": 108,
+      "embd_last_at_su": 267
+     },
+     "poisoned_rows_merged": 4
+    }
+   ],
+   "mutants": {
+    "mut1": {
+     "what": "KV end: one extra RES link credit (TIGHT sizing, VM stalled 300 cycles) -> ROM-end receive-buffer overrun",
+     "rc": 1,
+     "exact": false,
+     "mismatches": 32,
+     "faults": 1,
+     "verdict": "CAUGHT"
+    },
+    "mut2": {
+     "what": "KV merge off: the t = T-1 rows come from HBM as poisoned (0xA5) -> wrong attention",
+     "rc": 1,
+     "exact": false,
+     "mismatches": 1024,
+     "faults": 0,
+     "verdict": "CAUGHT"
+    },
+    "mut3": {
+     "what": "one flit dropped in the UCIe macro model (ROM -> KV) -> sequence fault",
+     "rc": 1,
+     "exact": false,
+     "mismatches": 0,
+     "faults": 2,
+     "verdict": "CAUGHT"
+    }
+   }
+  },
+  "best": {
+   "params": {
+    "ROM_ST": 28,
+    "KV_ST": 1,
+    "LINK": 7,
+    "QX": 29,
+    "RX": 28,
+    "KVL": 34,
+    "PHY_LAT": 3
+   },
+   "adapter_plus_phy": 9,
+   "exact_all": true,
+   "runs": 14,
+   "layer_step_8192": 1869,
+   "vectors": [
+    {
+     "vec": "129_tiny",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1309,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 894,
+      "attn_out_last": 1269,
+      "res_first_at_vm": 934,
+      "res_last_at_vm": 1309,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "129_tiny",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1309,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 894,
+      "attn_out_last": 1269,
+      "res_first_at_vm": 934,
+      "res_last_at_vm": 1309,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 999,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 734,
+      "attn_out_last": 959,
+      "res_first_at_vm": 774,
+      "res_last_at_vm": 999,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 999,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 734,
+      "attn_out_last": 959,
+      "res_first_at_vm": 774,
+      "res_last_at_vm": 999,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1397,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 982,
+      "attn_out_last": 1357,
+      "res_first_at_vm": 1022,
+      "res_last_at_vm": 1397,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1397,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 982,
+      "attn_out_last": 1357,
+      "res_first_at_vm": 1022,
+      "res_last_at_vm": 1397,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1589,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1174,
+      "attn_out_last": 1549,
+      "res_first_at_vm": 1214,
+      "res_last_at_vm": 1589,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1589,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1174,
+      "attn_out_last": 1549,
+      "res_first_at_vm": 1214,
+      "res_last_at_vm": 1589,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1909,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 99,
+      "attn_out_first": 1454,
+      "attn_out_last": 1869,
+      "res_first_at_vm": 1494,
+      "res_last_at_vm": 1909,
+      "emb_req_at_gw": 106,
+      "embd_last_at_su": 263
+     },
+     "poisoned_rows_merged": 4
+    }
+   ]
+  },
+  "worst": {
+   "params": {
+    "ROM_ST": 28,
+    "KV_ST": 1,
+    "LINK": 7,
+    "QX": 29,
+    "RX": 28,
+    "KVL": 34,
+    "PHY_LAT": 9
+   },
+   "adapter_plus_phy": 15,
+   "exact_all": true,
+   "runs": 14,
+   "layer_step_8192": 1883,
+   "vectors": [
+    {
+     "vec": "129_tiny",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1323,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 902,
+      "attn_out_last": 1277,
+      "res_first_at_vm": 948,
+      "res_last_at_vm": 1323,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "129_tiny",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1323,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 902,
+      "attn_out_last": 1277,
+      "res_first_at_vm": 948,
+      "res_last_at_vm": 1323,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1011,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 740,
+      "attn_out_last": 965,
+      "res_first_at_vm": 786,
+      "res_last_at_vm": 1011,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "1_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1011,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 740,
+      "attn_out_last": 965,
+      "res_first_at_vm": 786,
+      "res_last_at_vm": 1011,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1411,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 990,
+      "attn_out_last": 1365,
+      "res_first_at_vm": 1036,
+      "res_last_at_vm": 1411,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "2048_wide",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1411,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 990,
+      "attn_out_last": 1365,
+      "res_first_at_vm": 1036,
+      "res_last_at_vm": 1411,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1603,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1182,
+      "attn_out_last": 1557,
+      "res_first_at_vm": 1228,
+      "res_last_at_vm": 1603,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "4097_flat",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1603,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1182,
+      "attn_out_last": 1557,
+      "res_first_at_vm": 1228,
+      "res_last_at_vm": 1603,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8191_mixed",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_normal",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 0,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    },
+    {
+     "vec": "8192_peaky",
+     "stall": 1,
+     "exact": true,
+     "cycles": 1923,
+     "marks": {
+      "ctl_sent": 40,
+      "attn_start": 105,
+      "attn_out_first": 1462,
+      "attn_out_last": 1877,
+      "res_first_at_vm": 1508,
+      "res_last_at_vm": 1923,
+      "emb_req_at_gw": 112,
+      "embd_last_at_su": 275
+     },
+     "poisoned_rows_merged": 4
+    }
+   ]
+  }
+ },
+ "ok": true
+}

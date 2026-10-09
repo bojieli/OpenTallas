@@ -431,9 +431,14 @@ def masters(m, k=1, port_bits=None):
         t = T['masters'][src]
         if name == 'qkd_land':
             mm = F.Master(name, LAND_W - SHAVE, m['geo']['stack_h'] - SHAVE, 7, 'KV landing (qfd_kvc successor)')
+            land = by['land_WS']
             for p in t['order']:
                 if p in used.get(name, {}):
-                    sp = t['ports'][p]
+                    sp = list(t['ports'][p])
+                    mt = __import__('re').fullmatch(r'c(\d+)([io])', p)
+                    if mt and sp[0] == 'face':
+                        cdc = by[f'cdc_WS_{mt.group(1)}']        # every stack has the same CDC column layout
+                        sp[4] = cdc.y + cdc.h / 2 - land.y + (40.0 if mt.group(2) == 'i' else -40.0)
                     mm.ports[p] = tuple(sp)
                     mm.order.append(p)
         else:
@@ -489,6 +494,8 @@ def masters(m, k=1, port_bits=None):
             if mst == 'qkd_astk' and p.startswith('e'):
                 face = 'W' if int(p[1:-1]) < 4 else 'E'
             layer = 'M4' if face in ('E', 'W') else 'M5'
+            if (mst == 'qkd_reng' and p == 'so') or (mst == 'qkd_astk' and p.startswith('e') and p.endswith('i')):
+                layer = 'M6'                     # the 16.8 k-bit leaf word on M6, the 16.5 k-bit q word on M4 (same face)
             L = mm.h if face in ('E', 'W') else mm.w
             fl = face_load.setdefault((mst, face), [])
             mm.face(p, bits, face, layer, 0.0, 1)
@@ -507,7 +514,9 @@ def masters(m, k=1, port_bits=None):
                 sp[4] = pos + span / 2
                 if mst == 'qkd_astk' and p.startswith('e'):
                     e = int(p[1:-1])
-                    sp[4] = (e % 4) * (RENG[1] + GY) + RENG[1] / 2 + (300.0 if p.endswith('i') else -300.0)
+                    sp[4] = (e % 4) * (RENG[1] + GY) + RENG[1] / 2      # level with its engine (o on M4, i on M6)
+                if mst == 'qkd_reng' and p in ('si', 'so'):
+                    sp[4] = RENG[1] / 2
                 mm.ports[p] = tuple(sp)
                 pos += span
     for mst in list(M):

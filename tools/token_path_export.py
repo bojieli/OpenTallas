@@ -384,6 +384,8 @@ def qwen(kv=None):
                 s_note += f"; chained layer {chained} = isolated {L_iso} - {drain} drain cycles (all taken here)"
             if kv and oid == "attn_kv":
                 cyc = kvc["layer_step"]
+                adders = []         # the tile ME-op adders (relays, MUL_LAT, band) do not apply: no tile op; the KV-die
+                                    # and r22k relay stages are inside the measured step (placement stage counts)
                 grade = "measured"
                 s_note = (f"ATTENTION LAYER STEP THROUGH THE LINK (kv-die): CTL / KVN / Q from the ROM faces -> r22k relays -> "
                           f"ROM end -> UCIe pair -> KV end -> qkd_seq -> near-HBM attention (R 8, _p) with the KV merge -> RES "

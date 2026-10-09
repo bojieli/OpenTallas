@@ -188,7 +188,7 @@ def _wrap_masters(v, m):
         x = 20.0
         for p, b in n_side:
             w_ = span * b / tot
-            ad.face(p, b, 'N', 'M5' if p in ('x3', 'eq', 'dc') else 'M7', x + w_ / 2, 1)   # N face: vertical layers
+            ad.face(p, b, 'N', 'M5', x + w_ / 2, 1)   # N face: M5 (the die track table's vertical pin layer)
             x += w_
         M['qfd_d2d_rom'] = ad
         c = by['clk_rx']
@@ -201,7 +201,7 @@ def _wrap_masters(v, m):
         M['qfd_clkrx'] = cm
         sq = M['qfd_sp_constants_sequencer']
         sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * 0.3, 1)
-        sq.face('dh', CTL_BITS, 'S', 'M7', sq.w * 0.7, 1)
+        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * 0.7, 1)
         sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
         # collective: its clock pin (was the PLL output pll_stream) stays at the same place, now an input
         return M
