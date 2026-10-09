@@ -1,0 +1,5 @@
+86:    ot_dsrom_wfc_tokpipe_src #(.PROMPT_EXTRA(2),.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
+111:    dsfd_wfc_tok_hard u_tok (.ck(fclk), .rst(rst_n), .f_c(cfgw), .t_cfg({cfg_users, cfg_plen, cfg_glen}), .f_dw(dw),
+WARNING: /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/bench/s0_neg_noepoch/tb.sv:426: $readmemh(trace.hex): Not enough words in the file for the requested range [0:65535].
+MTP_S0 FAIL: u0 step stalled 10001 cycles (autoregressive fallback or hang)
+/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/bench/s0_neg_noepoch/tb.sv:386: $finish called at 80458500 (1ps)
