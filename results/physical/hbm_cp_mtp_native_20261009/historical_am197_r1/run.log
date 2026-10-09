@@ -1,0 +1,8 @@
+view=asap7 corner=TT block=hfd_cmdproc_s_mtp_native_am top=hfd_cmdproc_s_mtp_native_am purpose=signoff_target
+  pnr:   wirelength=611413 um vias=267685 DRC=0 antenna_nets=0 Fmax=602.12 MHz
+  drv:   max_slew=55 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=60
+  macro: ot_sram_2rw_512x64_m4_r2c2 32768 bits (130.896 x 34.83 um) lef=ot_sram_2rw_512x64_m4_r2c2.lef lib=ot_sram_2rw_512x64_m4_r2c2_ss.lib
+  halo:  5 5 um (command line); placed macros=1
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/codex/hbm-cp-mtp-am197-20261009/route_r1/physical.json
