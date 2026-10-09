@@ -2,7 +2,7 @@
   "schema_version": 1,
   "records": [
     {
-      "element": "HBM TP96 global candidate ordering",
+      "element": "ot_hbm_index_global_order",
       "target": "HBM accelerator",
       "recorded_at": "2026-10-09T08:00:51.280320+00:00",
       "owner": "/root/hbm_system",
@@ -49,12 +49,10 @@
           "No actualSS/FF/context closure. Component gate alone has no rate credit."
         ]
       },
-      "dependencies": {
-        "status": "missing",
-        "evidence": [
+      "dependencies": [
+          "missing",
           "Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"
-        ]
-      },
+        ],
       "integration": {
         "status": "incomplete",
         "evidence": [
@@ -63,7 +61,7 @@
       }
     },
     {
-      "element": "HBM TP96 canonical candidate ID scan",
+      "element": "ot_hbm_index_global_order_scan",
       "target": "HBM accelerator",
       "recorded_at": "2026-10-09T08:00:51.280334+00:00",
       "owner": "/root/hbm_system",
@@ -108,12 +106,10 @@
           "Actual selectedR25I slots/budgets and SS/FF unknown"
         ]
       },
-      "dependencies": {
-        "status": "missing",
-        "evidence": [
+      "dependencies": [
+          "missing",
           "Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"
-        ]
-      },
+        ],
       "integration": {
         "status": "incomplete",
         "evidence": [
