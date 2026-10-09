@@ -1,0 +1,14 @@
+{
+  "source_commit": "5f1c4714dee6d85aab47b8d3a38e148b071754bd",
+  "host": "ot-epyc1tb",
+  "status": "PASS",
+  "checks": [
+    "actual340A417520stagingbits",
+    "unifiedwrapperpresent",
+    "typed696slots338BFdouble",
+    "released30720Bseedtransport",
+    "releasedheaderassertions"
+  ],
+  "model_sha256": "6e59753aee0a46fc513fb54155d93efd50ccdaa44c24eeaf6b52499ec5e4739b",
+  "scope": "main analytical entrypoints only; no RTL/physical qualification"
+}
