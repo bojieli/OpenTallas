@@ -132,6 +132,58 @@
     "floorplan_slot_fit": false,
     "qualification": "typed proposed inventory; not equivalent to --pairs631 with heuristic BF ratio"
   },
+  "aligned_head_input_staging": {
+    "schema": "opentallas.dsrom.head-input-staging.v1",
+    "default_enabled": false,
+    "adopted": false,
+    "source": "rtl/v41rom/ot_dsrom_head_bundle.sv and head_elem A input ABI",
+    "sizing": {
+      "head_dies": 12,
+      "bundles_per_die": 85,
+      "A_elements_per_die": 340,
+      "stages_per_A": 4,
+      "bits_per_stage": 307,
+      "registered_bits_per_die": 417520
+    },
+    "MACs_per_cycle_unchanged": true,
+    "compute_intensity_unchanged": true,
+    "ports_bytes_per_cycle": {
+      "x_per_A": 32,
+      "other_per_A": 6.375
+    },
+    "boundary_bits_per_cycle": {
+      "each_A": 307,
+      "per_bundle": 1228
+    },
+    "replicas": {
+      "A_input_pipeline": 340,
+      "stage_groups": 1360
+    },
+    "mux_demux_added": 0,
+    "fanout": {
+      "source_A_receivers_per_bundle": 4,
+      "purpose": "independent aligned landings beside actual A pin groups"
+    },
+    "routing": {
+      "per_A_tracks": 307,
+      "pin_segment_target_um": 100,
+      "capacity": "requires extracted A LEF faces and one-bundle route"
+    },
+    "area": {
+      "register_cell_floor_um2_per_die": 121748.83200000001,
+      "register_slot_floor_mm2_at_55pct": 0.22136151272727272,
+      "buffer_CTS_hold_area_unmeasured": true,
+      "floorplan_slot_fit": false
+    },
+    "latency": {
+      "added_cycles_per_head_pass": 4,
+      "added_verify_AR_us": 0.0033333333333333335,
+      "added_draft_5passes_us": 0.016666666666666666,
+      "added_verify_6pass_stage_busy_us": 0.02,
+      "II_effect": "price new head busy against actual stage limiter"
+    },
+    "qualification": "proposed structural budget; exactness and routed timing required"
+  },
   "main_hidden_transport": {
     "hidden_dimension": 5120,
     "captures": 3,
@@ -307,6 +359,8 @@
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
-    "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621"
+    "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+    "tools/dsrom_head_input_staging_model.py": "7e340a91444cf61a987a1b11cea17d9dc17648732bf96997f007779470f13963",
+    "tools/uarch_model.py": "0aebf0b2b3cfb12ae74ed4514b1b07e3e5b779feb877efe581710423c22a911c"
   }
 }
