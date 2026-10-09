@@ -34,6 +34,36 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def dsrom_engram_lead_model(users=64):
+    """Released tokenizer map and lead-window path, priced before implementation."""
+    return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
+        vocab_size=129280, compressed_vocab_size=99092, id_bits=17,
+        map_source='results/uarch/h4_c0_ds_external_source_provenance_20261003/r1/payloads/fbc8c3ec76fc1143_L01_token_map.npy',
+        map_sha256='fbc8c3ec76fc11430b854fb2ff267fdf923b5ff2d4f869e3c0433d8edc6479b1',
+        checkpoint_revision='dba1be0a40aa45a94ad051997016db3960a90277',
+        macro='ot_rom_4096x72_m8', map_entries_per_word=4,
+        map_words=32320, map_macros=8, macro_physical_bytes=294912,
+        map_logical_bytes=274720, rom_ecc=False,
+        map_area_mm2=8*38.016*62.910/1e6,
+        replicas=4, replica_home='S0 embedding TP ranks, one independent map/window per rank',
+        macs_per_cycle=0, map_read_bytes_per_cycle=9, useful_map_bytes_per_cycle=17/8,
+        map_input_bits_per_cycle=21, map_output_bits_per_cycle=17,
+        map_latency_cycles=2, idwin_latency_cycles=1, lead_added_cycles=3,
+        history_users=users, history_depth=8,
+        history_bits=users*(8*18+7),
+        lead_context_slots=2, lead_context_bits=2*(68+1+1+12+21+21),
+        header_first_bit=208, header_window_bits=68, header_valid_bit=276, header_dead_bit=277,
+        header_added_flits=0, header_added_bits_per_token=70,
+        header_total_bits=278, existing_link_bits_per_cycle=512,
+        routing_tracks_added=70, routing_capacity_qualification='same512-bit lead flit; local70-bit context routes pending actual physical views',
+        mux_cost='registered8:1 macro-word selection then4:1 seventeen-bit lane selection; bounded two-slot context',
+        fanout='source rank sends existing HIDDEN lead to stages; window copied intact to fourTP Engram homes at L1 and L14',
+        floorplan_slot_fit='eight existing38.016x62.910um macros =0.0191327mm2 per source rank; placement pending',
+        protection='fault-free no-ECC ROM; mutable history protection remains existing qualification gap',
+        negative_contract='rawtoken<129280, cid<99092, user<64, first explicitly supplied, rewind1..5 and no conflicting inflight same-user token',
+        qualification='source-pinned released map; exact producer/transport and SS/FF physical gates required before adoption')
+
+
 def dsrom_engram_rowstripe_model(context=1048576, users=64):
     """Opt-in whole-row PC placement; historical atom-striped layout retained.
 
