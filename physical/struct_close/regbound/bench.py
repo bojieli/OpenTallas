@@ -103,6 +103,11 @@ def tokloop(mode, w):
     a = "@(posedge clk); while (!job_rdy) @(posedge clk); job_v <= 0;"
     assert a in t
     t = t.replace(a, a + " repeat (3) @(posedge clk);")
+    # the bench re-arms the next MTP commit on dut.ls == 4 a few edges after the last; the registered mtp_v reaches the
+    # core one edge later, so the state probe waits 2 more edges (else a second batch is issued into the same state)
+    b = "ib = ib + 1; mtp_v <= 1; @(posedge clk); mtp_v <= 0; host_stop <= 0;"
+    assert b in t
+    t = t.replace(b, b + " repeat (2) @(posedge clk);")
     (w / "tb_hbm_token_loop.sv").write_text(t)
     env = dict(os.environ, OT_TOKLOOP_SRC=" ".join([str(R / f"{D}/ot_hbm_token_loop_rb.sv"), str(R / "rtl/common/ot_sc_pfifo.sv"),
                                                     str(w / "tb_hbm_token_loop.sv")]))
