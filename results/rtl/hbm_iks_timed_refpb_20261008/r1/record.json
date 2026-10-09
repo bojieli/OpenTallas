@@ -1,0 +1,192 @@
+{
+  "schema": "opentallas.hbm_iks_timed.v1",
+  "source_commit": "76293f4df",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "373fddb086f971f7939c67a38f9a2d162c1f5a56a9ac888520f844b60e50d1d4",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "97f85a65d42d8882fdacd40e136a79c00cda6d7fab0a5fb5dd888191f0224073",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv": "71e486b338cb8220f084161d2ff4af38a30cef7a664ce94d477210c2bd02204c",
+    "tools/hbm_svc_iks_timed_bench.py": "61b4ab0af0aee44dada5ecd776e6bbcf5c2555dc4438faf008f461f579b58d71",
+    "results/uarch/hbm_iks_timed_refpb_20261008/prebuild.json": "5c617e375df86f03da9ec10725e0b299d17d05ffd2b263de9502cffd90d9e923"
+  },
+  "scope": "timed request-level controller; behavioral return SRAM, no physical signoff or performance adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps",
+  "cases": [
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay1_mut0.log",
+      "raw_sha256": "29690f969f3b77cebdef16574ecd13a096f610ed24578544dc4873340b699489",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 448.512,
+          "drain_ns": 653.312,
+          "logical_tbs": 0.414812
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 401.792,
+          "drain_ns": 606.592,
+          "logical_tbs": 0.463046
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 1300,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase1300_delay1_mut0.log",
+      "raw_sha256": "df13946a1ba638169ff2652ba3f3f1fe5a0ac4d6ddd39a27857ecee9fef826a5",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 287.808,
+          "drain_ns": 492.608,
+          "logical_tbs": 0.646431
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 320.768,
+          "drain_ns": 525.568,
+          "logical_tbs": 0.580008
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 2700,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase2700_delay1_mut0.log",
+      "raw_sha256": "325a714f24e8b0b4df3ff1f81b67febf9c5f36a4a3ec5326461d72384b86ae52",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 289.408,
+          "drain_ns": 494.208,
+          "logical_tbs": 0.642857
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 319.68,
+          "drain_ns": 524.48,
+          "logical_tbs": 0.581982
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay1_mut0.log",
+      "raw_sha256": "d3c3dda663c5c233e4150cae768310a86aeb1cf336a4a8bcbe28dc4269a5c4c1",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 538.624,
+          "drain_ns": 743.424,
+          "logical_tbs": 0.345413
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 310.912,
+          "drain_ns": 515.712,
+          "logical_tbs": 0.598394
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 5500,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase5500_delay1_mut0.log",
+      "raw_sha256": "2ce383f50fd3526d6cae958674919b808eb8eecfa7a952395f41789227334f37",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 289.344,
+          "drain_ns": 494.144,
+          "logical_tbs": 0.642999
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 319.424,
+          "drain_ns": 524.224,
+          "logical_tbs": 0.582448
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 6900,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase6900_delay1_mut0.log",
+      "raw_sha256": "72f18eb94a7b8e0387e880fb22a64bab738e9ac3a5553efe62c0cb7f6a5c4d7a",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 290.944,
+          "drain_ns": 495.744,
+          "logical_tbs": 0.639463
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 954.24,
+          "drain_ns": 1159.04,
+          "logical_tbs": 0.19497
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 23,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay23_mut0.log",
+      "raw_sha256": "543f4b8714acd92fdf7eb433d21738f60dc97e902ab5c5781a6434f4097af209",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 3818.496,
+          "drain_ns": 4023.296,
+          "logical_tbs": 0.048723
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 3748.608,
+          "drain_ns": 3953.408,
+          "logical_tbs": 0.049631
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 1,
+      "returncode": 1,
+      "raw_log": "phase0_delay1_mut1.log",
+      "raw_sha256": "58e5a7fdcdaa5948e51c32e0e79ef15edaf5417dc7df0e9ca7bfd0afd79f4b3e",
+      "rows": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_returncode": 0
+}
