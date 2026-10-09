@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.embedding_group_flop_gate_failure.v1",
+  "verdict": "FAIL",
+  "node_sha256": "9d13aba037e446ca3677857cbf5c7b00f57171f58de3b0f64e0d969aa7ee0dfb",
+  "bench_sha256": "3528799a250e959f9ebf154ea109b86a11a496065d90b04af4bd068cb8398184",
+  "logs_sha256": {
+    "mode4.log": "479b4b20ac2f3f3e78add03c6f0caec69040027030d5ea289383e4a699bbdad5",
+    "mode4_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reason": "Deliberately malformed fifth command was rejected by test producer before hardware could exercise its fault guard. Only MODE4 intentional malformed producer bypass was adjusted; RTL unchanged."
+}
