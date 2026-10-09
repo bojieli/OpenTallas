@@ -112,9 +112,12 @@ QWEN_R21M = dict(QWEN_R21F, su_core_clock=True, vm_me=True)
 # qfd_sp_band_lanes_t 1,555.2 PD 0.40)
 QWEN_R21B = dict(QWEN_R21M, tt_h=3732.48)
 QWEN_R21BT = dict(QWEN_R21M, tt_h=4354.56, bl_h=1555.2)
+# r21c (emb-hbm 2026-10-08, OWNER DECISION ~21:00 PT): r21b with the input embedding in each die's attached HBM -- the
+# IO-band embedding ROM and its words / relays removed, the SU's embedding face terminated at the hub (gateway)
+QWEN_R21C = dict(QWEN_R21B, emb_hbm=True)
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
-                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT}
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)

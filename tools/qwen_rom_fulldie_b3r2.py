@@ -72,7 +72,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, emb_hbm=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -235,6 +235,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if vm_me:
         _vm_me(v, m)          # before the relays (the result / lane words get their relay chains)
     m['b3r2']['r21m_vm_me'] = vm_me
+    if emb_hbm:
+        _emb_hbm(v, m)        # before the relays: the SU <-> hub embedding words get their relay chains
+    m['b3r2']['r21c_emb_hbm'] = emb_hbm
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -373,7 +376,7 @@ def _rtl_finish(v, m):
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
         tt, vm, sq, su, em = (o['qfd_sp_tree_top'], o['qfd_sp_vector_memory'], o['qfd_sp_constants_sequencer'],
-                              o['qfd_sp_su64_sfu'], o['qfd_io_embedding_rom'])
+                              o['qfd_sp_su64_sfu'], o.get('qfd_io_embedding_rom'))   # r21c: no embedding ROM
         for M_, gone in ((tt, ('md',)), (vm, ('em',)), (sq, ('ea', 'md'))):
             for pn in gone:
                 if pn in M_.ports:
@@ -397,11 +400,12 @@ def _rtl_finish(v, m):
         su.face('ea', EMB_REQ_BITS, 'W', 'M4', 1500.0, 2)
         su.face('ecr', 1, 'W', 'M4', 1520.0, 2)
         su.face('eq', EMB_RSP_BITS, 'W', 'M4', 1300.0, 1)
-        if 'a' in em.ports:
-            em.ports['a'] = em.ports['a'][:1] + (EMB_REQ_BITS,) + em.ports['a'][2:]
-        if 'o' in em.ports:
-            em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
-        em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
+        if em is not None:
+            if 'a' in em.ports:
+                em.ports['a'] = em.ports['a'][:1] + (EMB_REQ_BITS,) + em.ports['a'][2:]
+            if 'o' in em.ports:
+                em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
+            em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
         for b in range(6):
             mn = f'qfd_port_tiles_{b}'
             if mn in o:
@@ -720,6 +724,81 @@ def _io_south(v):
                 M.ports[q] = ('face', bits, face, 'M4', y + span / 2, 1)
                 used.append((y, y + span))
                 y += span + max(10.0, (M.h - 40.0) / max(1, len(ps)) - span)
+        return o
+    v.masters = masters
+
+
+# r21c (emb-hbm 2026-10-08, OWNER DECISION 2026-10-08 ~21:00 PT): the Qwen3-8B input embedding moves out of the on-die
+# ROM into each die's attached HBM (rtl/qwen_sys/emb_hbm_20261008, design review REVIEW_QUEUE.md "EMB-HBM").
+#   * the IO-band embedding ROM element (io_embedding_rom, qfd_io_embedding_rom: the r21b 11.046 mm2 placeholder for a
+#     root + taps + 2,374 code / 3 scale bank parents) is removed with its die words (emb_a 26 b, emb 513 b, emb_cr) and
+#     their relay chains (r21b: 54 relays on emb_a alone) and its clock leaf;
+#   * the SU's embedding face (ea / ecr / eq, unchanged: ot_qfd_su_embed_pf) now talks to the HUB (qfd_hub_emb:
+#     ot_qwen_die_hub_emb_top = the full-rate hub + the embedding gateway ot_qfd_emb_gw); the rows come over the
+#     existing hub <-> stack links (EMB link class), no new wide die bus;
+#   * the strip / controller additions sit inside existing frames: the per-stack embedding engine (ot_qfd_emb_strip,
+#     core clock) beside the strip-end link endpoint in the qfd_kvc frame, the static-row port in every PC controller
+#     (qfd_ctrl_emb_<pc>: ot_qwen_ctrl_pc_emb) and the per-PC ECC / class port (ot_qfd_emb_pcport) in the controller
+#     band; their area is recorded in m['r21c'] against those frames.
+# The IO band keeps its depth (the die outline does not change); the freed band length is recorded as slack.
+# area estimates of the in-frame additions (flops x 0.32 um2 ASAP7 DFF / 0.55 util x 1.6 logic) -- the review sizes them
+EMB_STRIP_FLOPS = 32 * 4 * 258 + 4 * 523 + 4 * 523 + 516 + 400 + 32 * 4 + 200     # rx FIFOs, in/tx queues, packer, credits
+EMB_PCPORT_FLOPS = 32 + 4 * 288 + 288 + 32 + 288 + 258 + 64                         # class FIFO, write FIFO, decode pipe
+EMB_GW_FLOPS = 32 * 25 + 4 * 523 + 512 + 26 + 512 + 160 + 4 * 8 * 11                 # request FIFO, slots, eq, pins, tags
+
+
+def _emb_hbm(v, m):
+    """r21c: drop the embedding ROM, terminate the SU's embedding words at the hub (see the r21c comment above)."""
+    gone = 'io_embedding_rom'
+    ins = [i for i in m['insts'] if i.name == gone]
+    if len(ins) != 1:
+        raise ValueError('r21c builds on r21f+ (io_embedding_rom present once)')
+    rom = ins[0]
+    m['insts'] = [i for i in m['insts'] if i.name != gone]
+    m['io'] = {k: it for k, it in m['io'].items() if it.name != gone}
+    B, dropped = [], []
+    for bid, cl, bits, eps in m['buses']:
+        if bid == 'emb_a':
+            eps = [('sp_su64_sfu', 'ea'), ('hub_el', 'ea')]
+        elif bid == 'emb':
+            eps = [('hub_el', 'eq'), ('sp_su64_sfu', 'eq')]
+        elif bid == 'emb_cr':
+            eps = [('hub_el', 'ecr'), ('sp_su64_sfu', 'ecr')]
+        elif any(e[0] == gone for e in eps):
+            eps = [e for e in eps if e[0] != gone]
+            if len(eps) < 2:
+                dropped.append(bid)
+                continue
+        B.append((bid, cl, bits, eps))
+    m['buses'] = B
+    for r in m.get('regions', []):
+        pass
+    gw_mm2 = EMB_GW_FLOPS * 0.32 * 1.6 / 0.55 / 1e6
+    m['r21c'] = dict(
+        removed=dict(instance=gone, master=rom.master, rect_um=[round(rom.x, 3), round(rom.y, 3), round(rom.w, 3), round(rom.h, 3)],
+                     mm2=round(rom.w * rom.h / 1e6, 3), buses_dropped=dropped,
+                     note='the r21b placeholder; the RTL-sized full replica (2,374 code + 3 scale bank parents + 2,376 taps + '
+                          'root) would need ~88.1 mm2 (EMB_HBM_FEASIBILITY.md)'),
+        rerouted=['emb_a (26 b) sp_su64_sfu.ea -> hub_el.ea', 'emb (513 b) hub_el.eq -> sp_su64_sfu.eq',
+                  'emb_cr (1 b) hub_el.ecr -> sp_su64_sfu.ecr'],
+        rtl={'qfd_hub': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv ot_qwen_die_hub_emb_top (+ ot_qfd_emb_gw)',
+             'qfd_ctrl (per PC)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv (ot_hbm_r14_stream_pc_srow SROW 1) '
+                                  '+ ot_qfd_emb_pcport.sv',
+             'qfd_kvc (strip end)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv + ot_qfd_link_far.sv (class split)'},
+        in_frame_mm2=dict(gateway_in_hub=round(gw_mm2, 4),
+                          strip_engine_per_stack=round(EMB_STRIP_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 4),
+                          pcport_per_pc=round(EMB_PCPORT_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 5)),
+        io_band_slack_um=round(rom.w + v.SHAVE, 3))
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        o.pop('qfd_io_embedding_rom', None)
+        hb = o['qfd_hub']
+        # W face: x3 / ar sit at h/2 -+ 60 (2-pitch, ~49 um each); the embedding words below and above them
+        hb.face('ea', EMB_REQ_BITS, 'W', 'M4', 40.0, 2)
+        hb.face('ecr', 1, 'W', 'M4', 50.0, 2)
+        hb.face('eq', EMB_RSP_BITS, 'W', 'M4', hb.h - 40.0, 1)
         return o
     v.masters = masters
 
