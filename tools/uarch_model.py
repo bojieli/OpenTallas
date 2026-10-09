@@ -67,6 +67,35 @@ def dsrom_engram_lead_model(users=64):
         qualification='source-pinned released map; exact producer/transport and SS/FF physical gates required before adoption')
 
 
+def dsrom_engram_protected_idwin_model(users=64):
+    """Mutable history protection candidate; released token-map ROM remains no-ECC."""
+    return dict(schema='opentallas.engram-protected-idwin-model.v1', opt_in_default=False,
+        users=users, history_depth=8, payload_bits_per_entry=18,
+        stored_bits_per_entry=72, history_storage_bits=users*8*72,
+        historical_storage_bits=users*8*18,
+        history_added_bits=users*8*54,
+        metadata_payload_bits_per_user=29,
+        metadata_stored_bits_per_user=72,
+        metadata_storage_bits=users*72,
+        historical_metadata_bits=users*29,
+        total_added_bits=users*(8*54+43),
+        added_sequential_area_mm2=users*(8*54+43)*.2916/1e6,
+        macs_per_cycle=0,
+        history_read_ports=3, history_write_ports=1,
+        history_bits_per_read_cycle=3*72, history_bits_per_write_cycle=72,
+        metadata_bits_per_read_cycle=2*72, metadata_bits_per_write_cycle=72,
+        decoder_replicas=5, encoder_replicas=3,
+        mux_cost='three512:1 protected72-bit history selectors; two64:1 metadata selectors; conditionalwritefanout512',
+        correction='SECDED64payload72stored;18history bits and29metadata bits zero-padded, singlecorrected before use; doublefault suppresseswindow and latchesfault',
+        metadata='writepointer3, earliercount4, explicitposition22 protected together; no duplicate unprotectedposition guard',
+        added_latency_cycles=0,
+        latency_qualification='zero additional stages proposed, not physically qualified; native lead remains4capture stages before output',
+        replicas=4, replica_home='S0 embedding TP rank',
+        boundary_added_bits=1,
+        floorplan_slot_fit='324x216um candidate; ROM0.01913mm2 plus protected mutable storage0.01209mm2 beforelogic/route',
+        qualification='model before protected implementation; functional injection and real SS/FF physical timing required; unprotected idwin retained only as historical default')
+
+
 def dsrom_engram_rowstripe_model(context=1048576, users=64):
     """Opt-in whole-row PC placement; historical atom-striped layout retained.
 
