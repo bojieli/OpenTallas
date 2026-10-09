@@ -1104,11 +1104,12 @@ def main():
                             "the error is the generic lowering + layer composition only",
                             "Qwen3-8B, measured collectives: the in-package all-reduce of 16 KB pays the endpoint "
                             "serialisation the 1 KB calibration entry lacks",
-                            "GDN: hgi_perf reuses the bit-exact gdn lowering, so 0 % is by construction (composition "
-                            "of one layer)",
-                            "DS-V4.1: the generic MLA front end lands within 6 % of the native stream's S2; the "
-                            "native-template path (the bit-exact records per layer type) within 1.4 %; the published "
-                            "walk is a fused-chain composition without a command processor, not a record stream"],
+                            "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition "
+                            "of one layer and the SU HBM first-access charge the reference predates",
+                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~24 % "
+                            "above the native stream (fused SU chains, CP-aware order); the native-template path (the "
+                            "bit-exact records per layer type, steady increments) is within ~3 %; the published walk "
+                            "is a fused-chain composition without a command processor, not a record stream"],
                    sources={p: hashlib.sha256((TOOLS / p).read_bytes()).hexdigest() for p in (
                        "hgi_sim/perf.py", "hgi_sim/timing.py", "hgi_sim/ds_native_timing.py")})
         print(json.dumps(rec, indent=1))
