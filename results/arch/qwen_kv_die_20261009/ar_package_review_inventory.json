@@ -8,7 +8,9 @@
     "paths": [
       "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
       "rtl/hdc/kv/ot_qwen_s4_packet_link.sv",
-      "rtl/qwen_sys/system_20261008/ot_qfd_sp_constants_sequencer_sys.sv"
+      "rtl/qwen_sys/system_20261008/ot_qfd_sp_constants_sequencer_sys.sv",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"
     ]
   },
   "contract_status": "not_published_at_inspection",
@@ -38,6 +40,13 @@
       "status": "provider_binding_pending",
       "owner": "embedding_hbm",
       "required": "Native32PC DATA/SIDECAR arbitration, true WR completion and shared native host o_cr; source owner reports seq11/class10 collision and forbids naive header normalization."
+    },
+    {
+      "element": "finite_attention_result_capture",
+      "status": "unbound_candidate_requires_selected_contract",
+      "owner": "review_qwen_token_path",
+      "evidence": "Actual hub_p out_valid/out_g/out_beat/out_data512 has no output ready or credit; headers say default-off not instantiated in shipped design. Selected bridge must reserve/capture full actual output burst before launch or provide proven calendar; package backpressure cannot discard completed result pulses. No chosen FIFO depth or payload invented.",
+      "required": "Selected native arithmetic provider and golden tree, output burst timing/count, finite link reservation/credit and true ROM consumer retirement gate."
     }
   ],
   "model_requirements": {
