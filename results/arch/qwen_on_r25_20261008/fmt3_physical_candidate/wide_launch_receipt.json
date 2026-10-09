@@ -1,0 +1,14 @@
+{
+  "source_commit": "2831b78d525eaa86a7d5706446cbf8ccdb8374bc",
+  "host": "ot-epyc3",
+  "pid": 1774412,
+  "root": "/srv/opentallas-scratch/codex/qwen-fmt3-wide-2831b78d5",
+  "status": "guard queued, no compute started",
+  "measured_available_mib": 92421,
+  "measured_disk_available": "2.4TiB",
+  "admission_peak_gib": 64,
+  "admission_cushion_gib": 100,
+  "geometry_source_evidence": "3467f362e",
+  "flow_source_gate": "wide_planning_gate.json",
+  "scope": "standalone widened front_c; whole R25 adoption awaits actual widened network and SS/FF/DRC"
+}

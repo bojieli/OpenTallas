@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "source_commit": "2831b78d525eaa86a7d5706446cbf8ccdb8374bc",
+  "scope": "generated literal preCTS SDC and Tcl hook execution; no physical timing credit",
+  "core_neighbour_planning_ps": 720,
+  "reset_ss_ff_core_source_ps": 0,
+  "hook_execution": "AUDIT ss -source 0 core_clk\nAUDIT ff -source 0 core_clk\nFMT3 planning phase removed before CTS; core source0, neighbour unchanged\n",
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "period_ps": 833,
+  "pins_sha256": "3329bdf153b7d915cc28dc235ae2ffb0f843fa0efdfd3647f86259ddd2ceab21",
+  "existing_hook": "only installs buffer-cap wrapper; performs no timing/repair before reset"
+}
