@@ -499,6 +499,13 @@ def main():
             cfg.append(' '.join(f'{v:08X}' for v in (c['entry'], c['token'], c['pos'], c['rank'], c['vocab'], c['ctxmax'],
                                                     c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'],
                                                     len(c['toks']))))
+        mds = []
+        for c in cs:     # the case's model descriptor (CP mode: loaded through the CFG window + CFG_COMMIT)
+            mds += G.d_pack(dict(magic=G.MAGIC, ver_minor=G.D_VERSION[1], ver_major=G.D_VERSION[0], n_words=G.NWORDS,
+                                 cp_vocab=c['vocab'], cp_ctx_max=c['ctxmax'],
+                                 coll_group_size=96 if c['vocab'] == 129280 else 4, entry_ar=c['entry'],
+                                 image_base=0x10, image_pages=1))
+        (T / f'hgi_seq_md{tag}.mem').write_text('\n'.join(f'{x:08X}' for x in mds) + '\n')
         (T / f'hgi_seq_toks{tag}.mem').write_text('\n'.join(' '.join(f'{x:08X}' for x in (c['toks'] + [0] * 16)[:16])
                                                            for c in cs) + '\n')
         (T / f'hgi_seq_cfg{tag}.mem').write_text('\n'.join(cfg) + '\n')
