@@ -56,9 +56,17 @@ module tb_hgi_seq;
     task automatic cfg_pair(input [4:0] pr, input [31:0] lo, input [31:0] hi);
         begin @(negedge clk); cmd_we = 1; cmd_addr = {1'b1, pr}; cmd_wdata = {hi, lo}; @(negedge clk); cmd_we = 0; end
     endtask
-    task automatic cfg_load(input [31:0] voc, input [31:0] ctx, input [31:0] grp, input [31:0] entry);
-        integer w; begin
-            cfg_pair(5'd20, voc, ctx); cfg_pair(5'd23, grp, 0); cfg_pair(5'd28, entry, 0); cfg_pair(5'd30, PAGE, 1);
+    reg [31:0] mdw [0:NCASE*64-1];
+`ifdef SEQ_CONF
+    initial $readmemh("hgi_seq_md_conf.mem", mdw);
+`elsif SEQ_STALE
+    initial $readmemh("hgi_seq_md_stale.mem", mdw);
+`else
+    initial $readmemh("hgi_seq_md.mem", mdw);
+`endif
+    task automatic cfg_load(input integer cc, input [31:0] voc, input [31:0] ctx);
+        integer w, pr; begin
+            for (pr = 0; pr < 32; pr = pr + 1) cfg_pair(pr[4:0], mdw[cc*64 + 2*pr], mdw[cc*64 + 2*pr + 1]);
             @(negedge clk); cmd_we = 1; cmd_addr = 6'h3F; @(negedge clk); cmd_we = 0; repeat (4) @(negedge clk);
             w = 0; while ((dut.u_cfg.st_hold || !cfg_loaded) && w < 2000) begin @(negedge clk); w = w + 1; end
             repeat (3) @(negedge clk);
@@ -207,7 +215,7 @@ module tb_hgi_seq;
             md_d = {32'd1, PAGE, 32'd0, 32'd0, cfg[c*12 + 0]};
             vocab = cfg[c*12 + 4]; ctxmax = cfg[c*12 + 5]; rank = cfg[c*12 + 3];
 `ifdef SEQ_CP
-            cfg_load(cfg[c*12 + 4], cfg[c*12 + 5], (cfg[c*12 + 4] == 129280) ? 96 : 4, cfg[c*12 + 0]);
+            cfg_load(c, cfg[c*12 + 4], cfg[c*12 + 5]);
 `endif
             fault_at = (cfg[c*12 + 9] == 32'hFFFF) ? -1 : cfg[c*12 + 10] + cfg[c*12 + 9];
             n0 = nd; ei = cfg[c*12 + 10] * 11;
