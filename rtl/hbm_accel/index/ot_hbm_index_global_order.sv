@@ -115,6 +115,7 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0)(
      if((rsp_empty&&!rsp_last)||(!rsp_empty&&rsp_tuple[0]&&(
           (rsp_tuple[15:8]==8'hff&&|rsp_tuple[7:1])||
           (rsp_tuple[33:17]%17'd96!=rank)||
+          (rsp_tuple[33:17]>frame[72:56])||
           (previous_v&&rsp_tuple[33:17]<=previous))))begin
       state<=FAULT;state_n<=~FAULT;
      end else if(!rsp_empty&&!rsp_tuple[0]&&!rsp_last)begin
