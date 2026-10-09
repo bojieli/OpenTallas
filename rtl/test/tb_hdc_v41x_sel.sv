@@ -35,6 +35,9 @@ module tb_hdc_v41x_sel
     parameter integer K    = 512;
     parameter integer AW   = 8;
     parameter integer DG   = 8;
+    parameter integer MEMV = 0; // optional actual compiled SRAM model
+    parameter integer READLAT = 1;
+    parameter integer MEMLAT = READLAT; // independent override for latency negative control
     parameter integer OD   = 4;
     parameter integer MAXB = 8192;                 // beats per quarter per segment
     localparam integer KW = $clog2(K + 1);
@@ -53,18 +56,30 @@ module tb_hdc_v41x_sel
     wire [Q*W*IW-1:0]  out_idx;
     wire [Q*AW-1:0]    mem_waddr, mem_raddr;
     wire [Q*W*EW-1:0]  mem_wdata;
-    reg  [Q*W*EW-1:0]  mem_rdata;
+    wire [Q*W*EW-1:0] mem_rdata;
+    reg [Q*W*EW-1:0] raw_rdata, captured_rdata;
     wire [Q*3*(AW+1)-1:0] stats;
     reg  [W*EW-1:0]    mem [0:Q*(1 << AW) - 1];
+    generate if (MEMV == 0) begin : g_beh_memory
+    always @(posedge clk) captured_rdata <= raw_rdata;
+    assign mem_rdata = MEMLAT == 2 ? captured_rdata : raw_rdata;
     integer mq;
     always @(posedge clk) begin
         for (mq = 0; mq < Q; mq = mq + 1) begin
             if (mem_we[mq]) mem[mq * (1 << AW) + mem_waddr[AW*mq +: AW]] <= mem_wdata[W*EW*mq +: W*EW];
-            if (mem_re[mq]) mem_rdata[W*EW*mq +: W*EW] <= mem[mq * (1 << AW) + mem_raddr[AW*mq +: AW]];
+            if (mem_re[mq]) raw_rdata[W*EW*mq +: W*EW] <= mem[mq * (1 << AW) + mem_raddr[AW*mq +: AW]];
         end
     end
+    end else begin : g_macro_memory
+        for (genvar mg=0; mg<Q; mg=mg+1) begin : qmem
+            hfd_idx_mem #(.W(W*EW), .AW(AW), .MEMV(1), .READLAT(MEMLAT)) u_mem (
+                .ck(clk), .we(mem_we[mg]), .wa(mem_waddr[AW*mg +: AW]),
+                .wd(mem_wdata[W*EW*mg +: W*EW]), .re(mem_re[mg]),
+                .ra(mem_raddr[AW*mg +: AW]), .rd(mem_rdata[W*EW*mg +: W*EW]));
+        end
+    end endgenerate
 
-    ot_hdc_v41x_sel #(.Q(Q), .W(W), .IW(IW), .K(K), .AW(AW), .DG(DG), .OD(OD)) dut (
+    ot_hdc_v41x_sel #(.Q(Q), .W(W), .IW(IW), .K(K), .AW(AW), .DG(DG), .OD(OD), .READLAT(READLAT)) dut (
         .clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_ready(in_ready), .in_last(in_last),
         .in_lv(in_lv), .in_val(in_val), .in_idx(in_idx), .in_k(in_k),
         .out_valid(out_valid), .out_ready(out_ready), .out_last(out_last), .out_lv(out_lv), .out_val(out_val),

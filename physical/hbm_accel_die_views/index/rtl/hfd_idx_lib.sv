@@ -53,12 +53,20 @@ endmodule
 //   MEMV 0: behavioural array (benches);
 //   MEMV 1: tools/mem_compiler macros, ceil(W/256) side by side: AW 8 -> ot_sram_1r1w_256x256_m2_r2c2 (TT clk->q 405 ps),
 //           AW 10 -> ot_sram_1r1w_1024x256_m2_r2c2 (545 ps); repair ports tied off.  The macro output feeds the
-//           selector directly (the 1-cycle contract): a capture register would need a read-latency parameter in
-//           ot_hdc_v41x_sel_slice (review item, not built).
-module hfd_idx_mem #(parameter integer W = 8, parameter integer AW = 4, parameter integer MEMV = 0) (
+//           selector directly for READLAT=1. READLAT=2 captures raw macro output before selector muxing;
+//           the matching selector metadata stage preserves finite in-flight reservations.
+module hfd_idx_mem #(parameter integer W = 8, parameter integer AW = 4, parameter integer MEMV = 0, parameter integer READLAT = 1) (
   input wire ck, input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
   input wire re, input wire [AW-1:0] ra, output wire [W-1:0] rd
 );
+  wire [W-1:0] raw_rd;
+  generate if (READLAT == 2) begin : capture
+    reg [W-1:0] captured;
+    always @(posedge ck) captured <= raw_rd;
+    assign rd = captured;
+  end else begin : direct
+    assign rd = raw_rd;
+  end endgenerate
   generate if (MEMV == 0) begin : beh
     reg [W-1:0] m [0:(1<<AW)-1];
     reg [W-1:0] r;
@@ -66,7 +74,7 @@ module hfd_idx_mem #(parameter integer W = 8, parameter integer AW = 4, paramete
       if (we) m[wa] <= wd;
       if (re) r <= m[ra];
     end
-    assign rd = r;
+    assign raw_rd = r;
   end else begin : mac
     localparam integer NM = (W + 255) / 256;
     wire [NM*256-1:0] wdx = {{(NM*256-W){1'b0}}, wd};
@@ -83,7 +91,7 @@ module hfd_idx_mem #(parameter integer W = 8, parameter integer AW = 4, paramete
           .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
       end
     end
-    assign rd = rdx[W-1:0];
+    assign raw_rd = rdx[W-1:0];
   end endgenerate
 endmodule
 `default_nettype wire

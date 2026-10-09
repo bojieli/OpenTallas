@@ -45,8 +45,11 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
-mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
-python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} $(for p in ${POSTSDC:-}; do echo -n " --post-sdc $p"; done) --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
+# Each instantiated memory family needs its own corner Liberty and LEF.
+# Passing only the first family leaves mixed-depth selector macros unresolved.
+corner_macros=()
+for mv in ${MACROS:-}; do corner_macros+=(--macro "${mv#*=}"); done
+python3 tools/w18/corner_sta.py "${corner_macros[@]}" $(for p in ${POSTSDC:-}; do echo -n " --post-sdc $p"; done) --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done
 python3 tools/hbm_fmax_attn_abstract.py --orfs-dir $W/work/orfs --name $master --out $W/view $mvx --tmp-dir $W/abs_tmp > $W/export.log 2>&1
