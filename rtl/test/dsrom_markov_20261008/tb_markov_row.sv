@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_markov_row;
+ parameter integer PINREG=0;
  parameter integer MUTANT=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0,iv=0,ordy=0;
@@ -11,7 +12,7 @@ module tb_markov_row;
  reg [31:0] hm[0:47],gm[0:47];
  integer n,b,c,cyc=0,t0,stall;
  string dir;
- ot_dsrom_markov_row #(.MUTANT_FOLD(MUTANT)) dut(.clk(clk),.rst_n(rst_n),.start(start),.start_ready(sr),
+ ot_dsrom_markov_row #(.MUTANT_FOLD(MUTANT),.PINREG(PINREG)) dut(.clk(clk),.rst_n(rst_n),.start(start),.start_ready(sr),
   .head_logit(head),.in_valid(iv),.in_ready(ir),.weight_bf16(w),.embed_bf16(x),
   .out_valid(ov),.out_ready(ordy),.out_bits(out),.fault(fault));
  always @(posedge clk) cyc<=cyc+1;
