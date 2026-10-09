@@ -14082,3 +14082,8 @@ def qwen_system_physical_model():
     """Q1 CROM48 and Q2 full-context control sizing, no speculative route credit."""
     from uarch_qwen_system_physical import model
     return model()
+
+
+def qwen_sequencer_sys_model():
+    """Actual Q2 FQS stage traversal/template-ROM/base-add sizing before RTL."""
+    return json.loads((ROOT / "results/rtl/qwen_system_20261009/physical/sequencer_sys_model.json").read_text())

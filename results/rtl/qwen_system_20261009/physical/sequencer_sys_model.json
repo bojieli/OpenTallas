@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.qwen_sequencer_sys_model.v1",
+  "target": "Qwen3-8B ROM TP4 actualFQS_sys",
+  "source_vehicle": "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv",
+  "replicas": 4,
+  "macs_cycle": 0,
+  "compute_intensity": 0,
+  "memory_ports_bytes_cycle": {
+    "constant_program": 128,
+    "constant_descriptor": 8
+  },
+  "template_inventory": {
+    "embedding_words": 2,
+    "layer_words": 31,
+    "head_words": 8,
+    "total_words": 41,
+    "physical_capacity_words": 64,
+    "descriptor_capacity": 8,
+    "active_descriptors": 7,
+    "template_bits": 42432,
+    "mutable_boot_bits_removed": 66048
+  },
+  "boundaries_bits_cycle": {
+    "package_down": 39,
+    "package_up": 59,
+    "stage_metadata": 30,
+    "ME_bases_changed": 48,
+    "engine_packets": "existing fullshapeFQS ME/SU widths unchanged"
+  },
+  "floorplan": {
+    "outline_um": [
+      777.6,
+      1000.08
+    ],
+    "area_um2": 777662.208,
+    "reservation_um2": 1382400,
+    "target_utilization": 0.55,
+    "added_logic_area_um2_assumed_upper": 20000,
+    "fits_reservation": true
+  },
+  "multiplexers": {
+    "program_read": "64:1 x1024 constantROM, existing oneedge response",
+    "descriptor_read": "8:1 x64 constantROM, oneedge response",
+    "stage_table": "38:1 x56 constantROM, registered",
+    "weight_bases": "two24-bitadders, ROMweights only, folded before existingOS"
+  },
+  "fanout": {
+    "stage_code_bits": 24,
+    "stage_scale_bits": 24,
+    "generation_tag_bits": 2,
+    "stage_tag_bits": 6,
+    "table_replicas": "oneperdie"
+  },
+  "tracks": {
+    "newCTRLpins": 98,
+    "local_stage_metadata": 30,
+    "region_capacity_tracks_assumed": 12000,
+    "comment": "existingwideME/SU/coll/VM packet obligations stayfullshape; pin placement measured separately"
+  },
+  "latency": {
+    "program_read_edges": 1,
+    "descriptor_read_edges": 1,
+    "weight_base_added_edges": 0,
+    "weight_base_fallback_added_edges": 1,
+    "fallback_added_cycles_token_upper": 217,
+    "baseline_stage_switch_added_cycles_token": 74,
+    "stage_pipeline": "priceactualdctl plusFQS IS/OS from commandtrace; do not assumefake-stagebench equalsactualFQS",
+    "FQ_HEAD": 1,
+    "MSTN": 1,
+    "A6_baseline_added_cycles_layer": 2
+  },
+  "exact_contract": "Golden38entry stage traversal; immutableISAtemplates byte-identical to releasedstagegeneratorAR256; relocateddescriptorprogrambases; wbase/wcsaddstagebaseonlyforROMme_wsrc0; fullMEpacket/go alignment; fullstg/gen tag; argmaxranktie unchanged. PinnedFQS source unchanged. Opt-in SYS_ENABLE default0 until exact+physicalgates."
+}
