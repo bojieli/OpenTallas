@@ -32,6 +32,8 @@ module ot_hgi_argmax18_value_m #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input wire [24:0] global_offset,
+    output reg out_range_fault,
     input  wire            in_v,
     input  wire            in_last,
     input  wire            in_bias_en,
@@ -191,7 +193,8 @@ module ot_hgi_argmax18_value_m #(
             end
             tnan[lv+1] <= tnan[lv];
         end
-        out_value <= tbits[LL][0]; out_idx <= ti[LL][0];
+        out_value <= tbits[LL][0]; out_idx <= {8'b0,ti[LL][0]}+{1'b0,global_offset};
+        out_range_fault <= (({8'b0,ti[LL][0]}+{1'b0,global_offset}) >= 26'd262144);
         out_nan <= tnan[LL];
     end
     // lanes that saw at least one valid value in the row (a lane can be empty on a short row)

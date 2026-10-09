@@ -21,37 +21,38 @@
         "name": "exact_cf_arg_ds_lockstep",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
         "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "pass"
       },
       {
         "name": "mutant_1",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1",
-        "expect_fail": true,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "fail"
       },
       {
         "name": "mutant_2",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2",
-        "expect_fail": true,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "fail"
       },
       {
         "name": "mutant_3",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3",
-        "expect_fail": true,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "fail"
       },
       {
         "name": "mutant_value_zero",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4",
-        "expect_fail": true,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "fail"
       },
       {
         "name": "mutant_nan_payload",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5",
-        "expect_fail": true,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "expect": "fail"
       }
     ],
     "calibrate": {
