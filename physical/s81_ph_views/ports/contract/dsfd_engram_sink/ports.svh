@@ -1,4 +1,4 @@
-    input wire [0:0] ck,
+    input wire ck,
     input wire [11:0] in_beat,
     input wire [19:0] in_col,
     input wire [1055:0] in_d,
@@ -8,11 +8,11 @@
     output wire [7:0] perr,
     output wire [7:0] rdy,
     input wire [2:0] rel_slot,
-    input wire [0:0] rel_v,
-    input wire [0:0] rst_n,
+    input wire rel_v,
+    input wire rst_n,
     input wire [3:0] st_bad,
     input wire [11:0] st_slot,
     input wire [3:0] st_v,
     output wire [10:0] wr_addr,
     output wire [511:0] wr_data,
-    output wire [0:0] wr_en
+    output wire wr_en

@@ -33,6 +33,60 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+
+def dsrom_engram_boot_dispatch_model():
+    """Class-11 mutable-HBM boot dispatch; implemented separately from RoPE.
+
+    Eight credits bound sector storage and outstanding controller tags. Boot
+    runs before token admission, so its pipelines add no decode cycles. This
+    sizing establishes no physical qualification or controller completion credit.
+    """
+    depth = 8
+    # Slot storage, four count/fingerprint registers, input pin flops,
+    # output pin flops, credit/status state.
+    state_bits = depth * (256 + 30 + 2) + 4 * 32 + 297 + 290 + 9
+    return dict(schema='opentallas.engram-boot-dispatch-model.v1', replicas=8,
+                macs_per_cycle=0, input_bytes_per_cycle=32,
+                output_bytes_per_cycle=32, completion_bytes_per_cycle=1,
+                input_boundary_bits=32 + 256 + 1,
+                two_stack_output_bits=2 * (29 + 256 + 3 + 1),
+                completion_boundary_bits=2 * (3 + 1),
+                storage_bits=state_bits, depth=depth,
+                selection='8-entry tagged queue; 8:1 sector/address mux and priority allocator',
+                area_cell_mm2_modelled=state_bits * .2916 / 1e6,
+                area_basis='ASAP7 sequential cell 0.2916um2; combinational/routing overhead unqualified',
+                floorplan_slot_um=[324, 216],
+                channel_tracks_needed=2 * (29 + 256 + 3 + 1),
+                channel_tracks_capacity_modelled=int(324 / .048),
+                channel_basis='0.048um contract pin lattice; metal/routing must validate',
+                serial_latency_cycles=2, single_user_decode_added_cycles=0,
+                controller_map=dict(
+                    status='boot-exclusive API mapper; actual hierarchical controller wiring/closure pending',
+                    queued_sectors=8, request_bits_per_pc=341, pseudochannels=64,
+                    state_bits=3290, sequential_cell_mm2_modelled=3290*.2916/1e6,
+                    queue='8 tagged sectors, one outstanding write per PC, completion tags retained until wd',
+                    request_fanout='data256/address30/tag17 shared; 64 independently registered valid bits',
+                    arbitration='8:1 queued-sector mux, two stack completion returns/cycle',
+                    added_preboot_pipeline_cycles=2, added_decode_cycles=0,
+                    boundary_bits_per_cycle=341,
+                    physical_obligation='distributed relay/pin copies for 64PC endpoints, FIFO and wd identity exact gate'),
+                prefetch=dict(
+                    slots=8, columns=24, beats_per_column=8, bits_per_beat=512,
+                    payload_bytes=98304, secded_bits_per_word=576,
+                    address_map='compact(slot*192+column*8+beat), six256-row groups, three256b macros/group',
+                    physical_sram_macros=18,
+                    macro='ot_sram_1r1w_256x256_m2_r2c2',
+                    macro_area_mm2=18*172.8*41.04/1e6,
+                    historical_unprotected_macros=12,
+                    added_macro_area_mm2=6*172.8*41.04/1e6,
+                    write_bytes_per_cycle=64, read_bytes_per_cycle=64,
+                    write_pipeline_cycles=1, read_pipeline_cycles=2,
+                    offpath_ready_added_cycles=1, decode_added_cycles=0,
+                    qualification='macroSScapture, SECDED exactness and delayed slotready required; no timing credit'),
+                composed_latency='preboot only: pin capture, registered dispatch, controller completion drain, publish',
+                address_contract='class11, 30-bit local atom; stack=atom[0], stack_atom=atom>>1',
+                status='sized for minimal exact RTL; no physical or controller qualification')
+
 import arch_budget_v41 as A  # noqa: E402
 
 def qwen_spine_credit_contract_model():

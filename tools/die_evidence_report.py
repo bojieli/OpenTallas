@@ -40,6 +40,15 @@ DIES = {
     's81': dict(
         name='DeepSeek-V4.1 ROM die S81 (m221pq)', host='ot-epyc3',
         note=f'{SCR}/s81-die/m221pq_r3 (r3 full-die GRT + balanced-kit STA v6) and m221pq_r4 (--nxt-reach relay fix)'),
+    # s81-dies 2026-10-08: the scan and head dies on the 1,792 mapping (tools/s81/s81_dies_recipe.py), each through
+    # tools/s81/s81_dies_chain.sh (own clock plan -> kit -> place -> full-die GRT -> STA TT / FF / SS)
+    's81scan': dict(
+        name='DeepSeek-V4.1 ROM S81 scan die (4-stack, 1,792 mapping)', host='ot-epyc3',
+        note=f'chain {SCR}/s81-dies/scan/STATUS.log (recipe scan: m221pq frames, hub 1,771.2 / VCH 1,555.2, --die layer)'),
+    's81head': dict(
+        name='DeepSeek-V4.1 ROM S81 head die (headp2, 1,792 mapping)', host='ot-epyc1tb',
+        note=f'chain {SCR}/s81-dies/headp2/STATUS.log (recipe headp2: mtp-die P2 content 511 pairs + 85 bundles, 221.4 um '
+             'frames; MTP sequencer / draft SerDes not yet in the floorplan)'),
 }
 STATIC = {
     # evidence that lives only in a log / committed record (no live probe); cited, never recomputed
@@ -492,6 +501,48 @@ def probe_s81():
     return out
 
 
+def probe_s81_run(run):
+    """one tools/s81/s81_dies_chain.sh run dir: GRT, STA split (TT setup / FF hold, SS sensitivity), view share, clock plan"""
+    out = dict(run=run, status_log=_read(f'{run}/STATUS.log').strip().splitlines()[-4:])
+    K, S = f'{run}/kit', f'{run}/grt'
+    if not (_exists(f'{S}/end_tt.rpt') and _exists(f'{S}/end_ff.rpt') and _exists(f'{K}/index.json')):
+        out['sta'] = dict(status='pending')
+        out['grt'] = grt_overflow(f'{S}/grt.log') if _exists(f'{S}/grt.log') else dict(status='pending')
+        cp = f'{run}/clock/plan.json'
+        out['clock_plan'] = clock_summary(cp) if _exists(cp) else dict(status='pending')
+        return out
+    idx = json.loads(_read(f'{K}/index.json'))
+    view = {m: v.get('view') for m, v in idx.get('masters', {}).items()}
+    cls = lambda m: ('real' if view.get(m) in ('closed', 'assembled', 'macro') else
+                     'relay' if re.search(r'_rly_', m) else 'placeholder')
+    inst2m = netlist_masters(f'{K}/die.v')
+    out['views'] = dict(masters_by_view={k: sum(1 for v in view.values() if v == k) for k in sorted(set(view.values()))})
+    out['area'] = area_split(inst2m, lef_sizes(glob.glob(f'{run}/a_real/*.lef')), cls)
+    out['grt'] = grt_overflow(f'{S}/grt.log')
+    sm = _read(f'{S}/summary.txt')
+    sta = {}
+    for c, chk, mx in (('tt', 'setup', 'max'), ('ff', 'hold', 'min')):
+        w = re.search(rf'{c} worst slack {mx} (\S+) tns {mx} (\S+)', sm)
+        res = dict(status='done', check=chk, all=dict(wns_ps=float(w.group(1)), tns_ps=float(w.group(2))) if w else None)
+        res['split'] = split_end_paths(f'{S}/end_{c}.rpt', f'{S}/paths_{c}.rpt', inst2m, cls)
+        sta[c] = res
+    w = re.search(r'ss worst slack max (\S+) tns max (\S+)', sm)
+    sta['ss'] = dict(status='done', check='setup (sensitivity)', all=dict(wns_ps=float(w.group(1)), tns_ps=float(w.group(2))) if w else None)
+    out['sta'] = sta
+    cp = f'{run}/clock/plan.json'
+    out['clock_plan'] = clock_summary(cp) if _exists(cp) else dict(status='missing', note=_read(f'{K}/clock_plan_used').strip())
+    out['ir'] = dict(status='pending', note='IR not run for this die')
+    return out
+
+
+def probe_s81scan():
+    return probe_s81_run(f'{SCR}/s81-dies/scan')
+
+
+def probe_s81head():
+    return probe_s81_run(f'{SCR}/s81-dies/headp2')
+
+
 def probe_qwen():
     Q = f'{SCR}/qwen-die-r20'
     R, C = f'{Q}/r21b', f'{Q}/cases/r21b_pdn'
@@ -533,7 +584,7 @@ def probe_qwen():
     return out
 
 
-PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81)
+PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head)
 
 
 # ----------------------------------------------------------------------------------------------- local driver
@@ -688,7 +739,7 @@ def main(argv=None):
         return 0
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='results/arch/die_evidence_20261008')
-    ap.add_argument('--die', default='qwen,hbm,s81')
+    ap.add_argument('--die', default='qwen,hbm,s81,s81scan,s81head')
     a = ap.parse_args(argv)
     dies = a.die.split(',')
     with concurrent.futures.ThreadPoolExecutor(len(dies)) as ex:
@@ -696,7 +747,7 @@ def main(argv=None):
     rep = dict(schema='opentallas.die_evidence_report.v1', date=time.strftime('%Y-%m-%d %H:%M %Z'),
                basis='BRIEF.md owner steer 2026-10-07 (academic validation) + option B (TT setup / FF hold)',
                tool='tools/die_evidence_report.py', dies={})
-    for d in ('qwen', 'hbm', 's81'):
+    for d in DIES:
         if d in res:
             r = res[d]
             for k, v in STATIC.get(d, {}).items():

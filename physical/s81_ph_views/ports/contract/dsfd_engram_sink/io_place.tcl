@@ -1,5 +1,5 @@
 # dsfd_engram_sink (contract pin plan, tools/s81_ph/s81_ph_pinplan.py)
-place_pin -pin_name {ck[0]} -layer M4 -location {0.0960 67.5000} -pin_size {0.1920 0.0240}
+place_pin -pin_name {ck} -layer M4 -location {0.0960 67.5000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {in_beat[0]} -layer M5 -location {35.6760 134.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {in_beat[1]} -layer M5 -location {35.7240 134.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {in_beat[2]} -layer M5 -location {35.7720 134.9040} -pin_size {0.0240 0.1920}
@@ -1127,8 +1127,8 @@ place_pin -pin_name {rdy[7]} -layer M4 -location {0.0960 94.8120} -pin_size {0.1
 place_pin -pin_name {rel_slot[0]} -layer M4 -location {0.0960 33.6600} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rel_slot[1]} -layer M4 -location {0.0960 33.7560} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rel_slot[2]} -layer M4 -location {0.0960 33.8520} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rel_v[0]} -layer M4 -location {0.0960 40.4760} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst_n[0]} -layer M4 -location {0.0960 60.7320} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rel_v} -layer M4 -location {0.0960 40.4760} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rst_n} -layer M4 -location {0.0960 60.7320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {st_bad[0]} -layer M5 -location {356.2680 134.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {st_bad[1]} -layer M5 -location {356.3160 134.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {st_bad[2]} -layer M5 -location {356.3640 134.9040} -pin_size {0.0240 0.1920}
@@ -1672,4 +1672,4 @@ place_pin -pin_name {wr_data[508]} -layer M5 -location {246.4440 0.0960} -pin_si
 place_pin -pin_name {wr_data[509]} -layer M5 -location {246.6360 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {wr_data[510]} -layer M5 -location {246.8280 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {wr_data[511]} -layer M5 -location {247.0200 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {wr_en[0]} -layer M5 -location {28.7640 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {wr_en} -layer M5 -location {28.7640 0.0960} -pin_size {0.0240 0.1920}

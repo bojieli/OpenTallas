@@ -158,7 +158,9 @@ module ot_rom_host_ingest #(
     assign e_wrdy = !ox_full;
     assign e_rrdy = (RMW_EN != 0) && !e_wv && !ox_full && rd_room;
     wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
-    wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 192'd0, hx_head[127:64]}
+    // Preserve the optional marker region in bits65:64. Existing markers use
+    // zero there and retain their exact low64 payload / RoPE dispatch behavior.
+    wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 190'd0, hx_head[129:64]}
                          : e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
     // read returns ck -> clk_i
     wire         rx_full, rx_empty, rx_ovf;
