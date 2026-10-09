@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_candidate_sram_bank",
+      "target": "HBM accelerator",
+      "owner": "candidate_store",
+      "description": "Actual SECDED native candidate payload bank",
+      "source": {
+        "commit": "81dc0159c",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff; remote elaboration pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuild sized real210macro fullstore; standalone bank physical pathfinding",
+        "evidence": [
+          "results/uarch/hbm_candidate_store_20261009.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending actual full8832flit/132480literal reads",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending CE/UE/order/retirement/reset gates",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending remote elaboration then admitted standalone bank PATHFINDING",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual native TU formatter/parser",
+        "die owner slot and relay allocation",
+        "mapped independent metadata protection audit"
+      ],
+      "integration": {
+        "status": "provider ABI implemented; real global-order join pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
+        ]
+      }
+    },
+    {
+      "element": "ot_hbm_candidate_publication_store",
+      "target": "HBM accelerator",
+      "owner": "candidate_store",
+      "description": "Full TP96 literal-slot publication and finite provider lease",
+      "source": {
+        "commit": "81dc0159c",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff; remote elaboration pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuild sized real210macro fullstore; standalone bank physical pathfinding",
+        "evidence": [
+          "results/uarch/hbm_candidate_store_20261009.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending actual full8832flit/132480literal reads",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending CE/UE/order/retirement/reset gates",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending remote elaboration then admitted standalone bank PATHFINDING",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual native TU formatter/parser",
+        "die owner slot and relay allocation",
+        "mapped independent metadata protection audit"
+      ],
+      "integration": {
+        "status": "provider ABI implemented; real global-order join pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
+        ]
+      }
+    }
+  ]
+}
