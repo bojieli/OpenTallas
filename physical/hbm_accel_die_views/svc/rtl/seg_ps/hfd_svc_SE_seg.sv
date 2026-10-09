@@ -42,18 +42,18 @@ module hfd_svc_SE_seg (
     input wire [0:0] rst
 );
   wire [606:0] xr0;
-  wire [1237:0] xl0;
+  wire [1265:0] xl0;
   wire [1420:0] xr1;
-  wire [1001:0] xl1;
+  wire [1043:0] xl1;
   wire [1148:0] xr2;
-  wire [999:0] xl2;
-  wire [986:0] xr3;
+  wire [1055:0] xl2;
+  wire [1028:0] xr3;
   wire [563:0] xl3;
-  wire [714:0] xr4;
+  wire [742:0] xr4;
   wire [561:0] xl4;
-  wire [442:0] xr5;
+  wire [456:0] xr5;
   wire [559:0] xl5;
-  wire [612:0] xr6;
+  wire [626:0] xr6;
   wire [57:0] xl6;
   wire [116:0] xr7;
   wire [279:0] xl7;

@@ -65,6 +65,10 @@ module tb_hfd_attn_half_b (input wire clk);
     wire [1617:0] pk_c = (ROLE == 1 || ROLE == 4) ? pk1 : 1618'd0;
     wire [1617:0] pk_r = (ROLE == 2 || ROLE == 4) ? pk2 : 1618'd0;
     // LDK = 1: the reference one-piece tile sees the forward chains with their ld field cleared (what the strap means)
+    // LDK = 1: the split tile's entry gets the k packet as a PS row on ks (the formatter must rebuild it bit for bit)
+    wire [1037:0] ldp = pk_k[1617:580];          // {ld_v, ld_mode, ld_bank3, ld_grp8, ld_w1024, ld_w2v}
+    wire [1101:0] ks_in = LDK ? {3'b101, 31'd0, ldp[1036], ldp[1035:1033], ldp[1032:1025], ldp[0], 1'b0, 5'd3, 4'hF, 10'd0,
+                                 ldp[1024:1], 10'd7, ldp[1037]} : 1102'd0;
     wire [1617:0] pk_cr = LDK ? {1038'd0, pk_c[579:0]} : pk_c;
     wire [1617:0] pk_rr = LDK ? {1038'd0, pk_r[579:0]} : pk_r;
     wire [528:0]  i_in = (ROLE == 3 || ROLE == 4) ? iw : 529'd0;
@@ -82,7 +86,7 @@ module tb_hfd_attn_half_b (input wire clk);
     assign xr_h = (MUT == 2) ? xr_d : (MUT == 3) ? {xr_l[135:0], xr_l[271:136]} : xr_l;
     wire [1617:0] cf_s, rf_s; wire [528:0] o_s;
     hfd_attn_half_lo #(.NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .NFR(NFR), .NLL(NLL)) u_lo (
-        .ck(clk), .rst(rst_n), .k(k_in), .ldk(LDK[0]), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
+        .ck(clk), .rst(rst_n), .k(LDK ? 1041'd0 : k_in), .ks(ks_in), .ldk(LDK[0]), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
     hfd_attn_half_hi #(.PMID(PMID), .NFC(NFC), .NL(NL), .NLL(NLL + ((MUT == 4) ? 1 : 0)), .NI(NI)) u_hi (
         .ck(clk), .xp(xp_h), .xr(xr_h), .i(i_in), .cf(cf_s), .o(o_s));
     always @(posedge clk) begin

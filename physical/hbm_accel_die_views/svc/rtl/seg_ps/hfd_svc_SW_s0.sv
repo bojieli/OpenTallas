@@ -5,7 +5,7 @@
 // wire-stage chain portions (ot_svc_vpipe, cross-face flops at both pins), own ck / rst synchroniser.
 module hfd_svc_SW_s0 (
     input wire [0:0] ck,
-    input wire [1237:0] ei,
+    input wire [1265:0] ei,
     output wire [606:0] eo,
     input wire [1:0] kq0,
     input wire [1:0] kq1,
@@ -36,8 +36,8 @@ module hfd_svc_SW_s0 (
   wire rs5_v; wire [276:0] rs5_d;
   wire rs6_v; wire [276:0] rs6_d;
   wire rs7_v; wire [276:0] rs7_d;
-  wire [3:0] gp0_sv, gp0_cr; wire [1107:0] gp0_sq; wire gp0_ovf;
-  wire [3:0] gp1_sv, gp1_cr; wire [1107:0] gp1_sq; wire gp1_ovf;
+  wire [3:0] gp0_sv, gp0_cr; wire [1107:0] gp0_sq; wire gp0_ovf, gp0_sgv; wire [12:0] gp0_sgd;
+  wire [3:0] gp1_sv, gp1_cr; wire [1107:0] gp1_sq; wire gp1_ovf, gp1_sgv; wire [12:0] gp1_sgd;
   wire ln0_wr_v, ln0_w_room, ln0_v, ln0_rq; wire [9:0] ln0_wr_tag; wire [4:0] ln0_wr_beat; wire [255:0] ln0_wr_data; wire [270:0] ln0_d;
   wire ln1_wr_v, ln1_w_room, ln1_v, ln1_rq; wire [9:0] ln1_wr_tag; wire [4:0] ln1_wr_beat; wire [255:0] ln1_wr_data; wire [270:0] ln1_d;
   wire ln2_wr_v, ln2_w_room, ln2_v, ln2_rq; wire [9:0] ln2_wr_tag; wire [4:0] ln2_wr_beat; wire [255:0] ln2_wr_data; wire [270:0] ln2_d;
@@ -111,6 +111,8 @@ module hfd_svc_SW_s0 (
   wire c_cr5_0_v; wire [0:0] c_cr5_0_d;
   wire c_cr6_0_v; wire [0:0] c_cr6_0_d;
   wire c_cr7_0_v; wire [0:0] c_cr7_0_d;
+  wire c_sg0_3_v; wire [12:0] c_sg0_3_d;
+  wire c_sg1_3_v; wire [12:0] c_sg1_3_d;
   assign ar0_kcv = 1'b0; assign ar0_kcd = 40'd0;
   assign ar0_icv = 1'b0; assign ar0_icd = 40'd0;
   ot_svs_arb #(.S(0), .KVI(-1), .IKI(-1)) u_ar0 (.ck(c), .rn(rn), .sv(ar0_sv), .sd(ar0_sd), .rq_take(ar0_take), .kvc_v(ar0_kcv), .kvc_d(ar0_kcd), .kv_take(ar0_kt), .ikc_v(ar0_icv), .ikc_d(ar0_icd), .ik_take(ar0_it), .done({dn3_o, dn2_o, dn1_o, dn0_o}), .iss_v(ar0_iv), .iss_d(ar0_id));
@@ -131,12 +133,12 @@ module hfd_svc_SW_s0 (
   assign gp0_sv[1] = rs1_v && (rs1_d[276:275] == 2'b11); assign gp0_sq[553:277] = rs1_d;
   assign gp0_sv[2] = rs2_v && (rs2_d[276:275] == 2'b11); assign gp0_sq[830:554] = rs2_d;
   assign gp0_sv[3] = rs3_v && (rs3_d[276:275] == 2'b11); assign gp0_sq[1107:831] = rs3_d;
-  ot_svs_grp #(.K(0)) u_gp0 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp0_sv), .sq(gp0_sq), .kq(kq0), .cr(gp0_cr), .ks(ks0), .ovf(gp0_ovf));
+  ot_svs_grp #(.K(0)) u_gp0 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp0_sv), .sq(gp0_sq), .kq(kq0), .sg_v(gp0_sgv), .sg_d(gp0_sgd), .cr(gp0_cr), .ks(ks0), .ovf(gp0_ovf));
   assign gp1_sv[0] = rs4_v && (rs4_d[276:275] == 2'b11); assign gp1_sq[276:0] = rs4_d;
   assign gp1_sv[1] = rs5_v && (rs5_d[276:275] == 2'b11); assign gp1_sq[553:277] = rs5_d;
   assign gp1_sv[2] = rs6_v && (rs6_d[276:275] == 2'b11); assign gp1_sq[830:554] = rs6_d;
   assign gp1_sv[3] = rs7_v && (rs7_d[276:275] == 2'b11); assign gp1_sq[1107:831] = rs7_d;
-  ot_svs_grp #(.K(1)) u_gp1 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp1_sv), .sq(gp1_sq), .kq(kq1), .cr(gp1_cr), .ks(ks1), .ovf(gp1_ovf));
+  ot_svs_grp #(.K(1)) u_gp1 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp1_sv), .sq(gp1_sq), .kq(kq1), .sg_v(gp1_sgv), .sg_d(gp1_sgd), .cr(gp1_cr), .ks(ks1), .ovf(gp1_ovf));
   ot_svs_lane u_ln0 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln0_wr_v), .wr_tag(ln0_wr_tag), .wr_beat(ln0_wr_beat), .wr_data(ln0_wr_data), .w_room(ln0_w_room), .o_v(ln0_v), .o_d(ln0_d), .room_q(ln0_rq));
   ot_svs_lane u_ln1 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln1_wr_v), .wr_tag(ln1_wr_tag), .wr_beat(ln1_wr_beat), .wr_data(ln1_wr_data), .w_room(ln1_w_room), .o_v(ln1_v), .o_d(ln1_d), .room_q(ln1_rq));
   ot_svs_lane u_ln2 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln2_wr_v), .wr_tag(ln2_wr_tag), .wr_beat(ln2_wr_beat), .wr_data(ln2_wr_data), .w_room(ln2_w_room), .o_v(ln2_v), .o_d(ln2_d), .room_q(ln2_rq));
@@ -297,6 +299,12 @@ module hfd_svc_SW_s0 (
   assign eo[7:6] = {c_cr6_0_d, c_cr6_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_cr7_0 (.ck(c), .rst_n(rn), .v(gp1_cr[3]), .d(1'b0), .qv(c_cr7_0_v), .q(c_cr7_0_d));
   assign eo[9:8] = {c_cr7_0_d, c_cr7_0_v};
+  ot_svc_vpipe #(.W(13), .N(3)) c_sg0_3 (.ck(c), .rst_n(rn), .v(ei[1238]), .d(ei[1251:1239]), .qv(c_sg0_3_v), .q(c_sg0_3_d));
+  assign gp0_sgv = c_sg0_3_v;
+  assign gp0_sgd = c_sg0_3_d;
+  ot_svc_vpipe #(.W(13), .N(2)) c_sg1_3 (.ck(c), .rst_n(rn), .v(ei[1252]), .d(ei[1265:1253]), .qv(c_sg1_3_v), .q(c_sg1_3_d));
+  assign gp1_sgv = c_sg1_3_v;
+  assign gp1_sgd = c_sg1_3_d;
   assign phy[0] = pc0_k_v;
   assign pc0_k_rdy = phy[1];
   assign phy[2] = pc0_k_addr[0];

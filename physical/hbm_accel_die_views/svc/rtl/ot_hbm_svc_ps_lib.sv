@@ -18,7 +18,7 @@
 //                returned beat leaves with tag[4:0] = {nocr, idx, valid, slot2} (slot = sector j[1:0]).
 //   ot_svs_grp   group unit beside SM arbiter k (PCs 4k .. 4k+3): ping-pong 4-sector row buffers per PC, round-robin
 //                onto the group's row port ks = {meta64, row1024, rq10, v} (the SM-line format: 1,099 b + 3 forwarded
-//                clock copies), meta = {44'd0, idx, pcid5, smask4, 10'd0}; ONE-BIT line credits back from the consumer
+//                clock copies), meta = {31'd0, load tag13, idx, pcid5, smask4, 10'd0}; ONE-BIT line credits back from the consumer
 //                on kq ({fclk, v}, two-clock FIFO), returned in row order: the group keeps the PC id of every credited
 //                row it sent (a 4 x CRR FIFO) and hands each credit to that row's PC (credit mode: CRR rows a PC).
 // Physical: rows of 4 PCs leave each group at its arbiter's x: 8 row ports a stack (8 x 1,024 b a cycle = the stack's 32
@@ -31,7 +31,9 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   input wire bw, input wire bk, input wire bi,
   output reg sd_v, output reg [61:0] sd_d,                 // stream descriptor to both PC daisy chains
   input wire dw_ok, input wire dw_ph, input wire de_ok, input wire de_ph,
-  output wire [1:0] kd);                                   // {forwarded clock, stream done pulse}
+  output wire [1:0] kd,                                    // {forwarded clock, stream done pulse}
+  output reg sg_v, output reg [12:0] sg_d);                // the stream's LOAD TAG (ed[83:71], compiler-supplied
+                                                           // {ld_mode, ld_bank3, ld_grp8, ld_w2v}) to every group unit
   wire [126:0] ed; wire e_empty, e_full; wire [2:0] e_fr;
   reg [127:0] e_f;
   wire e_wck = ~e_fclk;
@@ -59,9 +61,9 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   wire e_done = (EEMPTY != 0) || (de_ok && de_ph == ph);
   reg [3:0] hold;                                // the descriptor needs >= 1 cycle to leave before a done can count
   always @(posedge ck or negedge rn)
-    if (!rn) begin pend <= 3'b000; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
+    if (!rn) begin pend <= 3'b000; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; sg_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
     else begin
-      sd_v <= launch; kdv <= 1'b0;
+      sd_v <= launch; sg_v <= launch; kdv <= 1'b0;
       if (ow_v) pend[0] <= 1'b1; else if (bw) pend[0] <= 1'b0;
       if (ok_v) pend[1] <= 1'b1; else if (bk) pend[1] <= 1'b0;
       if (oi_v) pend[2] <= 1'b1; else if (bi) pend[2] <= 1'b0;
@@ -69,6 +71,7 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
       else if (hold != 0) hold <= hold - 4'd1;
       else if (spend && w_done && e_done) begin spend <= 1'b0; kdv <= 1'b1; end
     end
+  always @(posedge ck) if (launch) sg_d <= ed[83:71];
   always @(posedge ck) if (launch)
     sd_d <= {~ph, idx, ed[125], ed[16:2], idx ? nsec_i : ed[28:17], idx ? 32'hFFFF_FFFF : ed[60:29]};
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
@@ -161,6 +164,7 @@ module ot_svs_grp #(parameter integer K = 0) (
   input wire ck, input wire rst, input wire rn,
   input wire [3:0] sv, input wire [4*277-1:0] sq,         // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
+  input wire sg_v, input wire [12:0] sg_d,                 // the running stream's load tag (from the e port)
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
   output wire ovf);                                        // a beat found its row buffer still full / credit queue overflow (never)
@@ -183,7 +187,8 @@ module ot_svs_grp #(parameter integer K = 0) (
   wire [1:0] off = rot[0] ? 2'd0 : rot[1] ? 2'd1 : rot[2] ? 2'd2 : 2'd3;
   wire [1:0] sel = rr + off;
   wire any = |rdy;
-  reg ov, ovb; reg [1087:0] od; reg [9:0] ot;
+  reg ov, ovb; reg [1087:0] od; reg [9:0] ot; reg [12:0] lt;
+  always @(posedge ck) if (sg_v) lt <= sg_d;
   always @(posedge ck or negedge rn)
     if (!rn) begin
       for (p = 0; p < 4; p = p + 1) begin full[p] <= 2'b00; ws[p] <= 1'b0; rs[p] <= 1'b0;
@@ -209,7 +214,7 @@ module ot_svs_grp #(parameter integer K = 0) (
       nc[p][ws[p]] <= sq[p*277+260+4];
     end
     if (any) begin
-      od <= {44'd0, ix[sel][rs[sel]], 5'(4 * K + sel), sm[sel][rs[sel]], 10'd0,
+      od <= {31'd0, lt, ix[sel][rs[sel]], 5'(4 * K + sel), sm[sel][rs[sel]], 10'd0,
              b[sel][rs[sel]][3], b[sel][rs[sel]][2], b[sel][rs[sel]][1], b[sel][rs[sel]][0]};
       ot <= rq[sel][rs[sel]];
     end

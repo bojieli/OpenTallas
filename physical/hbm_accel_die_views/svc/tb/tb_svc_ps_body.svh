@@ -138,10 +138,10 @@
       kmap = {row[14:0], bhi, col, pc ^ col ^ hi5, blo}; end
   endfunction
   integer ps_n = 0, ps_rows = 0, ps_kd = 0, ps_want = 0, ps_cr_out = 0;
-  reg ps_busy = 0; reg ps_idx; reg ps_nocr; reg [14:0] ps_row0; reg [11:0] ps_nsec; reg [31:0] ps_mask;
+  reg ps_busy = 0; reg ps_idx; reg ps_nocr; reg [14:0] ps_row0; reg [11:0] ps_nsec; reg [31:0] ps_mask; reg [12:0] ps_tag;
   // back-to-back streams (review-0400 R4 (3)): the next stream's command may be issued while one runs; the e port must
   // hold it until the running stream is done.  ps2_* = the queued one; ps_seq = sequence number of the current stream.
-  reg ps2_v = 0; reg ps2_idx, ps2_nocr; reg [14:0] ps2_row0; reg [11:0] ps2_nsec; reg [31:0] ps2_mask; integer ps_seq = 0;
+  reg ps2_v = 0; reg ps2_idx, ps2_nocr; reg [14:0] ps2_row0; reg [11:0] ps2_nsec; reg [31:0] ps2_mask; reg [12:0] ps2_tag; integer ps_seq = 0;
   reg [1023:0] ps_seen [0:31];                       // rq bitmap per PC (nsec <= 4 * 1024)
   integer pq, kr, kc;
   always @(posedge ck) if (rst) for (kr = 0; kr < 8; kr = kr + 1) if (ks[kr][0]) begin : rowchk
@@ -154,7 +154,7 @@
     for (sl = 0; sl < 4; sl = sl + 1) want[sl*256 +: 256] = f({2'b00, a4}, 5'(sl ^ rr[1:0]));
     wsm = 4'd0; for (sl = 0; sl < 4; sl = sl + 1) if (ps_idx || (jq + sl) < ps_nsec) wsm[sl] = 1'b1;
     if (!ps_busy) begin err = err + 1; $display("ERR PS row with no stream"); end
-    else if (pcid[4:2] != kr || !ps_mask[pcid] || meta[19] != ps_idx) begin err = err + 1;
+    else if (pcid[4:2] != kr || !ps_mask[pcid] || meta[19] != ps_idx || meta[32:20] != ps_tag) begin err = err + 1;
       $display("ERR PS row port %0d pc %0d idx %0d", kr, pcid, meta[19]); end
     else if (ps_seen[pcid][rq]) begin err = err + 1; $display("ERR PS duplicate row pc %0d rq %0d", pcid, rq); end
     else if (ks[kr][1034:11] !== want || sm !== wsm) begin err = err + 1;
@@ -218,22 +218,23 @@
     ev <= 1'b0;
 `ifdef PS_STREAMS
     if (rst && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
-      reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; integer q;
+      reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
+      tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
       blocks = 1 + $urandom % 120;
       if (idx_) nsec_ = 12'(((17 * blocks) + 31) >> 5);
-      ed <= {1'b1, nocr_, 54'd0, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
+      ed <= {1'b1, nocr_, 41'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
              idx_ ? 2'd2 : 2'd1};
       ev <= 1'b1; ps_n = ps_n + 1;
       if (!ps_busy) begin
-        ps_idx = idx_; ps_nocr = nocr_; ps_row0 = row0_; ps_nsec = nsec_; ps_mask = mask_; ps_seq = ps_seq + 1;
+        ps_idx = idx_; ps_nocr = nocr_; ps_row0 = row0_; ps_nsec = nsec_; ps_mask = mask_; ps_tag = tag_; ps_seq = ps_seq + 1;
         for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
         ps_busy = 1;
       end else begin
-        ps2_idx = idx_; ps2_nocr = nocr_; ps2_row0 = row0_; ps2_nsec = nsec_; ps2_mask = mask_; ps2_v = 1;
+        ps2_idx = idx_; ps2_nocr = nocr_; ps2_row0 = row0_; ps2_nsec = nsec_; ps2_mask = mask_; ps2_tag = tag_; ps2_v = 1;
       end
     end else
 `endif
@@ -257,7 +258,7 @@
     integer q;
     repeat (4) @(posedge ck);
     if (ps2_v) begin       // the queued stream becomes current (its rows can only start after this one's done)
-      ps_idx = ps2_idx; ps_nocr = ps2_nocr; ps_row0 = ps2_row0; ps_nsec = ps2_nsec; ps_mask = ps2_mask; ps_seq = ps_seq + 1;
+      ps_idx = ps2_idx; ps_nocr = ps2_nocr; ps_row0 = ps2_row0; ps_nsec = ps2_nsec; ps_mask = ps2_mask; ps_tag = ps2_tag; ps_seq = ps_seq + 1;
       for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
       ps2_v = 0;
     end else ps_busy = 0;

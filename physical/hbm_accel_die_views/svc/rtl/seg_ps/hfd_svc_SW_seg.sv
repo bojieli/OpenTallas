@@ -42,18 +42,18 @@ module hfd_svc_SW_seg (
     input wire [0:0] rst
 );
   wire [606:0] xr0;
-  wire [1237:0] xl0;
+  wire [1265:0] xl0;
   wire [1424:0] xr1;
-  wire [1042:0] xl1;
+  wire [1084:0] xl1;
   wire [1152:0] xr2;
-  wire [1081:0] xl2;
-  wire [935:0] xr3;
+  wire [1137:0] xl2;
+  wire [977:0] xr3;
   wire [895:0] xl3;
-  wire [878:0] xr4;
+  wire [920:0] xr4;
   wire [7:0] xl4;
-  wire [606:0] xr5;
+  wire [634:0] xr5;
   wire [5:0] xl5;
-  wire [334:0] xr6;
+  wire [348:0] xr6;
   wire [3:0] xl6;
   hfd_svc_SW_s0 u_s0 (.l0(lsm4), .q0(qsm4), .l1(lsm0), .q1(qsm0), .ks0(ks0), .ks1(ks1), .kq0(kq0), .kq1(kq1), .phy(phy[3625:0]), .ck(ck), .rst(rst), .eo(xr0), .ei(xl0));
   hfd_svc_SW_s1 u_s1 (.kv(kv), .l2(lsm5), .q2(qsm5), .ik(ik), .ks2(ks2), .kq2(kq2), .phy(phy[7831:3626]), .ck(ck), .rst(rst), .wi(xr0), .wo(xl0), .eo(xr1), .ei(xl1));

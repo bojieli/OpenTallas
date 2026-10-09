@@ -26,6 +26,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_golden_v41 as V  # noqa: E402
+import hdc_golden as G  # noqa: E402
 
 F = np.float32
 C = 8
@@ -115,10 +116,16 @@ def rnd(rng, shape):
 def main():
     rng = np.random.default_rng(20261009)
     sizes = [1, 7, 8, 9, 63, 64, 65, 100, 513, 1000, 2048, 2049, 4095, 8192, 9000]
-    res, bad, mut_swap, mut_il, mut_bal, load = [], 0, 0, 0, 0, []
+    res, bad, mut_swap, mut_il, mut_bal, load, mut_lmax = [], 0, 0, 0, 0, [], 0
     for P in sizes:
         for trial in range(3):
-            e = np.abs(rnd(rng, (P,)))                       # softmax numerators (>= 0)
+            sc = (rng.standard_normal(P) * 6).astype(F)      # raw scores (scaled q.k)
+            mx = sc.max()                                    # GLOBAL row max (order-free; merged across the 8 pairs)
+            e = G.exp(V.add(sc, -mx))
+            # mutant: each pair subtracts its LOCAL max (no cross-pair max merge) -> e differs
+            nc_ = max(1, -(-P // C)); runs = [(g * nc_ // 8 * C, min(P, (g + 1) * nc_ // 8 * C)) for g in range(8)]
+            el = np.concatenate([G.exp(V.add(sc[a:b], -sc[a:b].max())) for a, b in runs if b > a]) if P > 0 else e
+            mut_lmax += int(V.csum(el).view(np.uint32) != V.csum(e).view(np.uint32))
             v = rnd(rng, (16, P))                            # 16 p.v columns
             pv = V.mul(e[None, :], v)
             want = np.concatenate([[V.csum(e)], V.csum(pv)])
@@ -139,15 +146,15 @@ def main():
                              aligned_eff=round(nc / (8 * -(-NPc // 8)), 3), balanced_eff=round(nc / (8 * bmax), 3)) if trial == 0 else None)
             bad += int(not ok)
             res.append(dict(P=P, trial=trial, exact=bool(ok)))
-    verdict = 'PASS' if bad == 0 and mut_swap > 0 and mut_il > 0 and mut_bal > 0 else 'FAIL'
+    verdict = 'PASS' if bad == 0 and mut_swap > 0 and mut_il > 0 and mut_bal > 0 and mut_lmax > 0 else 'FAIL'
     load = [x for x in load if x]
     out = dict(schema='opentallas.hgi_att8_split.v1', rule=__doc__.split('Checks')[0].strip(), cases=len(res),
-               mismatches=bad, mutant_swap_detected_cases=mut_swap, mutant_interleaved_detected_cases=mut_il, mutant_balanced_swap_detected_cases=mut_bal, per_pair_load=load,
+               mismatches=bad, mutant_swap_detected_cases=mut_swap, mutant_interleaved_detected_cases=mut_il, mutant_balanced_swap_detected_cases=mut_bal, mutant_local_max_detected_cases=mut_lmax, per_pair_load=load,
                verdict=verdict, sizes=sizes)
     p = ROOT / 'results/rtl/hbm_forks_20261009/att8_split_check.json'
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(out, indent=1) + '\n')
-    print(f'ATT8_SPLIT {verdict} cases={len(res)} mismatches={bad} mut_swap={mut_swap} mut_interleaved={mut_il} mut_balanced={mut_bal}')
+    print(f'ATT8_SPLIT {verdict} cases={len(res)} mismatches={bad} mut_swap={mut_swap} mut_interleaved={mut_il} mut_balanced={mut_bal} mut_local_max={mut_lmax}')
     for x in load: print(x)
     return 0 if verdict == 'PASS' else 1
 

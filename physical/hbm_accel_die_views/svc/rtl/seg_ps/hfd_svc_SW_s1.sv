@@ -5,7 +5,7 @@
 // wire-stage chain portions (ot_svc_vpipe, cross-face flops at both pins), own ck / rst synchroniser.
 module hfd_svc_SW_s1 (
     input wire [0:0] ck,
-    input wire [1042:0] ei,
+    input wire [1084:0] ei,
     output wire [1424:0] eo,
     output wire [1025:0] ik,
     input wire [1:0] kq2,
@@ -16,7 +16,7 @@ module hfd_svc_SW_s1 (
     input wire [44:0] q2,
     input wire [0:0] rst,
     input wire [606:0] wi,
-    output wire [1237:0] wo
+    output wire [1265:0] wo
 );
   wire c = ck[0]; wire rn, rdy_q, rdy_q2;
   ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));
@@ -32,7 +32,7 @@ module hfd_svc_SW_s1 (
   wire rs9_v; wire [276:0] rs9_d;
   wire rs10_v; wire [276:0] rs10_d;
   wire rs11_v; wire [276:0] rs11_d;
-  wire [3:0] gp2_sv, gp2_cr; wire [1107:0] gp2_sq; wire gp2_ovf;
+  wire [3:0] gp2_sv, gp2_cr; wire [1107:0] gp2_sq; wire gp2_ovf, gp2_sgv; wire [12:0] gp2_sgd;
   wire ik_sv, ik_dn; wire [276:0] ik_sq; wire [1037:0] ik_kvo; wire [1023:0] ik_iko;
   wire kv_sv, kv_dn; wire [276:0] kv_sq; wire [1037:0] kv_kvo; wire [1023:0] kv_iko;
   wire ln4_wr_v, ln4_w_room, ln4_v, ln4_rq; wire [9:0] ln4_wr_tag; wire [4:0] ln4_wr_beat; wire [255:0] ln4_wr_data; wire [270:0] ln4_d;
@@ -114,6 +114,9 @@ module hfd_svc_SW_s1 (
   wire c_cr9_0_v; wire [0:0] c_cr9_0_d;
   wire c_cr10_0_v; wire [0:0] c_cr10_0_d;
   wire c_cr11_0_v; wire [0:0] c_cr11_0_d;
+  wire c_sg0_2_v; wire [12:0] c_sg0_2_d;
+  wire c_sg1_2_v; wire [12:0] c_sg1_2_d;
+  wire c_sg2_2_v; wire [12:0] c_sg2_2_d;
   assign ar1_icv = 1'b0; assign ar1_icd = 40'd0;
   ot_svs_arb #(.S(1), .KVI(2), .IKI(-1)) u_ar1 (.ck(c), .rn(rn), .sv(ar1_sv), .sd(ar1_sd), .rq_take(ar1_take), .kvc_v(ar1_kcv), .kvc_d(ar1_kcd), .kv_take(ar1_kt), .ikc_v(ar1_icv), .ikc_d(ar1_icd), .ik_take(ar1_it), .done({dn7_o, dn6_o | kvd_o, dn5_o, dn4_o}), .iss_v(ar1_iv), .iss_d(ar1_id));
   assign as2_sv[0] = rs8_v && (rs8_d[276:275] == 2'b00); assign as2_sq[276:0] = rs8_d;
@@ -127,7 +130,7 @@ module hfd_svc_SW_s1 (
   assign gp2_sv[1] = rs9_v && (rs9_d[276:275] == 2'b11); assign gp2_sq[553:277] = rs9_d;
   assign gp2_sv[2] = rs10_v && (rs10_d[276:275] == 2'b11); assign gp2_sq[830:554] = rs10_d;
   assign gp2_sv[3] = rs11_v && (rs11_d[276:275] == 2'b11); assign gp2_sq[1107:831] = rs11_d;
-  ot_svs_grp #(.K(2)) u_gp2 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp2_sv), .sq(gp2_sq), .kq(kq2), .cr(gp2_cr), .ks(ks2), .ovf(gp2_ovf));
+  ot_svs_grp #(.K(2)) u_gp2 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp2_sv), .sq(gp2_sq), .kq(kq2), .sg_v(gp2_sgv), .sg_d(gp2_sgd), .cr(gp2_cr), .ks(ks2), .ovf(gp2_ovf));
   ot_svs_kvasm #(.KV(0)) u_ik (.ck(c), .rn(rn), .sv(ik_sv), .sq(ik_sq), .dn(ik_dn), .kv(ik_kvo), .ik(ik_iko));
   wire fck_ik; ot_svc_fclk_buf u_fc_ik (.a(c), .y(fck_ik));
   assign ik = {fck_ik, fck_ik, ik_iko};
@@ -306,6 +309,13 @@ module hfd_svc_SW_s1 (
   assign eo[3:2] = {c_cr10_0_d, c_cr10_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_cr11_0 (.ck(c), .rst_n(rn), .v(gp2_cr[3]), .d(1'b0), .qv(c_cr11_0_v), .q(c_cr11_0_d));
   assign eo[5:4] = {c_cr11_0_d, c_cr11_0_v};
+  ot_svc_vpipe #(.W(13), .N(5)) c_sg0_2 (.ck(c), .rst_n(rn), .v(ei[1043]), .d(ei[1056:1044]), .qv(c_sg0_2_v), .q(c_sg0_2_d));
+  assign wo[1251:1238] = {c_sg0_2_d, c_sg0_2_v};
+  ot_svc_vpipe #(.W(13), .N(5)) c_sg1_2 (.ck(c), .rst_n(rn), .v(ei[1057]), .d(ei[1070:1058]), .qv(c_sg1_2_v), .q(c_sg1_2_d));
+  assign wo[1265:1252] = {c_sg1_2_d, c_sg1_2_v};
+  ot_svc_vpipe #(.W(13), .N(2)) c_sg2_2 (.ck(c), .rst_n(rn), .v(ei[1071]), .d(ei[1084:1072]), .qv(c_sg2_2_v), .q(c_sg2_2_d));
+  assign gp2_sgv = c_sg2_2_v;
+  assign gp2_sgd = c_sg2_2_d;
   assign phy[0] = pc4_k_v;
   assign pc4_k_rdy = phy[1];
   assign phy[2] = pc4_k_addr[0];

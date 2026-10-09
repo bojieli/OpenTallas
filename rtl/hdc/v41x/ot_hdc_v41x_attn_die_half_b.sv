@@ -28,6 +28,9 @@ module hfd_attn_half_lo #(
     input  wire [1617:0] ci,
     input  wire [0:0]    ck,
     input  wire [1040:0] k,
+    input  wire [1101:0] ks,       // hbm-forks RQ-HF-4: the svc PS row port of this tile's pair (entry tiles only; others
+                                   // leave it unconnected at the die = 0): {fclk x3, meta64, row1024, rq10, v}, meta[32:20] =
+                                   // the stream's load tag {ld_mode, ld_bank3, ld_grp8, ld_w2v} (compiler-supplied), meta[19] = idx
     input  wire [0:0]    ldk,      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
                                    // tie, false path).  1: the ld half of the packet comes from this tile's own k port only
                                    // (the forward chains' ld field is ignored; they still carry the query); 0: today's OR
@@ -53,7 +56,13 @@ module hfd_attn_half_lo #(
     wire ldk_s = ldk[0];
 `endif
     wire [PK-1:0] fw = ci_s | ri_s;                          // forward-chain packet (ld 1,038 | query 580)
-    wire [PW-1:0] pk = {q_s[582], k_s[1037:0] | (ldk_s ? 1038'd0 : fw[PK-1:580]), q_s[579:0] | fw[579:0]};
+    // the entry formatter: a PS row (KV rows only, idx = 0) becomes the ld packet {ld_v, ld_mode, ld_bank, ld_grp, ld_w,
+    // ld_w2v}; the row rides the same 1 + NK pin pipe as k, so its packet reaches ROOT in the same cycle k would (0 added)
+    wire [1101:0] ks_s;
+    ot_attn_bpipe #(.W(1102), .N(1 + NK)) u_pks (.clk(clk), .d(ks), .q(ks_s));
+    wire [63:0] ks_meta = ks_s[1098:1035];
+    wire [1037:0] ks_ld = {ks_s[0] & ~ks_meta[19], ks_meta[32], ks_meta[31:29], ks_meta[28:21], ks_s[1034:11], ks_meta[20]};
+    wire [PW-1:0] pk = {q_s[582], ldk_s ? ks_ld : (k_s[1037:0] | fw[PK-1:580]), q_s[579:0] | fw[579:0]};
     wire [PW-1:0] root_q;
     // ROOT on the N face: its bank outputs are the xp pins
     ot_attn_bpipe #(.W(PW), .N(1)) u_root (.clk(clk), .d(pk), .q(root_q));

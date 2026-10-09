@@ -3,9 +3,10 @@
  "rule": "hbm-forks (2026-10-09, REVIEW_20261009 review-0400 R4 condition 1): the 8-entry-point attention split.\n\nRule (both goldens, no golden change): the positions of one attention row (Qwen: 0 .. P-1; DS: the selected rows in the\ngolden's index order) are cut into the R-ARITH chunks of 8 (hdc_golden_v41.csum), the chunk count padded to a power of two\nNP, and pair g (g = 0..7) owns the CONTIGUOUS ALIGNED block of NP/8 chunks [g*NP/8, (g+1)*NP/8) (when NP < 8: blocks of\none chunk, pairs >= NP idle).  Each pair computes its block's partial Z and p.v with the same chunk-8 chains and the\npairwise tree of its block; the 8 partials merge in pair order by the tree's top log2(min(8, NP)) levels:\n((P0+P1)+(P2+P3))+((P4+P5)+(P6+P7)).  Because every block is an aligned subtree of the golden's padded pairwise tree,\nthe merged result equals csum over all positions bit for bit.  The global row max (needed before exp) is order-free\n(a max), so pass 1 merges maxima in any order.  The compiler lays block g's rows into PC group g of every stack (rows\nchannel-major per chunk block), so ATT pair g consumes ks<g> with no reorder hardware.",
  "cases": 45,
  "mismatches": 0,
- "mutant_swap_detected_cases": 32,
- "mutant_interleaved_detected_cases": 24,
- "mutant_balanced_swap_detected_cases": 5,
+ "mutant_swap_detected_cases": 30,
+ "mutant_interleaved_detected_cases": 26,
+ "mutant_balanced_swap_detected_cases": 3,
+ "mutant_local_max_detected_cases": 36,
  "per_pair_load": [
   {
    "P": 1,

@@ -6,10 +6,10 @@
 module hfd_svc_SE_s6 (
     input wire [0:0] ck,
     input wire [57:0] ei,
-    output wire [612:0] eo,
+    output wire [626:0] eo,
     inout wire [1865:0] phy,
     input wire [0:0] rst,
-    input wire [442:0] wi,
+    input wire [456:0] wi,
     output wire [559:0] wo
 );
   wire c = ck[0]; wire rn, rdy_q, rdy_q2;
@@ -37,6 +37,7 @@ module hfd_svc_SE_s6 (
   wire c_cr26_1_v; wire [0:0] c_cr26_1_d;
   wire c_cr27_1_v; wire [0:0] c_cr27_1_d;
   wire c_cr28_1_v; wire [0:0] c_cr28_1_d;
+  wire c_sg7_3_v; wire [12:0] c_sg7_3_d;
   ot_svs_pcs #(.PCID(26), .END(0)) u_pc26 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc26_iv), .iss_d(pc26_id), .k_v(pc26_k_v), .k_rdy(pc26_k_rdy), .k_addr(pc26_k_addr), .k_len(pc26_k_len), .k_tag(pc26_k_tag), .kr_v(pc26_kr_v), .kr_tag(pc26_kr_tag), .kr_beat(pc26_kr_beat), .kr_data(pc26_kr_data), .b_v(pc26_bv), .b_t(pc26_bt), .b_b(pc26_bb), .b_d(pc26_bd), .di_v(pc26_div), .di_d(pc26_did), .do_v(pc26_dov), .do_d(pc26_dod), .dni_ok(pc26_dniok), .dni_ph(pc26_dniph), .dno_ok(pc26_dnook), .dno_ph(pc26_dnoph), .cr_v(pc26_crv));
   ot_svs_pcs #(.PCID(27), .END(0)) u_pc27 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc27_iv), .iss_d(pc27_id), .k_v(pc27_k_v), .k_rdy(pc27_k_rdy), .k_addr(pc27_k_addr), .k_len(pc27_k_len), .k_tag(pc27_k_tag), .kr_v(pc27_kr_v), .kr_tag(pc27_kr_tag), .kr_beat(pc27_kr_beat), .kr_data(pc27_kr_data), .b_v(pc27_bv), .b_t(pc27_bt), .b_b(pc27_bb), .b_d(pc27_bd), .di_v(pc27_div), .di_d(pc27_did), .do_v(pc27_dov), .do_d(pc27_dod), .dni_ok(pc27_dniok), .dni_ph(pc27_dniph), .dno_ok(pc27_dnook), .dno_ph(pc27_dnoph), .cr_v(pc27_crv));
   ot_svs_pcs #(.PCID(28), .END(0)) u_pc28 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc28_iv), .iss_d(pc28_id), .k_v(pc28_k_v), .k_rdy(pc28_k_rdy), .k_addr(pc28_k_addr), .k_len(pc28_k_len), .k_tag(pc28_k_tag), .kr_v(pc28_kr_v), .kr_tag(pc28_kr_tag), .kr_beat(pc28_kr_beat), .kr_data(pc28_kr_data), .b_v(pc28_bv), .b_t(pc28_bt), .b_b(pc28_bb), .b_d(pc28_bd), .di_v(pc28_div), .di_d(pc28_did), .do_v(pc28_dov), .do_d(pc28_dod), .dni_ok(pc28_dniok), .dni_ph(pc28_dniph), .dno_ok(pc28_dnook), .dno_ph(pc28_dnoph), .cr_v(pc28_crv));
@@ -87,6 +88,8 @@ module hfd_svc_SE_s6 (
   assign pc27_crv = c_cr27_1_v;
   ot_svc_vpipe #(.W(1), .N(1)) c_cr28_1 (.ck(c), .rst_n(rn), .v(ei[54]), .d(ei[55:55]), .qv(c_cr28_1_v), .q(c_cr28_1_d));
   assign pc28_crv = c_cr28_1_v;
+  ot_svc_vpipe #(.W(13), .N(4)) c_sg7_3 (.ck(c), .rst_n(rn), .v(wi[443]), .d(wi[456:444]), .qv(c_sg7_3_v), .q(c_sg7_3_d));
+  assign eo[626:613] = {c_sg7_3_d, c_sg7_3_v};
   assign phy[0] = pc26_k_v;
   assign pc26_k_rdy = phy[1];
   assign phy[2] = pc26_k_addr[0];

@@ -6,14 +6,14 @@
 module hfd_svc_SW_s5 (
     input wire [0:0] ck,
     input wire [5:0] ei,
-    output wire [606:0] eo,
+    output wire [634:0] eo,
     input wire [1:0] kq5,
     output wire [1101:0] ks5,
     output wire [1098:0] l5,
     inout wire [2487:0] phy,
     inout wire [43:0] q5,
     input wire [0:0] rst,
-    input wire [878:0] wi,
+    input wire [920:0] wi,
     output wire [7:0] wo
 );
   wire c = ck[0]; wire rn, rdy_q, rdy_q2;
@@ -29,7 +29,7 @@ module hfd_svc_SW_s5 (
   wire rs21_v; wire [276:0] rs21_d;
   wire rs22_v; wire [276:0] rs22_d;
   wire rs23_v; wire [276:0] rs23_d;
-  wire [3:0] gp5_sv, gp5_cr; wire [1107:0] gp5_sq; wire gp5_ovf;
+  wire [3:0] gp5_sv, gp5_cr; wire [1107:0] gp5_sq; wire gp5_ovf, gp5_sgv; wire [12:0] gp5_sgd;
   wire pc20_iv, pc20_k_v, pc20_k_rdy, pc20_kr_v, pc20_bv; wire [50:0] pc20_id; wire [29:0] pc20_k_addr; wire [3:0] pc20_k_len, pc20_kr_beat, pc20_bb; wire [16:0] pc20_k_tag, pc20_kr_tag, pc20_bt; wire [255:0] pc20_kr_data, pc20_bd; wire pc20_div, pc20_dov, pc20_dniok, pc20_dniph, pc20_dnook, pc20_dnoph, pc20_crv; wire [61:0] pc20_did, pc20_dod;
   wire pc21_iv, pc21_k_v, pc21_k_rdy, pc21_kr_v, pc21_bv; wire [50:0] pc21_id; wire [29:0] pc21_k_addr; wire [3:0] pc21_k_len, pc21_kr_beat, pc21_bb; wire [16:0] pc21_k_tag, pc21_kr_tag, pc21_bt; wire [255:0] pc21_kr_data, pc21_bd; wire pc21_div, pc21_dov, pc21_dniok, pc21_dniph, pc21_dnook, pc21_dnoph, pc21_crv; wire [61:0] pc21_did, pc21_dod;
   wire pc22_iv, pc22_k_v, pc22_k_rdy, pc22_kr_v, pc22_bv; wire [50:0] pc22_id; wire [29:0] pc22_k_addr; wire [3:0] pc22_k_len, pc22_kr_beat, pc22_bb; wire [16:0] pc22_k_tag, pc22_kr_tag, pc22_bt; wire [255:0] pc22_kr_data, pc22_bd; wire pc22_div, pc22_dov, pc22_dniok, pc22_dniph, pc22_dnook, pc22_dnoph, pc22_crv; wire [61:0] pc22_did, pc22_dod;
@@ -69,6 +69,9 @@ module hfd_svc_SW_s5 (
   wire c_cr21_0_v; wire [0:0] c_cr21_0_d;
   wire c_cr22_0_v; wire [0:0] c_cr22_0_d;
   wire c_cr23_0_v; wire [0:0] c_cr23_0_d;
+  wire c_sg5_2_v; wire [12:0] c_sg5_2_d;
+  wire c_sg6_2_v; wire [12:0] c_sg6_2_d;
+  wire c_sg7_2_v; wire [12:0] c_sg7_2_d;
   assign ar5_kcv = 1'b0; assign ar5_kcd = 40'd0;
   assign ar5_icv = 1'b0; assign ar5_icd = 40'd0;
   ot_svs_arb #(.S(5), .KVI(-1), .IKI(-1)) u_ar5 (.ck(c), .rn(rn), .sv(ar5_sv), .sd(ar5_sd), .rq_take(ar5_take), .kvc_v(ar5_kcv), .kvc_d(ar5_kcd), .kv_take(ar5_kt), .ikc_v(ar5_icv), .ikc_d(ar5_icd), .ik_take(ar5_it), .done({dn23_o, dn22_o, dn21_o, dn20_o}), .iss_v(ar5_iv), .iss_d(ar5_id));
@@ -82,7 +85,7 @@ module hfd_svc_SW_s5 (
   assign gp5_sv[1] = rs21_v && (rs21_d[276:275] == 2'b11); assign gp5_sq[553:277] = rs21_d;
   assign gp5_sv[2] = rs22_v && (rs22_d[276:275] == 2'b11); assign gp5_sq[830:554] = rs22_d;
   assign gp5_sv[3] = rs23_v && (rs23_d[276:275] == 2'b11); assign gp5_sq[1107:831] = rs23_d;
-  ot_svs_grp #(.K(5)) u_gp5 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp5_sv), .sq(gp5_sq), .kq(kq5), .cr(gp5_cr), .ks(ks5), .ovf(gp5_ovf));
+  ot_svs_grp #(.K(5)) u_gp5 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp5_sv), .sq(gp5_sq), .kq(kq5), .sg_v(gp5_sgv), .sg_d(gp5_sgd), .cr(gp5_cr), .ks(ks5), .ovf(gp5_ovf));
   ot_svs_pcs #(.PCID(20), .END(0)) u_pc20 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc20_iv), .iss_d(pc20_id), .k_v(pc20_k_v), .k_rdy(pc20_k_rdy), .k_addr(pc20_k_addr), .k_len(pc20_k_len), .k_tag(pc20_k_tag), .kr_v(pc20_kr_v), .kr_tag(pc20_kr_tag), .kr_beat(pc20_kr_beat), .kr_data(pc20_kr_data), .b_v(pc20_bv), .b_t(pc20_bt), .b_b(pc20_bb), .b_d(pc20_bd), .di_v(pc20_div), .di_d(pc20_did), .do_v(pc20_dov), .do_d(pc20_dod), .dni_ok(pc20_dniok), .dni_ph(pc20_dniph), .dno_ok(pc20_dnook), .dno_ph(pc20_dnoph), .cr_v(pc20_crv));
   ot_svs_pcs #(.PCID(21), .END(0)) u_pc21 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc21_iv), .iss_d(pc21_id), .k_v(pc21_k_v), .k_rdy(pc21_k_rdy), .k_addr(pc21_k_addr), .k_len(pc21_k_len), .k_tag(pc21_k_tag), .kr_v(pc21_kr_v), .kr_tag(pc21_kr_tag), .kr_beat(pc21_kr_beat), .kr_data(pc21_kr_data), .b_v(pc21_bv), .b_t(pc21_bt), .b_b(pc21_bb), .b_d(pc21_bd), .di_v(pc21_div), .di_d(pc21_did), .do_v(pc21_dov), .do_d(pc21_dod), .dni_ok(pc21_dniok), .dni_ph(pc21_dniph), .dno_ok(pc21_dnook), .dno_ph(pc21_dnoph), .cr_v(pc21_crv));
   ot_svs_pcs #(.PCID(22), .END(0)) u_pc22 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc22_iv), .iss_d(pc22_id), .k_v(pc22_k_v), .k_rdy(pc22_k_rdy), .k_addr(pc22_k_addr), .k_len(pc22_k_len), .k_tag(pc22_k_tag), .kr_v(pc22_kr_v), .kr_tag(pc22_kr_tag), .kr_beat(pc22_kr_beat), .kr_data(pc22_kr_data), .b_v(pc22_bv), .b_t(pc22_bt), .b_b(pc22_bb), .b_d(pc22_bd), .di_v(pc22_div), .di_d(pc22_did), .do_v(pc22_dov), .do_d(pc22_dod), .dni_ok(pc22_dniok), .dni_ph(pc22_dniph), .dno_ok(pc22_dnook), .dno_ph(pc22_dnoph), .cr_v(pc22_crv));
@@ -175,6 +178,13 @@ module hfd_svc_SW_s5 (
   assign pc22_crv = c_cr22_0_v;
   ot_svc_vpipe #(.W(1), .N(3)) c_cr23_0 (.ck(c), .rst_n(rn), .v(gp5_cr[3]), .d(1'b0), .qv(c_cr23_0_v), .q(c_cr23_0_d));
   assign pc23_crv = c_cr23_0_v;
+  ot_svc_vpipe #(.W(13), .N(2)) c_sg5_2 (.ck(c), .rst_n(rn), .v(wi[879]), .d(wi[892:880]), .qv(c_sg5_2_v), .q(c_sg5_2_d));
+  assign gp5_sgv = c_sg5_2_v;
+  assign gp5_sgd = c_sg5_2_d;
+  ot_svc_vpipe #(.W(13), .N(4)) c_sg6_2 (.ck(c), .rst_n(rn), .v(wi[893]), .d(wi[906:894]), .qv(c_sg6_2_v), .q(c_sg6_2_d));
+  assign eo[620:607] = {c_sg6_2_d, c_sg6_2_v};
+  ot_svc_vpipe #(.W(13), .N(4)) c_sg7_2 (.ck(c), .rst_n(rn), .v(wi[907]), .d(wi[920:908]), .qv(c_sg7_2_v), .q(c_sg7_2_d));
+  assign eo[634:621] = {c_sg7_2_d, c_sg7_2_v};
   assign phy[0] = pc20_k_v;
   assign pc20_k_rdy = phy[1];
   assign phy[2] = pc20_k_addr[0];

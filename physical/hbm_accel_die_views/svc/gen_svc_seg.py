@@ -136,15 +136,17 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
                 out.append([a_, b_])
         return [tuple(x) for x in out]
     occl = {L_: merged((q[2], q[4]) for v in P.values() for q in v['pins'] if v.get('face') == 'N' and q[1] == L_)
-            for L_ in ('M5', 'M7')}
+            for L_ in ('M5',)}
     fk = _PARENTS[parent][1]
     for name, xc in wants:
         bits = PS_PORTS_BITS[name[:2]]
-        need = bits * PITCH_N + 2.0
         j = seg_of(xc)
         a, b = segs[j]
         best = None
-        for L_ in ('M5', 'M7'):               # M7 above an M5 port when the segment's N face is full on M5
+        # M5 at the line ports' pitch (0.192 um, 5.2 b/um); where the segment's N face is full, M5 at 0.096 um (10.4 b/um,
+        # under the 12 b/um fail line; the die generator's split views take N-face pins on M5 only)
+        for L_, PITCH_N in (('M5', 0.192), ('M5', 0.096)):
+            need = bits * PITCH_N + 2.0
             occ = occl[L_]
             cands = sorted({round(x, 3) for x in [xc - need / 2, a + 2.0] + [e + 1.0 for _, e in occ] +
                             [s_ - need - 1.0 for s_, _ in occ]})
@@ -155,13 +157,13 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
                     continue
                 d = abs(x0 + need / 2 - xc)
                 if best is None or d < best[0]:
-                    best = (d, x0, L_)
+                    best = (d, x0, L_, PITCH_N)
             if best is not None:
                 break
         assert best is not None, (parent, name, xc, 'no free N-face span in segment', j)
-        L_ = best[2]
+        L_, PITCH_N = best[2], best[3]
         x0 = round(round((best[1] + 1.0) / 0.048) * 0.048, 4)
-        wpin = 0.024 if L_ == 'M5' else 0.032
+        wpin = 0.024
         pins = [[f'{name}[{i}]', L_, round(x0 + i * PITCH_N, 4), round(H_um - 0.192, 4), round(x0 + i * PITCH_N + wpin, 4),
                  H_um] for i in range(bits)]
         d_ = 'in' if name.startswith('kq') else 'out'
@@ -260,6 +262,8 @@ def plan_family(fam):
         for p in range(32):
             o, j = divmod(p, 4)
             ch(f'c_cr{p}', 1, f'gp{o}', f'gp{o}_cr[{j}]', "1'b0", f'pc{p}', f'pc{p}_crv', None, 'ps_cr')
+        for k in range(8):          # the stream's load tag (ATT ld fields, compiler-supplied) to each group unit
+            ch(f'c_sg{k}', 13, 'e', 'e_sgv', 'e_sgd', f'gp{k}', f'gp{k}_sgv', f'gp{k}_sgd', 'ps_tag')
     for c in C:
         c['xa'], c['ya'] = U[c['su']]; c['xb'], c['yb'] = U[c['du']]
         c['sa'], c['sb'] = seg_of(c['xa']), seg_of(c['xb'])
@@ -564,13 +568,13 @@ def build(pl):
                             f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .cr_v(pc{p}_crv));')
             elif u.startswith('gp'):
                 k = int(u[2:])
-                decl.append(f'  wire [3:0] gp{k}_sv, gp{k}_cr; wire [1107:0] gp{k}_sq; wire gp{k}_ovf;')
+                decl.append(f'  wire [3:0] gp{k}_sv, gp{k}_cr; wire [1107:0] gp{k}_sq; wire gp{k}_ovf, gp{k}_sgv; wire [12:0] gp{k}_sgd;')
                 for jj in range(4):
                     pp = 4 * k + jj
                     body.append(f"  assign gp{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b11); "
                                 f"assign gp{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
                 body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp{k}_sv), .sq(gp{k}_sq), '
-                            f'.kq(kq{k}), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
+                            f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
             elif u.startswith('pc'):
                 p = int(u[2:])
                 decl.append(f'  wire pc{p}_iv, pc{p}_k_v, pc{p}_k_rdy, pc{p}_kr_v, pc{p}_bv; wire [50:0] pc{p}_id; '
@@ -595,14 +599,15 @@ def build(pl):
             elif u == 'e' and PS:
                 we, ee = int(not pl['ps_lists']['w']), int(not pl['ps_lists']['e'])
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od; wire e_sdv; wire [61:0] e_sdd; '
-                            'wire e_dwok, e_dwph, e_deok, e_deph;')
+                            'wire e_dwok, e_dwph, e_deok, e_deph, e_sgv; wire [12:0] e_sgd;')
                 if we:
                     body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0;   // no PC west of the e port")
                 if ee:
                     body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0;   // no PC east of the e port")
                 body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee})) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
                             '.e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
-                            '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd));')
+                            '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd), '
+                            '.sg_v(e_sgv), .sg_d(e_sgd));')
             elif u == 'e':
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od;')
                 body.append('  ot_svs_e u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), .e_fclk(e[128]), .ow_v(e_ow), '
