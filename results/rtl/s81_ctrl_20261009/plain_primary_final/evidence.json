@@ -1,0 +1,13 @@
+{
+  "status": "PLAIN_NATIVE_SHARED_LAST_CURRENT_RESET_AND_MUTANT_PASS",
+  "source_commit": "471b0c95f",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/ds-control/primary-shared-plain-final-471b0c95f",
+  "admission_gib": 1,
+  "mechanism": "Current ordinary flop FIFOs, actual native594bit input CDC,16 real LAT3 FP32 adds; shared BF16-widened LAST; one final BF16 rounding",
+  "partial_common_reset": "Five prefix and shared frames accepted in two domains, output stalled, common reset flushes pending context; no retained output/busy/fault",
+  "premature_rounding_mutant": "Same-source P2_MUT_PRE_ROUND reaches actual adder; first directed rounding-boundary result3f800000 instead of golden3f810000, expected numeric mismatch",
+  "base_and_format_negatives": "Already committed936149ecb plain_primary_shared async24contexts30720values1920frames and4negativecases; not rerun",
+  "receipt_note": "Final shell summary initially returned127 because remote rg absent, after both simulations completed. Read-only grep confirmed expected numeric mismatch; terminal-receipt.log appended separately, original immutable logs retained.",
+  "production_binding": "Actual prefix/shared producer composition and transaction origin, E3 literal VM base/write-visible fence, physical endpoints remain separate dependencies",
+  "physical_claim": null
+}
