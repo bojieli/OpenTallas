@@ -1,0 +1,135 @@
+{
+  "schema": "opentallas.qwen_sysctl_registry_binding.v1",
+  "status": "BLOCKED_SELECTED_MASTER_BINDING_MISSING",
+  "requested_old_row": "qfd_sysctl_stn",
+  "actual_closed_successor_row": "qfd_sysctl_stn_pb2",
+  "incorrect_alias_rejected": "qfd_sysctl_sram has cancelled-only category and zero closed jobs; do not point supersession at it as a closed winner",
+  "component_functional_successor": {
+    "status": "PROVEN_WITH_PRICED_LATENCY",
+    "old": "52e97db99 ot_qfd_sysctl_stn",
+    "new": "d4760be45 ot_qfd_sysctl_stn_pb2 PKG_DONE_REG1/PROMPT_READ_STATION1/BOUNDARY_STATIONS1/PROMPT_SRAM1",
+    "ports": "Same external66-port host/package control interface; additional parameters defaultoff",
+    "bench": "Nine control cases including8192steps/1245184stageevents/8191CQ zero mismatches; poisoned unwrittenread mutantFAIL; SRAMread alignment/ECC mutants in prior component evidence",
+    "added_edges": "One step completion edge forDONE_REG; one promptread edge; tenchannel finiteoneentryqueues retain originalstation contract"
+  },
+  "physical_winner": {
+    "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+    "source": "d4760be45",
+    "record": "71e85321e",
+    "master": "qfd_sysctl_stn_pb2_cl",
+    "TT_ps": 17.23,
+    "FF_ps": 13.72,
+    "DRC": 0,
+    "SS_sensitivity_ps": -366.3,
+    "view": "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl",
+    "LEF_sha256": "5156f9cf6610ab636f720331593399b0184bec53707c8d7be84a65a913e303c8"
+  },
+  "selected_generator": {
+    "ref": "b4617e33b",
+    "path": "tools/qwen_kv_die/kv_die.py",
+    "blob": "8fca129b5e78b06683853fb36d6033824b83b5a5",
+    "qkd_host": "qfd_io_host successor (ingest stream: hing_qfd) + SerDes adapter ot_qfd_link_adapter",
+    "qkd_pll": "vendor PLL abstract + ot_qwen_sys_rst_seq (ASSUMED frame)",
+    "winner_name_present": false,
+    "old_sram_name_present": false,
+    "consequence": "No selected generator binding, dimensions/port allocation or installation point to the closed SYSCTL view; conditional component replacement is insufficient for selected architecture equivalence."
+  },
+  "action": "Claude KV/host integration owner supplies actual selected SYSCTL master mapping and priced completion/prompt latency. Then retire qfd_sysctl_stn under superseded_elements lock pointing to actual qfd_sysctl_stn_pb2 winner, preserving52failure; never label qfd_sysctl_sram closed without evidence. No new route required for unchanged saved winner.",
+  "superseded_elements_mutated": false,
+  "refreshed_registry_rows": [
+    {
+      "element": "qfd_sysctl_stn",
+      "target": "Qwen ROM",
+      "variants": [
+        "qfd_sysctl_stn_pb2"
+      ],
+      "category": "closed (TT era)",
+      "via": "",
+      "purpose": "Fix measured5601 CTSfailure using complete die-report inputstation and finite tenAXIchannel queues; unchangedprotectedSRAM andclocks; actualfullctx+fault+negative gatespassed.",
+      "jobs": 4,
+      "live": 0,
+      "failed": 3,
+      "closed_jobs": 1,
+      "best": {
+        "tt": 17.23,
+        "ff": 13.72,
+        "ss": -366.3,
+        "drc": 0,
+        "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+        "corner": "TT",
+        "source_commit": "d4760be45"
+      },
+      "area": {
+        "die": 150000,
+        "core": 146544,
+        "util": 0.113045
+      },
+      "revoked": null,
+      "latest": {
+        "t": 1791553525.0,
+        "job": "qfd_sysctl_stn-52e97db99-tc-hm10",
+        "status": "NEEDS_RTL",
+        "text": "route bulk released (drive-resume disk cleanup, NEEDS_RTL; MB before/after 3006 2040); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+      },
+      "closed_t": 1791543991.0,
+      "owner": "Codex:qwen-system-crom-control",
+      "evidence_history": [],
+      "qualification": null,
+      "superseded": null
+    },
+    {
+      "element": "qfd_sysctl_sram",
+      "target": "Qwen ROM",
+      "variants": [],
+      "category": "cancelled only",
+      "via": "",
+      "purpose": "Approved Q2 full-context control master; opt-in prompt SRAM8192x18 with SECDED24, one real1024x256 1R1W macro",
+      "jobs": 2,
+      "live": 0,
+      "failed": 0,
+      "closed_jobs": 0,
+      "best": {
+        "tt": null,
+        "ff": null,
+        "ss": null,
+        "drc": null,
+        "job": null,
+        "corner": null,
+        "source_commit": null
+      },
+      "area": null,
+      "revoked": null,
+      "latest": {
+        "t": 1791530169.0,
+        "job": "qfd_sysctl_sram-5601e8881-tc-hm10",
+        "status": "EARLY_FAIL_SETUP",
+        "text": "EARLY_FAIL_SETUP: post-cts TT setup WNS -720.6 ps at 833.333 (route-period -784.0 at 770), 3089 failing endpoints, TNS -556467; gate WNS < -400 with > 500 endpoints"
+      },
+      "closed_t": null,
+      "owner": "Codex:qwen-system-crom-control",
+      "evidence_history": [],
+      "qualification": null,
+      "superseded": null
+    }
+  ],
+  "counts": {
+    "qfd_sysctl_stn": {
+      "category": "needs redesign (no live job)",
+      "jobs": 1,
+      "live": 0,
+      "closed_jobs": 0
+    },
+    "qfd_sysctl_stn_pb2": {
+      "category": "closed (TT era)",
+      "jobs": 3,
+      "live": 0,
+      "closed_jobs": 1
+    },
+    "qfd_sysctl_sram": {
+      "category": "cancelled only",
+      "jobs": 2,
+      "live": 0,
+      "closed_jobs": 0
+    }
+  }
+}
