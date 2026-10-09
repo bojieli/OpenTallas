@@ -170,6 +170,12 @@ module hfd_coll (
     reg [79:0] o_vmaddr; always @(posedge clk) o_vmaddr <= {r_obase, r_abase};
     assign t_hgi_vmaddr = o_vmaddr;
     assign w_ep_inj_data = i_f_su_SW[1023:0] | i_f_su_NW[1023:0] | i_f_su_SE[1023:0] | i_f_su_NE[1023:0];   // SU-quarter ownership OR (rtl/spec.json contracts)
+`ifndef SYNTHESIS
+    // inject ownership contract (rtl/spec.json contracts ep.inj_data): at most one SU quarter drives a non-zero
+    // inject beat; the owner of flit i is quarter i mod 4 (SW, NW, SE, NE).  Any overlap is a contract violation.
+    always @(posedge clk) if (rst_n && ((|i_f_su_SW[1023:0]) + (|i_f_su_NW[1023:0]) + (|i_f_su_SE[1023:0]) + (|i_f_su_NE[1023:0])) > 1)
+        $error("hfd_coll: SU inject ownership violated (more than one quarter drives inject data)");
+`endif
     assign w_ep_sw_cr_ret = {i_llk_N3[966:959]};
     assign w_ep_ph_rx_v = {i_llk_S0[494:487]};
     assign w_ep_ph_rx_flit = {i_llk_N3[958:487], i_llk_N2[973:487], i_llk_N1[973:487], i_llk_N0[973:487], i_llk_S4[973:487], i_llk_S3[973:487], i_llk_S2[973:487], i_llk_S1[973:487], i_llk_S0[973:495]};
