@@ -20,8 +20,8 @@ def main():
         return source.replace('$sformatf("%sb", INSTANCE)', '"b"').replace('$sformatf("%sa%0d", INSTANCE, q)', '"a"')
     source = bundle.read_text()
     cases = {'baseline': source,
-             'misaligned_payload': source.replace('.W(305), .D(A_INPUT_STAGES)', '.W(305), .D(A_INPUT_STAGES+1)'),
-             'lost_B_data': source.replace('.d({row_in, xsa, bd_r})', ".d({row_in, xsa, 32'd0})")}
+             'misaligned_payload': source.replace('.W(305), .D(A_INPUT_STAGES)', '.W(305), .D(A_INPUT_STAGES==0 ? 0 : A_INPUT_STAGES+1)'),
+             'lost_B_data': source.replace('.d({row_in, xsa, bd_r})', ".d({row_in, xsa, A_INPUT_STAGES==0 ? bd_r : 32'd0})")}
     outcomes = {}
     with tempfile.TemporaryDirectory(prefix='s81-A-staging-') as temp:
         d = Path(temp)
