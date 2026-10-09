@@ -3,15 +3,15 @@ set -u
 cd "$SRC"
 export OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 export OT_ORFS_NUM_CORES=4 NUM_CORES=4
-# Distinct full91FF boot composition; do not reuse or overwrite r4 collar-only.
+# Selected X5 body_cl (1f77ae2d0); preserve the failed baseline and DATA evidence.
 /srv/opentallas-scratch/admit.sh 8 -- python3 tools/run_abi3_physical.py \
  --view asap7 --top ot_hbm_production_clock_digital_body \
- --source rtl/hbm_accel/control/ot_hbm_production_clock_digital_body.sv \
- --source rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv \
+ --source rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv \
+ --source rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv \
  --source rtl/hbm_accel/control/ot_hbm_reset_seq.sv \
  --clock-port clk_stream --clock-period-ns 0.833333333 \
  --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
- --sdc-append physical/hbm_accel_die_views/clock_boundary/production_body.sdc \
+ --sdc-append physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc \
  --orfs-corner TC --hold-corners TC,BC --stages pnr \
  --die-area 0 0 100.224 99.36 --core-area 0 0.54 100.224 98.82 \
  --place-density 0.55 --routing-layers M2 M7 \

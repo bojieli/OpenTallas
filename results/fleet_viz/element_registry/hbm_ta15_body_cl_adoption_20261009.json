@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.element_registry.v1",
+ "element": "TA15 production digital boot/reset body",
+ "source_commit": "1f77ae2d0e313d86c7e515f85259978a45efe8e7",
+ "source": "rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv",
+ "collars": "rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv",
+ "constraints": "physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc",
+ "decision": "CONFIRMED REVIEW_20261009 review0443 X5",
+ "status": "ADOPTED_ISOLATED_DIGITAL_BODY",
+ "added_token_cycles": 0,
+ "hm10": {"setup_tt_ps": 269.46, "setup_ss_ps": 201.5, "hold_ff_ps": 8.03, "drc": 0},
+ "hm25": {"setup_tt_ps": 269.73, "hold_ff_ps": 21.52, "drc": 0},
+ "evidence": "results/uarch/hbm_ta15_body_cl_adoption_20261009",
+ "retired_alternative": "H15 DATA e631befc2: preserve exact/mutant evidence; no retries/adoption",
+ "external_obligations": ["analog PLL macro and lock specification", "actual AON source and synchronizer MTBF contract", "die loaded clock/reset fanout and destination placement"],
+ "no_new_route": true
+}

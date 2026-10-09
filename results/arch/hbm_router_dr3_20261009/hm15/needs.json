@@ -1,0 +1,68 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_orph2_a75cb556b-ttref-hm15/cl/io_ref_routed.sdc",
+  "/srv/opentallas-scratch/codex/hbm-router-dr3-needs-e384a2d2c/rebudget_measure.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": 181.87,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 181.87,
+  "worst_input_to_reg_slack_ps": 712.91,
+  "worst_output_port_slack_ps": 430.26,
+  "violating_d_pins": "0",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 585.0,
+    "min": 489.9,
+    "max": 775.3,
+    "n": 1090,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 585.0,
+    "min": 489.9,
+    "max": 775.3,
+    "n": 1090,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "c48187c59f17cf37833658023cdce987452fd2dc9f677eb693ab691dcb44acf2"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -0.15,
+  "tns_ps": -0.15,
+  "worst_reg_to_reg_slack_ps": -0.15,
+  "worst_input_to_reg_slack_ps": 5.08,
+  "worst_output_port_slack_ps": 129.46,
+  "violating_d_pins": "1",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 488.9,
+    "min": 405.6,
+    "max": 650.2,
+    "n": 1090,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 488.9,
+    "min": 405.6,
+    "max": 650.2,
+    "n": 1090,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "6681603ca124ebe14a6ab968c368abb3c7fc83d9270d146ff9ba35956093d2f9"
+ }
+}

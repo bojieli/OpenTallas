@@ -1,6 +1,14 @@
 """Production TA15 composition before integration RTL/physical build."""
 def model():
- return dict(default_enabled=False, adopted=False,
+ return dict(default_enabled=False, adopted=True,
+  selected_digital_body=dict(source_commit='1f77ae2d0e313d86c7e515f85259978a45efe8e7',
+   source='rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv',
+   collars='rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv',
+   sdc='physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc',
+   decision='CONFIRMED review0443 X5: Claude body_cl closed first; DATA H15 evidence only',
+   added_token_cycles=0, reset_release_destination_edges=3, ready_return_AON_edges=2,
+   evidence='results/uarch/hbm_ta15_body_cl_adoption_20261009',
+   scope='selected isolated digital body; analog PLL and die loaded clock/reset integration remain unqualified'),
   mechanism='AON ordered qualification -> analog PLL output clocks -> destination reset collars -> synchronized released readiness',
   clock_period_ns=dict(stream=5/6,serial=10/9,hbm=1.024,link=5/6),
   digital_body_successor=dict(top='ot_hbm_production_clock_digital_body',
