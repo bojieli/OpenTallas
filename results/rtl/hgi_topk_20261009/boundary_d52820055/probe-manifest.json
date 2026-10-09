@@ -1,0 +1,16 @@
+{
+  "source_commit": "d52820055",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "source_payload_sha256": "ae75888c751a7ff7a41fef909763ec31ed9a8b7da95592729f7adb9a6436ab54",
+  "cache_key": "fa823da917431bd095fd06fb",
+  "standalone_only_overrides": {
+    "TIMEOUT": null,
+    "SRC_CAP": "infinity",
+    "source_provider": "SHA256-verified pinned payload"
+  },
+  "max_rss_kib": 12169656,
+  "raw_netlist_cells": 4194514,
+  "strict_levels": 16,
+  "verdict": "PASS",
+  "daemon_mutation": false
+}
