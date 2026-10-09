@@ -1,0 +1,33 @@
+MACRO_TRACK_GATE PASS macros=1 hooks=0 warnings=1
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+59431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+mkdir -p /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/
+echo 833.333 > /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+13. Executing Verilog-2005 frontend: /src/rtl/common/ot_secded.sv
+14. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv
+15. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv
+16. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_link_retry_pipeline'.
+/src/rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv:42: ERROR: Failed to detect width of signal access `\g_on.txv'!
+
+Elapsed time: 0:00.73[h:]min:sec. CPU time: user 0.69 sys 0.04 (99%). Peak memory: 83248KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/hbm-retry545-pipeline-pathfinding-r1/physical.json

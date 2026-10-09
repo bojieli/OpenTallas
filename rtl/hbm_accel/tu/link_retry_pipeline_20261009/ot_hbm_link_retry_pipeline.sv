@@ -39,13 +39,6 @@ module ot_hbm_link_retry_pipeline #(
  (* keep="true" *) reg tx_tag_parity,rx_valid_parity,mail_parity,cap_parity;
  (* keep="true" *) reg delta_parity,window_parity;
  (* keep="true" *) reg ack_inv,invalid_inv,nak_inv;
- wire tx_good=(parity32(txd)==tx_parity)&&((^{txs,tx_replay,txv})==tx_tag_parity);
- wire rx_good=(parity32(rxd)==rx_parity)&&(rxv==rx_valid_parity);
- wire mail_good=(^{mail_seq,mail_v,mail_nak})==mail_parity;
- wire cap_good=(^{cap_seq,cap_base,cap_sent,cap_v,cap_nak})==cap_parity;
- wire arithmetic_good=(^delta_pipe)==delta_parity&&(^window_pipe)==window_parity;
- wire classified_good=(ack_progress!=ack_inv)&&(invalid_ack!=invalid_inv)&&(fresh_nak!=nak_inv);
- wire packet_poison=(txv&&!tx_good)||(rxv&&!rx_good);
  reg [1:0] phase;
  reg [SW-1:0] base,next_seq,sent_seq,cursor,expected;
  reg [SW-1:0] debt_pipe;
@@ -66,6 +59,13 @@ module ot_hbm_link_retry_pipeline #(
  reg read_pending;reg [SW-1:0] read_target;
  reg read_generation,generation;
  reg [1:0] write_guard;
+ wire tx_good=(parity32(txd)==tx_parity)&&((^{txs,tx_replay,txv})==tx_tag_parity);
+ wire rx_good=(parity32(rxd)==rx_parity)&&(rxv==rx_valid_parity);
+ wire mail_good=(^{mail_seq,mail_v,mail_nak})==mail_parity;
+ wire cap_good=(^{cap_seq,cap_base,cap_sent,cap_v,cap_nak})==cap_parity;
+ wire arithmetic_good=(^delta_pipe)==delta_parity&&(^window_pipe)==window_parity;
+ wire classified_good=(ack_progress!=ack_inv)&&(invalid_ack!=invalid_inv)&&(fresh_nak!=nak_inv);
+ wire packet_poison=(txv&&!tx_good)||(rxv&&!rx_good);
  wire rd_v,rd_ce,rd_ue;wire [W-1:0] rd_data;
  wire [SW-1:0] rd_seq;wire [EW-1:0] rd_epoch;
  wire [SW-1:0] rx_delta=rx_seq-expected;

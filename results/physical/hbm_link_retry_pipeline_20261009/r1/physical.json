@@ -1,0 +1,201 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T08:16:55.005705+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_link_retry_pipeline",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "DEPTH": 512,
+      "ENABLE": 1,
+      "EW": 24,
+      "W": 545
+    },
+    "sources": [
+      {
+        "path": "rtl/common/ot_secded.sv",
+        "sha256": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+        "size_bytes": 2943
+      },
+      {
+        "path": "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv",
+        "sha256": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397",
+        "size_bytes": 3077
+      },
+      {
+        "path": "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv",
+        "sha256": "9d5df008cfa0ea1f14b1b71ca9bd639f873e62365de4a47cb5e92eae05c92584",
+        "size_bytes": 8870
+      }
+    ],
+    "top": "ot_hbm_link_retry_pipeline"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\n59431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\nmkdir -p /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/\necho 833.333 > /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/clock_period.txt\n/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/1_1_yosys_canonicalize.log\nUsing ABC speed script.\nExtracting clock period from SDC file: /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/clock_period.txt\nSetting clock period to 833.333\n1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\n2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\n3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\n4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib\n7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\n8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\n9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\n10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib\n13. Executing Verilog-2005 frontend: /src/rtl/common/ot_secded.sv\n14. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv\n15. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv\n16. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v\n17. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_hbm_link_retry_pipeline'.\n/src/rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv:42: ERROR: Failed to detect width of signal access `\\g_on.txv'!\n\nElapsed time: 0:00.73[h:]min:sec. CPU time: user 0.69 sys 0.04 (99%). Peak memory: 83248KB.\nmake[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1\nmake: *** [Makefile:308: /work/results/asap7/opentallas_ot_hbm_link_retry_pipeline_asap7_hbm_retry545_pipeline_pathfinding/base/1_1_yosys_canonicalize.rtlil] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T08:16:53.229864+00:00",
+  "git": {
+    "commit": "7130940fc0698ff929421cfc6fd700f2d1d656f2",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? tools/__pycache__/"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_link_retry_pipeline",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "W=545",
+      "--param",
+      "EW=24",
+      "--param",
+      "DEPTH=512",
+      "--source",
+      "rtl/common/ot_secded.sv",
+      "--source",
+      "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv",
+      "--source",
+      "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--macro-place-halo",
+      "4",
+      "4",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/hbm_link_retry_pipeline_20261009/macro_place.tcl",
+      "--clock-period-ns",
+      ".833333333",
+      "--clock-uncertainty-ns",
+      ".06",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      ".2",
+      "--die-area",
+      "0",
+      "0",
+      "690",
+      "460",
+      "--core-area",
+      "5.4",
+      "5.4",
+      "684.6",
+      "454.6",
+      "--stages",
+      "pnr",
+      "--core-utilization",
+      "55",
+      "--place-density",
+      ".55",
+      "--hold-margin-ns",
+      ".015",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "hbm_retry545_pipeline_pathfinding",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/hbm-retry545-pipeline-pathfinding-r1/work",
+      "--output",
+      "/srv/opentallas-scratch/codex/hbm-retry545-pipeline-pathfinding-r1/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+    ],
+    "driver": {
+      "commit": "7130940fc0698ff929421cfc6fd700f2d1d656f2",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-wt-r1/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "00dc1c640f606e580a41b3ed7fc142bf24d776b426cfb5c9e14ec559e0ee2006",
+      "tree": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-wt-r1"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-wt-r1"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
