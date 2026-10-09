@@ -83,21 +83,25 @@ module tb_hgi_idx_index;
   ot_hgi_idx_unit #(.MUT(MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
     .sel_ev(ev));
+  // VM model (fast path): up to 4 requests outstanding, pipelined (6..8 cycles, never before the predecessor), in order
   reg [31:0] vm [0:262143];
-  integer vdel = -1; reg [337:0] vq;
+  reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;
   always @(posedge ck) begin
+    tnow = tnow + 1;
     vmr[273] <= 1'b0;
-    if (vmq[337]) begin
-      if (vdel >= 0) $fatal(1, "VM: second request outstanding");
-      vq = vmq; vdel = 2 + ($urandom % 5);
-    end else if (vdel > 0) vdel = vdel - 1;
-    else if (vdel == 0) begin
-      vdel = -1;
+    if (qn2 > 0 && vqt[qh2 % 8] <= tnow) begin : serve
+      reg [337:0] vq; vq = vqq[qh2 % 8]; qh2 = qh2 + 1; qn2 = qn2 - 1;
       for (integer w = 0; w < 8; w = w + 1) begin
         if (vq[336] && &vq[16 + 4*w +: 4]) vm[{vq[323:309], 3'(w)}] = vq[48 + 32*w +: 32];
         vmr[32*w +: 32] <= vq[336] ? 32'd0 : vm[{vq[323:309], 3'(w)}];
       end
       vmr[256] <= vq[336]; vmr[272:257] <= vq[15:0]; vmr[273] <= 1'b1;
+    end
+    if (vmq[337]) begin
+      if (qn2 >= 4) $fatal(1, "VM: more than 4 outstanding");
+      vqq[(qh2 + qn2) % 8] = vmq;
+      tlast = (tnow + 6 + ($urandom % 3) > tlast + 1) ? tnow + 6 + ($urandom % 3) : tlast + 1;
+      vqt[(qh2 + qn2) % 8] = tlast; qn2 = qn2 + 1; if (qn2 > maxo2) maxo2 = qn2;
     end
   end
   hfd_idx_sel #(.T(T), .LA(LA)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),

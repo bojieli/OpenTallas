@@ -9,18 +9,26 @@ module tb_hgi_idx_merge;
   ot_hgi_idx_merge #(.MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .go(go), .k(k), .key_id(key), .g(g), .n(n),
     .a_base(18'h01000), .b_base(18'h10000), .o_base(18'h30000), .r_base(18'h31000), .a_str(18'(n)), .b_str(18'(n)),
     .has_r(1'b1), .done(done), .fault(fault), .vmq(vmq), .vmr(vmr));
-  reg [31:0] vm [0:262143]; integer vdel = -1; reg [337:0] vq;
+  // VM model (fast path): up to 4 requests outstanding, pipelined like ot_hgi_vm_unit (each answers 6..8 cycles after
+  // it was sent: stations + 4 core edges, never before its predecessor), in order; a 5th outstanding is a violation
+  reg [31:0] vm [0:262143];
+  reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;
   always @(posedge clk) begin
+    tnow = tnow + 1;
     vmr[273] <= 1'b0;
-    if (vmq[337]) begin if (vdel >= 0) $fatal(1, "VM: 2 outstanding"); vq = vmq; vdel = 2 + ($urandom % 5); end
-    else if (vdel > 0) vdel = vdel - 1;
-    else if (vdel == 0) begin
-      vdel = -1;
+    if (qn2 > 0 && vqt[qh2 % 8] <= tnow) begin : serve
+      reg [337:0] vq; vq = vqq[qh2 % 8]; qh2 = qh2 + 1; qn2 = qn2 - 1;
       for (integer w = 0; w < 8; w = w + 1) begin
         if (vq[336] && &vq[16 + 4*w +: 4]) vm[{vq[323:309], 3'(w)}] = vq[48 + 32*w +: 32];
         vmr[32*w +: 32] <= vq[336] ? 32'd0 : vm[{vq[323:309], 3'(w)}];
       end
-      vmr[273] <= 1'b1;
+      vmr[256] <= vq[336]; vmr[272:257] <= vq[15:0]; vmr[273] <= 1'b1;
+    end
+    if (vmq[337]) begin
+      if (qn2 >= 4) $fatal(1, "VM: more than 4 outstanding");
+      vqq[(qh2 + qn2) % 8] = vmq;
+      tlast = (tnow + 6 + ($urandom % 3) > tlast + 1) ? tnow + 6 + ($urandom % 3) : tlast + 1;
+      vqt[(qh2 + qn2) % 8] = tlast; qn2 = qn2 + 1; if (qn2 > maxo2) maxo2 = qn2;
     end
   end
   reg [31:0] mv [0:65535]; reg [31:0] mi [0:65535]; reg [31:0] eo [0:4095]; reg [31:0] er [0:4095];
@@ -54,7 +62,7 @@ module tb_hgi_idx_merge;
       end
       repeat (5) @(negedge clk);
     end
-    if (bad == 0) $display("PASS HGI_IDX_MERGE cases=%0d", nc); else $display("FATAL: HGI_IDX_MERGE %0d cases failed", bad);
+    if (bad == 0) $display("PASS HGI_IDX_MERGE cases=%0d max_outstanding=%0d", nc, maxo2); else $display("FATAL: HGI_IDX_MERGE %0d cases failed", bad);
     $finish;
   end
 endmodule

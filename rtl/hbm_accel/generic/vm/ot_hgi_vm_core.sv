@@ -18,7 +18,9 @@
 // word is written iff all 4 of its byte-mask bits are set; a partial word mask latches mask_fault.
 module ot_hgi_vm_core #(
     parameter integer NC = 2,
-    parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1]
+    parameter integer OUT = 4,         // requests a client may have outstanding (VM fast path, review ~16:40); 1 = v1
+    parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
+                                       //   3 write responses skip the read pipeline (out of order: must FAIL)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -27,7 +29,7 @@ module ot_hgi_vm_core #(
     input  wire [NC*337-1:0] req,
     output reg  [NC-1:0]     rsp_v,
     input  wire [NC-1:0]     rsp_r,
-    output reg  [NC*273-1:0] rsp,
+    output reg  [NC*273-1:0] rsp,      // FIFO head per client (in request order)
     output reg  [15:0]       ce,
     output reg               ue,
     output reg               mask_fault,
@@ -87,7 +89,9 @@ module ot_hgi_vm_core #(
     wire [31:0]   c_bm   [0:NC-1];
     wire [15:0]   c_tag  [0:NC-1];
     wire [4:0]    c_bank [0:NC-1];
-    reg  [NC-1:0] busy;                                   // response outstanding
+    reg  [2:0]    ocnt [0:NC-1];                          // requests outstanding (granted, response not yet taken)
+    reg  [NC-1:0] busy;
+
     genvar g, k;
     for (g = 0; g < NC; g = g + 1) begin : g_c
         wire [336:0] q = req[g*337 +: 337];
@@ -103,18 +107,18 @@ module ot_hgi_vm_core #(
     reg [NC-1:0] gr_w [0:NB-1];
     integer b, c;
     always @* begin
-        for (b = 0; b < NB; b = b + 1) begin
-            gr_r[b] = {NC{1'b0}}; gr_w[b] = {NC{1'b0}};
-            for (c = NC - 1; c >= 0; c = c - 1) begin
-                if (req_v[c] && !busy[c] && c_bank[c] == b && !c_we[c]) gr_r[b] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << c);
-                if (req_v[c] && !busy[c] && c_bank[c] == b &&  c_we[c]) gr_w[b] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << c);
+        for (integer ab = 0; ab < NB; ab = ab + 1) begin
+            gr_r[ab] = {NC{1'b0}}; gr_w[ab] = {NC{1'b0}};
+            for (integer ac = NC - 1; ac >= 0; ac = ac - 1) begin
+                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab && !c_we[ac]) gr_r[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
+                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac]) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
             end
         end
     end
     reg [NC-1:0] acc;
     always @* begin
         acc = {NC{1'b0}};
-        for (b = 0; b < NB; b = b + 1) acc = acc | gr_r[b] | gr_w[b];
+        for (integer ab = 0; ab < NB; ab = ab + 1) acc = acc | gr_r[ab] | gr_w[ab];
     end
     assign req_r = acc;
     // ---------------------------------------------------------------- banks
@@ -168,33 +172,58 @@ module ot_hgi_vm_core #(
     reg [33:0]   dw;
     reg [15:0]   ce_n;
     reg          ue_n;
+    // per-client response FIFO (OUT deep, in request order): the pipeline always has room because a client never has
+    // more than OUT requests outstanding
+    reg [272:0] rf [0:4*NC-1];             // client c entry e at 4c + e (flat: simulator-safe)
+    reg [1:0]   rf_h [0:NC-1];
+    reg [1:0]   rf_t [0:NC-1];
+    reg [2:0]   rf_n [0:NC-1];
+    // head registers: a copy of each client's FIFO head kept in flops (simulators do not wake @* on array words)
+    reg [272:0] rhd [0:NC-1]; reg [NC-1:0] rvn;
+    for (g = 0; g < NC; g = g + 1) begin : g_rsp
+        always @* begin rsp_v[g] = rvn[g]; rsp[g*273 +: 273] = rhd[g]; end
+    end
+    reg [272:0] pk; reg push, pop, wsk; reg [1:0] hn;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= {NC{1'b0}}; p1_v <= {NC{1'b0}}; pm_v <= {NC{1'b0}}; p2_v <= {NC{1'b0}}; rsp_v <= {NC{1'b0}}; ce <= 16'd0; ue <= 1'b0;
+            p1_v <= {NC{1'b0}}; pm_v <= {NC{1'b0}}; p2_v <= {NC{1'b0}}; ce <= 16'd0; ue <= 1'b0;
+            for (c = 0; c < NC; c = c + 1) begin ocnt[c] <= 3'd0; rf_h[c] <= 2'd0; rf_t[c] <= 2'd0; rf_n[c] <= 3'd0; end
+            rvn <= {NC{1'b0}}; busy <= {NC{1'b0}};
         end else begin
             ce_n = 16'd0; ue_n = 1'b0;
             for (c = 0; c < NC; c = c + 1) begin
-                if (acc[c]) begin busy[c] <= 1'b1; p1_v[c] <= 1'b1; p1_we[c] <= c_we[c]; p1_bank[c] <= c_bank[c]; p1_tag[c] <= c_tag[c]; end
+                if (acc[c]) begin p1_v[c] <= 1'b1; p1_we[c] <= c_we[c]; p1_bank[c] <= c_bank[c]; p1_tag[c] <= c_tag[c]; end
                 else p1_v[c] <= 1'b0;
-                pm_v[c] <= p1_v[c];
+                wsk = (MUT == 3) && p1_v[c] && p1_we[c];         // mutant: a write answers from p1 (overtakes reads)
+                pm_v[c] <= p1_v[c] && !wsk;
                 if (p1_v[c]) begin pm_we[c] <= p1_we[c]; pm_tag[c] <= p1_tag[c]; pm_bank[c] <= p1_bank[c]; end
                 p2_v[c] <= pm_v[c];
                 if (pm_v[c]) begin p2_we[c] <= pm_we[c]; p2_tag[c] <= pm_tag[c]; end
-                if (p2_v[c]) begin
+                push = p2_v[c] || wsk;
+                pk = 273'd0;
+                if (wsk) pk = {p1_tag[c], 1'b1, 256'd0};
+                else if (p2_v[c]) begin
                     for (w = 0; w < 8; w = w + 1) begin
                         dw = dec(p2_raw[c][w*39 +: 39]);
                         if (!p2_we[c]) begin
-                            rsp[c*273 + w*32 +: 32] <= dw[31:0];
+                            pk[w*32 +: 32] = dw[31:0];
                             if (dw[32]) ce_n = ce_n + 16'd1;
                             if (dw[33]) ue_n = 1'b1;
-                        end else rsp[c*273 + w*32 +: 32] <= 32'd0;
+                        end
                     end
-                    rsp[c*273 + 256] <= p2_we[c];
-                    rsp[c*273 + 257 +: 16] <= p2_tag[c];
-                    rsp_v[c] <= 1'b1;
-                end else if (rsp_v[c] && rsp_r[c]) begin
-                    rsp_v[c] <= 1'b0; busy[c] <= 1'b0;
+                    pk[256] = p2_we[c]; pk[257 +: 16] = p2_tag[c];
                 end
+                pop = rsp_v[c] && rsp_r[c];
+                if (push) begin rf[4*c + rf_t[c]] <= pk; rf_t[c] <= rf_t[c] + 2'd1; end
+                if (pop) rf_h[c] <= rf_h[c] + 2'd1;
+                // the head after this edge: the next entry on a pop (or the pushed word if that empties into it)
+                hn = rf_h[c] + 2'd1;
+                if (pop) rhd[c] <= (rf_n[c] == 3'd1) ? pk : rf[4*c + hn];
+                else if (rf_n[c] == 3'd0 && push) rhd[c] <= pk;
+                rf_n[c] <= rf_n[c] + {2'd0, push} - {2'd0, pop};
+                rvn[c] <= (rf_n[c] + {2'd0, push} - {2'd0, pop}) != 3'd0;
+                ocnt[c] <= ocnt[c] + {2'd0, acc[c]} - {2'd0, pop};
+                busy[c] <= (ocnt[c] + {2'd0, acc[c]} - {2'd0, pop}) >= 3'(OUT);
             end
             ce <= ce + ce_n;
             if (ue_n) ue <= 1'b1;
@@ -202,7 +231,7 @@ module ot_hgi_vm_core #(
     end
     // capture the macro output of the client's bank one edge after the access (rd_out is valid after the access edge)
     always @(posedge clk)
-        for (c = 0; c < NC; c = c + 1)
-            if (pm_v[c]) p2_raw[c] <= m_rd[pm_bank[c]][311:0];
+        for (integer pc = 0; pc < NC; pc = pc + 1)
+            if (pm_v[pc]) p2_raw[pc] <= m_rd[pm_bank[pc]][311:0];
 endmodule
 `default_nettype wire
