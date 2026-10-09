@@ -34,7 +34,12 @@ module ot_s81ph_vm_mem #(
     parameter integer GW = (NBL < NB) ? $clog2(NB / NBL) : 1,
     // CLAUDE s81-blocks 2026-10-07: DW = the row slice held here (512: the whole row; 256: one half of a bit-sliced
     // pair, every control decision identical in both halves): DW/128 macro columns a bank, DW/32 mask bits a port
-    parameter integer DW = 512
+    parameter integer DW = 512,
+    // struct-close 2026-10-09 (drive-0212 0512 (2), s81b-vm_bgq grid10 -b TT -485: grp_q -> every bank's hit / prefix
+    // count -> q_r, one static flop fanning out over the whole tile): GREP = 1 gives every bank its OWN registered
+    // global bank id (gid = grp * NBL + gb, keep_hierarchy flops beside the bank) and every 128-b output slice its own
+    // registered grp copy for the is_local select.  grp is a static pin: 0 cycles, identical function.
+    parameter integer GREP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -147,7 +152,21 @@ module ot_s81ph_vm_mem #(
     generate for (gb = 0; gb < NBL; gb = gb + 1) begin : g_bank
         localparam integer GI = gb / (NBL / NG);
         wire [BB+GW:0] gidw = grp_q * NBL + gb;
-        wire [BB-1:0] gid = (NBL == NB) ? gb : gidw[BB-1:0];          // global bank id
+        wire [BB-1:0] gid0 = (NBL == NB) ? gb : gidw[BB-1:0];         // global bank id
+        wire [BB-1:0] gid;
+        if (GREP != 0) begin : g_gidr
+            wire [BB+GW:0] gidp = grp * NBL + gb;                      // from the static pin, registered here
+            genvar gk;
+            for (gk = 0; gk < BB; gk = gk + 1) begin : g_b
+`ifndef OT_VM_MUT_GID
+                (* keep_hierarchy *) ot_sc_rep_ff u_g (.clk(clk), .rst_n(1'b1), .d((NBL == NB) ? gb[gk] : gidp[gk]), .q(gid[gk]));
+`else
+                (* keep_hierarchy *) ot_sc_rep_ff u_g (.clk(clk), .rst_n(1'b1), .d(((NBL == NB) ? gb[gk] : gidp[gk]) ^ (gk == 0)), .q(gid[gk]));   // mutant: bank id bit 0 flipped
+`endif
+            end
+        end else begin : g_gid0
+            assign gid = gid0;
+        end
         // ---- pushes of this cycle (stage A regs, this bank group's copy), in port order
         reg [NP-1:0] hit;
         reg [QW:0]   pref [0:NP-1];
@@ -296,9 +315,20 @@ module ot_s81ph_vm_mem #(
             for (p = 0; p < NP; p = p + 1)
                 if (d_v[p] && is_local(d_b[0][p]) && b_dp[d_b[0][p][LB-1:0]][PW*d_j[0][p] +: PW] != p) mis_r <= 1'b1;
         end
+    wire [GW-1:0] grp_k [0:NC-1];
+    genvar gk2, gk3;
+    generate for (gk2 = 0; gk2 < NC; gk2 = gk2 + 1) begin : g_grpk
+        if (GREP != 0) begin : g_r
+            for (gk3 = 0; gk3 < GW; gk3 = gk3 + 1) begin : g_b
+                (* keep_hierarchy *) ot_sc_rep_ff u_g (.clk(clk), .rst_n(1'b1), .d(grp[gk3]), .q(grp_k[gk2][gk3]));
+            end
+        end else begin : g_s
+            assign grp_k[gk2] = grp_q;
+        end
+    end endgenerate
     always @(posedge clk)
         for (p = 0; p < NP; p = p + 1) for (k = 0; k < NC; k = k + 1)
-            o_d[p*DW + 128*k +: 128] <= is_local(d_b[k][p]) ? b_ds[d_b[k][p][LB-1:0]][DW*d_j[k][p] + 128*k +: 128] : 128'd0;
+            o_d[p*DW + 128*k +: 128] <= ((NBL == NB) || (d_b[k][p] >> LB) == grp_k[k]) ? b_ds[d_b[k][p][LB-1:0]][DW*d_j[k][p] + 128*k +: 128] : 128'd0;
 
     // ------------------------------------------------------------------ status
     integer bo;
