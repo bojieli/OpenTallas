@@ -4,11 +4,11 @@
 // compiled words; no arithmetic rewriting occurs in this dispatcher. Immutable
 // ROM requires validity/bounds but no ECC. Mutable command/state seats use SECDED.
 module ot_qwen_r25_su_dispatch #(
- parameter integer ENABLE=0, CAPACITY=8224
+ parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73
 )(
  input wire clk,rst_n,
  input wire launch_v,output wire launch_rdy,input wire [1:0] launch_checked,
- input wire [72:0] launch_owner,input wire [11:0] launch_pc,
+ input wire [OWNER_W-1:0] launch_owner,input wire [11:0] launch_pc,
  input wire [12:0] launch_count,input wire [19:0] launch_position,
  input wire [2:0] launch_queries,
  output wire rom_v,input wire rom_rdy,output wire [11:0] rom_pc,
@@ -17,10 +17,10 @@ module ot_qwen_r25_su_dispatch #(
  input wire rom_valid,input wire rom_window,
  input wire [19:0] rom_row0,input wire [15:0] rom_rows,
  output wire [3:0] cmd_v,input wire [3:0] cmd_rdy,
- output wire [2759:0] cmd_words,output wire [72:0] cmd_owner,
+ output wire [2759:0] cmd_words,output wire [OWNER_W-1:0] cmd_owner,
  output wire [11:0] cmd_pc,output wire [1:0] cmd_query,
  output wire [19:0] cmd_position,output wire [20:0] cmd_valid_length,
- input wire [3:0] done_v,input wire [291:0] done_owner,
+ input wire [3:0] done_v,input wire [4*OWNER_W-1:0] done_owner,
  input wire [47:0] done_pc,input wire [7:0] done_query,
  output wire finished_v,input wire finished_rdy,output wire fault
 );
@@ -66,6 +66,7 @@ module ot_qwen_r25_su_dispatch #(
   assign cmd_query=0;assign cmd_position=0;assign cmd_valid_length=0;
   assign finished_v=0;assign fault=0;
  end else begin:enabled
+  localparam integer HI=OWNER_W-64;
   localparam IDLE=0,REQUEST=1,RECEIVE=2,EXEC=3,FINISH=4,FAILED=5;
   // state: phase3 issued4 returned4 active4 pc12 base12 remaining13 slot2 nq3.
   reg [71:0] state,owner_lo,context_seat;
@@ -75,8 +76,8 @@ module ot_qwen_r25_su_dispatch #(
   wire [2:0] phase=s[2:0];wire [3:0] issued=s[6:3],returned=s[10:7],active=s[14:11];
   wire [11:0] pc=s[26:15],base=s[38:27];wire [12:0] remaining=s[51:39];
   wire [1:0] slot=s[53:52];wire [2:0] nq=s[56:54];
-  wire [12:0] original_count=x[41:29];
-  wire [19:0] position=x[28:9];
+  wire [12:0] original_count=x[HI+20+:13];
+  wire [19:0] position=x[HI+:20];
   wire [65:0] wd[0:43];wire [43:0] wue;
   for(genvar k=0;k<44;k=k+1)begin:word_decode
    assign wd[k]=decode64(words[k]);assign wue[k]=wd[k][65];
@@ -87,7 +88,7 @@ module ot_qwen_r25_su_dispatch #(
   assign rom_v=phase==REQUEST&&!fault;assign rom_pc=pc;
   assign rom_out_rdy=phase==RECEIVE&&!fault;
   assign cmd_v=(phase==EXEC&&!fault)?active&~issued:4'd0;
-  assign cmd_owner={x[8:0],od[63:0]};assign cmd_pc=pc;assign cmd_query=slot;
+  assign cmd_owner={x[HI-1:0],od[63:0]};assign cmd_pc=pc;assign cmd_query=slot;
   assign cmd_position=position+slot;
   assign cmd_valid_length={1'b0,position}+slot+21'd1;
   assign finished_v=phase==FINISH&&!fault;
@@ -107,7 +108,7 @@ module ot_qwen_r25_su_dispatch #(
     if(cmd_v[q]&&cmd_rdy[q])ni[q]=1;
     if(done_v[q])begin
      if(phase!=EXEC||!active[q]||!ni[q]||returned[q]||
-        done_owner[q*73+:73]!=cmd_owner||done_pc[q*12+:12]!=pc||
+        done_owner[q*OWNER_W+:OWNER_W]!=cmd_owner||done_pc[q*12+:12]!=pc||
         done_query[q*2+:2]!=slot)invalid=1;
      else nr[q]=1;
     end
@@ -155,7 +156,7 @@ module ot_qwen_r25_su_dispatch #(
     state<=encode64(next_s);
     if(launch_v&&launch_rdy&&!invalid)begin
      owner_lo<=encode64(launch_owner[63:0]);
-     context_seat<=encode64({22'd0,launch_count,launch_position,launch_owner[72:64]});
+     context_seat<=encode64({{(64-HI-33){1'b0}},launch_count,launch_position,launch_owner[OWNER_W-1:64]});
     end
     if(rom_out_v&&rom_out_rdy&&!invalid)begin
      available=(cmd_valid_length>rom_row0)?cmd_valid_length-rom_row0:0;
@@ -171,5 +172,6 @@ module ot_qwen_r25_su_dispatch #(
    end
   end
  end endgenerate
+ initial if(OWNER_W!=73&&OWNER_W!=74)$fatal(1,"owner width must preserve legacy73 or native Qwen74");
  initial if(CAPACITY<8195)$fatal(1,"p4 dispatcher capacity too small");
 endmodule

@@ -1,15 +1,15 @@
 `timescale 1ns/1ps
-module tb_qwen_r25_causal_mask;
+module tb_qwen_r25_causal_mask #(parameter OWNER_W=73);
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0,in_v=0,out_rdy=0;
  reg [1:0] in_checked=3;
- reg [72:0] in_owner=0;
+ reg [OWNER_W-1:0] in_owner=0;
  reg [79:0] in_query_positions=0;
  reg [2:0] in_queries=4;
  reg [19:0] in_row0=0;
- wire in_rdy,out_v,fault;wire [72:0] out_owner;
+ wire in_rdy,out_v,fault;wire [OWNER_W-1:0] out_owner;
  wire [19:0] out_row0;wire [83:0] out_valid_lengths;wire [127:0] out_live;
- ot_qwen_r25_causal_mask #(.ENABLE(1),.CAPACITY(8224)) dut(.*);
+ ot_qwen_r25_causal_mask #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W)) dut(.*);
  integer block_id,q,r,checks=0,mutant_leaks=0;
  reg [127:0] expected,held;
  task reset;
@@ -21,7 +21,7 @@ module tb_qwen_r25_causal_mask;
  endtask
  task accept_frame(input integer row0,input integer owner_id);
   begin
-   @(negedge clk);in_row0=row0;in_owner={9'h1a3,64'h123456789abc0000}+owner_id;in_v=1;
+   @(negedge clk);in_row0=row0;in_owner={{(OWNER_W-64){1'b1}},64'h123456789abc0000}+owner_id;in_v=1;
    do @(posedge clk);while(!in_rdy);
    @(negedge clk);in_v=0;
   end

@@ -2,13 +2,13 @@
 // Full p4 causal consumer frame, model d46b7384b. Immutable ROM has no ECC;
 // these mutable masks/context seats do. One resident frame, held until consumed.
 module ot_qwen_r25_causal_mask #(
- parameter integer ENABLE=0, CAPACITY=8224
+ parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73
 )(
  input wire clk,rst_n,
  input wire in_v,output wire in_rdy,input wire [1:0] in_checked,
- input wire [72:0] in_owner,input wire [79:0] in_query_positions,
+ input wire [OWNER_W-1:0] in_owner,input wire [79:0] in_query_positions,
  input wire [2:0] in_queries,input wire [19:0] in_row0,
- output wire out_v,input wire out_rdy,output wire [72:0] out_owner,
+ output wire out_v,input wire out_rdy,output wire [OWNER_W-1:0] out_owner,
  output wire [19:0] out_row0,output wire [83:0] out_valid_lengths,
  output wire [127:0] out_live,output wire fault
 );
@@ -17,19 +17,20 @@ module ot_qwen_r25_causal_mask #(
   assign in_rdy=0;assign out_v=0;assign out_owner=0;assign out_row0=0;
   assign out_valid_lengths=0;assign out_live=0;assign fault=0;
  end else begin:enabled
+  localparam integer HI=OWNER_W-64,COUNT_L=20+HI,OCC=COUNT_L+3,FAIL=OCC+1;
   reg [71:0] seat[0:5];
   wire [65:0] dec[0:5];wire [63:0] d[0:5];wire [5:0] ue;
   for(genvar k=0;k<6;k=k+1)begin:decode
    assign dec[k]=decode64(seat[k]);assign d[k]=dec[k][63:0];assign ue[k]=dec[k][65];
   end
-  wire occupied=d[3][32],failed=d[3][33];
-  wire [2:0] nq=d[3][31:29];
+  wire occupied=d[3][OCC],failed=d[3][FAIL];
+  wire [2:0] nq=d[3][COUNT_L+:3];
   wire [79:0] qpos={d[5][19:0],d[4][59:0]};
   assign fault=(|ue)||failed;
   assign in_rdy=!fault&&(!occupied||out_rdy);
   assign out_v=occupied&&!fault;
   assign out_live={d[1],d[0]};
-  assign out_owner={d[3][28:20],d[2]};assign out_row0=d[3][19:0];
+  assign out_owner={d[3][20+:HI],d[2]};assign out_row0=d[3][19:0];
   for(genvar q=0;q<4;q=q+1)begin:lengths
    assign out_valid_lengths[q*21+:21]=(q<nq)?{1'b0,qpos[q*20+:20]}+21'd1:21'd0;
   end
@@ -58,13 +59,13 @@ module ot_qwen_r25_causal_mask #(
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)for(i=0;i<6;i=i+1)seat[i]<=encode64(64'd0);
    else begin
-    if(out_v&&out_rdy)seat[3]<=encode64(d[3]&~64'h100000000);
+    if(out_v&&out_rdy)seat[3]<=encode64(d[3]&~(64'd1<<OCC));
     if(in_v&&in_rdy)begin
-     if(!shape)seat[3]<=encode64(64'h200000000);
+     if(!shape)seat[3]<=encode64((64'd1<<FAIL));
      else begin
       seat[0]<=encode64(live[63:0]);seat[1]<=encode64(live[127:64]);
       seat[2]<=encode64(in_owner[63:0]);
-      seat[3]<=encode64({30'd0,1'b0,1'b1,in_queries,in_owner[72:64],in_row0});
+      seat[3]<=encode64({{(64-HI-25){1'b0}},1'b0,1'b1,in_queries,in_owner[OWNER_W-1:64],in_row0});
       seat[4]<=encode64({4'd0,in_query_positions[59:0]});
       seat[5]<=encode64({44'd0,in_query_positions[79:60]});
      end
@@ -72,6 +73,7 @@ module ot_qwen_r25_causal_mask #(
    end
   end
  end endgenerate
+ initial if(OWNER_W!=73&&OWNER_W!=74)$fatal(1,"owner width must preserve legacy73 or native Qwen74");
  initial if(CAPACITY<8195||CAPACITY>1048576||CAPACITY%32!=0)
   $fatal(1,"Qwen p4 mask capacity must include complete final row group");
 endmodule

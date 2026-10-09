@@ -2,11 +2,11 @@
 // Structural full four-quarter binding. Arithmetic wrapper source822ca7b65;
 // control sourcec17b6a4b0. No SM/VM/HBM endpoint is replaced by a zero response.
 module ot_qwen_r25_su_four_quarter #(
- parameter integer ENABLE=0,CAPACITY=8224
+ parameter integer ENABLE=0,CAPACITY=8224,OWNER_W=74
 )(
  input wire clk,rst_n,warm_abort,
  input wire launch_v,output wire launch_rdy,input wire [1:0] launch_checked,
- input wire [72:0] launch_owner,input wire [11:0] launch_pc,
+ input wire [OWNER_W-1:0] launch_owner,input wire [11:0] launch_pc,
  input wire [12:0] launch_count,input wire [19:0] launch_position,input wire [2:0] launch_queries,
  output wire rom_v,input wire rom_rdy,output wire [11:0] rom_pc,
  input wire rom_out_v,output wire rom_out_rdy,input wire [11:0] rom_out_pc,
@@ -18,14 +18,14 @@ module ot_qwen_r25_su_four_quarter #(
  output wire [127:0] virtual_edges,reads,writes,visibility_reads
 );
  wire [3:0] cmd_v,cmd_rdy,done_v,qfault;
- wire [2759:0] cmd_words;wire [72:0] cmd_owner;wire [11:0] cmd_pc;
+ wire [2759:0] cmd_words;wire [OWNER_W-1:0] cmd_owner;wire [11:0] cmd_pc;
  wire [1:0] cmd_query;wire [19:0] cmd_position;wire [20:0] cmd_valid_length;
- wire [291:0] done_owner;wire [47:0] done_pc;wire [7:0] done_query;
+ wire [4*OWNER_W-1:0] done_owner;wire [47:0] done_pc;wire [7:0] done_query;
  wire dispatcher_fault,dispatcher_rdy,dispatcher_finished;
  assign fault=dispatcher_fault||(|qfault);
  assign launch_rdy=dispatcher_rdy&&!fault&&!warm_abort;
  assign finished_v=dispatcher_finished&&!fault&&!warm_abort;
- ot_qwen_r25_su_dispatch #(.ENABLE(ENABLE),.CAPACITY(CAPACITY)) u_dispatch(
+ ot_qwen_r25_su_dispatch #(.ENABLE(ENABLE),.CAPACITY(CAPACITY),.OWNER_W(OWNER_W)) u_dispatch(
   .clk(clk),.rst_n(rst_n),.launch_v(launch_v&&!fault&&!warm_abort),.launch_rdy(dispatcher_rdy),
   .launch_checked(launch_checked),.launch_owner(launch_owner),.launch_pc(launch_pc),
   .launch_count(launch_count),.launch_position(launch_position),.launch_queries(launch_queries),
@@ -38,11 +38,11 @@ module ot_qwen_r25_su_four_quarter #(
   .done_v(done_v),.done_owner(done_owner),.done_pc(done_pc),.done_query(done_query),
   .finished_v(dispatcher_finished),.finished_rdy(finished_rdy&&!fault&&!warm_abort),.fault(dispatcher_fault));
  for(genvar q=0;q<4;q=q+1)begin:quarters
-  ot_qwen_r25_su_quarter #(.ENABLE(ENABLE),.N(256),.M(64),.QID(q)) u_quarter(
+  ot_qwen_r25_su_quarter #(.ENABLE(ENABLE),.N(256),.M(64),.QID(q),.OWN_W(OWNER_W)) u_quarter(
    .clk(clk),.rst_n(rst_n),.warm_abort(warm_abort||fault),
    .cmd_v(cmd_v[q]&&!fault),.cmd_rdy(cmd_rdy[q]),.cmd_word(cmd_words[q*690+:690]),
    .cmd_owner(cmd_owner),.cmd_pc(cmd_pc),.cmd_query(cmd_query),
-   .done_v(done_v[q]),.done_owner(done_owner[q*73+:73]),
+   .done_v(done_v[q]),.done_owner(done_owner[q*OWNER_W+:OWNER_W]),
    .done_pc(done_pc[q*12+:12]),.done_query(done_query[q*2+:2]),
    .req_v(req_v[q]),.req_rdy(req_rdy[q]),.req(req[q*337+:337]),
    .rsp_v(rsp_v[q]),.rsp_rdy(rsp_rdy[q]),.rsp(rsp[q*273+:273]),.fault(qfault[q]),
