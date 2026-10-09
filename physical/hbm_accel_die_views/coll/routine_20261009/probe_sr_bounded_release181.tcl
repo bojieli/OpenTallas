@@ -72,6 +72,7 @@ foreach bt [$block getBTerms] {
 }
 # OpenROAD arguments are microns:150 sites X and23 rows Y.
 if {[info exists ::env(OT_SR_CHECK_ONLY_ODB)]} {
+ ord::clear
  read_db $::env(OT_SR_CHECK_ONLY_ODB)
  set block [ord::get_db_block]
  set instmap [dict create]
@@ -144,6 +145,10 @@ if {$global_outside} {incr bad}
 puts "SR_BOUNDED_GEOMETRY anchors=[dict size $anchors] released=[dict size $released] maxdxDBU=$maxdx maxdyDBU=$maxdy maxpinManhattanDBU=$maxpin bad=$bad"
 if {$rc} {puts "SR_BOUNDED_LEGALIZER_FAIL $err";exit 1}
 if {$bad} {error "SR bounded geometry gate failed"}
+if {[info exists ::env(OT_SR_GEOMETRY_SELFTEST)] && [info exists ::env(OT_SR_CHECK_ONLY_ODB)]} {
+ puts "SR_GEOMETRY_SELFTEST_PASS_NOT_LEGALITY"
+ exit
+}
 check_placement -verbose
 puts "SR_BOUNDED_LEGALIZATION_PASS"
 exit

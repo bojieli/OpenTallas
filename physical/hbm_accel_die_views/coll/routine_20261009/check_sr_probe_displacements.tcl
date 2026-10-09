@@ -4,6 +4,7 @@ set orig [dict create]
 foreach inst [[ord::get_db_block] getInsts] {
  dict set orig [$inst getName] [list [$inst getOrigin] [$inst getOrient] [[$inst getMaster] isBlock] [$inst getPlacementStatus]]
 }
+ord::clear
 read_db $::env(OT_PROBE_ODB)
 set moved 0;set outside 0;set macro_bad 0;set anchor_bad 0;set maxx 0;set maxy 0
 foreach inst [[ord::get_db_block] getInsts] {
