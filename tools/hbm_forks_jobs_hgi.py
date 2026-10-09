@@ -80,6 +80,24 @@ def specs(commit):
                                 'TOKEN18 core with cp_vocab / cp_ctx_max. TC route option B, HM ' + tag,
                         stages=dict(bench=bench, **mtp_route('ot_hgi_cmdproc', hm, args, M2RW)),
                         route_hold_margin_ns=float(hm)))
+        # ---- the die command processor ot_hgi_cp (config path + sequencer): replaces ot_hgi_cmdproc on the die
+        args = (f"--source {G}/ot_hgi_cfg.sv --source {G}/ot_hgi_seq.sv --source {G}/ot_hgi_cp.sv --param USE_MACRO=1 "
+                f"--clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2={M256} --macro-place-halo 6 6 "
+                "--die-area 0 0 420 420 --core-area 10.8 10.8 409.2 409.2")
+        cpb = (f"cd {G}/tb && iverilog -g2012 -DSEQ_CP -DSEQ_MACRO {{D}} -I. -I.. -o /tmp/cp_{{NAME}}_$$.vvp -s tb_hgi_seq "
+               "tb_hgi_seq.sv ../ot_hgi_seq.sv ../ot_hgi_cp.sv ../ot_hgi_cfg.sv "
+               "../../../../physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v && "
+               "vvp -n /tmp/cp_{NAME}_$$.vvp | tail -3")
+        bench = [dict(name='cp_exact', cmd=cpb.replace('{D}', ''), expect='pass', pass_regex='HGI_SEQ PASS', threads=1,
+                      peak_ram_gb=4),
+                 dict(name='cp_mut_tokx', cmd=cpb.replace('{D}', '-DOT_HGI_SEQ_MUT_TOKX'), expect='fail',
+                      fail_regex='HGI_SEQ FAIL', threads=1, peak_ram_gb=4)]
+        out.append(dict(name=f'hgi_cp-{c9}-tc-{tag}-cl', block='ot_hgi_cp', **common(commit),
+                        purpose='hbm-forks item 4: the die command processor ot_hgi_cp = config path (busy/settle + range) '
+                                '+ v1.0 sequencer (indexed descriptors, TOKX, 18-bit token); replaces the LAUNCH-list '
+                                'ot_hgi_cmdproc. TC route option B, HM ' + tag,
+                        stages=dict(bench=bench, **mtp_route('ot_hgi_cp', hm, args, M256)),
+                        route_hold_margin_ns=float(hm)))
         # ---- attention half_lo with the PS entry port + ldk strap
         hm_a = '0.030' if tag == 'hm25' else '0.010'
         rcmd = ("bash $(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh "
@@ -103,6 +121,8 @@ def specs(commit):
                                                logs=['{RUN}/routes/{LABEL}/run.log']),
                                     collect=dict(cmd='mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json '
                                                      '{RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/')),
+                        budget=dict(enabled=False, reason='tile IO false-pathed: every face pin is a pin-bank register '
+                                    '(the half-tile line convention, signoff_833_int.sdc); the die stations carry the budget'),
                         no_bench_reason='ldk lockstep bench (physical/hbm_forks/run_attn_ldk.sh: CF-1 roles 0-4 at ldk 0, '
                                         'ldk 1, mutant FAIL) PASS at 43dbec73e on the same RTL; re-run in parallel',
                         verdict=dict(corner_sta='{RUN}/routes/{LABEL}/corner_sta.json',
