@@ -14846,3 +14846,63 @@ def hbm_index_global_order_scan_model():
     """Canonical static ID scan with actual sparse protected rank heads."""
     from tools.hbm_index_global_order_model import model
     return model(static_scan=True)
+
+
+def hbm_collective_vm_publication_model(words=4096,lanes=16,quarters=4):
+    """Actual req337/rsp273 VM lease, fully published before TU indexed reads.
+
+    Source compiler d5225192c graph all_reduce_o/down: FP32 4096 words,
+    q1024 disjoint word ranges. No native TU descriptor opcode exists yet.
+    Read tags have QID2/sequence14; no in-band fault, only separate abort.
+    """
+    if words!=4096 or lanes!=16 or quarters!=4:
+        raise ValueError('only authoritative full4096/fourquarter contract sized')
+    flits=words//lanes;sectors=words//8
+    # Two parity-sector masters for each of two native injector read lanes.
+    # Each word256+seq12+epoch24 occupies two266-bit codes in three macros.
+    macros=2*2*(flits//128)*3
+    return dict(candidate='HBM_FULL_QUARTER_VM_PUBLICATION',default_enabled=False,
+        adopted=False,MACs_per_cycle=0,FP32_words=words,FW=512,PFMAX=flits,
+        quarter_words=1024,rank_order=[0,1,2,3],VM_base_word=233472,
+        VM_read_requests=sectors,VM_request_bits=337,VM_response_bits=273,
+        max_outstanding_requests=1,request_tag='QID2 + sequence14',
+        actual_Qwen_owner_bits=74,legacy_owner_default_bits=73,
+        response_fault_field=False,external_fault_requires_abort=True,
+        requested_bytes_per_sector=32,total_load_bytes=words*4,
+        publication_overlap_credit=0,minimum_load_cycles=2*sectors+2,
+        actual_load_cycles='sum measured request-ready and matched response latency for512 sectors +2write visibility edges',
+        injector_read_lanes=2,bytes_per_cycle_per_injector=64,
+        injector_request_to_response_edges=4,mutable_payload_protection='real SRAM SECDED on data+flitindex+24bit session',
+        protected_SRAM_masters=4,real_SRAM_macros=macros,
+        SRAM_macro_area_um2=macros*3891.57696,
+        SRAM_area_reservation_at_55_percent_um2=macros*3891.57696/.55,
+        forward_VM_boundary_bits=quarters*337,reverse_VM_boundary_bits=quarters*273,
+        producer_mux='one registered selected QID; held request, one outstanding, no same-cycle long ready chain',
+        fanout='write each sector to both read-lane replicas; no broadcast payload to fourquarters',
+        lease='allproducer writeACK and same-sector visibility under matching owner/op/PC/query precede publication start; stable readlease until TU release',
+        native_endpoint_successor='PFMAX256, indexed response fouredges after request; currentPFMAX64/samecycleinjdata cannot bind',
+        integration_open=['TU descriptor ISA/header and production SM publication grant','VM read arbiter and source fault transport','actual full shape native endpoint queue/relay inventory','descriptor/control-state protection and warm-abort drain','SS/FF15ps DRC0 with actual FF capture budgets'],physical_qualified=False)
+
+
+def hbm_collective_native_publication_endpoint_model():
+    """Source-sized successor of fixedPF64/same-edge injector native parent."""
+    return dict(candidate='HBM_NATIVE_FULL4096_INDEXED_RETURN',default_enabled=False,
+        adopted=False,physical_qualified=False,MACs_per_cycle=0,FW=512,PWT=545,
+        PFMAX=256,INJ=2,NPT=8,RXAW=8,QAW=7,TXAW=6,
+        partial_result_delivery_queue_depth=128,
+        native_source_landing_credit_window=64,
+        protected_RX_landing_depth=64,
+        queue_storage='new128-depth source successor; same3 real256x256 macros/queue, halfrowsused; original64-only contract preserved',
+        synchronous_packet_queues=25,synchronous_packet_macros=75,
+        additional_protected_landing_queues=8,additional_landing_macros=24,
+        publication=hbm_collective_vm_publication_model(),
+        injector_response_edges=4,added_request_to_hub_capture_edges=5,
+        injector_metadata_pipeline_register_bits=2*5*(32+1+1),
+        geometric_WSTG=22,protected_flight_instances=16,
+        geometric_flight_flit_seats=16*22,
+        geometric_flight_payload_bits=16*22*545,
+        RTT_cycles=None,RTT_qualified=False,
+        relay_basis='currentR25I max430-budget22 stages; uniform22 pathfinding, actual perport FF stations and ACK RTT not yet bound',
+        token_delta='512 actualVM sector reads before go +5sourcecore edges vs historicalsameedgeinjdata +8PHYingressedges perhop; compose actual measured stagecalendar, no invented overlap',
+        mutable_control='new valid/tag pipeline parity detects corruption before hub capture; broader native descriptor/control qualification open',
+        integration_open=['actual TUdescriptor/compiler production grant','actual perport PHYretry and separate control transport','actual source landing credit64 vs PHYcandidate256 must compose','source-sized full256 flit exactness and allnegative controls','real macro placement and SS/FF15ps DRC0'])
