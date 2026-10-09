@@ -53,3 +53,20 @@ class DeferredMergeTests(unittest.TestCase):
         rm.assert_called_once()
 
 if __name__=='__main__': unittest.main()
+
+class ClaudeOwnershipTests(unittest.TestCase):
+    def test_claude_ownership_defers_without_temporary_hold_or_git(self):
+        with tempfile.TemporaryDirectory() as d, patch.object(cl,'STATE',Path(d)), patch.object(cl,'notify_claude_record') as note:
+            (Path(d)/'main_publish_owner.json').write_text('{"automatic_main_publish":false}')
+            j=dict(name='fixture',spec=dict(block='fixture',source=dict(branch='candidate'),merge_target='main'))
+            with patch.object(cl,'gfetch',side_effect=AssertionError('main fetch forbidden')):
+                result=cl.merge_record(j,dict(branch_commit='abc123'),[])
+                cl.retry_deferred_record_merges()
+            self.assertIn('Claude owns',result['merge'])
+            note.assert_called_once_with('fixture','candidate','abc123')
+    def test_measurements_remain_dirty_under_claude_ownership(self):
+        with tempfile.TemporaryDirectory() as d, patch.object(cl,'STATE',Path(d)), patch.object(cl,'gfetch',side_effect=AssertionError('main push forbidden')):
+            (Path(d)/'main_publish_owner.json').write_text('{"automatic_main_publish":false}')
+            (Path(d)/'measured.dirty').write_text('pending')
+            cl.publish_measured()
+            self.assertTrue((Path(d)/'measured.dirty').exists())

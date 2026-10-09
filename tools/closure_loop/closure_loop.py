@@ -1142,6 +1142,24 @@ def record_measured(j):
         (STATE / "measured.dirty").write_text(now_iso())
 
 
+def claude_owns_main():
+    policy = STATE / 'main_publish_owner.json'
+    if not policy.exists():
+        return False
+    try:
+        return json.loads(policy.read_text()).get('automatic_main_publish') is False
+    except (OSError, ValueError):
+        return True  # malformed ownership policy never authorizes a main push
+
+
+def notify_claude_record(name, branch, commit):
+    line = f"{now_iso()} READY {name}: {branch} {commit}; Claude owns main merge.\n"
+    root = Path('/home/ubuntu/claude-takeover-20261007')
+    root.mkdir(parents=True, exist_ok=True)
+    append_locked(root / 'fleet_closure.log', line)
+    append_locked(root / 'READY_TO_MERGE.md', '\n- ' + line)
+
+
 MEASURED_REPO_PATH = "results/rtl/budgets_20261006/measured_insertion.json"
 
 
@@ -1154,6 +1172,8 @@ def publish_measured():
     if stamp.exists() and time.time() - stamp.stat().st_mtime < 600:
         return
     with PUBLISH_LOCK:
+        if claude_owns_main():
+            return  # owner consumes durable measured.dirty / measured_insertion.json; no main push
         if (STATE / "main_integration_hold.json").exists():
             return  # central coordinator is integrating; keep all unpublished measurements
         wt = STATE / "git" / "measured-main"
@@ -1881,7 +1901,7 @@ def setup_sensitivity_text(metrics):
 
 def defer_record_merge(j, out, sparse, dry=False):
     """Keep the source-branch record durable while the owner's main window is held."""
-    if dry or j['spec'].get('merge_target') != 'main' or not (STATE / 'main_integration_hold.json').exists():
+    if dry or j['spec'].get('merge_target') != 'main' or not (claude_owns_main() or (STATE / 'main_integration_hold.json').exists()):
         return False
     pending = STATE / 'deferred_record_merges'
     pending.mkdir(parents=True, exist_ok=True)
@@ -1891,8 +1911,11 @@ def defer_record_merge(j, out, sparse, dry=False):
     path = pending / (j['name'] + '.json')
     tmp = path.with_suffix('.tmp')
     tmp.write_text(json.dumps(record, indent=1) + '\n')
+    was_pending = path.exists()
     tmp.replace(path)
-    out['merge'] = 'DEFERRED main merge: owner integration window; record committed on source branch'
+    if claude_owns_main() and not was_pending:
+        notify_claude_record(j['name'], j['spec']['source']['branch'], out['branch_commit'])
+    out['merge'] = ('DEFERRED main merge: Claude owns integration; record committed on source branch' if claude_owns_main() else 'DEFERRED main merge: owner integration window; record committed on source branch')
     return True
 
 
@@ -1938,7 +1961,7 @@ def merge_record(j, out, sparse, dry=False):
 
 
 def retry_deferred_record_merges():
-    if (STATE / 'main_integration_hold.json').exists():
+    if claude_owns_main() or (STATE / 'main_integration_hold.json').exists():
         return
     for path in sorted((STATE / 'deferred_record_merges').glob('*.json')):
         if (STATE / 'main_integration_hold.json').exists():
