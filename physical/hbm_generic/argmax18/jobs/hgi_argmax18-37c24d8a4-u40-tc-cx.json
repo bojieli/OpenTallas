@@ -13,7 +13,7 @@
   "peak_ram_gb": 40,
   "source": {
     "branch": "codex/hgi-argmax18-20261009",
-    "commit": "3e3f1cd55"
+    "commit": "20945784e"
   },
   "stages": {
     "bench": [
@@ -44,6 +44,12 @@
       {
         "name": "mutant_value_zero",
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4",
+        "expect_fail": true,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "mutant_nan_payload",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5",
         "expect_fail": true,
         "peak_ram_gb": 1
       }

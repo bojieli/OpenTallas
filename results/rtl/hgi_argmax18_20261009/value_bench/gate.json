@@ -1,0 +1,36 @@
+{
+  "rtl_source": "3e3f1cd55",
+  "positive": {
+    "build_rc": 0,
+    "sim_rc": 0,
+    "rows": 6,
+    "cycles": 19056,
+    "winning_bits_checked": true
+  },
+  "mutants": {
+    "1": {
+      "build_rc": 0,
+      "sim_rc": 1
+    },
+    "2": {
+      "build_rc": 0,
+      "sim_rc": 1
+    },
+    "3": {
+      "build_rc": 0,
+      "sim_rc": 1
+    },
+    "4": {
+      "build_rc": 0,
+      "sim_rc": 1
+    }
+  },
+  "native_ds_leaf_unchanged": true,
+  "host": "ot-pve1",
+  "run": "/srv/opentallas-scratch/codex/hgi-argmax18-3e3f1cd55",
+  "missing": [
+    "CF hbm-sim vector pin",
+    "route evidence",
+    "NaN payload mutant pending"
+  ]
+}
