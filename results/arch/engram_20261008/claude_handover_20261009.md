@@ -26,6 +26,15 @@ the eight released-map ROM macros, unprotected history, delayed squash tails,
 stalls and an omitted-rewind mutant. It does not qualify a full native program
 or die. P2 expert/shared594 is not a SOURCE RESULT ABI.
 
+Final current-source gate PASS:
+`results/rtl/engram_source_rewind_gate_20261009.json`, source `6ec613f11`.
+Positive1600 windows/64 rewinds/2241 held-wait edges; omitted-rewind mutant
+rejected by the actual lead position guard before any reissued publication.
+Remote EPYC1 `/srv/opentallas-scratch/engram-source-rewind-r1`,
+`gate-6ec613f11.log`; retained compiled objects `/tmp/engram-source-rewind-1p904su1`.
+Three prior fixture/detector failures are immutable under
+`results/rtl/engram_source_rewind_failures/`; none is overwritten.
+
 Remaining production bindings are unimplemented and require Claude ownership:
 
 - Native SOURCE scheduling currently selects AR, not this WFC engine. Select
