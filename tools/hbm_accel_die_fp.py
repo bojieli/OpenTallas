@@ -398,6 +398,32 @@ R25S = dict(R25, attn_split=ATTN_HALF_DIR, attn_tile_h_um=1488.24,
             # widths (hub_h_ref), the index quarters (index_h: their closed split bands), the spine (spine_h, centred;
             # the router envelope moves with it)
             hub_h_ref=R25['hub_h'], cq_h=5529.6, index_h=5529.6)
+# r25m (MTP-DIE 2026-10-08): r25 + the DSpark MTP master hfd_mtp in a low spine slot (see build).  Slot from the closed
+# standalone routes (ctl_takeover_20261005 cell areas: topk_f3 28,799.6 + argmax_f1 6,144.3 + union_f3 3,116.3 +
+# spec_f3 1,430.7 + scratch_c2 909.8 + ctl_f2 885.3 + accept_a0 290.1 + fence_a1 247.9 = 41,824 um2 of cells) at 45 %
+# cell / 55 % with pin-flop banks and hold buffers: 92.9k um2 -> 466.56 x 200.88 um (0.0937 mm2), <= 1 mm a side.
+MTP_SLOT = (466.56, 200.88)
+# (a, b, bits): dspark_top ports.  cmdproc -> mtp: start / cfg_gamma / force / ngen / plen (37) + eng_done + sr_* spec
+#   requests (54) + host token reads p_tok / f_tok (34) = 126; mtp -> cmdproc: cmd_v/op/idx/ncol/pos/tok1/toks (203) +
+#   sa_* rollback addresses / n_committed (84) + p_addr / f_addr (32) + done = 320; su_red -> mtp: logit rows lg_*
+#   (523: 8 lanes x FP32 value + bias, mask, last, bias_en); mtp -> coll: am_v / am_idx / am_fault for the 96-die
+#   argmax select (19) + e_v / e_tok / e_idx (34) -> 64; coll -> mtp: merged argmax (64); su_red -> mtp: router vectors
+#   rv_* (134); mtp -> router: t_ids / t_col (58) + union u_* (20) = 78 (the expert-fetch request rides the router's
+#   expert_req chain); router -> mtp: u_ready (1) -> 8; loader -> mtp emitted-token sink is the cmdproc's.
+MTP_HUB_LINKS = (('cmdproc', 'mtp', 126), ('mtp', 'cmdproc', 320), ('su_red', 'mtp', 523 + 134), ('mtp', 'coll', 64),
+                 ('coll', 'mtp', 64), ('mtp', 'router', 78), ('router', 'mtp', 8))
+# loader memory side widths (ot_hfd_loader_half ports): request = req_v 2 + req_we 2 + req_addr 64 + req_wdata 512 +
+#   req_wstrb 64 + req_tag 32 + m_ar* 76 + m_aw* 76 + m_w* 74 + m_rready + m_bready = 904; response = rsp_v 2 + rsp_we 2 +
+#   rsp_tag 32 + rsp_data 512 + req_rdy 2 + m_arready + m_r* 68 + m_awready + m_wready + m_b* 3 = 624 (per stack: the
+#   loader's address decode selects the stack; ingest owns the RTL demux)
+LD_MEM_NATIVE = (904, 624)
+LR_DX = 420.0                   # response chain's svc-face offset from the column channel (its own station column)
+LM_BUNDLES = lambda m: math.ceil(sum(m['variant']['ld_mem']) / 16)    # lane width in k16 bundles (both directions)
+R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0], 'lr': LD_MEM_NATIVE[1]}, spine_slots_low={'mtp': MTP_SLOT}, spine_slot_domains=dict(R25.get('spine_slot_domains', {}), mtp='stream_1p2'),
+            # ECO pins on the closed cmdproc S half's S face (it looks at the loader and the MTP slot below): the MTP
+            # command port pair; the cmdproc stream adds them (re-route of hfd_cmdproc_s, mtp-hbm / cmdproc owner)
+            split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 320, 'S', 'M5', 0.30, 2),
+                                               'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
 ADOPTED = R25
 
 
@@ -3511,7 +3537,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
