@@ -15,7 +15,8 @@ def model():
         'credit_contract':'prepaid CRED32 fits LD64 including added correction edge; only actual CDC retirement returns credit; UE quarantines debt',
         'storage_cost':{'HBM_check_overhead_fraction':0.125,'free_ECC_sideband_claim':False,'native_check_provider':'MISSING; do not silently tie to zero'},
         'gates':{'positive':'full 288b clean and every single-bit with exact metadata through actual native CDC','negative':'double-bit UE no crossing/no recycled credit, correction-disabled mutant, reset while debt requires parent fence','physical':'TT setup>=0 FF hold>=0 DRC0 with SS sensitivity'},
-        'open':['actual HBM check-bit provider/PHY pins','native CDC mutable storage protection','positive all-copy warm reset fence','full physical die adoption'],
+        'open':['actual HBM check-bit provider/PHY pins','existing native drained common-reset integration','full physical die adoption'],
+        'CDC_storage_inventory':'native lmem/wmem/amem are flop arrays; SECDED rejected by confirmed ClaudeV28, Q5 HBM correctionbeforeCDC remains required',
         'adopted':False,
     }
 if __name__=='__main__':
