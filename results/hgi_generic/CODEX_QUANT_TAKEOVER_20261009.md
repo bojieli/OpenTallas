@@ -22,8 +22,8 @@ Evidence: `results/hgi_generic/quant_decode_20261009/`, `quant_v1_blockset_20261
 
 ## Physical jobs preserved
 
-- `hgi_quant_pd50-7202d4ec4-tc-cx`: EPYC2, `/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx`; fullroute originallydriver4104924, latest audit olddriver absent with no route rc/status; physical child must provide actual compute handle/terminal evidence, no restart on missing observer.
-- `hgi_quant_pd55-7202d4ec4-tc-cx`: EPYC4, `/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx`; fullroute driver2124280 freshly verified live at takeover audit.
+- `hgi_quant_pd50-7202d4ec4-tc-cx`: EPYC2, `/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx`; **EARLY_FAIL_HOLD terminal at07:02:34PT**, olddriver4104924 absent; no matching run-path processes and no liveE2container mounts for thisjob. Physicalchild preserved early_fail.json/fullCTSlog/hash/canonicalstate. Actual FFhold-386.108ps persistedthrough7800iterations/10381buffers; no reroute scheduled.
+- `hgi_quant_pd55-7202d4ec4-tc-cx`: EPYC4, `/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx`; fullroute driver2124280 freshly verified live at14:08UTC; actualcontainer11aea74832cd6d75e2420adb6d2a25cb5a9aba0ad6cacd0445e0be372fdcd569 `/competent_zhukovsky`, containerPID2159155. Same-386.108ps inputhold endpoint observed at~540iterations, still progressing; no finalverdict.
 - All four daemon exact/mutant entries accepted for each job.
 - These are real HM10/HM20 repair variants. Declared densities .50/.55 were ignored by PLACE_DENSITY_LB_ADDON (actual.079, same calibration placement); do not claim distinct density variants. PD55 pending-only fullroute HM20 was changed before launch under fleetlock; actualemitted HOLD_SLACK_MARGIN20 verified. No progressing job was restarted.
 - Runtime770ps, signoff833.333ps, setup60/hold25 unchanged. WC/BC names preserved, WC reads TT library data, BC reads FF. Actual configuration receipts prove this.
