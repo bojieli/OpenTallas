@@ -116,6 +116,12 @@ def main():
             assert compare['pass_'],compare
             assert (rec['rtl_golden_mismatches']>0)==mutant
         records.append(rec)
+    import hashlib
+    sources=[Path(__file__).resolve(),Path(C.__file__),Path(G.__file__),Path(V.__file__),Path(I.__file__),
+             *C.RTL,*C.LIB,C.TB,C.FIELDS_SVH,C.HARNESS]
+    pins={str(p.relative_to(C.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    for record in records:
+        record['source_sha256']=pins
     if a.out:
         a.out.mkdir(parents=True,exist_ok=True)
         (a.out/'programs.json').write_text(json.dumps(records,indent=2)+'\n')
