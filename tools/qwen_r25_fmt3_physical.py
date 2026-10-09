@@ -10,6 +10,7 @@ import ast
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -23,15 +24,17 @@ def cmd(args,log,env=None):
         raise RuntimeError(f'{log}: exit {result.returncode}')
 
 
-def model():
+def model(wide=False):
     tree=ast.parse((ROOT/'tools/uarch_model.py').read_text())
-    node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='qwen_r25_int8_unpack_model')
-    scope={};exec(compile(ast.Module(body=[node],type_ignores=[]),'model','exec'),scope)
-    return scope['qwen_r25_int8_unpack_model']()
+    node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name==('qwen_r25_fmt3_wide_model' if wide else 'qwen_r25_int8_unpack_model'))
+    nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('qwen_r25_int8_unpack_model','qwen_r25_fmt3_wide_model')]
+    scope={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'model','exec'),scope)
+    return scope[node.name]()
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--source-commit',required=True)
+    p.add_argument('--wide',action='store_true',help='570.24um strip and 240um central corridor; separate candidate')
     a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     state={'source_commit':a.source_commit,'phase':'model','policy':'SS>=15ps FF>=15ps DRC0;833ps60/25uncertainty'}
     def save(): (out/'state.json').write_text(json.dumps(state,indent=2)+'\n')
@@ -40,17 +43,50 @@ def main():
         gen=ROOT/'tools/hbm_accel_smh_physical.py'
         # Empty explicit environment overrides prevent accidental TC setup reuse.
         env=dict(os.environ,OT_SMH_CORNER='WC');env.pop('OT_ORFS_CORNER_OVERRIDE',None);env.pop('OT_SMH_POST_SDC',None)
-        m=model();(out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
+        m=model(a.wide);(out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
         pins={}  # measured literal generator pin ABI is captured below
         common=[sys.executable,gen,'block','--piece','front_c','--variant','one','--src',ROOT,
             '--period','833','--skew','90','--die-skew','150','--pd','0.55','--cores','16',
             '--need','64','--no-admit','--top-param','ENABLE_INT8=1','--hold-mm','--hold-margin','40',
             '--hold-buffer-pct','60','--make-var','GPL_ROUTABILITY_DRIVEN=0']
+        if a.wide:
+            common += ['--geom',ROOT/'results/arch/qwen_on_r25_20261008/fmt3_physical_candidate/wide_geometry.json']
+        def bind_endpoints(work):
+            if a.wide:
+                with (work/'hops.tcl').open('a') as f:
+                    f.write('\n'+(ROOT/'physical/common_flow/qwen_fmt3_pin_endpoints.tcl').read_text())
+                # Only the new candidate: match the literal neighbour planning
+                # source phase before the first floorplan repair; remove core
+                # source before CTS, preventing double-counting its actual tree.
+                sdc=work/'constraint.sdc'
+                text=sdc.read_text()
+                refs=re.findall(r'set_clock_latency\s+-source\s+([0-9.]+)\s+\[get_clocks nbr_clk\]',text)
+                if len(refs)!=1: raise RuntimeError('expected one explicit neighbour planning source')
+                text+='\n# FMT3 wide preCTS planning phase, removed by PRE_CTS_TCL\n'
+                text+=f'set_clock_latency -source {refs[0]} [get_clocks core_clk]\n'
+                sdc.write_text(text)
+                reset=work/'planning_reset.tcl'
+                # Existing hold-buffer hook must run too; keep its exact body.
+                old=work/'rt_hook.tcl'
+                reset.write_text((old.read_text() if old.exists() else '')+'\n'+
+                    'set_clock_latency -source 0 [get_clocks core_clk]\n'+
+                    'if {[info commands ot_mm_on] ne \"\" && [ot_mm_on]} {\n'+
+                    '  set_mode ff\n  set_clock_latency -source 0 [get_clocks core_clk]\n  set_mode ss\n}\n'+
+                    'puts \"FMT3 planning phase removed before CTS; core source0, neighbour unchanged\"\n')
+                with (work/'config.mk').open('a') as f:
+                    f.write('\nexport PRE_CTS_TCL = /work/planning_reset.tcl\n')
+                (work/'planning_reference.json').write_text(json.dumps(dict(
+                    source_commit=a.source_commit,preCTS_core_source_ps=float(refs[0]),
+                    preCTS_neighbour_source_ps=float(refs[0]),postCTS_core_source_ps=0,
+                    unchanged='period, uncertainty, input/output delay and neighbour reference'),indent=2)+'\n')
+        label='qwen_fmt3_wide' if a.wide else 'qwen_fmt3'
         cal=out/'cal';route=out/'route'
-        cmd(common+['--label','qwen_fmt3_cal','--out',cal,'--stop-after','cts',
+        cmd(common+['--label',label+'_cal','--out',cal,'--stop-after','cts',
             '--make-var','SKIP_CTS_REPAIR_TIMING=1'],out/'generate_cal.log',env)
+        bind_endpoints(cal)
         geometry=json.loads((cal/'geometry.json').read_text())
-        assert geometry['die']==m['front_c_footprint_um'],(geometry['die'],m['front_c_footprint_um'])
+        expected=([570.24,518.4] if a.wide else m['front_c_footprint_um'])
+        assert geometry['die']==expected,(geometry['die'],expected)
         state.update(phase='exact_gates',geometry=geometry);save()
         cmd([sys.executable,ROOT/'tools/qwen_r25_int8_gate.py','--out',out/'adapter_gate'],out/'adapter_gate.log',env)
         cmd([sys.executable,ROOT/'tools/test_qwen_r25_int8_image.py','--out',out/'image_gate'],out/'image_gate.log',env)
@@ -64,11 +100,12 @@ def main():
         budget=dict(planning=m,calibrated_clock=clock,pin_abi_sha256=hashlib.sha256((cal/'pins.tcl').read_bytes()).hexdigest(),
             interface_setup_ps=390,local_setup_ps=383,hold='BC scene neighbour source at measured FF insertion;min30/0ps')
         (out/'budget.json').write_text(json.dumps(budget,indent=2)+'\n')
-        cmd(common+['--label','qwen_fmt3_ss','--out',route,'--lat',ss,'--lat-ff',ff,
+        cmd(common+['--label',label+'_ss','--out',route,'--lat',ss,'--lat-ff',ff,
                     '--make-var','SETUP_SLACK_MARGIN=15'],out/'generate_route.log',env)
         # The canonical generator's FF input reference uses SS source latency.
         # Supply the correct calibrated FF neighbour and cancel SS-FF output debt
         # in the FF repair scene only; setup scene remains SS and unchanged.
+        bind_endpoints(route)
         ff_sdc=route/'ff_boundary.sdc'
         ff_sdc.write_text(f'set_clock_latency -source {ff} [get_clocks nbr_clk]\n'
                           'set_output_delay -min 0 -clock nbr_clk [all_outputs]\n')

@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "scope": "native A/B K spans and skew plus local Markov row permutation; full released snapshot equals independently bounded source windows; interior128 and shard tails21/22",
+  "results": [
+    {
+      "die": 0,
+      "bundle": 83,
+      "valid_rows": 128,
+      "passed": true,
+      "all_18_images_equal": {
+        "mk2_0.viamap.hex": true,
+        "ha1_1.viamap.hex": true,
+        "ha0_1.viamap.hex": true,
+        "mk2_1.viamap.hex": true,
+        "ha3_1.viamap.hex": true,
+        "ha2_0.viamap.hex": true,
+        "ha0_0.viamap.hex": true,
+        "mk0_1.viamap.hex": true,
+        "hb_0.viamap.hex": true,
+        "mk3_1.viamap.hex": true,
+        "hb_1.viamap.hex": true,
+        "ha2_1.viamap.hex": true,
+        "mk1_1.viamap.hex": true,
+        "mk3_0.viamap.hex": true,
+        "mk1_0.viamap.hex": true,
+        "ha1_0.viamap.hex": true,
+        "ha3_0.viamap.hex": true,
+        "mk0_0.viamap.hex": true
+      },
+      "released_head_payload_sha256": "1efd757eab192cfad7e0a70230b95bfcb0c506c005d73cd5d5c36321858563b9"
+    },
+    {
+      "die": 0,
+      "bundle": 84,
+      "valid_rows": 21,
+      "passed": true,
+      "all_18_images_equal": {
+        "mk2_0.viamap.hex": true,
+        "ha1_1.viamap.hex": true,
+        "ha0_1.viamap.hex": true,
+        "mk2_1.viamap.hex": true,
+        "ha3_1.viamap.hex": true,
+        "ha2_0.viamap.hex": true,
+        "ha0_0.viamap.hex": true,
+        "mk0_1.viamap.hex": true,
+        "hb_0.viamap.hex": true,
+        "mk3_1.viamap.hex": true,
+        "hb_1.viamap.hex": true,
+        "ha2_1.viamap.hex": true,
+        "mk1_1.viamap.hex": true,
+        "mk3_0.viamap.hex": true,
+        "mk1_0.viamap.hex": true,
+        "ha1_0.viamap.hex": true,
+        "ha3_0.viamap.hex": true,
+        "mk0_0.viamap.hex": true
+      },
+      "released_head_payload_sha256": "18cc210a22c582ce904e90b561e81a866da2bd51629c33f7964b2340e2f2b259"
+    },
+    {
+      "die": 2,
+      "bundle": 84,
+      "valid_rows": 22,
+      "passed": true,
+      "all_18_images_equal": {
+        "mk2_0.viamap.hex": true,
+        "ha1_1.viamap.hex": true,
+        "ha0_1.viamap.hex": true,
+        "mk2_1.viamap.hex": true,
+        "ha3_1.viamap.hex": true,
+        "ha2_0.viamap.hex": true,
+        "ha0_0.viamap.hex": true,
+        "mk0_1.viamap.hex": true,
+        "hb_0.viamap.hex": true,
+        "mk3_1.viamap.hex": true,
+        "hb_1.viamap.hex": true,
+        "ha2_1.viamap.hex": true,
+        "mk1_1.viamap.hex": true,
+        "mk3_0.viamap.hex": true,
+        "mk1_0.viamap.hex": true,
+        "ha1_0.viamap.hex": true,
+        "ha3_0.viamap.hex": true,
+        "mk0_0.viamap.hex": true
+      },
+      "released_head_payload_sha256": "dbaedbca56fa3744b8b36501493d55dbc58882c5e6ed836c35c88bf4f6fb1246"
+    }
+  ],
+  "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+  "source_sha256": {
+    "dsrom_markov_head_bundle_image_gate.py": "3bed09f3b4013fdce8f5463cf7ecea2bb7538cc3a825480a4f93d4bf160e1099",
+    "dsrom_markov_head_bundle_image.py": "bed0d4989bcd0d09158ec11b6879375e5135d3be172fe31ffba433489dfb2ef4",
+    "dsrom_markov_head_weight_image.py": "12bef5744824dc50b050b8ad296ec489baef9b2e178040968a9561e213878fb5"
+  }
+}

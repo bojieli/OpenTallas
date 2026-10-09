@@ -1,0 +1,15 @@
+{
+  "source_commit": "bb1ab3e48",
+  "host": "ot-pve1",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "input_source": "da3b6c691 calibrated 3_2_place_iop.odb immutable copy",
+  "positive": "PASS",
+  "negative": "PASS wrong CLK load rejected HBM_CAPTURE_NONREGISTER",
+  "direct_capture_count": 3270,
+  "max_pin_distance_um": 7.701,
+  "capture_cell_area_um2": 953.532,
+  "reservation_area_um2": 1764.0342,
+  "added_cells": 0,
+  "added_cycles": 0,
+  "scope": "actual full PWT545/18SRAM floorplan placement gate, no routed timing/DRC/die integration claim"
+}

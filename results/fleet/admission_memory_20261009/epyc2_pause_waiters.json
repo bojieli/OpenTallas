@@ -1,0 +1,103 @@
+{
+ "at": 1791530762.7472067,
+ "waiters": [
+  {
+   "pid": 430473,
+   "parent": 430471,
+   "requested_GiB": "60",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "a385f40111a22f7cd36c1ffc964c278605acb604e96fed42c2a7775850a701fe"
+  },
+  {
+   "pid": 466723,
+   "parent": 466721,
+   "requested_GiB": "128",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "e939d84eb894fd3334e269fbf4ded3bcac5b4ddf270c16c46938837b24fe0216"
+  },
+  {
+   "pid": 482390,
+   "parent": 482388,
+   "requested_GiB": "2",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "2a59273773fd0edb3493055581eca79c4f287d401f7a2e59955c4b25ccdf0fc2"
+  },
+  {
+   "pid": 482996,
+   "parent": 482994,
+   "requested_GiB": "2",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "2a59273773fd0edb3493055581eca79c4f287d401f7a2e59955c4b25ccdf0fc2"
+  },
+  {
+   "pid": 484713,
+   "parent": 483969,
+   "requested_GiB": "32",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "1fcd145a9bc43e6389244d6bc84ebf10fc5510b106daf887fa60f6654ff08505"
+  },
+  {
+   "pid": 487102,
+   "parent": 487100,
+   "requested_GiB": "40",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "c913157f0aefd7d58c752ef7834c31d2221a457b6a7fd5173cc79190cee704ac"
+  },
+  {
+   "pid": 1855411,
+   "parent": 1,
+   "requested_GiB": "24",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "f7d52758e7d1a1a832626d28436ad1c43a57c42c14572da0d378e0083cd00120"
+  },
+  {
+   "pid": 1869711,
+   "parent": 1,
+   "requested_GiB": "24",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "f7d52758e7d1a1a832626d28436ad1c43a57c42c14572da0d378e0083cd00120"
+  },
+  {
+   "pid": 1949119,
+   "parent": 1,
+   "requested_GiB": "48",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "bd25f6159ea9e715b7b609507da63e5922972423a49d46a3f98f06f8e6b96d2d"
+  },
+  {
+   "pid": 1970688,
+   "parent": 1,
+   "requested_GiB": "16",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "d9618c8674719bac6c0fa171cb874ad62a5ccc6bf088286d9a1453b97129cb71"
+  },
+  {
+   "pid": 1970689,
+   "parent": 1,
+   "requested_GiB": "16",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "d9618c8674719bac6c0fa171cb874ad62a5ccc6bf088286d9a1453b97129cb71"
+  },
+  {
+   "pid": 4103144,
+   "parent": 1,
+   "requested_GiB": "16",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "d9618c8674719bac6c0fa171cb874ad62a5ccc6bf088286d9a1453b97129cb71"
+  },
+  {
+   "pid": 4103145,
+   "parent": 1,
+   "requested_GiB": "16",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "d9618c8674719bac6c0fa171cb874ad62a5ccc6bf088286d9a1453b97129cb71"
+  },
+  {
+   "pid": 4103159,
+   "parent": 1,
+   "requested_GiB": "24",
+   "action": "SIGSTOP admissionwaiter only; no compute stopped",
+   "command_sha256": "f7d52758e7d1a1a832626d28436ad1c43a57c42c14572da0d378e0083cd00120"
+  }
+ ]
+}

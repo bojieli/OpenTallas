@@ -1,0 +1,8 @@
+PASS TU545 full256 landing debt blocks producer; ACK alone never returns popcredit
+PASS full545bit normalstream, cumulativepop wrap, zero faultfree replay
+PASS FECUE replay exact545; retries consume no duplicate landingcredit
+PASS coordinated linkdown reset, staleepoch controls, futurepop fault
+PASS_ALL
+rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:61: $finish called at 31576000000 (1fs)
+FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:34: conserved landing debt overflow257
+       Time: 3025000000  Scope: tb_hbm_tu_retry_port

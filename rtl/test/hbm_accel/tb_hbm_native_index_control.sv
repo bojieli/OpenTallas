@@ -1,19 +1,25 @@
 `timescale 1ps/1fs
-module tb_hbm_native_index_control;
+module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
  reg clk=0;always #416.667 clk=~clk;
  reg por_n=0,owner_valid=0,owner_fault=0,allocation_granted=0;
  reg [72:0] owner_frame=0,allocation_frame=0,command_frame=0,keep_frame=0;
  reg producer_published=0,producer_drained=0,selector_idle=1;
  reg command_v=0,command_cand=0,command_keep=0,keep_v=0;
+ reg [5:0] command_layer=2;reg [14:0] command_key_row0=4000;
+ reg key_visible=0;reg [72:0] key_visibility_frame=0,prefetch_accepted_frame=0;
+ reg prefetch_accepted=0;wire prefetch_v;
+ wire [5:0] held_layer;wire [14:0] held_key_row0;wire [13:0] held_ndie;
  reg [6:0] command_rank=0;reg [13:0] command_ndie=0;reg [9:0] command_k=0;
  reg [1:0] keep_quarter=0;reg [341:0] keep_bitmap=0;
  wire command_r,keep_r,source_start_v;reg source_start_r=0;
  wire [89:0] fs;wire [344:0] kin;wire [72:0] held_frame;wire [6:0] held_rank;
  reg source_done=0;reg [1:0] index_event=0;reg returns_drained=0,source_idle=0;
  wire retained,done,fault;
- ot_hbm_native_index_control #(.ENABLE(1)) dut(.*);
+ ot_hbm_native_index_control #(.ENABLE(1),.PREFETCH(PREFETCH_CASE)) dut(.*);
  integer fr,q,j,frames=0,masks=0,starts=0,retirements=0;
  reg [89:0] expected_fs;reg [341:0] expected_mask[0:3];
+ reg bad_prefetch;
+ initial bad_prefetch=$test$plusargs("BAD_PREFETCH");
  always @(posedge clk)begin
   if(por_n)begin
    if(fs[0])begin
@@ -44,11 +50,24 @@ module tb_hbm_native_index_control;
    command_k=512;command_cand=fr[1];command_keep=fr[0];
    expected_fs={command_keep,command_cand,command_k,command_ndie,command_rank,
                 owner_frame[72:53],owner_frame[35:32],owner_frame[31:0],1'b1};
-   producer_published=0;producer_drained=0;source_start_r=0;
+   producer_published=0;producer_drained=0;source_start_r=0;key_visible=0;
    returns_drained=0;source_idle=0;selector_idle=1;
    tick();if(!command_r)$fatal(1,"command not admitted");
    command_v=1;tick();command_v=0;
    repeat(4)begin if(fs[0])$fatal(1,"missing publication wait");tick();end
+   if(PREFETCH_CASE)begin
+    key_visibility_frame=owner_frame;key_visible=1;
+    while(!prefetch_v)tick();
+    if(held_frame!==owner_frame||held_layer!=command_layer||held_key_row0!=command_key_row0||held_ndie!=command_ndie)
+     $fatal(1,"prefetch dynamic descriptor mismatch");
+    repeat(3)begin if(!prefetch_v||fs[0])$fatal(1,"lost prefetch debt");tick();end
+    prefetch_accepted_frame=bad_prefetch?(owner_frame^73'd1):owner_frame;
+    prefetch_accepted=1;tick();prefetch_accepted=0;
+    if(bad_prefetch)begin
+     tick();if(!fault||fs[0]||source_start_v)$fatal(1,"wrong prefetch receipt accepted");
+     $display("EXPECTED_PREFETCH_IDENTITY_REJECT");$finish;
+    end
+   end
    producer_published=1;producer_drained=1;
    if(command_keep)begin
     for(q=0;q<4;q=q+1)begin

@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS",
+  "source_commit": "f8b8bd3c9",
+  "checks": [
+    {
+      "pair": [
+        "front_n",
+        "front_c"
+      ],
+      "matched_signal_pins": 2940,
+      "same_track_x": true,
+      "opposite_faces": true
+    },
+    {
+      "pair": [
+        "front_c",
+        "front_s"
+      ],
+      "matched_signal_pins": 2020,
+      "same_track_x": true,
+      "opposite_faces": true
+    }
+  ]
+}

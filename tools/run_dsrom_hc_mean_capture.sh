@@ -14,7 +14,7 @@ sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_a
  rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv)
 iverilog -g2012 -s tb_hc_mean_capture -o "$out/base.vvp" "${sources[@]}" >"$out/elaborate.log" 2>&1
 vvp "$out/base.vvp" +vectors="$out/synthetic" >"$out/positive.log" 2>&1
-for bad in 1 2 3 4 5; do
+for bad in 1 2 3 4 5 10; do
     vvp "$out/base.vvp" +vectors="$out/synthetic" +bad="$bad" >"$out/negative_$bad.log" 2>&1
 done
 iverilog -g2012 -s tb_hc_mean_capture -DHC_VM_READER -o "$out/reader.vvp" "${sources[@]}" >"$out/reader.elaborate.log" 2>&1
@@ -34,7 +34,7 @@ if [[ -n ${HC_RELEASED_ROOT:-} ]]; then
     for rank in 0 1 2 3; do
         python3 tools/dsrom_hc_mean_capture_vectors.py --out "$out/released_rank$rank" --rank "$rank" --released-root "$HC_RELEASED_ROOT"
         vvp "$out/base.vvp" +vectors="$out/released_rank$rank" >"$out/released_rank$rank.log" 2>&1
-        vvp "$out/reader.vvp" +vectors="$out/released_rank$rank" >"$out/reader_released_rank$rank.log" 2>&1
+        vvp "$out/reader.vvp" +vectors="$out/released_rank$rank" +rank="$rank" >"$out/reader_released_rank$rank.log" 2>&1
     done
 fi
 python3 - "$out" <<'PY'

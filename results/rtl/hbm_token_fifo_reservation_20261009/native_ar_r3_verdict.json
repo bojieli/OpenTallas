@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm.native_ar_token_join.rtl.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "qwen": false,
+      "mutant": 0,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=0 records=12 launches=24 stalls=371\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:53: $finish called at 460368000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": false,
+      "mutant": 1,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:39: token/job/position corrupt\n       Time: 418251000  Scope: tb_hbm_native_ar_token_join\n",
+      "verdict": "FAIL"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=12 launches=24 stalls=371\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:53: $finish called at 460368000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 1,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:39: token/job/position corrupt\n       Time: 418251000  Scope: tb_hbm_native_ar_token_join\n",
+      "verdict": "FAIL"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "6a22b46233c8a9f5ccb79559f6920466e61f7a9dcc202285a9b811f36298c294",
+    "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv": "8fbe8358fdc9b2c49210959a6a131ca6159319e5fa6e24a49d84bcb2128e0bea",
+    "rtl/hbm_accel/qwen/r25/ot_qwen_r25_cmdproc18.sv": "bc1b7308d4968f4cf3330fb984fd551843cb0602256055a4a4b5972de0dd14af",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv": "f7d040c0de8ffbd68b8bdce1816cc6539c11585ca8bc973ddd59b890ee8c2ffc"
+  },
+  "scope": "real two-half32SM CP and token runtime; synthetic SM results; no arithmetic or full token datapath claim"
+}

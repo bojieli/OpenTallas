@@ -59,7 +59,7 @@ def pack(schema, binding, context):
 def compile_jobs(request, registry, root):
     schemas = registry.get("schemas", {})
     bindings = registry.get("jobs", {})
-    rows, rejected = [], []
+    rows, rejected, unbound_endpoints = [], [], []
     for job in request["jobs"]:
         ident = job["id"]
         try:
@@ -91,11 +91,16 @@ def compile_jobs(request, registry, root):
                                 "hex": f"{word:0{(signal['width']+3)//4}x}"}
             rows.append({"id": ident, "engine": job["engine"],
                          "endpoint": schema["endpoint"], "signals": values})
+            if not schema.get("integration_ready", False):
+                unbound_endpoints.append(ident)
         except (ValueError, KeyError, OSError, TypeError) as error:
             rejected.append({"id": ident, "reason": str(error)})
     # Atomic whole program: partial native tables are never dispatch eligible.
-    return {"status": "NATIVE_COMPILE_PASS" if not rejected and rows else "NATIVE_COMPILE_BLOCKED",
-            "dispatch_eligible": not rejected and bool(rows),
+    table_ready = not rejected and bool(rows)
+    return {"status": "NATIVE_COMMAND_COMPILE_PASS" if table_ready else "NATIVE_COMPILE_BLOCKED",
+            "command_table_eligible": table_ready,
+            "dispatch_eligible": table_ready and not unbound_endpoints,
+            "unbound_endpoints": unbound_endpoints,
             "rows": rows if not rejected else [], "rejected": rejected}
 
 
@@ -112,7 +117,7 @@ def main():
     result["registry_sha256"] = digest(args.registry)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + "\n")
-    raise SystemExit(0 if result["dispatch_eligible"] else 2)
+    raise SystemExit(0 if result["command_table_eligible"] else 2)
 
 
 if __name__ == "__main__":

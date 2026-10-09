@@ -1,0 +1,12 @@
+{
+  "source_commit": "d61d74519",
+  "host": "ot-agidock128",
+  "remote": "/srv/opentallas-scratch/codex/s81-dispatch-d61d74519",
+  "positive": "PASS 48 sectors, 48 credits; simultaneous branch returns tested",
+  "negative": "PASS wrong marker class mutant detected",
+  "scope": "Minimum host class/credit dispatch; not controller or physical qualification",
+  "sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv": "a63d4595a642d55093ae4bccad816bb3c540f77738af1c133dea5eb0fd3a4779",
+    "rtl/test/s81_native_ingest/tb_s81_host_dispatch.sv": "c7f9bf982b7a819f9edd568ebdbe9dbe3d37f9de94b3a448b106883633b619dc"
+  }
+}

@@ -43,6 +43,13 @@ CORNER_CODE = r'''    # TTB-CORNER-BEGIN (tt_overlay v2 = hbm-blocks 4aadc92bc s
                 _ot_mf.write(f"TC {os.getpid()} wc_reads_tt orfs_corner={args.orfs_corner} hold={args.hold_corners}\n")
     # TTB-CORNER-END
 '''
+# The corner block replacement spans the calibrate-only injection installed by
+# hold_corners_patch. Keep it in the final block so either overlay order retains it.
+CALIBRATION_CODE = r'''    if os.environ.get("OT_CAL_CTS_ONLY", "") == "1":
+        args.orfs_var = list(args.orfs_var or []) + ["SKIP_CTS_REPAIR_TIMING=1"]
+        print("OT_CAL_CTS_ONLY: calibrate run, SKIP_CTS_REPAIR_TIMING=1 (no CTS setup/hold repair)", file=sys.stderr)
+'''
+
 MAIN_CORNER_TAIL = "        args.orfs_corner = _ot_oc\n"
 MM_OLD = 'args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]'
 MM_NEW = 'args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1", f"OT_MM_SETUP_CORNER={_ot_p}"]'
@@ -107,11 +114,11 @@ def ensure_corner(s):
     a = s.index(PARSE_ANCHOR) + len(PARSE_ANCHOR)
     b = s.index(RHC_ANCHOR, a) if RHC_ANCHOR in s[a:] else a
     seg = s[a:b]
-    if seg == CORNER_CODE:
+    if seg == CORNER_CODE + CALIBRATION_CODE:
         return s, msg, True
     if seg.strip() and "CORNER" not in seg:
         return s, [f"unexpected code between parse_args and the hold-corner block ({len(seg)} chars)"], False
-    s = s[:a] + CORNER_CODE + s[b:]
+    s = s[:a] + CORNER_CODE + CALIBRATION_CODE + s[b:]
     msg.append("corner block v2 (WC reads TT)" + (" replaced a rename block" if seg.strip() else " added"))
     return s, msg, True
 

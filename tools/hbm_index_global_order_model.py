@@ -5,7 +5,7 @@ concatenation is not globally ascending under the round-robin owner mapping.
 """
 import math
 
-def model():
+def model(static_scan=False):
     ranks=96
     tuples_per_flit=15
     quarter_blocks=342
@@ -16,13 +16,16 @@ def model():
     positions=2*ranks*17
     valid=2*ranks
     tournament_nodes=sum((48,24,12,6,3,2,1))
-    tournament_bits=2*tournament_nodes*(17+7+1)
-    control=2*(73+7+17+34+16)
+    tournament_bits=0 if static_scan else 2*tournament_nodes*(17+7+1)
+    control=2*(73+7+17+34+16)+(2*(18+7) if static_scan else 0)
     ff=heads+positions+valid+tournament_bits+control
     return dict(schema='opentallas.hbm.index_global_order.v1', default_enabled=False,
-        source_order='96 ascending native block-ID lists merged by minimum literal ID',
+        source_order=('canonical global block-ID scan against actual96 retained heads' if static_scan
+            else '96 ascending native block-ID lists merged by minimum literal ID'),
         correctness='unchanged BF16 values; signed zero preserved; duplicate IDs/NaN fault',
-        ranks=ranks, MACs_per_cycle=0, arithmetic='95 unsigned17bit ID comparisons in seven registered levels',
+        ranks=ranks, MACs_per_cycle=0,
+        arithmetic=('one selected18bit ID comparison; rank0..95 rotates with global ID'
+            if static_scan else '95 unsigned17bit ID comparisons in seven registered levels'),
         compute_intensity=0, memory_bytes_per_cycle=dict(head_response=34/8,
             source_publication_write=64, source_publication_read=64),
         bits_per_boundary=dict(TU_packet=545,TU_header=33,TU_payload=512,
@@ -44,9 +47,11 @@ def model():
         routing_tracks_required=2*(34+7+17+73), channel_capacity_tracks=None,
         slot_fit=False, area_and_clock_context='selected R25I endpoint placement must supply actual budgets',
         latency_cycles=dict(head_initialization='96*(actual read round trip plus acceptance)',
-            select_levels=7, tuple_emit_capture=1,
-            per_tuple_minimum=9, refill_round_trip='actual TU publication SRAM/relay delay additive',
-            full_valid_1m_comparison_minimum=9*131072),
+            select_levels=0 if static_scan else 7, tuple_emit_capture=1,
+            per_tuple_minimum=2 if static_scan else 9,
+            refill_round_trip='actual TU publication SRAM/relay delay additive; current implementation waits refill',
+            full_valid_1m_comparison_minimum=(2 if static_scan else 9)*131072,
+            missing_candidate_scan='one edge per absent global ID, no fabricated invalid candidate' if static_scan else None),
         single_user_composition='query and score -> native candidate publication -> real '
             'allgather and positive write ACK -> seven-level global-ID merge -> '
             'native global top2048 selector -> real keep-mask publication; no free overlap',

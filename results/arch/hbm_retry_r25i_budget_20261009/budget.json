@@ -1,0 +1,413 @@
+{
+  "variant": "CURRENT_R25I",
+  "scope": "GEOMETRIC_PATHFINDING_NO_FF_CAPTURE_OR_FEC_MEASUREMENT",
+  "clock_contract": {
+    "status": "unqualified-explicit-source-contract",
+    "selected": false,
+    "external_generation_assumed": true,
+    "periods_ns": {
+      "stream": 0.8333333333333334,
+      "serial": 1.1111111111111112,
+      "hbm": 1.024,
+      "link": 0.8333333333333334
+    },
+    "serial_relationship": "external source phase locked: three serial edges per four stream edges; common rising edge every 10/3 ns",
+    "link_relationship": "independent phase; only actual dual-clock FIFO crossings may receive timing exceptions",
+    "hbm_protocol_exception": "1.024 ns (976.5625 MHz) HBM service clock remains distinct from 1.2 GHz streaming",
+    "reset_contract": "four active-high reset assertions; domain-local synchronized release must be implemented and checked",
+    "input_pin_count": 8,
+    "clock_pin_count": 4,
+    "reset_pin_count": 4,
+    "clock_pad_or_receiver_area_um2": null,
+    "external_generation_power_w": null,
+    "source_dynamic_power_w_per_input_ff": {
+      "stream": 5.879999999999999e-07,
+      "serial": 4.4099999999999994e-07,
+      "hbm": 4.785156249999999e-07,
+      "link": 5.879999999999999e-07
+    },
+    "power_basis": "C*V^2*f at 0.7 V, per fF; actual receiver/package capacitance and clock-generator power unmeasured",
+    "cts_status": "must rebuild from physical south-edge entries; historical hb_coll-root insertion numbers do not apply",
+    "remaining_gates": [
+      "actual full collective clk_stream/clk_link/por_stream/por_link pins",
+      "external source jitter, 3:4 phase relationship and reset release proof",
+      "package/clock receiver area, capacitance and external source energy",
+      "measured south-entry CTS for every real consumer with SS/FF uncertainty",
+      "CDC verification for every asynchronous edge; no blanket false paths"
+    ]
+  },
+  "paths": {
+    "link_lk_S0": {
+      "segments": 5,
+      "um": 6490.6,
+      "stages_430": 19,
+      "stages_504": 16
+    },
+    "link_lk_S1": {
+      "segments": 5,
+      "um": 6293.6,
+      "stages_430": 18,
+      "stages_504": 16
+    },
+    "link_lk_S2": {
+      "segments": 6,
+      "um": 7693.7,
+      "stages_430": 22,
+      "stages_504": 20
+    },
+    "link_lk_S3": {
+      "segments": 5,
+      "um": 5900.0,
+      "stages_430": 17,
+      "stages_504": 15
+    },
+    "link_lk_S4": {
+      "segments": 5,
+      "um": 5682.8,
+      "stages_430": 17,
+      "stages_504": 15
+    },
+    "link_lk_N0": {
+      "segments": 5,
+      "um": 5529.4,
+      "stages_430": 17,
+      "stages_504": 15
+    },
+    "link_lk_N1": {
+      "segments": 6,
+      "um": 7358.3,
+      "stages_430": 21,
+      "stages_504": 19
+    },
+    "link_lk_N2": {
+      "segments": 5,
+      "um": 5996.8,
+      "stages_430": 18,
+      "stages_504": 15
+    },
+    "link_lk_N3": {
+      "segments": 5,
+      "um": 6241.7,
+      "stages_430": 18,
+      "stages_504": 16
+    }
+  },
+  "buses": [
+    {
+      "name": "clk_link",
+      "kind": "clock_trunk",
+      "bits": 1,
+      "endpoints": [
+        [
+          "TOP",
+          "clk_link"
+        ],
+        [
+          "lk_S0",
+          "ck"
+        ],
+        [
+          "lk_S1",
+          "ck"
+        ],
+        [
+          "lk_S2",
+          "ck"
+        ],
+        [
+          "lk_S3",
+          "ck"
+        ],
+        [
+          "lk_S4",
+          "ck"
+        ],
+        [
+          "lk_N0",
+          "ck"
+        ],
+        [
+          "lk_N1",
+          "ck"
+        ],
+        [
+          "lk_N2",
+          "ck"
+        ],
+        [
+          "lk_N3",
+          "ck"
+        ],
+        [
+          "lk_host",
+          "ck"
+        ],
+        [
+          "w289_lk_lk_S0",
+          "ck"
+        ],
+        [
+          "w293_lk_lk_S1",
+          "ck"
+        ],
+        [
+          "w298_lk_lk_S2",
+          "ck"
+        ],
+        [
+          "w302_lk_lk_S3",
+          "ck"
+        ],
+        [
+          "w306_lk_lk_S4",
+          "ck"
+        ],
+        [
+          "w310_lk_lk_N0",
+          "ck"
+        ],
+        [
+          "w315_lk_lk_N1",
+          "ck"
+        ],
+        [
+          "w319_lk_lk_N2",
+          "ck"
+        ],
+        [
+          "w323_lk_lk_N3",
+          "ck"
+        ],
+        [
+          "w335_host",
+          "ck"
+        ],
+        [
+          "hb_coll",
+          "clk_link"
+        ]
+      ]
+    },
+    {
+      "name": "rst_link",
+      "kind": "reset_tree",
+      "bits": 1,
+      "endpoints": [
+        [
+          "TOP",
+          "por_link"
+        ],
+        [
+          "w286_lk_lk_S0",
+          "rst"
+        ],
+        [
+          "w287_lk_lk_S0",
+          "rst"
+        ],
+        [
+          "w288_lk_lk_S0",
+          "rst"
+        ],
+        [
+          "w289_lk_lk_S0",
+          "rst"
+        ],
+        [
+          "w290_lk_lk_S1",
+          "rst"
+        ],
+        [
+          "w291_lk_lk_S1",
+          "rst"
+        ],
+        [
+          "w292_lk_lk_S1",
+          "rst"
+        ],
+        [
+          "w293_lk_lk_S1",
+          "rst"
+        ],
+        [
+          "w294_lk_lk_S2",
+          "rst"
+        ],
+        [
+          "w295_lk_lk_S2",
+          "rst"
+        ],
+        [
+          "w296_lk_lk_S2",
+          "rst"
+        ],
+        [
+          "w297_lk_lk_S2",
+          "rst"
+        ],
+        [
+          "w298_lk_lk_S2",
+          "rst"
+        ],
+        [
+          "w299_lk_lk_S3",
+          "rst"
+        ],
+        [
+          "w300_lk_lk_S3",
+          "rst"
+        ],
+        [
+          "w301_lk_lk_S3",
+          "rst"
+        ],
+        [
+          "w302_lk_lk_S3",
+          "rst"
+        ],
+        [
+          "w303_lk_lk_S4",
+          "rst"
+        ],
+        [
+          "w304_lk_lk_S4",
+          "rst"
+        ],
+        [
+          "w305_lk_lk_S4",
+          "rst"
+        ],
+        [
+          "w306_lk_lk_S4",
+          "rst"
+        ],
+        [
+          "w307_lk_lk_N0",
+          "rst"
+        ],
+        [
+          "w308_lk_lk_N0",
+          "rst"
+        ],
+        [
+          "w309_lk_lk_N0",
+          "rst"
+        ],
+        [
+          "w310_lk_lk_N0",
+          "rst"
+        ],
+        [
+          "w311_lk_lk_N1",
+          "rst"
+        ],
+        [
+          "w312_lk_lk_N1",
+          "rst"
+        ],
+        [
+          "w313_lk_lk_N1",
+          "rst"
+        ],
+        [
+          "w314_lk_lk_N1",
+          "rst"
+        ],
+        [
+          "w315_lk_lk_N1",
+          "rst"
+        ],
+        [
+          "w316_lk_lk_N2",
+          "rst"
+        ],
+        [
+          "w317_lk_lk_N2",
+          "rst"
+        ],
+        [
+          "w318_lk_lk_N2",
+          "rst"
+        ],
+        [
+          "w319_lk_lk_N2",
+          "rst"
+        ],
+        [
+          "w320_lk_lk_N3",
+          "rst"
+        ],
+        [
+          "w321_lk_lk_N3",
+          "rst"
+        ],
+        [
+          "w322_lk_lk_N3",
+          "rst"
+        ],
+        [
+          "w323_lk_lk_N3",
+          "rst"
+        ],
+        [
+          "w324_host",
+          "rst"
+        ],
+        [
+          "w325_host",
+          "rst"
+        ],
+        [
+          "w326_host",
+          "rst"
+        ],
+        [
+          "w327_host",
+          "rst"
+        ],
+        [
+          "w328_host",
+          "rst"
+        ],
+        [
+          "w329_host",
+          "rst"
+        ],
+        [
+          "w330_host",
+          "rst"
+        ],
+        [
+          "w331_host",
+          "rst"
+        ],
+        [
+          "w332_host",
+          "rst"
+        ],
+        [
+          "w333_host",
+          "rst"
+        ],
+        [
+          "w334_host",
+          "rst"
+        ],
+        [
+          "w335_host",
+          "rst"
+        ],
+        [
+          "hb_coll",
+          "por_link"
+        ]
+      ]
+    }
+  ],
+  "physical_RTT_qualified": false,
+  "RTT_cycles": null,
+  "source_sha256": {
+    "hbm_accel_die_fp.py": "bbc71e173ffb9b6234fe53090143a59efd95d1d5969c77257deffd69cc4978a5",
+    "hbm_die_clock_inputs.py": "0e28cb73df3ea0c92ba8ca52a33ec2ed6b7c363cd120dbe0aa614e37ccdd3298"
+  }
+}

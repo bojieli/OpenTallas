@@ -25,23 +25,30 @@ module tbmask #(parameter SHARDTAIL=0);
  reg[255:0]embed_data=0;reg[3:0]embed_beat=0;reg[31:0]embed_id=32'h55;reg embed_last=0;
  wire head_go;reg head_valid=0;reg[31:0]head_bits=0;reg head_fault=0;
  wire joined_valid,done,best_valid,fault;wire[31:0]joined_bits,best_bits;wire[16:0]joined_row,best_row;
- ot_dsrom_markov_head_driver #(.ENABLE(1),.PINREG(PINREG_VALUE),.CACHE_PINREG(CACHE_PINREG_VALUE),.VALID_ROWS(SHARDTAIL?6:32)) dut(.*);
- reg[255:0]vec[0:15];reg[31:0]gold[0:15];integer i,n,transaction_case=0,wanted=0,got=0,best=0;
+ ot_dsrom_markov_head_driver #(.ENABLE(1),.PINREG(PINREG_VALUE),.CACHE_PINREG(CACHE_PINREG_VALUE),.VALID_ROWS(SHARDTAIL==2?0:(SHARDTAIL?6:32))) dut(.*);
+ reg[255:0]vec[0:15];reg[31:0]gold[0:15];integer i,n,transaction_case=0,wanted=0,got=0,best=0,cyc=0,first_head=-1,last_head=-1,first_join=-1,last_join=-1,highwater=0,head_full=0,argmax_cycle=-1;
+ always @(posedge clk)cyc<=cyc+1;
  reg[8*1024-1:0]dir;
- always @(negedge clk)if(rst_n)begin
+ always @(negedge clk)begin
+  if(!rst_n)begin first_join=-1;last_join=-1;highwater=0;head_full=0;argmax_cycle=-1;end
+  else begin
+  if(done&&argmax_cycle<0)argmax_cycle=cyc;
+  if(dut.hn>highwater)highwater=dut.hn;if(dut.hn==2)head_full=head_full+1;
   if(fault)$fatal(1,"mask driverfault");
   if(joined_valid)begin
+   if(first_join<0)first_join=cyc;last_join=cyc;
    if(got>=wanted||joined_row!=row0+got||joined_row>=129280||joined_bits!==gold[got])$fatal(1,"padded row reached join %0d %0d",got,joined_row);
    got=got+1;
   end
+ end
  end
  initial begin
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR");
   $readmemh({dir,"/embed.hex"},vec);$readmemh({dir,"/gold.hex"},gold);
   for(transaction_case=0;transaction_case<2;transaction_case=transaction_case+1)begin
-   rst_n=0;start=0;head_valid=0;embed_valid=0;got=0;
+   rst_n=0;start=0;head_valid=0;embed_valid=0;got=0;first_head=-1;last_head=-1;
    row0=transaction_case==1?129280:(SHARDTAIL?21920:129264);
-   wanted=transaction_case==1?0:(SHARDTAIL?6:16);
+   wanted=(transaction_case==1||SHARDTAIL==2)?0:(SHARDTAIL?6:16);
    best=BEST16;if(SHARDTAIL)best=BEST6;
    repeat(5)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);start=1;@(negedge clk);start=0;
    for(i=0;i<16;i=i+1)begin
@@ -50,12 +57,13 @@ module tbmask #(parameter SHARDTAIL=0);
    embed_valid=0;embed_last=0;repeat(3)@(negedge clk);
    // Valid rows have all-negative logits; scheduledpadding haszero, which wouldwin.
    for(n=0;n<32;n=n+1)begin
-    head_valid=1;head_bits=n<wanted?32'hc9800000:32'b0;@(negedge clk);head_valid=0;
+    head_valid=1;head_bits=n<wanted?32'hc9800000:32'b0;if(first_head<0)first_head=cyc;last_head=cyc;@(negedge clk);head_valid=0;
     repeat(255)@(negedge clk);
    end
    while(!done)@(negedge clk);
    if(got!=wanted||best_valid!=(wanted!=0))$fatal(1,"valid rowcount %0d %0d",got,wanted);
    if(wanted!=0&&(best_row!=row0+best||best_bits!==gold[best]||best_bits[31]!=1))$fatal(1,"zero padding won overnegative realrows");
+   $display("MASKMETRICS case=%0d valid=%0d firsthead=%0d lasthead=%0d firstjoin=%0d lastjoin=%0d argmax=%0d queuehigh=%0d headfull=%0d",transaction_case,wanted,first_head,last_head,first_join,last_join,argmax_cycle,highwater,head_full);
    $display("PASS paddedmask shardtail=%0d row0=%0d valid=%0d skipped=%0d bestvalid=%0d",SHARDTAIL,row0,got,32-got,best_valid);
   end
   $finish;
@@ -65,7 +73,7 @@ endmodule
 '''.replace('CACHE_PINREG_VALUE',str(cache_pinreg)).replace('PINREG_VALUE',str(pinreg)).replace('BEST16',str(int(np.argmax(gold)))).replace('BEST6',str(int(np.argmax(gold[:6])))))
  src=['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv']
  results=[]
- for case in (0,1):
+ for case in (0,1,2):
   obj=out/f'obj{case}'
   p=subprocess.run(['verilator','--binary','--timing','-j','8','-Wno-fatal','--top-module','tbmask',f'-GSHARDTAIL={case}','--Mdir',str(obj),*[str(ROOT/s) for s in src],str(macro),str(tb)],capture_output=True,text=True)
   (out/f'compile{case}.log').write_text(p.stdout+p.stderr)
@@ -74,7 +82,7 @@ endmodule
   (out/f'sim{case}.log').write_text(p.stdout+p.stderr);print(p.stdout,flush=True)
   results.append(dict(case=case,passed=p.returncode==0 and p.stdout.count('PASS paddedmask')==2,exit=p.returncode))
   if p.returncode:break
- record=dict(PINREG=pinreg,CACHE_PINREG=cache_pinreg,passed=len(results)==2 and all(x['passed'] for x in results),scope='directed driver mask; actual last16 Markov rows, injected allnegative headlogits versuszero scheduledpadding; lastvocab, allpadding, sixrowshardtail',results=results,released=json.loads((ROOT/'input/last_rows_receipt.json').read_text()),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src})
+ record=dict(PINREG=pinreg,CACHE_PINREG=cache_pinreg,passed=len(results)==3 and all(x['passed'] for x in results),scope='directed driver mask; actual last16 Markov rows, injected allnegative headlogits versuszero scheduledpadding; lastvocab, allpadding, sixrowshardtail, explicit VALID_ROWS0 completion',results=results,released=json.loads((ROOT/'input/last_rows_receipt.json').read_text()),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src})
  (out/'verdict.json').write_text(json.dumps(record,indent=2)+'\n');return record['passed']
 if __name__=='__main__':
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1,2],default=1);ap.add_argument('--cache-pinreg',type=int,choices=[0,1],default=0);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.pinreg,a.cache_pinreg) else 1)

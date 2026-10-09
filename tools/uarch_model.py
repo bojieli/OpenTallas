@@ -173,7 +173,7 @@ def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
         "output_register_bits": 1088, "control_register_bits": 2,
         "half_mux_inputs_per_lane": 2, "half_control_fanout": 64,
         "estimated_area_mm2_die": 0.1,
-        "floorplan_slot": "existing open smh_front_c strip; fit unverified",
+        "floorplan_slot": "actual hierarchical front_c candidate strip; adopted R25 element mapping unverified",
         "routing_tracks_needed": 2176,
         "routing_channel_capacity": 2500,
         "routing_capacity_basis": "120um central channel / 0.048um track pitch on one layer; other traffic shares it",
@@ -198,6 +198,123 @@ def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
         "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
         "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0",
     }
+
+
+def qwen_r25_fmt3_wide_model():
+    """Structural fallback, not admitted until full-die slot/reticle check."""
+    base=qwen_r25_int8_unpack_model()
+    base.update(front_width_um=570.24, front_c_footprint_um=[570.24,518.4],
+        central_channel_um=240.0, routing_channel_capacity=5000,
+        routing_fit="2176/5000=43.52% adapter buses; all other traffic and DRC remain route gates",
+        element_outline_um=[3214.08,1131.84], previous_element_outline_um=[3075.84,1131.84],
+        comparison_basis="wide hierarchical SM3 vs separate unadopted R24SM3 baseline; neither is adopted R25",
+        adopted_r25_sm_slot_um=[2202.768,2072.79], adopted_r25_sm_grid=[4,2],
+        hierarchical_candidate_sm_grid=[3,3], hierarchical_candidate_side_padding_um=207.36,
+        additional_front_area_mm2_die=32*138.24*1114.56/1e6,
+        additional_element_area_mm2_die=32*138.24*1131.84/1e6,
+        additional_wire_length_um=138.24,
+        additional_wire_cycles=0,
+        wire_cycle_status="no new relay credit; same RTL must meet833ps; added relay needs priced RTL candidate",
+        neighbouring_masters="new front_n/front_s pin views required; preserve previous views",
+        die_admission="component geometry PASS at 3467f362e on source0cb3d9624; whole-die adoption pending widened actual pin anchors/network hops",
+        die_outline_um=[31734.288,24051.6], die_area_mm2=763.260401,
+        die_area_growth_mm2_vs_adopted_r25=10.069649,
+        die_area_growth_mm2_vs_unadopted_sm3=19.949359,
+        provisional_die_width_growth_um=829.44,
+        provisional_die_area_growth_mm2=829.44*24622/1e6,
+        full_die_cost_status="provisional wide-minus-SM3 baseline; not wide-minus-adoptedR25, not a measured or adopted headline")
+    return base
+
+
+def hbm_link_landing_credit_model(capacity=256, payload_bits=545, seq_bits=12,
+                                  session_bits=16, rtt_cycles=None):
+    """TU RX FIFO owns256 finite landing slots; protected replay stays512.
+
+    New flits consume one slot until the actual TU FIFO pop is observed.
+    Replay duplicates consume no new credit and receiver drops duplicate seq.
+    Persistent cumulative pops tolerate lost/stale reverse control frames.
+    """
+    if capacity < 2 or capacity & (capacity-1):
+        raise ValueError("power-of-two landing capacity required")
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_TU545_RETRY_LANDING_CREDIT",default_enabled=False,
+        payload_bits=payload_bits,landing_capacity=capacity,credit_bits=cw,
+        RX_FIFO_ownership="external actual TU protected landing FIFO",
+        reverse_bits_per_cycle=seq_bits+session_bits+1+cw,
+        forward_bits_per_cycle=payload_bits+seq_bits+session_bits,
+        macs_per_cycle=0,memory_ports_added=0,fault_free_added_cycles=0,
+        pop_return_rtt_cycles=rtt_cycles,
+        rate_bound_records_per_cycle=None if rtt_cycles is None else min(1,capacity/rtt_cycles),
+        routing_tracks_needed=payload_bits+2*seq_bits+2*session_bits+1+cw,
+        channel_capacity=None,slot_fit=None,actual_TU_RX_FIFO_bound=False,
+        physical_qualified=False,adoptable=False)
+
+
+def hbm_retry_pop_cdc_model(capacity=256, source_period_ns=5/6,
+                           destination_period_ns=5/6):
+    """Real Gray event counter across independent core/PHY clocks.
+
+    Source advances by at most ONE per edge; destination emits individual
+    pops from bounded retained event debt. It never samples an atomic binary
+    multi-bit bus directly. Both domains reset before session admission.
+    """
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_RETRY_POP_CDC",capacity=capacity,counter_bits=cw,
+        macs_per_cycle=0,memory_ports=0,source_event_per_cycle=1,
+        Gray_crossing_bits=cw,synchronizer_stages=2,registered_source_bits=2*cw,
+        destination_state_bits=3*cw,source_period_ns=source_period_ns,
+        destination_period_ns=destination_period_ns,
+        first_event_latency_ns_bound=3*destination_period_ns,
+        steady_events_per_cycle=1,retained_event_debt=capacity,
+        area_um2=None,floorplan_slot_fit=None,routing_tracks_needed=cw,
+        channel_capacity=None,actual_clock_reset_bound=False,physical_qualified=False)
+
+
+def hbm_retry_phy_ingress_model(depth=256, head_slots=8, payload_bits=545):
+    """Actual TU ph_tx has no ready; credit-qualified staging is finite.
+
+    TU SWCRED256 bounds accepted-but-not-remote-popped first sends, so a
+    full256-record ingress cannot overflow. Replay has its separate512 slots.
+    Storage issues one protected read/cycle with eight reserved head slots.
+    """
+    store=hbm_link_replay_sram_model(payload_bits=payload_bits,depth=depth,ports=1)
+    if head_slots<6 or head_slots & (head_slots-1):
+        raise ValueError("power-of-two head >=6 read pipeline slots required")
+    return dict(candidate="HBM_TU_PHY_PROTECTED_INGRESS",default_enabled=False,
+        storage=store,capacity=depth,head_slots=head_slots,
+        head_register_bits=head_slots*payload_bits,
+        accepted_records_per_cycle=1,read_requests_per_cycle=1,
+        reserved_response_slots=head_slots,macs_per_cycle=0,
+        producer_credit_owner="TU SWCRED256 actual remote landing pops",
+        minimum_enqueue_launch_edges=8,steady_records_per_cycle=1,
+        added_single_user_cycles_per_port_hop=8,
+        physical_qualified=False,actual_TU_bound=False,
+        composition_open="actual clockCDC/relay/PHY budgets and end-to-end stage gate")
+
+
+def hbm_tu_retry_phy_port_model(payload_bits=545, session_bits=24):
+    """One real TU port composition, source/receiver PHY and core pop clocks.
+
+    Actual native endpoint ph_tx/ph_rx are PHY-clock pulse ports; sw_cr_ret
+    and rx_credit are core-clock pulses. Two Gray bridges carry real pops.
+    """
+    ingress=hbm_retry_phy_ingress_model(payload_bits=payload_bits)
+    replay=hbm_link_replay_sram_model(payload_bits=payload_bits,session_bits=session_bits,ports=1)
+    return dict(candidate="HBM_ACTUAL_TU_RETRY_PHY_PORT",default_enabled=False,
+        payload_bits=payload_bits,session_bits=session_bits,source_SWCRED=256,
+        actual_port_names=dict(tx='ph_tx_v/ph_tx_flit',rx='ph_rx_v/ph_rx_flit',
+            source_credit='sw_cr_ret',receiver_pop='rx_credit'),
+        ingress=ingress,replay=replay,
+        pop_CDC_replicas=2,ingress_macros=8,replay_macros=16,
+        total_macros_per_port=24,total_macros_eight_ports=192,
+        SRAM_area_per_die_um2=192*3891.57696,
+        forward_bits_per_cycle=payload_bits+12+session_bits,
+        reverse_bits_per_cycle=12+session_bits+10+1,
+        ingress_added_edges=8,credit_CDC_edges_bound=3,
+        physical_rtt_cycles=None,first_send_latency_cycles=8,
+        steady_records_per_cycle=1,macs_per_cycle=0,physical_qualified=False,
+        actual_TU_endpoint_bound=False,
+        topology='each direction terminates at actual hop landing owner, including switch ingress; never treat switch debt as final peer debt')
 
 
 def qwen_spine_credit_contract_model():
@@ -14621,3 +14738,171 @@ def qwen_kv_row_model():
     """Full32-PC option-M row mechanism and merged-word prepaid credits."""
     from uarch_model_qwen_kv_row import model
     return model(DFF_UM2)
+
+
+def s81_native_ingest_contract_model():
+    """Actual host sector and perPC source-owned native controller service."""
+    from s81_native_ingest_model import model
+    return model()
+
+
+def qwen_dspark_native_model():
+    from uarch_qwen_dspark_native_model import model
+    return model()
+
+
+def dsrom_hc_mean_capture_model():
+    """Mandatory full-rank L37/38/39 INPUT residual means and seed framing."""
+    from tools.dsrom_hc_mean_capture_model import model
+    return model()
+
+
+def dsrom_hc_input_reader_model():
+    """Finite native VM reader; port ownership and H mapping remain explicit."""
+    from tools.dsrom_hc_mean_capture_model import input_reader_model
+    return input_reader_model()
+
+
+def hbm_native_token_join_model(qwen=False):
+    """Native Qwen/DeepSeek real two-half AR token runtime; qualification pending."""
+    from hbm_native_token_join_model import model
+    return model(qwen=qwen)
+
+
+def hbm_native_mtp_stop_model(tw=17):
+    """Full-context native MTP stop/ready successor with composed ACK cycles."""
+    from hbm_native_mtp_stop_model import model
+    return model(tw=tw)
+
+
+def s81_control_transport_model(**kwargs):
+    """Real native queue/CDC, control lane and HC/seed adapters before build."""
+    from tools.s81_ctrl.control_transport_model import model
+    return model(**kwargs)
+
+
+def dsrom_hc_seed_join_model():
+    """Protected head join of three independently placed input-layer means."""
+    from tools.dsrom_hc_mean_capture_model import seed_join_model
+    return seed_join_model()
+
+
+def qwen_r25_su_quarter_contract_model():
+    """Real N256/M64 c12 quarters and finite native service calendar."""
+    from tools.qwen_r25_su_quarter_model import model
+    return model()
+
+
+def hbm_production_clock_control_model():
+    from hbm_production_clock_control_model import model
+    return model()
+
+
+def hbm_indexer_service_transport_model():
+    from hbm_indexer_r25i_model import hbm_indexer_service_transport_model as impl
+    return impl()
+
+
+def hbm_coll_capture_placement_model():
+    """Same full collective port with measured legal direct SRAM captures."""
+    from tools.hbm_coll_capture_placement_model import model
+    return model()
+
+
+def dsrom_mtp_seed_qs5f_candidate():
+    """Before-build sizing for minimum seed gate on exact selected native QS5f.
+
+    Parent baseline aligned experiment is historical QX9; this candidate has
+    exact pinnedfa27 source/params and does not inherit a closedphysical view.
+    """
+    return dict(adopted=False,source_commit='fa27bd60819f9bf61483d5605a02837fe6a34088',
+        native_master='ot_v41_rom_elem_q_qxpq_w10',NB=2,MTP=1,EARLY=1,FAST=1,PP=1,
+        QTIMING_FIX=1,QPIPE=1,QP_XS=1,QP_CAP=0,QP_P1=1,QP_CSAM=10,QZ=1,QZ_NS=8,QZ_NE=4,QY=1,QX=10,PQ=1,QW=0,QM=5,QS=5,
+        native_physical_closed=False,known_physical_FF_hold_ps=-111.3,
+        element_scope='one native NB2 pair, two releasedrows fullK15360, four sequentialaligned phases and LAT8actualFP32joins',
+        segment_K=[4096,4096,4096,3072],MACs=30720,MACs_per_issue_cycle=64,
+        weight_bytes_per_issue_cycle=64,ROM_boundary_bits_per_issue_cycle=548,
+        activation=dict(quantisers=2,blocks32=480,words_per_cycle=64,VM_bytes_per_cycle=256,buffer_bytes=15960),
+        collector=dict(root_storage_bits=256,FP32_add_operations=6,adder_instances=1,adder_LAT=8,minimum_serial_join_cycles=48),
+        partial_phase_fmt_fp32=[True,True],final_projection_rounding='BF16 once after balanced full root, before main_norm',
+        config_cycles=100,phase_quiet_fence_cycles=128,measured_complete_column_cycles=None,
+        PQ_shadow_replay=dict(words_per_phase=17,phases=4,QM5_read_stages=2,
+            input_pipeline_fence_cycles=6,post_replay_settle_fence_cycles=6,
+            go_condition='registered sh_free && !walking, then settle fence',
+            load_condition='registered bank_free && sh_free',
+            replay_latency_overlap='none in this minimum serial bench; actual status wait is included in measured complete cycles'),
+        latency_contribution='measure actualselectedminimum; wholematrix, HCmean, main_norm, rankgather and6position sharing remainunqualified',
+        storage=dict(logical8192x32B_rowbanks_per_rank=75,nativeNB2pairs_per_rank=38,physical4096macros_per_rank=152),
+        qualification=dict(whole_field_descriptor=False,parallel_engine_count=False,six_positions=False,new_collector_physical_closed=False))
+
+
+def hbm_index_global_order_model():
+    """Actual TP96 candidate packets and finite canonical gather before build."""
+    from tools.hbm_index_global_order_model import model
+    return model()
+
+
+def hbm_index_global_order_scan_model():
+    """Canonical static ID scan with actual sparse protected rank heads."""
+    from tools.hbm_index_global_order_model import model
+    return model(static_scan=True)
+
+
+def hbm_collective_vm_publication_model(words=4096,lanes=16,quarters=4):
+    """Actual req337/rsp273 VM lease, fully published before TU indexed reads.
+
+    Source compiler d5225192c graph all_reduce_o/down: FP32 4096 words,
+    q1024 disjoint word ranges. No native TU descriptor opcode exists yet.
+    Read tags have QID2/sequence14; no in-band fault, only separate abort.
+    """
+    if words!=4096 or lanes!=16 or quarters!=4:
+        raise ValueError('only authoritative full4096/fourquarter contract sized')
+    flits=words//lanes;sectors=words//8
+    # Two parity-sector masters for each of two native injector read lanes.
+    # Each word256+seq12+epoch24 occupies two266-bit codes in three macros.
+    macros=2*2*(flits//128)*3
+    return dict(candidate='HBM_FULL_QUARTER_VM_PUBLICATION',default_enabled=False,
+        adopted=False,MACs_per_cycle=0,FP32_words=words,FW=512,PFMAX=flits,
+        quarter_words=1024,rank_order=[0,1,2,3],VM_base_word=233472,
+        VM_read_requests=sectors,VM_request_bits=337,VM_response_bits=273,
+        max_outstanding_requests=1,request_tag='QID2 + sequence14',
+        actual_Qwen_owner_bits=74,legacy_owner_default_bits=73,
+        response_fault_field=False,external_fault_requires_abort=True,
+        requested_bytes_per_sector=32,total_load_bytes=words*4,
+        publication_overlap_credit=0,minimum_load_cycles=2*sectors+2,
+        actual_load_cycles='sum measured request-ready and matched response latency for512 sectors +2write visibility edges',
+        injector_read_lanes=2,bytes_per_cycle_per_injector=64,
+        injector_request_to_response_edges=4,mutable_payload_protection='real SRAM SECDED on data+flitindex+24bit session',
+        protected_SRAM_masters=4,real_SRAM_macros=macros,
+        SRAM_macro_area_um2=macros*3891.57696,
+        SRAM_area_reservation_at_55_percent_um2=macros*3891.57696/.55,
+        forward_VM_boundary_bits=quarters*337,reverse_VM_boundary_bits=quarters*273,
+        producer_mux='one registered selected QID; held request, one outstanding, no same-cycle long ready chain',
+        fanout='write each sector to both read-lane replicas; no broadcast payload to fourquarters',
+        lease='allproducer writeACK and same-sector visibility under matching owner/op/PC/query precede publication start; stable readlease until TU release',
+        native_endpoint_successor='PFMAX256, indexed response fouredges after request; currentPFMAX64/samecycleinjdata cannot bind',
+        integration_open=['TU descriptor ISA/header and production SM publication grant','VM read arbiter and source fault transport','actual full shape native endpoint queue/relay inventory','descriptor/control-state protection and warm-abort drain','SS/FF15ps DRC0 with actual FF capture budgets'],physical_qualified=False)
+
+
+def hbm_collective_native_publication_endpoint_model():
+    """Source-sized successor of fixedPF64/same-edge injector native parent."""
+    return dict(candidate='HBM_NATIVE_FULL4096_INDEXED_RETURN',default_enabled=False,
+        adopted=False,physical_qualified=False,MACs_per_cycle=0,FW=512,PWT=545,
+        PFMAX=256,INJ=2,NPT=8,RXAW=8,QAW=7,TXAW=6,
+        partial_result_delivery_queue_depth=128,
+        native_source_landing_credit_window=64,
+        protected_RX_landing_depth=64,
+        queue_storage='new128-depth source successor; same3 real256x256 macros/queue, halfrowsused; original64-only contract preserved',
+        synchronous_packet_queues=25,synchronous_packet_macros=75,
+        additional_protected_landing_queues=8,additional_landing_macros=24,
+        publication=hbm_collective_vm_publication_model(),
+        injector_response_edges=4,added_request_to_hub_capture_edges=5,
+        injector_metadata_pipeline_register_bits=2*5*(32+1+1),
+        geometric_WSTG=22,protected_flight_instances=16,
+        geometric_flight_flit_seats=16*22,
+        geometric_flight_payload_bits=16*22*545,
+        RTT_cycles=None,RTT_qualified=False,
+        relay_basis='currentR25I max430-budget22 stages; uniform22 pathfinding, actual perport FF stations and ACK RTT not yet bound',
+        token_delta='512 actualVM sector reads before go +5sourcecore edges vs historicalsameedgeinjdata +8PHYingressedges perhop; compose actual measured stagecalendar, no invented overlap',
+        mutable_control='new valid/tag pipeline parity detects corruption before hub capture; broader native descriptor/control qualification open',
+        integration_open=['actual TUdescriptor/compiler production grant','actual perport PHYretry and separate control transport','actual source landing credit64 vs PHYcandidate256 must compose','source-sized full256 flit exactness and allnegative controls','real macro placement and SS/FF15ps DRC0'])

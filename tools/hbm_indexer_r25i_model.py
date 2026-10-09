@@ -81,6 +81,12 @@ def hbm_indexer_r25i_physical_model():
             score_per_die=score_extra * 0.2916),
         native_slots=dict(score_primary_um=[2000.16, 3000.24],
             score_parallel_fallback_um=[2000.16, 3402.0],
+            score_grid_primary_um=[2000.16, 3000.264],
+            score_grid_fallback_um=[2000.16, 3402.024],
+            mirror_grid_padding_um=0.024,
+            mirror_grid_extra_outline_um2_per_die=4*2000.16*0.024,
+            mirror_grid_latency_cycles=0,
+            mirror_grid_contract='M4 y requires height=0.024 mod0.048; M7 x requires width=0.032 mod0.064. Preserve row-aligned origins and add top outline padding only.',
             selector_um=[1399.656, 844.56],
             placement='four side-band scorers; selector above SU-full in the spine'),
         routing_capacity=dict(track_pitch_um=0.048, key_lines_per_stack=8,
@@ -91,3 +97,58 @@ def hbm_indexer_r25i_physical_model():
     model['storage'].update(line_landing_bits_per_stack=8*64*1098,
                            score_landing_bits_per_die=4*128*609)
     return model
+
+
+def hbm_indexer_service_transport_model():
+    """Price packed-key collection before new native service masters are built."""
+    height=388.8
+    ordinary=16*285
+    extras=2*285
+    pop=32
+    readcmd=16*7
+    tracks_per_layer=math.floor(height/0.096)
+    return dict(default_enabled=False,adopted=False,
+      layout='Packed136B keys preserved; 34sector group,32PCs,local primary-bank rotation plus2protectedextras',
+      collector=dict(width_um=500,height_um=height,replicas=4,
+        location='Within middle service bands; area allocation, not a second overlapping macro',
+        footprint_um2_per_stack=500*height,mapped_area_status='Await source-owned storage/codec/gather/legacy mapped inventory'),
+      boundary=dict(ordinary_sectors=16,extra_sectors=2,protected_packet_bits=285,
+        forward_peak_bits_per_cycle=ordinary+extras,reverse_pop_bits_per_cycle=pop,
+        read_command_bits_per_cycle=readcmd,
+        total_peak_bits_per_cycle=ordinary+extras+pop+readcmd,
+        data_bytes_per_peak_cycle=18*32,
+        protection='Native K256/R10 data266 plus K13/R6 identity19, source allocation072ffde6c'),
+      routing=dict(layers=['M4','M6'],pitch_um=0.096,tracks_per_layer=tracks_per_layer,
+        aggregate_tracks=2*tracks_per_layer,
+        residual_tracks_before_legacy_clock_control=2*tracks_per_layer-ordinary-extras-pop-readcmd,
+        qualification='No fit until actual legacy/control/clockshield demand is subtracted and exact encoded transport is implemented'),
+      geometry=dict(old_band_height_um=259.176,new_band_height_um=height,
+        extra_service_footprint_mm2=4*8500.032*(height-259.176)/1e6,
+        full_die_height_candidate_um=24621.84+2*(height-259.176),
+        preserve_historical_masters=True),
+      latency=dict(stage_count='To be measured from actual collector and bank station routes',
+        exact_gate='Source-owned18sector cut transport and returned pop with complete34sector frame identity',
+        token_latency='Not qualified until path inventory is composed; no rate credit'),
+      MACs_per_cycle=0,
+      replica_cost='32PCprimary rotation+2extra steering; actual mux and protectedmetadata area must be mapped')
+
+
+def hbm_indexer_scalar_credit_relay_model():
+    return dict(default_enabled=False, adopted=False,
+      mechanism='Full existing forwarded credit pulse/clock primitive in a scalar-sized station',
+      outline_um=[25.92,25.92], reserved_area_um2=25.92**2,
+      minimum_FF_bits=4, FF_area_floor_um2=4*0.2916,
+      mapped_cell_clock_area='Pending scalar primitive hardening; reservation excludes no source flop or clock delay',
+      latency='Inherited forwarded primitive and meso termination, no bypass',
+      boundary_bits_per_cycle=1,clock_tracks=1,
+      physical='Candidate native credit station only; no contextual closure credit',
+      historical='Keep generic2000um2 station overhead and all historical masters unchanged')
+
+
+def hbm_indexer_quarter_end_model():
+    return dict(default_enabled=False, adopted=False, extra_registered_sideband_bits=1,
+      FF_area_floor_um2=0.2916, added_boundary_bits_per_cycle=1, routing_tracks=1,
+      latency_added_cycles=0, slot_um=[1399.656,844.56],
+      purpose='Lossless candidate quarter termination; whole-frame co.last cannot flush partial quarter flits',
+      source='33b02c114 EXPOSE_QUARTER_LAST',
+      physical='Fresh6903pin native master; historical6902pin record and failedroute preserved')

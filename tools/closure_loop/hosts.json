@@ -20,7 +20,17 @@
    "disk_roots": {
     "/": 100,
     "/srv/opentallas-scratch": 200
-   }
+   },
+   "external_jobs": [
+    {
+     "name": "qwen-quarter-fullshape-lint",
+     "pid": 1755537,
+     "command_match": "--lint-only -Wno-fatal --top-module ot_qwen_r25_su_quarter",
+     "peak_ram_gb": 128,
+     "owner": "Codex:qwen_hbm_unify",
+     "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
+    }
+   ]
   },
   {
    "name": "ot-epyc1tb",
@@ -40,7 +50,17 @@
    "ram_gb": 1133,
    "disk_roots": {
     "/": 100
-   }
+   },
+   "external_jobs": [
+    {
+     "name": "hbm-hc64-physical",
+     "pid": 2938696,
+     "command_match": "hc-row-shard-r2/physical_private64/run.sh",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
+    }
+   ]
   },
   {
    "name": "ot-epyc2",
@@ -71,6 +91,38 @@
      "peak_ram_gb": 250,
      "owner": "Codex:hbm_continuation",
      "reason": "Admitted full connected FA6 KEYLEG24 SCORE32 LA7 CRED128 gate; expected250GiB; persistent remaining peak until actualworker exit"
+    },
+    {
+     "name": "hbm-hc40-physical",
+     "pid": 1873433,
+     "command_match": "hc_row40_sram900_pathfinding",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "FullW32 realFP/40macro remainingstage128GiB envelope conservatively reserved against stabledriver; actualYosys9.88GiB; futurePNR peakunmeasured"
+    },
+    {
+     "name": "hbm-retry545-compact",
+     "pid": 873659,
+     "command_match": "hbm-retry545-pathfinding-r3",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry",
+     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT2.44GiB"
+    },
+    {
+     "name": "hbm-retry545-wide",
+     "pid": 3630405,
+     "command_match": "hbm-retry545-pathfinding-wide-r1",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry",
+     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT4.24GiB"
+    },
+    {
+     "name": "hbm-index-selector-la7-calibration",
+     "pid": 360589,
+     "command_match": "hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/cl/run.sh",
+     "peak_ram_gb": 120,
+     "owner": "Codex:hbm_continuation/selector_capture",
+     "reason": "Active fullshape T1 LA7 MEMV1 READLAT2 calibration; stablelauncher preserves120GiB declared futurepeak until terminal; liveYosys OPT phase"
     }
    ],
    "paused_admission_previous": {
@@ -116,6 +168,14 @@
      "peak_ram_gb": 256,
      "owner": "Codex:hbm_continuation",
      "reason": "admitted 256GiB; retained historical NK4 peak203396396KiB"
+    },
+    {
+     "name": "hbm-selector-native-qend-calibration",
+     "pid": 745294,
+     "command_match": "hbm_idx_sel_native_qend_aa7127b87_pathfinding/cl/run.sh",
+     "peak_ram_gb": 120,
+     "owner": "Codex:hbm_continuation/selector_capture",
+     "reason": "Admitted actual6903pin native T1 LA7 MEMV1 READLAT2 EXPOSE1; sourceaa7127b87, inventory77952 override, stablelauncher tracks120GiB futuregrowth"
     }
    ]
   },

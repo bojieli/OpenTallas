@@ -6,6 +6,7 @@ export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_fl
 # Characterization only. Actual H VM and seed placement/arrival budgets are
 # pending: generic IO fractions cannot qualify the parent token path.
 python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_hc_mean_capture \
+ --param SINGLE_CAPTURE=1 \
  --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv \
  --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv \
  --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv \

@@ -1,0 +1,42 @@
+{
+  "remote_source_commit": "8e24044",
+  "remote_clean_worktree": "/srv/opentallas-scratch/claude/md6-bundle-r4-wt",
+  "remote_host": "ot-epyc1tb",
+  "scope": "one native 4A+1B bundle, four Markov drivers and one shared released-token embedding lookup; actual native B row stream and golden separate head/Markov join",
+  "passed_cases": [
+    {
+      "die": 0,
+      "bundle": 83,
+      "valid": 128
+    },
+    {
+      "die": 0,
+      "bundle": 84,
+      "valid": 21
+    },
+    {
+      "die": 2,
+      "bundle": 84,
+      "valid": 22
+    }
+  ],
+  "B_roworder_mutant": "FAIL detected at actual B root row0",
+  "A_INPUT_STAGES": 4,
+  "PINREG": 2,
+  "CACHE_PINREG": 1,
+  "defaults": "all opt-ins remain zero/off",
+  "scheduled_padding": "every A consumes 32 actual head logits, including zero-image padded rows; invalid rows do not enter Markov or argmax",
+  "physical_qualified": false,
+  "open": [
+    "shared embedding port SS capture and full-die broadcast",
+    "driver context SS/FF route",
+    "replicated head floorplan",
+    "VM/descriptor/compiler enrollment"
+  ],
+  "physical_jobs": {
+    "compact": "/srv/opentallas-scratch/claude/md6-compact-r2/route_r2 on ot-epyc1tb",
+    "baseline": "/srv/opentallas-data/claude/md6-head-driver-caf38a801/route_r3 on ot-epyc2",
+    "PINREG2": "/srv/opentallas-data/claude/md6-head-driver-caf38a801/route_pinreg2_r1 on ot-epyc2"
+  },
+  "native_pinned_source_changes": false
+}

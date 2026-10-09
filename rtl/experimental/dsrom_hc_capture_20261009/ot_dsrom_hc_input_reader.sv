@@ -1,12 +1,14 @@
 `timescale 1ns/1ps
 // Explicit reserved/shared native VM read-client facade. NO added hard-master
 // port is claimed: req/rsp must bind through the actual owner arbiter.
-// TP4 local H layout must be provided by the compiler: four contiguous1280
-// element streams, expanded BF16 in FP32 words, 16 words/512b VM row.
+// Actual ShapeLayout(tp_exact=True) keeps H=4x5120 expanded BF16/FP32
+// words on each rank. Read only this rank's contiguous1280 dimensions:
+// Hbase + copy*320 rows + rank*80 rows + localrow (16 words/512b row).
 // One outstanding read owns its response; real rsp_valid governs progress.
 // Four protected row registers are reused for two eight-dimension beats.
 module ot_dsrom_hc_input_reader #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,
+    parameter integer MAX_CONTEXT=1048576,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -16,6 +18,7 @@ module ot_dsrom_hc_input_reader #(
     input wire [POS_W-1:0] cmd_position,
     input wire [EPOCH_W-1:0] cmd_epoch,
     input wire [13:0] cmd_h_row,
+    input wire [1:0] cmd_rank,
     input wire [14:0] cmd_region_rows,
     output wire mean_cmd_valid,input wire mean_cmd_ready,
     output wire [1:0] mean_cmd_capture,
@@ -35,6 +38,7 @@ module ot_dsrom_hc_input_reader #(
     reg [POS_W-1:0] position_q;
     reg [EPOCH_W-1:0] epoch_q;
     reg [13:0] base_q;
+    reg [1:0] rank_q;
     reg [6:0] row_q;
     reg half_q;
     reg [575:0] rows[0:3];
@@ -55,8 +59,9 @@ module ot_dsrom_hc_input_reader #(
             assign mean_residuals[128*c+16*l+:16]=decoded[c][256*half_q+32*l+16+:16];
         end
     end endgenerate
-    wire [14:0] end_row={1'b0,cmd_h_row}+15'd320;
-    wire [14:0] requested_row={1'b0,base_q}+{13'd0,copy_q}*15'd80+{8'd0,row_q};
+    wire [14:0] end_row={1'b0,cmd_h_row}+15'd1280;
+    wire [14:0] requested_row={1'b0,base_q}+{13'd0,copy_q}*15'd320+
+                              {13'd0,rank_q}*15'd80+{8'd0,row_q};
     assign cmd_ready=state==IDLE&&!fault;
     assign mean_cmd_valid=state==MCMD&&!fault;
     assign mean_cmd_capture=capture_q;assign mean_cmd_user=user_q;
@@ -76,15 +81,15 @@ module ot_dsrom_hc_input_reader #(
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=IDLE;fault<=0;capture_q<=0;copy_q<=0;user_q<=0;
-            position_q<=0;epoch_q<=0;base_q<=0;row_q<=0;half_q<=0;
+            position_q<=0;epoch_q<=0;base_q<=0;rank_q<=0;row_q<=0;half_q<=0;
             for(k=0;k<4;k=k+1) rows[k]<=0;
         end else if(!fault) begin
             if(rsp_fault || (rsp_valid&&state!=WAIT)) fault<=1;
             else case(state)
                 IDLE: if(cmd_valid) begin
-                    if(cmd_capture>2 || cmd_region_rows<320 || end_row>16384) fault<=1;
+                    if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || cmd_region_rows<1280 || end_row>16384) fault<=1;
                     else begin capture_q<=cmd_capture;user_q<=cmd_user;
-                        position_q<=cmd_position;epoch_q<=cmd_epoch;base_q<=cmd_h_row;
+                        position_q<=cmd_position;epoch_q<=cmd_epoch;base_q<=cmd_h_row;rank_q<=cmd_rank;
                         row_q<=0;copy_q<=0;half_q<=0;state<=MCMD;end
                 end
                 MCMD: if(mean_cmd_ready) state<=REQ;

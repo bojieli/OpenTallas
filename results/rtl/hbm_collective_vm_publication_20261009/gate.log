@@ -1,0 +1,6 @@
+PASS fourquarter4096 FP32512 matched VM sectors, held requests/responses and write visibility
+PASS both512bit injector lanes rotate all256 flits in golden order, actual4edge SECDED SRAM capture
+PASS warmabort drains actual outstanding service, keeps tag sequence, no stale publication
+PASS separate provider fault quarantines; writeEcho is not fault transport
+PASS_ALL
+rtl/tb_hbm_collective_vm_publication.sv:85: $finish called at 2691755000 (1fs)
