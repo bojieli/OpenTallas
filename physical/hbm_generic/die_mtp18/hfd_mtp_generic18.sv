@@ -2,7 +2,7 @@
 `default_nettype none
 // Opt-in source-derived TW18 facade; SPECF0 must qualify independently.
 module hfd_mtp_generic18 #(parameter integer ENABLE=0) (
- input wire clk, input wire rst_n,
+ input wire [0:0] ck, input wire [0:0] rst,
  input wire [130:0] f_cmdproc,
  output wire [505:0] t_cmdproc,
  input wire [522:0] f_su_red,
@@ -11,6 +11,9 @@ module hfd_mtp_generic18 #(parameter integer ENABLE=0) (
  output wire [18:0] t_coll,
  input wire [0:0] f_coll
 );
+ wire clk=ck[0];
+ reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0],rst[0]};
+ wire rst_n=~rst_s[1];
  generate if (ENABLE==0) begin:g_off
  assign t_cmdproc='0;
  assign t_router='0;

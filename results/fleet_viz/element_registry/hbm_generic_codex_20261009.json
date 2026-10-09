@@ -7,7 +7,7 @@
       "owner": "generic_collective",
       "description": "hgi coll decode",
       "source": {
-        "commit": "497929409",
+        "commit": "7c38e6508",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
         ]
@@ -44,8 +44,11 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
-        "jobs": [],
+        "status": "RUNNING",
+        "jobs": [
+          "hgi_coll_decode_a-7c38e6508-tc-cx",
+          "hgi_coll_decode_b-7c38e6508-tc-cx"
+        ],
         "corners": {},
         "evidence": [],
         "electrical": {
@@ -58,12 +61,14 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "host": "ot-agidock128"
       },
       "dependencies": [
         "real record dispatcher and static group/rank source",
         "ROW_GATHER row backend must consume owner/count/destinations",
-        "PSG endpoint isolation gates separate"
+        "PSG endpoint isolation gates separate",
+        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -371,7 +376,7 @@
         ]
       },
       "implementation": {
-        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "status": "PINREG1_DEFAULT_OFF_ADDS_ONE_EDGE",
         "evidence": [
           "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv"
         ]
@@ -425,7 +430,8 @@
       "dependencies": [
         "every token consumer carries bit17",
         "normative simulator CF-MTP vectors",
-        "production ctl/argmax binding"
+        "production ctl/argmax binding",
+        "bareleaf boundary failure repaired withPINREG1 +1edge; newmodel/exact/boundarysource awaiting final pin before pair intake"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -480,7 +486,7 @@
         }
       },
       "physical": {
-        "status": "SYNTHESIS_FLOORPLAN_PREFLIGHT_NO_WATCHED_PAIR_SUBMISSION",
+        "status": "BARE_LEAF_RETIRED_USE_REGISTERED_FULLCORE",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -499,7 +505,8 @@
       "dependencies": [
         "host token/history/command/completion widths updated together",
         "source c644518bf port manifest",
-        "original Icarus suspicion preserved; current Verilator lockstep passes, no end-to-end CP claim"
+        "original Icarus suspicion preserved; current Verilator lockstep passes, no end-to-end CP claim",
+        "barectl boundary56input/17regout/combinationaltoken path unacceptable; no waiver; fullcore endpoint required"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -748,7 +755,7 @@
       "owner": "generic_collective",
       "description": "Record-controlled ordered row gather formatter, existing reader protocol, default off",
       "source": {
-        "commit": "42ee27e47",
+        "commit": "7c38e6508",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
         ]
@@ -786,8 +793,11 @@
         }
       },
       "physical": {
-        "status": "FOUR_PD55_60_PAIR_SPECS_PREPARED_NOT_SUBMITTED",
-        "jobs": [],
+        "status": "RUNNING",
+        "jobs": [
+          "hgi_coll_row_formatter_a-7c38e6508-tc-cx",
+          "hgi_coll_row_formatter_b-7c38e6508-tc-cx"
+        ],
         "corners": {},
         "evidence": [],
         "electrical": {
@@ -800,7 +810,8 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "host": "ot-agidock128"
       },
       "dependencies": [
         "real decoder ROW_GATHER metadata to start",
@@ -808,7 +819,8 @@
         "actual reader request/response/written flag",
         "actual result store/multicast consumer",
         "normative simulator vector ABI and DS payload/isolation gate",
-        "boundary lint running; no physical job claimed"
+        "boundary lint running; no physical job claimed",
+        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -829,7 +841,7 @@
         ]
       },
       "implementation": {
-        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "status": "RETIRED_WRONG_SELECT_UNIT_MAPPING",
         "evidence": [
           "rtl/hbm_accel/generic_20261009/ot_hgi_idx_ds_dispatch.sv"
         ]
@@ -860,7 +872,7 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
+        "status": "RETIRED_NOT_ROUTED",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -881,7 +893,151 @@
         "native N384/P16/K6 retains DS default ordering/cycles",
         "generic op2 is a distinct module and never silently replaces DS SELECT",
         "source-matched DS lockstep and mutant gate pending",
-        "original DS index512/candidate bypass remains outside this wrapper; no full CF1 path claim"
+        "original DS index512/candidate bypass remains outside this wrapper; no full CF1 path claim",
+        "normative IDX.SELECT is DS indexer, NOT routerK6; active wrapper removed2569b96d3, evidence historical only; native_index512 is sole selected line"
+      ],
+      "integration": {
+        "status": "RETIRED",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_idx_native_ds_dispatch",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_index_decode/native_index512",
+      "description": "Normative unit9/op3 native DS SELECT candidate endpoint, original index512 mechanism",
+      "source": {
+        "commit": "9d5f3c86c",
+        "paths": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_native_ds_dispatch.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_native_ds_dispatch.sv"
+        ]
+      },
+      "model": {
+        "status": "PHYSICAL_SLOT_NOT_QUALIFIED",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_NATIVE_MEMORY_PROTOCOL_AND_CYCLE_LOCKSTEP",
+          "evidence": [
+            "results/rtl/hgi_native_index512_20261009/attempt2/receipt.json"
+          ],
+          "receipt_commit": "b003e54bd"
+        },
+        "negative": {
+          "status": "PASS_COMPILED_ID_MUTANT_AT_CYCLE490",
+          "evidence": [
+            "results/rtl/hgi_native_index512_20261009/attempt2/receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED_SLOT_FIT_AND_MACRO_GATE_PENDING",
+        "jobs": [],
+        "corners": {},
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+      },
+      "dependencies": [
+        "K512balanced871/unbalanced2637; K2048select1366=3185; K1=667, unchanged native references",
+        "behavioral synchronous1R1W SRAM proof only, physical macro capture qualification remains open",
+        "cmd_unit9/op3 must be held through drain, no tieoffs",
+        "no duplicate existing native candidate routes"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_mtp_fullcore18",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_token18",
+      "description": "TW18/XSEL1/PRL2 qualified topology with matching SPECF0 evidence required",
+      "source": {
+        "commit": "6de65ee0e",
+        "paths": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED_SLOT_NEW_AREA_PENDING",
+        "source_commit": "a28dcab37",
+        "evidence": [
+          "tools/uarch_model.py:hgi_token18_fullcore_model",
+          "tools/uarch_model.py:hgi_mtp_die_contract_model",
+          "physical/hbm_generic/die_mtp18/contract.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "MATCHED_FULLCORE_SPECF0_REPLAY_PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "status": "MATCHED_FULLCORE_MUTANT_PENDING",
+          "evidence": []
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED_BOUNDARY_AND_GATE_PENDING",
+        "jobs": [],
+        "corners": {},
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+      },
+      "dependencies": [
+        "fullcore0newedges vs qualifiedfullcore,4edges vs barectl; resetfacade2releaseedges",
+        "SPECF1 oldphysicalview cannot substitute for exactSPECF0 proof",
+        "all17->18 fields carried: p/f/e/cmd1/am_idx/sa_tok18 +cmd_toks144",
+        "newsource-derived groupedf_cmdproc131/t_cmdproc506/total1297bits; realCP/gather/historyproducers pending",
+        "clockck/resetactivehigh facade uses standard2flopreset; actual wrapper clock/electrical and fullcore gates still required"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -891,5 +1047,5 @@
       }
     }
   ],
-  "collected_at_utc": "2026-10-09T13:09:47.772292+00:00"
+  "collected_at_utc": "2026-10-09T13:30:33.726662+00:00"
 }

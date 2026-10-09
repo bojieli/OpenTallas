@@ -32,6 +32,7 @@ def model():
                 signal_bits_per_cycle=sum(g['bits'] for g in groups.values()),
                 total_signal_tracks_lower_bound=2*sum(g['bits'] for g in groups.values()),
                 facade_added_cycles=0, core_edges_vs_bare_controller=4,
+                reset_synchronizer_flops=2, reset_release_edges=2,
                 reserved_slot_um=[466.56,200.88], measured_new_area_um2=None,
                 floorplan_slot_fit=None, physical_ready=False,
                 dependencies=['matching SPECF0 fullcore exact replay and mutant',
@@ -44,11 +45,13 @@ def render(contract):
     lines=['`timescale 1ns/1ps','`default_nettype none',
            '// Opt-in source-derived TW18 facade; SPECF0 must qualify independently.',
            'module hfd_mtp_generic18 #(parameter integer ENABLE=0) (',
-           ' input wire clk, input wire rst_n,']
+           ' input wire [0:0] ck, input wire [0:0] rst,']
     decl=[]
     for name, group in contract['groups'].items():
         decl.append(f" {group['direction']} wire [{group['bits']-1}:0] {name}")
-    lines+= [',\n'.join(decl),');',' generate if (ENABLE==0) begin:g_off']
+    lines+= [',\n'.join(decl),');', ' wire clk=ck[0];',
+             " reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0],rst[0]};",
+             ' wire rst_n=~rst_s[1];', ' generate if (ENABLE==0) begin:g_off']
     for name, group in contract['groups'].items():
         if group['direction']=='output':lines.append(f" assign {name}='0;")
     lines+=[' end else begin:g_on',' ot_hgi_mtp_core18 #(.GENERIC18(1),.TW(18),.SPECF(0)) core (',

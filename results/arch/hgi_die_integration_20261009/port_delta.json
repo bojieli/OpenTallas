@@ -13,7 +13,8 @@
         "die_id": 8,
         "cmd_v": 1,
         "hdr": 128,
-        "selected_count": 20
+        "selected_count": 32,
+        "selected_count_valid": 1
       },
       "response_outputs": {
         "cmd_r": 1,
@@ -26,7 +27,7 @@
         "backend_subgroup": 8,
         "backend_owner_block": 8,
         "backend_destinations": 8,
-        "backend_row_count": 20,
+        "backend_row_count": 21,
         "error_v": 1
       },
       "response_inputs": {
@@ -34,7 +35,8 @@
         "error_r": 1
       },
       "latency_delta_edges": 1,
-      "integration_gap": "Connect record dispatcher and real group/row gather consumers; endpoint PSG is not a record decoder."
+      "integration_gap": "Connect record dispatcher and real group/row gather consumers; endpoint PSG is not a record decoder.",
+      "source_commit": "7c38e6508"
     },
     {
       "owner": "generic_quant_decode",

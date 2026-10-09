@@ -453,6 +453,14 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         if 'mtp' not in variant.get('spine_slots_low', {}):
             raise ValueError('generic18 fullcore requires the modeled MTP slot')
         variant['spine_slot_masters'] = {**variant.get('spine_slot_masters', {}), 'mtp': 'hfd_mtp_generic18'}
+        from hgi_mtp_die_contract import model as generic_mtp_port_model
+        hgi_mtp_ports = generic_mtp_port_model()['groups']
+        extra = {**variant.get('split_extra_ports', {})}
+        cp_extra = {**extra.get('hfd_cmdproc', {})}
+        cp_extra.update(t_mtp=('hfd_cmdproc_s', hgi_mtp_ports['f_cmdproc']['bits'], 'S', 'M5', 0.30, 2),
+                        f_mtp=('hfd_cmdproc_s', hgi_mtp_ports['t_cmdproc']['bits'], 'S', 'M5', 0.70, 2))
+        extra['hfd_cmdproc'] = cp_extra
+        variant['split_extra_ports'] = extra
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
