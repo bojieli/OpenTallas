@@ -21,7 +21,7 @@ always @(posedge clk)begin
  respv<=0;cyc<=cyc+1;
  if(rst_n)for(p=0;p<32;p=p+1)begin
   if(count[p]>0&&rrdy[p]&&((cyc+p)%5!=0))begin
-   respv[p]<=1;respt[p*17+:17]<=qt[p][head[p]];respb[p*4+:4]<=qb[p][head[p]];respd[p*256+:256]<=pat(qa[p][head[p]]);
+   respv[p]<=1;respt[p*17+:17]<=qt[p][head[p]];respb[p*4+:4]<=qb[p][head[p]];respd[p*256+:256]<=pat(qa[p][head[p]]) ^ ((mut==1&&p==5&&qt[p][head[p]][14:5]==3&&qb[p][head[p]]==0)?256'd1:256'd0);
    head[p]=(head[p]+1)%256;count[p]=count[p]-1;
   end
   if(kv[p])begin
