@@ -105,10 +105,19 @@ def dsrom_engram_canonical_model(context=1048576, users=64):
     record['added_return_capture_cycles']=3
     record['read_adapter']['transaction']='generation12,row3,burst2; three requests per reserved row, one row per PC, bounds on each burst/beat'
     record['read_adapter']['requests_per_reserved_row']=3
+    record['read_adapter']['post_rtl_state_bits']=35859
+    record['read_adapter']['post_rtl_sequential_area_mm2_modelled']=35859*.2916/1e6
+    record['read_adapter']['post_rtl_capture_stage_bits']=6*(256+17+4+1)
+    record['read_adapter']['post_rtl_control_and_output_bits']=847
+    record['read_adapter']['protected_buffer_overhead_bits']=6*9*(288-256)
+    record['configuration_boundary_bits']=64*30*2+1
+    record['maximum_pc_local_usable_atoms']=19775388
+    record['capacity_guard']='attested base<exclusive limit<=19775388; 31/35-bit end/inverse arithmetic before rq.addr30'
+    record['qualified_component_record']='results/rtl/engram_canonical_read_gate_20261009.json'
     record['read_adapter']['controller_request_credits_used_per_pc_max']=3
     record['read_adapter']['request_credit_depth_actual']=8
     record['aperture']='per64PC base/limit in PC-local32B atoms; inverse checked wide before rq.addr30, region inventory pending loader owner'
-    record['qualification']='model before canonical RTL; actual PHY pc_of, len-count, aperture bounds and fullpayload/CRC gates required; historical len8 API fixtures do not qualify PHY'
+    record['qualification']='actual32-PC timing-model read gate passed; fullpayload/CRC/boot fence, deployed inventory and physical closure pending; historical len8 API fixtures do not qualify PHY'
     return record
 
 
