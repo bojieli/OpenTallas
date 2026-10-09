@@ -1,0 +1,30 @@
+{
+  "source_branch": "codex/qwen-crom-ctl-physical-20261009",
+  "source_crom": "91e710eae",
+  "source_sysctl": "c56a82177",
+  "crom": {
+    "job": "qfd_crom48-91e710eae-tc-hm10",
+    "host": "ot-epyc2",
+    "status": "route launched, actual wrapper3407040 and docker3407118 verified live 2026-10-08 23:44PT",
+    "run": "/srv/opentallas-data/claude/closure-loop/qfd_crom48-91e710eae-tc-hm10",
+    "physical_claim": "pending",
+    "exact_claim": "historical full-shape pass/mutant; simulationtoken-equivalent"
+  },
+  "sysctl": {
+    "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
+    "status": "validated queued; remote bench-first builds gate route",
+    "physical_claim": "pending",
+    "exact_claim": "pending; opt-in PROMPT_SRAM=1",
+    "mutable_storage": "SECDED24 per18b token in32b slot, eight slots per1024x256 SRAM row",
+    "fault_source": 22,
+    "UE_contract": "qzero, sticky pb_fault gates package readiness"
+  },
+  "remaining": [
+    "remote prompt exact/negative",
+    "remote fullcontext control exact/faults",
+    "route verdict",
+    "die integration",
+    "SS sensitivity and TC/FF timing composed"
+  ],
+  "cycles_added": 0
+}
