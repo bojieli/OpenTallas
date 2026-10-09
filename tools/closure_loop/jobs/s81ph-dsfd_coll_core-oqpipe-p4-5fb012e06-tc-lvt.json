@@ -1,0 +1,95 @@
+{
+  "name": "s81ph-dsfd_coll_core-oqpipe-p4-5fb012e06-tc-lvt",
+  "block": "dsfd_coll_core",
+  "owner": "Codex:s81-slab-continuation",
+  "purpose": "Physical capacity fallback: immutable south/M5 20.8pins/um failure;11601pins,2695south VMpins stride4,540x1360.8core,24SRAM,+6.43%area;existing OQPIPE1 RTL/latency unchanged. Gates unchanged. Native TP4 exact/slice mutant alongsideCTS. Route112GB UNMEASURED estimate from WDRT14,533,068KB scaled6.25area plus20%inventory;cal12GB from corefloorplan2,854,364KB plusCTSgrowth. Remote only.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc4"
+  ],
+  "threads": 24,
+  "peak_ram_gb": 112,
+  "source": {
+    "branch": "codex/s81-collective-mirror-20261009",
+    "commit": "5fb012e06"
+  },
+  "stages": {
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.000 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SRC={SRC} OUT={RUN}/routes CORES=24 NEED=12 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv rtl/link/ot_fifo_sram_fwft.sv rtl/hdc/ot_hdc_fastfp.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/core_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes_p4 dsfd_coll_core rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/collective/place_macros_core_p4.tcl --param OQPIPE=1 $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 24,
+      "peak_ram_gb": 12
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.000 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=24 NEED=112 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv rtl/link/ot_fifo_sram_fwft.sv rtl/hdc/ot_hdc_fastfp.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/core_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes_p4 dsfd_coll_core rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/collective/place_macros_core_p4.tcl --param OQPIPE=1",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ],
+      "threads": 24,
+      "peak_ram_gb": 112
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+    },
+    "bench": [
+      {
+        "name": "exact_coll_tp4_oqpipe",
+        "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench f1p2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 12
+      },
+      {
+        "name": "neg_oqpipe_slice",
+        "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench mut_oqslice +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_MUT_OQPIPE_SLICE",
+        "expect": "fail",
+        "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+        "threads": 8,
+        "peak_ram_gb": 12
+      }
+    ]
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/variant_fill/s81ph-dsfd_coll_core-oqpipe-p4-5fb012e06-tc-lvt/dsfd_coll_core"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "host_require": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc4"
+  ],
+  "route_corner": "TC"
+}
