@@ -14076,3 +14076,8 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+def hbm_norm_split_model(**kwargs):
+    """Size the inherited G8/G16 norm hard groups and price exposed hops."""
+    from tools.hbm_norm_split_model import model
+    return model(**kwargs)
