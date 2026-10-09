@@ -1,5 +1,6 @@
 `timescale 1ps/1fs
 module tb_qwen_r25_native_ar_su_intercept #(parameter TOKEN=131072,FIRST_POS=524288,MUT=0);
+ localparam SAME=(TOKEN==151935);
  reg clk=0;always #417 clk=~clk;
  reg rst_n=0,job_v=0;wire job_rdy,hr_v,busy,identity_fault,intercept_fault;
  wire [74:0] hr_d;wire [2:0] last_status;wire [31:0] st_tokens,st_hq_stall;
@@ -32,7 +33,7 @@ module tb_qwen_r25_native_ar_su_intercept #(parameter TOKEN=131072,FIRST_POS=524
    if(native_wait==1)native_complete_v<=1;
   end
   if(native_req_v&&native_req_rdy)begin
-   if(native_req_pc!==32'h53550000||native_req_owner!=={20'(FIRST_POS+native_calls),18'(TOKEN+native_calls),4'd9,32'hfedcba98})
+   if(native_req_pc!==32'h53550000||native_req_owner!=={20'(FIRST_POS+native_calls),18'(TOKEN+(SAME?0:native_calls)),4'd9,32'hfedcba98})
     $fatal(1,"actual CP owner or source-defined entry lost");
    native_complete_owner<=native_req_owner^(MUT?(74'd1<<53):74'd0);
    native_wait<=6;native_calls=native_calls+1;
@@ -41,8 +42,8 @@ module tb_qwen_r25_native_ar_su_intercept #(parameter TOKEN=131072,FIRST_POS=524
    if(|sm_launch_v[h*16+:16])begin
     if(sm_launch_v[h*16+:16]!=16'hffff||sm_launch_pc[h*32+:32]!=32'habc123)
      $fatal(1,"SU CP entry leaked to ordinary SM");
-    if(sm_launch_owner[h*74+:74]!=={20'(FIRST_POS+records),18'(TOKEN+records),4'd9,32'hfedcba98})$fatal(1,"ordinary SM owner changed");
-    sm_result[h]<=18'(TOKEN+records+1);sm_wait[h]<=3+h;sm_calls=sm_calls+1;
+    if(sm_launch_owner[h*74+:74]!=={20'(FIRST_POS+records),18'(TOKEN+(SAME?0:records)),4'd9,32'hfedcba98})$fatal(1,"ordinary SM owner changed");
+    sm_result[h]<=18'(TOKEN+(SAME?0:records+1));sm_wait[h]<=3+h;sm_calls=sm_calls+1;
    end else if(sm_wait[h]>0)begin
     sm_wait[h]<=sm_wait[h]-1;
     if(sm_wait[h]==2)begin res_v[h*16]<=1;res_data[h*512+:32]<=sm_result[h];end
@@ -50,7 +51,7 @@ module tb_qwen_r25_native_ar_su_intercept #(parameter TOKEN=131072,FIRST_POS=524
    end
   end
   if(hr_v&&!MUT)begin
-   if(hr_d[17:0]!==TOKEN+records+1||hr_d[18+:21]!==FIRST_POS+records+1||hr_d[39+:32]!==32'hfedcba98)
+   if(hr_d[17:0]!==TOKEN+(SAME?0:records+1)||hr_d[18+:21]!==FIRST_POS+records+1||hr_d[39+:32]!==32'hfedcba98)
     $fatal(1,"actual AR token record corrupt");
    records=records+1;
   end
