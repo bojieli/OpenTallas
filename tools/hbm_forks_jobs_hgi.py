@@ -25,6 +25,7 @@ CHK = [dict(name='ttb_routed_at_TC', cmd="test -s {CL}/ttb_corner.txt && ! grep 
 POST = ['physical/hbm_accel_die_views/common/signoff_unc60.sdc', 'physical/hbm_accel_die_views/common/vclk_corner_true.sdc',
         'physical/common_flow/link_budget_consistent.sdc']
 G = 'rtl/hbm_accel/generic'
+WIDE = [True]          # --nominal: the INT8 front in the 432-um front_c strip (keeps the qualified 4 x 2 SM grid)
 
 
 def mtp_route(top, hm, args, macro, threads=8, ram=24):
@@ -114,14 +115,14 @@ def specs(commit):
         # ---- SM INT8 front (front_c, wide fmt3 strip)
         geom = 'results/arch/qwen_on_r25_20261008/fmt3_physical_candidate/wide_geometry.json'
         fc = lambda cal: (TT + "python3 tools/hbm_accel_smh_physical.py block --piece front_c --variant one "  # noqa: E731
-                          f"--geom {geom} --top-param ENABLE_INT8=1 --top-param PIPE_INT8=1 --pd 0.45 --grt-allow "
+                          + (f"--geom {geom} " if WIDE[0] else "") + f"--top-param ENABLE_INT8=1 --top-param PIPE_INT8=1 --pd 0.45 --grt-allow "
                           f"--period 770 --skew 90 --die-skew 150 --hold-margin {0 if cal else int(float(hm) * 1000)} "
                           "--hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} "
                           + ("--label {LABEL}_cal --out {RUN}/routes/{LABEL}_cal --stop-after cts --lat-ff 100 && "
                              "bash {RUN}/routes/{LABEL}_cal/run.sh" if cal else
                              "--label {LABEL} --out {RUN}/routes/{LABEL} --lat ${CK_SS_MEAN:-720} --lat-ff ${CK_FF_MEAN:-430} "
                              "&& bash {RUN}/routes/{LABEL}/run.sh"))
-        out.append(dict(name=f'hgi_smh_front_c_int8-{c9}-tc-{tag}-cl', block='ot_hbm_accel_smh_front_c',
+        out.append(dict(name=f'hgi_smh_front_c_int8{"" if WIDE[0] else "_nom"}-{c9}-tc-{tag}-cl', block='ot_hbm_accel_smh_front_c',
                         **common(commit, ram=64, threads=16),
                         purpose='hbm-forks item 1: SM INT8 front (two-beat; one-beat re-layout NO_FIT per owner rule): '
                                 'front_c ENABLE_INT8 = 1 PIPE_INT8 = 1, formats 0-2 bypass the adapter (CF-1 cycle-'
@@ -161,6 +162,8 @@ def common(commit, ram=24, threads=8):
 
 def main():
     commit = sys.argv[1]
+    if '--nominal' in sys.argv:
+        WIDE[0] = False
     out = specs(commit)
     if '--write' in sys.argv:
         d = Path(sys.argv[sys.argv.index('--write') + 1])
