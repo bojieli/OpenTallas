@@ -1,0 +1,22 @@
+{
+  "variant": "r25",
+  "blocks": [
+    {
+      "name": "quant_legacy_reachability_baseline",
+      "owner": "generic_die_integration",
+      "module": "ot_hfd_actquant_m",
+      "source": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "source_sha256": "177a532ff0f64d69eaf39995a257922c3709ffe14dd048d5e1a4945c8e0586d7",
+      "params": {
+        "MR": 1,
+        "MLAT": 6
+      },
+      "wrapper_spec": "physical/hbm_accel_die_views/quant/rtl/spec.json",
+      "instance": "aq",
+      "clock_reset_ports": [
+        "clk",
+        "rst_n"
+      ]
+    }
+  ]
+}

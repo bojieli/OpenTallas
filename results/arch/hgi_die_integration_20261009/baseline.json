@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.hgi_die_integration_audit.v1",
+  "scope": "strict wrapper bindings only; die_top_lint, remote elaboration, traffic, and physical gates remain mandatory",
+  "variant": "r25",
+  "blocks": [
+    {
+      "name": "quant_legacy_reachability_baseline",
+      "owner": "generic_die_integration",
+      "ports": [
+        {
+          "port": "clk",
+          "direction": "input",
+          "bits": 1,
+          "bind": "clk"
+        },
+        {
+          "port": "rst_n",
+          "direction": "input",
+          "bits": 1,
+          "bind": "rst_n"
+        },
+        {
+          "port": "v",
+          "direction": "input",
+          "bits": 1,
+          "bind": "const:1"
+        },
+        {
+          "port": "fp4",
+          "direction": "input",
+          "bits": 1,
+          "bind": "expr:tgl"
+        },
+        {
+          "port": "x",
+          "direction": "input",
+          "bits": 1024,
+          "bind": "die:f_vm[0:1024]"
+        },
+        {
+          "port": "vo",
+          "direction": "output",
+          "bits": 1,
+          "bind": "fold"
+        },
+        {
+          "port": "q",
+          "direction": "output",
+          "bits": 256,
+          "bind": "fold"
+        },
+        {
+          "port": "e",
+          "direction": "output",
+          "bits": 10,
+          "bind": "fold"
+        },
+        {
+          "port": "y",
+          "direction": "output",
+          "bits": 512,
+          "bind": [
+            "die:t_su_SW[0:512]",
+            "die:t_su_NW[0:512]",
+            "die:t_su_SE[0:512]",
+            "die:t_su_NE[0:512]"
+          ]
+        },
+        {
+          "port": "fault",
+          "direction": "output",
+          "bits": 1,
+          "bind": "fold"
+        }
+      ],
+      "errors": [
+        "v: functional HGI port is not connected to a die net",
+        "fp4: functional HGI port is not connected to a die net",
+        "vo: functional HGI port is not connected to a die net",
+        "q: functional HGI port is not connected to a die net",
+        "e: functional HGI port is not connected to a die net",
+        "fault: functional HGI port is not connected to a die net",
+        "strict wrapper generation failed: strict regeneration deferred until functional bindings pass"
+      ],
+      "source_sha256": "177a532ff0f64d69eaf39995a257922c3709ffe14dd048d5e1a4945c8e0586d7"
+    }
+  ],
+  "errors": [
+    "quant_legacy_reachability_baseline: v: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: fp4: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: vo: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: q: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: e: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: fault: functional HGI port is not connected to a die net",
+    "quant_legacy_reachability_baseline: strict wrapper generation failed: strict regeneration deferred until functional bindings pass"
+  ],
+  "verdict": "FAIL",
+  "contract_sha256": "84a6afe3f04751571f40a7156fc7f62a5bff3e2160d4f2658a053c041945340c",
+  "checker_sha256": "4eeb259e8b4115ca70f880bd0fd588ae02a76aa41511a2d1f3a1e256ff2b8ce8"
+}
