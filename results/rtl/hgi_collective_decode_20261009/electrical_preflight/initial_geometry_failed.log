@@ -1,0 +1,128 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+HGI_INPUT_ANCHOR moved=156 existing buffers, matching actual row rails; timing/electrical limits unchanged
+[INFO DPL-0006] Core area: 45979.49 um^2
+[INFO DPL-0007] Movable instances area: 192.76 um^2
+[INFO DPL-0008] Fixed instances area within core: 137.66 um^2
+[INFO DPL-0009] Utilization: 0.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 5910 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.14s
+Placement Analysis
+---------------------------------
+total displacement        325.9 u
+average displacement        0.1 u
+max displacement            0.9 u
+original HPWL           27925.8 u
+legalized HPWL          28027.8 u
+delta HPWL                    0 %
+
+[WARNING DPL-0005] Overlap check failed (40).
+ input235 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_269_Left_845 (TAPCELL_ASAP7_75t_R)
+ input240 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_270_Left_846 (TAPCELL_ASAP7_75t_R)
+ input245 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_271_Left_847 (TAPCELL_ASAP7_75t_R)
+ input250 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_272_Left_848 (TAPCELL_ASAP7_75t_R)
+ input257 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_273_Left_849 (TAPCELL_ASAP7_75t_R)
+ input258 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_296_Left_872 (TAPCELL_ASAP7_75t_R)
+ input261 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_297_Left_873 (TAPCELL_ASAP7_75t_R)
+ input263 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_298_Left_874 (TAPCELL_ASAP7_75t_R)
+ input264 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_299_Left_875 (TAPCELL_ASAP7_75t_R)
+ input265 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_300_Left_876 (TAPCELL_ASAP7_75t_R)
+ input270 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_274_Left_850 (TAPCELL_ASAP7_75t_R)
+ input275 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_275_Left_851 (TAPCELL_ASAP7_75t_R)
+ input285 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_276_Left_852 (TAPCELL_ASAP7_75t_R)
+ input292 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_279_Left_855 (TAPCELL_ASAP7_75t_R)
+ input297 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_280_Left_856 (TAPCELL_ASAP7_75t_R)
+ input301 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_281_Left_857 (TAPCELL_ASAP7_75t_R)
+ input305 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_282_Left_858 (TAPCELL_ASAP7_75t_R)
+ input307 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_277_Left_853 (TAPCELL_ASAP7_75t_R)
+ input310 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_283_Left_859 (TAPCELL_ASAP7_75t_R)
+ input313 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_284_Left_860 (TAPCELL_ASAP7_75t_R)
+ input316 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_285_Left_861 (TAPCELL_ASAP7_75t_R)
+ input318 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_278_Left_854 (TAPCELL_ASAP7_75t_R)
+ input319 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_286_Left_862 (TAPCELL_ASAP7_75t_R)
+ input321 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_287_Left_863 (TAPCELL_ASAP7_75t_R)
+ input322 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_289_Left_865 (TAPCELL_ASAP7_75t_R)
+ input323 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_288_Left_864 (TAPCELL_ASAP7_75t_R)
+ input325 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_290_Left_866 (TAPCELL_ASAP7_75t_R)
+ input328 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_291_Left_867 (TAPCELL_ASAP7_75t_R)
+ input332 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_292_Left_868 (TAPCELL_ASAP7_75t_R)
+ input335 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_293_Left_869 (TAPCELL_ASAP7_75t_R)
+ input339 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_294_Left_870 (TAPCELL_ASAP7_75t_R)
+ input344 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_295_Left_871 (TAPCELL_ASAP7_75t_R)
+ input358 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_302_Left_878 (TAPCELL_ASAP7_75t_R)
+ input359 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_301_Left_877 (TAPCELL_ASAP7_75t_R)
+ input361 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_303_Left_879 (TAPCELL_ASAP7_75t_R)
+ input363 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_304_Left_880 (TAPCELL_ASAP7_75t_R)
+ input366 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_305_Left_881 (TAPCELL_ASAP7_75t_R)
+ input370 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_306_Left_882 (TAPCELL_ASAP7_75t_R)
+ input374 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_307_Left_883 (TAPCELL_ASAP7_75t_R)
+ input378 (BUFx2_ASAP7_75t_R) overlaps PHY_EDGE_ROW_308_Left_884 (TAPCELL_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (40).
+ input235
+ input240
+ input245
+ input250
+ input257
+ input258
+ input261
+ input263
+ input264
+ input265
+ input270
+ input275
+ input285
+ input292
+ input297
+ input301
+ input305
+ input307
+ input310
+ input313
+ input316
+ input318
+ input319
+ input321
+ input322
+ input323
+ input325
+ input328
+ input332
+ input335
+ input339
+ input344
+ input358
+ input359
+ input361
+ input363
+ input366
+ input370
+ input374
+ input378
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: probe.tcl, 12 DPL-0033

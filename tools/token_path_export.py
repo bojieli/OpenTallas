@@ -445,8 +445,11 @@ def qwen(kv=None):
                         basis=f"{KVD} (priced candidate: the TP4 basis with the attention step measured through the link; "
                               f"reprice.json typical {kvc['token_cycles']:,} cycles)",
                         source=KVD + " cases.typical", status="priced candidate (not a closed rate)",
+                        per_user_cost_vs_tp4_pct=kv["per_user_cost"]["vs_tp4_pct"], die_pair_mm2=kv["silicon"]["pair_mm2"],
+                        interposer_reticles=kv["silicon"]["interposer_reticles"],
                         measured_cycles=None, priced_cycles=None)
-        notes = ["Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
+        notes = [f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
+                 "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
                  "new K / V and the attention output cross the UCIe link (results/arch/qwen_kv_die_20261009/CONTRACT.md).",
                  "Every other operation keeps the measured TP4 windows and priced adders of the qwen_rom view."]
         return finish(d, headline, gdef, QWEN_CLASSES, drill, notes,

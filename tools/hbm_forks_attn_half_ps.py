@@ -33,6 +33,11 @@ def main():
     lines.append(f'place_pin -pin_name {{ldk[0]}} -layer M5 -location {{{x1 + 2.016:.4f} 0.0960}} -pin_size {{0.0240 0.1920}}')
     with open(lo / 'io_place.tcl', 'a') as f:
         f.write('# hbm-forks RQ-HF-4: PS entry row port + strap\n' + '\n'.join(lines) + '\n')
+    with open(lo / 'macro_placement.tcl', 'a') as f:
+        f.write('# hbm-forks RQ-HF-4: the PS entry row port ks lands in two SN pin banks under its pins (x 1062.0-1273.4, S face)\n')
+        for c, x in ((0, 1056.096), (1, 1163.616)):
+            f.write(f'place_macro -macro_name {{u_pks.gn.g_s\\[0\\].g_c\\[{c}\\].g_sn.u_b}} -location {{{x:.3f} 0.024}} '
+                    '-orientation R0 -exact\n')
     print('written', lo)
 
 

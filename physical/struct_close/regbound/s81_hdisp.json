@@ -1,0 +1,3 @@
+{"src": "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv", "module": "ot_s81_host_dispatch", "core": "ot_s81_host_dispatch_core",
+ "clk": "ck", "reset": "rst_n", "outputs_registered": true,
+ "why": "pi-s81hdisp-c7c53c4c2 TT -310 (input->reg only): i_v / i_addr / i_d / branch_cr -> class decode / credit arithmetic -> regs. Credit protocol: +1 cycle on every input, credits unchanged (8)."}

@@ -315,7 +315,10 @@ module ot_s81ph_coll_core #(
     end else begin : g_oqp
         localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;     // 9 queue slices (the last one 51 b)
         reg  [2099:1]  wq;                                              // registered packer word
-        reg  [ONS-1:0] pq;                                              // registered push, one replica per slice
+        // FLOW-FIX-0410 2026-10-09: (* keep *) + physical/common_flow/ot_keep_regs.tcl (SYNTH_CANONICALIZE_TCL, default on)
+        // keep the ONS replicas as ONS flops; a plain reg was folded by the yosys opt_merge into one push flop that fanned
+        // out to every slice again.  Attribute only: simulation unchanged.
+        (* keep *) reg [ONS-1:0] pq;                                    // registered push, one replica per slice
         wire [ONS-1:0] s_hv, s_r2, s_flt;
         always @(posedge clk) wq <= b_word;
         always @(posedge clk or negedge rst_n)

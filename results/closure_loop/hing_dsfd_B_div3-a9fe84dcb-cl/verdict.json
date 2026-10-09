@@ -1,0 +1,120 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hing_dsfd_B_div3-a9fe84dcb-cl",
+ "block": "dsfd_host",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/struct-close-20261009",
+ "record_branch": "codex/closure-record-hing_dsfd_B_div3-a9fe84dcb-cl",
+ "source_commit": "a9fe84dcbe4df47dd93b3266a592c875f239aa61",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hing_dsfd_B_div3-a9fe84dcb-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 19.69,
+  "ff_ps": 10.05,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -764.61,
+  "ss_sensitivity_tns_ps": -3784509.8,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hing_dsfd_B_div3-a9fe84dcb-cl/routes/hing_dsfd_B_div3_a9fe84dcb_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/rom_host_ingest/sdc/hing_clocks_div3.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hing_dsfd_B_div3-a9fe84dcb-cl/routes/hing_dsfd_B_div3_a9fe84dcb_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hing_dsfd_B_div3-a9fe84dcb-cl/routes/hing_dsfd_B_div3_a9fe84dcb_cl/work/orfs/logs/asap7/opentallas_dsfd_host_asap7_hing_hing_dsfd_B_div3_a9fe84dcb_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_hing_e2e_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "HING_PASS\n",
+   "track": "parallel"
+  },
+  "bench_hing_neg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "HING_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": null,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T05:07:47-07:00",
+ "job_spec": {
+  "name": "hing_dsfd_B_div3-a9fe84dcb-cl",
+  "block": "dsfd_host",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 (REVIEW_20261009 N2/N3 flow requeue): hing_dsfd_B_div3 ended NEEDS_HUMAN 'verdict inputs missing': corner_sta reads physical/rom_host_ingest/sdc/hing_clocks_div*.sdc as a --post-sdc where $clk_period is undefined (Tcl error -> every metric null). a9fe84dcb defines clk_period from core_clk when absent. Same RTL line (main; +2-bit BOOT marker field in ot_rom_host_ingest). 0 cycles.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-agidock128"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 24,
+  "route_hold_margin_ns": 0.01,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "a9fe84dcbe4df47dd93b3266a592c875f239aa61"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "hing_e2e_exact",
+     "cmd": "python3 tools/rtl_rom_host_ingest_bench.py --quick --no-model --work /tmp/hing_{NAME} --output {RUN}/bench/bench.json > {RUN}/bench.txt 2>&1; grep -q '^pass: True' {RUN}/bench.txt && echo HING_PASS",
+     "expect": "pass",
+     "pass_regex": "HING_PASS",
+     "threads": 2,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "hing_neg",
+     "cmd": "grep -q 'mutant payload_bit_flip_in_cdc detected' {RUN}/bench.txt && grep -q 'mutant done_tag_plus_one detected' {RUN}/bench.txt && echo HING_NEG_FAIL && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "HING_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "new master, no die generator ports yet: block-internal closure at the generic 20 % IO first (die-face budget after placement in r21c / S81 r5)"
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" DIV=\"3\" UTIL=\"35\" PD=\"0.5\" HM=\"0.01\" NEED=\"24\" bash physical/rom_host_ingest/route.sh {LABEL} dsfd_host",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

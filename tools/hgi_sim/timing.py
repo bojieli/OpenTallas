@@ -36,7 +36,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import hbm_generic_iface as HGI  # noqa: E402
 import hdc_isa_v41 as I  # noqa: E402
 
-from .records import ISTRIDE_BCAST, rec_bytes  # noqa: E402
+from .records import rec_bytes  # noqa: E402
 
 CAL = json.loads((Path(__file__).with_name("calibration.json")).read_text())
 ROOT = Path(__file__).resolve().parents[2]
@@ -94,26 +94,31 @@ def cv(sec, key):
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
 def expand(recs, pos, token=0, rank=0):
-    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay and predicates."""
-    out, pc, loop, L = [], 0, None, 0
+    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay (two levels: CTL.LOOP
+    param[15:0] count, [16] level) and predicates.  L is the level-0 counter (L1 is not used by the cost model)."""
+    out, pc, loops = [], 0, []
     while pc < len(recs):
         r = recs[pc]
         p = r.pred
+        L = next((x[2] for x in reversed(loops) if x[3] == 0), 0)
+        L1 = next((x[2] for x in reversed(loops) if x[3] == 1), 0)
         if not (p == "ALWAYS" or (p == "POS0" and pos == 0) or (p == "NOT_POS0" and pos != 0)
-                or (p == "LAST_ITER" and loop and L == loop[1] - 1)):
+                or (p == "LAST_ITER" and loops and loops[-1][2] == loops[-1][1] - 1)):
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "LOOP":
-            loop, L, pc = (pc + 1, r.param), 0, pc + 1
+            loops.append([pc + 1, r.param & 0xFFFF, 0, (r.param >> 16) & 1])
+            pc += 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
-            L += 1
-            if L < loop[1]:
-                pc = loop[0]
+            loops[-1][2] += 1
+            if loops[-1][2] < loops[-1][1]:
+                pc = loops[-1][0]
                 continue
-            loop, L, pc = None, 0, pc + 1
+            loops.pop()
+            pc += 1
             continue
-        out.append((pc, L))
+        out.append((pc, L, L1))
         if r.unit == "CTL" and r.op == "END":
             break
         pc += 1
@@ -126,12 +131,12 @@ class Dyn:
 
 
 def eff(d, dyn, L):
-    if d.dyn_sel == 31:                       # C3b indexed descriptor: timing uses index 0 (values are not modelled)
-        base = d.base
+    if d.indexed:                             # C3b indexed descriptor: timing uses id 0 (values are not modelled)
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride
     else:
-        base = d.base + L * d.lstride + dyn.v[d.dyn_sel] * d.dyn_mul
-    n = dyn.v[d.n_sel] if d.n_sel else d.n
-    ist = 0 if d.istride == ISTRIDE_BCAST else (d.istride or 1)
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride + dyn.v[d.dyn_sel] * d.dyn_mul
+    n = dyn.v[d.n_sel] if 0 < d.n_sel < 63 else d.n
+    ist = 0 if d.ibcast else (d.istride or 1)
     return base, n, d.m, d.stride, ist
 
 
@@ -152,8 +157,8 @@ def intervals(d, dyn, L):
     if 1 < m <= 64 and st:
         out = []
         for o in range(m):
-            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "dyn_sel": 0, "dyn_mul": 0,
-                             "n_sel": 0, "n": n})
+            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "l1stride": 0, "dyn_sel": 0,
+                             "dyn_mul": 0, "n_sel": 0, "n": n, "indexed": 0})
             out.append(interval(sub, dyn, 0))
         return out
     return [interval(d, dyn, L)]
@@ -163,15 +168,12 @@ def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
-    for d in r.desc.values():
-        if d.dyn_sel == 31:                   # the index word the dispatcher reads
-            reads.append(("VM", d.lstride, d.lstride + 1))
     for kind, iv in getattr(r, "implicit", ()):
         (writes if kind == "w" else reads).append(iv)
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
             continue
-        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))
+        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))      # I (id table): a read
     if r.unit == "SU" and r.sut and r.sut.get("c_pair") and "A" in r.desc:
         pass                                             # partner lies inside A's head span (aligned)
     return reads, writes
@@ -257,7 +259,7 @@ def cost(r, dyn, L, cfg=None):
         c, how = su_cost(r, dyn, L)
         return c, ("measured_depth_model" if MEAS.get("SU.model_check", {}).get("value") else "model"), how
     if u == "FUSED":
-        seg = r.param & 0xFF
+        seg = (r.param >> 6) & 0xFF
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
@@ -304,9 +306,9 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     n = len(ex)
     units = HGI.UNITS
     costs, fps = [], []
-    for (k, L) in ex:
+    for (k, L, L1) in ex:
         r = recs[k]
-        dyn.v[4] = L
+        dyn.v[4], dyn.v[8] = L, L1
         costs.append(cost_fn(r, dyn, L))
         fps.append(footprint(r, dyn, L))
     # true dependences (exact intervals): producer = last writer of an overlapping region (RAW / WAW), readers since
@@ -339,8 +341,8 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     dwire, rwire, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
     if not wires:
         dwire = rwire = 0
-    nm_rd = [set(getattr(recs[k], "reads", ())) for k, _ in ex]
-    nm_wr = [set(getattr(recs[k], "writes", ())) for k, _ in ex]
+    nm_rd = [set(getattr(recs[k], "reads", ())) for k, *_ in ex]
+    nm_wr = [set(getattr(recs[k], "writes", ())) for k, *_ in ex]
     # record byte offsets in the image (for fetch); loop replays hit the ring when the body fits
     offs, o = [], 0
     for r in recs:
@@ -376,7 +378,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     hol_block = [0.0] * n
     wait_block = [0.0] * n
     cp_busy = 0.0
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         r = recs[k]
         c = costs[i][0]
         u = r.unit
@@ -389,7 +391,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             nch = (1 if r.sut is not None else 0) + len(r.descs_in_order())
             dcyc = 0.0 if mode in ("S1",) else cpc["decode_header"]["value"] + nch * cpc["decode_per_chunk"]["value"]
             alat = 0.0 if mode in ("S1",) else cpc["addr_latency"]["value"]
-            nidx = sum(1 for d in r.desc.values() if d.dyn_sel == 31)
+            nidx = sum(1 for d in r.desc.values() if d.indexed)
             f_r = fetch_ready(i, k, L)
             dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2", "SX") else (dec_t + dcyc)
             ready = dec_t + alat
@@ -401,7 +403,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             qt = q[-qd] if len(q) >= qd else 0.0
             if nidx:
                 # C3b: the dispatcher reads the index word only after its producer retired (the wait is satisfied)
-                ivs = [("VM", d.lstride, d.lstride + 1) for d in r.desc.values() if d.dyn_sel == 31]
+                ivs = [interval(r.desc["I"], dyn, L)] if "I" in r.desc else []
                 prod = max([end[j] + rwire for j in deps[i]
                             if any(overlap(w_, iv) for w_ in fps[j][1] for iv in ivs)] + [0.0])
                 ready = max(ready, prod + cpc["indexed_read"]["value"] * nidx)
@@ -447,7 +449,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     # per-unit busy / idle split: idle caused by true dependences vs by issue (CP, HOL, drain waits)
     per_unit = defaultdict(lambda: dict(busy=0.0, idle_true_dep=0.0, idle_issue=0.0, records=0))
     prev = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         u = recs[k].unit
         pu = per_unit[u]
         pu["records"] += 1
@@ -459,7 +461,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         pu["idle_issue"] += gap_issue
         prev[u] = end[i]
     fam = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         fam[recs[k].family or recs[k].tag] += end[i] - start[i]
     return dict(mode=mode, total_cycles=total, records_executed=n, deps=deps, start=start, end=end, disp=disp,
                 costs=costs, ex=ex, races=races, per_unit={k: {a: round(b, 1) for a, b in v.items()}
@@ -478,7 +480,7 @@ def critical_path(s, recs):
     seen = set()
     while i is not None and i not in seen:
         seen.add(i)
-        k, L = s["ex"][i]
+        k, L, *_ = s["ex"][i]
         path.append(dict(tag=recs[k].tag, L=L, unit=recs[k].unit, start=round(s["start"][i], 1),
                          end=round(s["end"][i], 1)))
         cands = [(s["end"][j], j) for j in s["deps"][i]]
@@ -504,7 +506,7 @@ def reorder(recs, pos, cost_fn=cost, rebuild=None):
     producer ends), so the program's results are unchanged."""
     s0 = schedule(recs, pos, "S0", cost_fn=cost_fn)
     first = {}
-    for i, (k, L) in enumerate(s0["ex"]):
+    for i, (k, L, *_) in enumerate(s0["ex"]):
         first.setdefault(k, (s0["start"][i], s0["end"][i], i))
     out, seg = [], []
 

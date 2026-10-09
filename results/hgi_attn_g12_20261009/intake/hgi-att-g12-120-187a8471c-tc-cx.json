@@ -1,0 +1,90 @@
+{
+  "name": "hgi-att-g12-120-187a8471c-tc-cx",
+  "block": "hgi_att_rows_g12_120",
+  "owner": "Codex:generic_attn_g12",
+  "purpose": "Owner-approved HGI-1 G12 row metadata frontend; 120/140um route variants, registered inputs and one held output; DS gather/arithmetic unchanged. Initial RAM8GiB is conservative source-inventory estimate (~400 control FFs, no macros), NOT measured physical peak. Exact wrapper golden/three RTL mutants pass remote; external hbm-sim CF-ATT conformance binding pending. No die adoption claim. Corrected exclusive1M endpoint: POS1 and effective counts21bits, physicalrow20; old799jobs held unstarted and ineligible. Final wrapper rejects orphan ID ingress while idle and flushes IDs after command fault; fourth C ordinal-order mutant.",
+  "hosts": [
+    "ot-pve1",
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "source": {
+    "branch": "codex/hgi-attn-g12-20261009",
+    "commit": "187a8471c953b4ee5b0c83234719fea8fcac830e"
+  },
+  "registered_io": true,
+  "stages": {
+    "bench": [
+      {
+        "name": "fullshape_exact",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_row_sources -o {RUN}/bench/g12  rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_row_sources.sv && vvp {RUN}/bench/g12",
+        "expect": "pass",
+        "pass_regex": "PASS CF-ATT cases=142 rows=1081866",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "ring_zero",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_row_sources -o {RUN}/bench/ring_zero -Ptb_hgi_att_row_sources.MUT_RING_ZERO=1 rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_row_sources.sv && vvp {RUN}/bench/ring_zero",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*ordered row mismatch",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "drop_C",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_row_sources -o {RUN}/bench/drop_C -Ptb_hgi_att_row_sources.MUT_DROP_C=1 rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_row_sources.sv && vvp {RUN}/bench/drop_C",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*ordered row mismatch",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "C_address",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_row_sources -o {RUN}/bench/C_order -Ptb_hgi_att_row_sources.MUT_C_REVERSE=1 rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_row_sources.sv && vvp {RUN}/bench/C_order",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*ordered row mismatch",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "C_order",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_row_sources -o {RUN}/bench/C_order_mut -Ptb_hgi_att_row_sources.MUT_C_ORDER=1 rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_row_sources.sv && vvp {RUN}/bench/C_order_mut",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*ordered row mismatch",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current route_master io_ref_skew measures actual TT/FF boundary clock in-run; no borrowed insertion or clock relaxation."
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/hgi_att_rows_g12_120.sdc; HM=0.010 SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_att_rows_g12_120 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 8
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_att_rows_g12_120.sdc"
+    ],
+    "macros": []
+  },
+  "cycles_added": "3 command-to-first request edges including input station, II1, selected-ID two-word FIFO. No tile/gather arithmetic cycles changed.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+}

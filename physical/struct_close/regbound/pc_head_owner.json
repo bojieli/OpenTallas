@@ -1,0 +1,3 @@
+{"src": "rtl/qwen_sys/system_20261009/ot_qfd_pc_head_owner_cl.sv", "module": "ot_qfd_pc_head_owner_cl", "core": "ot_qfd_pc_head_owner_cl_core",
+ "clk": "clk", "reset": "rst_n",
+ "why": "qfd_pc_head_owner_cl-9512a1e94-tc-hm10-b-cl TT -423.7 (7,545 ep): ack_data -> ack_bad -> safe -> mem[*] write enables (in->reg -487); head_v (ok && hv) -> pin (reg->out -108.5). Every input and output gets a flop at the pin: +1 on ack / input, +1 on head / credit / status."}

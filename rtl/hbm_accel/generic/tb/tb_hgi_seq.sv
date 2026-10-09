@@ -15,10 +15,13 @@
 // Prints HGI_SEQ PASS / FAIL.  Mutants: OT_HGI_SEQ_MUT_WAIT, OT_HGI_SEQ_MUT_LOOP, OT_HGI_SEQ_MUT_IDXL.
 module tb_hgi_seq;
 `include "hgi_seq_sizes.svh"
-`ifdef SEQ_STALE
-    localparam integer NCASE = SEQ_NCASE_STALE, NEXP = SEQ_NEXP_STALE;
+`include "hgi_seq_sizes_conf.svh"
+`ifdef SEQ_CONF
+    localparam integer NCASE = CONF_NCASE, NEXP = CONF_NEXP, NW = CONF_NW;
+`elsif SEQ_STALE
+    localparam integer NCASE = SEQ_NCASE_STALE, NEXP = SEQ_NEXP_STALE, NW = SEQ_NW;
 `else
-    localparam integer NCASE = SEQ_NCASE, NEXP = SEQ_NEXP;
+    localparam integer NCASE = SEQ_NCASE, NEXP = SEQ_NEXP, NW = SEQ_NW;
 `endif
     localparam integer PAGE = 32'h10;
     reg clk = 0; always #1 clk = ~clk;
@@ -40,19 +43,26 @@ module tb_hgi_seq;
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
         .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
         .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles));
-    reg [127:0] img [0:SEQ_NW-1];
+    reg [127:0] img [0:NW-1];
+    reg [95:0] vmi [0:CONF_NVMI-1];
     reg [255:0] ex [0:NEXP-1];
     reg [31:0] cfg [0:NCASE*12-1];
     reg [95:0] vmw [0:4095];
     reg [63:0] vm0 [0:SEQ_NVM0-1];
     integer nvmw = 0;
     initial begin
+`ifdef SEQ_CONF
+        $readmemh("hgi_seq_image_conf.mem", img);
+        $readmemh("hgi_seq_expect_conf.mem", ex); $readmemh("hgi_seq_cfg_conf.mem", cfg);
+        for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
+        $readmemh("hgi_seq_vmi_conf.mem", vmi);
+`elsif SEQ_STALE
         $readmemh("hgi_seq_image.mem", img);
-`ifdef SEQ_STALE
         $readmemh("hgi_seq_expect_stale.mem", ex); $readmemh("hgi_seq_cfg_stale.mem", cfg);
         for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
         $readmemh("hgi_seq_vmw_stale.mem", vmw);
 `else
+        $readmemh("hgi_seq_image.mem", img);
         $readmemh("hgi_seq_expect.mem", ex); $readmemh("hgi_seq_cfg.mem", cfg);
         for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
         $readmemh("hgi_seq_vmw.mem", vmw);
@@ -63,7 +73,7 @@ module tb_hgi_seq;
     localparam [39:0] IMG = PAGE * 4096;
     function automatic [127:0] word_at(input [39:0] a);
         reg signed [41:0] w; begin w = ($signed({2'b0, a}) - $signed({2'b0, IMG})) / 16;
-            word_at = (w >= 0 && w < SEQ_NW) ? img[w] : 128'hDEAD; end
+            word_at = (w >= 0 && w < NW) ? img[w] : 128'hDEAD; end
     endfunction
     reg [39:0] fq [0:63]; integer fqh = 0, fqn = 0, fdel = 0;
     always @(posedge clk) begin
@@ -151,6 +161,10 @@ module tb_hgi_seq;
             for (a = 0; a < 16; a = a + 1) vm[32'hF000 + a] = 0;
             for (a = 0; a < 16; a = a + 1) vm[32'hF010 + a] = 0;
             vm[32'hF000] = 3; vm[32'hF100] = 1 << 21;
+`ifdef SEQ_CONF
+            for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
+            for (a = 0; a < CONF_NVMI; a = a + 1) if (vmi[a][95:64] == c) vm[vmi[a][49:32]] = vmi[a][31:0];
+`endif
             md_d = {32'd1, PAGE, 32'd0, 32'd0, cfg[c*12 + 0]};
             vocab = cfg[c*12 + 4]; ctxmax = cfg[c*12 + 5]; rank = cfg[c*12 + 3];
             fault_at = (cfg[c*12 + 9] == 32'hFFFF) ? -1 : cfg[c*12 + 10] + cfg[c*12 + 9];
