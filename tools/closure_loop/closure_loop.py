@@ -38,6 +38,7 @@ import datetime as dt
 import fcntl
 import glob
 import json
+import hashlib
 import os
 import re
 import shlex
@@ -461,8 +462,34 @@ def save_job(j):
         os.replace(tmp, p)
 
 
+_STATE_READ_WARNINGS = set()
+
+
 def all_jobs():
-    return [json.loads(p.read_text()) for p in sorted((STATE / "jobs").glob("*.json"))]
+    """Keep unrelated fleet work running if an externally written state is malformed.
+
+    Leave the offending file untouched for owner recovery; never infer a fresh
+    status or resubmit it, since it could have a live producer outside the loop.
+    """
+    jobs = []
+    for p in sorted((STATE / "jobs").glob("*.json")):
+        raw = None
+        try:
+            raw = p.read_text()
+            j = json.loads(raw)
+            if not isinstance(j, dict) or not isinstance(j.get("spec"), dict) or \
+                    j.get("name") != p.stem or not isinstance(j.get("status"), str) or not j["status"]:
+                raise ValueError("job state requires matching name, nonempty status and object spec")
+        except (OSError, ValueError) as exc:
+            # One warning per distinct bad content; a persistent malformed file
+            # must not flood the daemon log on every status query and tick.
+            key = (str(p), str(exc), hashlib.sha256((raw or "").encode()).hexdigest())
+            if key not in _STATE_READ_WARNINGS:
+                _STATE_READ_WARNINGS.add(key)
+                log(f"MALFORMED job state {p}: {exc}; preserved, excluded from scheduling")
+            continue
+        jobs.append(j)
+    return jobs
 
 
 def keys_path():
