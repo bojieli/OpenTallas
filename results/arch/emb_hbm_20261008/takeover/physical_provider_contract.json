@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.embedding_hbm_physical_provider.v1",
+  "qualified": false,
+  "controller_clock_period_ps": 1024,
+  "PC_ports": {
+    "read": "r_v + r_d[287:0]",
+    "write": "wd[287:0]",
+    "KV_landing": "kv_v + kv_d[287:0]",
+    "embedding_landing": "em_v + em_d[257:0]"
+  },
+  "storage_layout": "four interleaved SECDED(72,64) codewords per256 payload bits",
+  "bench_provider": "tb_emb_dram_pc stores/returns all288bits; exact/negative gates qualify logic only",
+  "real_HBM_PHY_provider": "OPEN: scheduler emits commands; no demonstrated ECC32 physical sideband storage/bandwidth provider",
+  "capacity_and_bandwidth_claim": "No capacity-free or bandwidth-free ECC32 claim qualified; must inventory actual sideband or price in-band overhead",
+  "strip_measured_synthesis": {
+    "source": "f42e102ca",
+    "cell_area_um2": 25336.04,
+    "cell_count": 184706,
+    "sequential_cell_count": 38573,
+    "raw_area_fraction_92p256x2000": 0.13731377904960113,
+    "CTS_hold_routing_closed": false
+  }
+}
