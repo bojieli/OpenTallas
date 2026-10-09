@@ -1,0 +1,61 @@
+{
+  "source_commit": "b224764ab",
+  "source_failure": "mtp_fence_p-d30fa5f39-tc",
+  "input_sha256": {
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv": "b69db5c9bbf5c9f3c6ac5be0f16d88ea4dc139e4787efb75f76ae24bb39556e3",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid_banked_cx.sv": "0dd66fc04ce002586032a46f4da3755a451b8b7a854fbfa7b4b9731e7f26184a",
+    "physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_cx.sv": "03d028295d4177b0d98abcdd81df376aed4e4894e7089df64ff768bbe006d06b",
+    "physical/hbm_mtp/bench/tb_fence_cx.sv": "3617a6d6abe74e03575a24045e4c1691150df2fefda47b9b82ce51c43efcdf90",
+    "physical/hbm_mtp/bench/tb_skid_cx.sv": "b4be447a6fb233ec947118f14e40543eabe6bb720bd82f9ab39173c6d3a3010e",
+    "tools/hbm_rf_fence_cx_model.py": "31aa97e77f9529637aa0d686571a00a4158c9c92e2295df4d14dab52f90ca667",
+    "tools/uarch_model.py": "63c45c73cb257bedcb6951499aa53b571c9414e2f1504e36616b46431371177b"
+  },
+  "scope": "full4096 transaction streams vs original fence; cycle-exact4114bit skid valid/data under stalls and promotion; no control protection or new protocol",
+  "cases": [
+    {
+      "name": "fence7",
+      "negative": false,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "fence3",
+      "negative": false,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "fence11",
+      "negative": false,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "fence29",
+      "negative": false,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "fence_mutant",
+      "negative": true,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "skid",
+      "negative": false,
+      "build_exit": 2,
+      "passed": false
+    },
+    {
+      "name": "skid_mutant",
+      "negative": true,
+      "build_exit": 2,
+      "passed": false
+    }
+  ],
+  "verdict": "FAIL",
+  "adopted": false
+}

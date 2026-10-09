@@ -1,0 +1,24 @@
+Command exited with non-zero status 2
+	Command being timed: "iverilog -g2012 -s tb_fence_cx -Ptb_fence_cx.MUT=0 -Ptb_fence_cx.SEED=29 -o gate/fence29.vvp /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/rtl/gpu/ot_gpu_rf_visibility_fence.sv /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/physical/hbm_mtp/rtl/ot_hfd_mtp_skid_banked_cx.sv /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_cx.sv /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/physical/hbm_mtp/bench/tb_fence_cx.sv /srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bench-r1/physical/hbm_mtp/bench/tb_skid_cx.sv"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 111%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5832
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 680
+	Voluntary context switches: 8
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2
