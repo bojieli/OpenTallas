@@ -1,0 +1,70 @@
+{
+  "scope": "Read-only routine diagnosis; no new RTL/model/compute/mainmerge",
+  "observed_at": "2026-10-09T12:05:37.421749+00:00",
+  "canonical_host": "ot-pve1",
+  "original_source": "da3b6c691d28f7dae83b488a7605ff6997f41d24",
+  "original_job": "hbm_coll_port_interior-da3b6c691-tc",
+  "capture_source": "94623b7d3",
+  "capture_job": "hbm_coll_port_capture-94623b7d3-tc",
+  "historical_headline": {
+    "TT_ps": -144.6,
+    "FF_internal_ps": -31.4
+  },
+  "current_original_receipt": {
+    "TT_ps": -66.17,
+    "TT_internal_ps": -56.24,
+    "FF_ps": -155.99,
+    "FF_internal_ps": -31.394554
+  },
+  "current_capture_receipt": {
+    "TT_ps": -26.19,
+    "FF_ps": -123.49,
+    "FF_internal_ps": 0.22321
+  },
+  "macro_errors": {
+    "locked": "fixed by explicit PLACED before relocation thenFIRM",
+    "dimension": "41.040um original macro vs41.064v2 expectation corrected",
+    "pin": "contiguousgroups replaced perbus edgeconstraints"
+  },
+  "macro_layout": {
+    "real_macro_count": 18,
+    "array": "6rows x3cols",
+    "channel_um": 24,
+    "outline_um": [
+      480,
+      540
+    ]
+  },
+  "remaining_TT": {
+    "start": "u_qp/u_head.wp[1]",
+    "end": "u_qp/u_head.mem[3][254]",
+    "slack_ps": -26.19,
+    "fanout_buffer_delay_ps": 461.03
+  },
+  "remaining_FF": {
+    "start": "ph_tx_flit[299]",
+    "end": "vclk output ph_tx_flit[299]",
+    "data_arrival_ps": 595.51,
+    "required_ps": 719.0,
+    "clock_mean_ps": 669,
+    "interclock_uncertainty_ps": 50
+  },
+  "clock_period_ps": 833,
+  "uncertainty_internal_ps": [
+    60,
+    25
+  ],
+  "external_hold_policy": "H1 sender50ps preserved; no timing relaxation",
+  "parent_budget_qualified": false,
+  "route_state": "NO ROUTE: dedupe confirmed originals terminal; Claude different port2_rows RUNNING remains preserved",
+  "resource_reserved_GiB": 24,
+  "resource_measured_peak": "pendingfleetlocator; reservation is not measuredpeak",
+  "proposed_routine_next": "CopiedODB headwrite-decode locality/legal sites gate then currentflow holdrepair on sameH1 envelope; noRTL structuralchanges",
+  "files_sha256": {
+    "da3b6c691/corner_sta_observed.json": "68011b9b178c149389d4d1f7ef008d862af4386389f34941b104b553935d899c",
+    "da3b6c691/job_observed.json": "b158355a30538a25cef62e010eb2f6382fd82477b36d1e0590f3d2c9cc1f4d1e",
+    "94623b7d3/ff_observed.log": "837cb091badffb8eb7ee358ba158afc89030b53d01a0de030d2d76c192d1dd8b",
+    "94623b7d3/corner_sta_observed.json": "06c163c23f44d2b038c229e46c001c0cc9c7fa95bac2cfc9c4d31311bf8f618d",
+    "94623b7d3/tt_observed.log": "6096b6bc21399c34f1f0ad6fdef465076e63030c8e06f146cef1390727d9f1ff"
+  }
+}
