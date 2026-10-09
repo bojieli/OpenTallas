@@ -32,9 +32,9 @@ module ot_qwen_r25_su_dispatch #(
  end else begin:enabled
   localparam IDLE=0,REQUEST=1,RECEIVE=2,EXEC=3,FINISH=4,FAILED=5;
   // state: phase3 issued4 returned4 active4 pc12 base12 remaining13 slot2 nq3.
-  reg [71:0] state,owner_lo,context;
+  reg [71:0] state,owner_lo,context_seat;
   reg [71:0] words[0:43];
-  wire [65:0] sd=decode64(state),od=decode64(owner_lo),xd=decode64(context);
+  wire [65:0] sd=decode64(state),od=decode64(owner_lo),xd=decode64(context_seat);
   wire [63:0] s=sd[63:0],x=xd[63:0];
   wire [2:0] phase=s[2:0];wire [3:0] issued=s[6:3],returned=s[10:7],active=s[14:11];
   wire [11:0] pc=s[26:15],base=s[38:27];wire [12:0] remaining=s[51:39];
@@ -113,13 +113,13 @@ module ot_qwen_r25_su_dispatch #(
   end
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin
-    state<=encode64(0);owner_lo<=encode64(0);context<=encode64(0);
+    state<=encode64(0);owner_lo<=encode64(0);context_seat<=encode64(0);
     for(j=0;j<44;j=j+1)words[j]<=encode64(0);
    end else begin
     state<=encode64(next_s);
     if(launch_v&&launch_rdy&&!invalid)begin
      owner_lo<=encode64(launch_owner[63:0]);
-     context<=encode64({22'd0,launch_count,launch_position,launch_owner[72:64]});
+     context_seat<=encode64({22'd0,launch_count,launch_position,launch_owner[72:64]});
     end
     if(rom_out_v&&rom_out_rdy&&!invalid)begin
      available=(cmd_valid_length>rom_row0)?cmd_valid_length-rom_row0:0;
