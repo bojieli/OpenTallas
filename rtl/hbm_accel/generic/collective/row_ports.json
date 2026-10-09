@@ -46,7 +46,7 @@
       "must_not_tie": true
     },
     "row_count": {
-      "width": 20,
+      "width": 21,
       "direction": "in",
       "binding": "op5k count",
       "must_not_tie": true
@@ -70,7 +70,7 @@
       "must_not_tie": true
     },
     "id": {
-      "width": 20,
+      "width": 32,
       "direction": "in",
       "binding": "selected U32rowidentifier afterboundcheck",
       "must_not_tie": true
@@ -181,6 +181,12 @@
       "width": 1,
       "direction": "out",
       "binding": "invalidcommand/unwrittenrowcompletion fault",
+      "must_not_tie": true
+    },
+    "context_rows": {
+      "width": 32,
+      "direction": "in",
+      "binding": "active static cp_ctx_max count up to1048576",
       "must_not_tie": true
     }
   },
