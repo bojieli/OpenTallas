@@ -103,5 +103,27 @@
       75968,
       113952
     ]
+  },
+  "physical_pin_successor": {
+    "failure": "08ef6a8a8 E/M4 20.8bits/um andW/M4 13.0bits/um100um",
+    "implementation": "tools/run_abi3_physical.py byte-identical to a66978536",
+    "regions": "same original4face regions, uniformfullface placement",
+    "layer_groups": 64,
+    "horizontal_layers": [
+      "M4",
+      "M6"
+    ],
+    "vertical_layers": [
+      "M5",
+      "M7"
+    ],
+    "total_pins": 3609,
+    "largest_face_pins": 2305,
+    "largest_face_length_um": 1000.08,
+    "modeled_average_bits_um_layer": 1.1524078073754098,
+    "modeled_100um_density_upper": 2.05,
+    "target_bits_um_layer": 6,
+    "cycles_added": 0,
+    "scope": "physicalonly; currentfullshape exact304stagegate reused"
   }
 }
