@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "s81ph-dsfd_coll_lane_e-a53f40362-tt",
+ "block": "dsfd_coll_lane_e",
+ "die": "s81_r3",
+ "die_master": "dsfd_sp_collective",
+ "tile": "dsfd_coll_lane_e",
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-a53f40362-tt",
+ "orfs": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-a53f40362-tt/routes/s81ph_dsfd_coll_lane_e_a53f40362_tt/work/orfs",
+ "measured_at": "2026-10-08T20:36:01-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 406.6,
+    "T": 833.333
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 334.9,
+    "T": 833.333
+   }
+  }
+ },
+ "r2r": {
+  "tt": 160.63,
+  "ff": 86.64
+ },
+ "errors": [],
+ "ports": {
+  "chb": {
+   "dir": "in",
+   "bits": 1,
+   "clock": null,
+   "T": null
+  },
+  "li_r": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 735.0,
+   "h": -97.3
+  },
+  "lo_d": {
+   "dir": "in",
+   "bits": 553,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 283.0,
+   "h": -27.6
+  },
+  "lo_v": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 323.3,
+   "h": -78.2
+  },
+  "rx": {
+   "dir": "in",
+   "bits": 515,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 298.6,
+   "h": 64.2
+  },
+  "flt": {
+   "dir": "out",
+   "bits": 3,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 228.1,
+   "smin": 127.2
+  },
+  "li_d": {
+   "dir": "out",
+   "bits": 553,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 402.2,
+   "smin": 114.2
+  },
+  "li_v": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 239.2,
+   "smin": 138.9
+  },
+  "lo_r": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 216.4,
+   "smin": 120.5
+  },
+  "tf": {
+   "dir": "out",
+   "bits": 1,
+   "clock": null,
+   "T": null
+  },
+  "tx": {
+   "dir": "out",
+   "bits": 512,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 316.1
+  }
+ },
+ "fwd": {},
+ "internal_ok": true
+}

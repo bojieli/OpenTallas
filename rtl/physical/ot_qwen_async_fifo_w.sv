@@ -14,7 +14,14 @@
 module ot_qwen_async_fifo_w #(
     parameter integer WIDTH = 32,
     parameter integer DEPTH = 4,
-    parameter integer RSL = 128            // read data slice served by one kept read-pointer copy
+    parameter integer RSL = 128,           // read data slice served by one kept read-pointer copy
+    // RSEL2 = 1 (safe-qwen S-A2, 2026-10-08; 0 = unchanged): 2-level REGISTERED read select.  Level 1 (<= 8:1 per group,
+    // one kept head-pointer copy per RSL-bit slice) is captured every rd_clk edge into rs_q; level 2 (<= 8:1 over the
+    // groups, by a kept registered group-index copy per slice) is combinational into the consumer's register.  rd_data
+    // is then the word POPPED at the previous rd_clk edge (rd_valid && rd_ready one edge earlier): +1 rd_clk of read
+    // latency, the consumer re-times its valid by one edge.  The head slot is sampled at the pop edge, before its free
+    // is published, so the sample is as safe as the RSEL2 = 0 capture.  Order and values unchanged.
+    parameter integer RSEL2 = 0
 ) (
     input  wire             wr_clk,
     input  wire             wr_rst_n,
@@ -77,15 +84,44 @@ module ot_qwen_async_fifo_w #(
     assign rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty;
     localparam integer NSL = (WIDTH + RSL - 1) / RSL;
     (* keep *) reg [ADDR_W-1:0] rd_bc [0:NSL-1];
-    genvar gs;
+    // level-1 group size for RSEL2: <= 8 rows, at least 2 groups
+    localparam integer GS = (DEPTH > 8) ? 8 : DEPTH / 2;
+    localparam integer NG = DEPTH / GS;
+    localparam integer GA = $clog2(GS);
+    localparam integer GI = (NG > 1) ? $clog2(NG) : 1;
+    initial if (RSEL2 != 0 && NG > 8) $error("ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1)");
+    // level-2 select copies: a kept ARRAY like rd_bc (the _p synthesis kept every rd_bc element; plain kept regs in a
+    // generate were merged by Yosys in the collective's PR=1 copies)
+    (* keep *) reg [GI-1:0] gsel_q [0:NSL-1];
+    genvar gs, gg;
     generate for (gs = 0; gs < NSL; gs = gs + 1) begin : g_rs
         localparam integer LO = gs * RSL;
         localparam integer SW = (WIDTH - LO < RSL) ? (WIDTH - LO) : RSL;
         always @(posedge rd_clk or negedge rd_domain_rst_n)
             if (!rd_domain_rst_n) rd_bc[gs] <= {ADDR_W{1'b0}};
             else rd_bc[gs] <= rd_bin_next[ADDR_W-1:0];
-        wire [WIDTH-1:0] row = mem[rd_bc[gs]];
-        assign rd_data[LO +: SW] = row[LO +: SW];
+        if (RSEL2 == 0) begin : g_s1
+`ifdef OT_MUT_RSL
+            wire [WIDTH-1:0] row = mem[rd_bc[gs] + (gs == 0)];      // bench mutant: slice 0 reads the next slot
+`else
+            wire [WIDTH-1:0] row = mem[rd_bc[gs]];
+`endif
+            assign rd_data[LO +: SW] = row[LO +: SW];
+        end else begin : g_s2
+            // level 1: per group, the head row's slice (<= 8:1 by this slice's pointer copy), registered every edge
+            (* keep *) reg [SW-1:0] rs_q [0:NG-1];
+            for (gg = 0; gg < NG; gg = gg + 1) begin : g_l1
+                wire [WIDTH-1:0] grow = mem[gg * GS + rd_bc[gs][GA-1:0]];
+                always @(posedge rd_clk) rs_q[gg] <= grow[LO +: SW];
+            end
+            always @(posedge rd_clk) gsel_q[gs] <= (NG > 1) ? rd_bc[gs][ADDR_W-1 -: GI] : {GI{1'b0}};
+            // level 2: <= 8:1 over the groups
+`ifdef OT_MUT_RSEL2
+            assign rd_data[LO +: SW] = rs_q[gsel_q[gs] + (gs == 0)];   // bench mutant: slice 0 reads the wrong group
+`else
+            assign rd_data[LO +: SW] = rs_q[gsel_q[gs]];
+`endif
+        end
     end endgenerate
     // registered write stage
     reg [WIDTH-1:0] wq_data;

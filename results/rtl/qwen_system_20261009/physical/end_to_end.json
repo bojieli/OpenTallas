@@ -1,0 +1,31 @@
+{
+  "source_branch": "codex/qwen-crom-ctl-physical-20261009",
+  "source_crom": "337dcce39",
+  "source_sysctl": "5601e8881",
+  "crom": {
+    "job": "qfd_crom48-91e710eae-tc-hm10",
+    "host": "ot-epyc2",
+    "status": "Initial macrolookup failure preserved; macrolookup successor passed and failed pin-density20.8bits/um. Newperlane-pinspread route queued.",
+    "run": "/srv/opentallas-data/claude/closure-loop/qfd_crom48-91e710eae-tc-hm10",
+    "physical_claim": "pending",
+    "exact_claim": "historical full-shape pass/mutant; simulationtoken-equivalent",
+    "successor": "qfd_crom48-337dcce39-tc-hm10",
+    "successor_status": "validated admitted-loop queue"
+  },
+  "sysctl": {
+    "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
+    "status": "Selected5601 protected-read source passes allpoisoned-memory exact/negative gates; admitted route next",
+    "physical_claim": "pending",
+    "exact_claim": "Selectedsource ninepoisoned-memory controlscenariosPASS incl8192steps/1245184events/8191completions; old-readmutantFAILwithpromptUE+startunready. Component20480reads/ECC2400PASS, SRAMoutputfault2592checks/reset2400PASS, correctiondisabledmutant288failures.",
+    "mutable_storage": "SECDED24 per18b token in32b slot, eight slots per1024x256 SRAM row",
+    "fault_source": 22,
+    "UE_contract": "qzero, sticky pb_fault gates package readiness",
+    "successor": "qfd_sysctl_sram-5601e8881-tc-hm10"
+  },
+  "remaining": [
+    "route verdicts",
+    "die integration and matched CROM/SU pin abutment",
+    "SS sensitivity and TC/FF timing composed"
+  ],
+  "cycles_added": 0
+}

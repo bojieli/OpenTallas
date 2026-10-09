@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=ot_hbm_loader_pc_service_lease top=ot_hbm_loader_pc_service_lease purpose=characterization
+  pnr:   wirelength=19246 um vias=24406 DRC=0 antenna_nets=0 Fmax=1289.94 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]
+  STATUS: PASS (all evaluated stages met)
+  wrote /srv/opentallas-data/codex/loader-read/95294ff25/pathfinding-r2/physical.json

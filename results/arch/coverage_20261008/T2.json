@@ -1,0 +1,1902 @@
+[
+ {
+  "id": "T2-H01",
+  "phase": "host",
+  "plane": "control",
+  "function": "Request in: prompt / LAUNCH admission, per-user tagged command queue",
+  "model_ref": "generate_spec(prompt, n) entry (tools/hdc_golden_v41.py); host_cq CMD_PROMPT / CMD_LAUNCH",
+  "hw_element": "ot_dsrom_host_cq",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/ctrlplane_units.json + system_gate_sys_b2.json / system_gate_sys_d5_u2.json (reduced HDC-core array, not S81)",
+  "closure": "NONE (no closure-loop element; die master dsfd_host exists only on claude/ingest-20261008 3af3b689f, not in the main recipe)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "No host master on any S81 die (layer, scan, head). The system gates bind host_cq to ot_rom_pkg_ctrl_x on the reduced V4.1x HDC-core array, not on the S81 field/hub microarchitecture."
+ },
+ {
+  "id": "T2-H02",
+  "phase": "host",
+  "plane": "control",
+  "function": "Token out: per-token TOKEN completion to host (incl. MTP multi-token emit t_0..t_a)",
+  "model_ref": "out += tg[:a+1] in generate_spec; host_cq kind 1 TOKEN",
+  "hw_element": "ot_dsrom_host_cq completion FIFO",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/ctrlplane_units.json (AR only; no multi-token completion case)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "token.return (head->S0) is priced; the egress to the host is not. host_cq reserves users*(prompt_len+gen_len-1) completions per LAUNCH: an MTP step emits up to 6 tokens at once - not exercised in any bench."
+ },
+ {
+  "id": "T2-H03",
+  "phase": "prefill",
+  "plane": "control",
+  "function": "Prompt / prefill handoff: GPU prefill completes, decode starts at position P for the user (pos counter, history, pending token y)",
+  "model_ref": "generate_spec: prefill loop then q=len(prompt)-1, y=argmax(logits) (owner: prefill on GPUs, KV ingested; memory kv-lives-in-hbm)",
+  "hw_element": "ot_rom_host_ingest (BOOT_END / completion) + host_cq LAUNCH",
+  "die": null,
+  "rtl": "rtl (branch only): ot_rom_host_ingest on origin/claude/ingest-20261008 d14c1955c / 3af3b689f",
+  "exact_bench": "claude/ingest-20261008 tb_rom_host_ingest e2e exact bench PASS 8 cases (d14c1955c; not on main)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "host_cq on main only supports on-chip prompt replay (prompt store MAXU x PMAX) - not the GPU-prefill handoff the owner requires at 1M. The handoff of the first pending token y and the DSpark anchor q is not specified for S81."
+ },
+ {
+  "id": "T2-H04",
+  "phase": "prefill",
+  "plane": "data",
+  "function": "Prefill-KV ingest into decode HBM: window rings (40 layers x 128), compressed KV (L2/L8/L14 ratio 2, L20 ratio 1), index keys, compressor open slot, DSpark dsk rows (3 stages x 128), Engram token history",
+  "model_ref": "Model.new_state fields tokens/win/ckv/ik/slots/slotrec/dsk (tools/hdc_golden_v41.py)",
+  "hw_element": "ot_hdc_kv_ingest + ot_rom_host_ingest (dsfd_host)",
+  "die": null,
+  "rtl": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv (+ ot_rom_host_ingest on claude/ingest-20261008)",
+  "exact_bench": "results/rtl/hdc_kv_ingest_campaign.json (pass) - engine level; no V4.1 state-class coverage record",
+  "closure": "NONE (dsfd_host route specs DRAFT, not queued: claude/ingest-20261008 3af3b689f)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "Ingest time is priced only analytically (results/arch/prefill_ingest.json v41_cold / v41_turns), outside the token path. No evidence the ingest format covers the compressor open-group slot, the DSpark dsk window rows or the Engram history (needed for the first decode/draft step to be exact)."
+ },
+ {
+  "id": "T2-B01",
+  "phase": "boot",
+  "plane": "data",
+  "function": "Backbone weight image: 40 layers x (attn, compressor, indexer, MoE 384+1 experts, HC fn/scale/base) in mask ROM",
+  "model_ref": "checkpoint layers.* (load_checkpoint, tools/hdc_golden_v41.py); compiler/models/deepseek-v4.1-flash/config.json",
+  "hw_element": "ROM field pairs (q-element / BF) + binding",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv, rtl/s81/ot_s81_bf_native.sv",
+  "exact_bench": "results/uarch/dsrom_s81_released_binding_20261004 (binding.json / matrix_map) + results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Mask ROM: no runtime load. ROM ECC removed by owner policy 2026-10-02 (AGENTS.md) - not a gap. Binding covers layers.*; mtp.* and Engram tables are NOT bound (see T2-M06, T2-D04)."
+ },
+ {
+  "id": "T2-B02",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Per-pair configuration: cfg ROMs + cfg7 sequencer (phase descriptors, ROM addresses, go)",
+  "model_ref": "(hardware lowering of every field matvec)",
+  "hw_element": "ot_s81_cfg7_seq x1,792 + ot_rom_4096x72_m8 x12,547",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json)",
+  "rtl": "rtl/v41die/ot_s81_cfg7_seq.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact) (cfg read inside the field vehicle)",
+  "closure": "NONE: ot_s81_cfg7_seq interim view, no closure-loop element",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "On every field phase; its cycles are inside the measured field phases."
+ },
+ {
+  "id": "T2-B03",
+  "phase": "boot",
+  "plane": "control",
+  "function": "HBM-resident read-only tables loaded at boot: RoPE cos/sin table (rope_mode hbm_cache, 256 B/position x 1M positions), KV region init",
+  "model_ref": "rope_cs(freqs, pos) (plain + YaRN) in attention/indexer/compressor",
+  "hw_element": "boot loader / host DMA into HBM",
+  "die": null,
+  "rtl": null,
+  "exact_bench": "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json (status 'blocked'); results/arch/v41_rope_hbm_capacity.json",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW"
+  ],
+  "notes": "No loader / host write port on any S81 die on main; the ingest branch (T2-H04) could carry it. Boot time unpriced (not a per-token cost)."
+ },
+ {
+  "id": "T2-B04",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Clocks: PLL + reset sequencer, 1.2 GHz fast / 0.9 GHz serial domains and 3:4 crossings",
+  "model_ref": "(implementation)",
+  "hw_element": "dsfd_coll_ck (PLL + reset sequencer), ot_meso_fifo_w512d8g1 / d4, dsfd_lkck_* link clocks",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_coll_ck in dsfd_sp_collective; meso FIFOs in hub; dsfd_lkck_NE/NW/SE/SW",
+  "rtl": "rtl/dsrom_sys/s81_ph/ (coll ck tile), rtl/common/ot_ratio_cdc_fifo.sv",
+  "exact_bench": "results/rtl/fullsys_recheck_20261007 (ds_su_xing 64/64 phases exact through d8g1)",
+  "closure": "CLOSED: dsfd_coll_ck TT +9711.9 (TT re-verified s81ph-dsfd_coll_ck-752a48488); ot_meso_fifo_w512d8g1 TT +136.69; dsfd_lkck_* interim",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [],
+  "notes": "Crossing cycles are priced as s81_die_tiles adders on every SU node. Link-clock cells dsfd_lkck_* are interim views."
+ },
+ {
+  "id": "T2-B05",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Reset / power-up / power-gating sequencing (incl. ICG enable)",
+  "model_ref": "(implementation; memory v41-pair-clock-power-needs-icg)",
+  "hw_element": "ot_chip_v41_pg_ctrl",
+  "die": null,
+  "rtl": "rtl/chip/ot_chip_v41_pg_ctrl.sv",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "inventory.json row 'reset / power-up / power-gating sequencing (P1)': RTL-untested on die, owner Codex Maxwell/Archimedes. No master in the m221pq recipe."
+ },
+ {
+  "id": "T2-B06",
+  "phase": "boot",
+  "plane": "control",
+  "function": "HBM PHY init / calibration / pseudo-channel bring-up",
+  "model_ref": "(implementation)",
+  "hw_element": "dsfd_ctrl (ctrl_ctr resets/PHY reset/status, ctrl_pc calibrate) + ot_hbm3e_phy_v41x_aw30_e8p5",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_ctrl x1, PHY x1 (scan/head dies x4)",
+  "rtl": "rtl/dsrom_sys/s81_ph/",
+  "exact_bench": null,
+  "closure": "CLOSED (blocks): dsfd_ctrl_ctr TT +375.89, dsfd_ctrl_pc TT +68.78; PHY vendor macro abstract",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_EXACT"
+  ],
+  "notes": "No bench record found for the calibration sequence itself."
+ },
+ {
+  "id": "T2-B07",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Link training / link-up gate (board + UCIe), FEC lock",
+  "model_ref": "(implementation)",
+  "hw_element": "collective slab v4 link-up gate + ot_pdie_serdes / ot_pdie_ucie pin macros",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): link x8 (ot_pdie_serdes x6, ot_pdie_ucie x2, pin macros only)",
+  "rtl": "rtl/dsrom_sys/s81_ph/ (coll tiles)",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact) ('trained links, no bit errors' bench_v4 coll_price)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Training itself is vendor PHY behaviour; not a per-token cost."
+ },
+ {
+  "id": "T2-D01",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Embedding lookup embed.weight[token] (129,280 x 5,120 BF16) + 4-copy residual expand",
+  "model_ref": "forward_positions: h = repeat(embed.weight[t], hc=4)",
+  "hw_element": "ot_dsrom_embed_row_reader on head-die field pairs + TP4 all_gather + SU expand",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_embed_row_reader.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/embed.json",
+  "closure": "NONE",
+  "in_token_path": "embed",
+  "cycles": 1074.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1 node(s) /embed/ in ds_rom.json, 1,074.3 critical cyc (1,074.3 incl. off-critical). No embed-reader master on the head die (embed rows are read through field pairs); S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792."
+ },
+ {
+  "id": "T2-D02",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram n-gram hash (L1, L14): token_map, 4-gram rolling XOR x multipliers mod primes -> 2 layers x 24 row ids",
+  "model_ref": "EngramTables.hashes / Model.engram_layer (tools/hdc_golden_v41.py)",
+  "hw_element": "ot_hdc_engram_hash_shipped inside dsfd_engram_lkp (ot_dsrom_engram_lookup; window fed oldest-first, strap-selected 6 columns)",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv, rtl/dsrom_sys/engram/dsfd_engram_lkp.sv, rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
+  "in_token_path": "ds_rom E1.hash / E14.hash (off-critical)",
+  "cycles": 17.0,
+  "cycles_source": "modelled (design.json timeline_cycles)",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "On die since the HBM Engram design (stream engram); hash runs on the home rank dies from the lead-flit window."
+ },
+ {
+  "id": "T2-D03",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram table row fetch: 48 rows x 264 B a token from 202.76 GB tables (2 layers x 24 cols, 768M rows)",
+  "model_ref": "decode_engram_rows(codes, scale, ids)",
+  "hw_element": "HBM-resident tables (rank r of the home stage holds columns 6r..6r+5, 25.35 GB) read by dsfd_engram_lkp via ctrl_SE; dsfd_engram_sink decodes into the prefetch buffer",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/{ot_dsrom_engram_lookup,dsfd_engram_lkp,ot_dsrom_engram_rowsink,dsfd_engram_sink}.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
+  "in_token_path": "ds_rom E1.hbm_read / E14.hbm_read (off-critical; slack L1 ~8.5k, L14 ~235k cycles)",
+  "cycles": null,
+  "cycles_source": "RTL bench isolated token (200 ns HBM) via design.json",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "OWNER option A 2026-10-09: 36 ROM table dies deleted, +8 HBM3E stacks (1->2 on the 8 home dies). Integrity: HBM3E ECC + per-row CRC-32 (bytes 257..260) with slot poison."
+ },
+ {
+  "id": "T2-D04",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram row transport: table dies -> L1 and L14 stage dies (rack R2 bottom -> S0/S1, S9-ish)",
+  "model_ref": "rows feed linear_q(engram.wkv)",
+  "hw_element": "lead flit (window, 72 b) on the existing stage hops + TP4 all-gather of the 6 packed rows a rank on the existing collective",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv (flit source), dsfd_engram_lkp credit beat port -> sp_collective",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (behavioural all-gather)",
+  "closure": "links unchanged (no new link); collective endpoint per the closure loop",
+  "in_token_path": "ds_rom E{1,14}.lead_flit + E{1,14}.rows_allgather",
+  "cycles": null,
+  "cycles_source": "modelled: hops x 1,015 + all-gather upper bound 1,422",
+  "gap": [
+   "MODELLED_ONLY"
+  ],
+  "notes": "No table trays or table links remain."
+ },
+ {
+  "id": "T2-D05",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram key/value projection engram.wkv (FP8) + key norms (E side)",
+  "model_ref": "linear_q(engram.wkv, rows); rsqrt(mean(k^2)) per copy",
+  "hw_element": "ROM field group E1.wkv (tools/dsrom_1m_field.py group_of)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/engram.json (rebuild bit-exact vs golden + shard)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "ds_rom E1.wkv / E1.knorm, E14.wkv / E14.knorm (off-critical)",
+  "cycles": null,
+  "cycles_source": "composition E{L}.wkv / knorm (dsrom_1m_allmeasured graph), exported by the engram stream",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "Deliberately off the token path ('E side, token-addressed, prefetched' - tools/dsrom_1m_engram.py docstring); no E1.wkv node exists in ds_rom.json, so its cost and the claim that it hides are unpriced."
+ },
+ {
+  "id": "T2-D06",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram gate + add on the residual (L1, L14): h.h, (h*wgt).k, rsqrt x2, signed-sqrt sigmoid gate, h + gate*value",
+  "model_ref": "Model.engram_layer",
+  "hw_element": "ot_hdc_v41x_vec (wired SU chain)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/engram.json (released-checkpoint operands, bit-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L1.eng.dot",
+  "cycles": 1742.4,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 8 node(s) /L\\d+\\.eng\\..*/ in ds_rom.json, 1,742.4 critical cyc (2,222.2 incl. off-critical). "
+ },
+ {
+  "id": "T2-D07",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Hyper-connection mix norm (sumsq + rsqrt over 4x5120) - attn and ffn, 80 sublayers",
+  "model_ref": "hc_mixes: r = rsqrt(sum(flat^2)/n + eps)",
+  "hw_element": "SU vec chain",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.hc.sumsq",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 160 node(s) /L\\d+\\.(attn|ffn)\\.hc\\.(sumsq|rsqrt)/ in ds_rom.json, 0 critical cyc (35,941.8 incl. off-critical). "
+ },
+ {
+  "id": "T2-D08",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Hyper-connection fn matvec (24 x 20,480 per sublayer, 80 per token) x r",
+  "model_ref": "hc_mixes: mixes = matvec_c(hc_{attn,ffn}_fn, flat, 8) * r",
+  "hw_element": "HC slab (he-class matvec)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_hc_n / dsfd_sp_hc_s (interim slab 18.3 mm2, no HC tile element)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "exact_bench": "results/rtl/hdc_v41x_hcp_campaign.json + hdc_v41x_hcp_hbm_exact.json (HDC vehicle)",
+  "closure": "NONE: dsfd_sp_hc_n/s interim, no HC tile element in the loop",
+  "in_token_path": "L0.attn.hc.fn",
+  "cycles": 0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 80 node(s) /L\\d+\\.(attn|ffn)\\.hc\\.fn/ in ds_rom.json, 0 critical cyc (18,643.8 incl. off-critical). Graded 'modelled' in ds_rom.json ('no measured patch', tools/dsrom_1m_measure.py s58 graph): 18,643.8 cyc a token off-critical today; becomes critical if the HC slab is slower than modelled."
+ },
+ {
+  "id": "T2-D09",
+  "phase": "decode",
+  "plane": "data",
+  "function": "HC pre/post sigmoid gates + comb row-softmax + Sinkhorn (20 iters, 4x4) - 80 per token",
+  "model_ref": "hc_mixes: pre/post sigmoid, comb exp/seqsum/div, cols(rows()) x19",
+  "hw_element": "SU front (max+exp) + ot_hdc_sinkhorn",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_hc_n / dsfd_sp_hc_s (interim slab 18.3 mm2, no HC tile element)",
+  "rtl": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+  "exact_bench": "results/rtl/hdc_v41_sinkhorn_campaign.json (3,840 real + 1M random bit-exact) + results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: ot_hdc_sinkhorn standalone route only (41 clocks at routed 151.9 MHz per token-path note); not a loop element; HC slab interim",
+  "in_token_path": "L0.attn.hc.pre_post",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 160 node(s) /L\\d+\\.(attn|ffn)\\.hc\\.(sinkhorn|pre_post)/ in ds_rom.json, 0 critical cyc (67,960.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D10",
+  "phase": "decode",
+  "plane": "data",
+  "function": "hc_pre collapse (4 copies -> 1, BF16) and hc_post mix (post*y + comb^T res), attn + ffn",
+  "model_ref": "Model.hc_pre / Model.hc_post",
+  "hw_element": "SU fused + ot_dsrom_su_hcpost lane",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "RUNNING: ot_dsrom_su_hcpost_lane_pr 'first trial in flight' (safe-hbm S-C1)",
+  "in_token_path": "L0.attn.hc_pre",
+  "cycles": 9621.1,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 160 node(s) /L\\d+\\.(attn|ffn)\\.hc_(pre|post)/ in ds_rom.json, 9,621.1 critical cyc (9,621.1 incl. off-critical). "
+ },
+ {
+  "id": "T2-D11",
+  "phase": "decode",
+  "plane": "data",
+  "function": "attn_norm / ffn_norm RMSNorm (fold)",
+  "model_ref": "rmsnorm_fold(hc_pre(h,pre), *_norm.weight)",
+  "hw_element": "ot_dsrom_su_norm (fused_fast)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.norm.sumsq",
+  "cycles": 12240.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 240 node(s) /L\\d+\\.(attn|ffn)\\.norm\\.(sumsq|rsqrt|scale)/ in ds_rom.json, 12,240.0 critical cyc (12,240.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D12",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Activation quantisation before every FP8/FP4 matvec (attn.quant, q_quant, z_quant, ffn.quant/quant2, shared_quant)",
+  "model_ref": "linear_q -> quant_fp8 / qdq of x (block 32 UE8M0)",
+  "hw_element": "ot_hdc_actquant / SU qbank",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.quant",
+  "cycles": 35320.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 240 node(s) /L\\d+\\.(attn\\.(quant|q_quant|z_quant)|ffn\\.(quant|quant2|shared_quant))/ in ds_rom.json, 35,320.0 critical cyc (39,868.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D13",
+  "phase": "decode",
+  "plane": "data",
+  "function": "a_proj: wq_a + wkv (FP8) and compressor wkv/wgate + indexer weights_proj (BF16)",
+  "model_ref": "linear_q(wq_a), linear_q(wkv), mv([cmp.wkv;cmp.wgate]), linear_bf16(indexer.weights_proj)",
+  "hw_element": "ROM field (a_proj.fp8 / a_proj.bf16 phases)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv, rtl/s81/ot_s81_bf_native.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L0.attn.a_proj",
+  "cycles": 38658.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.a_proj/ in ds_rom.json, 38,658.5 critical cyc (38,658.5 incl. off-critical). BF phases priced at HALF_PHL as a composed upper bound (the HALF element is not in the field vehicle: results/rtl/s81_bf_native_20261006/half_exact)."
+ },
+ {
+  "id": "T2-D14",
+  "phase": "decode",
+  "plane": "data",
+  "function": "TP4 all-gather of a_proj shards",
+  "model_ref": "(TP4 mapping of wq_a/wkv)",
+  "hw_element": "dsfd_sp_collective (one-shot AG)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_collective",
+  "rtl": "rtl/rom/ot_rom_oneshot_px.sv, rtl/dsrom_sys/s81_ph/",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": "L0.attn.a_allgather",
+  "cycles": 17360.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.a_allgather/ in ds_rom.json, 17,360.0 critical cyc (17,360.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D15",
+  "phase": "decode",
+  "plane": "data",
+  "function": "q_norm on qr (RMSNorm fold)",
+  "model_ref": "rmsnorm_fold(linear_q(wq_a,x), q_norm)",
+  "hw_element": "ot_dsrom_su_norm",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.q_norm.sumsq",
+  "cycles": 120.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 120 node(s) /L\\d+\\.attn\\.q_norm\\.(sumsq|rsqrt|scale)/ in ds_rom.json, 120.0 critical cyc (120.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D16",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wq_b (q 1280 -> 64x512) + indexer wq_b (1280 -> 32x128)",
+  "model_ref": "linear_q(wq_b, qr); linear_q(indexer.wq_b, qr)",
+  "hw_element": "ROM field (wq_b phase)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L0.attn.wq_b",
+  "cycles": 45753.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.wq_b/ in ds_rom.json, 45,753.6 critical cyc (45,753.6 incl. off-critical). "
+ },
+ {
+  "id": "T2-D17",
+  "phase": "decode",
+  "plane": "data",
+  "function": "q RoPE (plain on L0/L1, YaRN elsewhere) on the 64-dim tail",
+  "model_ref": "rope_tail(q, rope_cs(freqs, pos))",
+  "hw_element": "SU rope",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.q_rope",
+  "cycles": 3763.2,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.q_rope/ in ds_rom.json, 3,763.2 critical cyc (4,704.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D18",
+  "phase": "decode",
+  "plane": "data",
+  "function": "kv_norm + kv RoPE + FP8 QDQ of the new window row",
+  "model_ref": "rmsnorm_bf16(wkv x, kv_norm); qdq_fp8(rope_tail(kv))",
+  "hw_element": "SU norm + rope + actquant",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, rtl/hdc/v41/ot_hdc_actquant.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.attn.kv_norm.sumsq",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 160 node(s) /L\\d+\\.attn\\.(kv_norm\\.(sumsq|rsqrt|scale)|kv_rope_qdq)/ in ds_rom.json, 0 critical cyc (11,440.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D19",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Window KV append (own row) + window ring load (last 128 rows) from HBM",
+  "model_ref": "state['win'][L].append(kv); rows = win[-128:]",
+  "hw_element": "dsfd_ctrl + dsfd_svc + ot_dsrom_window_column_* + ot_dsrom_window_source_ctl",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_ctrl / dsfd_svc / PHY x1 (scan dies x4)",
+  "rtl": "rtl/dsrom_sys/s81_window_la/",
+  "exact_bench": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+  "closure": "PARTIAL: dsfd_ctrl assembled (ctrl_pc/ctr CLOSED, ctrl_pc TC re-route s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm10 queued), dsfd_svc assembled (svc_pc/svcio_x/svc_stn/svcio_ad/od CLOSED; svcio_q revoked), window columns CLOSED, ot_dsrom_window_source_ctl 'failed, re-running'; HBM3E PHY = vendor macro abstract",
+  "in_token_path": "L0.attn.window_load",
+  "cycles": 5698.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 80 node(s) /L\\d+\\.attn\\.(own_row_write|window_load)/ in ds_rom.json, 5,698.8 critical cyc (45,786.4 incl. off-critical). "
+ },
+ {
+  "id": "T2-D20",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Compressor (KV source layers): ratio-2 softmax pool of 2 slots at L2/L8/L14, ratio-1 at L20; cmp norm; FP4-e4m3 row QDQ; open-slot state",
+  "model_ref": "Model.compressor; ckv.append(qdq_fp4_e4m3(rope_tail(latent)))",
+  "hw_element": "SU (pool/norm/row_qdq) + slot register",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv, rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact) (row_qdq, norm); cmp.pool base cycles = model",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L2.attn.cmp.pool",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 19 node(s) /L\\d+\\.attn\\.cmp\\.(pool|norm\\.(sumsq|rsqrt|scale)|row_qdq)/ in ds_rom.json, 0 critical cyc (3,338.1 incl. off-critical). cmp.pool (3 nodes, 869.7 cyc, off-critical) is graded 'measured' but its note is 'model + s81_die_tiles' - the base is the S58 model graph."
+ },
+ {
+  "id": "T2-D21",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Indexer key: indexer.wk on the latent (cmp.wk) + k_norm + RoPE + FP4-e8m0 QDQ; index-key append",
+  "model_ref": "k = rmsnorm(linear_bf16(indexer.wk, latent)); ik.append(qdq_fp4_e8m0(rope_tail(k)))",
+  "hw_element": "ROM field cmp.wk + SU + HBM ik ring",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792; SU slab",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv, rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact); results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L2.attn.cmp.wk",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 24 node(s) /L\\d+\\.attn\\.(cmp\\.(wk|k_norm\\.(sumsq|rsqrt|scale)|k_rope_qdq)|idx\\.newkey)/ in ds_rom.json, 0 critical cyc (5,323.2 incl. off-critical). idx.newkey (4 nodes, 471.6 cyc) base cycles are 'model + s81_die_tiles'."
+ },
+ {
+  "id": "T2-D22",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Indexer query: idx q RoPE (YaRN) + FP4-e8m0 QDQ; weights_proj scale",
+  "model_ref": "Model.indexer q / wts",
+  "hw_element": "ot_dsrom_su_qbank (NB32, ROPE 1, QLAT5)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact) (L20/L24 golden + random)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L2.attn.idx.q",
+  "cycles": 744.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 8 node(s) /L\\d+\\.attn\\.idx\\.q/ in ds_rom.json, 744.0 critical cyc (744.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D23",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Indexer score scan over n compressed keys (8 index layers; 524,288 keys at L2/8/14, 1,048,576 at L20+): relu(q.k) x wts, head-sum",
+  "model_ref": "Model.indexer: score = dots_q4(q, keys); s = reduce_rows(relu(score)*wts)",
+  "hw_element": "scan service (svc index quarter) on scan dies",
+  "die": "S81 scan die (32, 4 HBM stacks) - last floorplanned r9m215khdc @2,050 pairs, NOT rebuilt on m221pq / 1,792",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_idx.sv (+ idx_pool_hbm_bridge, idx_shard_reader)",
+  "exact_bench": "results/rtl/hdc_v41x_idx_four_stack_gate.json / hdc_v41x_idx_campaign.json (HDC vehicle)",
+  "closure": "NONE: scan die not rebuilt on m221pq; svc index quarter is a W4 reservation",
+  "in_token_path": "L2.attn.idx.score",
+  "cycles": 18282.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 8 node(s) /L\\d+\\.attn\\.idx\\.score/ in ds_rom.json, 18,282.0 critical cyc (18,282.0 incl. off-critical). All 8 idx.score nodes (18,282 cyc, all critical) are graded 'measured' but their notes start 'model + s81_die_tiles': base cycles come from the S58 model graph, only tile adders are measured."
+ },
+ {
+  "id": "T2-D24",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Candidate blocks at L20: per-block max (block 8), pin newest, top-2048 blocks; mask applied at L24..36",
+  "model_ref": "Model.candidate_blocks; s = where(cand, s, -inf)",
+  "hw_element": "ot_hdc_v41x_sel_cand + collective merge + final select",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_bk_selector / dsfd_bk_collector",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/cand_select.json (golden 1M L20 scores, golden-equal) + results/rtl/hdc_v41_cand_campaign.json",
+  "closure": "FAILED: dsfd_bk_selector partitioned - dsfd_selt_q TT -297.84 / dsfd_selt_c TT -25.37 'failed, re-running', dsfd_selt_q2 no result; collector dsfd_bk_collector assembled (dsfd_colt_mrg CLOSED, dsfd_colt_lane revoked)",
+  "in_token_path": "L20.attn.cand.topk_local",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 3 node(s) /L\\d+\\.attn\\.cand\\..*/ in ds_rom.json, 0 critical cyc (13,104.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D25",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Index top-512 (lowest-index ties) per index layer + TP4 merge",
+  "model_ref": "topk_lowest_index(s, 512)",
+  "hw_element": "selector (ot_hdc_v41x_sel) + collective merge",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_bk_selector",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "exact_bench": "results/rtl/dsrom_reindex_candidates_20261004 + results/rtl/hdc_v41_select_campaign.json",
+  "closure": "FAILED: dsfd_bk_selector partitioned - dsfd_selt_q TT -297.84 / dsfd_selt_c TT -25.37 'failed, re-running', dsfd_selt_q2 no result; collector dsfd_bk_collector assembled (dsfd_colt_mrg CLOSED, dsfd_colt_lane revoked)",
+  "in_token_path": "L2.attn.idx.topk_local",
+  "cycles": 17616.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 24 node(s) /L\\d+\\.attn\\.idx\\.topk_(local|merge|final)/ in ds_rom.json, 17,616.0 critical cyc (17,616.0 incl. off-critical). idx.topk_local (8 nodes, 11,784 critical cyc) carries a 'model + s81_die_tiles' note."
+ },
+ {
+  "id": "T2-D26",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Selected compressed-KV row gather (512 rows) + TP4 row all-gather (all 40 layers)",
+  "model_ref": "rows += [ckv[src][i] for i in sel]",
+  "hw_element": "dsfd_sp_gather (root tiles) + collector + ckv AG",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_gather / dsfd_bk_collector",
+  "rtl": "rtl/dsrom_sys/s81_ph/ot_s81ph_root_blk.sv, rtl/dsrom_sys/ot_chip_v41x_ckv_die_service_cr.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/ckv_credit_bench.json (AG_CREDIT successor, default-off, not installed in the die)",
+  "closure": "PARTIAL: dsfd_sp_gather partitioned (ot_s81ph_root_tile CLOSED, root_blk none)",
+  "in_token_path": "L2.attn.gather",
+  "cycles": 14714.6,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 48 node(s) /L\\d+\\.attn\\.(gather|rows_allgather)/ in ds_rom.json, 14,714.6 critical cyc (47,482.6 incl. off-critical). attn.gather (8 nodes, 6,487 critical cyc) base cycles are 'model'. Remote rows on ag_rx had no ready/credit (inventory D3); the credit successor needs RXQ~160 for full rate, unpriced."
+ },
+ {
+  "id": "T2-D27",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Attention scores q.K over 128 window + up to 512 selected rows, x scale (64 heads)",
+  "model_ref": "Model.attend: s = dots(q, kvm) * attn_scale",
+  "hw_element": "svc attention quarter / attention tile",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_svc (scan dies x4)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "exact_bench": "results/rtl/hdc_v41x_attn_campaign.json (HDC vehicle)",
+  "closure": "PARTIAL: dsfd_ctrl assembled (ctrl_pc/ctr CLOSED, ctrl_pc TC re-route s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm10 queued), dsfd_svc assembled (svc_pc/svcio_x/svc_stn/svcio_ad/od CLOSED; svcio_q revoked), window columns CLOSED, ot_dsrom_window_source_ctl 'failed, re-running'; HBM3E PHY = vendor macro abstract",
+  "in_token_path": "L0.attn.scores",
+  "cycles": 2104.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.scores/ in ds_rom.json, 2,104.0 critical cyc (2,104.0 incl. off-critical). 40 scores nodes (2,104 critical cyc) base cycles are 'model'."
+ },
+ {
+  "id": "T2-D28",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Softmax with sink: max, exp, den, sink term exp(sink - m), normalise (BF16 P)",
+  "model_ref": "Model.attend two-pass softmax + sink",
+  "hw_element": "ot_dsrom_su_softmax (exp/div tiles)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "PARTIAL: ot_dsrom_su_softmax_exp_tile / exp_hr / div_tile, ot_dsrom_su_fdiv_tile / hr CLOSED (TT era / re-verified); slab interim",
+  "in_token_path": "L0.attn.max",
+  "cycles": 41399.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 200 node(s) /L\\d+\\.attn\\.(max|exp|den|sink|normalize)/ in ds_rom.json, 41,399.8 critical cyc (41,399.8 incl. off-critical). "
+ },
+ {
+  "id": "T2-D29",
+  "phase": "decode",
+  "plane": "data",
+  "function": "P.V over the same rows (64 heads x 512)",
+  "model_ref": "dots(to_bf16(e), kvm.T)",
+  "hw_element": "attention tile P.V pass",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_svc",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "exact_bench": "w11_attn_ploader pwords2_psup2 (full geometry, synthetic vectors, exact) per token-path note",
+  "closure": "PARTIAL: dsfd_ctrl assembled (ctrl_pc/ctr CLOSED, ctrl_pc TC re-route s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm10 queued), dsfd_svc assembled (svc_pc/svcio_x/svc_stn/svcio_ad/od CLOSED; svcio_q revoked), window columns CLOSED, ot_dsrom_window_source_ctl 'failed, re-running'; HBM3E PHY = vendor macro abstract",
+  "in_token_path": "L0.attn.pv",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.pv/ in ds_rom.json, 0 critical cyc (10,620.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D30",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Inverse RoPE on o, grouped wo_a (8 groups x 1024 rank, BF16) + wo_b (FP8)",
+  "model_ref": "Model.attend: rope_tail(o, inverse) ; matvec_c(wo_a[g]) ; linear_q(wo_b)",
+  "hw_element": "ROM field wo_a.g0/g1 + wo_b phases; SU inverse RoPE",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L0.attn.wo_a",
+  "cycles": 110836.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 80 node(s) /L\\d+\\.attn\\.(wo_a|wo_b)/ in ds_rom.json, 110,836.0 critical cyc (110,836.0 incl. off-critical). The inverse RoPE has no node of its own in ds_rom.json (assumed inside normalize / z_quant)."
+ },
+ {
+  "id": "T2-D31",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Attention output TP4 all-reduce",
+  "model_ref": "(TP4 mapping)",
+  "hw_element": "dsfd_sp_collective one-shot AR",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_collective",
+  "rtl": "rtl/rom/ot_rom_oneshot_allreduce.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": "L0.attn.out_allreduce",
+  "cycles": 33080.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.attn\\.out_allreduce/ in ds_rom.json, 33,080.0 critical cyc (33,080.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D32",
+  "phase": "decode",
+  "plane": "data",
+  "function": "MoE router: gate matvec (384 x 5120) + sqrt(softplus) + bias + top-6 (lowest index) + ascending-id order",
+  "model_ref": "Model.moe: scores = sqrt(softplus(mv(gate,x))); topk(scores+bias, 6)",
+  "hw_element": "ROM field router + SU spsqrt + ot_hdc_select_tree",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792; SU slab",
+  "rtl": "rtl/hdc/v41/ot_hdc_select_tree.sv, rtl/hdc/v41x/ot_dsrom_su_spsqrt.sv",
+  "exact_bench": "results/rtl/dsrom_recovery_20261004/router/select_tree.json (exact on all 40 layers' golden 1M router scores) + results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L0.ffn.router",
+  "cycles": 53332.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 200 node(s) /L\\d+\\.ffn\\.(router|softplus_sqrt|bias|top6|top6_order)/ in ds_rom.json, 53,332.0 critical cyc (53,332.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D33",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Router TP4 all-gather",
+  "model_ref": "(TP4 mapping)",
+  "hw_element": "dsfd_sp_collective",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_collective",
+  "rtl": "rtl/rom/ot_rom_oneshot_px.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": "L0.ffn.router_allgather",
+  "cycles": 16876.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.ffn\\.router_allgather/ in ds_rom.json, 16,876.0 critical cyc (16,876.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D34",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Route weights: scores[i] / (sum + 1e-20) x route_scale 1.5",
+  "model_ref": "Model.moe wgt",
+  "hw_element": "SU (ffn.weights, fused route_w)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_su_n / dsfd_sp_su_s (interim slab 25.6 mm2, results/rtl/s81_die_view_index_20261008/index.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "NONE: SU slab interim; closed SU tiles only ot_dsrom_su_softmax_exp_tile/exp_hr/div_tile, ot_dsrom_su_fdiv_tile/hr, ot_dsrom_su_swiglu_lane (TT era); no loop element for norm/quant/RoPE/vec chains",
+  "in_token_path": "L0.ffn.route_w",
+  "cycles": 236.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 80 node(s) /L\\d+\\.ffn\\.(weights|route_w)/ in ds_rom.json, 236.0 critical cyc (10,592.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D35",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Routed experts (6 of 384, FP4) gate/up + clamped SwiGLU (limit 10) x route weight + down",
+  "model_ref": "Model.expert x6",
+  "hw_element": "ROM field experts_gu / down + ot_dsrom_su_swiglu_lane",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792; SU slab",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv, rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact); results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]; ot_dsrom_su_swiglu_lane CLOSED TT +164.39",
+  "in_token_path": "L0.ffn.experts_gu",
+  "cycles": 182882.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 120 node(s) /L\\d+\\.ffn\\.(experts_gu|swiglu|down)/ in ds_rom.json, 182,882.5 critical cyc (182,882.5 incl. off-critical). "
+ },
+ {
+  "id": "T2-D36",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Shared expert gate/up + SwiGLU + quant (down shares ffn.down)",
+  "model_ref": "Model.expert(shared_experts)",
+  "hw_element": "ROM field shared_gu + SU",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact); results/rtl/dsrom_1m_allmeasured_20261004/su.json + results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json (wired SU RTL, golden-exact)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "L0.ffn.shared_gu",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 80 node(s) /L\\d+\\.ffn\\.(shared_gu|shared_swiglu)/ in ds_rom.json, 0 critical cyc (35,184.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D37",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Expert sum + combine TP4 all-reduce",
+  "model_ref": "y = sum_i expert_i + shared",
+  "hw_element": "return tree + dsfd_sp_collective AR",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_node_* (interim) + dsfd_sp_collective",
+  "rtl": "rtl/rom/ot_rom_oneshot_allreduce.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": "L0.ffn.combine_allreduce",
+  "cycles": 33080.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 40 node(s) /L\\d+\\.ffn\\.combine_allreduce/ in ds_rom.json, 33,080.0 critical cyc (33,080.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D38",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Field result return path: return tree nodes, PQ root CAM, capture, VM row write",
+  "model_ref": "(every matvec's partial-sum reduction order: split_sum / chunked)",
+  "hw_element": "dsfd_node_* x3,456, dsfd_pq_root x128, ot_s81_pq_ret_root_cam_p, dsfd_sp_capture, dsfd_sp_vm",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json)",
+  "rtl": "rtl/dsrom_sys/s81_pq_parent/, rtl/dsrom_sys/s81_capture_parent/, rtl/dsrom_sys/protected_vm/",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/field.json (one-region full-shape ROM field RTL, released weights, exact); results/uarch/dsrom_s81_field_phases_1792_20261007 (1,792 phases, 19,312 region runs exact) (return path inside the region runs)",
+  "closure": "PARTIAL: ot_s81_pq_ret_root_cam_p CLOSED; capture tiles CLOSED; dsfd_node_* / dsfd_pq_root interim; ot_v41_pqc_spine_screen 'failed, re-running'; VM: dsfd_vm_bg flow failure, dsfd_vm_bgh/bgq first trial in flight",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Cycles are inside every field node (field class 50.5% of the AR token). PQ phase pipelining at 1,792 is not measured (COMPLETENESS_AUDIT 2a)."
+ },
+ {
+  "id": "T2-D39",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Final hc_pre (last ffn pre) + final RMSNorm",
+  "model_ref": "forward_positions: xf = rmsnorm_fold(hc_pre(h, pre), norm)",
+  "hw_element": "head die SU (fused)",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured)",
+  "closure": "NONE: head die plan-only",
+  "in_token_path": "head.hc_pre",
+  "cycles": 314.9,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 4 node(s) /head\\.(hc_pre|norm\\..*)/ in ds_rom.json, 314.9 critical cyc (314.9 incl. off-critical). "
+ },
+ {
+  "id": "T2-D40",
+  "phase": "decode",
+  "plane": "data",
+  "function": "LM head 129,280 x 5,120 (BF16) on 12 head dies",
+  "model_ref": "logits = mv(head.weight, xf)",
+  "hw_element": "ot_dsrom_head_bundle (head_elem A/B + glue; fused head fh_*)",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/v41rom/ot_dsrom_head_bundle.sv, rtl/s81/ot_dsrom_head_bundle_glue.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured)",
+  "closure": "PARTIAL: ot_dsrom_head_elem_A TT +987.59, _B TT +196.56, ot_dsrom_head_bundle_glue TT +281.99 CLOSED (TT era); ot_hdc_v41_fh_head_top / fh_quad first trial in flight; ot_hdc_v41_fh_ep_view 'failed, re-running' (FF -61.83)",
+  "in_token_path": "head.lm_head",
+  "cycles": 8429.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1 node(s) /head\\.lm_head/ in ds_rom.json, 8,429.0 critical cyc (8,429.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-D41",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Greedy argmax (lowest id on ties) + cross-die argmax merge",
+  "model_ref": "int(np.argmax(logits))",
+  "hw_element": "in-element first-max + bundle compare tree + TP4 all_gather 32 B",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/v41rom/ot_dsrom_head_bundle.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured)",
+  "closure": "PARTIAL (inside head_elem A/B)",
+  "in_token_path": "head.argmax",
+  "cycles": 396.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 2 node(s) /head\\.argmax(_merge)?/ in ds_rom.json, 396.5 critical cyc (396.5 incl. off-critical). "
+ },
+ {
+  "id": "T2-C01",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Position counter + per-user context (pos, token history, pending token) at the source stage",
+  "model_ref": "forward_positions(pos0), state['tokens']",
+  "hw_element": "ot_rom_pkg_ctrl_x (SOURCE package controller)",
+  "die": null,
+  "rtl": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/system_gate_sys_b2.json / system_gate_sys_d5_p3g2.json (reduced HDC-core array)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "No package/stage controller master in the m221pq (or head) recipe; the S81 die issues phases from hub control buses (cc/go) whose source is inside interim slabs."
+ },
+ {
+  "id": "T2-C02",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Per-die layer program sequencing: field phase issue order, SU op issue, collective issue, substage concurrency",
+  "model_ref": "layer() op order",
+  "hw_element": "hub control inside dsfd_sp_su/vm/capture (cc/go buses) ; reduced-vehicle sequencer ot_hdc_core_v41x",
+  "die": null,
+  "rtl": "rtl/hdc/v41x/ot_hdc_core_v41x.sv (reduced vehicle); S81 issue logic not a separate module",
+  "exact_bench": "system gates (reduced vehicle); S81 field phases measured per phase, not as one issued layer",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "Substage concurrency and phase overlap are composition rules (MODEL-ONLY per COMPLETENESS_AUDIT 2/7); no S81 die-level run issues a whole layer."
+ },
+ {
+  "id": "T2-C03",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Stage-to-stage sequencing: hidden-state handoff, identity/order check, credits (120 stages HALF_PHL, 4 ranks each)",
+  "model_ref": "layer L -> L+1 across stage dies",
+  "hw_element": "ot_dsrom_link_rt + ot_dsrom_stage_guard + ot_dsrom_link_sel",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_link_rt.sv, rtl/dsrom_sys/ot_dsrom_stage_guard.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json + ctrlplane_units.json + system gates (CRC errors injected)",
+  "closure": "NONE: S81 dies carry only ot_pdie_serdes / ot_pdie_ucie pin macros; no link_rt / stage_guard master",
+  "in_token_path": "L0.substage_hop0",
+  "cycles": 58348.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 58 node(s) /L\\d+\\.substage_hop[01]|head\\.hop/ in ds_rom.json, 58,348.0 critical cyc (58,348.0 incl. off-critical). Hop = ot_dsrom_link_rt RTL 652 cyc + full-KP4 PHY VENDOR BUDGET 209 ns + 2x45 routed wire stages (links_full_fec.json)."
+ },
+ {
+  "id": "T2-C04",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Unplaced stage hops (62 hops: 27 S81 frame + 35 of the 1,792 mapping) and cable flight",
+  "model_ref": "(mapping)",
+  "hw_element": "same as T2-C03",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_link_rt.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json",
+  "closure": "NONE",
+  "in_token_path": "unplaced_hops",
+  "cycles": 62649.2,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 1 node(s) /unplaced_hops/ in ds_rom.json, 62,649.2 critical cyc (62,649.2 incl. off-critical). One aggregate node: where the hops fall between stages is not in the composition record; rack.json is still at 85 stages / 340 layer dies (not 120 / 480)."
+ },
+ {
+  "id": "T2-C05",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Token return head -> S0 (8 traversals) feeding the next position",
+  "model_ref": "decode loop: next token y",
+  "hw_element": "ot_dsrom_link_rt endpoints + full-KP4 PHY",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_link_rt.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json",
+  "closure": "NONE",
+  "in_token_path": "token.return",
+  "cycles": 2194.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1 node(s) /token\\.return/ in ds_rom.json, 2,194.0 critical cyc (2,194.0 incl. off-critical). "
+ },
+ {
+  "id": "T2-C06",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Field return backpressure / credits (element -> return tree -> VM) and collective/link credit flow",
+  "model_ref": "(finite producer/consumer flow control, AGENTS.md)",
+  "hw_element": "RET_CREDIT successor ot_v41_field_w17w10_sys; scenario-C credit return tree",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_node_* (interim)",
+  "rtl": "rtl/dsrom_sys/ot_v41_field_w17w10_sys.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/field_sys_bench.json (reduced NP16/R4; issue gate never engaged on real phases)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Default-off successor; the m221pq return nodes are interim views."
+ },
+ {
+  "id": "T2-C07",
+  "phase": "decode",
+  "plane": "control",
+  "function": "KV address generation + append + cache-length tracking (window ring p mod 128, compressed row n//r, index-key ring, per user)",
+  "model_ref": "state['win']/['ckv']/['ik'] indexing",
+  "hw_element": "ot_chip_v41x_kv_prefetch + ot_chip_v41x_hbm_karb + idx_pool_hbm_bridge ; S81 window_source_ctl",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_ctrl / dsfd_svc",
+  "rtl": "rtl/chip/ot_chip_v41x_kv_prefetch.sv, rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv",
+  "exact_bench": "system gates KVHBM / IDXHBM lines (reduced) + results/rtl/dsrom_system_rtl_20261003/levers/window_refill_tag.json",
+  "closure": "PARTIAL: dsfd_ctrl assembled (ctrl_pc/ctr CLOSED, ctrl_pc TC re-route s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm10 queued), dsfd_svc assembled (svc_pc/svcio_x/svc_stn/svcio_ad/od CLOSED; svcio_q revoked), window columns CLOSED, ot_dsrom_window_source_ctl 'failed, re-running'; HBM3E PHY = vendor macro abstract",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Inside the hbm-class nodes."
+ },
+ {
+  "id": "T2-C08",
+  "phase": "decode",
+  "plane": "control",
+  "function": "HBM controller service: refresh-aware scheduling, PC ready, measured service latency",
+  "model_ref": "(memory kv-lives-in-hbm: refresh-aware controller required)",
+  "hw_element": "dsfd_ctrl_pc / HBM controller domain",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_ctrl",
+  "rtl": "rtl/hdc/kv/ot_hdc_hbm_model.sv (behavioural timed model only)",
+  "exact_bench": null,
+  "closure": "PARTIAL: dsfd_ctrl_pc CLOSED as a block",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT",
+   "NOT_PRICED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "inventory.json: 'HBM controller domain + measured service (H3: HBM_LAT_S, PC_RDY)' is model-only."
+ },
+ {
+  "id": "T2-C09",
+  "phase": "decode",
+  "plane": "control",
+  "function": "RoPE position -> cos/sin supply (HBM table read by position, plain + YaRN)",
+  "model_ref": "rope_cs(freqs, pos) in attention / indexer / compressor (group position pos+1-r)",
+  "hw_element": "kv_rope_reqmux + rope HBM table",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_svc",
+  "rtl": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_kv_rope_reqmux_c8.sv",
+  "exact_bench": "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json (status 'blocked')",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "No rope-table read node in ds_rom.json; whether it overlaps the window load is not shown."
+ },
+ {
+  "id": "T2-C10",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Attention masking: causal window 128, sink, candidate-block mask, selections from the source layer (idx_of / kv_of reuse)",
+  "model_ref": "Model.attention ctx['sel'] reuse; candidate mask at L > 20",
+  "hw_element": "selector + svc control",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_bk_selector / dsfd_svc",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "exact_bench": "results/rtl/hdc_v41_select_campaign.json",
+  "closure": "FAILED: dsfd_bk_selector partitioned - dsfd_selt_q TT -297.84 / dsfd_selt_c TT -25.37 'failed, re-running', dsfd_selt_q2 no result; collector dsfd_bk_collector assembled (dsfd_colt_mrg CLOSED, dsfd_colt_lane revoked)",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Selection reuse across layers (L3-7 use L2's, etc.) needs the selection to be carried with the hidden state across stage hops when the source layer is on an earlier stage - not shown in the hop payload record."
+ },
+ {
+  "id": "T2-C11",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Expert dispatch / combine control: top-6 ids -> phase issue to the selected experts' field pairs, order of summation",
+  "model_ref": "Model.moe: ids sorted, run and sum in id order",
+  "hw_element": "selector ids -> x_ctl / cfg address",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): ot_v41_rom_elem_q_qxpq_w10 x1,280 (interim) + dsfd_bf=ot_s81_bf_native x512 (interim) + cfg ROM + ot_s81_cfg7_seq x1,792",
+  "rtl": "rtl/hdc/v41/ot_hdc_select_tree.sv",
+  "exact_bench": "results/rtl/dsrom_recovery_20261004/router/select_tree.json",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Dispatch is inside the measured experts_gu phases; the ids_hop exists only in the draft-block composition (mtp.*.ffn.ids_hop)."
+ },
+ {
+  "id": "T2-C12",
+  "phase": "decode",
+  "plane": "control",
+  "function": "TP4 collectives control (one-shot AR/AG, fixed order, 4 ranks, in-package UCIe + board)",
+  "model_ref": "(TP4 mapping)",
+  "hw_element": "dsfd_sp_collective",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_sp_collective",
+  "rtl": "rtl/rom/ot_rom_oneshot_allreduce.sv, rtl/rom/ot_rom_oneshot_px.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json (tb_w15b_v41_tp4 at S81, full RS(544,514) board leg, bit-exact)",
+  "closure": "NOT CLOSED: dsfd_sp_collective partitioned - dsfd_coll_core 'failed, re-running', dsfd_coll_lane_e superseded (TT -140), dsfd_coll_lane_w + dsfd_coll_ck CLOSED",
+  "in_token_path": "L0.attn.a_allgather",
+  "cycles": 113406.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 210 node(s) /L\\d+\\.(attn\\.(a_allgather|out_allreduce|rows_allgather|idx\\.topk_merge|cand\\.merge)|ffn\\.(router_allgather|combine_allreduce))|head\\.argmax_merge/ in ds_rom.json, 113,406.5 critical cyc (147,176.5 incl. off-critical). Aggregate of every collective (also listed per op above)."
+ },
+ {
+  "id": "T2-C13",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Link FEC / CRC / go-back-N retry on every off-package link (owner 2026-10-06: full RS(544,514) everywhere)",
+  "model_ref": "(implementation)",
+  "hw_element": "ot_dsrom_link_rt (CRC-32, go-back-N, credit) + vendor KP4 FEC PHY",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_link_rt.sv, rtl/dsrom_sys/ot_dsrom_link_chan.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json (17 cases, 4 mutants) + system gates (errors injected)",
+  "closure": "NONE: no link_rt master on any S81 die; PHY = vendor budget 209 ns",
+  "in_token_path": "L0.substage_hop0",
+  "cycles": 123191.2,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 60 node(s) /L\\d+\\.substage_hop[01]|head\\.hop|token\\.return|unplaced_hops/ in ds_rom.json, 123,191.2 critical cyc (123,191.2 incl. off-critical). the hop class (14.9% of AR cycles) rests on the 209 ns full-KP4 vendor budget; retry cost under errors not priced."
+ },
+ {
+  "id": "T2-C14",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Stop condition: EOS / stop-token detection, max_seq_len guard, gen_len count",
+  "model_ref": "generate: while len(out) < n; g = min(gamma, max_seq_len-2-q)",
+  "hw_element": "ot_rom_pkg_ctrl_x fb_cont (gen_len count only)",
+  "die": null,
+  "rtl": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
+  "exact_bench": "system gates (fixed gen_len)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "MISSING_HW"
+  ],
+  "notes": "Only a fixed gen_len count exists (pkg_ctrl_x fb_cont); no EOS / stop-token compare, no max_seq_len clamp of gamma (generate_spec g = min(gamma, max_pos-2-q))."
+ },
+ {
+  "id": "T2-C15",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Engram token history per user (last 3 tokens) delivered to the hash unit",
+  "model_ref": "position's hist (state['tokens'][:n0+j+1])",
+  "hw_element": "ot_dsrom_engram_idwin (per-user ring of 8 ids + DEAD flags, official blocking rule) on the S0 rank dies; home dies stateless",
+  "die": "S81 S0 rank dies (embedding stage)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "RTL only (small; folds into the S0 embed reader on the die kit)",
+  "in_token_path": "ds_rom E{L}.lead_flit source",
+  "cycles": 1.0,
+  "cycles_source": "RTL (1-cycle registered)",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "History transport = the lead flit (window travels; no history on the home dies)."
+ },
+ {
+  "id": "T2-C16",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Sampler mode: greedy only",
+  "model_ref": "int(np.argmax(logits)) (lowest id)",
+  "hw_element": "head argmax",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/v41rom/ot_dsrom_head_bundle.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured)",
+  "closure": "PARTIAL (head_elem A/B)",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [],
+  "notes": "Temperature / top-p sampling is not supported anywhere (not claimed; greedy is the exactness contract). Not counted as a gap."
+ },
+ {
+  "id": "T2-M01",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Main-hidden capture at the inputs of L37, L38, L39 (mean of 4 residual copies, BF16) for every verified position",
+  "model_ref": "Model.layer: ctx['mh'].append(main_hidden_part(h)) for L in dspark_target_layer_ids",
+  "hw_element": "SU vec on the L37-L39 stage dies",
+  "die": null,
+  "rtl": "rtl/hdc/v41x/dspark/ot_hdc_core_v41x.sv (reduced vehicle)",
+  "exact_bench": "results/rtl/dsrom_dspark_step_slices_20261004 (reduced, one step)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "No node in either token-path view; the S81 composition does not capture or forward main_hidden."
+ },
+ {
+  "id": "T2-M02",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Main-hidden transport: L37/L38/L39 stage dies -> DSpark seed die (3 x 5,120 BF16 per position)",
+  "model_ref": "dspark_seed(concat(mh))",
+  "hw_element": "stage link",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "Three stage dies to one seed location per position; no link, port or hop priced."
+ },
+ {
+  "id": "T2-M03",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "DSpark seed: main_proj (15,360 -> 5,120) + main_norm, then per stage (3) wkv + kv_norm + plain RoPE + FP8 -> dsk window row",
+  "model_ref": "Model.dspark_seed / dspark_row",
+  "hw_element": "ROM field (mtp.0.main_proj, mtp.{0,1,2}.attn.wkv) on draft dies",
+  "die": null,
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv (as-built element)",
+  "exact_bench": "results/rtl/dsrom_dspark_step_slices_20261004 (reduced: seed 7,425 cyc)",
+  "closure": "NONE",
+  "in_token_path": "accept.seed",
+  "cycles": 3856.2,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 1 node(s) /accept\\.seed/ in ds_rom_mtp.json, 3,856.2 critical cyc (3,856.2 incl. off-critical). Priced as the reduced-vehicle ratio (seed 7,425 + commit 8)/verify x the full-shape verify (dsrom_1m_measure DRAFT.seed_commit): a scaling, not a measurement."
+ },
+ {
+  "id": "T2-M04",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "DSpark window cache (dsk): 3 stages x 128 rows per user, ring by position, storage + read",
+  "model_ref": "state['dsk'][st]; dspark_window(st, anchor)",
+  "hw_element": "HBM on head dies (stated)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "MTP_AUDIT: 'the drafter's KV rides on the head dies' HBM stacks' - no controller, address map or port exists."
+ },
+ {
+  "id": "T2-M05",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Draft block input: embed of y + 4 noise tokens (id 128799), 4 copies each",
+  "model_ref": "Model.draft: ids = [y] + [noise]*(B-1)",
+  "hw_element": "embed reader (head die) + hop to draft primary",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_embed_row_reader.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json (exact vs golden draft at 1M anchor)",
+  "closure": "NONE",
+  "in_token_path": "mtp.0.hop_in",
+  "cycles": 3673.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1 node(s) /mtp\\.0\\.hop_in/ in ds_rom_mtp.json, 3,673.3 critical cyc (3,673.3 incl. off-critical). "
+ },
+ {
+  "id": "T2-M06",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "DSpark stages mtp.0..2 over 5 block rows: HC + window attention (dsk + block rows, no in-block mask) + MoE 128 experts top-3 + shared",
+  "model_ref": "Model.dspark_stage x3 (DSparkBlock)",
+  "hw_element": "S81 layer-class elements on draft dies (DP1-EP5: 4 primary + 60 replicas)",
+  "die": null,
+  "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv + SU/HC as backbone",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json + results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json (every element exact)",
+  "closure": "NONE: no draft-die recipe (mtp.* 'unowned auxiliary obligation' in the S81 binding)",
+  "in_token_path": "mtp.0.hop_in",
+  "cycles": 105083.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 192 node(s) /mtp\\.\\d\\..*/ in ds_rom_mtp.json, 105,083.0 critical cyc (105,083.0 incl. off-critical). 198 NOT BUILT operators in ds_rom_mtp.json (109.3k cyc). Draft die count conflict: rack 52 vs draft.json 64 (12 baseline + 52 added)."
+ },
+ {
+  "id": "T2-M07",
+  "phase": "mtp_draft",
+  "plane": "control",
+  "function": "Draft-die fan-out: primary -> 15 expert replicas per primary (DP1-EP5), ids / return hops",
+  "model_ref": "(placement of mtp.* experts)",
+  "hw_element": "ot_dsrom_link_rt star or 2-level tree (dsfd_drf_fan planned)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE (mtp-rom stream started 2026-10-08 21:04: dsfd_drf_fan)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "'the 15-link star is unpriced' (MTP_AUDIT G5); ids_hop / ret_hop nodes exist but are measured+vendor per hop, not a routed topology."
+ },
+ {
+  "id": "T2-M08",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Draft head per block row: last-stage hc_pre + mtp.2 norm + shared lm_head sweep (5 sweeps)",
+  "model_ref": "Model.draft: logits = mv(head.weight, rmsnorm(hc_pre))",
+  "hw_element": "ot_dsrom_head_bundle (head die, time-shared with AR head)",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/v41rom/ot_dsrom_head_bundle.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured) + results/rtl/dsrom_fused_draft_head_20261004 (reduced, 5 cases exact)",
+  "closure": "PARTIAL: head_elem A/B + glue CLOSED (TT era)",
+  "in_token_path": "draft.head0",
+  "cycles": 42130.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 6 node(s) /draft\\.(head\\d|fixed)/ in ds_rom_mtp.json, 42,130.0 critical cyc (42,130.0 incl. off-critical). The draft-head hc_pre / norm for the mtp.2 stage are not separate nodes."
+ },
+ {
+  "id": "T2-M09",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Markov head bias: markov_head.embed[d_i] (rank 256) -> head (129,280 x 256) added to logits row i",
+  "model_ref": "Model.draft: logits[i] += mv(markov_head.head, markov_head.embed[out[i]])",
+  "hw_element": "none (bias input of the fused head)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": "draft.markov0",
+  "cycles": 327.5,
+  "cycles_source": "modelled",
+  "gap": [
+   "MISSING_HW",
+   "MODELLED_ONLY"
+  ],
+  "notes": "token-path: 5 node(s) /draft\\.markov\\d/ in ds_rom_mtp.json, 327.5 critical cyc (327.5 incl. off-critical). Priced as head occupancy x 0.00781 (Markov MACs / lm_head MACs); weights not bound to any ROM; head_elem bias input to be confirmed (MTP_AUDIT G8; dsfd_nvx dropped in r8)."
+ },
+ {
+  "id": "T2-M10",
+  "phase": "mtp_draft",
+  "plane": "control",
+  "function": "Serial draft argmax chain d_{i+1} = argmax(logits_i + markov(d_i)), 5 steps",
+  "model_ref": "Model.draft loop over B",
+  "hw_element": "fused draft head argmax (bias + argmax on the ME stream)",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/hdc/v41/dspark_fused_head/",
+  "exact_bench": "results/rtl/dsrom_fused_draft_head_20261004 + results/rtl/dsrom_fh_redesign_20261006 (reduced, exact)",
+  "closure": "PARTIAL: fh_* views in flight / ep_view failed",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Cycles inside draft.head0..4."
+ },
+ {
+  "id": "T2-M11",
+  "phase": "mtp_draft",
+  "plane": "control",
+  "function": "Head-die MTP sequencer: draft-chain FSM, seed dispatch to draft primary, draft collection, position/epoch counter",
+  "model_ref": "generate_spec control loop",
+  "hw_element": "ot_dsrom_mtp_seq -> dsfd_mtp_seq (planned)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE (mtp-rom stream started 2026-10-08 21:04)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "MTP_AUDIT G2."
+ },
+ {
+  "id": "T2-M12",
+  "phase": "mtp_verify",
+  "plane": "control",
+  "function": "Verify batch formation: [y, d1..d5] at positions q+1..q+6 -> wavefront issue at S0",
+  "model_ref": "generate_spec: forward_positions([y]+drafts, q+1)",
+  "hw_element": "ot_rom_pkg_ctrl_wfc src",
+  "die": null,
+  "rtl": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+  "exact_bench": "results/rtl/dsrom_wavefront_verify_20261004/record.json (reduced, one stage L20)",
+  "closure": "CLOSED (SS era, standalone): src r24 SS +31.5 / FF +22.7 (results/rtl/dsrom_wfc_split_20261006/closure.json); integration_qualified = false; NOT a loop element; m221pq child_reservations = {}",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Formally on no die: m221pq dropped the 0.456 mm2 wfc soft reservation of r8/r9."
+ },
+ {
+  "id": "T2-M13",
+  "phase": "mtp_verify",
+  "plane": "control",
+  "function": "Wavefront per-stage handoff: positions 2..6 follow at II = slowest stage busy x (1 + 46/11,271) + hop",
+  "model_ref": "forward_positions layer-major",
+  "hw_element": "ot_rom_pkg_ctrl_wfc stg (+ reference ot_rom_pkg_ctrl_wf charged)",
+  "die": null,
+  "rtl": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+  "exact_bench": "results/rtl/dsrom_wavefront_verify_20261004/record.json (6 jobs incl. squash+reissue, exact vs ISA; one reduced stage)",
+  "closure": "CLOSED (SS era, standalone): stg r11 SS +73.1 / FF +15.7; integration_qualified = false (4 bindings unverified)",
+  "in_token_path": "wave.p2",
+  "cycles": 161546.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "MODELLED_ONLY",
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "token-path: 5 node(s) /wave\\.p\\d/ in ds_rom_mtp.json, 161,546.0 critical cyc (161,546.0 incl. off-critical). II assumes no contention (VM / SU / KV ports, selector, collectives); whole-array wavefront never run (5-package run killed). WFC charge (+3 handoff, +13 hop) not applied."
+ },
+ {
+  "id": "T2-M14",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "In-pass causal KV visibility: position j at layer L reads window/compressed/index rows written by j' < j in the same pass",
+  "model_ref": "forward_positions: 'reads the rows its predecessors (in this pass) wrote at layer L'",
+  "hw_element": "WFC + window/ckv write path",
+  "die": null,
+  "rtl": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+  "exact_bench": "results/rtl/dsrom_wavefront_verify_20261004/record.json (write-to-visible <=264 cyc vs >=7,911; one stage)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Shown only on one reduced stage; ratio-2 compressor groups and index keys completed inside the pass are not exercised at full shape."
+ },
+ {
+  "id": "T2-M15",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Verify passes 1..6 through all 40 layers (the AR operator set per position)",
+  "model_ref": "forward_positions(6 positions)",
+  "hw_element": "backbone (T2-D*)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json)",
+  "rtl": "(see T2-D*)",
+  "exact_bench": "(see T2-D*)",
+  "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
+  "in_token_path": "V.embed",
+  "cycles": 828866.4,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1794 verify-phase critical node(s) in ds_rom_mtp.json = the AR pass, 828,866.4 cyc. token-path: 2000 node(s) /(?!wave\\.).*/ in ds_rom_mtp.json, 980,282.4 critical cyc (980,282.4 incl. off-critical). Position 1 = the AR pass (690.732 us); the verify-phase operator list is the AR critical path. Gaps of T2-D* apply x6."
+ },
+ {
+  "id": "T2-M16",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Per-position Engram hash with speculative history (drafts enter the n-gram history)",
+  "model_ref": "forward_positions hist = state['tokens'][:n0+j+1] incl. drafts",
+  "hw_element": "ot_dsrom_engram_idwin (drafts enter the ring) + dsfd_engram_lkp (6 windows a step, serial ~405 cycles each)",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (stressed_8_slots_mtp: 8 prefetch slots)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
+  "in_token_path": null,
+  "cycles": 2025.0,
+  "cycles_source": "modelled: 5 extra windows x ~405 (bench throughput), inside the slack",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "As T2-D02, x6 positions a step; table fetch x6 (288 rows/step)."
+ },
+ {
+  "id": "T2-M17",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Verify head: final norm + lm_head + argmax for each of the 6 positions (t_0..t_5)",
+  "model_ref": "tg = [argmax(lg) for lg in lgs]",
+  "hw_element": "ot_dsrom_head_bundle (head interval)",
+  "die": "S81 head die (12) - plan-only results/rtl/dsrom_s81_fulldie_20261004/r9m215khdc/head_die/floorplan.json (hb_elem 425, hbglue 85), not re-sized for 1,792",
+  "rtl": "rtl/v41rom/ot_dsrom_head_bundle.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/head.json (ot_dsrom_head_bundle go->last logit measured)",
+  "closure": "PARTIAL: head_elem A/B + glue CLOSED (TT era)",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "Positions 2..6 are inside II (the head occupancy 6.99 us < II 27.8 us); the head's own entry interval (12.37 us) needs RTL proof (memory dsrom-scenario-c-adopted) and the head dies also serve 5 draft sweeps a step."
+ },
+ {
+  "id": "T2-M18",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Accept compare: longest prefix d_i == t_{i-1} -> a, bonus t_a",
+  "model_ref": "generate_spec: while drafts[a] == tg[a]: a += 1",
+  "hw_element": "ot_hdc_accept (NSLOT 8) / ot_hdc_mtp_accept_guarded",
+  "die": null,
+  "rtl": "rtl/hdc/ot_hdc_accept.sv, rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv",
+  "exact_bench": "results/rtl/ds_mtp_accept_20261003/development_record.json (protected leaf, 43 directed + mutant; component-level)",
+  "closure": "CLOSED (HBM-side instance only, SS era): accept_a0 SS +55.3 / FF +14.0 (results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/closure.json); TT re-STA -125.5 constraint-only (mtp-hbm.log); no DS-ROM instance",
+  "in_token_path": "accept.commit",
+  "cycles": 4.2,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "token-path: 1 node(s) /accept\\.commit/ in ds_rom_mtp.json, 4.2 critical cyc (4.2 incl. off-critical). "
+ },
+ {
+  "id": "T2-M19",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "acc_n / squash broadcast to S0 and the in-flight wavefront: kill or re-issue squashed positions",
+  "model_ref": "(implementation of truncate for in-flight positions)",
+  "hw_element": "none (planned on the token-return link)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": "results/rtl/dsrom_wavefront_verify_20261004/record.json shows squash+reissue on one stage with the reference controller",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "MTP_AUDIT G2: no block, no hop priced beyond seed_commit."
+ },
+ {
+  "id": "T2-M20",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Commit: q += a+1, y = t_a, token history += t_0..t_a, emit to host, next step's anchor",
+  "model_ref": "generate_spec: q, y = q+1+a, tg[a]",
+  "hw_element": "pkg_ctrl / mtp sequencer",
+  "die": null,
+  "rtl": null,
+  "exact_bench": "ISA only: results/rtl/hdc_v41_mtp_isa_evidence.json; reduced RTL one step results/rtl/dsrom_dspark_step_slices_20261004 (commit 8 cyc)",
+  "closure": "NONE",
+  "in_token_path": "accept.round",
+  "cycles": 15.1,
+  "cycles_source": "measured",
+  "gap": [
+   "MISSING_HW"
+  ],
+  "notes": "token-path: 1 node(s) /accept\\.round/ in ds_rom_mtp.json, 15.1 critical cyc (15.1 incl. off-critical). Priced only as 4.2 + 15.1 cyc (ratio + rounding)."
+ },
+ {
+  "id": "T2-M21",
+  "phase": "mtp_accept",
+  "plane": "data",
+  "function": "KV ROLLBACK - window rows of rejected positions (40 layers x up to 5 rows)",
+  "model_ref": "Model.truncate: del win[L][n:]",
+  "hw_element": "dead-row invariant (no hardware: rows never read before the committed position rewrites them)",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json)",
+  "rtl": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv (position pointer) + window ring",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Proof is ISA/golden only (truncate) + one reduced RTL step + one-stage squash/reissue. The multi-step ROM campaign never terminated (MTP_AUDIT G1); mtp-exact A1 launched 2026-10-08 21:21 on EPYC1 with pass condition 'final KV incl. dead rows equals plain'."
+ },
+ {
+  "id": "T2-M22",
+  "phase": "mtp_accept",
+  "plane": "data",
+  "function": "KV ROLLBACK - compressed KV rows + index keys (L2/L8/L14 ratio 2: n//2; L20 ratio 1) and the compressor open-group slot rebuild (slotrec)",
+  "model_ref": "Model.truncate: del ckv/ik[s][n//r:]; slots[s] = [slotrec[p] for p in range(n - n%r, n)]",
+  "hw_element": "dead-row invariant + compressor ring",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv (index-key ring); compressor slot = SU state",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Hazard: at ratio 2 a pass that completes a group with a REJECTED position overwrites the open slot; truncate rebuilds it from slotrec. The invariant covers HBM rows; the open-slot register must be position-indexed (MTP_AUDIT says 'compressor-ring') - no full-shape RTL shows it."
+ },
+ {
+  "id": "T2-M23",
+  "phase": "mtp_accept",
+  "plane": "data",
+  "function": "KV ROLLBACK - DSpark dsk rows of rejected positions (3 stages)",
+  "model_ref": "Model.truncate: del dsk[st][n:]",
+  "hw_element": "dsk ring (T2-M04)",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "MISSING_HW"
+  ],
+  "notes": "Storage itself is unbuilt (T2-M04)."
+ },
+ {
+  "id": "T2-M24",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "ROLLBACK - Engram token history (snapshot restore at slot a)",
+  "model_ref": "Model.truncate: del tokens[n:] (hash history)",
+  "hw_element": "ot_dsrom_engram_idwin rewind port (rb_valid/rb_user/rb_n <= 5): ring + position count move back = official cache truncation",
+  "die": "S81 S0 rank dies",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (rewind events; 2 rewind mutants caught)",
+  "closure": "RTL only",
+  "in_token_path": "ds_rom_mtp accept.engram_rewind (parallel to the commit tail)",
+  "cycles": 1.0,
+  "cycles_source": "RTL",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Coordinated with mtp-rollback (mtp-rollback.log): one rewind per user per step from the commit sequencer."
+ },
+ {
+  "id": "T2-M25",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Per-position transients (index selection, candidate blocks) isolated per position in the wavefront",
+  "model_ref": "forward_positions ctx per position",
+  "hw_element": "WFC per-position context",
+  "die": null,
+  "rtl": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+  "exact_bench": "results/rtl/dsrom_wavefront_verify_20261004/record.json (one stage)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "A rejected position's L20 candidate set must not reach a committed position's L24..36 mask; shown only on one reduced stage."
+ },
+ {
+  "id": "T2-F01",
+  "phase": "fault",
+  "plane": "control",
+  "function": "HBM / SRAM / mutable-state protection (ECC or equivalent) on KV, index keys, VM, window staging",
+  "model_ref": "(AGENTS.md ROM reliability policy 2026-10-02: SRAM, HBM, link and mutable control-state protection still required)",
+  "hw_element": "none found",
+  "die": null,
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "ROM ECC was removed by owner policy (not a gap). No SECDED / sideband ECC on dsfd_ctrl / svc / VM in the S81 RTL; HBM3E on-die ECC is vendor DRAM behaviour."
+ },
+ {
+  "id": "T2-F02",
+  "phase": "fault",
+  "plane": "control",
+  "function": "Field / return fault vector, overflow traps, identity checks, watchdog + stall export, fault aggregation",
+  "model_ref": "(implementation)",
+  "hw_element": "FAULT_TIE successor, dsfd_capt_ctl fault/done trees, ot_dsrom_stage_guard, host_cq WDOG, ot_dsrom_stall_export",
+  "die": "S81 layer1 m221pq (480 layer dies @1,792 HALF_PHL; recipe tools/dsrom_s81_fulldie.py --gen r8 rev r9; plan results/rtl/dsrom_s81_fulldie_20261004/m221pq/plan/floorplan.json): dsfd_capt_ctl (fault trees) only",
+  "rtl": "rtl/dsrom_sys/ot_v41_field_w17w10_sys.sv, rtl/dsrom_sys/ot_dsrom_stall_export.sv, rtl/dsrom_sys/ot_dsrom_stage_guard.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/field_sys_bench.json + ctrlplane_units.json",
+  "closure": "PARTIAL: dsfd_capt_ctl CLOSED TT +39.36; guard / stall export / watchdog on no die",
+  "in_token_path": null,
+  "cycles": 0.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T2-F03",
+  "phase": "fault",
+  "plane": "control",
+  "function": "Link fault handling: CRC detect, go-back-N replay, link-down",
+  "model_ref": "(implementation)",
+  "hw_element": "ot_dsrom_link_rt",
+  "die": null,
+  "rtl": "rtl/dsrom_sys/ot_dsrom_link_rt.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "Replay latency under errors not priced (hops priced error-free)."
+ },
+ {
+  "id": "T2-U01",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Multi-user: per-user context tables, KV namespaces at 1M per user, admission; one user per stage pipelining",
+  "model_ref": "(rack scan_die_power 'head-bound saturated 80,833 tok/s' assumes many users)",
+  "hw_element": "ot_rom_pkg_ctrl_x users + host_cq admission",
+  "die": null,
+  "rtl": "rtl/rom/ot_rom_pkg_ctrl_x.sv, rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+  "exact_bench": "results/rtl/dsrom_system_rtl_20261003/system_gate_sys_d5_u2.json / sys_b5_u2_r2 (2 users, reduced)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "The headline is per-user batch 1. Any aggregate-throughput claim needs per-user HBM capacity at 1M on 1-stack layer dies and the head's interval with MTP draft sweeps - neither in the token path."
+ }
+]

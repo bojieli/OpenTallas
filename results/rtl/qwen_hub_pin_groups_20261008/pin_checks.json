@@ -1,0 +1,38 @@
+{
+  "16": {
+    "verdict": "PASS",
+    "all_signal_pins": 5270,
+    "duplicate_pins": 0,
+    "outside_original_interval": 0,
+    "layer_counts": {
+      "M6": 2338,
+      "M4": 2925,
+      "M7": 7
+    },
+    "max_bits_per_um_over_100um": {
+      "E/M6": 9.53,
+      "E/M4": 14.34,
+      "N/M7": 0.07
+    },
+    "full_shape_source_instances": 159701,
+    "test_scope": "pin legality on production full-shape synthesized hub with production ASAP7 tracks, unchanged frame and original intervals; physical route remains required"
+  },
+  "32": {
+    "verdict": "PASS",
+    "all_signal_pins": 5270,
+    "duplicate_pins": 0,
+    "outside_original_interval": 0,
+    "layer_counts": {
+      "M6": 2338,
+      "M4": 2925,
+      "M7": 7
+    },
+    "max_bits_per_um_over_100um": {
+      "E/M6": 9.53,
+      "E/M4": 14.34,
+      "N/M7": 0.07
+    },
+    "full_shape_source_instances": 159701,
+    "test_scope": "pin legality on production full-shape synthesized hub with production ASAP7 tracks, unchanged frame and original intervals; physical route remains required"
+  }
+}

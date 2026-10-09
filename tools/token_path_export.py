@@ -141,8 +141,9 @@ def distribute(total, keys, weights=None):
     return {k: sign * v / 10 for k, v in zip(keys, q)}
 
 
-def finish(d, headline, groups_def, classes, drill, notes, extra=None):
-    """slack, groups, shares, totals check; returns the record"""
+def finish(d, headline, groups_def, classes, drill, notes, extra=None, tau=None):
+    """slack, groups, shares, totals check; returns the record.  tau (MTP): the record is one verify step and the rate
+    is tau accepted tokens a step"""
     N, E = d.nodes, d.edges
     crit = [n for n in d.order]
     total = max(N[c]["end"] for c in crit)
@@ -214,19 +215,26 @@ def finish(d, headline, groups_def, classes, drill, notes, extra=None):
             del n["elements"]
         if n["instances"] == c.get("instances"):
             del n["instances"]
-    tok_s = CLK / total
+    tok_s = (tau or 1.0) * CLK / total
     pub = headline["tok_s"]
     assert abs(round(tok_s, 1) - pub) <= 0.1 + 1e-9, (d.key, tok_s, pub)
+    repro = (f"{total:,.1f} cycles x (1 / {CLK / 1e9:g} GHz) = {total / CLK * 1e6:,.3f} us = {tok_s:,.2f} tok/s; "
+             f"published {pub:,.1f} (within rounding)") if not tau else (
+             f"one verify step {total:,.1f} cycles = {total / CLK * 1e6:,.3f} us; tau {tau:g} accepted tokens a step -> "
+             f"{total / tau:,.1f} cycles ({total / tau / CLK * 1e6:,.3f} us) an accepted token = {tok_s:,.2f} tok/s; "
+             f"published {pub:,.1f} (within rounding)")
     rec = dict(
         schema="opentallas.token_path.v1", design=d.key, title=d.title, clock_hz=CLK, tool="tools/token_path_export.py",
-        repo_head=head(), headline=headline,
+        repo_head=head(), headline=headline, mode="mtp" if tau else "ar",
         totals=dict(cycles=r1(total), us=round(total / CLK * 1e6, 3), tok_s=round(tok_s, 2), tok_s_published=pub,
-                    reproduces=f"{total:,.1f} cycles x (1 / {CLK / 1e9:g} GHz) = {total / CLK * 1e6:,.3f} us = "
-                               f"{tok_s:,.2f} tok/s; published {pub:,.1f} (within rounding)",
+                    reproduces=repro,
                     by_grade={k: r1(v) for k, v in grade_tot.most_common()},
                     by_class=[dict(cls=k, cycles=r1(v), share=round(v / total, 6)) for k, v in cls_tot.most_common()]),
         classes=classes, groups=groups, group_edges=gedges, drill=drill, critical_path=crit,
         adder_items=d.items, nodes=list(N.values()), edges=E, notes=notes)
+    if tau:
+        rec["totals"].update(tau=tau, step_cycles=r1(total), per_accepted_cycles=r1(total / tau),
+                             per_accepted_us=round(total / tau / CLK * 1e6, 3))
     if extra:
         rec.update(extra)
     return rec
@@ -444,7 +452,9 @@ DS_CLASSES = [
     dict(id="hop", label="Stage hop (SerDes, full-KP4 FEC)", elements=[], instances=["lk_E*", "lk_W*"]),
     dict(id="head", label="Head die (LM head bundle, argmax)", elements=["ot_dsrom_head_elem_A", "ot_dsrom_head_elem_B",
          "ot_dsrom_head_bundle_glue", "ot_s81_head_delay8x32", "ot_hdc_v41_fh_head_top"], instances=[]),
-    dict(id="embed", label="Embed / Engram table dies", elements=[], instances=[]),
+    dict(id="embed", label="Embed ROM / Engram lookup (HBM-resident tables, design 2026-10-08)",
+         elements=["ot_dsrom_engram_idwin", "ot_dsrom_engram_lookup", "ot_dsrom_engram_rowsink", "ot_hdc_engram_hash_shipped"],
+         instances=["eng_SE", "ctrl_SE", "phy_SE"]),
 ]
 FIELD_SUF = ("a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "ffn.router", "shared_gu", "experts_gu", "ffn.down", "idx.q", "eng.dot")
 HBM_SUF = ("idx.score", "attn.scores", "attn.pv", "window_load", "own_row_write", "ckv")
@@ -472,9 +482,17 @@ def ds_cls(node):
     return "su"
 
 
+_DS_CAP = {}
+DS_TARGETS = {"field1792_half_dedicated_ksplit_half_rate": ("half_dedicated_ksplit", "half_rate", "half_phl"),
+              "field1792_full_shared_full_rate_bf": ("full_shared", "full_rate_bf", "full_rate_shared98")}
+
+
 def ds_capture():
-    """field_phases_1792 compose exactly as the re-price's final cumulative state, with the half_rate composition's
-    allmeasured run replayed in-process (graph_hook) to keep its operator graph."""
+    """field_phases_1792 compose exactly as the re-price's final cumulative state, with the allmeasured runs of the
+    HALF_PHL (half_dedicated_ksplit / half_rate) and full-rate (full_shared / full_rate_bf) compositions replayed
+    in-process (graph_hook) to keep their operator graphs.  Cached: the AR and MTP exports share one run."""
+    if _DS_CAP:
+        return _DS_CAP["cap"], _DS_CAP["fp"], _DS_CAP["rp"], _DS_CAP["ew"]
     import dsrom_closure_cost_ledger as LED
     import field_phases_1792 as FP
     import dsrom_1m_allmeasured as A
@@ -483,13 +501,12 @@ def ds_capture():
     assert "extra_wire 2" in rp["basis"]
     ew = BASE_EXTRA_WIRE + sum(i["per_field_phase"] for i in rp["items"])
     rows = [tuple(r) for i in rp["items"] for r in i["per_node"]]
-    cap = {}
+    cap = {"all": {}}
     orig = LED.compose
-    target = "field1792_half_dedicated_ksplit_half_rate"
 
     def compose(items, pending=False, extra=()):
         names = [e[0] for e in extra]
-        if names != [target]:
+        if len(names) != 1 or names[0] not in DS_TARGETS:
             return orig(items, pending, extra)
         with tempfile.TemporaryDirectory(prefix=".tokenpath-", dir=LED.OUT) as td:
             s = Path(td)
@@ -497,11 +514,13 @@ def ds_capture():
             (s / "levers" / LED.LEV.name).write_text(json.dumps(LED.lever(items, pending, extra), indent=1) + "\n")
             ns = argparse.Namespace(rec=A.REC, out=s / "composition.json", baseline="recovery", recovery=s, window="s81",
                                     hop_tier=A.DEFAULT_HOP_TIER)
+            c1 = {}
 
             def hook(g, P, base_patches, info):
-                cap["g"], cap["P"], cap["base"] = g, P, base_patches
+                c1["g"], c1["P"], c1["base"] = g, P, base_patches
             rec = A.compose(ns, graph_hook=hook, write_output=False)
-        cap["rec"] = rec
+        c1["rec"] = rec
+        cap["all"][names[0]] = c1
         return rec["AR_tok_s"], rec["MTP"]["MTP_tok_s"]
 
     LED.ITEMS.append(("reprice_20261008", "today's per-node closure items (results/arch/reprice_20261008)", rows))
@@ -510,12 +529,14 @@ def ds_capture():
         with tempfile.TemporaryDirectory(prefix="tokenpath-") as td:
             out = Path(td) / "fp.json"
             a = argparse.Namespace(regions_dir=FP.OUT / "regions", geo_dir=FP.OUT / "geometry",
-                                   variants="half_dedicated_ksplit", extra_wire=ew, out=out)
+                                   variants=",".join(sorted({v for v, _, _ in DS_TARGETS.values()})), extra_wire=ew, out=out)
             FP.cmd_compose(a)
             fp = json.loads(out.read_text())
     finally:
         LED.compose = orig
         LED.ITEMS.pop()
+    cap.update(cap["all"]["field1792_half_dedicated_ksplit_half_rate"])
+    _DS_CAP.update(cap=cap, fp=fp, rp=rp, ew=ew)
     return cap, fp, rp, ew
 
 
@@ -694,6 +715,7 @@ def ds_rom():
     d.edges.append(dict(src="unplaced_hops", dst="head.hop", bytes=HOPB, link="stage hops", cycles=0))
     total_us = t_path + unplaced_us
     assert abs(total_us - comp["AR_us"]) < 0.002, (total_us, comp["AR_us"])
+    ds_engram_nodes(d)
     # slack for off-critical nodes is computed in finish(); order groups so SX precedes the head stage
     headline = dict(tok_s=comp["AR_tok_s"], us=comp["AR_us"], cycles=r1(comp["AR_us"] * CY), mode="AR, position 1,048,575",
                     mtp_tok_s=comp["MTP_tok_s"], tau=4.159,
@@ -714,12 +736,51 @@ def ds_rom():
         f"Each stage group is one TP4 layer-die group of the pipeline (split at stage hops); {n_s81 + extra_hops} further stage "
         "hops exist in the mapping but the composition does not place them: they are one aggregate node before the head hop.",
         "Field operators are the measured 1,792 field phases (HALF_PHL: BF16 phases at 2 x (go->idle) + 2, upper bound).",
+        "Engram (E1.* / E14.*, off the critical path): the HBM-resident table design of results/arch/engram_20261008/design.json "
+        "(lead flit from S0 -> HBM row lookup on the home stage's rank dies -> TP4 row all-gather -> wkv + key norm), "
+        "grade modelled until the blocks close; it replaces the composition's ROM-table gather / deliver placeholders and "
+        "the 36 table dies.",
     ]
     return finish(d, headline, gdef, DS_CLASSES, drill, notes,
                   extra=dict(geometry=dict(source=GEO, key="ds_s81_layer", die="S81 layer die (snapshot; one of 4 TP dies per stage)")))
 
 
 DSC = {c["id"]: c for c in DS_CLASSES}
+ENGRAM = "results/arch/engram_20261008/design.json"
+
+
+def ds_engram_nodes(d):
+    """The Engram side branch of the HBM-resident design (stream engram, 2026-10-08): lead flit -> HBM row lookup ->
+    TP4 row all-gather -> wkv + key norm, from token start, ending at the L{L}.eng.dot consumer.  The composition's
+    own E{L}.gather / E{L}.deliver (ROM-table placeholders) are not exported; these nodes replace them.  Off the
+    critical path (slack from the design record); grade 'modelled' until the blocks close."""
+    if not (ROOT / ENGRAM).exists():
+        return
+    rec = J(ENGRAM)
+    for L in (1, 14):
+        t = rec["timeline_cycles"][f"L{L}"]
+        cons = f"L{L}.eng.dot"
+        if cons not in d.nodes:
+            continue
+        grp = d.nodes[cons]["group"]
+        steps = [("lead_flit", "hop", t["lead_flit_cycles"], t["lead_flit_note"]),
+                 ("hash", "embed", t["hash_cycles"], t["hash_note"]),
+                 ("hbm_read", "embed", t["hbm_read_cycles"], t["hbm_read_note"] + "; " + t["lookup_local_src"]),
+                 ("rows_allgather", "coll", t["allgather_cycles"] - 4, t["allgather_note"]),
+                 ("wkv", "field", t["wkv_cycles"], t["wkv_note"]),
+                 ("knorm", "su", t["knorm_cycles"], t["wkv_knorm_src"])]
+        st, prev = 0.0, None
+        for k, cls, cyc, note in steps:
+            nid = f"E{L}.{k}"
+            n = d.add(nid, nid, grp, cls, cyc, src("modelled", ENGRAM, f"timeline_cycles.L{L}", note=note), op=f"eng.{k}",
+                      elements=DSC[cls]["elements"], instances=DSC[cls]["instances"], start=st, deps=[prev] if prev else [],
+                      critical=False, kind="parallel")
+            n["layer"] = L
+            n["slack"] = r1(t["slack_cycles"])
+            n["engram"] = True
+            st += cyc
+            prev = nid
+        d.edges.append(dict(src=prev, dst=cons, bytes=6 * 264 * 4, link="on die (key / value to the SU)", cycles=0))
 
 
 # ======================================================================================== HBM accelerator DS 1M
@@ -921,6 +982,500 @@ def hbm():
                   extra=dict(geometry=dict(source=GEO, key="hbm_ds", die="HBM accelerator DS die (r14b snapshot; one of 96)")))
 
 
+# ======================================================================================== MTP (speculative) step
+# One MTP step = draft (the MTP head proposes 5 tokens) -> verify (6 positions through the layers: the fixed
+# latency is paid once, then one wavefront interval / multi-position walk) -> accept / commit (tau accepted tokens a
+# step, on average) -> the next step.  No new model: every term is the existing MTP pricing of the composition the
+# re-price drives (DS ROM: tools/dsrom_1m_allmeasured.py MTP + field_phases_1792 compose; HBM: the matched reference's
+# mtp() walk at P = 6 + the unified composition's MTP_step lines + the re-price upper bound).
+# hw: the hardware status of each MTP-only operator (verify-pass operators are the AR path's, as in the AR view):
+#   built   = runs on closed elements / the same hardware as the AR path
+#   partial = its element closed as a block but is not integrated / not adopted on the die
+#   none    = no closed hardware element: FLAGGED (modelled, or measured RTL with no die / route)
+MTP_FLAG_NONE = "modelled — no RTL/route"
+QWEN_VERDICT = "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+DS_DRAFT_REC = "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
+DS_SLICES = "results/rtl/dsrom_dspark_step_slices_20261004/composition.json"
+WFC_CLOSURE = "results/rtl/dsrom_wfc_split_20261006/closure.json"
+WAVE_REJECT = "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
+HBM_CTL = "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/closure.json"
+HBM_DRAFT = "results/rtl/dshbm_dspark_draft_20261004/composition.json"
+PHASES = [("draft", "Draft (MTP head)"), ("verify", "Verify (6 positions)"), ("accept", "Accept / commit")]
+MTP_CLASSES_EXTRA = [
+    dict(id="wave", label="Wavefront verify positions (slowest stage)", elements=["ot_rom_pkg_ctrl_wfc", "ot_rom_pkg_ctrl_wf"],
+         instances=["e*", "n*_*", "sp_vm", "sp_su_n", "sp_su_s"]),
+    dict(id="ctl", label="Accept / commit control (spec state, accept)", elements=["ot_hdc_accept", "ot_dshbm_dspark_ctl",
+         "ot_dshbm_spec_state", "ot_dshbm_accept_port"], instances=["hb_cmdproc", "ctrl_*"]),
+]
+
+
+def hw(status, note, evidence=None):
+    assert status in ("built", "partial", "none")
+    d = dict(status=status, note=note)
+    if evidence:
+        d["evidence"] = evidence
+    return d
+
+
+def mark(n, phase, hwd=None):
+    n["phase"] = phase
+    if hwd:
+        n["hw"] = hwd
+        if hwd["status"] == "none":
+            n["flag"] = hwd.get("flag", MTP_FLAG_NONE)
+    return n
+
+
+def phase_spans(d, total):
+    out = []
+    for pid, lab in PHASES:
+        ns = [n for n in d.nodes.values() if n.get("phase") == pid and n["critical"]]
+        if not ns:
+            continue
+        st, en = min(n["start"] for n in ns), max(n["end"] for n in ns)
+        cyc = sum(n["cycles"] for n in ns)
+        out.append(dict(id=pid, label=lab, start=r1(st), end=r1(en), cycles=r1(cyc), share=round(cyc / total, 6)))
+    return out
+
+
+def hw_summary(d):
+    s = collections.defaultdict(lambda: dict(nodes=0, cycles=0.0))
+    for n in d.nodes.values():
+        if n["critical"] and n.get("hw"):
+            s[n["hw"]["status"]]["nodes"] += 1
+            s[n["hw"]["status"]]["cycles"] += n["cycles"]
+    return {k: dict(nodes=v["nodes"], cycles=r1(v["cycles"])) for k, v in s.items()}
+
+
+def accounting(total, tau, ar_cycles, phases, tau_source):
+    return dict(tau=tau, tau_source=tau_source, drafted_tokens=5, verified_positions=6,
+                accepted_tokens_per_step=tau, step_cycles=r1(total), per_accepted_cycles=r1(total / tau),
+                per_accepted_us=round(total / tau / CLK * 1e6, 3), ar_token_cycles=r1(ar_cycles),
+                speedup_over_ar=round(ar_cycles * tau / total, 4),
+                per_accepted_by_phase={p["id"]: r1(p["cycles"] / tau) for p in phases},
+                rule="one verify step emits tau tokens on average (accepted drafts + the verify pass's own next token); "
+                     "per-accepted-token cost = step / tau")
+
+
+def ds_rom_mtp(ar=None):
+    import dsrom_1m_measure as M
+    ar = ar or ds_rom()
+    cap, fp, rp, ew = ds_capture()
+    CY = CLK / 1e6
+    npos = M.WAVEFRONT["positions"]
+    # ---- both BF cases at phase level (the reproduction of the re-priced MTP tok/s)
+    variants = {}
+    for tgt, (v, key, rkey) in DS_TARGETS.items():
+        m = cap["all"][tgt]["rec"]["MTP"]
+        comp = fp["variants"][v]["compositions"][key]
+        assert comp["MTP_tok_s"] == rp["after"][rkey]["MTP_tok_s"], (rkey, comp, rp["after"][rkey])
+        parts = dict(draft_us=m["draft_us"], verify_first_position_us=comp["AR_us"], wavefront_us=round(npos * m["II_us"], 3),
+                     seed_commit_us=m["seed_commit_us"])
+        rnd = comp["MTP_step_us"] - sum(parts.values())
+        assert abs(rnd) < 0.05, (rkey, rnd)
+        variants[rkey] = dict(
+            label={"half_phl": "BF HALF_PHL (120 stages, accepted closure path)",
+                   "full_rate_shared98": "BF full rate (full_shared, 98 stages; no BF cost)"}[rkey],
+            AR_tok_s=comp["AR_tok_s"], AR_us=comp["AR_us"], MTP_tok_s=comp["MTP_tok_s"], step_us=comp["MTP_step_us"],
+            tau=m["tau"], II_us=m["II_us"], positions_after_first=npos, worst_stage=m["worst_stage"], **parts,
+            rounding_us=round(rnd, 4), extra_hops_1792=fp["variants"][v]["extra_hops"],
+            reproduces=f"draft {parts['draft_us']} + verify ({comp['AR_us']} AR pass + {npos} x II {m['II_us']}) + seed/commit "
+                       f"{parts['seed_commit_us']} (+ {rnd:+.3f} composition rounding) = {comp['MTP_step_us']} us; "
+                       f"{m['tau']} x 1e6 / {comp['MTP_step_us']} = {m['tau'] * 1e6 / comp['MTP_step_us']:,.2f} tok/s "
+                       f"(published {comp['MTP_tok_s']:,.1f})",
+            source=REPRICE + f" ds_rom.after.{rkey}.MTP_tok_s")
+    hv = variants["half_phl"]
+    m = cap["rec"]["MTP"]
+    dt = m["draft_terms"]
+    dr = J(DS_DRAFT_REC)
+    sl = J(DS_SLICES)["measured_reduced"]
+    wfc = J(WFC_CLOSURE)
+    d = Design("ds_rom", "DeepSeek-V4.1 ROM array (S81, 1,792 pairs, HALF_PHL BF), 1M context, MTP (DSpark, gamma 5)", "cycles")
+    gdef = collections.OrderedDict()
+    HW_DRAFTDIE = hw("none", "not built: mtp.* weights sit on no die of the S81 binding (the DSpark stage placement DP1-EP5, "
+                     f"{dr['placement']['dies']['total']} S81 layer-class dies, +{dr['placement']['dies']['added_silicon_mm2']:,.0f} mm2, "
+                     "is stated, not bound); the elements were measured exact in full-shape RTL on the released mtp.* weights",
+                     evidence=DS_DRAFT_REC + " still_modelled['DSpark stage placement'] / placement")
+    HW_DRAFTDIE["flag"] = "not built — no die / route (elements measured in RTL)"
+    # ---- draft: three DSpark blocks (node level, the record's own critical paths)
+    ff = cap["rec"]["info"]["draft_blocks"]["full_fec"]
+    blk_nodes = []
+    for k, (st, s) in enumerate(dr["stages"].items()):
+        gid = f"D{k}"
+        gdef[gid] = dict(label=f"Draft block {st} (DSpark stage {k})", kind="draft", phase="draft")
+        for p in s["critical_path"]:
+            blk_nodes.append((gid, st, p))
+    fec_keys = [i for i, (_, _, p) in enumerate(blk_nodes) if "hop" in p["node"] or "all" in p["node"]]
+    fec_w = [99.0 if "hop" in blk_nodes[i][2]["node"] else 100.0 for i in fec_keys]
+    fec = distribute(ff["cycles"], fec_keys, fec_w)
+    for i, (gid, st, p) in enumerate(blk_nodes):
+        c = ds_cls(p["node"])
+        gr = {"measured": "measured", "measured+vendor_phy": "measured+vendor", "placement": "measured"}.get(p["cls"], "modelled")
+        ad = [dict(item="draft full-KP4 FEC delta", cycles=fec[i], grade="measured+vendor", record=ff["record"],
+                   note=f"{ff['cycles']} cycles ({ff['board_hops']} board hops x {ff['hop_delta_cycles']} + {ff['collective_issues']} "
+                        f"collectives x {ff['collective_delta_cycles']}), spread over the hop / collective operators")] if i in fec else []
+        n = d.add(f"{st}.{p['node']}", f"{st} {p['node']}", gid, c, p["us"] * CY,
+                  src(gr, DS_DRAFT_REC, f"stages['{st}'].critical_path", note=f"{p['cls']}; " + dr["basis"][:200]),
+                  op=p["node"], elements=DSC[c]["elements"], instances=DSC[c]["instances"], adders=ad)
+        mark(n, "draft", HW_DRAFTDIE)
+    assert abs(sum(n["cycles"] for n in d.nodes.values()) - dt["blocks_us"] * CY) < 1.0
+    # ---- draft: 5 serial head steps on the head die (lm_head sweep) + the Markov embedding head
+    gdef["DH"] = dict(label="Draft head x 5 (LM head + Markov, serial chain)", kind="draft", phase="draft")
+    head_hw = hw("built", "the head die's lm_head bundle (ot_dsrom_head_elem_A / _B SAFE closed 2026-10-08), the verify pass's own head")
+    mk_hw = hw("none", "Markov bigram head (d_i's embedding row x the lm_head MAC ratio 0.00781): a transfer ratio from the reduced "
+               "vehicle, no full-shape Markov RTL and no element", evidence=DS_SLICES + " transfer_ratios.markov_over_head_macs_full")
+    for k in range(5):
+        n = d.add(f"draft.head{k}", f"draft head step {k + 1}: LM head sweep + argmax", "DH", "head", dt["head_occ_us"] * CY,
+                  src("measured", "tools/dsrom_1m_allmeasured.py info.head.stage_occupancy_us",
+                      note=f"head stage occupancy {dt['head_occ_us']} us (the measured lm_head bundle sweep), one per drafted token"),
+                  op="draft.head", elements=DSC["head"]["elements"], instances=DSC["head"]["instances"])
+        mark(n, "draft", head_hw)
+        n = d.add(f"draft.markov{k}", f"draft step {k + 1}: Markov embedding head", "DH", "head",
+                  dt["head_occ_us"] * dt["r_markov"] * CY,
+                  src("modelled", DS_SLICES, "transfer_ratios.markov_over_head_macs_full",
+                      note=f"head occupancy x {dt['r_markov']} (Markov MACs / lm_head MACs at full shape)"),
+                  op="draft.markov", elements=[], instances=[])
+        mark(n, "draft", mk_hw)
+    n = d.add("draft.fixed", "draft fixed overhead: head element SAFE (+39 x 5 sweeps)", "DH", "head", dt["fixed_overhead_us"] * CY,
+              src("priced", REPRICE, "ds_rom.items[head_elem_safe] draft.total +195", note="lm_head element A/B SAFE +39 cycles a bundle "
+                  "sweep on the 5 draft head sweeps (dshead-elemA/elemB-safe CLOSED 10-08)"),
+              op="draft.fixed", elements=DSC["head"]["elements"], instances=DSC["head"]["instances"])
+    mark(n, "draft", head_hw)
+    t_draft = d.chain_schedule()
+    assert abs(t_draft - m["draft_us"] * CY) < 1.0, (t_draft, m["draft_us"] * CY)
+    # ---- verify, position 1: the AR pass (the AR record's own critical path, shifted)
+    an = {n["id"]: n for n in ar["nodes"]}
+    ag = {g["id"]: g for g in ar["groups"]}
+    for nid in ar["critical_path"]:
+        n0 = an[nid]
+        gid = "V." + n0["group"]
+        if gid not in gdef:
+            g0 = ag[n0["group"]]
+            gdef[gid] = dict(label="verify " + g0["label"], kind=g0["kind"], phase="verify")
+        n = d.add("V." + nid, n0["label"], gid, n0["cls"], n0["base_cycles"], n0["src"], op=n0["op"],
+                  elements=n0.get("elements", DSC[n0["cls"]]["elements"]), instances=n0.get("instances", DSC[n0["cls"]]["instances"]),
+                  adders=[dict(item=a, cycles=c, **ar["adder_items"].get(a, {})) for a, c in n0["adders"]],
+                  start=t_draft + n0["start"], kind=n0["kind"])
+        for k in ("reprice_10_08", "bf16", "layer"):
+            if k in n0:
+                n[k] = n0[k]
+        mark(n, "verify")
+    t_v1 = t_draft + ar["totals"]["cycles"]
+    assert abs(ar["totals"]["cycles"] - hv["verify_first_position_us"] * CY) < 1.0
+    # ---- verify, positions 2..6: wavefront intervals through the slowest stage
+    ws = m["worst_stage"]
+    ovh = 46 / 11271
+    busy = ws["busy_us"] * (1 + ovh)
+    hopx = m["II_us"] - busy
+    gdef["W"] = dict(label=f"verify positions 2-6 (wavefront II {m['II_us']} us at {ws['first']} .. {ws['hop']})", kind="wave",
+                     phase="verify")
+    wave_hw = hw("partial", f"wavefront controller: the split ot_rom_pkg_ctrl_wfc closed as blocks ({wfc['verdict'][:90]}...) "
+                 "but integration_qualified = false, so the composition charges the reference ot_rom_pkg_ctrl_wf handoff "
+                 "(46 / 11,271), whose physical route was rejected (three variants)",
+                 evidence=f"{WFC_CLOSURE} accepted/exact true, integration_qualified false; {WAVE_REJECT}")
+    t = t_v1
+    prev = d.order[-1]
+    for k in range(npos):
+        n = d.add(f"wave.p{k + 2}", f"position {k + 2}: slowest stage busy ({ws['first']} .. {ws['hop']}) + handoff", "W", "wave",
+                  busy * CY, src("measured", "tools/dsrom_1m_allmeasured.py MTP.worst_stage",
+                                 note=f"busy {ws['busy_us']} us x (1 + measured handoff 46/11271) (wavefront verify rule, "
+                                      "results/rtl/dsrom_wavefront_verify_20261004: a stage takes the next position 46 cycles "
+                                      "after it finishes the previous one)"),
+                  op="wave.busy", start=t, deps=[prev], elements=MTP_CLASSES_EXTRA[0]["elements"],
+                  instances=MTP_CLASSES_EXTRA[0]["instances"])
+        mark(n, "verify", wave_hw)
+        t += busy * CY
+        n = d.add(f"wave.h{k + 2}", f"position {k + 2}: stage hop (full-KP4) out of the slowest stage", "W", "hop", hopx * CY,
+                  src("measured+vendor", "tools/dsrom_1m_allmeasured.py MTP.II_us", note=f"II {m['II_us']} - busy x (1 + ovh) = "
+                      f"{hopx:.4f} us: the measured stage hop + its cable flight"), op="wave.hop", start=t,
+                  elements=[], instances=DSC["hop"]["instances"])
+        mark(n, "verify", hw("built", "the stage-hop link (ot_dsrom_link_rt, measured; PHY = vendor budget), as AR"))
+        t += hopx * CY
+        prev = n["id"]
+    # ---- accept / commit: seed (next step's DSpark seed) + commit, then the composition's rounding
+    gdef["A"] = dict(label="accept / commit + seed of the next step", kind="accept", phase="accept")
+    seed_c, com_c = sl["dspark_seed_cycles"], sl["commit_cycles"]
+    sc = m["seed_commit_us"]
+    note_sc = (f"seed_commit {sc} us = the reduced-vehicle ratio (seed {seed_c} + commit {com_c} cycles) / verify, "
+               f"x the full-shape verify pass (dsrom_1m_measure DRAFT.seed_commit_us); split seed / commit by the reduced cycles")
+    n = d.add("accept.seed", "seed: main_proj + wkv window rows of the 3 DSpark stages (next step)", "A", "field",
+              sc * seed_c / (seed_c + com_c) * CY, src("modelled", DS_SLICES, "transfer_ratios.seed_commit_over_verify", note=note_sc),
+              op="accept.seed", start=t, deps=[prev], elements=[], instances=[])
+    mark(n, "accept", dict(HW_DRAFTDIE, note="the seed runs on the DSpark stage dies: " + HW_DRAFTDIE["note"]))
+    t += n["cycles"]
+    n = d.add("accept.commit", "accept / commit: compare drafts vs targets, emit accepted tokens, roll back KV", "A", "ctl",
+              sc * com_c / (seed_c + com_c) * CY, src("modelled", DS_SLICES, "measured_reduced.commit_cycles", note=note_sc),
+              op="accept.commit", start=t, elements=MTP_CLASSES_EXTRA[1]["elements"][:1], instances=[])
+    mark(n, "accept", hw("partial", "ot_hdc_accept closed as a block (accept_a0, SS +55.27 / FF +13.99 ps in the HBM control "
+                         "inventory) but is on no S81 die; the ROM commit path is ISA-level (ot_hdc_accept + CTL ACCEPT)",
+                         evidence=HBM_CTL + " rows[accept_a0]"))
+    t += n["cycles"]
+    if (ROOT / ENGRAM).exists():
+        er = J(ENGRAM)["mtp_history_restore"]
+        n = d.add("accept.engram_rewind", "Engram history restore: rewind the user's n-gram history by the rejected drafts",
+                  "A", "embed", er["cycles"], src("modelled", ENGRAM, "mtp_history_restore", note=er["how"]),
+                  op="accept.engram_rewind", start=t, deps=["accept.commit"], critical=False, kind="parallel",
+                  elements=["ot_dsrom_engram_idwin"], instances=[])
+        mark(n, "accept", hw("partial", "RTL rewind port of ot_dsrom_engram_idwin, bench-exact vs the official cache "
+                             "truncation; not routed", evidence="results/rtl/dsrom_engram_lookup_campaign.json"))
+    n = d.add("accept.round", "composition rounding (MTP tok/s rounded to 0.1 before the 1,792 hops are added)", "A", "ctl",
+              hv["step_us"] * CY - t, src("zero", "tools/s81/field_phases_1792.py compose", note=f"MTP_step_us = tau x 1e6 / "
+              f"round(MTP_tok_s, 1) + extra hops: {hv['rounding_us'] * CY:+.1f} cycles against the sum of the terms "
+              "(+ the 0.1-cycle rounding of the operators)"), op="accept.round", start=t,
+              elements=[], instances=[])
+    mark(n, "accept")
+    total = t + n["cycles"]
+    assert abs(total - hv["step_us"] * CY) < 0.6, (total, hv["step_us"] * CY)
+    phases = phase_spans(d, total)
+    headline = dict(tok_s=hv["MTP_tok_s"], us=hv["step_us"], cycles=r1(hv["step_us"] * CY), tau=m["tau"],
+                    mode=f"MTP (DSpark gamma 5, tau {m['tau']}), position 1,048,575", ar_tok_s=hv["AR_tok_s"],
+                    mtp_over_ar=round(hv["MTP_tok_s"] / hv["AR_tok_s"], 3),
+                    basis=f"{m['rule']}; 1,792 HALF mapping adds {hv['extra_hops_1792']} hops once a step",
+                    source=REPRICE + " ds_rom.after.half_phl.MTP_tok_s", status="measured field + composed MTP rule "
+                    "(wavefront and draft placement not physically qualified)", physical_qualified=m.get("physical_qualified"))
+    drill = dict(group="W", why="the wavefront: positions 2-6 at the slowest stage's interval")
+    notes = [
+        "One MTP step: the DSpark draft (3 blocks + 5 serial head steps) -> verify (position 1 is the whole AR pass, the "
+        f"fixed latency paid once; positions 2-6 follow it through the pipeline at one interval II = slowest stage busy x "
+        f"(1 + 46/11,271) + hop = {m['II_us']} us each) -> accept / commit + the next step's seed.",
+        f"Rate = tau {m['tau']} accepted tokens / step ({hv['step_us']} us) = {hv['MTP_tok_s']:,.1f} tok/s; full-rate BF "
+        f"(98 stages): {variants['full_rate_shared98']['MTP_tok_s']:,.1f} tok/s (phase split in mtp_variants).",
+        "Hatched operators have no closed hardware: the three DSpark stages and the seed run on dies the S81 binding does not "
+        "contain (mtp.* weights are unowned there); the Markov head is a transfer ratio. The wavefront controller and the "
+        "accept unit closed as blocks but are not integrated (dashed).",
+        "The verify pass's operators are the AR view's critical path (off-critical operators: see the AR view).",
+    ]
+    rec = finish(d, headline, gdef, DS_CLASSES + MTP_CLASSES_EXTRA, drill, notes, tau=m["tau"],
+                 extra=dict(geometry=ar["geometry"], mtp_variants=variants))
+    rec.update(phases=phases, hw_summary=hw_summary(d),
+               accounting=accounting(total, m["tau"], ar["totals"]["cycles"], phases, m["tau_source"]))
+    return rec
+
+
+def hbm_p6():
+    """the matched reference's MTP walk at P = 6 for its MTP gate row (corrected+wg+su12), replayed in-process"""
+    import dshbm_matched_reference as MR
+    A, CL = MR.A, MR.CL
+    prog = json.loads((A.BASE / "program.json").read_text())
+    _, su6, _, _ = A.su_tables()
+    coll, local = A.Coll(A.load(MR.INH / "collectives.json")), A.Local(A.load(MR.INH / "local.json"))
+    hbm_ = A.Hbm(A.load(MR.INH / "hbm_streams.json"))
+    smseq = MR.SMSeq(sorted((MR.REC / "sm_seq").glob("*_nc8_a*.json")))
+    f6 = MR.REC / "su_m6a5" / "su_N1024_M256_b7r8m6a5_dpi_beh_su_cases_p6om_ildr.json"
+    s6 = CL.best_of([("dr", json.loads(f6.read_text()))])
+    T12 = dict(A.TARGET, su=1.2e9, du_ser=MR.F_SER)
+    return MR.mtp(prog, smseq, CL.su_table_overlap(s6), coll, local, hbm_, T12, ("coll", "local", "hbm", "mixes"), True, None)
+
+
+def hbm_mtp(ar=None):
+    M_ = "results/rtl/dshbm_matched_reference_20261005/composition.json"
+    HWS = "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
+    ar = ar or hbm()
+    m = J(M_)
+    gate = m["gate"]
+    row = {r["name"]: r for r in m["ladder_target_clocks"]}[gate["MTP_row"]]["MTP"]
+    mm, rows6 = hbm_p6()
+    assert abs(mm["step_us"] - gate["MTP_step_us"]) < 0.001 and abs(mm["step_us"] - row["step_us"]) < 0.001, (mm["step_us"], gate)
+    uni = J(UNI)["targets"]["hbm_ds"]
+    lines = {l["id"]: l for l in uni["lines"]}
+    comp = uni["compositions"]["unified_candidate_contracts_rtl"]
+    rp = J(REPRICE)["hbm_ds"]
+    tau = comp["tau"]
+    use = [l for l in uni["lines"] if l["role"] in ("base", "published", "candidate", "lever") and l["effect"]]
+    use = [l for l in use if l["id"] != "collective_sram_protected"] + [lines["cdc_refill_ii1"], lines["sm_su_native_edge_proposed"]]
+    assert abs(sum(l["effect"]["MTP_step"] for l in use) - comp["MTP_step_us"]) < 0.002
+    assert abs(lines["matched_gate"]["effect"]["MTP_step"] - mm["step_us"]) < 0.001
+    CY = CLK / 1e6
+    wt = J(HWS)["compositions"]["ds_matched"]["terms"]
+    wsh = {c: sum(wt[k]["us"] for k in (keys if isinstance(keys, tuple) else (keys,))) for c, keys in WIRE_SHARES.items()}
+    serial = [n for n in rows6 if not n["node"].startswith("hcp:")]
+    hcp = [n for n in rows6 if n["node"].startswith("hcp:")]
+    assert all(n["us"] == 0 for n in hcp)
+    idx_by_cls = collections.defaultdict(list)
+    for i, n in enumerate(serial):
+        idx_by_cls[hbm_cls(n)].append(i)
+    adders = collections.defaultdict(list)
+
+    def spread(item, us, classes, grade, record, weight=None, note=None):
+        if not us:
+            return
+        keys = [i for c in classes for i in idx_by_cls[c]]
+        w = [weight(serial[i]) for i in keys] if weight else None
+        for i, v in distribute(us * CY, keys, w).items():
+            a = dict(item=item, cycles=v, grade=grade, record=record)
+            if note:
+                a["note"] = note
+            adders[i].append(a)
+
+    for l in use:
+        if l["id"] == "matched_gate":
+            continue
+        rule = HBM_RULES[l["id"]]
+        rec_ = l["source"][0]["file"] if isinstance(l["source"], list) and l["source"] else UNI
+        gr_ = "lever" if l["role"] == "lever" else "priced"
+        eff = l["effect"]["MTP_step"]
+        if rule == "wire":
+            tot = sum(wsh.values())
+            for c, s_ in wsh.items():
+                spread(l["id"], eff * s_ / tot, [c], gr_, rec_, note=f"{l['item'][:160]}; MTP_step effect, spread over the r05 wire-class shares")
+        elif rule == "fec":
+            spread(l["id"], eff, ["coll"], gr_, rec_, weight=lambda n: n.get("budget_us") or 0.0,
+                   note=f"{l['item'][:160]}; MTP_step effect per switch crossing, weighted by TU budget")
+        else:
+            spread(l["id"], eff, rule, gr_, rec_, note=f"{l['item'][:160]}; MTP_step effect over the {'/'.join(rule)} nodes")
+    # re-price (upper bound): the same cycles a step as the AR walk (unified convention), placed per occurrence
+    RPR = REPRICE + " hbm_ds (upper bound)"
+    items = {x["item"]: x["cycles_hi"] for x in rp["items"]}
+    n_ar = n_g = 0
+    for i, n in enumerate(serial):
+        if n["node"].startswith("coll:"):
+            a_ = "all_reduce" in n["how"]
+            n_ar += a_; n_g += not a_
+            adders[i].append(dict(item="collective_sr_endpoint (re-price 10-08)", cycles=17 if a_ else 14, grade="priced", record=RPR))
+            adders[i].append(dict(item="truecredit_rx_pin (re-price 10-08)", cycles=1, grade="priced", record=RPR))
+    assert 17 * n_ar + 14 * n_g == items["collective_sr_endpoint"] and n_ar + n_g == items["truecredit_rx_pin"], (n_ar, n_g)
+    norm_keys = [i for i, n in enumerate(serial) if n["node"].startswith("su:") and "norm" in n["node"]]
+    for i, v in distribute(items["norm_split"], norm_keys).items():
+        adders[i].append(dict(item="norm_split (re-price 10-08)", cycles=v, grade="priced", record=RPR,
+                              note=f"+2 x the AR path's fused norm nodes = {items['norm_split']} cycles a step, spread over the "
+                                   f"{len(norm_keys)} SU norm nodes of the P6 walk (unfused SU chains at P6)"))
+    spread("packet_sram_ii1rw (re-price 10-08)", items["packet_sram_ii1rw"] / CY, ["coll"], "priced", RPR,
+           note="+4 a packet pass x 610 passes, spread over the collectives")
+    d = Design("hbm_ds", "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, MTP (DSpark, gamma 5)", "cycles")
+    gdef = collections.OrderedDict()
+    # ---- draft
+    drw = [x for x in J(HBM_DRAFT)["rows"] if x["ctx"] == "1M" and x["scenario"] == "tomahawk_ultra_protocol"
+           and x["design"] == "ablation_w19"][0]
+    ab = drw["as_built"]
+    assert abs(ab["draft_us"] - mm["draft_us"]) < 1e-6 and abs(drw["seed_commit_us"] - mm["seed_commit_us"]) < 1e-6
+    gdef["D"] = dict(label="Draft: 3 DSpark stages + LM head + 5-step Markov chain", kind="draft", phase="draft")
+    ctl_hw = hw("built", "SM array (as the AR path) + the DSpark controller ot_dshbm_dspark_ctl (ctl_f2) and the SM argmax "
+                "epilogue ot_dshbm_argmax (argmax_f1), both closed blocks", evidence=HBM_CTL)
+    n = d.add("draft.compute", "draft compute: embed + 3 DSpark stages (5 slots) + batched LM head pass + 5-step Markov chain",
+              "D", "sm", (ab["draft_us"] - ab["draft_transport_us"]) * CY,
+              src("measured", HBM_DRAFT, "rows[1M, tomahawk_ultra_protocol, ablation_w19].as_built",
+                  note="stage SM ops measured 5-column on the SM element (exact), head 5-col pass, chain step measured; "
+                       "composed per the record's definition (draft_us - draft_transport_us)"),
+              op="draft.compute", elements=HBC["sm"]["elements"] + ["ot_dshbm_argmax"], instances=HBC["sm"]["instances"])
+    mark(n, "draft", ctl_hw)
+    n = d.add("draft.transport", "draft collectives / transport (18 stage collectives + cross-die argmax merges)", "D", "coll",
+              ab["draft_transport_us"] * CY, src("modelled", HBM_DRAFT, "as_built.draft_transport_us",
+                                                  note="w15 collective time; o-group tree reduce + multicast extrapolated (record flag)"),
+              op="draft.transport", elements=HBC["coll"]["elements"], instances=HBC["coll"]["instances"])
+    mark(n, "draft", hw("built", "the collective endpoint + switch tier of the AR path; its time is extrapolated, not the hardware"))
+    # ---- verify: the P6 walk
+    def gname(n):
+        L = n["layer"]
+        return "embed" if L == -2 else "head" if isinstance(L, str) else f"L{L}"
+    for i, n in enumerate(serial):
+        gid = "V." + gname(n)
+        if gid not in gdef:
+            b = gname(n)
+            gdef[gid] = dict(label="verify " + {"embed": "embed", "head": "LM head + argmax"}.get(b, f"layer {b[1:]}"),
+                             kind="embed" if b == "embed" else "head" if b == "head" else "layer", phase="verify")
+        c = hbm_cls(n)
+        grade = {"measured": "measured", "measured_tu_budget": "measured+vendor", "modelled": "modelled"}[n["cls"]]
+        nn = d.add(f"v{i:04d}", n["node"], gid, c, n["us"] * CY,
+                   src(grade, "tools/dshbm_matched_reference.py mtp() walk P=6", f"row {gate['MTP_row']}", note=n["how"][:600]),
+                   op=n["node"].split(":")[0], elements=HBC[c]["elements"], instances=HBC[c]["instances"], adders=adders.get(i, []))
+        nn["layer"] = n["layer"]
+        if n.get("budget_us"):
+            nn["vendor_budget_cycles"] = r1(n["budget_us"] * CY)
+        mark(nn, "verify")
+    gdef["VU"] = dict(label="verify: routed-expert union over 6 positions (W19 model)", kind="union", phase="verify")
+    un_hw = hw("partial", "ot_dshbm_expert_union closed as a block (union_f3, SS +9.52 / FF +10.79 ps) but not adopted "
+               "(adopted_system false); the SM / fetch increment itself is the W19 lines-style model, no RTL walk",
+               evidence=HBM_CTL + " rows[union_f3]")
+    for k, c, lab in (("sm", "sm", "union: extra expert SM work (6 positions' union of routed experts)"),
+                      ("fetch", "hbm", "union: extra expert weight fetch (union of routed experts)")):
+        n = d.add(f"union.{k}", lab, "VU", c, mm["union_model_us"][k] * CY,
+                  src("modelled", "hbm_accelerator_model VERIFY_PARTS[6] - [1]", note="W19 model increment (verify P6 over P1); "
+                      "the matched reference keeps it unchanged (an HBM-favourable lower bound)"),
+                  op=f"union.{k}", elements=HBC[c]["elements"] + ["ot_dshbm_expert_union"], instances=HBC[c]["instances"])
+        mark(n, "verify", un_hw)
+    # ---- accept / commit + seed
+    gdef["A"] = dict(label="accept / commit + seed of the next step", kind="accept", phase="accept")
+    sp = J(HBM_DRAFT)["elements"]["seed"]["parts_us"]
+    rest = mm["seed_commit_us"] - sum(sp.values())
+    seed_hw = hw("built", "SM / SU / barrier of the AR path")
+    for k, c, lab, gr in (("sm", "sm", "seed: main_proj (6 columns) on the SMs", "measured"),
+                          ("local", "su", "seed: main_x gather + main_norm + 3 stages' wkv window rows", "measured"),
+                          ("barrier", "barrier", "seed: barrier", "measured"),
+                          ("collective", "coll", "seed: 1 collective (the record's remainder)", "apportioned"),
+                          ("commit", "ctl", "accept / commit: compare, emit accepted tokens, roll back spec state", "measured")):
+        us = rest if k == "collective" else sp[k]
+        n = d.add(f"accept.{k}", lab, "A", c, us * CY,
+                  src(gr, HBM_DRAFT, "elements.seed.parts_us" if k != "collective" else "seed_commit_us - sum(parts)",
+                      note=f"seed_commit {mm['seed_commit_us']} us = parts {sp} + 1 collective"),
+                  op=f"accept.{k}", elements=(MTP_CLASSES_EXTRA[1]["elements"] if c == "ctl" else HBC[c]["elements"]),
+                  instances=(MTP_CLASSES_EXTRA[1]["instances"] if c == "ctl" else HBC[c]["instances"]))
+        mark(n, "accept", hw("partial", "ot_dshbm_dspark_ctl (ctl_f2) and ot_hdc_accept (accept_a0) closed as blocks; "
+                             "ot_dshbm_spec_state NOT adopted (spec3_s8 terminal: 2 mismatches; route positive) and the "
+                             "accelerator is not qualified as a whole", evidence=HBM_CTL + " blocked.spec_state")
+             if k == "commit" else seed_hw)
+    total = d.chain_schedule()
+    # HC mixes beside the layer body (exposed 0)
+    first_of = {}
+    for nid in d.order:
+        first_of.setdefault(d.nodes[nid]["group"], nid)
+    for k, n in enumerate(hcp):
+        mo = re.search(r"([\d.]+) us beside a ([\d.]+) us body", n["how"])
+        dur, body = float(mo.group(1)), float(mo.group(2))
+        gid = "V." + gname(n)
+        grp_nodes = [x for x in d.order if d.nodes[x]["group"] == gid]
+        if n["node"].split(".")[-1] == "ffn":
+            k0 = next((j for j, x in enumerate(grp_nodes) if d.nodes[x]["label"].startswith("su:hc_post")), None)
+            anchor = grp_nodes[k0 + 1] if k0 is not None and k0 + 1 < len(grp_nodes) else grp_nodes[0]
+        else:
+            anchor = grp_nodes[0]
+        nn = d.add(f"hcp{k:03d}", n["node"], gid, "hc", dur * CY, src("measured", "tools/dshbm_matched_reference.py mtp() walk P=6",
+                   note=n["how"]), op="hcp", elements=HBC["hc"]["elements"], instances=HBC["hc"]["instances"], critical=False,
+                   deps=[], start=d.nodes[anchor]["start"], kind="parallel")
+        nn["layer"] = n["layer"]
+        nn["slack"] = r1((body - dur) * CY)
+        mark(nn, "verify")
+    after = rp["upper"]["after"]
+    exp_us = comp["MTP_step_us"] + sum(x["cycles_hi"] for x in rp["items"]) / CY
+    assert abs(total / CY - exp_us) < 0.01, (total / CY, exp_us)
+    phases = phase_spans(d, total)
+    headline = dict(tok_s=after["MTP_tok_s"], us=round(exp_us, 3), cycles=r1(exp_us * CY), tau=tau,
+                    mode=f"MTP (DSpark gamma 5, tau {tau}), position 1,048,575", ar_tok_s=after["AR_tok_s"],
+                    mtp_over_ar=round(after["MTP_tok_s"] / after["AR_tok_s"], 3),
+                    basis=f"{UNI} hbm_ds unified_candidate_contracts_rtl MTP step ({comp['MTP_step_us']} us, {comp['MTP_tok_s']} "
+                          f"tok/s) + the 2026-10-08 re-price upper bound; step = draft + verify (P6 walk + expert union) + seed/commit "
+                          f"(gate row {gate['MTP_row']}, {gate['MTP_step_us']} us)",
+                    source=REPRICE + " hbm_ds.upper.after.MTP_tok_s", status="priced candidate (not a closed rate)",
+                    gate_row=gate["MTP_row"])
+    worst = max((g for g in gdef if g.startswith("V.L")), key=lambda g: sum(d.nodes[x]["cycles"] for x in d.order if d.nodes[x]["group"] == g))
+    drill = dict(group=worst, why="the longest verify layer (6 positions on one weight fetch)")
+    notes = [
+        "One MTP step: draft (as-built DSpark draft on the SMs) -> verify (the 6 positions walk the layers together: one weight "
+        "fetch, the MMA columns carry the positions; the SU, attention and collectives scale with the positions) + the routed-"
+        "expert union increment -> accept / commit + the next step's seed.",
+        f"Verify walk: tools/dshbm_matched_reference.py mtp() at P = 6 on the gate's MTP row {gate['MTP_row']} ({len(rows6)} "
+        "operators, replayed in-process); the unified composition's MTP_step line effects are spread as in the AR view "
+        "(the joint PQ/XMAP lever credits -77.1 us here vs -36.4 AR; W2_PACK credits 0 at MTP).",
+        f"Rate = tau {tau} / step = {after['MTP_tok_s']:,.1f} tok/s (re-price upper bound; lower bound in reprice.json).",
+        "Hatched: no closed hardware; dashed: a closed block not adopted / integrated (expert union, spec state).",
+    ]
+    rec = finish(d, headline, gdef, HBM_CLASSES + MTP_CLASSES_EXTRA[1:], drill, notes, tau=tau,
+                 extra=dict(geometry=ar["geometry"]))
+    rec.update(phases=phases, hw_summary=hw_summary(d),
+               accounting=accounting(total, tau, ar["totals"]["cycles"], phases, row["tau_source"]))
+    return rec
+
+
+def qwen_mtp_note():
+    v = J(QWEN_VERDICT)
+    return dict(available=False, verdict=v["verdict"], source=QWEN_VERDICT,
+                reason=f"AR only by the owner's decision (2026-10-05, {QWEN_VERDICT} verdict {v['verdict']}): the Qwen3-8B ROM is "
+                       "compute-balanced (weight read rate = MAC rate), so a multi-position verify costs about as much per "
+                       "position as an AR layer and DSpark measured below AR (best np3: "
+                       f"{v['best']['speedup_vs_ar_upper']}-{v['best']['speedup_vs_ar_lower']}x AR). DSpark stays built and "
+                       "exact but off; speculation pays only where the dominant per-token cost is shared across positions "
+                       "(the DS ROM and the HBM accelerator).")
+
+
 # ======================================================================================== geometry snapshots (views)
 def geo_snapshot(key):
     """neutral geometry for the views' harness: {w, h, instances: [[name, kind, x, y, w, h, master]]} (y up)"""
@@ -930,30 +1485,75 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
+OPTIONAL_TARGETS = ("qwen_hbm",)
+
+
+def target_functions(namespace):
+    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_ds=namespace["hbm"])
+    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_ds=namespace["hbm_mtp"])
+    for name in OPTIONAL_TARGETS:
+        if callable(namespace.get(name)):
+            fns[name] = namespace[name]
+            if callable(namespace.get(name + "_mtp")):
+                mtps[name] = namespace[name + "_mtp"]
+    return fns, mtps
+
+
+def optional_mtp_qualified(record):
+    """A characterization tau cannot establish deployment throughput."""
+    return bool((record.get("qualification") or {}).get("deployment_qualified") is True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--viz-dir", type=Path, default=None, help="also write data/ + geometry snapshots for the views here")
-    ap.add_argument("--only", default="qwen_rom,ds_rom,hbm_ds")
+    ap.add_argument("--only", default=None, help="comma-separated targets; default: all implemented targets")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    fns = dict(qwen_rom=qwen, ds_rom=ds_rom, hbm_ds=hbm)
+    fns, mtps = target_functions(globals())
     index = []
-    for k in a.only.split(","):
-        rec = fns[k]()
+
+    def write(name, rec):
         rec["inputs"] = {p: sha(p) for p in sorted({REPRICE, UNI, GEO})}
-        p = a.out / f"{k}.json"
+        p = a.out / f"{name}.json"
         p.write_text(json.dumps(rec, separators=(",", ":")) + "\n")
-        t = rec["totals"]
-        print(f"{k}: {t['cycles']:,.1f} cycles = {t['us']} us = {t['tok_s']} tok/s (published {t['tok_s_published']}); "
-              f"{len(rec['nodes'])} nodes, {len(rec['critical_path'])} on the critical path, {len(rec['groups'])} groups")
-        index.append(dict(design=k, title=rec["title"], file=p.name, tok_s=t["tok_s_published"], cycles=t["cycles"]))
         if a.viz_dir:
             dd = a.viz_dir / "data"
             dd.mkdir(parents=True, exist_ok=True)
             shutil.copy(p, dd / p.name)
+        return p
+
+    for k in (a.only.split(",") if a.only else fns):
+        rec = fns[k]()
+        mrec = mtps[k](rec) if k in mtps else None
+        if mrec and k in OPTIONAL_TARGETS and not optional_mtp_qualified(mrec):
+            mrec = None
+            rec["mtp"] = dict(available=False, deployment_qualified=False,
+                              reason="speculative characterization has not passed deployment qualification")
+        if mrec:
+            t = mrec["totals"]
+            rec["mtp"] = dict(available=True, file=f"{k}_mtp.json", tok_s=t["tok_s_published"], tau=t["tau"],
+                              step_cycles=t["cycles"], per_accepted_cycles=t["per_accepted_cycles"])
+            mrec["ar"] = dict(file=f"{k}.json", tok_s=rec["totals"]["tok_s_published"], cycles=rec["totals"]["cycles"])
+            write(f"{k}_mtp", mrec)
+            print(f"{k} MTP: step {t['cycles']:,.1f} cycles = {t['us']} us, tau {t['tau']} -> {t['tok_s']} tok/s (published "
+                  f"{t['tok_s_published']}); per accepted {t['per_accepted_cycles']:,.1f} cycles; phases "
+                  f"{[(x['id'], x['cycles']) for x in mrec['phases']]}; hw {mrec['hw_summary']}")
+            for vk, vv in (mrec.get("mtp_variants") or {}).items():
+                print(f"   {vk}: {vv['reproduces']}")
+        else:
+            rec.setdefault("mtp", qwen_mtp_note() if k == "qwen_rom" else
+                           dict(available=False, reason="no qualified speculative composition implemented"))
+        p = write(k, rec)
+        t = rec["totals"]
+        print(f"{k}: {t['cycles']:,.1f} cycles = {t['us']} us = {t['tok_s']} tok/s (published {t['tok_s_published']}); "
+              f"{len(rec['nodes'])} nodes, {len(rec['critical_path'])} on the critical path, {len(rec['groups'])} groups")
+        index.append(dict(design=k, title=rec["title"], file=p.name, tok_s=t["tok_s_published"], cycles=t["cycles"],
+                          mtp=dict(rec["mtp"], reason=None) if mrec else rec["mtp"]))
+        if a.viz_dir:
             gk = rec["geometry"]["key"]
-            (dd / f"geo_{k}.json").write_text(json.dumps(geo_snapshot(gk), separators=(",", ":")) + "\n")
+            (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo_snapshot(gk), separators=(",", ":")) + "\n")
     (a.out / "index.json").write_text(json.dumps(dict(schema="opentallas.token_path.index.v1", designs=index), indent=1) + "\n")
     if a.viz_dir:
         shutil.copy(a.out / "index.json", a.viz_dir / "data" / "index.json")

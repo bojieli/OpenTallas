@@ -1,0 +1,168 @@
+{
+  "generator_source_pin": "0cb3d962452b9a627de3a386cd4e0baf5be0c7bf",
+  "scope": "geometry_only",
+  "network_qualified": false,
+  "timing_qualified": false,
+  "cases": {
+    "r25_adopted": {
+      "geometry_um": {
+        "W": 30590.352,
+        "H": 24621.84,
+        "x0": 365.904,
+        "grp_w": 10107.072,
+        "grp_h": 4665.599999999999,
+        "mid_ch": 8780.832,
+        "hub_h": 12100.32,
+        "side_h": 6260.24,
+        "core_w": 28994.976000000002,
+        "cx": 14863.392,
+        "hub_y": [
+          6607.44,
+          18014.4
+        ],
+        "ew_y": {
+          "S": 9828.576000000001,
+          "N": 15230.16
+        },
+        "spch": 1244.16
+      },
+      "area_mm2": 753.1907524876799,
+      "reticle_margin_um": {
+        "x": 2409.648000000001,
+        "y": 1378.1599999999999
+      },
+      "legality": {
+        "instances": 142,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": [],
+        "reserved_regions": 0,
+        "reserved_overlaps": 0,
+        "reserved_overlap_examples": []
+      },
+      "fit": true,
+      "physical_grid": [
+        4,
+        2
+      ],
+      "group_count": 4,
+      "sm_per_group": 8,
+      "column_corridor_um": 259.2,
+      "side_padding_um": 0,
+      "notes": [
+        "hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 242.8 um",
+        "Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified."
+      ]
+    },
+    "r25_wide_4x2_rejected": {
+      "fit": false,
+      "error": "(38680.848, 20854.8)",
+      "error_type": "AssertionError"
+    },
+    "r25_sm3_reference_unadopted": {
+      "geometry_um": {
+        "W": 30904.848,
+        "H": 24051.6,
+        "x0": 365.904,
+        "grp_w": 10264.392,
+        "grp_h": 4173.191999999999,
+        "mid_ch": 8780.832,
+        "hub_h": 12100.32,
+        "side_h": 5975.191999999999,
+        "core_w": 29309.616,
+        "cx": 15020.712,
+        "hub_y": [
+          6322.32,
+          17729.28
+        ],
+        "ew_y": {
+          "S": 9543.492,
+          "N": 14945.04
+        },
+        "spch": 1244.16
+      },
+      "area_mm2": 743.3110421568,
+      "reticle_margin_um": {
+        "x": 2095.151999999998,
+        "y": 1948.4000000000015
+      },
+      "legality": {
+        "instances": 142,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": [],
+        "reserved_regions": 0,
+        "reserved_overlaps": 0,
+        "reserved_overlap_examples": []
+      },
+      "fit": true,
+      "physical_grid": [
+        3,
+        3
+      ],
+      "group_count": 4,
+      "sm_per_group": 8,
+      "column_corridor_um": 259.2,
+      "side_padding_um": 207.36,
+      "notes": [
+        "hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 400.5 um",
+        "Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified."
+      ]
+    },
+    "r25_fmt3_wide_3x3": {
+      "geometry_um": {
+        "W": 31734.288,
+        "H": 24051.6,
+        "x0": 365.904,
+        "grp_w": 10679.112,
+        "grp_h": 4173.191999999999,
+        "mid_ch": 8780.832,
+        "hub_h": 12100.32,
+        "side_h": 5975.191999999999,
+        "core_w": 30139.055999999997,
+        "cx": 15435.432,
+        "hub_y": [
+          6322.32,
+          17729.28
+        ],
+        "ew_y": {
+          "S": 9543.492,
+          "N": 14945.04
+        },
+        "spch": 1244.16
+      },
+      "area_mm2": 763.2604012608,
+      "reticle_margin_um": {
+        "x": 1265.7119999999995,
+        "y": 1948.4000000000015
+      },
+      "legality": {
+        "instances": 142,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": [],
+        "reserved_regions": 0,
+        "reserved_overlaps": 0,
+        "reserved_overlap_examples": []
+      },
+      "fit": true,
+      "physical_grid": [
+        3,
+        3
+      ],
+      "group_count": 4,
+      "sm_per_group": 8,
+      "column_corridor_um": 259.2,
+      "side_padding_um": 207.36,
+      "notes": [
+        "hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 815.2 um",
+        "Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified."
+      ],
+      "area_delta_vs_unadopted_sm3_mm2": 19.949359103999996,
+      "area_delta_vs_adopted_r25_mm2": 10.069648773120093
+    }
+  }
+}

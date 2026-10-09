@@ -11,9 +11,15 @@ Checks (each calibrated on 2026-10-08's failing vs closed blocks, see THRESHOLDS
                 qfd_link_rx128 77.5% -> 146k HM-50 hold buffers -> DPL-0033; s81b pq-rootcam 85.8%; hbm_coll_port 67%)
   pin_density   signal pins per um per (edge, layer) in a sliding window > pin_density_max (hbm_vm8 seam: 20.8 failed,
                 2.6-7.8 closed)
-  pin_pdn       a signal pin within pin_pdn_clear_um of a PDN strap / via stack on the same or an adjacent layer
-                (s81 hend hx_E: M5 strap + M2-M5 via stack 0.1 um from the M4 pin column -> DRC 4 for 60 iterations)
-  pin_width     a pin shape whose width is not legal on its layer (WIDTHTABLE; hbm_vm8 M7 ck pin 0.064 -> RECTONLY DRC)
+  pin_pdn       (WARNING by default) a signal pin within 1 track of a PDN strap / via stack on the same or an adjacent
+                layer.  Recalibrated 2026-10-08 21:00: the s81 hend hx_W pinreg and hl_E1 blocks carry the SAME strap
+                geometry as the failed hx_E pinreg (M5 strap 0.048 um off the full M4 column, identical PDN via stacks)
+                and closed DRC 0, so it does not separate failure from closure (hx_E is still flagged by util 80.5%).
+                pin_pdn_fail=1 restores the FAIL.
+  pin_width     a pin shape whose width is not on its layer's WIDTHTABLE AND whose via-down access is blocked: a PDN
+                strap on the adjacent layer overlaps / sits within one pitch of the pin footprint, so the router must
+                enter on the pin layer with a min-width stub (RECTONLY DRC).  hbm_vm8 M7 ck pin 0.064 over the M6
+                strap -> DRC 3 (FAIL); hbm_svc_SE_s0 r18b, same 0.064 ck pin with M6 1.43 um away -> DRC 0 (warning).
   channel       nets that must cross a cut line (fixed terminals: macro pins + block pins) exceed the cut's routing
                 tracks (layers >= M4 not blocked by a macro, channel_usable of the pitch) (hbm_attn_tile r23 middle channel)
   macro_edge    a macro within macro_edge_um of a die edge that has signal pins behind it which the macro does not
@@ -60,6 +66,8 @@ THRESHOLDS = {
     # s81 hend hx_E: M5 strap 0.048 um from the full M4 i[] column -> DRC 4 for 60 iterations.  Half-density columns
     # beside the same strap (hfd_svc_SW 10.4 b/um, idxq / attn 5.2) closed: those are warnings.
     "pin_pdn_tracks": 1.0,
+    "pin_pdn_fail": 0.0,          # 0 = warning only (geometry closed DRC 0 in hx_W pinreg / hl_E1); 1 = FAIL
+    "pin_width_access_pitches": 1.0,  # off-table pin FAILS only with adjacent-layer PDN within this many pitches
     "pin_pdn_full_frac": 0.9,
     "channel_usable": 0.5,        # usable share of a cut's tracks (PDN, std-cell local routing)
     "channel_min_layer": 4,       # long-haul layers (M4+) carry the crossing nets
@@ -369,7 +377,11 @@ def lint(dump, th=None):
 
     # widths
     tabs = width_tables(dump)
-    badw = []
+    badw, softw = [], []
+    pdn_by_layer = defaultdict(list)
+    for kind, l1, l2, r in dump.get("pdn_edge", []):
+        if kind == "wire" and l1 in lvl:
+            pdn_by_layer[lvl[l1]].append(r)
     for name, net, e, layer, p, r in pins:
         if layer not in L:
             continue
@@ -378,12 +390,28 @@ def lint(dump, th=None):
         ok = any(abs(w - t) < 5e-4 for t in tab) if tab else w >= L[layer]["width"] - 5e-4
         if w < L[layer]["width"] - 5e-4:
             ok = False
-        if not ok:
-            badw.append((name, layer, round(w, 4)))
+        if ok:
+            continue
+        # via-down / via-up access: an adjacent-layer PDN strap over (or within a pitch of) the pin footprint
+        v0 = lvl[layer]
+        blocked = False
+        for v in (v0 - 1, v0 + 1):
+            pitch = next((l["pitch"] for l in layers if l["level"] == v), L[layer]["pitch"])
+            lim = T["pin_width_access_pitches"] * pitch + 1e-4
+            if any(rect_gap(r, s_) <= lim for s_ in pdn_by_layer.get(v, ())):
+                blocked = True
+                break
+        (badw if blocked else softw).append((name, layer, round(w, 4)))
     met["pin_width_illegal"] = len(badw)
+    met["pin_width_offtable_accessible"] = len(softw)
     if badw:
         ex = "; ".join(f"{n} {l} w={w}" for n, l, w in badw[:4])
-        fails.append(("pin_width", f"{len(badw)} pin shape(s) with an illegal width for the layer (WIDTHTABLE): {ex}"))
+        fails.append(("pin_width", f"{len(badw)} pin shape(s) off the layer WIDTHTABLE with an adjacent-layer PDN strap "
+                                   f"over the pin (no via access -> RECTONLY stub): {ex}"))
+    if softw:
+        ex = "; ".join(f"{n} {l} w={w}" for n, l, w in softw[:4])
+        warns.append(("pin_width", f"{len(softw)} pin shape(s) off the WIDTHTABLE with free via access "
+                                   f"(closed DRC 0 in hbm_svc_SE_s0 r18b): {ex}"))
 
     # pin <-> PDN clearance (same / adjacent layer)
     shapes = defaultdict(list)       # level -> rects
@@ -431,7 +459,7 @@ def lint(dump, th=None):
     met["pin_pdn_min_um"] = {k: round(v, 3) for k, v in mind.items()}
     if near:
         ex = "; ".join(f"{n} {l} {g} um" for n, l, g in near[:4])
-        fails.append(("pin_pdn", f"{len(near)} pin(s) of a full-density column within {T['pin_pdn_tracks']:g} track of a "
+        (fails if T["pin_pdn_fail"] else warns).append(("pin_pdn", f"{len(near)} pin(s) of a full-density column within {T['pin_pdn_tracks']:g} track of a "
                                  f"PDN strap / via stack on the same or an adjacent layer ({ex}): offset the strap half a "
                                  f"pitch off the pin column (pdn_view_m5w.tcl) or inset the core"))
     elif soft:
@@ -480,12 +508,21 @@ def lint(dump, th=None):
         fails.append(("macro_edge", f"{len(shadow)} macro(s) abut a pin edge with signal pins behind them ({ex}): keep "
                                     f"macros off pin edges (rows/columns inside, channels to the pins)"))
 
-    # pin bank distance
+    # pin bank distance, direction-aware (safe-hbm 2026-10-08, reviewer Q8/Q9): the rule is about the macro that DRIVES
+    # an output pin or RECEIVES from an input pin.  On a net whose block port is an OUTPUT, only the macro whose pin on it
+    # is an output (the driver) is measured; sink macros of that net (a fanout of the same register bank into other
+    # banks, e.g. hfd_attn_half_lo root_q -> xp ports + u_fr / u_mid) are exempt.  Nets with an INPUT port are unchanged.
+    port_io = {name: io for name, net, sig, io, boxes in dump["bterms"]}
     far = []
     for i, m in enumerate(macros):
         pts = []
         for net, x, y, io, cap in m["pins"]:
-            pts += [(t[2], t[3]) for t in net_terms.get(net, ()) if t[0] == "P"]
+            for t in net_terms.get(net, ()):
+                if t[0] != "P":
+                    continue
+                if port_io.get(t[1]) == "OUTPUT" and io != "OUTPUT":
+                    continue
+                pts.append((t[2], t[3]))
         if len(pts) < T["bank_min_pins"]:
             continue
         cx = sum(p[0] for p in pts) / len(pts)

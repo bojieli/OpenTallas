@@ -62,6 +62,11 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer ROM_PIPE = 0,
     parameter integer ROM_ARELAY = 1,
     parameter integer ROM_MUT = 0,        // bench negative control: 1 = the capture register's bank select one edge early
+    // ROM_CAP2 = 1 (safe-qwen S-A1, 2026-10-08; needs ROM_PIPE; 0 = unchanged): one more register stage between the pin
+    // capture (cap, placed at the macro pins by rom_cap_at_pins.tcl) and the INT8 -> BF16 expansion / group OR (cap2,
+    // with its bank select sel_c2), so the cap -> BF16 / group-OR -> gs stage (the predicted next limiter) is a
+    // register-to-register hop.  +1 memory cycle per matvec fill (RX = ROM_ARELAY + 2 + ROM_CAP2; KV and x follow RX).
+    parameter integer ROM_CAP2 = 0,
     // BAW: bank address width (12: ot_rom_4096x266_m8 banks; 11: ot_rom_2048x266_m8 half-depth banks, SS clk->q
     // 604 ps, twice CODE_BANKS for the same words -- the single-cycle capture then closes with a balanced clock)
     parameter integer BAW = 12,
@@ -113,7 +118,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     input  wire [TG*W*32-1:0] kv_q
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
-    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2) : 0;   // extra memory cycles of the ROM pipeline
+    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0;   // extra memory cycles of the ROM pipeline
     localparam integer ME_EXTRA = MEM_EXTRA + RX;
     localparam integer SB = (CODE_BANKS + 1) / 2;                      // south group: banks [0, SB)
     generate if (ROM_PIPE != 0 && (MEM_EXTRA != 1 || ROM_ARELAY < 1)) begin : g_rp_bad
@@ -257,12 +262,13 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign rom_addr = rq_ad_s[ROM_ARELAY];
         assign rom_addr_n = rq_ad_n[ROM_ARELAY];
         //: bank select of the word in the capture registers (held when no read: the macros hold their output)
-        reg [CODE_BANKS-1:0] sel_1, sel_c;
+        reg [CODE_BANKS-1:0] sel_1, sel_c, sel_c2;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin sel_1 <= {CODE_BANKS{1'b0}}; sel_c <= {CODE_BANKS{1'b0}}; end
+            if (!rst_n) begin sel_1 <= {CODE_BANKS{1'b0}}; sel_c <= {CODE_BANKS{1'b0}}; sel_c2 <= {CODE_BANKS{1'b0}}; end
             else begin
                 if (|rom_ce) sel_1 <= rom_ce;          // the edge the macro samples
                 sel_c <= sel_1;                        // the edge its word lands in the capture register
+                sel_c2 <= sel_c;                       // ROM_CAP2: the edge it lands in cap2
             end
         end
         for (p = 0; p < TG / 2; p = p + 1) begin : g_pair
@@ -275,9 +281,18 @@ module ot_qwen_rom_tile_logic_w12 #(
                 //: the bank's output register at its pins, no enable
                 (* keep *) reg [PWB-1:0] cap;
                 always @(posedge clk) cap <= rom_rd[(p*CODE_BANKS + b)*266 +: PWB];
+                wire [PWB-1:0] cx;                     // the word the expansion reads
+                wire           sx, sx_early;           // its bank select (and the mutant's one-edge-early select)
+                if (ROM_CAP2 != 0) begin : g_cap2
+                    (* keep *) reg [PWB-1:0] cap2;
+                    always @(posedge clk) cap2 <= cap;
+                    assign cx = cap2; assign sx = sel_c2[b]; assign sx_early = sel_c[b];
+                end else begin : g_cap1
+                    assign cx = cap; assign sx = sel_c[b]; assign sx_early = sel_1[b];
+                end
                 genvar e;
                 for (e = 0; e < PWB / 8; e = e + 1) begin : g_cv
-                    assign cv[b][16*e +: 16] = int8_bf16(cap[8*e +: 8]) & {16{(ROM_MUT != 0) ? sel_1[b] : sel_c[b]}};
+                    assign cv[b][16*e +: 16] = int8_bf16(cx[8*e +: 8]) & {16{(ROM_MUT != 0) ? sx_early : sx}};
                 end
                 assign os[b+1] = (b < SB) ? (os[b] | cv[b]) : os[b];
                 assign on[b+1] = (b < SB) ? on[b] : (on[b] | cv[b]);
@@ -392,6 +407,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
     parameter integer ROM_PIPE = 0,       // ot_qwen_rom_tile_logic_w12 ROM_PIPE (the KV write port takes ROM_ARELAY more stages)
     parameter integer ROM_ARELAY = 1,
+    parameter integer ROM_CAP2 = 0,       // ot_qwen_rom_tile_logic_w12 ROM_CAP2 (safe-qwen S-A1)
     parameter integer LRST = 0,
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
@@ -422,7 +438,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .LRST(LRST), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .LRST(LRST), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_rd(rom_rd),

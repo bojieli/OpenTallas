@@ -1,0 +1,5 @@
+{
+ "verdict": "FAIL",
+ "source_sha256": "14042daea0ae2b9052c97dd69721d769e272b7f9e80fe77a3748a5d35b69f7c9",
+ "reason": "Whole-K GU phase six segments per pair demands48words per(q,b), exceeding NCH16. Must split into legal subphases."
+}

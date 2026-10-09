@@ -1,0 +1,48 @@
+{
+  "source_commit": "0544fca2c",
+  "host": "ot-epyc3",
+  "status": "FAILED_GRT_PARASITIC_STA",
+  "qualification": "interim511-pair reduced Markov32 vehicle; no detailed-route or signoff credit",
+  "evidence": {
+    "STATUS.log": {
+      "path": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/STATUS.log",
+      "sha256": "22dfdf5a2bc0197120a301004a94f7d80b64baa56043c5f854bfd094cdfc8d4a",
+      "excerpts": [
+        "2026-10-09 05:59:57 UTC GRT+STA: [INFO GRT-0018] Total wirelength: 1134590707 um | tt worst slack max -303.5 tns max -428995.9  ff worst slack min -341.5 tns min -29752906.0  ss worst slack max -351.0 tns max -2191779.5  "
+      ]
+    },
+    "grt/grt.log": {
+      "path": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/grt/grt.log",
+      "sha256": "c74bc96d92b159930fd5f03c789b26356d4bea1bdaaa9a4ea6ec53e3d0c77c51",
+      "excerpts": [
+        "[INFO GRT-0096] Final congestion report:",
+        "Total        1400535305       110604077            7.90%             0 /  0 /  0",
+        "[INFO GRT-0018] Total wirelength: 1134590707 um"
+      ]
+    },
+    "grt/sta_ss.log": {
+      "path": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/grt/sta_ss.log",
+      "sha256": "018b762a1258dd0227a7cde1c31c5659f33eed0b0161b7a0f832d2edf4216b64",
+      "excerpts": [
+        "worst slack max -351.0",
+        "tns max -2191779.5"
+      ]
+    },
+    "grt/sta_tt.log": {
+      "path": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/grt/sta_tt.log",
+      "sha256": "ea5c729448445de775f2c0c60aced7b5b32b902c2865607b5fc2786d2e66d852",
+      "excerpts": [
+        "worst slack max -303.5",
+        "tns max -428995.9"
+      ]
+    },
+    "grt/sta_ff.log": {
+      "path": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/grt/sta_ff.log",
+      "sha256": "d53d141721c49cb8453a0f9e20f878a3e9ab62a4b13906186e96b8aee8cb016a",
+      "excerpts": [
+        "worst slack min -341.5",
+        "tns min -29752906.0"
+      ]
+    }
+  }
+}

@@ -9,7 +9,6 @@
 :root{
   --bg:#05070d; --panel:#0b1020; --panel2:#0f1629; --line:#1b2540; --ink:#e8eefc; --dim:#8a97b8; --faint:#4a5678;
   --accent:#5ee7ff; --ok:#4ade80; --warn:#fbbf24; --hot:#ff5d73;
-  --qwen:#7c9cff; --hbm:#38e1c6; --ds:#ffb44d; --other:#c084fc;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
@@ -17,99 +16,262 @@
 [hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
 body{background:radial-gradient(1200px 600px at 70% -10%,#10204a55,transparent),radial-gradient(900px 500px at 0% 110%,#2a0f3a44,transparent),var(--bg);min-height:100vh}
-.wrap{max-width:1500px;margin:0 auto;padding:18px 16px 28px}
+.wrap{max-width:1560px;margin:0 auto;padding:18px 16px 28px}
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-h1{margin:0;font-size:clamp(20px,3.2vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+h1{margin:0;font-size:clamp(18px,2.4vw,26px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
 h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--dim);font-size:13px;margin-top:4px}
 .live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1020cc}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
 @keyframes pulse{50%{opacity:.35}}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
-.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden}
-.kpi .l{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
-.kpi .v{font:800 clamp(22px,3.4vw,40px)/1.1 var(--sans);font-variant-numeric:tabular-nums;margin-top:4px;position:relative;z-index:1}
-.kpi .v small{font-size:.45em;color:var(--dim);font-weight:600;margin-left:4px}
-.kpi .s{color:var(--dim);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;position:relative;z-index:1;padding-bottom:16px}
-.kpi canvas{position:absolute;left:0;right:0;bottom:0;width:100%;height:22px;opacity:.5}
-.mid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px}
-.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px}
-.ptitle{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-#map{width:100%;aspect-ratio:2.25/1;display:block}
-.ticker{list-style:none;margin:0;padding:0;max-height:300px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
-.ticker li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:7px 2px;border-bottom:1px solid #141c33;font-size:13px;animation:slidein .7s ease-out}
-.ticker li.new{background:linear-gradient(90deg,#5ee7ff22,transparent)}
+.cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.coltitle{font:700 11px var(--mono);letter-spacing:.14em;color:var(--faint);text-transform:uppercase;margin:2px 2px -4px}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.ptitle{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.ptitle b{color:var(--ink);font-weight:600;letter-spacing:.02em;text-transform:none;font-size:12px}
+.stats{display:flex;gap:6px 16px;flex-wrap:wrap;font:12px var(--mono);color:var(--dim);margin-bottom:8px}
+.stats b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+canvas.chart{width:100%;display:block}
+#ramArea{height:200px}
+#tanks{height:170px;margin-top:10px}
+#closeChart{height:170px}
+.legend2{display:flex;gap:6px 12px;flex-wrap:wrap;font:11px var(--mono);color:var(--dim);margin-top:8px}
+.legend2 span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:9px;height:9px;border-radius:3px;display:inline-block}
+.ticker{list-style:none;margin:0;padding:0;max-height:640px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.ticker li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:9px 8px;border-bottom:1px solid #141c33;font-size:13px;animation:slidein .7s ease-out;border-radius:8px}
+.ticker li .bk{font:800 15px var(--mono);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticker li .jn{grid-column:2;color:var(--dim);font:11.5px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticker li .sl{grid-column:3;grid-row:1/3;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.ticker li .sl span{font:700 12.5px var(--mono);font-variant-numeric:tabular-nums;padding:2px 7px;border-radius:6px;background:#4ade801f;color:var(--ok);white-space:nowrap}
+.ticker li .sl span.neg{background:#ff5d731f;color:var(--hot)}
+.ticker li .tag{grid-row:1/3}
+.ticker li.hot{background:linear-gradient(90deg,#ff5d7326,#ffb44d14 50%,transparent);box-shadow:inset 3px 0 0 #ffb44d}
+.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out,glow 2.4s ease-in-out infinite}
+.ticker li.new{animation:flash 1.8s ease-out 2}
+@keyframes glow{50%{box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355}}
+@keyframes flash{0%{background:#ffd23f88;transform:scale(1.02)}100%{}}
+.closepanel{border-color:#ff5d7355;box-shadow:0 0 0 1px #ff5d7322,0 10px 40px #ff5d7314;position:relative;overflow:hidden}
+.closepanel .ptitle span:first-child{color:#ffb4c0;font-weight:700;font-size:12.5px;letter-spacing:.12em}
+.closepanel.boom{animation:boom 1.6s ease-out}
+@keyframes boom{0%{box-shadow:0 0 0 0 #ffd23fcc,0 0 60px #ff5d73aa}100%{box-shadow:0 0 0 22px #ffd23f00,0 10px 40px #ff5d7314}}
+.flame{display:inline-block;width:10px;height:10px;border-radius:50%;background:radial-gradient(#ffd23f,#ff5d73);box-shadow:0 0 12px #ff5d73;animation:pulse 1.2s infinite;margin-right:6px}
+.vctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-2px 0 8px;font:11.5px var(--mono);min-width:0}
+#vchips,#fSt{display:flex;flex-wrap:wrap;gap:6px;min-width:0;max-width:100%}
+#closeHot{flex-wrap:wrap;justify-content:flex-end;min-width:0}#closeHot .nw{white-space:nowrap}
+#vban{display:block;margin:0 0 8px;padding:6px 10px;border-radius:8px;font:800 12px var(--mono);color:#05070d;background:linear-gradient(90deg,#5ee7ff,#4ade80);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;animation:flash 1.8s ease-out 2}
+#vban[hidden]{display:none}
+.vctl select{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 6px;font:11.5px var(--mono)}
+#vfeed{list-style:none;margin:0;padding:0 4px 0 0;height:640px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a3558 transparent}
+#vfeed li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 8px;border-bottom:1px solid #141c33;border-radius:8px;animation:slidein .7s ease-out;border-left:3px solid transparent}
+#vfeed .vs{grid-row:1/span 4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed .bk{font:800 14px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed .bk small{color:var(--dim);font-weight:400;font-size:11px}
+#vfeed .jn,#vfeed .why{grid-column:2;color:var(--dim);font:11px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed .why{color:#b9c2dc}
+#vfeed .sl{grid-column:3;grid-row:1/span 4;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+#vfeed .sl span{font:700 12px var(--mono);font-variant-numeric:tabular-nums;padding:1px 6px;border-radius:5px;white-space:nowrap}
+#vfeed .sl small{color:var(--faint);font:11px var(--mono)}
+.p{background:#4ade801f;color:var(--ok)}.n{background:#ff5d7326;color:var(--hot)}.z{background:#8a97b81a;color:var(--dim)}
+#vfeed li.k-closed{border-left-color:#4ade80}#vfeed li.k-closed .vs{background:#4ade80}
+#vfeed li.k-timing{border-left-color:#ff8a4d;background:linear-gradient(90deg,#ff5d7312,transparent 60%)}#vfeed li.k-timing .vs{background:linear-gradient(135deg,#ff5d73,#ffb44d)}
+#vfeed li.k-flow{border-left-color:#9b8cc9}#vfeed li.k-flow .vs{background:#9b8cc9}#vfeed li.k-flow .bk{color:#c9c2e6}
+#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out,glowg 2.4s ease-in-out infinite}
+#vfeed li.k-closed.hot{background:linear-gradient(90deg,#4ade801c,transparent 60%)}
+#vfeed li.k-check{border-left-color:#f472b6}#vfeed li.k-check .vs{background:#f472b6}
+#vfeed .ck{grid-column:2;font:800 12px var(--mono);color:#f9a8d4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed li.new{animation:flash 1.8s ease-out 2}
+@keyframes glowg{50%{box-shadow:0 0 28px #4ade8055}}
+#toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}#toast.check{background:linear-gradient(90deg,#f472b6,#f9a8d4)}
+#toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#toast.on{transform:translate(-50%,0)}
+#rbar{position:sticky;top:0;z-index:8;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-4px 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#0b1020ee;font:600 12px var(--mono);color:var(--dim);backdrop-filter:blur(6px)}
+#rbar button{font:700 12px var(--mono);background:var(--accent);color:#05070d;border:0;border-radius:8px;padding:6px 12px;cursor:pointer;min-width:64px}
+#rbar input[type=range]{flex:1 1 220px;min-width:140px;accent-color:var(--accent)}
+#rbar .sp{display:inline-flex;gap:4px}#rbar .sp span{padding:4px 8px;border:1px solid var(--line);border-radius:999px;cursor:pointer}#rbar .sp span.on{background:var(--accent);color:#05070d;border-color:var(--accent)}
+#rclock{position:fixed;right:16px;bottom:16px;z-index:9;font:800 20px var(--mono);color:var(--ink);background:#0b1020e6;border:1px solid var(--accent);border-radius:12px;padding:8px 14px;box-shadow:0 8px 40px #5ee7ff33;pointer-events:none}
+#rclock small{display:block;font:600 11px var(--mono);color:var(--dim);letter-spacing:.08em}
+.jobs{margin-top:14px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font:12px var(--mono)}
+.ctl select,.ctl input{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font:12px var(--mono)}
+.ctl input[type=search]{min-width:200px}
+.chip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;line-height:1.35;border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
+.chip.on{color:#05070d;font-weight:700}
+.tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
+table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
+.jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:0;box-shadow:inset 0 -1px 0 var(--line);cursor:pointer;white-space:nowrap;z-index:2}
+.jt th.s::after{content:' \25B4'}.jt th.s.d::after{content:' \25BE'}
+.jt td{padding:3px 7px;border-bottom:1px solid #121a30;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
+.jt td.ev{max-width:none;white-space:normal;color:var(--dim);min-width:280px}
+.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
+.jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
+.jt tr:hover td{background:#16203b}
+.st{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
+.stmd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;margin-top:12px}
+.stmd pre{margin:0;font:11px/1.45 var(--mono);color:var(--dim);white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;background:#0b1020;border:1px solid var(--line);border-radius:8px;padding:8px}
+.stmd pre b{color:var(--ink)}
+@media (max-width:900px){.stmd{grid-template-columns:1fr}}
+.elems .esum{border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums;margin:4px 0 10px;width:100%}
+.esum th,.esum td{padding:4px 7px;border:1px solid var(--line);text-align:right;white-space:nowrap}
+.esum th{color:var(--dim);font-weight:600;background:#0f1629;white-space:normal;vertical-align:bottom;font-size:10.5px}
+.esum td:first-child,.esum th:first-child{text-align:left}
+.esum td.c{cursor:pointer}.esum td.c:hover{outline:1px solid var(--accent)}
+.esum .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.sumwrap{overflow-x:auto}
+#elTable td.pu{max-width:420px;white-space:normal;color:var(--dim);min-width:220px}
+#elTable td.pu div,#elTable td.ev div{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#elTable td.en{text-align:right}
+#elTable td.eneg{color:var(--hot)}#elTable td.epos{color:var(--ok)}
+#elTable td.ev{min-width:320px}
+#elTable tr.el td:first-child{border-left:3px solid var(--c)}
+#elTable small{color:var(--faint)}
 @keyframes slidein{from{opacity:0;transform:translateY(-8px)}}
 .tag{font:700 10px var(--mono);padding:3px 7px;border-radius:6px;color:#05070d;letter-spacing:.03em;white-space:nowrap}
 .ticker .h{color:var(--dim);font:12px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ticker .t{color:var(--faint);font:12px var(--mono)}
-.cats{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.cat{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);background:#0a0f1e;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
-.cat b{color:var(--ink);font-variant-numeric:tabular-nums}
-.sw{width:9px;height:9px;border-radius:3px}
-.hosts{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
-.host{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .6s}
-.host.down,.host.pending{opacity:.55}
+.runbars{display:flex;flex-direction:column;gap:7px}
+.rb{display:grid;grid-template-columns:130px 1fr 44px;gap:8px;align-items:center;font:12px var(--mono);color:var(--dim)}
+.rb .tr{height:10px;background:#141c33;border-radius:5px;overflow:hidden}
+.rb .tr i{display:block;height:100%;border-radius:5px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.rb b{color:var(--ink);text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.hosts{display:grid;gap:12px}
+.hosts.big{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hosts.small{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.smallc{padding:9px 11px}
+.smallc .hn{font-size:12px}.smallc .hk,.smallc .hm,.smallc .gpu{font-size:10.5px}
+.smallc .grid{margin:7px 0 6px}.smallc .offline{height:56px}
+.host{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .6s;min-width:0}
+.host.down,.host.pending,.host.connecting{opacity:.55}
 .hh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.hn{font:800 15px var(--mono);letter-spacing:.02em}
+.hn{font:800 14px var(--mono);letter-spacing:.02em;display:flex;align-items:center;gap:6px}
 .hk{color:var(--dim);font-size:11px}
-.hb{white-space:nowrap;font:700 22px var(--sans);font-variant-numeric:tabular-nums}
-.hb small{color:var(--dim);font-size:11px;font-weight:600}
+.hb{white-space:nowrap;font:600 13px var(--mono);font-variant-numeric:tabular-nums}
+.hb small{color:var(--dim);font-size:11px;font-weight:400}
 .grid{width:100%;display:block;margin:10px 0 8px;border-radius:6px}
-.bar{height:8px;border-radius:5px;background:#141c33;overflow:hidden;margin:6px 0 4px}
-.bar i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,#7c9cff,#a78bfa,#ff5d73);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.bar{height:6px;border-radius:4px;background:#141c33;overflow:hidden;margin:5px 0 4px}
+.bar i{display:block;height:100%;width:0;border-radius:4px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
 .hm{display:flex;justify-content:space-between;gap:8px;color:var(--dim);font:12px var(--mono);flex-wrap:wrap}
 .hm b{color:var(--ink);font-weight:600}
-.offline{height:84px;display:grid;place-items:center;color:var(--faint);font:600 12px var(--mono);border:1px dashed var(--line);border-radius:8px;margin:10px 0 8px}
+.offline{height:84px;display:grid;place-items:center;color:var(--faint);font:600 12px var(--mono);border:1px dashed var(--line);border-radius:8px;margin:10px 0 8px;letter-spacing:.1em}
+.host.pending .offline{color:var(--accent);border-color:#5ee7ff55;animation:pulse 2.2s infinite}
 .gpu{margin-top:6px;font:12px var(--mono);color:var(--dim)}
 .gpu b{color:var(--ink)}
 footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--faint);font:11px var(--mono);margin-top:14px}
 .legend{display:flex;align-items:center;gap:8px}
 .legend span.r{width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#101a33,#1f3a8a,#00b3d6,#5ef0b0,#ffd23f,#ff5d73)}
-@media (max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}.kpis .kpi:first-child{grid-column:span 2}.mid{grid-template-columns:1fr}}
-@media (max-width:420px){.hosts{grid-template-columns:1fr}.wrap{padding:12px 12px 20px}}
+@media (max-width:1100px){.cols{grid-template-columns:1fr}}
+@media (max-width:820px){.hosts.small{grid-template-columns:1fr}}
+@media (max-width:640px){.hosts.big{grid-template-columns:1fr}}
+@media (max-width:480px){.hosts{grid-template-columns:1fr}.wrap{padding:12px 12px 20px}#ramArea{height:200px}#tanks{height:150px}.rb{grid-template-columns:110px 1fr 40px}#vfeed .vs{min-width:74px;max-width:74px;font-size:9px;padding:3px 4px}#vfeed li{gap:2px 6px}}
 </style>
 </head>
 <body>
+<div id="toast"></div>
 <div class="wrap">
   <header>
     <div>
       <h1><span class="g">OpenTallas</span> compute fleet</h1>
-      <div class="sub">Chip-design place-and-route, synthesis and RTL simulation across four sites, live</div>
+      <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
     </div>
     <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
   </header>
+  <div id="rbar" hidden><button id="rPlay">pause</button><span id="rFrom"></span><input type="range" id="rScrub" min="0" max="1" step="1" value="0"><span id="rTo"></span><span class="sp" id="rSpeed"></span><span id="rMsg"></span></div>
+  <div id="rclock" hidden></div>
 
-  <section class="kpis">
-    <div class="kpi"><div class="l">Cores busy</div><div class="v" id="k-busy">-</div><div class="s" id="k-busy-s">&nbsp;</div><canvas id="spark"></canvas></div>
-    <div class="kpi"><div class="l">RAM in use</div><div class="v" id="k-mem">-</div><div class="s" id="k-mem-s">&nbsp;</div></div>
-    <div class="kpi"><div class="l">Routes running</div><div class="v" id="k-run">-</div><div class="s" id="k-run-s">&nbsp;</div></div>
-    <div class="kpi"><div class="l">Blocks closed today</div><div class="v" id="k-closed">-</div><div class="s" id="k-closed-s">&nbsp;</div></div>
-    <div class="kpi"><div class="l">GPU</div><div class="v" id="k-gpu">-</div><div class="s" id="k-gpu-s">&nbsp;</div></div>
+  <div class="cols">
+    <div class="col">
+      <div class="coltitle">CPU</div>
+      <section class="panel">
+        <div class="ptitle"><span>Threads busy · last 60 min</span><b id="cpu-now"></b></div>
+        <div class="stats" id="cpu-stats"></div>
+        <canvas class="chart" id="cpuSpark" style="height:46px"></canvas>
+      </section>
+      <section class="hosts big" id="hostsBig"></section>
+      <section class="hosts small" id="hostsSmall"></section>
+      <div class="coltitle">Memory</div>
+      <section class="panel">
+        <div class="ptitle"><span>RAM in use across the fleet · last 60 min</span><b id="ram-now"></b></div>
+        <canvas class="chart" id="ramArea"></canvas>
+        <div class="legend2" id="ramLegend"></div>
+        <canvas class="chart" id="tanks"></canvas>
+      </section>
+    </div>
+
+    <div class="col">
+      <div class="coltitle">Timing closure</div>
+      <section class="panel closepanel" id="closepanel">
+        <div class="ptitle"><span><i class="flame"></i><span id="feedTitle">Live closures</span></span><span id="closeHot"></span></div>
+        <div id="vban" hidden></div><div class="vctl" id="vctl" hidden><span id="vchips"></span><select id="vTgt"><option value="">all targets</option><option value="TT">TT ≥0 / FF ≥0</option><option value="SS">SS ≥0 / FF ≥0</option></select></div>
+        <ul class="ticker" id="ticker"></ul>
+        <ul id="vfeed" hidden></ul>
+      </section>
+      <section class="panel">
+        <div class="ptitle"><span>Closure loop</span></div>
+        <div class="stats" id="loop-stats"></div>
+        <div class="ptitle" style="margin-top:6px"><span>Routes running by target</span></div>
+        <div class="runbars" id="runbars"></div>
+      </section>
+      <section class="panel">
+        <div class="ptitle"><span>Closures per target · last 24 h, hourly</span><b id="close24"></b></div>
+        <canvas class="chart" id="closeChart"></canvas>
+        <div class="legend2" id="closeLegend"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel jobs" id="jobsPanel" hidden>
+    <div class="ptitle"><span>Closure loop · live progress (every active job)</span><b id="jobsNow"></b></div>
+    <div class="ctl">
+      <select id="fHost"><option value="">all hosts</option></select>
+      <select id="fTgt"><option value="">all targets</option><option>TT</option><option>SS</option></select>
+      <span id="fSt"></span>
+      <input id="fTxt" placeholder="filter job / block / event" type="search">
+      <label><input type="checkbox" id="fGrp" checked> group by host</label>
+    </div>
+    <div class="tblwrap"><table class="jt"><thead><tr id="jHead"></tr></thead><tbody id="jBody"></tbody></table></div>
+    <div class="stmd">
+      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · fleet admission</span><span id="mdAge"></span></div><pre id="mdFleet"></pre></div>
+      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · recent terminal</span></div><pre id="mdTerm"></pre></div>
+    </div>
   </section>
 
-  <section class="mid">
-    <div class="panel"><div class="ptitle"><span>Sites</span><span id="sites-s"></span></div><canvas id="map"></canvas>
-      <div class="cats" id="runcats"></div></div>
-    <div class="panel"><div class="ptitle"><span>Timing closures</span><span>Most recent first</span></div><ul class="ticker" id="ticker"></ul>
-      <div class="cats" id="closecats"></div></div>
+  <section class="panel elems" id="elPanel" hidden>
+    <div class="ptitle"><span>Elements · per-block closure status</span><b id="elNow"></b></div>
+    <div class="sumwrap"><table class="esum" id="elSum"></table></div>
+    <div class="ctl" id="elCtl">
+      <select id="eTgt"><option value="">all targets</option></select>
+      <span id="eSt"></span>
+      <input id="eTxt" placeholder="filter element / description / job / event" type="search">
+      <label><input type="checkbox" id="eGrp" checked> group by target</label>
+    </div>
+    <div class="tblwrap" id="elWrap"><table class="jt" id="elTable"><thead><tr id="eHead"></tr></thead><tbody id="eBody"></tbody></table></div>
   </section>
-
-  <section class="hosts" id="hosts"></section>
 
   <footer>
     <div class="legend">core load <span class="r"></span> 0 to 100%</div>
     <div id="foot">&nbsp;</div>
   </footer>
 </div>
-<script src="landmask.js"></script>
 <script>
 (() => {
 'use strict';
 const qs = new URLSearchParams(location.search);
-const API = '/api/stream' + (qs.get('safe') === '0' ? '?safe=0' : '');
-const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek S81':'#ffb44d','Other':'#c084fc'};
+const relabel = o => o && JSON.parse(JSON.stringify(o).replaceAll('DeepSeek S81', 'DeepSeek ROM'));   // old recordings carry the pre-rename label
+const RD = window.REPLAY_DATA || null;
+const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
+let RT = 0;   // replay clock (recorded epoch seconds)
+const NOW = () => REPLAY ? RT : Date.now() / 1000;
+const SAFE = RD ? !!RD.safe : qs.get('safe') === '1';
+const Q = SAFE ? '?safe=1' : '';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
+const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
+const sgn = v => v == null ? '?' : (v >= 0 ? '+' : '') + Number(v).toFixed(1);
+const CATS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other'];
+const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek ROM':'#ffb44d','Other':'#c084fc'};
+const HOSTCOL = ['#5ee7ff','#a78bfa','#f472b6','#ffb44d','#4ade80','#7c9cff','#38e1c6','#fb7185','#a3e635'];
 const STOPS = [[0,[16,26,51]],[.18,[31,58,138]],[.4,[0,179,214]],[.6,[94,240,176]],[.8,[255,210,63]],[1,[255,93,115]]];
 const LUT = [];
 for (let i = 0; i <= 100; i++) {
@@ -120,29 +282,66 @@ for (let i = 0; i <= 100; i++) {
 const col = v => { const c = LUT[Math.max(0, Math.min(100, Math.round(v)))]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
 const $ = id => document.getElementById(id);
 const fmt = (n, d = 0) => n == null ? '-' : Number(n).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
-const ago = t => { const s = Math.max(0, Date.now() / 1000 - t); return s < 60 ? 'now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
-const DPR = Math.min(2, window.devicePixelRatio || 1);
-
-// ---- animated numbers
-const tweens = new Map();
-function tweenText(el, to, dec = 0, suffix = '') {
-  const from = tweens.has(el) ? tweens.get(el).cur : to;
-  tweens.set(el, {from, to, cur: from, t0: performance.now(), dec, suffix});
+const ago = t => { const s = Math.max(0, NOW() - t); return s < 10 ? 'now' : s < 60 ? Math.floor(s) + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const gb = g => g >= 1000 ? fmt(g / 1024, 2) + ' TB' : fmt(g) + ' GB';
+// ---- keyed, incremental DOM: write only what changed (no wholesale innerHTML, no animation replay, scroll/hover kept)
+const setHTML = (el, h) => { if (el._h !== h) { el._h = h; el.innerHTML = h; } };
+const setText = (el, t) => { t = String(t); if (el.textContent !== t) el.textContent = t; };
+const frag = h => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+function reconcile(list, items) {   // items: [[key, outerHTML]] in display order; returns the newly inserted nodes
+  const seen = {}, want = new Map();
+  for (const [k, h] of items) { const n = seen[k] = (seen[k] || 0) + 1; want.set(n > 1 ? k + '#' + n : k, h); }   // duplicate keys stay distinct
+  const old = new Map(), added = [];
+  for (const n of [...list.children]) { if (n._k != null && want.has(n._k) && !old.has(n._k)) old.set(n._k, n); else n.remove(); }
+  const nodes = [];
+  for (const [k, h] of want) {
+    let n = old.get(k);
+    if (n) {
+      if (n._h !== h) {   // content changed: patch attributes and children of the same node
+        const m = frag(h);
+        for (const a of [...n.attributes]) if (!m.hasAttribute(a.name)) n.removeAttribute(a.name);
+        for (const a of m.attributes) if (n.getAttribute(a.name) !== a.value) n.setAttribute(a.name, a.value);
+        if (n.innerHTML !== m.innerHTML) n.innerHTML = m.innerHTML;
+        n._h = h;
+      }
+    } else { n = frag(h); n._k = k; n._h = h; added.push(n); }
+    n._i = nodes.length; nodes.push(n);
+  }
+  // keep the longest run of existing nodes already in order; move or insert only the rest (minimal DOM moves)
+  const seq = [...list.children].map(n => n._i), tails = [], prev = new Array(seq.length), stay = new Set();
+  seq.forEach((v, i) => { let lo = 0, hi = tails.length; while (lo < hi) { const m = (lo + hi) >> 1; if (seq[tails[m]] < v) lo = m + 1; else hi = m; } prev[i] = lo ? tails[lo - 1] : -1; tails[lo] = i; });
+  for (let i = tails.length ? tails[tails.length - 1] : -1; i >= 0; i = prev[i]) stay.add(seq[i]);
+  let next = null;
+  for (let i = nodes.length - 1; i >= 0; i--) { const n = nodes[i]; if (!stay.has(i)) list.insertBefore(n, next); next = n; }
+  return added;
 }
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
+  const w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * DPR) || cv.height !== Math.round(h * DPR)) { cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); }
+  const g = cv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, w, h); return [g, w, h];
+}
+const rgba = (hex, a) => `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
+
+let D = null, HIST = [], HH = [];
 
 // ---- host cards
 const cards = new Map();
-function card(h) {
+function card(h, i) {
   let c = cards.get(h.label);
   if (c) return c;
   const el = document.createElement('div'); el.className = 'host';
-  el.innerHTML = `<div class="hh"><div><div class="hn"></div><div class="hk"></div></div><div class="hb"></div></div>
+  el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span></div><div class="hk"></div></div><div class="hb"></div></div>
     <canvas class="grid"></canvas><div class="offline" hidden></div>
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
     <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>routes <b class="rt"></b></span></div><div class="gpu" hidden></div>`;
-  $('hosts').appendChild(el);
+  el.classList.add(/EPYC/.test(h.kind) ? 'bigc' : 'smallc');
+  $(/EPYC/.test(h.kind) ? 'hostsBig' : 'hostsSmall').appendChild(el);
   c = {el, cv: el.querySelector('canvas'), cur: [], tgt: [], n: 0};
-  el.querySelector('.hn').textContent = h.label;
+  el.querySelector('.nm').textContent = h.label;
+  const hc = HOSTCOL[i % HOSTCOL.length];
+  el.querySelector('.sw').style.background = hc;
+  el.querySelector('.bar i').style.background = `linear-gradient(90deg,${rgba(hc, .55)},${hc})`;
   cards.set(h.label, c);
   return c;
 }
@@ -155,7 +354,7 @@ function layoutGrid(c) {
   c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
 }
 function drawGrid(c, t) {
-  if (!c.geo || !c.n) return;
+  if (!c.geo || !c.n || c.cv.hidden) return;
   const g = c.cv.getContext('2d'), {cols, cell, gap} = c.geo;
   g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, c.cv.width, c.cv.height);
   const r = Math.min(3, cell * .22);
@@ -170,178 +369,533 @@ function drawGrid(c, t) {
   g.shadowBlur = 0;
 }
 function updateHosts(d) {
-  for (const h of d.hosts) {
-    const c = card(h), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
-    el.className = 'host ' + (up ? '' : h.state);
-    el.querySelector('.hk').textContent = h.kind + ' · ' + (d.regions[h.region] || {}).label + (h.alias ? ' · ' + h.alias : '');
+  d.hosts.forEach((h, i) => {
+    const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
+    el.className = 'host ' + (/EPYC/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
+    setText(el.querySelector('.hk'), h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : ''));
     el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
     if (!up) {
-      el.querySelector('.offline').textContent = h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING';
-      el.querySelector('.hb').innerHTML = '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>';
+      setText(el.querySelector('.offline'), h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING');
+      setHTML(el.querySelector('.hb'), '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>');
       for (const s of ['.mu', '.mp', '.ld', '.dk']) el.querySelector(s).textContent = '-';
-      el.querySelector('.rt').textContent = h.routes; el.querySelector('.bar i').style.width = '0';
-      continue;
+      setText(el.querySelector('.rt'), h.routes); el.querySelector('.bar i').style.width = '0';
+      return;
     }
     if (c.n !== h.cores.length) { c.n = h.cores.length; c.cur = h.cores.slice(); layoutGrid(c); }
     c.tgt = h.cores.slice();
     const busy = h.cores.reduce((a, b) => a + b, 0) / h.cores.length;
-    el.querySelector('.hb').innerHTML = `${Math.round(busy)}%<small> of ${h.cores.length} threads</small>`;
+    setHTML(el.querySelector('.hb'), `${Math.round(busy)}%<small> of ${h.cores.length} thr</small>`);
     el.style.borderColor = busy > 80 ? '#ff5d7355' : busy > 40 ? '#5ee7ff33' : '';
     const mp = 100 * h.mem_used / h.mem_total;
-    el.querySelector('.mu').textContent = h.mem_total > 900 ? `${fmt(h.mem_used / 1024, 2)} / ${fmt(h.mem_total / 1024, 2)} TB` : `${fmt(h.mem_used)} / ${fmt(h.mem_total)} GB`;
-    el.querySelector('.mp').textContent = Math.round(mp) + '%';
+    setText(el.querySelector('.mu'), `${gb(h.mem_used)} / ${gb(h.mem_total)}`);
+    setText(el.querySelector('.mp'), Math.round(mp) + '%');
     el.querySelector('.bar i').style.width = mp.toFixed(1) + '%';
-    el.querySelector('.ld').textContent = fmt(h.load, 0);
-    el.querySelector('.dk').textContent = h.docker ?? '-';
-    el.querySelector('.rt').textContent = h.routes;
+    setText(el.querySelector('.ld'), fmt(h.load, 0));
+    setText(el.querySelector('.dk'), h.docker ?? '-');
+    setText(el.querySelector('.rt'), h.routes);
     const gp = el.querySelector('.gpu');
     gp.hidden = !(h.gpu && h.gpu.length);
-    if (!gp.hidden) gp.innerHTML = h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>');
-  }
+    if (!gp.hidden) setHTML(gp, h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>'));
+  });
 }
 
-// ---- map
-const map = $('map'); const pulses = []; let MAP = null;
-function proj(lat, lon, w, h) {   // equirectangular, cropped to the land mask's latitude window
-  const L = window.LANDMASK, top = L.lat0 + L.step / 2, bot = L.lat0 - L.step * (L.rows.length - .5);
-  return [(lon + 180) / 360 * w, (top - lat) / (top - bot) * h];
-}
-function drawMap(t) {
-  if (!MAP || !window.LANDMASK) return;
-  const w = map.clientWidth, h = map.clientHeight;
-  if (map.width !== Math.round(w * DPR)) { map.width = Math.round(w * DPR); map.height = Math.round(h * DPR); }
-  const g = map.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, w, h);
-  const L = window.LANDMASK, cols = 360 / L.step, rows = L.rows.length, cw = w / cols, ch = h / rows;
-  g.fillStyle = '#1e2a4a';
-  for (let r = 0; r < rows; r++) {
-    const hex = L.rows[r];
-    for (let k = 0; k < cols; k++) {
-      const nib = parseInt(hex[k >> 2], 16); if (!(nib & (8 >> (k & 3)))) continue;
-      g.beginPath(); g.arc((k + .5) * cw, (r + .5) * ch, Math.min(cw, ch) * .28, 0, 7); g.fill();
-    }
+// ---- RAM: stacked area over 60 min (redrawn on data, with an eased reveal) and per-host tanks (animated)
+let areaT0 = 0, areaFirst = true;
+function drawRamArea(t) {
+  if (!D || !HIST.length) return false;
+  const [g, w, h] = fit($('ramArea'));
+  const padL = 44, padB = 18, padT = 8, W = w - padL - 6, H = h - padB - padT;
+  const capTB = D.totals.mem_total / 1024 || 1;
+  const yMax = Math.max(1, Math.ceil(capTB));
+  const now = HIST[HIST.length - 1][0], t0 = now - 3600;
+  const X = ts => padL + (ts - t0) / 3600 * W, Y = tb => padT + H - tb / yMax * H;
+  // grid + axes
+  g.font = '10px ui-monospace,Menlo,monospace'; g.fillStyle = '#4a5678'; g.strokeStyle = '#1b2540'; g.lineWidth = 1;
+  const step = yMax > 4 ? 1 : .5;
+  g.textAlign = 'right';
+  for (let v = 0; v <= yMax + 1e-9; v += step) { const y = Math.round(Y(v)) + .5; g.beginPath(); g.moveTo(padL, y); g.lineTo(padL + W, y); g.stroke(); g.fillText(v + ' TB', padL - 6, y + 3); }
+  g.textAlign = 'center';
+  for (let m = 60; m >= 0; m -= 15) g.fillText(m ? `-${m}m` : 'now', X(now - m * 60), h - 4);
+  // reveal sweep on first draw, then a short ease of the newest sample
+  const u = Math.min(1, (t - areaT0) / (areaFirst ? 1600 : 900)), e = 1 - Math.pow(1 - u, 3);
+  const clipX = areaFirst ? padL + W * e : padL + W;
+  g.save(); g.beginPath(); g.rect(padL, 0, clipX - padL, h); g.clip();
+  // downsample to <= 240 columns
+  const rows = HIST.filter(r => r[0] >= t0), stepN = Math.max(1, Math.ceil(rows.length / 240));
+  const pts = rows.filter((_, i) => i % stepN === 0 || i === rows.length - 1);
+  const nh = HH.length, base = new Array(pts.length).fill(0);
+  for (let k = 0; k < nh; k++) {
+    const top = pts.map((r, i) => base[i] + (r[5][k] || 0) / 1024);
+    if (top.every((v, i) => v === base[i])) continue;
+    const hc = HOSTCOL[k % HOSTCOL.length];
+    g.beginPath();
+    pts.forEach((r, i) => (i ? g.lineTo : g.moveTo).call(g, X(r[0]), Y(top[i])));
+    for (let i = pts.length - 1; i >= 0; i--) g.lineTo(X(pts[i][0]), Y(base[i]));
+    g.closePath();
+    const gr = g.createLinearGradient(0, padT, 0, padT + H); gr.addColorStop(0, rgba(hc, .75)); gr.addColorStop(1, rgba(hc, .35));
+    g.fillStyle = gr; g.fill();
+    g.beginPath(); pts.forEach((r, i) => (i ? g.lineTo : g.moveTo).call(g, X(r[0]), Y(top[i]))); g.strokeStyle = hc; g.lineWidth = 1.2; g.stroke();
+    for (let i = 0; i < pts.length; i++) base[i] = top[i];
   }
-  const sites = MAP.sites, hub = sites.onprem;
-  // arcs from the coordinator to each remote site, with a travelling packet
-  for (const [k, s] of Object.entries(sites)) {
-    if (k === 'onprem' || !hub) continue;
-    let [x0, y0] = proj(hub.lat, hub.lon, w, h), [x1, y1] = proj(s.lat, s.lon, w, h);
-    if (Math.abs(x1 - x0) > w / 2) x1 += x1 < x0 ? w : -w;   // go the short way round
-    const mx = (x0 + x1) / 2, my = Math.min(y0, y1) - Math.abs(x1 - x0) * .22;
-    const lit = s.up > 0;
-    g.strokeStyle = lit ? '#5ee7ff55' : '#4a567833'; g.lineWidth = 1.2; g.setLineDash(lit ? [] : [3, 4]);
-    for (const dx of [0, x1 > w ? -w : x1 < 0 ? w : 0]) {
-      g.beginPath(); g.moveTo(x0 + dx, y0); g.quadraticCurveTo(mx + dx, my, x1 + dx, y1); g.stroke();
-      if (lit) {
-        for (const ph of [0, .5]) {
-          const u = ((t / 2600) + ph + k.length * .13) % 1, a = 1 - u;
-          const px = a * a * x0 + 2 * a * u * mx + u * u * x1 + dx, py = a * a * y0 + 2 * a * u * my + u * u * y1;
-          g.fillStyle = '#bff6ff'; g.beginPath(); g.arc(px, py, 1.8, 0, 7); g.fill();
-        }
+  g.restore();
+  // capacity line + fleet edge glow
+  g.setLineDash([4, 4]); g.strokeStyle = '#ff5d7399'; g.beginPath(); g.moveTo(padL, Y(capTB)); g.lineTo(padL + W, Y(capTB)); g.stroke(); g.setLineDash([]);
+  g.fillStyle = '#ff5d73cc'; g.textAlign = 'left'; g.fillText(`capacity ${fmt(capTB, 2)} TB`, padL + 4, Y(capTB) - 4);
+  if (!areaFirst || u >= 1) {
+    const yl = Y(base[base.length - 1] || 0), xl = X(now), ph = (t / 1600) % 1;
+    g.fillStyle = '#e8eefc'; g.shadowColor = '#5ee7ff'; g.shadowBlur = 10; g.beginPath(); g.arc(xl, yl, 3, 0, 7); g.fill(); g.shadowBlur = 0;
+    g.strokeStyle = rgba('#5ee7ff', 1 - ph); g.beginPath(); g.arc(xl, yl, 3 + 9 * ph, 0, 7); g.stroke();
+  }
+  if (u >= 1) areaFirst = false;
+  return true;
+}
+const tankLvl = [];
+function drawTanks(t) {
+  if (!D) return;
+  const [g, w, h] = fit($('tanks'));
+  const hs = D.hosts, n = hs.length, gap = Math.min(14, w / n * .18), tw = (w - gap * (n - 1)) / n;
+  const labH = 30, TH = h - labH - 4, SEG = 16, sg = 2, segH = (TH - sg * (SEG - 1)) / SEG;
+  hs.forEach((hst, k) => {
+    const x = k * (tw + gap), up = hst.state === 'up' || hst.state === 'stale';
+    const frac = up && hst.mem_total ? hst.mem_used / hst.mem_total : 0;
+    tankLvl[k] = tankLvl[k] == null ? frac : tankLvl[k] + (frac - tankLvl[k]) * 0.05;
+    const lv = tankLvl[k], hc = HOSTCOL[k % HOSTCOL.length];
+    // segmented column
+    for (let s = 0; s < SEG; s++) {
+      const y = TH - (s + 1) * segH - s * sg, f0 = s / SEG, f1 = (s + 1) / SEG;
+      g.fillStyle = '#121a30'; g.beginPath(); g.roundRect ? g.roundRect(x, y, tw, segH, 2) : g.rect(x, y, tw, segH); g.fill();
+      if (lv > f0) {
+        const part = Math.min(1, (lv - f0) / (f1 - f0)), ph = part * segH;
+        const glow = lv < f1 ? .55 + .35 * Math.sin(t / 380 + k) : .85;   // the top segment breathes
+        g.fillStyle = rgba(hc, glow); g.beginPath(); g.rect(x, y + segH - ph, tw, ph); g.fill();
       }
     }
-    g.setLineDash([]);
-  }
-  for (const [k, s] of Object.entries(sites)) {
-    const [x, y] = proj(s.lat, s.lon, w, h), lit = s.up > 0, busy = s.busy || 0;
-    const base = lit ? col(Math.max(35, busy)) : '#4a5678';
-    const R = 4 + Math.sqrt(s.cores || 0) * .45;
-    if (lit) { const pr = R + 4 + 6 * ((t / 1400 + k.length) % 1); g.strokeStyle = base; g.globalAlpha = 1 - ((t / 1400 + k.length) % 1); g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, pr, 0, 7); g.stroke(); g.globalAlpha = 1; }
-    g.fillStyle = base; g.shadowColor = base; g.shadowBlur = lit ? 14 : 0; g.beginPath(); g.arc(x, y, R, 0, 7); g.fill(); g.shadowBlur = 0;
-    const fs = Math.max(10, Math.min(13, w / 60));
-    g.font = `700 ${fs}px ui-monospace,Menlo,monospace`; g.fillStyle = '#e8eefc'; g.textAlign = x > w * .8 ? 'right' : 'left';
-    const tx = x + (g.textAlign === 'right' ? -R - 6 : R + 6);
-    g.fillText(s.label, tx, y - 2);
-    g.font = `${fs - 1}px ui-monospace,Menlo,monospace`; g.fillStyle = '#8a97b8';
-    g.fillText(lit ? `${s.cores} thr · ${Math.round(busy)}%` : s.pending ? 'coming online' : 'offline', tx, y + fs);
-  }
-  // closure bursts
-  for (let i = pulses.length - 1; i >= 0; i--) {
-    const p = pulses[i], u = (t - p.t0) / 2200; if (u > 1) { pulses.splice(i, 1); continue; }
-    const s = sites[p.region]; if (!s) continue; const [x, y] = proj(s.lat, s.lon, w, h);
-    g.strokeStyle = p.color; g.globalAlpha = 1 - u; g.lineWidth = 2.5; g.beginPath(); g.arc(x, y, 8 + 50 * u, 0, 7); g.stroke(); g.globalAlpha = 1;
-  }
+    if (!up) {
+      g.fillStyle = hst.state === 'pending' ? rgba('#5ee7ff', .5 + .3 * Math.sin(t / 500)) : '#4a5678';
+      g.font = '600 9px ui-monospace,Menlo,monospace'; g.textAlign = 'center';
+      g.fillText(hst.state === 'pending' ? 'COMING' : 'OFFLINE', x + tw / 2, TH / 2 - 4);
+      if (hst.state === 'pending') g.fillText('ONLINE', x + tw / 2, TH / 2 + 8);
+    }
+    // labels
+    const fs = tw < 50 ? 9 : 11;
+    g.textAlign = 'center'; g.font = `700 ${fs}px ui-monospace,Menlo,monospace`; g.fillStyle = '#e8eefc';
+    let lab = hst.label; while (g.measureText(lab).width > tw + gap - 2 && lab.length > 3) lab = lab.slice(0, -1);
+    g.fillText(lab, x + tw / 2, TH + 14);
+    g.font = `${fs}px ui-monospace,Menlo,monospace`; g.fillStyle = '#8a97b8';
+    g.fillText(up ? (tw < 60 ? `${Math.round(hst.mem_used)}G` : `${gb(hst.mem_used)}`) + (tw >= 90 ? ` · ${Math.round(100 * frac)}%` : '') : '-', x + tw / 2, TH + 27);
+  });
 }
 
-// ---- spark
-function drawSpark(hist) {
-  const cv = $('spark'), w = cv.clientWidth, h = cv.clientHeight; if (!w || hist.length < 2) return;
-  cv.width = w * DPR; cv.height = h * DPR; const g = cv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
-  const ys = hist.map(x => x[2] ? x[1] / x[2] : 0), n = ys.length;
-  const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, '#5ee7ff88'); grad.addColorStop(1, '#5ee7ff00');
-  g.beginPath(); g.moveTo(0, h);
-  ys.forEach((y, i) => g.lineTo(i / (n - 1) * w, h - y * (h - 4)));
-  g.lineTo(w, h); g.closePath(); g.fillStyle = grad; g.fill();
-  g.beginPath(); ys.forEach((y, i) => (i ? g.lineTo : g.moveTo).call(g, i / (n - 1) * w, h - y * (h - 4))); g.strokeStyle = '#5ee7ff'; g.lineWidth = 1.5; g.stroke();
+// ---- threads busy spark (60 min)
+function drawCpu() {
+  const pts = HIST.filter(r => r[2]); if (pts.length < 2) return;
+  const [g, w, h] = fit($('cpuSpark')), t0 = pts[pts.length - 1][0] - 3600;
+  const X = ts => (ts - t0) / 3600 * w, Y = v => h - 2 - v * (h - 6);
+  const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, '#5ee7ff66'); grad.addColorStop(1, '#5ee7ff00');
+  g.beginPath(); g.moveTo(X(pts[0][0]), h); pts.forEach(r => g.lineTo(X(r[0]), Y(r[1] / r[2]))); g.lineTo(X(pts[pts.length - 1][0]), h); g.closePath(); g.fillStyle = grad; g.fill();
+  g.beginPath(); pts.forEach((r, i) => (i ? g.lineTo : g.moveTo).call(g, X(r[0]), Y(r[1] / r[2]))); g.strokeStyle = '#5ee7ff'; g.lineWidth = 1.3; g.stroke();
 }
 
-// ---- ticker
+// ---- closures per target, hourly stacked bars over 24 h
+function drawClosures() {
+  if (!D) return;
+  const ch = D.loop.closed_hourly || {start: 0, bins: {}}, bins = ch.bins || {};
+  const [g, w, h] = fit($('closeChart')), padL = 26, padB = 18, padT = 6, W = w - padL - 2, H = h - padB - padT;
+  const tot = Array.from({length: 24}, (_, i) => CATS.reduce((a, c) => a + ((bins[c] || [])[i] || 0), 0));
+  const yMax = Math.max(4, Math.ceil(Math.max(...tot) / 4) * 4);
+  g.font = '10px ui-monospace,Menlo,monospace'; g.fillStyle = '#4a5678'; g.strokeStyle = '#1b2540'; g.textAlign = 'right';
+  for (let v = 0; v <= yMax; v += yMax / 4) { const y = Math.round(padT + H - v / yMax * H) + .5; g.beginPath(); g.moveTo(padL, y); g.lineTo(padL + W, y); g.stroke(); g.fillText(v, padL - 5, y + 3); }
+  const bw = W / 24, gp = Math.max(1, bw * .18);
+  g.textAlign = 'center';
+  for (let i = 0; i < 24; i++) {
+    let y = padT + H;
+    for (const c of CATS) {
+      const v = (bins[c] || [])[i] || 0; if (!v) continue;
+      const bh = v / yMax * H; y -= bh;
+      g.fillStyle = CATCOL[c]; g.globalAlpha = i === 23 ? 1 : .85; g.fillRect(padL + i * bw + gp / 2, y, bw - gp, bh - 1); g.globalAlpha = 1;
+    }
+    if (i % 6 === 5 || i === 23) {
+      const d = new Date((ch.start + i * 3600) * 1000);
+      g.fillStyle = '#4a5678'; g.fillText(i === 23 ? 'now' : d.toLocaleTimeString('en-US', {hour: 'numeric', hour12: true}).replace(' ', '').toLowerCase(), padL + (i + .5) * bw, h - 4);
+    }
+  }
+  setHTML($('closeLegend'), CATS.filter(c => bins[c] || c !== 'Other').map(c => `<span><i class="sw" style="background:${CATCOL[c]}"></i>${c} ${(D.loop.closed_24h_by_cat || {})[c] || 0}</span>`).join(''));
+  setText($('close24'), `${fmt(Object.values(D.loop.closed_24h_by_cat || {}).reduce((a, b) => a + b, 0))} in 24 h`);
+}
+
+// ---- ticker + loop stats
 let seen = null;
-function cats(el, obj, suffix) {
-  el.innerHTML = Object.entries(obj).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<span class="cat"><span class="sw" style="background:${CATCOL[k] || CATCOL.Other}"></span>${k} <b>${v}</b>${suffix}</span>`).join('');
-}
-function updateTicker(d) {
-  const regionOf = Object.fromEntries(d.hosts.map(h => [h.label, h.region]));
-  const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.block || '');
+function updateLoop(d) {
+  const L = d.loop;
+  setHTML($('loop-stats'), `<span>blocks closed today <b>${fmt(L.closed_today)}</b></span><span>closing runs <b>${fmt(L.closed_today_jobs)}</b></span>` +
+    `<span>routes running <b>${fmt(L.running)}</b></span><span>queued <b>${fmt(L.queued)}</b></span><span>closed all-time <b>${fmt(L.closed_total)}</b></span>`);
+  const rc = L.running_by_cat || {}, mx = Math.max(1, ...Object.values(rc));
+  const rb = $('runbars');
+  if (!rb.children.length) rb.innerHTML = CATS.map(c => `<div class="rb" data-c="${c}"><span><i class="sw" style="background:${CATCOL[c]}"></i> ${c}</span><span class="tr"><i style="background:${CATCOL[c]};width:0"></i></span><b>0</b></div>`).join('');
+  for (const row of rb.children) {
+    const c = row.dataset.c, v = rc[c] || 0;
+    row.hidden = c === 'Other' && !v;
+    row.querySelector('.tr i').style.width = (100 * v / mx).toFixed(1) + '%';
+    setText(row.querySelector('b'), fmt(v));
+  }
+  const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.name || r.block || '');
   const fresh = seen ? d.recent.filter(r => !seen.has(keyOf(r))) : [];
   seen = new Set(d.recent.map(keyOf));
-  $('ticker').innerHTML = d.recent.slice(0, 12).map(r => `<li class="${fresh.includes(r) ? 'new' : ''}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span><span class="h">closed on ${r.host}${r.block ? ' · ' + r.block : ''}</span><span class="t">${ago(r.t)}</span></li>`).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
-  for (const r of fresh) pulses.push({t0: performance.now(), region: regionOf[r.host] || 'onprem', color: CATCOL[r.cat] || CATCOL.Other});
-  cats($('closecats'), d.loop.closed_24h_by_cat, ' closed / 24 h');
-  cats($('runcats'), d.loop.running_by_cat, ' running');
+  const now = NOW();
+  const hr = d.recent.filter(r => now - r.t < 3600).length;
+  if (SAFE) setHTML($('closeHot'), `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`);
+  if (!SAFE) return;
+  const items = d.recent.slice(0, 20).map(r => {
+    const cls = now - r.t < 900 ? 'fresh' : now - r.t < 3600 ? 'hot' : '';
+    const sl = r.setup !== undefined ? `<span class="${r.setup < 0 ? 'neg' : ''}">${r.setup_corner} ${sgn(r.setup)} ps</span><span class="${r.hold < 0 ? 'neg' : ''}">FF ${sgn(r.hold)} ps</span>` : '';
+    return [keyOf(r), `<li class="${cls}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span>` +
+      `<span class="bk" title="${esc(r.block)}">${esc(r.block || 'block')} <small style="color:var(--dim);font-weight:400">on ${esc(r.host)}</small></span>` +
+      `<span class="sl">${sl}<small class="t" data-t="${r.t}"></small></span>` +
+      `<span class="jn" title="${esc(r.name)}">${esc(r.name || '')}${r.target ? ' · target ' + esc(r.target.replace(/>=/g, '≥')) : ''}${r.into ? ' · into ' + esc(r.into) : ''}</span></li>`];
+  });
+  if (!items.length) items.push(['__none', '<li><span></span><span class="h">waiting for closures</span><span></span></li>']);
+  const fk = new Set(fresh.map(keyOf));
+  for (const n of reconcile($('ticker'), items)) if (fk.has(n._k)) n.classList.add('new');
+  tickAges();
+  if (fresh.length) {
+    const r = fresh[0], p = $('closepanel');
+    p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
+    const tt = $('toast');
+    tt.textContent = `CLOSED  ${r.block || r.cat}` + (r.setup !== undefined ? `  ${r.setup_corner} ${sgn(r.setup)} / FF ${sgn(r.hold)} ps` : '') + `  on ${r.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
+    tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
+  }
 }
 
 // ---- data
 let lastT = 0;
 function onData(d) {
-  lastT = d.t;
+  d = relabel(d);
+  if (d.delta) { for (const r of d.history) if (!HIST.length || r[0] > HIST[HIST.length - 1][0]) HIST.push(r); }
+  else HIST = d.history.filter(r => r.length >= 6);
+  while (HIST.length && HIST[0][0] < d.t - 3700) HIST.shift();
+  HH = d.hist_hosts || []; D = d; lastT = d.t;
   const T = d.totals;
-  tweenText($('k-busy'), T.busy, 0);
-  $('k-busy-s').textContent = `of ${fmt(T.cores)} threads · ${T.cores ? Math.round(100 * T.busy / T.cores) : 0}% · ${T.hosts_up} hosts up`;
-  tweenText($('k-mem'), T.mem_used / 1024, 2, ' TB');
-  $('k-mem-s').textContent = `of ${fmt(T.mem_total / 1024, 2)} TB · ${fmt(T.docker)} containers`;
-  tweenText($('k-run'), d.loop.running, 0);
-  $('k-run-s').textContent = `${fmt(d.loop.queued)} queued · ${fmt(d.loop.closed_total)} closed all-time`;
-  tweenText($('k-closed'), d.loop.closed_today, 0);
-  $('k-closed-s').textContent = `${fmt(d.loop.closed_today_jobs)} closing runs since midnight`;
+  setText($('ram-now'), `${fmt(T.mem_used / 1024, 2)} of ${fmt(T.mem_total / 1024, 2)} TB · ${T.mem_total ? Math.round(100 * T.mem_used / T.mem_total) : 0}%`);
+  const old = HIST.find(r => r[0] >= d.t - 3600);
+  setHTML($('ramLegend'), d.hosts.map((h, k) => `<span><i class="sw" style="background:${HOSTCOL[k % HOSTCOL.length]}"></i>${h.label} ${h.mem_used != null ? gb(h.mem_used) : '-'}</span>`).join('') +
+    (old && d.t - old[0] > 90 ? `<span style="margin-left:auto">${T.mem_used >= old[4] ? '+' : '-'}${gb(Math.abs(T.mem_used - old[4]))} in ${Math.round((d.t - old[0]) / 60)} min</span>` : ''));
+  setText($('cpu-now'), `${fmt(T.busy)} of ${fmt(T.cores)} · ${T.cores ? Math.round(100 * T.busy / T.cores) : 0}%`);
   const gp = d.hosts.flatMap(h => h.gpu || []);
-  if (gp.length) { tweenText($('k-gpu'), gp[0].util, 0, '%'); $('k-gpu-s').textContent = `${gp[0].name.replace(' Workstation Edition', '')} · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB`; }
-  const sites = {};
-  for (const [k, r] of Object.entries(d.regions)) sites[k] = {...r, cores: 0, busyc: 0, up: 0, pending: false};
-  for (const h of d.hosts) {
-    const s = sites[h.region]; if (!s) continue;
-    if (h.state === 'pending') s.pending = true;
-    if (h.cores && h.state === 'up') { s.up++; s.cores += h.cores.length; s.busyc += h.cores.reduce((a, b) => a + b, 0) / 100; }
-  }
-  for (const s of Object.values(sites)) s.busy = s.cores ? 100 * s.busyc / s.cores : 0;
-  MAP = {sites};
-  $('sites-s').textContent = `${Object.values(sites).filter(s => s.up).length} sites live · ${d.hosts.filter(h => h.state === 'up').length}/${d.hosts.length} hosts`;
-  updateHosts(d); updateTicker(d); drawSpark(d.history);
-  $('foot').textContent = (d.safe ? 'share-safe view · ' : 'PRIVATE view · ') + `updates every ${d.poll} s`;
+  setHTML($('cpu-stats'), `<span>hosts up <b>${T.hosts_up}/${d.hosts.length}</b></span><span>containers <b>${fmt(T.docker)}</b></span>` +
+    (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : ''));
+  updateHosts(d); updateLoop(d); if (!SAFE && d.vver != null && d.vver !== VV) loadVerdicts(d.vver); drawCpu(); drawClosures();
+  if (!REPLAY || areaFirst) areaT0 = REPLAY ? 0 : performance.now();   // replay frames arrive faster than the reveal sweep
+  if (REPLAY) { setText($('foot'), (d.safe ? 'share-safe ' : 'INTERNAL ') + `replay · one frame per ${d.poll} s recorded`); return; }
+  setText($('foot'), (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`);
 }
+let es = null;
 function connect() {
-  const es = new EventSource(API);
-  es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
-  es.onerror = () => { es.close(); setTimeout(connect, 4000); };
+  fetch('/api/fleet' + Q).then(r => r.ok ? r.json() : null).then(d => d && onData(d)).catch(() => {}).finally(() => {
+    es = new EventSource('/api/stream' + Q);
+    es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
+    es.onerror = () => { es.close(); setTimeout(connect, 4000); };
+  });
 }
-fetch(API.replace('stream', 'fleet')).then(r => r.ok ? r.json() : null).then(d => d && onData(d)).catch(() => {});
-connect();
-window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); });
+if (!REPLAY) connect();
 
-// ---- frame loop (about 30 fps; pauses when hidden)
-let lastF = 0;
+// ---- verdict feed (internal view): every terminal verdict, newest first
+const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['check', 'Check failed'], ['flow', 'Flow failures']];
+const KCOL = {closed: '#4ade80', timing: '#ff8a4d', check: '#f472b6', flow: '#9b8cc9'};
+const VF = Object.assign({kind: '', tgt: ''}, relabel(ls('vf')) || {});
+let VV = null, VD = [], vseen = null, vFetchT = 0, vHash = null;
+function loadVerdicts(v) {   // skips the render when the payload is unchanged
+  VV = v;
+  if (REPLAY) { const d = rpVerdicts(), h = d.length + '|' + (d[0] ? d[0].t : 0) + '|' + (d.length ? d[d.length - 1].t : 0); if (h === vHash) return; vHash = h; VD = d; renderVerdicts(); return; }
+  vFetchT = Date.now();
+  fetch('/api/verdicts').then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === vHash) return; vHash = x; VD = relabel(JSON.parse(x).verdicts); renderVerdicts(); }).catch(() => { VV = null; });
+}
+function renderVerdicts() {
+  lsw('vf', VF);
+  for (const [id, h] of [['ticker', true], ['vfeed', false], ['vctl', false]]) if ($(id).hidden !== h) $(id).hidden = h;
+  setText($('feedTitle'), 'Live verdicts');
+  const now = NOW(), key = v => v.name + '|' + v.status + '|' + v.t;   // job + verdict + time
+  const fresh = vseen ? VD.filter(v => !vseen.has(key(v)) && now - v.t < 3600) : [];   // vseen is reset on a replay seek: rebuild silently
+  vseen = new Set(VD.map(key));
+  const cnt = {}; VD.forEach(v => cnt[v.kind] = (cnt[v.kind] || 0) + 1);
+  setHTML($('vchips'), KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" title="${t} ${k ? cnt[k] || 0 : VD.length}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' '));
+  if ($('vTgt').value !== VF.tgt) $('vTgt').value = VF.tgt;
+  const day = VD.filter(v => now - v.t < 86400);
+  setHTML($('closeHot'), [['closed', '#4ade80'], ['timing', '#ff8a4d'], ['check', '#f472b6'], ['flow', '#9b8cc9']].map(([k, c]) => `<span class="nw"><b style="color:${c}">${day.filter(v => v.kind === k).length}</b> ${k}</span>`).join(' · ') + ' · <span class="nw">24 h</span>');
+  const chip = (lab, v, z) => v == null ? '' : `<span class="${v < 0 ? 'n' : z ? 'z' : 'p'}">${lab} ${sgn(v)}${lab === 'DRC' ? '' : ' ps'}</span>`;
+  const vis = VD.filter(v => (!VF.kind || v.kind === VF.kind) && (!VF.tgt || v.corner === VF.tgt));
+  const fs = new Set(fresh.map(key));
+  const items = vis.map(v => {   // fresh/hot/new classes and age text are applied to the live nodes, not baked into the row key
+    const cls = 'k-' + v.kind;
+    const drc = v.drc == null ? '' : `<span class="${v.drc > 0 ? 'n' : 'z'}">DRC ${v.drc}</span>`;
+    const why = v.kind === 'closed' ? (v.why || '') : (v.why + (v.detail ? ' · ' + v.detail : ''));
+    return [key(v), `<li class="${cls}" data-t="${v.t}"><span class="vs" title="${esc(v.status)}">${esc(v.status)}</span>` +
+      `<span class="bk" title="${esc(v.block)}">${esc(v.block)} <small>on ${esc(v.host || '?')} · ${esc(v.target.replace(/>=/g, '≥'))}</small></span>` +
+      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small data-t="${v.t}"></small></span>` +
+      (v.kind === 'check' ? `<span class="ck" title="${esc(v.check)}">✗ check failed: ${esc(v.check)}</span>` : '') +
+      `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`];
+  });
+  if (!items.length) items.push(['__none', '<li><span></span><span class="jn">no verdicts match</span></li>']);
+  for (const n of reconcile($('vfeed'), items)) if (fs.has(n._k)) n.classList.add('new');   // only genuinely new rows pulse
+  tickAges();
+  if (fresh.length) {
+    const v = fresh[0], p = $('closepanel'), tt = $('toast');
+    p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
+    tt.className = v.kind === 'closed' ? 'ok' : v.kind === 'timing' ? 'bad' : v.kind === 'check' ? 'check' : 'flow';
+    tt.textContent = `${v.status}  ${v.block}` + (v.setup != null ? `  ${v.corner} ${sgn(v.setup)} / FF ${sgn(v.hold)} ps` : '') + (v.kind === 'flow' ? '  ' + v.why.slice(0, 60) : v.kind === 'check' ? '  check failed: ' + v.check.slice(0, 60) : '') + `  on ${v.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
+    void tt.offsetWidth; tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
+    const bn = $('vban'); bn.hidden = true; void bn.offsetWidth;
+    bn.textContent = `▲ ${fresh.length} new verdict${fresh.length > 1 ? 's' : ''} · ${v.status} ${v.block}`; bn.title = bn.textContent; bn.hidden = false;
+    clearTimeout(bn._t); bn._t = setTimeout(() => bn.hidden = true, 20000);
+  }
+}
+function tickAges() {   // relative ages and fresh/hot highlights against NOW() (the replay clock in replay)
+  const now = NOW();
+  for (const e of document.querySelectorAll('#vfeed [data-t], #ticker [data-t], #eBody .age[data-t]')) {
+    const t = +e.dataset.t, a = now - t;
+    if (e.tagName === 'LI') { e.classList.toggle('fresh', a < 900); e.classList.toggle('hot', a >= 900 && a < 3600); }
+    else setText(e, ago(t));
+  }
+  for (const e of document.querySelectorAll('#ticker li')) { const s = e.querySelector('[data-t]'); if (s) { const a = now - s.dataset.t; e.classList.toggle('fresh', a < 900); e.classList.toggle('hot', a >= 900 && a < 3600); } }
+}
+function vReset() { vseen = null; VV = null; vHash = null; $('vban').hidden = true; }   // a replay seek rebuilds the feed for the new time, no banner
+$('vban').onclick = () => { $('vfeed').scrollTop = 0; $('vban').hidden = true; };
+$('vchips').onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (k == null) return; VF.kind = k; renderVerdicts(); };
+$('vTgt').onchange = e => { VF.tgt = e.target.value; renderVerdicts(); };
+setInterval(() => { tickAges(); if (!REPLAY && !SAFE && VV != null && Date.now() - vFetchT > 30000) loadVerdicts(VV); }, 15000);   // ages every 15 s; re-fetch if the change signal went quiet
+
+// ---- live job table (internal view only)
+const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
+const STCOL = {RUNNING: '#4ade80', SYNC: '#5ee7ff', ECO: '#ffb44d', READY: '#a78bfa', QUEUED: '#8a97b8'};
+const COLS = [['label', 'host'], ['name', 'job'], ['block', 'block'], ['target', 'target'], ['stage', 'stage'], ['status', 'status'], ['age', 'age'], ['ev', 'latest event / wait']];
+const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, relabel(ls('f')) || {});
+let J = null, jHash = null;
+const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 'm' : s < 86400 ? (s / 3600).toFixed(1) + 'h' : (s / 86400).toFixed(1) + 'd';
+function renderJobs() {
+  if (!J) return;
+  lsw('f', F);
+  const now = NOW(), order = J.hosts;
+  const rows = J.jobs.map(j => Object.assign({}, j, {age: j.since ? now - j.since : 0, ev: (j.status === 'RUNNING' || j.status === 'ECO') ? (j.event || j.wait) : (j.wait || j.reason || j.event)}));
+  const cnt = {}; rows.forEach(r => cnt[r.status] = (cnt[r.status] || 0) + 1);
+  setHTML($('fSt'), STS.map(s => `<span class="chip ${F.sts.includes(s) ? 'on' : ''}" data-s="${s}" style="${F.sts.includes(s) ? 'background:' + STCOL[s] : ''}">${s} ${cnt[s] || 0}</span>`).join(' '));
+  const hs = [...new Set(rows.map(r => r.label))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b));
+  const sel = $('fHost'); if (sel.options.length - 1 !== hs.length) { sel.innerHTML = '<option value="">all hosts</option>' + hs.map(h => `<option>${esc(h)}</option>`).join(''); }
+  if (sel.value !== F.host) sel.value = F.host; if ($('fTgt').value !== F.tgt) $('fTgt').value = F.tgt; $('fGrp').checked = F.grp; if (document.activeElement !== $('fTxt')) $('fTxt').value = F.txt;
+  const tx = F.txt.toLowerCase();
+  const vis = rows.filter(r => F.sts.includes(r.status) && (!F.host || r.label === F.host) && (!F.tgt || r.target.startsWith(F.tgt)) &&
+    (!tx || (r.name + ' ' + r.block + ' ' + r.ev + ' ' + r.stage).toLowerCase().includes(tx)));
+  const k = F.sort, dir = F.dir;
+  vis.sort((a, b) => (F.grp ? (hs.indexOf(a.label) - hs.indexOf(b.label)) : 0) || ((a[k] > b[k]) - (a[k] < b[k])) * dir || a.name.localeCompare(b.name));
+  setHTML($('jHead'), COLS.map(([c, t]) => `<th data-c="${c}" class="${F.sort === c ? 's' + (F.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const items = []; let g = null;
+  for (const r of vis) {
+    if (F.grp && r.label !== g) {
+      g = r.label; const gr = vis.filter(x => x.label === g), c2 = {}; gr.forEach(x => c2[x.status] = (c2[x.status] || 0) + 1);
+      items.push(['g|' + g, `<tr class="grp"><td colspan="8">${esc(g)} · ${gr.length}<small>${STS.filter(s => c2[s]).map(s => s + ' ' + c2[s]).join(' · ')}</small></td></tr>`]);
+    }
+    items.push(['j|' + r.name, `<tr><td>${esc(r.label)}</td><td title="${esc(r.owner)}">${esc(r.name)}</td><td>${esc(r.block)}</td><td>${esc(r.target.replace(/>=/g, '≥'))}</td><td>${esc(r.stage)}${r.attempt > 1 ? ' a' + r.attempt : ''}</td>` +
+      `<td><span class="st" style="background:${STCOL[r.status] || '#8a97b8'}">${r.status}</span></td><td class="ag" data-s="${r.since || ''}"></td><td class="ev">${esc(r.ev)}</td></tr>`]);
+  }
+  if (!items.length) items.push(['__none', '<tr><td colspan="8">no matching jobs</td></tr>']);
+  reconcile($('jBody'), items); jobAges();
+  setText($('jobsNow'), `${vis.length} shown of ${rows.length} active · ${STS.map(s => (cnt[s] || 0) + ' ' + s.toLowerCase()).join(' · ')}`);
+  const st = J.status || {};
+  setHTML($('mdFleet'), [...(st.head || []), '', ...(st.fleet || []).map((l, i) => i ? esc(l).replace(/^(\w+):/, '<b>$1</b>:') : '<b>' + esc(l) + '</b>')].map(l => l.startsWith('<') ? l : esc(l)).join('\n'));
+  setHTML($('mdTerm'), (st.terminal || []).map(l => esc(l).replace(/^(\S+) \[([^\]]+)\] (\w+)/, '<b>$1</b> [$2] <b>$3</b>')).join('\n'));
+  jobAges();
+}
+function jobAges() {   // age cells and the status-file age, in place
+  const now = NOW();
+  for (const e of $('jBody').querySelectorAll('td.ag')) setText(e, dur(e.dataset.s ? now - e.dataset.s : 0));
+  const st = (J && J.status) || {}; setText($('mdAge'), st.mtime ? 'written ' + ago(st.mtime) : 'not found');
+}
+function pollJobs() {
+  if (SAFE) return;
+  fetch('/api/jobs').then(r => r.ok ? r.text() : null).then(x => { if (x == null) return; if (x === jHash) { jobAges(); return; } jHash = x; J = relabel(JSON.parse(x)); if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs(); }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
+}
+$('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
+$('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
+$('fGrp').onchange = e => { F.grp = e.target.checked; renderJobs(); };
+$('fTxt').oninput = e => { F.txt = e.target.value; renderJobs(); };
+$('fSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; F.sts = F.sts.includes(s) ? F.sts.filter(x => x !== s) : F.sts.concat(s); renderJobs(); };
+$('jHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (F.sort === c) F.dir = -F.dir; else { F.sort = c; F.dir = c === 'age' ? -1 : 1; } renderJobs(); };
+if (!REPLAY) pollJobs();
+window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
+
+// ---- per-element closure status (/api/elements; replay: RP.elems; share-safe: summary counts only)
+const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
+  'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
+  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd'};
+const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['qualification', 'qualification'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
+  ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
+const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
+let ED = null, eHash = null;
+const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
+const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
+function elementQualification(q) {
+  if (!q) return '';
+  const st = x => x && x.status || 'unrecorded', e = q.exactness || {};
+  return `source ${q.source.commit} · RTL ${st(q.implementation)} · model ${st(q.model)} · exact +${st(e.positive)} / -${st(e.negative)} · physical ${st(q.physical)} · corners ${JSON.stringify(q.physical && q.physical.corners || {})} · dependencies ${(q.dependencies || []).join(', ')} · integration ${st(q.integration)} · ${q.registry_path}`;
+}
+function renderElements() {
+  if (!ED) return;
+  if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
+  const cats = ED.cats, tg = ED.targets.filter(t => ED.summary[t]);
+  const tot = {}; let all = 0;
+  let sh = '<tr><th>target</th>' + cats.map(c => `<th><span class="sw" style="background:${ECOL[c]}"></span>${esc(c)}</th>`).join('') + '<th>total</th></tr>';
+  for (const t of tg) {
+    const s = ED.summary[t], n = Object.entries(s).reduce((a, [c, v]) => a + (c === 'superseded' ? 0 : v), 0); all += n;
+    sh += `<tr><td>${esc(t)}</td>` + cats.map(c => { tot[c] = (tot[c] || 0) + (s[c] || 0); return `<td class="${s[c] && !SAFE ? 'c' : ''}" data-t="${esc(t)}" data-c="${esc(c)}" style="${s[c] ? 'color:' + ECOL[c] : 'color:var(--faint)'}">${s[c] || '·'}</td>`; }).join('') + `<td><b>${n}</b></td></tr>`;
+  }
+  sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
+  setHTML($('elSum'), sh);
+  const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
+  setText($('elNow'), `${closed} of ${all} closed` + (tot['superseded'] ? ` (+${tot['superseded']} superseded, not counted)` : '') + ` · as of ${ago(ED.t)}`);
+  const rowsOK = !SAFE && ED.rows;
+  for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
+  if (!rowsOK) return;
+  if (!EF.sts) EF.sts = cats.slice();
+  if (EF.knownCats) { for (const c of cats) if (!EF.knownCats.includes(c) && !EF.sts.includes(c)) EF.sts.push(c); }
+  else if (!EF.sts.includes('implementation recorded (no physical job)')) EF.sts.push('implementation recorded (no physical job)');
+  EF.knownCats = cats.slice();
+  const cnt = {}; ED.rows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
+  setHTML($('eSt'), cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' '));
+  const sel = $('eTgt'); if (sel.options.length - 1 !== tg.length) sel.innerHTML = '<option value="">all targets</option>' + tg.map(t => `<option>${esc(t)}</option>`).join('');
+  if (sel.value !== EF.tgt) sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
+  const tx = EF.txt.toLowerCase();
+  const rows = ED.rows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
+    qualification: elementQualification(r.qualification), lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category)}));
+  const vis = rows.filter(r => EF.sts.includes(r.category) && (!EF.tgt || r.target === EF.tgt) &&
+    (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.qualification, r.best.job, r.owner, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
+  const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
+  const v = x => x == null ? -Infinity : x;
+  vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
+  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const items = []; let g = null;
+  const tf = t => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '';
+  for (const r of vis) {
+    if (EF.grp && r.target !== g) {
+      g = r.target; const c2 = {}; vis.filter(x => x.target === g).forEach(x => c2[x.category] = (c2[x.category] || 0) + 1);
+      items.push(['g|' + g, `<tr class="grp"><td colspan="${ECOLS.length}">${esc(g)} · ${Object.values(c2).reduce((a, b) => a + b, 0)}<small>${cats.filter(c => c2[c]).map(c => c + ' ' + c2[c]).join(' · ')}</small></td></tr>`]);
+    }
+    const b = r.best, lt = r.latest;
+    const tip = `best job ${b.job || '-'} (${b.corner || '-'} line), source ${b.source_commit || 'unrecorded'}` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+      `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
+      `<td class="pu" title="${esc(JSON.stringify(r.evidence_history || []))}"><div>${esc(r.qualification)}</div></td>` +
+      `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
+      `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
+      `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
+      `<td>${tf(r.closed_t)}</td><td class="ev" title="${esc(lt ? lt.job + ': ' + lt.text : '')}">${lt ? `<div><span class="age" data-t="${lt.t}"></span> <b>${esc(lt.status)}</b> <small>${esc(lt.job)}</small> ${esc(lt.text)}</div>` : ''}</td></tr>`]);
+  }
+  if (!items.length) items.push(['__none', `<tr><td colspan="${ECOLS.length}">no matching elements</td></tr>`]);
+  reconcile($('eBody'), items); tickAges();
+}
+function pollElements() {
+  fetch('/api/elements' + Q).then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === eHash) return; const d = JSON.parse(x); if (d && d.t) { eHash = x; ED = relabel(d); renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
+}
+$('eTgt').onchange = e => { EF.tgt = e.target.value; renderElements(); };
+$('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
+$('eTxt').oninput = e => { EF.txt = e.target.value; renderElements(); };
+$('eSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; EF.sts = EF.sts.includes(s) ? EF.sts.filter(x => x !== s) : EF.sts.concat(s); renderElements(); };
+$('eHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (EF.sort === c) EF.dir = -EF.dir; else { EF.sort = c; EF.dir = ['lt', 'closed_t', 'tt', 'ff', 'ss', 'die', 'util', 'live', 'failed', 'jobs'].includes(c) ? -1 : 1; } renderElements(); };
+$('elSum').onclick = e => { const td = e.target.closest('td.c'); if (!td) return; EF.sts = [td.dataset.c]; EF.tgt = td.dataset.t; renderElements(); $('elWrap').scrollIntoView({behavior: 'smooth', block: 'start'}); };
+if (!REPLAY) pollElements();
+
+// ---- replay: the recorded window (window.REPLAY_DATA when exported, else /api/replay) through the same renderers
+let rAges = 0, RP = null, rPlaying = true, rSpeed = +(qs.get('speed') || 10) || 10, rLast = 0, rIdx = -1, rDraw = 0, rJobsKey = null;
+const SPEEDS = [1, 10, 60, 600];
+const tstr = (t, d) => new Date(t * 1000).toLocaleString('en-US', Object.assign({hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}, d ? {month: 'short', day: 'numeric'} : {}));
+const bsearch = (a, t, key) => { let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (key(a[m]) <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
+const atT = (a, t) => { const i = bsearch(a || [], t, x => x[0]); return i < 0 ? null : a[i][1]; };
+function rpVerdicts() { if (!RP.verdicts) return []; const i = bsearch(RP.verdicts, RT, v => v.t); return RP.verdicts.slice(Math.max(0, i - 599), i + 1).reverse(); }
+function rpJobs() {   // job table at RT: start state + diffs (re-applied from the start on a backward seek)
+  const i = bsearch(RP.jdiffs, RT, x => x[0]);
+  if (i === rJobsKey) return null; rJobsKey = i;
+  const m = new Map(RP.jobs0.map(j => [j.name, j]));
+  for (let k = 0; k <= i; k++) { for (const j of RP.jdiffs[k][1]) m.set(j.name, j); for (const n of RP.jdiffs[k][2]) m.delete(n); }
+  const lab = Object.fromEntries(RP.hosts.map(h => [h.alias, h.label]));
+  return [...m.values()].map(j => Object.assign({}, j, {label: lab[j.host] || j.host || 'unplaced'}));
+}
+function rpSnap(i) {
+  const f = RP.frames[i], t = f[0], tot = {cores: 0, busy: 0, mem_total: 0, mem_used: 0, docker: 0, hosts_up: 0};
+  const hosts = RP.hosts.map((m, k) => {
+    const r = f[1][k] || ['down'], e = Object.assign({}, m, {state: r[0], routes: r[7] || 0});
+    if (r[1] && (r[0] === 'up' || r[0] === 'stale')) {
+      const b = atob(r[1]), cores = new Array(b.length); for (let j = 0; j < b.length; j++) cores[j] = b.charCodeAt(j);
+      Object.assign(e, {cores, mem_total: r[2], mem_used: r[3], load: r[4], docker: r[5], gpu: r[6] || []});
+      if (r[0] === 'up') { tot.hosts_up++; tot.cores += cores.length; tot.busy += cores.reduce((a, c) => a + c, 0) / 100; tot.mem_total += r[2]; tot.mem_used += r[3]; tot.docker += r[5] || 0; }
+    }
+    return e;
+  });
+  const hi = bsearch(RP.hist, t, r => r[0]), lo = bsearch(RP.hist, t - 3600, r => r[0]);
+  const vi = RP.verdicts ? bsearch(RP.verdicts, t, v => v.t) : 0;
+  return {t, poll: RP.poll, safe: RP.safe, regions: RP.regions, hosts, totals: tot, vver: RP.verdicts ? vi : null,
+          loop: atT(RP.loops, t) || {}, recent: atT(RP.recents, t) || [], hist_hosts: RP.hosts.map(h => h.label),
+          history: RP.hist.slice(Math.max(0, lo), hi + 1)};
+}
+function rpShow(force) {
+  const i = Math.max(0, bsearch(RP.frames, RT, f => f[0]));
+  if (i !== rIdx || force) {
+    rIdx = i; const d = rpSnap(i); d.loop = Object.assign({running: 0, queued: 0, closed_today: 0, closed_today_jobs: 0, closed_total: 0, running_by_cat: {}, closed_24h_by_cat: {}, closed_hourly: {start: 0, bins: {}}}, d.loop);
+    onData(d);
+    const ee = atT(RP.elems, RT); if (ee && ee !== ED) { ED = ee; renderElements(); }
+    if (!SAFE && RP.jobs0) {
+      const rows = rpJobs();
+      if (rows) { J = {t: RT, jobs: rows, status: atT(RP.mds, RT) || {}, hosts: RP.hosts.map(h => h.label)}; if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs(); }
+      else if (J) { J.status = atT(RP.mds, RT) || J.status; jobAges(); }
+    }
+  }
+  $('rScrub').value = Math.round(RT - RP.t0);
+}
+function rpTick(t) {
+  if (!RP) return;
+  const dt = rLast ? Math.min(1, (t - rLast) / 1000) : 0; rLast = t;   // capped: a backgrounded tab does not leap
+  if (rPlaying) { RT = Math.min(RP.t1, RT + dt * rSpeed); if (RT >= RP.t1) { rPlaying = false; $('rPlay').textContent = 'replay'; } }
+  if (t - rDraw > 100) { rDraw = t; rpShow(false); }
+  if (t - rAges > 1000) { rAges = t; tickAges(); }
+  $('live').classList.remove('stale');
+  setText($('clock'), 'REPLAY · ' + tstr(RT));
+  setHTML($('rclock'), `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`);
+}
+function rpStart(P) {
+  P = relabel(P);
+  if (!P || !P.frames || !P.frames.length) { $('rMsg').textContent = 'no recorded frames in this window'; return; }
+  RP = P; RP.jdiffs = RP.jdiffs || []; RT = RP.t0 = Math.max(P.t0, P.frames[0][0]); RP.t1 = Math.min(P.t1, P.frames[P.frames.length - 1][0]);
+  $('rScrub').max = Math.max(1, Math.round(RP.t1 - RP.t0));
+  $('rFrom').textContent = tstr(RP.t0, true); $('rTo').textContent = tstr(RP.t1, true);
+  $('rMsg').textContent = `${P.frames.length} frames` + (P.step > 1 ? ` (1 in ${P.step})` : '');
+  document.title = 'OpenTallas Fleet Replay';
+  rpShow(true);
+}
+if (REPLAY) {
+  $('rbar').hidden = false; $('rclock').hidden = false;
+  if (!SPEEDS.includes(rSpeed)) SPEEDS.push(rSpeed), SPEEDS.sort((a, b) => a - b);
+  const sp = () => { $('rSpeed').innerHTML = SPEEDS.map(x => `<span data-x="${x}" class="${x === rSpeed ? 'on' : ''}">${x}×</span>`).join(''); };
+  sp();
+  $('rSpeed').onclick = e => { const x = +(e.target.dataset && e.target.dataset.x); if (x) { rSpeed = x; sp(); } };
+  $('rPlay').onclick = () => { if (!RP) return; if (RT >= RP.t1) RT = RP.t0, rIdx = -1, vReset(); rPlaying = !rPlaying; $('rPlay').textContent = rPlaying ? 'pause' : 'play'; };
+  $('rScrub').oninput = e => { if (!RP) return; RT = RP.t0 + +e.target.value; vReset(); rpShow(true); };
+  document.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); $('rPlay').click(); } });
+  if (RD) rpStart(RD);
+  else {
+    $('rMsg').textContent = 'loading recording';
+    const p = new URLSearchParams(); for (const k of ['from', 'to', 'safe', 'max']) if (qs.get(k)) p.set(k, qs.get(k));
+    fetch('/api/replay?' + p).then(r => r.json()).then(d => d.error ? ($('rMsg').textContent = d.error) : rpStart(d)).catch(e => $('rMsg').textContent = 'load failed: ' + e);
+  }
+}
+
+// ---- frame loop (about 30 fps; rAF pauses when hidden)
+let lastF = 0, lastArea = 0;
 function frame(t) {
   requestAnimationFrame(frame);
   if (t - lastF < 33) return; lastF = t;
-  for (const [el, s] of tweens) {
-    const u = Math.min(1, (t - s.t0) / 1200), e = 1 - Math.pow(1 - u, 3);
-    s.cur = s.from + (s.to - s.from) * e;
-    el.innerHTML = fmt(s.cur, s.dec) + (s.suffix ? `<small>${s.suffix.trim()}</small>` : '');
-  }
   for (const c of cards.values()) drawGrid(c, t);
-  drawMap(t);
-  const age = Date.now() / 1000 - lastT;
+  drawTanks(t);
+  if (t - lastArea > 66) { drawRamArea(t); lastArea = t; }   // area chart at ~15 fps
+  const age = NOW() - lastT;
   $('live').classList.toggle('stale', !lastT || age > 30);
-  $('clock').textContent = lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting';
+  if (REPLAY) { rpTick(t); return; }
+  setText($('clock'), lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting');
 }
 requestAnimationFrame(frame);
 })();

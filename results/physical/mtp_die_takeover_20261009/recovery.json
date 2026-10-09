@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.mtp_die_takeover.v1",
+  "observed_utc": "2026-10-09T05:58:00.670753+00:00",
+  "scope": "recovered diagnostics, no physical closure or model adoption",
+  "cases": {
+    "hbm_r25sm": {
+      "source_commit": "8b4e49626",
+      "status": "FAILED_CASE_GENERATION",
+      "cause": "adopted view index hfd_attn_tile absent in candidate split model",
+      "fix_commit": "2ab688595",
+      "host": "ot-epyc1tb"
+    },
+    "s81_headmtp": {
+      "source_commit": "0544fca2c",
+      "host": "ot-epyc3",
+      "status": "clock_plan_failed; GRT completed with zero overflow; STA live",
+      "clock_intra_max_ps": 55.3,
+      "clock_inter_max_ps": 403.4,
+      "clock_inter_violations": 8,
+      "qualification": "511 pair reduced Markov32 plan is undersized for released Markov256; missing real sequencer view"
+    },
+    "s81_l1wfc": {
+      "source_commit": "0544fca2c",
+      "host": "ot-epyc3",
+      "status": "clock_plan_failed; STA kit live",
+      "clock_intra_max_ps": 76.3,
+      "clock_inter_max_ps": 109.2,
+      "clock_intra_violations": 7
+    }
+  },
+  "adoption_blockers": [
+    "Markov shape256 replaces reduced32; distinguish524288-byte storage pair(4 ROM4096) from262144-byte successor pair(2 ROM4096)",
+    "Native loader sector678/550 and host AXI226/74 must replace incorrect904/624 svc allocation",
+    "Unqualified interim MTP and attention half views remain generated placeholders"
+  ],
+  "logs": {
+    "epyc3_headmtp/clock.log": {
+      "sha256": "61da7a5630cb07f60757ef3a57d9974c1b7bad1e23d9c3132a6a06ef7ef434c1",
+      "text": "{\"die\": \"s81r8_head\", \"regions\": 179, \"pairs\": 23151, \"max_intra\": 55.3, \"max_inter\": 403.4, \"viol_intra\": 0, \"viol_inter\": 8}\n"
+    },
+    "epyc3_l1wfc/clock.log": {
+      "sha256": "43906d1ffa365ca28f2930613fe41953bf4c645deb7eff6392fbe87f34659938",
+      "text": "{\"die\": \"s81r8_layer1\", \"regions\": 166, \"pairs\": 70059, \"max_intra\": 76.3, \"max_inter\": 109.2, \"viol_intra\": 7, \"viol_inter\": 0}\n"
+    },
+    "epyc1_r25sm/case.log": {
+      "sha256": "ac486af442c0ab8feabe505855201c53fa4897aca0139de0b0f1c1d39dfdf00a",
+      "text": "{\"relay_ends_dropped_short\": 48, \"buses_cut\": 292, \"relays\": 414, \"wire_stages\": 1522, \"unknown_dir_bits\": 0, \"skipped_multi\": 0, \"skipped_fclk\": 477, \"pin_fallback\": 4, \"qualification\": \"diagnostic-only: analytic views and unqualified flow control\", \"path_um_total\": 682991.0014545462, \"extra_wire_stages\": 826, \"instances\": 1936, \"unplaced_n\": 0}\nTraceback (most recent call last):\n  File \"/srv/opentallas-scratch/claude/mtp-die/src_r25sm_8b4e49626/tools/hbm_die_views.py\", line 1259, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/srv/opentallas-scratch/claude/mtp-die/src_r25sm_8b4e49626/tools/hbm_die_views.py\", line 1255, in main\n    return a.fn(a) or 0\n           ~~~~^^^\n  File \"/srv/opentallas-scratch/claude/mtp-die/src_r25sm_8b4e49626/tools/hbm_die_views.py\", line 678, in cmd_die\n    assert k == 1, (n, k)\n           ^^^^^^\nAssertionError: ('hfd_attn_tile', 0)\n"
+    }
+  }
+}

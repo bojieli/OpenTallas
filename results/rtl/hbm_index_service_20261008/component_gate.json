@@ -1,0 +1,32 @@
+{
+  "status": "COMPONENT_EXACT_PASS_NOT_ADOPTED",
+  "source_sha256": {
+    "tools/hbm_index_service_model.py": "b59b9211cfa6dfc1be37c01e31af1fc5ab4cd04522fd69b418e0467ea417119b",
+    "tools/uarch_model.py": "423b7f3bd023610b2bab8edcbccdecebbf083c28b930864f0b6b50539f55b0e5",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv": "d5edd73cae06fc97d74aafd2d71eb1f94b811821ee89772cca9eaa3aacb19702",
+    "rtl/hbm_accel/service/ot_hbm_kvwb_hub.sv": "ea86d655aa0d3dab2ad0b9c98be1a31a963b6e6c6d7cb7af4d72943b7b88cc84",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "3ad405df46e413bf1f1f2f4b33f2f3573c2669d7ab7416ce774c121fe03350e7",
+    "rtl/test/hbm_accel/tb_hbm_key_contiguous.sv": "228dd7f79ec719ff89ddc101e504eb3d485e5b25566071f32ff247d5f43cc0aa",
+    "rtl/test/hbm_accel/tb_hbm_index_lines.sv": "42e8dbf7665e3a3e06523c82eec491274188bb649250399705348c1db0cc883e"
+  },
+  "key_mapping_sectors": 32784,
+  "line_count": 1368,
+  "line_cycles_with_gaps_and_pair_reordering": 216,
+  "negatives": [
+    "old interleaved mapping fails ord1 offset7",
+    "one sector bit corruption fails line23 byte104"
+  ],
+  "history": "lines_mutant.log is invalid negative from Icarus compound assignment; corrected explicit bit complement fails in lines_mutant_v2.log. Preserved historical logs.",
+  "limitations": [
+    "reassembly behavioural storage; SRAM/protection pending",
+    "full service admission/core integration pending",
+    "no throughput/signoff/adoption claim"
+  ],
+  "replay": [
+    "iverilog -g2012 -o /tmp/hbm-key-contiguous rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv rtl/test/hbm_accel/tb_hbm_key_contiguous.sv",
+    "vvp /tmp/hbm-key-contiguous",
+    "iverilog -g2012 -o /tmp/hbm-index-lines physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv rtl/test/hbm_accel/tb_hbm_index_lines.sv",
+    "vvp /tmp/hbm-index-lines",
+    "vvp /tmp/hbm-index-lines +mut=1"
+  ]
+}

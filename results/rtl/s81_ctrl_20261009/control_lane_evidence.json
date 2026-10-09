@@ -1,0 +1,53 @@
+{
+  "status": "COMPONENT_EXACT_PASS_NOT_PHYSICAL_ADOPTION",
+  "host": "ot-agidock128",
+  "admission": "/srv/opentallas-scratch/admit.sh 2",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl_lane_adapter.sv": "a78b47b7ede6c1200da6a26018cd6024b17554a8f63ecc2334fddaeaf8fb039a",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_sp_collective_ctrl.sv": "22eb361d78e261fdacb84aefd419359864cc6fd37ccd52585714b040be9087b4",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_control_lane.sv": "3851035e4bad79abc9ab006f33a6c954430f932f141efc35af584f9e0bbd5bb4",
+    "rtl/dsrom_sys/s81_ctrl/test/run_control_lane.sh": "a1c6b6f74b86dda9c87fe15a30abc107d5c9d9453764d1ff17ac875e8b533a00"
+  },
+  "remote_artifacts": "/srv/opentallas-scratch/codex/ds-control/link-test",
+  "scope": "Registered native553 control-lane adapter; CT logical endpoint full512-bit flit reference with CRC/replay, not selected GFMT1/EPPIPE2 physical lane proof. Native selected GFMT1/EPPIPE2 dsfd_coll_ck/core and8 W/MY lanes elaborate (84 modules) against real RTL, inherited gearbox MULTIDRIVEN warnings retained.",
+  "shape": {
+    "flits": 641,
+    "payload_bits": 512,
+    "native_boundary_bits": 553,
+    "message": "header plus640 payload flits"
+  },
+  "clean": {
+    "errors": 0,
+    "first": 16,
+    "last": 1020
+  },
+  "replay": {
+    "errors": 0,
+    "crc_rejects": 17,
+    "replays": 7,
+    "first": 16,
+    "last": 1020
+  },
+  "negative_gates": [
+    "reserved core collision rejected",
+    "nonzero padding rejected"
+  ],
+  "mutations": {
+    "payload_bit": "641 errors expected FAIL",
+    "last": "1 error expected FAIL"
+  },
+  "remaining": [
+    "generator real peer lane reservation",
+    "SS/FF contextual controller and adapter closure",
+    "actual engine microprogram compiler binding"
+  ],
+  "native_elaboration": {
+    "host": "ot-agidock128",
+    "tool": "Verilator5.032 --lint-only",
+    "gfmt": 1,
+    "eppipe": 2,
+    "modules": 84,
+    "status": "PASS_WITH_INHERITED_WARNINGS",
+    "log": "control_lane_native_elaboration.log"
+  }
+}

@@ -1,0 +1,72 @@
+{
+ "verdict": "FAIL",
+ "fails": [
+  {
+   "check": "pin_density",
+   "msg": "pin density > 12.0 bits/um/layer over 100 um: S/M5 20.8 b/um @62: spread over the face (target <= 6.0) / more layers / a longer edge"
+  }
+ ],
+ "warns": [
+  {
+   "check": "pin_pdn",
+   "msg": "4452 pin(s) within 1 track of a PDN strap / via stack (column not full: escape tracks remain)"
+  }
+ ],
+ "metrics": {
+  "core_um2": 689900.2,
+  "std_um2": 68475.0,
+  "macro_um2": 170324.3,
+  "flops": 94223,
+  "hold_allow_um2": 6868.9,
+  "util": 0.3461,
+  "util_hold": 0.3561,
+  "n_macros": 24,
+  "n_pins": 11601,
+  "pin_density_max": 20.84,
+  "pin_density_at": "S M5 @62.1 um (2084 pins / 100 um, 2695 on the face)",
+  "pin_width_illegal": 0,
+  "pin_width_offtable_accessible": 0,
+  "pin_pdn_near": 0,
+  "pin_pdn_near_sparse": 4452,
+  "pin_pdn_min_um": {
+   "M5": 0.325,
+   "M4": 0.048
+  },
+  "macro_edge_shadow": 0,
+  "bank_far": 0,
+  "slivers": 0,
+  "channel_worst": {
+   "axis": "y",
+   "at": 176.01,
+   "demand": 548,
+   "cap": 9249.2,
+   "ratio": 0.059
+  },
+  "capture_unanchored": 0
+ },
+ "thresholds": {
+  "util_max": 0.6,
+  "util_hold_max": 0.65,
+  "hold_buf_per_flop": 1.0,
+  "pin_density_max": 12.0,
+  "pin_density_target": 6.0,
+  "pin_density_window_um": 100.0,
+  "pin_density_min_pins": 1,
+  "pin_pdn_tracks": 1.0,
+  "pin_pdn_fail": 0.0,
+  "pin_width_access_pitches": 1.0,
+  "pin_pdn_full_frac": 0.9,
+  "channel_usable": 0.5,
+  "channel_min_layer": 4,
+  "macro_edge_um": 10.0,
+  "macro_edge_pins": 32,
+  "sliver_um": 12.0,
+  "sliver_min_row_area_um2": 2.0,
+  "sliver_blocked_frac": 0.9,
+  "bank_dist_um": 100.0,
+  "bank_min_pins": 8,
+  "capture_warn_um": 50.0,
+  "capture_warn_count": 256
+ },
+ "dump": "/work/reports/asap7/opentallas_dsfd_coll_core_asap7_s81ph_s81b_coll_core_oqpipe_3abd84e2c_tc_f3_lvt_cal/base/fp_margin_lint_dump.json"
+}

@@ -1,0 +1,24 @@
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/common/ot_ratio_cdc_fifo.sv:45:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   45 | module ot_ratio_cdc_fifo #(
+      |        ^~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/dsrom_sys/s81_ph/ot_s81ph_cap_p.sv:213:1: ... note: In file included from 'ot_s81ph_cap_p.sv'
+                       /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.032
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/link/ot_link_crc32.sv:29:26: More than a 8k bit replication is probably wrong: 18016
+   29 |             masks = {32*W{1'b0}};
+      |                          ^
+                      /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv:185:1: ... note: In file included from 'ot_s81ph_link_ep.sv'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv:116:112: Signal has multiple driving blocks with different clocking: 'tx'
+                                                                                                                                      : ... note: In instance 'dsfd_sp_collective_ctrl.g_lane[7].g_e.u_l'
+                      /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:174:13: ... Location of first driving block
+  174 |             beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+      |             ^~~~~~~
+                      /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:180:9: ... Location of other driving block
+  180 |         beat_tx[511:3] <= idle_q ? {{G{1'b0}}, r_tx} : {gpay, r_tx};
+      |         ^~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 7.250 MB sources in 84 modules, into 43.719 MB in 127 C++ files needing 0.000 MB
+- Verilator: Walltime 11.181 s (elab=1.361, cvt=8.870, bld=0.000); cpu 11.180 s on 1 threads; alloced 956.379 MB

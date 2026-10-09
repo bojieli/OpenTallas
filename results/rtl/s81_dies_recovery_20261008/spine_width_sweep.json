@@ -1,0 +1,142 @@
+{
+  "schema": "opentallas.s81-dies.spine-sizing.v1",
+  "source_sha": "fe365cd132167c1833f4d0b8c3196386f26a8669",
+  "method": "Analytical build_r8 spine geometry only: omit frame instance construction and stop before HBM bands/bus/relay placement. Unchanged spine slab equations and boundary margins.",
+  "qualification": "Sizing evidence only; full floorplan legality, functional wiring, routed timing, DRC and IR remain unproven.",
+  "selected_hub_width_um": 1814.4,
+  "selected_vch_width_um": 1468.8,
+  "vch_reduction_from_failed_recipe_percent": 5.555555555555562,
+  "die_outline_um": [
+    33000,
+    26000
+  ],
+  "added_latency_cycles": 0,
+  "rows": [
+    {
+      "width": 1771.2,
+      "vch": 1555.2,
+      "worst_margin_um": -88.45600000000104,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 3127.68,
+          "end": 10357.176,
+          "low_margin": -86.40000000000038,
+          "high_margin": 12428.744000000002
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15642.720000000003,
+          "end": 22874.376000000004,
+          "low_margin": 12428.640000000003,
+          "high_margin": -88.45600000000104
+        }
+      ]
+    },
+    {
+      "width": 1814.4,
+      "vch": 1468.8,
+      "worst_margin_um": 125.38400000000001,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 3341.52,
+          "end": 10400.376,
+          "low_margin": 127.43999999999977,
+          "high_margin": 12385.544000000002
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15601.680000000002,
+          "end": 22660.536,
+          "low_margin": 12387.600000000002,
+          "high_margin": 125.38400000000001
+        }
+      ]
+    },
+    {
+      "width": 1857.6,
+      "vch": 1382.4000000000003,
+      "worst_margin_um": 328.4240000000027,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 3544.56,
+          "end": 10439.256,
+          "low_margin": 330.47999999999973,
+          "high_margin": 12346.664
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15560.64,
+          "end": 22457.496,
+          "low_margin": 12346.56,
+          "high_margin": 328.4240000000027
+        }
+      ]
+    },
+    {
+      "width": 1900.8,
+      "vch": 1296.0000000000002,
+      "worst_margin_um": 520.6640000000043,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 3736.8,
+          "end": 10475.975999999999,
+          "low_margin": 522.72,
+          "high_margin": 12309.944000000003
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15526.079999999998,
+          "end": 22265.255999999998,
+          "low_margin": 12311.999999999998,
+          "high_margin": 520.6640000000043
+        }
+      ]
+    },
+    {
+      "width": 1944,
+      "vch": 1209.6000000000001,
+      "worst_margin_um": 708.5840000000035,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 3924.72,
+          "end": 10512.696,
+          "low_margin": 710.6399999999996,
+          "high_margin": 12273.224000000002
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15487.199999999999,
+          "end": 22077.336,
+          "low_margin": 12273.119999999999,
+          "high_margin": 708.5840000000035
+        }
+      ]
+    },
+    {
+      "width": 1987.2,
+      "vch": 1123.2,
+      "worst_margin_um": 885.7040000000052,
+      "su": [
+        {
+          "name": "sp_su_s",
+          "y": 4101.84,
+          "end": 10545.096,
+          "low_margin": 887.76,
+          "high_margin": 12240.824000000002
+        },
+        {
+          "name": "sp_su_n",
+          "y": 15454.799999999997,
+          "end": 21900.215999999997,
+          "low_margin": 12240.719999999998,
+          "high_margin": 885.7040000000052
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_mtp_seq",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_mtp_seq.lef": "4ec0a56ad45f85da0d9539901409cc01b6be867589c238d1e04140af51fb98c6",
+    "dsfd_mtp_seq_ff.lib": "13349325fda50051be717e226b6b4566a5936bc50b8d80b73186d57541ea0255",
+    "dsfd_mtp_seq_ss.lib": "dc44178a3c9e3d65ec54f99e7f4bebf161451ee070d234cbe0373c960d485fc4"
+  },
+  "ok": true
+}

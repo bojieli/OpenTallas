@@ -1,0 +1,25 @@
+# Qwen r25 production lowering and executable host shell
+
+Successor to cmdproc18 component commit `c4b9c7a95`. The graph is the owner's new **r25_prenorm_full_w8** contract: released raw W8 matrices, explicit RMSNorm before BF16 matrix inputs. Historical folded/post-matvec graphs remain unchanged. This record does **not** establish complete Qwen decode or production kernel execution.
+
+`tools/qwen_r25_decode_program.py` emits **871 ordered component operations**, including all36 layers with24 operations each, embedding and the head. It records actual c12 vec-campaign words for prenorm, separate Q/K norm, rotate-half RoPE, Q rounding, softmax, SwiGLU, QKV scales and residual. The source hashes identify the imported stage/ISA modules. RMSNorm and SwiGLU add explicit BF16 output rounding at the next SM boundary; QK norm and RoPE remain FP32, Q rounds after RoPE, K/V encode FP8 at append. Gate/up publication must provide the explicitly addressed padded views at0/4096. These are real stage words in the **existing bench encoding**, not fabricated production dispatcher instructions.
+
+QKV and gate/up retain separate canonical q/k/v/gate/up image geometries from fmt3 producer `f638941f6`; the packed producer's actual IL8 issuer order, NC8 independent activation columns, op_c8/op_g/op_gs1, full32-SM row partitions and unchanged BF16 scale sidecar consumer are carried in the program. Installed storage stride is **160 bytes**, response136, useful codes128; payload efficiency is **80%**, not1byte/weight transport. The per-stage image/service bases remain unbound.
+
+A flat command list would exceed NCMD256. Lowering uses **38 command batches** (embedding,36layers,head); each layer requires25 words including END. The compiler preserves actual descriptors/stage words for installation, requires a source-pinned production unit/dispatcher binding for each launch, checks entry PCs against actual IMEM capacity, and refuses absent entries. There are **28 missing production kernel bindings**, enumerated in `gate.json`. No default or guessed PCs exist. Unsupported attention/collective/embedding/append/scale/head programs remain explicit obligations.
+
+`tools/qwen_r25_decode_host.py` is an executable finite host shell over **eight CP halves across TP4**. A caller owns actual pin snapshots, die input driving, descriptor-installation visibility and clock ticks. It loads only idle command stores, holds doorbells until actual readiness, and joins actual completions. Each batch has a distinct job32 transaction ID; generation4 and position20 must also match. The final global18bit token must agree across the eight halves. The physical tuple packing uses loader343/split148. The shell computes no kernel outputs and substitutes no completion or fence.
+
+The shell's **protocol fixture** passes token151935 and kills a stale generation and a single-half TOKEN17 truncation. This fixture is explicitly **not RTL arithmetic execution**. Actual exhaustive TOKEN18 CP/SRAM/split-wrapper RTL evidence remains in `results/rtl/qwen_cmdproc18_20261008`; the fixture does not broaden that evidence into whole-decode execution.
+
+The TP4 HBM capacity map includes full replicated embedding codes/scales, all raw matrices, distinct BF16 scale artifacts, gains, KV and constants. It converts a logical global128B stripe to the actual native mapper37 tuple: high2bits select stack, low35bits are local bytes, sector30=local>>5 and PC=s[6:2]xor s[11:7]xor s[16:12]. Native Waddr24 translation is **unbound**, so no truncating cast is offered.
+
+For the actual KVS32 successor, each `[layer,KVhead,K|V]` plane is1MiB:32768sectors,1024sectors/PC, mask all32PCs. Logical sector=pos*4+sector_in_row; p=sector%32,j=sector//32; native bank={j[9:7],j[1:0]},row=row0+(j>>10),col=j[6:2]. The gate exhaustively checks all32768 plane sectors for unique tuples and exact reassembly. Service recovery confirmed this matches the real encoder.144distinct row0 slots still need actual allocation; row0 must be below32768. Global KV extents establish logical capacity only; they are **not** the physical transposed storage assignment. The existing DS posted-write path uses528B/288B rows and cannot provide the required128B Qwen row mapping. A dedicated Qwen writeback binding is required. The proposed layout was sent to service recovery; neither90% sustained read bandwidth nor downstream credit qualification is established.
+
+All new verification ran on **EPYC2 through `/srv/opentallas-scratch/admit.sh 1`**, with no new localhost compute after the owner stop. Final gate peak RSS is recorded in `gate.json`. Remote source/evidence are retained at `/srv/opentallas-scratch/codex/qwen-cmdproc18-program-20261008`; earlier successful attempts were not overwritten. Reproduce:
+
+```
+python tools/qwen_r25_decode_program_gate.py --su-tools <qualified-stage-tools> --image-tools <qualified-fmt3-tools> --out <new-output>
+```
+
+No token-cycle/rate, full-chip resource fit, numerical quality, SS/FF, routing-layer, DRC or IR claim is made. Root was notified that production dispatcher/kernel ownership and native base allocation remain necessary. No docs/ files were edited.

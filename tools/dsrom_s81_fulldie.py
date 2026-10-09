@@ -86,7 +86,8 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS
+    BF_EXPLICIT_IDS = None
     DIE_KIND, GEN = die, gen
     HOP_PLAN = None                  # --hop-fix plans are per die
     # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
@@ -116,12 +117,33 @@ def configure(die, gen='r7'):
 # BF pairs in every return region of a layer die, at the in-region positions tools/dsrom_bf_double_alloc.py binds
 # (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
 BF_PER_REGION = None
+BF_EXPLICIT_IDS = None
+
+
+def parse_bf_pair_ranges(text, pairs):
+    """Explicit BF-double field IDs; comma-separated half-open ranges."""
+    ids = set()
+    for item in text.split(','):
+        ends = item.split(':')
+        if len(ends) != 2:
+            raise ValueError('BF ranges require start:stop')
+        lo, hi = map(int, ends)
+        if not 0 <= lo < hi <= pairs:
+            raise ValueError(f'BF range {item} outside [0,{pairs})')
+        current = set(range(lo, hi))
+        if ids & current:
+            raise ValueError(f'overlapping BF range {item}')
+        ids.update(current)
+    return frozenset(ids)
 
 
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
+    if BF_EXPLICIT_IDS is not None:
+        assert n > max(BF_EXPLICIT_IDS, default=-1), 'explicit BF IDs exceed pair count'
+        PAIRS, BF_PAIRS = n, len(BF_EXPLICIT_IDS)
+    elif DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
         PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
     elif DIE_KIND in ('layer', 'layer1'):
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
@@ -247,6 +269,55 @@ def real_lef(rel):
     return _REAL[rel]
 
 
+def q_pq():
+    """True when the q abstract carries the PQ pins (go_tag / bank_free / sh_free / walking): ot_v41_rom_elem_q_qxpq_w10"""
+    return 'go_tag[0]' in real_lef(Q_LEF)['pins']
+
+
+# Real-macro pins that are left without a die net BY DESIGN (build-every-path rule, s81-die-2 2026-10-08: every other
+# functional pin of a real macro must have a net, see unbound_functional_pins).  pin name -> reason.
+DIAG_PINS = {
+    'walking': 'PQ q element diagnostic: no consumer in the PQ design (ot_v41_pair_pq_w17w10 leaves e_walking open; '
+               'the PQ spine admits ops by its GAP / GUARD timing, the loader by bank_free / sh_free)',
+}
+
+
+def unbound_functional_pins(m):
+    """{(master, pin): instances} of real-macro signal pins (LEF) with no die net, excluding DIAG_PINS,
+    UNUSED_BY_DESIGN and the cfg ROM's spare rd_out[71:48].  The generator fails on any (build-every-path rule)."""
+    rp = real_ports()
+    lefs = {}
+    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF) + ((HEAD_A_LEF, HEAD_B_LEF) if HEAD_BUNDLES else ()):
+        r_ = real_lef(rel)
+        lefs[r_['name']] = r_['pins']
+    by = {it.name: it for it in m['insts']}
+    bound = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        for inst, port in eps:
+            if inst == 'TOP' or inst not in by:
+                continue
+            mst = by[inst].master
+            if mst not in rp:
+                continue
+            base, lo, hi = pslice(port)
+            if base in rp[mst]:
+                bound[inst].update(rp[mst][base][:bits] if lo is None else rp[mst][base][lo:hi + 1])
+    out = defaultdict(int)
+    for it in m['insts']:
+        pins = lefs.get(it.master)
+        if pins is None:
+            continue
+        got = bound.get(it.name, set())
+        for pn in pins:
+            b_ = re.sub(r'\[\d+\]$', '', pn)
+            if pn in got or b_ in DIAG_PINS or (it.master, b_) in UNUSED_BY_DESIGN:
+                continue
+            if b_ == 'rd_out' and int(pn[pn.index('[') + 1:-1]) >= 48:
+                continue                    # cfg ROM spare columns (48-b payload)
+            out[(it.master, b_)] += 1
+    return dict(out)
+
+
 def q_x1_south():
     """True when the q abstract has xs_q1 / xs_e1 on its S face (QELEM Z22+): the slot's own station drives them"""
     rq = real_lef(Q_LEF)
@@ -307,6 +378,10 @@ def region_bounds():
 
 
 def bf_sites():
+    if BF_EXPLICIT_IDS is not None:
+        assert len(BF_EXPLICIT_IDS) == BF_PAIRS
+        assert not (set(BF_EXPLICIT_IDS) & nv_sites())
+        return set(BF_EXPLICIT_IDS)
     if BF_PER_REGION is not None and DIE_KIND in ('layer', 'layer1'):
         # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
         nb = BF_PER_REGION * ROOTS
@@ -2201,6 +2276,9 @@ STEP9 = 425.0                       # r9: closer to the 430.56 um reach (the pla
 HSTN_DOM = dict(serial_0p9='serial', stream_1p2='stream')
 SEQ_WH = (34.56, 60.48)
 STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',))
+HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
+HOST_MM2 = 0.10
+FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
 HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
 HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
@@ -2210,6 +2288,11 @@ SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spre
 CF_WH = (850.176, 47.52)
 CF_WH_V2 = (432.0, 95.04)        # --cfifo-v2: same area, 2:1 squarer (the 850 x 47.5 slab had 671 ps CTS insertion)
 CFIFO_V2 = False
+CFIFO_COLCK = False                 # --cfifo-colck (s81-die-2 2026-10-08): the cfifo's column side (read port, x-lane /
+                                    # cc output flops, st / ri capture, rd launch, rsync) is clocked from cr, a sink of
+                                    # its own column tree (co -> tree -> cr), not from ck: sta_v6 FF class 70k < -100 was
+                                    # xa/xb launched at ck (min 161 ps) into the first column relays at co + tree (~450 ps);
+                                    # TT class cf* ri capture (column -> cfifo) moves onto the same tree.  0 cycles.
 RSTG_WH = (38.88, 34.56)
 NVR = RET                           # NV5 draft-head result word back into its lm-head pair
 SEQ_XL, SSTN_X, R_CFGX = 326.16, 365.04, 37.152
@@ -2222,7 +2305,8 @@ HEND_PINREG = True
 # the cfg band (ELEM_DY) + the element frame + 4.32; SLOTS8 = the slots per column that fit the field height between
 # the bands with a >= FIELD_MARGIN gap each side; PAIRS = pairs (elements) per die (configure(pairs=...)).
 ELEM_FRAME_H = 157.68
-FIELD_MARGIN = 216.0
+FIELD_MARGIN = FIELD_MARGIN_DEFAULT = 216.0
+PQ_FIELD_MARGIN = 108.0       # --pq-place minimum field <-> band gap (see configure: the PQ root row)
 SLOT_H8, SLOTS8 = SLOT_H, SLOTS
 Q_ELEM_FRAME_H = None             # opt-in independent q frame, BF remains ELEM_FRAME_H
 SU_AREA_MM2 = None                # optional current-leaf SU reservation, not a hard macro
@@ -2313,6 +2397,13 @@ def frame_slots_needed(npairs_frame, bf_frac, nv_frac=0.0):
 def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
+    if BF_EXPLICIT_IDS is not None:
+        # The typed head inventory is fixed; layer capacity sweeps would
+        # change pair identity and omit its dedicated Markov engines.
+        return dict(scope='fixed explicit head field inventory; no maximum-die claim',
+                    pairs=PAIRS, bf_double=BF_PAIRS, ordinary=PAIRS-BF_PAIRS,
+                    bf_pair_ids=sorted(BF_EXPLICIT_IDS), field_frames_fit=_frames_fit(sl, sh),
+                    dedicated_Markov_engines_included=False)
     keep = (PAIRS, BF_PAIRS, NV_PAIRS)
     best = 0
     for p in range(1000, 4000, 16):
@@ -2381,6 +2472,11 @@ def real_ports_r8():
               + _bus('xs_sv', 2) + ['xs_v'],
               x1=_bus('xs_q1', 256) + _bus('xs_e1', 10), go=['go'], ck=['clk'], rs=['rst_n'],
               cfg=_bus('cfg_a', 5) + _bus('cfg_d', 48) + ['cfg_v'], r0=ln(0), r1=ln(1), st=['busy', 'fault'])
+    # s81-die-2 2026-10-08 (tie-off audit TA-10): the PQ q element's op tag in / loader handshake out, bound to its pair
+    # sequencer ot_s81_cfg7_seq (go_tag, ef = {bank_free, sh_free}); only when the abstract has them (PQ elements)
+    rq_ = real_lef(Q_LEF)['pins']
+    if 'go_tag[0]' in rq_:
+        qp.update(gt=_bus('go_tag', 2), ef=['sh_free', 'bank_free'])
     assert len(qp['x0']) == X0B and len(qp['x1']) == X1B and len(qp['r0']) == LEAF
     assert len(set(qp['r0'] + qp['r1'])) == 2 * LEAF == RET
     cfg = dict(ck=['clk'], ce=['ce_in'], a=_bus('addr_in', 12), rd=_bus('rd_out', 48))
@@ -2471,32 +2567,43 @@ class Placer:
         self.occ.add(it.box())
         return it
 
-    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None):
+    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None, cross_step=None):
         """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev` and
         (s81-die-timing 2026-10-08) within `nreach` of the next point `nxt` of the chain (r3: hop relays that found no
         spot inside a packed frame landed up to 906 um short of their load, on the far side of their driver)."""
         reach = reach or FWD_REACH
-        al = [0.0]
-        for i in range(1, int(span / 4.32) + 1):
-            al += [-4.32 * i, 4.32 * i]
-        cr = [0.0]
-        step = (h if horiz else w) + 2.16
-        for i in range(1, rows + 1):
-            cr += [step * i, -step * i]
-        cands = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+        step = cross_step or (h if horiz else w) + 2.16
+        cands = _near_cands(span, rows, step)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
             x = dn(cx + dx - w / 2, GX)
             y = dn(cy + dy - h / 2, GY)
-            r = (x, y, x + w, y + h)
-            if not _inside(r, allowed) or not self.occ.free(r, 0.432):
-                continue
+            # (s81-die-2) the cheap reach tests first: same first hit, the occupancy test only on reachable spots
             if prev is not None and _mh(prev, (x + w / 2, y + h / 2)) > reach:
                 continue
             if nxt is not None and _mh(nxt, (x + w / 2, y + h / 2)) > nreach:
                 continue
+            r = (x, y, x + w, y + h)
+            if not _inside(r, allowed) or not self.occ.free(r, 0.432):
+                continue
             return x, y
         return None
+
+
+_NEAR_CANDS = {}
+
+
+def _near_cands(span, rows, step):
+    k = (span, rows, step)
+    if k not in _NEAR_CANDS:
+        al = [0.0]
+        for i in range(1, int(span / 4.32) + 1):
+            al += [-4.32 * i, 4.32 * i]
+        cr = [0.0]
+        for i in range(1, rows + 1):
+            cr += [step * i, -step * i]
+        _NEAR_CANDS[k] = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+    return _NEAR_CANDS[k]
 
 
 def _poly_len(P):
@@ -2827,6 +2934,11 @@ def build_r8(variant=None):
     su_area = SU_AREA_MM2 if SU_AREA_MM2 is not None else HUB_MM2['su']
     centre = ['gather', 'vm', 'capture', 'collective']
     centre_area = dict(HUB_MM2)
+    if CTRL_SLAB:
+        from uarch_model import s81_ctrl_die_model
+        ctrl_model = s81_ctrl_die_model(cw, CTRL_ROLE)
+        centre.insert(centre.index('collective'), 'stage_ctrl')
+        centre_area['stage_ctrl'] = ctrl_model['area_mm2_nominal']
     wfc_rect = None
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
@@ -2834,18 +2946,48 @@ def build_r8(variant=None):
     if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
         centre.insert(centre.index('vm') + 1, 'pq')
         centre_area['pq'] = PQ_CORE_H * cw / 1e6
+    if HOST_SLAB:         # s81-dies / ingest RQ-ING-1: dsfd_host (ot_rom_host_ingest ROWS / IKEY / CSR) beside the collective
+        centre.insert(centre.index('collective') + 1, 'host')
+        centre_area['host'] = HOST_MM2
     if VM_FACE_MM2 and centre_area['vm'] < VM_FACE_MM2:
         # S81-RERUN v9e (OWNER rule 3, coordinator 2026-10-07): the head die's VM slab (0.89 mm2, ~880 um tall) took
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
         # capture buses at the VM face); the slab grows to the layer die's VM outline so its face spreads them
         centre_area['vm'] = VM_FACE_MM2
+    if WFC_HARD and DIE_KIND in ('layer', 'layer1'):
+        # MTP-DIE: the bound WFC slab (real master dsfd_wfc) on every layer-class die, after the capture (its
+        # core_start / done / result endpoint), next to the collective (stage link in / out) and one slab from the VM
+        if 'wfc' in centre:
+            centre.remove('wfc')
+        centre.insert(centre.index('capture') + 1, 'wfc_hard')
+        centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+    if MTP_SEQ and DIE_KIND == 'head':
+        centre.insert(centre.index('capture') + 1, 'mtp')
+        centre_area['mtp'] = MTP_SEQ_MM2
+    if (WFC_HARD and DIE_KIND in ('layer', 'layer1')) or (MTP_SEQ and DIE_KIND == 'head'):
+        # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
+        # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
+        centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
     ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
-        if n == 'wfc':
+        if n == 'stage_ctrl':
+            master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
+            slab(n, centre_area[n], x_sp, yy, cw, master=master)
+            notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
+        elif n == 'wfc_hard':
+            slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
+            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
+                         'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
+                         % (WFC_SLAB_H, centre_area[n]))
+        elif n == 'mtp':
+            slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq')
+            notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
+                         % centre_area[n])
+        elif n == 'wfc':
             wh = up(centre_area[n] * 1e6 / cw, GY)
             wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
         elif n == 'pq':
@@ -2860,7 +3002,8 @@ def build_r8(variant=None):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
-            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
+            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2',
+                 master='dsfd_host' if n == 'host' else None)
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
     slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
@@ -2918,7 +3061,9 @@ def build_r8(variant=None):
     links = []
     for side in 'WE':
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
-        tot = sum(m_['h'] for _, m_ in stack) + 3 * 43.2
+        if MTP_LINKS and DIE_KIND == 'head':     # MTP-DIE: draft fan-out SerDes, W gets the odd one
+            stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
+        tot = sum(m_['h'] for _, m_ in stack) + (len(stack) - 1) * 43.2
         y = up(mid - tot / 2, GY)
         for i, (kind, m_) in enumerate(stack):
             if side == 'W':
@@ -2934,11 +3079,13 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
                    elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
+    if BF_EXPLICIT_IDS is not None:
+        variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -2948,7 +3095,7 @@ def build_r8(variant=None):
         if reg['name'] in ('spine', 'vch'):
             reg['rect'][1] = min(reg['rect'][1], spine_y0)
             reg['rect'][3] = max(reg['rect'][3], spine_y1)
-    if DIE_KIND == 'layer':
+    if DIE_KIND == 'layer' and wfc_rect is not None:
         reservation = json.loads((ROOT / 'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
         x0, y0, x1, y1 = wfc_rect
         reservation['selected_WFC_gross_um'] = wfc_rect
@@ -2957,6 +3104,9 @@ def build_r8(variant=None):
         m['child_reservations'] = {'wfc': reservation}
         regions.append(dict(name='wfc_selected_child', kind='soft_child_reservation', rect=[x0, y0, x1, y1]))
         m['wfc_rect'] = wfc_rect
+    if CTRL_SLAB:
+        m['ctrl_model'] = ctrl_model
+        m['ctrl_binding_shell_sha256'] = CTRL_BINDINGS['shell_sha256']
     m['buses'] = []
     buses_r8(m)
     return m
@@ -2995,13 +3145,15 @@ def buses_r8(m):
 
     def bus(bid, cls, bits, eps):
         B.append((bid, cls, bits, eps))
+    if CTRL_SLAB:
+        _ctrl_native_buses(m, bus)
     # ---------------- head-bundle frames (head die): column stream up a glue chain, result chain down
     for r, f in m['frames'].items():
         if not f.get('bundles'):
             continue
         cf = f'cf{r}'
         nb = f['bundles']
-        col_ck, col_rs = [(cf, 'co')], [(cf, 'rs')]
+        col_ck, col_rs = [(cf, 'co')] + ([(cf, 'cr')] if CFIFO_COLCK else []), [(cf, 'rs')]
         for b in range(nb):
             gn = f'g{r}_{b}'
             el = [f'{gn}b'] + [f'{gn}a{q}' for q in range(4)]
@@ -3041,7 +3193,7 @@ def buses_r8(m):
         for p, kind, s, ln in elems:
             slot_elems[s].append((p, kind, ln))
         nvslots = {s + 1: p for p, kind, s, ln in elems if kind == 'NV'}
-        col_ck = [(cf, 'co')]
+        col_ck = [(cf, 'co')] + ([(cf, 'cr')] if CFIFO_COLCK else [])
         col_rs = [(cf, 'rs')]
         # stations
         for s in range(last + 1):
@@ -3067,6 +3219,11 @@ def buses_r8(m):
                 col_rs += [(e, 'rs'), (sq, 'rst_n')]
                 bus(f'cfg_{p}', 'cfg', CFGB, [(sq, 'cfg'), (e, 'cfg')])
                 bus(f'go_{p}', 'go', 1, [(sq, 'go_e'), (e, 'go')])
+                if kind == 'q' and q_pq():
+                    # TA-10: op tag with go (the sequencer counts the broadcast gos = the PQ spine's tag), and the
+                    # element's {bank_free, sh_free} that hold a configuration load (ot_v41_pair_pq_ld PQ 1)
+                    bus(f'gt_{p}', 'cfg', 2, [(sq, 'go_tag'), (e, 'gt')])
+                    bus(f'ef_{p}', 'cfg', 2, [(e, 'ef'), (sq, 'ef')])
                 bus(f'ra_{p}', 'rom_a', 12, [(sq, 'a')] + [(f'c{p}_{k}', 'a') for k in range(CFG_PER_PAIR)])
                 for k in range(CFG_PER_PAIR):
                     bus(f'rc_{p}_{k}', 'rom_ce', 1, [(sq, f'ce{k}'), (f'c{p}_{k}', 'ce')])
@@ -3303,7 +3460,11 @@ def buses_r8(m):
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
                                  ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
-              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()):
+              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
+            (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
+            (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
+            ((('collective', 'host', 514, 't_host', 'f_collective'),
+              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
         else:
@@ -3313,6 +3474,10 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
+        for st, ct in m['ctrls'].items():
+            bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (ct.name, 'hw')])
+            bus(f'hc_{st}', 'host_wr', 18, [(ct.name, 'hc'), (hub['host'].name, f'fc{st}')])
     if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
         for j in range(PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
@@ -3331,6 +3496,9 @@ def buses_r8(m):
         if it.kind == 'cfifo':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rst'))
+        elif it.name == 'sp_stage_ctrl':
+            dom['stream'].append((it.name, 'ck'))
+            rst['stream'].append((it.name, 'rs'))
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
@@ -3392,6 +3560,54 @@ PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a rela
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
+# MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
+# (528 + valid/ready) and read xa_re/raddr15 out, xa_rq512 in; stage link flit 512 + valid/credit each way through the
+# collective (the stage-hop endpoint); core_start / done / result (C8 capture binding) 64 each way.
+WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f_vm'),
+             ('collective', 'wfc', 514, 't_wfc', 'f_collective'), ('wfc', 'collective', 514, 't_collective', 'f_wfc'),
+             ('wfc', 'capture', 64, 't_capture', 'f_wfc'), ('capture', 'wfc', 64, 't_wfc', 'f_capture'))
+# sequencer: argmax token words in from the capture (verify targets t_0..t_5 + draft d_i, 17 b + valid + index), out
+# to the collective: acc_n / bonus / squash / epoch word on the token return + seed dispatch to the draft primary
+# (128 b); in from the collective: draft-chain completions and the 12-die argmax merge (128 b); to the VM: the Markov
+# embed row (32 x BF16 = 512 b) and the draft seed x control (64 b).
+MTP_SEQ_BUSES = (('capture', 'mtp', 64, 't_mtp', 'f_capture'), ('mtp', 'collective', 128, 't_collective', 'f_mtp'),
+                 ('collective', 'mtp', 128, 't_mtp', 'f_collective'), ('mtp', 'vm', 576, 't_vm', 'f_mtp'))
+# MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
+# r3 / r4 dies stay reproducible).
+CTRL_SLAB = False
+CTRL_ROLE = 'layer'
+CTRL_MM2 = 0.15                 # preliminary shell/queue reservation; no routed-area claim
+CTRL_BINDINGS = None
+
+
+def _ctrl_native_buses(m, bus):
+    """Bind every native shell port from explicit endpoints; ck/rs use the real stream clock tree."""
+    it = m['hub']['stage_ctrl']
+    names = {x.name for x in m['insts']} | {'TOP'}
+    for port, spec in CTRL_BINDINGS['ports'].items():
+        if port in ('ck', 'rs'):
+            continue
+        endpoint = tuple(spec['endpoint'])
+        if endpoint[0] not in names:
+            raise ValueError('ctrl endpoint does not exist: %s %s' % (port, endpoint))
+        eps = [(it.name, port), endpoint] if spec['direction'] == 'output' else [endpoint, (it.name, port)]
+        bus('stage_ctrl_' + port, 'stage_ctrl', spec['bits'], eps)
+
+
+WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
+                                #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
+                                #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
+                                #   collective (link in / out), sized from the routed outlines (src 78,190.7 + stg
+                                #   35,941.7 um2 side by side, 17.28 um halos)
+WFC_SLAB_H = 231.12             #   slab height: both blocks at 196.56 um tall (src 398 x 196.56, stg 183 x 196.56) + halos
+MTP_SEQ = False                 # --mtp-seq: head die: ot_dsrom_mtp_seq (accept NSLOT 8 / NW 17 + draft-chain FSM + acc_n /
+                                #   squash word + position / epoch counter + Markov embed lookup control) slab between
+                                #   capture and collective, wired to capture (argmax tokens), collective (token return /
+                                #   seed / squash), VM (Markov embed row, draft seed x)
+MTP_SEQ_MM2 = 0.15              #   audit B1 upper estimate (ctl_f2-class 885 um2 + accept 290 um2 cells; pin-flop banks)
+CAPTURE_FACE_UM = 129.6         #   capture slab height with the MTP endpoints (twice the 63 um slab of a 0.109 mm2 capture)
+MTP_LINKS = 0                   # --mtp-links N: head die: N extra board SerDes (ot_pdie_serdes, real LEF) for the draft
+                                #   fan-out (DP1-EP5 primary on head dies h0..h3: one link per draft ROW package)
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
 PQ_ROOT_ROW = 241.92            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 211.68 + 8.64 + 8.64)
 PQ_ROOT_WH = (132.192, 211.68)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
@@ -3443,7 +3659,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else '') + ('w' if (CHS or VCH8 != 1209.6 or HC_CORR != 1209.6) else '') + ('v' if VM_FACE_MM2 else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else '') + ('w' if (CHS or VCH8 != 1209.6 or HC_CORR != 1209.6) else '') + ('v' if VM_FACE_MM2 else '') + ('ctrl' + CTRL_ROLE if CTRL_SLAB else ''))
 
 
 def set_cc_reach(um):
@@ -3613,7 +3829,7 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
-                if pl is None and reg is not None and not fwd and PQ_PLACE:
+                if pl is None and reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY):
                     # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
                     # takes the nearest legal spot within reach (the strip / channel next to the frame)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
@@ -3640,7 +3856,7 @@ def _hop_fix(m, P):
                             rec['pad_fallback']['nxt_die'] = rec['pad_fallback'].get('nxt_die', 0) + 1
                             break
                 if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
-                    rec['nxt_relaxed'] = rec.get('nxt_relaxed', 0) + 1
+                    rec['pad_fallback']['nxt_relaxed'] = rec['pad_fallback'].get('nxt_relaxed', 0) + 1   # (an int in rec broke the summary)
                     for PAD in (2.16, 1.08, 0.0):
                         for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
@@ -3650,7 +3866,28 @@ def _hop_fix(m, P):
                                 break
                         if pl:
                             break
-                assert pl, (bid, e, k)
+                    # s81-die-2 2026-10-08: the legacy chain also has the whole-die fallbacks (PQ frame_out, pin relay);
+                    # without them a packed frame failed under --nxt-reach where legacy passed (es_12_y0, adopted PQ row)
+                    if pl is None and ((reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY)) or (PIN_RELAY and reg is None)):
+                        for span, rows in ((300.0, 30), (1200.0, 120)):
+                            pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                        reach=R - 10.0, span=span, rows=rows)
+                            if pl:
+                                pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                                rec['pad_fallback']['relaxed_die'] = rec['pad_fallback'].get('relaxed_die', 0) + 1
+                                break
+                if pl is None and NXT_REACH:
+                    # The coarse row pitch can skip a narrow legal gap in a packed frame. Search a finer
+                    # lattice before failing; keep both timing reaches and the original occupancy clearance.
+                    for PAD in (2.16, 1.08, 0.0):
+                        pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, [(0.0, 0.0, W, H)],
+                                    prev=cur, horiz=horiz, reach=R - 10.0, span=1200.0,
+                                    rows=560, cross_step=2.16, **NR)
+                        if pl:
+                            pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                            rec['pad_fallback']['fine_lattice'] = rec['pad_fallback'].get('fine_lattice', 0) + 1
+                            break
+                assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
                     it = P.add(Inst(nm, stn_master([bits], horiz), pl[0], pl[1], w_, h_,
@@ -4283,7 +4520,8 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             ly_t, ly_r = link_span_y(lk, 'tx'), link_span_y(lk, 'rx')
         else:
             ly_t = ly_r = ly
-        yy = cy + (i - 1.5) * 90.0
+        n_side = sum(1 for l_ in m['links'] if l_.name[3] == side)
+        yy = cy + (i - 1.5) * 90.0 if n_side <= 4 else cy + (i - (n_side - 1) / 2) * min(90.0, 0.8 * coll.h / n_side)
         cx = coll.x if side == 'W' else coll.x + coll.w
         nm = f'K{side}{i}'
         if side == 'W':
@@ -4580,11 +4818,11 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
-        _lay(Mx, 'N', P_(['co', 'rs']), 'M5', start=c0 + 60.0)
+        _lay(Mx, 'N', P_(['co', 'cr', 'rs']), 'M5', start=c0 + 60.0)
         _lay(Mx, 'W', P_(['ck', 'rst']), 'M4')
     elif kind == 'seq':
         _lay(Mx, 'W', P_([f'q{j}' for j in range(7)] + ['a'] + [f'ce{j}' for j in range(7)]), 'M4', gap=0.0)
-        _lay(Mx, 'N', P_(['cfg', 'go_e']), 'M5')
+        _lay(Mx, 'N', P_(['cfg', 'go_e', 'go_tag', 'ef']), 'M5')
         _lay(Mx, 'E', P_(['lc', 'st']), 'M4')
         _lay(Mx, 'S', P_(['clk', 'rst_n']), 'M5')
     elif kind == 'hend':
@@ -4795,28 +5033,29 @@ def glue_rtl(m):
             body.append('    reg [65:0] r; always @(posedge ck[0]) r <= i;')
             body.append('    assign o = {r[65:1], r[0] & rs[0]};')
         elif mst == 'dsfd_cfifo' and CFIFO_V2:
-            body += [_sync('rsync', 'ck[0]', 'rst[0]'),
+            rk = 'cr[0]' if CFIFO_COLCK else 'ck[0]'       # column-side clock (--cfifo-colck: the column tree's return)
+            body += [_sync('rsync', rk, 'rst[0]'),
                      '    // CFIFO_V2 (S81-RERUN fail-fast, cfifo e654bb52a SS -252 / FF -21): every input captured at its pin,',
                      '    // every data output from a flop, the overrun check in the write domain (sticky, synchronised)',
                      '    assign co = ck;          // column clock-tree root (option C region root)',
                      '    assign rs = rsync;',
                      '    reg [565:0] xi; always @(posedge xf[0]) xi <= xd;',
-                     '    reg [1:0] sti; always @(posedge ck[0]) sti <= st;',
+                     f'    reg [1:0] sti; always @(posedge {rk}) sti <= st;',
                      '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
                      f'    ot_meso_fifo #(.W(564), .ENABLE(1\'b1){MESO_P()}) u_x (.wclk(xf[0]), .wrst_n(xi[0]), .w_v(xi[1]), .w_rdy(wr), '
-                     '.w_d(xi[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
+                     f'.w_d(xi[565:2]), .rclk({rk}), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
                      '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
                      '    reg wov; always @(posedge xf[0]) if (!xi[0]) wov <= 1\'b0; else if (xi[1] & ~wr) wov <= 1\'b1;',
-                     '    reg [1:0] wov_s; always @(posedge ck[0]) wov_s <= {wov_s[0], wov};',
+                     f'    reg [1:0] wov_s; always @(posedge {rk}) wov_s <= {{wov_s[0], wov}};',
                      '    // lane stream {x0 283 | x1 266 | cc 15}; xs_v, go and cfg_go qualified by the FIFO valid, registered',
                      '    reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r;',
-                     '    always @(posedge ck[0]) begin xa_r <= {xq[282] & xv, xq[281:0]}; xb_r <= xq[548:283];',
+                     f'    always @(posedge {rk}) begin xa_r <= {{xq[282] & xv, xq[281:0]}}; xb_r <= xq[548:283];',
                      '        cc_r <= {xq[563:551], xq[550] & xv, xq[549] & xv}; end',
                      '    assign xa = xa_r; assign xb = xb_r; assign cc = cc_r;',
                      '    reg [67:0] rr; reg flt;',
-                     '    always @(posedge ck[0] or negedge rsync) if (!rsync) begin rr <= 68\'d0; flt <= 1\'b0; end',
+                     f'    always @(posedge {rk} or negedge rsync) if (!rsync) begin rr <= 68\'d0; flt <= 1\'b0; end',
                      '        else begin rr <= {sti[1] | flt, sti[0] | ~rl, ri}; flt <= flt | wf | rf_ | wov_s[1]; end',
-                     '    assign rf = ck;',
+                     f'    assign rf = {rk[:2]};          // forwarded with rd (the clock that launches it)',
                      '    assign rd = {rr, rr[0], rsync};   // {status, root word, valid = root o_v, rst_n}']
         elif mst == 'dsfd_cfifo':
             body += [_sync('rsync', 'ck[0]', 'rst[0]'),
@@ -4932,6 +5171,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
+        ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -4993,6 +5233,7 @@ def die_options(ap):
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--q-elem-h', type=float, help='r8 layer/layer1: independent q frame height; --elem-h remains BF height; requires --bf-per-region')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--bf-pair-ranges', help='r8 head: explicit BF-double IDs as comma-separated half-open ranges; e.g. 0:338 for the typed 696-slot inventory')
     ap.add_argument('--bf-per-region', type=int, default=None,
                     help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
@@ -5019,6 +5260,8 @@ def die_options(ap):
     ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
                     'face; layer die value 2.6599; default off)')
+    ap.add_argument('--cfifo-colck', action='store_true', help='with --cfifo-v2: the cfifo column side clocked from its '
+                    'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -5034,16 +5277,43 @@ def die_options(ap):
     ap.add_argument('--face-pin-inset', action='store_true', help='die-gaps 2026-10-08: generated face pins start '
                     '0.048 um inside the outline (abutted node stacks put different-net M5 pins tip to tip under the '
                     'EOL keepout); default off for reproducing r3/r4')
+    ap.add_argument('--host', action='store_true', help='s81-dies / ingest RQ-ING-1: dsfd_host slab (0.10 mm2) beside '
+                    'the collective (HOST class demuxed from the board SerDes) wired to every stack controller; default off')
+    ap.add_argument('--frame-out-relay', action='store_true', help='s81-dies: a frame relay with no spot in its full '
+                    'frame takes the nearest legal spot within reach outside it, as --pq-place does (head die); default off')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
                     'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
+    ap.add_argument('--wfc-hard', action='store_true', help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every '
+                    'layer-class die (layer and layer1) instead of the scan-die-only soft reservation; default off')
+    ap.add_argument('--mtp-seq', action='store_true', help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) '
+                    'between capture and collective, wired; default off')
+    ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
+    ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
+    ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
+    ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
+                    '(default 0; the DP1-EP5 primary head die takes 5: one per draft row package)')
     return ap
 
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
-    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2
+    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS
+    CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
+    CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
+    CTRL_BINDINGS = None
+    if CTRL_SLAB:
+        if not (getattr(a, 'hop_fix', False) and getattr(a, 'pin_relay', False)):
+            raise ValueError('--ctrl-slab requires implemented --hop-fix --pin-relay endpoint stations')
+        if a.gen != 'r8' or a.rev != 'r9':
+            raise ValueError('--ctrl-slab requires r9 wired die')
+        if not getattr(a, 'ctrl_bindings', None):
+            raise ValueError('--ctrl-slab requires real native endpoints (--ctrl-bindings); no inferred or tied-off binding')
+        from s81_ctrl.die_binding_contract import validate_manifest
+        CTRL_BINDINGS = validate_manifest(a.ctrl_bindings, ROOT, CTRL_ROLE)
+    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2, BF_EXPLICIT_IDS
     SU_AREA_MM2 = getattr(a, "su_mm2", None)
     Q_ELEM_FRAME_H = getattr(a, "q_elem_h", None)
     BF_PER_REGION = getattr(a, "bf_per_region", None)
@@ -5062,8 +5332,18 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
-    global PQ_PLACE
+    global PQ_PLACE, FIELD_MARGIN
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    global FRAME_OUT_RELAY, HOST_SLAB
+    FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
+    HOST_SLAB = bool(getattr(a, 'host', False))
+    if getattr(a, 'field_margin', None) is not None:
+        FIELD_MARGIN = float(a.field_margin)     # explicit, every gen (a leftover --pq-place margin must not leak)
+    else:
+        # s81-die-2 2026-10-08: the adopted PQ root (211.68 tall, row 241.92 vs 164.16) takes 6 x 77.76 um from the field;
+        # at the 216 um minimum gap the mixed221 frame lost its 9th slot by 0.35 um a tier ("mixed slots exceed field
+        # height").  Under --pq-place the minimum gap is PQ_FIELD_MARGIN; the field stays centred (actual gap ~215 um).
+        FIELD_MARGIN = PQ_FIELD_MARGIN if PQ_PLACE else FIELD_MARGIN_DEFAULT
     if PQ_PLACE:
         assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
             '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
@@ -5078,6 +5358,9 @@ def apply_options(a):
     HOP_FIX, HOP_PLAN, MESO_D8 = bool(a.hop_fix), None, bool(a.meso_d8)
     global FWD_REACH, HOP_R_FWD, HOP_R_CC, CFIFO_V2, CF_WH
     CFIFO_V2 = bool(a.cfifo_v2)
+    global CFIFO_COLCK
+    CFIFO_COLCK = bool(getattr(a, 'cfifo_colck', False))
+    assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, 410.0
@@ -5094,10 +5377,18 @@ def apply_options(a):
             set_pairs(a.pairs or PAIRS)
         elif a.pairs:
             set_pairs(a.pairs)
+        if getattr(a, 'bf_pair_ranges', None) is not None:
+            assert a.die == 'head' and BF_PER_REGION is None and NV_PAIRS == 0, \
+                '--bf-pair-ranges requires r8 head, no NV, and no --bf-per-region'
+            BF_EXPLICIT_IDS = parse_bf_pair_ranges(a.bf_pair_ranges, PAIRS)
+            set_pairs(PAIRS)
         slot_geometry()
+    else:
+        assert getattr(a, 'bf_pair_ranges', None) is None, '--bf-pair-ranges requires r8'
 
 
 def main(argv=None):
+    global BF_EXPLICIT_IDS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
     ap.add_argument('--work', type=Path)
@@ -5119,6 +5410,10 @@ def main(argv=None):
     m = build()
     if a.gen == 'r8':
         finalize_r8(m)
+        ub = unbound_functional_pins(m)
+        if ub:     # build-every-path rule (s81-die-2 2026-10-08, tie-off audit TA-10): no functional pin without a net
+            raise SystemExit('UNBOUND functional real-macro pins (master, pin): instances: '
+                             + json.dumps({f'{k[0]}.{k[1]}': v for k, v in sorted(ub.items())}))
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
@@ -5194,6 +5489,11 @@ def main(argv=None):
                         configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                         slot_geometry(v_.get('elem_frame_h'))
                         set_pairs(v_['pairs'])
+                        if v_.get('bf_pair_ids') is not None:
+                            assert DIE_KIND == 'head' and NV_PAIRS == 0
+                            BF_EXPLICIT_IDS = frozenset(v_['bf_pair_ids'])
+                            assert all(0 <= p < PAIRS for p in BF_EXPLICIT_IDS)
+                            set_pairs(PAIRS)
                     m = build()
                     if man.get('variant', {}).get('gen') == 'r8':
                         finalize_r8(m)

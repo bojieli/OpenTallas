@@ -1,0 +1,23 @@
+# Isolated digital-body pathfinding; analog PLL insertion and die reset loads pending.
+create_clock -name stream -period 0.833333333 [get_ports clk_stream]
+create_clock -name serial -period 1.111111111 [get_ports clk_serial]
+create_clock -name hbm -period 1.024 [get_ports clk_hbm]
+create_clock -name link -period 0.833333333 [get_ports clk_link]
+set_clock_uncertainty -setup 0.060 [all_clocks]
+set_clock_uncertainty -hold 0.025 [all_clocks]
+# Reset intents are asynchronous AON inputs. Recovery/removal is not waived.
+# Provisional arrival range keeps their checks visible until AON timing is bound.
+set_input_delay -min 0.025 -clock hbm [get_ports {por_n pll_reset_n pll_lock phy_reset_intent_n*}]
+set_input_delay -max 0.100 -clock hbm [get_ports {por_n pll_reset_n pll_lock phy_reset_intent_n*}]
+set_input_delay -min 0.025 -clock link [get_ports {link_reset_intent_n*}]
+set_input_delay -max 0.100 -clock link [get_ports {link_reset_intent_n*}]
+set_input_delay -min 0.025 -clock stream [get_ports {coll_reset_intent_n cmd_reset_intent_n}]
+set_input_delay -max 0.100 -clock stream [get_ports {coll_reset_intent_n cmd_reset_intent_n}]
+set_output_delay -min 0.025 -clock hbm [get_ports phy_reset_n*]
+set_output_delay -max 0.100 -clock hbm [get_ports phy_reset_n*]
+set_output_delay -min 0.025 -clock link [get_ports link_reset_n*]
+set_output_delay -max 0.100 -clock link [get_ports link_reset_n*]
+set_output_delay -min 0.025 -clock stream [get_ports {coll_reset_stream_n cmd_reset_stream_n}]
+set_output_delay -max 0.100 -clock stream [get_ports {coll_reset_stream_n cmd_reset_stream_n}]
+set_output_delay -min 0.025 -clock serial [get_ports {coll_reset_serial_n cmd_reset_serial_n}]
+set_output_delay -max 0.100 -clock serial [get_ports {coll_reset_serial_n cmd_reset_serial_n}]

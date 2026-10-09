@@ -60,6 +60,9 @@ module ot_s81_bf_native #(
     // changes (QPIPE boundary, split lanes, tree), values and per-lane order do not: exact at transaction level
     // (tools/s81/bf_txn_bench.py --variant recut).  Requires FAST = 1, PP = 1, BP = 0, HALF = 0.
     parameter integer RECUT = 0,
+    // QZE (RECUT only, 2026-10-08, default 0): the q-element's ICG enable retimed onto a register beside the ICG
+    // (ot_v41_rom_elem_qx_w10 QZE); zero added cycles.
+    parameter integer QZE = 0,
     parameter integer RDRAIN = 200,
     parameter INSTANCE = ""
 ) (
@@ -245,7 +248,7 @@ module ot_s81_bf_native #(
         ot_v41_rom_elem_qx_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
-            .QY(1), .QX(10), .QBF(RECUT), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_elem (
+            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_elem (
             .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),

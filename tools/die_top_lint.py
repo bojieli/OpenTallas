@@ -2054,6 +2054,47 @@ def margin(die, m):
     return dict(verdict='N/A')
 
 
+def hbm_wrapper_ledgers(masters, root=None, generate=None):
+    """SYS-3: expose the internal ties that external die connectivity cannot see.
+
+    Regenerate the ledger from each current generic wrapper spec. Do not trust an
+    old *_wrap.json: report its current RTL/spec source hashes and whether the
+    generated wrapper agrees byte-for-byte with the committed wrapper.
+    Custom view generators remain outside this generic-wrapper ledger's scope.
+    """
+    root = Path(root or ROOT)
+    if generate is None:
+        import hbm_die_wrap as W
+        W.V.L.VARIANT = VARIANT
+        W.V._MODEL.clear()
+        generate = W.gen
+    rows = []
+    for path in sorted((root / 'physical/hbm_accel_die_views').glob('*/rtl/spec*.json')):
+        spec = json.loads(path.read_text())
+        if spec.get('master') not in masters:
+            continue
+        row = dict(master=spec['master'], spec=str(path.relative_to(root)),
+                   spec_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        source = path.with_name(f"{spec['master']}.sv")
+        row['wrapper_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest() if source.exists() else None
+        try:
+            rendered, stats = generate(spec, strict=False)
+            row.update(ties=stats['ties'], tied_off_bits=stats['tied_off_bits'],
+                       classed_tie_bits=stats['classed_tie_bits'], errors=stats.get('errors', []),
+                       wrapper_matches_spec=source.exists() and source.read_text() == rendered)
+        except (Exception, SystemExit) as error:
+            row.update(ties=[], tied_off_bits=None, classed_tie_bits={},
+                       errors=[f'ledger generation failed: {type(error).__name__}: {error}'],
+                       wrapper_matches_spec=False)
+        rows.append(row)
+    return dict(schema='opentallas.hbm_wrapper_ledgers.v1', variant=VARIANT,
+                scope='generic wrapper specs only; custom generators require their own audit',
+                wrappers=rows, tied_off_bits=sum(r['tied_off_bits'] or 0 for r in rows),
+                generation_failures=sum(r['tied_off_bits'] is None for r in rows),
+                wrappers_with_errors=sum(bool(r['errors']) for r in rows),
+                wrappers_matching_spec=sum(r['wrapper_matches_spec'] for r in rows))
+
+
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
@@ -2116,6 +2157,8 @@ def run_lint(die, out, top_fix=False, tag=''):
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
+    if die == 'hbm':
+        rec['wrapper_ledgers'] = hbm_wrapper_ledgers({it.master for it in m['insts']})
     (out / f'{top}_lint.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     return rec
 

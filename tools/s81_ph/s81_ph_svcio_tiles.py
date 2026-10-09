@@ -11,6 +11,8 @@ from s81_ph_coll_tiles import Plan, ROOT, r4, P   # noqa: E402
 
 SW, SH, H = 8500.032, 1576.776, 129.6
 G = 0.432                                   # x0 grid (lcm of the 0.048 track and 0.054 site pitches)
+W_OD, BAD_Y, FI_Y = 216.0, 64.812, 58.044      # od tile width, bad pin (E face) / fi pin (W face) y in their tiles
+FS_WH = (17.256, 30.216)                    # dsfd_stnh_512x1 (physical/s81_die_views/views/dsfd_stnh_512x1)
 
 
 def main():
@@ -61,8 +63,22 @@ def main():
     comp = json.loads(f.read_text())
     comp['instances'] = [i for i in comp['instances'] if i['inst'] != 'u_io'] + \
         [dict(inst=f'u_io.u_{m.split("_")[-1]}', master=m, xy=[r4(x0), r4(SH - H)], orient='R0') for m, x0, W in tiles]
+    # s81-die-2 2026-10-08 (RQ-2, reviewer APPROVED 22:30): the od bad -> ad fi hop crosses the x tile (~645 um); one
+    # common-clock fault station u_io.u_fs (ot_s81ph_svc_io_t FSTN 1; die view dsfd_stnh_512x1, 1 bit used) at its
+    # midpoint, just below the hub row.  fault +1 cycle (status only).
+    at = {m: (x0, W) for m, x0, W in tiles}
+    bad = (at['dsfd_svcio_od'][0] + W_OD, SH - H + BAD_Y)
+    fi = (at['dsfd_svcio_ad'][0], SH - H + FI_Y)
+    fx = r4(round(((bad[0] + fi[0]) / 2 - FS_WH[0] / 2) / G) * G)
+    fy = r4(SH - H - FS_WH[1] - 4.32)
+    fc = (fx + FS_WH[0] / 2, fy + FS_WH[1] / 2)
+    comp['instances'].append(dict(inst='u_io.u_fs', master='dsfd_stnh_512x1', xy=[fx, fy], orient='R0'))
+    md = lambda a, b: r4(abs(a[0] - b[0]) + abs(a[1] - b[1]))
+    comp['io_hub_fault'] = dict(station='u_io.u_fs', bad_to_station_um=md(bad, fc), station_to_fi_um=md(fc, fi),
+                                direct_um=md(bad, fi), cycles_added=1, scope='fault status only')
     comp['io_hub'] = ('r3: four tiles at their pin groups (rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv, composition '
-                      'ot_s81ph_svc_io_t); u_io.u_od.bad -> u_io.u_ad.fi (die net, flop both ends); svc fault = u_io.u_ad.fault')
+                      'ot_s81ph_svc_io_t FSTN 1); u_io.u_od.bad -> u_io.u_fs (fault station) -> u_io.u_ad.fi (die nets, flops '
+                      'at every end); svc fault = u_io.u_ad.fault')
     f.write_text(json.dumps(comp, indent=1) + '\n')
     print([(m, r4(x0), W) for m, x0, W in tiles])
 

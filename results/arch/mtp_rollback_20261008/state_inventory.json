@@ -1,0 +1,222 @@
+{
+ "stream": "mtp-rollback",
+ "date": "2026-10-08",
+ "model": "DeepSeek-V4.1-Flash (compiler/models/deepseek-v4.1-flash/config.json): 40 layers, window 128, head_dim 512, compress_ratios 0/0, 2 on L2-L19, 1 on L20-L39; kv sources L2/L8/L14 (ratio 2), L20 (ratio 1); index sources L2/8/14/20/24/28/32/36; Engram L1/L14, max n-gram 4; hc_mult 4, 20 Sinkhorn iterations; DSpark 3 stages, block 5 (gamma 5)",
+ "golden_rollback": "tools/hdc_golden_v41.py Model.truncate(state, q+2+a): drop every position-indexed entry past the committed positions, rebuild the compressor open group from slotrec; generate_spec == generate bit for bit (328b5fff)",
+ "principle": "Every speculative state is POSITION-INDEXED in a ring sized R >= reach + PMAX (PMAX = g+1 = 6 positions a verify pass; spec_state uses PMAX 8), so a rejected write never lands on a slot a committed read still needs. Rollback is then the commit pointer n = q+2+a and the next anchor q+1+a, with ZERO data movement and no per-ring action: the rings' n is only a reach guard, the next pass's writes are addressed by position. Proven multi-step in RTL: results/rtl/mtp_rollback_20261008/record.json.",
+ "pass_length_PMAX": 6,
+ "window": 128,
+ "gamma": 5,
+ "state": [
+  {
+   "id": "S1",
+   "name": "window KV rows",
+   "per": "every layer (40), every position",
+   "golden": "state[\"win\"][L]",
+   "reach": "a query at p reads p-W+1..p; verify writes n..n+g",
+   "ring_needed": ">= W + PMAX = 134",
+   "ring_chosen": 256,
+   "size_per_user": {
+    "ar_bytes": 2785280,
+    "mtp_bytes": 5570560,
+    "extra_bytes": 2785280
+   },
+   "hazard": "AS BUILT BOTH DESIGNS slot = pos mod 128: rejected q+1+g overwrites committed row q+1+g-128, still in the window of the next query q+2+a whenever g >= a+2 (HBM: ot_hbm_accel_dskv_wb + read stream, coverage-T3; ROM: ot_chip_v41x_window_kv_prefetch WINDOW_SLOTS fixed at 128, slot = row[6:0] -- its tag check makes the read FAULT rather than return wrong data, but the committed row is gone)",
+   "rom": {
+    "where": "HBM attached to each S81 layer die (per-user window region, ot_chip_v41x_window_kv_prefetch / ot_dsrom_window_stream_la), on-die staging 128 rows",
+    "mechanism": "HBM region ring 256 slots (slot = pos[7:0]); keep the 128-row on-die stage keyed by pos[6:0] with its tag: a stage slot clobbered by a rejected row misses its tag and refills from the intact HBM slot (review MR-1)",
+    "rtl": "ot_mtp_pos_ring ORDER 0 R 256 (bench model of the region ring); prefetch change in review",
+    "cycles": "rollback 0; per rejected step <= g-a-1 (<= 4) extra row refills a layer (17 sectors each)"
+   },
+   "hbm": {
+    "where": "HBM, replicated on every die (W19 TP-96), slot w on PC w[6:0]",
+    "mechanism": "ot_hbm_accel_dskv_wb_spec WIN_SLOTS 256 + ot_hbm_accel_dswin_rd + ot_dshbm_spec_state WR 256",
+    "rtl": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_spec.sv, ot_hbm_accel_dswin_rd.sv (new)",
+    "cycles": "rollback 0; read rate unchanged (128 consecutive positions still hit 128 distinct PCs)"
+   },
+   "bench": "rom_good/hbm_good PASS; mutants rom_win_ring_eq_W(+_notag), hbm_win_mod_W_asbuilt FAIL"
+  },
+  {
+   "id": "S2",
+   "name": "compressor open group (ratio-2 sources L2/L8/L14)",
+   "per": "3 sources",
+   "golden": "state[\"slots\"], \"slotrec\"",
+   "reach": "the group completing at p pools p-1, p; the committed open group after commit n (n odd) is position n-1",
+   "ring_needed": ">= r-1+PMAX = 7",
+   "ring_chosen": 8,
+   "size_per_user": {
+    "record_bytes": 4096,
+    "ar_bytes": 12288,
+    "mtp_bytes": 98304
+   },
+   "hazard": "NOT a dead row: a rejected position n completes (and empties) the committed open group, rejected n+1 opens a new one; an AR open-group register returns the wrong partner for the committed group (n-1)/2 -- every rejection with n odd breaks it",
+   "rom": {
+    "where": "the compressor of the L2/L8/L14 source layer die (SU/hub); per-user records SRAM or HBM (review MR-2)",
+    "mechanism": "ot_mtp_cmp_slot_ring: slot record at p mod 8 with position tag; the group-completing write reads its partner from the ring (no restore copy); the committed open group is readable for ingest",
+    "rtl": "rtl/mtp/rollback/ot_mtp_cmp_slot_ring.sv (new)",
+    "cycles": "write 1, group out +1, rollback 0"
+   },
+   "hbm": {
+    "where": "HBM (spec-state SLOT region)",
+    "mechanism": "ot_dshbm_spec_state SLOT_WR / SLOT_RD, SR >= r_max+PMAX (10; bench 16)",
+    "rtl": "as built",
+    "cycles": "+1 record read (4 KiB) at each group-completing position (the partner), rollback 0"
+   },
+   "bench": "mutants rom_open_slot_no_restore, hbm_slot_ring_eq_r FAIL"
+  },
+  {
+   "id": "S3",
+   "name": "compressed KV rows + index keys",
+   "per": "4 kv sources (L2/8/14 ratio 2, L20 ratio 1) + index keys of the 8 index sources' scans",
+   "golden": "state[\"ckv\"], state[\"ik\"]",
+   "reach": "index scan reads keys 0..(p+1)//r - 1; selection reads any committed group",
+   "ring_needed": "none: linear by group index; a rejected group index >= committed groups and is rewritten by the committed group before any scan reaches it",
+   "ring_chosen": "linear",
+   "hazard": "HBM index keys are 68 B packed 8 to a 544-B block and written as whole sectors from the unit's open-block SHADOW (ot_hbm_accel_dskv_wb kind 2). Safe under MTP only if the shadow is NOT reloaded when a key opens a block: a rejected key opening block b+1 would replace the shadow, and the next committed key of block b rewrites its neighbour's bytes from it. Without reload it is safe for PMAX <= 7 (a rejected key's group is < 7 groups past the next committed key, never the shadow index of a committed neighbour).",
+   "rom": {
+    "where": "HBM (selection rows) / scan die keys",
+    "mechanism": "linear, dead-row; any sub-sector packed store must follow the no-reload-at-block-open rule",
+    "rtl": "as built",
+    "cycles": "0"
+   },
+   "hbm": {
+    "where": "owner die of the key's block (sequence-sharded TP-96)",
+    "mechanism": "as built + rule: sh_v only at bring-up / ingest, never at block open",
+    "rtl": "ot_hbm_accel_dskv_wb(_spec) kind 2",
+    "cycles": "0"
+   },
+   "bench": "hbm_good writes every index key through dskv_wb_spec kind 2 (owner die, shadow) and reads it back by byte map; mutant hbm_key_shadow_reload_on_block_open FAIL (corrupt committed key bytes after the first rejection)"
+  },
+  {
+   "id": "S4",
+   "name": "Engram token history",
+   "per": "Engram layers L1, L14 (one history per user)",
+   "golden": "state[\"tokens\"] (hashes of the last 4)",
+   "reach": "the hash at p reads tokens p..p-3; drafts are history of q+2..q+1+g",
+   "ring_needed": ">= NG-1+PMAX = 9",
+   "ring_chosen": 16,
+   "size_per_user": {
+    "mtp_bytes": 34
+   },
+   "hazard": "as built a testbench restore (tb_hdc_v41x_array g_prime); an appending history register mis-hashes after any rejection",
+   "rom": {
+    "where": "with the Engram hash unit (no S81 home yet, T2-C15/D02): head die or L1/L14 dies (review MR-3)",
+    "mechanism": "ot_mtp_hist_ring: tokens of a pass written at positions q+1..q+1+g before the pass, read NG newest first, pad below 0; rollback = pointer",
+    "rtl": "rtl/mtp/rollback/ot_mtp_hist_ring.sv (new)",
+    "cycles": "g+1 writes a pass, read 1+NG, rollback 0"
+   },
+   "hbm": {
+    "where": "spec-state token ring (registers)",
+    "mechanism": "ot_dshbm_spec_state TOK (TR 16)",
+    "rtl": "as built",
+    "cycles": "rollback 0"
+   },
+   "bench": "mutants rom_engram_hist_no_restore, hbm_tok_ring_eq_NG FAIL"
+  },
+  {
+   "id": "S5",
+   "name": "DSpark window caches (dsk), the drafter's window rows",
+   "per": "3 stages, every verified position",
+   "golden": "state[\"dsk\"][s] (dspark_seed), read by dspark_window(anchor) in ring-slot (p mod W) order",
+   "reach": "draft at anchor q reads q-W+1..q; verify seeds n..n+g",
+   "ring_needed": ">= W + PMAX = 134",
+   "ring_chosen": 256,
+   "size_per_user": {
+    "row_bytes": 544,
+    "per_stage_bytes": 139264,
+    "total_bytes": 417792,
+    "minimal_packed_bytes": 215424
+   },
+   "traffic_per_mtp_step": {
+    "write_bytes": 9792,
+    "draft_read_bytes": 208896
+   },
+   "hazard": "NO STORAGE EXISTED on either design (T2-M04/M23); a W-slot ring breaks like S1",
+   "rom": {
+    "where": "design for mtp-die: the HBM window region of the die that runs DSpark stage s's attention (a window-only layer: same row format, same prefetch/ring), 3 extra window layers; or head-die HBM (review MR-4)",
+    "mechanism": "ot_mtp_pos_ring ORDER 1 R 256 (ring-slot read order = the release's ring)",
+    "rtl": "rtl/mtp/rollback/ot_mtp_pos_ring.sv (new)",
+    "cycles": "rollback 0; draft read W+1 rows a stage"
+   },
+   "hbm": {
+    "where": "HBM window region, layer slots 40..42 (replicated like the window rows)",
+    "mechanism": "ot_hbm_accel_dskv_wb_spec row_slot 40+s, read by spec-state DSK_RD -> ot_hbm_accel_dswin_rd",
+    "rtl": "new writer/reader + spec-state as built",
+    "cycles": "rollback 0"
+   },
+   "bench": "mutant rom_dsk_ring_eq_W FAIL; draft-side reads checked every step"
+  },
+  {
+   "id": "S6",
+   "name": "hyper-connection / Sinkhorn state",
+   "golden": "hc_mixes per position",
+   "ring_needed": "none",
+   "hazard": "none: no cross-position state (pre/post/comb recomputed per position and layer)",
+   "rom": {
+    "mechanism": "none"
+   },
+   "hbm": {
+    "mechanism": "none"
+   }
+  },
+  {
+   "id": "S7",
+   "name": "per-position transients: index selection, L20 candidate blocks, selection reuse across stages, MoE routing, main-hidden capture (L37-39)",
+   "golden": "ctx (per position)",
+   "ring_needed": "none",
+   "hazard": "none in storage; they travel with the position (T2-M25: a rejected position's candidate set must not reach a committed position -- holds by construction in the bench's layer-major pass; wavefront form covered by mtp-exact A2)",
+   "rom": {
+    "mechanism": "per-position context in the WFC job"
+   },
+   "hbm": {
+    "mechanism": "per column"
+   }
+  },
+  {
+   "id": "S8",
+   "name": "position counters",
+   "golden": "q, len(tokens)",
+   "rom": {
+    "where": "head-die sequencer (dsfd_mtp_seq, mtp-rom) + pkg_ctrl user context",
+    "mechanism": "ot_mtp_commit: n = q+2+a, q_next = q+1+a, squash range q+2+a..q+1+g, epoch; registered 1 cycle after acc_done",
+    "rtl": "rtl/mtp/rollback/ot_mtp_commit.sv (new)"
+   },
+   "hbm": {
+    "where": "ot_dshbm_dspark_ctl",
+    "mechanism": "n_set to spec_state (as built); incremental ring slots sw_n/ss_n/st_n"
+   },
+   "bench": "mutants *_commit_off_by_one FAIL"
+  },
+  {
+   "id": "S9",
+   "name": "draft state: pending token y, drafts d1..dg, Markov chain token, draft logits, the drafter's block-row KV",
+   "golden": "draft(): all recomputed per step",
+   "ring_needed": "none",
+   "hazard": "none: per-step transients; the block rows' KV is never stored (kvs inside dspark_attention)",
+   "rom": {
+    "mechanism": "epoch-tagged in the sequencer"
+   },
+   "hbm": {
+    "mechanism": "dspark_ctl scratch"
+   }
+  },
+  {
+   "id": "S10",
+   "name": "in-flight squashed verify jobs (ROM wavefront)",
+   "hazard": "a squashed position still in flight may write position-indexed rows; exact iff the re-issued job of the same position never overtakes it at any stage (per-stage FIFO order of the WFC) and the visibility fence holds (<= 264 cycles write-to-visible vs >= 7,911 to the next position). Ring rows written by squashed jobs are dead.",
+   "rom": {
+    "mechanism": "squash range from ot_mtp_commit; ordering invariant in review MR-5"
+   },
+   "hbm": {
+    "mechanism": "n/a: one layer-major pass, accept after the pass"
+   }
+  }
+ ],
+ "new_findings": [
+  "S1: the 128-slot window ring of BOTH designs is not exact under MTP (ROM prefetch WINDOW_SLOTS=128 fixed; HBM dskv_wb pos mod 128). Fix: 256-slot ring.",
+  "S3: the HBM index-key open-block shadow must never be reloaded at a block opening (as-built header allows it); mutant proves the corruption.",
+  "S8: as-built ROM rollback needs no per-die commit message at all under the ring design (n is only a guard); only the head sequencer's anchor and the squash range matter.",
+  "mtp-hbm hfd_mtp_core default RLOG = 16'h7272 (ratios 4/128/4/128) and WR = 136: V4.1 needs RLOG = 16'h0111 and WR = 256 to agree with dskv_wb_spec / dswin_rd."
+ ],
+ "evidence": "results/rtl/mtp_rollback_20261008/record.json"
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "HBM native index dynamic controller",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T00:35:00-07:00",
+      "owner": "/root/hbm_system",
+      "source": {"commit": "4b801cc28", "paths": ["rtl/hbm_accel/control/ot_hbm_native_index_control.sv", "tools/hbm_native_index_control_model.py"]},
+      "description": "Dynamic full73 retained owner, native fs90 and four literal342-bit keep masks; actual publication and consumer drain gate frame admission and retirement.",
+      "implementation": {"status": "implemented", "evidence": ["source4b801cc28; dual-rail descriptor/state/mask; default ENABLE0"]},
+      "model": {"status": "priced", "evidence": ["tools/hbm_native_index_control_model.py", "tools/uarch_model.py:hbm_native_index_control_model"]},
+      "exactness": {
+        "positive": {"status": "pass_component", "evidence": ["results/rtl/hbm_native_index_control_20261009/record.json", "results/rtl/hbm_native_index_control_20261009/positive.log:24frames/48masks/24starts/24receipts"]},
+        "negative": {"status": "pass_expected_rejection", "evidence": ["results/rtl/hbm_native_index_control_20261009/generation_drop.log:generation metadata mutation rejected"]}
+      },
+      "physical": {"status": "pending", "evidence": ["No SS/FF or actual R25I loaded boundary qualification; no rate credit"]},
+      "dependencies": {"status": "missing_bindings", "evidence": ["actual CP descriptor; checked FP32 SRAM producer publication; continuation native query credit and return joins; actual keep-mask source"]},
+      "integration": {"status": "incomplete", "evidence": ["Component gate does not establish full AR/MTP production connectivity"]}
+    },
+    {
+      "element": "HBM TP96 global candidate ordering",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T00:35:00-07:00",
+      "owner": "/root/hbm_system",
+      "source": {"commit": "64831e7e1", "paths": ["rtl/hbm_accel/index/ot_hbm_index_global_order.sv", "tools/hbm_index_global_order_model.py", "rtl/test/hbm_accel/tb_hbm_index_global_order.sv"]},
+      "description": "Full96 protected heads and seven registered minimum-ID comparison levels; lossless actual TU payload15x34 plus explicit quarter-last, header33 retained.",
+      "implementation": {"status": "implemented_not_gated_not_integrated", "evidence": ["64831e7e1; explicit invalid/padded slot ordinals retained; full73 provider identity checked"]},
+      "model": {"status": "priced", "evidence": ["tools/hbm_index_global_order_model.py:92flits/rank,8832allrankflits,138payload-only macros; at least9compare/emit edges per tuple plus real source refill"]},
+      "exactness": {
+        "positive": {"status": "running", "evidence": ["ot-agidock128:/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/order-positive.log; actual131072tuple minimum fullshape gate"]},
+        "negative": {"status": "pending", "evidence": ["Provider wrong-rank and ordering mutations required"]}
+      },
+      "physical": {"status": "pending", "evidence": ["No actual SS/FF/context closure; model only; no rate credit"]},
+      "dependencies": {"status": "missing", "evidence": ["Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"]},
+      "integration": {"status": "incomplete", "evidence": ["Provider read interface is real finite control contract but production store is unbound; full AR/MTP token path remains incomplete"]}
+    }
+  ]
+}

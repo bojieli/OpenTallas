@@ -1,0 +1,25 @@
+{
+  "master": "qfd_crom48",
+  "period_ps": 833.333,
+  "route_period_ps": 770,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "boundary_external_fraction": 0.2,
+  "abutted_skew_ps": 90,
+  "interregion_skew_ps": 150,
+  "sender_hold_skew_ps": 50,
+  "receiver_hold_skew_ps": 0,
+  "clock_reference": "measured propagated boundary t_v flop, Qwen die clock plan",
+  "outline_um": [
+    777.6,
+    1000
+  ],
+  "io_pin_layers": [
+    "M4",
+    "M6",
+    "M5",
+    "M7"
+  ],
+  "macro_capture": "single-cycle local at pins; SS macro clkq739.2103ps; no latency exception",
+  "adoption": "Current owner TT/FF route policy confirmed by parent; SS sensitivity. Route does not establish die closure"
+}

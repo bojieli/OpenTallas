@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.hbm.full_token_path_review.v1",
+  "source_commit": "2657fb660bc6546bf7fb8f7b1c339df963636db9",
+  "scope": [
+    "Qwen HBM AR",
+    "Qwen HBM MTP",
+    "DeepSeek HBM AR",
+    "DeepSeek HBM MTP"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "57e74b9dab63d9ee83d1ee963b6cb79e3b3f4f5397d0be86e914a07642adbab6",
+    "rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv": "b56ae9fff7924b92d5bb78f1c678ad9c573f9be77b1d5db0d7650c0ef61b7b23",
+    "rtl/hbm_accel/control/ot_hbm_expert_workgroup.sv": "b040e500b1ba59df076bb607c50cdfca434c1ae36b636c163b091b8b84ad1674",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_spec.sv": "43afde58d9951d01a0e24e6b80f16e157c90a71626474ba15d724ff419f0d8cb",
+    "rtl/experimental/mtp_exact_20261008/ot_dshbm_mtp_closed_top.sv": "d20b5192f9de18852fece38b941ddfa45e0f5ad3191da7171656740b0dab13eb",
+    "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv": "cab80ae86b57afc86eb15ece85328cfb4149923e2d17d650f2d817f8ba672aef",
+    "rtl/hbm_accel/collective/ot_hbm_accel_hbm_system.sv": "f40f8da34e2e9c88ff01870f5997cab0cfacb518c966a2723d8ecab8da8ce609"
+  },
+  "findings": [
+    {
+      "stage": "embedding and native loader",
+      "owner": "embedding_hbm/loader_service",
+      "finding": "Component implementations exist; target program to token-loop runtime production binding remains unproven",
+      "required": "actual job/token/position operand plus tagged completion and bank visibility"
+    },
+    {
+      "stage": "Qwen SU and MTP causal attention",
+      "owner": "qwen_hbm_unify/stage_harness",
+      "finding": "parent_exec only four HCpost words; actual generic SU and perquery validlength dispatcher in implementation; 28 production dispatch entries still failclosed",
+      "required": "real operator/quarter dispatch completion, exact prenorm and perquery causal validlength8192..8195"
+    },
+    {
+      "stage": "DeepSeek expert workgroup",
+      "owner": "hbm_system",
+      "finding": "ot_hbm_expert_workgroup has no production RTL instance in inspected current sources",
+      "required": "bind selected expert identities, actual32PC gather/service, matrix completion/result steering"
+    },
+    {
+      "stage": "AR token loop and host output",
+      "owner": "review_hbm_token_path",
+      "finding": "normal host FIFO dropped pending registered record at full capacity; fixed and remote68job exact pressure gate passed; no production instance or physical master",
+      "required": "actual CP/MTP wrapper with identity and native floorplan/interface budget; route"
+    },
+    {
+      "stage": "MTP verify/accept and rollback",
+      "owner": "mtp_continuation/mtp_rollback/hbm_system",
+      "finding": "closed_top explicitly bench-only; speculative WB only rollbackbench; small default shapes B5/PMAX8/MAXPOS128 are mechanism scope",
+      "required": "actual gamma/context-capacity coupling, accept/EOS truncated count back to specstate and real SRAM/HBM WB commit"
+    },
+    {
+      "stage": "clock/reset and fault envelope",
+      "owner": "hbm_wiring/hbm_system",
+      "finding": "clock_reset_boundary has no production RTL instance in inspected current sources",
+      "required": "actual production PLL and each domain reset/CDC/fault bindings; no slower-SDC credit"
+    }
+  ],
+  "completion": false,
+  "whole_system_simulation_run": false
+}

@@ -1,0 +1,26 @@
+ideal_hbm_200ns pass {'elements_compared': 18432000, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 480, 'max': 24983, 'mean': 24436.4}, 'layer_14': {'min': 480, 'max': 24983, 'mean': 24436.4}}}
+ideal_hbm_200ns_core_unwrapped pass {'elements_compared': 4546560, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 475, 'max': 20883, 'mean': 19047.8}, 'layer_14': {'min': 475, 'max': 20883, 'mean': 19047.8}}}
+isolated_token_hbm_200ns_allgather_model pass {'elements_compared': 1376256, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 1855, 'max': 1855, 'mean': 1855.0}, 'layer_14': {'min': 1855, 'max': 1855, 'mean': 1855.0}}}
+isolated_token_hbm_200ns_local_allgather pass {'elements_compared': 1376256, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 480, 'max': 480, 'mean': 480.0}, 'layer_14': {'min': 480, 'max': 480, 'mean': 480.0}}}
+stressed pass {'elements_compared': 18432000, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 651, 'max': 31957, 'mean': 29626.8}, 'layer_14': {'min': 674, 'max': 32543, 'mean': 31066.9}}}
+crc_injection_stressed pass {'elements_compared': 3895296, 'element_mismatches': 0, 'poisoned_dumps': 106, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 449, 'max': 21191, 'mean': 19033.2}, 'layer_14': {'min': 456, 'max': 20659, 'mean': 18652.2}}}
+stressed_8_slots_mtp pass {'elements_compared': 5726208, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 645, 'max': 31473, 'mean': 28816.5}, 'layer_14': {'min': 647, 'max': 31586, 'mean': 28815.7}}}
+stressed_pipe1 pass {'elements_compared': 6930432, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 646, 'max': 32236, 'mean': 29624.0}, 'layer_14': {'min': 676, 'max': 32431, 'mean': 30071.9}}}
+crc_injection_pipe1 pass {'elements_compared': 2949120, 'element_mismatches': 0, 'poisoned_dumps': 80, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 444, 'max': 21191, 'mean': 18536.1}, 'layer_14': {'min': 462, 'max': 20954, 'mean': 18438.5}}}
+isolated_token_pipe1_local_allgather pass {'elements_compared': 700416, 'element_mismatches': 0, 'poisoned_dumps': 0, 'latency_cycles_window_to_slot_ready': {'layer_1': {'min': 481, 'max': 481, 'mean': 481.0}, 'layer_14': {'min': 481, 'max': 481, 'mean': 481.0}}}
+mutation row alignment ignored (offset in atom forced 0) caught
+mutation column offset not subtracted caught
+mutation neighbouring column read (wrong column of the rank) caught
+mutation rank strap ignored for the column base caught
+mutation scale taken from the atom's first byte caught
+mutation window fed newest first caught
+mutation CRC check disabled caught
+mutation credits ignored caught
+mutation slot ready one beat early caught
+mutation row statuses not awaited MISSED
+mutation DEAD history does not block caught
+mutation MTP rewind ignored caught
+mutation MTP rewind leaves the position count caught
+mutation sequence start not honoured caught
+fail
+EXIT=1

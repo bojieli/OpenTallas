@@ -7,6 +7,7 @@ OT_HOLD_MM=1 the patched scripts behave exactly as the originals.  Applied like 
    orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -130,8 +131,33 @@ def patch_preroute_gate(scripts: Path) -> str:
     return "patched"
 
 
+def patch_abc_no_dch(scripts: Path, env=None) -> str:
+    """ABC-NODCH (drive-2155 2026-10-08): yosys-abc's &dch asserts on some netlists (aigDup.c:602 Aig_ManDupDfs,
+    'ABC failed with status 86'; dsfd_wfc_vmx: 253k ANDs, &get -n; &st; &dch alone reproduces it, abc_area too).  With
+    OT_ABC_NO_DCH=1 in the container env the disposable container's abc_speed / abc_area scripts run &synch2 (synthesis
+    with structural choices, already in the script) in place of &dch.  Without the variable nothing changes."""
+    env = os.environ if env is None else env
+    if env.get("OT_ABC_NO_DCH") != "1":
+        return "off"
+    out = []
+    for name in ("abc_speed.script", "abc_area.script"):
+        f = scripts / name
+        if not f.is_file():
+            continue
+        lines = f.read_text().splitlines()
+        new = ["&synch2" if ln.strip() in ("&dch", "&dch -f") else ln for ln in lines]
+        if new != lines:
+            f.write_text("\n".join(new) + "\n")
+            out.append(f"{name}: {sum(a != b for a, b in zip(lines, new))} x &dch -> &synch2")
+    return "; ".join(out) or "no &dch found"
+
+
 if __name__ == "__main__":
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
+    try:
+        print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001
+        print(f"orfs_hold_mm: abc no-dch not applied ({ex})")
     try:
         print("orfs_hold_mm: fp lint hook", patch_fp_lint(Path(sys.argv[1])))
     except Exception as ex:  # noqa: BLE001 - the lint hook must never break a flow

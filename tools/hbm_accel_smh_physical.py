@@ -1204,6 +1204,15 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv\n"
                     "export VERILOG_DEFINES += -DOT_SMH_RCH_NONEMPTY\n")
+    int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
+    if int8_enabled:
+        if a.piece != "front_c":
+            raise ValueError("ENABLE_INT8 belongs to the central strip candidate")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv\n")
+    if getattr(a, "hold_mm", False):
+        with (work / "config.mk").open("a") as f:
+            f.write("export OT_HOLD_MM = 1\n")
     write_abstract(work, name, macros, name)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
@@ -1214,6 +1223,14 @@ def cmd_block(a):
            make_extra=(mx + " ") if mx else "")
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
+    if getattr(a, "hold_mm", False):
+        script = work / "run.sh"
+        content = script.read_text()
+        hook = "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts; "
+        token = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make"
+        if content.count(token) != 1:
+            raise ValueError("multi-mode container patch anchor missing")
+        script.write_text(content.replace(token, hook + token))
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
 
 
@@ -1330,6 +1347,7 @@ def main(argv=None):
     b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
                    "loop does its own admission)")
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
+    b.add_argument("--hold-mm", action="store_true", help="opt-in SS setup/FF hold multi-mode flow repair")
     b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")

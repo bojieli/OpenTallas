@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "PINREG": 2,
+  "CACHE_PINREG": 1,
+  "scope": "one actual32-row A, real tokenlookup, fullK256 Markov dot, separatejoin, localargmax; not fullshard/die closure",
+  "released": {
+    "head.bin": {
+      "key": "head.weight",
+      "rows": [
+        21920,
+        21921,
+        21922,
+        21923,
+        21924,
+        21925,
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21932,
+        21933,
+        21934,
+        21935,
+        21936,
+        21937,
+        21938,
+        21939,
+        21940,
+        21941,
+        21942,
+        21943,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21950,
+        21951
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          5120
+        ],
+        "data_offsets": [
+          0,
+          1323827200
+        ]
+      },
+      "shard": "model-00043-of-00048.safetensors",
+      "sha256": "91b36dfedd66e1542472fc7f176b60ee831ea1f34f8479d16ce954d3326cc3c3"
+    },
+    "weight.bin": {
+      "key": "mtp.2.markov_head.head.weight",
+      "rows": [
+        21920,
+        21921,
+        21922,
+        21923,
+        21924,
+        21925,
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21932,
+        21933,
+        21934,
+        21935,
+        21936,
+        21937,
+        21938,
+        21939,
+        21940,
+        21941,
+        21942,
+        21943,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21950,
+        21951
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          71470552,
+          137661912
+        ]
+      },
+      "shard": "model-00046-of-00048.safetensors",
+      "sha256": "cd16cd1b1cae27f2a2d39195e3f9ff80e7b599cbaf5bb0f8b0520c904a275cd8"
+    },
+    "embed.bin": {
+      "key": "mtp.2.markov_head.embed.weight",
+      "rows": [
+        21946
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          5279192,
+          71470552
+        ]
+      },
+      "shard": "model-00046-of-00048.safetensors",
+      "sha256": "5f0a69bb44b4e3ba8a75e8f566def14733a5ccc4f80b0ee834d754a409d13fdc"
+    },
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "row0": 21920,
+    "token": 21946
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "mutant": 1,
+      "exit": -6,
+      "passed": false
+    }
+  ],
+  "nonzero_markov_rows": 32,
+  "source_sha256": {
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "1fd607d6540d3a644ba64fcc7c596bf9c52ce6bdb9a2c068883aaf7f56252034",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv": "acd4663aff09cd4b8ffce232a431734cfc34cc41682e616c72d4a85fde1d2da5",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv": "5f425991704c88906c6bd6d9e18953f962132b8f892c378127a93eeb8d975e54"
+  },
+  "macro_model_patch": [
+    "744ps SSclkq"
+  ],
+  "physical_qualified": false
+}

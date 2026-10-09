@@ -72,7 +72,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, emb_hbm=False):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -189,6 +189,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 rx.setdefault(slab, {})[int(pin[2:])] = by[root].x + by[root].w / 2
         m['b3r8_root_y'] = ry
         m['b3r8_root_x'] = rx
+    m['strict_ports'] = bool(strict_ports)
+    m['rtl_bound_masters'] = rtl_bound_masters
+    m['port_exemptions'] = port_exemptions or {}
     m['clock_regions'] = clock_regions(v, m)
     m['die']['budget_mm2'] = 858
     m['die']['margin_mm2'] = round(858 - m['die']['mm2'], 3)
@@ -238,6 +241,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if emb_hbm:
         _emb_hbm(v, m)        # before the relays: the SU <-> hub embedding words get their relay chains
     m['b3r2']['r21c_emb_hbm'] = emb_hbm
+    if before_relays is not None:
+        # Opt-in system composition: actual slots/ports precede relay discovery.
+        # Default recipes retain their existing geometry and master contracts.
+        before_relays(v, m)
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -1514,6 +1521,14 @@ def _r18_masters(v, m):
         byname = {i.name: i for i in model['insts']}
         for inst, ps in used.items():
             mst_used.setdefault(byname[inst].master, set()).update(ps)
+        from qwen_system.port_guard import audit_dropped_ports, PortBindingError
+        try:
+            model['q14_dropped'] = audit_dropped_ports(
+                out, mst_used, strict=model.get('strict_ports', False),
+                bound_masters=model.get('rtl_bound_masters'), exemptions=model.get('port_exemptions'))
+        except PortBindingError as exc:
+            model['q14_dropped'] = exc.ledger
+            raise
         mirrored_x = {i.master for i in model['insts'] if i.orient in ('MX', 'R180')}
         for mn, M in out.items():
             # Q14: drop abstract ports no die net reaches

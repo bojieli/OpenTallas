@@ -55,20 +55,29 @@ class Lint(unittest.TestCase):
 
     def test_pin_width(self):
         ck = ["ck", "ck", "SIGNAL", "INPUT", [["M7", [99.6, 199.7, 99.664, 200.0]]]]    # 0.064 on M7 (vm8)
-        self.assertIn("pin_width", self.checks(dump(bterms=[ck])))
+        m6 = [["wire", "M6", "", [0.4, 199.8, 199.6, 200.088]]]                 # M6 strap under the pin (vm8: DRC 3)
+        self.assertIn("pin_width", self.checks(dump(bterms=[ck], pdn_edge=m6)))
+        far = [["wire", "M6", "", [0.4, 201.2, 199.6, 201.488]]]                # 1.2 um away (svc_SE_s0 r18b: DRC 0)
+        r = F.lint(dump(bterms=[ck], pdn_edge=far))
+        self.assertNotIn("pin_width", {f["check"] for f in r["fails"]})
+        self.assertIn("pin_width", {w["check"] for w in r["warns"]})
         ok = ["ck", "ck", "SIGNAL", "INPUT", [["M7", [99.6, 199.7, 99.632, 200.0]]]]
-        self.assertNotIn("pin_width", self.checks(dump(bterms=[ok])))
+        self.assertNotIn("pin_width", self.checks(dump(bterms=[ok], pdn_edge=m6)))
 
     def test_pin_pdn_full_column(self):
         strap = [["wire", "M5", "", [0.24, 0.5, 0.36, 199.5]]]                 # pdn_view M5 offset 0.300 (hx_E)
         full = [m4_pin(f"i{i}", 20 + i * 0.048) for i in range(400)]
-        self.assertIn("pin_pdn", self.checks(dump(bterms=full, pdn_edge=strap)))
+        r = F.lint(dump(bterms=full, pdn_edge=strap))                         # hx_W / hl_E1 closed DRC 0: warning
+        self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]})
+        self.assertIn("pin_pdn", {w["check"] for w in r["warns"]})
+        self.assertIn("pin_pdn", {f["check"] for f in F.lint(dump(bterms=full, pdn_edge=strap), {"pin_pdn_fail": 1.0})["fails"]})
         half = [m4_pin(f"i{i}", 20 + i * 0.096) for i in range(400)]
         r = F.lint(dump(bterms=half, pdn_edge=strap))
         self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]})
         self.assertIn("pin_pdn", {w["check"] for w in r["warns"]})
         moved = [["wire", "M5", "", [2.64, 0.5, 2.76, 199.5]]]                  # m5w offset 2.700
-        self.assertNotIn("pin_pdn", self.checks(dump(bterms=full, pdn_edge=moved)))
+        r = F.lint(dump(bterms=full, pdn_edge=moved), {"pin_pdn_fail": 1.0})
+        self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]} | {w["check"] for w in r["warns"]})
 
     def test_sliver_and_blockage(self):
         macros = [{"name": "a", "master": "B", "bbox": [20, 20, 120, 60], "status": "FIRM", "halo": None, "pins": []},
@@ -90,6 +99,25 @@ class Lint(unittest.TestCase):
         wall = {"name": "sram", "master": "B", "bbox": [3, 0, 23, 60], "status": "FIRM", "halo": None, "pins": []}
         self.assertIn("macro_edge", self.checks(dump(bterms=[m4_pin(f"p{i}", 5 + i) for i in range(40)],
                                                      macros=[wall], masters=masters)))
+
+    def test_bank_distance_follows_direction(self):
+        """safe-hbm Q8/Q9 (hfd_attn_half_lo): a register bank at the N face drives output ports AND, on the same net,
+        the inputs of banks ~150 um inside (root_q -> xp + u_fr / u_mid).  The sinks are exempt; the driver is measured.
+        A true input-pin case (ports drive a far macro's inputs) still fails, and a far DRIVER of output ports fails."""
+        masters = dict(dump()["masters"], B={"n": 3, "w": 20, "h": 20, "type": "BLOCK", "block": True, "top_layer": 4})
+        outs = [[f"x{i}", f"x{i}", "SIGNAL", "OUTPUT", [["M5", [100 + i * 0.192, 199.808, 100.024 + i * 0.192, 200]]]]
+                for i in range(20)]
+        root = {"name": "u_root", "master": "B", "bbox": [95, 175, 115, 195], "status": "FIRM", "halo": None,
+                "pins": [[f"x{i}", 100 + i, 195, "OUTPUT", None] for i in range(20)]}
+        sink = {"name": "u_fr", "master": "B", "bbox": [95, 20, 115, 40], "status": "FIRM", "halo": None,
+                "pins": [[f"x{i}", 100 + i, 40, "INPUT", None] for i in range(20)]}
+        self.assertNotIn("bank_distance", self.checks(dump(bterms=outs, macros=[root, sink], masters=masters)))
+        far_drv = dict(root, name="u_far_drv", bbox=[95, 20, 115, 40])
+        self.assertIn("bank_distance", self.checks(dump(bterms=outs, macros=[far_drv, sink], masters=masters)))
+        ins = [m4_pin(f"k{i}", 10 + i) for i in range(20)]
+        far_in = {"name": "bank", "master": "B", "bbox": [150, 150, 170, 170], "status": "FIRM", "halo": None,
+                  "pins": [[f"k{i}", 150, 160, "INPUT", None] for i in range(20)]}
+        self.assertIn("bank_distance", self.checks(dump(bterms=ins, macros=[far_in], masters=masters)))
 
     def test_channel(self):
         masters = dict(dump()["masters"], B={"n": 2, "w": 90, "h": 200, "type": "BLOCK", "block": True, "top_layer": 7})

@@ -1,0 +1,13 @@
+MISMATCH slot 1 idx 1 got c22c f0 exp c22f
+MISMATCH slot 36 idx 36 got 4320 f0 exp 431f
+MISMATCH slot 42 idx 42 got 44f5 f0 exp 44f4
+MISMATCH slot 64 idx 64 got c539 f0 exp c53a
+MISMATCH slot 86 idx 86 got c387 f0 exp c389
+MISMATCH slot 120 idx 120 got 455a f0 exp 4559
+MISMATCH slot 131 idx 131 got 4164 f0 exp 4163
+MISMATCH slot 139 idx 139 got c2c7 f0 exp c2ca
+MISMATCH slot 156 idx 156 got c376 f0 exp c377
+MISMATCH slot 173 idx 173 got 4273 f0 exp 4272
+V41XARRSLICE s=0 checked=1152 errors=214
+V41XARR slots=1184 checked=1152 errors=214 faults_expected_and_raised=27 refused=9 masked=234 beats_in=296 beats_out=296 span=385 in_stall=20 out_stall=198 lat_min=100 lat_max=152 tok_cycles=1587 cycles=1601
+- /srv/opentallas-scratch/codex/hbm-indexer-query-9a3ffdc19/src/rtl/test/tb_hdc_v41x_idx_array_lat.sv:215: Verilog $finish

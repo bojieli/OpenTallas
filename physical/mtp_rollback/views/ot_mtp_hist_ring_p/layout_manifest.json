@@ -1,0 +1,22 @@
+{
+  "source_commit": "190e093241ae23ef8e00c33d14e4410523f4d47c",
+  "route_job": "mtprb-hist-ring-p-190e09324-tc",
+  "root_path": "/srv/opentallas-data/claude/closure-loop/mtprb-hist-ring-p-190e09324-tc/routes/mtprb_hist_ring_p_190e09324_tc/work/orfs/results/asap7/opentallas_ot_mtp_hist_ring_p_asap7_mtp_mtprb_hist_ring_p_190e09324_tc/base",
+  "files": {
+    "ot_mtp_hist_ring_p.gds": {
+      "sha256": "bd002a62f73fe22fb89731ee388623c7c60a73a1c71043fc372a419e519de48c",
+      "bytes": 7269570
+    },
+    "ot_mtp_hist_ring_p.v": {
+      "sha256": "ceabcbc842ce5864a9a19732e6d214ed20591f68de20dd25d0545ce4208ebef2",
+      "bytes": 557468
+    }
+  },
+  "retained_remote_artifacts": [
+    "6_final.odb",
+    "6_final.spef",
+    "6_final.sdc",
+    "6_final.def"
+  ],
+  "retirement": "Keep the retained remote routed artifacts while hierarchical integration or reproduction needs them."
+}

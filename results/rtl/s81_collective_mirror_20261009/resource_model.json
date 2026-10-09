@@ -1,0 +1,23 @@
+{
+  "scope": "dsfd_coll_lane_w GFMT1 EPPIPE2,345.6x340.2,10 macros",
+  "observed_predecessor_peak_kb": null,
+  "route_reservation_gb": 8,
+  "physical_variant_change": "current per-corner FF IO reference repair + HM25 + TT calibration; native RTL and footprint unchanged",
+  "added_cycles": 0,
+  "parent_model": "tools/uarch_model.py and tools/dsrom_closure_cost_ledger.py; existing collective FMT1 cost unchanged",
+  "new_compute_or_memory_width": false,
+  "ports": {
+    "rx": 515,
+    "tx": 512,
+    "lo_d": 553,
+    "li_d": 553
+  },
+  "clock_policy": "1.2GHz TT setup,FF hold,SS sensitivity;60/25ps uncertainties retained",
+  "retirement_scope": "Separate E master only; four east physical positions persist W/MY",
+  "no_local_compute": true,
+  "headroom_before_gate": {
+    "MemAvailable_GiB": 50,
+    "disk_free_GB": 511
+  },
+  "resta_admission_gb": 8
+}

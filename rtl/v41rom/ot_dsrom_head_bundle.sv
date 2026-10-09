@@ -19,7 +19,8 @@ module ot_dsrom_head_bundle #(
     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
-    parameter integer SAFE = 0             // ot_dsrom_head_elem SAFE (registered argmax compare)
+    parameter integer SAFE = 0,            // ot_dsrom_head_elem SAFE (registered argmax compare)
+    parameter integer A_INPUT_STAGES = 0   // opt-in aligned A transport; model prices every added cycle
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -70,11 +71,24 @@ module ot_dsrom_head_bundle #(
     wire [16:0] a_row [0:3];
     wire [31:0] a_bits [0:3];
     wire [31:0] a_key [0:3];
+    wire [3:0] a_go;
     generate for (q = 0; q < 4; q = q + 1) begin : g_a
         wire ov, lv;
         wire [31:0] od, ld;
+        wire [16:0] row_a;
+        wire [16:0] row_in = row0 + 17'd32 * q;
+        wire [255:0] x_a;
+        wire bv_a;
+        wire [31:0] bd_a;
+        // All 307 bits use the same depth. Validity alone resets; payload
+        // travels continuously, retaining the original systolic and B join alignment.
+        // Physical implementation must land these groups at the actual A faces.
+        ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES), .RESET(1)) u_av (
+            .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a}));
+        ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) u_ad (
+            .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a, x_a, bd_a}));
         ot_dsrom_head_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
-            .clk(clk), .rst_n(rst_n), .go(go_d), .row0(row0 + 17'd32 * q), .x(xsa), .b_v(bv_r[q]), .b_d(bd_r),
+            .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a), .x(x_a), .b_v(bv_a), .b_d(bd_a),
             .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
             .best_key(a_key[q]), .fault(a_fault[q]));
     end endgenerate
@@ -87,8 +101,8 @@ module ot_dsrom_head_bundle #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; end
         else begin
-            c1_v <= &a_done && !go_d;
-            res_v <= c1_v && !go_d;
+            c1_v <= &a_done && !a_go[0];
+            res_v <= c1_v && !a_go[0];
         end
     always @(posedge clk) begin
         c1[0] <= pick({a_key[0], a_row[0], a_bits[0]}, {a_key[1], a_row[1], a_bits[1]});

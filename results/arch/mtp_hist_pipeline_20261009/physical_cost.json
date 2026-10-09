@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.mtp_hist_pipeline_physical_cost.v1",
+  "source_commit": "190e093241ae23ef8e00c33d14e4410523f4d47c",
+  "route_job": "mtprb-hist-ring-p-190e09324-tc",
+  "baseline_cell_area_um2": 676.118,
+  "successor_cell_area_um2": 793.108,
+  "added_cell_area_um2": 116.9899999999999,
+  "cell_area_change_pct": 17.303192637971463,
+  "baseline_core_area_um2": 1991.92,
+  "successor_core_area_um2": 2314.95,
+  "macro_width_um": 52.244,
+  "macro_height_um": 52.244,
+  "macro_footprint_um2": 2729.435536,
+  "signal_boundary_tracks": 140,
+  "macro_view": "physical/mtp_rollback/views/ot_mtp_hist_ring_p",
+  "replicas_per_concurrent_user": 1,
+  "per_token_read_added_cycles": 4,
+  "per_token_write_fence_added_cycles_upper": 2,
+  "per_token_added_cycles_upper": 6,
+  "per_token_added_ns_upper": 5.0,
+  "request_interval_cycles": {
+    "old": 5,
+    "new": 6
+  },
+  "full_rollback_trace_cycles": {
+    "old": 696817,
+    "new": 699197,
+    "extra": 2380,
+    "scope": "Same toy arithmetic trace / stimulus SHA; validates protocol cost, not system token latency"
+  },
+  "clock_register_bits_extra": 234,
+  "energy_measurement_available": false,
+  "energy_scope": "Area and extra clocked state are measured/priced proxies; no workload-qualified energy number is claimed.",
+  "timing": {
+    "setup_corner": "TT",
+    "tt_ps": 129.06,
+    "ff_hold_ps": 7.13,
+    "ss_sensitivity_ps": -84.07,
+    "uncertainty_setup_ps": 60,
+    "uncertainty_hold_ps": 25,
+    "clock_hz": 1200000000,
+    "drc": 0
+  },
+  "qualification": "Routed-insertion Option-B TT/FF signoff + full-shaped exactness; SS remains sensitivity, not a closure claim."
+}
