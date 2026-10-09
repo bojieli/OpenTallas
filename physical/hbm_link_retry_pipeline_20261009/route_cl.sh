@@ -17,7 +17,7 @@ SDCA=physical/hbm_accel_die_views/common/io_vclk_m_$L.sdc
 echo "UTIL=${UTIL:-55} PD=${PD:-0.55} HM=${HM:-0.010} DW=$DW DH=$DH VT=${OT_MULTI_VT:-rvt} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asap7 --top ot_hbm_link_retry_pipeline \
- --param ENABLE=1 --param W=545 --param EW=24 --param DEPTH=512 \
+ --param ENABLE=1 --param W=545 --param EW=24 --param DEPTH=512 ${RSTR:+--param RSTR=$RSTR} \
  --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv \
  --source rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv \
  --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \

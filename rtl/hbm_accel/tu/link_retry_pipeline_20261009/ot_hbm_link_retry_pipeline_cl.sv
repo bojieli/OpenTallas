@@ -12,7 +12,8 @@
 // No feedback combinational path reaches registered forward payload/valid.
 // Coordinated reset must change session; old traffic cannot survive its wrap.
 module ot_hbm_link_retry_pipeline #(
- parameter ENABLE=0,W=545,SW=12,EW=24,DEPTH=512,TIMEOUT=8192,MAX_RETRY=8
+ parameter ENABLE=0,W=545,SW=12,EW=24,DEPTH=512,TIMEOUT=8192,MAX_RETRY=8,
+ RSTR=`ifdef OT_RETRY_RSTR 1 `else 0 `endif
 )(
  input wire clk,rst_n,input wire [EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire [W-1:0] in_data,
@@ -28,6 +29,15 @@ module ot_hbm_link_retry_pipeline #(
  input wire [EW-1:0] fb_session,
  output wire fault,output wire [SW-1:0] retained,output wire [31:0] replay_count
 );
+ // struct-close r4 (DRV6 re-judge: rst_n -> rxd recovery -652 / -668 on cl / cl2): RSTR = 1 = the SC-19 registered reset.
+ // rst_n (pin) only feeds a 2-flop synchroniser (async assert, sync release; keep_hierarchy, beside the pin); every other
+ // flop resets from rst_i, its registered output (+2 edges on the reset release, no change while running).
+ wire rst_i;
+ generate if (RSTR != 0) begin : g_rstr
+ (* keep_hierarchy *) ot_retry_rst_sync u_rs (.clk(clk), .rst_n(rst_n), .rst_o(rst_i));
+ end else begin : g_rdir
+ assign rst_i = rst_n;
+ end endgenerate
  generate if(!ENABLE) begin:g_off
  assign in_ready=tx_ready;assign tx_valid=in_valid;assign tx_data=in_data;
  assign tx_seq=0;assign tx_session=session;
@@ -46,7 +56,7 @@ module ot_hbm_link_retry_pipeline #(
  // 36 endpoints: fault_r gated a 32-bit increment).  rinc is a one-cycle pulse set by the rewind; the counter adds it
  // one edge later in its own block (+1 cycle on the replay_count status only).
  reg rinc;
- always @(posedge clk or negedge rst_n) if(!rst_n) retries<=0; else if(rinc) retries<=retries+1'b1;
+ always @(posedge clk or negedge rst_i) if(!rst_i) retries<=0; else if(rinc) retries<=retries+1'b1;
  localparam TW=$clog2(TIMEOUT+1),RW=$clog2(MAX_RETRY+2);
  reg [TW-1:0] timer;
  reg [RW-1:0] attempts;
@@ -70,20 +80,24 @@ module ot_hbm_link_retry_pipeline #(
  wire launched=txv&&tx_ready&&!fault_r;
  wire request_read=phase==0&&replaying&&!read_pending&&!txv&&
    cursor!=sent_seq&&write_guard==0&&!fault_r;
- assign in_ready=phase==0&&!fault_r&&!replaying&&!txv&&!full_pipe;
+ `ifndef OT_RETRY_MUT_RSTR_NOGATE
+ assign in_ready=(RSTR==0||rst_i)&&phase==0&&!fault_r&&!replaying&&!txv&&!full_pipe;   // RSTR: no admission until the registered reset releases
+`else
+ assign in_ready=phase==0&&!fault_r&&!replaying&&!txv&&!full_pipe;   // mutant: admission while the core is still in reset
+`endif
  assign tx_valid=txv&&!fault_r;assign tx_data=txd;assign tx_seq=txs;
  assign tx_session=session;
  assign out_valid=rxv&&!fault_r;assign out_data=rxd;
  // Conservatively leave a bubble when the landing register is occupied.
- assign rx_ready=!rxv||fault_r;
+ assign rx_ready=(RSTR==0||rst_i)&&(!rxv||fault_r);
  assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session;
  // struct-close r2: retained (next_seq - base, a 12-bit subtract) was the -cl routes' only failing class: reg->out -513
  // (hbm_retry545_cl-958d0b4b1 x3).  Registered status: +1 cycle on the debt report, nothing else changes.
  reg [SW-1:0] retained_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) retained_q<=0; else retained_q<=next_seq-base;
+ always @(posedge clk or negedge rst_i) if(!rst_i) retained_q<=0; else retained_q<=next_seq-base;
  assign retained=retained_q;assign fault=fault_r;assign replay_count=retries;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
- .clk(clk),.rst_n(rst_n),.w_valid(accepted),.w_data(in_data),
+ .clk(clk),.rst_n(rst_i),.w_valid(accepted),.w_data(in_data),
  .w_seq(next_seq),.w_session(session),.r_valid(request_read),
  .r_seq(cursor),.r_session(session),.o_valid(rd_v),.o_data(rd_data),
  .o_seq(rd_seq),.o_session(rd_epoch),.o_ce(rd_ce),.o_ue(rd_ue));
@@ -91,8 +105,8 @@ module ot_hbm_link_retry_pipeline #(
  if(DEPTH<2||(DEPTH&(DEPTH-1))!=0||DEPTH>=(1<<(SW-1)))$fatal(1,"ambiguous replay window");
  if(TIMEOUT<8||MAX_RETRY<1)$fatal(1,"invalid retry bound");
  end
- always @(posedge clk or negedge rst_n) begin
- if(!rst_n) begin
+ always @(posedge clk or negedge rst_i) begin
+ if(!rst_i) begin
  phase<=0;base<=0;next_seq<=0;sent_seq<=0;cursor<=0;expected<=0;
  debt_pipe<=0;full_pipe<=0;fault_r<=0;replaying<=0;nak_pending<=0;
  nak_seen<=0;last_nak<=0;rinc<=0;timer<=0;attempts<=0;
@@ -186,4 +200,11 @@ module ot_hbm_link_retry_pipeline #(
  end
  end
  endgenerate
+endmodule
+
+// 2-flop reset synchroniser (async assert, sync release): the only load of the reset pin when RSTR = 1
+module ot_retry_rst_sync (input wire clk, input wire rst_n, output wire rst_o);
+ reg [1:0] r;
+ always @(posedge clk or negedge rst_n) if (!rst_n) r <= 2'b00; else r <= {r[0], 1'b1};
+ assign rst_o = r[1];
 endmodule
