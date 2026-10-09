@@ -382,6 +382,22 @@ R25 = dict(R24P, vm_cross_2layer=True, hub_ports_file='physical/hbm_accel_die_vi
 R25['pin_centre'] = {**R25.get('pin_centre', {}), **{(m_, p_): c_ for m_ in ('hfd_router', 'hfd_loader')
                                                      for p_, c_ in (('rst', 366.0253), ('ck', 612.5932))}}
 R25A = dict(R25, attn_tile_h_um=1600.5)
+# r25s (attn-split, OWNER 2026-10-08 18:10 PT; flag default OFF, r25 stays ADOPTED until both halves close): every
+#   attention tile slot holds the two HALF tiles hfd_attn_half_lo / hfd_attn_half_hi (rtl/hdc/v41x/
+#   ot_hdc_v41x_attn_die_half_b.sv, cut between the quad rows; pins / outlines from tools/hbm_attn_half_tile_place.py,
+#   physical/hbm_attn_tile_r/half/<master>/ports.json + io_place.tcl), abutting at the seam: xp (1,619 b) and xr (272 b)
+#   are die nets between face-to-face pin banks (register -> pin | pin -> register, ~0 um, no relay, no credit: no ready
+#   crosses).  Slot 1778.52 x (814.32 + 673.92) = 1,488.24 um (+10.2 % vs r25's 1,349.976); the hub band grows by
+#   2 x 4 x 138.264 um so the four tile rows still fit each scan quadrant (die H 25.7 mm <= 26 mm; a 1,661 um slot made
+#   27.1 mm).  Zero added cycles (the halves keep hfd_attn_tile_b's port latencies).
+ATTN_HALF_DIR = 'physical/hbm_attn_tile_r/half'
+ATTN_HALF_OF = dict(k='lo', ci='lo', q='lo', ri='lo', rf='lo', rst='lo', cf='hi', i='hi', o='hi')
+R25S = dict(R25, attn_split=ATTN_HALF_DIR, attn_tile_h_um=1488.24,
+            hub_h=R25['hub_h'] + 2 * (4 * (1488.24 - 1349.976)) + 2 * 2.16,
+            # everything else in the hub keeps its r25 size: SU / SFU / HC quarters (cq_h, at the hub edge) and their
+            # widths (hub_h_ref), the index quarters (index_h: their closed split bands), the spine (spine_h, centred;
+            # the router envelope moves with it)
+            hub_h_ref=R25['hub_h'], cq_h=5529.6, index_h=5529.6)
 ADOPTED = R25
 
 
@@ -406,7 +422,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
     if variant.get('hub_scale'):        # r23: the SU / SFU / HC quarters grow by hub_scale; the centre channel widens by
         #   the added quarter widths on both sides (each quarter is BLOCKS mm2 / 4 over the quarter height qhc)
-        hub_h0 = up(variant.get('hub_h', 7200.0), GY)
+        hub_h0 = up(variant.get('hub_h_ref', variant.get('hub_h', 7200.0)), GY)   # r25s: the r25 quarter widths
         hh0 = dn(hub_h0 - 2 * HCH, GY) - 0.0
         qh0 = dn((dn(hub_h0 - 2 * HCH, GY) - HCH) / 2, GY)
         add = 0.0
@@ -532,6 +548,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         yy = it.y + h_
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
+        if 'hub_h_ref' in variant:     # r25s: a taller hub band moves the centred spine column up by half the growth
+            ry = up(ry + (hub_h - up(variant['hub_h_ref'], GY)) / 2, GY)
         if variant.get('sm_physical_grid'):
             # Historical envelope is absolute; preserve its hub-relative location.
             ry += grp_h - (2 * (sm_dims()[1] + SHAVE) + 2 * CH) + variant.get('side_padding_um', 0.0)
@@ -593,7 +611,10 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     th = up(variant.get('attn_tile_h_um', BLOCKS['attn_tile'][0] * 1e6 / tw), GY)
     tg = 43.2
     assert 4 * th + 3 * tg <= qh + 1e-6, ('attention tiles do not fit the quadrant', 4 * th + 3 * tg, qh)
-    iw = up(BLOCKS['index'][0] / 4 * 1e6 / qh, GX)
+    # r25s: the index quarters keep the r25 height (their closed split bands, physical/hbm_accel_die_views/index_q/split)
+    #   at the hub edge of a taller scan quadrant
+    ixh = min(qh, dn(variant['index_h'], GY)) if 'index_h' in variant else qh
+    iw = up(BLOCKS['index'][0] / 4 * 1e6 / ixh, GX)
     tiles, scan = [], {}
     for st in ('SW', 'SE', 'NW', 'NE'):
         side, half = st
@@ -606,7 +627,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
             ix_x = up(hub['hc_SE'].x + hub['hc_SE'].w + SHAVE + HCH, GX)
             tx0 = up(ix_x + iw + HCH, GX)
             assert tx0 + 4 * tw + 3 * tg <= x0 + core_w - HCH / 2 + 1e-6, ('E scan quadrant overflows', tx0)
-        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy, iw - SHAVE, qh - SHAVE, qori(st), kind='hub', region='hub')
+        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy if side == 'S' else dn(qy + qh - ixh, GY), iw - SHAVE, ixh - SHAVE,
+                  qori(st), kind='hub', region='hub')
         insts.append(ix)
         hub[f'index_{st}'] = ix
         ty0 = up(qy + (qh - 4 * th - 3 * tg) / 2, GY)
@@ -784,6 +806,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         split_vm(m)
     if variant.get('vm_split8'):        # r23v: VM 8-way fallback (default off)
         split_vm8(m)
+    if variant.get('attn_split'):       # r25s: attention tiles as two half-tile die blocks (default off)
+        split_attn(m, variant['attn_split'])
     for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
@@ -1305,6 +1329,98 @@ def split_vm8(m):
             mst.ports, mst.order = sp_, list(order)
         fixed[f'hfd_vm_{q}_{h}'] = fn
     m['vm8'] = {nm: [x.name for x in ab] for nm, ab in halves.items()}
+
+
+def split_attn(m, half_dir):
+    """r25s (attn-split): every hfd_attn_tile instance becomes hfd_attn_half_lo (master frame: the bottom of the slot)
+    + hfd_attn_half_hi (the top), abutting; the tile's die ports go to the half that owns them (ATTN_HALF_OF; ck to
+    both), and the seam buses xp (lo -> hi, the ROOT packet) / xr (lo -> hi, quad row 0's results) join face-to-face
+    pin banks.  Pin plans fixed to the half records (exact rectangles at k = 1, face runs when bundled).  m['tiles'] and
+    the scan grids keep the lo halves (one per logical tile)."""
+    recs = {h: json.loads((ROOT / half_dir / f'hfd_attn_half_{h}/ports.json').read_text()) for h in ('lo', 'hi')}
+    hl, hh = recs['lo']['h_um'], recs['hi']['h_um']
+    tiles = {it.name: it for it in m['insts'] if it.master == 'hfd_attn_tile'}
+    halves = {}
+    for nm, it in tiles.items():
+        assert it.h + SHAVE >= hl + hh - 1e-6, ('attention tile slot shorter than the two halves', nm, it.h, hl + hh)
+        flip = it.orient in ('MX', 'R180')                  # mirrored copies: lo on top, still facing its quadrant
+        lo = Inst(nm + '_lo', 'hfd_attn_half_lo', it.x, round(it.y + (hh if flip else 0.0), 4), recs['lo']['w_um'], hl,
+                  it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        hi = Inst(nm + '_hi', 'hfd_attn_half_hi', it.x, round(it.y + (0.0 if flip else hl), 4), recs['hi']['w_um'], hh,
+                  it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        halves[nm] = dict(lo=lo, hi=hi)
+    m['insts'] = [i for i in m['insts'] if i.name not in tiles] + [x for d in halves.values() for x in (d['lo'], d['hi'])]
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        e2 = []
+        for inst, port in eps:
+            if inst not in tiles:
+                e2.append((inst, port))
+            elif port == 'ck':
+                e2 += [(halves[inst]['lo'].name, port), (halves[inst]['hi'].name, port)]
+            else:
+                e2.append((halves[inst][ATTN_HALF_OF[port]].name, port))
+        nb.append((bid, cls, bits, e2))
+    for nm, d in halves.items():
+        for p_ in ('xp', 'xr'):
+            nb.append((f'{nm}_seam_{p_}', 'hub', recs['lo']['ports'][p_]['bits'], [(d['lo'].name, p_), (d['hi'].name, p_)]))
+    m['buses'] = nb
+    for k_ in ('tiles',):
+        m[k_] = [halves[t.name]['lo'] if t.name in halves else t for t in m[k_]]
+    for sc in m['scan'].values():
+        sc['tiles'] = [[halves[t.name]['lo'] for t in row] for row in sc['tiles']]
+    if isinstance(m.get('clocked'), dict):
+        for nm, d in halves.items():
+            if nm in m['clocked']:
+                dom = m['clocked'].pop(nm)
+                m['clocked'][d['lo'].name] = m['clocked'][d['hi'].name] = dom
+    for e in m.get('meso', []):
+        if e.get('inst') in halves:
+            e['inst'] = halves[e['inst']]['lo'].name            # the q receiver
+    fixed = m.setdefault('fixed_ports', {})
+    for h, rec in recs.items():
+        text = (ROOT / half_dir / f'hfd_attn_half_{h}/io_place.tcl').read_text()
+        pat = r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
+        exact = defaultdict(dict)
+        for port, bit, layer, x, y, w_, h_ in re.findall(pat, text):
+            x, y, w_, h_ = map(float, (x, y, w_, h_))
+            exact[port][int(bit)] = (f'{port}[{bit}]', layer, (x - w_ / 2, y - h_ / 2, x + w_ / 2, y + h_ / 2))
+        if set(exact) != set(rec['ports']) or any(set(exact[p_]) != set(range(v['bits'])) for p_, v in rec['ports'].items()):
+            raise ValueError(f'attn half {h}: io_place / ports.json mismatch')
+        W_, H_ = rec['w_um'], rec['h_um']
+        spec, order = {}, []
+        for p_, v in rec['ports'].items():
+            (x0, x1), (y0, y1) = v['x'], v['y']
+            n_ = v['bits']
+            if x0 == x1:
+                face, lo_, hi_ = ('W' if x0 < W_ / 2 else 'E'), y0, y1
+            else:
+                face, lo_, hi_ = ('S' if y0 < H_ / 2 else 'N'), x0, x1
+            tr = Q.TRK[v['layer']][1]
+            # bundled planning: a port in separate runs (xr: W and E ends of the seam) is planned at its longest run
+            al = sorted(((r[2][0] + r[2][2]) / 2 if face in 'SN' else (r[2][1] + r[2][3]) / 2) for r in exact[p_].values())
+            runs, cur = [], [al[0]]
+            for u in al[1:]:
+                if u - cur[-1] > 10.0:
+                    runs.append(cur)
+                    cur = []
+                cur.append(u)
+            runs.append(cur)
+            run_ = max(runs, key=len)
+            pitch = max(1, round((hi_ - lo_) / max(1, n_ - 1) / tr)) if n_ > 1 and len(runs) == 1 else 4
+            spec[p_] = ('face', n_, face, v['layer'], round((run_[0] + run_[-1]) / 2, 4), pitch)
+            order.append(p_)
+        rects = {p_: ('rects', [exact[p_][b] for b in range(v['bits'])]) for p_, v in rec['ports'].items()}
+
+        def fn(mst, k=1, spec=spec, rects=rects, order=order):
+            if k > 1:                                       # bundled planning: face runs (the jogs between bank
+                sp_ = dict(spec)                            #   chunks are below the bundle pitch)
+                _bundle_pack(mst, sp_, order, k)
+            else:
+                sp_ = dict(rects)
+            mst.ports, mst.order = sp_, list(order)
+        fixed[f'hfd_attn_half_{h}'] = fn
+    m['attn_halves'] = {nm: [d['lo'].name, d['hi'].name] for nm, d in halves.items()}
 
 
 def fix_ports_from_views(m, masters_):
@@ -3297,7 +3413,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
