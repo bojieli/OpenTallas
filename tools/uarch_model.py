@@ -70,6 +70,43 @@ def hbm_link_retry_model(payload_bits=551, seq_bits=12, session_bits=16,
         adoption="OPEN: physical RTT, protected SRAM, die ports, SS/FF route required")
 
 
+def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
+                              depth=512, ports=8):
+    """Protected replay successor: payload AND transaction identity in SRAM.
+
+    Physical macro inventory is real 128x256 ASAP7 1R1W; registered write
+    pins and read capture, followed by the shipped two-edge SECDED decoder.
+    Decoder/mux timing remains an SS/FF qualification obligation.
+    """
+    if depth < 128 or depth % 128 or depth & (depth-1):
+        raise ValueError("power-of-two depth >=128 required")
+    record_bits=payload_bits+seq_bits+session_bits
+    chunks=math.ceil(record_bits/256)
+    coded_bits=chunks*266
+    macros_per_bank=math.ceil(coded_bits/256)
+    banks=depth//128
+    macro_count=banks*macros_per_bank*ports
+    macro_area=3891.57696 # pinned physical/asap7_memory_macros/128x256 JSON
+    return dict(candidate="HBM_LINK_REPLAY_SECDED_SRAM",default_enabled=False,
+        payload_bits=payload_bits,identity_bits=seq_bits+session_bits,record_bits=record_bits,
+        secded_chunks=chunks,coded_bits=coded_bits,macros_per_bank=macros_per_bank,
+        banks_per_port=banks,macros_per_port=banks*macros_per_bank,ports=ports,
+        macro_count=macro_count,macro_area_um2=macro_area,
+        SRAM_area_um2=macro_count*macro_area,slot_reservation_um2=macro_count*macro_area/0.55,
+        decoder_logic_area_um2=None,slot_fit=None,physical_qualified=False,
+        macs_per_cycle=0,write_records_per_cycle=1,read_records_per_cycle=1,
+        write_encoded_bits_per_cycle=coded_bits,read_encoded_bits_per_cycle=coded_bits,
+        routing_tracks_needed=2*record_bits+2*math.ceil(math.log2(depth))+2,
+        channel_capacity=None,read_bank_mux_inputs=banks,
+        replicas=dict(encoder=chunks*ports,decoder=chunks*ports),
+        write_commit_edges=1,read_response_edges=4,minimum_write_read_request_gap_edges=2,
+        fault_free_forward_added_edges=0,replay_initial_read_edges=6,
+        replay_scheduler_outstanding_reads=1, replay_head_records=1,
+        replay_steady_records_per_cycle=1/7,
+        token_fault_free_added_cycles=0,
+        adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
