@@ -11,7 +11,7 @@ for family,info in s['families'].items():
   pcs=sorted(int(re.fullmatch(r'pc(\d+)',u)[1])for u in seg['units']if re.fullmatch(r'pc(\d+)',u))
   rects=[]
   for pc in pcs:
-   x=max(seg['x0'],g['hfd_svc_'+family]['pc_x'][pc]-94.824)
+   x=min(seg['x1']-189.648,max(seg['x0'],g['hfd_svc_'+family]['pc_x'][pc]-94.824))
    for bank in range(2):rects.append({'PC':pc,'bank':bank,'rect_um':[x+bank*94.824,110,x+(bank+1)*94.824,151.04]})
   bounds=all(seg['x0']<=r['rect_um'][0] and r['rect_um'][2]<=seg['x1']for r in rects)
   overlap=any(a['rect_um'][0]<b['rect_um'][2] and b['rect_um'][0]<a['rect_um'][2]for i,a in enumerate(rects)for b in rects[i+1:])
