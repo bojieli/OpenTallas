@@ -17,6 +17,7 @@ const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: r
 const LIMIT = 30000;                 // most instances drawn one by one per frame
 const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const ST_KEYS = ['closed', 'below', 'running', 'failing', 'revoked', 'superseded', 'placeholder', 'macro', 'relay'];
+const ROLE_LABEL = {exact: 'is this master', variant: 'variant', primary: 'is this master (die recipe)', part: 'hardened inside', relay: 'die relay hop', lineage: 'predecessor of'};
 const ST_COL = {}; ST_KEYS.forEach(k => ST_COL[k] = cssv('--st-' + k));
 const ST_SHORT = {closed: 'closed', below: 'closed < margin', running: 'running', failing: 'failing', revoked: 'revoked', superseded: 'superseded',
   placeholder: 'placeholder', macro: 'hard macro', relay: 'relay / wire stage'};
@@ -491,10 +492,11 @@ function renderCard(c){
   const pl = Object.entries(places).map(([die, ms]) => {
     const gg = S.geo[die]; const lab = (S.dieById.get(die) || {}).label || die;
     const rows = ms.map(p => { const mi = gg ? gg.mIndex.get(p.master) : null; const n = gg && mi != null ? gg.byMaster[mi].length : null;
-      return `<tr class="cl" data-die="${esc(die)}" data-m="${esc(p.master)}"><td class="m">${dot(p.s)} ${esc(p.master)}</td><td class="n">${n == null ? '' : '×' + fmt(n, 0)}</td><td>${esc(p.src || '')}${p.view ? ' · view ' + esc(p.view) : ''}</td></tr>`; }).join('');
+      return `<tr class="cl" data-die="${esc(die)}" data-m="${esc(p.master)}"><td class="m">${dot(p.s)} ${esc(p.master)}</td><td class="n">${n == null ? '' : '×' + fmt(n, 0)}</td><td title="${esc(p.via || '')}">${p.role ? `<b class="role r-${esc(p.role)}">${esc(ROLE_LABEL[p.role] || p.role)}</b> ` : ''}${esc(p.role ? '' : (p.src || ''))}${p.view ? ' · view ' + esc(p.view) : ''}</td></tr>`; }).join('');
     return `<div style="margin-bottom:6px"><div style="font-size:12.5px;margin-bottom:3px"><button class="lnk" data-showdie="${esc(die)}">${esc(lab)}</button></div><table class="t"><tbody>${rows}</tbody></table></div>`;
   }).join('');
-  H.push(`<div class="sec"><h3>Where it sits</h3>${pl || '<p class="note">Not placed on an exported die map: a sub-block hardened inside a die master, or not used by the current dies.</p>'}</div>`);
+  const via = Object.values(places).flat().map(p => p.via).filter(Boolean); const via1 = [...new Set(via)].slice(0, 2);
+  H.push(`<div class="sec"><h3>Where it sits</h3>${pl ? pl + (via1.length ? `<p class="note">Link: ${via1.map(esc).join('; ')}</p>` : '') : `<p class="note">${c.dieless ? 'Not on an exported die map: ' + esc(c.dieless) + '.' : 'Not placed on an exported die map: a sub-block hardened inside a die master, or not used by the current dies.'}</p>`}</div>`);
   if (sel && g && sel.insts.length){
     const ids = sel.insts.slice(0, 14);
     H.push(`<div class="sec"><h3>Instances on this die (${fmt(sel.insts.length, 0)})</h3><table class="t"><thead><tr><th>instance</th><th class="n">x <span class="u">(µm)</span></th><th class="n">y <span class="u">(µm)</span></th><th>region</th></tr></thead><tbody>${ids.map(i =>
@@ -613,7 +615,8 @@ function renderTree(){
         const gk = t.id + '/' + gp.name, go = OPEN.has(gk) || (cur && S.sel && gp.items.some(i => selM.has(i.m)));
         const cc = gp.counts || {}; const closed = (cc.closed || 0) + (cc.below || 0), all = gp.items.reduce((a, i) => a + (i.group ? 0 : 1), 0);
         const items = go ? gp.items.map(i => {
-          if (i.group) return `<div class="item" style="cursor:default">${dot('relay')}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small></div>`;
+          if (i.group) return i.el ? `<div class="item" data-el="${esc(i.el)}" title="hardened by ${esc(i.el)}">${dot(i.s)}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small></div>`
+                                   : `<div class="item" style="cursor:default">${dot('relay')}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small></div>`;
           const kids = i.kids && i.kids.length && (selM.has(i.m)) ? i.kids.map(k => { const e = S.elByName.get(k); return `<div class="item kid" data-el="${esc(k)}">${dot(e ? e.s : 'placeholder')}<span class="n">${esc(k)}</span></div>`; }).join('') : '';
           return `<div class="item${selM.has(i.m) && cur ? ' sel' : ''}" data-die="${esc(t.id)}" data-m="${esc(i.m)}" title="${esc(i.m)}">${dot(i.s)}<span class="n">${esc(SAFE ? i.m : i.m.replace(/^(hfd|qfd|dsfd)_/, ''))}</span><small>${i.kids && i.kids.length ? `+${i.kids.length} ` : ''}×${fmt(i.n, 0)}</small></div>` + kids;
         }).join('') : '';
@@ -629,11 +632,15 @@ function renderTree(){
   $('tree').querySelectorAll('.gh').forEach(e => e.onclick = () => { const k = e.dataset.g; OPEN.has(k) ? OPEN.delete(k) : OPEN.add(k); renderTree(); });
   $('tree').querySelectorAll('.item[data-m]').forEach(e => e.onclick = () => selectMaster(e.dataset.die, e.dataset.m, {zoom: true}));
   $('tree').querySelectorAll('.item[data-el]').forEach(e => e.onclick = ev => { ev.stopPropagation(); selectElement(e.dataset.el, {zoom: true}); });
-  // elements with no die master on any exported die
-  const un = m.elements.filter(e => !Object.keys(e.dies).length);
+  // elements with no die master on any exported die (lineage-only elements sit with their successor's master)
+  const un = m.elements.filter(e => !Object.keys(e.dies).length && !Object.keys(e.lineage || {}).length);
   const byT = {}; un.forEach(e => (byT[e.target] = byT[e.target] || []).push(e));
-  $('unplaced').innerHTML = un.length ? `<div class="ptitle" style="padding-left:0">Elements not on a die map (${un.length})</div>` + Object.entries(byT).map(([t, es]) =>
-    `<details><summary>${esc(t)} (${es.length})</summary>${es.map(e => `<div class="item" style="padding-left:12px" data-uel="${esc(e.element)}" title="${esc(e.decoded)}">${dot(e.s)}<span class="n">${esc(e.element)}</span></div>`).join('')}</details>`).join('') : '';
+  const rc = m.reconcile || {};
+  const recon = Object.entries(rc).filter(([t, r]) => r.total).map(([t, r]) => { const c = r.closed || {};
+    return `<div class="rc" title="${esc(t)}: ${r.total} elements = ${r.placed} on a die + ${r.lineage_only} lineage only + ${r.dieless} die-less + ${r.unaccounted} unaccounted"><b>${esc(t)}</b> closed ${c.total}${c.api != null && c.api !== c.total ? ` (api ${c.api})` : ''}: ${c.placed} on a die${c.lineage_only ? `, ${c.lineage_only} lineage` : ''}${c.dieless ? `, ${c.dieless} die-less` : ''}${c.unaccounted ? `, <span style="color:var(--s-open)">${c.unaccounted} unaccounted</span>` : ''}</div>`; }).join('');
+  $('unplaced').innerHTML = (recon ? `<div class="ptitle" style="padding-left:0">Reconciled with /api/elements</div><div class="rcs">${recon}</div>` : '') +
+    (un.length ? `<div class="ptitle" style="padding-left:0">Elements not on a die map (${un.length})</div>` + Object.entries(byT).map(([t, es]) =>
+    `<details><summary>${esc(t)} (${es.length})</summary>${es.map(e => `<div class="item" style="padding-left:12px" data-uel="${esc(e.element)}" title="${esc(e.decoded)}${e.dieless && e.dieless !== true ? ': ' + esc(e.dieless) : ''}">${dot(e.s)}<span class="n">${esc(e.element)}</span>${e.dieless && e.dieless !== true ? `<small class="why">${esc(e.dieless)}</small>` : ''}</div>`).join('')}</details>`).join('') : '');
   $('unplaced').querySelectorAll('[data-uel]').forEach(e => e.onclick = () => selectElement(e.dataset.uel, {zoom: false}));
 }
 
@@ -643,7 +650,7 @@ function buildSearch(){
   const m = S.meta; SIDX = [];
   for (const e of m.elements) SIDX.push({t: 'element', name: e.element, dec: e.decoded, s: e.s, key: (e.element + ' ' + e.decoded).toLowerCase()});
   const names = m.names || {};
-  for (const d of m.dies){ const ms = m.masters[d.id] || {}; for (const [n, v] of Object.entries(ms)){ if (v.s === 'relay' && /rly|relay/.test(n)) continue; SIDX.push({t: 'master', die: d.id, name: n, dec: d.label, s: v.s, key: n.toLowerCase()}); } }
+  for (const d of m.dies){ const ms = m.masters[d.id] || {}; for (const [n, v] of Object.entries(ms)){ if ((v.relay || v.s === 'relay') && /rly|relay|wstg/.test(n)) continue; SIDX.push({t: 'master', die: d.id, name: n, dec: d.label, s: v.s, key: n.toLowerCase()}); } }
 }
 let sOn = 0, sRes = [];
 $('q').addEventListener('input', () => search($('q').value));

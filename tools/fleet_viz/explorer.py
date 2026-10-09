@@ -235,7 +235,9 @@ class Explorer:
         story_of = collections.defaultdict(list)
         for c in cards:
             for a in c.get('attach') or []: story_of[a].append(c['id'])
-        dies = []; mstat = {}; el_dies = collections.defaultdict(dict); children = collections.defaultdict(lambda: collections.defaultdict(set))
+        comp = self.compose()
+        dies = []; mstat = {}; el_dies = collections.defaultdict(dict); el_lin = collections.defaultdict(dict)
+        children = collections.defaultdict(lambda: collections.defaultdict(set))
         for d in self.dies():
             g = self.geom.get(d['id']); rec = g['rec'] if g else None
             info = dict(id=d['id'], label=d['label'], target=d['target'], want=self.want.get(d['id']),
@@ -247,64 +249,145 @@ class Explorer:
                             masters=len(rec['masters']), relays=rec.get('relays'), buses=len(rec['buses']))
             dies.append(info)
             if not rec: continue
-            masters = [m['name'] for m in rec['masters']]; mset = set(masters)
-            views = rec.get('views') or {}
-            mapping = collections.defaultdict(set)     # master -> elements
-            for el, r in rows.items():
-                if r['target'] != d['target'] and not (r['target'] == 'Other'): continue
-                names = [el] + (r.get('variants') or [])
-                hit = [n for n in names if n in mset]
-                for js in jobs_by_el.get(el, []):
-                    for to in js['record_to']:
-                        for part in pathlib.PurePosixPath(to).parts[::-1]:
-                            if part in mset: hit.append(part); break
-                if not hit:
-                    for v_m, v in views.items():
-                        if v_m in mset and el in (v.get('tiles') or []): hit.append(v_m)
-                if not hit:
-                    for js in sorted(jobs_by_el.get(el, []), key=lambda j: j['created']):
-                        for tok in MASTER_TOKEN.findall(js['purpose']):
-                            if tok in mset: hit.append(tok); break
-                        if hit: break
-                for h in hit:
-                    mapping[h].add(el)
-                    el_dies[el].setdefault(d['id'], [])
-                    if h not in el_dies[el][d['id']]: el_dies[el][d['id']].append(h)
-                    if h != el: children[d['id']][h].add(el)
-            ms = {}
-            for mi, m in enumerate(rec['masters']):
-                n = m['name']; els = mapping.get(n, set())
-                own = rows.get(n)
-                if own:
-                    st = self.el_status(own); src = 'element'
-                elif els:
-                    sts = [self.el_status(rows[e]) for e in els]
-                    st = next((s for s in ROLL if s in sts), 'placeholder'); src = 'children'
-                else:
-                    v = views.get(n) or {}; vs = (v.get('status') or '')
-                    if vs in ('closed',): st = 'closed'
-                    elif vs == 'closed-below-margin': st = 'below'
-                    elif vs == 'macro': st = 'macro'
-                    elif re.search(r'(^|_)(rly|wstg)(_|$)', n) or n.startswith('hfd_rly'): st = 'relay'
-                    elif not re.match(r'(hfd|qfd|dsfd)_', n) and not v: st = 'macro'
-                    else: st = 'placeholder'
-                    src = 'view index' if v else 'generator'
-                ms[n] = dict(s=st, src=src, el=n if own else (sorted(els)[0] if len(els) == 1 else None), els=sorted(els),
-                             view=views.get(n, {}).get('status') if views.get(n) else None)
+            ms, roles = self.map_die(d, rec, rows, jobs_by_el, comp)
+            for n, els in roles.items():
+                for el, (role, src) in els.items():
+                    tgt = el_lin if role == 'lineage' else el_dies
+                    tgt[el].setdefault(d['id'], [])
+                    if n not in tgt[el][d['id']]: tgt[el][d['id']].append(n)
+                    if role not in ('lineage', 'exact', 'primary', 'variant'): children[d['id']][n].add(el)
             mstat[d['id']] = ms
-        els = []
+        els = []; dieless = comp.get('dieless') or {}
         for el, r in rows.items():
             st = self.el_status(r)
+            dl = None
+            if not el_dies.get(el) and not el_lin.get(el):
+                dl = dieless.get(el) or next((why for rx, why in comp.get('dieless_re') or [] if re.search(rx, el)), None) or ('superseded: ' + ((r.get('superseded') or {}).get('reason') or 'no instance on a current die')
+                                         if st == 'superseded' else 'no die master on an exported die (unaccounted)')
             els.append(dict(element=el, target=r['target'], s=st, cat=r['category'], decoded=self.decode(el),
-                            dies=el_dies.get(el, {}), stories=sorted(set(story_of.get(el, []) + [s for v in r.get('variants') or [] for s in story_of.get(v, [])])),
+                            dies=el_dies.get(el, {}), lineage=el_lin.get(el, {}), dieless=dl,
+                            stories=sorted(set(story_of.get(el, []) + [s for v in r.get('variants') or [] for s in story_of.get(v, [])])),
                             live=r['live'], jobs=r['jobs'], variants=r.get('variants') or []))
         tree = self.tree(dies, mstat, children, rows)
+        recon = self.reconcile(els, es)
         meta = dict(t=time.time(), status_keys=STATUS_KEYS, status_label=STATUS_LABEL, dies=dies, masters=mstat, elements=els,
                     tree=tree, stories=[{k: c.get(k) for k in ('id', 'title', 'target', 'status', 'element', 'summary', 'attach', '_file')} for c in cards],
-                    story_meta=smeta, names=self.names, exporting=self.exporting)
+                    story_meta=smeta, names=self.names, exporting=self.exporting, reconcile=recon)
         with self.lock:
             self.meta = meta; self.meta_t = time.time(); self._mk = key
             self.jobs_by_el = jobs_by_el; self.rows = rows; self.cards = {c['id']: c for c in cards}; self.children = children
+
+    def compose(self):
+        """explorer_compose.json (rules + dieless + fold); reloaded when it changes"""
+        p = HERE / 'explorer_compose.json'
+        try: mt = p.stat().st_mtime
+        except OSError: return dict(rules=[], dieless={})
+        if getattr(self, '_comp_mt', None) != mt:
+            try:
+                c = json.loads(p.read_text())
+                for r in c.get('rules', []):
+                    r['_m'] = re.compile(r['masters']); r['_d'] = re.compile(r['die']) if r.get('die') else None
+                c['_fold'] = re.compile(c['fold']) if c.get('fold') else None
+                self._comp = c; self._comp_mt = mt
+            except Exception as e:
+                self.log('explorer compose: %s' % e); self._comp = getattr(self, '_comp', dict(rules=[], dieless={}))
+        return self._comp
+
+    def map_die(self, d, rec, rows, jobs_by_el, comp):
+        """master -> {element: (role, source)} for one die, and the per-master map status.
+
+        Order: exact name / element variants; curated composition (explorer_compose.json); job record dirs and
+        view-index tiles; the generic variant fold (qfd_cst_n -> qfd_cst); job / element purpose naming a master."""
+        mset = {m['name'] for m in rec['masters']}; views = rec.get('views') or {}
+        roles = collections.defaultdict(dict)
+        def add(m, el, role, src):
+            if el in roles[m] and roles[m][el][0] in ('exact', 'primary'): return
+            roles[m][el] = (role, src)
+        cand = {el: r for el, r in rows.items() if r['target'] == d['target'] or r['target'] == 'Other'}
+        ruled = set()
+        for r in comp.get('rules', []):
+            if r['_d'] and not r['_d'].search(d['id']): continue
+            ms_ = [m for m in mset if r['_m'].search(m)]
+            for el in [e for x in r['elements'] for e in (sorted(c for c in cand if re.search(x[3:], c)) if x.startswith('re:') else [x])]:
+                if el not in cand or not ms_: continue
+                ruled.add(el)
+                for m in ms_: add(m, el, r['role'], 'composition: ' + r.get('src', ''))
+        for el, r in cand.items():
+            names = [el] + (r.get('variants') or [])
+            for n in names:
+                if n in mset: add(n, el, 'exact' if n == el else 'variant', 'element name' if n == el else 'element variant ' + n)
+            if el in ruled: continue
+            for js in jobs_by_el.get(el, []):
+                for to in js['record_to']:
+                    for part in pathlib.PurePosixPath(to).parts[::-1]:
+                        if part in mset and part not in names: add(part, el, 'part', 'job record dir ' + to); break
+            for v_m, v in views.items():
+                if v_m in mset and el in (v.get('tiles') or []): add(v_m, el, 'part', 'view index tile of ' + v_m)
+        # generic variant fold: a master with no element of its own whose base name is an element (qfd_cst_n -> qfd_cst)
+        fold = comp.get('_fold')
+        if fold:
+            for m in mset:
+                if m in rows or any(v[0] in ('exact', 'primary', 'variant') for v in roles.get(m, {}).values()): continue
+                mm = fold.match(m)
+                if mm and mm.group('base') in cand: add(m, mm.group('base'), 'variant', 'variant fold %s -> %s' % (m, mm.group('base')))
+        placed = {el for m in roles for el in roles[m]}
+        for el, r in cand.items():
+            if el in placed or el in ruled: continue
+            texts = [r.get('purpose') or ''] + [js['purpose'] for js in sorted(jobs_by_el.get(el, []), key=lambda j: j['created'])]
+            for t in texts:
+                tok = next((t_ for t_ in MASTER_TOKEN.findall(t) if t_ in mset and t_ != el), None)
+                if tok: add(tok, el, 'part', 'purpose names ' + tok); break
+        ms = {}
+        for m in rec['masters']:
+            n = m['name']; rl = roles.get(n, {})
+            prim = sorted(e for e, (ro, _) in rl.items() if ro == 'primary')
+            own = prim[0] if prim else (n if n in rows else next((e for e, (ro, _) in sorted(rl.items()) if ro in ('exact', 'variant')), None))
+            if prim and n in rl and n != own: rl[n] = ('lineage', 'superseded on this die by ' + own)
+            if own and own != n and n in rows and n not in rl: rl[n] = ('lineage', 'superseded on this die by ' + own)
+            parts = sorted(e for e, (ro, _) in rl.items() if ro in ('part', 'relay') and e != own)
+            lin = sorted(e for e, (ro, _) in rl.items() if ro == 'lineage')
+            relay = bool(re.search(r'(^|_)(rly|rlyf|wstg)(_|$)', n) or n.startswith('hfd_rly'))
+            v = views.get(n) or {}
+            if own:
+                st = self.el_status(rows[own]); src = 'element' if own == n else ('primary element ' + own if prim else 'element variant ' + own)
+            elif parts:
+                sts = [self.el_status(rows[e]) for e in parts]
+                st = next((s for s in ROLL if s in sts), 'placeholder'); src = 'relay element' if relay else 'parts'
+            else:
+                vs = (v.get('status') or '')
+                if vs in ('closed',): st = 'closed'
+                elif vs == 'closed-below-margin': st = 'below'
+                elif vs == 'macro': st = 'macro'
+                elif relay: st = 'relay'
+                elif not re.match(r'(hfd|qfd|dsfd)_', n) and not v: st = 'macro'
+                else: st = 'placeholder'
+                src = 'view index' if v else 'generator'
+            if relay and st != 'relay' and not parts and not own: st = 'relay'
+            hard = ([own] if own else []) + parts
+            ms[n] = dict(s=st, src=src, el=own or (parts[0] if len(parts) == 1 else None), els=sorted(set(hard)), lin=lin,
+                         relay=relay, roles={e: [ro, s_[:300]] for e, (ro, s_) in rl.items()},
+                         view=v.get('status') if v else None)
+        return ms, roles
+
+    def reconcile(self, els, es):
+        """every /api/elements row accounted: placed on a die (as itself, a part or a relay), lineage only, or die-less
+        with a reason; per target and per map status (closed counts include closed-below-margin)"""
+        out = {}
+        for e in els:
+            t = out.setdefault(e['target'], dict(total=0, placed=0, lineage_only=0, dieless=0, unaccounted=0,
+                                                 closed=dict(total=0, placed=0, lineage_only=0, dieless=0, unaccounted=0),
+                                                 unaccounted_list=[], closed_offdie=[]))
+            k = 'placed' if e['dies'] else 'lineage_only' if e['lineage'] else ('unaccounted' if 'unaccounted' in (e['dieless'] or '') else 'dieless')
+            t['total'] += 1; t[k] += 1
+            if e['s'] in ('closed', 'below'):
+                t['closed']['total'] += 1; t['closed'][k] += 1
+                if k != 'placed': t['closed_offdie'].append([e['element'], k, e['dieless'] or 'lineage: ' + ', '.join(sorted({m for v in e['lineage'].values() for m in v}))])
+            if k == 'unaccounted': t['unaccounted_list'].append(e['element'])
+        api = collections.Counter()
+        for r in es.get('rows', []):
+            if self.el_status(r) in ('closed', 'below'): api[r['target']] += 1
+        for tg, t in out.items(): t['closed']['api'] = api.get(tg, 0)
+        return out
 
     def el_status(self, r):
         st = CAT_STATUS.get(r['category'], 'failing')
@@ -323,19 +406,25 @@ class Explorer:
             groups = collections.defaultdict(list)
             for m in rec['masters']:
                 st = ms[m['name']]
-                if st['s'] == 'relay': grp = 'die relays / wire stages'
+                if st.get('relay') or st['s'] == 'relay': grp = 'die relays / wire stages'
                 else: grp = m['kind'] or 'other'
-                groups[grp].append(dict(m=m['name'], n=m['n'], s=st['s'], kids=sorted(children[d['id']].get(m['name'], set()) - {m['name']})))
+                groups[grp].append(dict(m=m['name'], n=m['n'], s=st['s'], el=st.get('el'),
+                                        kids=sorted(children[d['id']].get(m['name'], set()) - {m['name']})))
             gl = []
             for k, v in sorted(groups.items(), key=lambda kv: (kv[0].startswith('die relays'), kv[0])):
                 c = collections.Counter(x['s'] for x in v)
-                if k.startswith('die relays'):     # one row, not 1,800 single-instance masters
-                    v = [dict(m='(%d relay / wire-stage masters)' % len(v), n=sum(x['n'] for x in v), s='relay', kids=[], group=True)]
-                gl.append(dict(name=k, items=sorted(v, key=lambda x: x['m']), counts=dict(c)))
-            real = [x for x in ms.values() if x['s'] not in ('relay',)]
+                if k.startswith('die relays'):     # one row per hardening element, not 1,800 single-instance masters
+                    fam = collections.defaultdict(list)
+                    for x in v: fam[x['el'] or ''].append(x)
+                    v = [dict(m='(%d relay / wire-stage masters%s)' % (len(xs), ': ' + el if el else ''), n=sum(x['n'] for x in xs),
+                              s=xs[0]['s'] if el else 'relay', kids=[el] if el else [], group=True, el=el or None)
+                         for el, xs in sorted(fam.items(), key=lambda kv: (kv[0] == '', kv[0]))]
+                gl.append(dict(name=k, items=sorted(v, key=lambda x: (x.get('group') and not x.get('el'), x['m'])), counts=dict(c)))
+            real = [x for x in ms.values() if not x.get('relay') and x['s'] != 'relay']
             c = collections.Counter(x['s'] for x in real)
+            rl = collections.Counter(x['s'] for x in ms.values() if x.get('relay') or x['s'] == 'relay')
             out.append(dict(id=d['id'], label=d['label'], groups=gl, counts=dict(c), closed=c['closed'] + c['below'],
-                            total=sum(v for k, v in c.items() if k not in ('macro', 'relay'))))
+                            total=sum(v for k, v in c.items() if k not in ('macro', 'relay')), relay_counts=dict(rl)))
         return out
 
     # ------------------------------------------------------------------ API
@@ -344,10 +433,13 @@ class Explorer:
         if m is None: return dict(warming=True)
         if not safe: return m
         sm = dict(m, elements=[dict(element=self.alias(e['element']), target=e['target'], s=e['s'], decoded=e['decoded'],
-                                    dies={k: [self.alias(x) for x in v] for k, v in e['dies'].items()}, stories=e['stories'], live=e['live'], jobs=e['jobs'], variants=[])
+                                    dies={k: [self.alias(x) for x in v] for k, v in e['dies'].items()}, stories=e['stories'], live=e['live'], jobs=e['jobs'], variants=[],
+                                    lineage={k: [self.alias(x) for x in v] for k, v in (e.get('lineage') or {}).items()}, dieless=bool(e.get('dieless')))
                                 for e in m['elements']],
-                  masters={d: {self.alias(k): dict(v, el=self.alias(v['el']) if v['el'] else None, els=[self.alias(x) for x in v['els']])
+                  masters={d: {self.alias(k): dict({k_: v_ for k_, v_ in v.items() if k_ != 'roles'}, el=self.alias(v['el']) if v['el'] else None,
+                                                   els=[self.alias(x) for x in v['els']], lin=[self.alias(x) for x in v.get('lin', [])])
                                for k, v in ms.items()} for d, ms in m['masters'].items()},
+                  reconcile={t: {k: v for k, v in r.items() if not k.endswith('_list') and k != 'closed_offdie'} for t, r in (m.get('reconcile') or {}).items()},
                   tree=[dict(t, groups=[dict(g, items=[dict(i, m=self.alias(i['m']) if not i.get('group') else i['m'], kids=[self.alias(k) for k in i['kids']]) for i in g['items']])
                                         for g in t['groups']]) for t in m['tree']],
                   dies=[{k: v for k, v in d.items() if k not in ('error', 'tool', 'note', 'want', 'key', 'commit')} for d in m['dies']],
@@ -399,12 +491,21 @@ class Explorer:
             if bj: out['adopted'] = dict(job=bj['name'], commit=bj['commit'], branch=bj['branch'], record_to=bj['record_to'], status=bj['status'])
             cyc = [j['cycles_added'] for j in js if j.get('cycles_added') is not None]
             out['cycles_added'] = cyc[-1] if cyc else None
+        if element:
+            em = next((e for e in meta['elements'] if e['element'] == element), None)
+            if em and em.get('dieless'): out['dieless'] = em['dieless']
         # where it sits: per die, its masters, instances counted by the client from geometry
         places = {}
         for d_id, ms in meta['masters'].items():
             for mn, v in ms.items():
                 if mn == name or (element and element in v['els']) or (master and mn == master and d_id == die):
-                    places.setdefault(d_id, []).append(dict(master=mn, s=v['s'], src=v['src'], view=v.get('view'), els=v['els']))
+                    ro = (v.get('roles') or {}).get(element or '', [None, None])
+                    places.setdefault(d_id, []).append(dict(master=mn, s=v['s'], src=v['src'], view=v.get('view'), els=v['els'],
+                                                            role=ro[0], via=ro[1], relay=v.get('relay')))
+                elif element and element in (v.get('lin') or []):
+                    ro = (v.get('roles') or {}).get(element, [None, None])
+                    places.setdefault(d_id, []).append(dict(master=mn, s=v['s'], src='lineage', view=v.get('view'), els=v['els'],
+                                                            role='lineage', via=ro[1], relay=v.get('relay')))
         out['places'] = places
         kids = set()
         for d_id, ch in children.items():
