@@ -14556,9 +14556,11 @@ def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24
         replay_launch_from_read_request_cycles=6,
         replay_steady_interval_cycles_min=8,
         serial_token_cost='For N framed records on a contended hop, '
-            'service is 4*N stream edges plus 1..4 TX entry edges '
+            'the last delivery is 4*(N-1) stream edges plus 1..4 TX entry edges '
             'and one RX landing edge; actual hop/FEC/ACK round trip '
             'must be composed before adoption.',
+        added_component_cycles_vs_unregistered_one_per_edge=
+            '3*(N-1)+2..5 for N contiguous records, before physical hop/FEC/ACK costs',
         routing_tracks_required=record*2+seq_bits+session_bits+1,
         routing_capacity_checked=False, actual_pin_budget_known=False,
         physical_qualified=False, default_enabled=False)
