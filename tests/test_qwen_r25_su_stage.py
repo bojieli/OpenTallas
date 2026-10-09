@@ -26,4 +26,5 @@ def test_full_shape_su_programs():
     import qwen_r25_su_programs as P
     for stage in ('rmsnorm','qknorm','softmax','swiglu'):
         assert P.reference(stage)['mismatches'] == 0
+        assert P.reference(stage,True)['mismatches'] > 0
     assert P.reference('softmax',True)['mismatches'] == 8

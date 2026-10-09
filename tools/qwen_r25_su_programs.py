@@ -74,6 +74,10 @@ def reference(stage, mutant=False, return_case=False):
         checks=[(8192,C.fbits(want))]
     else:
         raise ValueError(stage)
+    if mutant and stage in ('rmsnorm','qknorm'):
+        ops[-1]['e1'] = I.E1_BYP  # missing learned gain
+    if mutant and stage == 'swiglu':
+        ops[0]['sfu'] = I.SFU_SIGM  # missing g factor
     if return_case:
         return mem, ops, checks
     for f in ops:
@@ -100,7 +104,7 @@ def main():
         S.apply(C)
         old=C.run_case
         C.run_case=lambda exe,d,nops,x=None:old(exe,d,nops,x,timeout=None)
-    for stage,mutant in [(s,False) for s in ('rmsnorm','qknorm','softmax','swiglu')]+[('softmax',True)]:
+    for stage,mutant in [(s,m) for s in ('rmsnorm','qknorm','softmax','swiglu') for m in (False,True)]:
         rec=reference(stage,mutant)
         rec['negative']=mutant
         if a.exe:

@@ -7,7 +7,28 @@
     "negative": false
   },
   {
+    "stage": "rmsnorm",
+    "ops": 3,
+    "mismatches": 4081,
+    "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
+    "negative": true
+  },
+  {
     "stage": "qknorm",
+    "ops": 3,
+    "mismatches": 0,
+    "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
+    "negative": false
+  },
+  {
+    "stage": "qknorm",
+    "ops": 3,
+    "mismatches": 1280,
+    "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
+    "negative": true
+  },
+  {
+    "stage": "softmax",
     "ops": 3,
     "mismatches": 0,
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
@@ -16,9 +37,9 @@
   {
     "stage": "softmax",
     "ops": 3,
-    "mismatches": 0,
+    "mismatches": 8,
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
-    "negative": false
+    "negative": true
   },
   {
     "stage": "swiglu",
@@ -28,9 +49,9 @@
     "negative": false
   },
   {
-    "stage": "softmax",
-    "ops": 3,
-    "mismatches": 8,
+    "stage": "swiglu",
+    "ops": 1,
+    "mismatches": 3069,
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": true
   }
