@@ -5,7 +5,7 @@ def model():
     base = row_model(k=256, pinreg=1)
     return dict(
         schema='opentallas.dsrom.markov.pinreg1-closure-proposal.v1',
-        status='CLAUDE_FAST_REVIEW_REQUIRED_BEFORE_REPAIR_PILOT_OR_NEW_ROUTE',
+        status='LVT_WITHDRAWN_J7_AFTER_ACTUAL_REFERENCE_REJUDGE_HOLD_ECO_ROUTINE_ONLY',
         base=base,
         RTL_source_commit='38f22c6d8', terminal_evidence_commit='45e29a281',
         proposal='Existing RTL only: source-pinned TT/FF clone repair feasibility first, then selective LVT on capture-enable data cone and local output delay anchors if measured feasible.',
@@ -52,4 +52,5 @@ def model():
             full_hold_repair_slot_fit='Pending actual measured repair inventory; no gross outline change proposed.'),
         exact_gate='Existing48 fullK256 released/stress rows +bubbles/outputstalls+faultcases and separate-logit-add mutant remain source-pinned, RTL byte-identical.',
         rejected='No baseline restart, no PINREG2 successor, no fault-cone staging without an actual fault path, no relaxed constraints.',
+        actual_reference_rejudge=dict(evidence_commit='b23e2116e',TT_setup_ps=21.0,FF_internal_hold_ps=-12.51,FF_output_hold_ps=17.13,FF_input_hold_ps=2.54,LVT_needed=False),
         qualified=False)
