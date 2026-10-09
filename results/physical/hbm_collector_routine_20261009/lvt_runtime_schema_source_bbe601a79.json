@@ -1,0 +1,45 @@
+{
+  "source_commit": "bbe601a79",
+  "canonical": "hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+  "runtime_schema_errors": [],
+  "source_required_files_sha256": {
+    "physical/hbm_accel_die_views/coll/rtl_ps/route_ps.sh": "2b01c50f0a50fd21d4d19667a0d7f9bdb52db4810362a3672bad366402d8f500",
+    "physical/hbm_accel_die_views/coll/rtl_ps/interior_macros.tcl": "f23776a72de5dbd8a56921ec6c37cb5b62d8f25dd498015dbf74cc3f215c8d8f",
+    "physical/hbm_accel_die_views/coll/rtl_ps/capture_adjacent_place.tcl": "8aeb1f6eeaca3212f66fa63a7432411f1b1dacc34840c763b26debb56bce5c95",
+    "tools/closure_loop/tt_overlay.py": "31df0370dfd0cd1660a2b1bb19bee70a49575728b4fe23ba4b5380eab1318816",
+    "tools/closure_loop/hold_corners_patch.py": "9975008aa3ac491663f4fbb6c4328c88cce49b80ec2e209efec4863a04111ce3",
+    "tools/closure_loop/h1_patch.py": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
+    "tools/orfs_hold_mm.py": "46484eb629591fa31f69d5764cf68e8dd5392adefec0540560c763606efaa380",
+    "tools/orfs_hold_mm.tcl": "6c78272d03d7ce3716ebf69403266911b71e6065b0e111cfab5040b1b34df758",
+    "results/physical/hbm_coll_capture_20261009/receipt.json": "2e0ed8bc3be600ae165558777960fc5ab097f94b4d4100f44c8f86ea1b803e5c",
+    "rtl/hbm_accel/tu/ot_hcoll_port.sv": "663135f1e9942fe6458b5fd92eff87862b3f54761f94a6c945a375eb9ee15b18",
+    "tools/hbm_coll_port_interior_model.py": "01d5565d9dd41aafe32381360159e30d74eac70d7d0d78fd9607b790225d7ce5",
+    "tools/hbm_coll_capture_placement_model.py": "d17893a33a17c153c859c0815153d5e18d7a36de4d4544cac05e4a21adf4b68d",
+    "physical/hbm_accel_die_views/coll/rtl_ps/interior_pins.tcl": "5e47fd309df3ce231f3f8ba376d9b86fec8a5de234eedfd2d6ef74c8d5c7e733",
+    "results/physical/hbm_coll_capture_20261009/gate.log": "84b6048595b0fc6e0cde2b33fb5cee9d2cb3f1c61775243baacf89f8e700418f",
+    "results/physical/hbm_coll_capture_20261009/negative.log": "5e87db4c48610c25c4332c33abea63434a2954562eae8d5cd52fff8b98a6cde7"
+  },
+  "ECO_guard_runtime": {
+    "TTmiss_blocks": true,
+    "electrical_fail_blocks": true,
+    "TTpass_electricalpass_holdfail_allows": true,
+    "vtswap_enabled": false
+  },
+  "baseline_capture_source": "94623b7d3",
+  "fanout8_source": "c4be41d70 separatepreserved",
+  "resource_estimate_GiB": {
+    "cal": 3,
+    "route": 16,
+    "conditional_ECO": 32
+  },
+  "resource_measured_baseline_GiB": {
+    "da3_DRT": 11.918,
+    "capture_DRT": 11.506,
+    "cal": 2.334
+  },
+  "LVT_future_peak_measured": false,
+  "ECO_future_peak_measured": false,
+  "TT_H1_MM_helpers": "exactpinnedsource, nohistoricalexternalfallback",
+  "new_RTL": false,
+  "compute_started": false
+}
