@@ -15057,3 +15057,24 @@ def hgi_attention_row_sources_model():
                      actual_pin_lint='required before route'),
         source_binding='B ring physical index; C existing selected-ID stream, does not replace DS nine-sector gather reader',
         clock_ns=0.833333, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def hgi_attention_record_adapter_model():
+    """Normative ATT records to G12 row front + existing ATT controller, no payload arithmetic."""
+    return dict(schema='hgi.att-record-adapter.v1',model_before_build=True,
+        transport_ABI='valid1/header128/SUT256/MDESC1024 actual3fae tuple; normative fields required',
+        upstream_gap='3fae sequencer is legacy fields/count20; Claude must supply normative header and full typed counts',
+        sideband_bits=dict(POS1=21,effective_B_count=32,effective_C_count=32),
+        replicas=4,MACs_per_cycle=0,memory_bytes_per_cycle=0,
+        record_payload_bits=1408,record_transport_bytes=176,
+        ATT_setup_payload_bits=1152,row_command_payload_bits=85,
+        state_bits_upper_bound=1344,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
+        slot_variants_um=[[320,320],[360,360]],stdcell_area_measured_um2=None,utilisation_target=0.55,
+        routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
+                     perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
+                     face_capacity_320=1316,actual_submit_lint='mandatory'),
+        latency_cycles=dict(added_record_command_edges=2,record_to_first_row_edges_including_G12=5,row_II=1),
+        token_charge=dict(DS_40_layers_QK_PV=160,Qwen_36_layers_two_local_KV_heads_QK_PV=288),
+        retirement='rows_done AND actual_ATT_done; fault is explicit, no completion on row emission alone',
+        selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
+        physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)
