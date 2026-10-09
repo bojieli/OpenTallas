@@ -1,0 +1,659 @@
+{
+ "schema": "opentallas.mtp-die-plan.v1",
+ "tool": "tools/mtp_die_plan.py",
+ "stream": "mtp-die 2026-10-08",
+ "budget": {
+  "ds_rom": {
+   "basis": "today's HALF_PHL re-price (results/arch/reprice_20261008: 4,351.6 tok/s, tau 4.159); draft / seed terms from the recovery composition (dsrom_recovery_20261004/composition.json MTP) + the re-price head SAFE adder (195 cycles); verify = step - draft - seed (DERIVED); II = (verify - AR) / 5 (DERIVED)",
+   "step_us": 955.74,
+   "verify_us": 829.572,
+   "draft_us": 122.95,
+   "seed_commit_us": 3.217,
+   "AR_us": 690.751,
+   "II_us": 27.764,
+   "phases": [
+    {
+     "phase": "verify",
+     "us": 829.572,
+     "rule": "AR + 5 x II (6 positions through the 120-stage wavefront)",
+     "blocks": [
+      {
+       "block": "WFC (ot_rom_pkg_ctrl_wfc src/stg) every stage",
+       "budget": "handoff <= 49 cycles a position a stage (measured 49, ref 46); hop delta <= 13 cycles a stage hop (measured)",
+       "class_": "measured"
+      },
+      {
+       "block": "WFC shims (dsfd_wfc_vmx VM 1.2/0.9 GHz 3:4 crossing, _lnk, _tok, _cep)",
+       "budget": "<= 5 cycles each way on the VM crossing (meso_d4 class), <= 2 cycles on link / token / core endpoint pin flops; total shim adder <= 14 cycles a stage a position",
+       "class_": "budget"
+      },
+      {
+       "block": "worst stage (II limiter)",
+       "budget": "II <= 27.76 us: stage busy x (1 + 0.004347) + hop + cable; the MTP shims may add <= 0.1 % to II (<= 28 ns)",
+       "class_": "derived"
+      },
+      {
+       "block": "head dies (verify lm_head, 6 positions)",
+       "budget": "6.9892 us a position (head stage occupancy, inside the head stage busy)",
+       "class_": "measured"
+      }
+     ]
+    },
+    {
+     "phase": "accept",
+     "us": null,
+     "rule": "inside seed_commit: accept + acc_n / squash broadcast",
+     "blocks": [
+      {
+       "block": "ot_dsrom_mtp_seq accept (ot_hdc_accept NSLOT 8 / NW 17) on head die h0",
+       "budget": "<= 3 cycles compare + 2 pin-flop cycles; the 12-die argmax merge result arrives through the head collective (existing)",
+       "class_": "budget"
+      },
+      {
+       "block": "acc_n / bonus / squash / epoch word",
+       "budget": "rides the existing token-return hop (head -> S0, 1,008 cycles full KP4 + 4 flight); +1 field (16 b) in the token word; the squash of in-flight wavefront positions is the WFC kill on the next stage boundary (no extra hop)",
+       "class_": "budget"
+      }
+     ]
+    },
+    {
+     "phase": "draft",
+     "us": 122.95,
+     "rule": "3 DSpark blocks + 5 serial head steps (lm_head sweep + Markov row + bias + argmax) + closure adders",
+     "blocks": [
+      {
+       "block": "DSpark blocks mtp.0 / mtp.1 / mtp.2 (DP1 primary on head dies h0..h3, experts on the draft row packages)",
+       "budget": "[29.925, 27.033, 27.033] us (measured element RTL on the S81 L0 graph) + full-FEC delta 3.577 us; package-pair fan-out (UCIe crossings for mtp.1 and half of mtp.2) <= 0.2 us a step",
+       "class_": "measured + budget"
+      },
+      {
+       "block": "draft link (primary -> row package A die, per row)",
+       "budget": "x_row 10,240 B + ids 64 B + weights 64 B out, ret_row 5,120 B back a block a row; 512 b / cycle a direction (S81 link chain): 160 + 80 cycles serialisation, hop 1,008 cycles full KP4 (measured hops x_row 0.3567 / ret_row 0.29 us incl. serialisation)",
+       "class_": "measured"
+      },
+      {
+       "block": "UCIe A <-> B (in package)",
+       "budget": "<= 10 ns + 2 x 8 cycles endpoint, cut-through; 512 b / cycle",
+       "class_": "budget"
+      },
+      {
+       "block": "draft head step x 5 (head bundles, fused bias + argmax)",
+       "budget": "6.9892 us sweep x (1 + r_markov 0.00781) + 39 cycles bias/argmax SAFE adder a sweep",
+       "class_": "measured"
+      },
+      {
+       "block": "Markov head (markov_head.embed 129,280 x 32 lookup + markov_head.head 129,280 x 32 matvec a draft row)",
+       "budget": "<= 54.6 ns a draft row (r_markov share of the sweep) + the 64 B embed-row broadcast to the 12 head dies <= 24 cycles: NO RTL (gap MTP-G1, review_queue/mtp-die.md)",
+       "class_": "model-only"
+      },
+      {
+       "block": "ot_dsrom_mtp_seq chain FSM",
+       "budget": "<= 4 cycles issue a head step; seed dispatch to the primary is die-local on h0 (primary on head dies): the head -> draft board hop is removed from the seed path",
+       "class_": "budget"
+      }
+     ]
+    },
+    {
+     "phase": "seed_commit",
+     "us": 3.217,
+     "rule": "measured seed_commit_over_verify ratio x verify (reduced vehicle)",
+     "blocks": []
+    }
+   ],
+   "link_widths": {
+    "stage_link": "512 b / cycle each way (ot_dsrom_link_rt, S81 link chains tx / rx)",
+    "draft_row_link": "512 b / cycle each way, 1 SerDes a row package a primary rank die",
+    "ucie_pair": "512 b / cycle each way (in-package UCIe, ot_pdie_ucie)",
+    "token_return": "existing word + 16 b acc_n / squash / epoch field"
+   }
+  },
+  "hbm": {
+   "basis": "re-price upper bound 3,700.3 tok/s (step = tau / rate); draft 45.28 us measured (dshbm_dspark_draft_20261004), seed / commit 3.567 us, union 76.19 us W19 model (token-path.log)",
+   "step_us": 1123.963,
+   "verify_us": 1075.116,
+   "draft_us": 45.28,
+   "seed_commit_us": 3.567,
+   "phases": [
+    {
+     "phase": "verify",
+     "us": 1075.116,
+     "blocks": [
+      {
+       "block": "SM (ot_hbm_accel_sm_v NC 8)",
+       "budget": "P = 6 positions on the MMA columns of one weight fetch: NC 8 >= 6, no added SM columns (mtp-hbm 21:23)",
+       "class_": "measured"
+      },
+      {
+       "block": "expert union (union_f3 in hfd_mtp)",
+       "budget": "+1 cycle a flush; union increment 76.19 us (W19 model, to be measured)",
+       "class_": "model"
+      },
+      {
+       "block": "hfd_mtp <-> cmdproc command round trip",
+       "budget": "<= 2 x 6 relay stages + 2 (PRL) + 2 pin flops = 16 cycles a command; total MTP control <= 1 % of the step (11.2 us)",
+       "class_": "budget"
+      },
+      {
+       "block": "spec_state rollback (spec_state_f)",
+       "budget": "<= 2 cycles a request",
+       "class_": "budget"
+      }
+     ]
+    },
+    {
+     "phase": "accept",
+     "blocks": [
+      {
+       "block": "accept_a0 + argmax_f1",
+       "budget": "argmax: +1 cycle a row (f1); die merge 16 cycles; 96-die select 24 cycles through hfd_coll (2 x 10 relay stages hfd_mtp <-> hfd_coll)",
+       "class_": "measured + derived"
+      }
+     ]
+    },
+    {
+     "phase": "draft",
+     "us": 45.28,
+     "blocks": [
+      {
+       "block": "draft chain",
+       "budget": "5 x 1.212 us chain step (52 % merge transport) + head pass 3,671 cycles; 23 draft collectives charged full FEC (gap: not charged today)",
+       "class_": "measured"
+      },
+      {
+       "block": "logit rows su_red -> hfd_mtp",
+       "budget": "20 relay stages (8.0 mm), once a pass: <= 6 x 20 cycles a step",
+       "class_": "derived"
+      },
+      {
+       "block": "drafter router (topk f384)",
+       "budget": "+1 cycle a selection",
+       "class_": "measured"
+      }
+     ]
+    }
+   ]
+  },
+  "tau": 4.159
+ },
+ "ds_rom_array": {
+  "reconciliation": {
+   "finding": "the 64 vs 52 conflict: DP1-EP5 needs 64 dedicated dies (4 primary + 60 expert replicas); its \"12 baseline draft dies\" were TP4 x 3 blocks of the old timing model, and the rack's 12 head dies still carry the WHOLE drafter as head content (head model basis: 15,131 DSpark pairs = 7.93 GB over 12 dies, 1,261 a die).  So the rack (52) double-counts nothing but under-counts the dedicated draft dies by 12, and the head dies carry 15,131 pairs that DP1-EP5 never reads.",
+   "dspark_pairs_on_head_dies": 15131,
+   "head_content_pairs_per_die_before": 1472,
+   "head_content_pairs_per_die_after": 511,
+   "head_after_basis": "non-lm-head globals 2526 / 12 + DP1 primary 282 (words 2307072) + Markov 18 (markov_head.head rows of the die's vocab share + the full 129,280 x 32 embed table replicated per head die for a local lookup)",
+   "dies": {
+    "rack": 52,
+    "dp1_ep5": 64,
+    "proposed": 40
+   }
+  },
+  "topologies": [
+   {
+    "name": "S15 star (DP1-EP5 as recorded)",
+    "primary_dies": 4,
+    "draft_dies": 64,
+    "links_per_primary_die": 15,
+    "board_links_total": 60,
+    "ucie_pairs": 0,
+    "added_hops_on_path": 0,
+    "path_delta_us": 0.0,
+    "die_edge": "UCIe + 10 SerDes max per S81 edge column: 15 extra need 7 + 7 + 1 corner (draft.json)",
+    "verdict": "REJECT: 15 SerDes + 1,024-b buses per primary die (9.28 mm2), 64 dies (+12 vs the rack)"
+   },
+   {
+    "name": "T2 board tree (block lead relays to 4 sibling replicas)",
+    "primary_dies": 4,
+    "draft_dies": 64,
+    "links_per_primary_die": 3,
+    "board_links_total": 60,
+    "ucie_pairs": 0,
+    "added_hops_on_path": 6,
+    "path_delta_us": 5.04,
+    "verdict": "REJECT: +2 full-FEC board hops a block (+5.0 us a step, -0.5 % MTP) and still 64 dies"
+   },
+   {
+    "name": "P2 package-pair fan-out (ADOPT-PROPOSED)",
+    "primary_dies": 0,
+    "primary_on": "head dies h0..h3 (one head TP4 group: the head die repeats the layer spine: attention, SU, HC, collectives; its 4 HBM stacks hold the drafter KV / window caches)",
+    "draft_dies": 40,
+    "links_per_primary_die": 5,
+    "board_links_total": 20,
+    "ucie_pairs": 20,
+    "added_hops_on_path": 0,
+    "path_delta_us": 0.2,
+    "rule": "row r, rank k: one 2-die package; die A = mtp.0 experts 0..127 (rank-k slices) + mtp.2 experts 0..63, die B = mtp.1 experts 0..127 + mtp.2 experts 64..127.  The primary rank-k die sends row r's x_row / ids / weights to die A (board, full KP4) which forwards over UCIe what B needs (cut-through); each expert output returns to A, which sums the row's 3 experts in id order (the DP1-EP5 rule, exact: the per-expert results are the same values, the sum order is unchanged) and returns ret_row to the primary.  mtp.0 rows: 0 UCIe crossings; mtp.1: 2; mtp.2: 0 or 2 (expert split)",
+    "capacity": {
+     "die_A_pairs": 1680,
+     "die_B_pairs": 1680,
+     "die_pairs_available": 1792,
+     "fill": 0.938,
+     "rep_pairs_one_block": 1120,
+     "note": "layer1 recipe (m221pq 1,792 pairs), q words on q and BF pairs (full_shared rule)"
+    },
+    "verdict": "ADOPT-PROPOSED: 5 SerDes a primary head die (fits the edge column: 4 + 3 W, 4 + 2 E), 40 draft dies (-12 vs the rack, -24 vs DP1-EP5), +0.2 us a step (UCIe crossings, budget)"
+   }
+  ],
+  "die_counts": {
+   "rack_20261006": {
+    "stages": 85,
+    "layer": 340,
+    "head": 12,
+    "table": 36,
+    "draft": 52,
+    "dies": 440,
+    "src": {
+     "head": "results/uarch/dsrom_l2_head_mac_20261004/model.json verdict.recommended_head_dies (owner-adopted 12, codex_notes 2026-10-04 '12 head dies / 372 total stay'); results/rtl/dsrom_recovery_20261004/levers/head.json 'per head die (1 of 12)'",
+     "stages": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json geoms['f183.60'] stages / layer_dies (adopted element frame, tools/dsrom_1m_allmeasured_adapters.FIELD_GEOM; S81 = 81 stages)",
+     "table": "results/uarch/dsrom_l2_head_mac_20261004/model.json head_groups['12'].total_dies 372 - 324 S81 layer - 12 head",
+     "draft": "results/rtl/dsrom_recovery_20261004/levers/draft.json dies_added (DP1-EP5)"
+    }
+   },
+   "proposed": {
+    "stages": 85,
+    "layer": 340,
+    "head": 12,
+    "table": 36,
+    "draft": 40,
+    "dies": 428,
+    "src": {
+     "head": "results/uarch/dsrom_l2_head_mac_20261004/model.json verdict.recommended_head_dies (owner-adopted 12, codex_notes 2026-10-04 '12 head dies / 372 total stay'); results/rtl/dsrom_recovery_20261004/levers/head.json 'per head die (1 of 12)'",
+     "stages": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json geoms['f183.60'] stages / layer_dies (adopted element frame, tools/dsrom_1m_allmeasured_adapters.FIELD_GEOM; S81 = 81 stages)",
+     "table": "results/uarch/dsrom_l2_head_mac_20261004/model.json head_groups['12'].total_dies 372 - 324 S81 layer - 12 head",
+     "draft": "tools/mtp_die_plan.py P2 package-pair fan-out (5 rows x 4 ranks x 2 dies)"
+    }
+   },
+   "silicon_delta_mm2": -10070.9,
+   "note": "stage count 85 here is the rack record; the 1,792 mapping (120 stages / 480 layer dies HALF_PHL) re-sizes layer dies only; head / table / draft counts are independent of the stage count (s81-dies owns the array v2 composition)"
+  },
+  "homes": {
+   "sequencer": "ot_dsrom_mtp_seq (dsfd_mtp_seq) on head die h0 (the head die that ends the 12-die argmax merge and launches the token return to S0): spine centre stack between capture (argmax tokens in) and collective (token return / seed out); same recipe on all 12 head dies (inactive on h1..h11)",
+   "accept": "inside ot_dsrom_mtp_seq (ot_hdc_accept NSLOT 8 / NW 17, closed on the HBM side SS +55.3 / FF +14.0)",
+   "markov_head": "head dies: markov_head.head rows beside each die's lm-head vocab rows (32 extra words a row, a second 32-term accumulator and the golden add order logits + markov in the head element: NOT the 4,096 + 32 concatenation, which changes rounding) + the embed table (8.27 MB, 17 pairs) on every head die; NO RTL (gap MTP-G1)",
+   "draft_primary": "head dies h0..h3 (one head TP4 group), 282 pairs each + their spine (attention, SU, HC, collectives) + the drafter window caches in the head dies' HBM stacks",
+   "draft_experts": "40 draft dies (layer1 recipe, 1680 of 1,792 pairs), 5 row packages x 4 ranks",
+   "wfc": "every layer-class die (layer AND layer1): bound dsfd_wfc slab after the capture (the r3 / r4 layer1 die carries NO WFC at all today: the soft reservation was on the 4-stack scan die only)"
+  },
+  "links": {
+   "per_primary_head_die": {
+    "added_serdes": 5,
+    "fec": "RS(544,514) KP4 full",
+    "hop_cycles": 1008,
+    "width_b": 512,
+    "note": "real ot_pdie_serdes LEF in the head die edge column (W 4 + 3, E 4 + 2), each through its own link chain to the collective"
+   },
+   "per_draft_die": {
+    "A": "1 SerDes up (primary) + UCIe to B",
+    "B": "UCIe to A only"
+   },
+   "board_links_total": 20,
+   "ucie_pairs": 20
+  }
+ },
+ "areas": {
+  "wfc": {
+   "reservation_mm2": 0.4561,
+   "real_need_mm2": 0.1141,
+   "src_um2": 78190.7,
+   "stg_um2": 35941.7,
+   "bound_slab": "hub column width x 231.12 um (both blocks 196.56 um tall + 17.28 um halos); 0.399 mm2 gross at the 1,728 um m221pq column"
+  },
+  "hfd_mtp": {
+   "cells_um2": 41824.0,
+   "by_block": {
+    "accept_a0": 290.084,
+    "argmax_f1": 6144.27,
+    "ctl_f2": 885.312,
+    "scratch_c2": 909.763,
+    "spec_f3": 1430.74,
+    "topk_f3": 28799.6,
+    "union_f3": 3116.34,
+    "fence_a1": 247.918
+   },
+   "slot_um": [
+    466.56,
+    200.88
+   ],
+   "slot_mm2": 0.0937,
+   "util_cells": 0.446
+  },
+  "dies": {
+   "hbm_r25": {
+    "file": "results/arch/mtp_die_20261008/checks/hbm_r25.txt",
+    "sha256": "c51cca4efbd1784bc30592ff54a26059c69196c28acb809e37f0d4587fe96111",
+    "status": "PASS",
+    "legality": {
+     "instances": 562,
+     "overlaps": 0,
+     "outside": 0
+    },
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 0
+    },
+    "outline": {
+     "die_mm2": 753.19,
+     "W": 30590.352,
+     "H": 24621.84,
+     "notes": [
+      "hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 242.8 um"
+     ],
+     "power": 468.0
+    },
+    "margin_lint": {
+     "verdict": "PASS",
+     "reach_violations": 0,
+     "far_side_relays": 0,
+     "chains": 1236,
+     "reach_um": 504.0
+    }
+   },
+   "hbm_r25m": {
+    "file": "results/arch/mtp_die_20261008/checks/hbm_r25m.txt",
+    "sha256": "94e70f7a2790f9ab3847bcc13d6165c19db9b26dedcf04c41b9d7ecc8cb5a6ac",
+    "status": "PASS",
+    "legality": {
+     "instances": 651,
+     "overlaps": 0,
+     "outside": 0
+    },
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 0
+    },
+    "outline": {
+     "die_mm2": 753.19,
+     "W": 30590.352,
+     "H": 24621.84,
+     "notes": [
+      "hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 242.8 um"
+     ],
+     "power": 468.3
+    },
+    "margin_lint": {
+     "verdict": "PASS",
+     "reach_violations": 0,
+     "far_side_relays": 0,
+     "chains": 1332,
+     "reach_um": 504.0
+    }
+   },
+   "hbm_r25s": {
+    "file": "results/arch/mtp_die_20261008/checks/hbm_r25s.txt",
+    "sha256": "23498cdaa7ce23abf43427436be6e89e9cad44e19e116178eec9ad0fd06749bc",
+    "status": "PASS",
+    "legality": {
+     "instances": 638,
+     "overlaps": 0,
+     "outside": 0
+    },
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 1
+    },
+    "outline": {
+     "die_mm2": 787.15,
+     "W": 30590.352,
+     "H": 25732.08,
+     "notes": [
+      "hub band 12517.2 um tall; scan quadrant 6084.7 um; W slack 242.8 um"
+     ],
+     "power": 484.6
+    }
+   },
+   "hbm_r25sm": {
+    "file": "results/arch/mtp_die_20261008/checks/hbm_r25sm.txt",
+    "sha256": "88946fdd4ef23a1ef1734ec1ae11f43d8c54dd474ccefd78983c5e19a895cf42",
+    "status": "PASS",
+    "legality": {
+     "instances": 639,
+     "overlaps": 0,
+     "outside": 0
+    },
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 1
+    },
+    "outline": {
+     "die_mm2": 787.15,
+     "W": 30590.352,
+     "H": 25732.08,
+     "notes": [
+      "hub band 12517.2 um tall; scan quadrant 6084.7 um; W slack 242.8 um"
+     ],
+     "power": 484.7
+    }
+   },
+   "s81_layer1_base": {
+    "status": "missing",
+    "file": "results/arch/mtp_die_20261008/checks/s81_layer1_base.txt"
+   },
+   "s81_layer1_wfc": {
+    "status": "missing",
+    "file": "results/arch/mtp_die_20261008/checks/s81_layer1_wfc.txt"
+   },
+   "s81_head_base": {
+    "status": "missing",
+    "file": "results/arch/mtp_die_20261008/checks/s81_head_base.txt"
+   },
+   "s81_head_mtp": {
+    "status": "missing",
+    "file": "results/arch/mtp_die_20261008/checks/s81_head_mtp.txt"
+   }
+  }
+ },
+ "token_path_mtp": {
+  "ds_rom": [
+   {
+    "op": "verify wavefront",
+    "dies": "all layer dies (WFC on every layer-class die) + head dies (lm_head x 6)",
+    "us": 829.572,
+    "positions": 6,
+    "limiter": "II"
+   },
+   {
+    "op": "accept",
+    "dies": "head die h0 (dsfd_mtp_seq)",
+    "cycles": "<= 5"
+   },
+   {
+    "op": "acc_n / squash broadcast",
+    "dies": "head h0 -> S0 token return (existing hop + 16 b field)"
+   },
+   {
+    "op": "seed",
+    "dies": "head h0 -> h0..h3 (DP1 primary, die-local / head TP4)",
+    "us": 3.217
+   },
+   {
+    "op": "DSpark blocks mtp.0..2",
+    "dies": "head h0..h3 (primary) + 40 draft dies (5 row packages x 4 ranks)",
+    "us": 87.731
+   },
+   {
+    "op": "draft head x 5 (lm_head sweep + Markov + bias + argmax)",
+    "dies": "12 head dies (head bundles) + h0 (sequencer: Markov embed broadcast, argmax merge)",
+    "us": 35.219
+   }
+  ],
+  "hbm": [
+   {
+    "op": "verify P6 walk + union",
+    "die": "every HBM die: SM columns NC 8, hfd_mtp union",
+    "us": 1075.116
+   },
+   {
+    "op": "accept / commit",
+    "die": "hfd_mtp (low spine slot) + hfd_coll 96-die select"
+   },
+   {
+    "op": "draft chain",
+    "die": "SM + hfd_mtp argmax / Markov",
+    "us": 45.28
+   },
+   {
+    "op": "seed / commit",
+    "die": "hfd_mtp spec_state",
+    "us": 3.567
+   }
+  ]
+ },
+ "extras": {
+  "main_hidden_transport": {
+   "what": "the drafter seed reads mh = concat of the BF16 means of the 4 residual copies at the input of layers 37, 38, 39 (golden dspark_seed / main_hidden_part) for every committed position; main_proj + main_norm then run on the DP1 primary (head dies h0..h3, mtp.0 seed projection)",
+   "capture": "layer dies of the stages that hold layers 37 / 38 / 39: the hc-mean (sequential sum x 1/hc, BF16: exact) on the SU at the layer input, staged at the WFC (the closed WFC src carries SEND_HIDDEN / HID_DEST: binding to verify by mtp-rom)",
+   "transport": "a TRAILING payload on the existing stage-hop flits from those stages to the head dies (cut-through: the activation leads, the 8 KB part of each layer follows in the same link), then head -> primary is die-local / head TP4",
+   "bytes_per_position": 24576,
+   "link_bits": 512,
+   "serialisation_cycles_per_hop": 384,
+   "latency_exposed_us": 0.0,
+   "latency_basis": "the trailing tail reaches the head 0.32 us after the last activation; the seed needs it only after the head lm_head sweep (6.99 us) and accept",
+   "link_occupancy_per_position_hop_pct": 1.15,
+   "hops": "from the L37 stage to the head (the rest of the pipeline), each carrying <= 3 parts",
+   "class_": "budget (no RTL: the trailing-payload framing is a WFC / link_rt change, mtp-rom)"
+  },
+  "window_rows": {
+   "what": "DSpark window rows (3 stages x 128-token window, kv_norm(wkv(main_x)) FP8, 512 B a row) + the speculative rows of the in-flight step (gamma + 1 = 6) under the dead-row invariant",
+   "bytes_per_user": 205824,
+   "home": "head dies h0..h3 HBM (per-user state; the drafter KV rides on the head dies' stacks); one step reads 3 x 128 rows = 196,608 B a user, at the head die stack bandwidth << 1 us",
+   "rollback": "no rollback hardware: rows of rejected positions are rewritten before read (dead-row invariant); sizing to be confirmed with mtp-rollback (log not yet present at 22:00 PT)"
+  },
+  "draft_fanout_price": {
+   "topology": "P2 package-pair",
+   "board_hops_per_block": "1 out + 1 back (in the measured block times)",
+   "ucie_crossings_per_step": "mtp.1: 2 a row; mtp.2: <= 2 a row",
+   "added_us_per_step": 0.2,
+   "area_per_primary_head_die_mm2": 3.09,
+   "area_basis": "draft.json: 15 SerDes + hub FIFO slots + waypoints = 9.28 mm2 a die -> 5 = 3.09 mm2",
+   "mtp_rate_effect_pct": -0.021
+  },
+  "hbm_draft_fec": {
+   "crossings": 23,
+   "hops_each": 2,
+   "full_minus_light_cycles_per_hop": 95,
+   "basis": "rack link_basis: full KP4 hop 1,004 cycles vs light 909 (measured RTL hop); every off-package link full FEC (OWNER 2026-10-06); 2 off-package hops a collective (die -> switch -> die)",
+   "added_us_per_step": 3.642,
+   "step_us_before": 1123.963,
+   "step_us_after": 1127.605,
+   "MTP_tok_s_before": 3700.3,
+   "MTP_tok_s_after": 3688.3,
+   "class_": "derived (priced, not measured)"
+  }
+ },
+ "hbm_die_fit": {
+  "limits": {
+   "H_um": 26000.0,
+   "W_um": 33000.0,
+   "mm2": 858.0
+  },
+  "variants": {
+   "hbm_r25": {
+    "W_um": 30590.352,
+    "H_um": 24621.84,
+    "mm2": 753.19,
+    "H_margin_um": 1378.2,
+    "W_headroom_um": 2409.6,
+    "area_headroom_mm2": 104.81,
+    "status": "PASS",
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 0
+    },
+    "margin_lint": {
+     "verdict": "PASS",
+     "reach_violations": 0,
+     "far_side_relays": 0,
+     "chains": 1236,
+     "reach_um": 504.0
+    }
+   },
+   "hbm_r25m": {
+    "W_um": 30590.352,
+    "H_um": 24621.84,
+    "mm2": 753.19,
+    "H_margin_um": 1378.2,
+    "W_headroom_um": 2409.6,
+    "area_headroom_mm2": 104.81,
+    "status": "PASS",
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 0
+    },
+    "margin_lint": {
+     "verdict": "PASS",
+     "reach_violations": 0,
+     "far_side_relays": 0,
+     "chains": 1332,
+     "reach_um": 504.0
+    }
+   },
+   "hbm_r25s": {
+    "W_um": 30590.352,
+    "H_um": 25732.08,
+    "mm2": 787.15,
+    "H_margin_um": 267.9,
+    "W_headroom_um": 2409.6,
+    "area_headroom_mm2": 70.85,
+    "status": "PASS",
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 1
+    },
+    "margin_lint": null
+   },
+   "hbm_r25sm": {
+    "W_um": 30590.352,
+    "H_um": 25732.08,
+    "mm2": 787.15,
+    "H_margin_um": 267.9,
+    "W_headroom_um": 2409.6,
+    "area_headroom_mm2": 70.85,
+    "status": "PASS",
+    "pin_clashes": {
+     "k1": 0,
+     "k16": 1
+    },
+    "margin_lint": null
+   }
+  },
+  "content": {
+   "hfd_mtp": {
+    "mm2": 0.0937,
+    "where": "low spine slot below the loader (spine column free bottom: 2.2 mm r25 / 2.1 mm r25s), outline unchanged"
+   },
+   "loader_mem": {
+    "mm2": 0.3071,
+    "stations": 88,
+    "chains": "4 stacks x (request 904 b + response 624 b), worst 57 stages (NE, 24.1 mm)",
+    "where": "expert-fetch route lanes (new lane \"lm\" in the spine-side and hub-edge channels, 96 k16 bundles)"
+   },
+   "quant_smaller_slot": {
+    "mm2": null,
+    "note": "inside the spine column: frees spine height, no outline change"
+   },
+   "loader_host_if_fix": {
+    "mm2": null,
+    "note": "ingest stream; budget: the remaining low-spine free area (~1.4 mm x 1.5 mm = 2.1 mm2 under hfd_mtp) + the W slack 242.8 um; width headroom 2.41 mm (~62 mm2 at 25.73 mm) for anything larger"
+   }
+  },
+  "options": [
+   "width first: a 0.5-2.4 mm E or W strip (SerDes / host strips move out) = 12.9-62 mm2 at 25.73 mm",
+   "collective + SerDes strip to the package partner die (2-die package): frees ~18 mm2 + the S-band channel",
+   "content to a companion die (loader / host / quant): frees ~11 mm2",
+   "re-place: quant / su_full slots shrink (quant 4.6 % util)"
+  ]
+ },
+ "inputs": {
+  "audit_ar": "16c586162e2c61ccb16bf062f7c5fae157a4d4af94ee8663d00c4edab14560a2",
+  "recovery": "3e6932f505d8cadea1af761019d74183ff933e101aa35cfb334291e48fbd3dea",
+  "draft_lever": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+  "draft_place": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+  "rack": "eac1c069ec5aaefe11a796a8fd6b2c5adf788ed8ffe7b78d8890b4b1720aface",
+  "head_model": "d4c59bac5ae7ac2f110ecea454df6c68ba3e73aef607dc87701cb921b5105fc6",
+  "wfc": "be01b4a2e8de00458348af6af110f16cbedcd0b270829ddc53da3628f82396c5",
+  "wfc_phys": "8f7c097171a3909db50feca5d5236d1467fedfe2b3ec3a0ca0615bfb8589fd25",
+  "wfc_res": "bb6a93e14e301a55ec3cacc966daa5f9e422ce432018dbba17291e6b85d7ff9f",
+  "fused_head": "aa7c78726595290552e17201782429a761ee51667de1ca3f73d72b7995a62051",
+  "hbm_ctl": "4c1c9c7ae563919d486e4d0af94ec0025aee65b1a33e93b3a5656dbbdf1c1980"
+ }
+}
