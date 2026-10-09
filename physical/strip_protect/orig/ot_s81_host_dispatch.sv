@@ -2,9 +2,7 @@
 // The actual290-bit hostsector ABI has8sharedcredits. Eachword enters exactly
 // one branch; returned branchcredits accumulate before onecredit/cycle returns
 // upstream. Markerregion0 preserves oldRoPE,2RoPE,3Engram,1reservedinvalid.
-// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
-// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
-module ot_s81_host_dispatch #(parameter integer ENABLE=0,PROTECT=0)(
+module ot_s81_host_dispatch #(parameter integer ENABLE=0)(
  input wire ck,rst_n,input wire i_v,i_we,input wire[31:0] i_addr,input wire[255:0] i_d,
  output reg i_cr,output reg[2:0] branch_v,output reg branch_we,
  output reg[31:0] branch_addr,output reg[255:0] branch_d,
@@ -15,7 +13,7 @@ module ot_s81_host_dispatch #(parameter integer ENABLE=0,PROTECT=0)(
  end else begin:g_on
   reg[3:0] outstanding,debt;reg[3:0] owned[0:2];reg state_p;
   integer k;reg[3:0] no[0:2];reg owned_bad;
-  wire state_bad=PROTECT&&(state_p!=(^{outstanding,debt,owned[0],owned[1],owned[2]})); // 1-bit state parity only when PROTECT
+  wire state_bad=state_p!=(^{outstanding,debt,owned[0],owned[1],owned[2]});
   wire marker=i_addr==32'hffffffff;
   wire invalid=!i_we||(marker&&i_d[65:64]==1);
   wire[2:0] cls=marker ? ((i_d[65:64]==3)?3'b100:3'b010) :

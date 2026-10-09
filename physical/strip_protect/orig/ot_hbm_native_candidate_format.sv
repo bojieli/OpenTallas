@@ -2,9 +2,7 @@
 `default_nettype none
 // Lossless co72 -> real TU545. Fifteen literal34-bit slots per payload,
 // payload511 actual quarter-last, payload510 zero; no header truncation.
-// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
-// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
-module ot_hbm_native_candidate_format #(parameter integer ENABLE=0,PROTECT=0)(
+module ot_hbm_native_candidate_format #(parameter integer ENABLE=0)(
  input wire clk,por_n,
  input wire owner_valid,owner_fault,retained,input wire [72:0] owner_frame,
  input wire [6:0] owner_rank,input wire tu_kind,input wire [7:0] tu_dst,
@@ -55,7 +53,7 @@ module ot_hbm_native_candidate_format #(parameter integer ENABLE=0,PROTECT=0)(
    (held_kind_n==~held_kind)&&
    (seen_retained_n==~seen_retained);
  wire storage_ok=(used==0||fifo_n[rp]==~fifo[rp]);
- wire coded_ok=(PROTECT==0)||(control_ok&&storage_ok); // complemented mirrors only when PROTECT
+ wire coded_ok=control_ok&&storage_ok;
  wire allowed=ENABLE&&retained&&owner_valid&&!owner_fault&&!sticky_fault&&coded_ok;
  wire push=allowed&&co[0]&&used<8;
  wire [72:0] packet=fifo[rp];

@@ -3,9 +3,7 @@
 // Dynamic metadata controller. The enclosing CP owns the full73 lease; this
 // block neither allocates VM storage nor substitutes issued writes for ACKs.
 // Native query credit and VM/router output joins are separate actual children.
-// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
-// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
-module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0,PROTECT=0)(
+module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  input wire clk,por_n,
  input wire owner_valid,owner_fault,allocation_granted,
  input wire [72:0] owner_frame,allocation_frame,
@@ -44,7 +42,7 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0,PROTE
  wire [3:0] seen=ctl[7:4];
  wire [1:0] gap=ctl[9:8];
  wire index_seen=ctl[10],source_seen=ctl[11];
- wire coded_ok=(PROTECT==0)||((desc_n==~desc)&&(mask_n==~mask)&&(ctl_n==~ctl));
+ wire coded_ok=(desc_n==~desc)&&(mask_n==~mask)&&(ctl_n==~ctl);
  wire active=state!=IDLE;
  wire lease_ok=owner_valid&&!owner_fault&&allocation_granted&&
                owner_frame==allocation_frame&&(!active||owner_frame==desc[72:0]);
