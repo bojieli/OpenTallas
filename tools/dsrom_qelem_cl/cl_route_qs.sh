@@ -18,7 +18,11 @@ echo "rc=$rc" > $J/exit
 if [ "$STOP" = finish ] && [ $rc = 0 ]; then
   SO=physical/abi3/gen/dsrom_q_cl_signoff.sdc
   [ -f $SO ] || bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh
-  python3 tools/w18/corner_sta.py --orfs-dir $J/work/orfs --post-sdc $SO \
+  H1_ARGS=()
+  if [ "${OT_NATIVE_Q_H1_INPUT:-0}" = 1 ]; then
+    H1_ARGS=(--post-sdc .ot_mm/io_ref_routed.sdc --post-sdc tools/dsrom_qelem_cl/native_q_h1_input.sdc)
+  fi
+  python3 tools/w18/corner_sta.py --orfs-dir $J/work/orfs --post-sdc $SO "${H1_ARGS[@]}" \
     --macro physical/asap7_memory_macros/ot_rom_4096x274_m8 --output $J/corner_sta.json > $J/corner.log 2>&1
   echo "corner_rc=$?" >> $J/exit
 fi
