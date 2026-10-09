@@ -9,7 +9,8 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
  input wire[31:0] sector_v,input wire[383:0] sector_j,input wire[8191:0] sector_data,
  input wire[7:0] credit,
  output reg[8791:0] lines,output reg[63:0] pop,
- output reg done,output reg fault);
+ output reg done,output reg fault,output wire retained);
+ assign retained=active;
  localparam AW=$clog2(DEPTH);
  reg[255:0] mem[0:31][0:DEPTH-1];reg[DEPTH-1:0] valid[0:31];
  reg[5:0] credits[0:7];reg active;reg[10:0] line0,nlines;
@@ -49,8 +50,9 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
    for(p=0;p<32;p=p+1)if(sector_v[p])begin
     j=sector_j[p*12+:12];slot=j%DEPTH;
     // Padded final read beats are not part of the logical frame.
-    if(!active)fault<=1;
-    else if(j*32+p<((nlines*136+31)/32))begin
+    if(j*32+p>=((nlines*136+31)/32))pop[p*2+:2]<=1;
+    else if(!active)fault<=1;
+    else begin
      if(valid[p][slot]||j*1024+p*32<line0*136)fault<=1;
      else begin valid[p][slot]<=1;mem[p][slot]<=sector_data[p*256+:256];end
     end
@@ -65,7 +67,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
       g=(((line0*136)/1024+j)*32+p)*32;
       if(g>=((line0*136)/32)*32&&g+32<=((line0+8<nlines)?(line0+8)*136:nlines*136))begin valid[p][slot]<=0;n=n+1;end
      end
-     pop[p*2+:2]<=2'(n);
+     pop[p*2+:2]<=2'(n)+2'(sector_v[p]&&(sector_j[p*12+:12]*32+p>=((nlines*136+31)/32)));
     end
     if(line0+8>=nlines)begin active<=0;done<=1;end
     else line0<=line0+8;
