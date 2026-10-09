@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-08T23:35:17.804512-07:00",
+  "action": "Set localhost max_job_threads/max_job_ram_gb/max_loop_threads to zero in persisted admission tables; no daemon or progressing job restarted.",
+  "rows": [
+    {
+      "path": "/home/ubuntu/wt-codex-fleet-recovery-20261008/tools/closure_loop/hosts.json",
+      "before_sha256": "93174c66573986c23ae2c8a6d81a9bb62b3f4eb0972f7514fd9e6dad60a329e8",
+      "after_sha256": "df284f4898a1010f3b0f5bd720a49639fa19d4c89e7b784bc3be26a4397a9e59"
+    },
+    {
+      "path": "/home/ubuntu/wt-codex-closure-daemon-20261007l/tools/closure_loop/hosts.json",
+      "before_sha256": "93174c66573986c23ae2c8a6d81a9bb62b3f4eb0972f7514fd9e6dad60a329e8",
+      "after_sha256": "df284f4898a1010f3b0f5bd720a49639fa19d4c89e7b784bc3be26a4397a9e59"
+    }
+  ]
+}

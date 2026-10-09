@@ -242,7 +242,12 @@ module ot_qwen_me_spctl_w12 #(
     //   RXA   the argmax-accumulator clear's delay (default RX): the result shift relative to the op's ISSUE, which is
     //         RX minus any reduction of XD (a caller that makes the tree selects early by lowering XD passes RXA itself)
     parameter integer RXA = RX,
-    parameter integer BANDF = 0
+    parameter integer BANDF = 0,
+    // AMR = 1 (safe-qwen S-D1, 2026-10-08; 0 = unchanged): the argmax tree's top word {top_v, key, idx} and its valid /
+    // rmax tag are registered AT the accumulator, and the accumulator clear moves with them, so the top-vs-best compare
+    // (u_bgt) and the am_idx / best_key / am_val update are local (routed qfd_sp_tree_top_b: am_idx -> u_bgt -> am_idx
+    // 2,228 ps, 6 logic + ~40 wire buffers).  The argmax result (am_any / am_idx / am_val) settles one edge later.
+    parameter integer AMR = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -907,6 +912,9 @@ end endgenerate
     wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
+    //: AMR: the accumulator's own copy of the tree top (and its tag / clear), one edge after the tree
+    wire [CW-1:0] atop;
+    wire          a_tv, a_rmax, a_clr;
     //: the accumulator clear of an amax op at its issue (RXA > 0: RXA edges later, with the results)
     wire am_clr;
     generate if (RXA > 0) begin : g_amc
@@ -917,15 +925,36 @@ end endgenerate
     //: top > best (key, then the lower index): the same kept carry as the tree nodes
     wire best_gt;
     wire [32+NW-1:0] best_s;
-    ot_qwen_w12_ksa #(.W(32 + NW)) u_bgt (.a({top_key, ~top_idx}), .b(~{best_key, ~am_idx}), .cin(1'b0), .s(best_s),
+    generate if (AMR != 0) begin : g_amr
+        reg [CW-1:0] atop_q;
+        reg          a_tv_q, a_rmax_q, a_clr_q;
+        always @(posedge clk) atop_q <= top;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin a_tv_q <= 1'b0; a_rmax_q <= 1'b0; a_clr_q <= 1'b0; end
+            else begin a_tv_q <= tv[LV]; a_rmax_q <= t_rmax; a_clr_q <= am_clr; end
+        assign atop = atop_q; assign a_tv = a_tv_q; assign a_rmax = a_rmax_q; assign a_clr = a_clr_q;
+    end else begin : g_amw
+        assign atop = top; assign a_tv = tv[LV]; assign a_rmax = t_rmax; assign a_clr = am_clr;
+    end endgenerate
+    wire          atop_v = atop[CW-1];
+    wire [31:0]   atop_key = atop[CW-2 -: 32];
+    wire [NW-1:0] atop_idx = atop[NW-1:0];
+    wire [31:0]   atop_val = atop_key[31] ? {1'b0, atop_key[30:0]} : ~atop_key;
+`ifdef OT_MUT_AMR
+    // bench mutant (AMR path only, so the AMR = 0 reference is untouched): the accumulator stores a wrong row index
+    wire [NW-1:0] atop_idx_w = atop_idx ^ {{(NW-1){1'b0}}, (AMR != 0) ? 1'b1 : 1'b0};
+`else
+    wire [NW-1:0] atop_idx_w = atop_idx;
+`endif
+    ot_qwen_w12_ksa #(.W(32 + NW)) u_bgt (.a({atop_key, ~atop_idx}), .b(~{best_key, ~am_idx}), .cin(1'b0), .s(best_s),
         .cout(best_gt));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
-            if (am_clr) am_any <= 1'b0;
-            else if (tv[LV] && !t_rmax && top_v && (!am_any || best_gt)) begin
-                am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
+            if (a_clr) am_any <= 1'b0;
+            else if (a_tv && !a_rmax && atop_v && (!am_any || best_gt)) begin
+                am_any <= 1'b1; best_key <= atop_key; am_idx <= atop_idx_w; am_val <= atop_val;
             end
         end
     end
@@ -990,7 +1019,7 @@ end endgenerate
     localparam [ORD+2:0] OMASK = (1 << (ORD + 1)) - 2;
     wire ord_busy = |(ov_line & OMASK);
     wire idle_c = !active && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
-                  && !ov2 && !ord_busy && !mx_we && !land_wait;
+                  && !ov2 && !ord_busy && !mx_we && !land_wait && !((AMR != 0) && a_tv);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);

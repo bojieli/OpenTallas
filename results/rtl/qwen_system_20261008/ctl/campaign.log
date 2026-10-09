@@ -1,0 +1,13 @@
+f_coll: CTL_RESULT pass=1 steps=3 trace_events=327 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00101000 turn_min=32 turn_max=97 turn_avg=74 step_cycles=707 CL=40 cycles=1899
+badlen: CTL_RESULT pass=1 steps=0 trace_events=0 trace_bad=0 cq=1/1 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=1073741824 turn_max=0 turn_avg=0 step_cycles=0 CL=40 cycles=318
+f_hang: CTL_RESULT pass=1 steps=4 trace_events=576 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00100010 turn_min=32 turn_max=97 turn_avg=78 step_cycles=789 CL=40 cycles=7737
+length: CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=32 turn_max=97 turn_avg=78 step_cycles=789 CL=40 cycles=3346
+eos: CTL_RESULT pass=1 steps=7 trace_events=1064 trace_bad=0 cq=5/5 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=32 turn_max=97 turn_avg=82 step_cycles=764 CL=40 cycles=5686
+f_core: CTL_RESULT pass=1 steps=5 trace_events=743 trace_bad=0 cq=2/5 cq_bad=0 fault_cq=1 fault_status=00100001 turn_min=32 turn_max=97 turn_avg=80 step_cycles=786 CL=40 cycles=3959
+f_dis: CTL_RESULT pass=1 steps=3 trace_events=456 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00010000 turn_min=32 turn_max=97 turn_avg=74 step_cycles=707 CL=40 cycles=2566
+f_seq: CTL_RESULT pass=1 steps=2 trace_events=240 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00100100 turn_min=58 turn_max=97 turn_avg=87 step_cycles=739 CL=40 cycles=1455
+meas_cl1: CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=19 turn_max=19 turn_avg=19 step_cycles=194049 CL=1 cycles=776521
+meas_cl40: CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=58 turn_max=97 turn_avg=87 step_cycles=194127 CL=40 cycles=776833
+meas_cl170: CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=188 turn_max=357 turn_avg=314 step_cycles=194387 CL=170 cycles=777873
+fullctx: CTL_RESULT pass=1 steps=8192 trace_events=1245184 trace_bad=0 cq=8191/8191 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=19 turn_max=97 turn_avg=85 step_cycles=734 CL=40 cycles=6209871
+CTL_CAMPAIGN 12/12 pass

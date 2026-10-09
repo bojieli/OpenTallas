@@ -1,0 +1,63 @@
+{
+ "name": "mtprb-dskvwb_spec-b-e24ab2ee0-tc",
+ "block": "ot_hbm_accel_dskv_wb_spec",
+ "owner": "Claude:mtp-rollback",
+ "purpose": "mtp-rollback 2026-10-09 (MR-7 + MR-6: per-token KV / index-key writer, window slot pos mod 256, shadow lock (HBM accelerator die, every stack)). Variant b: UTIL=30 PD=0.45 HM=0.01. Bench gate: tools/mtp_rollback_bench.py campaign (28+ runs, good PASS / mutants FAIL).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/mtp-rollback-20261008",
+  "commit": "e24ab2ee0f6fbe2ae9f89a89fa986e8f0a6cc99d"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=30 PD=0.45 HM=0.01 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_accel_dskv_wb_spec --source rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_spec.sv --param ENABLE=1 --param STACK=0 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=30 PD=0.45 HM=0.01 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_accel_dskv_wb_spec --source rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_spec.sv --param ENABLE=1 --param STACK=0",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/mtp_rollback_20261008/routes/mtprb-dskvwb_spec-b-e24ab2ee0-tc"
+  }
+ ],
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "no_bench_reason": "bench gate run outside the loop: tools/mtp_rollback_bench.py campaign (record results/rtl/mtp_rollback_20261008/record.json)"
+}

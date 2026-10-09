@@ -1,0 +1,63 @@
+{
+ "name": "mtprb-commit-a-e24ab2ee0-tc",
+ "block": "ot_mtp_commit",
+ "owner": "Claude:mtp-rollback",
+ "purpose": "mtp-rollback 2026-10-09 (commit / rollback sequencer: n = q+2+a, q_next, squash range, epoch (head-die sequencer side)). Variant a: UTIL=40 PD=0.55 HM=0.025. Bench gate: tools/mtp_rollback_bench.py campaign (28+ runs, good PASS / mutants FAIL).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/mtp-rollback-20261008",
+  "commit": "e24ab2ee0f6fbe2ae9f89a89fa986e8f0a6cc99d"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_mtp_commit --source rtl/mtp/rollback/ot_mtp_commit.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 16
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_mtp_commit --source rtl/mtp/rollback/ot_mtp_commit.sv",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/mtp_rollback_20261008/routes/mtprb-commit-a-e24ab2ee0-tc"
+  }
+ ],
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "no_bench_reason": "bench gate run outside the loop: tools/mtp_rollback_bench.py campaign (record results/rtl/mtp_rollback_20261008/record.json)"
+}

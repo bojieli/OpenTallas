@@ -1,0 +1,65 @@
+{
+ "name": "hfd_mtp_x_lvt-021c82802-tc",
+ "block": "hfd_mtp_x",
+ "owner": "Claude:mtp-hbm",
+ "purpose": "mtp-hbm 2026-10-08 hfd_mtp (HBM die block of the DSpark control plane; owner: route as soon as it lints, 2-3 safe variants). ot_hfd_mtp_core = ot_dshbm_dspark_top_m (ctl FAST + accept, spec_state_f, argmax FAST, union FAST) behind registered pins (template D): pin flops, 3 skid slices (cmd out, spec-state request in, union out), token reads PRL 2. Exactness: physical/hbm_mtp/run_bench.sh on the golden traces (results/rtl/hbm_mtp_20261008/bench), gates adoption; spec_state_f's 2-mismatch fix is mtp-exact's (re-route on its commit). Die-link budget on (consistent split until mtp-die publishes the hfd_mtp budget). VARIANT X + LVT. | MR-8 requeue (replaces cancelled hfd_mtp_x_lvt-fc1b8a377-tc: RLOG 16'h7272 / WR 136 were wrong): spec-state W 128 / WR 256 / SR 10 / RLOG 16'h0111 / CKMAX 2^20.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 24,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/mtp-hbm-20261008",
+  "commit": "021c82802a9f11bc09ca79632171b4e43de888ca"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MULTI_VT=lvt;  OUT={RUN}/routes CORES=24 UTIL=45 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} hfd_mtp_x --source physical/hbm_mtp/rtl/hfd_mtp_tops.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_core.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_dshbm_dspark_top_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_dspark_ctl_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv --source rtl/gpu/dshbm/ot_dshbm_accept_port.sv --source rtl/hdc/ot_hdc_accept.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv     $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 24,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MULTI_VT=lvt;  OUT={RUN}/routes CORES=24 UTIL=45 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} hfd_mtp_x --source physical/hbm_mtp/rtl/hfd_mtp_tops.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_core.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_dshbm_dspark_top_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_dspark_ctl_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv --source rtl/gpu/dshbm/ot_dshbm_accept_port.sv --source rtl/hdc/ot_hdc_accept.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv    ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/hbm_mtp_20261008/routes/hfd_mtp_x_lvt-021c82802-tc"
+  }
+ ],
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 4,
+ "notes": "cycles added: 4",
+ "no_bench_reason": "golden-trace benches (tb_hfd_mtp_dspark, traces from tools/dshbm_dspark_trace.py, ~10 MB scripts not in the repo) run beside the route: results/rtl/hbm_mtp_20261008/bench (PASS required for adoption; MUT 1/2 must FAIL)"
+}

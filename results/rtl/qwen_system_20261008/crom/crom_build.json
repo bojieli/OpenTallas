@@ -1,0 +1,277 @@
+{
+ "schema": "opentallas.qwen_crom.v1",
+ "tp": 4,
+ "su_width": 64,
+ "tmax": 8192,
+ "layout": {
+  "QK0": 4096,
+  "POST0": 5376,
+  "QSCALE": 9472,
+  "ROPE0": 9473,
+  "OSC0": 533761,
+  "DSC0": 537857,
+  "END": 541953,
+  "LROWS": 148,
+  "FN_ROW0": 5328,
+  "NARROW_ROWS": 5392,
+  "WIDE_ROWS": 8192,
+  "macro": "ot_rom_4096x266_m8",
+  "wide": [
+   16,
+   2,
+   4
+  ],
+  "narrow": [
+   8,
+   2,
+   8
+  ],
+  "macros": 48
+ },
+ "program_instructions": {
+  "layer": 31,
+  "head": 8
+ },
+ "contract": {
+  "pass": true,
+  "violations": [],
+  "n_violations": 0,
+  "vector_reads_by_stage_region": {
+   "layer:QK": 600,
+   "layer:ROPE": 600,
+   "layer:QSCALE": 9576,
+   "layer:OSC": 1920,
+   "layer:DSC": 1920,
+   "head:FNORM": 640
+  },
+  "positions": [
+   0,
+   1,
+   63,
+   64,
+   255,
+   256,
+   4095,
+   4096,
+   8190,
+   8191
+  ]
+ },
+ "cross_check": {
+  "0": {
+   "words": 541953,
+   "mismatches": 0,
+   "sha256": "0e0687e37589923948ecd93c856c1a0536f77021df880833528c57f2c7a7c126"
+  },
+  "35": {
+   "words": 541953,
+   "mismatches": 0,
+   "sha256": "6322a56d2b44a92e6c9b328eec25eb4bdf0ec88eadddac18cea0d6b2cdbaa3b3"
+  }
+ },
+ "macros": {
+  "crom_n_c0_d0": {
+   "viamap_sha256": "ceb217013a72d72763f71131664874105d48bb160720e5e5cc6d4a85cd227e8b",
+   "crc32": "59be255c"
+  },
+  "crom_n_c0_d1": {
+   "viamap_sha256": "9fb53502b1e470b9b24efe7f478b86994517aef8ccdd52352db494d119916301",
+   "crc32": "f7dc6385"
+  },
+  "crom_n_c1_d0": {
+   "viamap_sha256": "2fd065e4115eec54e5ac10d0eee23cd7c6c15ee4f7629dbcfcda941556445ec9",
+   "crc32": "4ca0d14f"
+  },
+  "crom_n_c1_d1": {
+   "viamap_sha256": "0be3cdd0a4201d8495ad0c7e83eae935668849fc4acdd20abb22694d819e5cb4",
+   "crc32": "975a4df6"
+  },
+  "crom_n_c2_d0": {
+   "viamap_sha256": "5b911d7fdeaec75e970e8bb9a6289d90ed0a3951b0376f3a2d19affae961874d",
+   "crc32": "09ed0dd1"
+  },
+  "crom_n_c2_d1": {
+   "viamap_sha256": "9d7278a3a2067af74142f0cb1910bde65f595da1c66ff135cddf6f957c8d7fb1",
+   "crc32": "95c5de44"
+  },
+  "crom_n_c3_d0": {
+   "viamap_sha256": "43366746cf8540d9af1ae32258c6b8b41d12d4344eb359d6a9e9370958b83d32",
+   "crc32": "ff938da0"
+  },
+  "crom_n_c3_d1": {
+   "viamap_sha256": "4bc6ac7d4e10fa90ee7ebfcc3a71fa3c0de3135ebb0278305e06e1f998141a9f",
+   "crc32": "55e830e0"
+  },
+  "crom_n_c4_d0": {
+   "viamap_sha256": "9b8e0640fd1790b95388ff2482f7b334c12763b232250732d0482a04b8418eac",
+   "crc32": "831f1a19"
+  },
+  "crom_n_c4_d1": {
+   "viamap_sha256": "799c79c6be1cb7bf46a763165dfc050d49edd4f5ac511bd3dce0f02d0942bbbf",
+   "crc32": "af2494ed"
+  },
+  "crom_n_c5_d0": {
+   "viamap_sha256": "97e7fbee5a0451a8df721a75e84e462b6df8791f2799f0ddec35add54db29571",
+   "crc32": "2e6de4ed"
+  },
+  "crom_n_c5_d1": {
+   "viamap_sha256": "bea04c2005ad62280aa542750b447bce2ba7b18e5c60cc8dd59f47d4f25d4587",
+   "crc32": "f725b406"
+  },
+  "crom_n_c6_d0": {
+   "viamap_sha256": "5bed92edb17ef2a3c813c5c4f85aa2522e04878b93dcc0f91d717e4dcd313c61",
+   "crc32": "cf3cfafe"
+  },
+  "crom_n_c6_d1": {
+   "viamap_sha256": "082f7ed466b0dfe328620f8bfa3cc541939fb2640db2683b96efe7de1bdb6b9d",
+   "crc32": "5c3e4a97"
+  },
+  "crom_n_c7_d0": {
+   "viamap_sha256": "df8bdc6cb6c428c2815a948eb6d02d0172d2241632da4ebb95c208da23bb5492",
+   "crc32": "ae320a56"
+  },
+  "crom_n_c7_d1": {
+   "viamap_sha256": "7cb18725c26b97079970b5e9845e55fbc5e7803027e32c4ef7d76a386ac051b1",
+   "crc32": "da638bc3"
+  },
+  "crom_w_c0_d0": {
+   "viamap_sha256": "4b007e8381908676fe9f3eede050d416e689df1ecf47f72af7060c2ebf244ae4",
+   "crc32": "7fa4238a"
+  },
+  "crom_w_c0_d1": {
+   "viamap_sha256": "be044bcc443063fd70734513d31536f5cee01b0f6d27284dc30a0f300575ee12",
+   "crc32": "b4813e0a"
+  },
+  "crom_w_c10_d0": {
+   "viamap_sha256": "6b151ba25b44b8c09e506383a03d5423daf524b23345ef85a4321d79b0874079",
+   "crc32": "b657c023"
+  },
+  "crom_w_c10_d1": {
+   "viamap_sha256": "36dd899ff6a3ab4a05bf0deb6226ebad93c4e8347eed317b863e06f47ac3f674",
+   "crc32": "52720992"
+  },
+  "crom_w_c11_d0": {
+   "viamap_sha256": "73b9c9d837df7311213aa1e6a0b0b9326d83b7f1503c793d08958a6aad822fa1",
+   "crc32": "287dcee1"
+  },
+  "crom_w_c11_d1": {
+   "viamap_sha256": "2fc131a9326d49334d308c744743abb1c280a905eed5535b29c048d5c30fa720",
+   "crc32": "efc5d3a2"
+  },
+  "crom_w_c12_d0": {
+   "viamap_sha256": "21cdfba40ffdf13075c90c16128b966088f8df4f98bec9397685e1960ffea571",
+   "crc32": "0839fd01"
+  },
+  "crom_w_c12_d1": {
+   "viamap_sha256": "2269fcc1906df04bcc2439cf7313ceca7e1b06e98d478af296f2d8ed354451b1",
+   "crc32": "9f6ae0dd"
+  },
+  "crom_w_c13_d0": {
+   "viamap_sha256": "d356287a66a57a8ede6cb536bac1f2354363a7429364e115cf3e0d55d2473c81",
+   "crc32": "ea5f37a6"
+  },
+  "crom_w_c13_d1": {
+   "viamap_sha256": "8036607870f2ebe38006fa434363e8e5b1aaf67abdec55601b83df8f070350ab",
+   "crc32": "65c29b67"
+  },
+  "crom_w_c14_d0": {
+   "viamap_sha256": "6c402a9ea2430dc8e65384a0ff80a566b4438eba13f36d332a30bcf5a0c519d1",
+   "crc32": "28d42c6d"
+  },
+  "crom_w_c14_d1": {
+   "viamap_sha256": "46116c243cb5798ce420136bc39c40594fbf07f753914b09e5205a735c6ec4fb",
+   "crc32": "3804b6af"
+  },
+  "crom_w_c15_d0": {
+   "viamap_sha256": "3f8c2c8c16ea80e03fd9267eaed65dc5c1201afd5ba467707baed7972cc1345e",
+   "crc32": "ba81fe71"
+  },
+  "crom_w_c15_d1": {
+   "viamap_sha256": "5734aa4f283b95581e104c66053c119c9739551c8867220d8de841f6131cf981",
+   "crc32": "dec4c47b"
+  },
+  "crom_w_c1_d0": {
+   "viamap_sha256": "bab65832fa6fd89302d522018e1a7c454851b1bff747f385a119603425ce6926",
+   "crc32": "66beccbd"
+  },
+  "crom_w_c1_d1": {
+   "viamap_sha256": "bbd0cbe11f9dcf6813449d4bbaf60fb1edda5b0ce6180e6008c7dae2d7a0e66d",
+   "crc32": "26bef62b"
+  },
+  "crom_w_c2_d0": {
+   "viamap_sha256": "7bad678e3f5e297f397a40486d003db93f4e8e98f63e8ef9d8b50819ffb8de6a",
+   "crc32": "68f91b7b"
+  },
+  "crom_w_c2_d1": {
+   "viamap_sha256": "1df7e5b8afc0a74f0c2906c38f3d8d7d4000e006b84c3621932075a026bd4600",
+   "crc32": "926cc0d8"
+  },
+  "crom_w_c3_d0": {
+   "viamap_sha256": "07994b82571dbb98bc00c2e66367b20f12b2fbad85a821359604ee0c95414ba9",
+   "crc32": "f9b878b8"
+  },
+  "crom_w_c3_d1": {
+   "viamap_sha256": "bc613f99c79f1f0d74a01b912c31e46b61f7e1e1708b16ce786b7f9d6008a3d1",
+   "crc32": "3c5d5439"
+  },
+  "crom_w_c4_d0": {
+   "viamap_sha256": "383f4cab8f4d6cf676f773d235eb22ba2fc5e10f40a16c9021e8afd1a08dcf7d",
+   "crc32": "dfd1dc29"
+  },
+  "crom_w_c4_d1": {
+   "viamap_sha256": "77f0fab1e1ce7c0152c941fc7c628aa9348fbd577261afa22bf38d30d1e0daeb",
+   "crc32": "8629e040"
+  },
+  "crom_w_c5_d0": {
+   "viamap_sha256": "8d41065a53b65d8b5858ce29307da77b2f2ac29cbea766c231e6897f05850ecf",
+   "crc32": "0c951e48"
+  },
+  "crom_w_c5_d1": {
+   "viamap_sha256": "aea28a14f216567be388d03efbabe1c31966cd3bbd65283ab550c8d469b52f4b",
+   "crc32": "509f0070"
+  },
+  "crom_w_c6_d0": {
+   "viamap_sha256": "d36e5f7e32bc2d062ec9fce262125b5f8194d3a712223c5d351617dc0f766aa5",
+   "crc32": "a195a07a"
+  },
+  "crom_w_c6_d1": {
+   "viamap_sha256": "d3b34e959bc74a4344c19a3d7db456f67774ae4b4eca8c50f08341fcb156f324",
+   "crc32": "c1d32474"
+  },
+  "crom_w_c7_d0": {
+   "viamap_sha256": "d2f43e94896ca01eb808fe758c7c0eda21bd4c6fa6ab886fd6702e8f02bc068e",
+   "crc32": "d7319380"
+  },
+  "crom_w_c7_d1": {
+   "viamap_sha256": "0a94b8aca54d629fcf74d9cac78af2ff9053949acaf3bec5aa35ab4cf45e3c76",
+   "crc32": "051084e2"
+  },
+  "crom_w_c8_d0": {
+   "viamap_sha256": "3a752db5636db2dea3b9b2c3a090807d47ba52a2b502d7763b843e840732d584",
+   "crc32": "0e0dda21"
+  },
+  "crom_w_c8_d1": {
+   "viamap_sha256": "e63307b3a5f612f1db8c455fd873aeee18180398d421706616014825979b993e",
+   "crc32": "d05e0368"
+  },
+  "crom_w_c9_d0": {
+   "viamap_sha256": "1bfd259558bf33738d6c912f37adfa4120120e2a76791a1b27fffdfffc265c0c",
+   "crc32": "9f7e166b"
+  },
+  "crom_w_c9_d1": {
+   "viamap_sha256": "8775c3ef2ef813b15578d769a10a7fbc472f3c130f9711579391220c864e0a37",
+   "crc32": "0234bde1"
+  }
+ },
+ "die_signature": "efe734be",
+ "vectors": {
+  "n": 15980,
+  "lane_reads": 1011804,
+  "sha256": "24e24e90b05559d4e6658e34303fac0e55de985bb3dc9f00064ed2231b38f3b8",
+  "note": "don't-care lanes (re = 0) written as 0 (sed of the 'x' form; the writer now emits 0)"
+ },
+ "golden_sha256": {
+  "wide": "d535c305d9722def65bb6e3bb31c1ae3397bcb2ca67e5c2f8a0adb0fb7af3748",
+  "narrow": "19f0ea14e3deb3f7a71434374e99d5ab6f8671a99331b188c860086f33929e68"
+ }
+}

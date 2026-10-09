@@ -6,7 +6,7 @@
 # LB=1 adds the consistent die-link budget (physical/common_flow/link_budget_consistent.sdc) for die-boundary blocks.
 #   route_mtp.sh <label> <top> [run_abi3_physical args: --source / --param / --macro-view ...] [--pnr-stop-after cts]
 # env: OUT (route base), CORES (16), UTIL (40), PD (0.55), HM (0.025), L (vclk insertion ps; default CK_SS_MEAN / 770),
-#      MACRO (corner_sta --macro dir), SDCX (extra --sdc-append, e.g. a multicycle design-intent SDC), LB (0/1)
+#      STAGES (synth,pnr; pnr for --macro-view jobs: the macro views live in the ORFS image), MACRO (corner_sta --macro dir), SDCX (extra --sdc-append, e.g. a multicycle design-intent SDC), LB (0/1)
 set -u
 lab=$1; top=$2; shift 2
 W=${OUT:?}/$lab; mkdir -p $W
@@ -20,7 +20,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 python3 tools/run_abi3_physical.py --view asap7 --top $top \
   --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $SDCA ${SDCX:+--sdc-append $SDCX} \
-  --stages synth,pnr --core-utilization ${UTIL:-40} --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.025} \
+  --stages ${STAGES:-synth,pnr} --core-utilization ${UTIL:-40} --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.025} \
   --orfs-var ADDER_MAP_FILE= \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag mtp_$lab \

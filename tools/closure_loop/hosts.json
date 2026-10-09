@@ -130,20 +130,21 @@
    "cores": 32,
    "cap": 35,
    "base": "/home/ubuntu/closure-loop-local",
-   "max_job_threads": 16,
-   "max_job_ram_gb": 120,
+   "max_job_threads": 0,
+   "max_job_ram_gb": 0,
    "min_free_disk_gb": 150,
    "caps": [
     "orfs"
    ],
    "ram_gb": 188,
-   "max_loop_threads": 96,
+   "max_loop_threads": 0,
    "min_free_ram_gb": 16,
    "note": "OWNER 2026-10-07 05:00: the coordinator host, capped so ssh stays responsive: <= 24 loop threads in total, MemAvailable >= job peak + 40 GB. ORFS only (local Verilator 4.038 / Yosys 0.9 differ from the fleet); the loop runs stages here directly (no ssh to itself). Fleet ORFS image loaded 2026-10-07 (old local latest kept as openroad/orfs:local-old-3985ce6d). RE-ENABLED 2026-10-07 07:00 after the smoke test (s81ph-dsfd_ctrl_ctr-34b3e75dd-localsmoke: calibrate -> route -> sign-off SS +307.0 / FF +8.41 / DRC 0 on localhost; ORFS image digest, yosys-0.68 and opensta binaries identical to the fleet; /srv/opentallas-scratch/admit.sh installed with a 40 GB reserve). | OWNER 2026-10-07 23:00: loop threads cap 48. | OWNER 2026-10-08 00:20: localhost admits more: 96 loop threads, 16 GB free floor, jobs up to 120 GB.",
    "disk_roots": {
     "/": 150
    },
-   "bench_offload": true
+   "bench_offload": true,
+   "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet."
   }
  ]
 }
