@@ -150,9 +150,41 @@ def plain_primary_shared_receive_model():
     result['storage_bits']=dict(queues=14256,queue_control=33,metadata_pipeline=246,
         context_and_control_upper_bound=192,receive_cdc=19008,total_without_native_adders=33735)
     result['receive_cdc'].update(protected_frame_bits=None,native_frame_bits=594,
-        storage_bits=19008,mutable_metadata='Actualnative74context+word7/last only; no complementarymetadata or protectedflopFIFO hardware')
+        storage_bits=19008,mutable_metadata='Actualnative74context+word7/last only; no complementarymetadata or protectedflopFIFO hardware',
+        wide_frame_latency='Actual594bit two-domain gate passed; common partial reset and premature-rounding mutant source471b0c95f',
+        reset='Common reset asserts both FIFO domains, synchronized release; no reset epoch hardware')
+    result['remaining']=['Existing A/Markov transaction namespace caller',
+        'Actual shared native VM publisher and static write-visible fence',
+        'Actual SU/main_norm output endpoint','Contextual SS/FF and real clock arrival']
     result['area_slot_fit']='PlainFIFO8/native594CDC33735FFbits plus16nativeLAT3adders; selectedSRAMproducerpayload retainsSECDED, noECC/duplication added to arithmeticflops'
     return result
+
+
+def plain_shared_publisher_model():
+    """Size a plain control successor; mutable SRAM payload retains SECDED."""
+    return dict(schema='opentallas.uarch.s81-shared-publisher-plain.v1',
+        enabled_default=False,adoption=False,values_per_rank=1280,frames=80,
+        macs_per_cycle=0,clock_ghz=1.2,contexts=1,
+        arithmetic='Preserve actual W2 BF16-rounded widened FP32 words; no arithmetic or re-rounding',
+        memory=dict(macros=3,master='ot_sram_1r1w_256x256_m2_r2c2',
+            allocated_bits=3*256*256,live_protected_bits=80*576,
+            read_bytes_per_active_cycle=96,write_bytes_per_active_cycle=96),
+        boundary_bits_per_cycle=dict(input=596,output=596),
+        bytes_per_cycle=dict(input=64,output=64),
+        plain_register_bits_upper=1698,
+        removed_complement_register_bits=1120,
+        ecc_decode=dict(slices=8,pipeline_cycles=2,payload_only=True),
+        replicas=4,mux_demux_fanout='One80-row context per rank, three SRAM banks; eight64bit SECDED slices',
+        routing_tracks_required=1192,available_tracks=None,
+        latency_cycles=dict(load_per_frame=3,read_and_publish_per_frame_upper=8,
+            full_context_no_stall_upper=80*11+4),
+        token_contribution_us_upper=(80*11+4)/1200,
+        area_slot_fit='Three real SRAM macros plus1698plain state/payload registers and eight SECDED pipelines; selected die fit pending',
+        completion='Only actual last publisher handshake releases one context',
+        remaining=['Actual W2 scalar VM write visibility and80-row static read1 capture',
+            'Production opaque74bit transaction caller','Full released GU/native E3 binding',
+            'Actual physical placement, clock arrival and SS/FF'],
+        proposal='Review53 plain-control successor to historical7279623a2; no leases or complementary control guards')
 
 
 def stage_range_observer_model():
