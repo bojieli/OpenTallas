@@ -87,7 +87,7 @@ BINDINGS = dict(
                   classed={'ev': 'debug'}),
     qkd_seq=dict(module='ot_qkvd_kv_seq', file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv',
                  ports=dict(rf=['c_v', 'c_d', 'c_cr'], tf=['u_v', 'u_d', 'u_cr'],
-                            aq_WS=['a_start', 'a_T', 'a_q_valid', 'a_q_beat', 'a_q_data'],
+                            aq_WS=['a_start', 'a_T', 'a_layer', 'a_q_valid', 'a_q_beat', 'a_q_data'],
                             ar=['a_out_valid', 'a_out_g', 'a_out_beat', 'a_out_data'], hf=['a_hub_fault'],
                             af_WS=['a_stk_fault'], mf_WS=['m_fault'],
                             kvn_WS=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'],
@@ -268,7 +268,8 @@ def _buses(m, T, r):
     add(('d2d_up', 'd2d_face', 3 * (W + 1) + 3, [('seq', 'tf'), ('d2d_kv', 'tf')]))       # RES EMBD HCTL + credits back
     # attention
     for st in STACKS:
-        add((f'aq_{st}', 'spine_local', 1 + 14 + 1 + 6 + 512, [('seq', f'aq_{st}'), (f'astk_{st}', 'aq')]))
+        add((f'aq_{st}', 'spine_local', 1 + 14 + 6 + 1 + 6 + 512, [('seq', f'aq_{st}'), (f'astk_{st}', 'aq')]))
+        add((f'lt_{st}', 'spine_local', 1 + 14 + 6, [(f'astk_{st}', 'lt'), (f'land_{st}', 'lt')]))   # layer start / T / index -> the KV merge fence
         add((f'ap_{st}', 'spine_local', 42 + 521, [(f'astk_{st}', 'ap'), ('ahub', f'ap_{st}')]))
         add((f'am_{st}', 'spine_local', 36, [('ahub', f'am_{st}'), (f'astk_{st}', 'am')]))
         for e in range(r):

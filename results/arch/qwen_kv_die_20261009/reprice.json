@@ -7,7 +7,7 @@
  "inputs": {
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/qwen_kv_die_20261009/bench.json": "47957af6228d4812",
-  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "e4ca2d3b72c33ced",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "e6813c7ae8744686",
   "results/arch/qwen_kv_die_20261009/rom_r22k.json": "e9f270441054fe21"
  },
  "basis": {
@@ -100,6 +100,24 @@
    5418.5
   ],
   "status": "priced candidate: the attention layer step is MEASURED through the link RTL (bit-exact), the relay stages come from the r22k / KV-die placements; the near-HBM attention elements are not closed physically"
+ },
+ "silicon": {
+  "rom_die_mm2": 757.576,
+  "kv_die_mm2": 172.297,
+  "pair_mm2": 929.9,
+  "vs_r21c_die_mm2": 83.1,
+  "package": "2 ROM dies (N-N facing) + 2 KV dies (one off each ROM die S edge) + 8 HBM3E stacks beside the KV dies",
+  "interposer_mm": [
+   29.0,
+   114.0
+  ],
+  "interposer_reticles": 3.9,
+  "status": "KV-die frames partly ASSUMED (stack aggregators, landings, centre blocks): measure before quoting the package size (review-0528 item 4)"
+ },
+ "per_user_cost": {
+  "vs_tp4": -0.0138,
+  "vs_tp4_pct": -1.38,
+  "statement": "-1.38 % per user against TP4 r21c (5416.7 vs 5492.7 tok/s), for a 929.9 mm2 die pair on a ~3.9-reticle interposer"
  },
  "notes": [
   "The decision record priced option 1a at 219,522 cycles assuming the TILE attention (1,756 cycles a layer) stays and only 2 x 14-cycle crossings are added.  Moving attention to the KV die means NEAR-HBM attention (row engines beside the HBM PHYs: KV never crosses), whose measured step is the layer_step here.",

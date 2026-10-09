@@ -47,6 +47,7 @@ module ot_qkvd_kv_seq #(
     // near-HBM attention
     output reg               a_start,
     output reg  [13:0]       a_T,
+    output wire [5:0]        a_layer,          // layer index (with start / T to the aggregators and the landings)
     output reg               a_q_valid,
     output reg  [5:0]        a_q_beat,
     output reg  [511:0]      a_q_data,
@@ -128,6 +129,7 @@ module ot_qkvd_kv_seq #(
     localparam [2:0] S_IDLE = 3'd0, S_KV = 3'd1, S_ST = 3'd2, S_Q = 3'd3, S_RUN = 3'd4;
     reg [2:0]   st;
     reg [5:0]   layer;
+    assign a_layer = layer;
     reg [3:0]   kv_n;
     reg [5:0]   q_n;
     reg [6:0]   r_n;
