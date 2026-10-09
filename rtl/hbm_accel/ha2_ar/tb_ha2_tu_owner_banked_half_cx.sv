@@ -52,6 +52,12 @@ module tb_ha2_tu_owner_banked_half_cx;
  integer last_pop[0:NPT-1],pop_count=0,pair_count=0;
  initial for(integer p=0;p<NPT;p=p+1)last_pop[p]=-1;
  if(HALF)begin:g_cadence
+  always @(negedge clk)if($test$plusargs("TRACE")&&cyc<160)
+   $display("TRACE c=%0d ph=%b act=%b/%b arm=%b/%b core_act=%b core_arm=%b pf=%0d pv=%h hv=%h cnt=%h/%h pr=%h run=%b core_pf=%0d dupe=%b",
+    cyc,g_half.dut.ph,active,g_half.dut.act_f,arm,g_half.dut.arm_s,
+    g_half.dut.core_act,g_half.dut.core_arm,g_half.dut.core_pf,
+    g_half.dut.p_head_v,g_half.dut.h_head_v,g_half.dut.p_cnt,g_half.dut.h_cnt,
+    g_half.dut.core_pr,g_half.dut.u_core.run,g_half.dut.u_core.PF_q,ddup);
   always @(posedge clk)if(rst_n&&g_half.dut.ph)begin
    for(integer p=0;p<NPT;p=p+1)if(g_half.dut.p_head_v[p])begin
     if(last_pop[p]>=0)begin
