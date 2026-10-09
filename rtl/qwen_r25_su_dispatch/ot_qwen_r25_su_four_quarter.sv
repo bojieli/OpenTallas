@@ -38,7 +38,7 @@ module ot_qwen_r25_su_four_quarter #(
   .done_v(done_v),.done_owner(done_owner),.done_pc(done_pc),.done_query(done_query),
   .finished_v(dispatcher_finished),.finished_rdy(finished_rdy&&!fault&&!warm_abort),.fault(dispatcher_fault));
  for(genvar q=0;q<4;q=q+1)begin:quarters
-  ot_qwen_r25_su_quarter #(.ENABLE(ENABLE),.N(256),.M(64),.QID(q),.OWN_W(OWNER_W)) u_quarter(
+  ot_qwen_r25_su_quarter #(.ENABLE(ENABLE),.N(256),.M(64),.QID(q),.OWNER_W(OWNER_W)) u_quarter(
    .clk(clk),.rst_n(rst_n),.warm_abort(warm_abort||fault),
    .cmd_v(cmd_v[q]&&!fault),.cmd_rdy(cmd_rdy[q]),.cmd_word(cmd_words[q*690+:690]),
    .cmd_owner(cmd_owner),.cmd_pc(cmd_pc),.cmd_query(cmd_query),

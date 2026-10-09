@@ -16,6 +16,9 @@ def model():
     command_bits=banks*(native+73+12+2+1)
     return dict(schema='opentallas.qwen_r25_su_dispatch_model.v1',default_off=True,
         models=['Qwen3-8B HBM'],replicas_per_die=1,quarters=4,
+        production_owner_bits=74,legacy_owner_bits=73,
+        owner74_fields="position[73:54],token[53:36],generation[35:32],job[31:0]",
+        owner74_added_protected_seats=0,
         mathematical_shape=dict(query_positions=[8191,8192,8193,8194],
             valid_lengths=[8192,8193,8194,8195],kv_capacity_rows=8224,rows_per_group=32),
         mask=dict(MACs_per_cycle=0,comparisons_per_cycle=128,compute_intensity=0,
