@@ -16,7 +16,7 @@ module tb_hbm_native_mtp_cp_closed_control;
  hfd_mtp_native_cp_stop #(.ENABLE(1)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),.f_su_red(523'b0),.f_router(59'b0),.f_coll(1'b1));
  ot_hbm_native_mtp_transaction_cp_join #(.ENABLE(1)) guard(
  .clk(clk),.rst_n(rst_n),.external_fault(qfault),.backend_quiescent(1'b1),
- .job_v(jv&&qjr),.job_rdy(gjr),.job_id(32'h12345678),.job_generation(4'hb),.job_epoch(8'h83),.job_cfg(cfg),.provider_controls(ownedprovider),.f_mtp(fm),.t_mtp(tm),
+ .job_v(jv&&qjr),.job_rdy(gjr),.job_id(32'h12345678),.job_generation(4'hb),.job_epoch(8'h83),.job_config(cfg),.provider_controls(ownedprovider),.f_mtp(fm),.t_mtp(tm),
  .eng_cmd_v(bv),.eng_cmd_rdy(br),.eng_cmd(bc),.eng_job(bj),.eng_generation(bg),.eng_sequence(bs),.eng_epoch(be),
  .cp_am_v(bam),.cp_am_idx(bai),.eng_cpl_v(bcv),.eng_cpl_rdy(bcr),.eng_cpl_job(cj),.eng_cpl_generation(cg),.eng_cpl_sequence(cs),.eng_cpl_epoch(ce),.eng_cpl_fault(bcf),
  .active(active),.inflight(inflight),.identity_fault(gif),.fault(gfault));
