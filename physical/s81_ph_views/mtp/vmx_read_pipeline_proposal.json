@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.mtp.vmx.read-pipeline-proposal.v1",
- "status": "MODEL_ONLY_AWAITING_CLAUDE_REVIEW_NO_RTL_NO_ROUTE",
+ "status": "OWNER_V14_APPROVED_MODEL_BOUND_BEFORE_RTL",
  "measured_source_commit": "a2f264c8b",
  "failure_record_commit": "e6e36f977",
  "failure_job": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
@@ -70,14 +70,14 @@
   "VMX_local_index_valid_FFbits": 112,
   "VMX_response_index_valid_FFbits": 7,
   "WFC_extra_valid_last_FFbits": 4,
-  "WFC_three_stage_expected_index_FFbits": 18,
+  "WFC_three_stage_expected_index_FFbits": 24,
   "WFC_TXQ_four_extra_513bit_slots_FFbits": 2052,
   "WFC_pointer_occupancy_increment_FFbits": 3,
-  "total_increment_FFbits": 2212,
+  "total_increment_FFbits": 2218,
   "area_per_FFbit_um2_planning": 0.6,
-  "increment_FFarea_um2_planning": 1327.2,
+  "increment_FFarea_um2_planning": 1330.8,
   "repair_control_allowance_factor": 1.5,
-  "increment_cellarea_um2_planning": 1990.8,
+  "increment_cellarea_um2_planning": 1996.2,
   "slot_core_um2": 81566.4,
   "measured_preCTS_stdarea_um2": 32724.6,
   "proposal_planning_utilization_percent": 42.56,
@@ -91,7 +91,8 @@
   "measured_pin_density_max_per_um": 5.28,
   "planned_pin_density_max_bound_per_um": 5.35,
   "routing": "Seven new response sideband wires join existing output face.16 local index replicas add96bit register loading and local routes; floorplan channel/PDN/capture lint must rerun on actual successor. No fabricated cut-capacity pass.",
-  "allocation": "Conservatively charges all1990.8um2 to historical VMX slot for bound;135FFbits belongVMX and2077FFbits matchedWFC. Actual WFC slot/replica placement must be sized before any RTL build; its fit is currently unbound."
+  "allocation": "VMX135FF/121.5um2inclallowance, matchedWFC2083FF/1874.7um2inclallowance. ActualSRC/STG slots bound below.",
+  "WFC_expected_index_pipeline": "four6-bit phases: acceptedinternalrequest then VM_REG and2extra responseedges"
  },
  "single_user_composition": {
   "stream_clock_GHz_unchanged": 1.2,
@@ -102,15 +103,39 @@
   "per_token_added_cycles_formula": "2 * (critical_path_hidden_read_bursts + critical_path_separate_side_read_bursts)",
   "per_token_added_us_formula": "0.001666666 * (critical_path_hidden_read_bursts + critical_path_separate_side_read_bursts)",
   "stage_hop_read_write_crossing_cycles_unchanged": "Historical94-cycle crossing accounting remains; added read-response debt is separate+2 per contiguousburst, not+2perword.",
-  "no_adoption_credit": "Actual native critical-path burst count and matched WFC consumer must be bound by coordinator before build. No per-user speed claim or1percent adoption qualification.",
+  "no_adoption_credit": "ActualSRC/STGslot and81stageparent allocation bound analytically, new endpoint RTL/exact/routing still required. Parent calendar counts actual bursts and replays; no performance gain claim.",
   "current_SIDE_WORDS": 0
  },
  "review_and_validation_before_route": [
-  "Claude determines priority and approves structure before successor RTL/PnR",
-  "BeforeRTL: bind actual WFC slot sizing for2077 incrementalFFbits and actual critical-path burst count; model-only proposal is not build-ready until those bindings exist",
+  "OwnerV14 explicitly approves implementation after C3 harness gate; Claude owns exclusive -cl/40 intake",
   "Bind actual WFC source and all read-valid/last/index metadata plus queue reservations; current fixedoneedge consumer is incompatible without matched change",
   "Minimum full46word VMX/WFC integration exactness with pauses/fullqueue/last/side boundary and mutants early response, missing debt reservation, wrong returned index",
   "Admitted remote full-shape build and TTsetup/FFhold/DRC qualification with actual pins; SS sensitivity and policy60/25 preserved",
   "No new topology/consumer/arithmetic reliability claim from this historical standalone transport"
- ]
+ ],
+ "selected_WFC_slot_binding": {
+  "physical_source_commit": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+  "actual_controller_base_commit": "8c8b3947f",
+  "SRC_basis": "physical/dsrom_wfc_tokpipe/src_basis.json",
+  "STG_basis": "physical/dsrom_wfc_tokpipe/stg_basis.json",
+  "SRC_shape": "MAXU866 WIN6 SOURCE1 XWORDS41 RXWORDS41 REC_SRAM1 VM_REG1 TXQ4",
+  "STG_shape": "full46-word STG MAXU866 WIN6 SOURCE0 RXWORDS41 VM_REG1 TXQ4",
+  "SRC_core_um2": 83806.8,
+  "SRC_std_um2": 21307.1,
+  "SRC_macro_um2": 20710.5,
+  "STG_core_um2": 34667.4,
+  "STG_std_um2": 17401.4,
+  "increment_WFC_cell_um2_planning": 1874.7,
+  "SRC_planning_gross_util_percent": 52.37,
+  "STG_planning_gross_util_percent": 55.6,
+  "allocation_change": false,
+  "pinning": "results/rtl/mtp_vmx_readpipe_20261009 selected floorplanJSON +SOURCE_COMMIT +RTLsha256; no new routeclosure inferred",
+  "replicas": {
+   "selected_parent_stage_allocation": 81,
+   "WFC_per_stage": 1
+  },
+  "per_critical_full81stage_job_added_fast_cycles": 162,
+  "per_critical_full81stage_job_added_ns": 135.0,
+  "per_token_scope": "Charge2cycles per actual critical contiguoushiddenburst; full81stagejob uppercomposition162cycles. Multiply actual speculative replay/acceptedtoken calendar in parentmodel; no committedtoken gain claimed."
+ }
 }
