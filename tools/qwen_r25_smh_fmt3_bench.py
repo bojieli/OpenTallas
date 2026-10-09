@@ -189,7 +189,7 @@ def cmd_run(a):
         gold = golden(o["codes"], o["x"])
         sim_vs_golden = bool(np.array_equal(G.bits(gold), G.bits(o["out"])))
         plan.append(dict(name=f"{o['key']} fmt3", codes=o["codes"], x=o["x"], want=o["out"], fmt=3,
-                         sim_vs_golden=sim_vs_golden, pair=len(plan) + 1))
+                         sim_vs_golden=sim_vs_golden, pair=None if a.no_pair else len(plan) + 1))
         if not a.no_pair:
             plan.append(dict(name=f"{o['key']} fmt0 widened", codes=o["codes"], x=o["x"], want=o["out"], fmt=0,
                              sim_vs_golden=sim_vs_golden, pair=len(plan) - 1))
@@ -255,6 +255,7 @@ def cmd_run(a):
                          results=len(got), sim_vs_golden=p["sim_vs_golden"], exact=exact, rtl=m))
     # CF-SM pairing: fmt3 result == fmt0 (BF16-widened) result, row for row
     pairs_ok = all(got_all[i] == got_all[p["pair"]] for i, p in enumerate(plan) if p["fmt"] == 3 and p["pair"] is not None)
+    npairs = sum(1 for p in plan if p["fmt"] == 3 and p["pair"] is not None)
     status = "pass" if bad == 0 and timeout is None and pairs_ok else "fail"
     srcs = PQ.SRC + PQ.SMH_SRC
     out = dict(schema="opentallas.qwen_r25_smh_fmt3_bench.v1", conformance="HGI-1 CF-SM (smh_front_c format 3)",
@@ -264,7 +265,7 @@ def cmd_run(a):
                             sim_source_sha256=man["sim_source_sha256"]),
                element="ot_hbm_accel_smh ENABLE_INT8 = 1 PIPE_INT8 = %d (RMAX %d, NC 8, one active column)" % (a.pipe, a.rmax),
                serial=a.serial, req_stalls=a.req_stalls, mutant=("OT_INT8_MUT_SIGN" if a.mut_sign else None),
-               simulator=a.sim, status=status, mismatching_ops=bad, cf_sm_pairs_equal=pairs_ok, total_cycles=total,
+               simulator=a.sim, status=status, mismatching_ops=bad, cf_sm_pairs_equal=pairs_ok, cf_sm_pairs=npairs, total_cycles=total,
                timeout=timeout, ops=rows,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                host=os.uname().nodename, build_command=cmd,
