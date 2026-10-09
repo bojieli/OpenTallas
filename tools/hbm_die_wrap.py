@@ -522,8 +522,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--spec', required=True, help='JSON spec file')
     ap.add_argument('--out')
+    ap.add_argument('--variant', default='', help='HBM die generator variant whose ports are bound')
     ap.add_argument('--ledger', action='store_true', help='print the SYS-1 tie ledger (no wrapper written; never fails)')
     a = ap.parse_args()
+    V.L.VARIANT = a.variant
+    V._MODEL.clear()
     spec = json.loads(Path(a.spec).read_text())
     if a.ledger:
         sv, st = gen(spec, strict=False)
