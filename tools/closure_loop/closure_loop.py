@@ -569,6 +569,60 @@ def submit_check(spec, force=False):
     return submit_lint.check(spec, git_, util_db(), force=force)
 
 
+BENCH_PATH_RE = re.compile(r"(?<![\w./$}{-])((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.[A-Za-z0-9]+)\b")
+BENCH_SCRIPT_RE = re.compile(r"[\w./-]+\.(?:sh|py|tcl)\b")
+
+
+def bench_missing_paths(spec, git_=None):
+    """drive-0212 2026-10-09: repo files a bench needs that the job's source sync would not carry (it syncs
+    source.paths, default tools rtl physical Makefile, + extra_paths).  pi-ta15prod-c7c53c4c2-*: bench.sh read
+    tests/rtl/tb_hbm_production_clock_control.sv -> rc=2 'No such file' after a full route.  Scans the bench commands
+    and the scripts they call (one level, at the source commit) for literal relative paths that exist at the commit.
+    Returns the sorted parent directories to add to source.extra_paths."""
+    src = spec.get("source") or {}
+    commit = str(src.get("commit", ""))
+    benches = ((spec.get("stages") or {}).get("bench") or [])
+    if not commit or not benches:
+        return []
+    git_ = git_ or submit_lint.Git(REPO)
+    synced = [str(x).rstrip("/") for x in list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))]
+
+    def covered(path):
+        return any(path == x or path.startswith(x + "/") for x in synced)
+
+    texts = []
+    for b in benches:
+        cmd = b.get("cmd") or ""
+        texts.append(cmd)
+        for sc in sorted(set(BENCH_SCRIPT_RE.findall(cmd))):
+            body = git_.show(commit, sc.lstrip("./"))
+            if body:
+                texts.append(body)
+    need = set()
+    for t in texts:
+        for path in BENCH_PATH_RE.findall(t):
+            path = path.lstrip("./") if path.startswith("./") else path
+            if path.startswith("/") or covered(path) or ".." in path.split("/"):
+                continue
+            if git_.blob(commit, path) is not None:
+                need.add(path.rsplit("/", 1)[0])
+    return sorted(need)
+
+
+def bench_paths_at_submit(j):
+    """intake: add the directories the benches need to source.extra_paths (recorded in an event)"""
+    try:
+        need = bench_missing_paths(j["spec"])
+    except Exception as ex:  # noqa: BLE001  (never block intake on the scan itself)
+        event(j, f"bench path scan skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    if need:
+        j.setdefault("spec_submitted", json.loads(json.dumps(j["spec"])))
+        src = j["spec"]["source"]
+        src["extra_paths"] = list(src.get("extra_paths", [])) + need
+        event(j, f"bench needs repo paths outside the source sync: added {need} to source.extra_paths")
+
+
 def lint_at_submit(j):
     """run the submit lint on a freshly ingested QUEUED job: may add the pin spread or REFUSE it"""
     try:
@@ -641,6 +695,8 @@ def ingest():
             else:
                 event(j, f"ingested from {origin}")
                 lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    bench_paths_at_submit(j)
         save_job(j)
 
 
@@ -3464,6 +3520,22 @@ def hm_auto_events(j):
     j["hm_auto_seen"] = seen[-20:]
 
 
+RECORD_DIR = "{RUN}/record"
+
+
+def precollect_cmd(spec):
+    """drive-0212 2026-10-09: the collect stage runs AFTER the verdict, but a verdict check may read what collect writes
+    (s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl: lef_check_MATCH on {RUN}/record/check.json, written only by collect's
+    s81_die_view_ports check), so the check could never pass (TT +84.94 / FF +8.01 / DRC 0 -> NEEDS_RTL).  When a check
+    reads {RUN}/record and the collect command writes it, the verdict runs the collect command first (collect is an
+    idempotent export: it runs again after the verdict as before)."""
+    col = ((spec.get("stages") or {}).get("collect") or {}).get("cmd") or ""
+    checks = (spec.get("verdict") or {}).get("checks") or []
+    if RECORD_DIR in col and any(RECORD_DIR in (c.get("cmd") or "") for c in checks):
+        return col
+    return None
+
+
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
@@ -3476,6 +3548,13 @@ def do_verdict(j, fleet, stl):
             return
     j["metrics"] = m
     checks, failed = {}, []
+    pre = precollect_cmd(j["spec"])
+    if pre:
+        ok, out = remote_ok(j, pre, timeout=3600)
+        if not ok and TRANSIENT_RE.search(out):
+            raise RuntimeError(f"verdict pre-collect: ssh/network failure: {out.strip()[-200:]}")
+        event(j, f"verdict: ran the collect stage first (a check reads {{RUN}}/record): rc {'0' if ok else 'nonzero'}"
+                 + ("" if ok else f": {out.strip()[-200:]}"))
     for c in v.get("checks", []):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
@@ -4316,6 +4395,10 @@ def cmd_validate(a):
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
         elif res["verdict"] == "FIX":
             print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
+        need = bench_missing_paths(spec)
+        if need:
+            print(f"bench needs repo paths outside the source sync: the loop will add {need} to source.extra_paths "
+                  f"at intake (or list them in source.extra_paths)")
     print("\n".join(errs) if errs else "OK")
     sys.exit(1 if errs else 0)
 
