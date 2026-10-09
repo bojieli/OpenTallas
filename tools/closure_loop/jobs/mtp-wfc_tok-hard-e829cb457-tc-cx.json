@@ -1,0 +1,95 @@
+{
+ "name": "mtp-wfc_tok-hard-e829cb457-tc-cx",
+ "block": "dsfd_wfc_tok_hard",
+ "owner": "Codex:mtp-rom/wfc_hard",
+ "purpose": "Single approved HARD structural token candidate, exact+epoch-mutant PASS. Four-edge full128-entry lookup: pin register,16-slot bank read,8-user selection,tag output. +2cycles versus r3; matched SOURCE still owed. TT>=0/FF>=0/DRC0,SS sensitivity,60/25ps unchanged. Remote admission only; no progressing predecessor changes.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/mtp-wfc-hard-20261009",
+  "commit": "e829cb457",
+  "extra_paths": [
+   "results/rtl/dshbm_dspark_rtl_20261003/traces"
+  ],
+  "required_files": [
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+   "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv",
+   "tools/s81_ph/s81_ph_wfc_token_hard_plan.py",
+   "tools/dsrom_wfc_token_hard_gate.py",
+   "tools/uarch_model.py",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_and_epoch_mutant",
+    "cmd": "python3 tools/dsrom_wfc_token_hard_gate.py --out {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKEN_HARD_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "cmd": "python3 tools/s81_ph/s81_ph_wfc_token_hard_plan.py && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.025 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_wfc_tok_hard rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv  $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.025 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_wfc_tok_hard rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true) && mkdir -p {RUN}/record/contract && cp physical/s81_ph_views/ports/contract/dsfd_wfc_tok_hard/* physical/s81_ph_views/specs/dsfd_wfc_tok_hard.json {RUN}/record/contract/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_wfc_tok_hard"
+  }
+ ],
+ "cycles_added": 3,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "Full128entry HARD model dsrom_wfc_token_hard_model in tools/uarch_model.py, four responseedges.162x151.2um legaloutline, predecessor7145um2 plus880um2 registerproxy; no physical credit. Exact and mutant gate passed. MatchingSOURCE remains required."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "bench_first": true
+}
