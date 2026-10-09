@@ -115,9 +115,14 @@ QWEN_R21BT = dict(QWEN_R21M, tt_h=4354.56, bl_h=1555.2)
 # r21c (emb-hbm 2026-10-08, OWNER DECISION ~21:00 PT): r21b with the input embedding in each die's attached HBM -- the
 # IO-band embedding ROM and its words / relays removed, the SU's embedding face terminated at the hub (gateway)
 QWEN_R21C = dict(QWEN_R21B, emb_hbm=True)
+# r22k (kv-die 2026-10-09, OWNER DECISION ~04:00 PT option 1a): the ROM die of the ROM die + KV die pair -- r21c with
+# the HBM PHYs / controllers / CDC / KV landing / hub moved to the KV die, no-KV tiles, the UCIe PHY + ROM link end at
+# the bottom of spine column M (tools/qwen_kv_die/rom_r22k.py, results/arch/qwen_kv_die_20261009/CONTRACT.md)
+from qwen_kv_die import rom_r22k as _R22K   # noqa: E402
+QWEN_R22K = dict(QWEN_R21C, before_relays=_R22K.surgery)
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
-                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C}
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -2183,7 +2188,8 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
+                                                              'r21c', 'r22k'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

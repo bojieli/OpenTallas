@@ -27,13 +27,26 @@ module ot_qkvd_layer_tb #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    // ROM die: SU face (CTL, Q, KVN, EMBQ) and VM / control face (RES, EMBD, HCTL)
-    input  wire [3:0]        su_v,
-    input  wire [4*W-1:0]    su_d,
-    output wire [3:0]        su_cr,
-    output wire [2:0]        vm_v,
-    output wire [3*W-1:0]    vm_d,
-    input  wire [2:0]        vm_cr,
+    // ROM die: the r21c hub's SU / VM / sequencer faces, now at the ROM end of the link (ot_qkvd_rom_end)
+    input  wire              x3_v,
+    input  wire [511:0]      x3_d,
+    input  wire [10:0]       x3_tag,
+    output wire              x3_cr,
+    input  wire              ea_v,
+    input  wire              ea_kind,
+    input  wire [23:0]       ea_addr,
+    output wire              ea_cr,
+    input  wire              dc_v,
+    input  wire [W-1:0]      dc_d,
+    output wire              dc_cr,
+    output wire              ar_v,
+    output wire [518:0]      ar_d,
+    input  wire              ar_cr,
+    output wire              eq_v,
+    output wire [511:0]      eq_d,
+    output wire              dh_v,
+    output wire [W-1:0]      dh_d,
+    input  wire              dh_cr,
     // KV die: HBM row requests / responses, KV write, embedding gateway, host
     output wire [E-1:0]      req_valid,
     output wire [E-1:0]      req_v,
@@ -71,33 +84,36 @@ module ot_qkvd_layer_tb #(
     localparam integer QB  = (RT_ROM + 8 > 48) ? RT_ROM + 8 : 48;
     localparam integer LB  = (RT_LNK + 4 > 32) ? RT_LNK + 4 : 32;
     localparam integer KB  = (RT_KV + 4 > 32) ? RT_KV + 4 : 32;
-    // ROM end: TX CTL Q KVN EMBQ (classes 0-3), RX RES EMBD HCTL (classes 4-6)
-    localparam [31:0] R_IBD = {8'd8, 8'd8, 8'(QB), 8'd8};
-    localparam [31:0] R_FCR = {8'd4, 8'd8, 8'(LB), 8'd4};
-    localparam [31:0] R_RBD = {8'd4, 8'd4, 8'(LB), 8'(LB)};
-    localparam [31:0] R_OCR = {8'd4, 8'(RT_ROM), 8'(RT_ROM), 8'(RT_ROM + 64)};
     // KV end: TX RES EMBD HCTL (4-6), RX CTL Q KVN EMBQ (0-3)
     localparam [31:0] K_IBD = {8'd8, 8'd4, 8'(KB + 8), 8'(KB + 8)};
     localparam [31:0] K_FCR = {8'd0, 8'd4, 8'(LB), 8'(LB)};
-    localparam [31:0] K_RBD = {8'd4, 8'd8, 8'(LB), 8'd4};
-    localparam [31:0] K_OCR = {8'd4, 8'd8, 8'(KB + 8), 8'd4};
+    localparam [31:0] K_RBD = {8'd32, 8'd8, 8'(LB), 8'd4};
+    localparam [31:0] K_OCR = {8'd32, 8'd8, 8'(KB + 8), 8'd4};
 
-    // ---------------- ROM die ----------------
-    wire [3:0]     rt_v;  wire [4*W-1:0] rt_d;  wire [3:0] rt_cr;
-    wire [2:0]     rr_v;  wire [3*W-1:0] rr_d;  wire [2:0] rr_cr;
-    ot_hdc_delay #(.W(4), .D(ROM_ST), .RESET(1)) u_r1v (.clk(clk), .rst_n(rst_n), .d(su_v), .q(rt_v));
-    ot_hdc_delay #(.W(4*W), .D(ROM_ST)) u_r1d (.clk(clk), .rst_n(rst_n), .d(su_d), .q(rt_d));
-    ot_hdc_delay #(.W(4), .D(ROM_ST), .RESET(1)) u_r1c (.clk(clk), .rst_n(rst_n), .d(rt_cr), .q(su_cr));
-    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r2v (.clk(clk), .rst_n(rst_n), .d(rr_v), .q(vm_v));
-    ot_hdc_delay #(.W(3*W), .D(ROM_ST)) u_r2d (.clk(clk), .rst_n(rst_n), .d(rr_d), .q(vm_d));
-    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r2c (.clk(clk), .rst_n(rst_n), .d(vm_cr), .q(rr_cr));
+    // ---------------- ROM die: SU / VM / sequencer faces -> ROM_ST relay stages -> ot_qkvd_rom_end ----------------
+    wire          x3_v_r, ea_v_r, dc_v_r, x3_cr_r, ea_cr_r, dc_cr_r, ar_v_r, eq_v_r, dh_v_r, ar_cr_r, dh_cr_r;
+    wire [522:0]  x3_r;
+    wire [24:0]   ea_r;
+    wire [W-1:0]  dc_r, dh_r;
+    wire [518:0]  ar_r;
+    wire [511:0]  eq_r;
+    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r1v (.clk(clk), .rst_n(rst_n), .d({x3_v, ea_v, dc_v}), .q({x3_v_r, ea_v_r, dc_v_r}));
+    ot_hdc_delay #(.W(523 + 25 + W), .D(ROM_ST)) u_r1d (.clk(clk), .rst_n(rst_n), .d({x3_tag, x3_d, ea_kind, ea_addr, dc_d}),
+                                                        .q({x3_r, ea_r, dc_r}));
+    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r1c (.clk(clk), .rst_n(rst_n), .d({x3_cr_r, ea_cr_r, dc_cr_r}), .q({x3_cr, ea_cr, dc_cr}));
+    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r2v (.clk(clk), .rst_n(rst_n), .d({ar_v_r, eq_v_r, dh_v_r}), .q({ar_v, eq_v, dh_v}));
+    ot_hdc_delay #(.W(519 + 512 + W), .D(ROM_ST)) u_r2d (.clk(clk), .rst_n(rst_n), .d({ar_r, eq_r, dh_r}), .q({ar_d, eq_d, dh_d}));
+    ot_hdc_delay #(.W(2), .D(ROM_ST), .RESET(1)) u_r2c (.clk(clk), .rst_n(rst_n), .d({ar_cr, dh_cr}), .q({ar_cr_r, dh_cr_r}));
     wire rom_up, rom_txv, rom_rxv, rom_lv, kv_up, kv_txv, kv_rxv, kv_lv;
     wire [FW-1:0] rom_txf, rom_rxf, rom_lf, kv_txf, kv_rxf, kv_lf;
-    wire [4:0] rom_fc, kv_fc;
-    ot_qkvd_d2d #(.NT(4), .NR(3), .TXB(0), .RXB(4), .IBD(R_IBD), .FCR(R_FCR), .RBD(R_RBD), .OCR(R_OCR),
-                  .MUT(MUT == 1 ? 1 : (MUT == 4 ? 2 : 0))) u_rom (
-        .clk(clk), .rst_n(rst_n), .t_v(rt_v), .t_d(rt_d), .t_cr(rt_cr), .r_v(rr_v), .r_d(rr_d), .r_cr(rr_cr),
-        .tx_up(rom_up), .tx_v(rom_txv), .tx_flit(rom_txf), .rx_v(rom_rxv), .rx_flit(rom_rxf), .fault(faults[0]),
+    wire [4:0] kv_fc;
+    wire [7:0] rom_fc;
+    ot_qkvd_rom_end #(.XS(2 * ROM_ST + 16), .RQD(32), .OCR_AR(2 * ROM_ST + 8), .MUT(MUT == 1 ? 1 : (MUT == 4 ? 2 : 0))) u_rom (
+        .clk(clk), .rst_n(rst_n), .x3_v(x3_v_r), .x3_d(x3_r[511:0]), .x3_tag(x3_r[522:512]), .x3_cr(x3_cr_r),
+        .ar_v(ar_v_r), .ar_d(ar_r), .ar_cr(ar_cr_r), .ea_v(ea_v_r), .ea_kind(ea_r[24]), .ea_addr(ea_r[23:0]),
+        .ea_cr(ea_cr_r), .eq_v(eq_v_r), .eq_d(eq_r), .dc_v(dc_v_r), .dc_d(dc_r), .dc_cr(dc_cr_r), .dh_v(dh_v_r),
+        .dh_d(dh_r), .dh_cr(dh_cr_r), .tx_up(rom_up), .tx_v(rom_txv), .tx_flit(rom_txf), .rx_v(rom_rxv),
+        .rx_flit(rom_rxf), .pll_fwd_pad(clk), .rst_fwd_pad(rst_n), .pll_fwd_o(), .rst_fwd_o(), .fault(faults[0]),
         .fault_cause(rom_fc));
     // ---------------- package: the two macros ----------------
     reg [31:0] cyc;
@@ -131,7 +147,7 @@ module ot_qkvd_layer_tb #(
     wire [E-1:0]  e_rv;
     wire [E*HD*8-1:0] e_rd;
     wire [7:0]    seq_fc;
-    ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(4), .UC0(KB + 8), .UC1(KB + 8),
+    ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(KB + 8), .UC1(KB + 8),
                      .UC2(4), .MUT(MUT == 2 ? 1 : (MUT == 5 ? 2 : 0))) u_seq (
         .clk(clk), .rst_n(rst_n), .c_v(sc_v), .c_d(sc_d), .c_cr(sc_cr), .u_v(su_tv), .u_d(su_td), .u_cr(su_tcr),
         .a_start(a_start), .a_T(a_T), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),

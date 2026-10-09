@@ -67,32 +67,33 @@ int main(int argc, char** argv) {
     { std::ifstream f(dir + "/gold.hex"); std::string l; while (f >> l) gold.push_back((uint32_t)strtoul(l.c_str(), 0, 16)); }
     if ((int)q.size() != NH * HD || (int)kv[0].size() != 2 * T || (int)kv[1].size() != 2 * T || (int)gold.size() != NH * HD) {
         fprintf(stderr, "bad vectors\n"); return 2; }
-    const int LAYER = 3, TOKEN = 0x1D2C5, EMB_ADDR = 0x0ABCD;
-    // ---- SU-face words per class: CTL (ATTN, TOKEN), Q (32), KVN (8), EMBQ (1) ----
-    std::deque<Word> tx[4];
-    { Word w = mkw(); wset(w, 0, 14, T); wset(w, 16, 6, LAYER); wset(w, 32, 32, 0x5000u); wset(w, 524, 4, 1); tx[0].push_back(w); }
-    { Word w = mkw(); wset(w, 0, 18, TOKEN); wset(w, 32, 14, T); wset(w, 524, 4, 2); tx[0].push_back(w); }
+    const int LAYER = 3, TOKEN = 0x1D2C5, EMB_ROW = 0x0ABC;
+    // ---- ROM-side faces: dc (CTL: ATTN, TOKEN), x3 (KVN x 8 then Q x 32, class in x3_tag[10:8]), ea (65 requests) ----
+    std::deque<Word> dcq, x3q;
+    std::deque<std::pair<int, int>> eaq;          // (kind, address)
+    { Word w = mkw(); wset(w, 0, 14, T); wset(w, 16, 6, LAYER); wset(w, 32, 32, 0x5000u); wset(w, 524, 4, 1); dcq.push_back(w); }
+    { Word w = mkw(); wset(w, 0, 18, TOKEN); wset(w, 32, 14, T); wset(w, 524, 4, 2); dcq.push_back(w); }
     for (int vg = 0; vg < 4; vg++) for (int h = 0; h < 2; h++) {
         int v = vg >> 1, g = vg & 1; Word w = mkw();
         const std::vector<uint8_t>& row = kv[v][2 * (T - 1) + g];
         for (int d = 0; d < 64; d++) wset(w, 8 * d, 8, row[64 * h + d]);
-        wset(w, 512, 3, (v << 2) | (g << 1) | h); tx[2].push_back(w); }
-    for (int b = 0; b < 32; b++) { Word w = mkw(); for (int i = 0; i < 32; i++) wset(w, 16 * i, 16, q[32 * b + i]); wset(w, 512, 6, b); tx[1].push_back(w); }
-    { Word w = mkw(); wset(w, 0, 24, EMB_ADDR); wset(w, 512, 1, 0); tx[3].push_back(w); }
-    const int QB = (2 * KVD_ROM_ST + 4 + 8 > 48) ? 2 * KVD_ROM_ST + 4 + 8 : 48;
-    int scred[4] = {8, QB, 8, 8};
+        wset(w, 512, 11, (2 << 8) | (v << 2) | (g << 1) | h); x3q.push_back(w); }
+    for (int b = 0; b < 32; b++) { Word w = mkw(); for (int i = 0; i < 32; i++) wset(w, 16 * i, 16, q[32 * b + i]); wset(w, 512, 11, (1 << 8) | b); x3q.push_back(w); }
+    for (int wd = 0; wd < 64; wd++) eaq.push_back({0, EMB_ROW * 64 + wd});
+    eaq.push_back({1, EMB_ROW});
+    int x3c = 2 * KVD_ROM_ST + 16, eac = 32, dcc = 4;
     // host words, gateway row
     std::deque<Word> hq;
     for (int k = 0; k < 2; k++) { Word w = mkw(); wset(w, 0, 32, 0xC0DE0000u + k); wset(w, 512, 16, 0x7000 + k); hq.push_back(w); }
     std::vector<Word> hsent(hq.begin(), hq.end());
     int hcred = 4, gwcred = 8, tkcredret = 0;
-    std::deque<Word> gw; std::vector<Word> gsent;
+    std::deque<Word> gw; std::vector<Word> gsent; std::vector<std::pair<int,int>> ga;
     int kvwcr_due[8] = {0}; int nkvw = 0; bool kvw_ok = true;
 
     Vot_qkvd_layer_tb* top = new Vot_qkvd_layer_tb;
     uint64_t cyc = 0;
     auto tick = [&]() { top->clk = 0; top->eval(); top->clk = 1; top->eval(); cyc++; };
-    top->rst_n = 0; top->su_v = 0; top->vm_cr = 0; top->kvw_cr = 0; top->emb_req_cr = 0; top->emb_q_v = 0; top->hc_v = 0; top->tok_cr = 0;
+    top->rst_n = 0; top->x3_v = 0; top->ea_v = 0; top->dc_v = 0; top->ar_cr = 0; top->dh_cr = 0; top->kvw_cr = 0; top->emb_req_cr = 0; top->emb_q_v = 0; top->hc_v = 0; top->tok_cr = 0;
     for (int x = 0; x < E; x++) sb(top->rsp_valid, x, 1, 0);
     for (int i = 0; i < 5; i++) tick();
     top->rst_n = 1;
@@ -100,24 +101,23 @@ int main(int argc, char** argv) {
     double tok[4] = {0, 0, 0, 0}; int rr[4] = {0, 0, 0, 0};
     std::vector<uint32_t> out(NH * HD, 0xDEADBEEF); std::vector<int> got(NH * HD, 0); int nout = 0;
     std::vector<Word> embd, hctl, toks;
-    int res_owed = 0, faults = 0, ret12[2] = {0, 0}, gwreq_ret = 0;
+    int res_owed = 0, faults = 0, dh_owed = 0, gwreq_ret = 0;
     int64_t t_ctl = -1, t_start = -1, a_first = -1, a_last = -1, res_first = -1, res_last = -1, t_emb_req = -1, t_embd_last = -1;
     int poisoned = 0;
     while (cyc < MAXC && !(nout == NH * HD && (int)embd.size() == 65 && (int)hctl.size() == 2 && (int)toks.size() == 1 && nkvw == 4)) {
         int64_t now = (int64_t)cyc;
-        // ---- SU face ----
-        top->su_v = 0;
-        for (int c = 0; c < 4; c++) {
-            if (now >= 40 && !tx[c].empty() && scred[c] > 0) {
-                put_word(top->su_d, c, tx[c].front()); tx[c].pop_front(); scred[c]--; sb(top->su_v, c, 1, 1);
-                if (c == 0 && t_ctl < 0) t_ctl = now;
-            }
+        // ---- ROM faces ----
+        top->x3_v = 0; top->ea_v = 0; top->dc_v = 0;
+        if (now >= 40) {
+            if (!dcq.empty() && dcc > 0) { put_word(top->dc_d, 0, dcq.front()); dcq.pop_front(); dcc--; top->dc_v = 1; if (t_ctl < 0) t_ctl = now; }
+            if (!x3q.empty() && x3c > 0) { const Word& w = x3q.front(); for (int bb = 0; bb < 512; bb += 32) sb(top->x3_d, bb, 32, wget(w, bb, 32));
+                                           top->x3_tag = (uint32_t)wget(w, 512, 11); x3q.pop_front(); x3c--; top->x3_v = 1; }
+            if (now >= 60 && !eaq.empty() && eac > 0) { top->ea_kind = eaq.front().first; top->ea_addr = eaq.front().second; ga.push_back(eaq.front());
+                                                        eaq.pop_front(); eac--; top->ea_v = 1; }
         }
-        // ---- VM face: credits (RES withheld during the stall window) ----
-        top->vm_cr = 0;
-        if (res_owed > 0 && !(STALL && now >= 400 && now < 700)) { sb(top->vm_cr, 0, 1, 1); res_owed--; }
-        if (ret12[0] > 0) { sb(top->vm_cr, 1, 1, 1); ret12[0]--; }
-        if (ret12[1] > 0) { sb(top->vm_cr, 2, 1, 1); ret12[1]--; }
+        top->ar_cr = 0;
+        if (res_owed > 0 && !(STALL && now >= 400 && now < 700)) { top->ar_cr = 1; res_owed--; }
+        top->dh_cr = dh_owed > 0; if (dh_owed > 0) dh_owed--;
         top->emb_req_cr = gwreq_ret > 0; if (gwreq_ret > 0) gwreq_ret--;
         // ---- host words ----
         top->hc_v = 0;
@@ -140,30 +140,29 @@ int main(int argc, char** argv) {
         tick();
         uint64_t nowc = cyc;
         // ---- outputs of this edge ----
-        for (int c = 0; c < 4; c++) if (gb(top->su_cr, c, 1)) scred[c]++;
+        if (top->x3_cr) x3c++;
+        if (top->ea_cr) eac++;
+        if (top->dc_cr) dcc++;
         if (top->hc_cr) hcred++;
         if (top->emb_q_cr) gwcred++;
         if (top->a_start_o && t_start < 0) t_start = nowc;
         if (top->a_out_valid_o) { if (a_first < 0) a_first = nowc; a_last = nowc; }
-        for (int c = 0; c < 3; c++) if (gb(top->vm_v, c, 1)) {
-            Word w = get_word(top->vm_d, c);
-            if (c == 0) {
-                int g = (int)wget(w, 518, 1), beat = (int)wget(w, 512, 6), bph = HD / 16, h = 4 * g + beat / bph, d0 = (beat % bph) * 16;
-                for (int l = 0; l < 16; l++) { int i = h * HD + d0 + l; out[i] = (uint32_t)wget(w, 32 * l, 32); got[i]++; nout++; }
-                if (res_first < 0) res_first = nowc; res_last = nowc; res_owed++;
-            } else {
-                if (c == 1) { embd.push_back(w); t_embd_last = nowc; } else hctl.push_back(w);
-                // EMBD / HCTL credits return at once (the consumer is always ready)
-            }
+        if (top->ar_v) {
+            int g = (int)gb(top->ar_d, 518, 1), beat = (int)gb(top->ar_d, 512, 6), bph = HD / 16, h = 4 * g + beat / bph, d0 = (beat % bph) * 16;
+            for (int l = 0; l < 16; l++) { int i = h * HD + d0 + l; out[i] = (uint32_t)gb(top->ar_d, 32 * l, 32); got[i]++; nout++; }
+            if (res_first < 0) res_first = nowc; res_last = nowc; res_owed++;
         }
-        ret12[0] += (int)gb(top->vm_v, 1, 1); ret12[1] += (int)gb(top->vm_v, 2, 1);   // returned on the next edge
+        if (top->eq_v) { Word w = mkw(); for (int bb = 0; bb < 512; bb += 32) wset(w, bb, 32, gb(top->eq_d, bb, 32)); embd.push_back(w); t_embd_last = nowc; }
+        if (top->dh_v) { hctl.push_back(get_word(top->dh_d, 0)); dh_owed++; }
         if (top->tok_v) { toks.push_back(get_word(top->tok_d, 0)); tkcredret++; }
         if (top->emb_req_v) {
-            Word w = get_word(top->emb_req_d, 0); t_emb_req = nowc;
-            if (wget(w, 0, 24) != (uint64_t)EMB_ADDR) { fprintf(stderr, "EMBQ address mismatch\n"); faults |= 64; }
-            uint32_t s = 0x9E3779B9u ^ EMB_ADDR;
-            for (int k = 0; k < 65; k++) { Word r = mkw(); for (int b = 0; b < 512; b += 32) { s = prng(s); wset(r, b, 32, s); } wset(r, 512, 7, k); wset(r, 519, 1, k == 64); gw.push_back(r); }
-            gwreq_ret++;             // returned on the next edge
+            Word w = get_word(top->emb_req_d, 0); if (t_emb_req < 0) t_emb_req = nowc;
+            int kind = (int)wget(w, 512, 1), addr = (int)wget(w, 0, 24);
+            size_t k = gsent.size() + gw.size();
+            if (k >= ga.size() || ga[k].first != kind || ga[k].second != addr) { fprintf(stderr, "EMBQ mismatch at %zu\n", k); faults |= 64; }
+            uint32_t s0 = 0x9E3779B9u ^ (uint32_t)(addr * 2 + kind);
+            Word r = mkw(); for (int bb = 0; bb < 512; bb += 32) { s0 = prng(s0); wset(r, bb, 32, s0); } wset(r, 512, 8, (int)k); gw.push_back(r);
+            gwreq_ret++;
         }
         if (top->kvw_v) {
             int vg = top->kvw_vg, v = vg >> 1, g = vg & 1;
@@ -192,7 +191,7 @@ int main(int argc, char** argv) {
     int mism = 0, first_bad = -1;
     for (int i = 0; i < NH * HD; i++) if (got[i] != 1 || out[i] != gold[i]) { if (first_bad < 0) first_bad = i; mism++; }
     int emb_bad = (int)gsent.size() != 65 || embd.size() != 65;
-    for (size_t k = 0; !emb_bad && k < 65; k++) if (embd[k] != gsent[k]) emb_bad = 1;
+    for (size_t k = 0; !emb_bad && k < 65; k++) for (int bb = 0; bb < 512; bb += 32) if (wget(embd[k], bb, 32) != wget(gsent[k], bb, 32)) emb_bad = 1;
     int hc_bad = hctl.size() != 2 || hctl[0] != hsent[0] || hctl[1] != hsent[1];
     int tk_bad = toks.size() != 1 || wget(toks[0], 0, 18) != (uint64_t)TOKEN || wget(toks[0], 524, 4) != 2;
     bool exact = mism == 0 && faults == 0 && nout == NH * HD && !emb_bad && !hc_bad && !tk_bad && nkvw == 4 && kvw_ok;
