@@ -1,0 +1,36 @@
+{
+  "source_commit": "5601e8881",
+  "host": "ot-epyc1tb",
+  "job": "qfd_sysctl_sram-5601e8881-tc-hm10",
+  "verdict": "PASS_CONTROL_POISON_AND_MUTANT",
+  "scenarios": 9,
+  "unwritten_memory": "Every SRAMtoken slot initialized with SECDEDdouble-bit UE, then promptDMAwrites only realpromptslots; productionwrites protected24bits in32bitslots",
+  "full_context": {
+    "steps": 8192,
+    "trace_events": 1245184,
+    "trace_bad": 0,
+    "completions": "8191/8191",
+    "completion_bad": 0
+  },
+  "CTRL_oneway_edges": 40,
+  "turnaround_max_edges": 97,
+  "added_prompt_read_edges": 0,
+  "negative_control": {
+    "change": "PROMPT_VALID_ONLY0 restores unconditionalunwrittenreads",
+    "eos_result": "pass0 steps3 CQ1/5 faultCQ1 FAULT_STATUS00440000 (promptUE + startunready)",
+    "scope": "fullshapeoriginalmechanism failure under same poisoned SRAM power-up"
+  },
+  "logs": {
+    "fault4.log": "9dbec55dca4dd9a68440a9f0cb4737b52405bf2d5bf6af63c4efbf9a2e914494",
+    "fault3.log": "864551f6039b6673219aa93ac4cc311ed24d6f2e24ab73ce2a96dbfb47354cbd",
+    "fault2.log": "1de8337ae315b11af1d13f6e2bd83fcf1412caa52c883f2d4dbb072e5fdc8334",
+    "fullctx.log": "28f8e35ce419fa8f290c7d9a8b4a3dfa4f87e68829a414c445c73ea414c5fcb8",
+    "eos.log": "d075168f3c93071191899910979638f56deb13d27ff94daaf0624e035a3becee",
+    "length.log": "bf6f5760ca3d5ba178b8691c10ae07efc07f864a23cf6feef875efa89b57a277",
+    "badlen.log": "e9cf4d9cfbf9775d8cd7f80c570025b90079e368f3a883b897b18ca948ce6ee0",
+    "fault1.log": "72da546563f3b592f50820eb444b18426a696ce1af43a4c4756d5eed983ee368",
+    "disagree.log": "e492cb7fa40801d18d587a7aa2999139d74d83768c410199e1d72d81cb3b55cf",
+    "unused_read_mutant.log": "602952933f6c42aa445db2b771a2b72874bc18f52ae95357329fd045df3313f3"
+  },
+  "physical_qualification": "pending route"
+}
