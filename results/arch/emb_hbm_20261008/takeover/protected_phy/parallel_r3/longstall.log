@@ -1,0 +1,5 @@
+latency coreHBM1024ps WR min=117 sum=9487 max=489 RD min=97 sum=7783 max=465 ACT=129 conflicts=82
+PASS 64 WR 64 RD writes=128 reads=320 cycles=17526 parallel real256 two-slot taggedmetadata boot-onlyWR OOO=2
+pairpublication vsmaxrealphysicalreturn extra_sum=198 extra_max=3 LONGSTALL=1
+PASS actualphysicaldata CE corrected and UE retained againstreal sidecarchecks
+tb_qfd_protected_phy_pair.sv:78: $finish called at 18230272 (1ps)

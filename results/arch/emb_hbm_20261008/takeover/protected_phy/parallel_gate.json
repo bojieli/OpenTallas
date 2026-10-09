@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.qwen.protected_phy.parallel_gate.v1",
+  "model_source": "69f3df5bf",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_pair_pc.sv": "fed6a54095c66837f31c61fcfeefdde7a2e58ece0041a70abd5ee9e8638456e6",
+    "bench/emb_hbm_20261008/tb_qfd_protected_phy_pair.sv": "970bec335a16d786f96a8885db8b97c3020060cc5357e398e45096f69ea99172",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_emb_protected_pair_r3.sh",
+  "clock_ps": 1024,
+  "passed": [
+    "64BOOTWR +64pairedreads:32KV/32EMB",
+    "requeststall2/7cycles",
+    "actualDATA/ECCrequests independentlyoffered; ECCofferednextedge before DATAresponse",
+    "DATAfirst andECCfirst fromactual256physicalmodel via2returntestshim",
+    "directactualmodelreturns",
+    "60edgeECCrequeststall whileDATAreturns beforeECCaccepted",
+    "physicalDATA1bitCE and2bitUE withrealcheckstorage",
+    "defaultoff",
+    "samePC16btagrollover"
+  ],
+  "negative_expected_FAIL": [
+    "wrongtag",
+    "wrongPC",
+    "bootwritevisibilitymismatch",
+    "runtimeKVWRITEunsupported",
+    "callercheckregionwrite",
+    "onebitassembledcodemutant",
+    "duplicateECCtag"
+  ],
+  "physical_transactions_64plus64": {
+    "writes": 128,
+    "reads": 320
+  },
+  "measured": {
+    "normal_shim_read_min": 39,
+    "normal_shim_read_sum": 4503,
+    "normal_shim_read_max": 395,
+    "normal_bootwrite_min": 117,
+    "normal_bootwrite_sum": 9487,
+    "normal_bootwrite_max": 489,
+    "publication_after_max_physical_return_cycles": 4,
+    "direct_longstall_publication_cycles": 3
+  },
+  "historical": [
+    "parallel_r2 testcompile typo preserved",
+    "serialcomponent remainshistorynotadopted"
+  ],
+  "protection": "payloadSECDEDonly; plainphase/tag/metadata registers; noID64/aperture/lease",
+  "native_JEDEC_binding": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "latency_claim": "parallelcompletion max(DATA,ECC), never serialized sum; physicaltwo-burst/tRRD/bankrowservice stillreal andunqualified atnativelevel",
+  "same_bank_issue": "linearhistoricalmap canplaceDATA/ECC differentrows samebank; bankdistinctbijectivealternative proposedto parent, notcurrent source",
+  "open": [
+    "nativeJEDEC separatephysicalclasses countlogicalonce",
+    "native32PCphysicalarbiter/twooutstandingcredits",
+    "runtimeKVpairedwriteledger/vendorcompletion",
+    "nativeactualm_p2l sectorcapture",
+    "bank/row/two-burstpricing andactualincontextphysicalviews"
+  ]
+}

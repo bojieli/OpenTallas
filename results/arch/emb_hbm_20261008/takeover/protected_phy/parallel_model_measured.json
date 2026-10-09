@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.qwen.protected_phy.pair.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "MACs_per_cycle": 0,
+  "domain_period_ps": 1024,
+  "replicas_per_stack": 32,
+  "stacks_per_die": 4,
+  "physical_sector_bytes": 32,
+  "protected_sector_bits": 288,
+  "logical_payload_bits": 256,
+  "check_bits": 32,
+  "sidecar_checks_per_sector": 8,
+  "embedding_data_rows": [
+    24427,
+    24575
+  ],
+  "embedding_sidecar_rows": [
+    24576,
+    24594
+  ],
+  "embedding_sidecar_reserved_bytes": 79691776,
+  "embedding_sidecar_logical_bytes": 77829216,
+  "kv_data_layer_rows": [
+    0,
+    35
+  ],
+  "kv_sidecar_rows": [
+    64,
+    99
+  ],
+  "kv_sidecar_sectors_per_layer_per_PC": 128,
+  "kv_sidecar_reserved_bytes": 18874368,
+  "region_map": "tools/qwen_protected_phy_region_map.py; disjoint staticregions, no aperture hardware",
+  "read_physical_transactions": 2,
+  "read_physical_bytes": 64,
+  "write_physical_transactions": 5,
+  "write_physical_bytes": 160,
+  "write_sequence": [
+    "bootECC RD",
+    "bootDATA WR",
+    "bootECC RMW WR",
+    "bootDATA RD fence",
+    "bootECC RD fence"
+  ],
+  "write_done": "both tagged readback fences match; never request acceptance",
+  "active_logical_requests_per_PC": 1,
+  "physical_outstanding_reads_per_PC": 2,
+  "write_RMW_exclusion": "all clients sharing a PC sidecar word must use this sole provider; external bypass invalidates qualification",
+  "mutable_register_payload_bits": 1339,
+  "register_area_proxy_um2": 428.48,
+  "area_basis": "flop proxy only; mux, control, CTS and routing additional; transient registers plain per owner scope; no slot/P&R qualification",
+  "boundaries": {
+    "logical_request_bits": 374,
+    "logical_return_bits": 345,
+    "physical_request_bits": 310,
+    "physical_return_bits": 282
+  },
+  "communication_intensity": "read64 physical bytes /32 logical bytes; write160/32",
+  "mux_fanout": "one selected PC return from32; no payload broadcast;32 per-PC request sources require admitted physical arbiter",
+  "routing_tracks_needed": "sum listed boundary bits at actual placement; no floorplan slot claimed",
+  "latency": "read two serialized matched physical reads + request/output edges; write five serialized transactions with actual request-ready and fence latency; component gate measures cycles, no token speed credit",
+  "native_JEDEC_binding": false,
+  "physical_qualified": false,
+  "obligations": [
+    "static generator reserves disjoint sidecar regions",
+    "native controller schedules extra ACT/PRE/RD/WR and protected metadata",
+    "all writers serialized here",
+    "actual issue sector metadata source",
+    "SS/FF in context and real PHY integration"
+  ],
+  "read_launch": "DATA request thenECC request onnextavailablephysicalrequestedge; neverwaitforDATAresponsebeforeECClaunch",
+  "read_return": "independenttaggedDATAslot andECCslot; accepteitherorder, exactPC/tag/beatmatch; duplicateorunknownfault",
+  "read_latency": "max(actualDATAcompletion,actualECCcompletion) +registeredpairpublication; norequestserializationlatency, nativebank/row/two-burstcost stillmustmeasure",
+  "write_supported": "embeddingbootclass1 ONLY; runtimeKVWRITE rejected, nativewriteledgerprovider OPEN",
+  "native_requirements": [
+    "actualtwooutstandingreadcredits",
+    "distinctphysicalDATA/ECCclasses do not advance logical counttwice",
+    "32PCphysicalrequestarbiter andnativeJEDEC",
+    "actualruntimeKVpairedwriteledger/vendorcompletion, never5xbootfallback",
+    "staticgeneratorregionmap binding"
+  ],
+  "gate": {
+    "normal_shim_read_min": 39,
+    "normal_shim_read_sum": 4503,
+    "normal_shim_read_max": 395,
+    "normal_bootwrite_min": 117,
+    "normal_bootwrite_sum": 9487,
+    "normal_bootwrite_max": 489,
+    "publication_after_max_physical_return_cycles": 4,
+    "direct_longstall_publication_cycles": 3
+  },
+  "same_bank_issue": "linearhistoricalmap canplaceDATA/ECC differentrows samebank; bankdistinctbijectivealternative proposedto parent, notcurrent source"
+}
