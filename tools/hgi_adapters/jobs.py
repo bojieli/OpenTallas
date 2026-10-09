@@ -33,12 +33,18 @@ UNITS = {
     'argmax': ('ot_hgi_argmax_record', [f'{A}/ot_hgi_argmax_record.sv'], (260, 260), (340, 220),
                'run_small.sh argmax (HGI_ARGMAX: CF-ARG x 2 + Qwen head + 40 random rows on the real argmax18 engine and '
                'the real HGI VM; MUT_OFFSET FAIL)'),
+    'fused': ('ot_hgi_fused_record', [f'{A}/ot_hgi_su_record.sv', f'{A}/ot_hgi_fused_record.sv'], (320, 320), (420, 260),
+              'run_small.sh fused (HGI_FUSED: CF-NORM d4096 BF16 + QK-norm seg 128 FP32 EXACT on the real vec + mover model; '
+              'Qwen ROW_NORM shapes vs hgi_sim row_norm; MUT_SEG FAIL)'),
+    'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv'], (300, 300), (400, 240),
+              'run_small.sh mover (HGI_MOVER: DMA adapter + mover on the real HGI VM + kport HBM model: CF-IDXD / CF-KV x 3 '
+              'exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),
            'run_small.sh hc (HGI_HC: DS HC_MIX shapes; MUT_NF FAIL)'),
 }
 
 
-NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record'}     # no legacy pass-through parameter
+NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover'}     # no legacy pass-through parameter
 
 
 def route(top, srcs, die, hm, pd):

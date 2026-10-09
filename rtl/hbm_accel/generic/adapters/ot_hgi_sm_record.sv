@@ -11,10 +11,13 @@
 // B's effective n elements, M = B.m rows) is cut into 32 CONTIGUOUS row blocks of Q = ceil(M / 32) rows: SM s takes
 // rows [s Q, min((s + 1) Q, M)) (none if s Q >= M).  Per SM s with rows R_s > 0:
 //   op_fmt = param[1:0] (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8: the smh encoding, B.fmt must agree);
-//   op_c = 8 (IL k-steps a group), op_g = ceil(K / (8 W)), W = weights a line (BF16 64, FP8 128, FP4 256, INT8 64:
-//   front_c two-beat), so a row is LPR = 8 op_g lines; op_gs = 1 (group-slot issue, every shipped DS / Qwen op);
-//   op_rows = R_s; op_xb = 0 (the x fragment base: one record at a time, the x store is single-buffered);
-//   d_base = (B.base + s Q B.stride) >> 5 (32-byte sector units: the stream service's address unit), d_lines = R_s LPR.
+//   op_c = 8 (IL k-steps a group), op_g = ceil(K / (8 W)), W = weights a line-lane group (BF16 64 x 8 = 512 K a group,
+//   FP8 1,024, FP4 2,048, INT8 512: tools/dshbm_matched_sm_seq.gen_op Gn), so a row is LPR = 8 op_g lines (INT8: 4 op_g,
+//   one line = two BF16 beats of codes); op_gs = 1 (group-slot issue); op_rows = R_s; op_xb = 0 (single-buffered x);
+//   d_base / d_lines in LINE units (the native SM descriptor: dshbm_expert_workgroup_descriptor d_base_unit = line):
+//   line bytes LB = 136 (the 1,088-b DS line) or 160 (the INT8 transport line), B.stride must be LPR x LB (rows dense
+//   in lines) and B.base a multiple of LB; line0 = B.base / LB (iterative divide, 2 bits an edge, under the x load);
+//   d_base = line0 + s Q LPR, d_lines = R_s LPR.
 // Positions (G18, hbm-forks: no SM port): P = param[4:2] + 1 slots ride the NC = 8 independent x columns; the x load
 //   carries P rows of A, the result publication takes the first P columns.  A.m and O.m must equal P when P > 1.
 // Service ports (peers on the die, decode-level handshakes): x load (A from VM / STREAM into every active SM's x store
@@ -24,8 +27,8 @@
 //   SMs (release_in := arrive: the record is the barrier).  Any SM fault, x / pub fault, or decode refusal retires the
 //   record with rec_fault and halts (sticky until rst_n).
 // Refusals: unit != 1 / op != 0; A, B or O absent; B not HBM, A / O not VM / STREAM; B.fmt != param fmt; B inner
-//   stride not 1 or ibcast; K != effective n of A; K or M = 0; op_g > 255; Q > 4095 (op_rows 13 b); P > 1 with A.m or
-//   O.m != P; B.base not 32-byte aligned.
+//   stride not 1 or ibcast; K != effective n of A; K or M = 0; FP8 / FP4 K not a multiple of 32; op_g > 255; Q > 4095;
+//   P > 1 with A.m or O.m != P; B.stride != LPR x LB; B.base not a multiple of LB (the divide's remainder, fault at E21).
 // Latency: accept E0, decode E1 (x load + publication issued), products by radix-16 iterative Horner E2-E6, per-SM
 //   fields E7-E9; the SMs start at max(E10, x_done + 1).  The x load of K elements takes >= ceil(K / 64) beats, so the
 //   added edges on the record path are the 2 of the station (E0, E1) whenever K >= 512.
@@ -100,6 +103,8 @@ module ot_hgi_sm_record #(
     wire [2:0]  bfmt = b_q[4:2];
     wire [2:0]  want = (pf == 2'd0) ? 3'd1 : (pf == 2'd1) ? 3'd2 : (pf == 2'd2) ? 3'd3 : 3'd4;
     wire [3:0]  lw8 = (pf == 2'd1) ? 4'd10 : (pf == 2'd2) ? 4'd11 : 4'd9;        // log2(8 W)
+    wire [7:0]  lby = (pf == 2'd3) ? 8'd160 : 8'd136;                              // line bytes
+    wire [10:0] lpr_d = (pf == 2'd3) ? {1'b0, g_full[7:0], 2'b00} : {g_full[7:0], 3'b000};
     wire [20:0] km1 = nb_q - 21'd1;
     wire [20:0] g_full = (km1 >> lw8) + 21'd1;                                       // ceil(K / 8W)
     wire [19:0] mm = b_q[87:68];
@@ -107,12 +112,14 @@ module ot_hgi_sm_record #(
     wire bad = (hdr_q[127:124] != 4'd1) || (hdr_q[123:118] != 6'd0) || !opnd[0] || !opnd[1] || !opnd[4] ||
                (b_q[1:0] != 2'd0) || (a_q[1:0] != 2'd1 && a_q[1:0] != 2'd2) || (o_q[1:0] != 2'd1 && o_q[1:0] != 2'd2) ||
                (bfmt != want) || b_q[5] || (b_q[135:120] > 16'd1) || (na_q != nb_q) || (nb_q == 21'd0) ||
-               (mm == 20'd0) || (g_full > 21'd255) || (q_full > 16'd4095) || (|b_q[12:8]) ||
+               (mm == 20'd0) || (g_full > 21'd255) || (q_full > 16'd4095) || (b_q[119:88] != {13'd0, lpr_d} * {24'd0, lby}) ||
+               ((pf == 2'd1 || pf == 2'd2) && (|nb_q[4:0])) ||
                (pp > 4'd1 && (a_q[87:68] != {16'd0, pp} || o_q[87:68] != {16'd0, pp}));
 
     // ---- products: QS = Q * B.stride, LQ = Q * LPR, ML = M * LPR (radix-16 iterative Horner, 5 digits, E2-E6)
     reg  [19:0] q_r; reg [7:0] g_r; reg [10:0] lpr_r; reg [19:0] m_r; reg [39:0] base_r; reg [31:0] str_r;
     reg  [1:0]  fmt_r;
+    reg  [7:0]  lby_r; reg [39:0] dv_n, dv_q; reg [8:0] dv_r; reg [5:0] dv_k; reg dv_chk;    // line0 = B.base / LB (radix 4)
     reg  [44:0] qs; reg [23:0] lq; reg [30:0] ml;
     reg  [2:0]  dig;                     // radix-16 digits left (5: Q and M are <= 20 b)
     reg         prod_v, pd_seen;
@@ -148,7 +155,7 @@ module ot_hgi_sm_record #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
+            raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; dv_chk <= 1'b0; dv_k <= 6'd0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
             x_v <= 1'b0; pub_v <= 1'b0; go_ok <= 1'b0; xs_done <= 1'b0; started <= 1'b0; pub_sent <= 1'b0;
             x_sent <= 1'b0; st_pend <= 0; d_pend <= 0; arr_want <= 0; arr_seen <= 0; rel <= 0; act <= 0; fld_ph <= 0;
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
@@ -166,7 +173,7 @@ module ot_hgi_sm_record #(
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; xs_done <= 1'b0; started <= 1'b0; go_ok <= 1'b0; fld_ph <= 2'd0;
-                    q_r <= {4'd0, q_full}; g_r <= g_full[7:0]; lpr_r <= {g_full[7:0], 3'b000}; m_r <= mm;
+                    q_r <= {4'd0, q_full}; g_r <= g_full[7:0]; lpr_r <= lpr_d; lby_r <= lby; dv_n <= b_q[47:8]; dv_q <= 40'd0; dv_r <= 9'd0; dv_k <= 6'd20; dv_chk <= 1'b1; m_r <= mm;
                     base_r <= b_q[47:8]; str_r <= b_q[119:88]; fmt_r <= pf;
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
                     x_v <= 1'b1; x_base <= a_q[47:8]; x_n <= na_q; x_p <= pp; x_stride <= a_q[119:88];
@@ -187,7 +194,16 @@ module ot_hgi_sm_record #(
                 if (dig == 3'd1) prod_v <= 1'b1;
             end
             if (busy && in_pd) pd_seen <= 1'b1;
-            if (prod_v && fld_ph == 2'd0) begin
+            if (busy && dv_k != 6'd0) begin                        // restoring divide, 2 quotient bits an edge
+                dv_k <= dv_k - 6'd1;
+                begin : g_div
+                    reg [9:0] r1, r2; reg q1, q2;
+                    r1 = {dv_r[8:0], dv_n[39]}; q1 = (r1 >= {2'd0, lby_r}); if (q1) r1 = r1 - {2'd0, lby_r};
+                    r2 = {r1[8:0], dv_n[38]};   q2 = (r2 >= {2'd0, lby_r}); if (q2) r2 = r2 - {2'd0, lby_r};
+                    dv_r <= r2[8:0]; dv_n <= dv_n << 2; dv_q <= {dv_q[37:0], q1, q2};
+                end
+            end
+            if (prod_v && fld_ph == 2'd0 && dv_k == 6'd0) begin
                 for (s = 0; s < NSM; s = s + 1) begin
                     sqs[s*45 +: 45] <= qs * s;
                     slq[s*31 +: 31] <= {7'd0, lq} * s;
@@ -202,7 +218,7 @@ module ot_hgi_sm_record #(
                         ((({3'd0, m_r} - sq[s*17 +: 17]) > {3'd0, q_r}) ? q_r[12:0] : (m_r - sq[s*17 +: 17])) : 13'd0;
                     dl_s[s*24 +: 24] <= ({3'd0, m_r} > {3'd0, sq[s*17 +: 17]}) ?
                         (((ml - slq[s*31 +: 31]) > {7'd0, lq}) ? lq : (ml - slq[s*31 +: 31])) : 24'd0;
-                    dbase_s[s*32 +: 32] <= ({5'd0, base_r} + sqs[s*45 +: 45]) >> 5;
+                    dbase_s[s*32 +: 32] <= dv_q[31:0] + {1'b0, slq[s*31 +: 31]};
                 end
                 fld_ph <= 2'd2;
             end
@@ -224,7 +240,9 @@ module ot_hgi_sm_record #(
                 for (s = 0; s < NSM; s = s + 1)
                     if (arr_want[s] && ret_q[s*4 + 2] != rel[s]) arr_seen[s] <= 1'b1;
             end
-            if (busy && (any_fault || in_xf || in_pf)) begin
+            if (busy && dv_chk && dv_k == 6'd0 && dv_r != 9'd0) begin            // B.base not a multiple of LB
+                rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0; dv_chk <= 1'b0;
+            end else if (busy && (any_fault || in_xf || in_pf)) begin
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0;
             end else if (busy && started && !go_ok && all_arr && pd_seen && st_pend == 0 && d_pend == 0) begin
                 rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; started <= 1'b0;
