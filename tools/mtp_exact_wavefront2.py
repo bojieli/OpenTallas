@@ -42,6 +42,7 @@ BODY2 = lambda L: [list(range(SOURCE_LAYER)), [SOURCE_LAYER], [SOURCE_LAYER + 1]
 KS = (1, 2)
 BAD = 3
 ORDER, CFG = "basic", "cfg_stage2"
+ROLLBACK_RING_DYN = False
 WFC = ROOT / "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 WFC_SHA = "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8"
 # the closed stg r11 element's knobs (results/rtl/dsrom_wfc_split_20261006/stage/stage_w1_r11.json)
@@ -177,6 +178,10 @@ def bench_copy(run: Path) -> Path:
     """tb_dsrom_wavefront_array.sv with STAGE_BENCH generalised to NODES >= 1 (inject at package 0, link n -> n+1,
     sink at package NODES-1).  NODES = 1 is the pinned bench's behaviour."""
     src = W.TB.read_text()
+    if ROLLBACK_RING_DYN:
+        anchor = "ot_hdc_core_v41x #(.SW(SW), .HS(HS),"
+        assert src.count(anchor) == 1, "ring-DYN core parameter anchor changed"
+        src = src.replace(anchor, "ot_hdc_core_v41x #(.ROLLBACK_RING_DYN(1), .SW(SW), .HS(HS),")
     old_inj = "            reg [FLIT:0] inj [0:INJ_MAX-1];           // {last, flit}; a zero entry ends the list\n"
     new_inj = "            reg [FLIT+1:0] inj [0:INJ_MAX-1];         // {valid, last, flit} (mtp-exact: explicit valid)\n"
     assert src.count(old_inj) == 1
@@ -235,6 +240,7 @@ def ctrl_copy(run: Path) -> Path:
 
 def run(scratch: Path, wave: int, ctrl: str, jobs: int):
     tag = f"stage2_{ctrl}_w{wave}" + ("" if ORDER == "basic" else f"_{ORDER}")
+    tag += "_ringdyn" if ROLLBACK_RING_DYN else ""
     obj = scratch / f"obj_{tag}"
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "v41_array_cfg.svh").write_text((scratch / "stage2_cfg.svh").read_text())
@@ -271,7 +277,9 @@ def run(scratch: Path, wave: int, ctrl: str, jobs: int):
     (scratch / f"run_{tag}.json").write_text(json.dumps(dict(rc=rc, build_seconds=round(bsec, 1),
                                                              sim_seconds=round(time.time() - t0, 1), ctrl=ctrl,
                                                              wave=wave, defines=defs, tb_sha256=sha(tb),
-                                                             ctrl_sha256=sha(cfile))) + "\n")
+                                                             ctrl_sha256=sha(cfile),
+                                                             core_sha256=sha(ROOT / 'rtl/hdc/v41x/ot_hdc_core_v41x.sv'),
+                                                             rollback_ring_dyn=ROLLBACK_RING_DYN)) + "\n")
     return rc
 
 
@@ -318,13 +326,16 @@ def record(scratch: Path, output: Path):
         a = analyse((scratch / f"out_{tag}.txt").read_text(errors="replace"))
         res["runs"][tag] = dict(meta=meta, **a)
     suffix = "" if ORDER == "basic" else f"_{ORDER}"
+    suffix += "_ringdyn" if ROLLBACK_RING_DYN else ""
     w1 = res["runs"].get(f"stage2_wfc_w1{suffix}", {})
     w0 = res["runs"].get(f"stage2_wfc_w0{suffix}") or res["runs"].get(f"stage2_wf_w0{suffix}", {})
     res["pass"] = bool(w1.get("passed") and w1.get("out_mismatch") == 0 and w1.get("mismatches") == 0
                        and w1.get("state_mismatch") == 0 and w1.get("overlapping_job_pairs", 0) > 0
                        and (not w0 or not w0.get("passed")))
     res["negative_control_wave0_detected"] = (not w0.get("passed")) if w0 else None
-    deep = res["runs"].get("stage2_wfc_w1_deep")
+    if ROLLBACK_RING_DYN:
+        res["pass"] = res["pass"] and bool(w0 and not w0.get("passed"))
+    deep = res["runs"].get("stage2_wfc_w1_deep" + ("_ringdyn" if ROLLBACK_RING_DYN else ""))
     if deep is not None:      # MR-5: squashed successors already in flight, re-issued after the corrected position
         res["mr5_deep_order_exact"] = bool(deep.get("passed") and deep.get("out_mismatch") == 0
                                             and deep.get("state_mismatch") == 0)
@@ -344,11 +355,14 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--order", default="basic", choices=("basic", "deep"))
+    ap.add_argument("--rollback-ring-dyn", action="store_true",
+                    help="Opt in to one-position core ring addressing; preserve original failing vehicle by default")
     ap.add_argument("--source-layer", type=int, default=19, choices=(8, 14, 19),
                     help="First measured stage; 14 exercises ratio2 compressor rollback plus Engram, 19 is original WFC vehicle")
     a, rest = ap.parse_known_args()
     assert set(rest) <= {"--all-unit", "--kv-hbm"}, rest   # appended by the array campaign import
-    global ORDER, CFG, SOURCE_LAYER
+    global ORDER, CFG, SOURCE_LAYER, ROLLBACK_RING_DYN
+    ROLLBACK_RING_DYN = a.rollback_ring_dyn
     SOURCE_LAYER = a.source_layer
     ORDER, CFG = a.order, ("cfg_stage2" if a.order == "basic" else f"cfg_stage2_{a.order}")
     if a.action == "prepare":
