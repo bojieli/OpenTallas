@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_mtp_p2_ordered_rows;
   parameter integer MUT_ORDER=0;
+  parameter integer PRIMARY_SHARED=0;
   reg clk=0;always #0.416667 clk=~clk;
   reg rst_n=0,start_v=0,sink_abort=0;
   wire start_r,done,fault;
@@ -18,7 +19,7 @@ module tb_mtp_p2_ordered_rows;
   wire [575:0] oq;
   integer received=0,cycles=0,bank,word,slice;
   reg checking=0;
-  ot_mtp_p2_ordered_rows #(.ENABLE(1),.MUT_ORDER(MUT_ORDER)) dut(
+  ot_mtp_p2_ordered_rows #(.ENABLE(1),.MUT_ORDER(MUT_ORDER),.PRIMARY_SHARED(PRIMARY_SHARED)) dut(
     .clk(clk),.rst_n(rst_n),.start_v(start_v),.start_r(start_r),
     .start_identity(identity),.start_ids(ids),.in_v(iv),.in_r(ir),
     .in_identity(itag),.in_expert(ie),.in_shared(ish),.in_last(ilast),
@@ -46,7 +47,7 @@ module tb_mtp_p2_ordered_rows;
     if(checking&&ov&&oready) begin
       bank=received/80;word=received%80;
       if(otag!==identity||oe!==expert(bank)||osh!==(bank==3)||
-         ow!==word||orl!==(word==79)||otl!==((bank==3)&&(word==79)))
+         ow!==word||orl!==(word==79)||otl!==((bank==(PRIMARY_SHARED?2:3))&&(word==79)))
         $fatal(1,"P2 FAIL identity/order at result%0d",received);
       for(slice=0;slice<8;slice=slice+1)
         if(oq[72*slice+:64]!==payload(bank,word,slice)||
@@ -95,9 +96,16 @@ module tb_mtp_p2_ordered_rows;
     reset_start();checking=1;
     // Parallel B/A arrivals deliberately opposite to the golden drain order.
     for(w=0;w<80;w=w+1)send_pair(2,0,w);
-    for(w=0;w<80;w=w+1)send_pair(3,1,w);
+    if(PRIMARY_SHARED) begin
+      for(w=0;w<80;w=w+1) begin
+        @(negedge clk);iv=1;ish=0;ilast=(w==79);itag={identity,identity};
+        ie={9'd0,expert(1)};iw={7'd0,7'(w)};idata={512'd0,flit(1,w)};
+        @(posedge clk);if(!ir[0])$fatal(1,"P2 FAIL single readiness");
+        @(negedge clk);iv=0;
+      end
+    end else for(w=0;w<80;w=w+1)send_pair(3,1,w);
     wait(done);@(negedge clk);
-    if(received!=320)$fatal(1,"P2 FAIL receipt count%0d",received);
+    if(received!=(PRIMARY_SHARED?240:320))$fatal(1,"P2 FAIL receipt count%0d",received);
     checking=0;
     for(k=0;k<4;k=k+1)negative(k);
     reset_start();send_pair(0,1,0);
@@ -108,7 +116,7 @@ module tb_mtp_p2_ordered_rows;
     if(!fault)$fatal(1,"P2 FAIL duplicate not rejected");
     reset_start();sink_abort=1;@(negedge clk);sink_abort=0;
     if(!fault)$fatal(1,"P2 FAIL consumer UE abort not held");
-    $display("P2 PASS full320flits exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles%0d",cycles);
+    $display("P2 PASS flits%0d primary_shared%0d exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles%0d",received,PRIMARY_SHARED,cycles);
     $finish;
   end
 endmodule

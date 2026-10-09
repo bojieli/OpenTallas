@@ -4,7 +4,7 @@
 // Three complete expert rows drain in ascending selected-ID order, then shared.
 // Each SRAM flit is eight SECDED72 words. The consumer MUST correct/decode and
 // reject UE before arithmetic; sink_abort poisons this transaction on that path.
-module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0) (
+module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0) (
   input wire clk, rst_n,
   input wire start_v, output wire start_r,
   input wire [73:0] start_identity, // {frame3,rank2,stage2,epoch4,position21,user10,transaction32}
@@ -30,6 +30,8 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     assign out_word=0; assign out_secded=0;
     assign in_r=0; assign done=0; assign fault=0;
   end else begin: enabled
+    localparam integer BANKS=PRIMARY_SHARED?3:4;
+    localparam integer LAST_BANK=BANKS-1;
     reg busy, busy_copy;
     reg [73:0] identity, identity_copy;
     reg [26:0] ids, ids_copy;
@@ -75,13 +77,13 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     assign out_expert=out_shared?9'd0:ids[9*queue_meta[rp[2:0]][8:7]+:9];
     assign out_identity=identity;
     assign out_row_last=out_word==79;
-    assign out_transaction_last=out_shared&&out_row_last;
+    assign out_transaction_last=(queue_meta[rp[2:0]][8:7]==LAST_BANK)&&out_row_last;
 
     always @* begin
       accept_bank=0; accept_last=0; in_r=0;
       for(b=0;b<4;b=b+1) begin accepted_data[b]=0;accepted_word[b]=0;end
       for(l=0;l<2;l=l+1) begin
-        target[l]=0;valid_expert[l]=in_shared[l];
+        target[l]=0;valid_expert[l]=in_shared[l]&&!PRIMARY_SHARED;
         lane_word[l]=in_word[7*l+:7];
         if(in_shared[l]) target[l]=3;
         else for(b=0;b<3;b=b+1)
@@ -99,7 +101,10 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
         end
       end
     end
-    for(genvar bank=0;bank<4;bank=bank+1) begin: banks
+    if(PRIMARY_SHARED) begin: no_shared_bank
+      assign bank_q[3]=0; assign encoded[3]=0;
+    end
+    for(genvar bank=0;bank<BANKS;bank=bank+1) begin: banks
       for(genvar slice=0;slice<8;slice=slice+1) begin: codes
         ot_secded_enc #(.K(64),.R(8)) enc(.clk(clk),
           .d(accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
@@ -139,7 +144,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
           pending_meta<={read_bank,read_word};pending_meta_copy<={read_bank,read_word};
           if(read_word==79) begin
             read_word<=0;read_word_copy<=0;
-            if(read_bank==3) begin all_issued<=1;all_issued_copy<=1;end
+            if(read_bank==LAST_BANK) begin all_issued<=1;all_issued_copy<=1;end
             else begin read_bank<=read_bank+1;read_bank_copy<=read_bank_copy+1;end
           end else begin read_word<=read_word+1;read_word_copy<=read_word_copy+1;end
         end
