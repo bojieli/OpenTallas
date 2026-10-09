@@ -1,0 +1,106 @@
+{
+  "name": "hgi-coll-port-secded-c035be9a7-pd50-tc-cx",
+  "block": "ot_hcoll_port",
+  "owner": "Codex:generic_collective_sram",
+  "purpose": "Owner GH-c approved payload-only SECDED in all real mutable collective SRAMs. Full545bit port, eighteen128x256 macros unchanged; nine72 codewords storedin648bits. InputencodebeforepinFF anddecodeaftercapture, zeroaddedlogicaledges. Actual CE648/UE23004 andFIFOcycle/fault/mutants passed; endpoint96rank gate parallel. Routes beforebenches per latestowner, adoptionrequiresall exact/electrical/fault/TTFF gates.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc4",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/hgi-collective-sram-20261009",
+    "commit": "c035be9a74cabc959d603cc7ace4988c2658ce82",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical"
+    ],
+    "required_files": [
+      "physical/hgi_collective_payload_secded_20261009/route_port.sh",
+      "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv"
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "stages": {
+    "bench": [
+      {
+        "cmd": "bash rtl/hbm_accel/generic_sram_ecc_20261009/run_fifo.sh {RUN}/bench/fifo",
+        "needs": [
+          "iverilog"
+        ],
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "ok": "grep -q 'PAYLOAD_FIFO PASS' {RUN}/bench/fifo/fifo.log && test $(wc -l < {RUN}/bench/fifo/mutants.txt) = 2"
+      },
+      {
+        "cmd": "bash rtl/hbm_accel/generic_sram_ecc_20261009/run_port.sh {RUN}/bench/port",
+        "needs": [
+          "iverilog"
+        ],
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "ok": "grep -q 'PAYLOAD_PORT PASS' {RUN}/bench/port/port.log"
+      }
+    ],
+    "calibrate": {
+      "cmd": "python3 -c \"from tools.uarch_model import hgi_collective_payload_secded_model as model; import json; print(json.dumps(model()))\" && export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/hold_corners_patch.py {SRC} && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 tools/closure_loop/h1_patch.py {SRC} && CAPTURE_ADJACENT=1 INTERIOR=1 DIEW=480 DIEH=540 PHALO='4 10' OUT={RUN}/routes CORES=8 PD=0.50 bash physical/hgi_collective_payload_secded_20261009/route_port.sh {LABEL}${CL_LABEL_SUFFIX} port --top ot_hcoll_port --param PAYLOAD_ECC=1 --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv --source physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk.sh $CK_SS_MEAN && bash physical/hbm_accel_die_views/common/make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX",
+      "threads": 8,
+      "peak_ram_gb": 8
+    },
+    "route": {
+      "cmd": "python3 -c \"from tools.uarch_model import hgi_collective_payload_secded_model as model; import json; print(json.dumps(model()))\" && export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/hold_corners_patch.py {SRC} && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc && HM=0.025 CAPTURE_ADJACENT=1 INTERIOR=1 DIEW=480 DIEH=540 PHALO='4 10' OUT={RUN}/routes CORES=8 PD=0.50 IO_ROUTE_SDC=physical/hbm_accel_die_views/common/io_vclk_${CK_SS_MEAN}.sdc IO_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc bash physical/hgi_collective_payload_secded_20261009/route_port.sh {LABEL} port --top ot_hcoll_port --param PAYLOAD_ECC=1 --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv --source physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "needs": [
+        "orfs"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/",
+      "needs": []
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/hgi_collective_payload_secded_20261009/pd50"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_corner": "TC",
+  "budget": {
+    "enabled": false,
+    "reason": "internal hard sub-block of hfd_coll (no die-level master, no budget sheet): screening IO envelope 0.2 T + io_vclk at the calibrated insertion, as the HBM contract blocks"
+  },
+  "reservation_state": "Cal8GiB/route32GiB conservative derived from same18macro baselinecal2.334GiB andfanout8DRT14,026,064KiB; protectedcodec FF/logic growth unmeasured until current phase. Not a perprocesscap; memoryonly guard.",
+  "flow_helper_provenance": "helpers from the exact pinned source snapshot; no historical external TTB/FH directory fallback; explicit TC/MM; idempotent holdpatch thenTT overlay thenH1",
+  "registered_io": true,
+  "rtl_boundary": {
+    "levels": 16
+  }
+}
