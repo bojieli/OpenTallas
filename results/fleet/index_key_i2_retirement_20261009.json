@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.fleet.scope_retirement.v1",
+  "recorded_at": "2026-10-09T10:48:30.072620+00:00",
+  "owner_decision": "CONFIRMED review-0342 N1/F-1: Codex I2 retired as separate line; Claude F-1 sole successor",
+  "source_lines": [
+    {
+      "owner": "hbm_continuation/service_recovery",
+      "branch": "codex/hbm-service-striped-20261008",
+      "source": "0285ac83b",
+      "fix": "ba96ec982",
+      "remote_aliases": [
+        "controller-allocated-r1",
+        "partial-r1",
+        "partial-r2",
+        "partial-fullshape-r1"
+      ]
+    },
+    {
+      "owner": "hbm_continuation/service_recovery native child",
+      "branch": "codex/hbm-iks-timed-refpb-20261008",
+      "source": "de36ced2a"
+    }
+  ],
+  "canonical_jobs_matching_I2": [],
+  "watched_specs_matching_I2": [],
+  "remote_proc_match": {
+    "host": "ot-epyc1tb",
+    "exact_command_path_needles": [
+      "hbm-service-striped-20261008",
+      "hbm-iks-timed-refpb"
+    ],
+    "processes": []
+  },
+  "owner_current_inventory": "All I2 gates terminal; no physical route submitted; no future intake/requeues/extensions. Owner read-only final verification in progress.",
+  "process_actions": 0,
+  "preserved_targets": [
+    "Claude F-1 svc per-PC stream",
+    "legacy hfd_svc providers",
+    "unrelated mtprb dskvwb jobs"
+  ],
+  "qualification": "Historical I2 gate PASS/failure evidence retained; not adopted as separate provider."
+}
