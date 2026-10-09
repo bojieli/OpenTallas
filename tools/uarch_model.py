@@ -14156,3 +14156,35 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
+
+
+def hbm_dskv_shadow_sram_model(*, utilisation=0.55, macro_capture_cycles=1):
+    """F04/R3 prebuild successor: 8 x 17 sectors; no qualification credit."""
+    if not 0 < utilisation <= .60 or macro_capture_cycles < 1:
+        raise ValueError('conservative slot/capture contract required')
+    macro_area = 94.824 * 41.040
+    # One transaction at a time. Request/response credit returned only on consume.
+    write_cycles = 4  # accept, encode, macro write, response consume
+    read_cycles = macro_capture_cycles + 4  # issue, capture, decoder2, consume
+    return dict(scope='prebuild estimate; opt-in, unqualified',
+        arithmetic=dict(MACs_per_cycle=0, compute_intensity=0),
+        memory=dict(logical_sectors=136, logical_bytes=4352, data_macros=2,
+            macro_depth=128, macro_width_bits=256, allocated_bytes=8192,
+            SECDED_sidecar_bits=136*10, valid_dualrail_bits=136*2,
+            bytes_per_cycle_read=32, bytes_per_cycle_write=32),
+        boundaries=dict(request_bits=1+3+5+256, response_bits=256+1,
+            storage_tracks_required=2*(256+256+256+7+7+2),
+            track_capacity='pending real slot routing, no fit credit'),
+        replication=dict(storage_pairs=1, bank_decode_fanout=2,
+            data_mux_inputs=2, write_demux_outputs=2),
+        floorplan=dict(macro_area_um2=2*macro_area,
+            minimum_macro_only_slot_um2=2*macro_area/utilisation,
+            logic_area='pending measured synthesis; cannot claim slot fit',
+            utilisation=utilisation),
+        latency=dict(write_cycles=write_cycles, read_cycles=read_cycles,
+            preload_cycles=17*write_cycles,
+            key_merge_2sector_cycles=2*(read_cycles+write_cycles+1),
+            key_merge_3sector_cycles=3*(read_cycles+write_cycles+1),
+            upper_added_cycles_per_token_8_index_layers=8*3*(read_cycles+write_cycles+1),
+            upper_added_ns_per_token_1p2GHz=8*3*(read_cycles+write_cycles+1)/1.2,
+            note='full key golden mapping unchanged; stalls add actual consumer delay'))
