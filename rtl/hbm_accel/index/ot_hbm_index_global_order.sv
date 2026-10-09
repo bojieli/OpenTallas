@@ -100,14 +100,21 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0)(
     INITREQ:if(read_v&&read_r)begin state<=INITWAIT;state_n<=~INITWAIT;end
     REFILLREQ:if(read_v&&read_r)begin state<=REFILLWAIT;state_n<=~REFILLWAIT;end
     INITWAIT,REFILLWAIT:if(rsp_v&&rsp_r)begin
-     if((rsp_empty&&!rsp_last)||(!rsp_empty&&(!rsp_tuple[0]||
+     if((rsp_empty&&!rsp_last)||(!rsp_empty&&rsp_tuple[0]&&(
           (rsp_tuple[15:8]==8'hff&&|rsp_tuple[7:1])||
           (rsp_tuple[33:17]%17'd96!=rank)||
           (previous_v&&rsp_tuple[33:17]<=previous))))begin
       state<=FAULT;state_n<=~FAULT;
+     end else if(!rsp_empty&&!rsp_tuple[0]&&!rsp_last)begin
+      // Explicit invalid slots (including quarter padding) consume actual
+      // storage ordinals. They neither terminate a rank nor become candidates.
+      if(ordinal[rank]==1379)begin state<=FAULT;state_n<=~FAULT;end
+      else begin ordinal[rank]<=ordinal[rank]+1'b1;ordinal_n[rank]<=~(ordinal[rank]+1'b1);
+       state<=(state==INITWAIT)?INITREQ:REFILLREQ;
+       state_n<=~((state==INITWAIT)?INITREQ:REFILLREQ);end
      end else begin
       head[rank]<=rsp_tuple;head_n[rank]<=~rsp_tuple;
-      valid[rank]<=!rsp_empty;valid_n[rank]<=rsp_empty;
+      valid[rank]<=!rsp_empty&&rsp_tuple[0];valid_n[rank]<=rsp_empty||!rsp_tuple[0];
       last[rank]<=rsp_last;last_n[rank]<=!rsp_last;
       if(state==INITWAIT&&rank!=95)begin rank<=rank+1'b1;rank_n<=~(rank+1'b1);
        state<=INITREQ;state_n<=~INITREQ;end
@@ -123,7 +130,7 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0)(
      previous<=winner[16:0];previous_n<=~winner[16:0];previous_v<=1;previous_v_n<=0;
      valid[selected]<=0;valid_n[selected]<=1;
      if(last[selected])begin wait_edges<=7;wait_edges_n<=~4'd7;state<=SETTLE;state_n<=~SETTLE;end
-     else if(ordinal[selected]==1365)begin state<=FAULT;state_n<=~FAULT;end
+     else if(ordinal[selected]==1379)begin state<=FAULT;state_n<=~FAULT;end
      else begin rank<=selected;rank_n<=~selected;ordinal[selected]<=ordinal[selected]+1'b1;
       ordinal_n[selected]<=~(ordinal[selected]+1'b1);state<=REFILLREQ;state_n<=~REFILLREQ;end
     end
