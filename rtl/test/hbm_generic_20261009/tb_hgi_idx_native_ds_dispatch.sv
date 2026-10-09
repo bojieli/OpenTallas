@@ -1,7 +1,7 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 module tb_hgi_idx_native_ds_dispatch;
 parameter MUTANT=0;
-reg clk=0; always #5 clk=~clk;
+reg clk=0; always #416.6665 clk=~clk;
 reg rst_n=0,held_valid=0;
 reg [3:0]cmd_unit=9;reg [5:0]cmd_op=3;
 reg [31:0]held_job=32'hface1234;reg[3:0]held_gen=13;
