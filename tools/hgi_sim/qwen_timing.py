@@ -25,7 +25,7 @@ from hgi_sim import timing as T  # noqa: E402
 from hgi_sim.records import encode_program  # noqa: E402
 
 CFG = ROOT / "compiler/models/qwen3-8b/config.json"
-MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/md_qwen3_8b.hex"
+MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/legacy_v0_9/md_qwen3_8b.hex"
 
 
 def summarize(s, recs):

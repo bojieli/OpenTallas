@@ -13,7 +13,8 @@ and the gate-level netlist (write_json) is scanned (no abc, no timing; a cheap s
 Clocks and asynchronous resets (ports that reach a flop clock / async-reset pin) are excluded.  Black boxes (macros)
 break paths like flops.  Gate levels count every 2-input-equivalent gate ($_NOT_ / $_BUF_ count 0); techmap leaves
 adders as ripple chains, so arithmetic at a boundary reads deep, by design.
-Verdict: findings are WARNINGS by default; a spec with "registered_io": true is REFUSED on any in->out path or a depth
+Verdict: findings are WARNINGS by default; a spec with "registered_io": true -- and (review-0443 X4) every spec whose name
+ends in -cl / -cx unless it sets "registered_io": false or "rtl_boundary": {"waive": "<reason>"} -- is REFUSED on any in->out path or a depth
 > N (spec "rtl_boundary": {"levels": N}, default 16).  SKIP when the recipe's sources / top are not readable, the
 sources exceed the size cap, or yosys fails / times out (never blocks intake on its own failure).
 
@@ -189,7 +190,15 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
     if cfg is False or (isinstance(cfg, dict) and cfg.get("skip")):
         return {"verdict": "SKIP", "message": "rtl_boundary opted out"}
     levels = int((cfg or {}).get("levels", LEVELS)) if isinstance(cfg, dict) else LEVELS
-    strict = bool(spec.get("registered_io"))
+    # review-0443 X4: REFUSE by default for new dual-track structural specs (name ending -cl / -cx, the registered-boundary
+    # rule's own lines); WARN for everything else.  "registered_io": false or "rtl_boundary": {"waive": "<reason>"} downgrades
+    # a -cl/-cx spec to WARN (a documented, intentional unregistered port, e.g. TA15's immediate-drop ready).
+    name = str(spec.get("name", ""))
+    waived = isinstance(cfg, dict) and bool(cfg.get("waive"))
+    if "registered_io" in spec:
+        strict = bool(spec.get("registered_io"))
+    else:
+        strict = bool(re.search(r"-c[lx]$", name)) and not waived
     r = recipe(spec, show)
     if not r:
         return {"verdict": "SKIP", "message": "rtl_boundary: sources / top not readable from the recipe"}
