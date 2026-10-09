@@ -563,7 +563,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
     reg [31:0]   hdr_pa_val;
     wire [NW-1:0] hdr_pos_increment;
     generate if (PREFIX_INC) begin : g_position_prefix
-        ot_dsrom_wfc_position_inc #(.W(NW)) u_inc(.v(hdr_pos),.inc(hdr_pos_increment));
+        ot_dsrom_wfc_tokpipe_position_inc #(.W(NW)) u_inc(.v(hdr_pos),.inc(hdr_pos_increment));
     end else begin : g_position_original
         assign hdr_pos_increment = hdr_pos + 1'b1;
     end endgenerate
@@ -1700,7 +1700,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_grp #(parameter integer DECODED_READ = 0, par
 endmodule
 
 // Balanced carry tree; no register/latency change, modulo-2^W increment.
-module ot_dsrom_wfc_position_inc #(parameter integer W=21)(
+module ot_dsrom_wfc_tokpipe_position_inc #(parameter integer W=21)(
  input wire [W-1:0] v, output wire [W-1:0] inc);
  assign inc[0]=~v[0];
  genvar b,n,l;
