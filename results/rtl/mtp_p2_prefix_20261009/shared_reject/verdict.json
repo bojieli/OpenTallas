@@ -1,0 +1,21 @@
+{
+  "source_commit": "5412320bd",
+  "model_before_RTL": "4798992b7",
+  "remote_host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/mtp-die-p2prefix5412320bd",
+  "verdict": "PASS",
+  "flits": 240,
+  "cycles": 628,
+  "PRIMARY_SHARED": 1,
+  "SRAM_macros": 9,
+  "negative_cases": [
+    "wrong identity",
+    "wrong expert",
+    "wrong word",
+    "wrong last",
+    "shared receipt on primary-owned-shared mode",
+    "duplicate",
+    "sink_abort"
+  ],
+  "scope": "generic opaque512 payload transport only; no numerical arithmetic or contextual timing claim"
+}
