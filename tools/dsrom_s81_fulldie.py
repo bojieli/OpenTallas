@@ -2898,6 +2898,11 @@ def build_r8(variant=None):
     su_area = SU_AREA_MM2 if SU_AREA_MM2 is not None else HUB_MM2['su']
     centre = ['gather', 'vm', 'capture', 'collective']
     centre_area = dict(HUB_MM2)
+    if CTRL_SLAB:
+        from uarch_model import s81_ctrl_die_model
+        ctrl_model = s81_ctrl_die_model(cw, CTRL_ROLE)
+        centre.insert(centre.index('collective'), 'stage_ctrl')
+        centre_area['stage_ctrl'] = ctrl_model['area_mm2_nominal']
     wfc_rect = None
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
@@ -2930,7 +2935,11 @@ def build_r8(variant=None):
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
-        if n == 'wfc_hard':
+        if n == 'stage_ctrl':
+            master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
+            slab(n, centre_area[n], x_sp, yy, cw, master=master)
+            notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
+        elif n == 'wfc_hard':
             slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
             notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
                          'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
@@ -3030,7 +3039,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3053,6 +3062,9 @@ def build_r8(variant=None):
         m['child_reservations'] = {'wfc': reservation}
         regions.append(dict(name='wfc_selected_child', kind='soft_child_reservation', rect=[x0, y0, x1, y1]))
         m['wfc_rect'] = wfc_rect
+    if CTRL_SLAB:
+        m['ctrl_model'] = ctrl_model
+        m['ctrl_binding_shell_sha256'] = CTRL_BINDINGS['shell_sha256']
     m['buses'] = []
     buses_r8(m)
     return m
@@ -3091,6 +3103,8 @@ def buses_r8(m):
 
     def bus(bid, cls, bits, eps):
         B.append((bid, cls, bits, eps))
+    if CTRL_SLAB:
+        _ctrl_native_buses(m, bus)
     # ---------------- head-bundle frames (head die): column stream up a glue chain, result chain down
     for r, f in m['frames'].items():
         if not f.get('bundles'):
@@ -3434,6 +3448,9 @@ def buses_r8(m):
         if it.kind == 'cfifo':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rst'))
+        elif it.name == 'sp_stage_ctrl':
+            dom['stream'].append((it.name, 'ck'))
+            rst['stream'].append((it.name, 'rs'))
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
@@ -3509,6 +3526,26 @@ MTP_SEQ_BUSES = (('capture', 'mtp', 64, 't_mtp', 'f_capture'), ('mtp', 'collecti
                  ('collective', 'mtp', 128, 't_mtp', 'f_collective'), ('mtp', 'vm', 576, 't_vm', 'f_mtp'))
 # MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
 # r3 / r4 dies stay reproducible).
+CTRL_SLAB = False
+CTRL_ROLE = 'layer'
+CTRL_MM2 = 0.15                 # preliminary shell/queue reservation; no routed-area claim
+CTRL_BINDINGS = None
+
+
+def _ctrl_native_buses(m, bus):
+    """Bind every native shell port from explicit endpoints; ck/rs use the real stream clock tree."""
+    it = m['hub']['stage_ctrl']
+    names = {x.name for x in m['insts']} | {'TOP'}
+    for port, spec in CTRL_BINDINGS['ports'].items():
+        if port in ('ck', 'rs'):
+            continue
+        endpoint = tuple(spec['endpoint'])
+        if endpoint[0] not in names:
+            raise ValueError('ctrl endpoint does not exist: %s %s' % (port, endpoint))
+        eps = [(it.name, port), endpoint] if spec['direction'] == 'output' else [endpoint, (it.name, port)]
+        bus('stage_ctrl_' + port, 'stage_ctrl', spec['bits'], eps)
+
+
 WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
                                 #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
                                 #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
@@ -3574,7 +3611,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else '') + ('w' if (CHS or VCH8 != 1209.6 or HC_CORR != 1209.6) else '') + ('v' if VM_FACE_MM2 else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else '') + ('p' if PIN_RELAY else '') + ('w' if (CHS or VCH8 != 1209.6 or HC_CORR != 1209.6) else '') + ('v' if VM_FACE_MM2 else '') + ('ctrl' + CTRL_ROLE if CTRL_SLAB else ''))
 
 
 def set_cc_reach(um):
@@ -5086,6 +5123,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
+        ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -5198,6 +5236,9 @@ def die_options(ap):
                     'layer-class die (layer and layer1) instead of the scan-die-only soft reservation; default off')
     ap.add_argument('--mtp-seq', action='store_true', help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) '
                     'between capture and collective, wired; default off')
+    ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
+    ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
     ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
     ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
                     '(default 0; the DP1-EP5 primary head die takes 5: one per draft row package)')
@@ -5206,6 +5247,19 @@ def die_options(ap):
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
+    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS
+    CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
+    CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
+    CTRL_BINDINGS = None
+    if CTRL_SLAB:
+        if not (getattr(a, 'hop_fix', False) and getattr(a, 'pin_relay', False)):
+            raise ValueError('--ctrl-slab requires implemented --hop-fix --pin-relay endpoint stations')
+        if a.gen != 'r8' or a.rev != 'r9':
+            raise ValueError('--ctrl-slab requires r9 wired die')
+        if not getattr(a, 'ctrl_bindings', None):
+            raise ValueError('--ctrl-slab requires real native endpoints (--ctrl-bindings); no inferred or tied-off binding')
+        from s81_ctrl.die_binding_contract import validate_manifest
+        CTRL_BINDINGS = validate_manifest(a.ctrl_bindings, ROOT, CTRL_ROLE)
     global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2
     SU_AREA_MM2 = getattr(a, "su_mm2", None)
     Q_ELEM_FRAME_H = getattr(a, "q_elem_h", None)
