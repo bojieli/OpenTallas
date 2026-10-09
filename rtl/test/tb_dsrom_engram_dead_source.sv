@@ -26,7 +26,7 @@ module tb_dsrom_engram_dead_source(input wire clk);
         .job_v(jv),.job_rdy(jr),.job_user(ju),.job_pos(jp),.job_tok(jt),.job_token_type(jtype),.job_done(1'b0),
         .pr_re(prre),.pr_user(pru),.pr_pos(prp),.pr_q(prq),.pr_token_type(prtype),
         .tok_valid(tv),.tok_user(tu),.tok_pos(tp),.tok_id(ti),.users_done(done),.proto_fault(pf));
-    ot_dsrom_engram_lead_producer #(.PROTECT_HISTORY(1)) l(
+    ot_dsrom_engram_lead_producer #(.PROTECT_HISTORY(0)) l(
         .clk(clk),.rst_n(rst_n),.t_v(jv && jr),.t_ready(lready),.t_user(ju),.t_pos(jp),.t_tok(jt),
         .t_first(jp==0),.t_dead(jtype!=7),.t_slot(1'b0),.rb_v(1'b0),.rb_user(12'b0),.rb_n(3'b0),
         .out_v(lv),.out_ready(lr),.out_ids(lids),.out_dead(ld),.out_user(lu),.out_pos(lp),.out_tok(lt),.fault(lf));

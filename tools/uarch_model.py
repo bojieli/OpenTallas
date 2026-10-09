@@ -70,6 +70,7 @@ def dsrom_engram_lead_model(users=64):
 def dsrom_engram_protected_idwin_model(users=64):
     """Mutable history protection candidate; released token-map ROM remains no-ECC."""
     return dict(schema='opentallas.engram-protected-idwin-model.v1', opt_in_default=False,
+        owner_status='REJECTED V37 REVIEW_20261009: flop arrays require no ECC; preserve experiment as history, no new route/adoption',
         users=users, history_depth=8, payload_bits_per_entry=18,
         stored_bits_per_entry=72, history_storage_bits=users*8*72,
         historical_storage_bits=users*8*18,
