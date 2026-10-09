@@ -1,0 +1,68 @@
+{
+  "schema": "hgi.g12.record-ports.v1",
+  "source_commit": "630558368c2a02e3a16d96bd3e908f6ec80d55b6",
+  "module": "ot_hgi_att_record_adapter",
+  "seq_tuple_ABI_bits": 1409,
+  "requires_normative_header": true,
+  "upstream_3fae_legacy_conversion": "OPEN/Claude",
+  "inputs": {
+    "clk": 1,
+    "rst_n": 1,
+    "rec_v": 1,
+    "rec_hdr": 128,
+    "rec_sut": 256,
+    "rec_desc": 1024,
+    "rec_pos1": 21,
+    "rec_b_count": 32,
+    "rec_c_count": 32,
+    "att_r": 1,
+    "att_done": 1,
+    "att_fault": 1,
+    "rows_cmd_r": 1,
+    "rows_done": 1,
+    "rows_fault": 1
+  },
+  "outputs": {
+    "rec_r": 1,
+    "att_v": 1,
+    "att_hdr": 128,
+    "att_desc": 1024,
+    "rows_cmd_v": 1,
+    "rows_ring": 1,
+    "rows_pos1": 21,
+    "rows_b_n": 21,
+    "rows_b_m": 21,
+    "rows_c_n": 21,
+    "busy": 1,
+    "u_done": 1,
+    "u_fault": 1
+  },
+  "normal_completion": "ActualATTdone ANDactualrowfrontdone",
+  "fault_completion": "Sticky u_fault halts CP and blocks new records/work; no fault u_done; recovery only by externally drained reset",
+  "SUT_by_design_unused": "ATT cannotcarrySUtemplate: templatebit92 rejects records; transportfixedwidth stillincludesSUT",
+  "producer_selected_ID_stream": "Independent realexistingIDstream binds unchangedG12physicalleaf c_id[31:0] ready/valid; thisadapterdoesnotproduceCID orrowpayload",
+  "latency": {
+    "adapter_edges": 3,
+    "existing_leaf_edges": 3,
+    "total_record_first_row_edges": 6,
+    "rowII": 1
+  },
+  "exact_gate": {
+    "host": "ot-pve1",
+    "run": "a5",
+    "cases": 18,
+    "rows": 1059089,
+    "mutants": [
+      "ring",
+      "count",
+      "fields",
+      "completion",
+      "fault"
+    ],
+    "all_mutants": "expected FATAL",
+    "max_rss_KiB": 8800,
+    "scope": "Adapter+actual G12 leaf; external ATTdone test driver, not whole ATT arithmetic proof",
+    "reuse": "a5 RTL/leaf/bench/runner byte-identical to630558368, proved in boundary.a6.receipt.json"
+  },
+  "adopted": false
+}

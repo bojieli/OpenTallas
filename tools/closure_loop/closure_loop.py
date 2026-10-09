@@ -72,6 +72,7 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
+ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 # EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
@@ -813,6 +814,31 @@ def ingest():
 # did not read it: it kept launching onto EPYC2, the recipe's admit.sh waited forever with 0 CPU and no writes, and
 # stuckscan killed the "hung" stage 51 min later (hbm_sfu_lane_rstr x2).  The loop now treats the file as "host paused".
 ADMIT_PAUSE = "/srv/opentallas-scratch/admit.pause_new.json"
+# STOPPED-WAITERS (drive-resume 2026-10-09): an admission waiter SIGSTOPped by a paused_waiters file (EPYC2 pid 430473,
+# state T from 00:26 to 07:00) never resumes on its own; every probe lists stopped (state T) admit.sh / admit_core.py
+# processes, logs them once per pid and keeps STATE/stopped_waiters.json current (one row per host).
+STOPPED_PROBE = ("ps -eo pid=,stat=,etimes=,args= | awk '$2 ~ /^T/ && /admit(_core)?\\.(sh|py)/ "
+                 "{printf \"OT_STOPPED_WAITER %s %s %ss \", $1, $2, $3; for (i = 4; i <= NF && i < 12; i++) printf \"%s \", $i; print \"\"}'")
+STOPPED_JSON = STATE / "stopped_waiters.json"
+_stopped_seen = set()
+
+
+def report_stopped_waiters(host, rows):
+    """log each stopped admission waiter once (per host/pid) and record the host's current list"""
+    for r in rows:
+        k = (host, r.split()[0])
+        if k not in _stopped_seen:
+            _stopped_seen.add(k)
+            log(f"STOPPED ADMISSION WAITER on {host}: {r[:240]} (state T: SIGSTOPped, it will never admit; "
+                f"resume with kill -CONT or remove it)")
+    try:
+        cur = json.loads(STOPPED_JSON.read_text()) if STOPPED_JSON.exists() else {}
+        cur[host] = dict(at=now_iso(), waiters=rows)
+        STOPPED_JSON.write_text(json.dumps(cur, indent=1))
+    except Exception:  # noqa: BLE001
+        pass
+
+
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
 
 
@@ -869,7 +895,7 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
-{PAUSE_PROBE}""", timeout=40)
+{PAUSE_PROBE}; {STOPPED_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -884,6 +910,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             paused = next((x[len("OT_ADMIT_PAUSED"):].strip() for x in r.stdout.splitlines() if x.startswith("OT_ADMIT_PAUSED")), None)
             if paused is not None:
                 info["admit_paused"] = paused[:200] or "admit.pause_new.json"
+            stopped = [x[len("OT_STOPPED_WAITER "):].strip() for x in r.stdout.splitlines() if x.startswith("OT_STOPPED_WAITER ")]
+            if stopped:
+                info["stopped_waiters"] = stopped
+                report_stopped_waiters(host, stopped)
         return info
 
     def own_pending(self, host, job=None):
@@ -915,17 +945,19 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
         # OWNER 2026-10-09: NEVER reserve memory for future growth (no reserve_ram_gb, no external-job remaining-peak
         # reservations) -- admit on measured MemAvailable minus own launches of the last few minutes only.
-        res = 0
-        head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
+        # drive-resume 2026-10-09 (coordinator, owner rule): admit iff measured MemAvailable >= the job's own request + a
+        # fixed safety of ADMIT_SAFETY_GB (16).  The earlier check subtracted the declared peaks of every launch AND every
+        # host claim of the last 3 min (waiting jobs re-claim each tick, so it never expired: "EPYC4 MemAvailable 316-224
+        # < 40+57") and added 5 % of host RAM -- both reservations for future growth.  Neither is subtracted any more.
+        head = min(ADMIT_SAFETY_GB, cfg.get("min_free_ram_gb", ADMIT_SAFETY_GB))
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
                 return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
         if ram <= 2:          # 2026-10-08: collect/export copy files; host-local, so they cannot move -- a 16 GB headroom
             head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
-        if info["mem_gb"] - pr - res < ram + head:
-            return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
-                           + f" < {ram}+{head:.0f}")
+        if info["mem_gb"] < ram + head:
+            return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB < {ram}+{head:.0f}"
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         for path, floor in disk_roots(cfg).items():   # every other root the host's jobs write (docker /, /tmp, ...)
