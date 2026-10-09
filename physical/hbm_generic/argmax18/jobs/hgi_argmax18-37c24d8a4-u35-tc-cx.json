@@ -1,0 +1,89 @@
+{
+  "name": "hgi_argmax18-37c24d8a4-u35-tc-cx",
+  "block": "ot_hgi_argmax18_m",
+  "owner": "Codex:generic_token18/argmax18",
+  "purpose": "Owner-approved HGI-1 CF-ARG width18 + row-bound rank*imm_a offset; qualified FAST1 native leaf; DS default off. Two physical alternatives.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "codex/hgi-argmax18-20261009",
+    "commit": "37c24d8a4"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact_cf_arg_ds_lockstep",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
+        "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "mutant_1",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1",
+        "expect_fail": true,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "mutant_2",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2",
+        "expect_fail": true,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "mutant_3",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3",
+        "expect_fail": true,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl';  OUT={RUN}/routes CORES=16 UTIL=35 PD=0.48 HM=0.035 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_argmax18_m --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv --param LP=8 --param GENERIC18=1 --param FLAT=7 --param FAST=1    $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl';  OUT={RUN}/routes CORES=16 UTIL=35 PD=0.48 HM=0.035 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_argmax18_m --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv --param LP=8 --param GENERIC18=1 --param FLAT=7 --param FAST=1   ",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_argmax18_20261009/u35"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "PROPOSAL: inherited40GiB is not a measured claim; fleet must replace with nearest measured argmax phase before intake. CF simulator vectors still to pin. No added valid/output cycles."
+}
