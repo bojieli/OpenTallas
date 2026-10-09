@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.hbm_ta15.digital_boundary_candidate.v1",
+  "model_before_RTL_commits": ["036489450", "9b0ae0197"],
+  "source_files": [
+    "rtl/hbm_accel/control/ot_hbm_pll_bb.sv",
+    "rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv"
+  ],
+  "dependency_commit": "bddc33a0e",
+  "dependency_file": "rtl/hbm_accel/control/ot_hbm_reset_seq.sv",
+  "pre_override_localhost_validation": {
+    "command": "python3 -m pytest -q tests/test_hbm_clock_reset_boundary.py",
+    "tests_passed": 3,
+    "positive": "17 independent endpoints, exact three real destination edges, asynchronous POR/PLL-reset/lock-loss assertion, clock-stop recovery, endpoint intent isolation",
+    "negative_control": "removing raw PLL-lock veto fails the independent reset oracle",
+    "production_elaboration": "real analog blackbox plus digital collars, no behavioral clock implementation"
+  },
+  "physical_body_top": "ot_hbm_clock_reset_collars",
+  "physical_body_clock_period_ns": {
+    "clk_stream": 0.8333333333333334,
+    "clk_serial": 1.1111111111111112,
+    "clk_hbm": 1.024,
+    "clk_link": 0.8333333333333334
+  },
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "physical_qualification": false,
+  "missing_physical_obligations": [
+    "vendor PLL Liberty/LEF/GDS and analog qualification",
+    "clock acquisition, insertion, jitter, phase and skew",
+    "actual parent clock and reset endpoint pin loading",
+    "asynchronous reset recovery/removal and assertion distribution",
+    "parent SS setup / FF hold and DRC closure",
+    "admitted remote digital physical run"
+  ]
+}
