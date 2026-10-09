@@ -143,6 +143,25 @@ class ShipFhTests(unittest.TestCase):
             self.assertEqual(sorted(x.name for x in (fh / "tools").iterdir()), ["orfs_hold_mm.py", "orfs_hold_mm.tcl"])
 
 
+class AbcNoDchTests(unittest.TestCase):
+    def test_no_dch_only_when_asked(self):
+        import sys
+        import tempfile
+        from pathlib import Path
+        sys.path.insert(0, str(cl.HERE.parent))
+        import orfs_hold_mm as m
+        with tempfile.TemporaryDirectory() as t:
+            d = Path(t)
+            (d / "abc_speed.script").write_text("&get -n\n&st\n&dch\n&nf\n&synch2\n")
+            (d / "abc_area.script").write_text("&get -n\n&dch -f\n&nf\n")
+            self.assertEqual(m.patch_abc_no_dch(d, {}), "off")
+            self.assertIn("&dch", (d / "abc_speed.script").read_text())
+            m.patch_abc_no_dch(d, {"OT_ABC_NO_DCH": "1"})
+            self.assertEqual((d / "abc_speed.script").read_text(), "&get -n\n&st\n&synch2\n&nf\n&synch2\n")
+            self.assertNotIn("&dch", (d / "abc_area.script").read_text())
+        self.assertIn("-e OT_ABC_NO_DCH", cl.DOCKER_SHIM)
+
+
 class HmEventTests(unittest.TestCase):
     def test_lines_and_dedup(self):
         rpt = "OT_HM_AUTO stage=cts HM auto-reduced 50->10: 72493 endpoints in margin (worst FF hold 2.85)\n"
