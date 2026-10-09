@@ -13,7 +13,7 @@
 #     pass-through, input chain + output chain), all its flops are spread evenly from P to that pin instead.
 # Inputs are handled first so that an output chain fed by an input chain starts from the moved input stage.
 # ORFS sources step hooks inside a proc: link every name the procs below use to a global first
-global fc_n fc_ps fc_psi fc_dbu fc_x0 fc_y0 fc_x1 fc_y1 fc_dist
+global fc_n fc_ps fc_psi fc_dbu fc_x0 fc_y0 fc_x1 fc_y1 fc_dist fc_stg
 set fc_n [expr {[info exists ::env(OT_FC_STAGES)] ? $::env(OT_FC_STAGES) : 5}]
 # per-port depth (hbm_die_wrap port_stages): OT_FC_FILE = <master>_face_stages.tcl (array fc_ps), else OT_FC_STAGES
 array set fc_ps {}; array set fc_psi {}
@@ -81,9 +81,21 @@ proc fc_rec {bt a b} {
   set port [regsub {\[.*} [$bt getName] {}]
   lappend fc_dist($port) [expr {(abs([lindex $a 0]-[lindex $b 0])+abs([lindex $a 1]-[lindex $b 1]))/$fc_dbu}]
 }
+# OT_FC_STAGGER (um, redesign-2 2026-10-08; default off): a stage whose target is a pin (on the core boundary) goes
+# 1..4 x STAGGER inward along the face normal, cycling per moved pin stage, instead of every pin stage of a face piling
+# into one column at the edge (hbm_vm8 nen/nes/swn: GRT-0116 hot tiles at x >= 675 of 700 um at 2.9 % utilisation).
+set fc_stg 0
 proc fc_move {inst p} {
-  global fc_x0 fc_y0 fc_x1 fc_y1
+  global fc_x0 fc_y0 fc_x1 fc_y1 fc_dbu fc_stg
   if {[info exists ::env(OT_FC_REPORT)]} return
+  if {[info exists ::env(OT_FC_STAGGER)] && $::env(OT_FC_STAGGER) > 0} {
+    set px [lindex $p 0]; set py [lindex $p 1]; set e [expr {2.0*$fc_dbu}]
+    set d [expr {$::env(OT_FC_STAGGER) * $fc_dbu * (1 + $fc_stg % 4)}]
+    set hit 1
+    if {$px >= $fc_x1 - $e} { set px [expr {$px - $d}] } elseif {$px <= $fc_x0 + $e} { set px [expr {$px + $d}] } \
+    elseif {$py >= $fc_y1 - $e} { set py [expr {$py - $d}] } elseif {$py <= $fc_y0 + $e} { set py [expr {$py + $d}] } else { set hit 0 }
+    if {$hit} { incr fc_stg; set p [list $px $py] }
+  }
   set m [$inst getMaster]; set w [$m getWidth]; set h [$m getHeight]
   set x [expr {round(max($fc_x0, min($fc_x1-$w, [lindex $p 0]-$w/2.0)))}]
   set y [expr {round(max($fc_y0, min($fc_y1-$h, [lindex $p 1]-$h/2.0)))}]

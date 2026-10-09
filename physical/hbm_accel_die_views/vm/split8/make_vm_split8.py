@@ -16,7 +16,7 @@ Root port depth (vm_wr_skew_finding.md): wr_v / bank / addr / owner / data_hi cr
 crosses the SW seam once (+2): the write port stays ONE depth (7); the read port (f_su_SE[200:0]) crosses the SE seam (+2).
 Cost (bench mode 2, 8-way vs 4-tile per output bit, run_vm_split8.sh): +2 on every path that crosses one seam.
     python3 make_vm_split8.py      (writes hfd_vm_<q>_{s,n}.sv, hfd_vm_<q>_j8.sv, tb_vm_split8.sv, ports/<master>/*, *_face_stages.tcl)"""
-import json, re, subprocess, sys, tempfile
+import json, math, re, subprocess, sys, tempfile
 from pathlib import Path
 D = Path(__file__).resolve().parent
 TD = D.parent / 'tiles'
@@ -246,10 +246,14 @@ def pin_lines(q, h, tmp):
             y -= DY
         elif 493.0 < y < 506.5:                     # E/W ctl input group: into the south half
             y -= 6.24
+        if SPREAD and not 0.0 <= y <= HH:      # r25 cross runs straddle the cut: spread_faces re-lays every face run
+            y = min(max(y, 0.5), HH - 0.5)
         assert 0.0 <= y <= HH, (q, h, p, y)
         out.append((p, b, ly, x, y, sz))
     # ck (area, centre M7), rst (quadrant pin in the south half; inner face y=480 in the north half)
-    out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0640 0.2880'))
+    # vm8-timing 2026-10-08: M7 WIDTHTABLE is 0.032/0.16/0.288/...; a 0.064-wide pin is off-table and RECTONLY flags the
+    # router's 0.032 stub on it (3 'Rect Only' markers on ck[0] at the pin's end, every vm8 half). Pin = one M7 wire wide, on track.
+    out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0320 0.2880'))
     orig_rst = [l for l in src.read_text().splitlines() if '{rst[0]}' in l][0]
     m = re.search(r'-layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{(.*)\}', orig_rst)
     if h == 's' and q == 'nw':     # r23v k16 bundled view: the quadrant S-face rst (698.94) collides with the t_s_wr run
@@ -258,20 +262,137 @@ def pin_lines(q, h, tmp):
         out.append(('rst', 0, m.group(1), float(m.group(2)), float(m.group(3)), m.group(4)))
     else:
         out.append(('rst', 0, 'M4', 699.72 if q in ('sw', 'nw') else 0.096, 480.0, '0.1920 0.0240'))
-    # seam: top edge of the south half / bottom edge of the north half, same x per bit (abutted straight wires), M5
+    # seam: top edge of the south half / bottom edge of the north half, same x per bit (abutted straight wires).
+    # drive-1128 (SEAM_SPREAD): the seam was one M5 track a bit (20.8 bits/um, s2n+n2s 3,166-8,218 bits in 152-394 um at the
+    # centre of the cut): GRT-0116 hot spots at the cut on every vm8 face run (nws x 275-425 / nes x 267-433, y 475-500, at
+    # 12-14 % average use).  Now laid over the whole cut edge on TWO layers (even bits M5, odd bits M7) at the widest bit-pair
+    # pitch that fits (0.384 .. 0.128 um): 2.6-7.8 bits/um.  The x of a bit is the same in both halves (zero-length seam).
     s2n, n2s = SEAM[q]
+    ys = HH - 0.096 if h == 's' else 0.096
+    if SEAM_SPREAD:
+        n = s2n + n2s
+        P = next(P for P in SEAM_PITCHES if -(-n // 2) * P <= QW - 8.0)
+        a0 = QW / 2 - (-(-n // 2)) * P / 2
+        k = 0
+        for p, w in (('s2n', s2n), ('n2s', n2s)):
+            for b in range(w):
+                ly = 'M5' if k % 2 == 0 else 'M7'
+                off, pt = (0.012, 0.048) if ly == 'M5' else (0.016, 0.064)
+                pos = a0 + (k // 2) * P
+                pos = round(off + math.ceil((pos - off) / pt - 1e-9) * pt, 4)
+                out.append((p, b, ly, pos, ys, '0.0240 0.1920' if ly == 'M5' else '0.0320 0.1920')); k += 1
+        return out
     x0 = round(QW / 2 - (s2n + n2s) * PITCH / 2, 3)
     x0 = round(round(x0 / PITCH) * PITCH, 3)
-    ys = HH - 0.096 if h == 's' else 0.096
     k = 0
     for p, w in (('s2n', s2n), ('n2s', n2s)):
         for b in range(w):
             out.append((p, b, 'M5', round(x0 + k * PITCH, 4), ys, '0.0240 0.1920')); k += 1
     return out
 
+# redesign-2 (2026-10-08, flow-triage G: hbm_vm8_{nen,nes,swn} GRT-0116 overflow at 2.9 % util, hot tiles on the face port
+#   stage chains): every face run of a sub-tile (die faces AND cross buses; the r25 generator's two-layer cross runs
+#   straddle the y = 500 cut, so the halves cannot take them as they are) is laid on TWO pin layers, even bits on M4 / M5,
+#   odd bits on M6 / M7, at the widest bit-pair pitch the half's face holds: 0.128 um (2 tracks a bit on both layers, the
+#   r25 VM cross-bus pitch), else 0.096 (2 tracks on M4 / M5), else 0.064.  Runs keep their r25 order, centred on their
+#   r25 band; a face's runs are one group laid identically on both partners of an abutting edge (same widths, same order,
+#   so cross nets stay zero-length); the E/W ctl crossers (one end in each half) sit at the cut end of their face.
+#   seam / ck / rst do not move.  The die generator must take these positions when it adopts the 8-way views.
+SPREAD = True
+TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064)}
+SZ = {'M4': '0.1920 0.0240', 'M6': '0.1920 0.0320', 'M5': '0.0240 0.1920', 'M7': '0.0320 0.1920'}
+PAIR_PITCHES = (0.128, 0.096, 0.064)
+# drive-1128: a face that carries ONLY die-face runs (no [ft]_[nsew]_{ctl,row,wr} cross bus, so no abutting sub-tile partner
+# to stay aligned with) is spread over its free edge at up to 0.512 um a bit pair: the qNW / iNW (nw_s W) and qNE / iNE (ne_s E)
+# runs were 1,094 bits in 70 um of a 500 um face (GRT-0116 / DPL-0033 hold-buffer pile-up at that corner); now ~4 bits/um.
+# Cross-bus faces keep PAIR_PITCHES (identical on both partners).  The die generator must take these positions on adoption.
+DIE_PAIR_PITCHES = (0.512, 0.384, 0.256, 0.192, 0.128, 0.096, 0.064)
+SEAM_SPREAD = True
+SEAM_PITCHES = (0.384, 0.320, 0.256, 0.192, 0.128, 0.096)
+CROSS_RE = re.compile(r'[ft]_[nsew]_(ctl|row|wr)')
+
+def face_of(x, y):
+    return 'E' if x > QW - 0.5 else 'W' if x < 0.5 else 'N' if y > HH - 0.5 else 'S' if y < 0.5 else None
+
+def spread_faces(pins, h):
+    by = {}
+    for t in pins:
+        by.setdefault(t[0], []).append(t)
+    fixed, runs = {}, {}
+    for p, ts in by.items():
+        f = face_of(ts[0][3], ts[0][4])
+        if p in ('ck', 'rst', 's2n', 'n2s') or f is None or len(ts) < 8:
+            for t in ts:
+                ft = face_of(t[3], t[4])
+                if ft:
+                    a = t[4] if ft in 'EW' else t[3]
+                    fixed.setdefault(ft, []).append((a - 1.0, a + 1.0))
+            continue
+        runs.setdefault(f, []).append(p)
+    moved = {p for v in runs.values() for p in v}
+    out = [t for p, ts in by.items() for t in ts if p not in moved]
+    stats = {}
+    for f, ps in runs.items():
+        L1 = 'M4' if f in 'EW' else 'M5'
+        L2 = {'M4': 'M6', 'M5': 'M7'}[L1]
+        along = HH if f in 'EW' else QW
+        coord = 4 if f in 'EW' else 3
+        cen = {p: sum(t[coord] for t in by[p]) / len(by[p]) for p in ps}
+        ctl = [p for p in ps if re.fullmatch(r'[ft]_[ew]_ctl', p)] if f in 'EW' else []
+        main = sorted((p for p in ps if p not in ctl), key=lambda p: cen[p])
+        holes = sorted(fixed.get(f, []))
+        free, a0 = [], 2.0
+        for lo, hi in holes:
+            if lo > a0:
+                free.append((a0, min(lo, along - 2.0)))
+            a0 = max(a0, hi)
+        if a0 < along - 2.0:
+            free.append((a0, along - 2.0))
+        lo_f, hi_f = max(free, key=lambda iv: iv[1] - iv[0])
+        die_only = not any(CROSS_RE.fullmatch(p) for p in ps)
+        for P in (DIE_PAIR_PITCHES if die_only else PAIR_PITCHES):
+            span = {p: -(-len(by[p]) // 2) * P + 8 * TRK[L2][1] for p in ps}
+            need = sum(span.values())
+            if need <= hi_f - lo_f:
+                break
+        else:
+            raise AssertionError(('face runs do not fit on two layers', h, f, need, free))
+        # ctl crossers at the cut end (north half: low end; south half: high end), the main group centred on its r25 band
+        nctl = sum(span[p] for p in ctl)
+        mlo, mhi = (lo_f + nctl, hi_f) if h == 'n' else (lo_f, hi_f - nctl)
+        mneed = sum(span[p] for p in main)
+        wc = sum(cen[p] * len(by[p]) for p in main) / max(1, sum(len(by[p]) for p in main))
+        y0 = min(max(wc - mneed / 2, mlo), mhi - mneed)
+        order = ([(p, lo_f + sum(span[c] for c in ctl[:k])) for k, p in enumerate(ctl)] if h == 'n' else
+                 [(p, hi_f - nctl + sum(span[c] for c in ctl[:k])) for k, p in enumerate(ctl)])
+        y = y0
+        for p in main:
+            order.append((p, y)); y += span[p]
+        for p, ys in order:
+            ts = sorted(by[p], key=lambda t: t[1])
+            for i, t in enumerate(ts):
+                ly = L1 if i % 2 == 0 else L2
+                off, pt = TRK[ly]
+                pos = ys + 4 * TRK[L2][1] + (i // 2) * P
+                pos = round(off + math.ceil((pos - off) / pt - 1e-9) * pt, 4)
+                x, yy = ((QW - 0.096 if f == 'E' else 0.096), pos) if f in 'EW' else (pos, (HH - 0.096 if f == 'N' else 0.096))
+                out.append((p, t[1], ly, round(x, 4), yy, SZ[ly]))
+        stats[f] = dict(runs=[o[0] for o in order], bits=sum(len(by[p]) for p in ps), pair_pitch=P, span_um=round(need, 2),
+                        group=[round(min(o[1] for o in order), 2), round(max(o[1] + span[o[0]] for o in order), 2)])
+    # no two pins of one layer on one track position
+    seen = set()
+    for p, b, ly, x, y, _ in out:
+        k = (ly, round(x, 3), round(y, 3))
+        assert k not in seen, ('pin clash', p, b, k)
+        seen.add(k)
+    return out, stats
+
 def write_ports(q, h, tmp):
     m = f'hfd_vm_{q}_{h}'
     pins = pin_lines(q, h, tmp)
+    if SPREAD:
+        pins, st = spread_faces(pins, h)
+        print(m, json.dumps(st))
     od = D / 'ports' / m; od.mkdir(parents=True, exist_ok=True)
     (od / 'io_place.tcl').write_text(f'# {m}: 8-way VM sub-tile pins (make_vm_split8.py; external pins from the r22 quadrant hfd_vm_{q})\n' +
         ''.join(f'place_pin -pin_name {{{p}[{b}]}} -layer {ly} -location {{{x:.4f} {y:.4f}}} -pin_size {{{sz}}}\n'
