@@ -55,6 +55,12 @@ STRESS = [("s bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("s fp4 K2304 R2 (G2)",
           ("s bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("s fp8 K2304 R2 (G3)", "fp8", 2304, 2, 1),
           ("s fp4 K2304 R2 (G2) b", "fp4", 2304, 2, 1), ("s bf16 K512 R32 (G1) b", "bf16", 512, 32, 1)]
 
+# hbm-forks CF-SM: INT8 (fmt3) ops between DS-format ops (format transitions both ways; rows -128 / 127 / 0)
+INT8SEQ = [("i int8 K4096 R8", "int8", 4096, 8, 1), ("i bf16 K4096 R8", "bf16", 4096, 8, 1),
+           ("i int8 K1024 R32", "int8", 1024, 32, 1), ("i fp8 K2304 R2", "fp8", 2304, 2, 1),
+           ("i int8 K4096 R3", "int8", 4096, 3, 1), ("i fp4 K2304 R2", "fp4", 2304, 2, 1),
+           ("i int8 K512 R16", "int8", 512, 16, 1), ("i bf16 K512 R16", "bf16", 512, 16, 1)]
+
 # directed retire-order hazard (the HAZ = 0 negative must fail on the deeper smh pipeline): a deep-D op (BF16 G10:
 # D = DBF + 4 SLAT = 39) followed at once by a SINGLE-ROW shallow one (block-dot G1: D = 0, 8 lines), whose row
 # drains ~81 cycles after its last line: 15 + 8 + 81 < 120, inside the BF16 row's drain.  (sim15: with R8 / R4
@@ -78,6 +84,9 @@ def seq_ops(name, serial):
     elif base == "stress":
         ops = MS.WARM + STRESS
         dep = [1] + [0] * len(STRESS)
+    elif base == "int8":
+        ops = MS.WARM + INT8SEQ
+        dep = [1] + [0] * len(INT8SEQ)
     elif base == "haz":
         ops = MS.WARM + HAZSEQ
         dep = [1] + [0] * len(HAZSEQ)
@@ -108,7 +117,7 @@ def cmd_run(a):
             foot = g["Gn"] * g["c"]
             rbase, ptr = ptr, (ptr + foot) % XDEPTH
         else:
-            assert resident is not None and resident["fmt"] == {"bf16": 0, "fp8": 1, "fp4": 2}[fmt] and \
+            assert resident is not None and resident["fmt"] == {"bf16": 0, "fp8": 1, "fp4": 2, "int8": 3}[fmt] and \
                 len(resident["X"][0]) == K, (tag, "a reused context needs the same vector, format and K")
             g = MS.gen_op("v41_" + fmt, R, K, a.nc, rng, X=resident["X"])
             assert g["Gn"] == resident["Gn"]
