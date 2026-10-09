@@ -92,7 +92,10 @@ def dsrom_engram_protected_idwin_model(users=64):
         latency_qualification='zero additional stages proposed, not physically qualified; native lead remains4capture stages before output',
         replicas=4, replica_home='S0 embedding TP rank',
         boundary_added_bits=1,
-        floorplan_slot_fit='324x216um candidate; ROM0.01913mm2 plus protected mutable storage0.01209mm2 beforelogic/route',
+        history_mux_area_mm2_modelled=3*72*511*.056/1e6,
+        metadata_mux_area_mm2_modelled=2*72*63*.056/1e6,
+        hardened_outline_um=[432,288],
+        floorplan_slot_fit='432x288um protected candidate; ROM0.01913mm2, mutable storage0.01209mm2, selectors0.00669mm2 beforeSECDED/control/route; retain324x216 historical unprotected job',
         qualification='model before protected implementation; functional injection and real SS/FF physical timing required; unprotected idwin retained only as historical default')
 
 
