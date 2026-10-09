@@ -12,6 +12,9 @@
 // from the current state and cleared on the edge of every pop and while the queue is empty, so it can only be late
 // (landed only grows); the overflow fault no longer looks at the pop (the sender's credits make count == 8 with in_v
 // impossible).  +1 clk_h edge per completion word (the pop after a pop waits one edge).
+// PIPE=2 (sys-takeover 2026-10-09, hostnative_pipe_a TT -47: landed -> snapshot < landed compare -> landed, 39 levels):
+// PIPE 1 plus the monotonic check registered (snap_lt_q, computed every edge from the held snapshot: snapshot is written
+// before req toggles and stays until the handshake, so the registered compare at the handshake edge is current).
 module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIPE=0)(
  input wire rst_n,ck,clk_h,input wire[7:0] ack_n,
  input wire in_v,input wire[63:0] in_d,output reg in_cr,
@@ -36,7 +39,8 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
     end
    end
   end
-  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;
+  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;reg snap_lt_q;
+  always @(posedge clk_h) snap_lt_q<=snapshot<landed;
   localparam integer QW=PROTECT?72:64;
   reg[QW-1:0] q[0:7];reg[2:0] wp,rp;reg[3:0] count;reg qp;
   reg[2:0] host_credits;reg hp;
@@ -69,7 +73,11 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
    end else begin
     rc1<=req;rc2<=rc1;fc1<=fc;fc2<=fc1;in_cr<=0;out_v<=0;
     if(rc2!=ack_host)begin
-     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||snapshot<landed)fh<=1;
+`ifdef OT_FENCE_MUT_LTSTALE
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?1'b0:(snapshot<landed)))fh<=1;   // mutant: monotonic check dropped
+`else
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?snap_lt_q:(snapshot<landed)))fh<=1;
+`endif
      else begin landed<=snapshot;landed_p<=^snapshot;end
      ack_host<=rc2;
     end

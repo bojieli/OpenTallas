@@ -6,6 +6,10 @@ window cases, host_ack_n = the fabric's actual sector writes, MSTALL 30) PLUS a 
 sector count must already be written to the HBM model when the done word leaves (the fence's job).
     host_native_pipe_bench.py pos|base|fence|fencevis|apstale OUT
 fencevis: the fence mutant must be caught by the VISIBILITY check alone (raw_fenced_stall: hing ok, vis_err > 0).
+rev c (OT_HOSTNATIVE_PIPE2: fence PIPE 2, engine APIPE 2): pos2, fencevis2, apstale2 (must catch); nseclag2 / ltstale2 are
+recorded as NOT consuming on these fault-free cases: the done word never leaves on the edge of its own last write here (so
+the one-edge done delay is not observed), and the registered monotonic check only fires on a protocol fault.
+RAW multi-descriptor cases also check every done word's count EXACTLY (cumulative sectors up to that descriptor).
 pos: pipeline ON, must pass; base: pipeline OFF (the original), must pass; fence / apstale: mutants OT_FENCE_MUT_HRSTALE
 (release flag not cleared on a pop) / OT_ING_MUT_APSTALE (stale row address across rows), must fail.
 Prints HNP_PASS / HNP_FAIL (pos, base) or HNP_NEG_DETECTED (rc 1) / HNP_NEG_MISSED (rc 0) and the ck cycles per case."""
@@ -39,7 +43,7 @@ def case_raw_multi(rng, fences, sizes, base=40):
         descs.append(KR.desc(KR.M_RAW, fence=f, tag=(16 + k) & 255, a0=a0, n0=n, nb=len(bt)))
         beats += bt
         a0 += n
-    return dict(descs=descs, beats=beats, init=np.zeros_like(exp), exp=exp, hd=16, kvh=2, meta=dict(fences=fences))
+    return dict(descs=descs, beats=beats, init=np.zeros_like(exp), exp=exp, hd=16, kvh=2, meta=dict(fences=fences), sizes=list(sizes))
 
 
 rngm = np.random.default_rng(20261010)
@@ -61,7 +65,8 @@ for name, c in extra.items():
 # visibility: a done word's count must not exceed the sectors already in the HBM model
 a = "                if (t_d[63:56] == 8'h01) begin"
 assert tb.count(a) == 1
-tb = tb.replace(a, a + "\n                    if (t_d[31:0] > sectors) begin vis_err = vis_err + 1; "
+tb = tb.replace(a, a + "\n                    $display(\"DONEW cnt=%0d\", t_d[31:0]);"
+                       "\n                    if (t_d[31:0] > sectors) begin vis_err = vis_err + 1; "
                        "$display(\"VISIBILITY early done count=%0d written=%0d\", t_d[31:0], sectors); end")
 a = "    integer dones = 0,"
 assert tb.count(a) == 1
@@ -69,7 +74,10 @@ tb = tb.replace(a, "    integer vis_err = 0;\n" + a)
 b = tb.index("$display(\"HING")
 tb = tb[:b] + "$display(\"VIS errors=%0d\", vis_err);\n            " + tb[b:]
 (w / "tb.sv").write_text(tb)
-defs = {"pos": ["-DOT_HOSTNATIVE_PIPE"], "base": [], "fence": ["-DOT_HOSTNATIVE_PIPE", "-DOT_FENCE_MUT_HRSTALE"],
+P2 = ["-DOT_HOSTNATIVE_PIPE2"]     # rev c: FPIPE 2 / APIPE 2
+defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2 + ["-DOT_ING_MUT_APSTALE"],
+        "nseclag2": P2 + ["-DOT_ING_MUT_NSECLAG"], "ltstale2": P2 + ["-DOT_FENCE_MUT_LTSTALE"],
+        "pos": ["-DOT_HOSTNATIVE_PIPE"], "base": [], "fence": ["-DOT_HOSTNATIVE_PIPE", "-DOT_FENCE_MUT_HRSTALE"],
         "fencevis": ["-DOT_HOSTNATIVE_PIPE", "-DOT_FENCE_MUT_HRSTALE"],
         "apstale": ["-DOT_HOSTNATIVE_PIPE", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
@@ -84,17 +92,30 @@ for name, c in cases.items():
     (w / f"{name}.log").write_text(out)
     m = re.search(r"VIS errors=(\d+)", out)
     vis = int(m.group(1)) if m else -1
-    good = rc == 0 and bool(B.hing_ok(out)) and vis == 0
+    # exact done counts (RAW cases): each fenced done word carries the cumulative sectors of every descriptor up to it
+    cnt_err = 0
+    if all((d & 15) == 0 for d in c["descs"]):
+        exp = []
+        sizes = c.get("sizes")
+        if sizes:
+            cum = 0
+            for d, n in zip(c["descs"], sizes):
+                cum += n
+                if (d >> 7) & 1: exp.append(cum)
+            got = [int(x) for x in re.findall(r"DONEW cnt=(\d+)", out)]
+            cnt_err = 0 if got == exp else 1
+            if cnt_err: print(f"  done counts {got} != expected {exp}")
+    good = rc == 0 and bool(B.hing_ok(out)) and vis == 0 and cnt_err == 0
     fenced = sum(1 for d in c["descs"] if (d >> 7) & 1)
     cyc = re.search(r"ck_cycles=(\d+)", out)
     print(f"case {name} {'PASS' if good else 'FAIL'} descs={len(c['descs'])} fenced={fenced} hing={'ok' if B.hing_ok(out) else 'FAIL'} "
           f"vis_err={vis} ck_cycles={cyc.group(1) if cyc else '?'}")
     ok_all &= good
     vis_only |= bool(B.hing_ok(out)) and rc == 0 and vis > 0
-if mode == "fencevis":
+if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)
-if mode in ("pos", "base"):
+if mode in ("pos", "base", "pos2"):
     print("HNP_PASS" if ok_all else "HNP_FAIL")
     sys.exit(0 if ok_all else 1)
 print("HNP_NEG_DETECTED" if not ok_all else "HNP_NEG_MISSED")

@@ -13,7 +13,12 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif,
     // sys-takeover 2026-10-09: engine options (ot_rom_host_ingest ENG_TRIM / APIPE), opt-in
     parameter integer ENG_TRIM = `ifdef OT_HING_ETRIM 1 `else 0 `endif,
-    parameter integer APIPE = `ifdef OT_HING_APIPE 1 `else 0 `endif) (
+    parameter integer APIPE = `ifdef OT_HING_APIPE2 2 `elsif OT_HING_APIPE 1 `else 0 `endif,
+    // RPIPE (sys-takeover 2026-10-09, with HCUT; hing_pipe_a TT -290: hk_d -> acked >= hk_d compare -> rel -> u_ca read
+    // pointer / u_cb write / hk_d reload, 36-37 levels): the release condition of the held head is a REGISTER (hr_q),
+    // recomputed every edge and cleared whenever the head is consumed or reloaded (acked only grows: never early).
+    // +1 ck edge per completion word.
+    parameter integer RPIPE = `ifdef OT_HING_RPIPE 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -81,8 +86,10 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     reg         hk_v; reg [63:0] hk_d;
     wire [63:0] r_head = (HCUT != 0) ? hk_d : a_head;
     wire        is_done = r_head[63:56] == 8'h01;
+    reg         hr_q;
 `ifndef OT_HING_MUT_HCUT_NOFENCE
-    wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full && (!is_done || FENCE == 0 || acked >= r_head[31:0]);
+    wire        rel = (RPIPE != 0) ? (hk_v && hr_q && !b_full) :
+                      ((HCUT != 0) ? hk_v : !a_empty) && !b_full && (!is_done || FENCE == 0 || acked >= r_head[31:0]);
 `else
     wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full;   // mutant: the fence is skipped on the head register
 `endif
@@ -91,6 +98,13 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
         if (!rn_c) hk_v <= 1'b0;
         else if (HCUT != 0) begin if (a_pop) hk_v <= 1'b1; else if (rel) hk_v <= 1'b0; end
     always @(posedge ck) if (HCUT != 0 && a_pop) hk_d <= a_head;
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) hr_q <= 1'b0;
+`ifdef OT_HING_MUT_RPSTALE
+        else hr_q <= hk_v && (!is_done || FENCE == 0 || acked >= hk_d[31:0]);                    // mutant: not cleared
+`else
+        else hr_q <= hk_v && !rel && !a_pop && (!is_done || FENCE == 0 || acked >= hk_d[31:0]);
+`endif
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin acked <= 0; slot_done_v <= 1'b0; slot_done_tag <= 0; end
         else begin

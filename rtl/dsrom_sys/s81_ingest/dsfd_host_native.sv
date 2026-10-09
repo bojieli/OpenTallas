@@ -8,7 +8,9 @@
 // sys-takeover 2026-10-09: FPIPE (fence PIPE), ENG_TRIM (engine without the dead QKV path), APIPE (engine stream address
 // registers); all opt-in, defaults = the original (`OT_HOSTNATIVE_PIPE sets all three for benches).
 module dsfd_host_native #(parameter integer ENABLE=0,PROTECT=0,
-`ifdef OT_HOSTNATIVE_PIPE
+`ifdef OT_HOSTNATIVE_PIPE2
+ parameter integer FPIPE=2,ENG_TRIM=1,APIPE=2      // sys-takeover rev c: fence monotonic check registered, 2-stage address terms
+`elsif OT_HOSTNATIVE_PIPE
  parameter integer FPIPE=1,ENG_TRIM=1,APIPE=1
 `else
  parameter integer FPIPE=0,ENG_TRIM=0,APIPE=0
