@@ -29,7 +29,14 @@ foreach macro [$block getInsts] {
     set mx [expr {double([$box xMin])/$dbu}]
     set my [expr {double([$box yMin])/$dbu}]
     set bankcaps 0
+    set payload_pins {}
     foreach pin [$macro getITerms] {
+        set pn [[$pin getMTerm] getName]
+        if {[regexp {^rd_out\[([0-9]+)\]$} $pn -> bit] && $bit<256} {lappend payload_pins [list $bit $pin]}
+    }
+    set left_rank 0;set right_rank 0
+    foreach record [lsort -integer -index 0 $payload_pins] {
+        lassign $record bit pin
         set pn [[$pin getMTerm] getName]
         if {![regexp {^rd_out\[([0-9]+)\]$} $pn -> bit] || $bit>=256} {continue}
         set net [$pin getNet]
@@ -49,15 +56,26 @@ foreach macro [$block getInsts] {
         if {[dict exists $seen [$cell getName]]} {error "capture reused by multiple ROM payload pins"}
         dict set seen [$cell getName] 1
         set width [expr {double([[$cell getMaster] getWidth])/$dbu}]
-        # Four columns of 64 rows in the modeled 12um left landing strip.
-        # Stay outside the 3um macro halo; snap to actual standard-cell sites.
-        set x [expr {$x0+floor(($mx-4.0-$width-($bit%4)*1.296-$x0)/$xp)*$xp}]
-        set y [expr {$y0+round(($my+2.0+($bit/4)*0.540-$y0)/$yp)*$yp}]
-        if {$x<2.0 || $x+$width>$mx-3.0} {error "capture landing strip does not fit"}
+        # Actual M4 q faces:130left+126right. Use each actual pin coordinate.
+        set qxy [$pin getAvgXY]
+        if {[llength $qxy]!=3 || ![lindex $qxy 0]} {error "missing actual q pin coordinate"}
+        set qx [expr {double([lindex $qxy 1])/$dbu}]
+        set mw [expr {double([$box xMax]-[$box xMin])/$dbu}]
+        if {$qx<$mx+$mw/2} {
+            set rank $left_rank;incr left_rank
+            set x [expr {$x0+floor(($mx-4.0-$width-($rank%4)*1.296-$x0)/$xp)*$xp}]
+            if {$x<2.0 || $x+$width>$mx-3.0} {error "left capture strip does not fit"}
+        } else {
+            set rank $right_rank;incr right_rank
+            set x [expr {$x0+ceil(($mx+$mw+4.0+($rank%4)*1.296-$x0)/$xp)*$xp}]
+            if {$x+$width>188.0 || $x<$mx+$mw+3.0} {error "right capture strip does not fit"}
+        }
+        set y [expr {$y0+round(($my+2.0+($rank/4)*0.540-$y0)/$yp)*$yp}]
         place_inst -name [$cell getName] -location [list $x $y] -status FIRM
         incr bankcaps
         incr captures
     }
+    if {$left_rank!=130 || $right_rank!=126} {error "unexpected actual payload face count"}
     if {$bankcaps!=256} {error "bank $bank requires256 direct captures, found$bankcaps"}
     puts "MD6_LOCALCAP bank=$bank origin=$mx,$my direct_captures=$bankcaps"
     incr macros
