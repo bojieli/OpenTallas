@@ -136,10 +136,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [31:0] RANK = {24'b0, rank};
         wire LEG = (gsz == 4'hF);
         wire MODE_OK = LEG || ((gsz <= 3) && ((32'd1 << gsz) <= NC));
+        wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << gsz) : 1);
+        wire PAYLOAD_OK = (pf != 0) && (pf <= PFMAX) && (({16'd0,pf} % REQ_NA) == 0) &&
+                         (({16'd0,pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,pf} / REQ_NA) % 2 == 0));
 `ifdef OT_COLL_MUT_MODE_GUARD
         wire ACCEPT_MODE = 1'b1;
 `else
-        wire ACCEPT_MODE = MODE_OK;
+        wire ACCEPT_MODE = MODE_OK && PAYLOAD_OK;
 `endif
         reg mode_error;
         always @(posedge clk or negedge rst_n)

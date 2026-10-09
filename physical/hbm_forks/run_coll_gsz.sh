@@ -30,7 +30,7 @@ import os
 if os.environ.get('NEGZ', '1') == '1':
     HF.build = nb
 for n in (1, 2, 4, 8):
-    HF.SHAPES[f'g{n}'] = dict(GS=n, NG=max(1, 8 // n), NC=n, NOG=8 // n, E=256, LANES=16, ONESHOT=0, BF16=1)
+    HF.SHAPES[f'g{n}'] = dict(GS=n, NG=max(1, 8 // n), NC=n, NOG=8 // n, E=128 if n == 1 else 256, LANES=16, ONESHOT=0, BF16=1)
     HF.build = _b if n == 1 else (nb if os.environ.get('NEGZ', '1') == '1' else _b)
     HF.write(Path(sys.argv[1]) / 'fx' / f'g{n}', f'g{n}', 20261009 + n)
 PY
@@ -57,7 +57,7 @@ echo "ar pos +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1 +SAMECOL=1" >> $J
 for pf in 1 64; do for r in 0 95; do echo "ga pos +VEC=fx/gather_pf$pf +PF=$pf +RANK=$r +SEED=1" >> $J; done; done
 for r in 0 62; do echo "arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=$r +SEED=1" >> $J; done
 if [ "${DS_ONLY:-0}" != 1 ];then
-for n in 1 2 4 8; do for r in $(seq 0 7); do for s in 1 2; do echo "g$n pos +VEC=fx/g$n +PF=16 +RANK=$r +SEED=$s" >> $J; done; done; done
+for n in 1 2 4 8; do for r in $(seq 0 7); do for s in 1 2; do pf=16;[ "$n" = 1 ] && pf=8;echo "g$n pos +VEC=fx/g$n +PF=$pf +RANK=$r +SEED=$s" >> $J; done; done; done
 for n in 2 4; do for r in 0 1; do echo "m$n neg +VEC=fx/g$n +PF=16 +RANK=$r +SEED=1" >> $J; done; done
 for r in 0 3 7;do echo "leak neg +VEC=fx/g2 +PF=16 +RANK=$r +SEED=1" >> $J;done
 fi
