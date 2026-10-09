@@ -1,0 +1,25 @@
+{
+  "source_commit": "9802048e0",
+  "bench_commit": "e49e9aac5",
+  "passed": true,
+  "positive": {
+    "compile_rc": 0,
+    "run_rc": 0,
+    "output": "PASS_VM8_FACE_HIER cycles=750 allfacechecks=5180 realmacros=12 reference6candidate6\n/srv/opentallas-scratch/codex/vm8-face-hierarchy-e49-r1/tb_vm8_face_hierarchy.sv:50: $finish called at 625000500 (1fs)\n"
+  },
+  "mutant": {
+    "compile_rc": 0,
+    "run_rc": 1,
+    "output": "FATAL: /srv/opentallas-scratch/codex/vm8-face-hierarchy-e49-r1/tb_vm8_face_hierarchy.sv:36: actual fullface mismatch t_w_wr cycle11\n       Time: 9166674  Scope: tb_vm8_face_hierarchy\n"
+  },
+  "source_sha256": {
+    "ot_hfd_oreg1.sv": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+    "ot_hfd_vm_slice.sv": "125bcb41a85357eb2ab88ab6183eb5d2d55f3dcb9eb9f97c7c37fa67e0424b42",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "ot_hbm_vm8_face_relay.sv": "742cc3ca1d5fe41cace81bf96af56112bb5f9a64e34fdc45b9929dbb23e96edb",
+    "hfd_vm_se_n_f3_reference.sv": "740d75b6860eedcc46a27ac526231e3c78d2d12e86852397a97007e831b3a669",
+    "hfd_vm_se_n_hier.sv": "e3ab5c15a0c3ac9c045a0cf1a413115f1d2199497b647bd0147af82d99da2186",
+    "tb_vm8_face_hierarchy.sv": "64fc17d08d5c3cae3487092d2d8df55a15809ec66b5338478098c0746e2e55d9"
+  },
+  "scope": "One actual fullSE-n half, six realSRAM macros in eachreference/candidate. Fullface f3 pipeline equality; not fullVM8/die integration orphysicalclosure."
+}
