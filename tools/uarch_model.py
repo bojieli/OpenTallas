@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def hbm_expert_steering_model():
+    """Full-shape L1 descriptor and tagged result steering, default off."""
+    from hbm_expert_steering_model import model
+    return model()
