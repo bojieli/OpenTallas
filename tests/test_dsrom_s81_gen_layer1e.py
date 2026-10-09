@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as F  # noqa: E402
 
-L1 = ('--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --hop-fix --pin-relay --pairs 1792 --q-elem-h 221.4 '
+L1 = ('--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --hop-fix --pin-relay --pairs 1792 --q-elem-h 221.4 --bf-per-region 4 '
       '--pq-place --die {die}')
 
 
