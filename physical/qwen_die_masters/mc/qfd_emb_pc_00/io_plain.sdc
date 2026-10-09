@@ -1,0 +1,7 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.667 -clock clk [get_ports {s_v w_v s_we s_bank[*] s_col[*] s_row[*] w_d[*]}]
+set_output_delay 166.667 -clock clk [get_ports {s_credit e_v e_d[*] fault_core}]
+set_input_delay 204.8 -clock hclk [get_ports {cmd_v cmd[*] read_credit[*] r_v r_d[*]}]
+set_output_delay 204.8 -clock hclk [get_ports {cmd_credit row_v row_op[*] row_bank[*] row_row[*] col_v col_we col_sr col_bank[*] col_col[*] busy wd[*] kv_v kv_d[*] fault_hbm}]
+set_false_path -from [get_ports {rst_n hrst_n}]

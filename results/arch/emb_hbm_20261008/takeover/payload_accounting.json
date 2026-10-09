@@ -8,5 +8,6 @@
   "payload_bytes": 622633728,
   "sector_count_bytes": 622633728,
   "consistent": true,
-  "reason": "The historical table_bytes field equals code bytes and excludes 303872 scale bytes. Reconcile from explicit table shape and measured sector count without changing hashes/checksum or overwriting the original."
+  "reason": "The historical full_table.json table_bytes is already the correct total payload: 622329856 code bytes plus303872 scale bytes. Explicit shape and measured sector count agree. The original package header alone misstates code bytes; pinned source/checksum remain unchanged.",
+  "correction": "Earlier takeover prose incorrectly called historical table_bytes code-only; arithmetic fields were and remain correct."
 }

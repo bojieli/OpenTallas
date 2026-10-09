@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.embedding_hbm_r21c_binding_model.v1",
+  "model_before_RTL": true,
+  "adopted": false,
+  "physical_closed": false,
+  "replica_count": {
+    "embedding_engine": 4,
+    "controller_pcport_embedding_cdc_composite": 128
+  },
+  "MACs_per_cycle": 0,
+  "clocks": {
+    "core_period_ps": 833.333333333,
+    "HBM_period_ps": 1024,
+    "actual_crossing_required": true
+  },
+  "CDC": {
+    "per_PC_fifos": [
+      {
+        "direction": "core_to_HBM",
+        "width_bits": 287,
+        "depth": 8,
+        "fields": "write_valid1,we1,bank5,col5,row19,data256"
+      },
+      {
+        "direction": "HBM_to_core",
+        "width_bits": 258,
+        "depth": 8,
+        "fields": "UE1,CE1,data256"
+      },
+      {
+        "direction": "HBM_to_core",
+        "width_bits": 1,
+        "depth": 8,
+        "fields": "static_entry_issued_credit"
+      }
+    ],
+    "per_PC_payload_bits": 4368,
+    "all_PC_payload_bits": 559104,
+    "primitive": "rtl/lib/ot_async_fifo.sv",
+    "legacy_KV_CDC": "Preserved separately; no extra bits aliased into its existing interface"
+  },
+  "boundary_bits_per_cycle": {
+    "embedding_command_per_PC_with_valid": 288,
+    "embedding_return_per_PC_with_valid": 259,
+    "embedding_credit_per_PC": 1,
+    "PHY_read_per_PC_with_valid": 289,
+    "PHY_static_write_per_PC": 288,
+    "hub_class_link_each_direction": 525
+  },
+  "memory_port_bytes_per_cycle": {
+    "command_FIFO_write": 35.875,
+    "return_FIFO_write": 32.25,
+    "PHY_payload": 32,
+    "PHY_protection_bits": 32
+  },
+  "finite_flow": {
+    "gateway_fetches_in_flight": 1,
+    "gateway_proof": "ot_qfd_emb_gw S_IDLE->S_ISSUE->S_ROW; returns toIDLE only after65th (scale) response retires",
+    "max_read_beats_per_PC_per_fetch": 2,
+    "strip_return_FIFO_depth": 4,
+    "command_credits_per_PC": 4,
+    "max_boot_commands_per_PC_in_flight": 4,
+    "CDC_command_depth": 8,
+    "CDC_return_depth": 8,
+    "credit_rate": "HBM976.5625MHz producer <= core1.2GHz consumer; reset/online rendezvous must complete before pulse admission",
+    "overflow_policy": "Explicit sticky per-domain pulse-not-ready faults; no ignored loss",
+    "batching": false
+  },
+  "area": {
+    "composite_frame_um": [
+      247.536,
+      370.44
+    ],
+    "all_controller_frames_mm2": 11.737246187519998,
+    "measured_controller_cells_um2": 1889.319,
+    "measured_PCport_cells_um2": 1367.926,
+    "CDC_payload_flop_proxy_um2": 1397.76,
+    "CDC_control_and_CTS_not_measured": true,
+    "gross_cell_proxy_utilisation": 0.050764943537909814,
+    "standalone_child_abstracts": "Cannot overlap full-frame controller and PCport LEFs; re-harden composite in existing controller reservation",
+    "outline_addition_from_composite_mm2": 0
+  },
+  "routing": {
+    "core_face_bits_including_original_controller_command": 585,
+    "two_layer_pitch_um": 0.096,
+    "usable_fraction": 0.75,
+    "short_face_capacity_tracks": 3867,
+    "local_density_gate_required": true,
+    "last_segment_max_um": 100,
+    "added_column_PC_stations_forward": 1,
+    "added_column_PC_stations_return": 1
+  },
+  "latency": {
+    "measured_baseKV1_cycles_mean": 473,
+    "measured_baseKV1_cycles_max": 789,
+    "existing_three_CDCs": "Included in baseline benchmark; implemented successor must compare accepted/visible edges",
+    "new_shoreline_column_proposed_added_core_edges": 2,
+    "new_station_edges_measured": false,
+    "qualified_headline_credit": 0
+  },
+  "provider": "Actual288bPHY/ECC32 storage+bandwidth remains unqualified; physical_provider_contract.json",
+  "source_sha256": {
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv": "51e5289c6cad293096a52a1d73eb1645a37f349dc383fcf2417e36394067d3b5",
+    "rtl/test/emb_hbm/tb_emb_hbm_e2e.sv": "a0441844f799ccb963ad4553ebca932941cda34f95b5b7b52e9cfa6c289a9646"
+  }
+}
