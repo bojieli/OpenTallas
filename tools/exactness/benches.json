@@ -208,8 +208,12 @@
      "img_gold4_dspark_g5_n12": 29049215
     }
    },
-   "last_pass": null,
-   "note": "ROM harness validation still live at takeover; earlier forced cases are committed in rom_b_part.json; no full-shape S81 implementation claim; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Pinned Claude mtp-exact/src snapshot; source and image hashes in validation/rom_record.json",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/rom.json"
+   },
+   "note": "Terminal exact true on all four cases (acceptance0..5), all five restore/accept-extra mutants detected. Reduced core with XU/Sinkhorn handshake successor; no full-shape S81 implementation claim."
   },
   {
    "bench": "v41_mtp_rom_wf2",
