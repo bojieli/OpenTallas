@@ -2765,5 +2765,93 @@
    "status": "merged",
    "merged_by": "drive-2041"
   }
- ]
+ ],
+ "merge_backlog_2026_10_08_2130": {
+  "stream": "merge-backlog",
+  "base": "origin/main 0b6058a98 (+7c8e17182)",
+  "closures_merged": [],
+  "closures_note": "No closure-loop job of any merged entry is CLOSED yet; every merged change is new files or behind a default-off parameter/env. Variants are adopted only when their jobs close.",
+  "ready_to_merge": [
+   {
+    "entry": "hbm-norm-split 26f2e4ed2",
+    "action": "merged (new files only; jobs hbm-norm-grp* not closed)"
+   },
+   {
+    "entry": "drive-1043-timing 398750b79",
+    "action": "merged (new files; ha2_tcrxp_* not closed)"
+   },
+   {
+    "entry": "credit-ready d5db55765",
+    "action": "merged (CREDIT/H_CREDIT/OWNER_RX_CREDIT default 0; pinned sha of 4 HA2 files drift; ha2_tccr_* not closed)"
+   },
+   {
+    "entry": "orphans 8de4473c4",
+    "action": "merged (sfu pinko lane views, data only)"
+   },
+   {
+    "entry": "attn-tile-2 0b66c6dd2",
+    "action": "merged (sliver blockage env, defaults unchanged)"
+   },
+   {
+    "entry": "attn-split 021f55db2",
+    "action": "merged (r25s variant; r25 unchanged; half jobs not closed)"
+   },
+   {
+    "entry": "hbm-coll-rtl acdfa3ab1",
+    "action": "merged (SR endpoint new files; face_chain_place macros end chain walks)"
+   },
+   {
+    "entry": "coll-port 42f6deeef",
+    "action": "merged (route_ps.sh env, defaults unchanged)"
+   },
+   {
+    "entry": "coll-fallback 1e2cc4ed6",
+    "action": "merged (ps2/hy additive)"
+   },
+   {
+    "entry": "ha2-h2-cg 76c237dbb",
+    "action": "merged (new flags; --half accepts several gate outputs)"
+   },
+   {
+    "entry": "qwen-tile 1ee48d600",
+    "action": "merged (new hook files)"
+   },
+   {
+    "entry": "safe-qwen 6858b69ff",
+    "action": "merged (all params default off; regenerated masters, sha pins drift; o302 SDC binds wclk/rclk)"
+   },
+   {
+    "entry": "bf-icg 6e8f0b698",
+    "action": "merged (QZE default 0; EPYC1 bficg qze + cg0 terminal.json pass=True, all mutants caught)"
+   },
+   {
+    "entry": "crash-1945 f6bc7c10b",
+    "action": "cherry-picked (OT_FC_THRU_BOW default off)"
+   },
+   {
+    "entry": "fleet-viz cc299102c",
+    "action": "merged (superseded category; branch commits up to cc299102c only)"
+   },
+   {
+    "entry": "redesign-2 1c3be936a (split8 + stagger)",
+    "action": "skipped: no hbm_vm8_* job CLOSED"
+   },
+   {
+    "entry": "drive-1128-vm8 a5b5873d9 / c47843849",
+    "action": "skipped: adopt only after hbm_vm8_*_sp_* close; none closed"
+   },
+   {
+    "entry": "vm8-seam2 2cf68d516",
+    "action": "skipped: s2 routes not closed / not compared with LVT spl"
+   },
+   {
+    "entry": "safe-s81 f3ac74ce4",
+    "action": "skipped: negative benches still running (selt neg_threshold/neg_frpr, coll_core neg_noreorder)"
+   },
+   {
+    "entry": "safe-s81-qs5f 4ea1fb1d0 / safe-s81-w2rb fec1faadd",
+    "action": "not for main (route snapshots)"
+   }
+  ]
+ }
 }
