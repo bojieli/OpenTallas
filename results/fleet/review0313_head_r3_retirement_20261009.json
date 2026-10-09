@@ -1,0 +1,261 @@
+{
+  "at": "2026-10-09T10:37:22.593210+00:00",
+  "jobs": [
+    {
+      "name": "mtp-wfc_tok-r3-8a357077f-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "status": "NEEDS_RTL",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I13 retired while HARD same r2 progresses; reconsider only if HARD fails; no prebuilt prefetch extensions",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "NEEDS_RTL",
+        "source_commit": "8a357077f",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/mtp-wfc_tok-r3-8a357077f-tc.before.json",
+        "state_sha256": "74f9115f3c583171241842197fb303a9c2f2b83b6defb213b77b943fd95bf4b4",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-quad-safe-b529ca8c9-tt",
+      "block": "ot_hdc_v41_fh_quad",
+      "status": "FLOORPLAN_MARGIN",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; selected ot_hdc_v41_fh_hquad excluded",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-quad-safe-b529ca8c9-tt.before.json",
+        "state_sha256": "9bff903492fa06a4b2ca6311424b174e805c2ea8208b9a548a78ebbcce0217b3",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "status": "NEEDS_HUMAN",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I13 retired while HARD same r2 progresses; reconsider only if HARD fails; no prebuilt prefetch extensions",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "NEEDS_HUMAN",
+        "source_commit": "f94ff05bba71a56155b40e8a6ced474069d46ffe",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/mtp-wfc_tok-r3-f94ff05bb-tc.before.json",
+        "state_sha256": "25925b2ae5a3ae1236b6c5ba829cfc594d0295967f2a3394ce59a5791b76b667",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-safe-94abba0f2",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "CANCELLED",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "CANCELLED",
+        "source_commit": "94abba0f265ba94883fd4618fb007448902dedc8",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-safe-94abba0f2.before.json",
+        "state_sha256": "6ac47585051d6c07f33042bb198d6dad643492b5718d0f5485ab498788e6ea91",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "mtp-wfc_tok-r3-3413bba96-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "status": "INVALID",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I13 retired while HARD same r2 progresses; reconsider only if HARD fails; no prebuilt prefetch extensions",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "INVALID",
+        "source_commit": "3413bba962922f2d8bbfd065a06b17967bead2af",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/mtp-wfc_tok-r3-3413bba96-tc.before.json",
+        "state_sha256": "8fdd47366db1d47243a03a64d51a8ec453d072dc7fd1b54e6e25bde60b106213",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-ss-a318fdf47",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "CANCELLED",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "CANCELLED",
+        "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-ss-a318fdf47.before.json",
+        "state_sha256": "3c091e40bf42ed20d8c9c463c2634928e2fcc1f5dd68d89ba26a0c5cde506b58",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-safe-94abba0f2-tt",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "EARLY_FAIL_HOLD",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "EARLY_FAIL_HOLD",
+        "source_commit": "94abba0f265ba94883fd4618fb007448902dedc8",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-safe-94abba0f2-tt.before.json",
+        "state_sha256": "e1ef8ac937134dd305e1df9374b21d57a1d5e1c4ccf01754b8e72ee2f5bcc1d1",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "mtp-wfc_tok-r3-1718d445e-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "status": "NEEDS_RTL",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I13 retired while HARD same r2 progresses; reconsider only if HARD fails; no prebuilt prefetch extensions",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "NEEDS_RTL",
+        "source_commit": "1718d445eb6607be7b87ec944cb4cf78b6deffc5",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/mtp-wfc_tok-r3-1718d445e-tc.before.json",
+        "state_sha256": "949d6f192ad5a4eb3ded545ef902ad67cea300e0f08cb68c1b61a87d735bcf86",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-safe-b529ca8c9",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "CANCELLED",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "CANCELLED",
+        "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-safe-b529ca8c9.before.json",
+        "state_sha256": "af14b6a30fbc56960887db0e0bb1fa3c01ad1a8641af779081c1557070acf04d",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-ss-a318fdf47-tt-d1956",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "EARLY_FAIL_HOLD",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "EARLY_FAIL_HOLD",
+        "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-ss-a318fdf47-tt-d1956.before.json",
+        "state_sha256": "d98ff940b1c7db1965b2550918287520002b03ce3e4f6e2e69b0bedba41e7e41",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-ss-a318fdf47-tt-d1956-f3-hm10",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "EARLY_FAIL_HOLD",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "EARLY_FAIL_HOLD",
+        "source_commit": "8c96c8c8c8ef1a72c670ec7c5d5c74e0b55788c1",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-ss-a318fdf47-tt-d1956-f3-hm10.before.json",
+        "state_sha256": "0055e1f895c832e5edb94a9f2d504084c1af164826dc17edf08ee7806d7d4dde",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-quad-ss-a318fdf47-tt",
+      "block": "ot_hdc_v41_fh_quad",
+      "status": "FLOORPLAN_MARGIN",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; selected ot_hdc_v41_fh_hquad excluded",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-quad-ss-a318fdf47-tt.before.json",
+        "state_sha256": "ffb48ed0181570f84ff439250474450b17f2450ab41c7c1ec03bbe90381c25fc",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-top-ss-a318fdf47-tt",
+      "block": "ot_hdc_v41_fh_head_top",
+      "status": "EARLY_FAIL_HOLD",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; preserve historical verdicts",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "EARLY_FAIL_HOLD",
+        "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-top-ss-a318fdf47-tt.before.json",
+        "state_sha256": "3f30a9997cac2b81344669d02cc399b2653b9b354a9d72b679c0e5c59ae38d82",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc-v2",
+      "block": "dsfd_wfc_tok_r3",
+      "status": "NEEDS_RTL",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I13 retired while HARD same r2 progresses; reconsider only if HARD fails; no prebuilt prefetch extensions",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "NEEDS_RTL",
+        "source_commit": "f94ff05bba71a56155b40e8a6ced474069d46ffe",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/mtp-wfc_tok-r3-f94ff05bb-tc-v2.before.json",
+        "state_sha256": "86dc8af981ffecd070f68dc5f4ca9abb88815e29d4eca2c6513e474c3d2bade6",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-quad-safe-b529ca8c9",
+      "block": "ot_hdc_v41_fh_quad",
+      "status": "CANCELLED",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; selected ot_hdc_v41_fh_hquad excluded",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "CANCELLED",
+        "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-quad-safe-b529ca8c9.before.json",
+        "state_sha256": "34cb9a33bff9c322950a4df837e7ed66a54121b997f5ea49b0bd23529256756c",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-quad-ss-a318fdf47",
+      "block": "ot_hdc_v41_fh_quad",
+      "status": "CANCELLED",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; selected ot_hdc_v41_fh_hquad excluded",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "CANCELLED",
+        "source_commit": "a318fdf478cdce66e0b03d9d357fec14106713dd",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-quad-ss-a318fdf47.before.json",
+        "state_sha256": "66cdf9c4bd3043416b3a891601844b1569ffbaa7051066aac1285ab72792dd27",
+        "scope_only_no_process_action": true
+      }
+    },
+    {
+      "name": "dshead-quad-safe-b529ca8c9-tt-f4-lvt",
+      "block": "ot_hdc_v41_fh_quad",
+      "status": "FLOORPLAN_MARGIN",
+      "retired_scope": {
+        "owner": "confirmed review0313 I8/I13",
+        "reason": "I8 superseded by selected r4 fh_ctl + hquad r6m CLOSED and ep_view; selected ot_hdc_v41_fh_hquad excluded",
+        "at": "2026-10-09T10:37:22.593210+00:00",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "source_commit": "e523fd403fab25fd75198303779d00f6e4d2b6c4",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/review0313_head_r3/dshead-quad-safe-b529ca8c9-tt-f4-lvt.before.json",
+        "state_sha256": "e6f90e40ef8e2bfb0864337f23b3e4ef2f003182f2a46f39f929212058cc6cdc",
+        "scope_only_no_process_action": true
+      }
+    }
+  ],
+  "process_actions": 0
+}
