@@ -1,0 +1,58 @@
+{
+  "captured_utc": "2026-10-09T09:55:05Z",
+  "scope": "Current live process HWM observations; not whole-run maximum or future link prediction",
+  "jobs": [
+    {
+      "host": "ot-epyc4",
+      "name": "hbm-indexer-3a6f720d4/run_t1",
+      "parent_pid": 952687,
+      "parent_RSS_KiB": 126226832,
+      "parent_HWM_KiB": 127169512,
+      "remaining_cc1plus_pid": 2313744,
+      "cc1plus_RSS_KiB": 5609264,
+      "cc1plus_HWM_KiB": 5888316,
+      "make_RSS_KiB": 52260,
+      "sh_RSS_KiB": 2060,
+      "gpp_RSS_KiB": 3308,
+      "phase": "one final generated C++ object, before archive/link",
+      "build_time_terminal": false,
+      "observed_live_individual_HWM_sum_KiB": 133115456
+    },
+    {
+      "host": "ot-epyc2",
+      "name": "hbm-indexer-2f27cb363/fa6_key24_score32",
+      "parent_pid": 2153931,
+      "parent_RSS_KiB": 126185584,
+      "parent_HWM_KiB": 127167300,
+      "remaining_cc1plus_pid": 175302,
+      "cc1plus_RSS_KiB": 5473952,
+      "cc1plus_HWM_KiB": 5891700,
+      "make_RSS_KiB": 52312,
+      "sh_RSS_KiB": 2060,
+      "gpp_RSS_KiB": 3288,
+      "phase": "one final generated C++ object, before archive/link",
+      "build_time_terminal": false,
+      "inventory_utc": "2026-10-09T09:55:55Z",
+      "cpp_count": 9819,
+      "cpp_bytes": 8543448123,
+      "object_count": 9821,
+      "object_bytes": 1035522712,
+      "missing_objects": [
+        {
+          "cpp": "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp",
+          "bytes": 180841184
+        }
+      ],
+      "archives": [],
+      "observed_live_individual_HWM_sum_KiB": 133116660
+    }
+  ],
+  "reservation_policy": "No estimated 200/250 GiB future claim; observed live individual HWM sums supplied to fleet. Future archive/link peak unmeasured. Reservation mutation belongs to fleet guard owner. Preserve workers.",
+  "retired_flattened_NK4": {
+    "pid": 3252430,
+    "terminal": "kernel OOM exit137",
+    "peak_KiB": 481352416,
+    "active_claim": false,
+    "evidence": "results/rtl/hbm_indexer_recovery_20261009/hier_dot/record.json"
+  }
+}
