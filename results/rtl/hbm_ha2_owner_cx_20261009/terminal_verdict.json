@@ -1,0 +1,148 @@
+{
+  "schema": "opentallas.ha2_owner_cx.fullshape_gate.v1",
+  "source_commit": "eecb9277541f38159684833e6bf0879c0cbc5ed3",
+  "scope": "minimum actual failed INJ2 NC8 PF384 NPT8 LANES16 FD8 owner; no native INJ8 or physical qualification",
+  "actual_fast_period_ps": 833.333334,
+  "nominal_halfcycle_setup_window_ps": 416.666667,
+  "positive_verdict": "PASS",
+  "bypass_baseline_verdict": "PASS",
+  "genuine_same_consuming_phase_mutant_verdict": "FAIL (expected)",
+  "mechanism_gate_verdict": "PASS",
+  "measured_service_interval_fast_edges": 2,
+  "observed_peer_pops": 1064,
+  "observed_adjacent_two_edge_pairs": 957,
+  "cycle_composition": [
+    {
+      "scenario": "S0",
+      "baseline": {
+        "pf": 64,
+        "mode": 0,
+        "throttle": 0,
+        "results": 4,
+        "ref_first_issue->last": 84,
+        "dut_first_issue->last": 106,
+        "ref_last": 102,
+        "dut_last": 148,
+        "dut_ready_stalls": 56,
+        "scenario": "S0"
+      },
+      "candidate": {
+        "pf": 64,
+        "mode": 0,
+        "throttle": 0,
+        "results": 4,
+        "ref_first_issue->last": 84,
+        "dut_first_issue->last": 106,
+        "ref_last": 102,
+        "dut_last": 148,
+        "dut_ready_stalls": 56,
+        "scenario": "S0"
+      },
+      "added_last_delivery_fast_edges": 0,
+      "added_issue_to_last_fast_edges": 0
+    },
+    {
+      "scenario": "S1",
+      "baseline": {
+        "pf": 384,
+        "mode": 0,
+        "throttle": 0,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 570,
+        "dut_last": 616,
+        "dut_ready_stalls": 343,
+        "scenario": "S1"
+      },
+      "candidate": {
+        "pf": 384,
+        "mode": 0,
+        "throttle": 0,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 570,
+        "dut_last": 616,
+        "dut_ready_stalls": 343,
+        "scenario": "S1"
+      },
+      "added_last_delivery_fast_edges": 0,
+      "added_issue_to_last_fast_edges": 0
+    },
+    {
+      "scenario": "S2",
+      "baseline": {
+        "pf": 384,
+        "mode": 1,
+        "throttle": 0,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 1038,
+        "dut_last": 1084,
+        "dut_ready_stalls": 634,
+        "scenario": "S2"
+      },
+      "candidate": {
+        "pf": 384,
+        "mode": 1,
+        "throttle": 0,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 1038,
+        "dut_last": 1084,
+        "dut_ready_stalls": 634,
+        "scenario": "S2"
+      },
+      "added_last_delivery_fast_edges": 0,
+      "added_issue_to_last_fast_edges": 0
+    },
+    {
+      "scenario": "S3",
+      "baseline": {
+        "pf": 384,
+        "mode": 1,
+        "throttle": 1,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 1506,
+        "dut_last": 1552,
+        "dut_ready_stalls": 420,
+        "scenario": "S3"
+      },
+      "candidate": {
+        "pf": 384,
+        "mode": 1,
+        "throttle": 1,
+        "results": 24,
+        "ref_first_issue->last": 405,
+        "dut_first_issue->last": 426,
+        "ref_last": 1506,
+        "dut_last": 1552,
+        "dut_ready_stalls": 420,
+        "scenario": "S3"
+      },
+      "added_last_delivery_fast_edges": 0,
+      "added_issue_to_last_fast_edges": 0
+    }
+  ],
+  "latency_claim": "Zero incremental delivery/issue-to-last edges in these four actual fullshape scenarios; conservative modeled0..2 head/arm visibility bounds retained. Existing baseline core/read/tree/output stages remain priced separately.",
+  "receipts_sha256": {
+    "gate-r4": "7078d29e0b956eb997343a92ba6cb0f7f20e26d7ff04f6105c047b22289ebd06",
+    "baseline-r4": "8b368bdeb02956581cb3ae9749d3a2de86d14a41768feffd5e4ce0ff4ee8a121",
+    "phase-mutant-r4": "d951e25bb0762e2f71b40d4d302cbc3be729a3e98a19a3402db978ce8a9f0355"
+  },
+  "default_enabled": false,
+  "physical_qualified": false,
+  "native_in_context_qualified": false,
+  "adoption": "HOLD / NO INTAKE, latest owner reserves new/exploratory work for Claude",
+  "unfinished": [
+    "actual generated pulse waveform/enable propagation and CTS arrival characterization",
+    "in-context TT setup/FF hold under unchanged60/25 uncertainty",
+    "actual reset-release and native INJ8/true-credit parent binding",
+    "routing channel and whole single-user critical-path composition"
+  ]
+}
