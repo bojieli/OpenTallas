@@ -1,0 +1,23 @@
+"""Qwen full-shape raw-bank selection pipeline; model precedes RTL."""
+def model():
+    return dict(schema='QWEN_TILE_RAW_GROUP_V1', default_enabled=False,
+        baseline='ROM_PIPE1 ARELAY1 CAP2=0, 2 columns x5 real4096ROM banks',
+        target='Qwen ROM AR', MACs_per_cycle=64, replicas_per_die=1536,
+        ROM_payload_bits_per_cycle=512, ROM_payload_bytes_per_cycle=64,
+        raw_capture_bits=2560, selected_group_bits=1024, expanded_group_bits=2048,
+        converted_codes_baseline=320, converted_codes_successor=128,
+        raw_mux='onehot masked OR, south3/north2 banks per column; raw zero expands to BF16 zero',
+        new_register_bits=1024+512+128,
+        added_fill_edges=1, steady_issue_interval=1,
+        fill_edge_ns=0.833333, per_token_delta_cycles='one edge per serial matvec fill; actual FQS matvec-count composition required',
+        forwarding='KV read and x delay follow RX+1; no arithmetic or reduction-order change',
+        slot_width_um=266.952,slot_height_um=1291.656,
+        register_area_upper_um2=(1024+512+128)*0.2916,
+        area_credit_from_converter_removal_um2=0,
+        added_area_mm2_per_die=(1024+512+128)*0.2916*1536/1e6,
+        external_pins_added=0, interbank_raw_bus_bits_per_column=512,
+        vertical_tracks_per_layer_at_50pct=int(266.952/0.064*.5),
+        raw_bus_tracks_needed=512, control_tracks=5,
+        floorplan='Existing south/north bank groups. Raw capture replaces converter-plus-OR critical cone; expanded gs and rs retain original geometry. Full context placement/PDN required.',
+        actual_path='1ee48d600 EPYC3 rp1p 3_detailed_place: cap147 to gs294 arrival790.73ps/SSplace WNS-102.24 at770ps; not terminal TT',
+        qualified=False, adoption=False)
