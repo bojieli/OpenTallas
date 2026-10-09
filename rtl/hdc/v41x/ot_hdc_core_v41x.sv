@@ -72,6 +72,7 @@ module ot_hdc_core_v41x #(
     parameter integer KV_HBM = 0,
     parameter integer ME0_HBM = 0,       // selected re-specified ME weight op uses an HBM window
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
+    parameter integer ROLLBACK_RING_DYN = 0, // one-position wavefront: eight compressor records
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
@@ -631,10 +632,13 @@ module ot_hdc_core_v41x #(
         dyn[db + 22] <= rnd16(n2);
         dyn[db + 23] <= rnd16(p1 + ns1);
         dyn[db + 24] <= rnd16(p1 + ns2);
-        if (NSLOT > 1) begin
-            //: MTP: the compressor slot ring of 8, the pooled pair's base, the Markov row
+        if (NSLOT > 1 || ROLLBACK_RING_DYN != 0) begin
+            // Ring storage is independent of the number of token slots. A
+            // one-position wavefront still needs the current record and pair.
             dyn[db + 25] <= {b_pos[2:0], 2'b00};
             dyn[db + 26] <= {b_pos[2:1], 7'd0};
+        end
+        if (NSLOT > 1) begin
             dyn[db + 27] <= b_tok * 32;
         end
         if (FULL_SHAPE) begin
