@@ -1,0 +1,6 @@
+progress cyc=2000 ops=34 writes=1008 idle r/m/a=000
+PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=50 cycles=2515 result_writes=1424 maxima=0 argmax_changes=0 scale_reads=865 latency_added=11 ACC_LAT=7 TREE_LAT=7 FAST_ISSUE=1 KV_PREP=4 adder_latency_added=21
+- /srv/opentallas-scratch/codex/qwen-tile-cx-integration/src/rtl/test/tb_qwen_me_partition_w12.sv:385: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 161.689 s; speed 31.159 ns/s
+- Verilator: cpu 161.687 s on 1 threads; alloced 651 MB
