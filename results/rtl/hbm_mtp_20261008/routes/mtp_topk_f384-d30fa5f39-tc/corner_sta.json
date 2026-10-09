@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp_topk_f384-d30fa5f39-tc/routes/mtp_topk_f384_d30fa5f39_tc/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design mtp_topk_f384\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreate_",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": -32.41,
+  "tns_ps": -9103.8,
+  "worst_register_d_slack_ps": -32.414738,
+  "worst_reg_to_reg_slack_ps": 19.64,
+  "worst_input_to_reg_slack_ps": -32.41,
+  "worst_output_port_slack_ps": 360.309174,
+  "violating_d_pins": 1217,
+  "errors": [],
+  "odb_sha256": "92d3bb736a4d662f4c73a9c5b88fc51b3e26df44a85bd9fb4b367ae3a708d7c4",
+  "spef_sha256": "f52dfabcb9533c7dcd724107ad445de2ac0c1e83601ef8f1dcf9467811abe187",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "39eed60b977867432c6e6ab44c9e6922b20b9ff1682126158b36dff926501e9a"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -327.87,
+  "tns_ps": -4245033.3,
+  "worst_register_d_slack_ps": -327.866943,
+  "worst_reg_to_reg_slack_ps": -327.87,
+  "worst_input_to_reg_slack_ps": -124.97,
+  "worst_output_port_slack_ps": 186.073318,
+  "violating_d_pins": 29502,
+  "errors": [],
+  "odb_sha256": "92d3bb736a4d662f4c73a9c5b88fc51b3e26df44a85bd9fb4b367ae3a708d7c4",
+  "spef_sha256": "f52dfabcb9533c7dcd724107ad445de2ac0c1e83601ef8f1dcf9467811abe187",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "39eed60b977867432c6e6ab44c9e6922b20b9ff1682126158b36dff926501e9a"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 15.23,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 15.231177,
+  "worst_reg_to_reg_slack_ps": 17.31,
+  "worst_input_to_reg_slack_ps": 15.23,
+  "worst_output_port_slack_ps": 23.724661,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "92d3bb736a4d662f4c73a9c5b88fc51b3e26df44a85bd9fb4b367ae3a708d7c4",
+  "spef_sha256": "f52dfabcb9533c7dcd724107ad445de2ac0c1e83601ef8f1dcf9467811abe187",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "39eed60b977867432c6e6ab44c9e6922b20b9ff1682126158b36dff926501e9a"
+ },
+ "post_sdc": {
+  "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+  "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "f66cdafb09fe13d61388da7a4458d2928db63582af041985d1d345ac8635d7d3"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": -327.87,
+ "closes_signoff": false
+}
