@@ -99,6 +99,27 @@ def dsrom_engram_protected_idwin_model(users=64):
         qualification='model before protected implementation; functional injection and real SS/FF physical timing required; unprotected idwin retained only as historical default')
 
 
+def dsrom_engram_dead_metadata_model(users=64,prompt_words=8):
+    """Released token-type metadata on actual PROMPT store/read/source scheduling."""
+    bits=users*prompt_words*3+users*3*2+3+3
+    return dict(schema='opentallas.engram-dead-source-model.v1',opt_in_default=False,
+        users=users,prompt_words=prompt_words,replicas=4,macs_per_cycle=0,
+        source_revision='dba1be0a40aa45a94ad051997016db3960a90277',
+        model_source_sha256='4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65',
+        image_processor_sha256='482759e3bcc4e9bb5ee582b244cc563f5d0e163d8b48dda91ebb7106e62f9272',
+        semantics='TEXT=-1 encoded3b111; image_start/image/image_newline/image_end0..3; DEAD=token_type>=0, not rawtoken alone; generatedfeedbackTEXT',
+        prompt_type_storage_bits=users*prompt_words*3,
+        prefetched_per_user_type_bits=users*3, queued_type_bits=users*3,
+        total_added_register_bits=bits, sequential_area_mm2_modelled=bits*.2916/1e6,
+        added_host_boundary_bits_per_command=3,
+        prompt_read_added_bits_per_cycle=3,prompt_read_added_bytes_per_cycle=3/8,
+        header_added_bits=0,source_stage_added_cycles=0,
+        mux_cost=f'3bit {users*prompt_words}:1 prompttype read and {users}:1 nexttoken type read',
+        fanout='captured type accompanies sameuser/position/rawtoken in prompt,nexttoken and queued feedback paths',
+        floorplan_slot_fit='~0.00056mm2 sequential perS0 rank at64x8; actual sourcecontroller view required',
+        qualification='actual hostcq input producer typedfield must bind; prompt_words8 is current source component, not1Mcontext prefillcapacity')
+
+
 def dsrom_engram_rowstripe_model(context=1048576, users=64):
     """Opt-in whole-row PC placement; historical atom-striped layout retained.
 
