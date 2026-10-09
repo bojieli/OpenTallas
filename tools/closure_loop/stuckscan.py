@@ -144,8 +144,10 @@ def worst_paths(rpt):
         grp = re.search(r"Path Group: (\S+)", blk); sl = re.search(r"([-\d.]+)\s+slack", blk)
         arr = blk.split("data arrival time")[0]
         req = blk.split("data arrival time", 1)[1] if "data arrival time" in blk else ""
-        vl = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \(ideal\)", arr)
-        vc = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \(ideal\)", req)
+        # the PORT side's clock latency: a virtual clock's ideal latency, or a real clock's propagated 0 at the port
+        # (retry545_cl2: IO on core_clk itself, "clock network delay (propagated) 0.00")
+        vl = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", arr) if "input port" in blk.split("\n", 2)[0] + blk.split("\n", 2)[1] else None
+        vc = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", req) if re.search(r"Endpoint: \S+\s*\n?\s*\(output port", blk) else None
         side = req if vl else arr      # the register end of an IO path: capture side of in->reg, launch side of reg->out
         ce = re.search(r"[-\d.]+\s+([-\d.]+)\s+clock \S+ \((?:rise|fall) edge\)", side)
         ck = re.search(r"\s([-\d.]+)\s+[\^v]\s+\S+/(?:CLK|CK|CLKN|GCLK)\s", side)
