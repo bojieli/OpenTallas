@@ -138,9 +138,9 @@ module tb_hbm_accel_tu_endpoint #(
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `ifdef TU_MCAST_ALL
-           .mcast_all(1'b1),
+           .mcast_all(1'b1),.mcast_group_size(8'd96),
 `else
-           .mcast_all(1'b0),
+           .mcast_all(1'b0),.mcast_group_size(8'd96),
 `endif
 `endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
