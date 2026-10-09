@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsrom_mtp_head_full340_A",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:s81_continuation/dies_scan_head",
+      "recorded_at": "2026-10-09T14:05:26+00:00",
+      "description": "Selected replicated capacity is 12 head dies, 85 bundles and 340 A/Markov engines per die; corrected native field inventory is 658 slots (338 BF-double, 320 ordinary NB2). An approved full340 hierarchy, physical master set and route recipe are missing. Minimum MD6 pair/bundle evidence does not qualify this element.",
+      "source": {
+        "commit": "e27c57223f78415da69771bd1708b8cefb9d51cf",
+        "paths": [
+          "tools/mtp_die_reprice.py",
+          "results/arch/mtp_die_reprice_20261009/model.json"
+        ],
+        "scope": "selected capacity model only; no selected full340 RTL top",
+        "generator_inventory_commit": "212141533ff32cdce4fff64f2a8db3750dec4da3",
+        "generator_inventory_path": "tools/dsrom_s81_fulldie.py",
+        "inventory_predecessor": "e05bcd27530666d68e33c0675a8a18cb06f2e53c"
+      },
+      "implementation": {
+        "status": "in progress; full340 native hierarchy unbound",
+        "evidence": [
+          "tools/mtp_die_reprice.py",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "model": {
+        "status": "storage and staging sized; physical fit and full composed timing incomplete",
+        "evidence": [
+          "results/arch/mtp_die_reprice_20261009/model.json"
+        ],
+        "field_slots": 658,
+        "BF_double_slots": 338,
+        "ordinary_NB2_slots": 320,
+        "field_weight_ROM4096_macros": 2632,
+        "existing_lm_head_ROM4096_macros": 850,
+        "local_Markov_ROM4096_macros": 680,
+        "weight_ROM_total": 4162,
+        "configuration_ROM4096x72_macros": 4606,
+        "all_ROM_types_total": 8768,
+        "physical_slot_fit": false
+      },
+      "exactness": {
+        "positive": {"status": "pending full340 integration; minimum component evidence only", "evidence": []},
+        "negative": {"status": "pending full340 integration; minimum component evidence only", "evidence": []}
+      },
+      "physical": {
+        "status": "no approved full340 route recipe; not ready to submit",
+        "corners": {},
+        "evidence": [],
+        "new_jobs_submitted": 0,
+        "minimum_leaf_not_equivalent": {
+          "approved_recipe_source": "24affff3306afb6a4bdb64ba70f590c0a613fac7",
+          "top": "ot_dsrom_markov_embed_localcapture_pair",
+          "slot_um": [190, 155],
+          "queued_family": "md6_lookup_localcapture-outputlanding-24affff33-tc-cx",
+          "scope": "two ROM / 512 captures; not full340 head"
+        }
+      },
+      "dependencies": [
+        "approved full340 native hierarchy and actual Markov weight/embedding interfaces",
+        "actual full253 lookup group selection, broadcast and cache connectivity",
+        "full658 typed field and native ROM configuration/loader bindings",
+        "measured face-separated 307-bit A input landings and qualified column-clock return view",
+        "actual full head master outlines, native HOST mux row and routing capacity fit",
+        "approved clean pinned fullshape route recipe with unchanged clocks/uncertainties"
+      ],
+      "integration": {
+        "status": "unbound; route prerequisite missing",
+        "evidence": []
+      },
+      "supersedes_description_only": {
+        "record": "results/fleet_viz/element_registry/dsrom_token_review_20261009.json",
+        "old_source": "20585cd70",
+        "old_field_slots": 696,
+        "reason": "correct native NB2 inventory and explicitly retain missing full-head implementation/physical qualification"
+      },
+      "owner_confirmation": {
+        "source": "mtp_rom/embed_port direct owner message on 2026-10-09",
+        "statement": "No authoritative approved full340 hierarchy RTL/route exists; MD6 minimum pair/local driver and minimum4A/1B bundle only. Full253 hierarchy/broadcast remains unqualified.",
+        "selected_capacity_review": "/home/ubuntu/claude-takeover-20261007/review_queue/mtp_die.md",
+        "minimum_scope_review": "/home/ubuntu/claude-takeover-20261007/review_queue/mtp_rom_embed_port.md"
+      }
+    }
+  ]
+}
