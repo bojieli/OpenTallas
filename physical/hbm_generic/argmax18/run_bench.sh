@@ -9,7 +9,7 @@ case "$mut" in
  0) ;;
  1) sed -i 's/IW=GENERIC18 ? 18 : 17/IW=GENERIC18 ? 17 : 17/' "$out/wrapper.sv";;
  2) sed -i 's/e_key\[k\] > bk\[k\]/e_key[k] >= bk[k]/' "$out/value.sv";;
- 3) sed -i "s/{18'b0,cfg_rank} \* {7'b0,cfg_imm_a}/{18'b0,cfg_rank} + {7'b0,cfg_imm_a}/" "$out/wrapper.sv";;
+ 3) sed -i "s/{18'b0,rank_q} \* {7'b0,imm_q}/{18'b0,rank_q} + {7'b0,imm_q}/" "$out/wrapper.sv";;
  4) sed -i "s/out_value <= tbits\[LL\]\[0\]/out_value <= 32'b0/" "$out/value.sv";;
  5) sed -i "s/e_bits\[q\] <= a_val\[32\*q +: 32\]/e_bits[q] <= (a_val[32*q+30 -: 8] == 8'hff \&\& a_val[32*q +: 23] != 0) ? 32'h7fc00000 : a_val[32*q +: 32]/" "$out/value.sv";;
  *) exit 2;;

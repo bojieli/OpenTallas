@@ -35,25 +35,25 @@ module ot_hgi_argmax18_m #(
  end endgenerate
  generate if(GENERIC18) begin:g_generic
    reg fresh;
-   reg [24:0] row_offset;
-   reg [24:0] offset_pipe[0:LAT];
-   wire [24:0] new_offset={18'b0,cfg_rank} * {7'b0,cfg_imm_a};
-   wire [24:0] selected_offset=fresh ? new_offset : row_offset;
+   reg [6:0] rank_q;
+   reg [17:0] imm_q;
+   reg [24:0] offset_pipe[0:LAT-2];
+   wire [24:0] registered_offset={18'b0,rank_q} * {7'b0,imm_q};
    integer j;
    always @(posedge clk or negedge rst_n) begin
      if(!rst_n) begin
-       fresh<=1'b1;row_offset<=0;
-       for(j=0;j<=LAT;j=j+1) offset_pipe[j]<=0;
+       fresh<=1'b1;rank_q<=0;imm_q<=0;
+       for(j=0;j<=LAT-2;j=j+1) offset_pipe[j]<=0;
      end else begin
        if(in_v) begin
-         if(fresh) row_offset<=new_offset;
+         if(fresh) begin rank_q<=cfg_rank;imm_q<=cfg_imm_a;end
          fresh<=in_last;
        end
-       offset_pipe[0]<=selected_offset;
-       for(j=1;j<=LAT;j=j+1) offset_pipe[j]<=offset_pipe[j-1];
+       offset_pipe[0]<=registered_offset;
+       for(j=1;j<=LAT-2;j=j+1) offset_pipe[j]<=offset_pipe[j-1];
      end
    end
-   assign end_offset=offset_pipe[LAT-1];
+   assign end_offset=offset_pipe[LAT-2];
    assign out_idx=local_idx;
    assign out_range_fault=out_v && core_range_fault;
  end else begin:g_ds
