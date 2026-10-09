@@ -15073,3 +15073,17 @@ def hgi_token18_contract_model():
                      control_read_wait_cycles=2),
         fanout=dict(replica_mux_demux=0, token_bit_max_accept_compare_fanout=1),
         exact_gate='DS17 lockstep + upper-bit mismatch + accept lengths0..7 + true mutants')
+
+
+def hgi_token18_accept_seat_model():
+    """Physical boundary repair, priced before RTL: parallel command pin seat."""
+    d=hgi_token18_contract_model()
+    seat_bits=4+3*18+3*3
+    d['accept'].update(pin_seat_bits=seat_bits, extra_ff_with_seat=17+seat_bits,
+                       latency_cycles=2, added_cycles_vs_DS17=1)
+    d['latency'].update(accept_cycles=2, token_added_cycles=1)
+    d['area'].update(estimated_accept_widening_um2=(17+seat_bits)*DFF_UM2)
+    d['physical_measured_base']=dict(stdcell_area_um2=263.752, cells=2137,
+        peak_floorplan_kib=322588, source='377249427', evidence='43b313543')
+    d['reason']='rtl_boundary actual source377 input->register34 levels; inputseat required'
+    return d
