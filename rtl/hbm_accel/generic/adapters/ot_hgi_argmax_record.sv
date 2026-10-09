@@ -15,7 +15,7 @@
 // Retire after both O words are written (the VM write responses).  Faults (rec fault + halt): unit != 7, op != 0, A / O
 //   absent, A not VM / STREAM or not FP32, A.m != 1, A inner stride != 1, n = 0, O not VM, imm_a >= 2^18, the engine's
 //   range fault (id >= 2^18).  A NaN row is NOT a fault (numpy semantics): it raises the sticky nan_flag.
-// Latency: accept E0, decode E1, first VM read request E2.
+// Latency: accept E0 (input register), decode E1, first VM read request E2.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_argmax_record #(
     parameter integer MUT_OFFSET = 0      // mutant: no A.base mod 8 correction
@@ -47,10 +47,10 @@ module ot_hgi_argmax_record #(
     wire [39:0] a_base = dA[47:8];
     wire [39:0] o_base = dO[47:8];
     wire [15:0] o_is = dO[5] ? 16'd0 : (dO[135:120] == 16'd0) ? 16'd1 : dO[135:120];
-    wire [6:0]  opnd = rec[100:94];       // rec bit 0 = valid, header = rec[128:1]
-    wire [127:0] rh = rec[128:1];
-    wire [255:0] rA = rec[384:129], rO = rec[640:385];
-    wire [20:0]  rnA = rec[661:641];
+    reg [682:0] rq; reg raw_v;              // input register (the record bus lands in a flop; decode next edge)
+    wire [127:0] rh = rq[128:1];             // rec bit 0 = valid, header = rec[128:1]
+    wire [255:0] rA = rq[384:129], rO = rq[640:385];
+    wire [20:0]  rnA = rq[661:641];
     wire bad = (rh[127:124] != 4'd7) || (rh[123:118] != 6'd0) || !rh[93] || !rh[97] ||
                !(rA[1:0] == 2'd1 || rA[1:0] == 2'd2) || (rA[4:2] != 3'd0) || (rA[87:68] != 20'd1) ||
                (rA[1:0] == 2'd1 && (rA[5] || rA[135:120] > 16'd1)) || (rnA == 21'd0) || (rO[1:0] != 2'd1) ||
@@ -71,15 +71,16 @@ module ot_hgi_argmax_record #(
     wire [39:0] wa = wr_n[0] ? (o_base + {24'd0, o_is}) : o_base;         // word address of the write in flight
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; halt_q <= 1'b0; ret <= 3'b001; nan_flag <= 1'b0; vmq <= 338'd0; stream_m <= 1'b0;
+            busy <= 1'b0; halt_q <= 1'b0; ret <= 3'b001; raw_v <= 1'b0; rq <= 683'd0; nan_flag <= 1'b0; vmq <= 338'd0; stream_m <= 1'b0;
             e_in_v <= 1'b0; e_in_last <= 1'b0; e_bias_en <= 1'b0; e_mask <= 8'd0; e_vals <= 256'd0; e_bias <= 256'd0;
             e_rank <= 7'd0; e_imm <= 18'd0; rd_pend <= 1'b0; rd_done_all <= 1'b0; got_out <= 1'b0; wr_phase <= 1'b0;
             wr_pend <= 1'b0; wr_n <= 2'd0; hdr <= 0; dA <= 0; dO <= 0; nA <= 0; sec <= 0; sec_last <= 0; w_end <= 0;
             res_val <= 0; res_id <= 0;
         end else begin
             ret[2:1] <= 2'b00; vmq[337] <= 1'b0; e_in_v <= 1'b0; e_in_last <= 1'b0;
-            if (rec[0] && ret[0]) begin                                          // E0 accept (ready = idle)
-                ret[0] <= 1'b0;
+            if (rec[0] && ret[0]) begin ret[0] <= 1'b0; raw_v <= 1'b1; rq <= rec; end      // E0 accept (ready = idle)
+            if (raw_v) begin                                                     // E1 decode
+                raw_v <= 1'b0;
                 if (bad) begin ret[2] <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; hdr <= rh; dA <= rA; dO <= rO; nA <= rnA; stream_m <= (rA[1:0] == 2'd2);
