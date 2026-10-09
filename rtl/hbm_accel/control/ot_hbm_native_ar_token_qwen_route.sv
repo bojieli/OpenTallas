@@ -10,6 +10,7 @@ module ot_hbm_native_ar_token_qwen_route(
  input wire [127:0] cmd_wdata,
  output wire [31:0] launch_v,output wire [63:0] launch_pc,
  output wire [2*18-1:0] launch_token,output wire [2*20-1:0] launch_pos,
+ output wire [147:0] launch_owner,
  input wire [31:0] sm_done,sm_fault,res_v,input wire [1023:0] res_data,
  output wire busy,output wire [2:0] last_status,
  output wire [31:0] st_tokens,st_hq_stall,output wire identity_fault
@@ -40,6 +41,7 @@ module ot_hbm_native_ar_token_qwen_route(
   .launch_pc(launch_pc),
   .launch_token(launch_token),
   .launch_pos(launch_pos),
+  .launch_owner(launch_owner),
   .sm_done(sm_done),
   .sm_fault(sm_fault),
   .res_v(res_v),

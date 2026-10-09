@@ -5,7 +5,7 @@ def model(qwen=False):
   position_bits=pw, host_record_bits=hrw, replicas_per_die=1, cp_halves=halves,
   sm_count=halves*nsm, commands_per_half=256, command_bits=64,
   macs_per_cycle=0, compute_intensity=0, memory_bytes_per_cycle={'command_write':16,'host_record':hrw/8},
-  boundary_bits_per_cycle={'host_record':hrw,'sm_launch':32+2*(32+tw+pw),'sm_completion':32*35},
+  boundary_bits_per_cycle={'host_record':hrw,'sm_launch':32+2*(32+tw+pw),'sm_completion':32*35,'producer_owner':2*(tw+pw+36)},
   mux_cost='two equal-token completion sources plus checked job/position/generation',
   fanout='16 launches per actual CP half; host record posted by owner die only',
   routing_tracks_required=hrw+32+2*(32+tw+pw)+32*35,
