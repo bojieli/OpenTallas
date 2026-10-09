@@ -1,0 +1,260 @@
+{
+  "at": "2026-10-09T12:17:51.259573+00:00",
+  "hosts": {
+    "ot-epyc1tb": {
+      "rc": 0,
+      "result": {
+        "processes": [
+          {
+            "pid": 2214861,
+            "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top dsfd_wfc_vmx --source rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv --source rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv --source rtl/common/ot_ratio_cdc_fifo.sv --clock-port ck --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_intra_r2_cl/margin.sdc --stages pnr --die-area 0 0 291.6 280.8 --core-area 0 0.54 291.6 280.26 --place-density 0.45 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/s81_ph_views/common/pdn_view.tcl --orfs-var IO_CONSTRAINTS=/src/.views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_intra_r2_cl/io_place.tcl --orfs-var ADDER_MAP_FILE= --step-tcl PRE_CTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl --step-tcl POST_CTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.000 --purpose signoff_target --nickname-tag s81ph_mtp_wfc_vmx_prd_c39e235bb_tc_o292_intra_r2_cl --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --param RQFREE=2 --keep-workdir /srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-intra-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_intra_r2_cl/work --force --output /srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-intra-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_intra_r2_cl/physical.json ",
+            "ppid": "PPid:\t2214850",
+            "rss": "VmRSS:\t   31440 kB"
+          },
+          {
+            "pid": 2259988,
+            "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top dsfd_wfc_vmx --source rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv --source rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv --source rtl/common/ot_ratio_cdc_fifo.sv --clock-port ck --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_r2_cl/margin.sdc --stages pnr --die-area 0 0 291.6 280.8 --core-area 0 0.54 291.6 280.26 --place-density 0.45 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/s81_ph_views/common/pdn_view.tcl --orfs-var IO_CONSTRAINTS=/src/.views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_r2_cl/io_place.tcl --orfs-var ADDER_MAP_FILE= --step-tcl PRE_CTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl --step-tcl POST_CTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.000 --purpose signoff_target --nickname-tag s81ph_mtp_wfc_vmx_prd_c39e235bb_tc_o292_r2_cl --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --param RQFREE=2 --keep-workdir /srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_r2_cl/work --force --output /srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_r2_cl/physical.json ",
+            "ppid": "PPid:\t2259977",
+            "rss": "VmRSS:\t   31428 kB"
+          }
+        ],
+        "containers": []
+      }
+    },
+    "ot-epyc2": {
+      "rc": 0,
+      "result": {
+        "processes": [],
+        "containers": []
+      }
+    },
+    "ot-epyc3": {
+      "rc": 0,
+      "result": {
+        "processes": [
+          {
+            "pid": 669557,
+            "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top dsfd_wfc_vmx --source rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv --source rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv --source rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv --source rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv --source rtl/common/ot_ratio_cdc_fifo.sv --clock-port ck --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_lvt_r2_cl/margin.sdc --stages pnr --die-area 0 0 291.6 280.8 --core-area 0 0.54 291.6 280.26 --place-density 0.45 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/s81_ph_views/common/pdn_view.tcl --orfs-var IO_CONSTRAINTS=/src/.views/mtp_wfc_vmx_prd_c39e235bb_tc_o292_lvt_r2_cl/io_place.tcl --orfs-var ADDER_MAP_FILE= --step-tcl PRE_CTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl --step-tcl POST_CTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.000 --purpose signoff_target --nickname-tag s81ph_mtp_wfc_vmx_prd_c39e235bb_tc_o292_lvt_r2_cl --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --param RQFREE=2 --keep-workdir /srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-lvt-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_lvt_r2_cl/work --force --output /srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_vmx-prd-c39e235bb-tc-o292-lvt-r2-cl/routes/mtp_wfc_vmx_prd_c39e235bb_tc_o292_lvt_r2_cl/physical.json ",
+            "ppid": "PPid:\t669546",
+            "rss": "VmRSS:\t   30968 kB"
+          }
+        ],
+        "containers": []
+      }
+    },
+    "ot-epyc4": {
+      "rc": 0,
+      "result": {
+        "processes": [],
+        "containers": []
+      }
+    },
+    "ot-pve1": {
+      "rc": 0,
+      "result": {
+        "processes": [],
+        "containers": []
+      }
+    },
+    "ot-agidock128": {
+      "rc": 0,
+      "result": {
+        "processes": [],
+        "containers": []
+      }
+    }
+  },
+  "excluded": "Selected HARD e829 and all STG/SOURCE tokpipe jobs",
+  "jobs": [
+    {
+      "name": "mtp-wfc_tok-r3-8a357077f-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "source": {
+        "branch": "codex/mtp-wfc-token-r3-route-20261009",
+        "commit": "8a357077f",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ],
+        "required_files": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+          "tools/s81_ph/s81_ph_wfc_tok_r3_plan.py",
+          "tools/dsrom_wfc_prompt_pipe_bench.py",
+          "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_stg_tokpipe.sv"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-r3-8a357077f-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "source": {
+        "branch": "codex/mtp-wfc-token-r3-route-20261009",
+        "commit": "f94ff05bba71a56155b40e8a6ced474069d46ffe",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ],
+        "required_files": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+          "tools/s81_ph/s81_ph_wfc_tok_r3_plan.py",
+          "tools/dsrom_wfc_prompt_pipe_bench.py",
+          "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_stg_tokpipe.sv"
+        ]
+      },
+      "status_preserved": "NEEDS_HUMAN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-r3-f94ff05bb-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-3413bba96-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "source": {
+        "branch": "codex/mtp-wfc-token-r3-route-20261009",
+        "commit": "3413bba962922f2d8bbfd065a06b17967bead2af",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ],
+        "required_files": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+          "tools/s81_ph/s81_ph_wfc_tok_r3_plan.py",
+          "tools/dsrom_wfc_prompt_pipe_bench.py",
+          "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_stg_tokpipe.sv"
+        ]
+      },
+      "status_preserved": "INVALID",
+      "host": null,
+      "run": null
+    },
+    {
+      "name": "mtp-wfc_tok-c-ae06a240d-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "ae06a240d36c36f8350f349cb2195b591d2eca16",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-c-ae06a240d-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-b-511fa714d-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "511fa714d18826c98280aa2248d04f8d82142e53",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-b-511fa714d-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-a-e1c20dfb6-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "e1c20dfb6ed52eefc6a83f5fa3cf5d9771d2a2ec",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-a-e1c20dfb6-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-1718d445e-tc",
+      "block": "dsfd_wfc_tok_r3",
+      "source": {
+        "branch": "codex/mtp-wfc-token-r3-route-20261009",
+        "commit": "1718d445eb6607be7b87ec944cb4cf78b6deffc5",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ],
+        "required_files": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+          "tools/s81_ph/s81_ph_wfc_tok_r3_plan.py",
+          "tools/dsrom_wfc_prompt_pipe_bench.py",
+          "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_stg_tokpipe.sv"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-r3-1718d445e-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-a-aeef13974-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "aeef1397446c4908e5fa6657156dfd627e7c2321",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "FLOORPLAN_MARGIN",
+      "host": "localhost",
+      "run": "/home/ubuntu/closure-loop-local/mtp-wfc_tok-a-aeef13974-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-c-c67a71fe5-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "c67a71fe589df4c8aeccfc9557e190620c5181c6",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-c-c67a71fe5-tc"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc-v2",
+      "block": "dsfd_wfc_tok_r3",
+      "source": {
+        "branch": "codex/mtp-wfc-token-r3-route-20261009",
+        "commit": "f94ff05bba71a56155b40e8a6ced474069d46ffe",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ],
+        "required_files": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+          "tools/s81_ph/s81_ph_wfc_tok_r3_plan.py",
+          "tools/dsrom_wfc_prompt_pipe_bench.py",
+          "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_stg_tokpipe.sv"
+        ]
+      },
+      "status_preserved": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-r3-f94ff05bb-tc-v2"
+    },
+    {
+      "name": "mtp-wfc_tok-b-0cd6caa1b-tc",
+      "block": "dsfd_wfc_tok",
+      "source": {
+        "branch": "claude/mtp-rom-20261008",
+        "commit": "0cd6caa1bd0cbff7af7e97368219cac19e626d38",
+        "extra_paths": [
+          "results/rtl/dshbm_dspark_rtl_20261003/traces"
+        ]
+      },
+      "status_preserved": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-b-0cd6caa1b-tc"
+    }
+  ],
+  "process_action": "None: all exact legacy-token canonical rows terminal; six-host scan only matched preserved VMX jobs through token source-list text. No retired token-top process or container found."
+}

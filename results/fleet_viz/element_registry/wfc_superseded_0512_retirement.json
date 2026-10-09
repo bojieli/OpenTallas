@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsfd_wfc_tok",
+      "target": "DeepSeek ROM",
+      "owner": "fleet_closure; confirmed review0512 retirement",
+      "recorded_at": "2026-10-09T12:17:51.259573+00:00",
+      "description": "Legacy token line superseded by selected HARD e829. Exact historical verdicts and objects preserved; selected HARD and SOURCE/STG tokpipe excluded.",
+      "source": {
+        "commit": "ae06a240d36c36f8350f349cb2195b591d2eca16",
+        "paths": [
+          "results/fleet/wfc_superseded_0512_retirement.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/wfc_superseded_0512_retirement.json"
+        ]
+      },
+      "integration": {
+        "status": "SUPERSEDED_BY_SELECTED_HARD"
+      },
+      "dependencies": [
+        "dsfd_wfc_tok_hard"
+      ],
+      "retired_jobs": [
+        "mtp-wfc_tok-c-ae06a240d-tc",
+        "mtp-wfc_tok-b-511fa714d-tc",
+        "mtp-wfc_tok-a-e1c20dfb6-tc",
+        "mtp-wfc_tok-a-aeef13974-tc",
+        "mtp-wfc_tok-c-c67a71fe5-tc",
+        "mtp-wfc_tok-b-0cd6caa1b-tc"
+      ]
+    },
+    {
+      "element": "dsfd_wfc_tok_r3",
+      "target": "DeepSeek ROM",
+      "owner": "fleet_closure; confirmed review0512 retirement",
+      "recorded_at": "2026-10-09T12:17:51.259573+00:00",
+      "description": "Legacy token line superseded by selected HARD e829. Exact historical verdicts and objects preserved; selected HARD and SOURCE/STG tokpipe excluded.",
+      "source": {
+        "commit": "8a357077f",
+        "paths": [
+          "results/fleet/wfc_superseded_0512_retirement.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/wfc_superseded_0512_retirement.json"
+        ]
+      },
+      "integration": {
+        "status": "SUPERSEDED_BY_SELECTED_HARD"
+      },
+      "dependencies": [
+        "dsfd_wfc_tok_hard"
+      ],
+      "retired_jobs": [
+        "mtp-wfc_tok-r3-8a357077f-tc",
+        "mtp-wfc_tok-r3-f94ff05bb-tc",
+        "mtp-wfc_tok-r3-3413bba96-tc",
+        "mtp-wfc_tok-r3-1718d445e-tc",
+        "mtp-wfc_tok-r3-f94ff05bb-tc-v2"
+      ]
+    }
+  ]
+}
