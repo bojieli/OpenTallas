@@ -111,7 +111,14 @@ def endpoint(block, work, case):
                 basis='exact rb station host map, attributes/kept hierarchy and physical ties retained')
 
 
+_orig_io_constraints_tcl = driver.io_constraints_tcl
+
+
 def pins(regions, exhaustive=False, die_area_um=None):
+    # struct-close 2026-10-09 (fill-5 F5-2): with OT_PIN_GROUP_MAX / OT_PIN_BALANCE_* the driver's own generator (Tcl
+    # regexp on the terminal names, balanced layers; tools >= dde873a8e) is used; otherwise the fixed station pattern.
+    if any(os.environ.get(k) for k in ('OT_PIN_BALANCE_H', 'OT_PIN_BALANCE_V', 'OT_PIN_GROUP_MAX')):
+        return _orig_io_constraints_tcl(regions, exhaustive, die_area_um)
     pat = {'^(clk_sm|por_n|release_held|in_.*|release_.*)$': 'clk_sm por_n release_held in_* release_*',
            '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$': 'fclk_o out_* ACK_* fault drained paused'}
     return '\n'.join('set_io_pin_constraint -region '+r['edge']+':* -pin_names {'+pat[r['regex']]+'}' for r in regions)+'\n'
