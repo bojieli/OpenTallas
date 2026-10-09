@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-09T12:05:19.210628+00:00",
+  "name": "hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx",
+  "watch": "/tmp/claude-review-20261003/closure_jobs/hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx.json",
+  "sha256": "b317a4e21f8ece411392f47468c8680e300838516dafb776228879a828e4e7ce",
+  "duplicate_active_family": [],
+  "source": {
+    "branch": "codex/hbm-selector-capture-20261009",
+    "commit": "5931d5864b059e46ce195ab07f2d8d8064f9d2bc",
+    "paths": [
+      "tools",
+      "rtl/hdc",
+      "rtl/hbm_accel/index",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "physical/abi3",
+      "physical/common_flow",
+      "physical/hbm_accel_die_views/common",
+      "physical/hbm_accel_die_views/index",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "configs/pdk",
+      "Makefile"
+    ],
+    "extra_paths": [
+      "results/rtl/hbm_selector_capture_macro_20261009_r2",
+      "results/rtl/hbm_selector_native_qend_aa7127b87",
+      "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail",
+      "results/physical/hbm_idx_sel_native_qend_aa7127b87_synth"
+    ]
+  },
+  "resources": "76GiB explicitly root-authorized conservative4x same-shape synth phase estimate, not measuredDRT. No external future claim added."
+}
