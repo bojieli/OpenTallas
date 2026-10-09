@@ -1,7 +1,7 @@
 """Remote minimum actual-core source completion gate, with a legacy control."""
 import argparse,hashlib,json,pathlib,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-SRC=['physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv','rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv','rtl/hbm_accel/service/ot_hbm_kport_map.sv','rtl/hbm_accel/ingest/ot_hbm_write_source_pc.sv','rtl/test/hbm_accel/tb_hbm_svc_write_source.sv']
+SRC=['physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv','rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv','rtl/hbm_accel/service/ot_hbm_kport_map.sv','rtl/hbm_accel/ingest/ot_hbm_write_source_ordered.sv','rtl/test/hbm_accel/tb_hbm_svc_write_source.sv']
 def main():
  p=argparse.ArgumentParser();p.add_argument('--work',type=pathlib.Path,required=True);p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
  if a.out.exists():raise SystemExit('fresh record required')

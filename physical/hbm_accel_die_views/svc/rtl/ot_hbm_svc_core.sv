@@ -460,7 +460,10 @@ module ot_hbm_svc_core #(
       wire [17:0] deltas;
       reg [15:0] total [0:2], token [0:2];
       reg [31:0] gray;
-      ot_hbm_write_source_pc #(.DEPTH(8)) u_source (
+      // One FIFO head remains held until its physical acceptance. Source
+      // issue order therefore equals accepted WQ order; retire only its
+      // contiguous source prefix, never a count of later-PC completions.
+      ot_hbm_write_source_ordered #(.ENABLE(1),.DEPTH(8)) u_source (
         .ck(ck),.rst_n(rn),.issue_v(wacc),.issue_source(hsource),
         .issue_rdy(source_room),.done_v(wd_q),.ack_n(deltas),.fault(wq_source_fault),.busy_pc(wq_source_busy));
       integer a;
