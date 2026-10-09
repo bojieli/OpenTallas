@@ -1,0 +1,75 @@
+{
+ "name": "mtp-p2-transport-8ed8e9762-tt-remote",
+ "block": "ot_mtp_p2_ordered_rows_general4bank",
+ "owner": "Codex:mtp-markov-route-P2",
+ "purpose": "Minimum finite protected P2 component pathfinding: actual12SRAMs,full320flits,general4bankthreeexpert+shared transport. Selected3expert-routed-prefixA-to-primary-sharedlast topology/facade and actualSECDEDconsumer/FP32arithmetic are separate unqualified obligations. Calibrated250ps IO; TT>=0 FF>=0 DRC0 SSsensitivity only; no dieclosure claim.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/mtp-p2-route-20261009",
+  "commit": "8ed8e9762"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/mtp_p2_transport/route.sh p2 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/mtp_p2_transport/gen/signoff_p2.sdc physical/mtp_p2_transport/model.json {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "routed_at_TT",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "post_sdc": [
+   "physical/mtp_p2_transport/gen/signoff_p2.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/mtp_p2_transport/closed/general4bank"
+  }
+ ],
+ "no_bench_reason": "Source-pinned source9f6265320 full320flit exact transport gate/all6 negatives and MUT_ORDER1 failure committed3da502cc4 results/rtl/mtp_p2_ordered_20261009/receipt.json. Successor6d45de7ec only fixes default-off continuous constants; enabled logic unchanged. No proof rerun: this change adds sized400x360 physical recipe/12 macroplacement only.",
+ "budget": {
+  "enabled": false,
+  "reason": "ActualA/SU clockplan unavailable, own calibrated generic250ps blockIO pathfinding only. RealSRAMclkq singlecycle/noMC; no production topology closure."
+ },
+ "cycles_added": "No transportRTLchange; encoder1 SRAMread1 protectedoutputqueue, full320flits receipt729cycles includes test stalls; consumerdecode2cycles belongs to separate integration.",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "merge_target": null
+}
