@@ -1,0 +1,184 @@
+{
+  "schema": "opentallas.qwen.embedding_hbm_closure.v1",
+  "adopted": false,
+  "physical_closed": false,
+  "source_sha256": {
+    "results/arch/emb_hbm_20261008/takeover/summary.json": "d073aa00a32ddd1c854430cdbe57b37cc14e24ee2d65162f71eb1b38aa750ac6",
+    "results/arch/emb_hbm_20261008/r21c_die.json": "168ef9a5ef6159e5d8be53e77d4d12ab49e25832e935acf6dbff5c7bb158a1d7",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv": "714487a068ea745f17ee742c9e57b630566004f7dcf6ad4bdb74f9ca77622cbc",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv": "51e5289c6cad293096a52a1d73eb1645a37f349dc383fcf2417e36394067d3b5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far.sv": "e01c3c70c23d4d8ba17dfa2119475e90a0b70fbad1fe10346a9e6911d8c5eef0",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv": "a203e503786573378a44b3471f252b68a7370a9e9566d598c6b6e229be637fda",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "physical/qwen_die_masters/cfg/qfd_hub_emb.env": "d6d5de75e88757ddfe909f97893e1d3917b2b061a587260529cf444e35b6e679",
+    "physical/qwen_die_masters/cfg/qfd_ctrl_emb_00.env": "093594294c62b28053787eacf1c79b15436dd3a3ca5467221db12dc805b48c51",
+    "physical/qwen_die_masters/cfg/qfd_emb_pcport.env": "222a89e6e9729c391e60de0e21c5da2044df36b69b7789468ea5b3969765d987",
+    "physical/qwen_die_masters/cfg/qfd_emb_strip.env": "73ed8a740de9a4a780540e5d3d0393b8bc2c5ccefa18c7910cf9ca3d88f4cd56",
+    "physical/qwen_die_masters/cfg/qfd_emb_strip_w600.env": "d6375ef491602c3594a67407a534dbd7c94daf78e2cb8d5c22c732d48fd9e8aa",
+    "physical/qwen_die_masters/cfg/qfd_emb_strip_narrow96.env": "333a8eef659f6fa7a5e2d124f3899e140969214b5882cbcb8a0e13cacf48d763",
+    "physical/qwen_die_masters/cfg/qfd_emb_strip_narrow92.env": "c5ebe5b5b7dcd0a21b2297da7e7d00440362ecde94f25e04d2a87a055b0f351e",
+    "physical/qwen_die_masters/cfg/qfd_emb_strip_narrow92_spread.env": "55bc674cfc4ff07b69f623c27a3326cae441850800beed8e81fc96ceeb80e6a0"
+  },
+  "MACs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity": "One 4098-byte exact released row per generated token per compute die; no layer multiplier",
+  "storage": {
+    "rows": 151936,
+    "hidden": 4096,
+    "code_bytes": 622329856,
+    "scale_bytes": 303872,
+    "payload_bytes": 622633728,
+    "allocated_HBM_bytes_per_copy": 624951296,
+    "copies_per_die": 1,
+    "twin_default": false,
+    "ECC": "mutable HBM SECDED72, 32 check bits per 256 payload bits"
+  },
+  "memory_port_bytes_per_cycle": {
+    "each_PC_read_payload_peak": 32,
+    "each_PC_write_payload_peak": 32,
+    "each_PC_ECC_sideband_peak": 4,
+    "SU_read_payload_peak": 64
+  },
+  "boundary_bits_per_cycle": {
+    "SU_request": 26,
+    "SU_response": 513,
+    "SU_credit": 1,
+    "each_link_word_each_direction": 528,
+    "each_PC_return": 259,
+    "strip_return_face": 8288,
+    "strip_PC_command_fanout": 32
+  },
+  "replica_count": {
+    "gateway": 1,
+    "strip": 4,
+    "controller": 128,
+    "pcport": 128
+  },
+  "replica_mux_demux_cost": {
+    "request_broadcast_replicas": 4,
+    "PC_command_fanout": 32,
+    "strip_code_gather_pairs": 16,
+    "strip_scale_select_inputs": 32,
+    "hub_stack_select_inputs": 4,
+    "selected_response_width_bits": 512
+  },
+  "routing": {
+    "pin_pitch_um": 0.096,
+    "pin_layers": 2,
+    "usable_edge_fraction": 0.75,
+    "strip_left_demand_tracks": 8288,
+    "strip_left_capacity_tracks": 31250,
+    "strip_left_planned_fit": true,
+    "strip_bottom_demand_tracks": 1050,
+    "strip_bottom_capacity_tracks": 1441,
+    "strip_bottom_planned_fit": true,
+    "legacy_strip_side_um": 414.72,
+    "legacy_strip_capacity_tracks": 6480,
+    "legacy_strip_planned_fit": false,
+    "assumptions": "Conservative pin-side planning only; verify actual layer access and pin placement in route. Die corridors and 100um final boundary wires remain OPEN.",
+    "actual_candidate_pin_assignment": {
+      "horizontal_layers": [
+        "M4",
+        "M6"
+      ],
+      "vertical_layers": [
+        "M5",
+        "M7"
+      ],
+      "minimum_distance_tracks": 2,
+      "ASAP7_M4_pitch_um": 0.048,
+      "minimum_spacing_um": 0.096,
+      "local_density_upper_bound_bits_per_um_per_layer": 10.416666666666666,
+      "measured_gate_limit": 12.0,
+      "routed_pin_density_closed": false,
+      "reason": "Actual prior one-layer one-track grouping failed at20.8; preserve terminal failure, bind modeled layers and two-track spacing before successor."
+    }
+  },
+  "area": {
+    "frames_um": {
+      "gateway_hub": [
+        567.216,
+        567.216
+      ],
+      "strip": [
+        92.256,
+        2000
+      ],
+      "controller": [
+        247.536,
+        370.44
+      ],
+      "pcport": [
+        116.64,
+        116.64
+      ]
+    },
+    "strip_total_frame_mm2": 0.738048,
+    "strip_frame_delta_vs_414p72_mm2": 0.050077286399999865,
+    "existing_r21c_die_mm2": 846.792,
+    "existing_reticle_margin_mm2": 11.208,
+    "freed_embedding_reservation_mm2": 11.046,
+    "utilisation_target": 0.55,
+    "slot_fit": "OPEN: r21c uses historical qfd_kvc slots; strip/controller/pcport successors need real abstract placement. Freed north IO-band area does not establish east/west shoreline slot fit."
+  },
+  "finite_flow": {
+    "link_credits": 128,
+    "SU_request_queue": 32,
+    "SU_consumer_credits": 32,
+    "hub_x3_skid": 8,
+    "static_PC_queue": 4,
+    "pcport_read_class_FIFO": 32,
+    "pcport_write_FIFO": 4,
+    "strip_return_FIFO_each_PC": 4,
+    "sizing": "65 SU response words; credit stalls are measured at SU13/EQ22 and link72 each direction. No same-cycle die ready response is assumed. Queue capacities and credit conservation still require physical boundary qualification."
+  },
+  "latency": {
+    "stream_clock_hz": 1200000000.0,
+    "HBM_clock_hz": 976562500.0,
+    "serial_embedding_fetches_per_token": 1,
+    "measured_cycles": {
+      "base_kv0": {
+        "lat_min": 434,
+        "lat_mean": 459,
+        "lat_max": 864
+      },
+      "base_kv1": {
+        "lat_min": 434,
+        "lat_mean": 473,
+        "lat_max": 789
+      },
+      "base_kv2": {
+        "lat_min": 434,
+        "lat_mean": 492,
+        "lat_max": 887
+      },
+      "twin_kv1": {
+        "lat_min": 434,
+        "lat_mean": 471,
+        "lat_max": 762
+      },
+      "twin_kv2": {
+        "lat_min": 434,
+        "lat_mean": 476,
+        "lat_max": 712
+      }
+    },
+    "measured_scope": "Full controller/link/strip/SU interface shape; sparse 160-token boot image. The complete 151936-token table was hashed separately, not fully simulated. No die closure claim.",
+    "hidden_cycles": 0,
+    "baseline_replaced_cycles_estimate": 65,
+    "pending_mean_extra_cycles": 408,
+    "pending_max_observed_extra_cycles": 822,
+    "baseline_estimate_status": "Historical behavioural baseline share not isolated; no new headline until qualified path and reprice."
+  },
+  "exactness": {
+    "positive_variants": 5,
+    "negative_variants": 4,
+    "all_expected": true,
+    "golden": "Released checkpoint W8 INT8 codes and BF16 scales; every delivered decoded FP32 element checked; CE corrected and UE fail closed"
+  },
+  "energy": "OPEN: requires measured activity and qualified cell/clock inventory; no assumed energy saving",
+  "headline_credit": 0
+}
