@@ -1,0 +1,13 @@
+{
+  "status": "PASS_ELABORATION",
+  "facade_source": "90bb8279a",
+  "controller_source": "1c33f2dc9",
+  "host": "ot-epyc3",
+  "admitted_GiB": 1,
+  "measured_max_RSS_KiB": 177408,
+  "elapsed_seconds": 1.94,
+  "tool": "Verilator lint-only, ENABLE=1, full actual controller source list",
+  "facade_sha256": "cd76a57ae6b75c0ceb28223ec549fc63655d77a9b0dab2d9976715c429751bef",
+  "physical_qualification": false,
+  "scope": "direct-wire facade full port coverage; no new engine arithmetic; production endpoint binding remains open"
+}
