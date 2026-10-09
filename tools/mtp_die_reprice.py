@@ -82,6 +82,16 @@ def compose():
     logical_engines = math.ceil(math.ceil(129280 / heads) / 32)
     seed_bytes = sum(t['bytes'] for t in seed.values())
     seed_pairs_per_rank = math.ceil(math.ceil(seed_bytes / 4) / source_pair_bytes)
+    # A physical field slot has one two-ROM base element; BF-double slots
+    # add another such element.  Historical "pair" counts mixed those units.
+    globals_bf_slots = math.ceil((5051-2525)/heads)
+    embed_bf_slots = math.ceil(embedded/source_pair_bytes)
+    # The released FP8 seed projection uses 32 data bytes/word.  Its scales
+    # fit in the carrier's 18 spare bits; norm spills beyond 75 full pairs.
+    seed_logical_pairs = math.ceil((seed['weight']['bytes']/4+seed['norm']['bytes']/4)/successor_pair_bytes)
+    regular_slots = 282+seed_logical_pairs
+    bf_slots = globals_bf_slots+embed_bf_slots
+    field_slots = regular_slots+bf_slots
     return dict(
         schema='opentallas.mtp_die_reprice.v1',
         status='STORAGE_SIZED_TIMING_AND_RTL_INCOMPLETE',
@@ -127,6 +137,24 @@ def compose():
                           reason_two_macros='real SS macro clkq needs two-edge capture; alternating banks preserve q',
                           row_engine_route_area_mm2=None,
                           physical_slot_fit=False),
+        typed_head_inventory=dict(
+            field_slots=field_slots, regular_two_ROM_slots=regular_slots,
+            BF_double_four_ROM_slots=bf_slots,
+            non_lm_head_global_BF_double_slots=globals_bf_slots,
+            Markov_embed_BF_double_slots=embed_bf_slots,
+            primary_block_regular_slots=282,
+            seed_regular_slots=seed_logical_pairs,
+            seed_weight_regular_slots=75, seed_norm_words_per_rank=80,
+            seed_scale_carrier_bits=18,
+            seed_scale_packing_qualification='proposed repeated scale in carrier; packed proof required',
+            field_ROM4096_macros=field_slots*2+bf_slots*2,
+            lm_head_bundles=head_bundles, lm_head_ROM4096_macros=head_bundles*10,
+            local_Markov_ROM4096_macros=physical_engines*2,
+            total_ROM4096_macros=field_slots*2+bf_slots*2+head_bundles*10+physical_engines*2,
+            dense_Markov_head_storage_slots_removed=math.ceil(head/source_pair_bytes/heads),
+            generator_BF_map_must_be_explicit=True,
+            floorplan_slot_fit=False,
+            qualification='typed proposed inventory; not equivalent to --pairs631 with heuristic BF ratio'),
         main_hidden_transport=dict(hidden_dimension=5120, captures=3, bytes_per_value=2,
                                    global_bytes_per_position=30720,
                                    bytes_per_TP4_rank_per_position=7680,
