@@ -13,8 +13,11 @@ module tb_hbm_index_global_order #(parameter integer SCAN_CASE=0);
  integer cycle=0,received=0,requests=0,id,local_ord,expected_reads=0;
  reg pending=0;integer delay_count=0;reg [6:0] p_rank;reg [16:0] p_ord;
  reg [33:0] stalled_tuple;reg stalled=0;
- reg mutant;
- initial mutant=$test$plusargs("MUT_RANK");
+ reg mutant,future_id;
+ initial begin
+  mutant=$test$plusargs("MUT_RANK");future_id=$test$plusargs("FUTURE_ID");
+  if(future_id)begin start_frame={20'd0,53'h123456789ab};owner_frame=start_frame;end
+ end
  always @(negedge clk)begin
   if(!por_n)begin read_r=0;out_r=0;rsp_v=0;pending=0;cycle=0;end
   else begin
@@ -51,11 +54,11 @@ module tb_hbm_index_global_order #(parameter integer SCAN_CASE=0);
    received=received+1;
   end
   if(fault)begin
-   if(mutant)begin $display("EXPECTED_BAD_IDENTITY_REJECT received=%0d",received);$finish;end
+   if(mutant||future_id)begin $display("EXPECTED_BAD_IDENTITY_REJECT received=%0d",received);$finish;end
    else $fatal(1,"unexpected order fault at %0d",received);
   end
   if(done)begin
-   if(mutant)$fatal(1,"wrong provider accepted");
+   if(mutant||future_id)$fatal(1,"wrong provider accepted");
    if(received!=131072||requests!=131264)$fatal(1,"full shape/debt mismatch %0d %0d",received,requests);
    $display("PASS_GLOBAL_ORDER ranks=96 tuples=%0d actual_reads=%0d cycles=%0d",received,requests,cycle);$finish;
   end
