@@ -49,7 +49,25 @@
     "prompt_DMA_request_and_return_extra_edges": 2,
     "prompt_read_extra_edges": 0,
     "composed_token_upper_extra_edges": 4,
-    "note": "Full control fixture measures actualcyclechange; AXI queues preserve transactions under independentbackpressure. No hardware timing/adoption claim untilremoteexact+route."
+    "note": "Full control fixture measures actualcyclechange; AXI queues preserve transactions under independentbackpressure. No hardware timing/adoption claim untilremoteexact+route.",
+    "measured_turn_max_CL40": {
+      "base5601": 97,
+      "station356": 98,
+      "extra_edges": 1
+    },
+    "measured_fullctx_avg_CL40": {
+      "base5601": 85,
+      "station356": 86
+    }
   },
-  "exact_contract": "new default-off BOUNDARY_STATIONS wrapper; preserve5601 coreRTL byte-identical; allAXIvalid/data packets stored; complete die report aligned; reset clearsFIFOvalids"
+  "exact_contract": "new default-off BOUNDARY_STATIONS wrapper; preserve5601 coreRTL byte-identical; allAXIvalid/data packets stored; complete die report aligned; reset clearsFIFOvalids",
+  "validation": {
+    "candidate": "356c2052b",
+    "fullctxsteps": 8192,
+    "stageevents": 1245184,
+    "completions": 8191,
+    "mismatches": 0,
+    "physical": "pending_admitted_route",
+    "reset_contract": "AXILqueuePOR; DMAqueuehostreset; completionpacketdiereset"
+  }
 }

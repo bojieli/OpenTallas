@@ -67,7 +67,10 @@
     "stage_pipeline": "priceactualdctl plusFQS IS/OS from commandtrace; do not assumefake-stagebench equalsactualFQS",
     "FQ_HEAD": 1,
     "MSTN": 1,
-    "A6_baseline_added_cycles_layer": 2
+    "A6_baseline_added_cycles_layer": 2,
+    "measured_stage_done_to_next_hstart_edges": [
+      2
+    ]
   },
   "exact_contract": "Golden38entry stage traversal; immutableISAtemplates byte-identical to releasedstagegeneratorAR256; relocateddescriptorprogrambases; wbase/wcsaddstagebaseonlyforROMme_wsrc0; fullMEpacket/go alignment; fullstg/gen tag; argmaxranktie unchanged. PinnedFQS source unchanged. Opt-in SYS_ENABLE default0 until exact+physicalgates.",
   "packing": {
@@ -82,5 +85,15 @@
       50112
     ],
     "adoption": "actual_sys generated packing only; historical ctl and original FQS untouched; generator asserts per-stage and totalcapacity"
+  },
+  "validation": {
+    "scope": "actual controlcommands against hostswapped oldFQS currentcompilerISA, stubengines; notnumericalpayloadgate",
+    "stages": 76,
+    "mecommands": 440,
+    "sucommands": 1448,
+    "collectives": 146,
+    "bad": 0,
+    "basefoldmutantbad": 576,
+    "pending": "native releasedimage relocation and numerical order proof +physicalroute"
   }
 }
