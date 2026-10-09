@@ -1,0 +1,81 @@
+{
+  "before_idle": 53,
+  "after_served_idle": 50,
+  "retirement_served": {
+    "qfd_cdc_storage_protection": "superseded",
+    "qfd_reset_allcopy_fence": "superseded"
+  },
+  "no_count_gain_claim_until_server_refresh": true,
+  "actions": {
+    "qfd_su_kv624": {
+      "action": "Two current-flow config-only trials toClaudeintake, mixedVT lvt andlvt+slvt; actualRVT internalin_addr1448->bad_q -425.55, notIOmiss. NoRTL/clockrelief. Verilatorlint routegate; originalexact+mutantbenchesparallel.",
+      "source": "2be021ec5",
+      "specs": [
+        "tools/closure_loop/jobs/qfd_su_kv624-2be021ec5-tc-registry-lvt.json",
+        "tools/closure_loop/jobs/qfd_su_kv624-2be021ec5-tc-registry-slvt.json"
+      ],
+      "model": "tools/uarch_model.py:qwen_su_kv624_model / tools/uarch_model_qwen_kv_packet.py",
+      "resource": "nearestsamefamilyDRT12023900KiB=11.467GiB rounded12; no guessed32",
+      "status": "intake_ready"
+    },
+    "qfd_sysctl_stn": {
+      "action": "Child01e30e8c3 stalealiasresolution: adoptregistrylink existingd476 I5winner, notduplicate routes",
+      "source": "d4760be45",
+      "winner_record": "71e85321e",
+      "tt": 17.23,
+      "ff": 13.72,
+      "drc": 0,
+      "status": "existing_winner_registry_binding"
+    },
+    "qfd_production_stage_traversal": {
+      "action": "Child01e30e8c3 SOURCE_BLOCKED; real38stage942f source/gatesexistsbutQ3fault/A6successorabsent. Claudeownsapprovedrecut; do notrouteolderfailedcone",
+      "status": "source_blocked"
+    },
+    "qfd_native_collective_binding": {
+      "action": "SOURCE_BLOCKED actualoldgeneratorseq_coll64+2 andWSQ66 default versusnative547/518. H11collectiveleafroutealreadyrunningdoesnotqualifythisjoin. NeedClaudeproducer/CDC/returnwrapper; nofakealiasroute",
+      "source": "2be021ec5",
+      "paths": [
+        "tools/qwen_rom_fulldie_b3r2.py",
+        "rtl/physical/ot_qwen_die_io_xfifo.sv"
+      ],
+      "status": "source_blocked"
+    },
+    "qfd_row_merge_native_fence": {
+      "action": "SOURCE_BLOCKED currentplainarbiterleafexistsbutreleaseddescriptor/sector\u2192metadata304andplain7bitACKowner/producerjoin absent. HistoricalrowendpointID64/TMR rejectedV31; nohistoricalprotectedroute. NearHBM/KVdie continuationClaudeowns",
+      "status": "source_blocked"
+    },
+    "qfd_cdc_storage_protection": {
+      "action": "retireV28/X2 flopECC, external supersededmetadata recorded preservinghistory",
+      "status": "retired_metadata"
+    },
+    "qfd_reset_allcopy_fence": {
+      "action": "retireS4/S6 extraresetepoch/control fence, external supersededmetadata recorded preservinghistory",
+      "status": "retired_metadata"
+    }
+  },
+  "su_source_binding": [
+    {
+      "path": "rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv",
+      "sha256": "4ce621e8d17c0ffbe420f5d3461641343bf2a55e86b5b0013aa68f7e297a3faa",
+      "same_approved_b6": true
+    },
+    {
+      "path": "rtl/test/qwen_system/tb_qfd_su_kv624.sv",
+      "sha256": "b5068aac14705c88fedd25783fe703ea17154ef9e19f19f02b6c9d92136e7fb3",
+      "same_approved_b6": true
+    },
+    {
+      "path": "tools/uarch_model_qwen_kv_packet.py",
+      "sha256": "aa893271c75c6c4006bea25e803d65667ece7f8bcecd9ba53f5a05dc58a135d1",
+      "same_approved_b6": true
+    }
+  ],
+  "su_block_source_live_dedup": {
+    "source": "2be021ec5",
+    "existing_live": 0,
+    "proposed": 2,
+    "max": 3
+  },
+  "schema_validator": "remoteAGIdock admitted1GiB bothOK",
+  "history_preserved": true
+}

@@ -1,0 +1,120 @@
+{
+  "name": "qfd_su_kv624-2be021ec5-tc-registry-slvt",
+  "block": "qfd_su_kv624",
+  "owner": "Codex:qwen-system",
+  "purpose": "Owner registry-first routine two config-only mixed-VT trials of approved Q3 unchanged64-lane624b RTL; actualRVT TT-425.55 internal in_addr1448->bad_q, FF1.41/DRC0. Currentdriver includes balancedpin support; same384x64frame/770route/833.333signoff/60-25. MixedVT uses samecellfootprints,0newRTL/edges; notguaranteedclosure. NoKVdie/newinterface.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "source": {
+    "branch": "codex/qwen-system-resume-20261009",
+    "commit": "2be021ec5",
+    "required_files": [
+      "rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv",
+      "rtl/test/qwen_system/tb_qfd_su_kv624.sv",
+      "tools/uarch_model_qwen_kv_packet.py",
+      "physical/qwen_die_masters/cfg/qfd_su_kv624.env",
+      "tools/run_abi3_physical.py"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "kv624_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_su_kv624 -Ptb_qfd_su_kv624.MUT=0 -o {RUN}/bench/exact rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv rtl/test/qwen_system/tb_qfd_su_kv624.sv && vvp {RUN}/bench/exact | tee {RUN}/bench/exact.log && grep -q '^PASS KV624' {RUN}/bench/exact.log",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS KV624"
+      },
+      {
+        "name": "kv624_negative",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_su_kv624 -Ptb_qfd_su_kv624.MUT=1 -o {RUN}/bench/negative rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv rtl/test/qwen_system/tb_qfd_su_kv624.sv && vvp {RUN}/bench/negative | tee {RUN}/bench/negative.log && grep -q '^NEG_DETECTED' {RUN}/bench/negative.log && false",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^NEG_DETECTED"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+    },
+    "route": {
+      "cmd": "export OT_MULTI_VT=lvt+slvt OT_PIN_GROUP_MAX=64 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7'; verilator --lint-only -Wno-fatal --top-module ot_qfd_su_kv624 rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_su_kv624.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_su_kv624 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 12
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_su_kv624 --post-sdc physical/qwen_die_masters/signoff/qfd_su_kv624.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_su_kv624 > {RUN}/record/route/export.log 2>&1 && cp {RUN}/bench/*.log {RUN}/record/route/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_su_kv624.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_system_20261009/routes/qfd_su_kv624-2be021ec5-tc-registry-slvt"
+    }
+  ],
+  "cycles_added": 864,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "Registryfirst owner cycle; source2be currentdriver ancestor dde873 preserved actualQ3 RTL/bench/model. Existingroutecmd executes Verilatorlint beforeP&R; exact+negativebench parallel unchanged. PendingClaudeintake/dedupe/resourcecheck, no manualdaemonedit.",
+  "merge_target": null,
+  "routed_ioref": true,
+  "resource_provenance": {
+    "host": "ot-epyc1tb",
+    "source": "b6a45428e",
+    "job": "qfd_su_kv624-b6a45428e-tc-hm10-pins2",
+    "phase": "5_2_route",
+    "peak_kib": 12023900,
+    "peak_gib": 11.46688461303711,
+    "claim_gib": 12,
+    "shape": "identicalRTL/384x64/8threads; mixedVT libs samefootprints additional librarymemory unmeasured; monitorHWM",
+    "log": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-b6a45428e-tc-hm10-pins2/routes/qfd_su_kv624_b6a45428e_tc_hm10_pins2/work/orfs/logs/asap7/opentallas_ot_qfd_su_kv624_asap7_qdm_qfd_su_kv624_b6a45428e_tc_hm10_pins2/base/5_2_route.log"
+  }
+}

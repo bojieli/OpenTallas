@@ -1,0 +1,18 @@
+{
+  "source": "2be021ec5",
+  "before": {
+    "qfd_cdc_storage_protection": null,
+    "qfd_reset_allcopy_fence": null
+  },
+  "after": {
+    "qfd_cdc_storage_protection": {
+      "by": "none (REJECTED V28/X2: flop ECC)",
+      "reason": "Binding REVIEW_20261009 V28/X2 rejects SECDED on native CDC flop arrays. HBM/SRAM payload ECC remains; historical proposal/evidence preserved. Registry retirement only, no physical route."
+    },
+    "qfd_reset_allcopy_fence": {
+      "by": "none (REJECTED S4/S6: reset-epoch/control protection)",
+      "reason": "Binding REVIEW_20261009 S4/S6 rejects extra reset-epoch/all-copy-fence/mirrored-control reliability protocol; latest registry-first owner explicitly retires this row. Historical pending proposal preserved; no route."
+    }
+  },
+  "history_deleted": false
+}
