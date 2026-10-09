@@ -38,11 +38,19 @@ module ot_hbm_link_retry_pipeline #(
  end else begin : g_rdir
  assign rst_i = rst_n;
  end endgenerate
+ // struct-close r5 (drive-0849: cl4 hm10 EF -433.5 = input session[18] -> g_on.txd (638 ps cell, fo 7), tx_session a
+ // combinational pass-through, rst_i recovery -252 into the 1,090 txd / rxd flops): with RSTR the session is a pin
+ // register (it only changes under the coordinated reset, which now releases 2 edges later), tx_session / ack_session
+ // leave that register, and the wide payload registers txd / rxd are NOT reset (valid-qualified; loaded only by the
+ // reset-released control state), so the reset net drives the control flops only.
+ reg [EW-1:0] session_q;
+ always @(posedge clk) session_q <= session;
+ wire [EW-1:0] session_i = (RSTR != 0) ? session_q : session;
  generate if(!ENABLE) begin:g_off
  assign in_ready=tx_ready;assign tx_valid=in_valid;assign tx_data=in_data;
- assign tx_seq=0;assign tx_session=session;
+ assign tx_seq=0;assign tx_session=session_i;
  assign out_valid=rx_valid;assign rx_ready=out_ready;assign out_data=rx_data;
- assign ack_seq=0;assign ack_nak=0;assign ack_session=session;
+ assign ack_seq=0;assign ack_nak=0;assign ack_session=session_i;
  assign fault=0;assign retained=0;assign replay_count=0;
  end else begin:g_on
  reg [1:0] phase;
@@ -73,7 +81,7 @@ module ot_hbm_link_retry_pipeline #(
  wire rd_v,rd_ce,rd_ue;wire [W-1:0] rd_data;
  wire [SW-1:0] rd_seq;wire [EW-1:0] rd_epoch;
  wire [SW-1:0] rx_delta=rx_seq-expected;
- wire feedback=fb_valid&&fb_good&&fb_session==session;
+ wire feedback=fb_valid&&fb_good&&fb_session==session_i;
  wire apply=phase==3;
  wire rewind=apply&&(fresh_nak||timeout_pending);
  wire accepted=in_valid&&in_ready;
@@ -85,12 +93,24 @@ module ot_hbm_link_retry_pipeline #(
 `else
  assign in_ready=phase==0&&!fault_r&&!replaying&&!txv&&!full_pipe;   // mutant: admission while the core is still in reset
 `endif
- assign tx_valid=txv&&!fault_r;assign tx_data=txd;assign tx_seq=txs;
- assign tx_session=session;
- assign out_valid=rxv&&!fault_r;assign out_data=rxd;
+ // RSTR: unreset payload registers, loaded under exactly the conditions of the control block (else branch: !fault_r)
+ wire txd_ld_rd = rd_v&&!rd_ue&&read_generation==generation&&rd_seq==read_target&&rd_seq==cursor&&rd_epoch==session_i&&!rewind;
+ wire rxd_ld = rx_valid&&rx_ready&&rx_session==session_i&&!rx_ue&&rx_seq==expected;
+ reg [W-1:0] txd_u, rxd_u;
+ always @(posedge clk) if (rst_i && !fault_r) begin
+  if (txd_ld_rd) txd_u <= rd_data; else if (accepted) txd_u <= in_data;
+`ifndef OT_RETRY_MUT_RXD_U
+  if (rxd_ld) rxd_u <= rx_data;
+`else
+  if (rxd_ld && rx_seq[0]) rxd_u <= rx_data;   // mutant: odd-sequence payloads only (the shadow load condition broken)
+`endif
+ end
+ assign tx_valid=txv&&!fault_r;assign tx_data=(RSTR!=0)?txd_u:txd;assign tx_seq=txs;
+ assign tx_session=session_i;
+ assign out_valid=rxv&&!fault_r;assign out_data=(RSTR!=0)?rxd_u:rxd;
  // Conservatively leave a bubble when the landing register is occupied.
  assign rx_ready=(RSTR==0||rst_i)&&(!rxv||fault_r);
- assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session;
+ assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session_i;
  // struct-close r2: retained (next_seq - base, a 12-bit subtract) was the -cl routes' only failing class: reg->out -513
  // (hbm_retry545_cl-958d0b4b1 x3).  Registered status: +1 cycle on the debt report, nothing else changes.
  reg [SW-1:0] retained_q;
@@ -98,8 +118,8 @@ module ot_hbm_link_retry_pipeline #(
  assign retained=retained_q;assign fault=fault_r;assign replay_count=retries;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
  .clk(clk),.rst_n(rst_i),.w_valid(accepted),.w_data(in_data),
- .w_seq(next_seq),.w_session(session),.r_valid(request_read),
- .r_seq(cursor),.r_session(session),.o_valid(rd_v),.o_data(rd_data),
+ .w_seq(next_seq),.w_session(session_i),.r_valid(request_read),
+ .r_seq(cursor),.r_session(session_i),.o_valid(rd_v),.o_data(rd_data),
  .o_seq(rd_seq),.o_session(rd_epoch),.o_ce(rd_ce),.o_ue(rd_ue));
  initial begin
  if(DEPTH<2||(DEPTH&(DEPTH-1))!=0||DEPTH>=(1<<(SW-1)))$fatal(1,"ambiguous replay window");
@@ -158,7 +178,7 @@ module ot_hbm_link_retry_pipeline #(
  read_pending<=0;
  if(rd_ue)fault_r<=1;
  else if(read_generation==generation&&rd_seq==read_target&&
-    rd_seq==cursor&&rd_epoch==session&&!rewind)begin
+    rd_seq==cursor&&rd_epoch==session_i&&!rewind)begin
  txv<=1;tx_replay<=1;txd<=rd_data;txs<=rd_seq;
  
  end
@@ -192,7 +212,7 @@ module ot_hbm_link_retry_pipeline #(
 `endif
  nak_pending<=0;
  end
- if(rx_valid&&rx_ready&&rx_session==session)begin
+ if(rx_valid&&rx_ready&&rx_session==session_i)begin
  if(!rx_ue&&rx_seq==expected)begin rxv<=1;rxd<=rx_data;end
  else if(rx_ue||!rx_delta[SW-1])nak_pending<=1;
  end
