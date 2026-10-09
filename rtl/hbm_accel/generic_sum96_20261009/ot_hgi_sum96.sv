@@ -3,7 +3,7 @@
 // accepted writes commit on this edge, accepted reads return exactly MEM_LAT
 // edges later. No combinational memory mux or inferred storage in this engine.
 module ot_hgi_sum96 #(
- parameter integer MEM_LAT=2, ADD_LAT=7,
+ parameter integer RANKS=96, MEM_LAT=2, ADD_LAT=7,
  parameter integer MUTANT_TREE=0, MUTANT_DROP=0
 )(input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
@@ -37,18 +37,18 @@ module ot_hgi_sum96 #(
  assign out_last=out_tile==15;
  assign rd_en=(state==REDUCE && issued<count) || (state==FINAL && issued==0);
  wire [6:0] natural_addr=(state==FINAL)?7'd0:issued;
- assign rd_addr=(MUTANT_TREE && count==96 && state==REDUCE)?((natural_addr==95)?7'd0:natural_addr+1'b1):natural_addr;
+ assign rd_addr=(MUTANT_TREE && count==RANKS && state==REDUCE)?((natural_addr==RANKS-1)?7'd0:natural_addr+1'b1):natural_addr;
  wire load_write=in_valid && in_ready && in_rank==rank_next && in_tile==tile;
  assign wr_en=load_write || result;
  assign wr_addr=load_write?rank_next:ti[ADD_LAT-1];
- assign wr_data=load_write?((MUTANT_DROP && rank_next==95)?512'd0:in_data):result_data;
+ assign wr_data=load_write?((MUTANT_DROP && rank_next==RANKS-1)?512'd0:in_data):result_data;
  for(genvar g=0;g<16;g=g+1) begin:g_add
  ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(odd),
  .a(lhs[g*32+:32]),.b(rd_data[g*32+:32]),.y(sum[g*32+:32]),.err(sum_err[g*2+:2]),.valid_out(sum_v[g]));
  end
  integer i;
  always @(posedge clk or negedge rst_n) begin
- if(!rst_n) begin state<=IDLE;rank_next<=0;tile<=0;count<=96;issued<=0;returned<=0;
+ if(!rst_n) begin state<=IDLE;rank_next<=0;tile<=0;count<=RANKS;issued<=0;returned<=0;
  rv<=0;rf<=0;tv<=0;tc<=0;out_valid<=0;done<=0;fault<=0;flush<=0; end
  else begin
  done<=0;
@@ -60,10 +60,10 @@ module ot_hgi_sum96 #(
  if(result) returned<=returned+1'b1;
  if(rsp && rd_fault) begin fault<=1;state<=FAIL;end
  else case(state)
- IDLE:if(cmd_valid) begin state<=LOAD;tile<=0;rank_next<=0;fault<=0;count<=96;end
+ IDLE:if(cmd_valid) begin state<=LOAD;tile<=0;rank_next<=0;fault<=0;count<=RANKS;end
  LOAD:if(in_valid) begin
  if(in_rank!=rank_next || in_tile!=tile) begin fault<=1;state<=FAIL;end
- else if(rank_next==95) begin state<=REDUCE;issued<=0;returned<=0;count<=96;end
+ else if(rank_next==RANKS-1) begin state<=REDUCE;issued<=0;returned<=0;count<=RANKS;end
  else rank_next<=rank_next+1'b1;
  end
  REDUCE:begin
@@ -91,6 +91,6 @@ module ot_hgi_sum96 #(
  end
  end
 `ifndef SYNTHESIS
- initial if(MEM_LAT<1 || ADD_LAT<3) $fatal(1,"invalid local pipeline");
+ initial if(MEM_LAT<1 || ADD_LAT<3 || (RANKS!=96 && RANKS!=12)) $fatal(1,"invalid local pipeline");
 `endif
 endmodule
