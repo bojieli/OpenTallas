@@ -42,7 +42,7 @@ ot_hbm_native_index_control #(.ENABLE(CONTROL),.PREFETCH(1)) actual_control(
  .keep_v(1'b0),.keep_r(),.keep_frame(73'd0),.keep_quarter(2'd0),.keep_bitmap(342'd0),
  .fs(control_fs),.kin(control_kin),.source_start_v(control_start_v),.source_start_r(1'b1),
  .held_frame(control_frame),.held_rank(control_rank),.source_done(got==1368),
- .index_event(got==1368?2'b01:2'b00),.returns_drained(!dut.idx_busy),
+ .index_event(got==1368?2'b01:2'b00),.returns_drained(!dut.gkvs.idx_busy),
  .source_idle(got==1368&&fifo_ne==0),.retained(control_retained),.done(control_done),.fault(control_fault));
 always@(posedge efck)if(rst_n&&CONTROL)begin
  if(control_fault)$fatal(1,"actual dynamic controller fault");
@@ -50,7 +50,7 @@ always@(posedge efck)if(rst_n&&CONTROL)begin
  if(control_start_v)query_ready=1;
  if(!key_visible&&actual_accepts!=rep_)$fatal(1,"service admission before actual key visibility fence");
 end
-always@(posedge clk)if(rst_n&&EARLY&&rep_==1&&portal_v&&dut.idx_busy)begin
+always@(posedge clk)if(rst_n&&EARLY&&rep_==1&&portal_v&&dut.gkvs.idx_busy)begin
  held_credit_witness=held_credit_witness+1;
  if(portal_take)$fatal(1,"next frame admitted before old line credits retired");
 end
@@ -176,7 +176,7 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  if(!EARLY)repeat(200)@(negedge clk);
  if(CONTROL)begin
   t=0;while(!control_done_seen)begin @(negedge efck);t=t+1;if(t>1000)$fatal(1,"controller retirement debt");end
-  if(dut.idx_busy||fifo_ne!=0)$fatal(1,"controller retired before transport drained");
+  if(dut.gkvs.idx_busy||fifo_ne!=0)$fatal(1,"controller retired before transport drained");
   $display("IKS_CONTROL full73=%h row15=%0d layer=%0d accepted=%0d retired=1",command_frame,command_row,rep_,actual_accepts);
   @(negedge efck);key_visible=0;
  end
