@@ -7,13 +7,13 @@
       "owner": "ingest",
       "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
       "source": {
-        "commit": "7abf5cd22",
+        "commit": "238c238fb",
         "paths": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
         ]
       },
       "implementation": {
-        "status": "implementeddefaultoff; remotequalificationpending",
+        "status": "Implemented; admitted remote largest FIFO and full host golden gates PASS",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
         ]
@@ -199,7 +199,7 @@
         "status": "queued SS/FF characterization successor",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/s81-host-protected-adcd3e0ee-ss.json"
+          "tools/closure_loop/jobs/s81-host-protected-e098a3ac1-ss.json"
         ]
       },
       "dependencies": [
