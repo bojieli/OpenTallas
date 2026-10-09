@@ -197,17 +197,7 @@
     "/": 100
    },
    "min_free_ram_gb": 16,
-   "external_jobs": [
-    {
-     "name": "s81-bf-input-holdseats-exact-gate",
-     "pid": 303289,
-     "command_match": "bf_txn_bench.py",
-     "peak_ram_gb": 4.6,
-     "owner": "Codex:s81_continuation",
-     "reason": "Owner subsequent actual8-waycompiler PG303265 observed4755964KiB4.535GiB, later4197660KiB; rounded4.6GiB current measured envelope. Immutable local phase sample /tmp/bf-cx-mutant-phase-rss.log; driver303289 remains advancing, no imposed cap.",
-     "launcher_pid": 303289
-    }
-   ]
+   "external_jobs": []
   },
   {
    "name": "ot-agidock128",
