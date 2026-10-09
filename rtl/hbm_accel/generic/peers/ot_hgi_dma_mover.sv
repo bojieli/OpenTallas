@@ -13,7 +13,7 @@
 //   (exact); FP8E4M3 the E4M3 value (NaN code 0x7F / 0xFF -> 0x7FC00000).  VM -> VM moves copy the word.
 // STORE (VM FP32 / U32 -> HBM; hgi_sim encode_fmt): FP32 / U32 the word; BF16 = to_bf16 (RNE, hdc_golden); FP8E4M3 =
 //   to_fp8 (RNE in the value's binade, subnormal quantum 2^-9, saturating at 448) then its code.
-// One element a cycle while the source sector is cached and the destination sector buffer is open; a sector read
+// One element every 4 edges (land the source word, decode, encode, merge: no address -> data path in one cycle) while the source sector is cached and the destination sector buffer is open; a sector read
 // misses or a destination sector change costs one round trip on its port (the kport is the boot-path rate: one sector
 // per round trip; the PS stream fork is the fast path, a later successor).  The record retires on done = every write
 // of the move acknowledged; fence_done = no write outstanding (the mover is serial, so 1 edge when idle).
@@ -65,14 +65,16 @@ module ot_hgi_dma_mover #(
     // ---- source sector cache / destination sector buffer
     reg        sc_ok; reg [36:0] sc_sec; reg [255:0] sc_dat;
     reg        db_dirty; reg [36:0] db_sec; reg [255:0] db_dat; reg [31:0] db_strb;
-    reg [2:0]  ph;                            // 0 element, 1 read wait, 2 write wait, 3 final flush wait, 4 done
+    reg [3:0]  ph;                            // 0 element, 1 read wait, 2 write wait, 3 final flush, 4 done, 5 land,
+                                              // 6 decode, 7 encode, 8 merge (an element takes 4 edges: no address -> data path)
+    reg [31:0] e_raw, e_dec, e_enc; reg [1:0] e_soff; reg [4:0] e_doff; reg [36:0] e_dsec; reg e_last; reg [3:0] e_n;
     reg        rd_pend, wr_pend;
     wire [36:0] s_sec = sa[41:5], d_sec = da[41:5];
     wire [4:0]  s_off = sa[4:0], d_off = da[4:0];
     // ---- element extract + convert
-    wire [31:0] raw32 = sc_dat[{s_off[4:2], 5'd0} +: 32];
-    wire [15:0] raw16 = sc_dat[{s_off[4:1], 4'd0} +: 16];
-    wire [7:0]  raw8  = sc_dat[{s_off, 3'd0} +: 8];
+    wire [31:0] raw32 = sc_dat[{s_off[4:2], 5'd0} +: 32];          // ph 0: the source word lands in e_raw
+    wire [15:0] raw16 = e_soff[1] ? e_raw[31:16] : e_raw[15:0];    // ph 6: the element within it
+    wire [7:0]  raw8  = e_raw[{e_soff, 3'd0} +: 8];
     function automatic [31:0] i8_f(input [7:0] c);               // INT8 -> binary32 (exact)
         reg [7:0] a; reg [2:0] p; integer k;
         begin
@@ -132,27 +134,27 @@ module ot_hgi_dma_mover #(
     endfunction
     reg [31:0] dec;                                             // the element as a VM word (LOAD) / FP32 (STORE src)
     always @* begin
-        if (ssp == 2'd1) dec = raw32;                          // VM source: the word
+        if (ssp == 2'd1) dec = e_raw;                          // VM source: the word
         else case (sf)
             3'd1: dec = {raw16, 16'd0};
             3'd2: dec = e4m3_f(raw8);
             3'd4: dec = i8_f(raw8);
-            default: dec = raw32;
+            default: dec = e_raw;
         endcase
     end
     reg [31:0] enc; reg [3:0] enc_n;                            // bytes of the destination element
     always @* begin
-        if (dsp == 2'd1) begin enc = dec; enc_n = 4'd4; end
+        if (dsp == 2'd1) begin enc = e_dec; enc_n = 4'd4; end
         else case (df)
-            3'd1: begin enc = {16'd0, to_bf16(dec)}; enc_n = 4'd2; end
-            3'd2: begin enc = {24'd0, to_e4m3(dec)}; enc_n = 4'd1; end
-            default: begin enc = dec; enc_n = 4'd4; end
+            3'd1: begin enc = {16'd0, to_bf16(e_dec)}; enc_n = 4'd2; end
+            3'd2: begin enc = {24'd0, to_e4m3(e_dec)}; enc_n = 4'd1; end
+            default: begin enc = e_dec; enc_n = 4'd4; end
         endcase
     end
-    wire [255:0] put_dat = {224'd0, enc} << {d_off, 3'd0};
-    wire [31:0]  put_strb = ((enc_n == 4'd4) ? 32'hF : (enc_n == 4'd2) ? 32'h3 : 32'h1) << d_off;
-    wire [255:0] put_mask = ((enc_n == 4'd4) ? {224'd0, 32'hFFFFFFFF} : (enc_n == 4'd2) ? {240'd0, 16'hFFFF} :
-                             {248'd0, 8'hFF}) << {d_off, 3'd0};
+    wire [255:0] put_dat = {224'd0, e_enc} << {e_doff, 3'd0};      // ph 8 (registered encode)
+    wire [31:0]  put_strb = ((e_n == 4'd4) ? 32'hF : (e_n == 4'd2) ? 32'h3 : 32'h1) << e_doff;
+    wire [255:0] put_mask = ((e_n == 4'd4) ? {224'd0, 32'hFFFFFFFF} : (e_n == 4'd2) ? {240'd0, 16'hFFFF} :
+                             {248'd0, 8'hFF}) << {e_doff, 3'd0};
     wire last_elem = (o == mm - 20'd1) && (i == nn - 21'd1);
     // ---- VM / kport response capture
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
@@ -161,18 +163,18 @@ module ot_hgi_dma_mover #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; mv_go <= 1'b0; mvq <= 227'd0; mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; k_req_v <= 1'b0; vmq <= 338'd0;
-            sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 3'd0; rd_pend <= 1'b0; wr_pend <= 1'b0; o <= 0; i <= 0;
+            sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 4'd0; rd_pend <= 1'b0; wr_pend <= 1'b0; o <= 0; i <= 0;
             k_req_we <= 1'b0; k_req_addr <= 0; k_req_wdata <= 0; k_req_wstrb <= 0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; vmq[337] <= 1'b0;
             if (k_req_v && k_req_rdy) k_req_v <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
             if (kf_r) mv_fault <= 1'b1;
-            if (mv_v && mv_rdy) begin mvq <= mv; mv_go <= 1'b1; busy <= 1'b1; ph <= 3'd5; end   // input register
+            if (mv_v && mv_rdy) begin mvq <= mv; mv_go <= 1'b1; busy <= 1'b1; ph <= 4'd5; end   // input register
             if (mv_go) begin
                 mv_go <= 1'b0;
                 {nn, mm, dis, dst, db, df, dsp, sis, sst, sb, sf, ssp} <= mvq;
-                busy <= 1'b1; o <= 0; i <= 0; sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 3'd0;
+                busy <= 1'b1; o <= 0; i <= 0; sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 4'd0;
                 srow <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
                 sa   <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
                 drow <= (mvq[94:93] == 2'd1) ? {mvq[137:98], 2'b00} : {2'd0, mvq[137:98]};
@@ -183,24 +185,23 @@ module ot_hgi_dma_mover #(
                 end
             end
             if (busy && !mv_fault) case (ph)
-                3'd0: begin
+                4'd0: begin
                     if ((s_es == 3'd4 && sa[1:0] != 2'd0) || (s_es == 3'd2 && sa[0]) ||
                         (d_es == 3'd4 && da[1:0] != 2'd0) || (d_es == 3'd2 && da[0])) begin
                         mv_fault <= 1'b1; busy <= 1'b0;                          // an element not naturally aligned
                     end else if (!sc_ok || sc_sec != s_sec) begin                     // source sector miss: read it
                         if (ssp == 2'd0) begin k_req_v <= 1'b1; k_req_we <= 1'b0; k_req_addr <= {s_sec[31:0], 5'd0}; end
                         else vmq <= {1'b1, 1'b0, s_sec[26:0], 5'd0, 256'd0, 32'd0, 16'h4D52};
-                        ph <= 3'd1;
+                        ph <= 4'd1;
                     end else if (db_dirty && db_sec != d_sec) begin          // destination sector change: flush
                         if (dsp == 2'd0) begin k_req_v <= 1'b1; k_req_we <= 1'b1; k_req_addr <= {db_sec[31:0], 5'd0};
                                                k_req_wdata <= db_dat; k_req_wstrb <= db_strb; end
                         else vmq <= {1'b1, 1'b1, db_sec[26:0], 5'd0, db_dat, db_strb, 16'h4D57};
-                        ph <= 3'd2;
-                    end else begin                                            // the element
-                        db_sec <= d_sec; db_dirty <= 1'b1;
-                        db_dat <= ((db_dirty ? db_dat : 256'd0) & ~put_mask) | put_dat;
-                        db_strb <= (db_dirty ? db_strb : 32'd0) | put_strb;
-                        if (last_elem) ph <= 3'd3;
+                        ph <= 4'd2;
+                    end else begin                                            // the element: land its source word
+                        e_raw <= raw32; e_soff <= s_off[1:0]; e_doff <= d_off; e_dsec <= d_sec; e_last <= last_elem;
+                        ph <= 4'd6;
+                        if (last_elem) ;
                         else if (i == nn - 21'd1) begin
                             i <= 0; o <= o + 20'd1;
                             srow <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
@@ -214,25 +215,33 @@ module ot_hgi_dma_mover #(
                         end
                     end
                 end
-                3'd1: begin                                                    // read response
-                    if (ssp == 2'd0 && kv_r && !kwe_r) begin sc_dat <= kd_r; sc_sec <= s_sec; sc_ok <= 1'b1; ph <= 3'd0; end
-                    if (ssp == 2'd1 && vr[273] && !vr[256]) begin sc_dat <= vr[255:0]; sc_sec <= s_sec; sc_ok <= 1'b1; ph <= 3'd0; end
+                4'd1: begin                                                    // read response
+                    if (ssp == 2'd0 && kv_r && !kwe_r) begin sc_dat <= kd_r; sc_sec <= s_sec; sc_ok <= 1'b1; ph <= 4'd0; end
+                    if (ssp == 2'd1 && vr[273] && !vr[256]) begin sc_dat <= vr[255:0]; sc_sec <= s_sec; sc_ok <= 1'b1; ph <= 4'd0; end
                 end
-                3'd2, 3'd4: begin                                              // write acknowledgement
+                4'd2, 4'd4: begin                                              // write acknowledgement
                     if ((dsp == 2'd0 && kv_r && kwe_r) || (dsp == 2'd1 && vr[273] && vr[256])) begin
                         db_dirty <= 1'b0;
-                        if (ph == 3'd4) begin busy <= 1'b0; mv_done <= 1'b1; end
+                        if (ph == 4'd4) begin busy <= 1'b0; mv_done <= 1'b1; end
                         ph <= (ph == 3'd4) ? 3'd0 : 3'd0;
                     end
                 end
-                3'd3: begin                                                    // final flush
+                4'd3: begin                                                    // final flush
                     if (dsp == 2'd0) begin k_req_v <= 1'b1; k_req_we <= 1'b1; k_req_addr <= {db_sec[31:0], 5'd0};
                                            k_req_wdata <= db_dat; k_req_wstrb <= db_strb; end
                     else vmq <= {1'b1, 1'b1, db_sec[26:0], 5'd0, db_dat, db_strb, 16'h4D57};
-                    ph <= 3'd4;
+                    ph <= 4'd4;
                 end
-                3'd5: ;                                                        // the command lands
-                default: ph <= 3'd0;
+                4'd5: ;                                                        // the command lands
+                4'd6: begin e_dec <= dec; ph <= 4'd7; end                      // decode
+                4'd7: begin e_enc <= enc; e_n <= enc_n; ph <= 4'd8; end        // encode
+                4'd8: begin                                                    // merge into the destination sector
+                    db_sec <= e_dsec; db_dirty <= 1'b1;
+                    db_dat <= ((db_dirty ? db_dat : 256'd0) & ~put_mask) | put_dat;
+                    db_strb <= (db_dirty ? db_strb : 32'd0) | put_strb;
+                    ph <= e_last ? 4'd3 : 4'd0;
+                end
+                default: ph <= 4'd0;
             endcase
         end
     end
