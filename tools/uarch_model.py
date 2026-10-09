@@ -14512,6 +14512,15 @@ def hbm_expert_steering_model():
     from hbm_expert_steering_model import model
     return model()
 
+def hbm_link_retry_pipeline_guard_model(**kwargs):
+    """Paced successor with retained counter/state parity; no latency credit."""
+    result = hbm_link_retry_pipeline_model(**kwargs)
+    result['bookkeeping_parity_registers_per_port'] = 22
+    result['new_stage_protection'] += '; retained bookkeeping parity, detect/poison'
+    result['protection_timing_cost'] = 'Combinational state poison gates admission and emission; route must qualify its depth and fanout.'
+    return result
+
+
 def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24,
                                   depth=512, ports=8):
     """Closure successor: four-edge paced admission and pipelined feedback."""
