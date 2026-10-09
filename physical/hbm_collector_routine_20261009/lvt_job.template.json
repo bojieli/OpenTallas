@@ -1,0 +1,103 @@
+{
+  "name": "hbm_coll_port_capture-lvt-routine-20261009",
+  "block": "ot_hcoll_port",
+  "owner": "Codex:link_retry",
+  "purpose": "Owner0512 unchanged capture946 LVT sibling; separate from acceptedfanout8. Real18macro/3270capture legalplacement and wrongCLKnegative bound, baselineTT-40/FF-14.35 measuredIO. NoRTL/interface/clock/pin/geometrychanges. Independent electrical zero checks blockholdECO; holdECO only ifactualTT>=0DRC0andelectricalPASS, never TTfailure.",
+  "hosts": [
+    "ot-pve1",
+    "ot-agidock128",
+    "ot-epyc1tb",
+    "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/hbm-collector-routine-20261009",
+    "commit": "SOURCE_PENDING_COMMIT",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical",
+      "results/physical/hbm_coll_capture_20261009",
+      "results/physical/hbm_collector_routine_20261009"
+    ],
+    "required_files": [
+      "physical/hbm_accel_die_views/coll/rtl_ps/route_ps.sh",
+      "physical/hbm_accel_die_views/coll/rtl_ps/interior_macros.tcl",
+      "physical/hbm_accel_die_views/coll/rtl_ps/capture_adjacent_place.tcl",
+      "tools/closure_loop/tt_overlay.py",
+      "tools/closure_loop/hold_corners_patch.py",
+      "tools/closure_loop/h1_patch.py",
+      "tools/orfs_hold_mm.py",
+      "tools/orfs_hold_mm.tcl",
+      "results/physical/hbm_coll_capture_20261009/receipt.json",
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv"
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "python3 -c \"from tools.hbm_coll_capture_placement_model import model; import json; print(json.dumps(model()))\" && export OT_MULTI_VT=lvt OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/hold_corners_patch.py {SRC} && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 tools/closure_loop/h1_patch.py {SRC} && CAPTURE_ADJACENT=1 INTERIOR=1 DIEW=480 DIEH=540 PHALO='4 10' OUT={RUN}/routes CORES=8 PD=0.45 bash physical/hbm_accel_die_views/coll/rtl_ps/route_ps.sh {LABEL}${CL_LABEL_SUFFIX} port $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk.sh $CK_SS_MEAN && bash physical/hbm_accel_die_views/common/make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX",
+      "threads": 8,
+      "peak_ram_gb": 3
+    },
+    "route": {
+      "cmd": "python3 -c \"from tools.hbm_coll_capture_placement_model import model; import json; print(json.dumps(model()))\" && export OT_MULTI_VT=lvt OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/hold_corners_patch.py {SRC} && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc && HM=0.010 CAPTURE_ADJACENT=1 INTERIOR=1 DIEW=480 DIEH=540 PHALO='4 10' OUT={RUN}/routes CORES=8 PD=0.45 IO_ROUTE_SDC=physical/hbm_accel_die_views/common/io_vclk_${CK_SS_MEAN}.sdc IO_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc bash physical/hbm_accel_die_views/coll/rtl_ps/route_ps.sh {LABEL} port",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "needs": [
+        "orfs"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/",
+      "needs": []
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      },
+      {
+        "name": "independent_electrical_zero",
+        "cmd": "python3 -c \"import json; m=json.load(open('{RUN}/routes/{LABEL}/physical.json'))['place_and_route']['metrics']; k=('drc_errors','antenna_violating_nets','antenna_violating_pins','max_slew_violations','max_cap_violations','max_fanout_violations'); assert all(m.get(x)==0 for x in k), {x:m.get(x) for x in k}\""
+      }
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/hbm_collector_routine_20261009/lvt-sibling-route"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_corner": "TC",
+  "budget": {
+    "enabled": false,
+    "reason": "internal hard sub-block of hfd_coll (no die-level master, no budget sheet): screening IO envelope 0.2 T + io_vclk at the calibrated insertion, as the HBM contract blocks"
+  },
+  "no_bench_reason": "ExistingRTL/config-onlyLVT reroute of actualcapture946 (sameRTLda3/7beb). Actualfull18macro legalplacement3270capturesPASS and wrongCLKnegative caught in results/physical/hbm_coll_capture_20261009/receipt.json; originalstream numerical/protocol gates preserved, no newRTLmechanism.",
+  "reservation_state": "16route/3cal conservative samefullinventory nearestda3DRT11.918/capture11.506/cal2.334; LVTfuturepeakUNKNOWN; conditionalECO32 futurepeakUNKNOWN, nevermeasured16/32",
+  "flow_helper_provenance": "helpers from the exact pinned source snapshot; no historical external TTB/FH directory fallback; explicit TC/MM; idempotent holdpatch thenTT overlay thenH1",
+  "hold_eco": {
+    "enabled": true,
+    "vtswap": false,
+    "reexport": true,
+    "authorization": "Existingdesign holdECO ONLY afterTTsetup>=0DRC0andallindependent electricalchecksPASS; defaultdaemonhold_only failed-check guard, noTT-failECO",
+    "resource_note": "DaemonconditionalholdECO uses32GiB guard; conservative futurephase estimate, not measuredLVT/ECO peak, headroom must be measured before launch"
+  }
+}
