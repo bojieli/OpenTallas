@@ -156,11 +156,11 @@
       "owner": "generic_index_decode",
       "description": "hgi idx topk",
       "source": {
-        "commit": "33a768ee2",
+        "commit": "d52820055",
         "paths": [
-          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
-          "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv"
-        ]
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv"
+        ],
+        "manifest_commit": "8c088de95"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -173,11 +173,12 @@
         "status": "MODELED",
         "evidence": [
           "tools/uarch_model.py:hgi_generic_topk_model"
-        ]
+        ],
+        "added_generic_edges": 3
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_FULL_K2048_EXPANDED_GATE",
+          "status": "PASS_FULLK2048_833PS_REGISTERED_GOLDEN",
           "evidence": [
             "results/rtl/hgi_topk_20261009/fb2efd543-receipt.json"
           ]
@@ -195,7 +196,7 @@
         }
       },
       "physical": {
-        "status": "PAIR_PROPOSALS_PENDING_FULLSHAPE_SLOT_AND_ADMISSION",
+        "status": "REGISTERED_BOUNDARY_PASS6_4_PAIR_INTAKE_PENDING_RECEIPT",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -215,7 +216,8 @@
         "full K2048 physical slot for174080 state bits/2048comparators",
         "resolved descriptors and output stream consumers",
         "normative param25 bits; stable golden score/id/value ordering",
-        "DS default MUST dispatch/bypass existing native parallel K6 SELECT; exact DS cycle lockstep required before adoption"
+        "DS default MUST dispatch/bypass existing native parallel K6 SELECT; exact DS cycle lockstep required before adoption",
+        "Latest registeredwrapper ENABLE1/MAX_K2048 has+3genericedges; source-d528 boundary6/4 passes; actual unit9 recordadapter/VM A/O/R writes unbound"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -1210,7 +1212,8 @@
         "evidence_commit": "8c6f2fa0a",
         "paths": [
           "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
-        ]
+        ],
+        "physical_retry_candidate": "630558368"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -1246,7 +1249,7 @@
         }
       },
       "physical": {
-        "status": "BOUNDARY_9_IN_3_OUT_PASS_PAIR_PREPARED_NOT_QUEUED",
+        "status": "IO_PLACEMENT_FAILURES_PRESERVED_CONFIG_RETRY_PAIR_INTAKE_PENDING",
         "jobs": [],
         "corners": {},
         "electrical": {
@@ -1259,7 +1262,8 @@
         "Real typed rec_pos1_21 and effectiveB/C count32 need upstream descriptor conversion beyond legacy3fae",
         "Actual ATT done/fault and rows done/fault must bind; done only both real completions",
         "GH5 no cancellation ports: sticky fault CP halt drained reset only",
-        "Existing selected-ID/gather/formatter actual producer consumer joins open"
+        "Existing selected-ID/gather/formatter actual producer consumer joins open",
+        "Two actual descriptor IO placement failures preserved; balanced32 config-only retry unchangedRTL/ports/outline/timing pendingactualfleetreceipt"
       ],
       "integration": {
         "status": "ACTUAL_PRODUCER_CONSUMER_UNBOUND",

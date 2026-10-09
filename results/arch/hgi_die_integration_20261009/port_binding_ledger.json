@@ -611,6 +611,60 @@
       "binding_status": "UNBOUND_PROVIDER_BOUNDARY_FAIL46_LEVELS",
       "functional_ties_allowed": false,
       "width_truncation_allowed": false
+    },
+    {
+      "source_commit": "8c088de95",
+      "path": "results/rtl/hgi_topk_20261009/topk-port-manifest.json",
+      "sha256": "86744cb610815be8765f4df449cea68eca83b086fe6855a20a99a6f26ea1863e",
+      "manifest": {
+        "module": "ot_hgi_idx_topk_registered",
+        "source_commit": "d52820055",
+        "source": "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv",
+        "parameters": {
+          "ENABLE": 0,
+          "MAX_K": 2048,
+          "MUTANT_TIE": 0,
+          "MUTANT_EARLY_DONE": 0
+        },
+        "physical_parameters": {
+          "ENABLE": 1,
+          "MAX_K": 2048
+        },
+        "unit": 9,
+        "op": 2,
+        "latency_added_generic_edges": 3,
+        "ports": {
+          "clk": "input1",
+          "rst_n": "input1",
+          "cmd_valid": "input1",
+          "cmd_ready": "output1",
+          "cmd_unit": "input4",
+          "cmd_op": "input6",
+          "cmd_param": "input25",
+          "cmd_n": "input32",
+          "cmd_m": "input32",
+          "cmd_values": "input1",
+          "in_valid": "input1",
+          "in_ready": "output1",
+          "in_score": "input32",
+          "out_valid": "output1",
+          "out_ready": "input1",
+          "out_id": "output32",
+          "out_score": "output32",
+          "out_row": "output32",
+          "out_last": "output1",
+          "out_values_valid": "output1",
+          "done": "output1",
+          "error": "output4"
+        },
+        "semantics": "cmd captures opcode/dimensions; score stream row-major; descending score then low ID; output relay held until accepted; done after final accepted result; error4 invalid/NaN; optionalR values_valid; param k[11:0]",
+        "unbound": "sequencer accepted-record adapter, VM A/O/R binding, combined unit9 arbitration/ready-done; no DS router production alias; native SELECT separate unit9/op3"
+      },
+      "producer_required": "Actual Claude unit9 op2 record adapter resolving A operands,n,m25bitparam and values R presence",
+      "consumer_required": "Actual VM O U32 IDs/R optionalFP32 values and counted writeACK; unit9 dispatch separates nativeSELECTop3 andEHASHop4",
+      "binding_status": "UNBOUND_COMBINED_DISPATCH_AND_VM",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false
     }
   ]
 }
