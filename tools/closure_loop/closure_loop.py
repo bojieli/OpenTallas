@@ -808,6 +808,14 @@ def ingest():
 
 
 # --------------------------------------------------------------------------------------------- host capacity
+# ADMIT-PAUSE (drive-resume 2026-10-09): a host's own admission gate (/srv/opentallas-scratch/admit.sh, used inside many
+# route recipes) refuses every new job while admit.pause_new.json exists (owner, EPYC2 00:25 memory pressure).  The loop
+# did not read it: it kept launching onto EPYC2, the recipe's admit.sh waited forever with 0 CPU and no writes, and
+# stuckscan killed the "hung" stage 51 min later (hbm_sfu_lane_rstr x2).  The loop now treats the file as "host paused".
+ADMIT_PAUSE = "/srv/opentallas-scratch/admit.pause_new.json"
+PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
+
+
 class Fleet:
     def __init__(self):
         self.pending = {}      # host -> [(t, threads, ram)]
@@ -860,7 +868,8 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
             reservation_probe = "; python3 -c " + shlex.quote(probe)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
-mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}""", timeout=40)
+mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
+{PAUSE_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -872,6 +881,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return None  # cannot admit without measuring the declared live reservations
             info["external_jobs"] = json.loads(external_line) if external_line else []
             info["external_remaining_gb"] = sum(x["remaining_gb"] for x in info["external_jobs"])
+            paused = next((x[len("OT_ADMIT_PAUSED"):].strip() for x in r.stdout.splitlines() if x.startswith("OT_ADMIT_PAUSED")), None)
+            if paused is not None:
+                info["admit_paused"] = paused[:200] or "admit.pause_new.json"
         return info
 
     def own_pending(self, host, job=None):
@@ -895,6 +907,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         info = self.probe(host)
         if info is None:
             return False, f"{cfg['label']} unreachable"
+        if info.get("admit_paused"):
+            return False, f"{cfg['label']} admission paused ({ADMIT_PAUSE}: {info['admit_paused']})"
         pt, pr = self.own_pending(host, job)
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
