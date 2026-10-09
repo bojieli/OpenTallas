@@ -561,12 +561,12 @@ def util_db_add(key, rec):
         os.replace(tmp, p)
 
 
-def submit_check(spec):
+def submit_check(spec, force=False):
     git_ = submit_lint.Git(REPO)
     commit = str((spec.get("source") or {}).get("commit", ""))
     if commit and git_.blob(commit, "") is None and (spec.get("source") or {}).get("branch"):
         gfetch(spec["source"]["branch"], timeout=300)
-    return submit_lint.check(spec, git_, util_db())
+    return submit_lint.check(spec, git_, util_db(), force=force)
 
 
 def lint_at_submit(j):
@@ -582,12 +582,12 @@ def lint_at_submit(j):
     if v == "PASS":
         event(j, f"submit lint PASS (estimate {res.get('est')} b/um, limit {res.get('limit')}"
                  + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")")
-    elif v == "SPREAD":
+    elif v == "FIX":
         j["spec_submitted"] = j["spec"]
-        j["spec"] = submit_lint.apply_spread(j["spec"], res, now_iso())
-        event(j, f"submit lint SPREAD: {res['message'][:500]}; PIN_H/PIN_V added to the stage commands "
-                 f"(spec.submit_lint)")
-        ledger(j, f"SUBMIT_LINT pin spread applied: {res['message'][:300]}")
+        j["spec"] = submit_lint.apply_fix(j["spec"], res, now_iso())
+        event(j, f"submit lint FIX {res['fix']}: {res['message'][:500]}; settings added to the route_master stage "
+                 f"commands (spec.submit_lint)")
+        ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
         j["reason"] = f"SUBMIT_LINT FLOORPLAN_MARGIN: {res['message']}"[:1500]
@@ -4311,11 +4311,11 @@ def cmd_validate(a):
     if not errs:
         res = submit_check(spec)
         print(f"submit lint {res['verdict']}: {res.get('message', '')}"
-              + (f" (estimate {res.get('est')} b/um, spread {res.get('est_spread')})" if res.get("est") else ""))
+              + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
         if res["verdict"] == "REFUSE":
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
-        elif res["verdict"] == "SPREAD":
-            print("  the loop will add PIN_H='M4 M6' PIN_V='M5 M7' to the route_master stage commands at intake")
+        elif res["verdict"] == "FIX":
+            print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
     print("\n".join(errs) if errs else "OK")
     sys.exit(1 if errs else 0)
 
@@ -4328,11 +4328,24 @@ def fp_margin_time(j):
     return j.get("updated", "")
 
 
+def release_route_key(j):
+    """drop a FLOORPLAN_MARGIN job from its block@commit route-key list: it stopped before global placement and spent
+    no route, so its requeue must not be REFUSED by MAX_ROUTES_PER_KEY"""
+    keys = route_keys()
+    key = f"{j['spec']['block']}@{j['spec']['source']['commit'][:12]}"
+    if j["name"] in keys.get(key, []):
+        keys[key] = [n for n in keys[key] if n != j["name"]]
+        tmp = keys_path().with_suffix(".tmp")
+        tmp.write_text(json.dumps(keys, indent=1) + "\n")
+        os.replace(tmp, keys_path())
+
+
 def cmd_submit_recheck(a):
-    """lint-at-submit back-check: every FLOORPLAN_MARGIN job since --since with no live successor (a later job of the
-    same block that is not terminal, or CLOSED) is re-judged by the submit lint; pin-density-only failures the
-    two-layer spread fixes are requeued (--requeue: a copy of the submitted spec named <name>-ls in the drop dir, so
-    intake applies and records the spread); the rest are listed with their failing checks"""
+    """lint-at-submit back-check: every FLOORPLAN_MARGIN job since --since with no live successor (a job of the same
+    block that is not terminal, or a later CLOSED one) is re-judged by the submit lint; pin-density-only failures an
+    approved automatic fix passes (forced: the measured failure outranks the lower-bound estimate) are requeued
+    (--requeue: the fixed spec, spec.submit_lint recorded, named <name>-ls in the drop dir; the failed job's route-key
+    slot is released, it spent no route); the rest are listed with their failing checks"""
     jobs = all_jobs()
     out = []
     for j in sorted(jobs, key=fp_margin_time):
@@ -4340,8 +4353,8 @@ def cmd_submit_recheck(a):
             continue
         blk = j["spec"].get("block")
         succ = [x["name"] for x in jobs if x["name"] != j["name"] and x["spec"].get("block") == blk
-                and x.get("created", "") > j.get("created", "")
-                and (x["status"] not in TERMINAL or x["status"] in ("CLOSED", "SMOKE_OK"))]
+                and (x["status"] not in TERMINAL or (x["status"] in ("CLOSED", "SMOKE_OK")
+                                                     and x.get("created", "") > j.get("created", "")))]
         reason = j.get("reason") or ""
         checks = sorted({part.split(":", 1)[0].strip() for part in reason.split(" | ") if ":" in part})
         spec = j.get("spec_submitted", j["spec"])
@@ -4354,14 +4367,17 @@ def cmd_submit_recheck(a):
         if succ:
             out.append(f"SUCCESSOR {j['name']}: {','.join(checks)} -> live successor {', '.join(succ[:3])}")
             continue
-        res = submit_check(spec)
-        est = f" est {res.get('est')} spread {res.get('est_spread')}" if res.get("est") else ""
-        if checks == ["pin_density"] and res["verdict"] == "SPREAD":
+        pin_only = checks == ["pin_density"]
+        res = submit_check(spec, force=pin_only)
+        est = f" est {res.get('est')} with fix {res.get('est_fix')}" if res.get("est") else ""
+        if pin_only and res["verdict"] == "FIX":
             new = (j["name"][:92] + "-ls")
-            line = f"REQUEUE {j['name']} -> {new}: pin density only, fixed by the two-layer spread{est}"
+            line = f"REQUEUE {j['name']} -> {new}: pin density only, fix {res['fix']} {res['fix_env']}{est}"
             if a.requeue:
-                nspec = json.loads(json.dumps(spec))
+                nspec = submit_lint.apply_fix(spec, res, now_iso())
                 nspec["name"] = new
+                nspec["submit_lint"]["requeued_from"] = j["name"]
+                release_route_key(j)
                 DROP.mkdir(parents=True, exist_ok=True)
                 (DROP / f"{new}.json").write_text(json.dumps(nspec, indent=1) + "\n")
             out.append(line)

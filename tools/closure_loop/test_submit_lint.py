@@ -85,36 +85,52 @@ class Expr(unittest.TestCase):
 
 
 class Density(unittest.TestCase):
-    def test_big_group_refused_even_spread(self):
-        # 2048 even data bits as ONE ordered group: 20.8 b/um on M4; M4+M6 cannot dilute it (M6: 15.6)
+    def test_big_group_balanced(self):
+        # 2048 even data bits as ONE ordered group: 20.5 b/um on M4 and M6 alike (more layers cannot dilute one group);
+        # the first approved fix, pin_balance, spreads them uniformly over 518 um on M4+M6: ~2 b/um
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left' --pin-region '^i_data\\[[0-9]*[13579]\\]$=right'"))
         r = S.check(spec(), g)
-        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertEqual(r["verdict"], "FIX", r)
         self.assertEqual(r["est"]["W"], 20.48)
-        self.assertEqual(r["est_spread"]["W"], 15.63)
-        self.assertIn("PIN_MIN_TRACKS=2", r["message"])
-
-    def test_several_groups_spread(self):
-        # 9 groups (by leading index digit, <= 1,111 pins each) of 2,047 data bits on a 100 um left face: 20.5 b/um
-        # averaged on one layer, 10.2 on two, each group <= 11.1 b/um -> SPREAD
-        pins = " ".join(f"--pin-region '^i_data\\[{k}[0-9]*\\]$=left'" for k in range(1, 10))
-        g = git_for(cfg(pins + " --pin-region '^(clk|rst_n|i_we|i_a|i_b|o_mask|fault|i_data\\[0\\])(\\[|$)=top'",
-                        fw=200, fh=100, params="--param NS=4"))
-        r = S.check(spec(), g)
-        self.assertEqual(r["verdict"], "SPREAD", r)
-        self.assertGreater(r["est"]["W"], 12)
-        self.assertLessEqual(r["est_spread"]["W"], 12)
-        s2 = S.apply_spread(spec(), r, "now")
-        self.assertTrue(s2["stages"]["route"]["cmd"].startswith("export PIN_H='M4 M6' PIN_V='M5 M7'; "))
-        self.assertEqual(s2["submit_lint"]["applied"], "pin_spread")
+        self.assertEqual(r["fix"], "pin_balance")
+        self.assertLess(r["est_fix"]["W"], 6)
+        s2 = S.apply_fix(spec(), r, "now")
+        cmd = s2["stages"]["route"]["cmd"]
+        self.assertIn("OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' "
+                      "PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh t", cmd)
+        self.assertTrue(cmd.startswith("export OT_ORFS_CORNER_OVERRIDE=TC; "))
+        self.assertEqual(s2["submit_lint"]["applied"], "pin_balance")
+        self.assertEqual(s2["submit_lint"]["env"]["OT_PIN_GROUP_MAX"], "32")
         self.assertNotIn("submit_lint", spec())
 
-    def test_cfg_pins_layers_blocks_spread(self):
-        pins = " ".join(f"--pin-region '^i_data\\[{k}[0-9]*\\]$=left'" for k in range(1, 10))
-        g = git_for(cfg(pins, fw=200, fh=100, extra="PIN_H=M4", params="--param NS=4"))
+    def test_refused_when_no_fix_fits(self):
+        # 2048 pins on a 60 um face: balanced spacing 0.029 um < pitch, two-track group needs 197 um
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", fh=60))
         r = S.check(spec(), g)
-        self.assertEqual(r["verdict"], "REFUSE")
-        self.assertIn("cfg pins PIN_H", r["message"])
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("pin_balance:", r["message"])
+        self.assertIn("pin_tracks2_spread:", r["message"])
+
+    def test_second_fix_and_cfg_block(self):
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
+        with patch.object(S, "FIXES", S.FIXES[1:]):
+            r = S.check(spec(), g)
+            self.assertEqual((r["verdict"], r["fix"]), ("FIX", "pin_tracks2_spread"), r)
+            self.assertLessEqual(max(r["est_fix"].values()), 12)
+            g2 = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=1"))
+            r2 = S.check(spec(), g2)
+            self.assertEqual(r2["verdict"], "REFUSE")
+            self.assertIn("the cfg sets PIN_MIN_TRACKS", r2["message"])
+
+    def test_force_applies_fix_to_measured_failure(self):
+        # the estimate passes as configured (a lower bound), but the flow measured a failure: force applies fix 1
+        g = git_for(cfg("--pin-region '^i_we(\\[|$)=left'"))
+        self.assertEqual(S.check(spec(), g)["verdict"], "PASS")
+        r = S.check(spec(), g, force=True)
+        self.assertEqual((r["verdict"], r["fix"]), ("FIX", "pin_balance"))
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
+        r2 = S.check(spec(cmd_env=env), g, force=True)                    # balance already set: the second fix
+        self.assertEqual(r2["fix"], "pin_tracks2_spread")
 
     def test_pass_and_tracks_and_balance(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"))
@@ -124,11 +140,11 @@ class Density(unittest.TestCase):
         r = S.check(spec(cmd_env=env), g)
         self.assertEqual(r["verdict"], "PASS", r)                            # uniform over 518 um: ~2 b/um/layer
 
-    def test_env_spread_already_present(self):
+    def test_env_settings_read(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
         r = S.check(spec(cmd_env="PIN_H='M4 M6' PIN_V='M5 M7' "), g)
         self.assertEqual(r["layers"]["PIN_H"], "M4 M6")
-        self.assertIn("already spread", r["message"])
+        self.assertEqual(r["est"]["W"], 15.63)                              # the group can land on M6: 1,563 slots
 
     def test_skips(self):
         self.assertEqual(S.check(spec(fp_lint=False), git_for(cfg("")))["verdict"], "SKIP")
@@ -143,8 +159,9 @@ class Density(unittest.TestCase):
     def test_threshold_override_and_warn_only(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
         self.assertEqual(S.check(spec(fp_lint={"set": {"pin_density_max": 25}}), g)["verdict"], "PASS")
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", fh=60))
         r = S.check(spec(fp_lint={"warn_only": True}), g)
-        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual(r["verdict"], "PASS")                              # warn_only never refuses
         self.assertTrue(r["message"].startswith("warn_only"))
 
     def test_util_from_same_synthesis_input(self):
@@ -171,13 +188,14 @@ class LoopWiring(unittest.TestCase):
 
     def test_spread_recorded(self):
         j = self.job()
-        res = {"verdict": "SPREAD", "message": "m", "est": {"W": 17}, "est_spread": {"W": 8}}
+        res = {"verdict": "FIX", "message": "m", "est": {"W": 17}, "est_fix": {"W": 8}, "fix": "pin_balance",
+               "fix_env": dict(S.FIXES[0]["env"])}
         with patch.object(cl, "submit_check", return_value=res), patch.object(cl, "ledger"), patch.object(cl, "log"):
             cl.lint_at_submit(j)
         self.assertEqual(j["status"], "QUEUED")
         self.assertEqual(j["spec_submitted"], spec())
-        self.assertIn("PIN_H='M4 M6'", j["spec"]["stages"]["route"]["cmd"])
-        self.assertEqual(j["spec"]["submit_lint"]["est_spread"], {"W": 8})
+        self.assertIn("OT_PIN_BALANCE_H='M4 M6'", j["spec"]["stages"]["route"]["cmd"])
+        self.assertEqual(j["spec"]["submit_lint"]["est_fix"], {"W": 8})
 
     def test_refused(self):
         j = self.job()
@@ -203,6 +221,13 @@ class LoopWiring(unittest.TestCase):
             cl.cmd_validate(SimpleNamespace(file=f.name))
         self.assertEqual(ex.exception.code, 1)
         Path(f.name).unlink()
+
+    def test_release_route_key(self):
+        with tempfile.TemporaryDirectory() as d, patch.object(cl, "STATE", Path(d)):
+            cl.keys_path().parent.mkdir(parents=True, exist_ok=True)
+            cl.keys_path().write_text(json.dumps({"b@abcdef1": ["j0", "j1", "j2"]}))
+            cl.release_route_key({"name": "j1", "spec": spec()})
+            self.assertEqual(cl.route_keys()["b@abcdef1"], ["j0", "j2"])
 
     def test_util_db_roundtrip(self):
         with tempfile.TemporaryDirectory() as d, patch.object(cl, "STATE", Path(d)):

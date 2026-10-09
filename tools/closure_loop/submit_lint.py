@@ -16,13 +16,14 @@ The model is a LOWER BOUND on what fp_margin_lint measures (it never refuses a f
   * all pins of a face, however placed, average at least T / (k x max(L, 100 um)) b/um on the best of its k layers.
   * OT_PIN_BALANCE_H/V (with OT_PIN_GROUP_MAX) places pins uniformly over the region, alternating layers per chunk:
     exactly that average.
-Verdict: PASS; SPREAD (fails on one layer, passes with the approved two-layer spread PIN_H 'M4 M6' / PIN_V 'M5 M7'
--> the loop adds it to the job's stage commands and records it in spec.submit_lint); REFUSE (fails even spread: the
-message names the face, the group and the knobs that would pass); SKIP (recipe without a readable pin plan).
+Verdict: PASS; FIX (fails as configured, passes with an approved automatic fix, tried in order: 1. pin_balance =
+OT_PIN_GROUP_MAX=32 + OT_PIN_BALANCE_H 'M4 M6' / _V 'M5 M7'; 2. pin_tracks2_spread = PIN_MIN_TRACKS=2 + PIN_H 'M4 M6' /
+PIN_V 'M5 M7' -> the loop puts the settings on the route_master invocations and records them in spec.submit_lint);
+REFUSE (no approved fix passes: the message says why each does not); SKIP (recipe without a readable pin plan).
 Utilisation: an estimate only where it is available -- a previous FLOORPLAN_MARGIN util measurement of the same
 synthesis input (top, parameters, source blobs, synthesis env) -- scaled to the new outline; > util_max refuses.
 
-    submit_lint.py check JOB.json [--repo R]       # print the verdict (exit 0 PASS/SPREAD/SKIP, 3 REFUSE)
+    submit_lint.py check JOB.json [--repo R]       # print the verdict (exit 0 PASS/FIX/SKIP, 3 REFUSE)
 """
 from __future__ import annotations
 
@@ -48,7 +49,15 @@ except Exception:  # noqa: BLE001  (shipped without tools/: keep the documented 
 # ASAP7 routing pitches (um) of the IO layers (fp_margin_lint calibration; 1/0.048 = 20.8 b/um, 1/0.064 = 15.6 b/um)
 PITCH = {"M2": 0.036, "M3": 0.036, "M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064, "M8": 0.08, "M9": 0.08}
 SPREAD = {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}           # approved two-layer spread (route_master be5b56d78, DQ1/DQ2)
-DEFAULT = {"PIN_H": "M4", "PIN_V": "M5"}                # ORFS IO_PLACER_H / IO_PLACER_V
+DEFAULT = {"PIN_H": "M4", "PIN_V": "M5"}
+# Approved automatic fixes, in order (coordinator 2026-10-09, layout only, 0 cycles): 1. balanced pins (uniform over the
+# region, alternating M4/M6 | M5/M7 per 32-pin chunk: run_abi3_physical OT_PIN_GROUP_MAX / OT_PIN_BALANCE_H/V);
+# 2. two-track slot pitch + the two-layer spread (route_master PIN_MIN_TRACKS / PIN_H / PIN_V).
+FIXES = (
+    {"name": "pin_balance", "env": {"OT_PIN_GROUP_MAX": "32", "OT_PIN_BALANCE_H": "M4 M6", "OT_PIN_BALANCE_V": "M5 M7",
+                                    "PIN_H": "M4 M6", "PIN_V": "M5 M7"}},
+    {"name": "pin_tracks2_spread", "env": {"PIN_MIN_TRACKS": "2", "PIN_H": "M4 M6", "PIN_V": "M5 M7"}},
+)                # ORFS IO_PLACER_H / IO_PLACER_V
 EDGES = {"left": "W", "right": "E", "top": "N", "bottom": "S"}
 CORE_INSET = 2.16                                       # route_master --core-area 2.16 2.16 FW-2.16 FH-2.16
 ENV_KEYS = ("PIN_H", "PIN_V", "PIN_MIN_TRACKS", "OT_PIN_GROUP_MAX", "OT_PIN_BALANCE_H", "OT_PIN_BALANCE_V")
@@ -403,6 +412,18 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
                 best = min(min(chunk, math.floor(window / (tracks * PITCH.get(lay, 0.048))) + 1) / window for lay in ls)
                 if best > grp:
                     grp, gwhy = best, f"group {r['regex']} {r['n']} pins" + (f" (chunks {group_max})" if group_max else "")
+        if balance:
+            # run_abi3_physical OT_PIN_BALANCE: each region's pins uniformly over its span, layer alternating per chunk;
+            # regions sharing a face are taken to overlap (their densities add)
+            bal = 0.0
+            for r in regs:
+                if not r["n"]:
+                    continue
+                span = (r["range_um"][1] - r["range_um"][0]) if r.get("range_um") else length[edge]
+                bal += r["n"] / (len(ls) * max(span, window))
+                if span / r["n"] < max(PITCH.get(lay, 0.048) for lay in ls):
+                    nofit.append(f"balanced {r['regex']} {r['n']} pins at {span / r['n']:.3f} um spacing < the layer pitch")
+            avg = max(avg, bal)
         est = max(grp, avg)
         why = gwhy if grp >= avg else f"{total:.0f} pins over {length[edge]:.0f} um x {len(ls)} layer(s)"
         out[edge] = {"est": round(est, 2), "layers": ls, "why": why, "pins": round(total), "nofit": nofit}
@@ -495,8 +516,50 @@ def master_plan(spec: dict, git: Git) -> dict:
             "synth_key": key, "core_um2": round((fw - 2 * CORE_INSET) * (fh - 2 * CORE_INSET), 1)}
 
 
-def check(spec: dict, git: Git, util_db: dict | None = None) -> dict:
-    """{"verdict": PASS|SPREAD|REFUSE|SKIP, "message", "est", "est_spread", "util_est", ...}"""
+def _choose_fix(plan, limit, window, res, force=False):
+    """the first approved automatic pin fix (FIXES order) whose estimate passes: ("FIX", message, "") with
+    res["fix"] / res["est_fix"] set, or ("NONE", "", why none applies)"""
+    why = []
+    cur_bal = plan["balance"]
+    for fx in FIXES:
+        env = fx["env"]
+        if fx["name"] == "pin_balance":
+            if cur_bal:
+                why.append("pin_balance already set")
+                continue
+            if not plan["regions"]:
+                why.append("pin_balance: no --pin-region to balance")
+                continue
+            d = density(plan, {"PIN_H": env["OT_PIN_BALANCE_H"], "PIN_V": env["OT_PIN_BALANCE_V"]}, plan["tracks"],
+                        int(env["OT_PIN_GROUP_MAX"]), True, window)
+        else:
+            same = {"PIN_H": plan["layers"]["PIN_H"] == env["PIN_H"], "PIN_V": plan["layers"]["PIN_V"] == env["PIN_V"],
+                    "PIN_MIN_TRACKS": plan["tracks"] >= float(env["PIN_MIN_TRACKS"])}
+            blocked = [k for k in same if k in plan["cfg_sets"] and not same[k]]
+            if blocked:
+                why.append(f"{fx['name']}: the cfg sets {','.join(blocked)}")
+                continue
+            if plan["tracks"] >= float(env["PIN_MIN_TRACKS"]) and plan["layers"] == {k: env[k] for k in SPREAD}:
+                why.append(f"{fx['name']} already set")
+                continue
+            d = density(plan, {k: env[k] for k in SPREAD}, float(env["PIN_MIN_TRACKS"]), plan["group_max"],
+                        cur_bal, window)
+        bad = _fails(d, limit)
+        nofit = [x for v in d.values() for x in v["nofit"]]
+        if bad or nofit:
+            why.append(f"{fx['name']}: {'; '.join(bad + nofit)[:300]}")
+            continue
+        res["fix"], res["fix_env"] = fx["name"], dict(env)
+        res["est_fix"] = {EDGES[e]: v["est"] for e, v in d.items()}
+        return "FIX", (f"approved automatic fix {fx['name']} "
+                       f"({' '.join(f'{k}={v!r}' for k, v in env.items())}) -> "
+                       f"{max(v['est'] for v in d.values())} b/um"), ""
+    return "NONE", "", " | ".join(why)
+
+
+def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
+    """{"verdict": PASS|FIX|REFUSE|SKIP, "message", "est", "fix", "fix_env", "est_fix", "util_est", ...}
+    force: apply the first fix that passes even when the estimate passes as configured (a MEASURED failure)"""
     if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
         return {"verdict": "SKIP", "message": "fp_lint / submit_lint opted out"}
     try:
@@ -511,34 +574,18 @@ def check(spec: dict, git: Git, util_db: dict | None = None) -> dict:
     res["est"] = {EDGES[e]: v["est"] for e, v in est.items()}
     msgs, verdict = [], "PASS"
     fails = _fails(est, limit)
-    if fails:
-        spreadable = [k for k in ("PIN_H", "PIN_V") if plan["layers"][k] != SPREAD[k]]
-        blocked = [k for k in spreadable if k in plan["cfg_sets"]]
-        sp = density(plan, {k: SPREAD[k] for k in SPREAD}, plan["tracks"], plan["group_max"], plan["balance"], window)
-        res["est_spread"] = {EDGES[e]: v["est"] for e, v in sp.items()}
-        sp_fails = _fails(sp, limit)
-        if spreadable and not blocked and not sp_fails:
-            verdict = "SPREAD"
-            msgs.append(f"pin density > {limit} b/um/layer on one layer ({'; '.join(fails)}); the approved two-layer "
-                        f"spread PIN_H='{SPREAD['PIN_H']}' PIN_V='{SPREAD['PIN_V']}' brings it to "
-                        f"{max(v['est'] for v in sp.values())} b/um")
-        else:
+    if fails or force:
+        verdict, fix_msg, why_not = _choose_fix(plan, limit, window, res, force=force and not fails)
+        if verdict == "FIX":
+            msgs.append((f"pin density > {limit} b/um/layer as configured ({'; '.join(fails)}); " if fails else
+                         "measured pin-density failure (the estimate is a lower bound); ") + fix_msg)
+        elif fails:
             verdict = "REFUSE"
-            why = ("the cfg pins PIN_H/PIN_V itself (" + ",".join(blocked) + ")" if blocked else
-                   "already spread over two layers" if not spreadable else "the two-layer spread does not fix it")
-            alt = []
-            t2 = density(plan, {k: SPREAD[k] for k in SPREAD}, 2 * plan["tracks"], plan["group_max"], False, window)
-            if not _fails(t2, limit) and not any(v["nofit"] for v in t2.values()):
-                alt.append(f"PIN_MIN_TRACKS={int(2 * plan['tracks'])} (+ spread) -> "
-                           f"{max(v['est'] for v in t2.values())} b/um")
-            bal = density(plan, {k: SPREAD[k] for k in SPREAD}, plan["tracks"], 32, True, window)
-            if not _fails(bal, limit):
-                alt.append(f"OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='{SPREAD['PIN_H']}' "
-                           f"OT_PIN_BALANCE_V='{SPREAD['PIN_V']}' -> {max(v['est'] for v in bal.values())} b/um")
-            alt.append("a longer edge / split the pin group")
-            msgs.append(f"pin density > {limit} b/um/layer at submit ({'; '.join(sp_fails or fails)}); {why}. "
-                        f"A --pin-region is one ordered group packed on ONE layer at the slot pitch "
-                        f"(PIN_MIN_TRACKS x layer pitch), so more layers cannot dilute it. Fix: " + " | ".join(alt))
+            msgs.append(f"pin density > {limit} b/um/layer at submit ({'; '.join(fails)}); no approved automatic fix "
+                        f"passes ({why_not}). A --pin-region is one ordered group packed on ONE layer at the slot "
+                        f"pitch, so more layers alone cannot dilute it. Fix: a longer edge / split the pin group")
+        else:
+            verdict = "PASS"
     # utilisation, where a measurement of the same synthesis input exists
     u = (util_db or {}).get(plan["synth_key"])
     if u and u.get("core_um2") and u.get("lint_core_um2"):
@@ -558,16 +605,18 @@ def check(spec: dict, git: Git, util_db: dict | None = None) -> dict:
     return res
 
 
-def apply_spread(spec: dict, res: dict, when: str) -> dict:
-    """a copy of spec whose route_master stage commands run with the approved spread, recorded in spec.submit_lint"""
+def apply_fix(spec: dict, res: dict, when: str) -> dict:
+    """a copy of spec whose route_master invocations run with res["fix_env"] (inline assignments just before
+    `bash ...route_master.sh`, so they win over earlier exports in the command), recorded in spec.submit_lint"""
     out = json.loads(json.dumps(spec))
-    pre = f"export PIN_H='{SPREAD['PIN_H']}' PIN_V='{SPREAD['PIN_V']}'; "
+    env = res["fix_env"]
+    assigns = " ".join(f"{k}={shlex.quote(str(v))}" for k, v in env.items())
     for k, cmd in stage_cmds(spec).items():
         if master_cfg_name(cmd):
-            out["stages"][k]["cmd"] = pre + cmd
-    out["submit_lint"] = {"applied": "pin_spread", "PIN_H": SPREAD["PIN_H"], "PIN_V": SPREAD["PIN_V"], "at": when,
-                          "est_one_layer": res.get("est"), "est_spread": res.get("est_spread"),
-                          "why": res.get("message", "")[:400]}
+            new, n = re.subn(r"\bbash(\s+(?:\S*/)?route_master\.sh\b)", lambda m: f"{assigns} bash{m.group(1)}", cmd)
+            out["stages"][k]["cmd"] = new if n else f"export {assigns}; " + cmd
+    out["submit_lint"] = {"applied": res["fix"], "env": dict(env), "at": when, "est_as_configured": res.get("est"),
+                          "est_fix": res.get("est_fix"), "why": res.get("message", "")[:400]}
     return out
 
 

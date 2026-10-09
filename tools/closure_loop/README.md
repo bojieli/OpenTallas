@@ -67,10 +67,12 @@ Offline: `openroad` `read_db X.odb; source tools/fp_margin_lint.tcl; ot_fp_lint_
 `validate` and intake run `submit_lint.py` on route_master.sh jobs: the cfg outline, `--pin-region` plan, top-module port
 widths (ANSI header, parameters resolved, no synthesis) and IO placer settings give a LOWER BOUND on the flow lint's pin
 density per face/layer (a region is one ordered group packed on one layer at PIN_MIN_TRACKS x pitch; a face averages at
-least T/(layers x max(L, 100 um))).  Fails on one layer but passes with the approved two-layer spread -> the loop prefixes
-the route_master stage commands with `export PIN_H='M4 M6' PIN_V='M5 M7'` and records it in `spec.submit_lint` (the
-submitted spec stays in `spec_submitted`); fails even spread -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." naming the
-face, the group and the settings that would pass (PIN_MIN_TRACKS=2, OT_PIN_GROUP_MAX + OT_PIN_BALANCE_H/V).  Utilisation
+least T/(layers x max(L, 100 um))).  Fails as configured -> the first APPROVED automatic fix whose estimate passes
+(coordinator 2026-10-09, layout only, 0 cycles), in order: 1. `pin_balance` OT_PIN_GROUP_MAX=32 + OT_PIN_BALANCE_H 'M4 M6'
+/ _V 'M5 M7' (uniform over the region, layers alternating per 32-pin chunk; needs span/pins >= the layer pitch);
+2. `pin_tracks2_spread` PIN_MIN_TRACKS=2 + PIN_H 'M4 M6' / PIN_V 'M5 M7' (the group must fit the face).  The settings go
+inline on the `bash ...route_master.sh` invocation and are recorded in `spec.submit_lint` (submitted spec kept in
+`spec_submitted`); no fix passes -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." saying why each fix does not.  Utilisation
 is estimated only from an earlier FLOORPLAN_MARGIN util measurement of the same synthesis input (STATE/submit_lint_util.json).
 `"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
 FLOORPLAN_MARGIN jobs without a live successor.
