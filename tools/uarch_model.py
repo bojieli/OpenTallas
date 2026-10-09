@@ -235,6 +235,22 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hgi_collective_row_formatter_model(**kwargs):
+    from uarch_model_hgi_collective_decode import row_formatter_model
+    return row_formatter_model(**kwargs)
+
+
+def hgi_collective_endpoint_model():
+    from uarch_model_hgi_collective_decode import endpoint_model
+    return endpoint_model()
+
+
+def hgi_collective_decode_model():
+    """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
+    from uarch_model_hgi_collective_decode import model
+    return model()
+
+
 def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
     """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
 
@@ -14659,6 +14675,48 @@ def dsrom_wfc_prompt_pipe_model():
     """Approved DR5 SOURCE/token read extra cycle, physical margin and ownership."""
     from dsrom_wfc_prompt_pipe_model import model
     return model()
+
+def dsrom_wfc_token_hard_model():
+    """Size the four-edge token lookup before RTL; no physical credit."""
+    entry_bits = 43
+    added_bits = 36 + 8 * (entry_bits + 1) + 2 * 26
+    return dict(schema='opentallas.dsrom.wfc-token-hard.v1', adopted=False,
+        default_enabled=False, clock_ghz=1.2, macs_per_cycle=0,
+        compute_intensity=0, communication_intensity='one request/response per cycle',
+        memory_ports=dict(token_read_bytes_per_cycle=8*44/8,
+                          draft_write_bytes_per_cycle=5*44/8),
+        boundaries_bits_per_cycle=dict(draft=513, request=36, response=22, config=55),
+        routing_tracks=dict(draft=2052, request=144, response=88, config=220),
+        replicas=dict(stores=1, user_read_banks=8),
+        mux=dict(per_user_entries=16, final_users=8, data_width=44,
+                 request_address_fanout_banks=8, draft_write_slots=5),
+        area=dict(predecessor_measured_cells_um2=7145,
+                  added_register_bits_upper=added_bits,
+                  added_cells_proxy_um2=added_bits*2,
+                  outline_um=[162,151.2],
+                  estimated_fill=(7145+added_bits*2)/(162*151.2),
+                  proxy_is_not_physical_measurement=True),
+        latency=dict(response_edges=4, original_edges=1, r3_edges=2,
+                     added_cycles_original=3, added_cycles_r3=2,
+                     added_ns_original=3/1.2, initiation_interval_cycles=1,
+                     draft_visibility_edges=2,
+                     source_matching_metadata_required=True),
+        measured_latency=dict(original_ingress_edges=0, original_read_response_edges=1,
+                              r3_ingress_edges=0, r3_read_response_edges=2,
+                              hard_ingress_edges=1, hard_read_response_edges=3,
+                              hard_total_edges=4, delta_original_edges=3,
+                              delta_r3_edges=2,
+                              evidence='results/rtl/dsrom_wfc_token_hard_20261009/'
+                                       'baselines_5d64607cd/summary.json'),
+        finite_flow=dict(token_inflight_slots=4, initiation_interval_cycles=1,
+                         fixed_response_no_backpressure=True,
+                         source_return_queue_entries=4,
+                         source_metadata_extra_stages_required=2),
+        failure_path=dict(start='f_pr[25]', end='u_tok.pr_q[16]',
+            report='mtp_wfc_tok_a_e1c20dfb6_tc/physical_artifacts/6_finish.rpt',
+            historical_tt_setup_ps=-478.67),
+        qualification='Remote exact/mutant minimum gate, matched SOURCE integration, '
+                      'and own TT/FF/DRC route with SS sensitivity remain required')
 
 def s81_ctrl_die_model(column_width_um, role='layer', stage_handoffs=121):
     """RQ-DSC1/2 native controller shell sizing before build; closure credit is zero."""
