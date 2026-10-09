@@ -23,7 +23,15 @@ import numpy as np
 import hdc_replay_v41 as R
 import hdc_golden_v41 as G
 I, P = R.I, R.P
-PIN = 'd2c28c279c4b8df731f9c4937e790831529a954b'
+# repinned 2026-10-09 (mtp-lead ring-8): d2c28c279 -> a997dd110; the only drift is the reduced Layout's opt-in
+# rollback_ring (default off) and build_model(engram=False); neither reaches this TP-4 emitter.
+PIN = 'a997dd1107baf003ed8828e38a336bc9a31d3c51'
+# Compressor record ring of the ratio-2 KV sources (MR-2 / MR-5): positions p and p + 8 never share a record,
+# so up to 7 squashed successors may write ahead before a corrected position is re-issued.  Layout: element e of
+# position p's 1,024-element (kv | gate) record at RING8 + (e // RING_CHUNK) * RING_CHUNK * RING_ENTRIES
+# + (p mod RING_ENTRIES) * RING_CHUNK + e % RING_CHUNK.  RING_CHUNK = 4 because the core's DYN25 (SLOTW8) is
+# {pos[2:0], 2'b00} at every shape (ot_hdc_core_v41x.sv, ROLLBACK_RING_DYN); no new DYN, no RTL change.
+RING_ENTRIES, RING_CHUNK = I.POS_RING, 4
 CONFIG = 'compiler/models/deepseek-v4.1-flash/inference_config.json'
 SOURCES = ['tools/hdc_replay_v41.py', 'tools/hdc_golden_v41.py', 'tools/hdc_program_v41.py',
            'tools/hdc_isa_v41.py', 'tools/v41_program_constants.py', 'tools/rtl_v41_fullshape_layer_campaign.py',
@@ -55,7 +63,13 @@ class FullLayerBuilder(R.ShapeBuilder):
         self.layer = layer
         self.actions = []
         extras=[]
-        if layer in R.KV_SRC and R.RATIO[layer]==2:extras += [('CP_KVL',128),('CP_SCL',128),('CPROJ',1024)]
+        if layer in R.KV_SRC and R.RATIO[layer]==2:
+            # MR-5 ring-8 (mtp-lead 2026-10-09): RING8 holds the last RING_ENTRIES positions' (kv | gate)
+            # records, chunk-interleaved so the RTL's ROLLBACK_RING_DYN selector DYN25 = (pos mod 8) * 4
+            # is the record offset in elements; PREV is the odd position's partner record (pos - 1).
+            # PREV sits directly below CPROJ: the pooling ops read the pair as one 2 x 1,024 block (a_so = 2 hd).
+            extras += [('CP_KVL',128),('CP_SCL',128),('PREV',1024),('CPROJ',1024),
+                       ('RING8',RING_ENTRIES*2*lay.s['hd'])]
         if layer in R.ENGRAM:extras += [('EKVL',6400)]
         base=lay.vm.map['SLOT2']; cursor=base
         for name,n in extras:
@@ -86,16 +100,26 @@ class FullLayerBuilder(R.ShapeBuilder):
                   {'CP_KVL'}, {'CPROJ'}, t + '.kv_projection_gather')
         self.coll(I.COLL_ALL_GATHER, v['CP_SCL'], v['CPROJ']+hd, 128,
                   {'CP_SCL'}, {'CPROJ'}, t + '.gate_projection_gather')
-        self.su({'CPROJ'}, {slot}, t + '.slot_store', su_nout=1, su_nin=2*hd,
-                a_base=v['CPROJ'], a_si=1, dst=I.DST_VM, o_base=v[slot],
-                o_d=I.DYN['SLOTW'], o_si=1)
-        self.action('persistent_ratio2_slot', source=L, slot_bits=2*2*hd*32,
-                    slot_index='position%2', complete='position%2==1', producer='projection_gather',
-                    group_first_position='position-1', restore_before='slot_store')
-        pred, a, b = I.PRED_ODD, v[slot], v[slot]+2*hd
-        self.su({slot}, {'CM'}, t, pred=pred, su_nout=1, su_nin=hd, a_base=a+hd,
+        ring, ch, nrec = v['RING8'], RING_CHUNK, 2*hd//RING_CHUNK
+        # ring-2 (RING_ENTRIES = 2) is the legacy two-record allocation, kept only as the MR-5 negative control
+        sel = I.DYN['SLOTW8'] if RING_ENTRIES == 8 else I.DYN['SLOTW']
+        assert RING_ENTRIES in (2, 8) and RING_CHUNK == 4
+        # odd position: copy the partner record (pos - 1, entry (pos mod 8) - 1) out of the ring
+        self.su({slot}, {'PREV'}, t + '.ring_partner', pred=I.PRED_ODD, su_nout=nrec, su_nin=ch,
+                a_base=ring-ch, a_d=sel, a_so=ch*RING_ENTRIES, a_si=1,
+                dst=I.DST_VM, o_base=v['PREV'], o_so=ch, o_si=1)
+        self.su({'CPROJ'}, {slot}, t + '.slot_store', su_nout=nrec, su_nin=ch,
+                a_base=v['CPROJ'], a_so=ch, a_si=1, dst=I.DST_VM, o_base=ring,
+                o_d=sel, o_so=ch*RING_ENTRIES, o_si=1)
+        self.action('persistent_ratio2_slot', source=L, slot_bits=RING_ENTRIES*2*hd*32,
+                    slot_index='position%8 (ring-8, DYN25 SLOTW8)', complete='position%2==1',
+                    producer='projection_gather', group_first_position='position-1',
+                    restore_before=None, rollback='none: squashed successors (<= 7) write other records')
+        pred, a, b = I.PRED_ODD, v['PREV'], v['CPROJ']
+        assert b == a + 2*hd, 'PREV must sit directly below CPROJ'
+        self.su({'PREV','CPROJ'}, {'CM'}, t, pred=pred, su_nout=1, su_nin=hd, a_base=a+hd,
                 a_si=1, b_base=b+hd, b_si=1, m1=I.M1_MAXB, dst=I.DST_VM, o_base=v['CM'], o_si=1)
-        self.su({slot,'CM'}, {'CE'}, t, pred=pred, su_nout=2, su_nin=hd, a_base=a+hd,
+        self.su({'PREV','CPROJ','CM'}, {'CE'}, t, pred=pred, su_nout=2, su_nin=hd, a_base=a+hd,
                 a_so=2*hd, a_si=1, b_base=v['CM'], b_si=1, ad=I.AD_NEGB,
                 sfu=I.SFU_EXP, dst=I.DST_VM, o_base=v['CE'], o_so=hd, o_si=1)
         self.su({'CE'}, {'CD'}, t, pred=pred, su_nout=1, su_nin=hd, a_base=v['CE'],
@@ -103,7 +127,7 @@ class FullLayerBuilder(R.ShapeBuilder):
         self.su({'CE','CD'}, {'CP'}, t, pred=pred, su_nout=2, su_nin=hd,
                 a_base=v['CE'], a_so=hd, a_si=1, b_base=v['CD'], b_si=1,
                 m1=I.M1_DIVB, dst=I.DST_VM, o_base=v['CP'], o_so=hd, o_si=1)
-        self.su({slot,'CP'}, {'POOL','SS'}, t, **P.segmented(dict(pred=pred,
+        self.su({'PREV','CPROJ','CP'}, {'POOL','SS'}, t, **P.segmented(dict(pred=pred,
                 su_nout=1, su_nin=hd, a_base=a, a_si=1, b_base=v['CP'], b_si=1,
                 m1=I.M1_AB, c_base=b, c_si=1, d_base=v['CP']+hd, d_si=1,
                 qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM, o_base=v['POOL'], o_si=1,
@@ -282,7 +306,7 @@ def build_program(*, opt_in=False):
                 'ROM_image':None,'collective_binding':None,'cycles':None},
         'embedding':{'weight_shape':[129280,5120],'broadcast':'replicated BF16 row into4 HC copies per rank',
                      'initial_pre':[1,0,0,0],'actual_image':None},
-        'persistent_state':['token history','40 window rings','4 CKV stores','4 IK stores','3 ratio2 open slots',
+        'persistent_state':['token history','40 window rings','4 CKV stores','4 IK stores','3 ratio2 compressor record rings (8 records)',
                             'per-position selection from latest index source','per-position candidate mask fromL20'],
         'consumer_cost_contract':{'scope':'Per-stage matrices carry rank-local MACs/shapes/dtypes; collectives carry actual descriptor FP32 VM input/output bytes. Engine, ROM/Engram port rates, routes and event calendars unresolved.',
               'embedding_BF16_bytes_per_rank':10240,'stage_h_pre_packed_bytes_per_rank':40976,

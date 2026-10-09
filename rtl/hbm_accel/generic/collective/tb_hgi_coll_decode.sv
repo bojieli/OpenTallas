@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_decode;
- parameter integer MUT_GROUP=0,MUT_ROW_BLOCK=0;
+ parameter integer MUT_GROUP=0,MUT_ROW_BLOCK=0,MUT_AR96=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cmd_v=0,br=0,er=0;
  reg [7:0] g=96,die=0;
@@ -8,7 +8,7 @@ module tb_hgi_coll_decode;
  wire cr,bv,ev;wire [5:0] op;wire [3:0] gsz;
  wire [7:0] bg,rank,group_id,subgroup,block_size,dest;
  wire [20:0] rows;
- ot_hgi_coll_decode #(.ENABLE(1),.MUT_GROUP(MUT_GROUP),.MUT_ROW_BLOCK(MUT_ROW_BLOCK)) d
+ ot_hgi_coll_decode #(.ENABLE(1),.MUT_GROUP(MUT_GROUP),.MUT_ROW_BLOCK(MUT_ROW_BLOCK),.MUT_AR96(MUT_AR96)) d
  (.clk(clk),.rst_n(rst_n),.coll_group_size(g),.die_id(die),.cmd_v(cmd_v),.cmd_r(cr),
  .hdr(hdr),.selected_count(count),.selected_count_valid(count_valid),.backend_v(bv),.backend_r(br),.backend_op(op),
  .backend_gsz(gsz),.backend_group_size(bg),.backend_rank(rank),.backend_group(group_id),
@@ -54,7 +54,7 @@ module tb_hgi_coll_decode;
   if(gsz!=15 || bg!=96)$fatal(1,"DS reset changed");
   for(gg=0;gg<5;gg=gg+1)begin
    for(r=0;r<256;r=r+1)begin
-    for(o=0;o<4;o=o+1) issue(groups[gg],r,o,0,0,0,0,0);
+    for(o=0;o<4;o=o+1) issue(groups[gg],r,o,0,0,0,0,(o==0 && groups[gg]==96));
     for(k=2;k<=8;k=k*2)issue(groups[gg],r,4,k,0,0,0,k>groups[gg]);
     // k=7/512/2048 CF-COLL selected rows, every owner/destination rank;
     for(j=0;j<3;j=j+1)begin

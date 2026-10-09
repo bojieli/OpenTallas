@@ -1,0 +1,5 @@
+TUCFG seed=1 rank=7 NC=2 NOG=4 PF=16 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=0.833333 TOT=8
+[1311000] %Fatal: tb_hbm_accel_tu_endpoint.sv:233: Assertion failed in tb_hbm_accel_tu_endpoint.unnamedblk11.chk: GROUP_ISOLATION rank=7 gi=12 OG=3
+%Error: rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv:233: Verilog $stop
+Aborting...
+leak neg +VEC=fx/g2 +PF=16 +RANK=7 +SEED=1
