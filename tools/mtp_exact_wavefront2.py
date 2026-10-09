@@ -75,7 +75,7 @@ def prepare(scratch: Path, gold_from: Path):
     t0 = time.time()
     scratch.mkdir(parents=True, exist_ok=True)
     model = V.Model()
-    lay = P.Layout(model)
+    lay = P.Layout(model, rollback_ring=(ORDER == "deep"))
     A.place_head_parts(lay)
     roms = scratch / "roms"
     if not (roms / "hbm_q.hex").exists():
@@ -98,9 +98,11 @@ def prepare(scratch: Path, gold_from: Path):
     if ORDER == "deep":
         # MR-5 worst case: the rejected position's successors are already in the pipeline (issued on the corrupted
         # context) when the rejection lands; they are squashed and re-issued after the corrected position
-        jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, BAD), (seq[4], 4), (seq[5], 5), (seq[3], 3), (seq[4], 4),
-                (seq[5], 5)]
-        clean_n = 6
+        # gamma=5: all five successors may have executed before acceptance reaches the stage.
+        jobs = [(seq[p], p) for p in range(BAD)] + [(bad, BAD)] + \
+               [(seq[p], p) for p in range(BAD + 1, BAD + 6)] + \
+               [(seq[p], p) for p in range(BAD, 12)]
+        clean_n = 12
     else:
         jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, BAD), (seq[3], 3), (seq[4], 4)]
         clean_n = 5
@@ -160,6 +162,9 @@ def prepare(scratch: Path, gold_from: Path):
                 program_instructions=[len(progs[k]) for k in KS], prepare_seconds=round(time.time() - t0, 1),
                 input_sha256={str(p_.relative_to(ROOT)): sha(p_) for p_ in [*W.sources(), Path(__file__)]})
     prep["order"] = ORDER
+    prep["compressor_ring_records"] = lay.ring
+    prep["rollback_storage_delta_bytes_per_package"] = 3 * (lay.ring - 2) * 64 * 4
+    prep["rollback_added_isa_instructions"] = 0
     (scratch / prep_name).write_text(json.dumps(prep, indent=1) + "\n")
     print(json.dumps({x: prep[x] for x in ("layers", "rxw", "txw", "jobs",
                                            "isa_squash_reissue_state_equals_clean_both_stages")}))
@@ -302,15 +307,17 @@ def analyse(text):
 
 
 def record(scratch: Path, output: Path):
-    prep = json.loads((scratch / "prepare_stage2.json").read_text())
+    pn = "prepare_stage2.json" if ORDER == "basic" else f"prepare_stage2_{ORDER}.json"
+    prep = json.loads((scratch / pn).read_text())
     res = dict(schema="opentallas.rtl.mtp_exact_wavefront2.v1", prepare=prep, runs={})
     for f in sorted(scratch.glob("run_stage2_*.json")):
         tag = f.stem[len("run_"):]
         meta = json.loads(f.read_text())
         a = analyse((scratch / f"out_{tag}.txt").read_text(errors="replace"))
         res["runs"][tag] = dict(meta=meta, **a)
-    w1 = res["runs"].get("stage2_wfc_w1", {})
-    w0 = res["runs"].get("stage2_wfc_w0") or res["runs"].get("stage2_wf_w0", {})
+    suffix = "" if ORDER == "basic" else f"_{ORDER}"
+    w1 = res["runs"].get(f"stage2_wfc_w1{suffix}", {})
+    w0 = res["runs"].get(f"stage2_wfc_w0{suffix}") or res["runs"].get(f"stage2_wf_w0{suffix}", {})
     res["pass"] = bool(w1.get("passed") and w1.get("out_mismatch") == 0 and w1.get("mismatches") == 0
                        and w1.get("state_mismatch") == 0 and w1.get("overlapping_job_pairs", 0) > 0
                        and (not w0 or not w0.get("passed")))
