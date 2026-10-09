@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-hm10-28efeed64-tt/routes/s81_hend_m221pq_hq_SW_pinreg_m5w_hm10_28efeed64_tt/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt/routes/s81_hend_m221pq_hq_SW_pinreg_m5w_dbcaa2606_tt/work/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design dsfd_l2r_vr_512x1__hq_SW\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 1111.1080 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core",
  "sdc_name": "6_final.sdc",
  "setup_tt": {
@@ -15,7 +15,7 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "9e45de4f411a94fb35eb29633aa7096dbe72f318107e233496c6f13ad604c77e",
-  "spef_sha256": "09b966b6a22420f0bb632c11060c98d02446994847772806f39d8aa6004f9b8a",
+  "spef_sha256": "d55b9ca34f0e3a1f3a7d9e929b13b51be272ba61f6e0deb8e9f02bc26ffabd47",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "4321cb7796ac23b1380133bd5172fdce051f2736eb910d22a58513b5583a3ba9"
  },
@@ -31,7 +31,7 @@
   "violating_d_pins": 449,
   "errors": [],
   "odb_sha256": "9e45de4f411a94fb35eb29633aa7096dbe72f318107e233496c6f13ad604c77e",
-  "spef_sha256": "09b966b6a22420f0bb632c11060c98d02446994847772806f39d8aa6004f9b8a",
+  "spef_sha256": "d55b9ca34f0e3a1f3a7d9e929b13b51be272ba61f6e0deb8e9f02bc26ffabd47",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "4321cb7796ac23b1380133bd5172fdce051f2736eb910d22a58513b5583a3ba9"
  },
@@ -47,7 +47,7 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "9e45de4f411a94fb35eb29633aa7096dbe72f318107e233496c6f13ad604c77e",
-  "spef_sha256": "09b966b6a22420f0bb632c11060c98d02446994847772806f39d8aa6004f9b8a",
+  "spef_sha256": "d55b9ca34f0e3a1f3a7d9e929b13b51be272ba61f6e0deb8e9f02bc26ffabd47",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "4321cb7796ac23b1380133bd5172fdce051f2736eb910d22a58513b5583a3ba9"
  },
