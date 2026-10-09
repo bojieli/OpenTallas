@@ -175,7 +175,11 @@ module ot_hgi_seq #(
     wire       in_lvl = (depth == 2'd2) ? lv_lvl[1] : lv_lvl[0];
     wire [15:0] in_cnt = (depth == 2'd2) ? lv_cnt[1] : lv_cnt[0];
     wire [15:0] in_ctr = in_lvl ? L1c : Lc;
-    wire       last_iter = (depth != 2'd0) && (in_ctr + 16'd1 == in_cnt);
+    wire       last_iter_c = (depth != 2'd0) && (in_ctr + 16'd1 == in_cnt);
+    // registered (route TT -403: Lc -> last / more -> the header evaluation -> u_v): the loop counters change only at
+    // LOOP / ENDLOOP, at least 3 edges before the next header is evaluated (S_DEC, S_H1, S_H2)
+    reg        last_iter;
+    always @(posedge clk) last_iter <= last_iter_c;
     reg  pred_ok;
     always @* case (h_pred) 2'd0: pred_ok = 1'b1; 2'd1: pred_ok = (pos == 0); 2'd2: pred_ok = (pos != 0);
                             default: pred_ok = last_iter; endcase
@@ -191,7 +195,9 @@ module ot_hgi_seq #(
         waitok = ((w & 16'hFFFE) & b) == 16'd0;
 `endif
     endfunction
-    assign busy = (st != S_IDLE) || (busy_u != 16'd0);
+    reg busy_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) busy_q <= 1'b0; else busy_q <= (st != S_IDLE) || (busy_u != 16'd0);
+    assign busy = busy_q;          // registered output (config E_BUSY: one cycle late is harmless)
     // ------------------------------------------------------------------ DYN
     // DS full-shape selectors: a free-running 4-stage registered bank from (pos, the record's slot, rank) -- the
     // values are valid 4 cycles after the header lands (dv_cnt); the address unit waits for it (timing: the
@@ -308,10 +314,12 @@ module ot_hgi_seq #(
     wire       top_lvl = lv_lvl[top[0]];
     wire [15:0] top_ctr = top_lvl ? L1c : Lc;
 `ifdef OT_HGI_SEQ_MUT_LOOP
-    wire more = top_ctr + 16'd2 < lv_cnt[top[0]];         // NEGATIVE CONTROL: one iteration short
+    wire more_c = top_ctr + 16'd2 < lv_cnt[top[0]];       // NEGATIVE CONTROL: one iteration short
 `else
-    wire more = top_ctr + 16'd1 < lv_cnt[top[0]];
+    wire more_c = top_ctr + 16'd1 < lv_cnt[top[0]];
 `endif
+    reg more;
+    always @(posedge clk) more <= more_c;                 // registered (see last_iter)
     // first present descriptor of 0..5 above j (7 = none)
     function automatic [2:0] nxt(input [6:0] o, input [3:0] j);
         integer q; begin nxt = 3'd7; for (q = 5; q >= 0; q = q - 1) if (o[q] && q > j) nxt = q[2:0]; end
