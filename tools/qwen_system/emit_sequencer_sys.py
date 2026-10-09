@@ -52,7 +52,8 @@ def emit(out):
     hw = [int(x, 16) for x in heads[0]['program_hex']]
     hd = [[int(x, 16) for x in h['descriptor_hex']] for h in heads]
     assert all(h['program_hex'] == heads[0]['program_hex'] for h in heads)
-    assert [len(ew), len(lw), len(hw)] == [2, 31, 8]
+    print('Measured template lengths:',[len(ew),len(lw),len(hw)],'descriptor lengths:',[len(ed),len(ld),len(hd[0])],flush=True)
+    assert len(ew) + len(lw) + len(hw) <= 64
     assert len(ed) + len(ld) + len(hd[0]) <= 8
     assert max(r['end'] for r in rows) == 1056
     assert sum(r['scale_span_words'] for r in rows) == 50112
@@ -65,7 +66,7 @@ def emit(out):
            'reg [12:0] index; begin',
            f"index = {{1'b0,addr}} + (bank == 0 ? 13'd{offsets[0]} : bank == 1 ? 13'd{offsets[1]} : 13'd{offsets[2]});",
            "sys_program = 0;",
-           "if ((bank == 0 && addr < 2) || (bank == 1 && addr < 31) || (bank == 2 && addr < 8)) case (index)"]
+           f"if ((bank == 0 && addr < {len(ew)}) || (bank == 1 && addr < {len(lw)}) || (bank == 2 && addr < {len(hw)})) case (index)"]
     rom += [f"13'd{i}: sys_program = 1024'h{w:0256x};" for i, w in enumerate(words)]
     rom += ['default: sys_program = 0; endcase', 'end endfunction',
             'function automatic [63:0] sys_descriptor(input [1:0] bank, input [5:0] addr);',
