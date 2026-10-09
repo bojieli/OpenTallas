@@ -275,7 +275,7 @@ def run(quick=False, no_mut=False) -> dict:
                            capture_output=True, text=True)
         lint[top] = {"returncode": r.returncode, "messages": r.stderr.strip().splitlines()[:10]}
     modes = {}
-    with tempfile.TemporaryDirectory(prefix="engram-lkp-", dir="/tmp/claude-1000") as scratch:
+    with tempfile.TemporaryDirectory(prefix="engram-lkp-") as scratch:
         s = Path(scratch)
         exes = {}
         for name, args, limit, bp in (MODES[:1] if quick else MODES):
