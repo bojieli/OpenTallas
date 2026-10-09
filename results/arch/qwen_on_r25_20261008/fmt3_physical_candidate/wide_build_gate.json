@@ -1,0 +1,67 @@
+{
+  "verdict": "PASS",
+  "source_commit": "f8b8bd3c9",
+  "scope": "productionfront_cfullsourceelaborationandthreewiderstrippinviews",
+  "geometries": {
+    "front_c": {
+      "piece": "front_c",
+      "variant": "one",
+      "die": [
+        570.24,
+        518.4
+      ],
+      "geom": {
+        "tile_w": 319.68,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 570.24,
+        "front_channel_um": 240.0,
+        "gap": 8.64,
+        "margin": 8.64
+      },
+      "pins": 12372
+    },
+    "front_n": {
+      "piece": "front_n",
+      "variant": "one",
+      "die": [
+        570.24,
+        354.24
+      ],
+      "geom": {
+        "tile_w": 319.68,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 570.24,
+        "front_channel_um": 240.0,
+        "gap": 8.64,
+        "margin": 8.64
+      },
+      "pins": 10832
+    },
+    "front_s": {
+      "piece": "front_s",
+      "variant": "one",
+      "die": [
+        570.24,
+        241.92
+      ],
+      "geom": {
+        "tile_w": 319.68,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 570.24,
+        "front_channel_um": 240.0,
+        "gap": 8.64,
+        "margin": 8.64
+      },
+      "pins": 5497
+    }
+  },
+  "pin_sha256": {
+    "front_c": "3329bdf153b7d915cc28dc235ae2ffb0f843fa0efdfd3647f86259ddd2ceab21",
+    "front_n": "3294460965ccfbe20bcb6a91438f38a245742595ffde4106129e4242a109f6bc",
+    "front_s": "e9422b642465762b85d0d7bea4dd62d8aff04acb880f1b8a75ccc0c835c8d6c7"
+  },
+  "die_model_admission": "pending root physicalhierarchy check"
+}
