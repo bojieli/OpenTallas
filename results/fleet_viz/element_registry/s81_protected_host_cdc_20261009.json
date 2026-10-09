@@ -96,6 +96,54 @@
         "status": "candidateprepared, notadoptedinnativewrapper",
         "evidence": []
       }
+    },
+    {
+      "element": "ot_s81_engram_aperture",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Protected explicit usable-capacity and deployed region installation, no address-width capacity inference",
+      "source": {
+        "commit": "e492b5f52",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/aperture_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pendingadmittedremotehostgoldengate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual inventory producer including key/window/CKV",
+        "two-stack Engram backend lease",
+        "four-stack RoPE coverage remains separate"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
     }
   ]
 }
