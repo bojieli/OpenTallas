@@ -1,0 +1,16 @@
+{
+  "approval": "REVIEW_20261009 review0400 R2 CONFIRMED0730, conservative2xCTS permitted; exactarchive hold superseded",
+  "host": "ot-epyc2",
+  "job": "qfd_io_xfifo-3d5ad2a4ftt",
+  "source": "3d5ad2a4f",
+  "phase": "4_1_cts",
+  "peak_kib": 5860460,
+  "peak_gib": 5.588970184326172,
+  "two_times_measured_cts_gib": 11.177940368652344,
+  "route_claim_gib": 16,
+  "claim_kind": "conservative R2-authorized estimate; NOT measuredDRT",
+  "log": "/srv/opentallas-data/claude/closure-loop/qfd_io_xfifo-3d5ad2a4ftt/routes/qfd_io_xfifo_3d5ad2a4ftt/work/orfs/logs/asap7/opentallas_ot_qwen_die_io_xfifo_asap7_qdm_qfd_io_xfifo_3d5ad2a4ftt/base/4_1_cts.log",
+  "sha256": "3ae619662503699004013eaac744f641923b3248c7dc1d7d835db99d58526b27",
+  "shape": "same400.008x1563.816/fiveCDCchannels/fourclocks; historicalPIPE0 versuspinnedPIPE2 explicit; onlyresource estimate, no closureinference",
+  "monitor": "currentphaseRSS/HWM monitoring by fleet; no perprocessRAMlimit/no restartprogressingjobs"
+}
