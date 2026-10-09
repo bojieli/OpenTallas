@@ -1,0 +1,38 @@
+{
+  "status": "TERMINAL_MAPPED_COMPONENT_ONLY_DESIGN_PARKED",
+  "source_commit": "c99c73326",
+  "evidence_parent_commit": "d3af8e607388b585d5dadb4ff3e6baebf44e0531",
+  "host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch/claude/emb-hub-sram-r1",
+  "guard": "/srv/opentallas-scratch/admit.sh 4 -- python3 map.py",
+  "script_sha256": "922c57ef98f71eaf41616bf3c30fd8bd7bb77e07b68fbde5891755481202c0d3",
+  "mapped_standardcell_area_um2": {
+    "one_link_baseline": 38799.24624,
+    "one_link_candidate": 4035.17538,
+    "four_link_composed_savings": 139056.28344
+  },
+  "macro_inventory": {
+    "actual_blackboxes_per_link": 3,
+    "logical_memories_postmap": 0,
+    "twelve_macro_area_um2_separate_from_std": 46698.92352
+  },
+  "peak_RSS_kB": {
+    "baseline": 1122620,
+    "candidate": 274692
+  },
+  "wall_time_seconds": {
+    "baseline": 114.13,
+    "candidate": 46.93
+  },
+  "area_gate": "PASS composed component savings>=72525.907936um2; full-hub postlayout savings/footprint NOT measured",
+  "owner_retraction": "All exploratory/new design assigned to Claude; F5 withdrawn unless Claude KVdiebudget becomes tight. Source parked, no adoption. This record only harvests pre-existing progressing job.",
+  "open": "Actual M4\u2192M6 offlinefp_lint/ODB, physical timing and native KV-die contract/placement remain OPEN. No next job authorized/launched.",
+  "retained_remote_objects": [
+    "map_r1/sram0/mapped.json",
+    "map_r1/sram0/mapped.v",
+    "map_r1/sram1/mapped.json",
+    "map_r1/sram1/mapped.v",
+    "map_r1/combined.lib"
+  ],
+  "active_handles": "None; original Python/Yosys jobs completed normally, not killed/restarted"
+}

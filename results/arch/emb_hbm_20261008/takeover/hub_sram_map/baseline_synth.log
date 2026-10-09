@@ -1,0 +1,1331 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch/claude/emb-hub-sram-r1/map_r1/sram0/synth.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/lib/ot_async_fifo.sv
+Parsing SystemVerilog input from `rtl/lib/ot_async_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/lib/ot_async_fifo.sv:91
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/qwen_sys/emb_hbm_20261008/ot_qfd_hub_sram_ingress.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/emb_hbm_20261008/ot_qfd_hub_sram_ingress.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_hub_sram_ingress'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_die_cdc_ch_sram'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \SRAM = 0
+Parameter \W = 523
+Parameter \IBUF = 128
+Parameter \OCRED = 8
+Parameter \AD = 8
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_die_cdc_ch_sram'.
+Parameter \SRAM = 0
+Parameter \W = 523
+Parameter \IBUF = 128
+Parameter \OCRED = 8
+Parameter \AD = 8
+Generating RTLIL representation for module `$paramod$647af3ba4e50b09ffdc7e00456e3e25be4c30f8a\ot_qwen_die_cdc_ch_sram'.
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Used module:     \ot_reset_sync
+Used module:     \ot_async_fifo
+Parameter \WIDTH = 523
+Parameter \DEPTH = 8
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_async_fifo'.
+Parameter \WIDTH = 523
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/lib/ot_async_fifo.sv:91
+
+7.3. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Used module:     \ot_reset_sync
+Used module:     $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo
+
+7.4. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Used module:     \ot_reset_sync
+Used module:     $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo
+Removing unused module `$paramod$647af3ba4e50b09ffdc7e00456e3e25be4c30f8a\ot_qwen_die_cdc_ch_sram'.
+Removing unused module `\ot_qfd_hub_sram_ingress'.
+Removing unused module `\ot_async_fifo'.
+Removed 3 unused modules.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Used module:     \ot_reset_sync
+Used module:     $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo
+
+8.1.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Used module:     \ot_reset_sync
+Used module:     $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo
+Removed 0 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:24$18100'.
+Removing empty process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:24$18100'.
+Cleaned up 1 empty switch.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$rtl/lib/ot_async_fifo.sv:70$18097 in module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:70$18097 in module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:98$18095 in module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+Marked 3 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:72$18087 in module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031 in module ot_qwen_die_cdc_ch_sram.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:68$18039 in module ot_qwen_die_cdc_ch_sram.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048 in module ot_qwen_die_cdc_ch_sram.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057 in module ot_qwen_die_cdc_ch_sram.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_reset_sync.sv:13$1 in module ot_reset_sync.
+Removed a total of 1 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 24 redundant assignments.
+Promoted 7 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rd_domain_rst_n in `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+Found async reset \wr_domain_rst_n in `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+Found async reset \rr_n in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+Found async reset \wr_n in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:68$18039'.
+Found async reset \wr_n in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+Found async reset \async_rst_n in `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~7 debug messages>
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:70$18097'.
+     1/1: $1$mem2reg_rd$\mem$rtl/lib/ot_async_fifo.sv:70$18067_DATA[522:0]$18099
+Creating decoders for process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+     1/9: $0\rd_empty[0:0]
+     2/9: $0\rd_gray[3:0]
+     3/9: $0\rd_bin[3:0]
+     4/9: $0\wr_gray_r2[3:0]
+     5/9: $0\wr_gray_r1[3:0]
+     6/9: $0\wr_online_r2[0:0]
+     7/9: $0\wr_online_r1[0:0]
+     8/9: $0\rd_online[0:0]
+     9/9: $0\rd_underflow[0:0]
+Creating decoders for process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+     1/21: $2$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_ADDR[2:0]$18093
+     2/21: $2$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_DATA[522:0]$18094
+     3/21: $0\wr_full[0:0]
+     4/21: $0\wr_gray[3:0]
+     5/21: $0\wr_bin[3:0]
+     6/21: $1$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_DATA[522:0]$18092
+     7/21: $1$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_ADDR[2:0]$18091
+     8/21: $0\rd_gray_w2[3:0]
+     9/21: $0\rd_gray_w1[3:0]
+    10/21: $0\rd_online_w2[0:0]
+    11/21: $0\rd_online_w1[0:0]
+    12/21: $0\wr_online[0:0]
+    13/21: $0\mem[7][522:0]
+    14/21: $0\mem[6][522:0]
+    15/21: $0\mem[5][522:0]
+    16/21: $0\mem[4][522:0]
+    17/21: $0\mem[3][522:0]
+    18/21: $0\mem[2][522:0]
+    19/21: $0\mem[1][522:0]
+    20/21: $0\mem[0][522:0]
+    21/21: $0\wr_overflow[0:0]
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+     1/4: $0\rf_q[0:0]
+     2/4: $0\cred[4:0]
+     3/4: $0\ov_q[0:0]
+     4/4: $0\ocr_q[0:0]
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:68$18039'.
+     1/1: $0\g_original_ingress.iv_q[0:0]
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:69$18041'.
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+     1/3: $1$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18056
+     2/3: $1$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_DATA[522:0]$18055
+     3/3: $1$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_ADDR[6:0]$18054
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+     1/4: $0\g_original_ingress.wf_q[0:0]
+     2/4: $0\g_original_ingress.cr_q[0:0]
+     3/4: $0\g_original_ingress.ir[7:0]
+     4/4: $0\g_original_ingress.iw[7:0]
+Creating decoders for process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:143$18066'.
+     1/1: $0\od_q[522:0]
+Creating decoders for process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+     1/1: $0\reset_pipe[1:0]
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$mem2reg_rd$\mem$rtl/lib/ot_async_fifo.sv:70$18067_DATA' from process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:70$18097'.
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_underflow' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18203' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_bin' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18208' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_gray' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18213' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_gray_r1' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18218' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_gray_r2' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18223' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_online' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18228' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_online_r1' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18233' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_online_r2' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18238' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_empty' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+  created $adff cell `$procdff$18243' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_overflow' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18248' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_bin' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18253' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_gray' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18258' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_gray_w1' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18263' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_gray_w2' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18268' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_online' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18273' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_online_w1' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18278' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\rd_online_w2' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18283' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\wr_full' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18288' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[0]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18295' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[1]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18302' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[2]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18309' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[3]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18316' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[4]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18323' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[5]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18330' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[6]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18337' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.\mem[7]' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $dff cell `$procdff$18344' with positive edge clock.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_ADDR' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18349' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:91$18068_DATA' using process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+  created $adff cell `$procdff$18354' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\ocr_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+  created $adff cell `$procdff$18359' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\ov_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+  created $adff cell `$procdff$18364' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\rf_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+  created $adff cell `$procdff$18369' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\cred' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+  created $adff cell `$procdff$18374' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.iv_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:68$18039'.
+  created $adff cell `$procdff$18379' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.id_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:69$18041'.
+  created $dff cell `$procdff$18380' with positive edge clock.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_ADDR' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+  created $dff cell `$procdff$18381' with positive edge clock.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_DATA' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+  created $dff cell `$procdff$18382' with positive edge clock.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+  created $dff cell `$procdff$18383' with positive edge clock.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.iw' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+  created $adff cell `$procdff$18388' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.ir' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+  created $adff cell `$procdff$18393' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.cr_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+  created $adff cell `$procdff$18398' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\g_original_ingress.wf_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+  created $adff cell `$procdff$18403' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_die_cdc_ch_sram.\od_q' using process `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:143$18066'.
+  created $dff cell `$procdff$18404' with positive edge clock.
+Creating register for signal `\ot_reset_sync.\reset_pipe' using process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+  created $adff cell `$procdff$18409' with positive edge clock and positive level reset.
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:70$18097'.
+Removing empty process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:70$18097'.
+Removing empty process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:98$18095'.
+Found and cleaned up 2 empty switches in `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+Removing empty process `$paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:72$18087'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:117$18031'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:68$18039'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:69$18041'.
+Found and cleaned up 1 empty switch in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18048'.
+Found and cleaned up 2 empty switches in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:77$18057'.
+Found and cleaned up 1 empty switch in `\ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:143$18066'.
+Removing empty process `ot_qwen_die_cdc_ch_sram.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:143$18066'.
+Removing empty process `ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+Cleaned up 7 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+<suppressed ~60 debug messages>
+Optimizing module ot_qwen_die_cdc_ch_sram.
+<suppressed ~19 debug messages>
+Optimizing module ot_reset_sync.
+<suppressed ~2 debug messages>
+
+8.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo...
+Checking module ot_qwen_die_cdc_ch_sram...
+Checking module ot_reset_sync...
+Found and reported 0 problems.
+
+8.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$58347781089f6f62c8bb23f717916a1820129f57\ot_async_fifo.
+Deleting now unused module ot_reset_sync.
+<suppressed ~5 debug messages>
+
+8.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 59 unused cells and 192 unused wires.
+<suppressed ~62 debug messages>
+
+8.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_die_cdc_ch_sram...
+Found and reported 0 problems.
+
+8.8. Executing OPT pass (performing simple optimizations).
+
+8.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 131 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 129 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 127 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+8.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45 debug messages>
+
+8.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+    Consolidated identical input bits for $mux cell $procmux$18185:
+      Old ports: A=523'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=523'1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, Y=$0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051
+      New ports: A=1'0, B=1'1, Y=$0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0]
+      New connections: $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [522:1] = { $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] $0$memwr$\g_original_ingress.ib$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:76$18028_EN[522:0]$18051 [0] }
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 1 changes.
+
+8.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 127 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+8.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45 debug messages>
+
+8.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 127 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.9. Executing FSM pass (extract and optimize FSM).
+
+8.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.10. Executing OPT pass (performing simple optimizations).
+
+8.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 127 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45 debug messages>
+
+8.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 127 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$18393 ($adff) from module ot_qwen_die_cdc_ch_sram (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:81$18062_Y, Q = \g_original_ingress.ir).
+Adding EN signal on $procdff$18404 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \af_d, Q = \od_q).
+Adding EN signal on $procdff$18388 ($adff) from module ot_qwen_die_cdc_ch_sram (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:80$18061_Y, Q = \g_original_ingress.iw).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18302 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[1]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18295 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[0]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18337 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[6]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18330 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[5]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18323 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[4]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18316 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[3]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18344 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[7]).
+Adding EN signal on $flatten\g_af.u_af.$procdff$18309 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_af.u_af.wr_data, Q = \g_af.u_af.mem[2]).
+
+8.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 27 unused cells and 27 unused wires.
+<suppressed ~28 debug messages>
+
+8.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 108 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_die_cdc_ch_sram.$sub$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18033 ($sub).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_die_cdc_ch_sram.$add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18034 ($add).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_die_cdc_ch_sram.$gt$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:123$18037 ($gt).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18169_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18158_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18148_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18108_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18107_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$procmux$18106_CMP0 ($eq).
+Removed top 1 bits (of 4) from port A of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$xor$rtl/lib/ot_async_fifo.sv:57$18077 ($xor).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:56$18075 ($add).
+Removed top 1 bits (of 4) from port A of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$xor$rtl/lib/ot_async_fifo.sv:54$18074 ($xor).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_die_cdc_ch_sram.$flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:53$18072 ($add).
+
+8.12. Executing PEEPOPT pass (run peephole optimizers).
+
+8.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_qwen_die_cdc_ch_sram:
+  creating $macc model for $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:56$18075 ($add).
+  creating $macc model for $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18033 ($sub).
+  creating $macc model for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18034 ($add).
+  creating $macc model for $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:53$18072 ($add).
+  creating $macc model for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:80$18061 ($add).
+  creating $macc model for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:81$18062 ($add).
+  merging $macc model for $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18033 into $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18034.
+  creating $alu model for $macc $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:80$18061.
+  creating $alu model for $macc $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:53$18072.
+  creating $alu model for $macc $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:81$18062.
+  creating $alu model for $macc $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:56$18075.
+  creating $macc cell for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:122$18034: $auto$alumacc.cc:399:replace_macc$18443
+  creating $alu model for $gt$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:123$18037 ($gt): new $alu
+  creating $alu cell for $gt$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:123$18037: $auto$alumacc.cc:548:replace_alu$18445
+  creating $alu cell for $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:56$18075: $auto$alumacc.cc:548:replace_alu$18456
+  creating $alu cell for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:81$18062: $auto$alumacc.cc:548:replace_alu$18459
+  creating $alu cell for $flatten\g_af.u_af.$add$rtl/lib/ot_async_fifo.sv:53$18072: $auto$alumacc.cc:548:replace_alu$18462
+  creating $alu cell for $add$rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv:80$18061: $auto$alumacc.cc:548:replace_alu$18465
+  created 5 $alu and 1 $macc cells.
+
+8.15. Executing SHARE pass (SAT-based resource sharing).
+
+8.16. Executing OPT pass (performing simple optimizations).
+
+8.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 112 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 112 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 1 unused cells and 2 unused wires.
+<suppressed ~2 debug messages>
+
+8.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 111 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.17. Executing MEMORY pass.
+
+8.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+  Analyzing ot_qwen_die_cdc_ch_sram.g_original_ingress.ib write port 0.
+
+8.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+Checking read port `\g_original_ingress.ib'[0] in module `\ot_qwen_die_cdc_ch_sram': no output FF found.
+Checking read port address `\g_original_ingress.ib'[0] in module `\ot_qwen_die_cdc_ch_sram': address FF has async set and/or reset, not supported.
+
+8.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.19. Executing OPT pass (performing simple optimizations).
+
+8.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+<suppressed ~15 debug messages>
+
+8.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 110 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 1 unused cells and 11 unused wires.
+<suppressed ~2 debug messages>
+
+8.19.5. Finished fast OPT passes.
+
+8.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \g_original_ingress.ib in module \ot_qwen_die_cdc_ch_sram:
+  created 128 $dff cells and 0 static cells of width 523.
+  read interface: 0 $dff and 127 $mux cells.
+  write interface: 128 write mux blocks.
+
+8.21. Executing OPT pass (performing simple optimizations).
+
+8.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+<suppressed ~14 debug messages>
+
+8.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 790 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~386 debug messages>
+
+8.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 790 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.21.6. Executing OPT_SHARE pass.
+
+8.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 0 unused cells and 263 unused wires.
+<suppressed ~1 debug messages>
+
+8.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~386 debug messages>
+
+8.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 790 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.21.14. Executing OPT_SHARE pass.
+
+8.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\g_original_ingress.ib[0]$18482 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[0]).
+Adding EN signal on $memory\g_original_ingress.ib[1]$18484 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[1]).
+Adding EN signal on $memory\g_original_ingress.ib[2]$18486 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[2]).
+Adding EN signal on $memory\g_original_ingress.ib[3]$18488 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[3]).
+Adding EN signal on $memory\g_original_ingress.ib[4]$18490 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[4]).
+Adding EN signal on $memory\g_original_ingress.ib[5]$18492 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[5]).
+Adding EN signal on $memory\g_original_ingress.ib[6]$18494 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[6]).
+Adding EN signal on $memory\g_original_ingress.ib[7]$18496 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[7]).
+Adding EN signal on $memory\g_original_ingress.ib[8]$18498 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[8]).
+Adding EN signal on $memory\g_original_ingress.ib[9]$18500 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[9]).
+Adding EN signal on $memory\g_original_ingress.ib[10]$18502 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[10]).
+Adding EN signal on $memory\g_original_ingress.ib[11]$18504 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[11]).
+Adding EN signal on $memory\g_original_ingress.ib[12]$18506 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[12]).
+Adding EN signal on $memory\g_original_ingress.ib[13]$18508 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[13]).
+Adding EN signal on $memory\g_original_ingress.ib[14]$18510 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[14]).
+Adding EN signal on $memory\g_original_ingress.ib[15]$18512 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[15]).
+Adding EN signal on $memory\g_original_ingress.ib[16]$18514 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[16]).
+Adding EN signal on $memory\g_original_ingress.ib[17]$18516 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[17]).
+Adding EN signal on $memory\g_original_ingress.ib[18]$18518 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[18]).
+Adding EN signal on $memory\g_original_ingress.ib[19]$18520 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[19]).
+Adding EN signal on $memory\g_original_ingress.ib[20]$18522 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[20]).
+Adding EN signal on $memory\g_original_ingress.ib[21]$18524 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[21]).
+Adding EN signal on $memory\g_original_ingress.ib[22]$18526 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[22]).
+Adding EN signal on $memory\g_original_ingress.ib[23]$18528 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[23]).
+Adding EN signal on $memory\g_original_ingress.ib[24]$18530 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[24]).
+Adding EN signal on $memory\g_original_ingress.ib[25]$18532 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[25]).
+Adding EN signal on $memory\g_original_ingress.ib[26]$18534 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[26]).
+Adding EN signal on $memory\g_original_ingress.ib[27]$18536 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[27]).
+Adding EN signal on $memory\g_original_ingress.ib[28]$18538 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[28]).
+Adding EN signal on $memory\g_original_ingress.ib[29]$18540 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[29]).
+Adding EN signal on $memory\g_original_ingress.ib[30]$18542 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[30]).
+Adding EN signal on $memory\g_original_ingress.ib[31]$18544 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[31]).
+Adding EN signal on $memory\g_original_ingress.ib[32]$18546 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[32]).
+Adding EN signal on $memory\g_original_ingress.ib[33]$18548 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[33]).
+Adding EN signal on $memory\g_original_ingress.ib[34]$18550 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[34]).
+Adding EN signal on $memory\g_original_ingress.ib[35]$18552 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[35]).
+Adding EN signal on $memory\g_original_ingress.ib[36]$18554 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[36]).
+Adding EN signal on $memory\g_original_ingress.ib[37]$18556 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[37]).
+Adding EN signal on $memory\g_original_ingress.ib[38]$18558 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[38]).
+Adding EN signal on $memory\g_original_ingress.ib[39]$18560 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[39]).
+Adding EN signal on $memory\g_original_ingress.ib[40]$18562 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[40]).
+Adding EN signal on $memory\g_original_ingress.ib[41]$18564 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[41]).
+Adding EN signal on $memory\g_original_ingress.ib[42]$18566 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[42]).
+Adding EN signal on $memory\g_original_ingress.ib[43]$18568 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[43]).
+Adding EN signal on $memory\g_original_ingress.ib[44]$18570 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[44]).
+Adding EN signal on $memory\g_original_ingress.ib[45]$18572 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[45]).
+Adding EN signal on $memory\g_original_ingress.ib[46]$18574 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[46]).
+Adding EN signal on $memory\g_original_ingress.ib[47]$18576 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[47]).
+Adding EN signal on $memory\g_original_ingress.ib[48]$18578 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[48]).
+Adding EN signal on $memory\g_original_ingress.ib[49]$18580 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[49]).
+Adding EN signal on $memory\g_original_ingress.ib[50]$18582 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[50]).
+Adding EN signal on $memory\g_original_ingress.ib[51]$18584 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[51]).
+Adding EN signal on $memory\g_original_ingress.ib[52]$18586 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[52]).
+Adding EN signal on $memory\g_original_ingress.ib[53]$18588 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[53]).
+Adding EN signal on $memory\g_original_ingress.ib[54]$18590 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[54]).
+Adding EN signal on $memory\g_original_ingress.ib[55]$18592 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[55]).
+Adding EN signal on $memory\g_original_ingress.ib[56]$18594 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[56]).
+Adding EN signal on $memory\g_original_ingress.ib[57]$18596 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[57]).
+Adding EN signal on $memory\g_original_ingress.ib[58]$18598 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[58]).
+Adding EN signal on $memory\g_original_ingress.ib[59]$18600 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[59]).
+Adding EN signal on $memory\g_original_ingress.ib[60]$18602 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[60]).
+Adding EN signal on $memory\g_original_ingress.ib[61]$18604 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[61]).
+Adding EN signal on $memory\g_original_ingress.ib[62]$18606 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[62]).
+Adding EN signal on $memory\g_original_ingress.ib[63]$18608 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[63]).
+Adding EN signal on $memory\g_original_ingress.ib[64]$18610 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[64]).
+Adding EN signal on $memory\g_original_ingress.ib[65]$18612 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[65]).
+Adding EN signal on $memory\g_original_ingress.ib[66]$18614 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[66]).
+Adding EN signal on $memory\g_original_ingress.ib[67]$18616 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[67]).
+Adding EN signal on $memory\g_original_ingress.ib[68]$18618 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[68]).
+Adding EN signal on $memory\g_original_ingress.ib[69]$18620 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[69]).
+Adding EN signal on $memory\g_original_ingress.ib[70]$18622 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[70]).
+Adding EN signal on $memory\g_original_ingress.ib[71]$18624 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[71]).
+Adding EN signal on $memory\g_original_ingress.ib[72]$18626 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[72]).
+Adding EN signal on $memory\g_original_ingress.ib[73]$18628 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[73]).
+Adding EN signal on $memory\g_original_ingress.ib[74]$18630 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[74]).
+Adding EN signal on $memory\g_original_ingress.ib[75]$18632 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[75]).
+Adding EN signal on $memory\g_original_ingress.ib[76]$18634 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[76]).
+Adding EN signal on $memory\g_original_ingress.ib[77]$18636 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[77]).
+Adding EN signal on $memory\g_original_ingress.ib[78]$18638 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[78]).
+Adding EN signal on $memory\g_original_ingress.ib[79]$18640 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[79]).
+Adding EN signal on $memory\g_original_ingress.ib[80]$18642 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[80]).
+Adding EN signal on $memory\g_original_ingress.ib[81]$18644 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[81]).
+Adding EN signal on $memory\g_original_ingress.ib[82]$18646 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[82]).
+Adding EN signal on $memory\g_original_ingress.ib[83]$18648 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[83]).
+Adding EN signal on $memory\g_original_ingress.ib[84]$18650 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[84]).
+Adding EN signal on $memory\g_original_ingress.ib[85]$18652 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[85]).
+Adding EN signal on $memory\g_original_ingress.ib[86]$18654 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[86]).
+Adding EN signal on $memory\g_original_ingress.ib[87]$18656 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[87]).
+Adding EN signal on $memory\g_original_ingress.ib[88]$18658 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[88]).
+Adding EN signal on $memory\g_original_ingress.ib[89]$18660 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[89]).
+Adding EN signal on $memory\g_original_ingress.ib[90]$18662 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[90]).
+Adding EN signal on $memory\g_original_ingress.ib[91]$18664 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[91]).
+Adding EN signal on $memory\g_original_ingress.ib[92]$18666 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[92]).
+Adding EN signal on $memory\g_original_ingress.ib[93]$18668 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[93]).
+Adding EN signal on $memory\g_original_ingress.ib[94]$18670 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[94]).
+Adding EN signal on $memory\g_original_ingress.ib[95]$18672 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[95]).
+Adding EN signal on $memory\g_original_ingress.ib[96]$18674 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[96]).
+Adding EN signal on $memory\g_original_ingress.ib[97]$18676 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[97]).
+Adding EN signal on $memory\g_original_ingress.ib[98]$18678 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[98]).
+Adding EN signal on $memory\g_original_ingress.ib[99]$18680 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[99]).
+Adding EN signal on $memory\g_original_ingress.ib[100]$18682 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[100]).
+Adding EN signal on $memory\g_original_ingress.ib[101]$18684 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[101]).
+Adding EN signal on $memory\g_original_ingress.ib[102]$18686 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[102]).
+Adding EN signal on $memory\g_original_ingress.ib[103]$18688 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[103]).
+Adding EN signal on $memory\g_original_ingress.ib[104]$18690 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[104]).
+Adding EN signal on $memory\g_original_ingress.ib[105]$18692 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[105]).
+Adding EN signal on $memory\g_original_ingress.ib[106]$18694 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[106]).
+Adding EN signal on $memory\g_original_ingress.ib[107]$18696 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[107]).
+Adding EN signal on $memory\g_original_ingress.ib[108]$18698 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[108]).
+Adding EN signal on $memory\g_original_ingress.ib[109]$18700 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[109]).
+Adding EN signal on $memory\g_original_ingress.ib[110]$18702 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[110]).
+Adding EN signal on $memory\g_original_ingress.ib[111]$18704 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[111]).
+Adding EN signal on $memory\g_original_ingress.ib[112]$18706 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[112]).
+Adding EN signal on $memory\g_original_ingress.ib[113]$18708 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[113]).
+Adding EN signal on $memory\g_original_ingress.ib[114]$18710 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[114]).
+Adding EN signal on $memory\g_original_ingress.ib[115]$18712 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[115]).
+Adding EN signal on $memory\g_original_ingress.ib[116]$18714 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[116]).
+Adding EN signal on $memory\g_original_ingress.ib[117]$18716 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[117]).
+Adding EN signal on $memory\g_original_ingress.ib[118]$18718 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[118]).
+Adding EN signal on $memory\g_original_ingress.ib[119]$18720 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[119]).
+Adding EN signal on $memory\g_original_ingress.ib[120]$18722 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[120]).
+Adding EN signal on $memory\g_original_ingress.ib[121]$18724 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[121]).
+Adding EN signal on $memory\g_original_ingress.ib[122]$18726 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[122]).
+Adding EN signal on $memory\g_original_ingress.ib[123]$18728 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[123]).
+Adding EN signal on $memory\g_original_ingress.ib[124]$18730 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[124]).
+Adding EN signal on $memory\g_original_ingress.ib[125]$18732 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[125]).
+Adding EN signal on $memory\g_original_ingress.ib[126]$18734 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[126]).
+Adding EN signal on $memory\g_original_ingress.ib[127]$18736 ($dff) from module ot_qwen_die_cdc_ch_sram (D = \g_original_ingress.id_q, Q = \g_original_ingress.ib[127]).
+
+8.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 128 unused cells and 128 unused wires.
+<suppressed ~129 debug messages>
+
+8.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.21.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.21.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_cdc_ch_sram..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~130 debug messages>
+
+8.21.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_cdc_ch_sram.
+Performed a total of 0 changes.
+
+8.21.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 662 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.21.22. Executing OPT_SHARE pass.
+
+8.21.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+
+8.21.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+
+8.21.26. Finished fast OPT passes. (There is nothing left to do.)
+
+8.22. Executing TECHMAP pass (map to technology primitives).
+
+8.22.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$c3cd1564c35d873179656addd6052d7ea8b6d991\_90_alu for cells of type $alu.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \cred (5 bits, unsigned)
+  add \ocr_q (1 bits, unsigned)
+  sub \g_af.u_af.rd_ready (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $pmux.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1476 debug messages>
+
+8.23. Executing OPT pass (performing simple optimizations).
+
+8.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+<suppressed ~308 debug messages>
+
+8.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 146596 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 146549 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 146540 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 146539 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+<suppressed ~171 debug messages>
+Removed a total of 57 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 28 unused cells and 383 unused wires.
+<suppressed ~30 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\ot_qwen_die_cdc_ch_sram' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 74259 gates and 145436 wires to a netlist network with 71177 inputs and 1225 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:    40033
+ABC RESULTS:            ANDNOT cells:      725
+ABC RESULTS:               MUX cells:    20346
+ABC RESULTS:              NAND cells:    64302
+ABC RESULTS:               NOR cells:     6589
+ABC RESULTS:               NOT cells:        7
+ABC RESULTS:                OR cells:     1220
+ABC RESULTS:             ORNOT cells:    16741
+ABC RESULTS:              XNOR cells:       30
+ABC RESULTS:               XOR cells:       14
+ABC RESULTS:        internal signals:    73034
+ABC RESULTS:           input signals:    71177
+ABC RESULTS:          output signals:     1225
+Removing temp directory.
+Removing global temp directory.
+
+8.25. Executing OPT pass (performing simple optimizations).
+
+8.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_cdc_ch_sram.
+<suppressed ~1570 debug messages>
+
+8.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_cdc_ch_sram'.
+Computing hashes of 222259 cells of `\ot_qwen_die_cdc_ch_sram'.
+Finding duplicate cells in `\ot_qwen_die_cdc_ch_sram'.
+Removed a total of 0 cells.
+
+8.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_cdc_ch_sram..
+Removed 0 unused cells and 78043 unused wires.
+<suppressed ~8 debug messages>
+
+8.25.5. Finished fast OPT passes.
+
+8.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_qwen_die_cdc_ch_sram'. Setting top module to ot_qwen_die_cdc_ch_sram.
+
+8.26.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+
+8.26.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_cdc_ch_sram
+Removed 0 unused modules.
+
+8.27. Printing statistics.
+
+=== ot_qwen_die_cdc_ch_sram ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   149146 wires
+   225459 wire bits
+      218 public wires
+    75972 public wire bits
+       12 ports
+     1056 port bits
+   222259 cells
+      725   $_ANDNOT_
+    40033   $_AND_
+       16   $_DFFE_PN0P_
+    71651   $_DFFE_PP_
+       55   $_DFF_PN0_
+        2   $_DFF_PN1_
+      523   $_DFF_P_
+    20346   $_MUX_
+    64302   $_NAND_
+     6589   $_NOR_
+        7   $_NOT_
+    16741   $_ORNOT_
+     1220   $_OR_
+       30   $_XNOR_
+       14   $_XOR_
+        5   $scopeinfo
+
+8.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_die_cdc_ch_sram...
+Found and reported 0 problems.
+
+9. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+9.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_qwen_die_cdc_ch_sram':
+  mapped 73 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 72174 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+10. Executing ABC pass (technology mapping using ABC).
+
+10.1. Extracting gate netlist of module `\ot_qwen_die_cdc_ch_sram' to `<abc-temp-dir>/input.blif'..
+
+10.1.1. Executed ABC.
+Extracted 293921 gates and 366168 wires to a netlist network with 72247 inputs and 72248 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_d2fa5a80.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+10.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:     7684
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:     1046
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:    44493
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:       13
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:     1712
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:    23889
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:      203
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:      127
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:      177
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:     1071
+ABC RESULTS:   AOI321xp33_ASAP7_75t_R cells:      233
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:      166
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:    19020
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     8193
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      666
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:    27036
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      552
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:       53
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:       83
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:     3015
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       91
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      990
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:     6385
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:    59316
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:    14764
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:      651
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:     1954
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:     1107
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:      273
+ABC RESULTS:   OAI321xp33_ASAP7_75t_R cells:      130
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:      197
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:     7469
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:     1036
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       38
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:        6
+ABC RESULTS:        internal signals:   221673
+ABC RESULTS:           input signals:    72247
+ABC RESULTS:          output signals:    72248
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 293570 unused wires.
+
+11. Printing statistics.
+
+=== ot_qwen_die_cdc_ch_sram ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   305584        - wires
+   307721        - wire bits
+       66        - public wires
+     2194        - public wire bits
+       12        - ports
+     1056        - port bits
+   306099 3.88E+04 cells
+        5        -   $scopeinfo
+     7684  672.196   A2O1A1Ixp33_ASAP7_75t_R
+     1046  137.256   A2O1A1O1Ixp25_ASAP7_75t_R
+        3    0.262   AND2x2_ASAP7_75t_R
+    44493 3.89E+03   AO21x1_ASAP7_75t_R
+        1    0.146   AO221x1_ASAP7_75t_R
+       13    3.033   AO31x2_ASAP7_75t_R
+        3     0.35   AO32x1_ASAP7_75t_R
+     1712  149.766   AOI211xp5_ASAP7_75t_R
+    23889 1.74E+03   AOI21xp33_ASAP7_75t_R
+      203   20.718   AOI221xp5_ASAP7_75t_R
+      127    11.11   AOI22xp33_ASAP7_75t_R
+      177   18.065   AOI311xp33_ASAP7_75t_R
+     1071   93.691   AOI31xp33_ASAP7_75t_R
+      233   27.177   AOI321xp33_ASAP7_75t_R
+      166   16.942   AOI32xp33_ASAP7_75t_R
+       73   27.673   DFFASRHQNx1_ASAP7_75t_R
+    72174  2.1E+04   DFFHQNx1_ASAP7_75t_R
+    19020  831.935   INVx1_ASAP7_75t_R
+     8193  477.816   NAND2xp33_ASAP7_75t_R
+      666   48.551   NAND3xp33_ASAP7_75t_R
+        1    0.087   NAND4xp25_ASAP7_75t_R
+    27036  1576.74   NOR2xp33_ASAP7_75t_R
+      552   40.241   NOR3xp33_ASAP7_75t_R
+       53    4.636   NOR4xp25_ASAP7_75t_R
+       83    8.471   NOR5xp2_ASAP7_75t_R
+     3015  263.752   O2A1O1Ixp33_ASAP7_75t_R
+       91   10.614   OA211x2_ASAP7_75t_R
+      990  101.039   OA21x2_ASAP7_75t_R
+     6385   558.56   OAI211xp5_ASAP7_75t_R
+    59316 4.32E+03   OAI21xp33_ASAP7_75t_R
+    14764 1.51E+03   OAI221xp5_ASAP7_75t_R
+      651   94.916   OAI222xp33_ASAP7_75t_R
+     1954  170.936   OAI22xp33_ASAP7_75t_R
+     1107   112.98   OAI311xp33_ASAP7_75t_R
+      273   23.882   OAI31xp33_ASAP7_75t_R
+      130   15.163   OAI321xp33_ASAP7_75t_R
+      197   20.106   OAI32xp33_ASAP7_75t_R
+     7469  653.388   OR2x2_ASAP7_75t_R
+     1036   90.629   OR3x1_ASAP7_75t_R
+       38    4.986   XNOR2xp5_ASAP7_75t_R
+        6    0.787   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_qwen_die_cdc_ch_sram': 38799.246240
+     of which used for sequential elements: 21073.611240 (54.31%)
+
+12. Executing JSON backend.
+
+13. Executing Verilog backend.
+
+13.1. Executing BMUXMAP pass.
+
+13.2. Executing DEMUXMAP pass.
+Dumping module `\ot_qwen_die_cdc_ch_sram'.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: dc45b7c054, time: 113.67s, user: 54.41s, system: 1.51s, MEM: 1096.31 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 59% 2x abc (72 sec), 20% 7x read_verilog (25 sec), ...
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /srv/opentallas-scratch/claude/emb-hub-sram-r1/map_r1/sram0/synth.ys"
+	User time (seconds): 120.46
+	System time (seconds): 2.12
+	Percent of CPU this job got: 107%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:54.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1122620
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 879327
+	Voluntary context switches: 103148
+	Involuntary context switches: 32877
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 381616
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
