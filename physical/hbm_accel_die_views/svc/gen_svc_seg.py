@@ -467,8 +467,14 @@ def build(pl):
             # 197 short / 124 spacing at the W-face pins): alternate M4 / M6 per bit (0.192 um a layer, the submit lint's
             # pin_balance rule); both faces of a cut come from this one plan, so the abutment still matches
             lay_ = (lambda k: 'M4' if k % 2 == 0 else 'M6') if PS else (lambda k: 'M4')
-            pins_ = [[f'{nm_}[{k}]', lay_(k), round(xa_, 4), round(f['y0'] + k * PITCH, 4), round(xb_, 4),
-                      round(f['y0'] + k * PITCH + 0.024, 4)] for k in range(f['bits'])]
+
+            def pin_(k):     # M4: 0.024-um pins on the 0.048 grid; M6: 0.032-um (min width) pins on its 0.064 track grid
+                y_ = f['y0'] + k * PITCH
+                if lay_(k) == 'M6':
+                    y_ = round(y_ / 0.064) * 0.064
+                    return [f'{nm_}[{k}]', 'M6', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.032, 4)]
+                return [f'{nm_}[{k}]', 'M4', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.024, 4)]
+            pins_ = [pin_(k) for k in range(f['bits'])]
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',
                               dir_segments=[[0, f['bits'], d_]], direction='output' if d_ == 'out' else 'input')
