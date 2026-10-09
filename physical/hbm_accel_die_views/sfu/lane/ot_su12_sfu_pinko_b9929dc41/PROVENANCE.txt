@@ -1,0 +1,9 @@
+# ot_su12_sfu PINKO lane view (screening input for the hfd_sfu quarter)
+
+LEF + SS/FF Liberty exported from closure-loop job hbm_sfu_lane_ring3ko_b9929dc41 (EPYC2, route rc=0): SFU lane RING3 +
+PINKO (M3/M5 keepout beside every lane signal pin through GRT/DRT, removed after DRT), the lane-side fix for the r24
+hfd_sfu quarter crash (DRT-0073 on u_lane_*/ce_imm1[11]: the old lane abstract's M3/M5 OBS covered the M4 pin stubs).
+That lane route is NOT closed (TT +248.16 / FF -11.54 / DRC 414, lane-internal); the closing lane job is
+hbm_sfu_lane_ring3ko_tt_fa2d9e454. ot_su12_sfu_tt.lib here is a COPY of the SS lib (conservative TT stand-in; no TT
+export of this route exists). Quarter routes that use this view are pin-access / r24p-face screening only: re-drop with the
+closed ring3ko_tt view before adoption.

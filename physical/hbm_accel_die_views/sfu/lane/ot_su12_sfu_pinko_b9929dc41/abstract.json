@@ -1,0 +1,66 @@
+{
+  "name": "ot_su12_sfu",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/src/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/routes/hbm_sfu_lane_ring3ko_b9929dc41/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/src/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3ko_b9929dc41/src/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc",
+    "sha256": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_su12_sfu.lef": "fa452d853c1b8b6713e1291fe54ddfcbf9259151e2d3578d2613dd7eedfdf6fa",
+    "ot_su12_sfu_ff.lib": "d49f95fe7bf43ce362480fa1152ee7035176dde98ad8d22c16be4202a778cac1",
+    "ot_su12_sfu_ss.lib": "e32b9e7d70e955837e03a7cb413f7617fd6dd4f3d3d50e09a82dc8e40d743c45"
+  },
+  "ok": true
+}
