@@ -86,3 +86,14 @@ def private_operand_model():
       "transport_latency_status":"actual BF16 producer pins, pipelined stations and CDC pending; no overlap credit",
       "model_scope":"privateFNandBF16flatoperandlanding; fullshapeRTLpass; actualclockcontextpending"})
     return row
+
+def epoch_operand_model():
+    row=private_operand_model()
+    row.update({"FN_epoch_enable_default":False,"FN_epoch_command_lease_bits":16,
+      "FN_request_boundary_bits":61,"FN_response_boundary_bits":286,
+      "all_external_signal_tracks_min":773,"FN_epoch_control_state_bits":16,
+      "FN_epoch_check":"16-bit equality before sector acceptance and write pipeline; stale/wrong epoch faults without commit",
+      "FN_epoch_added_functional_cycles":0,
+      "physical_scope":"new leased port layout and comparator not qualified; prior40/64 jobs immutable",
+      "exact_gate":"pending full K20480 W32 realFP baseline and wrong/late epoch negative gates"})
+    return row
