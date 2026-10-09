@@ -14113,3 +14113,8 @@ def hbm_loader_external_core_clock_model(nd=2, aw=3):
 def hbm_native_operation_backend_slot_model(context):
     from hbm_native_backend_slot import model
     return model(context)
+
+
+def hbm_native_source_write_contract_model():
+    from hbm_native_write_contract import model
+    return model()
