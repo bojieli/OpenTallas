@@ -53,7 +53,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--single', help='run one system case (e.g. R_mutant_done_not_held) and exit with its raw simulation '
+                                     'rc (closure-loop expect=fail bench); --out is then the case log')
     a = ap.parse_args()
+    if a.single:
+        a.work.mkdir(parents=True, exist_ok=True)
+        params = {'R_system_positive': (), 'R_mutant_done_not_held': ('MUT=1',), 'R_mutant_hostdone_not_held': ('MUT=2',),
+                  'R_mutant_am_fifo_only': ('MUT=3',), 'R_mutant_prl2': ('PRL=2',)}[a.single]
+        sysb = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R]]
+        c = run(a.work, a.single, 'tb_hbm_native_mtp_mx1_regb_system', sysb, params)
+        a.out.write_text(json.dumps(c, indent=2) + '\n')
+        print(c['output'][-1500:])
+        if c.get('phase') == 'compile':
+            raise SystemExit('compile error (not a functional failure)')   # a compile error must not pass a fail bench
+        print(f"MX1_REGB_CASE {a.single} rc={c['returncode']}")
+        raise SystemExit(c['returncode'])
     if a.out.exists():
         raise SystemExit('immutable output exists')
     a.work.mkdir(parents=True, exist_ok=True)
