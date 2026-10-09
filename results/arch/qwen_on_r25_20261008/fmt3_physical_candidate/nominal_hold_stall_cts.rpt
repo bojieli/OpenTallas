@@ -1,0 +1,9 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=hold repair over 3.0 h
+chunks (wns_ps tns_ps viol_endpoints): {-96.9 -129315.7 7629.0} {-74.0 -10241.1 883.0} {-28.4 -288.0 36.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+R2R           36     -28.4  g_side[1].g_rs[1].g_in.u_a.g_p.u_d/q[580]$_DFF_P_/QN -> g_side[1].g_rs[1].g_in.u_m.g_p.u_d/q[580]$_DFF_P_/D
+top pin groups (class start -> end, bus indices folded):
+     11      -9.1  R2R g_side[*].g_rs[*].g_in.u_p.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_o.g_p.u_d/q[*]$_DFF_P_/D
+     10     -27.7  R2R g_h[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/D
+      8     -28.4  R2R g_side[*].g_rs[*].g_in.u_a.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/D
+      7     -27.9  R2R g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_p.g_p.u_d/q[*]$_DFF_P_/D
