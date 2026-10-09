@@ -101,7 +101,8 @@ module ot_hgi_fused_record #(
     function automatic [127:0] suh(input [6:0] opnd);
         suh = {4'd2, 6'd0, 16'd0, 2'd0, opnd, 1'b1, 92'd0};
     endfunction
-    wire [17:0] g_b = cfg_scratch, s1_b = cfg_scratch + d[17:0], s2_b = s1_b + nseg[15:0];
+    reg  [17:0] scr_q; always @(posedge clk) scr_q <= cfg_scratch;      // static strap, registered
+    wire [17:0] g_b = scr_q, s1_b = cfg_scratch + d[17:0], s2_b = s1_b + nseg[15:0];
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

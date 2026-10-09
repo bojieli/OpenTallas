@@ -52,7 +52,7 @@ module ot_hgi_dma_mover #(
     assign k_req_tag = 16'h4D56;
     assign k_rsp_rdy = 1'b1;
     // ---- command
-    reg busy;
+    reg busy, mv_go; reg [226:0] mvq;
     reg [1:0] ssp, dsp; reg [2:0] sf, df; reg [39:0] sb, db; reg [31:0] sst, dst; reg [15:0] sis, dis;
     reg [19:0] mm; reg [20:0] nn;
     assign mv_rdy = !busy && !mv_fault;
@@ -160,7 +160,7 @@ module ot_hgi_dma_mover #(
     always @(posedge clk) begin kv_r <= k_rsp_v; kwe_r <= k_rsp_we; kd_r <= k_rsp_data; kf_r <= k_fault; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; k_req_v <= 1'b0; vmq <= 338'd0;
+            busy <= 1'b0; mv_go <= 1'b0; mvq <= 227'd0; mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; k_req_v <= 1'b0; vmq <= 338'd0;
             sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 3'd0; rd_pend <= 1'b0; wr_pend <= 1'b0; o <= 0; i <= 0;
             k_req_we <= 1'b0; k_req_addr <= 0; k_req_wdata <= 0; k_req_wstrb <= 0;
         end else begin
@@ -168,15 +168,17 @@ module ot_hgi_dma_mover #(
             if (k_req_v && k_req_rdy) k_req_v <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
             if (kf_r) mv_fault <= 1'b1;
-            if (mv_v && mv_rdy) begin
-                {nn, mm, dis, dst, db, df, dsp, sis, sst, sb, sf, ssp} <= mv;
+            if (mv_v && mv_rdy) begin mvq <= mv; mv_go <= 1'b1; busy <= 1'b1; ph <= 3'd5; end   // input register
+            if (mv_go) begin
+                mv_go <= 1'b0;
+                {nn, mm, dis, dst, db, df, dsp, sis, sst, sb, sf, ssp} <= mvq;
                 busy <= 1'b1; o <= 0; i <= 0; sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 3'd0;
-                srow <= (mv[1:0] == 2'd1) ? {mv[44:5], 2'b00} : {2'd0, mv[44:5]};
-                sa   <= (mv[1:0] == 2'd1) ? {mv[44:5], 2'b00} : {2'd0, mv[44:5]};
-                drow <= (mv[94:93] == 2'd1) ? {mv[137:98], 2'b00} : {2'd0, mv[137:98]};
-                da   <= (mv[94:93] == 2'd1) ? {mv[137:98], 2'b00} : {2'd0, mv[137:98]};
-                if ((mv[1:0] > 2'd1) || (mv[94:93] > 2'd1) || mv[4:2] == 3'd3 || mv[4:2] == 3'd6 || mv[97:95] == 3'd3 ||
-                    mv[97:95] == 3'd6 || mv[97:95] == 3'd4 || mv[205:186] == 20'd0 || mv[226:206] == 21'd0) begin
+                srow <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
+                sa   <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
+                drow <= (mvq[94:93] == 2'd1) ? {mvq[137:98], 2'b00} : {2'd0, mvq[137:98]};
+                da   <= (mvq[94:93] == 2'd1) ? {mvq[137:98], 2'b00} : {2'd0, mvq[137:98]};
+                if ((mvq[1:0] > 2'd1) || (mvq[94:93] > 2'd1) || mvq[4:2] == 3'd3 || mvq[4:2] == 3'd6 || mvq[97:95] == 3'd3 ||
+                    mvq[97:95] == 3'd6 || mvq[97:95] == 3'd4 || mvq[205:186] == 20'd0 || mvq[226:206] == 21'd0) begin
                     mv_fault <= 1'b1; busy <= 1'b0;
                 end
             end
@@ -229,6 +231,7 @@ module ot_hgi_dma_mover #(
                     else vmq <= {1'b1, 1'b1, db_sec[26:0], 5'd0, db_dat, db_strb, 16'h4D57};
                     ph <= 3'd4;
                 end
+                3'd5: ;                                                        // the command lands
                 default: ph <= 3'd0;
             endcase
         end
