@@ -1,0 +1,86 @@
+{
+  "name": "qfd_q5_landing_ecc-ab9c785e9-wc-ttalias",
+  "block": "qfd_q5_landing_ecc",
+  "owner": "Codex:review_qwen_token_path",
+  "purpose": "Actual 288b native controller KV correction before LD64 CDC; physical gate only, real ECC provider and die integration OPEN; configuration-only successor preserves RTL and clocks/budgets, fixes unsupportedTC-scene WC_LIB_FILES failure by namedWC alias actualTT cells/macros and BC/FF hold",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-q5-ecc-20261009",
+    "commit": "ab9c785e9",
+    "required_files": [
+      "rtl/qwen_sys/q5_20261009/ot_qfd_kv_landing_ecc.sv",
+      "rtl/qwen_sys/q5_20261009/ot_qfd_stream4_cdc_ecc_pc.sv",
+      "rtl/test/qwen_system/tb_qfd_q5_native.sv",
+      "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "physical/qwen_die_masters/cfg/qfd_q5_landing_ecc.env",
+      "physical/qwen_die_masters/qfd_q5_hclk.sdc",
+      "physical/qwen_die_masters/signoff/qfd_q5_landing_ecc.sdc",
+      "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv",
+      "rtl/qwen_sys/q5_20261009/synth/manifest.json"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_q5_landing_ecc.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_q5_landing_ecc {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_q5_landing_ecc --out {RUN}/record/views/qfd_q5_landing_ecc --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "actual_TT_WC_alias_logged",
+        "cmd": "grep -q 'corner WC reads the TT liberties' {RUN}/routes/{LABEL}/flow.log"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_q5_landing_ecc.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "new HCLK leaf pathfinding only; preserve166.667ps outside+90ps clock skew+50ps hold; no parent adoption before model/control binding"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_native_corner_alias_20261009/qfd_q5_landing_ecc-ab9c785e9-wc-ttalias"
+    },
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    }
+  ],
+  "cycles_added": "one1024ps HCLK edge per dependent KV return; full token calendar must compose it; II1 preserved",
+  "merge_target": "main",
+  "no_bench_reason": "Configuration-only corner-scene fix. Original RTL/exact gates byte-identical; existing immutable positive+negative campaign records qualify same mechanisms. No golden rerun. Failed priorTC-scene attempts retained. Physical TTsetup>=0/FFhold>=0/DRC0 with actual1024psQ5 or1111.111psserial and60/25ps uncertainty; SS sensitivity.",
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+}
