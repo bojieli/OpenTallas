@@ -2,6 +2,8 @@
 """cont-takeover 2026-10-09: closure-loop specs for the distributed-HC structural successors (2 variants per block)."""
 import json, sys
 commit, branch, outdir = sys.argv[1], sys.argv[2], sys.argv[3]
+LB = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+ONLY = sys.argv[5].split(',') if len(sys.argv) > 5 else None
 D = 'rtl/experimental/dsrom_hc_capture_20261009'
 MV = 'ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2'
 MAC = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2'
@@ -33,11 +35,16 @@ V = {
                    "Codex's registered SECDED encode/decode pipes (ECC_PIPE=1, never routed), compact frame: the parallel fallback if PLAIN_ROWS is not adopted (bench: VM-reader full-shape bench with ECC_PIPE)", 'ECC_PIPE as Codex priced; REG_IO +1 per request, +1 per response, +1 per command'),
 }
 for n, (block, el, case, args, die, mtcl, hm, why, cyc) in V.items():
+    if ONLY and n not in ONLY:
+        continue
+    if not LB:
+        n = n + '-lb0'
+        why = why + '; LB=0: standard 0.2 T IO budget (Codex characterization basis). With the die-link budget (LB=1) the join/reader failed only on IO: out_ready -> 600-bit skid pop fan-out (-120 TT) and fault out (-28); a die-link boundary needs the finite-credit relay (parent obligation in the RTL), not valid/ready'
     name = f'{n}-{commit[:9]}-tc-cl'
     macro = ('--macro-view ' + MV + ' --macro-place-halo 5 5 ' + (f'--orfs-var MACRO_PLACEMENT_TCL=/src/{mtcl} ' if mtcl else '')) if 'join' in n or 'mean' in n else ''
     env = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; "
-           "export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; "
-           f"OUT={{RUN}}/routes CORES=12 UTIL=40 PD=0.55 HM={hm} LB=1 STAGES={'pnr' if macro else 'synth,pnr'} {'MACRO='+MAC if macro else ''} bash physical/hbm_mtp/route_mtp.sh ")
+           "export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl" + (" physical/common_flow/link_budget_hook.tcl" if LB else "") + "'; "
+           f"OUT={{RUN}}/routes CORES=12 UTIL=40 PD=0.55 HM={hm} LB={LB} STAGES={'pnr' if macro else 'synth,pnr'} {'MACRO='+MAC if macro else ''} bash physical/hbm_mtp/route_mtp.sh ")
     tail = f"{block} {args} --clock-port clk {macro}--die-area 0 0 {die} {die} --core-area 2.16 2.16 {die-2.16:.2f} {die-2.16:.2f}"
     spec = {
         'name': name, 'block': block, 'element': el, 'owner': 'Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)',
@@ -60,7 +67,7 @@ for n, (block, el, case, args, die, mtcl, hm, why, cyc) in V.items():
                     'drc_metrics': '{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json',
                     'checks': [{'name': 'ttb_routed_at_TC', 'cmd': "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"}],
                     'post_sdc': ['physical/hbm_accel_die_views/common/signoff_unc60.sdc', 'physical/hbm_accel_die_views/common/vclk_corner_true.sdc',
-                                 'physical/common_flow/link_budget_consistent.sdc']},
+                                 ] + (['physical/common_flow/link_budget_consistent.sdc'] if LB else [])},
         'route_hold_corners': 'mm', 'route_hold_margin_ns': float(hm), 'route_corner': 'TC',
         'cycles_added': cyc, 'merge_target': None,
         'record': [{'from': '{RUN}/record', 'to': f'results/physical/cont_takeover_hc_20261009/{n}'}],
