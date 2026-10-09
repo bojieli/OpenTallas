@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.qwen.protected_phy.bank_pair_gate.v1",
+  "model_source": "69f3df5bf",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_bank_pair_pc.sv": "18d3731786651205e8dc92913ef397130c10dcbfc9d6b76ab819ba53422da38f",
+    "bench/emb_hbm_20261008/tb_qfd_protected_phy_bank_pair.sv": "7b97cb9380ffbb0ed42c9fa6f3460116fe544e1e310cf47f5bb6865b958ab2ae",
+    "tools/qwen_protected_phy_bank_map.py": "9394dd9158c881d23da4d4882942b34c38d65fc9c900ee2464d62212e6dd07fd",
+    "tools/check_qwen_protected_phy_bank_map.py": "bb39935ea29f44283f7354ceab4913e51f5b9cff3c1e91456d96f059e4713c9c"
+  },
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_emb_protected_bank_pair.sh",
+  "clock_ps": 1024,
+  "passed": [
+    "64BOOTWR +64pairedreads:32KV/32EMB",
+    "requeststall2/7cycles",
+    "actualDATA/ECCrequests independentlyoffered; ECCofferednextedge before DATAresponse",
+    "DATAfirst andECCfirst fromactual256physicalmodel via2returntestshim",
+    "directactualmodelreturns",
+    "60edgeECCrequeststall whileDATAreturns beforeECCaccepted",
+    "physicalDATA1bitCE and2bitUE withrealcheckstorage",
+    "defaultoff",
+    "samePC16btagrollover"
+  ],
+  "negative_expected_FAIL": [
+    "wrongtag",
+    "wrongPC",
+    "bootwritevisibilitymismatch",
+    "runtimeKVWRITEunsupported",
+    "callercheckregionwrite",
+    "onebitassembledcodemutant",
+    "duplicateECCtag",
+    "bankmapmutant violatesDATA/ECCdisjoint",
+    "staticmapmutant bankdisjoint assertion"
+  ],
+  "physical_transactions_64plus64": {
+    "writes": 128,
+    "reads": 320
+  },
+  "measured": {
+    "direct_read_min": 57,
+    "direct_read_sum": 4460,
+    "direct_read_max": 401,
+    "bootwrite_min": 126,
+    "bootwrite_sum": 9486,
+    "bootwrite_max": 504,
+    "ACT": 163,
+    "row_conflicts": 46,
+    "pairpublication_cycles": 3
+  },
+  "historical": [
+    "parallel_r2 testcompile typo preserved",
+    "serialcomponent remainshistorynotadopted"
+  ],
+  "protection": "payloadSECDEDonly; plainphase/tag/metadata registers; noID64/aperture/lease",
+  "native_JEDEC_binding": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "latency_claim": "parallelcompletion max(DATA,ECC), never serialized sum; physicaltwo-burst/tRRD/bankrowservice stillreal andunqualified atnativelevel",
+  "open": [
+    "nativeJEDEC separatephysicalclasses countlogicalonce",
+    "native32PCphysicalarbiter/twooutstandingcredits",
+    "runtimeKVpairedwriteledger/vendorcompletion",
+    "nativeactualm_p2l sectorcapture",
+    "bank/row/two-burstpricing andactualincontextphysicalviews"
+  ],
+  "static_exhaustive_gate": {
+    "KV_sectors": 36864,
+    "KV_sidecar_words": 4608,
+    "KV_sidecar_rows": 36,
+    "EMB_sectors": 152576,
+    "EMB_sidecar_words": 19072,
+    "EMB_sidecar_rows": 19,
+    "bijection": true,
+    "DATA_ECC_bank_disjoint": true
+  },
+  "physical_fixture": "all32banks; actual256model, sparseMEM_WORDS65521 backing, no fullmemoryclaim",
+  "read_service_trace": {
+    "normal_reads": 64,
+    "ECC_tail_after_DATA_min_cycles": 1,
+    "ECC_tail_sum_cycles": 153,
+    "ECC_tail_max_cycles": 17,
+    "ECC_tail_mean_cycles": 2.390625,
+    "positive_tail_cases": 64,
+    "publication_after_max_return_cycles": 3,
+    "source": "bank_pair_r1/trace.log",
+    "zero_added_HBM_latency_proven": false,
+    "explanation": "actualtwo-burst samePCservice/ACT/tRRD effects survive bankdisjoint; thisgate provespairing, notW5zeroaddednativeHBMlatency"
+  }
+}

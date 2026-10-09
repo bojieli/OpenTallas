@@ -1,0 +1,21 @@
+{
+  "PASS": true,
+  "cases": [
+    {
+      "embedding": false,
+      "logical_sectors": 36864,
+      "unique_sidecar_words": 4608,
+      "sidecar_rows": 36,
+      "bank_disjoint": true,
+      "bijection": true
+    },
+    {
+      "embedding": true,
+      "logical_sectors": 152576,
+      "unique_sidecar_words": 19072,
+      "sidecar_rows": 19,
+      "bank_disjoint": true,
+      "bijection": true
+    }
+  ]
+}

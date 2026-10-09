@@ -1,0 +1,12 @@
+{
+  "normal_reads": 64,
+  "ECC_tail_after_DATA_min_cycles": 1,
+  "ECC_tail_sum_cycles": 153,
+  "ECC_tail_max_cycles": 17,
+  "ECC_tail_mean_cycles": 2.390625,
+  "positive_tail_cases": 64,
+  "publication_after_max_return_cycles": 3,
+  "source": "bank_pair_r1/trace.log",
+  "zero_added_HBM_latency_proven": false,
+  "explanation": "actualtwo-burst samePCservice/ACT/tRRD effects survive bankdisjoint; thisgate provespairing, notW5zeroaddednativeHBMlatency"
+}

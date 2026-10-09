@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-protected-bank-pair-r1/check_qwen_protected_phy_bank_map.py", line 13, in <module>
+    assert bank!=ebank,('same bank',emb,row,bank,col,erow,ebank,ecol)
+           ^^^^^^^^^^^
+AssertionError: ('same bank', False, 0, 0, 0, 64, 0, 0)
