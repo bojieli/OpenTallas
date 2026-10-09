@@ -48,7 +48,7 @@ module ot_hbm_native_ar_token_join #(
  generate for(genvar k=0;k<2;k=k+1) begin:g_half
   if(QWEN) begin:g_qwen
    ot_qwen_r25_cmdproc18 #(.ENABLE(ENABLE),.NSM(16),.NCMD(NCMD),.TW(TW),.PW(PW)) u_cp(
-    .clk(clk),.rst_n(rst_n),.cmd_we(cmd_we[k] && !busy),
+    .clk(clk),.rst_n(rst_n && !external_fault),.cmd_we(cmd_we[k] && !busy),
     .cmd_addr(cmd_addr[k*$clog2(NCMD)+:$clog2(NCMD)]),.cmd_wdata(cmd_wdata[k*64+:64]),
     .db_v(db_v && db_rdy),.db_rdy(cp_db_rdy[k]),.db_token(db_token),.db_pos(db_pos),
     .db_job(db_job),.db_generation(generation),.cpl_position(cp_pos[k*PW+:PW]),
@@ -61,7 +61,7 @@ module ot_hbm_native_ar_token_join #(
     .cpl_status(cp_status[k*4+:4]),.cpl_cycles(),.st_kernels(),.st_busy());
   end else begin:g_ds
    ot_ds_hbm_cmdproc20 #(.ENABLE(ENABLE),.NSM(16),.NCMD(NCMD),.TW(TW),.PW(PW)) u_cp(
-    .clk(clk),.rst_n(rst_n),.cmd_we(cmd_we[k] && !busy),
+    .clk(clk),.rst_n(rst_n && !external_fault),.cmd_we(cmd_we[k] && !busy),
     .cmd_addr(cmd_addr[k*$clog2(NCMD)+:$clog2(NCMD)]),.cmd_wdata(cmd_wdata[k*64+:64]),
     .db_v(db_v && db_rdy),.db_rdy(cp_db_rdy[k]),.db_token(db_token),.db_pos(db_pos),
     .db_job(db_job),.db_generation(generation),.cpl_position(cp_pos[k*PW+:PW]),
