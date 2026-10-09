@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS",
+  "scope": "actual583bit q/rst pipe, not wholequad/die",
+  "timeunit": "1ps",
+  "timeprecision": "1fs",
+  "positive_edge_period_ps": 833.333,
+  "half_rate_mechanism": false,
+  "cases": [
+    {
+      "name": "golden",
+      "returncode": 0,
+      "expect": "PASS",
+      "output": "PASS_ATTN_QTAIL full_bits=583 tail_bits=39 stages=5 FF=195 period_ps=833.333 cycles=1024 bit_checks=594660\n/srv/opentallas-scratch2/scratch/codex/attn-half-flat-qtail/gate/tb.sv:32: $finish called at 853749659 (1fs)\n"
+    },
+    {
+      "name": "reset_lost",
+      "returncode": 1,
+      "expect": "FAIL",
+      "output": "FATAL: /srv/opentallas-scratch2/scratch/codex/attn-half-flat-qtail/gate/tb.sv:28: QTAIL mismatch cycle=4 mut=1\n       Time: 4583332  Scope: tb\n"
+    },
+    {
+      "name": "tail_one_edge_early",
+      "returncode": 1,
+      "expect": "FAIL",
+      "output": "FATAL: /srv/opentallas-scratch2/scratch/codex/attn-half-flat-qtail/gate/tb.sv:28: QTAIL mismatch cycle=4 mut=2\n       Time: 4583332  Scope: tb\n"
+    }
+  ],
+  "sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv": "67dd9460695a6296d9dbdea4aeec57f5ef918a11bf16f24b7b6a422dfe672460",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv": "3ab84bcc56f4ed149b8d07c9054a6165ba5335a18250f09c5c5073fd66cab403",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv": "58744be475391abd1a96c11a66440566e64f53cd42987c9bcfb95eb74ed5c929",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m6h1r.sv": "66f72cfeace7eeecd8e4ec94a9f16f3aab2acf7e027a5b3082c945e985f837ac",
+    "tools/attn_half_cx/gate.py": "f90824709884b85ab35a7bb5b0393a3ae0c5429a558ad24443254da93bac641e"
+  }
+}
