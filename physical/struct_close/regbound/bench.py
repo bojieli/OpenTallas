@@ -145,6 +145,21 @@ def mtpemit(mode, w):
     print("RB_mtp_emit_queue_BENCH_ERROR mutant escaped"); return 2
 CASES["global_order_scan"] = dict(CASES["global_order"], tb=lambda: sp_tb("gorder_tb", 4096),
      params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
+def cvp_tb():
+    """the golden VM-publication bench on the wrapper: the indexed read latency is 6 edges (4 + pin flop + output
+    flop: the priced boundary cost) and the release / fault status probes wait 2 more edges; every data check is unchanged"""
+    t = tbfile("rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_collective_vm_publication.sv")
+    for a, b in (("if(cycles-expected_cycle[seen]!=4)", "if(cycles-expected_cycle[seen]!=6)"),
+                 ("@(negedge clk);release_lease=1;tick;@(negedge clk);release_lease=0;tick;",
+                  "@(negedge clk);release_lease=1;tick;@(negedge clk);release_lease=0;tick;tick;tick;"),
+                 ("@(negedge clk);service_fault=1;tick;", "@(negedge clk);service_fault=1;tick;tick;tick;")):
+        assert a in t, a
+        t = t.replace(a, b)
+    return t
+L_ = "rtl/hbm_accel/tu/link_retry_sram_20261008"
+CASES["coll_vm_pub"] = dict(rtl=[f"{D}/ot_hbm_collective_vm_publication_rb.sv", "rtl/common/ot_secded.sv", f"{L_}/ot_hbm_replay_sram.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"], tb=cvp_tb,
+     top="tb_hbm_collective_vm_publication", ok="PASS_ALL", neg_defines=["OT_HBM_PUBLICATION_MUT_QID"], neg_ok="quarter read ownership lost")
 def run(key, mode, w):
     if key == "token_loop": return tokloop(mode, w)
     if key == "mtp_emit_queue": return mtpemit(mode, w)

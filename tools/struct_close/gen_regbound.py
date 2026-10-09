@@ -30,6 +30,9 @@ mod_body = mod_body[:mod_body.index("endmodule") + len("endmodule")]
 core = mod_body.replace("module " + spec["module"], "module " + spec["core"], 1)
 hs_ports = set(); 
 for g in spec.get("in_hs", []) + spec.get("out_hs", []): hs_ports |= {g["v"].split("[")[0], g["r"], *g["data"]}
+# vector channels ("in_vec"/"out_vec": {"v": vport, "r": rport, "data": dport, "n": N}): N independent valid/ready lanes,
+# lane k = v[k] / r[k] / data[k*W/N +: W/N], each through its own pin FIFO
+for g in spec.get("in_vec", []) + spec.get("out_vec", []): hs_ports |= {g["v"], g["r"], g["data"]}
 # a valid carried as bit 0 of a data vector ("v": "emit[0]", data ["emit"]): the FIFO valid is that bit; the core sees
 # {data[MSB:1], fifo valid} (an empty FIFO presents valid 0)
 passp = set(spec.get("pass", [])) | {spec["clk"], spec["reset"]}
@@ -103,6 +106,24 @@ for k, o in enumerate(order_after):
     for dn in o.get("data", []):
         L.append(f" reg {P[dn][1]} ia{k}_{dn}; always @(posedge {ck}) if ({pu}) ia{k}_{dn} <= {dn};"); conn[dn] = f"ia{k}_{dn}"
     conn[pu] = f"(ia{k}_p && !ci{fifo}_v)"
+def pw(n):
+    w = P[n][1]
+    if not w: return 1
+    a, b = w[1:-1].split(":"); return eval(a) - eval(b) + 1
+for i, g in enumerate(spec.get("in_vec", [])):
+    N = g["n"]; DW = pw(g["data"]) // N
+    L.append(f" wire [{N-1}:0] iv{i}_v, iv{i}_r; wire [{N*DW-1}:0] iv{i}_d;")
+    for k in range(N):
+        L.append(f" ot_sc_pfifo #(.W({DW}), .S(2), .G(64)) u_iv{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}[{k}]), .in_ready({g['r']}[{k}]),")
+        L.append(f"   .in_data({g['data']}[{k*DW} +: {DW}]), .out_valid(iv{i}_v[{k}]), .out_ready(iv{i}_r[{k}]), .out_data(iv{i}_d[{k*DW} +: {DW}]));")
+    conn[g["v"]] = f"iv{i}_v"; conn[g["r"]] = f"iv{i}_r"; conn[g["data"]] = f"iv{i}_d"
+for i, g in enumerate(spec.get("out_vec", [])):
+    N = g["n"]; DW = pw(g["data"]) // N
+    L.append(f" wire [{N-1}:0] ov{i}_v, ov{i}_r; wire [{N*DW-1}:0] ov{i}_d;")
+    for k in range(N):
+        L.append(f" ot_sc_pfifo #(.W({DW}), .S(2), .G(64)) u_ov{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid(ov{i}_v[{k}]), .in_ready(ov{i}_r[{k}]),")
+        L.append(f"   .in_data(ov{i}_d[{k*DW} +: {DW}]), .out_valid({g['v']}[{k}]), .out_ready({g['r']}[{k}]), .out_data({g['data']}[{k*DW} +: {DW}]));")
+    conn[g["v"]] = f"ov{i}_v"; conn[g["r"]] = f"ov{i}_r"; conn[g["data"]] = f"ov{i}_d"
 inst = ", ".join(f".{n}({conn[n]})" for _, _, n in ports)
 pp = ", ".join(f".{n}({n})" for n in pnames)
 L.append(f" {spec['core']} #({pp}) u_core ({inst});")
