@@ -86,7 +86,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    seat_step<=0;pending_step<=0;seat_lane<=0;pending_lane<=0;launched<=0;returned<=0;finished<=0;
    read_part<=0;write_part<=0;next_tag<=0;pending_tag<=0;
-   x<=0;launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;
+   launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;
   end else begin
    done<=0;launch<=0;
    if(rsp_v&&rsp_r)begin response_v<=1;response<=rsp;end
@@ -99,7 +99,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]);
     wi<=co[135:120]==0?16'd1:co[135:120];
     launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
-    reserved<=0;queued<=0;head<=0;tail<=0;x<=0;
+    reserved<=0;queued<=0;head<=0;tail<=0;
    end
    if(busy&&validating)begin
     validating<=0;
@@ -113,7 +113,6 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end
     if(take_req)begin
-     if(!req[336]&&read_part==0)x<=0;
      seat_v<=0;
      pending_step<=seat_step;pending_lane<=seat_lane;
      pending<=1;pending_write<=req[336];pending_tag<=next_tag;next_tag<=next_tag+1;end
@@ -128,8 +127,6 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
         write_row<=write_row+1;write_col<=0;write_rowbase<=write_rowbase+ws;write_addr<=write_rowbase+ws;
        end else begin write_col<=write_col+pending_step;write_addr<=write_addr+pending_step*wi;end
       end else begin
-       if(pending_step==8)x[read_part*32+:256]<=response[255:0];
-       else x[read_part*32+:32]<=response[pending_lane*32+:32];
        if(read_col+pending_step==n)begin
         read_row<=read_row+1;read_col<=0;read_rowbase<=read_rowbase+rs;read_addr<=read_rowbase+rs;
        end else begin read_col<=read_col+pending_step;read_addr<=read_addr+pending_step*ri;end
@@ -158,6 +155,20 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
      busy<=0;reserved<=0;queued<=0;done<=1;fault<=1;
     end else if(!bad && take_rsp&&reply_ok&&pending_write&&last_write &&
       (write_row+1==m && write_col+pending_step==n || MUTANT==2))begin busy<=0;done<=1;end
+   end
+  end
+ end
+ // Independent lane capture prevents Yosys variable-LHS priority mux chains
+ // from carrying raw cmd.valid through all1024 input assembly bits.
+ for(genvar lane=0;lane<32;lane=lane+1)begin:g_input_lane
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)x[lane*32+:32]<=0;
+   else if((ready&&cmd[0])||(take_req&&!req[336]&&read_part==0))x[lane*32+:32]<=0;
+   else if(take_rsp&&reply_ok&&!pending_write&&!bad)begin
+    if(pending_step==8 && lane>=read_part && lane<read_part+8)
+      x[lane*32+:32]<=response[(lane-read_part)*32+:32];
+    else if(pending_step==1 && lane==read_part)
+      x[lane*32+:32]<=response[pending_lane*32+:32];
    end
   end
  end
