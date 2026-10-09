@@ -419,7 +419,8 @@ endmodule
 // with a finite metadata queue and the engine's own finite output credit.
 module ot_hdc_v41x_idx_score_slice_l #(
     parameter integer NK=4, NB=4, IH=32, IW=30, MD=64,
-    parameter integer FPL=3, FML=3, QL=3   // engine arithmetic latencies (ot_hdc_v41x_idx_engine_l)
+    parameter integer FPL=3, FML=3, QL=3,  // engine arithmetic latencies (ot_hdc_v41x_idx_engine_l)
+    parameter integer ARRAY_PHASE_GATE=0 // private: array excludes queries from external key-valid
 ) (
     input wire clk, rst_n,
     input wire ql_v,
@@ -461,7 +462,7 @@ module ot_hdc_v41x_idx_score_slice_l #(
     wire pop=o_valid && o_ready;
     // Query SRAM is single-buffered. A new query may overwrite it only after
     // all earlier score beats leave both the engine and metadata queue.
-    assign ql_ready=(count==0) && !ev && !i_valid;
+    assign ql_ready=(count==0) && !ev && (ARRAY_PHASE_GATE || !i_valid);
     assign i_ready=er && count<MDE;
     assign o_valid=ev && count!=0;
     assign o_last=meta[rd][IW+NK];
@@ -534,7 +535,8 @@ module ot_hdc_v41x_idx_array_l #(
     parameter integer MD = 64,         // per-slice score/metadata FIFO depth (deepened to cover the latency)
     parameter integer FPL = 3,         // binary32 add latency (7: 1.2 GHz streaming domain)
     parameter integer FML = 3,         // head-weight product latency
-    parameter integer QL = 3           // block-dot latency
+    parameter integer QL = 3,          // block-dot latency
+    parameter integer SAFE_QUERY_GATE = 0 // phase-exclusion gate independent of accepted-key ready
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -569,15 +571,16 @@ module ot_hdc_v41x_idx_array_l #(
     wire take = i_valid && i_ready;
     wire consume = o_valid && o_ready;
     assign i_ready = &sr;
-    assign ql_ready = &qr;
+    assign ql_ready = (&qr) && (!SAFE_QUERY_GATE || !i_valid);
+    wire slice_ql_v = ql_v && (!SAFE_QUERY_GATE || !i_valid);
     assign o_valid = &sv;
     assign protocol_fault = (|sv && !(&sv)) || ((&sv) && o_last != {NS{o_last[0]}});
 
     genvar s;
     generate for (s = 0; s < NS; s = s + 1) begin : g_slice
-        ot_hdc_v41x_idx_score_slice_l #(.NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL)) u (
+        ot_hdc_v41x_idx_score_slice_l #(.NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL), .ARRAY_PHASE_GATE(SAFE_QUERY_GATE)) u (
             .clk(clk), .rst_n(rst_n),
-            .ql_v(ql_v), .ql_ready(qr[s]), .ql_head(ql_head),
+            .ql_v(slice_ql_v), .ql_ready(qr[s]), .ql_head(ql_head),
             .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
             .i_valid(take), .i_ready(sr[s]), .i_last(i_last[s]),
             .i_first_index(i_index[s*NK*IW +: IW]),

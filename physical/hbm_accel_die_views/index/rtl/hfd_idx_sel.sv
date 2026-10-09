@@ -26,6 +26,7 @@
 //   co   candidates out (layer 20) {blk17 x2, val16 x2, lv2, q2, last, v}; coc credit in
 //   ev   {fault, done} (registered pulses / level)
 module hfd_idx_sel #(
+  parameter integer EXPOSE_QUARTER_LAST = 0,
   parameter integer T = 1,           // scorer blocks a stack (1: one hfd_idx_score L16; 4: four column taps L4)
   parameter integer LA = 6,          // score landing FIFO address bits (depth 64 = the scorer's CRED)
   parameter integer OCRED = 8,       // output credits (the VM landing depth) on to / co
@@ -46,6 +47,7 @@ module hfd_idx_sel #(
   output wire [611:0]  to,
   input  wire          toc,
   output wire [71:0]   co,
+  output reg           co_quarter_last, // aligned co.v; retained legacy co.last is whole-frame
   input  wire          coc,
   output reg  [1:0]    ev
 );
@@ -205,6 +207,9 @@ module hfd_idx_sel #(
   reg tv; reg [610:0] td;
   reg cv_; reg [70:0] cd_;
   always @(posedge ck or negedge rn) if (!rn) begin tv <= 1'b0; cv_ <= 1'b0; end else begin tv <= o_take; cv_ <= c_take; end
+  always @(posedge ck or negedge rn)
+    if (!rn) co_quarter_last <= 1'b0;
+    else co_quarter_last <= EXPOSE_QUARTER_LAST && c_take && c_last[cq];
   always @(posedge ck) begin
     if (o_take) td <= {o_idx[W*IW*oq +: W*IW], o_val[W*16*oq +: W*16], o_ninf[W*oq +: W], o_lv[W*oq +: W], oq,
                        o_last[oq] && oq == 2'd3};
