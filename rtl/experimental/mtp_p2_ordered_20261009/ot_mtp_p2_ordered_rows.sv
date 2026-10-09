@@ -28,7 +28,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     assign start_r=0; assign out_v=0; assign out_identity=0; assign out_expert=0;
     assign out_shared=0; assign out_row_last=0; assign out_transaction_last=0;
     assign out_word=0; assign out_secded=0;
-    always @* begin in_r=0; done=0; fault=0; end
+    assign in_r=0; assign done=0; assign fault=0;
   end else begin: enabled
     reg busy, busy_copy;
     reg [73:0] identity, identity_copy;
