@@ -1,0 +1,67 @@
+{
+ "name": "sp-hostnative-9f728a4eb-tc-hm10-cl",
+ "block": "dsfd_host_native",
+ "element": "dsfd_host_native",
+ "owner": "Claude:strip-protect",
+ "purpose": "strip-protect 2026-10-09 ('-cl' line). Native S81 host ABI (dsfd_host + visibility fence) with the unprotected fence (PROTECT=0, as ot_s81_ingest_visibility_fence). Ingest recipe (physical/rom_host_ingest/route.sh, clk_i = ck/2, UTIL 30 / PD 0.45 like hing_dsfd_C -cl), top overridden. Variant: TC route / option B (TT setup, FF hold, DRC 0), mm hold HM 10 ps. Exact bench + mutant: physical/strip_protect/bench.py host_native (lock-step vs the original + the committed functional golden; the mutant must FAIL).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/strip-protect-20261009",
+  "commit": "9f728a4eb4143d946ba799723bb59cc7461092f9"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "host_native_exact",
+    "cmd": "python3 physical/strip_protect/bench.py host_native pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "STRIP_host_native_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "host_native_mutant",
+    "cmd": "python3 physical/strip_protect/bench.py host_native neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "STRIP_host_native_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" DIV=\"2\" UTIL=\"30\" PD=\"0.45\" HM=\"0.010\" NEED=\"24\" XSRCS=\"rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv\" bash physical/rom_host_ingest/route.sh {LABEL} dsfd_host --top dsfd_host_native --param ENABLE=1 --param PROTECT=0",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "enabled": false,
+   "reason": "multi-clock block (second clock / virtual AON clock defined in its own SDC): no single core_clk insertion to calibrate; block-internal closure at the generic IO budget first"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/rom_host_ingest/sdc/hing_clocks_div2.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (protection stripped; TA15: same 3-edge release)",
+ "merge_target": null
+}
