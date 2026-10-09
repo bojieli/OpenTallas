@@ -3520,8 +3520,13 @@ def buses_r8(m):
         bus('eng_sw_r', 'eng', 265, [(m['svcs']['SW'].name, 'ter'), (hub['eng'].name, 'fer')])  # hq_cred + hr 264
     if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
         for st, ct in m['ctrls'].items():
-            bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (ct.name, 'hw')])
-            bus(f'hc_{st}', 'host_wr', 18, [(ct.name, 'hc'), (hub['host'].name, f'fc{st}')])
+            # s81-gen 2026-10-09: with --ctrl-rq the stack client owns the controller's real request port (rq), so the
+            # host writes land in the client (svc / layer1e Engram service), which muxes them into rq (ingest 2f179fc18:
+            # per-PC local mux).  The controller's N face is covered by the abutting client (8.64 um gap): the r4 --host
+            # hw_SW chain could never reach a pin there (station 5/53 trap); the client's free face can.
+            tgt = ((m['svcs'][st].name if st in m['svcs'] else hub['eng'].name) if CTRL_RQ else ct.name)
+            bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (tgt, 'hw')])
+            bus(f'hc_{st}', 'host_wr', 18, [(tgt, 'hc'), (hub['host'].name, f'fc{st}')])
     if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
         for j in range(PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
