@@ -1,0 +1,34 @@
+export DESIGN_NICKNAME = wfc_stg_route
+export DESIGN_NAME = ot_dsrom_wfc_tokpipe_stg
+export PLATFORM = asap7
+export VERILOG_FILES = /src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv /src/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv
+export VERILOG_DEFINES = -DSYNTHESIS
+export VERILOG_TOP_PARAMS = WAVE 1 WIN 6 FLIT 512 NW 21 AW 30 VWA 15 USER_W 10 MAXU 866 KVW 32768 SEND_HIDDEN 1 HID_DEST 1 FWD_TOKEN 1 SOURCE 0 XWORDS 46 RXWORDS 41 UPOS_LWR 1 CONTROL_PIPE 1 PRECOMP 1 IN_DEC 1 TXQ_SLICE 1 RDY_LT 1 FANOUT_COPY 1 MARGIN 1 LINK_REG 1 LINK_SEL 1 VM_REG 1 SLEW_COPY 1
+export SDC_FILE = /work/constraint.sdc
+export CORE_UTILIZATION = 50
+export CORE_ASPECT_RATIO = 1
+export CORE_MARGIN = 2
+export PLACE_DENSITY = 0.5
+export PLACE_DENSITY_LB_ADDON = 0.2
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_MEMORY_MAX_BITS = 65536
+export LEC_CHECK = 0
+export TNS_END_PERCENT = 100
+export SETUP_SLACK_MARGIN = 0
+export HOLD_SLACK_MARGIN = 0
+export SKIP_REPORT_METRICS = 0
+export REPORT_CLOCK_SKEW = 1
+export CORNER = WC
+export ADDER_MAP_FILE = 
+export ASAP7_USE_VT = RVT
+export CORNERS = WC BC
+export WC_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)
+export SLEW_MARGIN = 30
+export CAP_MARGIN = 20
+export HOLD_SLACK_MARGIN = 28
+export SKIP_CTS_REPAIR_TIMING = 1
+export POST_CTS_TCL = /work/wfc_post_cts.tcl
+
+# TC route: WC alias reads TC stdcell and TT macro liberties

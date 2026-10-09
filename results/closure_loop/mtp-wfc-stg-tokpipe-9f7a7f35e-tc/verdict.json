@@ -1,0 +1,271 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "block": "ot_dsrom_wfc_tokpipe_stg",
+ "owner": "Codex:mtp-rom/WFCbinding",
+ "source_branch": "codex/mtp-wfc-token-r3-route-20261009",
+ "record_branch": "codex/closure-record-mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "source_commit": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 141.65,
+  "ff_ps": 22.8,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -165.8,
+  "ss_sensitivity_tns_ps": -86869.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/wfc_eco_corner_sta.json",
+  "post_sdc": [
+   "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/wfc_eco_corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/logs/asap7/wfc_stg_route/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_stg": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_r1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_r1/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_negative_stg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED [{\"case\": \"stg_neg_prevuser\", \"expected\": \"fail\", \"pass_\": true, \"trace\": null, \"log\": \"stg_neg_prevuser/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_stg_vmnat": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_vmnat\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_vmnat/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_stg_lag1": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_lag1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_lag1/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "TT_FF0_DRC0_region_die150": {
+   "ok": true,
+   "out": "f7a7f35e-tc/route/results/asap7/wfc_stg_route/base\",\"drc_metrics\":[\"/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/logs/asap7/wfc_stg_route/base/5_2_route.json\"],\"sdc_name\":\"6_final.sdc\",\"post_sdc\":[\"physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc\"]}\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3732,
+    "mean": 393.2,
+    "min": 380.5,
+    "max": 404.0
+   },
+   "all": {
+    "n": 26782,
+    "mean": 389.7,
+    "min": 377.7,
+    "max": 404.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3732,
+    "mean": 243.3,
+    "min": 234.2,
+    "max": 254.7
+   },
+   "all": {
+    "n": 26782,
+    "mean": 240.6,
+    "min": 231.3,
+    "max": 254.7
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 300,
+   "CK_SS_ALL_MEAN": 296,
+   "CK_SS_MIN": 289,
+   "CK_SS_ALL_MIN": 286,
+   "CK_SS_MAX": 311,
+   "CK_SS_ALL_MAX": 311,
+   "CK_TT_MEAN": 300,
+   "CK_TT_ALL_MEAN": 296,
+   "CK_TT_MIN": 289,
+   "CK_TT_ALL_MIN": 286,
+   "CK_TT_MAX": 311,
+   "CK_TT_ALL_MAX": 311,
+   "CK_FF_MEAN": 243,
+   "CK_FF_ALL_MEAN": 241,
+   "CK_FF_MIN": 234,
+   "CK_FF_ALL_MIN": 231,
+   "CK_FF_MAX": 255,
+   "CK_FF_ALL_MAX": 255,
+   "CK_SSLIB_MEAN": 393,
+   "CK_SSLIB_MIN": 380,
+   "CK_SSLIB_MAX": 404,
+   "CK_SSLIB_ALL_MEAN": 390,
+   "CK_SSLIB_ALL_MIN": 378,
+   "CK_SSLIB_ALL_MAX": 404,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T07:09:07-07:00",
+ "job_spec": {
+  "name": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "block": "ot_dsrom_wfc_tokpipe_stg",
+  "owner": "Codex:mtp-rom/WFCbinding",
+  "purpose": "Separate full-shape stg hardened successor of closed SOURCEr24/STGr11. +1SOURCEprompt cycle, +0R6 current-user launch cycles. Retain770ps route/833ps signoff,60/25 uncertainty,150ps dieclock IO obligation and90ps regional/50ps IOhold policy. Exact/negative gates run remotely beside admitted physical; no inherited closedview. Owner continuation acceptance TT setup>=0/FF hold>=0/DRC0; SS sensitivity.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 64,
+  "bench_first": false,
+  "source": {
+   "branch": "codex/mtp-wfc-token-r3-route-20261009",
+   "commit": "9f7a7f35e",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ],
+   "required_files": [
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv",
+    "physical/dsrom_wfc_tokpipe/stg_basis.json"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_stg",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/bench --case stg_r1",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "negative_stg",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/negative --case stg_neg_prevuser --raw-negative",
+     "expect": "fail",
+     "fail_regex": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "stg_vmnat",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_vmnat --case stg_vmnat",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "stg_lag1",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_lag1 --case stg_lag1",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/cal --src {SRC} --cores 12 --need 64 && WFC_TARGET=cts bash {RUN}/cal/run.sh",
+    "base": "{RUN}/cal/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+    "threads": 12,
+    "peak_ram_gb": 64
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/route --src {SRC} --cores 12 --need 64 && bash {RUN}/route/run.sh",
+    "ok": "grep -q '^flow_rc=0' {RUN}/route/status && grep -q '^sta_rc=0' {RUN}/route/status",
+    "logs": [
+     "{RUN}/route/flow.log",
+     "{RUN}/route/sta.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/case.json {RUN}/route/config.mk {RUN}/route/constraint.sdc {RUN}/route/signoff.sdc {RUN}/route/wf_sta.json {RUN}/route/wf_drv.json {RUN}/route/check.json {RUN}/record/ && B=$(ls -d {RUN}/route/results/asap7/*/base | tail -1) && cp \"$B/6_final.odb\" \"$B/6_final.def\" \"$B/6_final.v\" \"$B/6_final.sdc\" \"$B/6_final.spef\" {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "checks": [
+    {
+     "name": "TT_FF0_DRC0_region_die150",
+     "cmd": "python3 tools/dsrom_wfc_tokpipe_eco_metrics.py --case {RUN}/route --eco-eligibility-check"
+    }
+   ],
+   "corner_sta": "{RUN}/route/wfc_eco_corner_sta.json",
+   "drc_metrics": "{RUN}/route/logs/asap7/wfc_stg_route/base/5_2_route.json",
+   "post_sdc": [
+    "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_stg"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Retained source-pinned full shape and IO boundary budgets; owner continuation TT/FF0/DRC0 with SS sensitivity."
+  },
+  "hold_eco": {
+   "reexport": "[ -f {RUN}/route/wf_sta.json.pre_eco ] || cp {RUN}/route/wf_sta.json {RUN}/route/wf_sta.json.pre_eco\n[ -f {RUN}/route/wf_drv.json.pre_eco ] || cp {RUN}/route/wf_drv.json {RUN}/route/wf_drv.json.pre_eco\npython3 tools/dsrom_wfc_tokpipe_physical.py sta --inst stg --case {RUN}/route"
+  },
+  "routed_ioref": false
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
