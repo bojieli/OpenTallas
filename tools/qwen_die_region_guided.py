@@ -415,7 +415,10 @@ puts OT_FLOW_DONE
 def sta_tcl(corner, para):
     c, C = corner, corner.upper()
     load = ('step load { read_db /work/region.odb }\nset_routing_layers -signal M4-M9 -clock M4-M9\n'
-            'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nstep guides { read_guides /work/route.guide }\n'
+            'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n'
+            # read_guides cannot feed estimate_parasitics (GRT-0008: the 'GRT' slacks of regions21g had no wire RC);
+            # re-route the cut region globally (M4-M9, default adjustments) instead
+            'step grt { global_route -congestion_iterations 30 -allow_congestion }\n'
             'step est { estimate_parasitics -global_routing }\n') if para == 'grt' else \
         'step load { read_db /work/routed.odb }\nstep spef { read_spef /work/routed.spef }\n'
     chk = 'max' if c == 'ss' else 'min'
