@@ -23,6 +23,7 @@
 module ot_s81_ctrl #(
     parameter integer WINDOW_CONTEXT = 0,
     parameter integer PROTECT_HISTORY = 0,
+    parameter integer TOKEN_TYPES = 0,
     parameter integer ROLE     = 0,          // 0 layer, 1 SOURCE (stage 0), 2 HEAD root
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
@@ -58,6 +59,7 @@ module ot_s81_ctrl #(
     input  wire                  clk,
     input  wire                  rst_n,
     input wire source_token_dead,
+    input wire [2:0] hc_token_type,
     input wire eng_rb_v,
     input wire [11:0] eng_rb_user,
     input wire [2:0] eng_rb_n,
@@ -135,15 +137,17 @@ module ot_s81_ctrl #(
     // ---- host queue (SOURCE) ----
     wire [NW-1:0] cfg_plen, cfg_glen, cfg_eos_id; wire [NW:0] cfg_maxl; wire cfg_eos_en;
     wire pr_re; wire [7:0] pr_user; wire [NW-1:0] pr_pos, pr_q;
+    wire [2:0] pr_type,j_token_type;
     wire tok_v, tok_stop; wire [7:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
     wire hq_f, hq_wd, hq_act; wire [3:0] hq_fc; wire [31:0] hq_wc;
     wire [15:0] snap;
     generate if (SOURCE) begin : g_src
         wire [31:0] s1, s2, s3, s4;
-        ot_s81_host_cq #(.MAXU(MAXU), .PMAX(PMAX), .NW(NW), .TAGW(8), .CQ_DEPTH(CQ_DEPTH), .CAUSEW(32), .WDOG(WDOG),
+        ot_s81_host_cq #(.TOKEN_TYPES(TOKEN_TYPES),.MAXU(MAXU), .PMAX(PMAX), .NW(NW), .TAGW(8), .CQ_DEPTH(CQ_DEPTH), .CAUSEW(32), .WDOG(WDOG),
                          .UCW(8)) u_hq (
             .clk(clk), .rst_n(rst_n), .cmd_valid(hc_valid), .cmd_ready(hc_ready), .cmd_op(hc_op), .cmd_tag(hc_tag),
             .cmd_user(hc_user), .cmd_pos(hc_pos), .cmd_token(hc_token), .cpl_valid(cpl_valid), .cpl_ready(cpl_ready),
+            .cmd_token_type(hc_token_type),.pr_token_type(pr_type),
             .cpl_data(cpl_data), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
             .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(boot_ok),
             .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),
@@ -153,7 +157,7 @@ module ot_s81_ctrl #(
     end else begin : g_nsrc
         assign hc_ready = 1'b0; assign cpl_valid = 1'b0; assign cpl_data = 0;
         assign cfg_users = 0; assign cfg_plen = 0; assign cfg_glen = 0; assign cfg_maxl = 0; assign cfg_eos_en = 0;
-        assign cfg_eos_id = 0; assign pr_q = 0; assign hq_f = 1'b0; assign hq_fc = 0; assign hq_wd = 1'b0;
+        assign cfg_eos_id = 0; assign pr_q = 0;assign pr_type=3'd7; assign hq_f = 1'b0; assign hq_fc = 0; assign hq_wd = 1'b0;
         assign hq_act = 1'b0; assign st_tokens = 0;
     end endgenerate
     // ---- package controller ----
@@ -168,7 +172,7 @@ module ot_s81_ctrl #(
     generate if(WINDOW_CONTEXT && SOURCE) begin:g_window_source
         ot_dsrom_engram_lead_producer #(.PROTECT_HISTORY(PROTECT_HISTORY)) u_lead(.clk(clk),.rst_n(rst_n),
             .t_v(j_v && j_r),.t_ready(producer_ready),.t_user(j_u),.t_pos(j_p),.t_tok(j_t),
-            .t_first(j_p==0),.t_dead(source_token_dead),.t_slot(window_slot),
+            .t_first(j_p==0),.t_dead(TOKEN_TYPES?j_token_type!=3'd7:source_token_dead),.t_slot(window_slot),
             .rb_v(eng_rb_v),.rb_user(eng_rb_user),.rb_n(eng_rb_n),.rb_ready(eng_rb_ready),
             .out_v(native_win_v),.out_ready(1'b1),.out_ids(native_win_ids),.out_dead(native_win_dead),
             .out_slot(native_win_slot),.out_user(native_win_user),.out_pos(native_win_pos),.out_tok(native_win_tok),
@@ -183,12 +187,13 @@ module ot_s81_ctrl #(
     wire run_eosen; wire [NW-1:0] run_eos; wire [NW:0] run_maxl;
     wire p_f; wire [3:0] p_fc; wire [31:0] p_jd;
     ot_s81_pkg_ctrl #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .MAXU(MAXU), .VWA(VWA), .RXB(RXB), .RXW(XW),
-        .WINDOW_CONTEXT(WINDOW_CONTEXT),.SOURCE(SOURCE), .SIDE_USH(SIDE_USH), .SIDE_BASE(SIDE_BASE), .MUT(MUT)) u_pkg (
+        .TOKEN_TYPES(TOKEN_TYPES),.WINDOW_CONTEXT(WINDOW_CONTEXT),.SOURCE(SOURCE), .SIDE_USH(SIDE_USH), .SIDE_BASE(SIDE_BASE), .MUT(MUT)) u_pkg (
         .clk(clk), .rst_n(rst_n), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
         .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(SOURCE ? boot_ok : 1'b1),
         .in_valid(g_v), .in_ready(g_r), .in_data(g_d), .in_last(g_l),
         .job_v(j_v), .job_rdy(j_r), .job_user(j_u), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .job_win_v(jw_v),.job_win_ids(jw_ids),.job_win_dead(jw_dead),
+        .job_token_type(j_token_type),.pr_token_type(pr_type),
         .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
         .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),

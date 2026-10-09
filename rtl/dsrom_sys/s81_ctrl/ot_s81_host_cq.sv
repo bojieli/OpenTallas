@@ -54,6 +54,7 @@
 //   it).
 // ---------------------------------------------------------------------------
 module ot_s81_host_cq #(
+    parameter integer TOKEN_TYPES = 0,
     parameter integer MAXU     = 16,
     parameter integer PMAX     = 8,       // prompt tokens stored per user
     parameter integer NW       = 16,
@@ -73,6 +74,7 @@ module ot_s81_host_cq #(
     input  wire [7:0]          cmd_user,    // PROMPT: user; LAUNCH: users
     input  wire [NW-1:0]       cmd_pos,     // PROMPT: pos;  LAUNCH: prompt_len
     input  wire [NW-1:0]       cmd_token,   // PROMPT: token; LAUNCH: gen_len
+    input wire [2:0] cmd_token_type, // 7=TEXT(-1);0..3 released image span types
     // host completion port
     output wire                cpl_valid,
     input  wire                cpl_ready,
@@ -89,6 +91,7 @@ module ot_s81_host_cq #(
     input  wire [7:0]          pr_user,
     input  wire [NW-1:0]       pr_pos,
     output reg  [NW-1:0]       pr_q,
+    output reg [2:0] pr_token_type,
     // device: reduced tokens and run completion
     input  wire                tok_valid,
     input  wire [7:0]          tok_user,
@@ -123,6 +126,7 @@ module ot_s81_host_cq #(
 
     // -- prompt store and per-user written counts -------------------------------------
     reg [NW-1:0] pmem [0:MAXU*PMAX-1];
+    reg [2:0] ptype [0:MAXU*PMAX-1];
     reg [PMAX-1:0] pwritten [0:MAXU-1];
     reg [NW-1:0] exp_pos [0:MAXU-1];      // next expected TOKEN position per user
     reg [TAGW-1:0] run_tag;
@@ -182,7 +186,7 @@ module ot_s81_host_cq #(
             nx_max_len <= {1'b1, {NW{1'b0}}}; nx_eos_en <= 1'b0; nx_eos_id <= 0;
             active <= 1'b0; wdog <= 1'b0; wdog_cause <= 0; fault <= 1'b0; fault_code <= F_NONE;
             st_tokens <= 0; st_spec_reads <= 0; st_cpl_stall <= 0; st_cq_high <= 0;
-            stamp <= 0; since_tok <= 0; done_posted <= 1'b0; run_tag <= 0; pr_q <= 0;
+            stamp <= 0; since_tok <= 0; done_posted <= 1'b0; run_tag <= 0; pr_q <= 0;pr_token_type<=3'd7;
             wdog_post_pending <= 1'b0;
             for (i = 0; i < MAXU; i = i + 1) begin pwritten[i] <= 0; exp_pos[i] <= 0; end
         end else begin
@@ -210,10 +214,13 @@ module ot_s81_host_cq #(
                 // ---- host commands ----
                 case (cmd_op)
                     OP_PROMPT: begin
-                        if (cmd_user >= MAXU || cmd_pos >= PMAX) begin
+                        if (cmd_user >= MAXU || cmd_pos >= PMAX ||
+                            (TOKEN_TYPES && ((cmd_token_type!=7 && cmd_token_type>3) ||
+                             (cmd_token_type!=7 && cmd_token!=21'd129264)))) begin
                             push_v = 1'b1; push_d = cpl(K_ERROR, cmd_tag, cmd_user, cmd_pos, R_BOUND, stamp);
                         end else begin
                             pmem[cmd_user * PMAX + cmd_pos] <= cmd_token;
+                            if(TOKEN_TYPES) ptype[cmd_user*PMAX+cmd_pos]<=cmd_token_type;
                             pwritten[cmd_user][cmd_pos] <= 1'b1;
                         end
                     end
@@ -287,10 +294,15 @@ module ot_s81_host_cq #(
             if (pr_re) begin
                 if (pr_user >= cfg_users || pr_user >= MAXU) begin
                     pr_q <= 0;
+                    pr_token_type<=3'd7;
                     fault <= 1'b1; if (fault_code == F_NONE) fault_code <= F_PR_USER;
                 end else if (pr_pos >= cfg_prompt_len || pr_pos >= PMAX) begin
                     pr_q <= 0; st_spec_reads <= st_spec_reads + 1;
-                end else pr_q <= pmem[pr_user * PMAX + pr_pos];
+                    pr_token_type<=3'd7;
+                end else begin
+                    pr_q <= pmem[pr_user * PMAX + pr_pos];
+                    pr_token_type<=TOKEN_TYPES?ptype[pr_user*PMAX+pr_pos]:3'd7;
+                end
             end
         end
     end

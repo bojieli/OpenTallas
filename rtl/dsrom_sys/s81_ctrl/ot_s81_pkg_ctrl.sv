@@ -35,6 +35,7 @@
 // ---------------------------------------------------------------------------
 module ot_s81_pkg_ctrl #(
     parameter integer WINDOW_CONTEXT = 0,
+    parameter integer TOKEN_TYPES = 0,
     parameter integer MY_ID      = 0,
     parameter integer FLIT       = 512,
     parameter integer NW         = 21,
@@ -72,6 +73,7 @@ module ot_s81_pkg_ctrl #(
     output reg                job_win_v,
     output reg [67:0]         job_win_ids,
     output reg                job_win_dead,
+    output reg [2:0] job_token_type,
     input  wire               job_done,
     // run stop configuration (to the hop framer / head sampler)
     output reg                run_eosen,
@@ -86,6 +88,7 @@ module ot_s81_pkg_ctrl #(
     output reg  [7:0]         pr_user,
     output reg  [NW-1:0]      pr_pos,
     input  wire [NW-1:0]      pr_q,
+    input wire [2:0] pr_token_type,
     // observation / host queue
     output reg                tok_valid,
     output reg  [7:0]         tok_user,
@@ -136,13 +139,16 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     reg [USER_W-1:0] res_u;
     reg [NW-1:0]    res_p, res_i;
     reg [NW-1:0]    ptok [0:MAXU-1];
+    reg [2:0] ptype [0:MAXU-1];
     reg [7:0]       next_u;
     reg             nu_ok, nu_pend;
     reg [NW-1:0]    nu_tok;
+    reg [2:0] nu_type;
     reg [1:0]       pr_t0, pr_t1;
     reg [7:0]       pr_u0, pr_u1;
     reg [USER_W-1:0] jq_u [0:MAXU-1];
     reg [NW-1:0]    jq_p [0:MAXU-1], jq_t [0:MAXU-1];
+    reg [2:0] jq_type [0:MAXU-1];
     reg [UB-1:0]    jq_w, jq_r;
     reg [UB:0]      jq_n;
     // the registered RESULT
@@ -154,6 +160,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     wire            fb_v      = SOURCE && res_v;
     wire            fb_cont   = in_gen && !stop_hd && !stop_ml;
     wire [NW-1:0]   fb_tok    = (nxt_pos < {1'b0, cfg_prompt_len}) ? ptok[res_u[UB-1:0]] : res_i;
+    wire [2:0] fb_type=(TOKEN_TYPES && nxt_pos<{1'b0,cfg_prompt_len})?ptype[res_u[UB-1:0]]:3'd7;
 
     reg  rx_hdr_h, rx_hdr_s, rx_hdr_r, rx_bad;
     reg  st_new, st_q, st_fb;
@@ -162,6 +169,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         vm_we = 1'b0; vm_waddr = 0;
         job_v = 1'b0; job_user = 0; job_pos = 0; job_tok = 0;
         job_win_v=0;job_win_ids=0;job_win_dead=0;
+        job_token_type=3'd7;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0;
         case (rx_st)
             R_IDLE: begin
@@ -203,6 +211,11 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
             if (st_new) begin job_v = 1'b1; job_user = USER_W'(next_u); job_pos = 0; job_tok = nu_tok; end
             if (st_q)   begin job_v = 1'b1; job_user = jq_u[jq_r]; job_pos = jq_p[jq_r]; job_tok = jq_t[jq_r]; end
             if (st_fb)  begin job_v = 1'b1; job_user = res_u; job_pos = res_p + 1'b1; job_tok = fb_tok; end
+            if(TOKEN_TYPES) begin
+                if(st_new) job_token_type=nu_type;
+                if(st_q) job_token_type=jq_type[jq_r];
+                if(st_fb) job_token_type=fb_type;
+            end
         end
     end
 
@@ -217,7 +230,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
             side_user <= 0; side_addr <= 0; side_len <= 0;
             run_eosen <= 1'b0; run_eos <= 0; run_maxl <= 0;
             res_v <= 1'b0; res_stop <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0;
-            next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
+            next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;nu_type<=3'd7;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0; pr_re <= 1'b0; pr_user <= 0; pr_pos <= 0;
             jq_w <= 0; jq_r <= 0; jq_n <= 0;
             tok_valid <= 1'b0; tok_user <= 0; tok_pos <= 0; tok_id <= 0; tok_stop <= 1'b0; users_done <= 0;
@@ -277,6 +290,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                 end
                 if (fb_v && fb_cont && !st_fb) begin
                     jq_u[jq_w] <= res_u; jq_p[jq_w] <= res_p + 1'b1; jq_t[jq_w] <= fb_tok;
+                    if(TOKEN_TYPES) jq_type[jq_w]<=fb_type;
                     jq_w <= (jq_w == UB'(MAXU - 1)) ? {UB{1'b0}} : jq_w + 1'b1;
                 end
                 if (st_q) jq_r <= (jq_r == UB'(MAXU - 1)) ? {UB{1'b0}} : jq_r + 1'b1;
@@ -293,6 +307,8 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                 pr_t1 <= pr_t0; pr_u1 <= pr_u0;
                 if (pr_t1 == 1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
                 if (pr_t1 == 2) ptok[pr_u1[UB-1:0]] <= pr_q;
+                if(TOKEN_TYPES && pr_t1==1) nu_type<=pr_token_type;
+                if(TOKEN_TYPES && pr_t1==2) ptype[pr_u1[UB-1:0]]<=pr_token_type;
                 if (cfg_users > MAXU) flt(4'd7);
                 // a new run (cfg_users returns to 0 between runs): clear the user scheduler
                 if (cfg_users == 0) begin next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; users_done <= 0; end
