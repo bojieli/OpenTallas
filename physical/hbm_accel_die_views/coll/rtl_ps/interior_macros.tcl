@@ -28,6 +28,8 @@ foreach name $macros {
     }
     set x [expr {$x0+($i%3)*($mw+$gap)}]
     set y [expr {$y0+($i/3)*($mh+$gap)}]
+    # RTL macro placement locks its result; explicitly unlock before moving.
+    $inst setPlacementStatus PLACED
     $inst setOrient R0
     $inst setLocation [expr {int(round($x*$units))}] [expr {int(round($y*$units))}]
     $inst setPlacementStatus FIRM
