@@ -35,7 +35,7 @@ EXTRA=${EXTRA_SRC:-}
   physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
   rtl/gpu/ot_gpu_fadd.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
-D=""; [ -n "$MUT" ] && D="-D$MUT"; [ "$U" = sfu_unit ] && D="$D -DUNIT_SFU"
+D="${XDEF:-}"; [ -n "$MUT" ] && D="$D -D$MUT"; [ "$U" = sfu_unit ] && D="$D -DUNIT_SFU"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN --top-module $TOP \
   -I"$OUT/vec" $D ${CFAST:+-MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0"} -Mdir "$OUT/obj${MUT:+_$MUT}" $SRC $EXTRA $TB -j ${J:-16} \
   > "$OUT/build${MUT:+_$MUT}.log" 2>&1 || { rm -f "$OUT/run${MUT:+_$MUT}.log"; tail -30 "$OUT/build${MUT:+_$MUT}.log"; exit 2; }

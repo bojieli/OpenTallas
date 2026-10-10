@@ -54,17 +54,17 @@ UNITS = {
                 'rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv'], (900, 900), (1100, 800),
                 'run_hc_unit.sh (HGI_HC_UNIT: Model.hc_mixes exact incl. Sinkhorn, K 256 / 800 / 28,672 on the real VM + a '
                 'reordering HBM model; MUT_POST FAIL); routed at W 8, RMAX 8'),
-    'su_unit': ('ot_hgi_su_unit', V41 + ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv', 'rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv',
-                'rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv', 'rtl/hdc/v41x/ot_hdc_v41x_vec.sv', f'{A}/ot_hgi_su_record.sv',
-                'rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv'], (1500, 1500), (1800, 1400),
+    'su_unit': ('ot_hgi_su_ctl', [f'{A}/ot_hgi_su_record.sv', 'rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv'],
+                (320, 320), (420, 260),
                 'run_small.sh su_unit / sfu_unit, run_su_stream.sh [PUB], run_fused_unit.sh (HGI_SU_UNIT / SFU_UNIT / '
-                'SU_STREAM / PUB_STREAM / FUSED_UNIT PASS on the real VM; MUT_DIRTY FAIL); routed at N 8, LV 5, 1K words'),
+                'SU_STREAM / PUB_STREAM / FUSED_UNIT PASS on the real VM; MUT_DIRTY FAIL); routed: the SU unit CONTROLLER '
+                '(record adapter + stage / drain / STREAM; the vec and its local memory are the r25 SU envelope)'),
 }
 PARAMS = {'ot_hgi_hc_unit': ' --param W=8 --param RMAX=8',
-          'ot_hgi_su_unit': ' --param N=8 --param LV=5 --param LWB=10 --param SLB=8'}
+          'ot_hgi_su_ctl': ''}
 
 
-NOLEG = {'ot_hgi_su_unit', 'ot_hgi_hc_unit', 'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover', 'ot_hgi_sm_xload', 'ot_hgi_sm_pub'}     # no legacy pass-through parameter
+NOLEG = {'ot_hgi_su_ctl', 'ot_hgi_hc_unit', 'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover', 'ot_hgi_sm_xload', 'ot_hgi_sm_pub'}     # no legacy pass-through parameter
 
 
 def route(top, srcs, die, hm, pd):
