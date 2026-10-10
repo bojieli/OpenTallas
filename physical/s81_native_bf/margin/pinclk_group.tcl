@@ -21,7 +21,8 @@ proc bf_pinclk_group {} {
   set pat [expr {[info exists ::env(BF_PINCLK_PATTERN)] ? $::env(BF_PINCLK_PATTERN) : "g_pin.r_*"}]
   set sinks {}; set skipped 0
   foreach inst [$blk getInsts] {
-    if {![string match $pat [$inst getName]]} continue
+    set iname [$inst getName]
+    if {![string match $pat $iname] && ![string match {cfg_d_i*} $iname]} continue
     if {![bf_pc_is_seq [$inst getMaster]]} continue
     set ck [$inst findITerm CLK]
     if {$ck eq "NULL" || $ck eq ""} continue
@@ -31,51 +32,22 @@ proc bf_pinclk_group {} {
   if {[llength $sinks] == 0} { error "BF_PINCLK: no $pat register on the root clock net [$root getName] (skipped $skipped)" }
   set bm [[ord::get_db] findMaster [expr {[info exists ::env(BF_PINCLK_BUF)] ? $::env(BF_PINCLK_BUF) : "BUFx24_ASAP7_75t_R"}]]
   if {$bm eq "NULL" || $bm eq ""} { error "BF_PINCLK: no buffer master" }
-  # a2 (2026-10-09 11:00): spatial sink groups.  Routes a/b/c900 showed the single group's H-tree puts the pin registers that sit
-  # alone at the die edge (west edge x < 5 um: xs_q0[176..183], xb_d[150..160], xb_sv, xs_p; north edge strip) on long branches
-  # +25..+80 ps over the group mean.  Each single-linkage cluster (BF_PINCLK_LINK um, default 60) of pin registers gets its OWN root
-  # buffer on clk, so TritonCTS builds one child tree per cluster and latency-balances the trees (CTS-0033) instead of stretching
-  # one H-tree over 1000 um.  The main body stays one group.
-  set link [expr {[info exists ::env(BF_PINCLK_LINK)] ? $::env(BF_PINCLK_LINK) : 60} * 1000]
-  set left $sinks; set groups {}
-  while {[llength $left]} {
-    set cl [list [lindex $left 0]]; set left [lrange $left 1 end]; set frontier $cl
-    while {[llength $frontier]} {
-      set nf {}; set keep {}
-      foreach it $left {
-        lassign [[$it getInst] getLocation] x y; set near 0
-        foreach c $frontier { lassign [[$c getInst] getLocation] cx cy; if {abs($cx-$x)+abs($cy-$y) <= $link} { set near 1; break } }
-        if {$near} { lappend nf $it } else { lappend keep $it }
-      }
-      set left $keep; lappend cl {*}$nf; set frontier $nf
-    }
-    lappend groups $cl
-  }
-  set groups [lsort -command {apply {{a b} {expr {[llength $b] - [llength $a]}}}} $groups]
-  set core [$blk getCoreArea]; set w [$bm getWidth]; set h [$bm getHeight]
-  set g 0
-  foreach cl $groups {
-    set bn [expr {$g == 0 ? "bf_pinclk_root" : "bf_pinclk_root$g"}]; set nnn [expr {$g == 0 ? "bf_pinclk" : "bf_pinclk$g"}]
-    set b [odb::dbInst_create $blk $bm $bn]
-    set nn [odb::dbNet_create $blk $nnn]
-    $nn setSigType CLOCK
-    [$b findITerm A] connect $root
-    [$b findITerm Y] connect $nn
-    set sx 0; set sy 0
-    foreach it $cl { lassign [[$it getInst] getLocation] x y; incr sx $x; incr sy $y; $it disconnect; $it connect $nn }
-    if {$g == 0} {
-      # main group: at the clock root (the clk port)
-      set bb [$bt getBBox]
-      set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
-    } else { set x [expr {$sx / [llength $cl]}]; set y [expr {$sy / [llength $cl]}] }
-    set x [expr {max([$core xMin], min($x, [$core xMax] - $w))}]
-    set y [expr {max([$core yMin], min($y, [$core yMax] - $h))}]
-    $b setLocation $x $y
-    $b setPlacementStatus PLACED
-    puts "BF_PINCLK group: [llength $cl] $pat register clock pins moved from [$root getName] to $nnn (driver $bn [$bm getName] at [expr {$x/1000.0}] [expr {$y/1000.0}] um)"
-    incr g
-  }
-  puts "BF_PINCLK groups: $g for [llength $sinks] pin registers (link [expr {$link/1000}] um); $skipped matching registers on other clock nets left in place"
+  set b [odb::dbInst_create $blk $bm bf_pinclk_root]
+  set nn [odb::dbNet_create $blk bf_pinclk]
+  $nn setSigType CLOCK
+  [$b findITerm A] connect $root
+  [$b findITerm Y] connect $nn
+  foreach it $sinks { $it disconnect; $it connect $nn }
+  # at the clock root: the clk port, pulled inside the core area
+  set bb [$bt getBBox]
+  set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+  set core [$blk getCoreArea]
+  set w [$bm getWidth]; set h [$bm getHeight]
+  set x [expr {max([$core xMin], min($x, [$core xMax] - $w))}]
+  set y [expr {max([$core yMin], min($y, [$core yMax] - $h))}]
+  $b setLocation $x $y
+  $b setPlacementStatus PLACED
+  puts "BF_PINCLK group: [llength $sinks] $pat register clock pins moved from [$root getName] to bf_pinclk (driver bf_pinclk_root [$bm getName] at [expr {$x/1000.0}] [expr {$y/1000.0}] um); $skipped matching registers on other clock nets left in place"
   set ::bf_pinclk_n [llength $sinks]
 }
 proc bf_pinclk_stats {tag} {
@@ -101,11 +73,53 @@ proc bf_pinclk_stats {tag} {
     }
   } e]} { puts "BF_PINCLK $tag stats failed: $e" }
 }
+
+# v3 (2026-10-09 19:30, owner STRUCTURAL hold): hold classification of the routed c900 / a / b dbs: the dominant class is R2R
+# g_pin.r_* (pin group, ungated) -> g_rc.u_elem.g_qb.g_bx.b_* (element input regs on the ICG-gated eclk tree): 1,407 endpoints,
+# worst -37.4, mean capture-launch skew +52 ps with ~73 ps of data path.  TritonCTS balanced the pin group to the overall mean,
+# but its capture regs sit on the deeper gated tree.  Fix: after CTS, delay the WHOLE pin group (a buffer chain in front of
+# bf_pinclk_root, one point, so the group stays tight) until its mean clock arrival reaches the mean arrival of the b_* capture
+# registers + ::bf_pinclk_shift_extra ps.  I2R / outputs are unaffected: the sign-off IO reference L is the pin group's own
+# mean.  Setup on pin -> b_* is short (data ~73 ps).  The 48 cfg_d capture flops (yosys name cfg_d_i*) join the group.
+proc bf_pc_mean {pat} {
+  set s 0.0; set n 0
+  foreach p [get_pins -quiet -hierarchical $pat] { set a [get_property $p arrival_max_rise]; if {[string is double -strict $a]} { set s [expr {$s+$a}]; incr n } }
+  return [expr {$n ? $s/$n : -1}]
+}
+proc bf_pinclk_shift {} {
+  set ex [expr {[info exists ::bf_pinclk_shift_extra] ? $::bf_pinclk_shift_extra : 0}]
+  set blk [ord::get_db_block]
+  set rb [$blk findInst bf_pinclk_root]; if {$rb eq "NULL" || $rb eq ""} { puts "BF_PINCLK shift: no root"; return }
+  set root [[$rb findITerm A] getNet]
+  set bm [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
+  lassign [$rb getLocation] x y
+  set_propagated_clock [all_clocks]
+  for {set i 0} {$i < 40} {incr i} {
+    estimate_parasitics -placement
+    set w [sta::worst_slack_cmd max]
+    set mp [bf_pc_mean g_pin.r_*/CLK]; set mb [bf_pc_mean g_rc.u_elem.g_qb.g_bx.b_*/CLK]
+    puts [format "BF_PINCLK shift it %d: pin mean %.1f, b_* capture mean %.1f, target +%s" $i $mp $mb $ex]
+    if {$mp < 0 || $mb < 0 || $mp >= $mb + $ex - 4} break
+    # one more buffer at the head of the chain (between the root clock net and the current chain input)
+    set a [$rb findITerm A]
+    set cur [$a getNet]
+    set b [odb::dbInst_create $blk $bm bf_pinclk_dly$i]
+    set nn [odb::dbNet_create $blk bf_pinclk_dly${i}_n]; $nn setSigType CLOCK
+    $a disconnect; $a connect $nn
+    [$b findITerm Y] connect $nn
+    [$b findITerm A] connect $cur
+    $b setLocation $x $y; $b setPlacementStatus PLACED
+    set rb $b
+  }
+  puts "BF_PINCLK shift: $i delay buffers in front of bf_pinclk_root"
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs bf_pc_cts_orig] eq ""} {
   rename clock_tree_synthesis bf_pc_cts_orig
   proc clock_tree_synthesis {args} {
     bf_pinclk_group
     bf_pc_cts_orig {*}$args
     bf_pinclk_stats post_cts
+    bf_pinclk_shift
+    bf_pinclk_stats post_shift
   }
 }
