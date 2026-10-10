@@ -14885,6 +14885,12 @@ def dsrom_mtp_p2_transport_model():
     return model()
 
 
+def dsrom_mtp_p2_rootpipe_model():
+    """Static decode separation and pin-local single-flight P2 output sizing."""
+    from dsrom_mtp_p2_transport_model import rootpipe_model
+    return rootpipe_model()
+
+
 def hbm_loader_native_service_model():
     """Finite deployment ingress; unresolved transport never earns token credit."""
     from hbm_loader_native_service_model import model
