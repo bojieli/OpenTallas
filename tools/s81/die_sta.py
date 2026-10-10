@@ -349,6 +349,8 @@ def main():
     ap.add_argument('--measured', type=Path, default=ROOT / 'results/rtl/budgets_20261006/measured_insertion.json',
                     help='closure-loop routed block clock insertion: the in-arc insertion of closed / assembled views, '
                          'subtracted from their planned pin latency (balanced die tree, balance_latency)')
+    ap.add_argument('--selector-square-planning', action='store_true', help='audit square FRPR selector source binding; unqualified old slab geometry is retained explicitly')
+    ap.add_argument('--require-qualified-selector', action='store_true', help='refuse the square selector while actual die composition gates remain open')
     ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
     a = ap.parse_args()
@@ -365,6 +367,18 @@ def main():
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
     parts = dict(PARTS)
+    if a.selector_square_planning:
+        selector = json.loads((vroot / 'physical/s81_ph_views/selector/composition_square_frpr.json').read_text())
+        if selector.get('variant') != 'square_frpr' or selector.get('qualified') is not False:
+            raise ValueError('square selector planning receipt is invalid')
+        parts['dsfd_bk_selector'] = ('dsfd_selt_q2', 'dsfd_selt_c')
+        rec['selector_binding'] = selector
+        # The same-name old assembly and same-name quarter can never qualify
+        # a new floorplan/source composition from the global lib scan.
+        for index in cls_.values():
+            index.pop('dsfd_bk_selector', None)
+        if a.require_qualified_selector:
+            raise ValueError('UNQUALIFIED square selector: ' + '; '.join(selector['qualification_problems']))
     if getattr(S, 'COLL_SPLIT3_CR', False):
         parts['dsfd_sp_collective'] = COLL_CR_PARTS + ('dsfd_coll_ck',)
         binding = collective_credit_binding(vroot)
@@ -409,7 +423,11 @@ def main():
             cells.append((mst, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
             r_ = dict(view='interim', ports=len(ports))
             if mst in parts:
-                if mst == 'dsfd_sp_collective' and 'collective_binding' in rec:
+                if mst == 'dsfd_bk_selector' and 'selector_binding' in rec:
+                    done = []
+                    r_['qualification'] = 'UNQUALIFIED'
+                    r_['binding_problems'] = rec['selector_binding']['qualification_problems']
+                elif mst == 'dsfd_sp_collective' and 'collective_binding' in rec:
                     done = sorted(rec['collective_binding']['tile_bindings'])
                     if rec['collective_binding']['clock_binding']:
                         done.append('dsfd_coll_ck')

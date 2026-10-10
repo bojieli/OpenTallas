@@ -34,7 +34,7 @@ def io(names, d):
     return [[n, d] for n in names]
 
 
-def build(ph):
+def build(ph, selector_square=False):
     rd = lambda p: json.loads((ph / p).read_text())  # noqa: E731
     sel = rd('results/rtl/s81_ph_20261006/selector/tiles.json')
     col = rd('results/rtl/s81_ph_20261006/collector/tiles.json')
@@ -114,6 +114,26 @@ def build(ph):
           'lane taps to the neighbour columns (237.6 pitch, abutted)', 'ot_s81ph_root_tile / trunk')])
     tile('ot_s81ph_root_blk', 'dsfd_sp_gather', 128, edges=[
         E(io(['i'], 'in') + io(['o', 'f'], 'out'), ABUT, 'root sub-block inside its root tile (abutted)', 'ot_s81ph_root_tile')])
+    if selector_square:
+        sel = rd('physical/s81_ph_views/selector/composition_square_frpr.json')
+        quarter = rd('physical/s81_ph_views/ports/contract_selsq_ckS/dsfd_selt_q2/ports.json')
+        T.pop('dsfd_selt_q')
+        worst = max(b['length_um_max'] for b in sel['bundles'])
+        # Direct source RTL still has no seam stations. Do not publish planned
+        # segmented lengths as if the implementation already contained them.
+        T['dsfd_selt_q2'] = dict(slab='dsfd_bk_selector', instances=4,
+            size_um=[quarter['w_um'], quarter['h_um']], domain='stream_1p2',
+            clock_ports=['ck'], qualification='UNQUALIFIED',
+            binding_problems=sel['qualification_problems'],
+            source_commit=sel['source_commit'], params=sel['params'], edges=[
+                E(io(['lane'], 'in'), inherit=['dsfd_bk_selector', None],
+                  what='die lane chain requires square floorplan composition'),
+                E(io(['t_s', 't_o'], 'out') + io(['f_c', 'f_cr'], 'in'), worst,
+                  'square quarter/control direct source seam; planned stations not implemented', 'dsfd_selt_c')])
+        T['dsfd_selt_c']['edges'][0] = E(io(['f_s', 'f_o'], 'in') + io(['t_c', 't_cr'], 'out'),
+            worst, 'actual square seam envelope, UNQUALIFIED', 'dsfd_selt_q2')
+        T['dsfd_selt_c']['qualification'] = 'UNQUALIFIED'
+        T['dsfd_selt_c']['binding_problems'] = sel['qualification_problems']
     return T
 
 
@@ -121,9 +141,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ph-root', required=True, type=Path)
     ap.add_argument('--commit', default='')
+    ap.add_argument('--selector-square', action='store_true', help='source-bound square FRPR planning variant; never qualify the stale strip geometry')
     ap.add_argument('--out', required=True, type=Path)
     a = ap.parse_args()
-    T = build(a.ph_root)
+    T = build(a.ph_root, selector_square=a.selector_square)
     a.out.write_text(json.dumps(dict(schema='opentallas.budgets.tiles.v1', source_commit=a.commit, tiles=T), indent=1) + '\n')
     print(len(T), sorted(T))
 

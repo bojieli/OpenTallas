@@ -1,0 +1,417 @@
+{
+ "schema": "opentallas.s81.selector-square.v1",
+ "variant": "square_frpr",
+ "source_commit": "1dc5e37d5476277c7413c341b42e09d2dd405bd5",
+ "default_enabled": false,
+ "qualified": false,
+ "params": {
+  "SAFE": 1,
+  "PIPE2": 1,
+  "CMP_RETIME": 1,
+  "QIO": 1,
+  "FRPR": 1,
+  "MRG_PIPE": 1,
+  "RQPIPE": 1,
+  "SLAT": 4,
+  "SEARCH_PIPE": 1
+ },
+ "tiles": [
+  {
+   "inst": "u_q0",
+   "master": "dsfd_selt_q2",
+   "x": 6.544,
+   "y": 0.0,
+   "orient": "R0",
+   "lane_order": "SW"
+  },
+  {
+   "inst": "u_q1",
+   "master": "dsfd_selt_q2",
+   "x": 654.5440000000001,
+   "y": 0.0,
+   "orient": "R0",
+   "lane_order": "SE"
+  },
+  {
+   "inst": "u_q2",
+   "master": "dsfd_selt_q2",
+   "x": 6.544,
+   "y": 324.0,
+   "orient": "R0",
+   "lane_order": "NW"
+  },
+  {
+   "inst": "u_q3",
+   "master": "dsfd_selt_q2",
+   "x": 654.5440000000001,
+   "y": 324.0,
+   "orient": "R0",
+   "lane_order": "NE"
+  },
+  {
+   "inst": "u_c",
+   "master": "dsfd_selt_c",
+   "x": 481.744,
+   "y": 140.4,
+   "orient": "R0"
+  }
+ ],
+ "tile_area_um2": 526652.9280000001,
+ "local_outline_um": [
+  1086.544,
+  604.8
+ ],
+ "existing_slab_outline_um": [
+  5270.376,
+  321.816
+ ],
+ "existing_slab_height_deficit_um": 282.984,
+ "source_contracts": {
+  "physical/s81_ph_views/ports/contract_selsq_ckS/dsfd_selt_q2/ports.json": "fb5594d22e12fc284657babd6f3096cf201878444395e52bc9a033ace4009634",
+  "physical/s81_ph_views/ports/contract/dsfd_selt_c/ports.json": "541783c564e792560d9852a303740640cb4a89947a57c3e2d9664c28327e3e84"
+ },
+ "clock_map": {
+  "u_q0/ck": "ck",
+  "u_q1/ck": "ck",
+  "u_q2/ck": "ck",
+  "u_q3/ck": "ck",
+  "u_c/ck": "ck"
+ },
+ "reset_map": {
+  "u_q0/rst": "rst",
+  "u_q1/rst": "rst",
+  "u_q2/rst": "rst",
+  "u_q3/rst": "rst",
+  "u_c/rst": "rst"
+ },
+ "die_ports": {
+  "lanes": {
+   "iSW": [
+    "u_q0",
+    "lane"
+   ],
+   "iSE": [
+    "u_q1",
+    "lane"
+   ],
+   "iNW": [
+    "u_q2",
+    "lane"
+   ],
+   "iNE": [
+    "u_q3",
+    "lane"
+   ]
+  },
+  "vd": [
+   "u_c",
+   "vd"
+  ],
+  "vf": [
+   "u_c",
+   "vf"
+  ]
+ },
+ "bundles": [
+  {
+   "quarter": 0,
+   "width": 865,
+   "src": [
+    "u_q0",
+    "t_s"
+   ],
+   "dst": [
+    "u_c",
+    "f_s[0+:865]"
+   ],
+   "length_um_max": 147.504,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 147.504,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 0,
+   "width": 354,
+   "src": [
+    "u_q0",
+    "t_o"
+   ],
+   "dst": [
+    "u_c",
+    "f_o[0+:354]"
+   ],
+   "length_um_max": 113.52,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 113.52,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 0,
+   "width": 66,
+   "src": [
+    "u_c",
+    "t_c[0+:66]"
+   ],
+   "dst": [
+    "u_q0",
+    "f_c"
+   ],
+   "length_um_max": 91.776,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 91.776,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 0,
+   "width": 1,
+   "src": [
+    "u_c",
+    "t_cr[0+:1]"
+   ],
+   "dst": [
+    "u_q0",
+    "f_cr"
+   ],
+   "length_um_max": 77.28,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 77.28,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 1,
+   "width": 865,
+   "src": [
+    "u_q1",
+    "t_s"
+   ],
+   "dst": [
+    "u_c",
+    "f_s[865+:865]"
+   ],
+   "length_um_max": 579.312,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 289.656,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 1,
+   "width": 354,
+   "src": [
+    "u_q1",
+    "t_o"
+   ],
+   "dst": [
+    "u_c",
+    "f_o[354+:354]"
+   ],
+   "length_um_max": 545.328,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 272.664,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 1,
+   "width": 66,
+   "src": [
+    "u_c",
+    "t_c[66+:66]"
+   ],
+   "dst": [
+    "u_q1",
+    "f_c"
+   ],
+   "length_um_max": 523.584,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 261.792,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 1,
+   "width": 1,
+   "src": [
+    "u_c",
+    "t_cr[1+:1]"
+   ],
+   "dst": [
+    "u_q1",
+    "f_cr"
+   ],
+   "length_um_max": 509.088,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 254.544,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 2,
+   "width": 865,
+   "src": [
+    "u_q2",
+    "t_s"
+   ],
+   "dst": [
+    "u_c",
+    "f_s[1730+:865]"
+   ],
+   "length_um_max": 103.44,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 103.44,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 2,
+   "width": 354,
+   "src": [
+    "u_q2",
+    "t_o"
+   ],
+   "dst": [
+    "u_c",
+    "f_o[708+:354]"
+   ],
+   "length_um_max": 137.424,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 137.424,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 2,
+   "width": 66,
+   "src": [
+    "u_c",
+    "t_c[132+:66]"
+   ],
+   "dst": [
+    "u_q2",
+    "f_c"
+   ],
+   "length_um_max": 159.168,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 159.168,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 2,
+   "width": 1,
+   "src": [
+    "u_c",
+    "t_cr[2+:1]"
+   ],
+   "dst": [
+    "u_q2",
+    "f_cr"
+   ],
+   "length_um_max": 173.664,
+   "minimum_stations": 0,
+   "equal_segment_um_lower_bound": 173.664,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 3,
+   "width": 865,
+   "src": [
+    "u_q3",
+    "t_s"
+   ],
+   "dst": [
+    "u_c",
+    "f_s[2595+:865]"
+   ],
+   "length_um_max": 535.248,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 267.624,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 3,
+   "width": 354,
+   "src": [
+    "u_q3",
+    "t_o"
+   ],
+   "dst": [
+    "u_c",
+    "f_o[1062+:354]"
+   ],
+   "length_um_max": 569.232,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 284.616,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 3,
+   "width": 66,
+   "src": [
+    "u_c",
+    "t_c[198+:66]"
+   ],
+   "dst": [
+    "u_q3",
+    "f_c"
+   ],
+   "length_um_max": 590.976,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 295.488,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  },
+  {
+   "quarter": 3,
+   "width": 1,
+   "src": [
+    "u_c",
+    "t_cr[3+:1]"
+   ],
+   "dst": [
+    "u_q3",
+    "f_cr"
+   ],
+   "length_um_max": 605.472,
+   "minimum_stations": 1,
+   "equal_segment_um_lower_bound": 302.736,
+   "final_pin_segment_target_um": 100,
+   "geometry_status": "station placement required"
+  }
+ ],
+ "interface_bits": 7204,
+ "internal_bundle_bits": 5144,
+ "lane_bits_per_cycle": 2060,
+ "memory": {
+  "replicas": 24,
+  "bytes_per_read_port_cycle": 32,
+  "logical_quarter_read_bits": 768,
+  "macros_per_quarter": 6
+ },
+ "macs_per_cycle": 0,
+ "latency": {
+  "measured_tail_minus_native_mean_cycles": 174,
+  "measured_tail_minus_native_max_cycles": 310,
+  "baseline_mean_cycles": 127,
+  "measured_increment_over_127_cycles": 47,
+  "inherited_recipe_total_65_status": "UNVERIFIED baseline attribution",
+  "added_composition_cycles_status": "UNPRICED pending station implementation and minimum exactness gate"
+ },
+ "qualification_problems": [
+  "square quarter live routed TT/FF/DRC/LEF MATCH and SS/TT/FF ETMs pending",
+  "selector control hardview must match MRG_PIPE=1 RQPIPE=1 SLAT=4 XDX=1 SEARCH_PIPE=1",
+  "R0 quarter/control seam stations are not implemented or placed; existing direct RTL is insufficient",
+  "clock roots, source latency and cross-root lockups require measured qualification",
+  "new slab height does not fit existing selector die slot; generator floorplan change required",
+  "lane chains and VM output station geometry require full die composition",
+  "minimum full-width transaction gate with actual seam latencies and finite credits required",
+  "routing tracks and PDN/grid proofs require actual hardened LEFs, not placeholder orientations"
+ ]
+}

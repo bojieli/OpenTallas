@@ -1,0 +1,187 @@
+{
+ "element": "dsfd_bk_selector_square_frpr",
+ "selected": false,
+ "model_before_build": true,
+ "macs_per_cycle": 0,
+ "replicas": {
+  "quarters": 4,
+  "control": 1,
+  "SRAM_macros": 24
+ },
+ "communication": {
+  "lane_bits_per_cycle": 2060,
+  "internal_bundle_bits": 5144,
+  "boundary_bits": 7204
+ },
+ "memory": {
+  "replicas": 24,
+  "bytes_per_read_port_cycle": 32,
+  "logical_quarter_read_bits": 768,
+  "macros_per_quarter": 6
+ },
+ "area_um2": 526652.9280000001,
+ "local_outline_um": [
+  1086.544,
+  604.8
+ ],
+ "old_slot_height_deficit_um": 282.984,
+ "latency": {
+  "measured_tail_minus_native_mean_cycles": 174,
+  "measured_tail_minus_native_max_cycles": 310,
+  "baseline_mean_cycles": 127,
+  "measured_increment_over_127_cycles": 47,
+  "inherited_recipe_total_65_status": "UNVERIFIED baseline attribution",
+  "added_composition_cycles_status": "UNPRICED pending station implementation and minimum exactness gate"
+ },
+ "mux_demux": "unchanged four-quarter status/result/control ownership; no eliminated mux credit",
+ "fanout": "source FRPR=1 three width-macro replicas per quarter; seam reset/credit fanout unqualified",
+ "routing_tracks": "actual LEF track and seam station capacity qualification pending; no admitted build",
+ "qualified": false,
+ "problems": [
+  "square quarter live routed TT/FF/DRC/LEF MATCH and SS/TT/FF ETMs pending",
+  "selector control hardview must match MRG_PIPE=1 RQPIPE=1 SLAT=4 XDX=1 SEARCH_PIPE=1",
+  "R0 quarter/control seam stations are not implemented or placed; existing direct RTL is insufficient",
+  "clock roots, source latency and cross-root lockups require measured qualification",
+  "new slab height does not fit existing selector die slot; generator floorplan change required",
+  "lane chains and VM output station geometry require full die composition",
+  "minimum full-width transaction gate with actual seam latencies and finite credits required",
+  "routing tracks and PDN/grid proofs require actual hardened LEFs, not placeholder orientations"
+ ],
+ "source_commit": "1dc5e37d5476277c7413c341b42e09d2dd405bd5",
+ "exact_log_sha256": "0c507c2e2dc9c70eee619ccfd2039f9c77883b846cff835a86d619651739a594",
+ "gate_observed": {
+  "segments": 32,
+  "out_beats": 639,
+  "replays": 6,
+  "errors": 0,
+  "threshold_mutant": "caught",
+  "frpr_mutant": "caught"
+ },
+ "jobs": {
+  "s81b-selt_q2-frprck2a-1dc5e37d5-tc-rd": {
+   "status": "RUNNING",
+   "stage_key": "route",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck2a-1dc5e37d5-tc-rd",
+   "updated": "2026-10-10T05:47:51-07:00",
+   "commit_full": "1dc5e37d5476277c7413c341b42e09d2dd405bd5",
+   "benches": {
+    "bench_exact_frpr": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "SELT_PIPE PASS\n",
+     "track": "parallel"
+    },
+    "bench_neg_threshold": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "SELT_PIPE FAIL\n",
+     "track": "parallel"
+    },
+    "bench_neg_frpr": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "SELT_PIPE FAIL\n",
+     "track": "parallel"
+    }
+   },
+   "calibration": {
+    "ss": {
+     "boundary": {
+      "n": 1576,
+      "mean": 546.6,
+      "min": 525.8,
+      "max": 573.1
+     },
+     "all": {
+      "n": 44559,
+      "mean": 542.9,
+      "min": 518.5,
+      "max": 578.9
+     },
+     "errors": []
+    },
+    "ff": {
+     "boundary": {
+      "n": 1576,
+      "mean": 339.9,
+      "min": 323.6,
+      "max": 361.3
+     },
+     "all": {
+      "n": 44559,
+      "mean": 337.9,
+      "min": 320.0,
+      "max": 372.1
+     },
+     "errors": []
+    },
+    "env": {
+     "CK_SS_MEAN": 418,
+     "CK_SS_ALL_MEAN": 415,
+     "CK_SS_MIN": 400,
+     "CK_SS_ALL_MIN": 395,
+     "CK_SS_MAX": 441,
+     "CK_SS_ALL_MAX": 451,
+     "CK_TT_MEAN": 418,
+     "CK_TT_ALL_MEAN": 415,
+     "CK_TT_MIN": 400,
+     "CK_TT_ALL_MIN": 395,
+     "CK_TT_MAX": 441,
+     "CK_TT_ALL_MAX": 451,
+     "CK_FF_MEAN": 340,
+     "CK_FF_ALL_MEAN": 338,
+     "CK_FF_MIN": 324,
+     "CK_FF_ALL_MIN": 320,
+     "CK_FF_MAX": 361,
+     "CK_FF_ALL_MAX": 372,
+     "CK_SSLIB_MEAN": 547,
+     "CK_SSLIB_MIN": 526,
+     "CK_SSLIB_MAX": 573,
+     "CK_SSLIB_ALL_MEAN": 543,
+     "CK_SSLIB_ALL_MIN": 518,
+     "CK_SSLIB_ALL_MAX": 579,
+     "CK_ROUTE_REF": "TT"
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+   }
+  },
+  "s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd": {
+   "status": "RUNNING",
+   "stage_key": "route",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd",
+   "updated": "2026-10-10T05:52:21-07:00",
+   "commit_full": "1dc5e37d5476277c7413c341b42e09d2dd405bd5",
+   "benches": {
+    "bench_exact_frpr": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "SELT_PIPE PASS\n",
+     "track": "parallel"
+    },
+    "bench_neg_threshold": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "SELT_PIPE FAIL\n",
+     "track": "parallel"
+    },
+    "bench_neg_frpr": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "SELT_PIPE FAIL\n",
+     "track": "parallel"
+    }
+   },
+   "calibration": null
+  }
+ }
+}

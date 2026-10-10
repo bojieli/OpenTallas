@@ -15704,3 +15704,28 @@ def hbm_su_r25gpht4_tile_sizing():
                 channel_capacity_status='actual macro abstractions and M7/channel route pending',
                 slot_fit_status='same tile outline; full actual placement/corner gate pending',
                 single_user_latency_status='transport envelope; controller schedule remains separately unqualified')
+
+
+def dsrom_selector_square_frpr_model():
+    """Default-off selector sizing from actual square source contracts.
+
+    No RTL/PnR launch is authorized by this model: seam stations and the die
+    slot are still unresolved. Measured source cycles are separate from the
+    unpriced transport mechanism to avoid replacing them with old recipe text.
+    """
+    from s81_ph.selector_square import build
+    receipt = build(Path(__file__).resolve().parents[1])
+    return dict(element='dsfd_bk_selector_square_frpr', selected=False,
+        model_before_build=True, macs_per_cycle=receipt['macs_per_cycle'],
+        replicas=dict(quarters=4, control=1, SRAM_macros=24),
+        communication= dict(lane_bits_per_cycle=receipt['lane_bits_per_cycle'],
+            internal_bundle_bits=receipt['internal_bundle_bits'],
+            boundary_bits=receipt['interface_bits']),
+        memory=receipt['memory'], area_um2=receipt['tile_area_um2'],
+        local_outline_um=receipt['local_outline_um'],
+        old_slot_height_deficit_um=receipt['existing_slab_height_deficit_um'],
+        latency=receipt['latency'],
+        mux_demux='unchanged four-quarter status/result/control ownership; no eliminated mux credit',
+        fanout='source FRPR=1 three width-macro replicas per quarter; seam reset/credit fanout unqualified',
+        routing_tracks='actual LEF track and seam station capacity qualification pending; no admitted build',
+        qualified=False, problems=receipt['qualification_problems'])
