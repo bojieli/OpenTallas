@@ -139,7 +139,7 @@ module hgi_e2e_coll_slot #(
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
         .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfg), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma));
-    defparam u_ce.u_ep.BF16 = COLL_BF16;
+    generate if (COLL_BF16 == 0) begin : g_fp32 defparam u_ce.u_ep.BF16 = 0; end endgenerate   // what-if: FP32 results
     // ---- record context (what the endpoint was told)
     integer k = -1, n_a = 0, gsize = 4, pf = 1, rnk = 0, nsub = 4, isbyp = 0, mall = 0;
     integer abase, obase;
