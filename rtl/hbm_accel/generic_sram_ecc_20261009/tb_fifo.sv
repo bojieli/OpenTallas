@@ -13,7 +13,8 @@ module tb_fifo;
   end
  end end
  for(genvar c=0;c<9;c=c+1)begin:g_reference
-  always @(negedge clk)begin #0.001; if(rst_n && dut.codec.g_ecc.g_c[c].result!==ot_gpu_w6_secded_pkg::decode64(dut.sampled[c*72+:72]))$fatal(1,"canonical decode mismatch"); end
+  // hgi-1010/d4: the two-stage decode (ot_hcoll_secded_dec2) must equal the canonical decode of its registered codeword
+  always @(negedge clk)begin #0.001; if(rst_n && !$isunknown(dut.g_ecc_head.u_dec.cw_q[c*72+:72]) && dut.g_ecc_head.u_dec.g_c[c].result!==ot_gpu_w6_secded_pkg::decode64(dut.g_ecc_head.u_dec.cw_q[c*72+:72]))$fatal(1,"canonical decode mismatch"); end
  end
  task flip(input integer b);
  begin case(b/256)

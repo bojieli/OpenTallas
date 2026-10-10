@@ -7,7 +7,8 @@
 #   top : the die master hfd_coll (rtl_ps/hfd_coll.sv: wrapper + core) through common/route_view.sh with MACROS =
 #         8 slices from rtl_ps/views/ot_hcoll_port (installed by tools/tt_views/ttv_install.sh from the slice route)
 #         + the core's SRAM macros, PDN pdn_top.tcl; corner_sta reads EVERY macro view (route_view.sh reads the first).
-# env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
+# env: OUT, CORES, PD, PER (0.833), HM (0.050), FACE_SDC (face clock taps, appended BEFORE the IO SDC so the taps are
+#      clocks when the IO SDC selects all_inputs -no_clocks; hgi-1010/d4), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
 #      macro halo "x y", default 340x340 / "4 4"), route_view.sh env (top)
 # coll-fallback 2026-10-08 (all default to the 8-slice behaviour above):
 #   SLICE   slice top module, ot_hcoll_port (default) or ot_hcoll_port2 (the 4-slice fallback: 2 ports a slice, 36 SRAMs;
@@ -38,14 +39,14 @@ if [ "$kind" = port ]; then
   fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   SL=${SLICE:-ot_hcoll_port}; SLSRC=""; [ $SL = ot_hcoll_port2 ] && SLSRC="--source rtl/hbm_accel/tu/ot_hcoll_port2.sv"
-  echo "kind=port slice=$SL mpt=${MPT:-} pintop=${PINTOP:-} pinbot=${PINBOT:-} die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
+  echo "kind=port slice=$SL mpt=${MPT:-} pintop=${PINTOP:-} pinbot=${PINBOT:-} die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} FACE_SDC=${FACE_SDC:-} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
   cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
   python3 tools/run_abi3_physical.py --view asap7 \
     ${MPT:+--orfs-var MACRO_PLACEMENT_TCL=/src/$MPT} ${PINTOP:+--pin-region "$PINTOP=top"} ${PINBOT:+--pin-region "$PINBOT=bottom"} \
     --macro-view $SRAM=$SD --macro-place-halo ${PHALO:-4 4} \
     --clock-port clk --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
     --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 --sdc-append physical/hbm_contracts_20261007/screening.sdc \
-    --sdc-append physical/hbm_contracts_20261007/reset_rst_n.sdc ${IO_ROUTE_SDC:+--sdc-append $IO_ROUTE_SDC} --stages pnr \
+    --sdc-append physical/hbm_contracts_20261007/reset_rst_n.sdc ${FACE_SDC:+--sdc-append $FACE_SDC} ${IO_ROUTE_SDC:+--sdc-append $IO_ROUTE_SDC} --stages pnr \
     --die-area 0 0 $DW $DH --core-area 1.08 1.08 $(python3 -c "print(round($DW-1.08,3), round($DH-1.08,3))") \
     --place-density ${PD:-0.5} --routing-layers M2 M6 --max-transition-ns library --max-fanout 8 \
     --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=-apply_ndr none" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \

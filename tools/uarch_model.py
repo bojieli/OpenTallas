@@ -70,6 +70,13 @@ def hgi_collective_payload_secded_model(widths=(544,545), ports=8):
         macro_outline_um=[94.824,41.04], words=rows,
         source='ot_hcoll_sram_prims.sv:sfifo/sfifo_x/sdelay;PSG NC8,NOG12',
         latency_added_edges=0, fifo_existing_edges=5, exported_fifo_existing_edges=5,
+        # hgi-1010/d4 (2026-10-10, PAYLOAD_ECC only): two-stage decode (syndrome, correction) everywhere; sliced head
+        # with replicated push; registered macro write in the exported FIFO; TX/RX pin flops on face taps (0 cycles)
+        ecc_latency_edges=dict(sfifo_push_to_head=7, sfifo_raw=5, sfifo_credit_loop=6, sfifo_credits=6,
+                               sfifo_x_added_vs_raw=2, sfifo_x_credit_loop=10, sfifo_x_slots=8, sfifo_x_rate=0.8,
+                               sdelay='D+3 (raw D)', port_tx_pacing_added=0, face_taps_added=0),
+        ecc_head_slices=9, ecc_added_flops_per_port=dict(syndrome_stage=5*(648+72), exported_write_stage=648+9,
+                                                      head_push_copies=2*9, pacing_flag=1),
         delay_existing_edges='D, 4..130', initiation_interval=1,
         token_latency_delta_cycles=0, throughput_qualification='pending RTL and timing gates',
         floorplan_slot_fit='same 165 macros at W544/545; codec cell area and channel fit pending',

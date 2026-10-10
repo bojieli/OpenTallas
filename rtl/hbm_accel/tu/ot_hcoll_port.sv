@@ -21,10 +21,11 @@ module ot_hcoll_port #(
     parameter integer SWCRED = 256,
     parameter integer K = 8,
     parameter integer PAYLOAD_ECC = 0,
-    parameter integer FACE_CK = 0       // 1: the RX pin flops run on the face clock tap ckf
+    parameter integer FACE_CK = 0       // bit 0: the RX pin flops run on the face clock tap ckf; bit 1: the TX pin flops on ckt
 ) (
     input  wire           clk,
-    input  wire           ckf,          // face clock tap (die leaf at the PHY face, option-1 source latency); tie to clk when FACE_CK = 0
+    input  wire           ckf,          // face clock tap (die leaf at the RX face, option-1 source latency); tie to clk when FACE_CK[0] = 0
+    input  wire           ckt,          // face clock tap (die leaf at the TX face); tie to clk when FACE_CK[1] = 0
     input  wire           rst_n,
     input  wire           qp_push,
     input  wire [PWT-1:0] qp_din,
@@ -49,7 +50,13 @@ module ot_hcoll_port #(
     // hgi-takeover (route e21dc1395 TT -158 / FF -80: rxf_p at the PHY face hung off a late in-block leaf, ~500 ps behind
     // the RX wire stage): with FACE_CK the RX pin flops run on the face tap ckf, a die clock leaf at the PHY face whose
     // option-1 source latency (face_ck.sdc: the block's interior insertion) aligns them with the interior registers
-    wire ckr = (FACE_CK != 0) ? ckf : clk;
+    wire ckr = (FACE_CK & 1) ? ckf : clk;
+    // hgi-1010/d4 (route 3b90d75fa pd50: the TX pin flops ph_tx_flit / ph_tx_v hung off a late in-block leaf at the TX
+    // face, 1,105 - 1,215 ps against the interior's ~810 ps TT -> FF hold -430 ps on u_txq -> ph_tx_flit, output setup
+    // -20): with FACE_CK[1] they run on the TX face tap ckt (a die clock leaf at the TX face, option-1 source latency =
+    // the interior insertion less the tap tree, measured per corner on the calibrate CTS: face_ck_latency.py).
+    wire ckx = (FACE_CK & 2) ? ckt : clk;
+    localparam integer TXF = (FACE_CK & 2) ? 1 : 0;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cr_p <= 1'b0; rbcr_p <= 1'b0; end
         else begin cr_p <= sw_cr_ret; rbcr_p <= rb_cr; end
@@ -87,7 +94,12 @@ module ot_hcoll_port #(
     wire [PWT-1:0] tx_head;
     wire [1:0] sc;
     integer acc;
-    wire tx_pop = !tx_empty && (acc + BITS_X100 >= PWB * 100);
+    // hgi-1010/d4 (TXF: route 3b90d75fa pd50 TT -49 on acc -> 32-bit add / compare -> tx_pop -> u_txq rp / ph_tx_v): the
+    // pacing test of the NEXT cycle is registered (acc_ok = acc' + BITS_X100 >= PWB * 100, computed from the value acc
+    // takes), so tx_pop is one flop and the empty test.  Exact: acc_ok always equals the old combinational test.
+    reg acc_ok;
+    wire acc_go = TXF ? acc_ok : (acc + BITS_X100 >= PWB * 100);
+    wire tx_pop = !tx_empty && acc_go;
     (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(1)) u_txq (.clk(clk), .rst_n(rst_n), .push(w1_v), .din(w1_d), .pop(tx_pop),
         .empty(tx_empty), .dout(tx_head), .ovf(tx_ovf), .count(sc));
     // ---- RX wire stages -> receive buffer (exported head) ----
@@ -101,7 +113,7 @@ module ot_hcoll_port #(
     // ---- state, output flops ----
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            credit <= SWCRED; acc <= 0; ph_tx_v <= 1'b0; stall <= 1'b0; fault <= 1'b0;
+            credit <= SWCRED; acc <= 0; acc_ok <= (BITS_X100 >= PWB * 100); stall <= 1'b0; fault <= 1'b0;
         end else begin : st
             integer a;
             credit <= credit - (tv ? 1 : 0) + (cr_p ? 1 : 0) + (drop[2] ? 1 : 0);
@@ -109,9 +121,11 @@ module ot_hcoll_port #(
             if (a > PWB * 100) a = PWB * 100;
             if (tx_pop) a = a - PWB * 100;
             acc <= a;
-            ph_tx_v <= tx_pop;
+            acc_ok <= (a + BITS_X100 >= PWB * 100);
             stall <= credit == 0 && !(qp_empty && qr_empty);
             fault <= fault | (|ue) | qp_ovf | qr_ovf | tx_ovf | rb_ovf;
         end
-    always @(posedge clk) ph_tx_flit <= tx_head;
+    // TX pin flops (on the TX face tap ckx with FACE_CK[1], else clk)
+    always @(posedge ckx or negedge rst_n) if (!rst_n) ph_tx_v <= 1'b0; else ph_tx_v <= tx_pop;
+    always @(posedge ckx) ph_tx_flit <= tx_head;
 endmodule

@@ -104,6 +104,98 @@ module ot_hcoll_payload_codec #(parameter integer W=545, parameter integer ECC=0
     end
 endmodule
 
+// hgi-1010/d4 (route 3b90d75fa pd50 TT -156 on u_qp rawb -> bank mux -> full SECDED decode -> ue_q, and every other
+// store's decode register at +10..+20 ps pre-route): the payload decode in TWO register stages (PAYLOAD_ECC only).
+//   stage 1 (this module's registers): the sampled codeword cw_q and, per 72-bit chunk, its 7-bit syndrome syn_q and
+//            overall parity ovr_q (the XOR trees, computed from the capture flop / bank mux);
+//   stage 2 (combinational out of stage 1, registered by the caller): correction, data extraction, ce / ue -- the
+//            same Hamming(72,64) equations as ot_hcoll_payload_codec.decode64, split at the syndrome.
+// decoded / ce / ue are a function of the stage-1 registers only: result[c] equals decode64(cw_q chunk c) exactly
+// (tb_fifo checks it against ot_gpu_w6_secded_pkg::decode64 every cycle).  +1 edge on every ECC read path.
+module ot_hcoll_secded_dec2 #(parameter integer W=545, parameter integer CW=((W+63)/64)*72)(
+    input  wire          clk,
+    input  wire [CW-1:0] sampled,
+    output reg  [CW-1:0] cw_q,
+    output wire [W-1:0]  decoded,
+    output wire          ce,
+    output wire          ue
+);
+  localparam integer N = CW / 72;
+  function automatic logic [7:0] syn64(input logic [71:0] code);
+    logic [6:0] s; logic [70:0] mask; integer p, k;
+    begin
+      for (k=0;k<7;k=k+1) begin
+        mask='0;
+        for (p=1;p<=71;p=p+1) if ((p & (1<<k)) != 0) mask[p-1]=1'b1;
+        s[k]=^(code[70:0]&mask);
+      end
+      syn64={^code, s};
+    end
+  endfunction
+  // {uncorrectable, corrected, data64} from the registered code, syndrome and overall parity (decode64's branches)
+  function automatic logic [65:0] fix64(input logic [71:0] code, input logic [6:0] syndrome, input logic overall);
+    logic [71:0] c; logic ue_, corrected; logic [63:0] data; integer p, j;
+    begin
+      c=code; ue_=0; corrected=0;
+      if (syndrome!=0) begin
+        if (overall && syndrome<=71) begin
+`ifndef OT_COLL_MUT_ECC_NO_CORRECT
+          for(p=1;p<=71;p=p+1) if(syndrome==p) c[p-1]=~c[p-1];
+`endif
+          corrected=1; end
+        else ue_=1;
+      end else if (overall) begin c[71]=~c[71]; corrected=1; end
+      data='0; j=0;
+      for (p=1;p<=71;p=p+1) if ((p & (p-1)) != 0) begin data[j]=c[p-1]; j=j+1; end
+      fix64={ue_,corrected,data};
+    end
+  endfunction
+  reg [7:0] syn_q [0:N-1];
+  wire [N*64-1:0] unpacked;
+  wire [N-1:0] cs, us;
+  always @(posedge clk) cw_q <= sampled;
+  for (genvar c=0;c<N;c=c+1) begin : g_c
+    always @(posedge clk) syn_q[c] <= syn64(sampled[c*72+:72]);
+    wire [65:0] result = fix64(cw_q[c*72+:72], syn_q[c][6:0], syn_q[c][7]);
+    assign unpacked[c*64+:64] = result[63:0];
+    assign cs[c] = result[64];
+    assign us[c] =
+`ifdef OT_COLL_MUT_ECC_UE_PUBLISH
+      1'b0;
+`else
+      result[65];
+`endif
+  end
+  assign decoded = unpacked[W-1:0]; assign ce = |cs; assign ue = |us;
+endmodule
+
+// hgi-1010/d4 (route 3b90d75fa pd50 TT -55 on u_qr ue_q -> head push -> 8 x 545 entry enables, -56 on the head read
+// pointer -> 545-bit 8:1 read mux -> the TX arbiter): the head FIFO of an ECC ot_hcoll_sfifo as NS lock-step slices
+// of <= 64 bits, each an ot_ha2_fifo with its own write / read pointers and its own registered push copy, so no
+// pointer or push fans out beyond one slice.  All slices push / pop together; empty / count are slice 0's.
+module ot_hcoll_headq #(parameter integer W=545, parameter integer AW=3, parameter integer SW=64,
+    parameter integer NS=(W+SW-1)/SW)(
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [NS-1:0] push,
+    input  wire [W-1:0]  din,
+    input  wire          pop,
+    output wire          empty,
+    output wire [W-1:0]  dout,
+    output wire          ovf,
+    output wire [AW:0]   count
+);
+  wire [NS-1:0] e, o;
+  wire [AW:0] cnt [0:NS-1];
+  for (genvar s=0;s<NS;s=s+1) begin : g_s
+    localparam integer LO = s*SW;
+    localparam integer WS = (W-LO < SW) ? W-LO : SW;
+    (* keep_hierarchy *) ot_ha2_fifo #(.W(WS), .AW(AW)) u_f (.clk(clk), .rst_n(rst_n), .push(push[s]), .din(din[LO+:WS]),
+        .pop(pop), .empty(e[s]), .dout(dout[LO+:WS]), .ovf(o[s]), .count(cnt[s]));
+  end
+  assign empty = e[0]; assign ovf = |o; assign count = cnt[0];
+endmodule
+
 // Fixed-latency delay line in SRAM: same port list and the same latency D as ot_ha2_delay, exact on valid beats
 // (d_out is defined only while v_out).  v_in at cycle t -> d_p (input flop, edge t) -> macro write (edge t+1, address
 // cnt) -> macro read at the fixed offset cnt - (D-3) (edge t+D-2) -> capture flop q (edge t+D-1) -> d_out at t+D.
@@ -134,7 +226,7 @@ module ot_hcoll_sdelay #(
     wire [W-1:0] decoded;
     wire ce, ue;
     // with PAYLOAD_ECC the input is registered before the encoder (f380ff981: TT -224 on the sender's head FIFO read ->
-    // arbiter -> SECDED encode -> d_p); the ECC line's latency is D + 2 (input register + decode register)
+    // arbiter -> SECDED encode -> d_p); the ECC line's latency is D + 3 (input register + two decode registers, g_reg)
     reg vi_q; reg [W-1:0] di_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) vi_q <= 1'b0; else vi_q <= v_in;
     always @(posedge clk) di_q <= d_in;
@@ -149,12 +241,16 @@ module ot_hcoll_sdelay #(
         .w_ce(vs[0]), .w_addr(cnt), .wd(d_p));
     // hgi-takeover (439ceed6b route: TT -246 on u_wtx q -> SECDED decode -> drop -> the port's credit counter): with
     // PAYLOAD_ECC the decoded word and its valid / ce / ue are registered (latency D + 1); without ECC unchanged (D).
+    // hgi-1010/d4: the decode itself in two register stages (ot_hcoll_secded_dec2: syndrome, then correction), so the
+    // ECC line's latency is D + 3 (input register + syndrome register + decode register).
     generate if (PAYLOAD_ECC != 0) begin : g_reg
-        reg vo, ceo, ueo; reg [W-1:0] dq;
+        reg vo, ceo, ueo, vsx; reg [W-1:0] dq;
+        wire [CW-1:0] cw_q; wire [W-1:0] decoded2; wire ce2, ue2;
+        ot_hcoll_secded_dec2 #(.W(W),.CW(CW)) u_dec (.clk(clk), .sampled(q), .cw_q(cw_q), .decoded(decoded2), .ce(ce2), .ue(ue2));
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin vo <= 1'b0; ceo <= 1'b0; ueo <= 1'b0; end
-            else begin vo <= vs[D-1] && !ue; ceo <= vs[D-1] && ce; ueo <= vs[D-1] && ue; end
-        always @(posedge clk) dq <= decoded;
+            if (!rst_n) begin vsx <= 1'b0; vo <= 1'b0; ceo <= 1'b0; ueo <= 1'b0; end
+            else begin vsx <= vs[D-1]; vo <= vsx && !ue2; ceo <= vsx && ce2; ueo <= vsx && ue2; end
+        always @(posedge clk) dq <= decoded2;
         assign v_out = vo; assign ecc_ce = ceo; assign ecc_ue = ueo; assign ecc_drop = ueo; assign d_out = dq;
     end else begin : g_comb
         assign v_out = vs[D-1] && !ue;
@@ -231,15 +327,22 @@ module ot_hcoll_sfifo #(
     wire [CW-1:0] encoded;
     wire [W-1:0] decoded;
     wire ce, ue;
+    wire [CW-1:0] cw_q; wire [W-1:0] decoded2; wire ce2, ue2;
     wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
     ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
     // hgi-takeover (drive-0849 -616 ps rawb -> SECDED decode -> head FIFO write): with PAYLOAD_ECC the decoded word and
     // its ce / ue are registered (v3) before the head FIFO; the credit loop grows to 5 edges, so the head holds 8 and
     // KC = 5 credits keep full rate.  PAYLOAD_ECC = 0 is unchanged (no stage, K = 4, head 4).
-    localparam integer ES = PAYLOAD_ECC ? 1 : 0;
+    // hgi-1010/d4: ES = 2 with PAYLOAD_ECC -- the decode is two register stages (ot_hcoll_secded_dec2: syndrome v3,
+    // correction v4); the credit loop is 6 edges, KC = 6 credits, head 8 deep.  The head is NS lock-step 64-bit slices
+    // (ot_hcoll_headq), each pushed by its own registered copy hpush_q[s] = v3 && !ue (the push decision of v4), so
+    // neither the push enable nor a head pointer fans out over the 545-bit word.
+    localparam integer ES = PAYLOAD_ECC ? 2 : 0;
     localparam integer KC = K + ES;
-    reg v3; reg [W-1:0] dec_q; reg ce_q, ue_q;
-    wire hv  = ES ? v3 : v2;
+    localparam integer NS = (W + 63) / 64;
+    reg v3, v4; reg [W-1:0] dec_q; reg ce_q, ue_q;
+    reg [NS-1:0] hpush_q;
+    wire hv  = ES ? v4 : v2;
     wire hue = ES ? ue_q : ue;
     wire hce = ES ? ce_q : ce;
     assign ecc_ce=hv && hce; assign ecc_ue=hv && hue; assign ecc_drop=ecc_ue;
@@ -256,29 +359,37 @@ module ot_hcoll_sfifo #(
     wire do_pop = pop && !empty;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(KC); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; ovf <= 1'b0;
+            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(KC); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; hpush_q <= '0; ovf <= 1'b0;
         end else begin
             push_p <= push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 3'(fetch) + 3'(do_pop) + 3'(ecc_drop);
-            v1 <= fetch; v2 <= v1; v3 <= v2;
+            v1 <= fetch; v2 <= v1; v3 <= v2; v4 <= v3;
+            hpush_q <= {NS{v3 && !ue2}};
             if ((push_p && full) || hovf) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        dec_q <= decoded; ce_q <= ce; ue_q <= ue;
+        dec_q <= decoded2; ce_q <= ce2; ue_q <= ue2;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
-    wire [W-1:0] raw_q = ES ? dec_q : decoded;
-    ot_ha2_fifo #(.W(W), .AW(2 + ES)) u_head (.clk(clk), .rst_n(rst_n), .push(hv && !hue), .din(raw_q), .pop(pop),
-        .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
+    generate if (ES != 0) begin : g_ecc_head
+        ot_hcoll_secded_dec2 #(.W(W),.CW(CW)) u_dec (.clk(clk), .sampled(sampled), .cw_q(cw_q), .decoded(decoded2), .ce(ce2), .ue(ue2));
+        ot_hcoll_headq #(.W(W), .AW(3)) u_head (.clk(clk), .rst_n(rst_n), .push(hpush_q), .din(dec_q), .pop(pop),
+            .empty(empty), .dout(dout), .ovf(hovf), .count(hc[3:0]));
+        assign hc[2+ES] = 1'b0;
+    end else begin : g_raw_head
+        assign cw_q = '0; assign decoded2 = '0; assign ce2 = 1'b0; assign ue2 = 1'b0;
+        ot_ha2_fifo #(.W(W), .AW(2)) u_head (.clk(clk), .rst_n(rst_n), .push(v2 && !ue), .din(decoded), .pop(pop),
+            .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
+    end endgenerate
     assign count = scnt;
 endmodule
 
@@ -322,37 +433,60 @@ module ot_hcoll_sfifo_x #(
     // hgi-takeover (route hgi-coll-port-secded-577d24ba1 TT -222 on bs2 -> decode -> ue -> ocr): the decode lands in a
     // register stage (v3) before it drives out_v / out_d and the credit counter (+1 edge on the export; the credit loop
     // is 9 edges against K = 8 head slots: a full stream runs at 8 / 9, above the core's 4 delivery lanes per 8 ports)
-    reg          v3, ueq, ceq; reg [W-1:0] dq;
-    assign ecc_ce=v3 && ceq; assign ecc_ue=v3 && ueq; assign ecc_drop=ecc_ue;
+    // hgi-1010/d4 (route 3b90d75fa pd50, PAYLOAD_ECC only, EX = 1): (a) the decode is two register stages
+    // (ot_hcoll_secded_dec2: syndrome v3, correction v4) -- +1 edge on the export, the credit loop is 10 edges against
+    // K = 8 slots (a full stream at 8 / 10, still above the core's 4 delivery lanes per 8 ports); (b) the macro write
+    // is driven straight from flops (TT -49 on scnt -> full -> put -> bank -> w_ce: the macro clock pin sits ~190 ps
+    // early on its own CTS net): put_q / wp_q / wd_q register the write one edge later, and fetch reads the AVAILABLE
+    // count (words whose write has landed) while full still counts every accepted push.  PAYLOAD_ECC = 0 unchanged.
+    localparam integer EX = PAYLOAD_ECC ? 1 : 0;
+    reg          v3, v4, ueq, ceq; reg [W-1:0] dq;
+    wire [CW-1:0] cw_q; wire [W-1:0] decoded2; wire ce2, ue2;
+    wire vd = EX ? v4 : v3;
+    assign ecc_ce=vd && ceq; assign ecc_ue=vd && ueq; assign ecc_drop=ecc_ue;
     reg          bs1, bs2;
-    reg [AW:0]   scnt;
-    reg [AW-1:0] wp, rp;
+    reg [AW:0]   scnt, avail;
+    reg [AW-1:0] wp, rp, wp_q;
+    reg          put_q;
+    reg [CW-1:0] wd_q;
     reg [3:0]    ocr;
     reg          v1, v2;
     wire full  = scnt == (AW+1)'(N);
     wire put   = push_p && !full;
-    wire fetch = (scnt != '0) && (ocr != 4'd0);
+    wire fetch = (EX ? (avail != '0) : (scnt != '0)) && (ocr != 4'd0);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
+            push_p <= 1'b0; scnt <= '0; avail <= '0; put_q <= 1'b0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
         end else begin
             push_p <= push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
+            avail <= avail + (AW+1)'(put_q) - (AW+1)'(fetch);
+            put_q <= put;
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 4'(fetch) + 4'(cr_in) + 4'(ecc_drop);
-            v1 <= fetch; v2 <= v1; v3 <= v2; out_v <= v3 && !ueq;
+            v1 <= fetch; v2 <= v1; v3 <= v2; v4 <= v3; out_v <= vd && !ueq;
             if (push_p && full) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= encoded;
+        wp_q <= wp; wd_q <= din_p;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        dq <= decoded; ceq <= ce; ueq <= ue;
+        if (EX) begin dq <= decoded2; ceq <= ce2; ueq <= ue2; end
+        else begin dq <= decoded; ceq <= ce; ueq <= ue; end
         out_d <= dq;
     end
+    generate if (EX != 0) begin : g_dec2
+        ot_hcoll_secded_dec2 #(.W(W),.CW(CW)) u_dec (.clk(clk), .sampled(sampled), .cw_q(cw_q), .decoded(decoded2), .ce(ce2), .ue(ue2));
+    end else begin : g_dec1
+        assign cw_q = '0; assign decoded2 = '0; assign ce2 = 1'b0; assign ue2 = 1'b0;
+    end endgenerate
+    wire          mw_v = EX ? put_q : put;
+    wire [AW-1:0] mw_a = EX ? wp_q : wp;
+    wire [CW-1:0] mw_d = EX ? wd_q : din_p;
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
-            .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
+            .rd(rdb[b]), .w_ce(mw_v && (NBK == 1 || mw_a[AW-1] == 1'(b))), .w_addr(7'(mw_a)), .wd(mw_d));
     end
 endmodule
