@@ -118,8 +118,11 @@ module ot_hgi_su_ctl #(
     localparam [3:0] S_IDLE = 0, S_SPAN = 1, S_MUL = 2, S_NEXTR = 3, S_STAGE = 4, S_STW = 5, S_RUN = 6, S_RUNW = 7,
                      S_DRAIN = 8, S_DRW = 9, S_DONE = 10, S_FAULT = 11, S_SOUT = 12;
     reg [2:0] dk;                                         // drain region (4 O, 5 R)
-    reg [26:0] dsec, dend, rsec_d, rsec_d2; reg so_w;
-    reg [2:0] rp;                                         // read pipe: a sector read is in flight
+    reg [26:0] dsec, dend, rsec_d, rsec_d2, rsec_d3; reg so_w;
+    reg [3:0] rp;                                         // read pipe: a sector read is in flight
+    // Local-memory return pin registers; advance data, mask, valid and sector identity together.
+    reg [255:0] sr_data_q; reg [7:0] sr_dm_q;
+    always @(posedge clk) begin sr_data_q <= sr_data; sr_dm_q <= sr_dm; end
     reg [255:0] rd_hold; reg [7:0] rd_dm_hold;
     // ---- STREAM 0 landing (top SW words of the local memory) and the op's stream flags
     localparam integer SW = 1 << SLB;
@@ -130,13 +133,20 @@ module ot_hgi_su_ctl #(
     reg [20:0] etot; reg [20:0] ebeat; reg [LWB:0] o_lb; reg amr_q;
     always @(posedge clk) amr_q <= am_rdy;
     // ---- control
+    // Registered engine status at the controller boundary. The vec holds ready/idle until go;
+    // capture its sticky fault with the same edge, so retirement still observes the fault.
+    reg ready_q, idle_q, vfault_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; end
+        else begin ready_q <= ready; idle_q <= idle; vfault_q <= vfault; end
+    end
     reg vf_seen; reg [1:0] idle_ph;
     wire [LWB:0] lbk = {alloc[LWB:3], 3'b000} + {{LWB{1'b0}}, 1'b0} + (lo[rk] & 24'd7);
     integer k2;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; op_rdy_r <= 1'b1; su_idle_r <= 1'b1; su_fault_r <= 1'b0; go <= 1'b0; vmq <= 338'd0;
-            sl_v <= 1'b0; sw_v <= 1'b0; dc_v <= 1'b0; sr_v <= 1'b0; rp <= 3'd0;
+            sl_v <= 1'b0; sw_v <= 1'b0; dc_v <= 1'b0; sr_v <= 1'b0; rp <= 4'd0;
             outst <= 3'd0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0;
@@ -144,7 +154,7 @@ module ot_hgi_su_ctl #(
             sw_v <= 1'b0; dc_v <= 1'b0; sr_v <= 1'b0;
             if (s0v_q && s0i_q >= SW) begin su_fault_r <= 1'b1; st <= S_FAULT; end
             if (s_clr) scount <= {20'd0, s0v_q}; else if (s0v_q) scount <= scount + 21'd1;
-            if (vfault && st == S_RUNW) vf_seen <= 1'b1;
+            if (vfault_q && st == S_RUNW) vf_seen <= 1'b1;
             case (st)
                 S_IDLE: begin
                     s_clr <= 1'b0;
@@ -231,59 +241,60 @@ module ot_hgi_su_ctl #(
                         end
                     end
                 end
-                S_RUN: if (ready && (!a_s || scount >= {5'd0, no} * {5'd0, ni})) begin
+                S_RUN: if (ready_q && (!a_s || scount >= {5'd0, no} * {5'd0, ni})) begin
                     go <= 1'b1; st <= S_RUNW; idle_ph <= 2'd0;
                 end
                 S_RUNW: begin
                     go <= 1'b0;
                     if (idle_ph != 2'd3) idle_ph <= idle_ph + 2'd1;
-                    else if (idle) begin
-                        if (vf_seen || vfault) begin su_fault_r <= 1'b1; st <= S_FAULT; end
+                    else if (idle_q) begin
+                        if (vf_seen || vfault_q) begin su_fault_r <= 1'b1; st <= S_FAULT; end
                         else begin dk <= 3'd4; st <= S_DRAIN; end
                     end
                 end
                 S_DRAIN: begin
                     if (dk == 3'd6) begin
-                        if (o_s) begin etot <= {5'd0, no} * {5'd0, ni}; ebeat <= 21'd0; o_lb <= lb[4]; rp <= 3'd0; so_w <= 1'b0;
+                        if (o_s) begin etot <= {5'd0, no} * {5'd0, ni}; ebeat <= 21'd0; o_lb <= lb[4]; rp <= 4'd0; so_w <= 1'b0;
                                        st <= S_SOUT; end
                         else st <= S_DONE;
                     end
                     else if (!rv[dk] || (dk == 3'd4 && o_s)) dk <= dk + 3'd1;
-                    else begin dsec <= lo[dk] >> 3; dend <= hi[dk] >> 3; st <= S_DRW; outst <= 0; rp <= 3'd0; end
+                    else begin dsec <= lo[dk] >> 3; dend <= hi[dk] >> 3; st <= S_DRW; outst <= 0; rp <= 4'd0; end
                 end
                 S_DRW: begin                                        // dirty sectors back to VM, word-masked
-                    // a sector read (words + dirty mask) is issued, then written back one edge later when dirty
+                    // A sector return crosses the local-memory pin register before dirty-masked publication.
                     begin : dw
                         reg [7:0] mk; reg issue;
-                        mk = MUT_DIRTY ? 8'hFF : sr_dm;
-                        // read latency: sr_v leaves a flop here, the memory registers the sector: data 2 edges on
-                        issue = dsec <= dend && outst + {2'd0, rp[0]} + {2'd0, rp[2]} < 3'd4;
+                        mk = MUT_DIRTY ? 8'hFF : sr_dm_q;
+                        // sr_v leaves a controller flop, memory captures a sector, then the return pin captures it.
+                        issue = dsec <= dend && outst + {2'd0, rp[0]} + {2'd0, rp[2]} + {2'd0, rp[3]} < 3'd4;
                         if (issue) begin sr_v <= 1'b1; sr_sec <= ({dsec, 3'b000} - lo[dk] + lb[dk]) >> 3; dsec <= dsec + 27'd1; end
-                        rp[0] <= issue; rp[2] <= rp[0]; rsec_d2 <= rsec_d;
-                        if (rp[2] && mk != 8'd0)
-                            vmq <= {1'b1, 1'b1, rsec_d2, 5'd0, sr_data,
+                        rp[0] <= issue; rp[2] <= rp[0]; rp[3] <= rp[2]; rsec_d2 <= rsec_d; rsec_d3 <= rsec_d2;
+                        if (rp[3] && mk != 8'd0)
+                            vmq <= {1'b1, 1'b1, rsec_d3, 5'd0, sr_data_q,
                                     {{4{mk[7]}}, {4{mk[6]}}, {4{mk[5]}}, {4{mk[4]}}, {4{mk[3]}}, {4{mk[2]}}, {4{mk[1]}}, {4{mk[0]}}},
                                     16'h5357};
                         if (issue) rsec_d <= dsec;
 `ifdef SU_DBG
-                        if (rp[2]) $display("DBG drain sec %0d mk %h data %h", rsec_d2, mk, sr_data[31:0]);
+                        if (rp[3]) $display("DBG drain sec %0d mk %h data %h", rsec_d3, mk, sr_data_q[31:0]);
                         if (issue) $display("DBG issue dsec %0d sr_sec %0d dend %0d", dsec, ({dsec, 3'b000} - lo[dk] + lb[dk]) >> 3, dend);
 `endif
-                        outst <= outst + ((rp[2] && mk != 8'd0) ? 3'd1 : 3'd0) - ((vr[273] && vr[256]) ? 3'd1 : 3'd0);
-                        if (dsec > dend && !rp[0] && !rp[2] && !issue && outst == ((vr[273] && vr[256]) ? 3'd1 : 3'd0)) begin
+                        outst <= outst + ((rp[3] && mk != 8'd0) ? 3'd1 : 3'd0) - ((vr[273] && vr[256]) ? 3'd1 : 3'd0);
+                        if (dsec > dend && !rp[0] && !rp[2] && !rp[3] && !issue && outst == ((vr[273] && vr[256]) ? 3'd1 : 3'd0)) begin
                             dk <= dk + 3'd1; st <= S_DRAIN; end
                     end
                 end
-                S_SOUT: if (amr_q && !rp[1] && !so_w) begin         // 8 elements a beat, in element order
+                S_SOUT: if (amr_q && !rp[1] && !rp[3] && !so_w) begin         // 8 elements a beat, in element order
                     sr_v <= 1'b1; sr_sec <= (o_lb + ebeat) >> 3; so_w <= 1'b1;
                 end else if (so_w) begin so_w <= 1'b0; rp[1] <= 1'b1; end   // the memory registers the sector
-                else if (rp[1]) begin                               // the sector, two edges after the request
+                else if (rp[1]) begin rp[1] <= 1'b0; rp[3] <= 1'b1; end
+                else if (rp[3]) begin                               // memory data captured at its controller pin
                     begin : so
                         reg [7:0] mk; integer q;
                         for (q = 0; q < 8; q = q + 1) mk[q] = (ebeat + q < etot);
-                        am_stream <= {1'b0, 256'd0, sr_data, mk, (ebeat + 21'd8 >= etot), 1'b1};
+                        am_stream <= {1'b0, 256'd0, sr_data_q, mk, (ebeat + 21'd8 >= etot), 1'b1};
                     end
-                    rp[1] <= 1'b0;
+                    rp[3] <= 1'b0;
                     if (ebeat + 21'd8 >= etot) st <= S_DONE; else ebeat <= ebeat + 21'd8;
                 end
                 S_DONE: begin su_idle_r <= 1'b1; op_rdy_r <= 1'b1; st <= S_IDLE; if (a_s) s_clr <= 1'b1; end
