@@ -15710,3 +15710,12 @@ def hgi_dma_wide_vm_model(**kwargs):
     """Opt-in raw-routing DMA and actual protected shared VM physical sizing."""
     from hgi_dma_wide_vm_model import model
     return model(**kwargs)
+
+
+def hgi_inverse_selected_candidate_model(k=2048, group=96):
+    """G25 protected inverse candidate; no physical or adoption credit."""
+    try:
+        from tools.uarch_model_hgi_inverse import model
+    except ModuleNotFoundError:
+        from uarch_model_hgi_inverse import model
+    return model(k=k, group=group)
