@@ -77,6 +77,14 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer BAW = 12,
     // LRST = 1: lane / tree-level reset copies inside the engine (ot_qwen_w12_matvec_part LRST)
     parameter integer LRST = 0,
+    // ARPB = 1 (qwen-1010/c 2026-10-10; needs ROM_PIPE; 0 = unchanged): the LAST request-relay stage keeps ONE address
+    // register per bank (a kept leaf beside the bank's two macros, rom_addr_b) instead of one per bank group: the group
+    // copy rq_ad_s drove 6 macro address pins across the macro cluster (rp1pcl-hm0 TT -84: 9 levels of buffers).  Same
+    // edge, same value: 0 cycles.  rom_addr / rom_addr_n then come from banks 0 / SB.
+    parameter integer ARPB = 0,
+    // TMUT (bench mutants, 0 = none): 1 = bank 0's address copy one edge stale; 2 = one tree adder's reset copy never
+    // released (LRST 3)
+    parameter integer TMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -112,6 +120,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [CODE_BANKS-1:0] rom_ce,
     output wire [11:0]       rom_addr,
     output wire [11:0]       rom_addr_n,          // north banks' address (ROM_PIPE; else == rom_addr)
+    output wire [CODE_BANKS*12-1:0] rom_addr_b,   // per-bank address (ARPB; else each bank's group address)
     input  wire [2*CODE_BANKS*266-1:0] rom_rd,
     // KV slice macro pins (KV_LOCAL = 1)
     output wire              kvs_r_ce,
@@ -159,7 +168,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -239,6 +248,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         end
 
         assign rom_addr_n = rom_addr;
+        assign rom_addr_b = {CODE_BANKS{rom_addr}};
     end else begin : g_rom_pipe
         //: request relay: ROM_ARELAY stages, one kept copy per bank group, decoded at the first stage
         wire [CODE_BANKS-1:0] ce0 = {CODE_BANKS{wrom_re}} & (({{(CODE_BANKS-1){1'b0}}, 1'b1}) << wrom_addr[AW-1:BAW]);
@@ -255,17 +265,54 @@ module ot_qwen_rom_tile_logic_w12 #(
                     rq_ce_n[a] <= (a == 1) ? ce0 : rq_ce_n[a-1];
                 end
             end
-            always @(posedge clk) begin
-                rq_ad_s[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_s[a-1];
-                rq_ad_n[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_n[a-1];
+            if (ARPB == 0 || a < ROM_ARELAY) begin : g_ad
+                always @(posedge clk) begin
+                    rq_ad_s[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_s[a-1];
+                    rq_ad_n[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_n[a-1];
+                end
             end
         end
         for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_ce
             assign rom_ce[b] = (b < SB) ? rq_ce_s[ROM_ARELAY][b] : rq_ce_n[ROM_ARELAY][b];
         end
-        //: two address ports to the wrapper's macros: rom_addr (south banks) and rom_addr_n (north banks)
-        assign rom_addr = rq_ad_s[ROM_ARELAY];
-        assign rom_addr_n = rq_ad_n[ROM_ARELAY];
+        if (ARPB != 0) begin : g_arpb
+            //: ARPB: the last relay stage as one kept address register per bank (rom_addr_b)
+            wire [11:0] ad_pre;
+            if (ROM_ARELAY == 1) begin : g_ap1
+                assign ad_pre = {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]};
+            end else begin : g_apn
+                assign ad_pre = rq_ad_s[ROM_ARELAY-1];
+            end
+            for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_ab
+                if (TMUT == 1 && b == 0) begin : g_mut
+                    wire [11:0] stale;
+                    ot_qwen_arpb_reg u_s (.clk(clk), .d(ad_pre), .q(stale));
+                    ot_qwen_arpb_reg u_a (.clk(clk), .d(stale), .q(rom_addr_b[12*b +: 12]));
+                end else begin : g_ok
+                    ot_qwen_arpb_reg u_a (.clk(clk), .d(ad_pre), .q(rom_addr_b[12*b +: 12]));
+                end
+            end
+            assign rom_addr = rom_addr_b[11:0];
+            assign rom_addr_n = rom_addr_b[12*((SB < CODE_BANKS) ? SB : 0) +: 12];
+`ifndef SYNTHESIS
+            //: every bank's copy must equal the group address it replaces, every edge
+            reg [11:0] ad_ref;
+            integer ck;
+            always @(posedge clk) ad_ref <= ad_pre;
+            always @(negedge clk) for (ck = 0; ck < CODE_BANKS; ck = ck + 1)
+                if (rom_addr_b[12*ck +: 12] !== ad_ref) begin
+                    $display("FAIL arpb bank %0d address copy %h != %h", ck, rom_addr_b[12*ck +: 12], ad_ref);
+                    $finish;
+                end
+`endif
+        end else begin : g_agrp
+            //: two address ports to the wrapper's macros: rom_addr (south banks) and rom_addr_n (north banks)
+            assign rom_addr = rq_ad_s[ROM_ARELAY];
+            assign rom_addr_n = rq_ad_n[ROM_ARELAY];
+            for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_abg
+                assign rom_addr_b[12*b +: 12] = (b < SB) ? rq_ad_s[ROM_ARELAY] : rq_ad_n[ROM_ARELAY];
+            end
+        end
         //: bank select of the word in the capture registers (held when no read: the macros hold their output)
         reg [CODE_BANKS-1:0] sel_1, sel_c, sel_c2;
         always @(posedge clk or negedge rst_n) begin
@@ -428,6 +475,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer ROM_CAP2 = 0,       // ot_qwen_rom_tile_logic_w12 ROM_CAP2 (safe-qwen S-A1)
     parameter integer ROM_CAPX = 0,       // ot_qwen_rom_tile_logic_w12 ROM_CAPX (redesign-qwen)
     parameter integer LRST = 0,
+    parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB (qwen-1010/c): per-bank address register
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -452,15 +500,16 @@ module ot_qwen_rom_tile_w12 #(
 );
     wire [CODE_BANKS-1:0] rom_ce;
     wire [11:0]           rom_addr, rom_addr_n;
+    wire [CODE_BANKS*12-1:0] rom_addr_b;
     wire [2*CODE_BANKS*266-1:0] rom_rd;
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
-        .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_rd(rom_rd),
+        .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_rd(rom_rd),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
     genvar p, b;
@@ -470,13 +519,13 @@ module ot_qwen_rom_tile_w12 #(
         for (p = 0; p < ((BAW == 12) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
                 ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]),
-                    .addr_in((ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
+                    .addr_in((ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
         end
         for (p = 0; p < ((BAW == 11) ? 2 : 0); p = p + 1) begin : g_colh
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                wire [11:0] ra = (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
+                wire [11:0] ra = (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
                 ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra[10:0]),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
@@ -514,4 +563,12 @@ module ot_qwen_rom_tile_w12 #(
                 .rr_en(2'b0), .rr_addr(14'd0), .cr_en(2'b0), .cr_sel(16'd0));
         end
     endgenerate
+endmodule
+
+
+// qwen-1010/c 2026-10-10: one kept per-bank ROM address register (ot_qwen_rom_tile_logic_w12 ARPB).  keep_hierarchy stops
+// opt_merge from folding the identical copies back into one (fixed width: Yosys asserts on parameterised keep_hierarchy).
+(* keep_hierarchy *)
+module ot_qwen_arpb_reg (input wire clk, input wire [11:0] d, output reg [11:0] q);
+    always @(posedge clk) q <= d;
 endmodule

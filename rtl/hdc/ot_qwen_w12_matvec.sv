@@ -217,7 +217,11 @@ module ot_qwen_w12_matvec_part #(
     // LRST = 1: each lane group and each split-tree level takes its own kept reset copy (asserted with rst_n,
     // released one edge later); lanes see their first valid >= 4 edges after any go, so the later release is
     // invisible.  0: the original (rst_n everywhere).
-    parameter integer LRST = 0
+    // LRST = 3 (qwen-1010/c 2026-10-10): LRST 2 plus a second kept copy per LANE and per TREE ADDER, fed by its group /
+    // level copy (released two edges after rst_n, assert still asynchronous): the level copy drove every tree adder's
+    // reset flops through 13 buffer levels (rp1pcl-hm0).  0 cycles.
+    parameter integer LRST = 0,
+    parameter integer TMUT = 0           // 2: one tree adder's reset copy never released (bench mutant, LRST 3)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -775,7 +779,7 @@ end endgenerate
     // yosys (0.68) opt_merge folds the identical (* keep *) flops back into ONE (qfd_tile_rp1p / tile_e_rp2np post-CTS:
     // the only startpoint is u_me.g_lrst.rt[0] -> lane multipliers / tree adders, -45..-75 ps TT, fanout tree 200+ ps
     // of wire).  Same reset behaviour (async assert, release one edge after rst_n), 0 cycles.
-    generate if (LRST == 2) begin : g_lrst2
+    generate if (LRST >= 2) begin : g_lrst2
         for (g = 0; g < G; g = g + 1) begin : g_rg
             ot_qwen_lrst_ff u_rg (.clk(clk), .rst_n(rst_n), .q(rst_g[g]));
         end
@@ -797,16 +801,22 @@ end endgenerate
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
                 localparam integer LI = g * W + gl;
+                wire rst_l;                              // LRST 3: the lane's own kept reset copy
+                if (LRST >= 3) begin : g_lr
+                    ot_qwen_lrst_ff u_rl (.clk(clk), .rst_n(rst_g[g]), .q(rst_l));
+                end else begin : g_lg
+                    assign rst_l = rst_g[g];
+                end
                 wire [31:0] prod, fb_pre, acc_in;
                 reg  [31:0] acc_q;
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
                 if (MUL_LAT == 5) begin : g_legacy_mul
-                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end else begin : g_candidate_mul
-                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end
                 // add input at c+8; the circulating sum from IL cycles earlier.
@@ -817,13 +827,13 @@ end endgenerate
                 always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
                 if (ACC_LAT == 5) begin : g_fadd
-                    ot_hdc_fadd u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_hdc_fadd u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
-                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_g[g]), .d(sum[32*LI +: 32]), .q(fb_pre));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_l), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end
@@ -883,7 +893,13 @@ end endgenerate
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_t[lv], vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                wire rst_a;                              // LRST 3: the adder's own kept reset copy
+                if (LRST >= 3) begin : g_ra
+                    ot_qwen_lrst_ff u_ra (.clk(clk), .rst_n((TMUT == 2 && lv == LV0 + 1 && p == 0) ? 1'b0 : rst_t[lv]), .q(rst_a));
+                end else begin : g_rl
+                    assign rst_a = rst_t[lv];
+                end
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_a, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a
