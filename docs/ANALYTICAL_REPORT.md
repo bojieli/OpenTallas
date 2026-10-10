@@ -46,7 +46,7 @@ Changes since the 2026-10-08 export:
 - **HBM generic die.** Qwen3-8B on r25 TP4 INT8: 953.8 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS uses the approved gather + G22 path; partial measured-unit sensitivity is recorded separately; DMA stays at full bandwidth.
 - **Qwen3-8B DFlash on the generic die.** block 16 1791.8 tok/s at the published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; open: SM multi-slot issue G18, CTL.TOKX).
 - **BF decision.** full-rate BF closure pending; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants.
-- **MTP block cycles charged.** DS ROM 4,351.6 → 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 → 3,699.9 tok/s (+130 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files).
+- **MTP block cycles charged.** DS ROM 4,351.6 → 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 → 3,699.9 tok/s (+131 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files).
 - **replica-fold / keep fixes.** 0 cycles (synthesis attribute only: (* keep *) copies survive opt_merge).
 - **GPU baselines.** DS: SGLang V4.1-Flash 4 x GB300 + DSpark 873.6 (was V4-Pro 383.7); Qwen: B200 + DFlash 1,175; OpenRouter medians DS 88.5 / Qwen 55.
 

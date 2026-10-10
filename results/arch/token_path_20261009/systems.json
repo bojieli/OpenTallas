@@ -459,7 +459,7 @@
       "unit": "tok/s",
       "grade": "modelled",
       "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles",
-      "note": "DSpark gamma 5, tau 4.159; approved gather delta 143235.0 cycles charged once per verify pass on the charged composition 1348889.6 cycles; modelled on the fixed RTL. Today's RTL ratios give 2862.6 tok/s. No native verify program is compiled."
+      "note": "DSpark gamma 5, tau 4.159; approved gather delta 143235.0 cycles charged once per verify pass on the charged composition 1348890.6 cycles; modelled on the fixed RTL. Today's RTL ratios give 2862.6 tok/s. No native verify program is compiled."
      }
     },
     "rtl_calibration": {
@@ -478,7 +478,7 @@
       "grade": "modelled",
       "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22_current_rtl_ratios.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles"
      },
-     "charged_mtp_basis_cycles": 1348889.6,
+     "charged_mtp_basis_cycles": 1348890.6,
      "approved_delta_per_verify": 143235.0,
      "calibrated_delta_per_verify": 394546.2,
      "native_AR": {
@@ -1320,7 +1320,7 @@
   },
   {
    "item": "MTP block cycles charged",
-   "effect": "DS ROM 4,351.6 -> 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 -> 3,699.9 tok/s (+130 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
+   "effect": "DS ROM 4,351.6 -> 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 -> 3,699.9 tok/s (+131 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
    "grade": "measured",
    "source": "results/arch/mtp_step_20261009 (tools/mtp_step_charges.py)"
   },
