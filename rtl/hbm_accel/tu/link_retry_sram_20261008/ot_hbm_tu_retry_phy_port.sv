@@ -9,7 +9,12 @@ module ot_hbm_tu_retry_phy_port_core #(
  parameter PIPE_FIX=0, // cont-takeover 2026-10-09: registered CDC Gray decode + HEAD_FREE replay head (LINK_CREDIT wrapper)
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
- parameter NOEPOCH=0
+ parameter NOEPOCH=0,
+ // IQ_SKID (redesign-ds 2026-10-09, default 0): a 2-entry registered skid between the PHY ingress head buffer and the
+ // retry port (turetryphy-lkp-g640 TT -212 / 9,531 D pins: u_ingress.hp -> 8:1 x 545-b head mux -> the replay SRAM
+ // SECDED encoder -> u_enc.q in one pclk cycle).  The ingress head read now ends in a flop and the encoder starts from
+ // one; the stream is valid/ready (latency insensitive), +1 pclk per flit on the ingress path.
+ parameter IQ_SKID=`ifdef OT_TU_IQSKID 1 `else 0 `endif
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -37,6 +42,21 @@ module ot_hbm_tu_retry_phy_port_core #(
  ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH)) u_ingress(
  .clk(pclk),.rst_n(phy_run),.session(phy_session),.in_valid(ph_tx_v && phy_run),.in_data(ph_tx_flit),.in_ready(),
  .out_valid(iq_valid),.out_ready(iq_ready),.out_data(iq_data),.fault(iq_fault),.debt(ingress_debt));
+ wire pq_valid,pq_ready;wire[W-1:0]pq_data;
+ if(IQ_SKID)begin:g_iqs
+`ifdef OT_TU_IQSKID_MUT
+  // negative control: the skid's second slot is never used (a flit arriving while the head is held is dropped)
+  reg v0;reg[W-1:0]d0;
+  assign iq_ready=1'b1;assign pq_valid=v0;assign pq_data=d0;
+  always@(posedge pclk or negedge phy_run) if(!phy_run)v0<=0; else if(pq_ready||!v0)v0<=iq_valid;
+  always@(posedge pclk) if(pq_ready||!v0)d0<=iq_data;
+`else
+  ot_hbm_tu_skid #(.W(W)) u_iqs(.clk(pclk),.rst_n(phy_run),.i_valid(iq_valid),.i_ready(iq_ready),.i_data(iq_data),
+   .o_valid(pq_valid),.o_ready(pq_ready),.o_data(pq_data));
+`endif
+ end else begin:g_iqd
+  assign pq_valid=iq_valid;assign iq_ready=pq_ready;assign pq_data=iq_data;
+ end
  wire port_fault;wire[CW-1:0]available;
  wire raw_tx_v,raw_rx_v,raw_rx_ready;
  assign fec_tx_v=raw_tx_v && !fault;
@@ -44,7 +64,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  assign fec_rx_ready=raw_rx_ready && !fault;
  ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
- .in_valid(iq_valid),.in_ready(iq_ready),.in_data(iq_data),
+ .in_valid(pq_valid),.in_ready(pq_ready),.in_data(pq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
  .rx_valid(fec_rx_v && !fault),.rx_ready(raw_rx_ready),.rx_ue(fec_rx_ue),.rx_data(fec_rx_data),.rx_seq(fec_rx_seq),.rx_session(fec_rx_session),
  .out_valid(raw_rx_v),.out_ready(1'b1),.out_data(ph_rx_flit),.rx_consumed(local_pop),
@@ -106,7 +126,8 @@ module ot_hbm_tu_retry_phy_port #(
  parameter TIMEOUT=2048,parameter REG_IO=`OT_TU_REG_IO_DEF,
  // LINK_CREDIT (cont-takeover 2026-10-09, REVIEW ~11:30; needs REG_IO): the FEC tx / rx channels are die-link credit
  // relays (rtl/common/ot_link_credit.sv): fec_tx_ready / fec_rx_ready carry credit pulses; landing overflow = fault.
- parameter LINK_CREDIT=0,LINK_DEPTH=8
+ parameter LINK_CREDIT=0,LINK_DEPTH=8,
+ parameter IQ_SKID=`ifdef OT_TU_IQSKID 1 `else 0 `endif   // redesign-ds: ingress head skid (see the core)
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -125,7 +146,7 @@ module ot_hbm_tu_retry_phy_port #(
  output wire[SW-1:0]ingress_debt,output wire[CW-1:0]rx_debt
 );
  generate if(!(REG_IO&&ENABLE))begin:g_core
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT)) u(.*);
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID)) u(.*);
  end else begin:g_reg
  wire phy_run=prst_n&&phy_link_up,core_run=rst_n&&core_link_up;
  // pclk input flops
@@ -146,7 +167,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.PIPE_FIX(LINK_CREDIT)) u(
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.PIPE_FIX(LINK_CREDIT)) u(
  .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),

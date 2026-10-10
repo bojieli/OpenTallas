@@ -1,16 +1,16 @@
 {
  "schema": "opentallas.hgi_sim.ds_native_timing.v1",
  "position": 1048575,
- "generated_utc": "2026-10-09T22:57:49Z",
+ "generated_utc": "2026-10-10T04:38:35Z",
  "grade": "pathfinding: walk-priced engine records (measured adapters), SU per record by the measured-depth model, CP entries estimates (calibration.json)",
  "program_source": "ds_rank0_program.json",
- "program_sha256": "e134aff48310fdcd95d588914e66475e74f5a61f8e10bba0763a9811ae7e8456",
+ "program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
  "result": {
   "program": {
    "rank": 0,
    "records": 3952,
    "image_bytes": 470912,
-   "image_sha256": "e57dd959bbdd42d390f7c4f4ee4d9031f7af720b3e25977375c065e1aba938a1",
+   "image_sha256": "092fdc4939c08cc54412cb95b8c10517c8fbe94435313f2d9644f4cfae36b017",
    "unit_ops": {
     "SU.VOP": 1356,
     "SM.MATVEC": 1095,
@@ -35,9 +35,9 @@
    }
   },
   "S0": {
-   "total_cycles": 524565.2,
-   "us": 437.138,
-   "tok_s": 2287.6,
+   "total_cycles": 518645.1,
+   "us": 432.204,
+   "tok_s": 2313.7,
    "records_executed": 3952,
    "cp_busy_cycles": 0.0,
    "n_races": 0,
@@ -45,49 +45,49 @@
    "per_unit": {
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 448804.2,
+     "idle_true_dep": 442884.0,
      "idle_issue": 0.0,
      "records": 201
     },
     "SM": {
      "busy": 103744.2,
-     "idle_true_dep": 420035.7,
+     "idle_true_dep": 414115.5,
      "idle_issue": 0.0,
      "records": 1095
     },
     "COLL": {
      "busy": 259473.0,
-     "idle_true_dep": 265092.2,
+     "idle_true_dep": 259172.1,
      "idle_issue": 0.0,
      "records": 562
     },
     "SU": {
      "busy": 134404.0,
-     "idle_true_dep": 384248.3,
+     "idle_true_dep": 378328.2,
      "idle_issue": 0.0,
      "records": 1356
     },
     "DMA": {
      "busy": 41826.9,
-     "idle_true_dep": 499302.1,
+     "idle_true_dep": 493382.0,
      "idle_issue": 0.0,
      "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 484884.4,
+     "idle_true_dep": 478964.2,
      "idle_issue": 0.0,
      "records": 80
     },
     "HC": {
      "busy": 92800.6,
-     "idle_true_dep": 422747.4,
+     "idle_true_dep": 416827.2,
      "idle_issue": 0.0,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 498063.1,
+     "idle_true_dep": 492143.0,
      "idle_issue": 0.0,
      "records": 48
     },
@@ -100,7 +100,7 @@
     "ARGMAX": {
      "busy": 3626.0,
      "idle_true_dep": 0.0,
-     "idle_issue": 520173.8,
+     "idle_issue": 514253.7,
      "records": 1
     }
    },
@@ -138,9 +138,9 @@
    }
   },
   "S1": {
-   "total_cycles": 559532.7,
-   "us": 466.277,
-   "tok_s": 2144.6,
+   "total_cycles": 554202.8,
+   "us": 461.836,
+   "tok_s": 2165.3,
    "records_executed": 3952,
    "cp_busy_cycles": 0.0,
    "n_races": 0,
@@ -148,49 +148,49 @@
    "per_unit": {
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 482703.7,
+     "idle_true_dep": 477373.7,
      "idle_issue": 1068.0,
      "records": 201
     },
     "SM": {
      "busy": 103744.2,
-     "idle_true_dep": 419368.6,
-     "idle_issue": 35634.6,
+     "idle_true_dep": 402574.6,
+     "idle_issue": 47098.6,
      "records": 1095
     },
     "COLL": {
      "busy": 259473.0,
-     "idle_true_dep": 292010.8,
-     "idle_issue": 8049.0,
+     "idle_true_dep": 288768.8,
+     "idle_issue": 5961.0,
      "records": 562
     },
     "SU": {
      "busy": 134404.0,
-     "idle_true_dep": 396478.9,
-     "idle_issue": 22736.9,
+     "idle_true_dep": 384085.2,
+     "idle_issue": 29800.7,
      "records": 1356
     },
     "DMA": {
      "busy": 41769.1,
-     "idle_true_dep": 34662.7,
-     "idle_issue": 479666.4,
+     "idle_true_dep": 35128.8,
+     "idle_issue": 473872.2,
      "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 518025.1,
+     "idle_true_dep": 512696.9,
      "idle_issue": 1364.0,
      "records": 80
     },
     "HC": {
      "busy": 92800.6,
-     "idle_true_dep": 255593.6,
-     "idle_issue": 205041.2,
+     "idle_true_dep": 257104.5,
+     "idle_issue": 198202.2,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 532567.9,
+     "idle_true_dep": 527239.7,
      "idle_issue": 0.0,
      "records": 48
     },
@@ -203,7 +203,7 @@
     "ARGMAX": {
      "busy": 3626.0,
      "idle_true_dep": 0.0,
-     "idle_issue": 555141.3,
+     "idle_issue": 549811.4,
      "records": 1
     }
    },
@@ -241,9 +241,9 @@
    }
   },
   "S2": {
-   "total_cycles": 550388.2,
-   "us": 458.657,
-   "tok_s": 2180.3,
+   "total_cycles": 543456.7,
+   "us": 452.881,
+   "tok_s": 2208.1,
    "records_executed": 3952,
    "cp_busy_cycles": 20644.0,
    "n_races": 0,
@@ -251,62 +251,62 @@
    "per_unit": {
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 472041.1,
+     "idle_true_dep": 465109.6,
      "idle_issue": 2553.0,
      "records": 201
     },
     "SM": {
      "busy": 103744.2,
-     "idle_true_dep": 428686.3,
-     "idle_issue": 17163.3,
+     "idle_true_dep": 425645.4,
+     "idle_issue": 13272.7,
      "records": 1095
     },
     "COLL": {
      "busy": 259473.0,
-     "idle_true_dep": 283103.6,
-     "idle_issue": 7811.6,
+     "idle_true_dep": 276176.1,
+     "idle_issue": 7807.6,
      "records": 562
     },
     "SU": {
      "busy": 134404.0,
-     "idle_true_dep": 372379.7,
-     "idle_issue": 37664.3,
+     "idle_true_dep": 365051.7,
+     "idle_issue": 38468.2,
      "records": 1356
     },
     "DMA": {
      "busy": 40329.1,
      "idle_true_dep": 38568.0,
-     "idle_issue": 483236.6,
+     "idle_issue": 476399.8,
      "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 508405.5,
+     "idle_true_dep": 501493.8,
      "idle_issue": 1856.0,
      "records": 80
     },
     "HC": {
      "busy": 92800.6,
-     "idle_true_dep": 183322.0,
-     "idle_issue": 268241.3,
+     "idle_true_dep": 172215.1,
+     "idle_issue": 272824.1,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 522269.3,
+     "idle_true_dep": 515357.6,
      "idle_issue": 1392.0,
      "records": 48
     },
     "CTL": {
      "busy": 0.0,
      "idle_true_dep": 0.0,
-     "idle_issue": 489382.5,
+     "idle_issue": 483121.4,
      "records": 109
     },
     "ARGMAX": {
      "busy": 3626.0,
      "idle_true_dep": 0.0,
-     "idle_issue": 545987.8,
+     "idle_issue": 539056.3,
      "records": 1
     }
    },
@@ -344,7 +344,7 @@
    }
   },
   "variants": {
-   "S2_no_wires": 528193.6,
+   "S2_no_wires": 521301.1,
    "S2_list_scheduled": 608632.7,
    "S2_list_scheduled_races": 0,
    "S2_list_scheduled_no_wires": 587531.7
@@ -354,7 +354,7 @@
    "published_walk_us": 460.05,
    "ds_hgi_walk_op_stream_S2_cycles": 544648,
    "ds_hgi_list_scheduled_cycles": 461646,
-   "native_S2_vs_walk_op_S2_pct": 1.05,
+   "native_S2_vs_walk_op_S2_pct": -0.22,
    "native_list_vs_walk_op_list_pct": 31.84
   },
   "critical_path_S2_tail": [
@@ -362,15 +362,15 @@
     "tag": "argmax_local",
     "L": 0,
     "unit": "ARGMAX",
-    "start": 545987.8,
-    "end": 549613.8
+    "start": 539056.3,
+    "end": 542682.3
    },
    {
     "tag": "argmax merge",
     "L": 0,
     "unit": "COLL",
-    "start": 549622.8,
-    "end": 550388.2
+    "start": 542691.3,
+    "end": 543456.7
    }
   ]
  },
@@ -446,7 +446,7 @@
    "source": "hgi-takeover 07:50 (R25G normative seq v1.0 dispatch buses, tools/hgi_die_dispatch.py on claude/hgi-die-20261009 f98724333, a relay every 504 um): cmdproc -> quant 11 edges (5.08 mm), coll 4 (1.62 mm), argmax / MTP slot 5 (2.44 mm), indexer 17 (8.08 mm); {ready, done, fault} return the same. One cycle a relay edge; the units not listed keep dispatch_wire / retire_wire"
   }
  },
- "run_source": "/tmp/claude-1000/fuse/r4/ds_full.json",
+ "run_source": "/tmp/claude-1000/fuse/r5/ds_full.json",
  "row_gather_bypass": {
   "rule": "owner read padded to the max owned count + one exact gather pass (perf.coll_cycles ALL_GATHER, measured TU endpoint model) + head HBM write",
   "layers": {

@@ -28,10 +28,11 @@ module tb_hgi_cp_die_seq;
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
     ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
-        .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .am_rec(am_rec), .am_ret(am_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
     // the sequencer-side view the vector checks use
     wire [15:0] u_v = cpd.u_cp.u_v; wire [15:0] u_rdy = cpd.u_rdy; wire [127:0] d_hdr = cpd.u_cp.d_hdr;
     wire [255:0] d_sut = cpd.u_cp.d_sut; wire [1791:0] d_desc = cpd.u_cp.d_desc; wire [146:0] d_n = cpd.u_cp.d_n;
@@ -39,7 +40,8 @@ module tb_hgi_cp_die_seq;
     wire busy = cpd.u_cp.u_seq.busy;
     reg [15:0] u_done = 0, u_fault = 0;
     always @* begin
-        ux_done = u_done & ~16'h0250; ux_fault = u_fault & ~16'h0250;
+        ux_done = u_done & ~16'h02D0; ux_fault = u_fault & ~16'h02D0;
+        am_ret = {u_fault[7], u_done[7], 1'b1};
         coll_ret = {u_fault[6], u_done[6], 1'b1}; quant_ret = {u_fault[4], u_done[4], 1'b1}; idx_ret = {u_fault[9], u_done[9], 1'b1};
     end
     reg [63:0] tks [0:NCASE*16-1];
@@ -167,6 +169,7 @@ module tb_hgi_cp_die_seq;
                 end
             end
             if (cu == 6) begin exp_coll = {rank, d_n[6*21 +: 21], d_n[4*21 +: 21], d_n[0 +: 21], d_desc[6*256 +: 256], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_coll = 1; end
+            if (cu == 7) begin exp_am = {rank, d_n[4*21 +: 21], d_n[0 +: 21], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_am = 1; end
             if (cu == 4) begin exp_quant = {d_n[4*21 +: 21], d_n[0 +: 21], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_quant = 1; end
             ei = ei + 11;
             outst[cu] = outst[cu] + 1;
@@ -176,9 +179,11 @@ module tb_hgi_cp_die_seq;
             nd = nd + 1;
         end
     end
-    reg check_coll = 0, check_quant = 0; reg [967:0] exp_coll; reg [682:0] exp_quant;
+    reg check_coll = 0, check_quant = 0, check_am = 0; reg [967:0] exp_coll; reg [682:0] exp_quant; reg [690:0] exp_am;
+    integer n_am = 0;
     always @(negedge clk) begin
         if (coll_rec[0]) begin if (!check_coll || coll_rec !== exp_coll) begin $display("FAIL coll record bus"); fails = fails + 1; end check_coll = 0; end
+        if (am_rec[0]) begin if (!check_am || am_rec !== exp_am) begin $display("FAIL argmax record bus"); fails = fails + 1; end check_am = 0; n_am = n_am + 1; end
         if (quant_rec[0]) begin if (!check_quant || quant_rec !== exp_quant) begin $display("FAIL quant record bus"); fails = fails + 1; end check_quant = 0; end
     end
     integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
@@ -228,7 +233,7 @@ module tb_hgi_cp_die_seq;
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
             nd = cfg[c*12 + 10] + cfg[c*12 + 6];
         end
-        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d", NCASE, nd);
+        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d argmax_records=%0d", NCASE, nd, n_am);
         else $display("HGI_SEQ_DIE FAIL %0d", fails);
         $finish;
     end

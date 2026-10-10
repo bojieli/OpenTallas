@@ -40,14 +40,16 @@ def ref(d, mut_rows=False):
            or not (opnd & 16) or C.fld(B, 'space') != 0 or C.fld(A, 'space') not in (1, 2)
            or C.fld(O, 'space') not in (1, 2) or C.fld(B, 'fmt') != WANT[pf] or C.fld(B, 'ibcast')
            or C.fld(B, 'istride') > 1 or na != nb or nb == 0 or M == 0 or g > 255 or Q > 4095
-           or C.fld(B, 'base') & 31 or (P > 1 and (C.fld(A, 'm') != P or C.fld(O, 'm') != P)))
+           or (P > 1 and (C.fld(A, 'm') != P or C.fld(O, 'm') != P)) or (pf in (1, 2) and nb % 32))
+    lb = 160 if pf == 3 else 136
+    lpr = (4 if pf == 3 else 8) * g
+    bad = bad or C.fld(B, 'stride') != lpr * lb or C.fld(B, 'base') % lb
     if bad:
         return 2 << (REF_BITS - 4)
-    lpr = 8 * g
     w = 0
     for s in reversed(range(NSM)):
         r = max(0, min(Q, M - s * Q))
-        base = ((C.fld(B, 'base') + s * Q * C.fld(B, 'stride')) >> 5) & 0xFFFFFFFF if r else 0
+        base = (C.fld(B, 'base') // lb + s * Q * lpr) & 0xFFFFFFFF if r else 0
         lines = r * lpr if r else 0
         w = w << 69 | r << 56 | base << 24 | lines
     w |= (g << 2 | pf) << (NSM * 69)
@@ -72,8 +74,10 @@ def md(**kw):
 
 
 def matvec(pf, K, M, bbase, P=1, abase=0, obase=8192, space_a=1, stride=None, rng=None):
-    es = {0: 2, 1: 1, 2: 0.5, 3: 1}[pf]
-    st = stride if stride is not None else int(-(-K * es // 32) * 32)
+    g = ((K - 1) >> LW8[pf]) + 1
+    lb = 160 if pf == 3 else 136
+    st = stride if stride is not None else (4 if pf == 3 else 8) * g * lb
+    bbase = bbase // lb * lb
     return rec(param=pf | (P - 1) << 2, A=md(space=space_a, fmt=0, base=abase, n=K, m=P, stride=K),
                B=md(space=0, fmt=WANT[pf], base=bbase, n=K, m=M, stride=st), O=md(space=1, fmt=0, base=obase, n=M, m=P,
                                                                                   stride=M))
@@ -99,11 +103,23 @@ def main():
             refs.append(ref(d))
         man.append(dict(id=ident, kind=['run', '', 'negative'][kind], records=len(ds),
                         refused=sum(1 for d in ds if ref(d) >> (REF_BITS - 4) == 2)))
-    for v, tr, cpl, vm in C.conformance(lambda v: any(r['unit'] == 'SM' for r in v['records'])):
-        ds = [d for d in tr if C.unit_of(d) == 1]
-        add(0, v['id'], ds)
+    # hbm-sim CF-IDXD images are raw rows (refused: not the line layout); their line-layout re-lay runs
+    cf = [d for v, tr0, cpl, vm in C.conformance(lambda v: any(r['unit'] == 'SM' for r in v['records'])) for d in tr0
+          if C.unit_of(d) == 1]
     tr, _ = C.qwen_dispatch()
-    add(0, 'qwen3_8b_token_sm_matvec', [d for d in tr if C.unit_of(d) == 1])
+    # the Qwen token's MATVECs with B re-laid in the SM line layout (hbm-sim images hold raw K-byte INT8 rows; the SM
+    # reads 160-byte transport lines: stride = LPR x 160, base a multiple of 160) -- same shapes, slots and operands
+    def relay(d):
+        B = d['eff'][1]
+        K, pf = d['n'][1], C.fld(d['hdr'], 'param', C.UOP) & 3
+        g = ((K - 1) >> LW8[pf]) + 1
+        lb = 160 if pf == 3 else 136
+        st = (4 if pf == 3 else 8) * g * lb
+        nb = md(space=0, fmt=C.fld(B, 'fmt'), base=C.fld(B, 'base') // lb * lb, n=C.fld(B, 'n'), m=C.fld(B, 'm'), stride=st)
+        return dict(d, eff=[d['eff'][0], nb] + d['eff'][2:])
+    add(0, 'qwen3_8b_token_sm_matvec_line_layout', [relay(d) for d in tr if C.unit_of(d) == 1])
+    add(2, 'qwen3_8b_token_sm_raw_image_refused', [d for d in tr if C.unit_of(d) == 1][:1])
+    add(0, 'cf_idxd_line_layout', [relay(d) for d in cf])
     ds = []
     for pf in (0, 1, 2):                    # DS: per-die rows of the 1/96 slices and the o-group K split
         for K, M in ((7168, 12), (7168, 40), (4096, 64), (2048, 7168 // 96 + 1), (1024, 1), (7168, 1536 // 96), (512, 33)):
@@ -118,21 +134,27 @@ def main():
     for _ in range(48):
         pf = rng.randint(0, 3)
         K = rng.randrange(1, 8 * 255 * {0: 64, 1: 128, 2: 256, 3: 64}[pf])
+        if pf in (1, 2):
+            K = max(32, K // 32 * 32)
         M = rng.randrange(1, 4096)
         rl.append(matvec(pf, K, M, bbase=rng.randrange(1 << 35) << 5, P=rng.randint(1, 8), abase=rng.randrange(1 << 17),
-                         space_a=rng.choice([1, 2]), stride=rng.randrange(1, 1 << 20) << 5))
+                         space_a=rng.choice([1, 2])))
     add(0, 'random_legal_48', rl)
     g = matvec(0, 4096, 64, bbase=0x1000)
     neg = {'unit_not_sm': dict(g, hdr=g['hdr'] ^ (3 << 124)),
-           'fmt_mismatch': matvec(1, 4096, 64, bbase=0x1000) | dict(eff=[g['eff'][0], md(space=0, fmt=3, base=0x1000, n=4096, m=64, stride=8192)] + g['eff'][2:]),
+           'fmt_mismatch': dict(g, eff=[g['eff'][0], md(space=0, fmt=3, base=0, n=4096, m=64, stride=8 * 8 * 136)] + g['eff'][2:]),
            'b_in_vm': dict(g, eff=[g['eff'][0], md(space=1, fmt=1, base=0x1000, n=4096, m=64)] + g['eff'][2:]),
            'k_mismatch': dict(g, n=[4095, 4096, 0, 0, 0, 0, 0]),
-           'b_unaligned': matvec(0, 4096, 64, bbase=0x1010),
+           'b_unaligned': dict(matvec(0, 4096, 64, bbase=136 * 1000), eff=[matvec(0, 4096, 64, bbase=0)['eff'][0],
+                               md(space=0, fmt=1, base=136 * 1000 + 8, n=4096, m=64, stride=8 * 8 * 136)] + [0, 0, matvec(0, 4096, 64, bbase=0)['eff'][4], 0, 0]),
+           'stride_not_dense': dict(matvec(0, 4096, 64, bbase=0), eff=[matvec(0, 4096, 64, bbase=0)['eff'][0],
+                               md(space=0, fmt=1, base=0, n=4096, m=64, stride=8192)] + [0, 0, matvec(0, 4096, 64, bbase=0)['eff'][4], 0, 0]),
+           'fp8_k_not_32': matvec(1, 4010, 8, bbase=0),
            'op_g_256': matvec(0, 8 * 64 * 256, 64, bbase=0x1000),
            'q_4096': matvec(0, 128, 32 * 4096, bbase=0x1000),
-           'p2_a_m1': rec(param=4, A=md(space=1, base=0, n=4096, m=1), B=md(space=0, fmt=1, base=0, n=4096, m=8, stride=8192),
+           'p2_a_m1': rec(param=4, A=md(space=1, base=0, n=4096, m=1), B=md(space=0, fmt=1, base=0, n=4096, m=8, stride=8 * 8 * 136),
                           O=md(space=1, base=9000, n=8, m=2)),
-           'no_o': rec(param=0, A=md(space=1, base=0, n=4096, m=1), B=md(space=0, fmt=1, base=0, n=4096, m=8, stride=8192)),
+           'no_o': rec(param=0, A=md(space=1, base=0, n=4096, m=1), B=md(space=0, fmt=1, base=0, n=4096, m=8, stride=8 * 8 * 136)),
            'm_zero': matvec(0, 4096, 0, bbase=0x1000)}
     for k, d in neg.items():
         add(2, k, [d])

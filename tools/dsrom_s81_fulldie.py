@@ -2305,7 +2305,10 @@ ENG_BUSES = (
 )
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
+FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
+HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
+HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
 FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
 HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
@@ -2977,6 +2980,8 @@ def build_r8(variant=None):
     if HOST_SLAB:         # s81-dies / ingest RQ-ING-1: dsfd_host (ot_rom_host_ingest ROWS / IKEY / CSR) beside the collective
         centre.insert(centre.index('collective') + 1, 'host')
         centre_area['host'] = HOST_MM2
+        if FWD_IFACE:     # s81-gen: forwarded host-write lanes (580 + 20 b each way per stack) need face (layer1e: 67 > 58 um)
+            centre_area['host'] = max(HOST_MM2, HOST_FACE_UM * cw / 1e6)
     if VM_FACE_MM2 and centre_area['vm'] < VM_FACE_MM2:
         # S81-RERUN v9e (OWNER rule 3, coordinator 2026-10-07): the head die's VM slab (0.89 mm2, ~880 um tall) took
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
@@ -3016,9 +3021,9 @@ def build_r8(variant=None):
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
         elif n == 'wfc_hard':
             slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
-            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
-                         'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
-                         % (WFC_SLAB_H, centre_area[n]))
+            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = closed SOURCE ot_dsrom_wfc_tokpipe_src %s um (910e67c7b) + closed '
+                         'STG tokpipe %s um (9f7a7f35e) in a %.2f um slab (%.3f mm2 gross)'
+                         % (WFC_SRC_UM, WFC_STG_UM, WFC_SLAB_H, centre_area[n]))
         elif n == 'p2':
             slab('p2', centre_area[n], x_sp, yy, cw, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
@@ -3128,7 +3133,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -3545,12 +3550,12 @@ def buses_r8(m):
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
             bus(f'wd_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'wd'), (cl_, 'wd')])
-    if 'eng' in hub:  # layer1e Engram service (ENG_BUSES) + the SW-home share through svc_SW
+    if 'eng' in hub and not FWD_IFACE:  # layer1e Engram service (ENG_BUSES) + the SW-home share through svc_SW
         for a_, pa, b_, pb, bits, _ in ENG_BUSES:
             bus(f'eng_{a_}_{b_}_{pa}', 'eng', bits, [(hub[a_].name, pa), (hub[b_].name, pb)])
         bus('eng_sw_q', 'eng', 35, [(hub['eng'].name, 'teq'), (m['svcs']['SW'].name, 'feq')])   # hq_v + atom 31 + tag 3
         bus('eng_sw_r', 'eng', 265, [(m['svcs']['SW'].name, 'ter'), (hub['eng'].name, 'fer')])  # hq_cred + hr 264
-    if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
+    if HOST_SLAB and not (FWD_IFACE and CTRL_RQ):     # host sector writes -> each stack controller's host write port (decode first), completions back
         for st, ct in m['ctrls'].items():
             # s81-gen 2026-10-09: with --ctrl-rq the stack client owns the controller's real request port (rq), so the
             # host writes land in the client (svc / layer1e Engram service), which muxes them into rq (ingest 2f179fc18:
@@ -3699,18 +3704,24 @@ DRAFT_IMAGE = dict(tool='tools/dsrom_mtp_draft_images.py', layout='rowpack whole
                    storage_pairs=1792, words_per_die=13762560, words_capacity=1792 * 8192, fill=0.9375,
                    images_per_side=4, note='8 distinct images (side x rank) serve the 40 dies (5 row replicas)')
 # MTP defaults (mtp-lead 2026-10-09).  MTP_SEQ_DEFAULT: the head-die sequencer is ON (dsfd_mtp_seq CLOSED c67a71fe5
-# SS +52.37 / FF +5.76).  WFC_HARD_DEFAULT: OFF until the WFC kit is complete: HARD wfc_tok CLOSED, STG tokpipe CLOSED,
-# SOURCE HARD partner mtp-wfc-src-hard-binding-5b11f631f-tc-cx still routing.  FLIP: set WFC_HARD_DEFAULT = True
-# when that job is CLOSED (TT >= 0 / FF >= 0 / DRC 0) -- the only change needed; then regenerate the layer1 / scan
-# die records (tools/s81/s81_dies_recipe.py) and the m221pq die evidence chain.
-WFC_HARD_DEFAULT = False
+# SS +52.37 / FF +5.76).  WFC_HARD_DEFAULT: ON since the WFC kit is complete (mtp-draftdie 2026-10-09 evening): SOURCE
+# HARD partner mtp-wfc-src-hard-mxb-910e67c7b-tc-cx CLOSED TT +152.31 / FF +4.02 / DRC 0 (view
+# physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src, DIEAREA 293.734 x 293.734 um), STG tokpipe
+# mtp-wfc-stg-tokpipe-9f7a7f35e-tc CLOSED (DIEAREA 190.41 x 190.41 um), HARD wfc_tok, wfc_lnk, wfc_vmx closed.
+# --no-wfc-hard reproduces the pre-MTP stage dies (soft reservation on the scan die only).
+WFC_HARD_DEFAULT = True
 MTP_SEQ_DEFAULT = True
 WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
                                 #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
                                 #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
                                 #   collective (link in / out), sized from the routed outlines (src 78,190.7 + stg
                                 #   35,941.7 um2 side by side, 17.28 um halos)
-WFC_SLAB_H = 231.12             #   slab height: both blocks at 196.56 um tall (src 398 x 196.56, stg 183 x 196.56) + halos
+WFC_SRC_UM = (293.734, 293.734)  #   closed SOURCE ot_dsrom_wfc_tokpipe_src (mtp-wfc-src-hard-mxb-910e67c7b-tc-cx DEF DIEAREA)
+WFC_STG_UM = (190.41, 190.41)    #   closed STG tokpipe (mtp-wfc-stg-tokpipe-9f7a7f35e-tc DEF DIEAREA)
+WFC_HALO = 17.28
+#   slab height: the two closed blocks side by side (src + stg + 3 halos = 535.98 um wide of the 1,728 um hub column),
+#   the taller (SOURCE) + 2 halos, on the GY grid (was 231.12 from the r24 / r11 outlines 398 x 196.56 / 183 x 196.56)
+WFC_SLAB_H = round(math.ceil((max(WFC_SRC_UM[1], WFC_STG_UM[1]) + 2 * WFC_HALO) / 2.16 - 1e-9) * 2.16, 3)
 MTP_SEQ = False                 # --mtp-seq: head die: ot_dsrom_mtp_seq (accept NSLOT 8 / NW 17 + draft-chain FSM + acc_n /
                                 #   squash word + position / epoch counter + Markov embed lookup control) slab between
                                 #   capture and collective, wired to capture (argmax tokens), collective (token return /
@@ -4053,7 +4064,7 @@ def _hop_fix(m, P):
                         tt.append(f'g_{bid}_{e[0]}_{k}')
                 return pl, (cx, cy), dch, horiz, w_, h_, NR
 
-            def stations_at(path, n):
+            def stations_at(path, n, extra=0):
                 Lp = _poly_len(path)
                 # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
                 # segment) at each non-glue end, the span between them at the reach as before
@@ -4063,51 +4074,58 @@ def _hop_fix(m, P):
                     if (h0 or h1) and Lp > PIN_SEG:
                         s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
                         s1 = Lp - min(PIN_SEG - 10.0, Lp / 2) if h1 else Lp
-                        mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1)
+                        mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1) + extra
                         pos = ([s0] if h0 else []) + [s0 + (s1 - s0) * (k + 1) / (mid + 1) for k in range(mid)] \
                             + ([s1] if h1 and s1 > s0 + 1.0 else [])
                 return pos
 
             path = [a, (b[0], a[1]), b]
-            if PATH_PICK and reg is None:
+            extra = 0
+            if (PATH_PICK and reg is None) or HOP_EXTRA:
                 # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1) / s81-gen (--path-pick): a die-level hop whose stations
                 # do not all find a box on the default horizontal-first L (the 20.2 mm layer1 hw_SW host chain along
-                # y = 14724.7 through packed field frames: station 5 / 53) takes the first candidate on which every
-                # station places (dry run, no occupancy change): the other L, then corridor Z paths by corridor share
-                # (then length).  Hops that place on the default L are unchanged; the station count follows the path.
-                cands = _hop_paths(a, b, cor)
+                # y = 14724.7 through packed field frames: station 5 / 53) tries the other L, then corridor Z paths by
+                # corridor share (then length); the station count follows the path.  Dry runs, no occupancy change.
+                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
+                # stations fall behind the path; layer1e VM -> eng_SE ended 1,164 um short).
+                # --hop-extra N (s81-gen): a hop with no clean candidate also tries 1..N extra stations (+1 cycle each on
+                # that hop; qs5f frames: g_xb_*_7 -> bank 670 um with the planned count).  First clean (path, extra)
+                # wins; else the placeable one with the fewest relaxed stations (default L, no extra on ties).
+                cands = _hop_paths(a, b, cor) if (PATH_PICK and reg is None) else [path]
                 rects = list(cor.values())
                 order = [cands[0]] + sorted(cands[1:], key=lambda p_: (-round(_corr_frac(p_, rects), 2), _poly_len(p_)))
-                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
-                # stations fall behind the path, e.g. a vertical leg through the field where boxes exist only in the
-                # tier channels; layer1e VM -> eng_SE ended 1,164 um short).  First clean candidate wins; if none is
-                # clean, the placeable one with the fewest relaxed stations (default L on ties).
                 n0 = n
                 best = None
-                for j_, cand in enumerate(order):
-                    n_c = n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)
-                    pos_c = stations_at(cand, n_c)
-                    cur_, ok, rc_ = a, True, {}
-                    for k in range(len(pos_c)):
-                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
-                        if pl_ is None:
-                            ok = False
+                for x_ in range(HOP_EXTRA + 1):
+                    for j_, cand in enumerate(order):
+                        n_c = (n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)) + x_
+                        pos_c = stations_at(cand, n_c, x_)
+                        cur_, ok, rc_ = a, True, {}
+                        for k in range(len(pos_c)):
+                            pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
+                            if pl_ is None:
+                                ok = False
+                                break
+                            cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                        if not ok:
+                            continue
+                        bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
+                        if best is None or bad < best[0]:
+                            best = (bad, j_, cand, n_c, x_)
+                        if bad == 0:
                             break
-                        cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
-                    if not ok:
-                        continue
-                    bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
-                    if best is None or bad < best[0]:
-                        best = (bad, j_, cand, n_c)
-                    if bad == 0:
+                    if best is not None and best[0] == 0:
                         break
-                if best is not None and best[1]:
-                    _, j_, cand, n_c = best
+                if best is not None:
+                    _, j_, cand, n_c, extra = best
                     path, n = cand, n_c
-                    kind_ = 'vfirst' if len(cand) == 3 else 'z'
-                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if j_:
+                        kind_ = 'vfirst' if len(cand) == 3 else 'z'
+                        rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if extra:
+                        rec['hop_extra'][f'+{extra}'] = rec['hop_extra'].get(f'+{extra}', 0) + 1
             Lp = _poly_len(path)
-            pos = stations_at(path, n)
+            pos = stations_at(path, n, extra)
             n = len(pos)
             prev, cur = eps[0], a
             fprev = fdrv if fwd else None
@@ -4659,6 +4677,93 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                [(bx, by_), (bx, yo), (vch_x(m, name), yo), (vch_x(m, name), he.y + he.h / 2),
                 (he.x + he.w / 2, he.y + he.h / 2)], he)
         CH8.bus(f'h{name}_o', 'local', 515, [(he.name, 'o'), (vm.name, name)])
+    if FWD_IFACE:
+        _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, vmy)
+
+
+def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, vmy):
+    """--fwd-iface (s81-gen 2026-10-09): the die-crossing host-write and layer1e Engram interfaces as FORWARDED lanes
+    (source-synchronous stations + an end block at the sink: m2l meso into a stream block, r2l ratio CDC into the serial
+    VM; an l2r start block when the VM is the source), the way the svc <-> VM / selector / collector chains are built.
+    The common-clock hop-fix chains they replace ran 20 mm through 6-8 clock regions: die-evidence-2 s81_l1full clock
+    plan, 8 inter-region pairs up to 322 ps (budget 150) on hw_SW / hc_SW."""
+    hub = m['hub']
+    vm = hub['vm']
+    band = lambda it: it.kind == 'svc'
+    offs = {}
+
+    def nxt_off(it):
+        """next face offset (from the east end) on a band block: svc_SW from 1,900 um west of the existing svc chain
+        taps (400-1,500) in 150 um steps; eng_SE (1,188 um) from its east end in 80 um steps"""
+        wide = it.w > 3000
+        o_ = offs.get(it.name, 1900.0 if wide else 40.0)
+        offs[it.name] = o_ + (150.0 if wide else 80.0)
+        assert o_ < it.w - 20.0, (it.name, o_)
+        return o_
+
+    def sink_end(tag, payload, dst, side):
+        kind = 'r2l' if dst.domain == 'serial_0p9' else 'm2l'
+        nm, w, h = end_spec(kind, [payload], 'vr')
+        if band(dst):
+            x, y = face_pt(dst, nxt_off(dst))
+            if dst is hub.get('eng'):          # layer1e: end blocks in the free SE slot, on eng_SE's top face
+                pl = P.near(x, y + h / 2 + 6.0, w, h, [cor['engS']], horiz=True, span=1200.0, rows=20)
+                assert pl, tag
+                return P.add(Inst(f'he_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
+            return beside_svc(f'he_{tag}', nm, w, h, dst, dst.x + dst.w - x)
+        y = dst.y + dst.h / 2 + (len(m.setdefault('_fwd_end', {}).setdefault(dst.name, [])) - 2) * 60.0
+        m['_fwd_end'][dst.name].append(tag)
+        return P.add(_hub_at(P, f'he_{tag}', nm, w, h, dst, side, y, cor))
+
+    def pin(it, side, tag):
+        if band(it):
+            return face_pt(it, nxt_off(it))
+        k_ = len(m.setdefault('_fwd_src', {}).setdefault(it.name, []))
+        m['_fwd_src'][it.name].append(tag)
+        return (it.x if side == 'W' else it.x + it.w, it.y + it.h / 2 + (k_ - 2) * 40.0)
+
+    def lane(tag, payload, src, sport, dst, dport, side):
+        """src.sport -> dst.dport (payload bits + valid/ready framing), forwarded on `side` of the spine"""
+        start = src
+        if src.domain == 'serial_0p9':          # serial VM: an l2r start block beside it
+            nm, w, h = end_spec('l2r', [payload], 'vr')
+            start = P.add(_hub_at(P, f'hs_{tag}', nm, w, h, src, side, vmy + 1150.0 + 60.0 * len(m.get('_fwd_l2r', [])), cor))
+            m.setdefault('_fwd_l2r', []).append(tag)
+            CH8.bus(f'hs_{tag}_i', 'local', payload + 1, [(src.name, sport), (start.name, 'i')])
+            CH8.bus(f'hs_{tag}_s', 'local', 3, [(start.name, 'st'), (src.name, sport + 's')])
+            a = (start.x + start.w / 2, start.y + start.h / 2)
+            srcp = (start.name, 'fo', 'od')
+        else:
+            a = pin(src, side, tag)
+            srcp = (src.name, sport + 'f', sport + 'd')
+        he = sink_end(tag, payload, dst, side)
+        b = (he.x + he.w / 2, he.y + he.h / 2)
+        sx = spine_x(side)
+        if band(src) and band(dst):             # band -> band along the strip
+            sy = strip_y(src, tag)
+            path = [a, (a[0], sy), (b[0], sy), b]
+        elif band(src):
+            sy = strip_y(src, tag)
+            path = [a, (a[0], sy), (sx, sy), (sx, b[1]), b]
+        elif band(dst):
+            sy = strip_y(dst, tag)
+            path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
+        else:
+            path = [a, (sx, a[1]), (sx, b[1]), b]
+        single(tag, payload, 'vr', srcp, a, path, he)
+        CH8.bus(f'he_{tag}_o', 'local', payload + 3, [(he.name, 'o'), (dst.name, dport)])
+
+    if HOST_SLAB and CTRL_RQ:
+        for st in m['ctrls']:
+            cl = m['svcs'][st] if st in m['svcs'] else hub['eng']
+            side = 'W' if st[1] == 'W' else 'E'
+            lane(f'hw{st}', 512 + 64 + 2, hub['host'], f'tw{st}', cl, 'hw', side)
+            lane(f'hc{st}', 18, cl, 'hc', hub['host'], f'fc{st}', side)
+    if 'eng' in hub:
+        for a_, pa, b_, pb, bits, _ in ENG_BUSES:
+            lane(f'e_{a_}_{pa}', bits, hub[a_], pa, hub[b_], pb, 'E')
+        lane('e_swq', 35, hub['eng'], 'teq', m['svcs']['SW'], 'feq', 'W')
+        lane('e_swr', 265, m['svcs']['SW'], 'ter', hub['eng'], 'fer', 'W')
 
 
 def _hub_at(P, name, master, w, h, slab, side, y, cor):
@@ -5528,6 +5633,11 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
+                    'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
+    ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
+                    'Engram interfaces as forwarded lanes with meso / ratio-CDC end blocks (the common-clock hop-fix '
+                    'chains crossed 6-8 clock regions: 322 ps inter-region skew); default off')
     ap.add_argument('--path-pick', action='store_true', help='s81-gen 2026-10-09: a die-level hop runs on the L or '
                     'corridor Z path with the largest corridor share (station count from that path); = OT_S81_PATH_PICK=1')
     ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
@@ -5610,7 +5720,9 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global CTRL_RQ
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA
+    HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
+    FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
     if a.die == 'layer1e':
         assert a.gen == 'r8' and a.rev == 'r9' and HOST_SLAB, \

@@ -21,7 +21,27 @@
 // Cost: +1 cycle on every crossing (+2 per round trip); the prompt / forced-token read loop (t_provider -> provider
 // -> f_provider -> t_mtp) gains 2 cycles: the controller must wait PRL = 4 (hgi_mtp_native default).  REGB=0 is the
 // original unregistered wiring (the 6adb6c001 cycle-exact bench runs it).  MUT (bench mutants, REGB=1 only):
-//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO.
+//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO;
+//   3 ARGMAX dispatch relay sends without the unit's ready (a record lost while the unit is busy).
+//
+// mtp-lead 2026-10-09 (r25gm die integration): HGI ARGMAX DISPATCH RELAY.  The R25G dispatch plan
+// (tools/hgi_die_dispatch.py 'argmax', cp_band_alias -> this band) puts the CP -> ARGMAX unit record bus on this band's
+// S face: t_hgi_argmax 683 = {n_O, n_A, desc_O, desc_A, header, valid} / f_hgi_argmax 3 = {fault, done, ready} (the
+// unit ot_hgi_argmax_slot, instance hb_mtp_am).  The record's producer is the HGI sequencer (ot_hgi_seq: u_v / u_rdy /
+// u_done / u_fault), which is not in this band: it arrives over the N cross-band pair x_hgi_argmax_rec 683 (in) /
+// x_hgi_argmax_ret 3 (out) from the band that hosts the sequencer (decision hgi-takeover (5)).  REGB=0: wires.
+// REGB=1 (r4, after f7d744101 post-CTS TT -460 / -402 on a single FIFO serving pins 700 um apart): three stages
+// down the band, each crossing <= ~350 um of wire inside one register-to-register cycle --
+//   T (top, by the x_* pins): ot_sc_pfifo, valid = rec[0]; the sequencer's ready = T's registered in_ready AND a
+//     dedicated reset replica (fanout 1), so the ready pin is two flops and an AND gate;
+//   M (mid band): ot_sc_pfifo wire stage;
+//   B (bottom, by the t_/f_ pins): one record register; the unit's ready ret[0] lands in ONE pin flop (fanout 1);
+//     a record is sent as a ONE-CYCLE valid pulse when that flopped ready is 1 and no record was sent in the two
+//     previous cycles.  Exact for this unit: ot_hgi_argmax_record's ret[0] stays 1 until it accepts (it drops only
+//     on accept, returns at retire) and MX1 is its only producer, so a ready seen one cycle late is still true
+//     unless our own previous send consumed it -- which the two-cycle hold-off covers.
+//   done / fault: three flops up the band (bottom, mid, top).
+// Cost: record +3 cycles (T, M, B) +1 (flopped ready); retire +3.
 // The job pin ready also carries a registered admission-open bit: no job is parked in the pin FIFO while admission
 // is closed (the held native done lasts until the drained reset, which would discard it).
 module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
@@ -38,12 +58,15 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  output wire [0:0] t_abort,
  output wire [0:0] t_drained,
  input wire [17:0] f_am,
- input wire [72:0] f_backend,output wire [270:0] t_backend
+ input wire [72:0] f_backend,output wire [270:0] t_backend,
+ input wire [682:0] x_hgi_argmax_rec,output wire [2:0] x_hgi_argmax_ret,
+ output wire [682:0] t_hgi_argmax,input wire [2:0] f_hgi_argmax
 );
  hfd_cmdproc_s ar(.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
   .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
   .xb(xb),.xl(xl),.xt(xt));
  generate if (REGB == 0) begin: g_direct
+  assign t_hgi_argmax=x_hgi_argmax_rec;assign x_hgi_argmax_ret=f_hgi_argmax;
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(ck[0]),.rst(rst[0]),
    .f_mtp(f_mtp),.emit_pend(f_mtp[43]),.t_mtp(t_mtp),.f_host(f_host),.t_host(t_host),.f_provider(f_provider),
    .t_emit(t_emit),.t_provider(t_provider),.f_emit_host(f_emit_host),.t_emit_host(t_emit_host),
@@ -124,6 +147,31 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;
   assign t_backend={kf_ir&&rn,bf_od,bf_ov};
+  // ---- HGI ARGMAX dispatch relay (sequencer band -> ARGMAX unit), three stages (see header)
+  wire rn_t;   // reset replica for the top ready pin (fanout 1)
+  ot_sc_rep_ff #(.RV(1'b0)) u_rn_t(.clk(c),.rst_n(1'b1),.d(~rs[0]),.q(rn_t));
+  wire at_ir,at_ov,am_ir,am_ov;wire [681:0] at_od,am_od;
+  wire b_take;
+  ot_sc_pfifo #(.W(682),.S(2),.G(32)) a_t(.clk(c),.rst_n(rn),.in_valid(x_hgi_argmax_rec[0]&&rn),.in_ready(at_ir),
+   .in_data(x_hgi_argmax_rec[682:1]),.out_valid(at_ov),.out_ready(am_ir),.out_data(at_od));
+  ot_sc_pfifo #(.W(682),.S(2),.G(32)) a_m(.clk(c),.rst_n(rn),.in_valid(at_ov),.in_ready(am_ir),
+   .in_data(at_od),.out_valid(am_ov),.out_ready(b_take),.out_data(am_od));
+  reg b_full,b_v,u_rdy_q;reg [1:0] b_hold;reg [681:0] b_d;
+  assign b_take=!b_full;
+  wire b_send=b_full&&!b_v&&(b_hold==2'd0)&&((MUT==3)?1'b1:u_rdy_q);
+  always @(posedge c or posedge rm) if (rm) begin b_full<=0;b_v<=0;u_rdy_q<=0;b_hold<=0; end
+   else begin
+    u_rdy_q<=f_hgi_argmax[0];
+    b_v<=b_send;
+    b_hold<=b_send?2'd2:(b_hold==2'd0 ?2'd0:b_hold-2'd1);
+    if (b_v) b_full<=1'b0; else if (am_ov&&b_take) b_full<=1'b1;
+   end
+  always @(posedge c) if (am_ov&&b_take) b_d<=am_od;
+  reg [2:1] ar_b,ar_m,ar_t;
+  always @(posedge c or posedge rm) if (rm) begin ar_b<=0;ar_m<=0;ar_t<=0; end
+   else begin ar_b<=f_hgi_argmax[2:1];ar_m<=ar_b;ar_t<=ar_m; end
+  assign t_hgi_argmax={b_d,b_v};
+  assign x_hgi_argmax_ret={ar_t,at_ir&&rn_t};
  end endgenerate
 endmodule
 

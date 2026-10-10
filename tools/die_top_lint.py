@@ -120,9 +120,14 @@ QWEN_R21C = dict(QWEN_R21B, emb_hbm=True)
 # the bottom of spine column M (tools/qwen_kv_die/rom_r22k.py, results/arch/qwen_kv_die_20261009/CONTRACT.md)
 from qwen_kv_die import rom_r22k as _R22K   # noqa: E402
 QWEN_R22K = dict(QWEN_R21C, before_relays=_R22K.surgery)
+# r22kcs (die-evidence-2 2026-10-09, opt-in): r22k with the CLOSED compact sequencer (259.2 x 333.36) + the constant ROM
+# as its own frame inside the old constants+sequencer reservation (rom_r22k._compact_seq)
+QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
+R22K_FAMILY = ('r22k', 'r22kcs')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
-                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K}
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
+                'r22kcs': QWEN_R22KCS}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -403,6 +408,38 @@ def real_blocks(die, m=None):
             bind={pn:([pn] if n==1 else _bus(pn,n)) for pn,(_,n) in pm['ports'].items()}
             out[mn]=dict(module=mn,file=directory+filename,kind='full-shape native index RTL',
                          params=prm,ports=pm['ports'],binding=bind)
+    if die == 'hbm' and V.get('mtp_x_stop') and V.get('mtp_master') != 'hgi_native' and not V.get('native_mtp_wb'):
+        # hgi-takeover 2026-10-09: the R25G MTP slot = the CLOSED view hfd_mtp_x_stop (renamed hfd_mtp in its LEF / ETMs);
+        # the die buses (stop_model groups) bind bit by bit to its raw RTL ports (the generator's pins are those pins)
+        from hbm_mtp_native_contract import stop_model
+        f = 'rtl/hbm_accel/control/hfd_mtp_x_stop.sv'
+        pm = parse_module(f, 'hfd_mtp_x_stop', {})
+        bind = {}
+        for g, gr in stop_model(ROOT)['groups'].items():
+            bind[g] = [fl['port'] if fl['width'] == 1 else f"{fl['port']}[{b}]" for fl in gr['fields'] for b in range(fl['width'])]
+        bind['ck'], bind['rst'] = ['clk'], ['rst_n']
+        out['hfd_mtp'] = dict(module='hfd_mtp_x_stop', file=f, kind='RTL of the CLOSED view mtp (hfd_mtp_x_stop), die buses '
+                              'bound bit by bit to its raw ports', params={}, ports=pm['ports'], binding=bind)
+    if die == 'hbm' and V.get('mtp_master') == 'hgi_native':
+        # mtp-lead 2026-10-09: the generic-die MTP slot (controller + ARGMAX unit, both CLOSED views) and the MX1 CP band
+        for mn, f, prm, kind in (
+                ('hgi_mtp_native', 'rtl/hbm_accel/generic/hgi_mtp_native.sv', {}, 'RTL of the CLOSED view mtp_hgi'),
+                ('ot_hgi_argmax18_m', 'physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv',
+                 dict(LP=8, FLAT=7, FAST=1, GENERIC18=1), 'RTL of the CLOSED view argmax_hgi (pinsep pd55)'),
+                ('hfd_cmdproc_s_mtp_native_mx1', 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', {},
+                 'MX1 CP-south RTL (route open)'),
+                # hgi-takeover decision (3): on the single-CP die the slot's ARGMAX instance is the dispatched unit
+                ('hfd_hgi_am', 'rtl/hbm_accel/generic/hfd_hgi_am.sv', {},
+                 'ARGMAX unit die master: ot_hgi_argmax_slot (closed adapter + closed engine) + VM client, 691-b record (route open)')):
+            if not (ROOT / f).exists():
+                continue
+            pm = parse_module(f, mn, prm)
+            bind = {pn: ([pn] if n == 1 else _bus(pn, n)) for pn, (_, n) in pm['ports'].items()}
+            if 'clk' in bind and 'rst_n' in bind:
+                # die clock / reset nets are 'ck' / 'rst' (active high); the slot wrapper's 2-flop synchroniser +
+                # inversion (as in every hfd_* wrapper) is a slot-wrapper obligation, bound here by name
+                bind['ck'], bind['rst'] = bind.pop('clk'), bind.pop('rst_n')
+            out[mn] = dict(module=mn, file=f, kind=kind, params=prm, ports=pm['ports'], binding=bind)
     return out
 
 
@@ -1038,7 +1075,7 @@ def real_lefs(die):
     if die == 'qwen_kv':
         return (QPHY_LEF, KV_UCIE_LEF, KV_SERDES_LEF)
     if die == 'qwen_rom':
-        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE == 'r22k' else (QPHY_LEF,)
+        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE in R22K_FAMILY else (QPHY_LEF,)
     return (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
@@ -2173,7 +2210,7 @@ def margin(die, m):
             return S.margin_lint(m)
         if die == 'hbm':
             return H.margin_lint(m)
-        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE == 'r22k'):
+        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
@@ -2313,7 +2350,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k'])
+                                                              'r21c', 'r22k', 'r22kcs'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

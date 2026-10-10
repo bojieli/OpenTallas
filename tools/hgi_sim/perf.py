@@ -1106,7 +1106,7 @@ def main():
                             "serialisation the 1 KB calibration entry lacks",
                             "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition "
                             "of one layer and the SU HBM first-access charge the reference predates",
-                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~24 % "
+                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~25 % "
                             "above the native stream (fused SU chains, CP-aware order); the native-template path (the "
                             "bit-exact records per layer type, steady increments) is within ~3 %; the published walk "
                             "is a fused-chain composition without a command processor, not a record stream"],

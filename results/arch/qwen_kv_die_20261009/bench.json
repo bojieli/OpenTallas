@@ -849,5 +849,12 @@
    ]
   }
  },
- "ok": true
+ "ok": true,
+ "rh_rebench": {
+  "run": "run12_d_rh (ot-epyc1tb), source 4b7c66f54 (link-end FIFOs RH=1)",
+  "typical_step_8192": 1789,
+  "exact_all": true,
+  "mutants": "mut1-5, 7 caught; mut6, mut8 exact",
+  "note": "identical step to run11 (the registered-head FIFO is cycle-equivalent at its interface: 200k-cycle random lockstep, 0 differences)"
+ }
 }

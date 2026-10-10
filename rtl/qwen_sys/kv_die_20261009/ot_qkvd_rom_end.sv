@@ -74,11 +74,11 @@ module ot_qkvd_rom_end #(
     wire         xpop = !xe && ((x_q && tc[1] != 0) || (x_kv && tc[2] != 0) || (!x_q && !x_kv));
     wire         epop = !ee && tc[3] != 0;
     wire         dpop = !de && tc[0] != 0;
-    ot_qkvd_fifo #(.W(523), .D(XS)) u_x (.clk(clk), .rst_n(rst_n), .push(xv), .din(xd), .pop(xpop), .dout(xh),
+    ot_qkvd_fifo #(.RH(1), .W(523), .D(XS)) u_x (.clk(clk), .rst_n(rst_n), .push(xv), .din(xd), .pop(xpop), .dout(xh),
                                           .empty(xe), .full(xf), .count());
-    ot_qkvd_fifo #(.W(25), .D(RQD)) u_e (.clk(clk), .rst_n(rst_n), .push(ev), .din(ed), .pop(epop), .dout(eh),
+    ot_qkvd_fifo #(.RH(1), .W(25), .D(RQD)) u_e (.clk(clk), .rst_n(rst_n), .push(ev), .din(ed), .pop(epop), .dout(eh),
                                          .empty(ee), .full(ef), .count());
-    ot_qkvd_fifo #(.W(W), .D(DCD)) u_d (.clk(clk), .rst_n(rst_n), .push(dv), .din(dd), .pop(dpop), .dout(dh_w),
+    ot_qkvd_fifo #(.RH(1), .W(W), .D(DCD)) u_d (.clk(clk), .rst_n(rst_n), .push(dv), .din(dd), .pop(dpop), .dout(dh_w),
                                         .empty(de), .full(df), .count());
     reg [3:0]    tv;
     reg [4*W-1:0] td;
