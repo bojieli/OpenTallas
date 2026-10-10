@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.qwen.ctlm-link-successor.v1",
+  "source_sha256": "a81a87ff32a4677903de2e947d46372ea8c490e2acbba3cf8ba66ebc777b9e2f",
+  "successor_sha256": "4bc430b0916d50272d222f403ee718f235b3a3af52e5b9b5e62bcbbf5876d8d8",
+  "default_equivalent": true,
+  "adoption": "requires actual die-link counts, exact bench and routed qualification",
+  "model": {
+    "macs_per_cycle_delta": 0,
+    "memory_bytes_per_cycle_delta": 0,
+    "replica_count": 1,
+    "mux_fanout_area_delta": 0,
+    "boundary_bits_per_cycle_delta": 0,
+    "registers_at_default_delta": 0,
+    "result_latency_cycles": "5 + 2*LNK; control timing shifted by CLNK; actual RTL latency must be measured",
+    "upper_select_delay_cycles": "CLNK + 2 + LNK - CR (must be nonnegative)",
+    "clock_hz": 1200000000
+  },
+  "old_sources_unchanged": true
+}

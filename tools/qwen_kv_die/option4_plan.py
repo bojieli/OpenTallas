@@ -64,8 +64,8 @@ def plan():
     seq_ports = ports(seq_file, 'ot_qfd_seq_su')
     # Required die outputs; direction is explicit because an x_oacc input
     # cannot serve as the SU accepted-operation-count output.
-    outputs = {'su_snapshot': {'x_sacc': 24, 'x_sidle': 1, 'x_sprog': 16, 'x_srows': 16},
-               'me_layer_start': {'me_start': 1, 'me_token': 18, 'me_pos': 18, 'me_prog_base': 12}}
+    outputs = {'su_snapshot': {'su_acc_o': 24, 'su_idle_o': 1, 'su_prog_o': 16, 'su_rows_o': 16},
+               'me_layer_start': {'me_start_o': 1, 'me_token_o': 18, 'me_pos_o': 18, 'me_prog_base_o': 12}}
     missing = {group: [name for name in ps if name not in seq_ports] for group, ps in outputs.items()}
     upper_file = ROOT / 'physical/qwen_die_masters/cfg/qfd_tt_up4_b.env'
     ctl_file = ROOT / 'physical/qwen_die_masters/cfg/qfd_tt_ctlm_a.env'
