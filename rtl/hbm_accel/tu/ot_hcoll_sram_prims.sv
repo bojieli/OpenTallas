@@ -319,7 +319,11 @@ module ot_hcoll_sfifo_x #(
     wire ce, ue;
     wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
     ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
-    assign ecc_ce=v2 && ce; assign ecc_ue=v2 && ue; assign ecc_drop=ecc_ue;
+    // hgi-takeover (route hgi-coll-port-secded-577d24ba1 TT -222 on bs2 -> decode -> ue -> ocr): the decode lands in a
+    // register stage (v3) before it drives out_v / out_d and the credit counter (+1 edge on the export; the credit loop
+    // is 9 edges against K = 8 head slots: a full stream runs at 8 / 9, above the core's 4 delivery lanes per 8 ports)
+    reg          v3, ueq, ceq; reg [W-1:0] dq;
+    assign ecc_ce=v3 && ceq; assign ecc_ue=v3 && ueq; assign ecc_drop=ecc_ue;
     reg          bs1, bs2;
     reg [AW:0]   scnt;
     reg [AW-1:0] wp, rp;
@@ -330,21 +334,22 @@ module ot_hcoll_sfifo_x #(
     wire fetch = (scnt != '0) && (ocr != 4'd0);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
+            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
         end else begin
             push_p <= push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 4'(fetch) + 4'(cr_in) + 4'(ecc_drop);
-            v1 <= fetch; v2 <= v1; out_v <= v2 && !ue;
+            v1 <= fetch; v2 <= v1; v3 <= v2; out_v <= v3 && !ueq;
             if (push_p && full) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        out_d <= decoded;
+        dq <= decoded; ceq <= ce; ueq <= ue;
+        out_d <= dq;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
