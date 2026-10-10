@@ -57,6 +57,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg response_v;reg [272:0] response;
  reg [127:0] header;
  reg [19:0] n,m,read_row,read_col,write_row,write_col;
+ reg [19:0] read_left,write_left;           // n - col, kept as registers (hgi-1010/c)
  reg [39:0] launched,returned,finished;
  reg [31:0] read_addr,write_addr,read_rowbase,write_rowbase,rs,ws;
  reg [15:0] ri,wi;
@@ -103,13 +104,16 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire d_lastr=dsc[18]; wire d_lastw=dsc[17]; wire d_final=dsc[16]; wire [15:0] d_tag=dsc[15:0];
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
  // ---------------------------------------------------------------- request precompute (4): from registered state only
- wire r_burst=ri==1 && read_addr[2:0]==0 && n-read_col>=8 && 32-read_part>=8;
+ // hgi-1010/c (route 1bf4e3f57 TT -99, SS -538: a / write_col -> p_*_n 28-29 levels = n - col subtract, compare,
+ // col + step add, == n compare, then the address mux): the elements left in the row are a register (read_left /
+ // write_left), so burst / row end are constant compares, and both next addresses are summed in parallel.
+ wire r_burst=ri==1 && read_addr[2:0]==0 && |read_left[19:3] && read_part<=6'd24;
  wire [3:0] r_step=r_burst?4'd8:4'd1;
- wire r_rowend=read_col+r_step==n;
+ wire r_rowend=r_burst ? (read_left==20'd8) : (read_left==20'd1);
  wire r_last=read_part+r_step==32 || r_rowend;
- wire w_burst=wi==1 && write_addr[2:0]==0 && n-write_col>=8 && 32-write_part>=8;
+ wire w_burst=wi==1 && write_addr[2:0]==0 && |write_left[19:3] && write_part<=6'd24;
  wire [3:0] w_step=w_burst?4'd8:4'd1;
- wire w_rowend=write_col+w_step==n;
+ wire w_rowend=w_burst ? (write_left==20'd8) : (write_left==20'd1);
  wire w_last=write_part+w_step==32 || w_rowend;
  wire w_final=w_last&&write_row+1==m&&w_rowend;
  reg [255:0] wd;
@@ -123,7 +127,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg p_ok,pw_ok,p_rdone;
  reg [31:0] p_r_addr,p_w_addr; reg [3:0] p_r_step,p_w_step; reg p_r_last,p_w_last,p_w_final;
  reg [5:0] p_r_part,p_w_part,p_r_part_n,p_w_part_n;
- reg [19:0] p_r_row_n,p_r_col_n,p_w_row_n,p_w_col_n;
+ reg [19:0] p_r_row_n,p_r_col_n,p_w_row_n,p_w_col_n,p_r_left_n,p_w_left_n;
  reg [31:0] p_r_addr_n,p_r_rowbase_n,p_w_addr_n,p_w_rowbase_n;
  reg [255:0] p_wd; reg [31:0] p_wmask;
  wire wsel=pw_ok && (p_rdone || (reserved>=DEPTH && MUTANT!=3));
@@ -137,12 +141,20 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  always @(posedge clk) begin                  // payload registers of the precompute: no reset (qualified by p_ok)
   p_r_addr<=read_addr; p_r_step<=r_step; p_r_last<=r_last; p_r_part<=read_part;
   p_r_part_n<=r_last?6'd0:read_part+r_step;
-  if(r_rowend)begin p_r_row_n<=read_row+1;p_r_col_n<=0;p_r_rowbase_n<=read_rowbase+rs;p_r_addr_n<=read_rowbase+rs;end
-  else begin p_r_row_n<=read_row;p_r_col_n<=read_col+r_step;p_r_rowbase_n<=read_rowbase;p_r_addr_n<=read_addr+(r_burst?{ri,3'd0}:{3'd0,ri});end
+  begin : rnx
+   reg [31:0] a_nrow,a_b8,a_b1;
+   a_nrow=read_rowbase+rs; a_b8=read_addr+{ri,3'd0}; a_b1=read_addr+{3'd0,ri};
+   if(r_rowend)begin p_r_row_n<=read_row+1;p_r_col_n<=0;p_r_left_n<=n;p_r_rowbase_n<=a_nrow;p_r_addr_n<=a_nrow;end
+   else begin p_r_row_n<=read_row;p_r_col_n<=read_col+r_step;p_r_left_n<=read_left-r_step;p_r_rowbase_n<=read_rowbase;p_r_addr_n<=r_burst?a_b8:a_b1;end
+  end
   p_w_addr<=write_addr; p_w_step<=w_step; p_w_last<=w_last; p_w_final<=w_final; p_w_part<=write_part;
   p_w_part_n<=w_last?6'd0:write_part+w_step;
-  if(w_rowend)begin p_w_row_n<=write_row+1;p_w_col_n<=0;p_w_rowbase_n<=write_rowbase+ws;p_w_addr_n<=write_rowbase+ws;end
-  else begin p_w_row_n<=write_row;p_w_col_n<=write_col+w_step;p_w_rowbase_n<=write_rowbase;p_w_addr_n<=write_addr+(w_burst?{wi,3'd0}:{3'd0,wi});end
+  begin : wnx
+   reg [31:0] a_nrow,a_b8,a_b1;
+   a_nrow=write_rowbase+ws; a_b8=write_addr+{wi,3'd0}; a_b1=write_addr+{3'd0,wi};
+   if(w_rowend)begin p_w_row_n<=write_row+1;p_w_col_n<=0;p_w_left_n<=n;p_w_rowbase_n<=a_nrow;p_w_addr_n<=a_nrow;end
+   else begin p_w_row_n<=write_row;p_w_col_n<=write_col+w_step;p_w_left_n<=write_left-w_step;p_w_rowbase_n<=write_rowbase;p_w_addr_n<=w_burst?a_b8:a_b1;end
+  end
   p_wd<=wd; p_wmask<=wmask;
  end
  // ---------------------------------------------------------------- response lanes (5): R1 decides, R2 writes
@@ -174,7 +186,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    cq_v<=0;val2<=0;val3<=0;val4<=0;aspan_q<=0;ospan_q<=0;orow_q<=0;
    fields_q<=0;same_q<=0;nalias_q<=0;shape_q<=0;aend_q<=0;oend_q<=0;
    a<=0;o<=0;validating<=0;busy<=0;bad<=0;seat_v<=0;seat<=0;response_v<=0;header<=0;n<=0;m<=0;
-   read_row<=0;read_col<=0;write_row<=0;write_col<=0;
+   read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=0;write_left<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    launched<=0;returned<=0;finished<=0;
    read_part<=0;write_part<=0;next_tag<=0;seat_d<=0;
@@ -190,7 +202,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];
     read_addr<=ca[39:8];write_addr<=co[39:8];read_rowbase<=ca[39:8];write_rowbase<=co[39:8];
-    read_row<=0;read_col<=0;write_row<=0;write_col<=0;rs<=ca[119:88];ws<=co[119:88];
+    read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=ca[67:48];write_left<=ca[67:48];rs<=ca[119:88];ws<=co[119:88];
     ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]);
     wi<=co[135:120]==0?16'd1:co[135:120];
     launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
@@ -238,11 +250,11 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
      if(stw)begin
       seat<={1'b1,{p_w_addr[29:3],5'd0},p_wd,p_wmask,next_tag};
       seat_d<={1'b1,p_w_step,p_w_addr[2:0],p_w_part,1'b0,p_w_last,p_w_final,next_tag};
-      write_part<=p_w_part_n;write_row<=p_w_row_n;write_col<=p_w_col_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n;
+      write_part<=p_w_part_n;write_row<=p_w_row_n;write_col<=p_w_col_n;write_left<=p_w_left_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n;
      end else begin
       seat<={1'b0,{p_r_addr[29:3],5'd0},256'd0,32'hffffffff,next_tag};
       seat_d<={1'b0,p_r_step,p_r_addr[2:0],p_r_part,p_r_last,1'b0,1'b0,next_tag};
-      read_part<=p_r_part_n;read_row<=p_r_row_n;read_col<=p_r_col_n;read_rowbase<=p_r_rowbase_n;read_addr<=p_r_addr_n;
+      read_part<=p_r_part_n;read_row<=p_r_row_n;read_col<=p_r_col_n;read_left<=p_r_left_n;read_rowbase<=p_r_rowbase_n;read_addr<=p_r_addr_n;
      end
     end
     // ---- responses, in request order
