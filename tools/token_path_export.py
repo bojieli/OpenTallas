@@ -16,10 +16,9 @@ re-price of 2026-10-08 (results/arch/reprice_20261008/reprice.json, tools/repric
             field_phases_1792.py compose on the measured field phases with the re-price's extra wire and per-node
             items; the composition of tools/dsrom_1m_allmeasured.py is replayed in-process (its graph_hook) so every
             node of its operator graph carries the solver's own start / finish; slack from the same graph.
-  hbm_ds    HBM accelerator, DS-V4.1 1M, AR.  The matched-reference critical path (results/rtl/dshbm_matched_reference_
-            20261005/composition.json path, 2,291 nodes), re-based to the gate row, plus every unified-composition line
-            of 'unified_candidate_contracts_rtl' and the re-price items (upper bound), each spread over the path nodes
-            of the class it is charged on (rules in HBM_RULES).
+  hbm_gen_qwen / hbm_gen_ds   the generic HBM die (R25GP): the compiled HGI-1 programs, one node per executed record,
+            timed by the hgi_sim schedule S2 (simulator table rate; RTL-calibrated rate pending unit fixes); Qwen MTP =
+            one DFlash block-16 step.
 
 Where a record gives a total but not its placement, the export spreads it and says so on the node (grade
 'apportioned').  The totals are asserted against the published re-priced tok/s.
@@ -837,204 +836,6 @@ def ds_engram_nodes(d):
 
 
 # ======================================================================================== HBM accelerator DS 1M
-HBM_CLASSES = [
-    dict(id="hbm", label="HBM loader / stream service", elements=["hfd_loader", "hfd_svc_SE_s0", "hfd_svc_SW_s0", "hfd_cmdproc_n",
-         "hfd_cmdproc_s"], instances=["svc_*", "phy_*", "hb_loader"]),
-    dict(id="xload", label="VM x-broadcast to the SMs", elements=["hfd_vm", "hfd_vm_ne", "hfd_vm_nw", "hfd_vm_se", "hfd_vm_sw",
-         "hfd_mcast_r6a", "hfd_mcast_r6b", "hfd_mcast_r7", "hfd_stn_r33", "hfd_meso_r35"], instances=["hb_vm", "w*_xt_*", "w*_xm*"]),
-    dict(id="sm", label="SM array (weight matvec, HBM-streamed)", elements=["ot_hbm_accel_smh_tile_e", "ot_hbm_accel_smh_tile_w",
-         "ot_hbm_accel_smh_front_c", "ot_hbm_accel_smh_front_n", "ot_hbm_accel_smh_front_s", "hfd_router"],
-         instances=["sm*", "svc_*", "hb_cmdproc", "hb_router"]),
-    dict(id="barrier", label="Barrier + SM -> SU result gather", elements=["hfd_gath_r25", "hfd_gath_r9", "hfd_result_relay64_ew",
-         "hfd_result_relay64_ns", "hfd_su_result_ingress"], instances=["hb_barrier", "w*_wl_sm*"]),
-    dict(id="su", label="SU / fused SU chains + SFU", elements=["hfd_su", "hfd_sfu", "hfd_quant", "ot_su12_full", "ot_su12_sfu",
-         "ot_su64_full64", "ot_hbm_norm_grp8", "ot_hbm_norm_grp16", "ot_hbm_norm_engine_view", "ot_hdc_v41x_vred_top1024"],
-         instances=["hb_su_*", "hb_sfu_*", "hb_quant"]),
-    dict(id="attn", label="Attention tiles (near-HBM)", elements=["hfd_attn_tile_b", "hfd_attn_half_hi", "hfd_attn_half_lo",
-         "ot_attn_tile_m6h1q", "ot_attn_bank_ew544", "ot_attn_bank_sn544"], instances=["at_*"]),
-    dict(id="du", label="Index / router DU", elements=["hfd_index_q_b0", "hfd_index_q_b1", "hfd_index_q_b2", "hfd_index_q_b3",
-         "hfd_index_q_b5", "hfd_router"], instances=["hb_router", "at_*"]),
-    dict(id="hc", label="Hyper-connection mix (HC, Sinkhorn)", elements=["hfd_hc"], instances=["hb_hc_*"]),
-    dict(id="coll", label="Collective endpoint (TU, SerDes)", elements=["hfd_coll", "hfd_coll_credit_prod", "hfd_coll_idle_tx",
-         "hfd_coll_pkt_fifo_ii1", "ot_hcoll_port", "ot_ha2_truecredit_rx_phys", "ot_ha2_truecredit_tx_phys",
-         "ot_ha2_relay_tx_internal", "ot_ha2_tu_owner_banked_half"], instances=["hb_coll", "sd_*", "lk_*"]),
-    dict(id="switch", label="Switch tier (off die, Tomahawk Ultra)", elements=[], instances=["lk_*"]),
-]
-HBC = {c["id"]: c for c in HBM_CLASSES}
-
-
-def hbm_cls(n):
-    p = n["node"].split(":")[0]
-    return {"hbm": "hbm", "xload": "xload", "sm": "sm", "barrier": "barrier", "su": "su", "sufused": "su", "attn": "attn",
-            "du": "du", "select": "du", "hcp": "hc", "coll": "coll", "tail": "switch"}.get(p, "su")
-
-
-# unified line -> (classes it is spread over, weight): wire-like lines over the r05 wire-class shares
-WIRE_SHARES = dict(xload="x_broadcast", barrier="barrier_wire_delta", coll=("su_coll_endpoint", "endpoint_serdes"),
-                   sm="expert_fetch_wire", hbm="kv_rows_wire", du="index_keys_wire", attn=("attn_out_wire", "attn_q_wire"))
-HBM_RULES = {
-    "die_wire_r16j": "wire", "closure_00": "wire", "closure_01": "wire", "closure_02": ["barrier"], "closure_03": ["xload"],
-    "closure_04": ["barrier"], "closure_05": ["coll"], "closure_06": ["coll"], "closure_07": ["xload"], "closure_08": ["sm"],
-    "closure_09": ["sm"], "closure_10": ["sm"], "closure_11": ["du"], "closure_12": ["du"], "closure_13": ["du"],
-    "closure_14": ["sm"], "closure_15": ["xload", "barrier"], "closure_16": ["sm"], "closure_17": [], "closure_18": ["attn"],
-    "closure_19": ["sm"], "closure_20": ["sm"], "closure_21": ["du"], "closure_22": "wire", "closure_23": [],
-    "closure_24": "wire", "closure_25": ["attn"], "closure_26": "wire", "closure_27": "wire",
-    "full_fec": "fec", "lever_joint_PQ_XMAP": ["sm", "xload"], "lever_paired_W2_PACK": ["sm"],
-    "ha2_truecredit": ["coll"], "cdc_refill_ii1": ["coll"], "sm_su_native_edge_proposed": ["barrier"],
-}
-
-
-def hbm():
-    M = "results/rtl/dshbm_matched_reference_20261005/composition.json"
-    HWS = "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
-    m = J(M)
-    uni = J(UNI)["targets"]["hbm_ds"]
-    lines = {l["id"]: l for l in uni["lines"]}
-    comp = uni["compositions"]["unified_candidate_contracts_rtl"]
-    rp = J(REPRICE)["hbm_ds"]
-    gate = m["gate"]
-    row = {r["name"]: r for r in m["ladder_target_clocks"]}
-    path = m["path"]
-    assert abs(sum(n["us"] for n in path) - m["headline"]["AR_us"]) < 0.01
-    # gate row differs from the headline row only in the SU term: re-base the su: nodes pro rata
-    hd, gr = row["matched"]["AR_by_term"], row[gate["AR_row"]]["AR_by_term"]
-    diff = {k: round(gr.get(k, 0) - hd.get(k, 0), 3) for k in set(hd) | set(gr) if abs(gr.get(k, 0) - hd.get(k, 0)) > 0.0005}
-    assert set(diff) == {"su"}, diff
-    su_nodes = [i for i, n in enumerate(path) if n["node"].startswith("su:")]
-    su_sum = sum(path[i]["us"] for i in su_nodes)
-    target_su = su_sum + (gate["AR_us"] - m["headline"]["AR_us"])
-    scale = target_su / su_sum
-    # the composition lines of unified_candidate_contracts_rtl
-    use = [l for l in uni["lines"] if l["role"] in ("base", "published", "candidate", "lever") and l["effect"]]
-    use = [l for l in use if l["id"] != "collective_sram_protected"] + [lines["cdc_refill_ii1"], lines["sm_su_native_edge_proposed"]]
-    assert abs(sum(l["effect"]["AR"] for l in use) - comp["AR_us"]) < 0.002, (sum(l["effect"]["AR"] for l in use), comp["AR_us"])
-    wt = J(HWS)["compositions"]["ds_matched"]["terms"]
-    wsh = {}
-    for c, keys in WIRE_SHARES.items():
-        keys = keys if isinstance(keys, tuple) else (keys,)
-        wsh[c] = sum(wt[k]["us"] for k in keys)
-    serial = [n for n in path if not n["node"].startswith("hcp:")]
-    hcp = [n for n in path if n["node"].startswith("hcp:")]
-    assert all(n["us"] == 0 for n in hcp)
-    CY = CLK / 1e6
-    idx_by_cls = collections.defaultdict(list)
-    for i, n in enumerate(serial):
-        idx_by_cls[hbm_cls(n)].append(i)
-    adders = collections.defaultdict(list)
-
-    def spread(item, us, classes, grade, record, weight=None, note=None):
-        if not us:
-            return
-        keys = [i for c in classes for i in idx_by_cls[c]]
-        w = [weight(serial[i]) for i in keys] if weight else None
-        for i, v in distribute(us * CY, keys, w).items():
-            a = dict(item=item, cycles=v, grade=grade, record=record)
-            if note:
-                a["note"] = note
-            adders[i].append(a)
-
-    for l in use:
-        if l["id"] == "matched_gate":
-            continue
-        rule = HBM_RULES[l["id"]]
-        rec_ = l["source"][0]["file"] if isinstance(l["source"], list) and l["source"] else UNI
-        gr_ = "lever" if l["role"] == "lever" else "priced"
-        if rule == "wire":
-            tot = sum(wsh.values())
-            for c, s in wsh.items():
-                spread(l["id"], l["effect"]["AR"] * s / tot, [c], gr_, rec_,
-                       note=f"{l['item'][:160]}; spread over the r05 wire-class shares ({HWS} compositions.ds_matched.terms)")
-        elif rule == "fec":
-            spread(l["id"], l["effect"]["AR"], ["coll"], gr_, rec_, weight=lambda n: n.get("budget_us") or 0.0,
-                   note=f"{l['item'][:160]}; per switch crossing, weighted by each collective's TU budget (crossings)")
-        else:
-            spread(l["id"], l["effect"]["AR"], rule, gr_, rec_, note=f"{l['item'][:160]}; spread over the {'/'.join(rule)} nodes")
-    # re-price items (upper bound), placed per occurrence
-    RPR = REPRICE + " hbm_ds (upper bound)"
-    for i, n in enumerate(serial):
-        if n["node"].startswith("coll:"):
-            ar = "all_reduce" in n["how"]
-            adders[i].append(dict(item="collective_sr_endpoint (re-price 10-08)", cycles=17 if ar else 14, grade="priced", record=RPR))
-            adders[i].append(dict(item="truecredit_rx_pin (re-price 10-08)", cycles=1, grade="priced", record=RPR))
-        if n["node"].startswith("sufused:") and "norm" in n["node"]:
-            adders[i].append(dict(item="norm_split (re-price 10-08)", cycles=2, grade="priced", record=RPR))
-    pk = next(x for x in rp["items"] if x["item"] == "packet_sram_ii1rw")["cycles_hi"]
-    spread("packet_sram_ii1rw (re-price 10-08)", pk / CY, ["coll"], "priced", RPR, note="+4 a packet pass x 610 passes, spread over the collectives")
-    d = Design("hbm_ds", "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, AR", "cycles")
-    gdef = collections.OrderedDict()
-
-    def gname(n):
-        L = n["layer"]
-        if L == -2:
-            return "embed"
-        if isinstance(L, str):
-            return "head"
-        return f"L{L}"
-    for i, n in enumerate(serial):
-        gid = gname(n)
-        if gid not in gdef:
-            gdef[gid] = dict(label={"embed": "Embed", "head": "LM head + argmax"}.get(gid, f"Layer {gid[1:]}"),
-                             kind="embed" if gid == "embed" else "head" if gid == "head" else "layer")
-        us = n["us"] * (scale if n["node"].startswith("su:") else 1.0)
-        c = hbm_cls(n)
-        grade = {"measured": "measured", "measured_tu_budget": "measured+vendor", "modelled": "modelled"}[n["cls"]]
-        note = n["how"]
-        if n["node"].startswith("su:"):
-            note += f" | re-based to the gate row {gate['AR_row']} (su term {gr['su']} vs {hd['su']} us: x{scale:.5f})"
-        nn = d.add(f"n{i:04d}", n["node"], gid, c, us * CY, src(grade, M, f"path[{path.index(n)}]", note=note[:600]),
-                   op=n["node"].split(":")[0], elements=HBC[c]["elements"], instances=HBC[c]["instances"], adders=adders.get(i, []),
-                   bytes_in=None, link_in={"coll": "SU -> endpoint -> SerDes -> switch", "switch": "switch tier (8 chips striped)",
-                                           "xload": "VM -> SM x faces", "sm": "HBM -> stream service -> SM", "barrier": "SM -> SU result tree"}.get(c, "on die"))
-        nn["layer"] = n["layer"]
-        if n.get("budget_us"):
-            nn["vendor_budget_cycles"] = r1(n["budget_us"] * CY)
-    d.chain_schedule()
-    # HC mixes run beside the layer body (exposed 0): parallel nodes with their measured duration
-    first_of = {}
-    for nid in d.order:
-        first_of.setdefault(d.nodes[nid]["group"], nid)
-    for k, n in enumerate(hcp):
-        mm = re.search(r"([\d.]+) us beside a ([\d.]+) us body", n["how"])
-        dur, body = float(mm.group(1)), float(mm.group(2))
-        gid = gname(n)
-        part = n["node"].split(".")[-1]
-        grp_nodes = [x for x in d.order if d.nodes[x]["group"] == gid]
-        # attn mix starts with the layer; ffn mix with the layer's second half (first node after the attention out gather)
-        if part == "ffn":
-            k0 = next((j for j, x in enumerate(grp_nodes) if d.nodes[x]["label"].startswith("sufused:hc_post")), None)
-            anchor = grp_nodes[k0 + 1] if k0 is not None and k0 + 1 < len(grp_nodes) else grp_nodes[0]
-        else:
-            anchor = grp_nodes[0]
-        st = d.nodes[anchor]["start"]
-        nn = d.add(f"hcp{k:03d}", n["node"], gid, "hc", dur * CY, src("measured", M, f"path[{path.index(n)}]", note=n["how"]),
-                   op="hcp", elements=HBC["hc"]["elements"], instances=HBC["hc"]["instances"], critical=False, deps=[],
-                   start=st, kind="parallel")
-        nn["layer"] = n["layer"]
-        nn["slack"] = r1((body - dur) * CY)
-    after = rp["upper"]["after"]
-    total = d.nodes[d.order[-1]]["end"]
-    exp_us = comp["AR_us"] + sum(x["cycles_hi"] for x in rp["items"]) / CY
-    assert abs(total / CY - exp_us) < 0.01, (total / CY, exp_us)
-    headline = dict(tok_s=after["AR_tok_s"], us=round(exp_us, 3), cycles=r1(exp_us * CY), mode="AR, position 1,048,575",
-                    mtp_tok_s=after["MTP_tok_s"], tau=comp["tau"],
-                    basis=f"{UNI} hbm_ds unified_candidate_contracts_rtl ({comp['AR_us']} us, {comp['AR_tok_s']} tok/s) + the "
-                          "2026-10-08 re-price upper bound (collective SR endpoint, norm split, true-credit rx, packet SRAM ii1rw)",
-                    source=REPRICE + " hbm_ds.upper.after", status="priced candidate (not a closed rate)",
-                    gate_row=gate["AR_row"], gate_AR_us=gate["AR_us"])
-    worst = max((g for g in gdef if g.startswith("L")), key=lambda g: sum(d.nodes[x]["cycles"] for x in d.order if d.nodes[x]["group"] == g))
-    drill = dict(group=worst, why="the longest layer on the token path")
-    notes = [
-        f"Measured path: {M} path[] (2,291 operators; the 80 HC-mix operators are exposed 0 and are drawn as parallel "
-        "operators beside their layer body with their measured duration).",
-        f"Every line of unified_candidate_contracts_rtl ({len(use) - 1} lines over the gate) is spread over the operators of the "
-        "class it is charged on (HBM_RULES in the tool; die-wire lines over the r05 wire-class shares, full FEC over the switch "
-        "crossings by TU budget). Those adders are grade 'priced' or 'lever' (negative: exact levers).",
-        "Each die of the TP-96 group runs the same schedule; collectives cross the off-die switch tier ('switch' class).",
-    ]
-    return finish(d, headline, gdef, HBM_CLASSES, drill, notes,
-                  extra=dict(geometry=dict(source=GEO, key="hbm_ds", die="HBM accelerator DS die (r14b snapshot; one of 96)")))
-
-
 # ======================================================================================== MTP (speculative) step
 # One MTP step = draft (the MTP head proposes 5 tokens) -> verify (6 positions through the layers: the fixed
 # latency is paid once, then one wavefront interval / multi-position walk) -> accept / commit (tau accepted tokens a
@@ -1218,6 +1019,15 @@ def ds_rom_mtp(ar=None):
                      "is stated, not bound); the elements were measured exact in full-shape RTL on the released mtp.* weights",
                      evidence=DS_DRAFT_REC + " still_modelled['DSpark stage placement'] / placement")
     HW_DRAFTDIE["flag"] = "not built — no die / route (elements measured in RTL)"
+    bnd = ROOT / "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json"
+    if bnd.exists() and json.loads(bnd.read_text()).get("PASS"):
+        # mtp-dsbind 2026-10-10: every mtp.* tensor bound to an owning die (4 DSpark primary + 40 MD-2 draft + 12 head),
+        # the dies generated by tools/s81/s81_dies_recipe.py draftP / draftA / draftB / head631; routes / STA open
+        HW_DRAFTDIE = hw("partial", "bound: 2,401/2,401 mtp.* tensors on owning dies of the S81 array (4 DSpark primary P.k* on the "
+                         "S81 L0 runs, 40 MD-2 draft dies in the rowpack, Markov on the 12 head dies); dies generated legally, "
+                         "not routed; the binding's placement deltas are charged (mc.binding.*)",
+                         evidence="results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json; die_set.json")
+        HW_DRAFTDIE["flag"] = "bound — dies generated, not routed (elements measured in RTL)"
     # ---- draft: three DSpark blocks (node level, the record's own critical paths)
     ff = cap["rec"]["info"]["draft_blocks"]["full_fec"]
     blk_nodes = []
@@ -1366,8 +1176,11 @@ def ds_rom_mtp(ar=None):
         f"(1 + 46/11,271) + hop = {m['II_us']} us each) -> accept / commit + the next step's seed.",
         f"Rate = tau {m['tau']} accepted tokens / step ({hv['step_us']} us) = {hv['MTP_tok_s']:,.1f} tok/s; full-rate BF "
         f"(98 stages): {variants['full_rate_shared98']['MTP_tok_s']:,.1f} tok/s (phase split in mtp_variants).",
-        "Hatched operators have no closed hardware: the three DSpark stages and the seed run on dies the S81 binding does not "
-        "contain (mtp.* weights are unowned there); the Markov head is a transfer ratio. The wavefront controller and the "
+        ("The DSpark stages and the seed are BOUND (results/uarch/dsrom_s81_mtp_binding_20261010: 2,401/2,401 mtp.* tensors on "
+         "4 DSpark primary + 40 MD-2 draft + 12 head dies; generated, not routed; placement deltas charged as mc.binding.*)"
+         if HW_DRAFTDIE["status"] == "partial" else
+         "Hatched operators have no closed hardware: the three DSpark stages and the seed run on dies the S81 binding does not "
+         "contain (mtp.* weights are unowned there)") + "; the Markov head is a transfer ratio. The wavefront controller and the "
         "accept unit closed as blocks but are not integrated (dashed).",
         "The verify pass's operators are the AR view's critical path (off-critical operators: see the AR view).",
     ]
@@ -1383,226 +1196,6 @@ def ds_rom_mtp(ar=None):
     return rec
 
 
-def hbm_p6():
-    """the matched reference's MTP walk at P = 6 for its MTP gate row (corrected+wg+su12), replayed in-process"""
-    import dshbm_matched_reference as MR
-    A, CL = MR.A, MR.CL
-    prog = json.loads((A.BASE / "program.json").read_text())
-    _, su6, _, _ = A.su_tables()
-    coll, local = A.Coll(A.load(MR.INH / "collectives.json")), A.Local(A.load(MR.INH / "local.json"))
-    hbm_ = A.Hbm(A.load(MR.INH / "hbm_streams.json"))
-    smseq = MR.SMSeq(sorted((MR.REC / "sm_seq").glob("*_nc8_a*.json")))
-    f6 = MR.REC / "su_m6a5" / "su_N1024_M256_b7r8m6a5_dpi_beh_su_cases_p6om_ildr.json"
-    s6 = CL.best_of([("dr", json.loads(f6.read_text()))])
-    T12 = dict(A.TARGET, su=1.2e9, du_ser=MR.F_SER)
-    return MR.mtp(prog, smseq, CL.su_table_overlap(s6), coll, local, hbm_, T12, ("coll", "local", "hbm", "mixes"), True, None)
-
-
-def hbm_mtp(ar=None):
-    M_ = "results/rtl/dshbm_matched_reference_20261005/composition.json"
-    HWS = "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
-    ar = ar or hbm()
-    m = J(M_)
-    gate = m["gate"]
-    row = {r["name"]: r for r in m["ladder_target_clocks"]}[gate["MTP_row"]]["MTP"]
-    mm, rows6 = hbm_p6()
-    assert abs(mm["step_us"] - gate["MTP_step_us"]) < 0.001 and abs(mm["step_us"] - row["step_us"]) < 0.001, (mm["step_us"], gate)
-    uni = J(UNI)["targets"]["hbm_ds"]
-    lines = {l["id"]: l for l in uni["lines"]}
-    comp = uni["compositions"]["unified_candidate_contracts_rtl"]
-    rp = J(REPRICE)["hbm_ds"]
-    tau = comp["tau"]
-    use = [l for l in uni["lines"] if l["role"] in ("base", "published", "candidate", "lever") and l["effect"]]
-    use = [l for l in use if l["id"] != "collective_sram_protected"] + [lines["cdc_refill_ii1"], lines["sm_su_native_edge_proposed"]]
-    assert abs(sum(l["effect"]["MTP_step"] for l in use) - comp["MTP_step_us"]) < 0.002
-    assert abs(lines["matched_gate"]["effect"]["MTP_step"] - mm["step_us"]) < 0.001
-    CY = CLK / 1e6
-    wt = J(HWS)["compositions"]["ds_matched"]["terms"]
-    wsh = {c: sum(wt[k]["us"] for k in (keys if isinstance(keys, tuple) else (keys,))) for c, keys in WIRE_SHARES.items()}
-    serial = [n for n in rows6 if not n["node"].startswith("hcp:")]
-    hcp = [n for n in rows6 if n["node"].startswith("hcp:")]
-    assert all(n["us"] == 0 for n in hcp)
-    idx_by_cls = collections.defaultdict(list)
-    for i, n in enumerate(serial):
-        idx_by_cls[hbm_cls(n)].append(i)
-    adders = collections.defaultdict(list)
-
-    def spread(item, us, classes, grade, record, weight=None, note=None):
-        if not us:
-            return
-        keys = [i for c in classes for i in idx_by_cls[c]]
-        w = [weight(serial[i]) for i in keys] if weight else None
-        for i, v in distribute(us * CY, keys, w).items():
-            a = dict(item=item, cycles=v, grade=grade, record=record)
-            if note:
-                a["note"] = note
-            adders[i].append(a)
-
-    for l in use:
-        if l["id"] == "matched_gate":
-            continue
-        rule = HBM_RULES[l["id"]]
-        rec_ = l["source"][0]["file"] if isinstance(l["source"], list) and l["source"] else UNI
-        gr_ = "lever" if l["role"] == "lever" else "priced"
-        eff = l["effect"]["MTP_step"]
-        if rule == "wire":
-            tot = sum(wsh.values())
-            for c, s_ in wsh.items():
-                spread(l["id"], eff * s_ / tot, [c], gr_, rec_, note=f"{l['item'][:160]}; MTP_step effect, spread over the r05 wire-class shares")
-        elif rule == "fec":
-            spread(l["id"], eff, ["coll"], gr_, rec_, weight=lambda n: n.get("budget_us") or 0.0,
-                   note=f"{l['item'][:160]}; MTP_step effect per switch crossing, weighted by TU budget")
-        else:
-            spread(l["id"], eff, rule, gr_, rec_, note=f"{l['item'][:160]}; MTP_step effect over the {'/'.join(rule)} nodes")
-    # re-price (upper bound): the same cycles a step as the AR walk (unified convention), placed per occurrence
-    RPR = REPRICE + " hbm_ds (upper bound)"
-    items = {x["item"]: x["cycles_hi"] for x in rp["items"]}
-    n_ar = n_g = 0
-    for i, n in enumerate(serial):
-        if n["node"].startswith("coll:"):
-            a_ = "all_reduce" in n["how"]
-            n_ar += a_; n_g += not a_
-            adders[i].append(dict(item="collective_sr_endpoint (re-price 10-08)", cycles=17 if a_ else 14, grade="priced", record=RPR))
-            adders[i].append(dict(item="truecredit_rx_pin (re-price 10-08)", cycles=1, grade="priced", record=RPR))
-    assert 17 * n_ar + 14 * n_g == items["collective_sr_endpoint"] and n_ar + n_g == items["truecredit_rx_pin"], (n_ar, n_g)
-    norm_keys = [i for i, n in enumerate(serial) if n["node"].startswith("su:") and "norm" in n["node"]]
-    for i, v in distribute(items["norm_split"], norm_keys).items():
-        adders[i].append(dict(item="norm_split (re-price 10-08)", cycles=v, grade="priced", record=RPR,
-                              note=f"+2 x the AR path's fused norm nodes = {items['norm_split']} cycles a step, spread over the "
-                                   f"{len(norm_keys)} SU norm nodes of the P6 walk (unfused SU chains at P6)"))
-    spread("packet_sram_ii1rw (re-price 10-08)", items["packet_sram_ii1rw"] / CY, ["coll"], "priced", RPR,
-           note="+4 a packet pass x 610 passes, spread over the collectives")
-    d = Design("hbm_ds", "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, MTP (DSpark, gamma 5)", "cycles")
-    gdef = collections.OrderedDict()
-    # ---- draft
-    drw = [x for x in J(HBM_DRAFT)["rows"] if x["ctx"] == "1M" and x["scenario"] == "tomahawk_ultra_protocol"
-           and x["design"] == "ablation_w19"][0]
-    ab = drw["as_built"]
-    assert abs(ab["draft_us"] - mm["draft_us"]) < 1e-6 and abs(drw["seed_commit_us"] - mm["seed_commit_us"]) < 1e-6
-    gdef["D"] = dict(label="Draft: 3 DSpark stages + LM head + 5-step Markov chain", kind="draft", phase="draft")
-    ctl_hw = hw("built", "SM array (as the AR path) + the DSpark controller ot_dshbm_dspark_ctl (ctl_f2) and the SM argmax "
-                "epilogue ot_dshbm_argmax (argmax_f1), both closed blocks", evidence=HBM_CTL)
-    n = d.add("draft.compute", "draft compute: embed + 3 DSpark stages (5 slots) + batched LM head pass + 5-step Markov chain",
-              "D", "sm", (ab["draft_us"] - ab["draft_transport_us"]) * CY,
-              src("measured", HBM_DRAFT, "rows[1M, tomahawk_ultra_protocol, ablation_w19].as_built",
-                  note="stage SM ops measured 5-column on the SM element (exact), head 5-col pass, chain step measured; "
-                       "composed per the record's definition (draft_us - draft_transport_us)"),
-              op="draft.compute", elements=HBC["sm"]["elements"] + ["ot_dshbm_argmax"], instances=HBC["sm"]["instances"])
-    mark(n, "draft", ctl_hw)
-    n = d.add("draft.transport", "draft collectives / transport (18 stage collectives + cross-die argmax merges)", "D", "coll",
-              ab["draft_transport_us"] * CY, src("modelled", HBM_DRAFT, "as_built.draft_transport_us",
-                                                  note="w15 collective time; o-group tree reduce + multicast extrapolated (record flag)"),
-              op="draft.transport", elements=HBC["coll"]["elements"], instances=HBC["coll"]["instances"])
-    mark(n, "draft", hw("built", "the collective endpoint + switch tier of the AR path; its time is extrapolated, not the hardware"))
-    # ---- verify: the P6 walk
-    def gname(n):
-        L = n["layer"]
-        return "embed" if L == -2 else "head" if isinstance(L, str) else f"L{L}"
-    for i, n in enumerate(serial):
-        gid = "V." + gname(n)
-        if gid not in gdef:
-            b = gname(n)
-            gdef[gid] = dict(label="verify " + {"embed": "embed", "head": "LM head + argmax"}.get(b, f"layer {b[1:]}"),
-                             kind="embed" if b == "embed" else "head" if b == "head" else "layer", phase="verify")
-        c = hbm_cls(n)
-        grade = {"measured": "measured", "measured_tu_budget": "measured+vendor", "modelled": "modelled"}[n["cls"]]
-        nn = d.add(f"v{i:04d}", n["node"], gid, c, n["us"] * CY,
-                   src(grade, "tools/dshbm_matched_reference.py mtp() walk P=6", f"row {gate['MTP_row']}", note=n["how"][:600]),
-                   op=n["node"].split(":")[0], elements=HBC[c]["elements"], instances=HBC[c]["instances"], adders=adders.get(i, []))
-        nn["layer"] = n["layer"]
-        if n.get("budget_us"):
-            nn["vendor_budget_cycles"] = r1(n["budget_us"] * CY)
-        mark(nn, "verify")
-    gdef["VU"] = dict(label="verify: routed-expert union over 6 positions (W19 model)", kind="union", phase="verify")
-    un_hw = hw("partial", "ot_dshbm_expert_union closed as a block (union_f3, SS +9.52 / FF +10.79 ps) but not adopted "
-               "(adopted_system false); the SM / fetch increment itself is the W19 lines-style model, no RTL walk",
-               evidence=HBM_CTL + " rows[union_f3]")
-    for k, c, lab in (("sm", "sm", "union: extra expert SM work (6 positions' union of routed experts)"),
-                      ("fetch", "hbm", "union: extra expert weight fetch (union of routed experts)")):
-        n = d.add(f"union.{k}", lab, "VU", c, mm["union_model_us"][k] * CY,
-                  src("modelled", "hbm_accelerator_model VERIFY_PARTS[6] - [1]", note="W19 model increment (verify P6 over P1); "
-                      "the matched reference keeps it unchanged (an HBM-favourable lower bound)"),
-                  op=f"union.{k}", elements=HBC[c]["elements"] + ["ot_dshbm_expert_union"], instances=HBC[c]["instances"])
-        mark(n, "verify", un_hw)
-    # ---- accept / commit + seed
-    gdef["A"] = dict(label="accept / commit + seed of the next step", kind="accept", phase="accept")
-    sp = J(HBM_DRAFT)["elements"]["seed"]["parts_us"]
-    rest = mm["seed_commit_us"] - sum(sp.values())
-    seed_hw = hw("built", "SM / SU / barrier of the AR path")
-    for k, c, lab, gr in (("sm", "sm", "seed: main_proj (6 columns) on the SMs", "measured"),
-                          ("local", "su", "seed: main_x gather + main_norm + 3 stages' wkv window rows", "measured"),
-                          ("barrier", "barrier", "seed: barrier", "measured"),
-                          ("collective", "coll", "seed: 1 collective (the record's remainder)", "apportioned"),
-                          ("commit", "ctl", "accept / commit: compare, emit accepted tokens, roll back spec state", "measured")):
-        us = rest if k == "collective" else sp[k]
-        n = d.add(f"accept.{k}", lab, "A", c, us * CY,
-                  src(gr, HBM_DRAFT, "elements.seed.parts_us" if k != "collective" else "seed_commit_us - sum(parts)",
-                      note=f"seed_commit {mm['seed_commit_us']} us = parts {sp} + 1 collective"),
-                  op=f"accept.{k}", elements=(MTP_CLASSES_EXTRA[1]["elements"] if c == "ctl" else HBC[c]["elements"]),
-                  instances=(MTP_CLASSES_EXTRA[1]["instances"] if c == "ctl" else HBC[c]["instances"]))
-        mark(n, "accept", hw("partial", "ot_dshbm_dspark_ctl (ctl_f2) and ot_hdc_accept (accept_a0) closed as blocks; "
-                             "ot_dshbm_spec_state NOT adopted (spec3_s8 terminal: 2 mismatches; route positive) and the "
-                             "accelerator is not qualified as a whole", evidence=HBM_CTL + " blocked.spec_state")
-             if k == "commit" else seed_hw)
-    total = d.chain_schedule()
-    # HC mixes beside the layer body (exposed 0)
-    first_of = {}
-    for nid in d.order:
-        first_of.setdefault(d.nodes[nid]["group"], nid)
-    for k, n in enumerate(hcp):
-        mo = re.search(r"([\d.]+) us beside a ([\d.]+) us body", n["how"])
-        dur, body = float(mo.group(1)), float(mo.group(2))
-        gid = "V." + gname(n)
-        grp_nodes = [x for x in d.order if d.nodes[x]["group"] == gid]
-        if n["node"].split(".")[-1] == "ffn":
-            k0 = next((j for j, x in enumerate(grp_nodes) if d.nodes[x]["label"].startswith("su:hc_post")), None)
-            anchor = grp_nodes[k0 + 1] if k0 is not None and k0 + 1 < len(grp_nodes) else grp_nodes[0]
-        else:
-            anchor = grp_nodes[0]
-        nn = d.add(f"hcp{k:03d}", n["node"], gid, "hc", dur * CY, src("measured", "tools/dshbm_matched_reference.py mtp() walk P=6",
-                   note=n["how"]), op="hcp", elements=HBC["hc"]["elements"], instances=HBC["hc"]["instances"], critical=False,
-                   deps=[], start=d.nodes[anchor]["start"], kind="parallel")
-        nn["layer"] = n["layer"]
-        nn["slack"] = r1((body - dur) * CY)
-        mark(nn, "verify")
-    after = rp["upper"]["after"]
-    exp_us = comp["MTP_step_us"] + sum(x["cycles_hi"] for x in rp["items"]) / CY
-    assert abs(total / CY - exp_us) < 0.01, (total / CY, exp_us)
-    total, charged = apply_mtp_charges(d, "hbm_ds", gdef, total)
-    tok = round(tau * CLK / total, 1) if charged else after["MTP_tok_s"]
-    if charged:
-        charged["MTP_tok_s_composed"] = after["MTP_tok_s"]
-    phases = phase_spans(d, total)
-    headline = dict(tok_s=tok, us=round(total / CY, 3), cycles=r1(total), tau=tau,
-                    mode=f"MTP (DSpark gamma 5, tau {tau}), position 1,048,575", ar_tok_s=after["AR_tok_s"],
-                    mtp_over_ar=round(tok / after["AR_tok_s"], 3), composed_tok_s=after["MTP_tok_s"],
-                    basis=f"{UNI} hbm_ds unified_candidate_contracts_rtl MTP step ({comp['MTP_step_us']} us, {comp['MTP_tok_s']} "
-                          f"tok/s) + the 2026-10-08 re-price upper bound; step = draft + verify (P6 walk + expert union) + seed/commit "
-                          f"(gate row {gate['MTP_row']}, {gate['MTP_step_us']} us)",
-                    source=REPRICE + " hbm_ds.upper.after.MTP_tok_s", status="priced candidate (not a closed rate)",
-                    gate_row=gate["MTP_row"])
-    worst = max((g for g in gdef if g.startswith("V.L")), key=lambda g: sum(d.nodes[x]["cycles"] for x in d.order if d.nodes[x]["group"] == g))
-    drill = dict(group=worst, why="the longest verify layer (6 positions on one weight fetch)")
-    notes = [
-        "One MTP step: draft (as-built DSpark draft on the SMs) -> verify (the 6 positions walk the layers together: one weight "
-        "fetch, the MMA columns carry the positions; the SU, attention and collectives scale with the positions) + the routed-"
-        "expert union increment -> accept / commit + the next step's seed.",
-        f"Verify walk: tools/dshbm_matched_reference.py mtp() at P = 6 on the gate's MTP row {gate['MTP_row']} ({len(rows6)} "
-        "operators, replayed in-process); the unified composition's MTP_step line effects are spread as in the AR view "
-        "(the joint PQ/XMAP lever credits -77.1 us here vs -36.4 AR; W2_PACK credits 0 at MTP).",
-        f"Rate = tau {tau} / step = {after['MTP_tok_s']:,.1f} tok/s (re-price upper bound; lower bound in reprice.json).",
-        "Hatched: no closed hardware; dashed: a closed block not adopted / integrated (expert union, spec state).",
-    ]
-    if charged:
-        notes.append(f"MTP block charges (group MC, {charged['source']}): the hfd_mtp die master's pin crossings, argmax / "
-                     f"topK / union FAST registers, spec-state latency, fence and commit add {charged['critical_cycles']:,.1f} "
-                     f"cycles a step ({after['MTP_tok_s']:,.1f} -> {tok:,.1f} tok/s); the KV writer's +1/row "
-                     f"({charged['overlapped_cycles']:,.0f} cycles) is overlapped with the next draft (proof in the file).")
-    rec = finish(d, headline, gdef, HBM_CLASSES + MTP_CLASSES_EXTRA[1:], drill, notes, tau=tau,
-                 extra=dict(geometry=ar["geometry"], mtp_charges=charged))
-    rec.update(phases=phases, hw_summary=hw_summary(d),
-               accounting=accounting(total, tau, ar["totals"]["cycles"], phases, row["tau_source"]))
-    return rec
 
 
 def qwen_mtp_note():
@@ -1614,6 +1207,421 @@ def qwen_mtp_note():
                        f"{v['best']['speedup_vs_ar_upper']}-{v['best']['speedup_vs_ar_lower']}x AR). DSpark stays built and "
                        "exact but off; speculation pays only where the dominant per-token cost is shared across positions "
                        "(the DS ROM and the HBM accelerator).")
+
+
+# ======================================================================================== generic HBM die (HGI-1 programs)
+# The token path of the generic HBM die IS its compiled HGI-1 program: one node per executed record (program order, loops
+# unrolled), start / end / cycles from the hgi_sim transaction-level schedule (timing.schedule S2: the command processor
+# modelled -- fetch, decode, wait-mask drains, in-order dispatch, head-of-line blocking -- on the simulator's unit cost
+# tables), edges = the wait-mask dependences (record i waits for the last earlier record of every unit in its mask) plus
+# the STREAM credit pairs.  Grade 'measured' where the die-level RTL bench (hgi-e2e, e2e_calibration.json per_unit)
+# measured the unit.op on that model's vehicle, 'priced' otherwise.  Clicking a node shows the decoded record
+# (tools/hgi_sim/listing.py) from data/<design>_program.json.
+HGI_OUT = "results/arch/hgi_programs_20261010"
+HGI_GEOM = HGI_OUT + "/r25gph_geometry.json"
+HGI_DS_PROGRAM = HGI_OUT + "/inputs/ds_rank0_program.json"
+HGI_DS_RUN = HGI_OUT + "/inputs/ds_native_1M_run.json"
+HGI_E2E = "results/arch/hgi_sim_20261009/e2e_calibration.json"
+HGI_DIE = "hbm_r25gph"
+# HGI unit -> R25GP die blocks (tools/hgi_die_dispatch.py UNITS: sm / att adapters in the CP block driving the SM launch
+# tree and the attention tiles; su / sfu / hc at the SW hub quarter; dma beside the loader; FUSED on the quant block;
+# coll; idx; argmax in the MTP slot).  HBM traffic is drawn on the svc / PHY of the operand's stacks.
+HGI_CLASSES = [
+    dict(id="SM", label="SM.MATVEC (32 SMs, weights streamed from HBM)", elements=["hfd_sm", "hfd_cmdproc"],
+         instances=["sm*", "svc_*", "phy_*"]),
+    dict(id="ATT", label="ATT.QK / PV (attention tiles, KV from HBM)", elements=["hfd_attn_half_lo", "hfd_attn_half_hi"],
+         instances=["at_*", "svc_*", "phy_*"]),
+    dict(id="SU", label="SU.VOP (stream unit, SW hub quarter)", elements=["hfd_su", "hfd_hgi_vm"],
+         instances=["hb_su_SW", "hb_hgi_vm"]),
+    dict(id="COLL", label="COLL (collective engine + SerDes)", elements=["hfd_coll", "hfd_serdes_slab", "ot_pdie_serdes"],
+         instances=["hb_coll", "sd_*", "lk_S*", "lk_N*"]),
+    dict(id="DMA", label="DMA (record mover beside the loader)", elements=["hfd_loader", "hfd_hgi_vm"],
+         instances=["hb_loader", "hb_hgi_vm", "svc_*", "phy_*"]),
+    dict(id="FUSED", label="FUSED (norms, softmax, QDQ: quant block)", elements=["hfd_quant"], instances=["hb_quant"]),
+    dict(id="HC", label="HC (hyper-connection mixes, SW hub quarter)", elements=["hfd_hc"], instances=["hb_hc_SW", "svc_*"]),
+    dict(id="IDX", label="IDX (indexer / top-k)", elements=["hfd_hgi_idx", "hfd_idx_score_native_grid", "hfd_idx_sel_native_qend"],
+         instances=["hb_hgi_idx", "idx_score_*", "idx_selector", "hb_index_*"]),
+    dict(id="SFU", label="SFU.GLU (SW hub quarter)", elements=["hfd_sfu"], instances=["hb_sfu_SW"]),
+    dict(id="ARGMAX", label="ARGMAX.LOCAL (MTP slot)", elements=["hfd_hgi_am"], instances=["hb_mtp_am"]),
+    dict(id="CTL", label="CTL (command processor)", elements=["hfd_cmdproc", "hgi_mtp_native"], instances=["hb_cmdproc", "hb_mtp"]),
+]
+HGI_LINK = dict(SM="HBM svc -> SM (weights) | VM -> SM (x)", ATT="HBM svc -> tiles (KV rows)", SU="VM -> SU -> VM",
+                COLL="VM -> coll -> SerDes -> peers", DMA="HBM svc <-> loader <-> VM", FUSED="VM -> quant -> VM",
+                HC="HBM / VM -> HC", IDX="VM -> IDX", SFU="VM -> SFU -> VM", ARGMAX="STREAM / VM -> argmax", CTL="CP")
+
+
+def _hgi_crit(s, recs):
+    """the critical chain, by executed index: walk back from the last end through what bound each record -- its STREAM
+    producer (end bound by the producer's tail), the unit's previous record (unit busy), or what held its dispatch
+    (timing.schedule S2 `why`: the waited unit's last record, the unit's queue, or the previous record in dispatch
+    order when the command processor itself -- fetch, decode, in-order issue -- was the bound)"""
+    import numpy as np
+    from hgi_sim import timing as T
+    ex, st, en, why = s["ex"], s["start"], s["end"], s["why"]
+    n = len(ex)
+    unit = [recs[k].unit for k, *_ in ex]
+    prev_u, lastu, last = [None] * n, [None] * n, {}
+    for i in range(n):
+        prev_u[i] = last.get(unit[i])
+        lastu[i] = dict(last)
+        last[unit[i]] = i
+    sprod, lp = [None] * n, {}
+    for i, (k, *_) in enumerate(ex):
+        r = recs[k]
+        for kk in ("A", "B", "C", "D"):
+            d = r.desc.get(kk)
+            if d is not None and d.space == "STREAM" and d.base in lp:
+                sprod[i] = lp[d.base]
+        for kk in ("O", "R"):
+            d = r.desc.get(kk)
+            if d is not None and d.space == "STREAM":
+                lp[d.base] = i
+    i = int(np.argmax(en))
+    path, seen = [], set()
+    eps = 1e-6
+    while i is not None and i not in seen:
+        seen.add(i)
+        path.append(i)
+        j = sprod[i]
+        if j is not None and en[i] <= en[j] + 200 and st[i] <= st[j] + eps:
+            i = j
+            continue
+        pu = prev_u[i]
+        ready, wt, qt, cpn, wun = why[i]
+        d_t = max(ready, wt, qt, cpn)
+        if pu is not None and unit[i] not in T.PIPELINED and en[pu] >= st[i] - eps and en[pu] > d_t:
+            i = pu
+            continue
+        if i == 0:
+            break
+        if wt >= d_t - eps and wun is not None and lastu[i].get(wun) is not None:
+            i = lastu[i][wun]
+        elif qt >= d_t - eps and pu is not None:
+            i = pu
+        else:
+            i = i - 1
+    assert n
+    return list(reversed(path))
+
+
+def _hgi_e2e(vehicle):
+    per = J(HGI_E2E)["result"]["per_unit"]
+    return {k: v[vehicle] for k, v in per.items() if vehicle in v}
+
+
+def hgi_program_file(key, recs, meta):
+    """data/<key>_program.json: the decoded listing of every image record (listing.py text block + fields)"""
+    from hgi_sim import listing as LS
+    from hgi_sim.records import encode_program
+    img = encode_program(recs)
+    ents = LS.listing(img, [r.tag for r in recs])
+    LS.check_roundtrip(img, ents)
+    return dict(schema="opentallas.hgi_program_listing.v1", design=key, tool="tools/hgi_sim/listing.py",
+                image_bytes=len(img), image_sha256=hashlib.sha256(img).hexdigest(), records=len(ents),
+                roundtrip="image -> listing -> records -> encode_program == image", **meta,
+                listing=[dict(index=e["index"], unit=e["unit"], op=e["op"], tag=e["tag"], text=LS.text([e]))
+                         for e in ents])
+
+
+def hgi_design(key, title, recs, pos, cost_fn, vehicle, group_of, headline_extra, notes, prog_meta, tau=None,
+               phase_of=None, hw_of=None):
+    from hgi_sim import timing as T
+    import hbm_generic_iface as HGI
+    s = T.schedule(recs, pos, "S2", cost_fn=cost_fn)
+    assert not s["races"], s["races"][:3]
+    ex, st, en, costs = s["ex"], s["start"], s["end"], s["costs"]
+    # the chain may overlap (an in-order dispatch link binds to the previous record's issue, not its end): keep the
+    # records that advance the chain's frontier, and credit each with its exclusive (non-overlapped) cycles
+    excl, front = {}, 0.0
+    for i in sorted(_hgi_crit(s, recs), key=lambda j: (st[j], en[j])):
+        x = en[i] - max(st[i], front)
+        if x > 1e-9 or (en[i] - st[i] <= 1e-9 and st[i] >= front):
+            excl[i] = max(0.0, x)
+            front = max(front, en[i])
+    crit = set(excl)
+    e2e = _hgi_e2e(vehicle)
+    d = Design(key, title, "cycles")
+    gdef = collections.OrderedDict()
+    ids = []
+    unit_ops = {}
+    for i, (k, L, L1) in enumerate(ex):
+        r = recs[k]
+        uo = f"{r.unit}.{r.op}"
+        gid, glab, gkind = group_of(i, k, L, r)
+        gdef.setdefault(gid, dict(label=glab, kind=gkind))
+        meas = e2e.get(uo)
+        grade = "measured" if meas else "priced"
+        c, cg, how = costs[i]
+        note = f"{how} [{cg}]" + (f"; RTL bench ratio {meas['ratio']}" if meas else "")
+        unit_ops.setdefault(uo, dict(grade=grade, cost_grade=cg, bench=meas, records=0))["records"] += 1
+        nid = f"r{i:05d}"
+        lab = r.tag or uo
+        n = d.add(nid, f"{lab} · {uo}", gid, r.unit, en[i] - st[i],
+                  src(grade, "hgi_sim S2", f"record {k}" + (f", L={L}" if L else ""), note=note),
+                  op=uo, deps=[], start=st[i], critical=i in crit, link_in=HGI_LINK.get(r.unit),
+                  kind="op" if i in crit else "parallel")
+        n["rec"] = k
+        if L:
+            n["iter"] = L
+        if phase_of:
+            mark(n, phase_of(i, k, L, r), hw_of(i, k, L, r) if hw_of else None)
+        ids.append(nid)
+    # edges: wait-mask dependences (the last earlier record of every waited unit), STREAM credit pairs
+    last = {}
+    seen = set()
+    for i, (k, L, L1) in enumerate(ex):
+        r = recs[k]
+        for b in range(16):
+            if r.wait >> b & 1 and HGI.UNITS[b] in last:
+                j = last[HGI.UNITS[b]]
+                if (j, i) not in seen:
+                    seen.add((j, i))
+                    d.edges.append(dict(src=ids[j], dst=ids[i], bytes=None, link=f"wait {HGI.UNITS[b]}", cycles=0))
+        for key_ in ("A", "B", "C", "D"):
+            dd = r.desc.get(key_)
+            if dd is not None and dd.space == "STREAM":
+                for j in range(i - 1, -1, -1):
+                    rj = recs[ex[j][0]]
+                    if any(x.space == "STREAM" and x.base == dd.base for kk, x in rj.desc.items() if kk in ("O", "R")):
+                        if (j, i) not in seen:
+                            seen.add((j, i))
+                            d.edges.append(dict(src=ids[j], dst=ids[i], bytes=None, link=f"STREAM {dd.base}", cycles=0))
+                        break
+        last[r.unit] = i
+    # consecutive critical nodes bound by a true dependence or unit order (not a wait bit) get their own edge
+    cp = [ids[i] for i in sorted(crit)]
+    for a, b in zip(cp, cp[1:]):
+        if (int(a[1:]), int(b[1:])) not in seen:
+            d.edges.append(dict(src=a, dst=b, bytes=None, link="data / unit order", cycles=0))
+    total = max(en)
+    tok = (tau or 1.0) * CLK / total
+    headline = dict(tok_s=round(tok, 1), us=round(total / CLK * 1e6, 3), cycles=r1(total), **headline_extra)
+    worst = max((g for g in gdef), key=lambda g: sum(d.nodes[x]["cycles"] for x in d.order if d.nodes[x]["group"] == g))
+    drill = dict(group=worst, why="the longest group on the token path")
+    rec = finish(d, headline, gdef, HGI_CLASSES, drill, notes, tau=tau,
+                 extra=dict(geometry=dict(source=HGI_GEOM, key=HGI_DIE, die="generic HBM die R25GP (HGI-1 machine, "
+                                          "variant r25gph; one of the group)"),
+                            unit_ops=unit_ops, unit_ops_rule=(f"grade 'measured': the unit.op was measured on the "
+                                f"die-level RTL bench ({HGI_E2E} per_unit, vehicle {vehicle}; bench = its RTL / simulator "
+                                "service); 'priced': simulator price (tools/hgi_sim/calibration.json). Node src 'hgi_sim S2' "
+                                "= tools/hgi_sim/timing.py schedule S2."),
+                            program=dict(file=f"{key}{'_mtp' if tau else ''}_program.json", records=len(recs), executed=len(ex),
+                                         schedule="S2 (CP modelled)", position=pos, **prog_meta)))
+    # exclusive critical cycles (the chain's frontier): shares, class / grade totals and group widths sum to the token
+    ex_of = {ids[i]: excl[i] for i in excl}
+    cls_tot, grade_tot, grp = collections.Counter(), collections.Counter(), collections.Counter()
+    gcl = collections.defaultdict(collections.Counter)
+    for n in rec["nodes"]:
+        if n["critical"]:
+            x = ex_of[n["id"]]
+            n["critical_cycles"] = r1(x)
+            n["share"] = round(x / total, 6)
+            cls_tot[n["cls"]] += x
+            grade_tot[n["src"]["grade"]] += x
+            grp[n["group"]] += x
+            gcl[n["group"]][n["cls"]] += x
+    t = rec["totals"]
+    t["by_grade"] = {k: r1(v) for k, v in grade_tot.most_common()}
+    t["by_class"] = [dict(cls=k, cycles=r1(v), share=round(v / total, 6)) for k, v in cls_tot.most_common()]
+    t["critical_rule"] = ("critical chain from timing.schedule S2 (what bound each record), each record credited with the "
+                          "cycles it advances the chain (overlap with the previous critical record removed)")
+    for g in rec["groups"]:
+        if g["critical"]:
+            g["cycles"] = r1(grp[g["id"]])
+            g["share"] = round(grp[g["id"]] / total, 6)
+            g["cls_cycles"] = {k: r1(v) for k, v in gcl[g["id"]].most_common()}
+    rec["_program"] = hgi_program_file(key, recs, prog_meta)
+    return rec
+
+
+def _qcfg():
+    return json.loads((ROOT / "compiler/models/qwen3-8b/config.json").read_text())
+
+
+def hbm_gen_qwen():
+    from hgi_sim import qwen_compiler as QC
+    from hgi_sim import timing as T
+    cfg = _qcfg()
+    recs = QC.program(QC.Geometry(cfg, 8192), QC.qwen_params(cfg), cfg["num_hidden_layers"])
+    lo = next(k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "LOOP")
+    hi = next(k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "ENDLOOP")
+    ffn0 = next(k for k, r in enumerate(recs) if r.tag == "prenorm.ffn")
+
+    def group_of(i, k, L, r):
+        if k < lo:
+            return "pro", "Prologue (embedding, RoPE row)", "embed"
+        if k > hi:
+            return "epi", "Epilogue (final norm, LM head, argmax)", "head"
+        part = "ffn" if k >= ffn0 else "attn"
+        return f"L{L:02d}.{part}", f"Layer {L} · {'FFN' if part == 'ffn' else 'attention'}", "layer"
+    notes = [
+        "Every node is one executed record of the compiled Qwen3-8B TP4 token program (tools/hgi_sim/qwen_compiler.py: "
+        f"{len(recs)} image records, the 36-layer body as one CTL.LOOP), in program order; clicking a node shows the decoded "
+        "record (tools/hgi_sim/listing.py, spec Appendix C).",
+        "start / end / cycles: tools/hgi_sim/timing.py schedule S2 at position 8,191 (command processor modelled: fetch, "
+        "decode, wait-mask drains, in-order dispatch, head-of-line blocking) on the simulator's unit cost tables "
+        "(calibration.json; SM / HBM first access from RTL measurements). Pathfinding grade, not a closed rate.",
+        f"Grade 'measured' = the unit.op was measured on the die-level RTL bench (hgi-e2e, {HGI_E2E} per_unit, vehicle "
+        "qwen_L0); 'priced' = simulator price only. The node note carries the bench's RTL / simulator service ratio.",
+        "Edges are the wait-mask dependences (a record waits for every unit in its 16-bit mask to drain: edge from that "
+        "unit's last earlier record) plus the STREAM credit pairs of the LM head.",
+        "Every die of the TP4 group runs the same image; the COLL records cross the SerDes to the 3 peers.",
+    ]
+    hx = dict(mode="AR, position 8,191 (8K context), TP4", status="simulator table rate; RTL-calibrated rate pending unit fixes",
+              basis="compiled HGI-1 program, tools/hgi_sim/timing.py S2 on the simulator cost tables",
+              source="tools/hgi_sim/qwen_compiler.py + tools/hgi_sim/timing.py (results/arch/hgi_sim_20261009/"
+                     "qwen_timing_P8191_v10.json is the committed timing record)")
+    return hgi_design("hbm_gen_qwen", "Generic HBM die (R25GP), Qwen3-8B TP4, 8K, AR: the compiled HGI-1 program",
+                      recs, 8191, T.cost, "qwen_L0", group_of, hx, notes,
+                      dict(model="Qwen3-8B", tp=4, compiler="tools/hgi_sim/qwen_compiler.py program()"))
+
+
+def hbm_gen_qwen_mtp(ar=None):
+    from hgi_sim import dflash as DF
+    from hgi_sim import dflash_timing as DFT
+    from hgi_sim import qwen_compiler as QC
+    cfg = _qcfg()
+    dcfg = json.loads(DFT.DCFG.read_text())
+    B = 16
+    pos = 8192 - B
+    recs = DF.step_program(DF.DGeom(cfg, dcfg, 8192, B), QC.qwen_params(cfg), timing_pos=pos)
+    tau, tau_src = DFT.TAU[B]["published"]
+    loops, cur = {}, None
+    for k, r in enumerate(recs):
+        if r.unit == "CTL" and r.op == "LOOP":
+            cur = r.tag
+        loops[k] = cur
+        if r.unit == "CTL" and r.op == "ENDLOOP":
+            cur = None
+
+    def phase(r):
+        f = r.family or r.tag
+        return "draft" if f.startswith("draft") else "verify" if f.startswith("verify") else "accept" if (
+            f.startswith("accept") or r.tag in ("tokx", "end")) else "draft"
+
+    def group_of(i, k, L, r):
+        ph = phase(r)
+        lp = loops.get(k)
+        if lp and lp.startswith("verify.layers"):
+            lay = int(lp[len("verify.layers"):]) + L
+            return f"V.L{lay:02d}", f"Verify · layer {lay} (16 positions)", "layer"
+        if lp == "draft.layers":
+            return f"D.L{L}", f"Draft · drafter layer {L}", "layer"
+        if lp == "draft_ctx.layers":
+            return "D.ctx", "Draft · context K/V rebuild", "stage"
+        if ph == "verify":
+            return ("V.head", "Verify · LM head + argmax", "head") if any(x in r.tag for x in ("head", "argmax")) else (
+                "V.pre", "Verify · embedding", "embed")
+        if ph == "accept":
+            return "acc", "Accept / commit (TOKX)", "stage"
+        if "head" in r.tag or "argmax" in r.tag:
+            return "D.head", "Draft · LM head + argmax", "head"
+        return "D.pre", "Draft · setup (counts, features, fc)", "stage"
+    hwd = hw("built", "AR-path units, P-slot operands")
+    tokx = hw("partial", "CTL.TOKX proposed (spec 7.4, Q-MTP-1), simulated only")
+    notes = [
+        f"One DFlash step (z-lab/Qwen3-8B-DFlash-b16, block {B}) compiled by tools/hgi_sim/dflash.py step_program: "
+        f"{len(recs)} image records (draft, verify over 16 positions, accept), one doorbell at entry_verify; every node is "
+        "one executed record; clicking a node shows the decoded record.",
+        "Timing: tools/hgi_sim/dflash_timing.py make_cost('spec') (one weight read shared by up to 8 slots; G18 open: if "
+        "every slot re-issues the line the step is ~3.9x longer) under timing.schedule S2.",
+        f"tau {tau} accepted tokens a step: {tau_src}.",
+        "Edges are the wait-mask dependences plus STREAM credit pairs.",
+    ]
+    hx = dict(mode=f"DFlash block {B}, position {pos}, TP4", status="simulator table rate; RTL-calibrated rate pending unit fixes",
+              basis="compiled HGI-1 DFlash step program, tools/hgi_sim/dflash_timing.py cost on timing.schedule S2",
+              source="tools/hgi_sim/dflash.py + dflash_timing.py (results/arch/hgi_sim_20261009/dflash/dflash_timing.json)",
+              tau=tau)
+    rec = hgi_design("hbm_gen_qwen", f"Generic HBM die (R25GP), Qwen3-8B TP4, 8K, DFlash b{B}: the compiled HGI-1 step",
+                     recs, pos, DFT.make_cost("spec", False), "qwen_L0", group_of, hx, notes,
+                     dict(model="Qwen3-8B + DFlash b16", tp=4, block=B, compiler="tools/hgi_sim/dflash.py step_program()"),
+                     tau=tau, phase_of=lambda i, k, L, r: phase(r),
+                     hw_of=lambda i, k, L, r: tokx if r.op == "TOKX" else hwd)
+    total = rec["totals"]["cycles"]
+    ar = ar or {}
+    ar_cyc = (ar.get("totals") or {}).get("cycles") or total
+    rec["phases"] = [dict(id=p, label=lab, **{k: v for k, v in x.items()}) for p, lab in
+                     (("draft", "Draft (DFlash block)"), ("verify", f"Verify ({B} positions)"), ("accept", "Accept / commit"))
+                     for x in [_phase_span(rec, p, total)] if x]
+    rec["hw_summary"] = _hw_sum(rec)
+    rec["accounting"] = dict(tau=tau, tau_source=tau_src, drafted_tokens=B - 1, verified_positions=B,
+                             accepted_tokens_per_step=tau, step_cycles=r1(total), per_accepted_cycles=r1(total / tau),
+                             per_accepted_us=round(total / tau / CLK * 1e6, 3), ar_token_cycles=r1(ar_cyc),
+                             speedup_over_ar=round(ar_cyc * tau / total, 4),
+                             per_accepted_by_phase={p["id"]: r1(p["cycles"] / tau) for p in rec["phases"]},
+                             rule="one step emits tau tokens on average; per-accepted-token cost = step / tau")
+    return rec
+
+
+def _phase_span(rec, pid, total):
+    ns = [n for n in rec["nodes"] if n.get("phase") == pid and n["critical"]]
+    if not ns:
+        return None
+    cyc = sum(n.get("critical_cycles", n["cycles"]) for n in ns)
+    return dict(start=r1(min(n["start"] for n in ns)), end=r1(max(n["end"] for n in ns)), cycles=r1(cyc),
+                share=round(cyc / total, 6))
+
+
+def _hw_sum(rec):
+    s = collections.defaultdict(lambda: dict(nodes=0, cycles=0.0))
+    for n in rec["nodes"]:
+        if n["critical"] and n.get("hw"):
+            s[n["hw"]["status"]]["nodes"] += 1
+            s[n["hw"]["status"]]["cycles"] += n.get("critical_cycles", n["cycles"])
+    return {k: dict(nodes=v["nodes"], cycles=r1(v["cycles"])) for k, v in s.items()}
+
+
+def hbm_gen_ds():
+    from hgi_sim import ds_native_timing as DT
+    from hgi_sim import timing as T
+    d, recs = DT.load(ROOT / HGI_DS_PROGRAM)
+    recs = T.rebuild_waits(recs)
+    rg = {}
+    for x in J(HGI_DS_RUN)["results"]:
+        for s_ in x.get("row_gather") or []:
+            rg[x["layer"]] = s_
+    cf = DT.NativeCost(d["ops"], recs, row_gather=rg)
+    ffn_from = {}
+    for k, r in enumerate(recs):
+        if r.tag == "ffn_norm" and r.layer not in ffn_from:
+            ffn_from[r.layer] = k
+
+    def group_of(i, k, L, r):
+        if not isinstance(r.layer, int) or r.layer >= 40:
+            return "head", "Head (final HC + norm, LM head, argmax)", "head"
+        part = "ffn" if k >= ffn_from.get(r.layer, 1 << 30) else "attn"
+        return (f"L{r.layer:02d}.{part}", f"Layer {r.layer} · {'MoE FFN' if part == 'ffn' else 'attention'}", "layer")
+    notes = [
+        f"Every node is one executed record of the compiled DeepSeek-V4.1-Flash TP96 token program of rank 0 (a head die; "
+        f"tools/hgi_sim/ds_native.py --program-out, {len(recs)} records, all 40 layers + the head, bit-exact against the "
+        f"released-checkpoint golden at position 1,048,575: {HGI_DS_RUN} status pass). The 96 per-die images have identical "
+        "structure (results/arch/hgi_sim_20261009/programs/); clicking a node shows the decoded record.",
+        "start / end / cycles: tools/hgi_sim/ds_native_timing.py NativeCost (walk-priced engine records from measured "
+        "adapters, SU by the measured-depth model, ROW_GATHER bypass pricing from the run's selection) under timing.schedule "
+        "S2 with the wait masks rebuilt over the whole token (as ds_native_timing does). Pathfinding grade.",
+        f"Grade 'measured' = the unit.op was measured on the die-level RTL bench (hgi-e2e, {HGI_E2E} per_unit, vehicle "
+        "ds_L0); 'priced' = simulator price only. The node note carries the bench's RTL / simulator service ratio.",
+        "Edges are the wait-mask dependences (edge from the last earlier record of every unit in the record's mask) plus "
+        "STREAM credit pairs.",
+        "MTP: the compiler emits no DS DSpark program yet (the generic die's backend operation translator, spec 6.11 "
+        "KERNEL entries, is open), so this design shows AR only.",
+    ]
+    hx = dict(mode="AR, position 1,048,575 (1M context), TP96", status="simulator table rate; RTL-calibrated rate pending unit fixes",
+              basis="compiled HGI-1 program (rank 0), tools/hgi_sim/ds_native_timing.py costs on timing.schedule S2",
+              source="tools/hgi_sim/ds_native.py + ds_native_timing.py (results/arch/hgi_sim_20261009/"
+                     "ds_native_timing_1M.json is the committed timing record of the same program)")
+    rec = hgi_design("hbm_gen_ds", "Generic HBM die (R25GP), DeepSeek-V4.1-Flash TP96, 1M, AR: the compiled HGI-1 program",
+                     recs, DT.POS, cf, "ds_L0", group_of, hx, notes,
+                     dict(model="DeepSeek-V4.1-Flash", tp=96, rank=0, compiler="tools/hgi_sim/ds_native.py --program-out",
+                          program_source=HGI_DS_PROGRAM, program_sha256=sha(HGI_DS_PROGRAM)))
+    rec["mtp"] = dict(available=False, reason="AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the "
+                      "generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend "
+                      "operation translator, which is still open, so there is no compiled MTP record stream to show.")
+    return rec
+
+
+def hgi_geo_snapshot():
+    return J(HGI_GEOM)
 
 
 # ======================================================================================== geometry snapshots (views)
@@ -1629,8 +1637,9 @@ OPTIONAL_TARGETS = ("qwen_hbm", "qwen_kvdie")
 
 
 def target_functions(namespace):
-    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_ds=namespace["hbm"])
-    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_ds=namespace["hbm_mtp"])
+    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_gen_qwen=namespace["hbm_gen_qwen"],
+               hbm_gen_ds=namespace["hbm_gen_ds"])
+    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_gen_qwen=namespace["hbm_gen_qwen_mtp"])
     for name in OPTIONAL_TARGETS:
         if callable(namespace.get(name)):
             fns[name] = namespace[name]
@@ -1655,7 +1664,16 @@ def main():
     index = []
 
     def write(name, rec):
-        rec["inputs"] = {p: sha(p) for p in sorted({REPRICE, UNI, GEO})}
+        prog = rec.pop("_program", None)
+        if prog is not None:
+            pp = a.out / f"{name}_program.json"
+            pp.write_text(json.dumps(prog, separators=(",", ":")) + "\n")
+            if a.viz_dir:
+                (a.viz_dir / "data").mkdir(parents=True, exist_ok=True)
+                shutil.copy(pp, a.viz_dir / "data" / pp.name)
+            rec["inputs"] = {p: sha(p) for p in sorted({HGI_E2E, HGI_GEOM, "tools/hgi_sim/calibration.json"})}
+        else:
+            rec["inputs"] = {p: sha(p) for p in sorted({REPRICE, UNI, GEO})}
         p = a.out / f"{name}.json"
         p.write_text(json.dumps(rec, separators=(",", ":")) + "\n")
         if a.viz_dir:
@@ -1664,7 +1682,8 @@ def main():
             shutil.copy(p, dd / p.name)
         return p
 
-    for k in (a.only.split(",") if a.only else fns):
+    targets = a.only.split(",") if a.only else list(fns)
+    for k in targets:
         rec = fns[k]()
         mrec = mtps[k](rec) if k in mtps else None
         if mrec and k in OPTIONAL_TARGETS and not optional_mtp_qualified(mrec):
@@ -1693,7 +1712,14 @@ def main():
                           mtp=dict(rec["mtp"], reason=None) if mrec else rec["mtp"]))
         if a.viz_dir:
             gk = rec["geometry"]["key"]
-            (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo_snapshot(gk), separators=(",", ":")) + "\n")
+            geo = hgi_geo_snapshot() if gk == HGI_DIE else geo_snapshot(gk)
+            (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo, separators=(",", ":")) + "\n")
+    if a.only and (a.out / "index.json").is_file():
+        # a partial run keeps the other view designs' entries (and drops designs that are no longer views)
+        done = {x["design"] for x in index}
+        old = json.loads((a.out / "index.json").read_text())["designs"]
+        keep = [x for x in old if x["design"] not in done and x["design"] in fns]
+        index = keep + index
     (a.out / "index.json").write_text(json.dumps(dict(schema="opentallas.token_path.index.v1", designs=index), indent=1) + "\n")
     if a.viz_dir:
         shutil.copy(a.out / "index.json", a.viz_dir / "data" / "index.json")

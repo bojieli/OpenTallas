@@ -12,9 +12,14 @@ C=$R/case_$DIE; G=$R/grt_$DIE          # unique dir names: run_case.sh / dietop_
 ADMIT=/srv/opentallas-scratch/admit.sh
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
-say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null)"
-# FROM=pdn (qwen-1010/b 2026-10-10): reuse a passed real case (floorplan.odb + run.log copied from an earlier run)
-if [ "${FROM:-}" = pdn ] && grep -q OT_LEGAL $C/run.log 2>/dev/null && [ -s $C/floorplan.odb ]; then say "real case reused"
+say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
+# OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
+if [ "${OT_FROM:-case}" = grt ]; then
+  grep -q OT_LEGAL $C/run.log && grep -q "OT_PDN PASS" $C/run_pdn.log && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
+  say "resume: $(grep -m1 OT_LEGAL $C/run.log) / $(grep -m1 'OT_PDN PASS' $C/run_pdn.log)"
+else
+# OT_FROM=pdn (qwen-1010/b): reuse a passed real case (floorplan.odb + run.log from an earlier run), redo the PDN
+if [ "${OT_FROM:-case}" = pdn ] && grep -q OT_LEGAL $C/run.log 2>/dev/null && [ -s $C/floorplan.odb ]; then say "real case reused"
 else
 $ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40))
 fi
@@ -23,11 +28,13 @@ say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' 
 $ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60))
 grep -q "OT_PDN PASS" $C/run_pdn.log || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
 say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
+fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=30 OT_TILE_UM=4.8
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 for c in tt ff; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
+  [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; continue; }
   ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl

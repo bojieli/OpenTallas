@@ -110,7 +110,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer SWCRED = 256,
     parameter integer LAT    = 7,
     parameter integer FW     = 32 * LANES,
-    parameter integer PWT    = FW + 33
+    parameter integer PWT    = FW + 33,
+    parameter integer PIPE   = 0    // hgi-unitrate: 1 = pipelined gather bypass (epoch-tagged multicast, see below)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -141,7 +142,20 @@ module ot_hbm_accel_tu_endpoint_psg #(
     output wire [DEL-1:0]       del_valid,
     output wire [DEL*PWT-1:0]   del_flit,
     output wire                 fault,
-    output wire [31:0]          stat_credit_stall
+    output wire [31:0]          stat_credit_stall,
+    // PIPELINED GATHER BYPASS (PIPE = 1, hgi-unitrate 2026-10-10).  A bypass collective started with pipe = 1 carries
+    // the epoch tag pipe_tag (latched at go) in every flit it sends: dst = {5'b11110, tag} (multicast: the switch
+    // tier multicasts every dst >= 0xF0; reductions keep 0xFF).  This endpoint only INJECTS it: start_ready_p is high
+    // again once its pf flits have left the hub (pipe_inj_done pulses with the tag), while its flits are still
+    // crossing; every received or own flit with a pipe dst is delivered unconditionally (no group filter, no
+    // completion accounting here): the block above (ot_hgi_coll_ep PIPE) owns per-epoch delivery, parking of
+    // early epochs, completion and in-order retirement.  Classic collectives are unchanged (and run only when the
+    // block has no pipelined epoch open).
+    input  wire                 pipe,
+    input  wire [2:0]           pipe_tag,
+    output wire                 start_ready_p,
+    output reg                  pipe_inj_done,
+    output reg  [2:0]           pipe_inj_tag
 );
     localparam integer LV   = $clog2(NC);
     localparam integer OFMX = PFMAX / NC;
@@ -149,9 +163,12 @@ module ot_hbm_accel_tu_endpoint_psg #(
     generate if (ENABLE == 0) begin : g_off
         assign inj_idx = '0; assign inj_rd = '0; assign ph_tx_v = '0; assign ph_tx_flit = '0;
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
-        assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
+        assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0; assign start_ready_p = 0;
+        always @* begin pipe_inj_done = 1'b0; pipe_inj_tag = 3'd0; end
     end else begin : g_on
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp; reg run_bf16;
+        reg run_pipe; reg [2:0] run_tag;          // PIPE: this run is a pipelined bypass, its epoch tag
+        wire [7:0] PDST = {5'b11110, run_tag};
         reg pending_start, completed, started;
         reg [15:0] rx_pending;
         wire active_desc = REARM && (started || pending_start || completed);
@@ -191,7 +208,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) mode_error <= 1'b0;
             else if (REARM && fault_ack && !started && !pending_start) mode_error <= 1'b0;
-            else if (go && (!REARM || start_ready) && !ACCEPT_MODE) mode_error <= 1'b1;
+            else if (go && (!REARM || (pipe && PIPE != 0 ? start_ready_p : start_ready)) && !ACCEPT_MODE) mode_error <= 1'b1;
         wire [3:0] LG = LEG ? 4'($clog2(NC)) : (MODE_OK ? eff_gsz : 4'd0);
         wire [31:0] NA = LEG ? NC : (32'd1 << LG);              // active contributors
         wire [31:0] OG = LEG ? RANK / NC : RANK >> LG, J = LEG ? RANK % NC : RANK & (NA - 1);
@@ -219,11 +236,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
         // ================= hub issue -> HUBW wire stages ==========================================
         integer k;
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
+        assign start_ready_p = (PIPE != 0) && REARM && !started && !pending_start && !completed && !fault;
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;end
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;run_pipe<=0;run_tag<=0;end
             else if (REARM) begin
-                if (go && start_ready && ACCEPT_MODE) begin
+                if (go && (pipe && PIPE != 0 ? start_ready_p : start_ready) && ACCEPT_MODE) begin
+                    run_pipe <= (PIPE != 0) && pipe && byp; run_tag <= pipe_tag;
                     run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;run_byp<=byp;run_bf16<=res_bf16;pending_start<=1;
                 end else if(pending_start) pending_start<=0;
             end
@@ -241,16 +260,27 @@ module ot_hbm_accel_tu_endpoint_psg #(
         end
         assign inj_idx = r_idx;
         assign inj_rd  = r_rd;
+        // PIPE: hub flits in flight (injected, not yet out of the HUBW stages); a pipelined run's injection is done
+        // when all pf flits are read AND have left the hub (its run constants and tag are then free for the next)
+        wire [INJ-1:0] h_v;
+        reg [7:0] hub_fl;
+        wire pipe_done_now = run_pipe && started && !pending_start && k >= PF && hub_fl == 8'd0 && !(|r_rd);
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin hub_fl <= 8'd0; pipe_inj_done <= 1'b0; pipe_inj_tag <= 3'd0; end
+            else begin
+                hub_fl <= hub_fl + 8'($countones(r_rd)) - 8'($countones(h_v));
+                pipe_inj_done <= pipe_done_now; pipe_inj_tag <= run_tag;
+            end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin k <= 0; started <= 1'b0; end
             else begin
                 if (REARM) begin
                     if(pending_start) started<=1'b1;
                     if(completed && done_ready) begin started<=0;k<=0;end
+                    if(pipe_done_now) begin started<=0;k<=0;end
                 end else if (go && !started && ACCEPT_MODE) started <= 1'b1;
                 if (|r_rd) k <= k + ((!BYP && (LEG || NA > 1)) ? INJ : 1);
             end
-        wire [INJ-1:0] h_v;
         wire [INJ*(16+16+FW)-1:0] h_d;   // {injection ordinal, flit index, data}
         // slice of each hub flit: hs = f / OF, hfo = f % OF (f < NC * OF) by compares against m * OF
         reg [7:0]  hs  [0:INJ-1];
@@ -395,9 +425,9 @@ module ot_hbm_accel_tu_endpoint_psg #(
         // bypass: the rank's own flits (hub output, one a cycle) enter the own delivery queue unchanged
         wire own_byp_v = BYP && h_v[0];
 `ifdef OT_COLL_MUT_BYP_OWNSIGN
-        wire [PWT-1:0] own_byp_f = {1'b1, 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0] & ~{LANES{32'h80000000}}};  // NEGATIVE: sign dropped
+        wire [PWT-1:0] own_byp_f = {1'b1, run_pipe ? PDST : 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0] & ~{LANES{32'h80000000}}};  // NEGATIVE: sign dropped
 `else
-        wire [PWT-1:0] own_byp_f = {1'b1, 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0]};
+        wire [PWT-1:0] own_byp_f = {1'b1, run_pipe ? PDST : 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0]};
 `endif
         (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW)) u_dqo (.clk(clk), .rst_n(rst_n), .push(r_v || own_byp_v), .din(own_byp_v ? own_byp_f : res_flit),
             .pop(dq_own_pop), .empty(dq_own_empty), .dout(dq_own_head), .ovf(dq_own_ovf), .count(dc0));
@@ -407,7 +437,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         for(genvar pg=0;pg<NPT;pg=pg+1)begin:g_membership
             wire[31:0] producer_base = 32'(rb_head[pg][FW+16+:8]) << LG;
             wire[31:0] src_rank = {24'd0, rb_head[pg][FW+16+:8]};
-            assign result_for_group[pg] = BYP ? (src_rank >= GBASE && src_rank < GBASE + GN) : LEG || (ALL_DEST ?
+            wire is_pipe = (PIPE != 0) && rb_head[pg][PWT-1] && rb_head[pg][FW+24+3 +: 5] == 5'b11110;
+            assign result_for_group[pg] = is_pipe ? 1'b1 : BYP ? (src_rank >= GBASE && src_rank < GBASE + GN) : LEG || (ALL_DEST ?
                 (producer_base>=OUTER_BASE && producer_base<OUTER_BASE+OUTER_G) :
                 rb_head[pg][FW+16+:8]==8'(OG));
         end
@@ -514,7 +545,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                         qr_din[pt] = {1'b1, 8'hFF, 8'(OG), cOGPF + 16'(f), h_d[(32+FW)*i +: FW]};
                     end else if (BYP) begin       // gather bypass: unchanged, multicast, src = rank
                         qr_push[pt] = 1'b1;
-                        qr_din[pt] = {1'b1, 8'hFF, 8'(RANK), cBYP0 + 16'(f), h_d[(32+FW)*i +: FW]};
+                        qr_din[pt] = {1'b1, run_pipe ? PDST : 8'hFF, 8'(RANK), cBYP0 + 16'(f), h_d[(32+FW)*i +: FW]};
                     end else begin
                         s = integer'(hs[i]);
                         if (s != J) begin
@@ -576,7 +607,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             for(integer p=0;p<NPT;p=p+1)begin
                 ntx=ntx+ph_tx_v[p];nrx=nrx+ph_rx_v[p];npop=npop+(rb_pop[p]&&!rb_empty[p]);
             end
-            for(integer l=0;l<DEL;l=l+1)if(del_valid[l])begin
+            for(integer l=0;l<DEL;l=l+1)if(del_valid[l] && !(PIPE != 0 && del_flit[l*PWT+FW+24+3 +: 5] == 5'b11110))begin
                 integer gi;gi=integer'(del_flit[l*PWT+FW+:16]);ndel=ndel+1;
                 if(BYP)begin
                     if(gi>=integer'(cBYPT))bad_result=1;
@@ -602,7 +633,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 byp_sum<=0;byp_xor<=0;
             end else if(REARM)begin
                 rx_pending<=rx_pending+16'(nrx)-16'(npop);
-                if(started && !completed)begin
+                if(started && !completed && !run_pipe)begin
                     tx_count<=tx_count+16'(ntx);delivery_count<=delivery_count+16'(ndel);
                     own_count<=own_count+16'(dq_own_pop&&!dq_own_empty);produced_count<=produced_count+16'(r_v);
                     result_seen<=seen_next;byp_sum<=byp_sum_n;byp_xor<=byp_xor_n;

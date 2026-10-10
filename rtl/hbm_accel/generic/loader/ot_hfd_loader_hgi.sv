@@ -30,7 +30,7 @@ module ot_hfd_loader_hgi #(
     input wire m_bvalid, output wire m_bready, input wire [1:0] m_bresp,
     output wire [418:0] lcp,
     input  wire [221:0] cpl,
-    output wire [4*346-1:0] lq,
+    output wire [4*350-1:0] lq,          // hgi-1010: 350 b ({native_len 4} at the MSB; svc native bursts d8b1b836c)
     input  wire [4*293-1:0] lr,
     // hgi-takeover (hgi-e2e DIE GAP / F6): the DMA unit (unit 8) beside the loader: record adapter ot_hgi_dma_record +
     // the full-rate mover ot_hgi_dma_mover on kport lane 2 (HBM) and one hfd_hgi_vm packet client
@@ -52,11 +52,12 @@ module ot_hfd_loader_hgi #(
 );
     wire c_awvalid, c_awready, c_wvalid, c_wready, c_bvalid, c_bready, c_arvalid, c_arready, c_rvalid, c_rready;
     wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata, c_rdata; wire [3:0] c_wstrb;
-    wire f_v, f_rdy; wire [36:0] f_a; wire lc_fault, ld_fault, kp_fault;
+    wire f_v, f_rdy; wire [36:0] f_a; wire [3:0] f_len; wire lc_fault, ld_fault, kp_fault;
     wire l_req_v, l_req_rdy, l_req_we, l_rsp_v, l_rsp_rdy, l_rsp_we; wire [36:0] l_req_addr; wire [255:0] l_req_wdata, l_rsp_data;
     wire [31:0] l_req_wstrb; wire [15:0] l_req_tag, l_rsp_tag;
     wire [2:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [47:0] k_rsp_tag; wire [767:0] k_rsp_data;
     // ---- DMA unit
+    wire d_mv_src, d_mv_pdone, d_mv_fdone;
     wire d_mv_v, d_mv_rdy, d_mv_done, d_mv_fault, d_fv, d_frdy, d_fdone, d_rdy, d_done, d_fault, dm_fault;
     wire [226:0] d_mv; wire d_kv, d_kwe, d_krr; wire [36:0] d_ka; wire [255:0] d_kd; wire [31:0] d_ks; wire [15:0] d_kt;
     ot_hgi_dma_record #(.LEGACY(0)) u_dma (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(d_rdy),
@@ -64,22 +65,24 @@ module ot_hfd_loader_hgi #(
         .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(d_done), .rec_fault(d_fault), .halted(),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
-        .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
+        .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
     ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
-        .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
+        .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),
+        .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
         .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
         .k_rsp_data(k_rsp_data[767:512]), .vmq(dma_vmq), .vmr(dma_vmr), .dq(dma_dq), .dq_rdy(dma_dq_rdy), .dd(dma_dd),
         .dd_cr(dma_dd_cr), .wl(dma_vmw), .wl_done(dma_vmw_done));
     assign dma_ret = {d_fault, d_done, d_rdy};
-    ot_hgi_loader_cp u_cpw (.clk(clk), .rst_n(rst_n),
+    ot_hgi_loader_cp #(.BURST(1)) u_cpw (   // 16-deep burst queue: the CP die holds FQCR 16 credits
+   .clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),
         .s_wdata(s_wdata), .s_wstrb(s_wstrb), .s_bvalid(s_bvalid), .s_bready(s_bready), .s_arvalid(s_arvalid),
         .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready), .s_rdata(s_rdata),
         .c_awvalid(c_awvalid), .c_awready(c_awready), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(c_wready),
         .c_wdata(c_wdata), .c_wstrb(c_wstrb), .c_bvalid(c_bvalid), .c_bready(c_bready), .c_arvalid(c_arvalid),
         .c_arready(c_arready), .c_araddr(c_araddr), .c_rvalid(c_rvalid), .c_rready(c_rready), .c_rdata(c_rdata),
-        .lcp(lcp), .cpl(cpl), .m_req_v(f_v), .m_req_rdy(f_rdy), .m_req_addr(f_a), .m_rsp_v(k_rsp_v[1]),
+        .lcp(lcp), .cpl(cpl), .m_req_v(f_v), .m_req_rdy(f_rdy), .m_req_addr(f_a), .m_req_len(f_len), .m_rsp_v(k_rsp_v[1]),
         .m_rsp_data(k_rsp_data[511:256]), .fault(lc_fault));
     ot_hfd_loader_half37 #(.ENABLE(1), .ND(1), .SHARED(1), .STACK_BYTES({28'd0, STACK_BYTES})) u_ld (
         .clk_host(clk), .rst_host_n(rst_n), .clk_mem(clk), .rst_mem_n(rst_n),
@@ -105,7 +108,9 @@ module ot_hfd_loader_hgi #(
     ot_hfd_loader_kport #(.ENABLE(1), .ND(3), .STACK_BYTES(STACK_BYTES)) u_kp (.clk(clk), .rst_n(rst_n),
         .req_v({d_kv, f_v, l_req_v}), .req_rdy(k_req_rdy), .req_we({d_kwe, 1'b0, l_req_we}), .req_addr({d_ka, f_a, l_req_addr}),
         .req_wdata({d_kd, 256'd0, l_req_wdata}), .req_wstrb({d_ks, 32'd0, l_req_wstrb}), .req_tag({d_kt, 16'hf000, l_req_tag}),
+        .req_len({4'd1, f_len, 4'd1}),            // the CP record fetch (lane 1) bursts 1..8 sectors; loader / DMA lanes 1
         .rsp_v(k_rsp_v), .rsp_rdy({d_krr, 1'b1, l_rsp_rdy}), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data),
+        .rsp_last(),
         .lq(lq), .lr(lr), .fault(kp_fault));
     assign f_rdy = k_req_rdy[1];
     assign fault = lc_fault | ld_fault | kp_fault;   // the DMA unit's faults retire through its record (dma_ret)

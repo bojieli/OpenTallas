@@ -33,10 +33,10 @@ def main():
         for mode,name in ((1,'wrong_tag'),(2,'out_of_range_beat'),(3,'duplicate_beat')):
             cases.append(dict(name=name,**simulate(lease,boundary,td,mode=mode)))
         definitions=[
-            ('ignore_response_identity',lease,'wire native_match=kr_tag=={1\'b1,tag_q}&&kr_beat==received_q;','wire native_match=1;',1),
-            ('ignore_beat_identity',lease,'kr_beat==received_q','1\'b1',3),
+            ('ignore_response_identity',lease,'wire native_match=kr_tag=={1\'b1,tag_q}&&kr_beat<len_q&&!got_q[kr_beat[2:0]];','wire native_match=1;',1),
+            ('ignore_beat_identity',lease,'&&!got_q[kr_beat[2:0]]','',3),
             ('force_single_sector',lease,'assign k_len=is_normal?normal_len:len_q;','assign k_len=is_normal?normal_len:4\'d1;',0),
-            ('release_boundary_first_beat',boundary,'if(native_rsp_v&&native_rsp_rdy&&native_rsp_beat==len_q-1)active<=0;','if(native_rsp_v&&native_rsp_rdy)active<=0;',0),
+            ('release_boundary_first_beat',boundary,'wire last=native_rsp_v&&native_rsp_rdy&&bc+4\'d1==len_q;','wire last=native_rsp_v&&native_rsp_rdy;',0),
             ('release_lease_first_beat',lease,'if(received_q+1==len_q)state<=REPLY;','state<=REPLY;',0),
             ('ignore_read_debt',lease,'is_normal&&read_debt==0&&write_debt==0','is_normal&&write_debt==0',0),
             ('ignore_write_debt',lease,'is_normal&&read_debt==0&&write_debt==0','is_normal&&read_debt==0',0),
@@ -60,7 +60,7 @@ def main():
         physical_admitted=False,token_credit=False,
         limitations=['minimum boundary vehicle with ready PHY responses; actual PHY service, floorplan and host load not measured',
                      'caller must provide a PC-local sector burst; global mapped contiguous runs must split at every PC mapping boundary',
-                     'one active transaction per stack remains; native burst alone does not establish 90% HBM bandwidth',
+                     'up to NATIVE_NO transactions per stack (owner FIFO); the loader-side rate is gated by tb_hfd_loader_kport (run_kport_bench.sh)',
                      'no RTL route, timing closure, adoption or token-rate claim'])
     (a.out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n')
     print(result['verdict'])

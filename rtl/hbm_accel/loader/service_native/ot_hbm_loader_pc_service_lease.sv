@@ -26,14 +26,16 @@ module ot_hbm_loader_pc_service_lease #(parameter integer ENABLE=0, ENABLE_NATIV
  localparam [1:0] IDLE=0,ISSUE=1,WAIT_REPLY=2,REPLY=3;
  reg[1:0]state;reg sticky;reg[6:0]read_debt;reg[3:0]write_debt;
  reg[3:0]len_q,received_q,beat_q;reg reply_full;
- reg[29:0]addr_q;reg[15:0]tag_q;reg[255:0]reply_q;
+ reg[29:0]addr_q;reg[15:0]tag_q;reg[255:0]reply_q;reg[7:0]got_q;
  wire is_normal=state==IDLE;
  wire normal_take=normal_v&&normal_rdy;
  wire add_read=normal_take&&!normal_we;
  wire add_write=normal_take&&normal_we;
  wire normal_room=normal_we?write_debt<8:(read_debt+7'(normal_len)<=64&&normal_len!=0);
  wire normal_reply=kr_v&&is_normal&&read_debt!=0&&!sticky;
- wire native_match=kr_tag=={1'b1,tag_q}&&kr_beat==received_q;
+ // [svc] 10-10: the PHY controller schedules a burst's sectors FR-FCFS, so beats may arrive in any order; each is
+ // passed on with its own beat index (the loader port places it), exactly once.
+ wire native_match=kr_tag=={1'b1,tag_q}&&kr_beat<len_q&&!got_q[kr_beat[2:0]];
  wire length_ok=ENABLE_NATIVE_BURST==0||(native_len>=1&&native_len<=8);
  wire reply_take=native_rsp_v&&native_rsp_rdy;
  wire receive_take=state==WAIT_REPLY&&kr_v&&kr_rdy;
@@ -55,15 +57,19 @@ module ot_hbm_loader_pc_service_lease #(parameter integer ENABLE=0, ENABLE_NATIV
  assign native_rsp_tag=tag_q;assign native_rsp_beat=beat_q;assign native_rsp_data=reply_q;
  assign fault=sticky;
  always @(posedge clk or negedge rst_n)if(!rst_n)begin
- state<=IDLE;sticky<=0;read_debt<=0;write_debt<=0;addr_q<=0;tag_q<=0;reply_q<=0;len_q<=1;received_q<=0;beat_q<=0;reply_full<=0;
+ state<=IDLE;sticky<=0;read_debt<=0;write_debt<=0;addr_q<=0;tag_q<=0;reply_q<=0;len_q<=1;received_q<=0;beat_q<=0;reply_full<=0;got_q<=0;
  end else begin
  read_debt<=new_read[6:0];write_debt<=new_write[3:0];
  if(new_read>64||new_write>8)sticky<=1;
+ `ifdef OT_LEASE_TRACE
+ if(!sticky&&kr_v&&((is_normal&&read_debt==0)||(state==WAIT_REPLY&&!native_match)||(state!=IDLE&&state!=WAIT_REPLY)))
+  $display("LEASE_STICKY %m t=%0t state=%0d kr_tag=%h kr_beat=%0d tag_q=%h received=%0d len=%0d reply_full=%0d",$time,state,kr_tag,kr_beat,tag_q,received_q,len_q,reply_full);
+ `endif
  if(kr_v&&((is_normal&&read_debt==0)||(state==WAIT_REPLY&&!native_match)||(state!=IDLE&&state!=WAIT_REPLY)))sticky<=1;
- if(native_v&&native_rdy)begin state<=ISSUE;addr_q<=native_addr;tag_q<=native_tag;len_q<=ENABLE_NATIVE_BURST!=0?native_len:4'd1;received_q<=0;end
+ if(native_v&&native_rdy)begin state<=ISSUE;addr_q<=native_addr;tag_q<=native_tag;len_q<=ENABLE_NATIVE_BURST!=0?native_len:4'd1;received_q<=0;got_q<=0;end
  if(state==ISSUE&&k_v&&k_rdy)state<=WAIT_REPLY;
  if(reply_take)reply_full<=0;
- if(receive_take)begin reply_q<=kr_data;beat_q<=kr_beat;reply_full<=1;received_q<=received_q+1;
+ if(receive_take)begin reply_q<=kr_data;beat_q<=kr_beat;reply_full<=1;received_q<=received_q+1;got_q[kr_beat[2:0]]<=1'b1;
  if(received_q+1==len_q)state<=REPLY;end
  if(reply_take&&state==REPLY)state<=IDLE;
  end

@@ -22,7 +22,11 @@ module ot_sc_pfifo #(
     parameter integer W = 32,
     parameter integer S = 2,       // entries (>= 2)
     parameter integer G = 32,      // data bits per pointer copy
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // PINREG=1 (sys-takeover 2026-10-10, opt-in): in_valid / in_data are captured by a bare pin flop first and pushed one
+    // edge later (no handshake logic between the pin and a flop: collvmpub rsp_valid pin -> we copies 11 levels); in_ready
+    // reserves room for that in-flight word (ready while count + in-flight < S; use S >= 3 for full rate).
+    parameter integer PINREG = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,     // synchronous, active low
@@ -38,7 +42,13 @@ module ot_sc_pfifo #(
     localparam integer CB = $clog2(S + 1);
     reg [CB-1:0] n;
     reg [SB-1:0] w, r;
-    wire push = in_valid && in_ready;
+    reg          pv; reg [W-1:0] pd;
+    always @(posedge clk) begin
+        if (!rst_n) pv <= 1'b0; else pv <= in_valid && in_ready;
+        pd <= in_data;
+    end
+    wire push = PINREG ? pv : (in_valid && in_ready);
+    wire [W-1:0] wdat = PINREG ? pd : in_data;
     wire pop  = out_valid && out_ready;
     wire [CB-1:0] n_nx = n + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, pop};
     wire [SB-1:0] w_nx = push ? ((w == S - 1) ? {SB{1'b0}} : w + 1'b1) : w;
@@ -48,7 +58,7 @@ module ot_sc_pfifo #(
         if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b1; out_valid <= 1'b0; end   // empty after reset: ready at once
         else begin
             n <= n_nx; w <= w_nx; r <= r_nx;
-            in_ready <= !full_nx;
+            in_ready <= PINREG ? (({1'b0, n_nx} + {{CB{1'b0}}, in_valid && in_ready}) < S) : !full_nx;
             out_valid <= (n_nx != 0);
         end
     end
@@ -80,7 +90,7 @@ module ot_sc_pfifo #(
         for (i = 0; i < S; i = i + 1) begin : g_s
             ot_sc_rep_ff #(.RV(i == 0)) u_we (.clk(clk), .rst_n(rst_n), .d(we_t[{push, pop}][i]), .q(we[i]));
             ot_sc_rep_ff #(.RV(i == 0)) u_rs (.clk(clk), .rst_n(rst_n), .d(rs_t[{push, pop}][i]), .q(rs[i]));
-            always @(posedge clk) if (we[i]) m[i] <= in_data[LO +: GW];
+            always @(posedge clk) if (we[i]) m[i] <= wdat[LO +: GW];
             assign sel[i+1] = sel[i] | ({GW{rs[i]}} & m[i]);
         end
         assign out_data[LO +: GW] = sel[S];

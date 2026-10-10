@@ -1,0 +1,168 @@
+{
+ "schema": "opentallas.hgi_unit_tput.v1 (hgi-e2e report.json compatible)",
+ "pass_": true,
+ "summary": {
+  "cycles": 14271,
+  "records": 9,
+  "exact_records": 9
+ },
+ "per_unit": {
+  "IDX": {
+   "records": 9,
+   "real": 9,
+   "exact": 9,
+   "rtl_busy": 14271,
+   "sim_cost": 8662.048
+  }
+ },
+ "per_op": {
+  "IDX.TOPK": {
+   "records": 6,
+   "rtl_service": 7277,
+   "sim_cost": 1698.048,
+   "ratio": 4.286
+  },
+  "IDX.OWNED": {
+   "records": 3,
+   "rtl_service": 6994,
+   "sim_cost": 6964.0,
+   "ratio": 1.004
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 0,
+   "ret": 1212,
+   "service": 1212,
+   "cost": 283.008,
+   "ratio": 4.283,
+   "mismatch": 0
+  },
+  {
+   "k": 1,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 1213,
+   "ret": 2425,
+   "service": 1213,
+   "cost": 283.008,
+   "ratio": 4.286,
+   "mismatch": 0
+  },
+  {
+   "k": 2,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 2426,
+   "ret": 3638,
+   "service": 1213,
+   "cost": 283.008,
+   "ratio": 4.286,
+   "mismatch": 0
+  },
+  {
+   "k": 3,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 3639,
+   "ret": 4851,
+   "service": 1213,
+   "cost": 283.008,
+   "ratio": 4.286,
+   "mismatch": 0
+  },
+  {
+   "k": 4,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 4852,
+   "ret": 6064,
+   "service": 1213,
+   "cost": 283.008,
+   "ratio": 4.286,
+   "mismatch": 0
+  },
+  {
+   "k": 5,
+   "unit": "IDX",
+   "op": 2,
+   "tag": "TOPK",
+   "real": 1,
+   "disp": 0,
+   "issue": 6065,
+   "ret": 7277,
+   "service": 1213,
+   "cost": 283.008,
+   "ratio": 4.286,
+   "mismatch": 0
+  },
+  {
+   "k": 6,
+   "unit": "IDX",
+   "op": 3,
+   "tag": "OWNED",
+   "real": 1,
+   "disp": 0,
+   "issue": 7278,
+   "ret": 8518,
+   "service": 1241,
+   "cost": 1227.0,
+   "ratio": 1.011,
+   "mismatch": 0
+  },
+  {
+   "k": 7,
+   "unit": "IDX",
+   "op": 3,
+   "tag": "OWNED",
+   "real": 1,
+   "disp": 0,
+   "issue": 8519,
+   "ret": 13034,
+   "service": 4516,
+   "cost": 4510.0,
+   "ratio": 1.001,
+   "mismatch": 0
+  },
+  {
+   "k": 8,
+   "unit": "IDX",
+   "op": 3,
+   "tag": "OWNED",
+   "real": 1,
+   "disp": 0,
+   "issue": 13035,
+   "ret": 14271,
+   "service": 1237,
+   "cost": 1227.0,
+   "ratio": 1.008,
+   "mismatch": 0
+  }
+ ],
+ "mutants": "m1 ascending sort compares scores",
+ "bench": "rtl/hbm_accel/generic/idx/tb_hgi_idx_tput.sv (ot_hgi_idx_unit on the REAL ot_hgi_vm_unit), tools/hgi_unit_tput/run_idx.sh, vectors tools/hgi_unit_tput/idx_vectors.py",
+ "source_base": "origin/main cc1f9cae5 (default reader, PREF 0)",
+ "host": "ot-epyc3 Verilator 5.050",
+ "shapes": "DS-V4.1 1M: route.top6 IDX.TOPK n384 k6 asc (x6, one with ties); row_gather.owned IDX.OWNED K 512/2048/512 (B 8, G 96, c 2; compiler 6dd28b4a7)",
+ "price": "NativeCost: TOPK walk 283.008; OWNED measured {512:1227, 2048:4510}",
+ "vehicle": "ds_L0",
+ "not_covered": "IDX.MERGE: no production record (the lowering uses COLL.TOPK_MERGE); IDX.INDEX: separate selector blocks (run_index_bench.sh)"
+}
