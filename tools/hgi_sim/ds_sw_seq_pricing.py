@@ -36,15 +36,15 @@ from hgi_sim import ds_native_timing as DT  # noqa: E402
 from hgi_sim.perf import coll_cycles  # noqa: E402
 
 CLK = 1.2e9
-MERGE_MEAS = dict(k=512, runs=96, cycles=7881.0, head=1500.0)       # IDX.MERGE measured (hgi-takeover)
+MERGE_MEAS = dict(base=594.0, per_output=1.37, points={512: 1297, 2048: 3407})   # IDX.MERGE measured (hgi-takeover)
+HC_POST = 540.0                                                     # HC_MIX_POST measured (G22)
 OWNED_MEAS = {512: 1227.0, 2048: 4510.0}                            # IDX.OWNED measured
 TOPK = lambda n: 20 + n / 16                                         # noqa: E731  IDX.TOPK estimate (16 / cycle)
 VM_IDX_READ = 2.0                                                    # indexed VM read: 4 outstanding, ~8 cycles
 
 
 def merge_cycles(k):
-    per = (MERGE_MEAS["cycles"] - MERGE_MEAS["head"]) / MERGE_MEAS["k"]
-    return MERGE_MEAS["head"] + per * k
+    return MERGE_MEAS["points"].get(k) or MERGE_MEAS["base"] + MERGE_MEAS["per_output"] * k
 
 
 def topk_merge_seq(k, n_local, G=96):
@@ -57,16 +57,17 @@ def topk_merge_seq(k, n_local, G=96):
     return sum(parts.values()), parts
 
 
-def row_gather_seq(K, M, G=96, pipelined=False):
+def row_gather_seq(K, M, G=96, pipelined=False, c=1):
     bw = T.cv("hbm", "bytes_per_cycle")
     load = T.first_access() + 2048 / bw
     gat = 768 + coll_cycles("ALL_GATHER", G * 64, G)[0] - (108.6 + 23.75)   # the 3,072-flit delivery + latency
     store = T.cv("units", "DMA.store_latency") + G * 2048 / bw
     owned = OWNED_MEAS.get(K) or OWNED_MEAS[512] * K / 512
     lat = gat - 768
-    parts = dict(idx_owned=owned, first_load=load, gathers=(M * 768 + lat) if pipelined else M * gat,
+    rounds = math.ceil(M / c)                        # c slots per ALL_GATHER (the compiler's batching, c = 2: 393 KB VM)
+    parts = dict(idx_owned=owned, first_load=load, gathers=(M * 768 + lat) if pipelined else rounds * (c * 768 + lat),
                  last_store=store)
-    return sum(parts.values()), dict(parts, per_slot_gather=round(gat, 1), M=M)
+    return sum(parts.values()), dict(parts, per_gather=round(c * 768 + lat, 1), M=M, slots_per_gather=c)
 
 
 def argmax_merge_seq(G=96):
@@ -76,11 +77,22 @@ def argmax_merge_seq(G=96):
 class SeqCost(DT.NativeCost):
     """NativeCost with the software sequences in place of TOPK_MERGE / ROW_GATHER / ARGMAX_MERGE."""
 
-    def __init__(self, ops, recs, row_gather, M_override=None, pipelined=False):
+    def __init__(self, ops, recs, row_gather, M_override=None, pipelined=False, c=1, hc_g22=False, rtl=None):
         super().__init__(ops, recs, row_gather=row_gather)
-        self.M_override, self.log, self.pipelined = M_override, {}, pipelined
+        self.M_override, self.log, self.pipelined, self.c, self.hc_g22 = M_override, {}, pipelined, c, hc_g22
+        self.rtl = rtl or {}                                 # unit.op -> measured RTL / simulator ratio
 
     def __call__(self, r, dyn, L):
+        c, g, how = self.base(r, dyn, L)
+        return c * self.rtl.get(f"{r.unit}.{r.op}", 1.0), g, how
+
+    def base(self, r, dyn, L):
+        if self.hc_g22 and r.unit == "HC" and r.op == "HC_MIX":
+            full = super().__call__(r, dyn, L)[0]
+            c = full / 24 + coll_cycles("ALL_GATHER", 24 * 4, 96)[0] + HC_POST     # G22: 1 row + gather + post
+            self.log[(r.layer, r.tag)] = dict(op="HC_MIX (G22 rows + gather + post)", cycles=round(c, 1),
+                                              was=round(full, 1))
+            return c, "measured+model", "G22"
         if r.unit == "COLL" and r.op == "TOPK_MERGE":
             c, parts = topk_merge_seq(r.imm_a, r.desc["A"].n)
             self.log[(r.layer, r.tag)] = dict(op="TOPK_MERGE", k=r.imm_a, n_local=r.desc["A"].n,
@@ -89,7 +101,7 @@ class SeqCost(DT.NativeCost):
         if r.unit == "COLL" and r.op == "ROW_GATHER":
             s = self.rg[r.layer]
             M = self.M_override or s["max_owned"]
-            c, parts = row_gather_seq(s["k"], M, pipelined=self.pipelined)
+            c, parts = row_gather_seq(s["k"], M, pipelined=self.pipelined, c=self.c)
             self.log[(r.layer, r.tag)] = dict(op="ROW_GATHER", K=s["k"], cycles=round(c, 1),
                                               parts={k: round(v, 1) for k, v in parts.items()})
             return c, "measured+model", "G21 sequence"
@@ -105,7 +117,13 @@ def main():
     ap.add_argument("--program", type=Path, required=True)
     ap.add_argument("--run", type=Path, required=True)
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--rtl", type=Path, help="e2e_calibration output: apply its measured unit.op ratios (not DMA.*: "
+                                             "priced at full bandwidth, the wide DMA -> VM port is being built)")
     a = ap.parse_args()
+    rtl = {}
+    if a.rtl:
+        pu = json.loads(a.rtl.read_text())["result"]["per_unit"]
+        rtl = {k: v["ds_L0"]["ratio"] for k, v in pu.items() if "ds_L0" in v and not k.startswith("DMA.")}
     d, recs = DT.load(a.program)
     recs = T.rebuild_waits(recs)
     rg = {}
@@ -119,11 +137,16 @@ def main():
             today[(r.layer, r.tag)] = round(base_cf(r, T.Dyn(DT.POS), 0)[0], 1)
     s_today = T.schedule(recs, DT.POS, "S2", cost_fn=base_cf)["total_cycles"]
     res = dict(today=dict(cycles=round(s_today, 1), tok_s=round(CLK / s_today, 1)))
-    for name, Mo, pl in (("software_sequences_M_measured_per_layer", None, False), ("software_sequences_M_12", 12, False),
-                         ("software_sequences_slots_pipelined", None, True)):
-        cf = SeqCost(d["ops"], recs, rg, M_override=Mo, pipelined=pl)
+    scen = [("software_sequences_M_measured_per_layer", dict()), ("software_sequences_M_12", dict(M_override=12)),
+            ("software_sequences_slots_pipelined", dict(pipelined=True)),
+            ("approved_path_c2_g22", dict(c=2, hc_g22=True))]
+    if rtl:
+        scen.append(("approved_path_c2_g22_current_rtl_ratios", dict(c=2, hc_g22=True, rtl=rtl)))
+    res["rtl_ratios_applied"] = rtl
+    for name, kw in scen:
+        cf = SeqCost(d["ops"], recs, rg, **kw)
         s = T.schedule(recs, DT.POS, "S2", cost_fn=cf)
-        ops = [dict(layer=k[0], tag=k[1], today_cycles=today[k], **v) for k, v in cf.log.items()]
+        ops = [dict(layer=k[0], tag=k[1], today_cycles=today.get(k, v.get("was")), **v) for k, v in cf.log.items()]
         res[name] = dict(cycles=round(s["total_cycles"], 1), tok_s=round(CLK / s["total_cycles"], 1),
                          delta_cycles=round(s["total_cycles"] - s_today, 1),
                          delta_pct=round(100 * (s["total_cycles"] / s_today - 1), 2), n_races=len(s["races"]),
@@ -134,7 +157,7 @@ def main():
     res["perf_generic_topk_merge_charge"] = round(coll_cycles("TOPK_MERGE", 2 * 512 * 2, 96)[0], 1)
     rec = dict(schema="opentallas.hgi_sim.ds_sw_seq_pricing.v1",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-               request="hgi-takeover 2026-10-09 16:48 PT (coordinator REVIEW ~16:40), spec G20 / G21 main e17bf2e57",
+               request="hgi-takeover 2026-10-09 16:48 PT + 10-10 inputs (IDX.MERGE 594 + 1.37 k, G22 HC rows, ROW_GATHER c = 2, DMA full bandwidth)",
                program=str(a.program.name), run=str(a.run.name), measured=dict(idx_merge=MERGE_MEAS,
                                                                                idx_owned=OWNED_MEAS),
                method=__doc__.split("\n\n")[1], result=res)
