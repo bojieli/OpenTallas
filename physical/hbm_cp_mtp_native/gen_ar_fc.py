@@ -16,7 +16,8 @@ Standard applied (same patterns as svc/gen_svc_seg.py --fc and tools/hbm_hub_qua
       root -- input: i0_<p> (posedge tap) -> lk_<p> (negedge tap) -> its reader on ck; output: last core stage (posedge ck)
       -> lockup (negedge ck) -> pin flop (posedge tap).  0 added cycles (each hop keeps one cycle: half on each root).
   (3) the forwarded-clock inverters of cSE / cSW leave from their face tap (aligned with that face's pin flops).
-Cycle behaviour is identical to hfd_cmdproc_s when all taps are the same clock (bench: tb_hfd_cmdproc_s_fc_lockstep).
+Cycle behaviour is identical to hfd_cmdproc_s when all taps are the same clock, except xl (+2 cycles, (4) below)
+(bench: tb_hfd_cmdproc_s_fc_lockstep compares xl at XL_LAG = 2).
 Fails loudly when the source no longer has the expected structure.
 """
 import re
@@ -102,6 +103,17 @@ def gen():
     s=re.sub(r'(ot_hfd_oreg[123]_fc[^\n]*?)\.fclk\(c_([ew])\)([^\n]*?)\.q\(o_(cSE|cSW|t_su_SE|t_su_SW)\[([^]]+)\]\)',tile_out,s)
     for k,f in FCLK.items():
         s=s.replace(f'.a(c_{f}), .y(fclk_{k})',f'.a(c_{f}_tile[1]), .y(fclk_{k})')
+    # (4) xl (f_loader[147:294] to the N band) re-tap, mtp-mx1 2026-10-10 (FT10 GRT: lk_f_loader[216] -> g_o_xl_0[69].u/s0
+    # -254.7 ps): the pin-flop tap became the S-face falling-edge lockup, so the first core stage of the N-face output
+    # station sat HALF a cycle from a flop ~700 um away across the band.  Tap the full-cycle core stage i1_f_loader and use
+    # the 3-stage station (s0, s1 full cycles, lockup half cycle at the N pin): +2 cycles on xl only (N-band f_loader path
+    # 7 -> 9, still <= the unsplit reference's 10; spine_face_stages.json), every hop a full cycle except the anchored lockup.
+    a = 'wire [146:0] od_xl = {lk_f_loader[293:147]};'
+    assert s.count(a) == 1, 'xl tap structure changed'
+    s = s.replace(a, 'wire [146:0] od_xl = {i1_f_loader[293:147]};   // full-cycle core tap (+2 cycles on xl, see gen_ar_fc.py (4))')
+    b = 'ot_hfd_oreg2_fc u (.clk(clk), .fclk(c_n), .d(od_xl[k])'
+    assert s.count(b) == 1, 'xl station structure changed'
+    s = s.replace(b, 'ot_hfd_oreg3_fc u (.clk(clk), .fclk(c_n), .d(od_xl[k])')
     return hdr + s
 
 

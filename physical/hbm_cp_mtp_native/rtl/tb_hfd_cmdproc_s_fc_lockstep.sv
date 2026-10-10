@@ -5,6 +5,9 @@
 // cycle after reset.  Prints LOCKSTEP PASS / FAIL.  Mutant (tools/hbm_mx1_regb_gate.py): the derived band's f_loader
 // lockup on the rising edge (one added cycle on f_loader -> xl) must FAIL.
 module tb_hfd_cmdproc_s_fc_lockstep #(parameter integer CYC = 3000);
+    // xl leaves the derived band XL_LAG cycles after the adopted band (gen_ar_fc.py (4): full-cycle xl re-tap)
+    localparam integer XL_LAG = 2;
+    reg [146:0] xl_hist [0:XL_LAG];
     reg clk = 0; always #5 clk = ~clk;
     reg rst = 1;
     reg [340:0] f_loader = 0; reg [63:0] f_router = 0; reg [15:0] xb = 0;
@@ -28,16 +31,18 @@ module tb_hfd_cmdproc_s_fc_lockstep #(parameter integer CYC = 3000);
             f_loader = r341(0); f_router = {$random, $random}; xb = $random;
             rse = r827(0); rsw = r827(0);
             @(posedge clk); #1;
+            for (k = XL_LAG; k > 0; k = k - 1) xl_hist[k] = xl_hist[k-1];
+            xl_hist[0] = xl_a;
             if (i > 8) begin
                 ncmp = ncmp + 1;
-                if (cSE_a !== cSE_b || cSW_a !== cSW_b || su_e_a !== su_e_b || su_w_a !== su_w_b || xl_a !== xl_b || xt_a !== xt_b) begin
+                if (cSE_a !== cSE_b || cSW_a !== cSW_b || su_e_a !== su_e_b || su_w_a !== su_w_b || xl_hist[XL_LAG] !== xl_b || xt_a !== xt_b) begin
                     errs = errs + 1;
                     if (errs < 4) $display("MISMATCH cyc %0d cSE %0d cSW %0d su %0d/%0d xl %0d xt %0d", i, cSE_a !== cSE_b,
-                                           cSW_a !== cSW_b, su_e_a !== su_e_b, su_w_a !== su_w_b, xl_a !== xl_b, xt_a !== xt_b);
+                                           cSW_a !== cSW_b, su_e_a !== su_e_b, su_w_a !== su_w_b, xl_hist[XL_LAG] !== xl_b, xt_a !== xt_b);
                 end
             end
         end
-        if (errs == 0) $display("LOCKSTEP PASS %0d cycles compared (cSE/cSW 827+827, t_su 64+64, xl 147, xt 16)", ncmp);
+        if (errs == 0) $display("LOCKSTEP PASS %0d cycles compared (cSE/cSW 827+827, t_su 64+64, xl 147 at +%0d, xt 16)", ncmp, XL_LAG);
         else $display("LOCKSTEP FAIL %0d mismatching cycles", errs);
         $finish;
     end

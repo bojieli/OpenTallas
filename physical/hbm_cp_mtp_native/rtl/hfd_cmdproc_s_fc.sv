@@ -2150,10 +2150,10 @@ module hfd_cmdproc_s_fc #(parameter integer TILECLK=0) (
         ot_hfd_oreg3_fc u (.clk(clk), .fclk(c_w_tile[k < 64 ? 0 : 1]), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[63:0] = o_t_su_SW[63:0];
-    wire [146:0] od_xl = {lk_f_loader[293:147]};
+    wire [146:0] od_xl = {i1_f_loader[293:147]};   // full-cycle core tap (+2 cycles on xl, see gen_ar_fc.py (4))
     wire [146:0] o_xl;
     for (genvar k = 0; k < 147; k = k + 1) begin : g_o_xl_0
-        ot_hfd_oreg2_fc u (.clk(clk), .fclk(c_n), .d(od_xl[k]), .q(o_xl[k]));
+        ot_hfd_oreg3_fc u (.clk(clk), .fclk(c_n), .d(od_xl[k]), .q(o_xl[k]));
     end
     assign xl[146:0] = o_xl[146:0];
     wire [15:0] od_xt = {i_cSE[764], i_cSE[661], i_cSE[558], i_cSE[455], i_cSE[352], i_cSE[249], i_cSE[146], i_cSE[43], i_cSW[764], i_cSW[661], i_cSW[558], i_cSW[455], i_cSW[352], i_cSW[249], i_cSW[146], i_cSW[43]};
