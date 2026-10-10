@@ -3,7 +3,7 @@ module tb_hbm_int8_line #(parameter integer PIPE = 0);
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0, int8_mode=1, s_valid=0, m_ready=0;
  reg [1087:0] s_data=0;
- wire s_ready,m_valid; wire [1087:0] m_data;
+ wire s_ready,m_valid,busy; wire [1087:0] m_data;   // busy: the adapter's drain flag (hbm-forks port; .* needs it)
  ot_hbm_accel_int8_line #(.PIPE(PIPE)) dut(.*);
  reg [1087:0] expect_q [0:2047];
  integer wr=0,rd=0,cycle=0,accepted=0,first_accept=-1,first_emit=-1;
