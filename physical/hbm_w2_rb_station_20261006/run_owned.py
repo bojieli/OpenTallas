@@ -32,6 +32,7 @@ p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--half', action='store_true', help='half-rate shell top')
 p.add_argument('--phase-seat', action='store_true', help='localphase and real kept hold/reset delay seats')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--pin-bank', action='store_true', help='default-off legal own-pin seats held through DPL')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
@@ -168,6 +169,9 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.h
         '--output', str(run/'physical.json')]
 if a.post_route_ff_hold:
     argv += ['--step-tcl', 'PRE_GLOBAL_ROUTE='+rel+'/setup_only.tcl']
+if a.pin_bank:
+    argv += ['--step-tcl', 'PRE_GLOBAL_PLACE='+rel+'/pin_bank.tcl',
+             '--step-tcl', 'POST_DETAIL_PLACE='+rel+'/pin_bank_release.tcl']
 argv += passthrough
 (run/'argv.json').write_text(json.dumps(dict(argv=argv, period_ps=a.period_ps, insertion=[a.l_min, a.l_max, a.l_ff_min],
     optimization_schedule='SS_setup_then_postroute_FF_hold' if a.post_route_ff_hold else 'legacy_multicorner',

@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.w2_pin_bank_prebuild.v1",
+  "status": "PREPARED_NOT_ROUTED",
+  "default_enabled": false,
+  "vehicle": {
+    "no": 3,
+    "safe": 1,
+    "core_um": [
+      520,
+      160
+    ],
+    "rtl_changed": false
+  },
+  "timing": {
+    "period_ps": 730,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "constraints_changed": false
+  },
+  "model": {
+    "added_cycles": 0,
+    "added_logic": 0,
+    "outline_area_changed": false,
+    "communication_bits_changed": false,
+    "token_latency_changed": false,
+    "pin_site_bank_inward_max_um": 16,
+    "pin_site_lateral_max_um": 12,
+    "clock_loads_changed": false
+  },
+  "root_cause_hypothesis": "Kept output/capture registers have no own-pin physical seats in run_owned.py; active route has not yet supplied a final path verdict.",
+  "admission": "No successor route submitted; preserve progressing source6744. Only launch if final route paths establish register-to-pin/pin-to-register wire debt.",
+  "implementation": {
+    "anchor_hook": "PRE_GLOBAL_PLACE (after IO placement)",
+    "placement_status": "FIRM through detailed placement",
+    "release_hook": "POST_DETAIL_PLACE",
+    "site_ownership": "Disjoint legal row/site ranges; error if no site fits"
+  },
+  "verification": {
+    "python_compile": true,
+    "tcl_syntactically_complete": true,
+    "actual_open_db_geometry": false,
+    "physical_closure": false
+  },
+  "next_gates": [
+    "Full mapped pin-bank coverage and no site overlap on an immutable route successor",
+    "Unchanged RTL positive exact and required S3 frame-check negative gates",
+    "Final loop own re-STA TT setup>=0 FF hold>=0 DRC0; SS sensitivity label"
+  ],
+  "files": {
+    "pin_bank.tcl": "6f55eac43b6e6cbcaf0bb0fc532dce954b96177a58f0ff2e6bb682e3f953b2e6",
+    "pin_bank_release.tcl": "4df36f8e229ddebfffe2c7a55cdb031a26bbb61090e0c0b84d2c13b9edb50247",
+    "run_owned.py": "17307ddd5dd25cff565e1c6ae1497c225a78898b81b3171af49591801aeb7636"
+  }
+}
