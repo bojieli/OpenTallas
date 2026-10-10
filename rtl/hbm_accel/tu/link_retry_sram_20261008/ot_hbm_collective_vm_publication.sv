@@ -12,7 +12,7 @@
 // registers six per-field mismatch bits, then ORs them (+1 edge to the fault, 2 edges after a header change); (e) the write
 // stage's data register loads every edge from an AND-OR of the four response lanes selected by a registered one-hot copy
 // of qid (qid only changes >= 2 edges before the next accepted response), only valid / sector are gated by write_sector;
-// (f) the replay stores drop the stored session / sequence check (NOEPOCH, review S4: payload SECDED only).  0 cycles on
+// (f) [WITHDRAWN 2026-10-09: NOEPOCH is not approved; the stores keep the session / sequence check]  0 cycles on
 // the sector stream; the header-change fault is reported one edge later.
 module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(
  input wire clk,rst_n,warm_abort,service_fault,service_quiet,
@@ -86,7 +86,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(PUBFIX>=2)) u_store(
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),
