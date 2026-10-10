@@ -63,7 +63,7 @@ def fc_face(po, x0, x1, name=None):
 PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
 # svc-fix 2026-10-10: segments whose ks face needs the group unit's plain port register (ot_svs_grp OPR = 1, +1 row
 # cycle): routed SE_s4 pspr TT -67.35 / -71.17 ps on u_gp5.od -> ks5 (enabled od not pin-anchorable, ~250 ps of wire)
-GRP_OPR = {'hfd_svc_SE_s4', 'hfd_svc_SE_s3'}   # SE_s3: routed u_gp4.ot -> ks4[8] -55.4 ps once phy[2488] is a clock
+GRP_OPR = {'hfd_svc_SE_s4', 'hfd_svc_SE_s3', 'hfd_svc_SE_s7'}   # SE_s3: routed u_gp4.ot -> ks4[8] -55.4 ps once phy[2488] is a clock; SE_s7: routed hm0 u_gp7.od[886] -> ks7[897] TT -10.41 (SE_s4 class)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
