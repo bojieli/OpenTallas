@@ -53,7 +53,11 @@ endmodule
 
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
 module dsfd_coll_cb #(parameter integer OD = 16,
-    parameter integer CR = 0   // redesign-ds: 1 = every lane / seam stream is a credit link (ot_s81ph_cr_relay), see ot_link_credit
+    parameter integer CR = 0,  // redesign-ds: 1 = every lane / seam stream is a credit link (ot_s81ph_cr_relay), see ot_link_credit
+    // TREP (ds-1010 2026-10-10, opt-in): the VM take strobe is re-registered once per output-queue slice (keep copies
+    // beside each slice) and each slice pops itself, so no single flop drives the 2,100 anchored t_vm pin flops spread
+    // along the 680 um S face (cb crpa post-CTS ts_r -> pop -> t_vm[1902] -140 ps, 560 um).  +1 cycle take -> t_vm.
+    parameter integer TREP = `ifdef OT_S81PH_COLL_TREP 1 `else 0 `endif
 ) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
@@ -116,21 +120,44 @@ module dsfd_coll_cb #(parameter integer OD = 16,
     reg [2099:1] wq;
     always @(posedge clk or negedge rst_n) if (!rst_n) pq <= {ONS{1'b0}}; else pq <= {ONS{bw_vq}};
     always @(posedge clk) wq <= bw_dq;
-    wire [ONS-1:0] s_hv, s_flt; wire [2099:1] oq_hd;
+    wire [ONS-1:0] s_hv, s_flt, s_pop; wire [2099:1] oq_hd;
     genvar j;
     generate for (j = 0; j < ONS; j = j + 1) begin : g_s
         localparam integer LO = j * OSW, WS = ((2099 - LO) < OSW) ? (2099 - LO) : OSW;
-        ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
-            .pop(s_hv[0] && ts_r[0]), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(), .fault(s_flt[j]));
+        if (TREP != 0) begin : g_rep
+            (* keep *) reg tk;                        // this slice's copy of the registered take strobe
+            always @(posedge clk or negedge rst_n) if (!rst_n) tk <= 1'b0; else tk <= ts_r[0];
+`ifdef OT_S81PH_MUT_TREP
+            wire sp = s_hv[j] && (j == 1 ? ts_r[0] : tk);    // mutant: slice 1 pops one cycle early
+`else
+            wire sp = s_hv[j] && tk;                         // identical replicas: every slice pops on the same edge
+`endif
+            ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
+                .pop(sp), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(), .fault(s_flt[j]));
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) t_vm[1 + LO +: WS] <= {WS{1'b0}};
+                else t_vm[1 + LO +: WS] <= sp ? oq_hd[1 + LO +: WS] : {WS{1'b0}};
+            assign s_pop[j] = sp;
+        end else begin : g_one
+            ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
+                .pop(s_hv[0] && ts_r[0]), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(), .fault(s_flt[j]));
+            assign s_pop[j] = s_hv[0] && ts_r[0];
+        end
     end endgenerate
-    wire pop = s_hv[0] && ts_r[0];
+    wire pop = s_pop[0];
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin t_vm <= 0; bw_cr <= 1'b0; bw_flt <= 1'b0; end
+        if (!rst_n) begin bw_cr <= 1'b0; bw_flt <= 1'b0; end
         else begin
-            t_vm <= pop ? {oq_hd, 1'b1} : 2100'd0;
             bw_cr <= pop;
             if (|s_flt) bw_flt <= 1'b1;
         end
+    generate if (TREP != 0) begin : g_tv0
+        always @(posedge clk or negedge rst_n) if (!rst_n) t_vm[0] <= 1'b0; else t_vm[0] <= pop;
+    end else begin : g_tvall
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) t_vm <= 0;
+            else t_vm <= pop ? {oq_hd, 1'b1} : 2100'd0;
+    end endgenerate
     wire unused_ok = &{1'b0, ts_r[2:1]};
 endmodule
 
