@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.derived_hard_view_identity.v1",
+  "name": "qfd_coll_xfifo_b",
+  "rtl_module": "ot_qwen_die_coll_xfifo",
+  "parameters": {
+    "WSQ": 546,
+    "WCQ": 516,
+    "N": 4,
+    "MB": 513,
+    "CQ_AD": 64,
+    "PIPE": 0
+  },
+  "initial_forward_credits": 4,
+  "engine_input_buffer_required": 4,
+  "source_record": "results/closure_loop/qfd_coll_xfifo_b-66fd85cda-tc/verdict.json",
+  "original_sha256": {
+    "results/arch/qwen_split_io_cdc_20261010/collective_export/qfd_coll_xfifo_b.lef": "3d60fffda46349b9315655592e818df7ac5c13a25c1c52e7674e907fd78f3c87",
+    "results/arch/qwen_split_io_cdc_20261010/collective_export/qfd_coll_xfifo_b_ss.lib": "7020085fc4cbef6456f8e72f71ab61d7163a4121e21dea1588624a099e93307e",
+    "results/arch/qwen_split_io_cdc_20261010/collective_export/qfd_coll_xfifo_b_ff.lib": "30e4a5878afc7442fbdcbde0bdb512b129ee060925d66100fdac26f378880b05",
+    "results/arch/qwen_split_io_cdc_20261010/collective_export/qfd_coll_xfifo_b_tt.lib": "43a75cf42bf3955c8a75d81da9723926b2d54e57583e71d4e483d50b8296cbbb"
+  },
+  "files": {
+    "qfd_coll_xfifo_b.lef": "aa2d000d6b086d1102cb936e86db6620e7493a8e3e1737a29d6c48bd70930c24",
+    "qfd_coll_xfifo_b_ss.lib": "39aaef7be99a9635a1efcf927365c89d7de8bd74da5b1861c710da12820bb5c5",
+    "qfd_coll_xfifo_b_ff.lib": "0f0f4b3ee8fa3b9072a6c6cf5c8801cb767fdedaee8d7fd5f987e7a5bd69def6",
+    "qfd_coll_xfifo_b_tt.lib": "fce6d9049a560e491f7ef23cb81b9745268063bcf1cefe3117c869b5441688e7"
+  },
+  "actual_tt_library": true,
+  "changes": "cell/macro identifier only; timing, pins and geometry retained otherwise",
+  "tt_setup_ps": 33.86,
+  "ff_hold_ps": 5.73,
+  "drc": 0,
+  "ss_sensitivity_ps": -282.63,
+  "qualification": "owner option B child; production reset/fault wiring and die qualification unresolved"
+}

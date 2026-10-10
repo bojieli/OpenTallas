@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.qwen.split_io_cdc.full_relay_composition.v1",
+  "source_commit": "0f234c872",
+  "recipe": "r22k",
+  "command": "python3 tools/qwen_rom_fulldie_b3r2.py plan --recipe r22k --native-coll --split-io-cdc",
+  "die": {
+    "w": 23484.384,
+    "h": 32801.76,
+    "mm2": 770.329,
+    "budget_mm2": 858,
+    "margin_mm2": 87.671
+  },
+  "instances": 12963,
+  "relays": {
+    "ucie_tx": 2,
+    "ucie_tx_x": 4,
+    "ucie_rx": 4,
+    "ucie_rx_x": 4,
+    "serdes_tx": 2,
+    "serdes_tx_x": 22,
+    "serdes_rx": 23,
+    "serdes_rx_x": 4,
+    "seq_coll": 67,
+    "seq_coll_x": 0,
+    "coll_seq": 55,
+    "coll_seq_x": 0
+  },
+  "destination_capture_stages": {
+    "ucie_tx": 3,
+    "ucie_tx_x": 5,
+    "ucie_rx": 5,
+    "ucie_rx_x": 5,
+    "serdes_tx": 3,
+    "serdes_tx_x": 23,
+    "serdes_rx": 24,
+    "serdes_rx_x": 5,
+    "seq_coll": 68,
+    "seq_coll_x": 1,
+    "coll_seq": 56,
+    "coll_seq_x": 1
+  },
+  "artifact_sha256": {
+    "plan.json": "08440e96b48df86941640f01861bb6d9482eaed99325fbe25468bd3aa929a526",
+    "floorplan.def": "92ff43cafe9f95916bb83c21c32f322cec8ddcfa1466722c5fa431a369a7f3bd",
+    "floorplan.svg": "b2c6eb670926c190c6ca5fe00b778c8994ff27b0e9fc266b92978dbdf7a9e1f2"
+  },
+  "gate": "analytic full-shape geometry only; no routed die qualification; four-credit RTT and production reset/fault wiring unresolved"
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen.native_collective.tt_export.v1",
+  "export_source_commit": "3fc33c145",
+  "host": "ot-epyc2",
+  "host_guard": "/srv/opentallas-scratch/admit.sh 24",
+  "measured_headroom": {
+    "mem_available_mib": 195067,
+    "disk_available_gb": 704
+  },
+  "exporter_sha256": "e4f43434734b64b8d3a99770dbf0c673f4985d39c9ab8a70987d6b21abf3eee4",
+  "raw_export_retained": "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/export",
+  "same_retained_closed_odb": true,
+  "actual_tt_library": true,
+  "new_leaf_verdict": false,
+  "named_views": "physical/variant_fill/qfd_coll_xfifo_b-66fd85cda-tc/named_tt_views/qfd_coll_xfifo_b",
+  "child_metrics": {
+    "tt_setup_ps": 33.86,
+    "ff_hold_ps": 5.73,
+    "drc": 0,
+    "ss_sensitivity_ps": -282.63
+  },
+  "gate": "production reset/fault wiring, sequencing and die qualification required"
+}

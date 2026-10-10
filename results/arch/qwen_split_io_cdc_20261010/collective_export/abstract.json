@@ -1,0 +1,80 @@
+{
+  "name": "qfd_coll_xfifo_b",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/qfd_coll_xfifo_b-66fd85cda-tc/routes/qfd_coll_xfifo_b_66fd85cda_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qfd_coll_xfifo_b-66fd85cda-tc/routes/qfd_coll_xfifo_b_66fd85cda_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/export:/out",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qfd_coll_xfifo_b-66fd85cda-tc/routes/qfd_coll_xfifo_b_66fd85cda_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/export:/out",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qfd_coll_xfifo_b-66fd85cda-tc/routes/qfd_coll_xfifo_b_66fd85cda_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/export:/out",
+        "-v",
+        "/srv/opentallas-data/codex/qwen_coll_tt_3fc33c145/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "qfd_coll_xfifo_b.lef": "3d60fffda46349b9315655592e818df7ac5c13a25c1c52e7674e907fd78f3c87",
+    "qfd_coll_xfifo_b_ff.lib": "30e4a5878afc7442fbdcbde0bdb512b129ee060925d66100fdac26f378880b05",
+    "qfd_coll_xfifo_b_ss.lib": "7020085fc4cbef6456f8e72f71ab61d7163a4121e21dea1588624a099e93307e",
+    "qfd_coll_xfifo_b_tt.lib": "43a75cf42bf3955c8a75d81da9723926b2d54e57583e71d4e483d50b8296cbbb"
+  },
+  "ok": true
+}

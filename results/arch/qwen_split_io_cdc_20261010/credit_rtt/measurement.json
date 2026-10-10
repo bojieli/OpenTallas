@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.qwen.native_credit_rtt.v1",
+  "composition_source_commit": "0f234c872",
+  "parameters": {
+    "NF": 67,
+    "WORDS": 256,
+    "WSQ": 546,
+    "WCQ": 516,
+    "CQ_AD": 64,
+    "PIPE": 0,
+    "initial_credits": 4
+  },
+  "clocks_ghz": {
+    "source_serial": 0.9,
+    "consumer_stream": 1.2
+  },
+  "first_credit_rtt_serial_cycles": 205,
+  "launch_window_serial_cycles": 12982,
+  "words": 256,
+  "measured_words_per_serial_cycle": 0.019719611770143277,
+  "long_run_credit_ceiling_words_per_serial_cycle": 0.01951219512195122,
+  "payload_bytes_per_serial_cycle_ceiling": 1.3317073170731708,
+  "reference_one_relay_rtt_serial_cycles": 7,
+  "station_forward_cycles": 1,
+  "station_reverse_credit_cycles": 2,
+  "local_credit_return_cycles": 4,
+  "arithmetic": "no arithmetic change; bit/order exact SQ scoreboard and reduce-result echo releases CQ reservations",
+  "consumer": "minimum response; additional consumer route/compute cannot improve this upper bound",
+  "reset_precondition": "rst_n remains low for NF+20 clocks while invalid drains unreset station data/valid; release then wait20 clocks",
+  "early_release": "FAIL preserved in early_reset_failure.log; X credit-gate state and no credits, not production-qualified",
+  "gate": "minimum mechanism measurement; reset/fault production net and die physical closure required"
+}
