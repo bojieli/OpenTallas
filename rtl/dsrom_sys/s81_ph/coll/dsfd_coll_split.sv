@@ -40,7 +40,7 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8) (
     output wire o_v, input wire o_cr, output wire [W-1:0] o_d      // downstream link (valid / data out, credit pulse in)
 );
     wire m_v, m_r, f; wire [W-1:0] m_d;
-    ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(i_v), .l_data(i_d), .l_credit(i_cr),
+    ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(0), .WFREE(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(i_v), .l_data(i_d), .l_credit(i_cr),
         .o_valid(m_v), .o_ready(m_r), .o_data(m_d), .fault(f));
 `ifdef OT_S81PH_MUT_CR_CRED
     localparam integer CX = D + 8;   // negative control: the sender believes in 8 more landing slots than exist
@@ -210,7 +210,7 @@ module dsfd_coll_ce #(
         wire f;
         ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(clk), .rst_n(rst_n), .i_valid(x_lo_v[l]), .i_ready(x_lo_r[l]),
             .i_data({x_lo_l[l], x_lo_d[l*552 +: 552]}), .l_valid(f_lo_v[l]), .l_data(f_lo_d[l]), .l_credit(f_lo_r[l]));
-        ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(1)) u_si (.clk(clk), .rst_n(rst_n), .l_valid(f_li_v[l]), .l_data(f_li_d[l]),
+        ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1)) u_si (.clk(clk), .rst_n(rst_n), .l_valid(f_li_v[l]), .l_data(f_li_d[l]),
             .l_credit(f_li_r[l]), .o_valid(x_li_v[l]), .o_ready(x_li_r[l]), .o_data({x_li_l[l], x_li_d[l*552 +: 552]}), .fault(f));
       end else begin : g_sk
         ot_s81ph_skid2 #(.W(553)) u_so (.clk(clk), .rst_n(rst_n), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),

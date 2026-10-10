@@ -46,7 +46,9 @@ TB_D = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_mx1_regb.sv'
 TB_F = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_fc_lockstep.sv'
 FC_MUT = ('always @(negedge c_s) lk_f_loader <= i0_f_loader;', 'always @(posedge c_s) lk_f_loader <= i0_f_loader;')
 L_OLD = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1)) dut('
-L_NEW = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(0),.FC(0)) dut('
+L_NEW = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(0)) dut('
+# the legacy bench predates the face clock taps: they ride the die clock (as on the die)
+L_TAPS = ('.ck(clk),', '.ck(clk),.cks(clk),.ckn(clk),.cke(clk),.ckw(clk),')
 MUT_NEEDLE = 'cpl_job=raw[232:201]'
 
 
@@ -131,7 +133,8 @@ def main():
     tl = (ROOT / TB_L).read_text()
     assert L_OLD in tl, 'legacy bench instance changed'
     tb_l = a.work / 'tb_legacy_regb0.sv'
-    tb_l.write_text(tl.replace(L_OLD, L_NEW))
+    assert tl.count(L_TAPS[0]) == 1, 'legacy bench clock hookup changed'
+    tb_l.write_text(tl.replace(L_OLD, L_NEW).replace(*L_TAPS))
     base = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20]]
     sysb = base + [ROOT / BACKEND, ROOT / TB_R]
     top = 'tb_hbm_native_mtp_mx1_regb_system'
