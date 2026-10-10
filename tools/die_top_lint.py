@@ -427,7 +427,10 @@ def real_blocks(die, m=None):
                 ('ot_hgi_argmax18_m', 'physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv',
                  dict(LP=8, FLAT=7, FAST=1, GENERIC18=1), 'RTL of the CLOSED view argmax_hgi (pinsep pd55)'),
                 ('hfd_cmdproc_s_mtp_native_mx1', 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', {},
-                 'MX1 CP-south RTL (route open)')):
+                 'MX1 CP-south RTL (route open)'),
+                # hgi-takeover decision (3): on the single-CP die the slot's ARGMAX instance is the dispatched unit
+                ('hfd_hgi_am', 'rtl/hbm_accel/generic/hfd_hgi_am.sv', {},
+                 'ARGMAX unit die master: ot_hgi_argmax_slot (closed adapter + closed engine) + VM client, 691-b record (route open)')):
             if not (ROOT / f).exists():
                 continue
             pm = parse_module(f, mn, prm)
@@ -2217,6 +2220,34 @@ def margin(die, m):
     return dict(verdict='N/A')
 
 
+def leaf_offsets(m):
+    """coordinator 2026-10-09: face clock taps (svc --fc segments) need their die leaf LATER than the segment's ck leaf by
+    the segment's interior insertion (set_clock_latency -source on ckw / cke in the block timing model).  Check: every
+    ckw / cke endpoint on a clock trunk has a plan row on the same net, the reference ck leaf of the same instance is on
+    that net, and the offset is resolved (0 < offset < the hbm period); unresolved rows are PENDING (segment open)."""
+    rows = m.get('clock_leaf_offsets') or []
+    have = {(r['inst'], r['pin']): r for r in rows}
+    nets = {bid: set(eps) for bid, cls, bits, eps in m['buses'] if cls == 'clock_trunk'}
+    errors, pending = [], []
+    for bid, eps in nets.items():
+        for inst, pin in eps:
+            if pin not in ('ckw', 'cke'):
+                continue
+            r = have.get((inst, pin))
+            if r is None:
+                errors.append(f'{inst}.{pin} on {bid}: no clock-plan offset row')
+            elif r['net'] != bid or (inst, r['ref_pin']) not in eps:
+                errors.append(f'{inst}.{pin}: offset row on {r["net"]} / ref {r["ref_pin"]} does not match net {bid}')
+            elif r['offset_ps'] is None:
+                pending.append(f'{inst}.{pin}')
+            elif not (0 < r['offset_ps'] < 1024):
+                errors.append(f'{inst}.{pin}: offset {r["offset_ps"]} ps outside (0, 1024)')
+    return dict(rows=len(rows), resolved=sum(r['offset_ps'] is not None for r in rows), pending=len(pending),
+                pending_examples=pending[:8], errors=errors,
+                verdict='FAIL' if errors else ('PENDING' if pending else ('PASS' if rows else 'NONE')),
+                rule='face tap leaf arrival = segment ck leaf arrival + offset_ps (die CTS per-leaf delay / tap)')
+
+
 def hbm_wrapper_ledgers(masters, root=None, generate=None):
     """SYS-3: expose the internal ties that external die connectivity cannot see.
 
@@ -2320,6 +2351,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         placeholder_port_direction_conflicts=conflicting,
         clocking=[dict(master=k[0], view=k[1], clock=k[2], instances=n) for k, n in sorted(ck_rows.items())],
         clock_sources={i: sorted(p) for i, p in ck_ports.items() if any(x.startswith('pll') for x in p)},
+        clock_leaf_offsets=leaf_offsets(m) if die == 'hbm' else None,
         reset=[dict(master=k[0], net=k[1], instances=n) for k, n in sorted(rst_rows.items())],
         interfaces=interfaces(die, m, pw) if die == 'hbm' else {},
         top_ports=list(LAST_TOP) if R8_ACTIVE[0] else 0,

@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 24,
-   "merged": 24,
+   "closed": 33,
+   "merged": 33,
    "record_only": 6
   },
   "jobs": {
@@ -1559,7 +1559,16 @@
    "hcjoin-mc420-lk-d4211f538-tc-cl": "ADOPTED (DS HC seed join on the credit relay, TT +19.31 / FF +21.50); source on main; record 91fefaacb",
    "hcjoin-mc500-lk-d4211f538-tc-cl": "record only (TT +17.36 / FF +23.52; mc420 adopted); e8de73fef",
    "mtp-wfc-src-hard-mxb-910e67c7b-tc-cx": "ADOPTED: MTP wavefront SOURCE HARD (ot_dsrom_wfc_tokpipe_src) TT +152.31 / FF +4.02 / DRC 0 after hold ECO; merge 910e67c7b (claude/mtp-wfcsrc-20261009: every file is this element -- PROMPT_EXTRA opt-in (default 0) RTL, eco_scope SDCs, tokpipe physical/bench tools, recovery/reentry evidence) + record af17df19b (closed view physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src). Local: dsrom_wfc_prompt_pipe_bench --hard-token WFC_TOKPIPE_GATE PASS (10 cases incl. both negatives), s0_neg_noepoch raw negative FAIL_AS_REQUIRED. SOURCE + STAGE (dsfd_wfc_tok_hard, closed view on main) pair now complete on main.",
-   "engram_lkp_crcmat2_a-b17ee03d4-tc": "ADOPTED: DS Engram lookup with the balanced CRC tree (dsfd_engram_lkp, TT +22.96 / FF +2.33); source b17ee03d4 already on main (sys-takeover); record 2310917c5 = new closed view physical/s81_ph_views/closed/dsfd_engram_lkp (LEF/libs/abstract/export). Local: OT_ENGRAM_CRCMAT=1 lookup campaign PASS (700,416 elements, 0 mismatches), mutant 1 (offset not subtracted) FAIL as required"
+   "engram_lkp_crcmat2_a-b17ee03d4-tc": "ADOPTED: DS Engram lookup with the balanced CRC tree (dsfd_engram_lkp, TT +22.96 / FF +2.33); source b17ee03d4 already on main (sys-takeover); record 2310917c5 = new closed view physical/s81_ph_views/closed/dsfd_engram_lkp (LEF/libs/abstract/export). Local: OT_ENGRAM_CRCMAT=1 lookup campaign PASS (700,416 elements, 0 mismatches), mutant 1 (offset not subtracted) FAIL as required",
+   "hgi_quant_c360-dedb8a397-tc-cl": "ADOPTED over hgi_quant_c360p-12c0bd9da (better hold: TT +43.65 / FF +3.74 vs +31.71 / +0.44); compact QDQ, RTL unchanged; cfg from dedb8a397 + record 2d051a3f7 (view physical/hgi_quant_generic_20261009/results/hgi_quant_c360/view)",
+   "hgi_adp_su_b-fc5794beb-tc-cl": "ADOPTED (TT +34.50 / FF +4.02; su_a +19.34 / +1.69 recorded); source fc5794beb on main; record 61db68f36",
+   "hgi_adp_su_a-fc5794beb-tc-cl": "record only (su_b adopted); 8018dbd43",
+   "hgi_adp_sfu_a-fc5794beb-tc-cl": "ADOPTED (TT +48.08 / FF +15.57; sfu_b +47.63 / +15.56 recorded); source on main; record 297393ccd",
+   "hgi_adp_sfu_b-fc5794beb-tc-cl": "record only (sfu_a adopted); a6707b7f0",
+   "hbm_loader_ldiv_A_v3-d74d0faa7-cl": "ADOPTED: HBM loader (hfd_loader, L-DIV v3) TT +58.93 / FF +18.15 (hold ECO after the drive-0849 check fix); ot_hfd_loader_div.sv + hfd_loader_div_v3.sdc from d74d0faa7 only (rest of struct-close branch not taken); record 565b23365; local LDM_DIV PASS + both negatives detected",
+   "hgi_adp_fused_a-fc5794beb-tc-cl": "FUSED adapter TT +3.62 / FF +4.68; source on main; record 1631cbb11",
+   "hing_rp2_a-d1704967f-tc-rd": "host ingest rp2 (redesign-ds) TT +19.29 / FF +8.76; source on main; record 4a5c3fa98",
+   "hgi_seq-79af6ba23-tc-hm0-cl": "record only (hm10 already adopted); c72a918e0"
   }
  }
 }

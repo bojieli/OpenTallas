@@ -522,6 +522,9 @@ def _hgi_mtp(v):
     return dict(v, mtp_master='hgi_native', split_extra_ports=ex,
                 split_masters=dict(v.get('split_masters', {}), hfd_cmdproc=MX1_SPLIT),
                 cp_band_alias={'hfd_cmdproc_s': MX1_BAND},
+                # MX1 r3 pins (collar_mx1 ports.json): t_hgi_argmax 764.928-895.896 um, f_hgi_argmax 900.096-900.504 um
+                # (S face, 0.192-um pitch = 4 tracks); centres / 1399.656
+                cp_pin_override={'t_hgi_argmax': (0.593297, 4), 'f_hgi_argmax': (0.643229, 4)},
                 hgi_dispatch=sorted(set(v.get('hgi_dispatch') or []) | {'argmax'}),
                 spine_slot_masters=dict(v.get('spine_slot_masters', {}), mtp=GENERIC_MASTER),
                 # two-instance MD-7 slot (466.56 x 200.88): the controller's closed view (mtp_hgi, 286.56 x 200.88) and
@@ -548,6 +551,15 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
         from hgi_die_dispatch import variant as hgi_dispatch_variant
         variant = dict(hgi_dispatch_variant(variant, variant['hgi_dispatch']), hgi_dispatch_pins_done=True)
+        # mtp-lead 2026-10-09: a CP band with its own pin record (MX1) overrides a planned dispatch pin's (fraction, pitch)
+        # -- the plan's argmax span (0.50 x 1399.656, 2 tracks = 667-733 um) lies on MX1's f_loader pins
+        ov_ = variant.get('cp_pin_override') or {}
+        if ov_ and 'hfd_cmdproc' in (variant.get('split_extra_ports') or {}):   # 'cp': one CP block, no MX1 band
+            ex_ = {k: dict(x) for k, x in variant['split_extra_ports'].items()}
+            for pn_, (frac_, pitch_) in ov_.items():
+                t_ = ex_['hfd_cmdproc'][pn_]
+                ex_['hfd_cmdproc'][pn_] = t_[:4] + (frac_, pitch_)
+            variant['split_extra_ports'] = ex_
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
@@ -1832,6 +1844,34 @@ def _xy_or_split_spec(ports):
     return spec, order
 
 
+def fc_tap_latency(rel, band, pins):
+    """Per-segment face clock tap latency from the segment's block timing model: set_clock_latency -source <ps> on
+    ckw / cke in its SDC (the split record's sibling sdc_* directories, <band>*.sdc), read in ps (values < 10 are ns).
+    Returns {pin: {ps, source}} for the pins that have one."""
+    out = {}
+    base = (ROOT / rel).parent.parent
+    tag = (ROOT / rel).parent.name.replace('split', '')            # split_psfc -> _psfc
+    for d in [base / f'sdc{tag}'] + sorted(p_ for p_ in base.glob('sdc*') if p_.name != f'sdc{tag}'):
+        for f in sorted(d.glob(f'{band}*.sdc')) if d.is_dir() else []:
+            for ln in f.read_text().splitlines():
+                mm = re.match(r'\s*set_clock_latency\s+(.*)$', ln)
+                if not mm or '-source' not in mm.group(1):
+                    continue
+                toks = mm.group(1)
+                val = re.search(r'(?:^|\s)(-?[0-9]+(?:\.[0-9]+)?)(?=\s)', ' ' + re.sub(r'\[.*', '', toks) + ' ')
+                tgt = re.search(r'\[get_(?:ports|clocks)\s+\{?([^\]\}]*)', toks)
+                if not val or not tgt:
+                    continue
+                v = float(val.group(1))
+                ps = v * 1000.0 if v < 10 else v
+                for tp in pins:
+                    if re.search(rf'(^|\s|\{{){tp}(\[0\])?(\s|\}}|$)', tgt.group(1)) and tp not in out:
+                        out[tp] = dict(ps=round(ps, 3), source=str(f.relative_to(ROOT)))
+        if out:
+            break
+    return out
+
+
 def apply_splits_x(m, rel):
     """r16j: x-axis split (hbm_die_split_x.v1).  Each instance of a split parent is replaced by its bands in the same
     slot (same orientation; MY / R180 mirror the band x), parent-port bus ends move to the owning band under its band
@@ -1840,6 +1880,7 @@ def apply_splits_x(m, rel):
     bands of each parent instance."""
     V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
+    fc_lat_ = {}
     fixed = m.setdefault('fixed_ports', {})
     # r25m (MTP-DIE, RQ-ING-4): ports a die variant adds to a split parent (the loader memory chains on the stream
     # services): each lands on the band under its peer's x, as an inner-face (master N) M5 run at the free face span nearest the peer's x at the peer's x (an
@@ -1869,6 +1910,8 @@ def apply_splits_x(m, rel):
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
         fc_taps[bn] = [p_ for p_ in ('ckw', 'cke') if p_ in rec['ports']]
+        if fc_taps[bn]:
+            fc_lat_[bn] = fc_tap_latency(rel, bn, fc_taps[bn])
         spec, order = _xy_or_split_spec(rec['ports'])
         for pn_, t_ in extra_x.get(bn, {}).items():
             # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
@@ -1967,6 +2010,21 @@ def apply_splits_x(m, rel):
                 nb.append((f'{inst}_x{j}', 'hub', x['bits'], [(names[fb], fp), (names[tb], tp)]))
     m['buses'] = nb
     m.setdefault('splits', {})['svc_x'] = dict(record=rel, instances=sorted(repl))
+    # coordinator 2026-10-09 ~22:10: a face clock tap (ckw / cke) clocks the segment's face registers directly, while ck
+    # reaches its interior registers through the segment's own tree (insertion I ~480-540 ps).  The block timing model
+    # declares I as set_clock_latency -source on ckw / cke; the die clock plan must deliver those leaves I LATER than
+    # the segment's ck leaf (a per-leaf delay / tap in the die tree) so face and interior registers line up.
+    rows_ = []
+    for inst, names in repl.items():
+        for bn, nm in names.items():
+            for tp in fc_taps.get(bn, ()):
+                lat = fc_lat_[bn].get(tp)
+                rows_.append(dict(net='clk_hbm', inst=nm, master=bn, pin=tp, ref_pin='ck',
+                                  offset_ps=lat['ps'] if lat else None, source=lat['source'] if lat else None,
+                                  status='resolved' if lat else 'PENDING: no set_clock_latency -source on this pin in the '
+                                  'segment timing model yet (segment not closed)'))
+    if rows_:
+        m['clock_leaf_offsets'] = rows_
 
 
 # ------------------------------------------------------------------------------------------------ station masters
@@ -3532,6 +3590,7 @@ def plan_record(m):
                                       where='multicast stations (one per SM column) + the x trunk stations', grade='sized: '
                                       '4 stages x bus width x 0.2916 um2 DFF at 0.6 utilisation')),
         power=die_power(m), pdn=pdn_plan(m), clock_region_list=clock_regions(m), notes=m['notes'], variant=m['variant'],
+        clock_leaf_offsets=m.get('clock_leaf_offsets', []),
         generator_decisions=DECISIONS,
         **r15_record(m))
 
