@@ -1,0 +1,31 @@
+{
+  "status": "PRE_PLACEMENT_DIAGNOSIS_NOT_TERMINAL",
+  "job": "s81b-wsrc-pinroot-36250138e-hm10",
+  "source_commit": "36250138e343ca618729a467b1292366afa53687",
+  "clock_reference": {
+    "real_network_latency_ps": 538,
+    "virtual_network_latency_ps": 538,
+    "real_source_latency_ps": 0,
+    "cal_real_and_virtual_network_ps": 700,
+    "consistent": true
+  },
+  "path": {
+    "start": "g_rst.rst_s2",
+    "end": "idle_b.SETN",
+    "kind": "internal recovery",
+    "final_buffer": "BUFx24",
+    "final_fanout": 4862,
+    "final_cap": 3610.67,
+    "final_slew_ps": 1997.98,
+    "final_buffer_delay_ps": 769.22,
+    "arrival_ps": 1471.91,
+    "required_ps": 979.66,
+    "recovery_ps": 268.34,
+    "slack_ps": -492.25
+  },
+  "stage_explanation": "ORFS floorplan.tcl deliberately skips clone/split: repair_timing_helper -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap. No repair_design fanout/slew at this stage; postIO GPL performs it. Preserve jobs and inspect placed reset paths before any RTL fix.",
+  "source_scope": "Provisional local clock source0; no die option1 claim",
+  "raw_sdc_remote": "/srv/opentallas-scratch/claude/closure-loop/s81b-wsrc-pinroot-36250138e-hm10/routes/s81b_wsrc_pinroot_36250138e_hm10/work/orfs/results/asap7/opentallas_ot_dsrom_window_source_ctl_asap7_s81b_wsrc_pinroot_36250138e_hm10/base/2_1_floorplan.sdc",
+  "raw_sdc_sha256": "1bee34bae5ccc0c8d934dc7739e4ddad3405e9d8dd77afe257d5616c5a104c60",
+  "report_sha256": "f9fc3340f261b12ce6b47792b21b348293c22f55fec0d78185b412fbe1fbed3b"
+}
