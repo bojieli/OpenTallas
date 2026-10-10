@@ -16,7 +16,8 @@ done
 ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6 7 8"
 # qwen-1010/b 2026-10-10: env HBMT=1 -> rows timed by the timed HBM3E stacks (HBMT_SLOT reorder slots, HBMT_PULLIN), the
 # runs pass hbmt=1 to the harness; PHASES="o1 o2 .." adds 8192_normal runs started o cycles later (refresh phase)
-HB=""; RA=""; [ "${HBMT:-0}" = 1 ] && HB="-GHBMT=1 -GHBMT_SLOT=${HBMT_SLOT:-64} -GHBMT_PULLIN=${HBMT_PULLIN:-0}" && RA="16 750 400000 1"
+HB="${DQ:+-GDQ=$DQ}"; RA="";  # env DQ: the engines' outstanding-row credit
+ [ "${HBMT:-0}" = 1 ] && HB="$HB -GHBMT=1 -GHBMT_SLOT=${HBMT_SLOT:-64} -GHBMT_PULLIN=${HBMT_PULLIN:-0}" && RA="16 750 400000 1"
 for m in $ML; do
   STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 ] && echo 0 || echo $m ) $HB > $OUT/log/build$m.log 2>&1 &
 done

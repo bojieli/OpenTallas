@@ -28,6 +28,7 @@ module ot_qkvd_layer_tb #(
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
     parameter integer W      = 528,
+    parameter integer DQ     = 32,     // qwen-1010/b: row-engine outstanding-row credit (row / e FIFO depth)
     parameter integer HBMT   = 0,      // qwen-1010/b: 1 = rows timed by ot_qkvd_hbm_timed_stack (timed HBM3E, REFpb) per stack
     parameter integer HBMT_SLOT = 64,  //   reorder slots per engine
     parameter integer HBMT_PULLIN = 0, //   REFpb pull-in (model PULLIN)
@@ -200,7 +201,7 @@ module ot_qkvd_layer_tb #(
     ot_hdc_delay #(.W(14 + 6 + 6 + 512), .D(QX)) u_qxd (.clk(clk), .rst_n(rst_n), .d({a_T, a_L, a_qb, a_qd}), .q({x_T, x_L, x_qb, x_qd}));
     ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_rxv (.clk(clk), .rst_n(rst_n), .d(h_ov), .q(a_ov));
     ot_hdc_delay #(.W(1 + 6 + 512), .D(RX)) u_rxd (.clk(clk), .rst_n(rst_n), .d({h_og, h_ob, h_od}), .q({a_og, a_ob, a_od}));
-    ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE)) u_attn (
+    ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE), .DQ(DQ)) u_attn (
         .clk(clk), .rst_n(rst_n), .start(x_start), .T(x_T), .q_valid(x_qv), .q_beat(x_qb), .q_data(x_qd),
         .req_valid(m_rq_v), .req_v(m_rq_vv), .req_g(m_rq_g), .req_t(m_rq_t), .rsp_valid(e_rv), .rsp_data(e_rd),
         .out_valid(h_ov), .out_g(h_og), .out_beat(h_ob), .out_data(h_od), .fault(af), .ev_stack(), .ev_hub());
