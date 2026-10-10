@@ -70,5 +70,8 @@ def leaf_s_model():
                      final_segment_target_um=100, SS_reach_sensitivity_um=504),
         mux_demux_fanout=dict(lane_compare_bits=3, sector_head_depth=1, CDC_handshake_fanout=1),
         area_delta_vs_old_leaf_um2=0, added_cycles=0,
+        floorplan=dict(edge_routing_channel_um=129.6, total_die_height_delta_um=259.2,
+                       reason='room for real relay frames around full-height landing columns',
+                       area_delta='actual die width times259.2um, recorded by generator'),
         fit='same full183.6-high leaf RTL; route measures cell area and utilization',
         qualification='own optionB TT>=0 FF>=0 DRC0; exact unchanged component; real LEF pin-to-pin reach and mirror legality')
