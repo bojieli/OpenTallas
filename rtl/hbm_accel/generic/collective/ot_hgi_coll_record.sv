@@ -21,7 +21,10 @@
 module ot_hgi_coll_record #(
     parameter integer MUT_PF = 0,          // mutant: pf from A.n without the /16 flit conversion
     parameter integer MUT_DONE = 0,        // mutant: retire on issue instead of on endpoint completion
-    parameter integer MUT_SLICE = 0        // 1: no slicing (the whole A row from every rank, pre-F3 behaviour)
+    parameter integer MUT_SLICE = 0,       // 1: no slicing (the whole A row from every rank, pre-F3 behaviour)
+    parameter integer PIPE = 0             // hgi-unitrate: 1 = ALL_GATHER records pipeline (epoch-tagged; the block
+                                           // ot_hgi_coll_ep PIPE retires them in order), every other op waits until
+                                           // no pipelined gather is open
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -75,7 +78,12 @@ module ot_hgi_coll_record #(
     output reg  [31:0]   rf_context_rows,
     input  wire          rf_done_v,
     output reg           rf_done_r,
-    input  wire          rf_fault
+    input  wire          rf_fault,
+    // PIPE: the endpoint's pipelined start ready, the block's open-epoch state, and this go's mode
+    input  wire          ep_start_ready_p,
+    input  wire          pipe_room,          // fewer than EQ pipelined gathers open
+    input  wire          pipe_idle,          // none open
+    output reg           ep_pipe
 );
     localparam S_IDLE = 4'd0, S_DEC = 4'd1, S_WAITDEC = 4'd2, S_EPGO = 4'd3, S_EPRUN = 4'd4, S_RFGO = 4'd5,
                S_RFRUN = 4'd6, S_HALT = 4'd7, S_DIV = 4'd8, S_TAB = 4'd9;
@@ -89,7 +97,9 @@ module ot_hgi_coll_record #(
     reg [20:0]  n_a_q, n_i_q;
     reg [7:0]   g_q, die_q;
     reg         in_ep_fault, in_ep_done, in_ep_ready, in_rf_start_r, in_rf_done, in_rf_fault;
+    reg         in_ready_p, in_room, in_idle;
     always @(posedge clk) begin
+        in_ready_p <= ep_start_ready_p; in_room <= pipe_room; in_idle <= pipe_idle;
         in_ep_fault <= ep_fault; in_ep_done <= ep_done_valid; in_ep_ready <= ep_start_ready;
         in_rf_start_r <= rf_start_r; in_rf_done <= rf_done_v; in_rf_fault <= rf_fault;
         g_q <= cfg_coll_group_size; die_q <= cfg_die_id;
@@ -103,11 +113,13 @@ module ot_hgi_coll_record #(
     wire [7:0]  dc_g, dc_rank, dc_group, dc_sub, dc_blk, dc_dest;
     wire [20:0] dc_rows;
     reg         dc_cmd_v;
+    // PIPE gate: an ALL_GATHER needs a free epoch, any other op an empty pipe (classic collectives never overlap one)
+    wire        gate_ok;
     ot_hgi_coll_decode #(.ENABLE(1)) u_dec (
         .clk(clk), .rst_n(rst_n), .coll_group_size(g_q), .die_id(die_q),
         .cmd_v(dc_cmd_v), .cmd_r(dc_cmd_r), .hdr(hdr_q),
         .selected_count({11'd0, n_i_q}), .selected_count_valid(opnd[6] && i_q[206:201] == 6'd63),
-        .backend_v(dc_bv), .backend_r(st == S_WAITDEC), .backend_op(dc_op), .backend_gsz(dc_gsz),
+        .backend_v(dc_bv), .backend_r(st == S_WAITDEC && gate_ok), .backend_op(dc_op), .backend_gsz(dc_gsz),
         .backend_group_size(dc_g), .backend_rank(dc_rank), .backend_group(dc_group), .backend_subgroup(dc_sub),
         .backend_owner_block(dc_blk), .backend_destinations(dc_dest), .backend_row_count(dc_rows),
         .error_v(dc_ev), .error_r(st == S_WAITDEC));
@@ -120,13 +132,14 @@ module ot_hgi_coll_record #(
     // ALL_GATHER (bypass): pf = A row bits / 512 in any element format; a partial flit or an empty row faults
     wire        pfg_bad = (a_rowbits[8:0] != 9'd0) || (n_a_q == 21'd0) || (a_rowwords > 17'hFFFF);
     // endpoint rank = the die's position on the 96-rank TU fabric (die mod 96: groups of 1..8 stay aligned)
+    assign gate_ok = (PIPE == 0) || !dc_bv || ((dc_op == 6'd1) ? in_room : in_idle);
     wire [7:0]  rank96 = (die_q >= 8'd192) ? die_q - 8'd192 : (die_q >= 8'd96) ? die_q - 8'd96 : die_q;
     // GROUP_REDUCE_MCAST: the endpoint's gsz is the reduction sub-group s (2 / 4 / 8), the outer group is G
     wire [3:0]  sub_gsz = (dc_sub == 8'd2) ? 4'd1 : (dc_sub == 8'd4) ? 4'd2 : 4'd3;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; dc_cmd_v <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
-            ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0;
+            ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0; ep_pipe <= 1'b0;
             ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0; ep_byp <= 1'b0; ep_amx <= 1'b0; ep_bf16 <= 1'b1;
             ep_a_base <= 40'd0; ep_o_base <= 40'd0; ep_gslice <= 1'b0; ep_gbase <= 8'd0; gs_we <= 1'b0;
             rf_group_size <= 8'd96; rf_owner_block <= 8'd8; rf_destinations <= 8'd0; rf_row_count <= 21'd0;
@@ -141,7 +154,8 @@ module ot_hgi_coll_record #(
                 end
                 S_DEC: begin dc_cmd_v <= 1'b1; if (dc_cmd_v && dc_cmd_r) begin dc_cmd_v <= 1'b0; st <= S_WAITDEC; end end
                 S_WAITDEC: if (dc_ev) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (dc_bv) begin
+                    else if (dc_bv && gate_ok) begin
+                        ep_pipe <= (PIPE != 0) && (dc_op == 6'd1);
                         if (dc_op == 6'd0 || dc_op == 6'd4) begin
                             if (pf_bad || (o_fmt_q != 3'd0 && o_fmt_q != 3'd1)) begin rec_fault <= 1'b1; st <= S_HALT; end   // O FP32 / BF16 only
                             else begin
@@ -207,7 +221,10 @@ module ot_hgi_coll_record #(
                     end else tq <= tq + 8'd1;
                 end
                 S_EPGO: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (in_ep_ready) begin
+                    else if (ep_pipe && in_ready_p && !ep_go) begin
+                        ep_go <= 1'b1; st <= S_IDLE;           // the block retires it (in order) when its epoch completes
+                    end
+                    else if (!ep_pipe && in_ep_ready) begin
                         ep_go <= 1'b1;
                         if (MUT_DONE) begin rec_done <= 1'b1; st <= S_IDLE; end else st <= S_EPRUN;
                     end

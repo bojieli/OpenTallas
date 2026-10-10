@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.dsrom.S81.mtp-die-set.v1",
+ "base": "S81 canonical binding (unchanged): results/uarch/dsrom_s81_released_binding_20261004/canonical",
+ "added": {
+  "primary": {
+   "count": 4,
+   "ids": [
+    "P.k0",
+    "P.k1",
+    "P.k2",
+    "P.k3"
+   ],
+   "recipe": "tools/s81/s81_dies_recipe.py draftP (layer1 full + --draft P --mtp-links 5)",
+   "role": "DSpark primary TP4 group: mtp.0..2 attention / router / shared expert / hc / vectors + mtp.0 seed projection"
+  },
+  "draft": {
+   "count": 40,
+   "ids": [
+    "DA.r0.k0",
+    "DA.r0.k1",
+    "DA.r0.k2",
+    "DA.r0.k3",
+    "DA.r1.k0",
+    "DA.r1.k1",
+    "DA.r1.k2",
+    "DA.r1.k3",
+    "DA.r2.k0",
+    "DA.r2.k1",
+    "DA.r2.k2",
+    "DA.r2.k3",
+    "DA.r3.k0",
+    "DA.r3.k1",
+    "DA.r3.k2",
+    "DA.r3.k3",
+    "DA.r4.k0",
+    "DA.r4.k1",
+    "DA.r4.k2",
+    "DA.r4.k3",
+    "DB.r0.k0",
+    "DB.r0.k1",
+    "DB.r0.k2",
+    "DB.r0.k3",
+    "DB.r1.k0",
+    "DB.r1.k1",
+    "DB.r1.k2",
+    "DB.r1.k3",
+    "DB.r2.k0",
+    "DB.r2.k1",
+    "DB.r2.k2",
+    "DB.r2.k3",
+    "DB.r3.k0",
+    "DB.r3.k1",
+    "DB.r3.k2",
+    "DB.r3.k3",
+    "DB.r4.k0",
+    "DB.r4.k1",
+    "DB.r4.k2",
+    "DB.r4.k3"
+   ],
+   "recipe": "tools/s81/s81_dies_recipe.py draftA / draftB",
+   "role": "MD-2 P2 routed experts (5 row packages x 4 ranks x A/B; A sums the row experts in id order)"
+  }
+ },
+ "head": {
+  "count": 12,
+  "ids": [
+   "H.h0",
+   "H.h1",
+   "H.h2",
+   "H.h3",
+   "H.h4",
+   "H.h5",
+   "H.h6",
+   "H.h7",
+   "H.h8",
+   "H.h9",
+   "H.h10",
+   "H.h11"
+  ],
+  "recipe": "tools/s81/s81_dies_recipe.py head631 (--mtp-seq --mtp-links 5)",
+  "mtp_content": "Markov embed (replicated) + Markov head vocab share + confidence/norm CROM; pairs 211..338 of 631 (338..631 spare: the former P2 primary reservation, now on P.k*)"
+ },
+ "dies_added_vs_canonical": 44,
+ "bytes_by_home": {
+  "primary": 581025160,
+  "draft": 7219445760,
+  "head": 132403712
+ },
+ "topology": {
+  "seed": "accept on head h0 (dsfd_mtp_seq) -> board hop h0 -> P.k* (main_proj on the primary; main-hidden captures ride the stage link to the head group, then this hop)",
+  "blocks": "P.k* run mtp.0 -> mtp.1 -> mtp.2 back to back (block st+1 on the dies holding block st output: no stage hop)",
+  "experts": "P.k -> board SerDes -> DA.r.k (row r) -> UCIe -> DB.r.k; expert outputs return to DA, summed in id order, -> P.k",
+  "ucie_crossings_a_row": {
+   "mtp.0": 0,
+   "mtp.1": 2,
+   "mtp.2": 2
+  },
+  "draft_head": "P.k* -> board hop -> head group (lm_head sweep + Markov x 5 on H.h*)",
+  "board_hops_added_vs_P2_head_home": 2
+ }
+}
