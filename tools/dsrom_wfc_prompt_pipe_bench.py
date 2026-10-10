@@ -6,7 +6,7 @@ import dsrom_mtp_rom_bench as B
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--case');p.add_argument('--raw-negative',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--case');p.add_argument('--hard-token',action='store_true');p.add_argument('--raw-negative',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
  common=list(B.COMMON)+['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv','rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv','rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv','rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv']
  base=B.cases();base['stg_neg_prevuser']=dict(base['stg_r1'],defines=['OT_WFC_TOKPIPE_MUT_PREVUSER'],expect='fail')
  names=('s0_tr_dspark','s0_tr_forced','s0_tr_forced_w16','s0_hash_u3','s0_hash_u1_fast','s0_neg_noepoch','stg_vmnat','stg_r1','stg_lag1','stg_neg_prevuser')
@@ -20,7 +20,9 @@ def main():
   d=a.out/name;d.mkdir(parents=True,exist_ok=True)
   cfg=spec.get('trace');metadata=B.trace_hex(ROOT/B.TRACES/f'{cfg}.cfg.json',d/'trace.hex') if cfg else None
   original=ROOT/f'rtl/dsrom_sys/mtp/tb/{spec["tb"]}.sv'
-  generated=d/'tb.sv';generated.write_text(original.read_text().replace('ot_rom_pkg_ctrl_wfc_tokpipe #(',f'ot_dsrom_wfc_tokpipe_{"stg" if stage else "src"} #('))
+  generated=d/'tb.sv';body=original.read_text();
+  if a.hard_token and not stage:body=body.replace('dsfd_wfc_tok_r3 u_tok','dsfd_wfc_tok_hard u_tok').replace('ot_rom_pkg_ctrl_wfc_tokpipe #(','ot_rom_pkg_ctrl_wfc_tokpipe #(.PROMPT_EXTRA(2),')
+  generated.write_text(body.replace('ot_rom_pkg_ctrl_wfc_tokpipe #(',f'ot_dsrom_wfc_tokpipe_{"stg" if stage else "src"} #('))
   sources=[str(ROOT/s) for s in common]+[str(generated)]
   for path in sources:pins[str(Path(path).relative_to(ROOT)) if Path(path).is_relative_to(ROOT) else name+'/tb.sv']=hashlib.sha256(Path(path).read_bytes()).hexdigest()
   cmd=['iverilog','-g2012','-s',spec['tb'],'-o',str(d/'sim.vvp')]+[f'-D{x}' for x in spec.get('defines',[])]+[f'-P{spec["tb"]}.{k}={v}' for k,v in spec.get('params',{}).items()]+sources

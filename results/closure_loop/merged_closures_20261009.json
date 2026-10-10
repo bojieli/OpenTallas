@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 22,
-   "merged": 22,
+   "closed": 23,
+   "merged": 23,
    "record_only": 6
   },
   "jobs": {
@@ -1557,7 +1557,8 @@
    "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc": "ADOPTED (HBM die MTP master hfd_mtp, TT +17.39 / FF +8.65); source on main; record 867da6c5f (corner_sta/physical/args; no LEF/lib in the record -> view export owed)",
    "hfd-mtp-x-stop-nreg-hm0-7bebe74b7-tc": "record only (TT +10.04 / FF +5.23; hm10 adopted); 7027a09fa",
    "hcjoin-mc420-lk-d4211f538-tc-cl": "ADOPTED (DS HC seed join on the credit relay, TT +19.31 / FF +21.50); source on main; record 91fefaacb",
-   "hcjoin-mc500-lk-d4211f538-tc-cl": "record only (TT +17.36 / FF +23.52; mc420 adopted); e8de73fef"
+   "hcjoin-mc500-lk-d4211f538-tc-cl": "record only (TT +17.36 / FF +23.52; mc420 adopted); e8de73fef",
+   "mtp-wfc-src-hard-mxb-910e67c7b-tc-cx": "ADOPTED: MTP wavefront SOURCE HARD (ot_dsrom_wfc_tokpipe_src) TT +152.31 / FF +4.02 / DRC 0 after hold ECO; merge 910e67c7b (claude/mtp-wfcsrc-20261009: every file is this element -- PROMPT_EXTRA opt-in (default 0) RTL, eco_scope SDCs, tokpipe physical/bench tools, recovery/reentry evidence) + record af17df19b (closed view physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src). Local: dsrom_wfc_prompt_pipe_bench --hard-token WFC_TOKPIPE_GATE PASS (10 cases incl. both negatives), s0_neg_noepoch raw negative FAIL_AS_REQUIRED. SOURCE + STAGE (dsfd_wfc_tok_hard, closed view on main) pair now complete on main."
   }
  }
 }
