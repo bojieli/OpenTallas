@@ -19,3 +19,12 @@ unit bodies on the die record buses (`tb_hgi_e2e.sv` REAL_HC / REAL_ATT; SM slic
   reserve and fill the 1,966,208 B set at B.base in exactly this layout.
 - Needs main's sequencer op table with HC_MIX_ROWS / HC_MIX_POST (a0fb6c743); before it the CP faulted at the first
   HC_MIX_POST (status 3).
+
+## ATT (unit 5) -- slot built, not yet run in the die bench
+
+`tb_hgi_e2e.sv` REAL_ATT (+define+E2E_ATT, `ot_hgi_att_unit` H16 D512 TD64 NL4, HBM lane on an in-order KLAT model;
+mutant -GATT_MUT_ROW=1) from the stopped g/ATT fork (84463739f).  The unit's opt-in PIPE (row stream + packed score
+writes, default 0) is exact in the unit bench (tb_hgi_att_tput, Qwen T512/T1024 at D128: PIPE 0 and PIPE 1 PASS).
+Unit throughput (Qwen hd 128 FP8, 4 lanes, KLAT 104): PIPE 0 QK 58,457 / PV 60,017 cycles a record at T 512 (priced
+349.7, 167x); PIPE 1 QK 2,604 / PV 4,190 at T 512, 5,202 / 8,243 at T 1,024, QK 10,398 at T 2,048 (~5 cycles a row:
+the ONE 32 B/cycle HBM read lane, 4 sectors a 128-B row; priced 3,166.7 B/cycle).
