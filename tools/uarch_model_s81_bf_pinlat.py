@@ -69,3 +69,64 @@ def model():
         exact_gate='full pair transaction scoreboard positive plus PINLAT/TCG/XST/FXST/DP/RECUT negatives',
         physical_gate='TT setup >=0, FF hold >=0, DRC0; unchanged signoff and own routed-insertion re-STA',
         qualification='model sizing only; no measured closure or adoption credit')
+
+
+def compact_hierarchy_model():
+    """Model true hardened-column locality within the existing reticle width."""
+    col_w, front_w, height = 450.144, 100.224, 220.32
+    macro_w, macro_h, halo = 125.304, 62.952, 5.4
+    column_std = 52977 - 2*macro_w*macro_h
+    column_sites = (col_w-4.32)*(height-4.32)-2*(macro_w+2*halo)*(macro_h+2*halo)
+    front_std = 8259 + model()['area']['added_latch_area_DFF_body_proxy_um2']
+    front_sites = (front_w-4.32)*(height-4.32)
+    width = 2*col_w+front_w
+    # Invoke the actual generator's slot sizing with this opt-in mixed row.
+    # Load a private module so this model does not mutate a caller's die globals.
+    import importlib.util
+    import sys
+    from pathlib import Path
+    path = Path(__file__).with_name('dsrom_s81_fulldie.py')
+    spec = importlib.util.spec_from_file_location('_bf_compact_geometry', path)
+    geo = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = geo
+    spec.loader.exec_module(geo)
+    rows = []
+    for frame_h in (198.72,228.96):
+        geo.configure('layer','r8')
+        geo.Q_ELEM_FRAME_H=241.92
+        geo.BF_PER_REGION=2
+        geo.PQ_PLACE=True
+        geo.set_pairs(1792)
+        slot, capacity = geo.slot_geometry(frame_h,108.)
+        rows.append(dict(BF_frame_h_um=frame_h,slot_h_um=slot,slots_per_frame=capacity,
+                         frame_h_um=geo.FRAME_H8,die_um=list(geo.DIE),pairs=geo.PAIRS,roots=geo.ROOTS))
+    assert width+8.64 <= 1040.256
+    assert rows[0]['slots_per_frame']==rows[1]['slots_per_frame']
+    return dict(schema='opentallas.s81_bf_compact_hardened.v1',default_off=True,
+        adopted=False,physical_qualified=False,
+        element='front + two mirrored instances of one hardened column',
+        dimensions_um=dict(column=[col_w,height],front=[front_w,height],pair=[width,height]),
+        die_reticle_um=[33000,26000],die_outline_delta=0,die_count_delta=0,
+        actual_generator_slot_capacity=rows,remaining_capacity='same9slots/frame and1792pairs; no PQrebinning',
+        MACs_per_cycle_peak=model()['MACs_per_cycle_peak'],
+        memory_ports=model()['memory'],external_bits_delta=0,
+        boundary_bits_per_column=776,replicas=dict(columns_per_pair=2,fronts_per_pair=1,pairs_per_die=1792),
+        routing=dict(interface_tracks_per_column=776,interface_face_capacity=int(2*height/.064*.7),
+                     front_operand_bits=1536,front_top_bottom_capacity=int(2*front_w/.064*.7),
+                     hard_column_clock_reset_locality=True,clock_pin='middle of long face',
+                     root_crossings='registered abutted boundaries; balanced die tree and contextual FF hold required'),
+        replica_cost=dict(two_column_operand_copies=True,front_interfaces=2,
+                          one_control_copy_per_column=True,root_ICGs_per_column=18),
+        area=dict(column_stdcell_estimate_um2=column_std,column_usable_sites_um2=column_sites,
+                  column_util_estimate_pct=100*column_std/column_sites,
+                  front_stdcell_estimate_um2=front_std,front_usable_sites_um2=front_sites,
+                  front_util_estimate_pct=100*front_std/front_sites,
+                  raw_pair_area_um2=width*height,
+                  raw_pair_area_delta_pct=100*(width*height/(1002.888*190.08)-1),
+                  clock_and_hold_repair_measured_area_pending=True),
+        latency=dict(relative_to_flat_QZE_partial_edges=3,relative_to_full948_partial_edges=1,
+                     PINLAT_added_edges=0,initiation_interval_unchanged=True,
+                     token_price='one extra exposed partial edge vs full948; compose owner token count'),
+        exact_gate='full pair HCOL1/PINLAT1 positive transaction oracle plus actual PINLAT and TCG DIFF mutants',
+        physical_gate='both hardened masters TT>=0 FF>=0 DRC0, real views and composed contextual boundary timing',
+        qualified=False)

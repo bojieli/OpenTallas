@@ -15466,3 +15466,9 @@ def s81_bf_tcg_pinlat_model():
     """Size the exact clock-lockup + tile-clock full-rate BF combination."""
     from uarch_model_s81_bf_pinlat import model
     return model()
+
+
+def s81_bf_compact_hierarchy_model():
+    """Price a taller compact hard-column array inside the actual reticle."""
+    from uarch_model_s81_bf_pinlat import compact_hierarchy_model
+    return compact_hierarchy_model()

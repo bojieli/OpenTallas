@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.s81_bf_compact_hardened.v1",
+  "default_off": true,
+  "adopted": false,
+  "physical_qualified": false,
+  "element": "front + two mirrored instances of one hardened column",
+  "dimensions_um": {
+    "column": [
+      450.144,
+      220.32
+    ],
+    "front": [
+      100.224,
+      220.32
+    ],
+    "pair": [
+      1000.5120000000001,
+      220.32
+    ]
+  },
+  "die_reticle_um": [
+    33000,
+    26000
+  ],
+  "die_outline_delta": 0,
+  "die_count_delta": 0,
+  "actual_generator_slot_capacity": [
+    {
+      "BF_frame_h_um": 198.72,
+      "slot_h_um": 280.8,
+      "slots_per_frame": 9,
+      "frame_h_um": 2829.6,
+      "die_um": [
+        33000.0,
+        26000.0
+      ],
+      "pairs": 1792,
+      "roots": 128
+    },
+    {
+      "BF_frame_h_um": 228.96,
+      "slot_h_um": 311.04,
+      "slots_per_frame": 9,
+      "frame_h_um": 2890.08,
+      "die_um": [
+        33000.0,
+        26000.0
+      ],
+      "pairs": 1792,
+      "roots": 128
+    }
+  ],
+  "remaining_capacity": "same9slots/frame and1792pairs; no PQrebinning",
+  "MACs_per_cycle_peak": {
+    "FP4": 128,
+    "FP8": 64,
+    "BF16": 32
+  },
+  "memory_ports": {
+    "installed_macros": 4,
+    "rows_per_macro": 4096,
+    "bits_per_macro_word": 274,
+    "active_macros_per_issue": 2,
+    "ROM_bytes_per_issue_cycle": 68.5,
+    "installed_raw_port_bytes_per_cycle": 137,
+    "new_ports": 0,
+    "new_bytes_per_cycle": 0,
+    "ECC": false
+  },
+  "external_bits_delta": 0,
+  "boundary_bits_per_column": 776,
+  "replicas": {
+    "columns_per_pair": 2,
+    "fronts_per_pair": 1,
+    "pairs_per_die": 1792
+  },
+  "routing": {
+    "interface_tracks_per_column": 776,
+    "interface_face_capacity": 4819,
+    "front_operand_bits": 1536,
+    "front_top_bottom_capacity": 2192,
+    "hard_column_clock_reset_locality": true,
+    "clock_pin": "middle of long face",
+    "root_crossings": "registered abutted boundaries; balanced die tree and contextual FF hold required"
+  },
+  "replica_cost": {
+    "two_column_operand_copies": true,
+    "front_interfaces": 2,
+    "one_control_copy_per_column": true,
+    "root_ICGs_per_column": 18
+  },
+  "area": {
+    "column_stdcell_estimate_um2": 37200.725184,
+    "column_usable_sites_um2": 76222.099584,
+    "column_util_estimate_pct": 48.80569465684059,
+    "front_stdcell_estimate_um2": 8729.6424,
+    "front_usable_sites_um2": 20715.264,
+    "front_util_estimate_pct": 42.14111101842584,
+    "raw_pair_area_um2": 220432.80384,
+    "raw_pair_area_delta_pct": 15.63448397391969,
+    "clock_and_hold_repair_measured_area_pending": true
+  },
+  "latency": {
+    "relative_to_flat_QZE_partial_edges": 3,
+    "relative_to_full948_partial_edges": 1,
+    "PINLAT_added_edges": 0,
+    "initiation_interval_unchanged": true,
+    "token_price": "one extra exposed partial edge vs full948; compose owner token count"
+  },
+  "exact_gate": "full pair HCOL1/PINLAT1 positive transaction oracle plus actual PINLAT and TCG DIFF mutants",
+  "physical_gate": "both hardened masters TT>=0 FF>=0 DRC0, real views and composed contextual boundary timing",
+  "qualified": false
+}
