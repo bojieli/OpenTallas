@@ -66,6 +66,8 @@ def check_record(record, allocation, both_selected=False):
             if desc.space != 'HBM' or desc.fmt != 'FP32' or desc.stride != 2048:
                 raise ValueError('Selected-reader ABI uses SPACE0 byte base, FP32 and2048-byte row stride')
             rows=desc.n
+            if desc.base % 32 or (name=='C' and rows > allocation['max_selected']):
+                raise ValueError('Selected address alignment or row capacity invalid')
             lo, hi = (0, 4*MIB) if name=='C' else (WINDOW_BASE,SCRATCH_BASE)
             if not lo <= desc.base or desc.base+rows*2048 > hi:
                 raise ValueError(f'{record.tag}:{name} selected byte range overlaps another allocation')
