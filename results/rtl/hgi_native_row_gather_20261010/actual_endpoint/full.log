@@ -1,0 +1,4 @@
+BYP_RUN gn=96 rank=77 base=0 pf=576 delivered=55296 cycles=15210
+BYP_RUN gn=96 rank=77 base=0 pf=544 delivered=52224 cycles=14451
+PASS HGI_COLL_ROW_NATIVE gn=96 rank=77 pf=576,544 foreign_dropped=0 fault=0
+rtl/hbm_accel/generic/collective/tb_hgi_coll_row_native.sv:215: $finish called at 24798990 (1ps)

@@ -1,0 +1,47 @@
+{
+  "verdict": "PASS_TRANSPORT_ONLY",
+  "source_commit": "749e3e3e6",
+  "host": "ot-epyc2",
+  "tool": "Icarus11.0",
+  "group": 96,
+  "rank": 77,
+  "row_words_fp32": 512,
+  "row_flits_64B": 32,
+  "row_bytes": 2048,
+  "endpoint_flits_max": 512,
+  "shape_cases": [
+    {
+      "m": 18,
+      "epochs": 2,
+      "flits_per_rank": 576,
+      "flits_delivered": 55296,
+      "cycles": 15210
+    },
+    {
+      "m": 17,
+      "epochs": 2,
+      "flits_per_rank": 544,
+      "flits_delivered": 52224,
+      "cycles": 14451
+    }
+  ],
+  "checked": [
+    "real PSG endpoint plus minimal switchpeer",
+    "all delivery flits bitexact",
+    "slot-major globalrow j*G+r across chunk boundaries",
+    "all injection offsets exact per staged chunk",
+    "terminal done and no fault",
+    "foreign group result isolation"
+  ],
+  "source_staging": "immutable initialized data with full protected-store handshake contract; actual HBM frontend not bound",
+  "destination": "always accepts checked map output; consumer VM acknowledgement and backpressure pending",
+  "not_qualified": [
+    "generic record frontend",
+    "inverse selected-list map",
+    "real HBM source and destination",
+    "credit-enabled endpoint",
+    "physical closure"
+  ],
+  "default_enable": 0,
+  "rate_credit": false
+}
