@@ -8,6 +8,8 @@
 # usage: route_master.sh CFG LABEL OUTROOT [cts]      (SRC = source snapshot root; HM route hold margin, ns)
 # PIN_H / PIN_V (env or cfg, drive-2140 2026-10-08, reviewer DQ1/DQ2): pin layers for the IO placer, e.g. PIN_H='M4 M6'
 # PIN_V='M5 M7' spreads a dense face over two layers (fp-lint pin density is per layer); unset = ORFS default (M4 / M5).
+# struct-close 2026-10-09: CORE_INSET (um, default 2.16) = core inset from the die edge; 10.8 keeps automatically placed
+# macros >= 10 um off the pin faces (fp_margin_lint macro_edge).
 set -uo pipefail
 CFG=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
@@ -32,7 +34,7 @@ export OT_ORFS_NUM_CORES=${NC:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TI
 export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
-  --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
+  --die-area 0 0 $FW $FH --core-area ${CORE_INSET:-2.16} ${CORE_INSET:-2.16} $(python3 -c "print(round($FW-${CORE_INSET:-2.16},3), round($FH-${CORE_INSET:-2.16},3))") \
   "${PINS[@]}" ${PINS:+--pin-regions-exhaustive} "${EXTRA[@]}" \
   --routing-layers ${RLAYERS:-M2 M7} --clock-port ${CLKPORT:-clk} --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \

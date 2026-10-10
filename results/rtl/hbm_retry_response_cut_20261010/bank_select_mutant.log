@@ -1,0 +1,4 @@
+PASS 512 full579-bit records protected in16 realSRAM macros; read4cycles
+PASS single data/check correction, double poison, staleepoch and stalealias rejection
+FATAL: /tmp/codex-retry-response-sel/tb_dp.sv:39: stream mismatch
+       Time: 57026000000 Scope: tb_hbm_replay_sram

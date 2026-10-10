@@ -14878,6 +14878,34 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
 
 
+def hbm_link_replay_response_cut_model(payload_bits=545, seq_bits=12, session_bits=24, depth=512):
+    """Before-build pricing: decoder hit-summary and replay response registers.
+
+    R25G generic HBM Qwen/DeepSeek retry only; ROM designs unaffected.
+    The old six-edge DP path combines syndrome hit OR, tag compare and the
+    downstream 545-bit enable. Register the hit summaries and final response.
+    """
+    base = hbm_link_replay_sram_model(payload_bits, seq_bits, session_bits, depth, 1)
+    chunks = base['secded_chunks']
+    extra_bits = chunks * (256 + 4 + 4) + payload_bits + seq_bits + session_bits + 3 + 2*(seq_bits+session_bits) + 2
+    return dict(base, candidate='HBM_REPLAY_DP_RESPONSE_CUT',
+        decoder_edges=4, read_response_edges=8, prior_dp_response_edges=6,
+        added_replay_edges=2, added_replay_ns=2/1.2,
+        token_fault_free_added_cycles=0, fault_free_forward_added_edges=0,
+        replay_initial_read_edges=10, replay_steady_records_per_cycle=1/11,
+        additional_register_bits=extra_bits,
+        added_ff_body_um2_proxy=extra_bits*DFF_UM2,
+        added_ff_55pct_reservation_um2_proxy=extra_bits*DFF_UM2/.55,
+        external_boundary_bits_delta=0, memory_port_bandwidth_delta=0,
+        registered_internal_boundary_bits=[chunks*(256+4+4),payload_bits+seq_bits+session_bits+3],
+        fanout='four 64-column hit summaries per SECDED chunk; response flags are registered',
+        routing_tracks_delta_external=0, floorplan_um=[690,460],
+        slot_fit='UNVALIDATED: existing 690x460 vehicle; route admission requires actual utilization',
+        design_applicability={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+            'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True},
+        physical_qualified=False, adoption='OPEN: full-depth exactness, mutants and TT/FF/DRC route')
+
+
 def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
     """Unified entry for before-build TA15 digital clock/reset boundary sizing."""
     from tools.hbm_ta15_clock_boundary_model import hbm_ta15_clock_boundary_model as model
