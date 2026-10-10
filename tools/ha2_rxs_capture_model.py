@@ -30,3 +30,21 @@ def return_pin_model():
         added_send_latency_cycles_vs_RREG=1,
         latency_composition="Send-data path +1 edge vs RREG; return/retirement credit +2 edges vs RREG. Full-shape measured credit depth8 qualification required.")
     return r
+
+
+def local_transport_model():
+    r=return_pin_model()
+    r.update(schema='opentallas.uarch.ha2_local_transport.v1',
+        mechanism=r['mechanism']+'; existing write registers own every actual SRAM write-pin destination and existing raw registers sit on the capture-to-output transport corridor',
+        additional_rtl_registers=0, additional_latency_cycles_vs_CP=0,
+        write_pin_owned_flops=1120, mid_transport_flops=1120,
+        maximum_write_destinations_per_bit=1,
+        write_sink_inventory_required=True,
+        west_macro_face_bits_per_cycle=512+256+20,
+        east_macro_face_bits_per_cycle=256,
+        tracks_needed_max=512+256+20,
+        channel_capacity_tracks=int(77.76/.096),
+        collar_columns=8,
+        placement_obligations=['Inventory every write flop destination across all banks; reject unexpected shared destinations until modeled', 'Use actual transformed macro pin coordinates for R0/MY/MX/R180', 'Anchor1120 write and1120 transport flops before GPL; release for DPL legalization', 'No netlist or clock/pin constraint change'])
+    assert r['tracks_needed_max'] <= r['channel_capacity_tracks']
+    return r

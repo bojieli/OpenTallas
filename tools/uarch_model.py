@@ -115,3 +115,8 @@ def ha2_truecredit_capture_collar_model():
 def ha2_truecredit_capture_return_pin_model():
     from tools.ha2_rxs_capture_model import return_pin_model
     return return_pin_model()
+
+
+def ha2_truecredit_local_transport_model():
+    from tools.ha2_rxs_capture_model import local_transport_model
+    return local_transport_model()

@@ -67,7 +67,10 @@ set_load 4 [all_outputs]
     if part.get('macros'):cmd+=['--macro-place-halo',*os.environ.get('HA2_HALO','2 2').split()]
     # Opt-in bank capture collar: new local stage remains near its own SRAM pins;
     # the existing raw_q stage now owns the longer transport hop.
-    if os.environ.get('HA2_RX_CAPTURE')=='1':
+    if os.environ.get('HA2_RX_LOCAL_TRANSPORT')=='1':
+        cmd+=['--step-tcl','PRE_GLOBAL_PLACE=physical/ha2_truecredit_20261007/rx_local_transport_plan.tcl',
+              '--step-tcl','PRE_DETAIL_PLACE=physical/ha2_truecredit_20261007/rx_local_transport_release.tcl']
+    elif os.environ.get('HA2_RX_CAPTURE')=='1':
         cmd+=['--step-tcl','PRE_GLOBAL_PLACE=physical/ha2_truecredit_20261007/rx_capture_at_macros.tcl',
               '--step-tcl','PRE_DETAIL_PLACE=physical/ha2_truecredit_20261007/rx_capture_release.tcl']
     elif os.environ.get('HA2_RX_RETURN_PINS')=='1':

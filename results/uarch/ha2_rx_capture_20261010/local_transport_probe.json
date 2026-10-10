@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "vehicle": "Read-only original CAP full-shape3_2_place_iop.odb; no source/database mutation",
+  "write_flops": 1120,
+  "write_destination_counts": {
+    "lane0_bank0": 512,
+    "lane0_bank1": 48,
+    "lane1_bank0": 512,
+    "lane1_bank1": 48
+  },
+  "maximum_destinations_per_bit": 1,
+  "raw_transport_flops": 1120,
+  "capture_flops": 1120,
+  "extra_cycles": 0,
+  "extra_flops": 0,
+  "placement_legal_orientation_support": [
+    "R0",
+    "MY",
+    "MX",
+    "R180"
+  ],
+  "core_bounds_checked": true,
+  "adopted": false,
+  "physical_obligations": [
+    "TT setup >=0",
+    "FF hold >=0",
+    "DRC0"
+  ]
+}
