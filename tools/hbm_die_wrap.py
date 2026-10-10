@@ -191,6 +191,8 @@ def gen(spec, strict=True):
     fck = fclk_bits(master)
     for p in spec.get('clock_out_ports', []):      # die outputs driven by the (inverted, kept) block clock
         fck.setdefault(p, {}).update({b: 'out' for b in range(ports[p]['bits'])})
+    for p, bs in spec.get('clock_out_bits', {}).items():   # single forwarded-clock bits of a data bus (IKS e_fclk)
+        fck.setdefault(p, {}).update({int(b): 'out' for b in bs})
     dirs = {}
     for p, v in ports.items():
         arr = ['in'] * v['bits']

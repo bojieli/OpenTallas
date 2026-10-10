@@ -31,7 +31,7 @@
     output wire [967:0] t_hgi_coll,
     output wire [703:0] t_hgi_dma,
     output wire [938:0] t_hgi_hc,
-    output wire [1818:0] t_hgi_idx,
+    output wire [2074:0] t_hgi_idx,
     output wire [221:0] t_hgi_loader,
     output wire [682:0] t_hgi_quant,
     output wire [1173:0] t_hgi_sfu,

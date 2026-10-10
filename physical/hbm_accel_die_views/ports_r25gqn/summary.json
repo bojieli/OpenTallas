@@ -329,7 +329,7 @@
     "input"
    ],
    "t_hgi_idx": [
-    1819,
+    2075,
     "S",
     "output"
    ],
@@ -341,6 +341,64 @@
    "t_hgi_argmax": [
     691,
     "S",
+    "output"
+   ]
+  }
+ },
+ "hfd_hgi_idx": {
+  "kind": null,
+  "w": 640.008,
+  "h": 600.48,
+  "instances": 1,
+  "ports": {
+   "ck": [
+    1,
+    "N",
+    "input"
+   ],
+   "rst": [
+    1,
+    "N",
+    "input"
+   ],
+   "f_hgi_cmdproc": [
+    2075,
+    "N",
+    "input"
+   ],
+   "f_hgi_vmr": [
+    274,
+    "N",
+    "input"
+   ],
+   "t_hgi_cmdproc": [
+    3,
+    "N",
+    "output"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "N",
+    "output"
+   ],
+   "t_hgi_iksSW": [
+    129,
+    "W",
+    "output"
+   ],
+   "t_hgi_iksNW": [
+    129,
+    "W",
+    "output"
+   ],
+   "t_hgi_iksSE": [
+    129,
+    "E",
+    "output"
+   ],
+   "t_hgi_iksNE": [
+    129,
+    "E",
     "output"
    ]
   }

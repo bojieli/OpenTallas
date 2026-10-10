@@ -1,0 +1,10 @@
+    input wire [0:0] ck,
+    input wire [2074:0] f_hgi_cmdproc,
+    input wire [273:0] f_hgi_vmr,
+    input wire [0:0] rst,
+    output wire [2:0] t_hgi_cmdproc,
+    output wire [128:0] t_hgi_iksNE,
+    output wire [128:0] t_hgi_iksNW,
+    output wire [128:0] t_hgi_iksSE,
+    output wire [128:0] t_hgi_iksSW,
+    output wire [337:0] t_hgi_vmq
