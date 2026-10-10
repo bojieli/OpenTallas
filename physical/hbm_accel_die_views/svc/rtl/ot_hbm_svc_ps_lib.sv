@@ -162,12 +162,25 @@ endmodule
 
 module ot_svs_grp #(parameter integer K = 0) (
   input wire ck, input wire rst, input wire rn,
-  input wire [3:0] sv, input wire [4*277-1:0] sq,         // stream beats of PCs 4K .. 4K+3 (tag 11)
+  input wire [3:0] sv_i, input wire [4*277-1:0] sq_i,     // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
   input wire sg_v, input wire [12:0] sg_d,                 // the running stream's load tag (from the e port)
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
   output wire ovf);                                        // a beat found its row buffer still full / credit queue overflow (never)
+  // hbm-forks 2026-10-09 (svc SE_s2 routed c_rs13_1.q -> u_gp3.b -53.9 ps: a beat's index bits fanned out to the 2 x 4
+  // row-buffer write enables across the buffer array straight from the chain's last stage): the beat lands in the
+  // group unit's own input register (sv / sq, at the unit) with its write enables pre-decoded one-hot (we1h), and is
+  // written one edge later (+1 cycle on the stream path; the stream beats carry no backpressure)
+  reg [3:0] sv; reg [4*277-1:0] sq; reg [3:0] we1h [0:3];
+  integer pi_;
+  always @(posedge ck or negedge rn)
+    if (!rn) sv <= 4'd0;
+    else sv <= sv_i;
+  always @(posedge ck) begin
+    sq <= sq_i;
+    for (pi_ = 0; pi_ < 4; pi_ = pi_ + 1) we1h[pi_] <= 4'd1 << sq_i[pi_*277+260 +: 2];
+  end
   reg [255:0] b [0:3][0:1][0:3];
   reg [3:0] sm [0:3][0:1];
   reg [2:0] cnt [0:3][0:1];
@@ -213,7 +226,7 @@ module ot_svs_grp #(parameter integer K = 0) (
     end
   always @(posedge ck) begin
     for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
-      b[p][ws[p]][sq[p*277+260 +: 2]] <= sq[p*277 +: 256];
+      for (s = 0; s < 4; s = s + 1) if (we1h[p][s]) b[p][ws[p]][s] <= sq[p*277 +: 256];
       rq[p][ws[p]] <= sq[p*277+265 +: 10];
       ix[p][ws[p]] <= sq[p*277+260+3];
       nc[p][ws[p]] <= sq[p*277+260+4];

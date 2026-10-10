@@ -120,7 +120,7 @@ module hfd_svc_SE_s1 (
   assign gp2_sv[1] = rs9_v && (rs9_d[276:275] == 2'b11); assign gp2_sq[553:277] = rs9_d;
   assign gp2_sv[2] = rs10_v && (rs10_d[276:275] == 2'b11); assign gp2_sq[830:554] = rs10_d;
   assign gp2_sv[3] = rs11_v && (rs11_d[276:275] == 2'b11); assign gp2_sq[1107:831] = rs11_d;
-  ot_svs_grp #(.K(2)) u_gp2 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp2_sv), .sq(gp2_sq), .kq(kq2), .sg_v(gp2_sgv), .sg_d(gp2_sgd), .cr(gp2_cr), .ks(ks2), .ovf(gp2_ovf));
+  ot_svs_grp #(.K(2)) u_gp2 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp2_sv), .sq_i(gp2_sq), .kq(kq2), .sg_v(gp2_sgv), .sg_d(gp2_sgd), .cr(gp2_cr), .ks(ks2), .ovf(gp2_ovf));
   ot_svs_lane u_ln4 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln4_wr_v), .wr_tag(ln4_wr_tag), .wr_beat(ln4_wr_beat), .wr_data(ln4_wr_data), .w_room(ln4_w_room), .o_v(ln4_v), .o_d(ln4_d), .room_q(ln4_rq));
   ot_svs_lane u_ln5 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln5_wr_v), .wr_tag(ln5_wr_tag), .wr_beat(ln5_wr_beat), .wr_data(ln5_wr_data), .w_room(ln5_w_room), .o_v(ln5_v), .o_d(ln5_d), .room_q(ln5_rq));
   ot_svs_lane u_ln6 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln6_wr_v), .wr_tag(ln6_wr_tag), .wr_beat(ln6_wr_beat), .wr_data(ln6_wr_data), .w_room(ln6_w_room), .o_v(ln6_v), .o_d(ln6_d), .room_q(ln6_rq));
@@ -628,7 +628,7 @@ module hfd_svc_SE_s1 (
   assign phy[340] = 1'b0;
   assign phy[341] = 1'b0;
   assign pc4_kr_v = phy[343];
-  assign phy[344] = rdy_q;
+  ot_svs_rdyp u_rdyp344 (.ck(c), .rn(rn), .q(phy[344]));
   assign pc4_kr_tag[0] = phy[345];
   assign pc4_kr_tag[1] = phy[346];
   assign pc4_kr_tag[2] = phy[347];
@@ -908,7 +908,7 @@ module hfd_svc_SE_s1 (
   assign pc4_kr_data[255] = phy[621];
   assign ln4_w_room = phy[622];
   assign ln4_wr_v = phy[623];
-  assign phy[624] = rdy_q;
+  ot_svs_rdyp u_rdyp624 (.ck(c), .rn(rn), .q(phy[624]));
   assign ln4_wr_tag[0] = phy[625];
   assign ln4_wr_tag[1] = phy[626];
   assign ln4_wr_tag[2] = phy[627];
@@ -1523,7 +1523,7 @@ module hfd_svc_SE_s1 (
   assign phy[1236] = 1'b0;
   assign phy[1237] = 1'b0;
   assign pc5_kr_v = phy[1239];
-  assign phy[1240] = rdy_q;
+  ot_svs_rdyp u_rdyp1240 (.ck(c), .rn(rn), .q(phy[1240]));
   assign pc5_kr_tag[0] = phy[1241];
   assign pc5_kr_tag[1] = phy[1242];
   assign pc5_kr_tag[2] = phy[1243];
@@ -1803,7 +1803,7 @@ module hfd_svc_SE_s1 (
   assign pc5_kr_data[255] = phy[1517];
   assign ln5_w_room = phy[1518];
   assign ln5_wr_v = phy[1519];
-  assign phy[1520] = rdy_q;
+  ot_svs_rdyp u_rdyp1520 (.ck(c), .rn(rn), .q(phy[1520]));
   assign ln5_wr_tag[0] = phy[1521];
   assign ln5_wr_tag[1] = phy[1522];
   assign ln5_wr_tag[2] = phy[1523];
@@ -2418,7 +2418,7 @@ module hfd_svc_SE_s1 (
   assign phy[2132] = 1'b0;
   assign phy[2133] = 1'b0;
   assign pc6_kr_v = phy[2135];
-  assign phy[2136] = rdy_q;
+  ot_svs_rdyp u_rdyp2136 (.ck(c), .rn(rn), .q(phy[2136]));
   assign pc6_kr_tag[0] = phy[2137];
   assign pc6_kr_tag[1] = phy[2138];
   assign pc6_kr_tag[2] = phy[2139];
@@ -2698,7 +2698,7 @@ module hfd_svc_SE_s1 (
   assign pc6_kr_data[255] = phy[2413];
   assign ln6_w_room = phy[2414];
   assign ln6_wr_v = phy[2415];
-  assign phy[2416] = rdy_q;
+  ot_svs_rdyp u_rdyp2416 (.ck(c), .rn(rn), .q(phy[2416]));
   assign ln6_wr_tag[0] = phy[2417];
   assign ln6_wr_tag[1] = phy[2418];
   assign ln6_wr_tag[2] = phy[2419];
@@ -3313,7 +3313,7 @@ module hfd_svc_SE_s1 (
   assign phy[3028] = 1'b0;
   assign phy[3029] = 1'b0;
   assign pc7_kr_v = phy[3031];
-  assign phy[3032] = rdy_q;
+  ot_svs_rdyp u_rdyp3032 (.ck(c), .rn(rn), .q(phy[3032]));
   assign pc7_kr_tag[0] = phy[3033];
   assign pc7_kr_tag[1] = phy[3034];
   assign pc7_kr_tag[2] = phy[3035];
@@ -3593,7 +3593,7 @@ module hfd_svc_SE_s1 (
   assign pc7_kr_data[255] = phy[3309];
   assign ln7_w_room = phy[3310];
   assign ln7_wr_v = phy[3311];
-  assign phy[3312] = rdy_q;
+  ot_svs_rdyp u_rdyp3312 (.ck(c), .rn(rn), .q(phy[3312]));
   assign ln7_wr_tag[0] = phy[3313];
   assign ln7_wr_tag[1] = phy[3314];
   assign ln7_wr_tag[2] = phy[3315];
@@ -4208,7 +4208,7 @@ module hfd_svc_SE_s1 (
   assign phy[3924] = 1'b0;
   assign phy[3925] = 1'b0;
   assign pc8_kr_v = phy[3927];
-  assign phy[3928] = rdy_q;
+  ot_svs_rdyp u_rdyp3928 (.ck(c), .rn(rn), .q(phy[3928]));
   assign pc8_kr_tag[0] = phy[3929];
   assign pc8_kr_tag[1] = phy[3930];
   assign pc8_kr_tag[2] = phy[3931];

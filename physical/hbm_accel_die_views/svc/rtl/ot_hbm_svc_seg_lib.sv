@@ -19,6 +19,12 @@ module ot_svs_rsync (input wire ck, input wire rst, output wire rn);
 endmodule
 
 // segment-local "ready after reset" (kr_rdy / wr_rdy level and the response capture enable)
+// one PHY pin's copy of the segment ready level (rdy_q of ot_svs_rdy: 1 one edge after the reset release), its own
+// register beside its pin (hbm-forks 2026-10-09)
+module ot_svs_rdyp (input wire ck, input wire rn, output reg q);
+  always @(posedge ck or negedge rn) if (!rn) q <= 1'b0; else q <= 1'b1;
+endmodule
+
 module ot_svs_rdy (input wire ck, input wire rn, output wire rdy_q, output wire rdy_q2);
   reg a, b;
   always @(posedge ck or negedge rn) if (!rn) begin a <= 1'b0; b <= 1'b0; end else begin a <= 1'b1; b <= a; end
