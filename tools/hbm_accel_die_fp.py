@@ -751,7 +751,9 @@ def build_r25gq(variant):
                 rr = r if S_ else V['attn_rows'] - 1 - r
                 y_ = ty0 + rr * (tp + V['attn_row_gap'])
                 # W: column 0 outermost; E mirrored (the base grid's column 0 is the outermost on both halves)
-                x_ = at_x + c * (tw + V['attn_col_gap'])
+                # E quadrants name-mirrored ([idx] 10-10): the R25GP E tile chains run c3 -> c0, so column 0 (the chain
+                # root) sits next to the SU on both halves
+                x_ = at_x + ((V['attn_cols'] - 1 - c) if E_ else c) * (tw + V['attn_col_gap'])
                 lo_y, hi_y = y_, y_ + th_lo      # N: mirrored below, hi under lo as the R25GP MX copies
                 for half, yh, hh_ in (('lo', lo_y, th_lo), ('hi', hi_y, th_hi)):
                     nm = f'at_{q}_{r}{c}_{half}'
