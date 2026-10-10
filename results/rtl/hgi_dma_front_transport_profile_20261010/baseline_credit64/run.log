@@ -1,0 +1,16 @@
+LOAD f 0 m 4 n 512: 89 cycles, 92.0 destination B / cycle
+LOAD f 1 m 3 n 4096: 171 cycles, 287.4 destination B / cycle
+LOAD f 2 m 2 n 4096: 86 cycles, 381.0 destination B / cycle
+LOAD f 4 m 5 n 1024: 73 cycles, 280.5 destination B / cycle
+LOAD f 0 m 4 n 2048: 91 cycles, 360.1 destination B / cycle
+LOAD f 2 m 4 n 8192: 171 cycles, 766.5 destination B / cycle
+LOAD f 0 m 64 n 8: 178 cycles, 11.5 destination B / cycle
+LOAD f 0 m 4 n 16384: 394 cycles, 665.3 destination B / cycle
+LOAD f 1 m 4 n 32768: 558 cycles, 939.6 destination B / cycle
+FAIL physical-credit bandwidth below90pct
+LOAD f 0 m 4 n 65536: 1364 cycles, 768.8 destination B / cycle
+FATAL HGI_DMA_FRONT errors=1
+- rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv:155: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 0.491 s; speed 26.972 us/s
+- Verilator: cpu 0.238 s on 1 threads; alloced 1020 MB

@@ -1,0 +1,26 @@
+LOAD f 0 m 4 n 512: 298 cycles, 27.5 destination B / cycle
+DMA_PROFILE move=1 cycles=297 requests=4 tagstall=0 ingress=256 grants=256 ack=256 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=8
+LOAD f 1 m 3 n 4096: 362 cycles, 135.8 destination B / cycle
+DMA_PROFILE move=2 cycles=361 requests=3 tagstall=0 ingress=768 grants=1536 ack=1536 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=16
+LOAD f 2 m 2 n 4096: 298 cycles, 110.0 destination B / cycle
+DMA_PROFILE move=3 cycles=297 requests=2 tagstall=0 ingress=256 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+LOAD f 4 m 5 n 1024: 286 cycles, 71.6 destination B / cycle
+DMA_PROFILE move=4 cycles=285 requests=5 tagstall=0 ingress=160 grants=640 ack=640 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+LOAD f 0 m 4 n 2048: 301 cycles, 108.9 destination B / cycle
+DMA_PROFILE move=5 cycles=300 requests=4 tagstall=0 ingress=1024 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+LOAD f 2 m 4 n 8192: 394 cycles, 332.7 destination B / cycle
+DMA_PROFILE move=6 cycles=393 requests=4 tagstall=0 ingress=1024 grants=4096 ack=4096 creditstall_lane_cycles=0 peak_lq=704 max_lane_lq=25 peak_ov=128
+LOAD f 0 m 64 n 8: 1062 cycles, 1.9 destination B / cycle
+DMA_PROFILE move=7 cycles=1061 requests=64 tagstall=732 ingress=64 grants=64 ack=64 creditstall_lane_cycles=0 peak_lq=1 max_lane_lq=1 peak_ov=1
+LOAD f 0 m 4 n 16384: 688 cycles, 381.0 destination B / cycle
+DMA_PROFILE move=8 cycles=687 requests=32 tagstall=359 ingress=8192 grants=8192 ack=8192 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+LOAD f 1 m 4 n 32768: 814 cycles, 644.1 destination B / cycle
+DMA_PROFILE move=9 cycles=813 requests=32 tagstall=359 ingress=8192 grants=16384 ack=16384 creditstall_lane_cycles=0 peak_lq=2000 max_lane_lq=65 peak_ov=64
+FAIL physical-credit bandwidth below90pct
+LOAD f 0 m 4 n 65536: 2434 cycles, 430.8 destination B / cycle
+DMA_PROFILE move=10 cycles=2433 requests=128 tagstall=2009 ingress=32768 grants=32768 ack=32768 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+FATAL HGI_DMA_FRONT errors=1
+- src/tb_hgi_dma_front.sv:183: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 14us; walltime 0.345 s; speed 40.774 us/s
+- Verilator: cpu 0.342 s on 1 threads; alloced 1020 MB

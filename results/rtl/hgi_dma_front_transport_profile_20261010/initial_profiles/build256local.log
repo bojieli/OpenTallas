@@ -1,0 +1,181 @@
+%Warning-WIDTHTRUNC: src/ot_hgi_dma_front.sv:96:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STACK_LOCAL_TAGS' generates 32 bits.
+                                                  : ... note: In instance 'tb_hgi_dma_front.dut'
+   96 |     localparam integer NT = STACK_LOCAL_TAGS ? NS*16 : 16;
+      |                                              ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: src/ot_hgi_dma_front.sv:56:24: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                  : ... note: In instance 'tb_hgi_dma_front.dut'
+   56 |     initial if (LD < 4 || (LD & (LD-1))) $fatal(1, "LDEPTH must be a power of two >=4");
+      |                        ^~
+%Warning-WIDTHTRUNC: src/ot_hgi_dma_front.sv:102:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STACK_LOCAL_TAGS' generates 32 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front.dut'
+  102 |         tag_slot = STACK_LOCAL_TAGS ? stack*16+tag : tag;
+      |                                     ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:104:32: Operator ADD expects 37 bits on the RHS, but RHS's REPLICATE generates 28 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  104 |     wire [36:0] next_addr = wa + {r_off[22:0], 5'd0};
+      |                                ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:109:27: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's VARREF 'next_stack' generates 2 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  109 |             if (!tag_busy[tag_slot(next_stack,t)]) ft = 5'(t);
+      |                           ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:160:92: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  160 |             if (oh[b][i]) xw[b] = xw[b] | {1'b1, 15'(ob[i] + {16'd0, rslot[b][i]}), od[i*4 + rslot[b][i]], 8'hFF};
+      |                                                                                            ^
+%Warning-WIDTHCONCAT: src/ot_hgi_dma_front.sv:174:105: More than a 8k bit replication is probably wrong: 8960
+                                                     : ... note: In instance 'tb_hgi_dma_front.dut'
+  174 |             cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; dd_cr <= '0; wl <= '0;
+      |                                                                                                         ^~
+%Warning-WIDTHCONCAT: src/ot_hgi_dma_front.sv:175:21: More than a 8k bit replication is probably wrong: 8640
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  175 |             dd_r <= '0; tag_busy <= '0; rr <= 5'd0; r_done <= 1'b1; cur_v <= '0;
+      |                     ^~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:201:24: Operator ADD expects 37 bits on the RHS, but RHS's REPLICATE generates 28 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  201 |                 a = wa + {r_off[22:0], 5'd0};
+      |                        ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:204:23: Operator ADD expects 37 bits on the RHS, but RHS's REPLICATE generates 33 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  204 |                 e = a + {19'd0, rn, 5'd0} - 37'd1;
+      |                       ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:210:30: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's VARREF 'st' generates 2 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  210 |                     tag_busy[tag_slot(st,ft[3:0])] <= 1'b1;
+      |                              ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:210:30: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  210 |                     tag_busy[tag_slot(st,ft[3:0])] <= 1'b1;
+      |                              ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:211:29: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's VARREF 'st' generates 2 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  211 |                     tg_dsec[tag_slot(st,ft[3:0])] <= 18'(wd >> 3) + (18'(r_off) << ks);
+      |                             ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:211:29: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  211 |                     tg_dsec[tag_slot(st,ft[3:0])] <= 18'(wd >> 3) + (18'(r_off) << ks);
+      |                             ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:212:29: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's VARREF 'st' generates 2 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  212 |                     tg_left[tag_slot(st,ft[3:0])] <= rn;
+      |                             ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:212:29: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  212 |                     tg_left[tag_slot(st,ft[3:0])] <= rn;
+      |                             ^~~~~~~~
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:214:72: Extracting 37 bits from only 32 bit number
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  214 |                     if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst[36:0]; wd <= wd + dst_w; end
+      |                                                                        ^
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:214:72: Selection index out of range: 36:0 outside 31:0
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  214 |                     if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst[36:0]; wd <= wd + dst_w; end
+      |                                                                        ^
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:218:67: Extracting 37 bits from only 32 bit number
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  218 |                         wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst[36:0]; rdw <= wd + dst_w;
+      |                                                                   ^
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:218:67: Selection index out of range: 36:0 outside 31:0
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  218 |                         wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst[36:0]; rdw <= wd + dst_w;
+      |                                                                   ^
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:219:39: Extracting 37 bits from only 32 bit number
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  219 |                         wa <= wa + sst[36:0]; wd <= wd + dst_w;
+      |                                       ^
+%Warning-SELRANGE: src/ot_hgi_dma_front.sv:219:39: Selection index out of range: 36:0 outside 31:0
+                                                 : ... note: In instance 'tb_hgi_dma_front.dut'
+  219 |                         wa <= wa + sst[36:0]; wd <= wd + dst_w;
+      |                                       ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:236:29: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 8 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  236 |                     lq[i*LD + lq_t[i]] <= {tg_dsec[tag_slot(i/NL,in[267:264])] + (18'(in[263:256]) << ks), in[255:0]};
+      |                             ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:236:52: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  236 |                     lq[i*LD + lq_t[i]] <= {tg_dsec[tag_slot(i/NL,in[267:264])] + (18'(in[263:256]) << ks), in[255:0]};
+      |                                                    ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:241:55: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 8 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  241 |                     {cur_sec[i], cur_d[i]} <= lq[i*LD + lq_h[i]];
+      |                                                       ^
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:253:74: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  253 |                 for (i = 0; i < NIN; i = i + 1) if (dd_r[i*270 + 269] && tag_slot(i/NL,dd_r[i*270 + 264 +: 4]) == t) k = k + 1;
+      |                                                                          ^~~~~~~~
+%Warning-WIDTHEXPAND: src/ot_hgi_dma_front.sv:280:95: Operator FUNCREF 'tag_slot' expects 32 bits on the Function Argument, but Function Argument's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front.dut'
+  280 |                                                   dq[q*51 + 37 +: 9], dq[q*51 +: 37], tg_dsec[tag_slot(q,dq[q*51 + 46 +: 4])]);
+      |                                                                                               ^~~~~~~~
+%Warning-WIDTHTRUNC: src/tb_hgi_dma_front.sv:55:31: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'full' generates 32 bits.
+                                                  : ... note: In instance 'tb_hgi_dma_front'
+   55 |             dq_rdy[s] <= full || ($urandom % 4) != 0;
+      |                               ^~
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:62:76: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'b' generates 32 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   62 |                 for (integer b = 0; b < 32; b = b + 1) sd[8*b +: 8] = hb(a + b);
+      |                                                                            ^
+%Warning-WIDTHTRUNC: src/tb_hgi_dma_front.sv:71:85: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'full' generates 32 bits.
+                                                  : ... note: In instance 'tb_hgi_dma_front'
+   71 |             if (lt[i] > lh[i] && cyc>=lb_ready[i][lh[i]%1024] && cr[i] > 0 && (full || ($urandom % 5) != 0)) begin dd_src[i*270 +: 270] <= lb[i][lh[i] % 1024]; lh[i] = lh[i] + 1; cr[i] = cr[i] - 1; end
+      |                                                                                     ^~
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:84:61: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   84 |             for(integer t=0;t<dut.NT;t=t+1)tagcount=tagcount+dut.tag_busy[t];
+      |                                                             ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:86:24: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   86 |                 inc=inc+dd[i*270+269];gc=gc+dut.bsel_v[i];ack=ack+wl_done[i];
+      |                        ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:86:44: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   86 |                 inc=inc+dd[i*270+269];gc=gc+dut.bsel_v[i];ack=ack+wl_done[i];
+      |                                            ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:86:66: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   86 |                 inc=inc+dd[i*270+269];gc=gc+dut.bsel_v[i];ack=ack+wl_done[i];
+      |                                                                  ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:87:24: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 9 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   87 |                 lqn=lqn+dut.lq_n[i];if(dut.lq_n[i]>maxq)maxq=dut.lq_n[i];
+      |                        ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:87:61: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 9 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   87 |                 lqn=lqn+dut.lq_n[i];if(dut.lq_n[i]>maxq)maxq=dut.lq_n[i];
+      |                                                             ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:87:51: Operator GT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 9 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   87 |                 lqn=lqn+dut.lq_n[i];if(dut.lq_n[i]>maxq)maxq=dut.lq_n[i];
+      |                                                   ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:88:48: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   88 |                 for(integer j=0;j<4;j=j+1)oq=oq+dut.ov[i][j];
+      |                                                ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:91:55: Operator ADD expects 32 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   91 |             for(integer s=0;s<NS;s=s+1)issuedq=issuedq+(dq[s*51+50]&&dq_rdy[s]);
+      |                                                       ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:92:66: Operator ADD expects 32 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+   92 |             pa=pa+1;p_issue=p_issue+issuedq;p_tagstall=p_tagstall+(!dut.r_done&&dut.ft==16);
+      |                                                                  ^
+%Warning-WIDTHTRUNC: src/tb_hgi_dma_front.sv:77:40: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'profile_on' generates 32 bits.
+                                                  : ... note: In instance 'tb_hgi_dma_front'
+   77 |     always @(posedge clk) if(profile_on&&rst_n)begin:prof
+      |                                        ^~
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:111:15: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 4 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front'
+  111 |             e = c[6:3]; m = c[2:0];
+      |               ^
+%Warning-WIDTHEXPAND: src/tb_hgi_dma_front.sv:111:27: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.
+                                                    : ... note: In instance 'tb_hgi_dma_front'
+  111 |             e = c[6:3]; m = c[2:0];
+      |                           ^
+%Warning-WIDTHTRUNC: src/tb_hgi_dma_front.sv:157:29: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'hit' generates 32 bits.
+                                                   : ... note: In instance 'tb_hgi_dma_front'
+  157 |                         if (!hit && vm[w] !== 32'hA5A5_0000 + w) bad = bad + 1;
+      |                             ^
+%Error: Internal Error: src/ot_hgi_dma_front.sv:101:62: ../V3Delayed.cpp:937: Multiple Write refs on LHS of NBA
+  101 |     function automatic integer tag_slot(input integer stack, tag);
+      |                                                              ^~~

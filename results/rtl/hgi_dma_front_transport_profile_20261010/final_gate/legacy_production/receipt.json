@@ -1,0 +1,22 @@
+{
+  "name": "legacy_production",
+  "parameters": {
+    "LDEPTH": 256,
+    "DATA_HOPS": 80,
+    "CREDIT_HOPS": 80,
+    "RESPONSE_LATENCY": 104,
+    "SERVICE_SLOTS": 8,
+    "BW_SCOPE": 1,
+    "STACK_LOCAL_TAGS": 0
+  },
+  "expected_negative": true,
+  "source_sha256": {
+    "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+    "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+  },
+  "compile_exit": 0,
+  "sim_exit": 0,
+  "exact_pass": false,
+  "negative_detected": true,
+  "passed": true
+}

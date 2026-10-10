@@ -1,0 +1,22 @@
+{
+  "name": "mut_stackalias",
+  "parameters": {
+    "LDEPTH": 256,
+    "DATA_HOPS": 80,
+    "CREDIT_HOPS": 80,
+    "RESPONSE_LATENCY": 104,
+    "SERVICE_SLOTS": 8,
+    "BW_SCOPE": 1,
+    "STACK_LOCAL_TAGS": 1
+  },
+  "expected_negative": true,
+  "source_sha256": {
+    "tag_alias.sv": "c9988ea890a26ed8d5bdc76c7b6ef8acb39246bc48a5557430ab688de04c6466",
+    "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+  },
+  "compile_exit": 0,
+  "sim_exit": 0,
+  "exact_pass": false,
+  "negative_detected": true,
+  "passed": true
+}

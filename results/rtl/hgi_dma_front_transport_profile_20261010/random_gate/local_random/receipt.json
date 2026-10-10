@@ -1,0 +1,23 @@
+{
+  "name": "local_random",
+  "parameters": {
+    "LDEPTH": 256,
+    "DATA_HOPS": 80,
+    "CREDIT_HOPS": 80,
+    "RESPONSE_LATENCY": 104,
+    "SERVICE_SLOTS": 8,
+    "BW_SCOPE": 2,
+    "STACK_LOCAL_TAGS": 1
+  },
+  "expected_negative": false,
+  "source_sha256": {
+    "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+    "tb_hgi_dma_front.sv": "55f3d92147edb000f4bef0fab9862cff7fc36f37cc1ef527a572550c6d8227b3"
+  },
+  "compile_exit": 0,
+  "source_mode": "random gaps, no bandwidth assertion",
+  "sim_exit": 0,
+  "exact_pass": true,
+  "negative_detected": false,
+  "passed": true
+}

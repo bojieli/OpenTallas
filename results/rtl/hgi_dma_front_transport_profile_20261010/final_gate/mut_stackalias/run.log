@@ -1,0 +1,48 @@
+LOAD f 0 m 4 n 512: 226 cycles, 36.2 destination B / cycle
+DMA_TIMING move=1 firstrequest=12 firstsource=117 firstdata=197 firstVM=202 lastsource=148 lastdata=228 lastVM=233 source_span=32 data_span=32 VM_span=32 VM_bytes=8192 VM_steady_Bpc=256.000
+DMA_PROFILE move=1 cycles=225 requests=4 tagstall=0 ingress=256 grants=256 ack=256 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=8
+LOAD f 1 m 3 n 4096: 290 cycles, 169.5 destination B / cycle
+DMA_TIMING move=2 firstrequest=240 firstsource=345 firstdata=425 firstVM=430 lastsource=440 lastdata=520 lastVM=525 source_span=96 data_span=96 VM_span=96 VM_bytes=49152 VM_steady_Bpc=512.000
+DMA_PROFILE move=2 cycles=289 requests=3 tagstall=0 ingress=768 grants=1536 ack=1536 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=16
+LOAD f 2 m 2 n 4096: 226 cycles, 145.0 destination B / cycle
+DMA_TIMING move=3 firstrequest=532 firstsource=637 firstdata=717 firstVM=722 lastsource=668 lastdata=748 lastVM=753 source_span=32 data_span=32 VM_span=32 VM_bytes=32768 VM_steady_Bpc=1024.000
+DMA_PROFILE move=3 cycles=225 requests=2 tagstall=0 ingress=256 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+LOAD f 4 m 5 n 1024: 214 cycles, 95.7 destination B / cycle
+DMA_TIMING move=4 firstrequest=760 firstsource=865 firstdata=945 firstVM=950 lastsource=884 lastdata=964 lastVM=969 source_span=20 data_span=20 VM_span=20 VM_bytes=20480 VM_steady_Bpc=1024.000
+DMA_PROFILE move=4 cycles=213 requests=5 tagstall=0 ingress=160 grants=640 ack=640 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+FAIL duplicate VM word 150016
+FAIL duplicate VM word 150017
+FAIL duplicate VM word 150018
+FAIL duplicate VM word 150019
+FAIL duplicate VM word 150020
+FAIL duplicate VM word 150021
+FAIL duplicate VM word 150022
+FAIL duplicate VM word 150023
+  load f 0: 12288 errors
+LOAD f 0 m 4 n 2048: 229 cycles, 143.1 destination B / cycle
+DMA_TIMING move=5 firstrequest=976 firstsource=1081 firstdata=1161 firstVM=1166 lastsource=1115 lastdata=1195 lastVM=1200 source_span=35 data_span=35 VM_span=35 VM_bytes=32768 VM_steady_Bpc=936.229
+DMA_PROFILE move=5 cycles=228 requests=4 tagstall=0 ingress=1024 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+  load f 2: 49152 errors
+LOAD f 2 m 4 n 8192: 322 cycles, 407.1 destination B / cycle
+DMA_TIMING move=6 firstrequest=1207 firstsource=1312 firstdata=1392 firstVM=1397 lastsource=1346 lastdata=1426 lastVM=1524 source_span=35 data_span=35 VM_span=128 VM_bytes=131072 VM_steady_Bpc=1024.000
+DMA_PROFILE move=6 cycles=321 requests=4 tagstall=0 ingress=1024 grants=4096 ack=4096 creditstall_lane_cycles=0 peak_lq=704 max_lane_lq=25 peak_ov=128
+LOAD f 0 m 64 n 8: 937 cycles, 2.2 destination B / cycle
+DMA_TIMING move=7 firstrequest=1531 firstsource=1636 firstdata=1716 firstVM=1721 lastsource=2378 lastdata=2458 lastVM=2463 source_span=743 data_span=743 VM_span=743 VM_bytes=2048 VM_steady_Bpc=2.756
+DMA_PROFILE move=7 cycles=936 requests=64 tagstall=450 ingress=64 grants=64 ack=64 creditstall_lane_cycles=0 peak_lq=1 max_lane_lq=1 peak_ov=1
+  load f 0: 98304 errors
+LOAD f 0 m 4 n 16384: 453 cycles, 578.7 destination B / cycle
+DMA_TIMING move=8 firstrequest=2470 firstsource=2575 firstdata=2655 firstVM=2660 lastsource=2833 lastdata=2913 lastVM=2918 source_span=259 data_span=259 VM_span=259 VM_bytes=262144 VM_steady_Bpc=1012.139
+DMA_PROFILE move=8 cycles=452 requests=32 tagstall=0 ingress=8192 grants=8192 ack=8192 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+  load f 1: 196608 errors
+LOAD f 1 m 4 n 32768: 707 cycles, 741.6 destination B / cycle
+DMA_TIMING move=9 firstrequest=2925 firstsource=3030 firstdata=3110 firstVM=3115 lastsource=3288 lastdata=3368 lastVM=3627 source_span=259 data_span=259 VM_span=513 VM_bytes=524288 VM_steady_Bpc=1022.004
+DMA_PROFILE move=9 cycles=706 requests=32 tagstall=0 ingress=8192 grants=16384 ack=16384 creditstall_lane_cycles=0 peak_lq=4048 max_lane_lq=129 peak_ov=64
+  load f 0: 393216 errors
+LOAD f 0 m 4 n 65536: 1221 cycles, 858.8 destination B / cycle
+DMA_TIMING move=10 firstrequest=3634 firstsource=3739 firstdata=3819 firstVM=3824 lastsource=4765 lastdata=4845 lastVM=4850 source_span=1027 data_span=1027 VM_span=1027 VM_bytes=1048576 VM_steady_Bpc=1021.009
+DMA_PROFILE move=10 cycles=1220 requests=128 tagstall=0 ingress=32768 grants=32768 ack=32768 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+FATAL HGI_DMA_FRONT errors=749568
+- /srv/opentallas-scratch/codex/dma-front-final-20261010/src/tb_hgi_dma_front.sv:213: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 10us; walltime 0.327 s; speed 33.977 us/s
+- Verilator: cpu 0.286 s on 1 threads; alloced 1020 MB

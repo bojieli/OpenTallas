@@ -1,0 +1,485 @@
+{
+  "verdict": "PASS_FRONT_STACKLOCAL_ONLY",
+  "source_parent_commit": "3651b1f959cdd02a0930396528acb8dbc4c1887b",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+    "rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv": "55f3d92147edb000f4bef0fab9862cff7fc36f37cc1ef527a572550c6d8227b3",
+    "tools/hgi_dma_credit_model.py": "68ea1758ea29d6ee5c0659d3673cebfbb1cc06b7d208a2ec9f8f8d3358365a0e",
+    "tools/hgi_dma_front_tag_gate.py": "08a4c4d93e8d0e0debb7e7614e405504d2f909e46cf9013b5758eb9b554a46d1"
+  },
+  "cases": [
+    {
+      "name": "default",
+      "parameters": {},
+      "expected_negative": false,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+      },
+      "compile_exit": 0,
+      "sim_exit": 0,
+      "exact_pass": true,
+      "negative_detected": false,
+      "passed": true,
+      "gate_name": "default"
+    },
+    {
+      "name": "legacy_production",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 1,
+        "STACK_LOCAL_TAGS": 0
+      },
+      "expected_negative": true,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+      },
+      "compile_exit": 0,
+      "sim_exit": 0,
+      "exact_pass": false,
+      "negative_detected": true,
+      "passed": true,
+      "gate_name": "legacy_bandwidth"
+    },
+    {
+      "name": "local_production",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 1,
+        "STACK_LOCAL_TAGS": 1
+      },
+      "expected_negative": false,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+      },
+      "compile_exit": 0,
+      "sim_exit": 0,
+      "exact_pass": true,
+      "negative_detected": false,
+      "passed": true,
+      "gate_name": "stacklocal_full",
+      "timing": [
+        {
+          "move": 1,
+          "firstrequest": 12,
+          "firstsource": 117,
+          "firstdata": 197,
+          "firstVM": 202,
+          "lastsource": 148,
+          "lastdata": 228,
+          "lastVM": 233,
+          "source_span": 32,
+          "data_span": 32,
+          "VM_span": 32,
+          "VM_bytes": 8192,
+          "VM_steady_Bpc": 256.0
+        },
+        {
+          "move": 2,
+          "firstrequest": 240,
+          "firstsource": 345,
+          "firstdata": 425,
+          "firstVM": 430,
+          "lastsource": 440,
+          "lastdata": 520,
+          "lastVM": 525,
+          "source_span": 96,
+          "data_span": 96,
+          "VM_span": 96,
+          "VM_bytes": 49152,
+          "VM_steady_Bpc": 512.0
+        },
+        {
+          "move": 3,
+          "firstrequest": 532,
+          "firstsource": 637,
+          "firstdata": 717,
+          "firstVM": 722,
+          "lastsource": 668,
+          "lastdata": 748,
+          "lastVM": 753,
+          "source_span": 32,
+          "data_span": 32,
+          "VM_span": 32,
+          "VM_bytes": 32768,
+          "VM_steady_Bpc": 1024.0
+        },
+        {
+          "move": 4,
+          "firstrequest": 760,
+          "firstsource": 865,
+          "firstdata": 945,
+          "firstVM": 950,
+          "lastsource": 884,
+          "lastdata": 964,
+          "lastVM": 969,
+          "source_span": 20,
+          "data_span": 20,
+          "VM_span": 20,
+          "VM_bytes": 20480,
+          "VM_steady_Bpc": 1024.0
+        },
+        {
+          "move": 5,
+          "firstrequest": 976,
+          "firstsource": 1081,
+          "firstdata": 1161,
+          "firstVM": 1166,
+          "lastsource": 1115,
+          "lastdata": 1195,
+          "lastVM": 1200,
+          "source_span": 35,
+          "data_span": 35,
+          "VM_span": 35,
+          "VM_bytes": 32768,
+          "VM_steady_Bpc": 936.229
+        },
+        {
+          "move": 6,
+          "firstrequest": 1207,
+          "firstsource": 1312,
+          "firstdata": 1392,
+          "firstVM": 1397,
+          "lastsource": 1346,
+          "lastdata": 1426,
+          "lastVM": 1524,
+          "source_span": 35,
+          "data_span": 35,
+          "VM_span": 128,
+          "VM_bytes": 131072,
+          "VM_steady_Bpc": 1024.0
+        },
+        {
+          "move": 7,
+          "firstrequest": 1531,
+          "firstsource": 1636,
+          "firstdata": 1716,
+          "firstVM": 1721,
+          "lastsource": 2378,
+          "lastdata": 2458,
+          "lastVM": 2463,
+          "source_span": 743,
+          "data_span": 743,
+          "VM_span": 743,
+          "VM_bytes": 2048,
+          "VM_steady_Bpc": 2.756
+        },
+        {
+          "move": 8,
+          "firstrequest": 2470,
+          "firstsource": 2575,
+          "firstdata": 2655,
+          "firstVM": 2660,
+          "lastsource": 2833,
+          "lastdata": 2913,
+          "lastVM": 2918,
+          "source_span": 259,
+          "data_span": 259,
+          "VM_span": 259,
+          "VM_bytes": 262144,
+          "VM_steady_Bpc": 1012.139
+        },
+        {
+          "move": 9,
+          "firstrequest": 2925,
+          "firstsource": 3030,
+          "firstdata": 3110,
+          "firstVM": 3115,
+          "lastsource": 3288,
+          "lastdata": 3368,
+          "lastVM": 3627,
+          "source_span": 259,
+          "data_span": 259,
+          "VM_span": 513,
+          "VM_bytes": 524288,
+          "VM_steady_Bpc": 1022.004
+        },
+        {
+          "move": 10,
+          "firstrequest": 3634,
+          "firstsource": 3739,
+          "firstdata": 3819,
+          "firstVM": 3824,
+          "lastsource": 4765,
+          "lastdata": 4845,
+          "lastVM": 4850,
+          "source_span": 1027,
+          "data_span": 1027,
+          "VM_span": 1027,
+          "VM_bytes": 1048576,
+          "VM_steady_Bpc": 1021.009
+        }
+      ],
+      "loads": [
+        {
+          "format": 0,
+          "rows": 4,
+          "elements_per_row": 512,
+          "cycles": 226,
+          "destination_bytes_per_cycle": 36.2
+        },
+        {
+          "format": 1,
+          "rows": 3,
+          "elements_per_row": 4096,
+          "cycles": 290,
+          "destination_bytes_per_cycle": 169.5
+        },
+        {
+          "format": 2,
+          "rows": 2,
+          "elements_per_row": 4096,
+          "cycles": 226,
+          "destination_bytes_per_cycle": 145.0
+        },
+        {
+          "format": 4,
+          "rows": 5,
+          "elements_per_row": 1024,
+          "cycles": 214,
+          "destination_bytes_per_cycle": 95.7
+        },
+        {
+          "format": 0,
+          "rows": 4,
+          "elements_per_row": 2048,
+          "cycles": 229,
+          "destination_bytes_per_cycle": 143.1
+        },
+        {
+          "format": 2,
+          "rows": 4,
+          "elements_per_row": 8192,
+          "cycles": 322,
+          "destination_bytes_per_cycle": 407.1
+        },
+        {
+          "format": 0,
+          "rows": 64,
+          "elements_per_row": 8,
+          "cycles": 937,
+          "destination_bytes_per_cycle": 2.2
+        },
+        {
+          "format": 0,
+          "rows": 4,
+          "elements_per_row": 16384,
+          "cycles": 453,
+          "destination_bytes_per_cycle": 578.7
+        },
+        {
+          "format": 1,
+          "rows": 4,
+          "elements_per_row": 32768,
+          "cycles": 707,
+          "destination_bytes_per_cycle": 741.6
+        },
+        {
+          "format": 0,
+          "rows": 4,
+          "elements_per_row": 65536,
+          "cycles": 1221,
+          "destination_bytes_per_cycle": 858.8
+        }
+      ]
+    },
+    {
+      "name": "mut_bf16",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 1,
+        "STACK_LOCAL_TAGS": 1,
+        "MUT": 1
+      },
+      "expected_negative": true,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+      },
+      "compile_exit": 0,
+      "sim_exit": 0,
+      "exact_pass": false,
+      "negative_detected": true,
+      "passed": true,
+      "gate_name": "BF16_mirror"
+    },
+    {
+      "name": "mut_stackalias",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 1,
+        "STACK_LOCAL_TAGS": 1
+      },
+      "expected_negative": true,
+      "source_sha256": {
+        "tag_alias.sv": "c9988ea890a26ed8d5bdc76c7b6ef8acb39246bc48a5557430ab688de04c6466",
+        "tb_hgi_dma_front.sv": "212125d7143e7fbb39b0fce47b15ea0fb6d2226f3c253d0f897155bb1bfd0dae"
+      },
+      "compile_exit": 0,
+      "sim_exit": 0,
+      "exact_pass": false,
+      "negative_detected": true,
+      "passed": true,
+      "gate_name": "stack_alias"
+    },
+    {
+      "name": "local_random",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 2,
+        "STACK_LOCAL_TAGS": 1
+      },
+      "expected_negative": false,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "55f3d92147edb000f4bef0fab9862cff7fc36f37cc1ef527a572550c6d8227b3"
+      },
+      "compile_exit": 0,
+      "source_mode": "random gaps, no bandwidth assertion",
+      "sim_exit": 0,
+      "exact_pass": true,
+      "negative_detected": false,
+      "passed": true,
+      "gate_name": "stacklocal_random"
+    },
+    {
+      "name": "mut_earlytag_random",
+      "parameters": {
+        "LDEPTH": 256,
+        "DATA_HOPS": 80,
+        "CREDIT_HOPS": 80,
+        "RESPONSE_LATENCY": 104,
+        "SERVICE_SLOTS": 8,
+        "BW_SCOPE": 2,
+        "STACK_LOCAL_TAGS": 1,
+        "MUT": 2
+      },
+      "expected_negative": true,
+      "source_sha256": {
+        "ot_hgi_dma_front.sv": "9f0b2fbdb4b96a1ce8ff1d9348ed31d32af71fee0fc9ddef64d8e64c4dbe73f8",
+        "tb_hgi_dma_front.sv": "55f3d92147edb000f4bef0fab9862cff7fc36f37cc1ef527a572550c6d8227b3"
+      },
+      "compile_exit": 0,
+      "source_mode": "random gaps, no bandwidth assertion",
+      "sim_exit": -6,
+      "exact_pass": false,
+      "negative_detected": true,
+      "passed": true,
+      "gate_name": "early_tag_random"
+    }
+  ],
+  "model": {
+    "scope": "DMA front finite lane buffers; streaming1.2GHz",
+    "MACs_per_cycle": 0,
+    "compute_intensity": "format conversion unchanged",
+    "source_bytes_per_cycle": 1024,
+    "destination_bytes_per_cycle": 1024,
+    "port_bytes_per_cycle": {
+      "lane": 32,
+      "VM": 1024
+    },
+    "boundary_bits": {
+      "data": 8640,
+      "credit": 32,
+      "VM": 8960
+    },
+    "replicas": {
+      "stacks": 4,
+      "lanes_per_stack": 8,
+      "buffer_entries": 256
+    },
+    "memory_bits": 2244608,
+    "added_memory_bits": 2209536,
+    "added_pointer_bits": 576,
+    "composed_credit_round_trip_cycles": 164,
+    "credit_window_rate_upper_bound": 1,
+    "required_depth_at_90pct": 148,
+    "fifo_mux_inputs": 256,
+    "lane_demux_count": 32,
+    "latency": {
+      "data_hops": 80,
+      "credit_hops": 80,
+      "front_internal_edges": 4,
+      "token_added_cycles": "transport cycles compose with actual DMA critical path"
+    },
+    "tracks_added": 0,
+    "channel_capacity": "same boundary wires, svc owner independently sizes corridor",
+    "area": "measure mapped storage or SRAM master; no inferred slot fit",
+    "floorplan_fit": false,
+    "tag_ownership": {
+      "scope": "front native tag ownership; no physical or token admission",
+      "default_stack_local_tags": 0,
+      "stack_local_tags": true,
+      "stacks": 4,
+      "tag_bits_on_service_interface": 4,
+      "total_descriptor_slots": 64,
+      "guaranteed_slots_per_stack": 16,
+      "descriptor_bits": 28,
+      "descriptor_register_bits": 1792,
+      "added_descriptor_register_bits": 1344,
+      "request_mux": "16-slot free pick at selected stack; 4 stack banks",
+      "ingress_demux": "lane/8 identifies stack, tag selects descriptor within stack",
+      "MACs_per_cycle": 0,
+      "source_bytes_per_cycle": 1024,
+      "destination_bytes_per_cycle": 1024,
+      "tracks_added": 0,
+      "source_run_sectors": 256,
+      "source_run_cycles": 32,
+      "descriptor_lifetime_cycles": 218,
+      "tags_required_per_stack_at_full_rate": 7,
+      "vm_words": 262144,
+      "VM_sector_address_bits": 15,
+      "vm_bytes": 1048576,
+      "latency": {
+        "response_latency": 104,
+        "data_hops": 80,
+        "full_load_ideal_data_cycles": 1024,
+        "full_load_lower_bound_cycles": 1212,
+        "full_load_rate_upper_bound": 0.8448844884488449
+      },
+      "floorplan_fit": false,
+      "physical_admitted": false,
+      "adoption": false,
+      "measured_service_contract": "each stack has independent request/data engine; same4bit tag concurrently across stacks is valid"
+    },
+    "measured_HBM_capacity": {
+      "sustained_bytes_per_cycle": 3166.6666666666665,
+      "nominal_bytes_per_cycle": 3333.3333333333335,
+      "current_lane_capacity_fraction_of_sustained": 0.3233684210526316,
+      "required_future_VM_bytes_per_cycle": 3072,
+      "current_width_satisfies_90pct_HBM": false
+    },
+    "physical_admitted": false,
+    "adoption": false,
+    "source_note": "source-derived R25GPH13\u201326mm service/front leg35\u201369 hops eachway plus32cycles internal strip RTT;96perleg conservatively covers192cycle transport; final tileplacement rechecks bound"
+  },
+  "HBM90pct": false,
+  "physical_admitted": false,
+  "adopted": false,
+  "limitation": "Current32sector/cycle path capacity1024Bcycle is32.34pct of measured3.8TBs at1.2GHz. Steady payload figures are VM port utilization, never HBM90pct.",
+  "bench_history": "Full gate bench SHA212125d7 archived as source_history/bench_full_gate.sv; final bench adds BW_SCOPE2 for randomized source, suppressing no full-source bandwidth verdict.",
+  "negative_history": "Initial unskewed early-tag mutant escaped. Preserved final_gate/mut_earlytag; randomized skewed test catches real reuse-before-completion. Original64credit random-source75.08pct FAIL and longstress globaltag failure preserved.",
+  "storage": "Added48descriptors at28bits=1344FF; lane FIFO credit256 already modeled separately; SRAM/physical slot fit remains unqualified."
+}

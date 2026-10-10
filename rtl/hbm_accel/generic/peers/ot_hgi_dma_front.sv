@@ -30,6 +30,7 @@ module ot_hgi_dma_front #(
     parameter integer SBIT = 35,          // stack select = HBM byte address [SBIT+1:SBIT] (ot_hbm_loader_kport_address)
     parameter [35:0] STACK_BYTES = 36'd22500000000,   // a run must end inside its stack's capacity
     parameter integer LDEPTH = 4,        // match service INITIAL_CREDITS; sized against physical credit RTT
+    parameter integer STACK_LOCAL_TAGS = 0, // opt-in: service four-bit tags are stack-local
     parameter integer MUT = 0
 ) (
     input  wire                  clk,
@@ -92,11 +93,21 @@ module ot_hgi_dma_front #(
     reg [31:0] issued, wrote;                               // destination sectors requested / acknowledged
     assign mv_rdy = !busy && !cv_q && !mv_fault;
     // ---------------------------------------------------------------- tags
-    reg [15:0] tag_busy;
-    reg [17:0] tg_dsec [0:15];                              // the run's first VM sector
-    reg [8:0]  tg_left [0:15];                              // beats still to land
+    localparam integer NT = STACK_LOCAL_TAGS ? NS*16 : 16;
+    reg [NT-1:0] tag_busy;
+    reg [17:0] tg_dsec [0:NT-1];                              // the run's first VM sector
+    reg [8:0]  tg_left [0:NT-1];                              // beats still to land
     reg [4:0] ft;
-    always @* begin ft = 5'd16; for (integer t = 15; t >= 0; t = t - 1) if (!tag_busy[t]) ft = 5'(t); end
+    function automatic integer tag_slot(input integer stack, tag);
+        tag_slot = STACK_LOCAL_TAGS ? stack*16+tag : tag;
+    endfunction
+    wire [36:0] next_addr = wa + {r_off[22:0], 5'd0};
+    wire [1:0] next_stack = next_addr[SBIT +: 2];
+    always @* begin
+        ft = 5'd16;
+        for (integer t = 15; t >= 0; t = t - 1)
+            if (!tag_busy[tag_slot(next_stack,t)]) ft = 5'(t);
+    end
     // ---------------------------------------------------------------- lanes
     reg [NIN*270-1:0] dd_r;                                 // pin flops
     reg [273:0] lq [0:NIN*LD-1];                            // {VM sector 18, source sector 256}
@@ -161,7 +172,7 @@ module ot_hgi_dma_front #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; dd_cr <= '0; wl <= '0;
-            dd_r <= '0; tag_busy <= 16'd0; rr <= 5'd0; r_done <= 1'b1; cur_v <= '0;
+            dd_r <= '0; tag_busy <= '0; rr <= 5'd0; r_done <= 1'b1; cur_v <= '0;
             issued <= 32'd0; wrote <= 32'd0;
             for (i = 0; i < NIN; i = i + 1) begin lq_h[i] <= LP'(0); lq_t[i] <= LP'(0); lq_n[i] <= (LP+1)'(0); ov[i] <= 4'd0; end
         end else begin
@@ -196,9 +207,9 @@ module ot_hgi_dma_front #(
                     mv_fault <= 1'b1;
                 else if (!dq[st*51 + 50] || dq_rdy[st]) begin
                     dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
-                    tag_busy[ft[3:0]] <= 1'b1;
-                    tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
-                    tg_left[ft[3:0]] <= rn;
+                    tag_busy[(STACK_LOCAL_TAGS ? int'(st)*16 : 0)+int'(ft[3:0])] <= 1'b1;
+                    tg_dsec[(STACK_LOCAL_TAGS ? int'(st)*16 : 0)+int'(ft[3:0])] <= 18'(wd >> 3) + (18'(r_off) << ks);
+                    tg_left[(STACK_LOCAL_TAGS ? int'(st)*16 : 0)+int'(ft[3:0])] <= rn;
                     issued <= issued + ({23'd0, rn} << ks);
                     if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst[36:0]; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
@@ -222,7 +233,7 @@ module ot_hgi_dma_front #(
                 if (in[269] && in[268]) mv_fault <= 1'b1;
                 if (in[269] && !ok) mv_fault <= 1'b1;
                 if (ok) begin
-                    lq[i*LD + lq_t[i]] <= {tg_dsec[in[267:264]] + (18'(in[263:256]) << ks), in[255:0]};
+                    lq[i*LD + lq_t[i]] <= {tg_dsec[tag_slot(i/NL,in[267:264])] + (18'(in[263:256]) << ks), in[255:0]};
                     lq_t[i] <= lq_t[i] + LP'(1);
                 end
                 if (pop[i]) begin
@@ -237,9 +248,9 @@ module ot_hgi_dma_front #(
                 end else ov[i] <= ov[i] & ~gnt[i];
             end
             // ---- tags: free once every beat landed
-            for (t = 0; t < 16; t = t + 1) begin : tg
+            for (t = 0; t < NT; t = t + 1) begin : tg
                 integer k; k = 0;
-                for (i = 0; i < NIN; i = i + 1) if (dd_r[i*270 + 269] && dd_r[i*270 + 264 +: 4] == 4'(t)) k = k + 1;
+                for (i = 0; i < NIN; i = i + 1) if (dd_r[i*270 + 269] && tag_slot(i/NL,dd_r[i*270 + 264 +: 4]) == t) k = k + 1;
                 if (k != 0) begin
                     tg_left[t] <= tg_left[t] - 9'(k);
                     if ({23'd0, tg_left[t]} <= ((MUT == 2) ? k + 8 : k)) tag_busy[t] <= 1'b0;
@@ -266,7 +277,7 @@ module ot_hgi_dma_front #(
                            cm_q[137:98], cm_q[169:138], cm_q[205:186], cm_q[226:206]);
         for (integer q = 0; q < NS; q = q + 1)
             if (dq[q*51 + 50] && dq_rdy[q]) $display("FRONT   req stack %0d tag %0d nsec %0d addr %h dsec %0d", q, dq[q*51 + 46 +: 4],
-                                                  dq[q*51 + 37 +: 9], dq[q*51 +: 37], tg_dsec[dq[q*51 + 46 +: 4]]);
+                                                  dq[q*51 + 37 +: 9], dq[q*51 +: 37], tg_dsec[tag_slot(q,dq[q*51 + 46 +: 4])]);
         if (mv_done) $display("FRONT done issued %0d", issued);
         if (mv_fault) $display("FRONT FAULT");
     end

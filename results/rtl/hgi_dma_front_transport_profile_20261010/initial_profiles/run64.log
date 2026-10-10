@@ -1,0 +1,24 @@
+LOAD f 0 m 4 n 512: 74 cycles, 110.7 destination B / cycle
+DMA_PROFILE move=1 cycles=73 requests=4 tagstall=0 ingress=256 grants=256 ack=256 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=8
+LOAD f 1 m 3 n 4096: 142 cycles, 346.1 destination B / cycle
+DMA_PROFILE move=2 cycles=141 requests=3 tagstall=0 ingress=768 grants=1536 ack=1536 creditstall_lane_cycles=280 peak_lq=8 max_lane_lq=1 peak_ov=16
+LOAD f 2 m 2 n 4096: 74 cycles, 442.8 destination B / cycle
+DMA_PROFILE move=3 cycles=73 requests=2 tagstall=0 ingress=256 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+LOAD f 4 m 5 n 1024: 62 cycles, 330.3 destination B / cycle
+DMA_PROFILE move=4 cycles=61 requests=5 tagstall=0 ingress=160 grants=640 ack=640 creditstall_lane_cycles=0 peak_lq=8 max_lane_lq=1 peak_ov=32
+LOAD f 0 m 4 n 2048: 77 cycles, 425.6 destination B / cycle
+DMA_PROFILE move=5 cycles=76 requests=4 tagstall=0 ingress=1024 grants=1024 ack=1024 creditstall_lane_cycles=0 peak_lq=32 max_lane_lq=1 peak_ov=32
+LOAD f 2 m 4 n 8192: 170 cycles, 771.0 destination B / cycle
+DMA_PROFILE move=6 cycles=169 requests=4 tagstall=0 ingress=1024 grants=4096 ack=4096 creditstall_lane_cycles=0 peak_lq=704 max_lane_lq=25 peak_ov=128
+LOAD f 0 m 64 n 8: 166 cycles, 12.3 destination B / cycle
+DMA_PROFILE move=7 cycles=165 requests=64 tagstall=60 ingress=64 grants=64 ack=64 creditstall_lane_cycles=0 peak_lq=1 max_lane_lq=1 peak_ov=1
+LOAD f 0 m 4 n 16384: 313 cycles, 837.5 destination B / cycle
+DMA_PROFILE move=8 cycles=312 requests=32 tagstall=139 ingress=8192 grants=8192 ack=8192 creditstall_lane_cycles=6496 peak_lq=32 max_lane_lq=1 peak_ov=32
+LOAD f 1 m 4 n 32768: 555 cycles, 944.7 destination B / cycle
+DMA_PROFILE move=9 cycles=554 requests=32 tagstall=203 ingress=8192 grants=16384 ack=16384 creditstall_lane_cycles=12184 peak_lq=976 max_lane_lq=33 peak_ov=64
+LOAD f 0 m 4 n 65536: 1129 cycles, 928.8 destination B / cycle
+PASS HGI_DMA_FRONT 2111488 B in 2762 cycles (764.5 B / cycle overall)
+- src/tb_hgi_dma_front.sv:182: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 0.229 s; speed 24.276 us/s
+- Verilator: cpu 0.230 s on 1 threads; alloced 1020 MB
