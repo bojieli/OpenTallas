@@ -15310,3 +15310,9 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hbm_svc_dma_stream_model(initial_credits=64, window=256):
+    """Source-derived full-shape service stream model, qualified independently of its RTL."""
+    from hbm_svc_dma_model import svc_dma_model
+    return svc_dma_model(initial_credits=initial_credits, window=window)
