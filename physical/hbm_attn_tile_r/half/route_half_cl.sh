@@ -13,7 +13,9 @@ H=${HALFDIR:-$D/half}/${TOP:?}      # hbm-forks: HALFDIR=physical/hbm_attn_tile_
 DW=1778.52
 # Opt-in CG1 must bind an explicitly selected gated hard view, including re-STA.
 QUADDIR=${QUADDIR:-$D/quad_b_cts/ot_attn_tile_m6h1q}
+IOFLAGS=--false-path-io
 case " ${PARAMS:-} " in *" CG=1 "*)
+  IOFLAGS="" # gated successor times its real registered boundary; no blanket IO exceptions
   case "$QUADDIR" in *c891a57cf_cg_hm10*) ;; *)
     echo "CG1 requires the qualified gated quad hard view" >&2; exit 2 ;; esac
 ;; esac
@@ -34,7 +36,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
   --macro-place-halo 1 1 \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
-  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
+  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 $IOFLAGS --stages pnr \
   --die-area 0 0 $DW ${DH:?} --core-area 0 0 $DW $DH --place-density ${PD:-0.40} --routing-layers M2 M7 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_placement.tcl --orfs-var PDN_TCL=/src/$D/die_tile/pdn_dt.tcl \
   --orfs-var IO_CONSTRAINTS=/src/$H/io_place.tcl --orfs-var MACRO_ROWS_HALO_X=${HALO:-1} --orfs-var MACRO_ROWS_HALO_Y=${HALO:-1}$PADV \
