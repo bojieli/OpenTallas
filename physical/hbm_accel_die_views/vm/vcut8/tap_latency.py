@@ -8,6 +8,8 @@ latencies >= 0: the die only adds delay).  Both TT and FF are measured; the SDC 
 
     tap_latency.py --base <calibrate ORFS results base glob> --sdc OUT.sdc --env OUT.env [--image openroad/orfs:latest]
 writes OUT.sdc (set_clock_latency -source per tap, TT / FF branch) and OUT.env (FCL_REF_TT=.. FCL_REF_FF=..).
+The written SDC ends with the route-own re-derivation (tap_fclat.tcl) that replaces these calibrated numbers
+whenever the session has propagated clocks on a built tree (CTS hook, FF scene sync, hold ECO, corner_sta).
 Docker/OpenROAD output is preserved in uniquely named per-corner logs beside OUT.env, including failed attempts."""
 import argparse, glob, json, subprocess, sys, tempfile
 from pathlib import Path
@@ -97,6 +99,11 @@ def main():
     L += ['} else {']
     L += [f'  set_clock_latency -source {round(ref["TT"] - v, 1)} [get_ports -quiet {{{t}[0]}}]' for t, v in sorted(res['TT'].items())]
     L += ['}']
+    # route-own re-derivation (tap_fclat.tcl): with propagated clocks and a built tree the values above are replaced by
+    # this session's own tap means; ideal clocks / no tree keep the calibrated numbers.
+    L += ['if {[llength [info commands ord::get_db_block]] && [file exists /src/physical/hbm_accel_die_views/vm/vcut8/tap_fclat.tcl]} {',
+          '  if {[catch {source /src/physical/hbm_accel_die_views/vm/vcut8/tap_fclat.tcl; ot_fcl_apply sdc} ot_fcl_e]} { puts "OT_FCL sdc: ERROR $ot_fcl_e -> calibrated tap latencies kept" }',
+          '}']
     Path(a.sdc).write_text('\n'.join(L) + '\n')
     Path(a.env).write_text(f'FCL_REF_TT={round(ref["TT"])}\nFCL_REF_FF={round(ref["FF"])}\n')
     print(f'tap_latency: {len(res["TT"])} taps, REF TT {ref["TT"]:.1f} / FF {ref["FF"]:.1f} ps; '
