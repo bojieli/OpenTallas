@@ -1,0 +1,118 @@
+{
+  "source_commit": "8e003d00e6d44876aadb91c2926b60347fb00316",
+  "full_shape": {
+    "W": 544,
+    "INJ": 2,
+    "AW": 6,
+    "TAGW": 16
+  },
+  "cases": [
+    {
+      "case": "f0_r0_c8_d3",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f0_r0_c1_d0",
+      "baseline_RREG_cycles": 1842,
+      "capture_cycles": 1842,
+      "delta": 0
+    },
+    {
+      "case": "f0_r0_c4_d7",
+      "baseline_RREG_cycles": 1170,
+      "capture_cycles": 1170,
+      "delta": 0
+    },
+    {
+      "case": "f0_r0_c16_d20",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f7_r7_c8_d3",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f7_r7_c1_d0",
+      "baseline_RREG_cycles": 1842,
+      "capture_cycles": 1842,
+      "delta": 0
+    },
+    {
+      "case": "f7_r7_c4_d7",
+      "baseline_RREG_cycles": 1170,
+      "capture_cycles": 1170,
+      "delta": 0
+    },
+    {
+      "case": "f7_r7_c16_d20",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f1_r64_c8_d3",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f1_r64_c1_d0",
+      "baseline_RREG_cycles": 1842,
+      "capture_cycles": 1842,
+      "delta": 0
+    },
+    {
+      "case": "f1_r64_c4_d7",
+      "baseline_RREG_cycles": 1170,
+      "capture_cycles": 1170,
+      "delta": 0
+    },
+    {
+      "case": "f1_r64_c16_d20",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f64_r1_c8_d3",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "f64_r1_c1_d0",
+      "baseline_RREG_cycles": 1842,
+      "capture_cycles": 1842,
+      "delta": 0
+    },
+    {
+      "case": "f64_r1_c4_d7",
+      "baseline_RREG_cycles": 1170,
+      "capture_cycles": 1170,
+      "delta": 0
+    },
+    {
+      "case": "f64_r1_c16_d20",
+      "baseline_RREG_cycles": 948,
+      "capture_cycles": 948,
+      "delta": 0
+    },
+    {
+      "case": "wrap_tag8",
+      "baseline_RREG_cycles": 1996,
+      "capture_cycles": 1996,
+      "delta": 0
+    }
+  ],
+  "all_checks_pass": true,
+  "positive_cases": 19,
+  "mechanism_mutants_caught": 8,
+  "reset_mutants_caught": 3,
+  "note": "For CRD8/default CRET3: steady rate preserved at f0/r0 (+1 final drain edge); CRD1 and long return delays price additional credit roundtrip bubbles explicitly. No token-rate gain claimed before parent composition."
+}
