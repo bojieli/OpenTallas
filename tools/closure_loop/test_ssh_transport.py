@@ -179,5 +179,46 @@ class TransportTest(unittest.TestCase):
         self.assertIn('-O', seen[0])
         self.assertIn('-N', seen[1])
 
+    def test_socket_epoch_preserves_old_master_socket_and_host_leases(self):
+        key = hashlib.sha256(b'host').hexdigest()[:20]
+        old_socket = self.root / (key + '.sock')
+        old_socket.write_text('old transfer still owns this generation')
+        seen = []
+        def run(cmd, **kwargs):
+            seen.append(cmd)
+            return subprocess.CompletedProcess(cmd, 255 if '-O' in cmd else 0, b'', b'')
+        with patch.dict(os.environ, CL_SSH_SOCKET_EPOCH='runtime-41cee'), patch.object(T.subprocess, 'run', side_effect=run):
+            with T.command('host') as cmd:
+                control = next(x for x in cmd if x.startswith('ControlPath='))
+                self.assertNotEqual(control, 'ControlPath=' + str(old_socket))
+                self.assertIn(str(self.root), control)
+                self.assertTrue((self.root / (key + '.0.lease')).exists())
+                self.assertIn((str(self.root), 'host'), T._SEMAPHORES)
+        self.assertEqual(old_socket.read_text(), 'old transfer still owns this generation')
+        self.assertEqual(len(seen), 2)
+        self.assertFalse(any('exit' in cmd or 'stop' in cmd for cmd in seen))
+
+    def test_new_epoch_cannot_bypass_old_generation_channel_leases(self):
+        key = hashlib.sha256(b'host').hexdigest()[:20]
+        leases = [(self.root / f'{key}.{n}.lease').open('a') for n in range(T.CHANNELS)]
+        for lease in leases:
+            fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        entered = threading.Event()
+        def task():
+            with T.command('host'):
+                entered.set()
+        try:
+            with patch.dict(os.environ, CL_SSH_SOCKET_EPOCH='new'), patch.object(T, '_ensure_master', return_value=['ssh', 'host']):
+                worker = threading.Thread(target=task)
+                worker.start()
+                self.assertFalse(entered.wait(.1))
+                leases[0].close()
+                self.assertTrue(entered.wait(2))
+                worker.join(2)
+                self.assertFalse(worker.is_alive())
+        finally:
+            for lease in leases:
+                lease.close()
+
 if __name__ == '__main__':
     unittest.main()

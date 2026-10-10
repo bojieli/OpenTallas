@@ -53,7 +53,12 @@ def direct_command(host):
 
 
 def _ensure_master(host, root, key):
-    socket = root / (key + ".sock")
+    # A coordinator may opt new operations into a fresh socket generation while
+    # old transfers keep their master.  Channel leases and their host key remain
+    # unchanged, so generations share the same measured session admission.
+    epoch = os.environ.get("CL_SSH_SOCKET_EPOCH", "")
+    suffix = "." + hashlib.sha256(epoch.encode()).hexdigest()[:12] if epoch else ""
+    socket = root / (key + suffix + ".sock")
     base = _options(socket)
     with (root / (key + ".master.lock")).open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
