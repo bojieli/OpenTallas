@@ -53,7 +53,12 @@ module ot_s81ph_coll_lane #(
     parameter integer CH_BOARD = 400,
     parameter integer IDLE_P = 1024,
     parameter integer SRAM = 1,
-    parameter integer UPGATE = 1
+    parameter integer UPGATE = 1,
+    // LCR (redesign-ds 2026-10-10, default 0): the core-facing face as CREDIT links (rtl/common/ot_link_credit.sv) for the
+    // three-tile collective core in CR mode: lo_v / lo_d land in pin flops + an 8-deep FIFO (OREG), lo_r is a credit pulse
+    // per freed slot; li_v / li_d leave from sender flops under credits, li_r is the receiver's credit pulse.  No pin
+    // drives a wide enable on either side.  Same ports and pin plan; +2..3 cycles each way.
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif
 ) (
     input  wire          clk,
     input  wire          rs_n,       // stream reset (async assert), synchronised here
@@ -85,12 +90,25 @@ module ot_s81ph_coll_lane #(
     wire iv, ir, il; wire [W-1:0] id;
     reg  lk1, up;                                // link-up gate (v4): own receiver locked once / peer's locked
     wire ir_g = ir && (UPGATE == 0 || up);
+    generate if (LCR != 0) begin : g_lcri
+        wire lcf;
+        ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(1)) u_ski (.clk(clk), .rst_n(rst_n), .l_valid(lo_v), .l_data(lo_d),
+            .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
+    end else begin : g_skid_i
     ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
         .out_v(iv), .out_r(ir_g), .out_d({il, id}));
+    end endgenerate
     // link -> core
     wire ov, orr, ol; wire [W-1:0] od;
+    generate if (LCR != 0) begin : g_lcro
+        wire lv; reg lvq; wire [W:0] ld;
+        ot_link_credit_tx #(.W(W + 1), .CRED(8)) u_sko (.clk(clk), .rst_n(rst_n), .i_valid(ov), .i_ready(orr), .i_data({ol, od}),
+            .l_valid(lv), .l_data(ld), .l_credit(li_r));
+        assign li_v = lv; assign li_d = ld;
+    end else begin : g_skid_o
     ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_n), .in_v(ov), .in_r(orr), .in_d({ol, od}),
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
+    end endgenerate
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE)) u_ep (

@@ -1,20 +1,20 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "0c5580a869f3eb6998cd42b5df95904e039f3d8aa4d38e84d5beb7c010d432cf",
+ "generator_sha256": "5af4946e414ebd8742c2b0e2c2843a64e631e2bfcff46965d75a8fd160068a3e",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
  },
  "die_um": [
-  6779.808,
+  7505.568,
   24328.08
  ],
- "die_mm2": 164.94,
- "instances": 938,
- "buses": 1474,
- "instance_mm2": 113.208,
- "fill": 0.6864,
+ "die_mm2": 182.596,
+ "instances": 1171,
+ "buses": 2027,
+ "instance_mm2": 119.605,
+ "fill": 0.655,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -34,7 +34,7 @@
   },
   "qkd_astk": {
    "n": 4,
-   "mm2": 7.0481
+   "mm2": 6.8882
   },
   "qkd_cdc": {
    "n": 128,
@@ -52,6 +52,10 @@
    "n": 1,
    "mm2": 0.4031
   },
+  "qkd_ectl": {
+   "n": 32,
+   "mm2": 2.6868
+  },
   "qkd_embgw": {
    "n": 1,
    "mm2": 0.1511
@@ -68,53 +72,53 @@
    "n": 1,
    "mm2": 0.105
   },
-  "qkd_reng": {
-   "n": 32,
-   "mm2": 33.9711
+  "qkd_rhead": {
+   "n": 128,
+   "mm2": 37.62
   },
   "qkd_rly_1": {
-   "n": 154,
-   "mm2": 0.245
+   "n": 158,
+   "mm2": 0.2514
   },
   "qkd_rly_10": {
    "n": 43,
    "mm2": 0.0684
   },
   "qkd_rly_1025": {
-   "n": 73,
-   "mm2": 0.2075
+   "n": 114,
+   "mm2": 0.324
   },
   "qkd_rly_1048": {
-   "n": 50,
-   "mm2": 0.1478
+   "n": 52,
+   "mm2": 0.1537
   },
   "qkd_rly_16": {
-   "n": 68,
-   "mm2": 0.1082
+   "n": 113,
+   "mm2": 0.1798
   },
   "qkd_rly_21": {
    "n": 4,
    "mm2": 0.0064
   },
   "qkd_rly_36": {
-   "n": 18,
-   "mm2": 0.0286
+   "n": 20,
+   "mm2": 0.0318
   },
   "qkd_rly_520": {
    "n": 21,
    "mm2": 0.0334
   },
   "qkd_rly_530": {
-   "n": 248,
-   "mm2": 0.3946
+   "n": 254,
+   "mm2": 0.4041
   },
   "qkd_rly_540": {
-   "n": 56,
-   "mm2": 0.0891
+   "n": 59,
+   "mm2": 0.0939
   },
   "qkd_rly_563": {
-   "n": 18,
-   "mm2": 0.0307
+   "n": 20,
+   "mm2": 0.0341
   },
   "qkd_seq": {
    "n": 1,
@@ -128,81 +132,81 @@
   "edge": "N (abuts the ROM die S edge under spine column M)"
  },
  "relay_stages": {
-  "af_EN": 1,
-  "af_ES": 27,
+  "af_EN": 2,
+  "af_ES": 28,
   "af_WN": 2,
-  "af_WS": 27,
+  "af_WS": 28,
   "am_EN": 5,
   "am_ES": 5,
-  "am_WN": 4,
-  "am_WS": 4,
-  "ap_EN": 4,
-  "ap_ES": 4,
+  "am_WN": 5,
+  "am_WS": 5,
+  "ap_EN": 5,
+  "ap_ES": 5,
   "ap_WN": 5,
   "ap_WS": 5,
-  "aq_EN": 1,
-  "aq_ES": 27,
-  "aq_WN": 1,
+  "aq_EN": 2,
+  "aq_ES": 28,
+  "aq_WN": 2,
   "aq_WS": 27,
   "ares": 21,
-  "emf_EN": 3,
+  "emf_EN": 4,
   "emf_ES": 24,
-  "emf_WN": 3,
+  "emf_WN": 4,
   "emf_WS": 24,
-  "emr_EN": 3,
+  "emr_EN": 4,
   "emr_ES": 24,
-  "emr_WN": 3,
-  "emr_WS": 24,
+  "emr_WN": 4,
+  "emr_WS": 25,
   "hc": 43,
   "hf": 21,
   "hs": 21,
-  "ing_EN": 24,
+  "ing_EN": 25,
   "ing_ES": 3,
   "ing_WN": 24,
   "ing_WS": 3,
-  "krq_EN_0": 1,
-  "krq_EN_1": 7,
-  "krq_EN_2": 7,
-  "krq_EN_3": 2,
-  "krq_ES_0": 1,
-  "krq_ES_1": 7,
-  "krq_ES_2": 7,
-  "krq_ES_3": 2,
-  "krq_WN_4": 1,
-  "krq_WN_5": 7,
-  "krq_WN_6": 7,
-  "krq_WN_7": 2,
-  "krq_WS_4": 1,
-  "krq_WS_5": 7,
-  "krq_WS_6": 7,
-  "krq_WS_7": 2,
-  "krs_EN_0": 2,
-  "krs_EN_1": 7,
-  "krs_EN_2": 7,
-  "krs_EN_3": 2,
-  "krs_ES_0": 2,
-  "krs_ES_1": 7,
-  "krs_ES_2": 7,
-  "krs_ES_3": 2,
-  "krs_WN_4": 2,
-  "krs_WN_5": 8,
-  "krs_WN_6": 7,
-  "krs_WN_7": 2,
-  "krs_WS_4": 2,
-  "krs_WS_5": 7,
-  "krs_WS_6": 7,
-  "krs_WS_7": 2,
+  "krq_EN_0": 5,
+  "krq_EN_1": 9,
+  "krq_EN_2": 9,
+  "krq_EN_3": 5,
+  "krq_ES_0": 5,
+  "krq_ES_1": 9,
+  "krq_ES_2": 9,
+  "krq_ES_3": 5,
+  "krq_WN_4": 5,
+  "krq_WN_5": 10,
+  "krq_WN_6": 9,
+  "krq_WN_7": 5,
+  "krq_WS_4": 5,
+  "krq_WS_5": 9,
+  "krq_WS_6": 9,
+  "krq_WS_7": 5,
+  "krs_EN_0": 5,
+  "krs_EN_1": 10,
+  "krs_EN_2": 9,
+  "krs_EN_3": 5,
+  "krs_ES_0": 5,
+  "krs_ES_1": 10,
+  "krs_ES_2": 9,
+  "krs_ES_3": 5,
+  "krs_WN_4": 5,
+  "krs_WN_5": 9,
+  "krs_WN_6": 9,
+  "krs_WN_7": 5,
+  "krs_WS_4": 5,
+  "krs_WS_5": 9,
+  "krs_WS_6": 9,
+  "krs_WS_7": 5,
   "kst": 43,
   "kvn_EN": 3,
-  "kvn_ES": 22,
+  "kvn_ES": 23,
   "kvn_WN": 3,
-  "kvn_WS": 22,
+  "kvn_WS": 23,
   "lt_EN": 1,
   "lt_ES": 1,
   "lt_WN": 1,
   "lt_WS": 1,
   "mf_EN": 3,
-  "mf_ES": 24,
+  "mf_ES": 25,
   "mf_WN": 3,
   "mf_WS": 25,
   "tk": 43
@@ -211,47 +215,47 @@
   "d2d_to_seq": 0,
   "seq_to_astk": {
    "WS": 27,
-   "WN": 1,
-   "ES": 27,
-   "EN": 1
+   "WN": 2,
+   "ES": 28,
+   "EN": 2
   },
   "astk_to_hub": {
    "WS": 5,
    "WN": 5,
-   "ES": 4,
-   "EN": 4
+   "ES": 5,
+   "EN": 5
   },
   "hub_to_astk": {
-   "WS": 4,
-   "WN": 4,
+   "WS": 5,
+   "WN": 5,
    "ES": 5,
    "EN": 5
   },
   "hub_to_seq": 21,
   "seq_to_d2d": 0,
   "seq_to_land": {
-   "WS": 22,
+   "WS": 23,
    "WN": 3,
-   "ES": 22,
+   "ES": 23,
    "EN": 3
   },
   "gw_to_land": {
    "WS": 24,
-   "WN": 3,
+   "WN": 4,
    "ES": 24,
-   "EN": 3
+   "EN": 4
   },
   "land_to_gw": {
-   "WS": 24,
-   "WN": 3,
+   "WS": 25,
+   "WN": 4,
    "ES": 24,
-   "EN": 3
+   "EN": 4
   },
   "seq_to_gw": 0,
   "gw_to_seq": 0
  },
  "assumed": {
-  "row_engine_frame": "re-cut D qkd_reng 531.36 x 1,998 (~529 k um2 cells composed from synthesis, 0.50)",
+  "row_engine_frame": "re-cut H: 4 x qkd_rhead 648.0 x 453.6 + qkd_ectl 648.0 x 129.6 (measured cells: head 152,960 um2 placed, control 24,507 um2 synthesized; routes qkd_rhead_c / qkd_ectl_c)",
   "astk_w": 220.32,
   "land_w": 172.8,
   "frames": {
@@ -310,13 +314,18 @@
   },
   "qkd_astk": {
    "w": 220.296,
-   "h": 7998.456,
-   "ports": 23
+   "h": 7817.016,
+   "ports": 55
   },
-  "qkd_reng": {
-   "w": 531.336,
-   "h": 1997.976,
+  "qkd_rhead": {
+   "w": 647.976,
+   "h": 453.576,
    "ports": 6
+  },
+  "qkd_ectl": {
+   "w": 647.976,
+   "h": 129.576,
+   "ports": 16
   },
   "ot_qkvd_ucie_x64_phy": {
    "w": 777.576,
@@ -424,13 +433,22 @@
   "failures": [],
   "rows": [
    {
-    "master": "qkd_reng",
-    "module": "ot_qwen_nearhbm_row_engine_d",
-    "rtl_ports": 34,
-    "die_ports": 6,
+    "master": "qkd_ectl",
+    "module": "ot_qwen_nearhbm_ectl_h",
+    "rtl_ports": 53,
+    "die_ports": 16,
     "classed": {
      "ev_k_first": "debug",
      "ev_v_first": "debug"
+    }
+   },
+   {
+    "master": "qkd_rhead",
+    "module": "ot_qwen_nearhbm_head_h",
+    "rtl_ports": 14,
+    "die_ports": 6,
+    "classed": {
+     "hid": "by_design: die-top strap (tie cells), the head index of this tile"
     }
    },
    {
