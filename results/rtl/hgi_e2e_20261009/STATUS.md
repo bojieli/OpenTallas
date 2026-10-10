@@ -67,7 +67,7 @@ The vehicles' metadata and the SHA-256 of their binaries are in `vehicles/`.
 
 **All real units together:**
 - **DS L0:** DMA, QUANT, IDX, SU, COLL (PFMAX 512), plus the SU fix. **PASS:** 56 real records exact, 91/91 dispatches, 86,320 cycles.
-- **Qwen L0:** DMA, SU, SFU, FUSED, COLL (PFMAX 512, FP32). The run is still going at the time of writing; see the COLLECT section of `hgi-e2e.log`.
+- **Qwen L0:** DMA, SU, SFU, FUSED, COLL (PFMAX 512, FP32). **PASS:** 26 real records exact, 34/34 dispatches, 216,474 cycles (the mover dominates: F6).
 
 ## Cycles against the simulator (doorbell to completion, 1.2 GHz cycles)
 
@@ -81,7 +81,7 @@ The vehicles' metadata and the SHA-256 of their binaries are in `vehicles/`.
 | Real FUSED | 101,026 | — |
 | Real SU (+ SFU) | 35,525 | 16,155 |
 | Real COLL, what-if | 32,714 | 58,694 |
-| All real (what-if COLL) | pending | 86,320 |
+| All real (what-if COLL) | 216,474 | 86,320 |
 
 Per-unit busy time (dispatch to retire) in RTL, against the simulator's unit cost:
 
