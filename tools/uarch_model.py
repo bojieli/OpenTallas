@@ -15704,3 +15704,9 @@ def hbm_su_r25gpht4_tile_sizing():
                 channel_capacity_status='actual macro abstractions and M7/channel route pending',
                 slot_fit_status='same tile outline; full actual placement/corner gate pending',
                 single_user_latency_status='transport envelope; controller schedule remains separately unqualified')
+
+
+def hgi_dma_wide_vm_model(**kwargs):
+    """Opt-in raw-routing DMA and actual protected shared VM physical sizing."""
+    from hgi_dma_wide_vm_model import model
+    return model(**kwargs)
