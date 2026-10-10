@@ -1,0 +1,22 @@
+# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)
+set fc_ps(t_coll) 3
+set fc_ps(t_hgi_cmdproc) 3
+set fc_ps(t_hgi_vmq) 5
+set fc_ps(t_router) 5
+set fc_ps(t_sfu) 4
+set fc_ps(t_su_ew) 3
+set fc_ps(t_su_ns) 2
+set fc_ps(t_vm) 5
+set fc_psi(a) 3
+set fc_psi(f_cmdproc) 3
+set fc_psi(f_coll) 3
+set fc_psi(f_hgi_cmdproc) 4
+set fc_psi(f_hgi_vmaddr) 3
+set fc_psi(f_hgi_vmr) 5
+set fc_psi(f_sfu) 5
+set fc_psi(f_su_ew) 5
+set fc_psi(f_su_ns) 1
+set fc_psi(f_vm) 4
+set fc_psi(r) 1
+set fc_psi(qid) 4
+set fc_psi(cg_en) 2

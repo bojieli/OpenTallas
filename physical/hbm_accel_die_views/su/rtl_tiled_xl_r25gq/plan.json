@@ -1,0 +1,61 @@
+{
+ "master": "hfd_su",
+ "lane": "ot_su12_light",
+ "lane_source": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+ "lane_params": {},
+ "lanes": 128,
+ "chains": 8,
+ "groups_per_chain": 4,
+ "lanes_per_column_group": 2,
+ "WI": 11539,
+ "WO": 6487,
+ "lane_broadcast_bits": 1742,
+ "lane_per_lane_bits": 192,
+ "lane_out_bits": 315,
+ "acc_bits_per_chain": 683,
+ "face_stages": {
+  "r": 1,
+  "a": 3,
+  "f_sfu": 5,
+  "qid": 4,
+  "t_sfu": 4,
+  "f_hgi_vmr": 5,
+  "t_hgi_vmq": 5,
+  "t_router": 5,
+  "f_su_ew": 5,
+  "t_su_ew": 3,
+  "f_cmdproc": 3,
+  "f_hgi_cmdproc": 4,
+  "t_hgi_cmdproc": 3,
+  "f_coll": 3,
+  "f_hgi_vmaddr": 3,
+  "t_coll": 3,
+  "f_vm": 4,
+  "t_vm": 5,
+  "f_su_ns": 1,
+  "t_su_ns": 2,
+  "cg_en": 3
+ },
+ "flops": {
+  "boundary": 61368,
+  "broadcast": 55776,
+  "accumulate": 21856,
+  "lane_output_stage": 40320,
+  "wake_face": 2,
+  "ownership_strap": 8
+ },
+ "ownership_capture_init_cycles": 4,
+ "tiled": {
+  "tiles": 128,
+  "chains": 16,
+  "tiles_per_chain": 8,
+  "acc_bits_per_chain": 456,
+  "flops_in_tiles": 603264,
+  "lockup_bits": 281472,
+  "clock_gates": 128,
+  "wake_lead_cycles": 5,
+  "flops_in_top": {
+   "boundary": 61368
+  }
+ }
+}

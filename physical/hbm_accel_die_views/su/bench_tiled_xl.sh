@@ -3,12 +3,14 @@
 # stages) transaction bench: qid 0-3 exact vs the generator model, inject-gate mutant, lane-connectivity negative and
 # never-wake / 20-edge-late wake mutants must FAIL (late: settle != 46).  Regenerates the RTL from the committed generator and checks it matches the committed set.
 #   bench_tiled_xl.sh <outdir>   (run in the source root)
-set -u; O=$1; mkdir -p $O; R=physical/hbm_accel_die_views/su/rtl_tiled_xl_r25
-python3 tools/hbm_hub_quarter_gen.py --quarter su --ports physical/hbm_accel_die_views/su/r25gpht4_wake_contract/ports.json \
+#   env PORTS / REFDIR: another committed configuration (R25GQ: PORTS=su/r25gq_contract/ports.json REFDIR=su/rtl_tiled_xl_r25gq
+#   GENARGS='--lanes 128 --groups 4 --wct 456' SETTLE=<its ungated settle>); with REFDIR the GENARGS set is reproduced too
+set -u; O=$1; mkdir -p $O; R=${REFDIR:-physical/hbm_accel_die_views/su/rtl_tiled_xl_r25}
+python3 tools/hbm_hub_quarter_gen.py --quarter su --ports ${PORTS:-physical/hbm_accel_die_views/su/r25gpht4_wake_contract/ports.json} \
   --out $O/gen --tiled --cg --cg-input-stages 2 --xroot lockup --lane-size 85.32 162.0 ${GENARGS:-} > $O/plan.log 2>&1
 # GENARGS (e.g. --lanes 128): a parameter study, generated fresh (no committed set to reproduce)
 : > $O/result.txt
-[ -n "${GENARGS:-}" ] || for f in hfd_su.sv hfd_su_neg.sv hfd_su_tile_xl.sv tb_hfd_su.sv macro_place.tcl; do cmp -s $O/gen/$f $R/$f || echo "REPRO_MISMATCH $f"; done >> $O/result.txt
+[ -n "${GENARGS:-}" ] && [ -z "${REFDIR:-}" ] || for f in hfd_su.sv hfd_su_neg.sv hfd_su_tile_xl.sv tb_hfd_su.sv macro_place.tcl; do cmp -s $O/gen/$f $R/$f || echo "REPRO_MISMATCH $f"; done >> $O/result.txt
 C="$(pwd)/rtl/hbm_accel/cg/ot_cg_tile.sv $(pwd)/rtl/hdc/ot_hdc_cg.sv"
 cd $O/gen
 run() { n=$1; shift; iverilog -g2012 -o $n.vvp "$@" $C > $n.clog 2>&1 && timeout 7200 vvp -n $n.vvp > $n.log 2>&1; echo "$n rc=$? $(grep OT_RESULT $n.log)" >> ../result.txt; rm -f $n.vvp; }
@@ -29,5 +31,5 @@ P=$(grep -c '^pos[0-3] rc=0 .*mismatches=0 settle_cycles='${SETTLE:-46}'$' resul
 M=$(grep -cE '^(gmut|neg|nowake) .*mismatches=[1-9]' result.txt)
 LS=$(grep '^late ' result.txt | sed -n 's/.*settle_cycles=\([0-9]*\).*/\1/p'); { grep -qE '^late .*mismatches=[1-9]' result.txt || { [ -n "$LS" ] && [ "$LS" != "${SETTLE:-46}" ]; }; } && M=$((M+1))
 grep -qE 'REPRO_MISMATCH|MUTANT_NOT_APPLIED' result.txt && R1=FAIL || R1=OK
-echo "TILED_XL_BENCH repro=$R1 positives_pass=$P/4 (settle 46 = ungated) mutants_fail=$M/4" | tee -a result.txt
+echo "TILED_XL_BENCH repro=$R1 positives_pass=$P/4 (settle ${SETTLE:-46} = ungated) mutants_fail=$M/4" | tee -a result.txt
 [ $R1 = OK ] && [ $P = 4 ] && [ $M = 4 ] && echo TILED_XL_BENCH_PASS
