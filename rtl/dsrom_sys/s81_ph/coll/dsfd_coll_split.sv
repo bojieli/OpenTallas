@@ -194,8 +194,69 @@ module dsfd_coll_ce #(
     always @(posedge clk) bw_d <= c_bw_d;
 endmodule
 
+// ---- lane-facing SENDER with a registered lane ready (redesign-ds 2026-10-10, ct-split3b): the lane tile's core-face
+// receiver is an unchanged ot_s81ph_skid2 (lo_r = !sk_v).  ct-split3a lost -168 / -233 to lo_r (pin) -> the relay skid's
+// 553-bit load enables.  Here the pin feeds ONE gate into the valid flop: a beat is presented for exactly one cycle, and
+// only when the lane's ready was high in the previous cycle with no beat presented then, which proves the lane's skid
+// slot is empty, so the beat is always taken (no duplicate, no loss).  out_d is the holding flop h_d, loaded only from
+// local flops.  Rate: one beat every 2 cycles on this seam (the lane skid cannot report its drain without a lane change).
+module ot_s81ph_send_lr #(parameter integer W = 8) (
+    input  wire clk, input wire rst_n,
+    input  wire in_v, output wire in_r, input wire [W-1:0] in_d,
+    output reg  out_v, input wire out_r, output wire [W-1:0] out_d
+);
+    reg h_v; reg [W-1:0] h_d;
+    assign in_r = !h_v || out_v;            // free, or the held beat is being taken this cycle
+    assign out_d = h_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin out_v <= 1'b0; h_v <= 1'b0; end
+        else begin
+`ifdef OT_S81PH_MUT_SPLIT_SENDLR
+            out_v <= out_r && h_v && !out_v || (out_v && h_v && in_v);   // mutant: back-to-back presentation (duplicates)
+`else
+            out_v <= out_r && !out_v && h_v;
+`endif
+            if (out_v) h_v <= in_v; else if (!h_v) h_v <= in_v;
+        end
+    always @(posedge clk) if (in_v && (!h_v || out_v)) h_d <= in_d;
+endmodule
+
+// ---- lane-facing RECEIVER with a landing register (redesign-ds 2026-10-10, ct-split3b): the lane's in_v / in_d pins land
+// in plain flops (no enable, one load each); a 4-deep FIFO behind them absorbs the beats in flight while the registered
+// ready (count <= 1) is seen late.  Full rate, +1 cycle.
+module ot_s81ph_land_rx #(parameter integer W = 8) (
+    input  wire clk, input wire rst_n,
+    input  wire in_v, output reg in_r, input wire [W-1:0] in_d,
+    output wire out_v, input wire out_r, output wire [W-1:0] out_d
+);
+    reg l_v; reg [W-1:0] l_d;
+    reg [W-1:0] m [0:3]; reg [1:0] wp, rp; reg [2:0] n;
+    wire pop = out_v && out_r;
+    wire [2:0] n_n = n + (l_v ? 3'd1 : 3'd0) - (pop ? 3'd1 : 3'd0);
+    assign out_v = n != 0;
+    assign out_d = m[rp];
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin l_v <= 1'b0; in_r <= 1'b0; wp <= 0; rp <= 0; n <= 0; end
+        else begin
+            l_v <= in_v && in_r;
+            if (l_v) wp <= wp + 1'b1;
+            if (pop) rp <= rp + 1'b1;
+            n <= n_n;
+            in_r <= n_n <= 3'd1;
+        end
+    always @(posedge clk) begin
+        l_d <= in_d;
+        if (l_v) m[wp] <= l_d;
+    end
+endmodule
+
 // ---- top tile: lanes 3 / 7 relays
-module dsfd_coll_ct (
+module dsfd_coll_ct #(
+    // LR (redesign-ds 2026-10-10, ct-split3b): 1 = the lane-facing ends are ot_s81ph_send_lr (registered lane ready, one beat
+    // every 2 cycles toward the lane) and ot_s81ph_land_rx (landing register + FIFO from the lane, full rate), so no lane
+    // pin drives a 553-bit enable; 0 = the 2-skid relays of ct-split3a.
+    parameter integer LR = 0
+) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
     output wire [0:0] wlo_v,  input wire [0:0] wlo_r, output wire [552:0] wlo_d,
@@ -219,8 +280,21 @@ module dsfd_coll_ct (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin flt_r <= 0; flt_d <= 0; end
         else begin flt_r <= {eflt, wflt}; flt_d <= flt_r; end
+    generate if (LR != 0) begin : g_lr
+        // seam-side skid (u_a) + lane-facing sender / receiver
+        wire a3v, a3r, a7v, a7r, b3v, b3r, b7v, b7r; wire [552:0] a3d, a7d, b3d, b7d;
+        ot_s81ph_skid2 #(.W(553)) u_lo3a (.clk(clk), .rst_n(rst_n), .in_v(lo3_v), .in_r(lo3_r), .in_d(lo3_d), .out_v(a3v), .out_r(a3r), .out_d(a3d));
+        ot_s81ph_send_lr #(.W(553)) u_lo3s (.clk(clk), .rst_n(rst_n), .in_v(a3v), .in_r(a3r), .in_d(a3d), .out_v(wlo_v), .out_r(wlo_r), .out_d(wlo_d));
+        ot_s81ph_skid2 #(.W(553)) u_lo7a (.clk(clk), .rst_n(rst_n), .in_v(lo7_v), .in_r(lo7_r), .in_d(lo7_d), .out_v(a7v), .out_r(a7r), .out_d(a7d));
+        ot_s81ph_send_lr #(.W(553)) u_lo7s (.clk(clk), .rst_n(rst_n), .in_v(a7v), .in_r(a7r), .in_d(a7d), .out_v(elo_v), .out_r(elo_r), .out_d(elo_d));
+        ot_s81ph_land_rx #(.W(553)) u_li3l (.clk(clk), .rst_n(rst_n), .in_v(wli_v), .in_r(wli_r), .in_d(wli_d), .out_v(b3v), .out_r(b3r), .out_d(b3d));
+        ot_s81ph_skid2 #(.W(553)) u_li3b (.clk(clk), .rst_n(rst_n), .in_v(b3v), .in_r(b3r), .in_d(b3d), .out_v(li3_v), .out_r(li3_r), .out_d(li3_d));
+        ot_s81ph_land_rx #(.W(553)) u_li7l (.clk(clk), .rst_n(rst_n), .in_v(eli_v), .in_r(eli_r), .in_d(eli_d), .out_v(b7v), .out_r(b7r), .out_d(b7d));
+        ot_s81ph_skid2 #(.W(553)) u_li7b (.clk(clk), .rst_n(rst_n), .in_v(b7v), .in_r(b7r), .in_d(b7d), .out_v(li7_v), .out_r(li7_r), .out_d(li7_d));
+    end else begin : g_rl
     ot_s81ph_relay2 #(.W(553)) u_lo3 (.clk(clk), .rst_n(rst_n), .in_v(lo3_v), .in_r(lo3_r), .in_d(lo3_d), .out_v(wlo_v), .out_r(wlo_r), .out_d(wlo_d));
     ot_s81ph_relay2 #(.W(553)) u_li3 (.clk(clk), .rst_n(rst_n), .in_v(wli_v), .in_r(wli_r), .in_d(wli_d), .out_v(li3_v), .out_r(li3_r), .out_d(li3_d));
     ot_s81ph_relay2 #(.W(553)) u_lo7 (.clk(clk), .rst_n(rst_n), .in_v(lo7_v), .in_r(lo7_r), .in_d(lo7_d), .out_v(elo_v), .out_r(elo_r), .out_d(elo_d));
     ot_s81ph_relay2 #(.W(553)) u_li7 (.clk(clk), .rst_n(rst_n), .in_v(eli_v), .in_r(eli_r), .in_d(eli_d), .out_v(li7_v), .out_r(li7_r), .out_d(li7_d));
+    end endgenerate
 endmodule
