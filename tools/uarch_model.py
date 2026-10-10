@@ -15287,3 +15287,9 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def qwen_kvwq_binary_feed_model():
+    """Posted KV control tile binary-feed successor; removes off-tile encoders."""
+    from uarch_model_qwen_kvwq_binary import model
+    return model()
