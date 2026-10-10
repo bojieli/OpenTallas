@@ -72,7 +72,7 @@ def snapshot(state):
         except (OSError, ValueError):
             continue
         statuses[d.get('status', 'unknown')] += 1
-        if d.get('status') not in {'RUNNING', 'QUEUED', 'WAITING', 'ECO', 'CALIBRATING', 'BENCH'} and not re.search('bf[a-z_]|ecaae581c', d.get('name', '')):
+        if d.get('status') not in {'RUNNING', 'QUEUED', 'WAITING', 'READY', 'SYNC', 'ECO', 'CALIBRATING', 'BENCH'} and not re.search('bf[a-z_]|ecaae581c', d.get('name', '')):
             continue
         spec = d.get('spec') or {}
         jobs.append({key: d.get(key) for key in ('name', 'status', 'host', 'run', 'reason', 'publish')} | {'source': spec.get('source'), 'owner': spec.get('owner')})
@@ -106,12 +106,12 @@ def check_takeover(state, pane):
         ack = json.loads(ACK.read_text())
         sent = dt.datetime.fromisoformat(state['sent_utc'])
         stamp = dt.datetime.fromisoformat(ack['engineering_action_utc'])
-        registry = Path(ack['registry_output_path'])
-        stream = Path(ack['stream_log_path'])
+        registry = Path(ack['registry_output_path']).resolve()
+        stream = Path(ack['stream_log_path']).resolve()
         safe = registry.is_relative_to(COORD) and stream.is_relative_to(COORD)
-        fresh = stamp >= sent and registry.stat().st_mtime >= sent.timestamp() and stream.stat().st_mtime >= sent.timestamp()
+        fresh = sent <= stamp <= now() and registry.stat().st_mtime >= sent.timestamp() and stream.stat().st_mtime >= sent.timestamp()
         sha_ok = hashlib.sha256(registry.read_bytes()).hexdigest() == ack['registry_sha256']
-        command_ok = 'registry_gaps.py' in ack['registry_command']
+        command_ok = 'registry_gaps.py' in ack['registry_command'] and bool(re.search(r'^OPEN \d+', registry.read_text(), re.M)) and 'IDLE (open, no live job):' in registry.read_text()
         nonce_ok = ack['nonce'] == state['nonce'] and state['nonce'] in stream.read_text(errors='replace')
         # The pane must actually show a new engineering tool action after delivery.
         old = set(state.get('pane_before_lines', []))
