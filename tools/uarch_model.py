@@ -34,6 +34,25 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def hbm_smh_result_valid_model(columns=8, row_bits=12):
+    """Size the optional south-front result qualification before RTL changes."""
+    if columns < 1 or row_bits < 1:
+        raise ValueError("positive shape required")
+    return dict(schema="opentallas.smh-result-valid.v1", opt_in_default=False,
+        master="ot_hbm_accel_smh_front_s", columns=columns,
+        macs_per_cycle=0, memory_bytes_per_cycle=0,
+        existing_result_bits_per_cycle=columns*(34+row_bits),
+        added_boundary_bits_per_cycle=0, added_data_registers=0,
+        qualification_and_gates=columns,
+        reduction_gate_upper_bound=4*columns, replicas=1,
+        mux_demux_cost=0, control_fanout_max=2,
+        local_routing_tracks_upper_bound=3*columns,
+        floorplan_slot_fit="existing south-front result landing; <=5*columns small gates, physical route required",
+        added_cycles=0, token_latency_added_ns=0.0,
+        correctness="fault only with own-column valid; row retires only with all columns valid; any partial valid vector raises fault",
+        physical_gate="refresh full NC8 front_s timing/DRC with RESULT_VALID=1; unchanged BE/tile closures do not qualify it")
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
