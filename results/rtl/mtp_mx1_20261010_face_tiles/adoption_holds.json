@@ -1,0 +1,28 @@
+{
+  "holds": [
+    {
+      "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc",
+      "reason": "MX1 physical pin contract is ineligible: frozen io_place.tcl places only four clock pins and omits 5401 base data pins. Preserve live run as diagnostic; do not publish/adopt or switch R25G die. Corrected full-pin TILECLK FT2 successor must provide full 5409-pin record and actual propagated-clock setup/hold/DRC evidence.",
+      "created_utc": "2026-10-10T12:25:29.372823+00:00",
+      "operator": "codex-mx1-root",
+      "replacement": "hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc"
+    },
+    {
+      "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc",
+      "reason": "MX1 physical pin contract is ineligible: frozen io_place.tcl places only four clock pins and omits 5401 base data pins. Preserve live run as diagnostic; do not publish/adopt or switch R25G die. Corrected full-pin TILECLK FT2 successor must provide full 5409-pin record and actual propagated-clock setup/hold/DRC evidence.",
+      "created_utc": "2026-10-10T12:25:29.372963+00:00",
+      "operator": "codex-mx1-root",
+      "replacement": "hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc"
+    },
+    {
+      "name": "hfd_cmdproc_s_mtp_native_mx1_rb-lrst1-hm10-f670f540e-tc",
+      "reason": "MX1 physical pin contract is ineligible: frozen io_place.tcl places only four clock pins and omits 5401 base data pins. Preserve live run as diagnostic; do not publish/adopt or switch R25G die. Corrected full-pin TILECLK FT2 successor must provide full 5409-pin record and actual propagated-clock setup/hold/DRC evidence.",
+      "created_utc": "2026-10-10T12:25:29.373047+00:00",
+      "operator": "codex-mx1-root",
+      "replacement": "hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc"
+    }
+  ],
+  "hook": "do_verdict() calls adoption_held(j) before get_metrics(), check execution and PASS/publication; adoption_held checks STATE/adoption_holds/<job-name>.json and returns true while file exists. Running stages are unaffected.",
+  "daemon_source_sha256": "609183a254e5cebf145ea72b7963044eb622a6eea01692fda06c7ef08fc88bf8",
+  "daemon_source_path": "/home/ubuntu/wt-codex-closure-daemon-20261007l/tools/closure_loop/closure_loop.py"
+}
