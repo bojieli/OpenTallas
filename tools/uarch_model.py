@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def ha2_truecredit_capture_collar_model():
+    """Price the local SRAM output capture stage before RTL build."""
+    from tools.ha2_rxs_capture_model import model
+    return model()
