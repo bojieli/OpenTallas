@@ -28,9 +28,12 @@ initial begin
  for(n=0;n<240;n=n+1)begin
   // Back-to-back controller attempts prove rejected go is not acceptance.
   // Embedding n20 requests a full65-word row and can stall behind credits.
-  go=(n==2 || n==3 || n==4 || n==10 || n==20 || n==150 || n==170 || n==171);
+  go=(n==2 || n==3 || n==4 || n==10 || n==20 || n==150 || n==170 || n==171 || n==180);
   a_src=(n==20 || n==150);
   eq_v=ea_v;ea_cr=ea_v;
+  // Seed a reachable cumulative state rather than simulate16million ops.
+  // The next two real accepts cross the24-bit wrap, just like o_cnt.
+  if(n==160)begin expected_count=24'hfffffe;dut.accepted_count=24'hfffffe;end
   @(posedge clk);
   sampled={expected_count,dut.s_idle && !dut.e_pend,dut.s_progress,dut.s_rows};
   for(i=8;i>0;i=i-1)pipeline[i]=pipeline[i-1];pipeline[0]=sampled;

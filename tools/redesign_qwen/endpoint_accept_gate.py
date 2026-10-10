@@ -19,6 +19,7 @@ def run(out):
         'premature_go_q':('else if (go_s && s_ready)','else if (go_q)'),
         'ignores_ready':('else if (go_s && s_ready)','else if (go_s)'),
         'wrong_epoch':("if (!rs) accepted_count <= 24'd0;","if (!rs) accepted_count <= accepted_count;"),
+        'truncated_count':("accepted_count <= accepted_count + 1'b1;","accepted_count <= accepted_count[15:0] + 16'd1;"),
         'status_pipeline':('.W(FS), .D(OS), .RESET(1)) u_os','.W(FS), .D(OS+1), .RESET(1)) u_os'),
     }
     paths=[ROOT/'tests/rtl/qwen_seq_boundary/tb_endpoint.sv',rtl,
@@ -51,6 +52,6 @@ def run(out):
         unsupported_claims=['whole-SU arithmetic exactness','full-token exactness','physical closure'],
         files={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths+[BASE]},cases=cases)
     if out:out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(payload,indent=2)+'\n')
-    print('PASS endpoint acceptance:5 pipeline shapes;4 mutants detected; production64-lane control')
+    print('PASS endpoint acceptance:5 pipeline shapes;5 mutants detected; production64-lane control')
 if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path);run(ap.parse_args().out)
