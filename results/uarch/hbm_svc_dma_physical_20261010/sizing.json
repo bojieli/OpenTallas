@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "status": "PROSPECTIVE_DMA_ONLY_PHYSICAL_RESERVATION",
+  "source_sha256": {
+    "physical/hbm_accel_die_views/svc/split_psfc/split.json": "8593d499f066e911bb412eabbbf93eee5c2dd2e1d3ed3080b451cb1da7f18c97",
+    "physical/hbm_accel_die_views/svc/svc_geometry.json": "01a8bd7465e4ce4a26911d01a1acc235e87e8c203ae7b98ac0af80d4513551c0",
+    "tools/hbm_accel_die_fp.py": "a7179e954383dfab1deeac79828fb3b8516e83a2fd74f5ad00256343ca40d601"
+  },
+  "hop_um": 380.0,
+  "pitch_um": 0.192,
+  "layers": [
+    "M4",
+    "M6"
+  ],
+  "lane_bits": 2160,
+  "request_bits": 51,
+  "credit_bits": 8,
+  "ready_bits": 1,
+  "edge_traffic_bits": 2220,
+  "initial_credits": 64,
+  "loader": {
+    "name": "hb_loader",
+    "x_um": 14735.952,
+    "y_um": 9104.4,
+    "w_um": 1399.6560000000002,
+    "h_um": 237.576
+  },
+  "route_admission": false,
+  "gates": [
+    "new tile RTL pins and relay instances match these records",
+    "measured cell area fits at <=60% utilization",
+    "resolve all proposed die placement/corridor conflicts",
+    "front endpoint physical pin allocation and clock-root lockups",
+    ">=90% bandwidth with composed actual credits/RTT",
+    "transaction exactness and in-context timing/DRC"
+  ],
+  "stacks": {
+    "SW": {
+      "internal_one_way_cycles_bound": 21,
+      "composed_credit_rtt_cycles_bound": 138,
+      "credit_utilization_upper_bound": 0.463768115942029,
+      "minimum_credits_for_90pct": 125,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": false,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 47,
+      "front_leg_um": 17038.967999999997,
+      "placement_conflicts": [
+        "phy_SW"
+      ]
+    },
+    "SE": {
+      "internal_one_way_cycles_bound": 22,
+      "composed_credit_rtt_cycles_bound": 144,
+      "credit_utilization_upper_bound": 0.4444444444444444,
+      "minimum_credits_for_90pct": 130,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": false,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 49,
+      "front_leg_um": 17645.736,
+      "placement_conflicts": [
+        "phy_SE"
+      ]
+    },
+    "NW": {
+      "internal_one_way_cycles_bound": 21,
+      "composed_credit_rtt_cycles_bound": 174,
+      "credit_utilization_upper_bound": 0.367816091954023,
+      "minimum_credits_for_90pct": 157,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": false,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 65,
+      "front_leg_um": 23875.367999999995,
+      "placement_conflicts": [
+        "phy_NW"
+      ]
+    },
+    "NE": {
+      "internal_one_way_cycles_bound": 22,
+      "composed_credit_rtt_cycles_bound": 180,
+      "credit_utilization_upper_bound": 0.35555555555555557,
+      "minimum_credits_for_90pct": 162,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": false,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 67,
+      "front_leg_um": 24482.136,
+      "placement_conflicts": [
+        "phy_NE"
+      ]
+    }
+  },
+  "tiles_per_family": {
+    "SW": 8,
+    "SE": 9
+  }
+}
