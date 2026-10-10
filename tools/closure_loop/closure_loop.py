@@ -5422,6 +5422,62 @@ def stale24_sweep(jobs, now=None, force=False):
     return done
 
 
+# MEM-GUARD (drive-1010 2026-10-10): EPYC2 (08:33, MemAvailable 6 GB) and EPYC4 (11:50-55, 7 GB) both hung -- sshd
+# stopped answering and every job on them was lost -- after running stages grew past their admission snapshot.  The
+# kernel OOM killer did not fire in time.  When a fresh probe shows a host below MEM_GUARD_GB (or MEM_GUARD_FRAC of its
+# RAM) available, the loop stops its OWN youngest loop stage there (largest declared peak first among the youngest),
+# puts the job back to READY at that stage (it relaunches when memory allows), logs it, and does at most one per host
+# per MEM_GUARD_EVERY_S.  Die runs and ECO stages (results live in the run dir) are never chosen.
+MEM_GUARD_GB = 24
+MEM_GUARD_FRAC = 0.03
+MEM_GUARD_EVERY_S = 300
+_MEM_GUARD_LAST = {}
+
+
+def mem_guard(jobs, fleet, now=None):
+    """returns [(host, job name)] stopped this call"""
+    now = time.time() if now is None else now
+    done = []
+    for h in hosts_table():
+        name = h["name"]
+        good = getattr(fleet, "last_good", {}).get(name)
+        if not good or now - good[0] > 120:
+            continue
+        floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
+        if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
+            continue
+        cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
+        if not cand:
+            continue
+        def key(j):
+            try:
+                age = now - dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+            except (TypeError, ValueError):
+                age = 1e9
+            return (int(age // 3600), -float(j["spec"].get("peak_ram_gb") or 0))   # youngest hour first, biggest within it
+        victim = sorted(cand, key=key)[0]
+        _MEM_GUARD_LAST[name] = now
+        try:
+            with job_lock(victim["name"]):
+                x = load_job(victim["name"])
+                if x["status"] != "RUNNING":
+                    continue
+                kill_own_stage(x)
+                why = (f"MEM-GUARD: {host_cfg(name)['label']} MemAvailable {good[1].get('mem_gb')} GB < {floor:.0f} GB floor "
+                       f"(hosts hung at 6-7 GB on 10-10); stopped this youngest stage ({x.get('stage_key')}), relaunches when memory allows")
+                event(x, why)
+                for k in ("stage_tag", "stage_started"):
+                    x.pop(k, None)
+                x.update(status="READY", wait=why[:200])
+                save_job(x)
+            log(why + f" [{victim['name']}]")
+            done.append((name, victim["name"]))
+        except Exception:  # noqa: BLE001
+            log("mem guard error:\n" + traceback.format_exc())
+    return done
+
+
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
@@ -5939,6 +5995,10 @@ def tick(fleet):
         release_deep(all_jobs())
     except Exception:  # noqa: BLE001
         log("release_deep error:\n" + traceback.format_exc())
+    try:
+        mem_guard(all_jobs(), fleet)
+    except Exception:  # noqa: BLE001
+        log("mem guard error:\n" + traceback.format_exc())
     try:
         stale24_sweep(all_jobs())
     except Exception:  # noqa: BLE001
