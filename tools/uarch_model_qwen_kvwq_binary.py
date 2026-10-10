@@ -79,7 +79,8 @@ def leaf_s_model():
 
 def head_pipeline_model():
     """Capture selected queue row before the four pin-feed banks."""
-    d=model()
+    d=model(relay_forward=42, relay_return=41)
+    d['floorplan']=dict(die_um=[8543.232,24587.28], die_mm2=210.055, edge_channel_um=129.6, control_relay_strip_um=518.832, overlaps=0, outside=0, inherited_landing_far_side=4)
     d['schema']='opentallas.qwen-kv-write-binary-head-pipeline.v1'
     d['area'].update(controller_slot_um=[216.0,648.0], extra_head_state_bits=1024+22+2+1,
                      extra_analytical_DFF_area_um2=(1024+22+2+1)*.2916,
@@ -90,7 +91,7 @@ def head_pipeline_model():
                         selected_row_internal_bits_per_cycle=1049,
                         controller_feed_density_estimate=(4*298+8)/(2*648))
     d['replica_cost']['head_capture_fanout']='one selected-row register per bit, feeds one quarter bank'
-    d['qualification']['exact']='full32PC HEAD_PIPE1 component and mutants, same physical296/293-bit feed contract'
+    d['qualification']['exact']='full32PC HEAD_PIPE1 component and mutants, same physical298/293-bit feed contract'
     return d
 
 
