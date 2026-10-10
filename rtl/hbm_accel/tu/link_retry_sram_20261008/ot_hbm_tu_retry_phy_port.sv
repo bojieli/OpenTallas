@@ -160,7 +160,7 @@ module ot_hbm_tu_retry_phy_port #(
  // output registers.  RDPIPE turns on the replay SRAMs' MUXREG (registered bank select before the syndrome, +1 read
  // edge, retry storage and PHY ingress) and resets the wrapper's own pin / output registers from the synchronised run
  // gates the core already uses (async assert from the flops, sync release).
- parameter RDPIPE=`ifdef OT_TU_RDPIPE2 2 `elsif OT_TU_RDPIPE 1 `else 0 `endif  // 2 (ds-1010): + replay SRAM OREG
+ parameter RDPIPE=`ifdef OT_TU_RDPIPE3 3 `elsif OT_TU_RDPIPE2 2 `elsif OT_TU_RDPIPE 1 `else 0 `endif  // 2 (ds-1010): + replay SRAM OREG; 3: + FEC tx DFREE
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -211,7 +211,7 @@ module ot_hbm_tu_retry_phy_port #(
  // FEC channels through skids
  wire lk_fault;
  if(LINK_CREDIT)begin:g_flink
- ot_link_credit_tx #(.W(W+SW+EW),.CRED(LINK_DEPTH)) u_tx(.clk(pclk),.rst_n(phy_run),.i_valid(c_tx_v),.i_ready(c_tx_r),.i_data({c_tx_d,c_tx_s,c_tx_e}),
+ ot_link_credit_tx #(.W(W+SW+EW),.CRED(LINK_DEPTH),.DFREE(RDPIPE>=3 ? 1 : 0)) u_tx(.clk(pclk),.rst_n(phy_run),.i_valid(c_tx_v),.i_ready(c_tx_r),.i_data({c_tx_d,c_tx_s,c_tx_e}),
   .l_valid(fec_tx_v),.l_data({fec_tx_data,fec_tx_seq,fec_tx_session}),.l_credit(fec_tx_ready));
  // redesign-ds: with IQ_SKID the FEC rx landing FIFO also drains through its output skid (OREG: iqs-b post-CTS -425 =
  // u_rx.rp -> 8:1 landing mux -> port rx logic -> o_ready -> pop -> landing write enable, one pclk cycle)
@@ -227,7 +227,9 @@ module ot_hbm_tu_retry_phy_port #(
  end
 
  // pclk output flops
- reg rx_v_o,nak_o,fault_o;reg[W-1:0]rx_f_o;reg[SW-1:0]ack_o,ret_o,ing_o;reg[EW-1:0]ack_e_o;reg[CW-1:0]ack_p_o,debt_o;
+ // ds-1010: every output pin flop is its own cell (keep): iqs5-a ack_session -79.5 = ack_e_o merged by synthesis with the
+ // core's ses_prev (same D), so the pin flop had internal loads and could not be anchored at its pin.
+ (* keep *) reg rx_v_o,nak_o,fault_o;(* keep *) reg[W-1:0]rx_f_o;(* keep *) reg[SW-1:0]ack_o,ret_o,ing_o;(* keep *) reg[EW-1:0]ack_e_o;(* keep *) reg[CW-1:0]ack_p_o,debt_o;
  always@(posedge pclk or negedge phy_run)if(!phy_run)begin rx_v_o<=0;nak_o<=0;fault_o<=0;ack_o<=0;ret_o<=0;ing_o<=0;ack_e_o<=0;ack_p_o<=0;debt_o<=0;end
   else begin rx_v_o<=c_rx_v;nak_o<=c_nak;fault_o<=c_fault||lk_fault;ack_o<=c_ack;ret_o<=c_ret;ing_o<=c_ing;ack_e_o<=c_ack_e;ack_p_o<=c_ack_p;debt_o<=c_debt;end
  always@(posedge pclk)rx_f_o<=c_rx_f;

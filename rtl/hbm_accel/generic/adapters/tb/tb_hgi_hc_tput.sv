@@ -65,7 +65,8 @@ module tb_hgi_hc_tput;
     initial for (int q = 0; q < NCASE; q++) retc[q] = -1;
     // retire stamps: the k-th done pulse belongs to the k-th record (in-order unit)
     always @(posedge clk) begin
-        if (rst_n && done) begin nd = nd + 1; if (t0 >= 0 && nd <= NCASE) retc[nd - 1] = cyc - t0; end
+        if (rst_n && done) begin nd = nd + 1; if (t0 >= 0 && nd <= NCASE) begin retc[nd - 1] = cyc - t0;
+            $display("RETIRE %0d at %0d (HBM beats so far %0d)", nd - 1, cyc - t0, hbeats); $fflush; end end
         if (rst_n && fault) nf = nf + 1;
     end
     initial begin
@@ -78,10 +79,11 @@ module tb_hgi_hc_tput;
             vm_req(1'b1, expm[e0][63:32] - 1, 32'hA5A5A5A5, qd); vm_req(1'b1, expm[e0][63:32] + ne, 32'hA5A5A5A5, qd);
         end
         repeat (4) @(negedge clk);
-        nd = 0; nf = 0; t0 = cyc;
+        nd = 0; nf = 0; t0 = cyc; $display("preload done at %0d", cyc); $fflush;
         for (c = 0; c < NCASE; c = c + 1) begin
             @(negedge clk); cur = casem[c][937:0]; rec_v = 1; issue[c] = cyc - t0;
-            while (!rec_rdy) @(negedge clk);
+            t = 0; while (!rec_rdy && t < 2000000 && nf == 0) begin @(negedge clk); t = t + 1; end
+            if (!rec_rdy) begin $display("ERR record %0d never accepted (state %0d, done %0d, fault %0d)", c, u.st, nd, nf); errors = errors + 1; break; end
             @(posedge clk); #0.1 rec_v = 0;
         end
         t = 0; while (nd < NCASE && nf == 0 && t < 5000000) begin @(posedge clk); t = t + 1; end

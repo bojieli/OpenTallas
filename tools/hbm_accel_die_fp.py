@@ -563,7 +563,11 @@ ADOPTED = R25
 #   Freed height -> svc-to-SM gap (129.6 -> 345.6 um), SM row channels (520 -> 1,209.6 um, 259 -> 561.6 um) and the
 #   SM-to-hub edge channel (551 -> 648 um); the inner SM column channels 259.2 -> 432 um (the outer SM column stays);
 #   spine side channels 1,244.16 -> 1,546.56 um.
-R25GQ = dict(r25gq=True, r25gq_base='r25gph',
+# loader host port h from rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv (origin/main 2026-10-10), host-facing ports
+# (tx = loader outputs, rx = loader inputs): s_* AXI-lite slave 37 / 65, h_* AXI-lite master 65 / 37, h_dma_* 74 / 205,
+# m_* host-memory AXI master 228 / 74, irq + fault 2 / 0  ->  406 / 381 (R25GPH: 256 / 256, short 150 / 125)
+HOST_H_HGI = (37 + 65 + 74 + 228 + 2, 65 + 37 + 205 + 74 + 0)
+R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              svc_gap_add=216.0, sm_colch_add=172.8, sm_ch01=1209.6, sm_ch12=561.6, hub_edge_ch=648.0, eq_ch=518.4,
              su_slot=(2016.144, 2808.0), sfu_frac=0.5, hc_mm2=550.8 * 5529.6 / 1e6, idx_score_frac=36 / 64,
              attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
@@ -3062,10 +3066,13 @@ def buses(m):
     pts = [p0, (p0[0] + 200.0, p0[1]), (p0[0] + 200.0, ych['S'] + 60.0), (xs_, ych['S'] + 60.0), (xs_, hl.y + hl.h / 2),
            (hl.x, hl.y + hl.h / 2)]
     if lrtl:    # r15 (H6): host link tx[255:0] + rx[255:0] (r1-r14b: tx only, the loader had no input)
-        chain('host', 'host', 512, (ld.name, 'h'), (hl.name, 'iox'), pts, path='host', fc=(256, 256), meso_end=True,
-              dom='link')
+        # host_h (R25GQ, [fp] 2026-10-10): (tx, rx) sized exactly from ot_hfd_loader_hgi's host-facing ports (HOST_H_HGI)
+        htx_, hrx_ = V.get('host_h', (256, 256))
+        chain('host', 'host', htx_ + hrx_, (ld.name, 'h'), (hl.name, 'iox'), pts, path='host', fc=(htx_, hrx_),
+              meso_end=True, dom='link')
         if fwd:
-            m.setdefault('meso', []).append(dict(inst=ld.name, kind='spine', chain='host (rx)', fifo_bits=256, slices=1,
+            m.setdefault('meso', []).append(dict(inst=ld.name, kind='spine', chain='host (rx)', fifo_bits=hrx_,
+                                                 slices=math.ceil(hrx_ / 512),
                                                  clock='clk_link', where='inside the receiving hub block'))
     else:
         chain('host', 'host', 512, (ld.name, 'h'), (hl.name, 'io'), pts, path='host')

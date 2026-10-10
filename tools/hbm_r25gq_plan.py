@@ -56,8 +56,8 @@ OPTION_A = [('vm_grpA_su', 'hub_vm_lanes', VMW, ['hb_hgi_vm', 'hb_su_SW']),
             # [fp] request 2026-10-10 (hgi-1010/mtp): reserve the CP <-> MTP f_mtp 517 / t_mtp 197 nets
             ('cp_mtp_f_mtp', 'control', 517, ['hb_mtp', 'hb_cmdproc']),
             ('cp_mtp_t_mtp', 'control', 197, ['hb_cmdproc', 'hb_mtp']),
-            # loader host port h widened for the host AXI master ld.m_* (228 out / 74 in), h_dma_wdata 64, irq / fault:
-            # +150 out / +125 in over the existing h spares (80 out / 13 in), to the host interface, pipelined
+            # loader host port h: exact HOST_H_HGI 406 / 381 (ot_hfd_loader_hgi host-facing ports) = R25GPH 256 / 256
+            # + 150 / + 125, to the host interface, pipelined
             ('loader_h_widen', 'host', 150 + 125, ['hb_loader', 'lk_host'])] + \
            [(f'att_rec_{q}', 'att_record', 1250, ['hb_cmdproc', f'at_{q}_00_lo']) for q in ('SW', 'SE', 'NW', 'NE')]
 
