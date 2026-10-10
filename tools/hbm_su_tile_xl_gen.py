@@ -14,16 +14,7 @@ def main():
     # The tile bit shape is invariant under the quarter face geometry.
     q=dict(H.QUARTERS['su']);p=H.Plan(q,{'ports':{'in':{'direction':'input','bits':6310},'out':{'direction':'output','bits':5376}}})
     p.tiled=True
-    s=H.emit_tile(p).replace('module hfd_su_tile (','module hfd_su_tile_xl (')
-    s=s.replace(f'output wire [{p.LB}:0] bc_out',f'output reg  [{p.LB}:0] bc_out')
-    s=s.replace('    assign bc_out =',f'    wire [{p.LB}:0] bc_pos;\n    assign bc_pos =')
-    s=s.replace('    always @(posedge clk) acc_out <=',f'    reg [{p.WCT-1}:0] acc_pos;\n    always @(posedge clk) acc_pos <=')
-    s=s.replace('endmodule','''`ifdef OT_SU_TILE_MUT_NOLOCKUP
-    always @(*) begin bc_out = bc_pos; acc_out = acc_pos; end
-`else
-    always @(negedge clk) begin bc_out <= bc_pos; acc_out <= acc_pos; end
-`endif
-endmodule''')
+    s=H.emit_tile_xl(p)
     out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     (out/'hfd_su_tile_xl.sv').write_text(s)
     (out/'hfd_su_tile.sv').write_text(H.emit_tile(p))

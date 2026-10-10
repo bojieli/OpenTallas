@@ -15281,3 +15281,32 @@ def hbm_su_tile_lockup_sizing():
              register_strip_um=[100.224,164.16],
              qualification='full-shape tile no IO falsepaths, calibrated phase budgets and emitted macro arcs; then quarter channel cuts')
     return r
+
+
+def hbm_su_tiled_gating_sizing():
+    """Physical proposal: gated XL tile quarter, not adopted before route/interface checks.
+
+    Wake uses raw clocks and a falling-edge register at every root crossing.
+    Tile data clocks contain the lane, broadcast, capture, accumulation and
+    output lockups. HOLD64 drains the16-hop chains; steady data latency is0
+    added cycles, with the compiler asserting wake3 edges before new data.
+    """
+    tiles, crossings, hold = 192, 42, 64
+    return dict(status='proposal_unqualified', tiles=tiles, icg_count=tiles,
+                hold_cycles=hold, wake_lead_cycles=3, data_cycles_added=0,
+                raw_clock_state_bits=tiles * (1 + 7 + 1) + crossings * 2 + 1,
+                wake_root_crossings=crossings,
+                tile_lockup_bits=tiles * (1743 + 448),
+                broadcast_bits_per_tile_hop=1743,
+                accumulate_bits_per_tile_hop=448,
+                wake_reset_bits_per_tile_hop=2,
+                lane_mac_cycles_unchanged=True,
+                cycles_per_chain=16, replica_fanout='one gate per tile, one wake successor',
+                tile_um=[187.056, 164.16], quarter_um=[1406.136, 5529.576],
+                added_wake_boundary_bits=1,
+                power_saving_w=0,
+                power_note='No savings adopted until real gated clock load closes and activity is measured',
+                obligations=['matched-root TT/FF macro budgets including output lockups',
+                             '192 real tile ICGs in quarter CTS, physical clock access',
+                             'M7 over-macro/channel capacity and full interface route',
+                             'qid static ownership straps at real E/M4 sites, timed capture'])
