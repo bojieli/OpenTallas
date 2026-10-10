@@ -122,6 +122,13 @@ proc ot_cg_clone_enchain {chain icg_clone k x y} {
   }
   [$icg_clone findITerm ENA] disconnect
   [$icg_clone findITerm ENA] connect $prev
+  return $prev
+}
+# group centroid of clusters [i0, i1] (iterm lists)
+proc ot_cg_centroid {clusters i0 i1} {
+  set sx 0; set sy 0; set n 0
+  foreach cl [lrange $clusters $i0 $i1] { foreach it $cl { lassign [[$it getInst] getLocation] x y; incr sx $x; incr sy $y; incr n } }
+  return [list [expr {$sx / $n}] [expr {$sy / $n}]]
 }
 set ::ot_cg_clones 0
 proc ot_cg_pushdown {} {
@@ -177,6 +184,8 @@ proc ot_cg_pushdown {} {
     set others [expr {[llength [$gnet getITerms]] - 1 - [llength $sinks]}]
     if {[llength $sinks] < $MIN} continue
     set clusters [ot_cg_split $sinks $K]
+    set G [expr {[info exists ::ot_cg_enreg_g] ? max(1, $::ot_cg_enreg_g) : [info exists ::env(OT_CG_ENREG_G)] ? max(1, $::env(OT_CG_ENREG_G)) : 1}]
+    array unset engrp
     set m [$inst getMaster]
     set k 0
     foreach cl [lrange $clusters 1 end] {
@@ -221,7 +230,17 @@ proc ot_cg_pushdown {} {
       $c setLocation [expr {$sx / $n}] [expr {$sy / $n}]
       $c setPlacementStatus PLACED
       if {[info exists ::ot_cg_enchain([$inst getName])] && [llength $::ot_cg_enchain([$inst getName])]} {
-        ot_cg_clone_enchain $::ot_cg_enchain([$inst getName]) $c $k [expr {$sx / $n}] [expr {$sy / $n}]
+        # OT_CG_ENREG_G clones per enable copy (spatially consecutive clusters of the bisection order): group 0 keeps the
+        # original register, group g > 0 gets one copy at its centroid (z_d fans out to N / G copies, not N)
+        set gi [expr {$k / $G}]
+        if {$gi > 0} {
+          if {![info exists engrp($gi)]} {
+            lassign [ot_cg_centroid $clusters [expr {$gi * $G}] [expr {min(($gi + 1) * $G - 1, [llength $clusters] - 1)}]] gx gy
+            set engrp($gi) [ot_cg_clone_enchain $::ot_cg_enchain([$inst getName]) $c $gi $gx $gy]
+          } else {
+            [$c findITerm ENA] disconnect; [$c findITerm ENA] connect $engrp($gi)
+          }
+        }
       }
       if {[info exists ::ot_cg_newlatch($cname)]} { set lc $::ot_cg_newlatch($cname); $lc setLocation [expr {$sx / $n}] [expr {$sy / $n}]; $lc setPlacementStatus PLACED }
     }
@@ -232,8 +251,9 @@ proc ot_cg_pushdown {} {
     set lat [expr {[info exists ::ot_cg_latch([$inst getName])] && $::ot_cg_latch([$inst getName]) ne "" ? [[lindex $::ot_cg_latch([$inst getName]) 0] getName] : "-"}]
     if {$lat ne "-"} { set li [lindex $::ot_cg_latch([$inst getName]) 0]; if {![$li isFixed]} { $li setLocation [expr {$sx / [llength $cl]}] [expr {$sy / [llength $cl]}]; $li setPlacementStatus PLACED } }
     if {[info exists ::ot_cg_enchain([$inst getName])] && [llength $::ot_cg_enchain([$inst getName])]} {
-      foreach e $::ot_cg_enchain([$inst getName]) { set li [lindex $e 0]; if {![$li isFixed]} { $li setLocation [expr {$sx / [llength $cl]}] [expr {$sy / [llength $cl]}]; $li setPlacementStatus PLACED } }
-      puts "OT_CG_ENREG [$inst getName]: enable chain [join [lmap e $::ot_cg_enchain([$inst getName]) {[lindex $e 0] getName}] { -> }] cloned x$k"
+      lassign [ot_cg_centroid $clusters 0 [expr {min($G - 1, [llength $clusters] - 1)}]] gx gy
+      foreach e $::ot_cg_enchain([$inst getName]) { set li [lindex $e 0]; if {![$li isFixed]} { $li setLocation $gx $gy; $li setPlacementStatus PLACED } }
+      puts "OT_CG_ENREG [$inst getName]: enable chain [join [lmap e $::ot_cg_enchain([$inst getName]) {[lindex $e 0] getName}] { -> }] cloned: [expr {($k + $G) / $G - 1}] copies, $G clones per copy"
     }
     puts "OT_CG_PUSHDOWN latch=$lat [$inst getName] ([$m getName]) sinks=[llength $sinks] other_loads=$others clusters=[llength $clusters] clones=$k"
     incr total $k
