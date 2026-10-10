@@ -78,5 +78,61 @@ class Overlay(unittest.TestCase):
         self.assertIn("pinflop_overlay.py", Path(cl.__file__).read_text())
 
 
+class InputPinflopRouteTime(unittest.TestCase):
+    def test_wiring(self):
+        import sys
+        sys.path.insert(0, str(ROOT / "tools/closure_loop"))
+        import closure_loop as cl
+        self.assertEqual(cl.DOCKER_SHIM.count("-e OT_IOREF_INPUT_PF"), 2)
+        src = Path(cl.__file__).read_text()
+        self.assertIn('env += "export OT_IOREF_INPUT_PF=1\\n"', src)
+        sdc = (ROOT / "physical/common_flow/io_ref_routed.sdc").read_text()
+        self.assertIn('$::env(OT_IOREF_INPUT_PF) eq "1"', sdc)
+
+    @unittest.skipUnless(shutil.which("docker"), "no docker")
+    def test_openroad_inputs_move_outputs_stay(self):
+        if subprocess.run(["docker", "image", "inspect", IMAGE], capture_output=True).returncode:
+            self.skipTest("no ORFS image")
+        net = """module top(input clk, input a, input b, input c, output q1);
+  wire cd, ck2;
+  BUFx2_ASAP7_75t_R u_ck (.A(clk), .Y(ck2));
+  DFFHQNx1_ASAP7_75t_R r1 (.CLK(ck2), .D(a), .QN());
+  DFFHQNx1_ASAP7_75t_R r2 (.CLK(ck2), .D(b), .QN());
+  AND2x2_ASAP7_75t_R u_a (.A(c), .B(b), .Y(cd));
+  DFFHQNx1_ASAP7_75t_R r3 (.CLK(clk), .D(cd), .QN(q1));
+endmodule
+"""
+        head = TCL.split("source /w/pinflop_ref.tcl")[0]
+        body = """create_clock -name vclk -period 833
+set_clock_latency 100 [get_clocks vclk]
+set_input_delay 316.6 -clock vclk [all_inputs -no_clocks]
+set_input_delay -min 0 -clock vclk [all_inputs -no_clocks]
+set_output_delay 316.6 -clock vclk [all_outputs]
+set_output_delay -min 0 -clock vclk [all_outputs]
+set_propagated_clock [get_clocks core_clk]
+if {[info exists ::env(PF)]} { set ::env(OT_IOREF_INPUT_PF) 1 }
+source /w/io_ref_routed.sdc
+write_sdc /tmp/y.sdc
+puts [exec grep -E "_delay" /tmp/y.sdc]
+"""
+        outs = {}
+        for pf in (False, True):
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, "t.v").write_text(net)
+                Path(t, "t.tcl").write_text(head + body)
+                shutil.copy(ROOT / "physical/common_flow/io_ref_routed.sdc", Path(t, "io_ref_routed.sdc"))
+                r = subprocess.run(["docker", "run", "--rm", *(["-e", "PF=1"] if pf else []), "-v", f"{t}:/w", IMAGE,
+                                    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
+                                    "/w/t.tcl"], capture_output=True, text=True, timeout=600)
+                outs[pf] = r.stdout + r.stderr
+        import re
+        mn = lambda o, p: float(re.search(r"set_input_delay (\S+) -clock \[get_clocks \{vclk\}\] -min -add_delay \[get_ports \{%s\}\]" % p, o).group(1))
+        om = lambda o: float(re.search(r"set_output_delay (\S+) -clock \[get_clocks \{vclk\}\] -min", o).group(1))
+        self.assertEqual(mn(outs[False], "a"), 0.0)                  # off: unchanged
+        self.assertIn("OT_IOREF_PF input pin flops 2", outs[True])
+        self.assertGreater(mn(outs[True], "a"), 0.0)                 # pin flops later than the boundary mean
+        self.assertEqual(om(outs[True]), om(outs[False]))            # outputs keep the boundary mean
+
+
 if __name__ == "__main__":
     unittest.main()
