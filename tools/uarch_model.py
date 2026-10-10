@@ -15555,3 +15555,9 @@ def dsrom_mtp_p2_rootpipe_model():
     """Static decode separation and pin-local single-flight P2 output sizing."""
     from dsrom_mtp_p2_transport_model import rootpipe_model
     return rootpipe_model()
+
+
+def pcmux_parallel_pin_model():
+    """Size the optional full-shape next-equation pin outputs before RTL."""
+    from pcmux_parallel_pin_model import model
+    return model()
