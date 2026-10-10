@@ -1106,9 +1106,22 @@ def main():
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
     ap.add_argument('--fold', type=int, default=0, help='[sfu] 2026-10-10 (R25GQ slot 2016 x 1095): fold each tile chain '
                     'into column segments of F tiles (serpentine, a registered relay each way at every turn); faced tiles')
+    ap.add_argument('--band-y', type=float, default=None, help='[sfu] R25GQ: the port band / chain-head y (the die '
+                    'view ports record has no band_xy; the folded quarter keeps its band at the S rows, 40 um)')
+    ap.add_argument('--end', action='append', default=[], metavar='PORT=S|N',
+                    help='[sfu] R25GQ (fp decision (a)): a port served by the far end of the S (even) / N (odd) chains '
+                    'instead of the centre band (outputs read the far-end broadcast, inputs inject into the far-end '
+                    'accumulator), so it does not widen the tile accumulator.  With --fold chain 0 ends at the W edge, '
+                    'chain 1 at the E edge: the W-face lgW tap = S, the E-face HGI client ports = N')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
+    ap_band = a.band_y
+    if a.end:
+        q['end'] = dict(kv.split('=') for kv in a.end)         # in place: emit_rtl names the quarter by identity
+        assert all(v in ('S', 'N') for v in q['end'].values()), q['end']
     pj = json.loads(Path(a.ports).read_text())
+    if ap_band is not None:
+        pj['band_xy'] = [pj['w_um'] / 2, ap_band]
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     if a.half_width:
