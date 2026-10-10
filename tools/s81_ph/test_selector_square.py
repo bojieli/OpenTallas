@@ -30,6 +30,16 @@ class SelectorSquare(unittest.TestCase):
         self.assertEqual(m['die_ports']['lanes']['iNE'], ['u_q3','lane'])
         self.assertEqual(m['latency']['measured_increment_over_127_cycles'],47)
 
+    def test_one_row_actual_m8_capacity(self):
+        import selector_one_row as R
+        m=R.build(ROOT)
+        self.assertEqual(m['track_pitch_um'], .08)
+        self.assertEqual(m['outline_um'], [2036.944,1006.56])
+        self.assertGreaterEqual(m['tracks_capacity_lower_bound'],5144)
+        self.assertEqual(m['station_instances'],107)
+        self.assertFalse(m['qualified'])
+        self.assertEqual(m['latency']['credits'],4)
+
     def test_budget_uses_unimplemented_direct_seam(self):
         legacy = B.build(ROOT)
         square = B.build(ROOT, selector_square=True)

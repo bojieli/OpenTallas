@@ -1,0 +1,266 @@
+{
+ "schema": "opentallas.s81.selector-one-row.v1",
+ "qualified": false,
+ "orient": "R0",
+ "source_commit": "1dc5e37d5476277c7413c341b42e09d2dd405bd5",
+ "quarters": 4,
+ "control": 1,
+ "tile_positions": [
+  {
+   "inst": "u_q0",
+   "x": 6.544,
+   "y": 0
+  },
+  {
+   "inst": "u_q1",
+   "x": 481.74399999999997,
+   "y": 0
+  },
+  {
+   "inst": "u_q2",
+   "x": 956.944,
+   "y": 0
+  },
+  {
+   "inst": "u_q3",
+   "x": 1432.144,
+   "y": 0
+  },
+  {
+   "inst": "u_c",
+   "x": 1907.344,
+   "y": 0
+  }
+ ],
+ "outline_um": [
+  2036.944,
+  1006.56
+ ],
+ "old_outline_um": [
+  5270.376,
+  321.816
+ ],
+ "dedicated_channel_um": 686.88,
+ "channel_bits": 5144,
+ "track_pitch_um": 0.08,
+ "routing_signal_fraction": 0.6,
+ "tracks_capacity_lower_bound": 5151,
+ "channel_basis": "actual ASAP7 M8 horizontal0.08um pitch; M9 vertical0.08um pitch; 60% signal allocation requires PG/via qualification",
+ "station_master": "dsfd_stnh_512x1",
+ "station_actual_size_um": [
+  17.256,
+  30.216
+ ],
+ "station_instances": 107,
+ "station_area_um2": 55790.580672000004,
+ "available_channel_area_um2": 1399136.09472,
+ "bundles": [
+  {
+   "quarter": 0,
+   "quarter_port": "t_s",
+   "control_port": "f_s",
+   "bits": 865,
+   "detour_length_um_max": 2746.056,
+   "stations_per_chunk": 7,
+   "chunks_512": 2,
+   "station_instances": 14,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 0,
+   "quarter_port": "t_o",
+   "control_port": "f_o",
+   "bits": 354,
+   "detour_length_um_max": 2528.808,
+   "stations_per_chunk": 7,
+   "chunks_512": 1,
+   "station_instances": 7,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 0,
+   "quarter_port": "f_c",
+   "control_port": "t_c",
+   "bits": 66,
+   "detour_length_um_max": 2421.816,
+   "stations_per_chunk": 7,
+   "chunks_512": 1,
+   "station_instances": 7,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 0,
+   "quarter_port": "f_cr",
+   "control_port": "t_cr",
+   "bits": 1,
+   "detour_length_um_max": 2385.144,
+   "stations_per_chunk": 7,
+   "chunks_512": 1,
+   "station_instances": 7,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 1,
+   "quarter_port": "t_s",
+   "control_port": "f_s",
+   "bits": 865,
+   "detour_length_um_max": 2400.264,
+   "stations_per_chunk": 7,
+   "chunks_512": 2,
+   "station_instances": 14,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 1,
+   "quarter_port": "t_o",
+   "control_port": "f_o",
+   "bits": 354,
+   "detour_length_um_max": 2183.016,
+   "stations_per_chunk": 6,
+   "chunks_512": 1,
+   "station_instances": 6,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 1,
+   "quarter_port": "f_c",
+   "control_port": "t_c",
+   "bits": 66,
+   "detour_length_um_max": 2076.024,
+   "stations_per_chunk": 6,
+   "chunks_512": 1,
+   "station_instances": 6,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 1,
+   "quarter_port": "f_cr",
+   "control_port": "t_cr",
+   "bits": 1,
+   "detour_length_um_max": 2039.352,
+   "stations_per_chunk": 6,
+   "chunks_512": 1,
+   "station_instances": 6,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 2,
+   "quarter_port": "t_s",
+   "control_port": "f_s",
+   "bits": 865,
+   "detour_length_um_max": 1635.816,
+   "stations_per_chunk": 5,
+   "chunks_512": 2,
+   "station_instances": 10,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 2,
+   "quarter_port": "t_o",
+   "control_port": "f_o",
+   "bits": 354,
+   "detour_length_um_max": 1418.568,
+   "stations_per_chunk": 4,
+   "chunks_512": 1,
+   "station_instances": 4,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 2,
+   "quarter_port": "f_c",
+   "control_port": "t_c",
+   "bits": 66,
+   "detour_length_um_max": 1311.576,
+   "stations_per_chunk": 4,
+   "chunks_512": 1,
+   "station_instances": 4,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 2,
+   "quarter_port": "f_cr",
+   "control_port": "t_cr",
+   "bits": 1,
+   "detour_length_um_max": 1274.904,
+   "stations_per_chunk": 4,
+   "chunks_512": 1,
+   "station_instances": 4,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 3,
+   "quarter_port": "t_s",
+   "control_port": "f_s",
+   "bits": 865,
+   "detour_length_um_max": 1290.024,
+   "stations_per_chunk": 4,
+   "chunks_512": 2,
+   "station_instances": 8,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 3,
+   "quarter_port": "t_o",
+   "control_port": "f_o",
+   "bits": 354,
+   "detour_length_um_max": 1072.776,
+   "stations_per_chunk": 4,
+   "chunks_512": 1,
+   "station_instances": 4,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 3,
+   "quarter_port": "f_c",
+   "control_port": "t_c",
+   "bits": 66,
+   "detour_length_um_max": 965.784,
+   "stations_per_chunk": 3,
+   "chunks_512": 1,
+   "station_instances": 3,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  },
+  {
+   "quarter": 3,
+   "quarter_port": "f_cr",
+   "control_port": "t_cr",
+   "bits": 1,
+   "detour_length_um_max": 929.112,
+   "stations_per_chunk": 3,
+   "chunks_512": 1,
+   "station_instances": 3,
+   "final_segments_um": 100,
+   "credit_initial": 4
+  }
+ ],
+ "latency": {
+  "source_measured_mean": 174,
+  "source_measured_max": 310,
+  "maximum_forward_stages": 7,
+  "credits": 4,
+  "credit_round_trip_and_command_status_alignment": "exact mechanism gate required; no throughput gain claimed"
+ },
+ "problems": [
+  "actual station placements and clocks/lockups not implemented",
+  "same-root common-clock primitive required: retained station fi0 is forwarded clock, not assumed interchangeable",
+  "actual M8 signal-layer PG/via blockage and station pin-access capacity pending",
+  "full-width finite-credit command/status transaction gate pending",
+  "matching control SLAT=4 XDX=1 hardview pending",
+  "die slot outline must be changed; no old-slab adoption"
+ ]
+}

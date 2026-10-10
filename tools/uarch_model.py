@@ -15729,3 +15729,15 @@ def dsrom_selector_square_frpr_model():
         fanout='source FRPR=1 three width-macro replicas per quarter; seam reset/credit fanout unqualified',
         routing_tracks='actual LEF track and seam station capacity qualification pending; no admitted build',
         qualified=False, problems=receipt['qualification_problems'])
+
+
+def dsrom_selector_one_row_frpr_model():
+    """R0-only one-row selector model using actual M8 track pitch.
+
+    A dedicated seam channel receives no over-macro routing credit. Hardened
+    station geometry prices area, while source clock/root and transaction gates
+    remain open; the model cannot authorize a route yet.
+    """
+    from s81_ph import selector_one_row
+    # The standalone planner keeps its sibling import for direct CLI use.
+    return selector_one_row.build(Path(__file__).resolve().parents[1])
