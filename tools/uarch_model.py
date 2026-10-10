@@ -466,6 +466,12 @@ def hgi_att_selected_model():
     return model()
 
 
+def hgi_att_scaled_model():
+    """Original scaled-FP4 provenance into the existing exact attention engine."""
+    from hgi_att_scaled_model import model
+    return model()
+
+
 def mtp_hist_pipeline_contract_model():
     """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
     from mtp_hist_pipeline_model import model
