@@ -7,8 +7,9 @@ posedge pin registers that tap drives (the negedge lockups are skipped) on the C
 latencies >= 0: the die only adds delay).  Both TT and FF are measured; the SDC picks by the loaded library corner.
 
     tap_latency.py --base <calibrate ORFS results base glob> --sdc OUT.sdc --env OUT.env [--image openroad/orfs:latest]
-writes OUT.sdc (set_clock_latency -source per tap, TT / FF branch) and OUT.env (FCL_REF_TT=.. FCL_REF_FF=..)."""
-import argparse, glob, json, subprocess, tempfile
+writes OUT.sdc (set_clock_latency -source per tap, TT / FF branch) and OUT.env (FCL_REF_TT=.. FCL_REF_FF=..).
+Docker/OpenROAD output is preserved in uniquely named per-corner logs beside OUT.env, including failed attempts."""
+import argparse, glob, json, subprocess, sys, tempfile
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -61,16 +62,30 @@ def main():
     ap.add_argument('--env', required=True)
     ap.add_argument('--image', default='openroad/orfs:latest')
     a = ap.parse_args()
-    base = sorted(glob.glob(a.base))[-1]
+    bases = sorted(glob.glob(a.base))
+    if len(bases) != 1:
+        ap.error(f'expected one calibrate database for {a.base!r}; found {len(bases)}: {bases}')
+    base = bases[0]
     db = '4_1_cts.odb' if Path(base, '4_1_cts.odb').exists() else '4_cts.odb'
     sdc = '4_cts.sdc' if Path(base, '4_cts.sdc').exists() else '3_place.sdc'
+    for name in (db, sdc):
+        if not Path(base, name).is_file():
+            ap.error(f'calibrate artifact missing: {Path(base, name)}')
     res = {}
     with tempfile.TemporaryDirectory() as td:
         for C in ('TT', 'FF'):
             Path(td, 's.tcl').write_text(TCL.format(PLAT=PLAT, C=C, db=db, sdc=sdc))
-            subprocess.run(['docker', 'run', '--rm', '-v', f'{base}:/base:ro', '-v', f'{td}:/t', a.image, 'bash', '-lc',
-                            '/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl'],
-                           check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=7200)
+            log_dir = Path(a.env).parent
+            log_dir.mkdir(parents=True, exist_ok=True)
+            with tempfile.NamedTemporaryFile(mode='w', prefix=f'tap_latency_{C}_', suffix='.log',
+                                             dir=log_dir, delete=False) as output:
+                log = Path(output.name)
+                result = subprocess.run(['docker', 'run', '--rm', '-v', f'{base}:/base:ro', '-v', f'{td}:/t', a.image, 'bash', '-lc',
+                                         '/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl'],
+                                        stdout=output, stderr=subprocess.STDOUT)
+            if result.returncode:
+                print(log.read_text(), file=sys.stderr)
+                raise RuntimeError(f'OpenROAD {C} tap calibration exited {result.returncode}; output preserved in {log}')
             res[C] = {l.split()[0]: float(l.split()[1]) for l in Path(td, f'{C}.txt').read_text().split('\n') if l.strip()}
     assert res['TT'] and set(res['TT']) == set(res['FF']), res
     ref = {C: max(v.values()) for C, v in res.items()}

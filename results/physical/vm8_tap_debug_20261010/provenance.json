@@ -1,0 +1,20 @@
+{
+  "scope": "Tap-clock calibration diagnostic only; no timing closure or adoption claim",
+  "rtl_source_commit": "2a2afc38711028e1c32126e2d67e7f9b8cb6f987",
+  "host": "ot-epyc2",
+  "job": "hbm_vm8vt_nee_2a2afc387-tc-rvt-cl",
+  "calibrate_base": "/srv/opentallas-data/claude/closure-loop/hbm_vm8vt_nee_2a2afc387-tc-rvt-cl/routes/hbm_vm8vt_nee_2a2afc387_tc_rvt_cl_cal/work/orfs/results/asap7/opentallas_hfd_vm_ne_e_asap7_hv_hbm_vm8vt_nee_2a2afc387_tc_rvt_cl_cal/base",
+  "original_failure": "Docker returned rc=1; original stdout/stderr discarded, cause unrecoverable",
+  "reproduction": "Original script with output exposed, closure-loop Docker shim, and fixed logging script each pass on preserved database. Fixed SDC and env byte-identical to exposed-original run (cmp rc=0).",
+  "tap_count": 10,
+  "ref_tt_ps": 212.3,
+  "ref_ff_ps": 178.8,
+  "tt_min_mean_ps": 105.8,
+  "changes": "Unique persistent combined Docker stdout/stderr logs; explicit missing/ambiguous calibration artifact error; remove unpriced 7200-second timeout. No RTL or latency change.",
+  "files_sha256": {
+    "nee_rvt_fclat.env": "859a9ec6c7de3a78c65d82bbd2baacf1695ac548bfa02b554290fbe5f097ef78",
+    "nee_rvt_FF.log": "3456802c69a1c1d9263248f28f0345f699eebba647e9f229d8d4bc204692819c",
+    "nee_rvt_TT.log": "d873848aef9fe7617beac731e7a1b7a74b2ce3afcf5f9a6b0b7677177351eccf",
+    "nee_rvt_fclat.sdc": "559f0264617c92843bdec08ba0981cccf3d625877a32dd97a9145c9774e2356a"
+  }
+}
