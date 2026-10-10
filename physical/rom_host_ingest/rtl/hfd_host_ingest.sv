@@ -10,7 +10,7 @@
 // pulse slot_done_v / slot_done_tag (ck) for the decode scheduler, so decode can never read a slot whose writes are still
 // in flight.  Fault words pass at once.  FENCE 0 (bench mutant, must FAIL) releases completions without waiting.
 module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
-    parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif) (
+    parameter integer HCUT = `ifdef OT_HING_HCUT2 2 `elsif OT_HING_HCUT 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -77,16 +77,33 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     wire        b_full;
     reg         hk_v; reg [63:0] hk_d;
     wire [63:0] r_head = (HCUT != 0) ? hk_d : a_head;
-    wire        is_done = r_head[63:56] == 8'h01;
+    wire        is_done0 = r_head[63:56] == 8'h01;
+    // redesign-hbm 2026-10-09 (HCUT = 2): hing HCUT-11861bec1 rvt TT -284 / SS -797 (35 levels) = hk_d -> 32-bit
+    // acked >= count compare -> rel -> u_cb.mem / wbin and u_ca.rbin.  The release decision now reads FLOPS only:
+    // ok_q = (acked >= hk_d count) and dn_q = (hk_d is a done word) are registered, and are trusted only once hk_d has sat
+    // one edge in the head register (hk_ok).  acked only grows, so a one-edge-stale ok_q can only delay a release, never
+    // advance it (the fence holds).  Cost: +1 ck edge per completion word (2 edges a word through the head).
+    reg         hk_ok, ok_q, dn_q;
+    always @(posedge ck) begin ok_q <= acked >= hk_d[31:0]; dn_q <= hk_d[63:56] == 8'h01; end
+    wire        is_done = (HCUT == 2) ? dn_q : is_done0;
+`ifndef OT_HING_MUT_HCUT2_STALE
+    wire        hk_rdy = (HCUT == 2) ? hk_v && hk_ok : hk_v;
+`else
+    wire        hk_rdy = hk_v;                     // mutant: trusts ok_q / dn_q of the PREVIOUS head word
+`endif
 `ifndef OT_HING_MUT_HCUT_NOFENCE
-    wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full && (!is_done || FENCE == 0 || acked >= r_head[31:0]);
+    wire        rel = ((HCUT != 0) ? hk_rdy : !a_empty) && !b_full &&
+                      (!is_done || FENCE == 0 || ((HCUT == 2) ? ok_q : acked >= r_head[31:0]));
 `else
     wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full;   // mutant: the fence is skipped on the head register
 `endif
     always @(*) a_pop = (HCUT != 0) ? (!a_empty && (!hk_v || rel)) : rel;
     always @(posedge ck or negedge rn_c)
-        if (!rn_c) hk_v <= 1'b0;
-        else if (HCUT != 0) begin if (a_pop) hk_v <= 1'b1; else if (rel) hk_v <= 1'b0; end
+        if (!rn_c) begin hk_v <= 1'b0; hk_ok <= 1'b0; end
+        else if (HCUT != 0) begin
+            if (a_pop) hk_v <= 1'b1; else if (rel) hk_v <= 1'b0;
+            hk_ok <= !a_pop && hk_v && !rel;       // the head word has been registered for >= 1 edge
+        end
     always @(posedge ck) if (HCUT != 0 && a_pop) hk_d <= a_head;
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin acked <= 0; slot_done_v <= 1'b0; slot_done_tag <= 0; end
