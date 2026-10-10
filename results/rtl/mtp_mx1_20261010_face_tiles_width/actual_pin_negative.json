@@ -1,0 +1,8 @@
+{
+  "scope": "existing fc8 fullshape calibration ODB negative check, no rebuild",
+  "signal_rectangles": 5405,
+  "expected": 5409,
+  "verdict": "expected FAIL: missing cke0/cke1/ckw0/ckw1; historic auto-placement also violates pin rectangles",
+  "remote_record": "ot-epyc1tb:/srv/opentallas-scratch/codex/mx1-root/mx1_actual_pins.tsv",
+  "record_sha256": "2cf7a1f0a5898252ed65ecfe8a5d5c535ca7db66bc5b0f11ca3b0248bd532b1b"
+}

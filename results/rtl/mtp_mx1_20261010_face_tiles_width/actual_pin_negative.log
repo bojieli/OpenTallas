@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-codex-mtp-mx1-root-20261010/physical/hbm_cp_mtp_native/gen_mx1_pin_plan.py", line 35, in <module>
+    if __name__=='__main__':main()
+  File "/home/ubuntu/wt-codex-mtp-mx1-root-20261010/physical/hbm_cp_mtp_native/gen_mx1_pin_plan.py", line 30, in main
+    assert set(actual)==set(expected),('actual pin names',sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected)))
+AssertionError: ('actual pin names', ['cke0[0]', 'cke1[0]', 'ckw0[0]', 'ckw1[0]'], [])
