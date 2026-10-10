@@ -11,7 +11,8 @@ module hgi_e2e_su_slot #(
     parameter integer UNIT = 2,
     parameter integer GLU = 0,
     parameter integer N = 16,
-    parameter integer M = 8
+    parameter integer M = 8,
+    parameter integer LV = 6
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -48,7 +49,7 @@ module hgi_e2e_su_slot #(
     wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
     wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire order_fault, retire_o;
     wire dbg_emit, dbg_ret, dbg_res; wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(6)) u_vec (
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV)) u_vec (
         .clk(clk), .rst_n(rst_n), .go(op_v), .ready(op_rdy), .idle(su_idle),
         .i_nout(w[0 +: 16]), .i_nin(w[16 +: 16]), .i_asrc(w[32 +: 2]), .i_bsrc(w[34 +: 2]), .i_csrc(w[36 +: 2]),
         .i_dsrc(w[38 +: 2]), .i_abase(w[40 +: 24]), .i_aso(w[64 +: 24]), .i_asi(w[88 +: 24]),

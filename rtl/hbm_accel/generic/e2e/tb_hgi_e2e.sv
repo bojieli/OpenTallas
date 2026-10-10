@@ -21,7 +21,7 @@
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0;
-    parameter integer SU_N = 16, SU_M = 8;
+    parameter integer SU_N = 64, SU_M = 16, SU_LV = 7;   // N x 2^LV >= 8,192: the Qwen P8191 softmax rows in one reduced segment
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
@@ -95,14 +95,14 @@ module tb_hgi_e2e;
     assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
     generate if (REAL_SU) begin : g_su
-        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[2]),
+        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[2]),
             .rec_rdy(r_rdy[2]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
             .rec_done(r_done[2]), .rec_fault(r_fault[2]));
     end else begin : g_su_stub
         assign r_rdy[2] = 1'b0; assign r_done[2] = 1'b0; assign r_fault[2] = 1'b0;
     end endgenerate
     generate if (REAL_SFU) begin : g_sfu
-        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[3]),
+        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[3]),
             .rec_rdy(r_rdy[3]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
             .rec_done(r_done[3]), .rec_fault(r_fault[3]));
     end else begin : g_sfu_stub
