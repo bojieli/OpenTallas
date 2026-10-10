@@ -42,7 +42,7 @@ def ref_word(d):
     pres = {nm: bool(op['opnd'] >> j & 1) for j, nm in enumerate(C.OPND)}
     D = {nm: d['eff'][j] for j, nm in enumerate(C.OPND)}
     sp = {nm: C.fld(D[nm], 'space') for nm in C.OPND}
-    use_b = s['m1'] in (1, 5, 6) or s['ad'] == 3 or s['e2'] == 1
+    use_b = s['m1'] in (1, 4, 6) or s['ad'] == 3 or s['e2'] == 1
     use_c = (s['m2'] == 1 or s['qm'] != 0 or s['ad'] in (1, 2) or s['e1'] in (1, 2)) and not s['c_pair']
     use_d = s['qm'] != 0 or s['ad'] == 5
     no, ni = C.fld(D['A'], 'm'), d['n'][0]

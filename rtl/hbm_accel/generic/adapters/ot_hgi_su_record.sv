@@ -68,7 +68,7 @@ module ot_hgi_su_record #(
         F_RED = 478, F_REDSQ = 480, F_REDWHOLE = 481, F_REDTREE = 482, F_REDRND = 483, F_RBASE = 484, F_RSO = 508,
         F_IMM1 = 532, F_IMM2 = 564, F_IMM3 = 596, F_CH_SRC = 628;
     // ---- ISA codes (tools/hdc_isa_v41.py)
-    localparam [2:0] M1_AB = 3'd1, M1_DIVB = 3'd5, M1_MAXB = 3'd6;
+    localparam [2:0] M1_AB = 3'd1, M1_DIVB = 3'd4, M1_MAXB = 3'd6;   // hdc_isa_v41: BYP AB AA AIMM DIVB DIVIMM MAXB
     localparam [1:0] M2_C = 2'd1;
     localparam [2:0] AD_Q = 3'd1, AD_C = 3'd2, AD_NEGB = 3'd3, AD_D = 3'd5;
     localparam [2:0] E1_MULC = 3'd1, E1_ADDC = 3'd2;
