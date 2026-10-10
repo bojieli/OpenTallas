@@ -44,7 +44,17 @@ def plan():
     # y=11604..12122 overlaps this slab, whose S boundary is 12115.44 um.
     proposed.append(dict(name='seq_su', master='qfd_seq_su_boundary', kind='candidate', x=east['x'],
                          y=round(east['y'] - 518.4 - 2.16, 3), w=518.4, h=518.4))
-    proposed.append(dict(name='sp_crom', master='qfd_crom_g_a', kind='candidate', x=sq['x'], y=sq['y'], w=777.6, h=1000.0))
+    # Four columns by two rows keep each closed 8-lane ROM/buffer
+    # group at its actual shape, in the vacated reservation and south gap.
+    # This requires a SU successor with constant ports on S and acceptance
+    # count on E; the current E-face pin-only variant does not satisfy it.
+    for group in range(8):
+        col, row = group % 4, group // 4
+        proposed.append(dict(name=f'crom_g_{group}', master='qfd_crom_g_a', kind='candidate',
+                             x=sq['x'] + col * 194.4, y=sq['y'] + row * 518.4, w=194.4-.024, h=518.4-.024))
+        proposed.append(dict(name=f'cbuf_g_{group}', master='qfd_su_cbuf_g_a', kind='candidate',
+                             x=su['x'] + col * 194.4, y=su['y'] - 432.0 + row * 216.0,
+                             w=194.4-.024, h=216.0-.024))
     overlaps = []
     for i, a in enumerate(kept + proposed):
         for b in (kept + proposed)[i + 1:]:
@@ -91,10 +101,10 @@ def plan():
                     'SU acceptance counter must be captured at actual endpoint acceptance and align with idle/progress; controller issue count is insufficient.',
                     'up4 closed view has LNK=0/CR=1/DLY=1; die band-word relays must be discovered before matching DLY=CLNK+2+LNK-CR.',
                     'ctlm module does not expose die LNK/CLNK parameters; successor must match composed band-control latency.',
-                    'Eight 194.4-um cbuf groups span 1555.2 um, exceeding the 777.58-um SU width; VM abuts the SU N face. New constant-store geometry and SU pin plan required.',
+                    'One row of eight cbuf groups cannot fit the SU N face (777.58 um; VM abuts N). Candidate uses four columns by two rows on S; SU constant ports must move to S, and upper-row buffers need relayed word paths past lower-row buffers.',
                     'seq_su east slot is adjusted below the port slab to avoid a 7-um overlap in the handoff coordinates.',
                     'Master abstractions must bind real RTL slices and pass hub routing-layer and pin-access checks before adoption.'
-                ], ready_to_build_die=False)
+                ], constant_store_candidate=dict(rom_groups=8,buffer_groups=8,macros_per_rom_group=6,rom_macros=48, layout='four columns by two rows, buffers in SU south gap', required_su_successor='E issue/status with endpoint accepted counter, S constant request/answer pins', qualification='all relays, both buffer rows, and macro pin access remain to compose'), ready_to_build_die=False)
 
 
 def main():

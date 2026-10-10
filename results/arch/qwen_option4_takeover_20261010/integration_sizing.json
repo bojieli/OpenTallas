@@ -81,13 +81,148 @@
       "h": 518.4
     },
     {
-      "name": "sp_crom",
+      "name": "crom_g_0",
       "master": "qfd_crom_g_a",
       "kind": "candidate",
       "x": 11418.62,
       "y": 6287.76,
-      "w": 777.6,
-      "h": 1000.0
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_0",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 9633.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_1",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11613.02,
+      "y": 6287.76,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_1",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11613.02,
+      "y": 9633.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_2",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11807.42,
+      "y": 6287.76,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_2",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11807.42,
+      "y": 9633.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_3",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 12001.820000000002,
+      "y": 6287.76,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_3",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 12001.820000000002,
+      "y": 9633.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_4",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 6806.16,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_4",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 9849.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_5",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11613.02,
+      "y": 6806.16,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_5",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11613.02,
+      "y": 9849.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_6",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11807.42,
+      "y": 6806.16,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_6",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 11807.42,
+      "y": 9849.6,
+      "w": 194.376,
+      "h": 215.976
+    },
+    {
+      "name": "crom_g_7",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 12001.820000000002,
+      "y": 6806.16,
+      "w": 194.376,
+      "h": 518.376
+    },
+    {
+      "name": "cbuf_g_7",
+      "master": "qfd_su_cbuf_g_a",
+      "kind": "candidate",
+      "x": 12001.820000000002,
+      "y": 9849.6,
+      "w": 194.376,
+      "h": 215.976
     }
   ],
   "geometry_overlaps": [],
@@ -147,9 +282,18 @@
     "SU acceptance counter must be captured at actual endpoint acceptance and align with idle/progress; controller issue count is insufficient.",
     "up4 closed view has LNK=0/CR=1/DLY=1; die band-word relays must be discovered before matching DLY=CLNK+2+LNK-CR.",
     "ctlm module does not expose die LNK/CLNK parameters; successor must match composed band-control latency.",
-    "Eight 194.4-um cbuf groups span 1555.2 um, exceeding the 777.58-um SU width; VM abuts the SU N face. New constant-store geometry and SU pin plan required.",
+    "One row of eight cbuf groups cannot fit the SU N face (777.58 um; VM abuts N). Candidate uses four columns by two rows on S; SU constant ports must move to S, and upper-row buffers need relayed word paths past lower-row buffers.",
     "seq_su east slot is adjusted below the port slab to avoid a 7-um overlap in the handoff coordinates.",
     "Master abstractions must bind real RTL slices and pass hub routing-layer and pin-access checks before adoption."
   ],
+  "constant_store_candidate": {
+    "rom_groups": 8,
+    "buffer_groups": 8,
+    "macros_per_rom_group": 6,
+    "rom_macros": 48,
+    "layout": "four columns by two rows, buffers in SU south gap",
+    "required_su_successor": "E issue/status with endpoint accepted counter, S constant request/answer pins",
+    "qualification": "all relays, both buffer rows, and macro pin access remain to compose"
+  },
   "ready_to_build_die": false
 }
