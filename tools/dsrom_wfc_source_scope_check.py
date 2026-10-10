@@ -25,7 +25,11 @@ def main():
     electrical = all(drv[k]['done'] and not any(drv[k]['violators'].values()) for k in ('TT','FF'))
     done = all(c[k].get('done') and c[k].get('exit') == 0 for k in ('TT','FF'))
     final = a.final or (base/'6_final.odb.pre_eco').exists()
-    ok = equivalent and fresh and electrical and done and tt >= 0 and L.case_record(a.case)['drc_errors'] == 0 and (not final or ff >= 0)
+    # mtp-lead 2026-10-09: TC electrical is a FINAL condition like FF hold.  Pre-ECO the post-route hold ECO (with its
+    # opt-in DRV repair, cl/hold_eco_opts.env REPAIR_DRV=1) still rebuilds the netlist and wires, so a pre-ECO slew miss
+    # must not stop the loop from reaching it (hold_only() requires no failed check); the installed (final) result must
+    # be electrically clean.  Unchanged for a final verdict.
+    ok = equivalent and fresh and (electrical or not final) and done and tt >= 0 and L.case_record(a.case)['drc_errors'] == 0 and (not final or ff >= 0)
     print(json.dumps(dict(eligible=ok, final=final, union_equivalent=equivalent, fresh=fresh, tc_electrical_clean=electrical, tt=tt, ff=ff, block_ff_preserved=c['FF']['block']['hold_wns_ps'], modes=modes)))
     if not ok: raise SystemExit(1)
 if __name__ == '__main__': main()

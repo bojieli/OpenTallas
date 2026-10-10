@@ -75,6 +75,10 @@ def main():
  # w_mask_in pins missed max slew (387.75 / 320 ps), failing the TC electrical check that gates the hold ECO.
  # --macro-x: the same S stack and Y rows (DRC-0 placement of that route), shifted right by a multiple of 0.432 um
  # (= lcm of the 0.054 site and 0.048 M4 pitch, so pin/track phase is unchanged) to open a channel for those cells.
+ # mxa/mxb (910e67c7b): tie slew gone, but 2-3 long rec-SRAM read-data repeater segments still exceed 320 ps after
+ # detailed route (repair_design runs at GRT with SLEW_MARGIN 30); the hold ECO has no DRV repair, so the route must be
+ # slew-clean.  --orfs-var KEY=VAL overrides the basis orfs_var (SOURCE route only), e.g. SLEW_MARGIN=50.
+ p.add_argument('--orfs-var',action='append',default=[],help='override a basis orfs_var KEY=VAL')
  p.add_argument('--macro-x',type=float,default=None,help='SOURCE only: fixed SRAM stack x origin (um); default rtlmp')
  a=p.parse_args();basis=json.loads((ROOT/f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json').read_text())
  L.CTRL='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv'
@@ -89,7 +93,7 @@ def main():
  if a.cmd=='check':return L.cmd_check(argparse.Namespace(case=a.case))
  # Size before route: retained full-shape basis, same macro count and registered
  # interfaces; SOURCE metadata +1cycle, current-user STAGE tuple +0cycles.
- L.cmd_prep(argparse.Namespace(inst=a.inst,case=a.case,src=a.src,knob=[f'{k}={v}' for k,v in basis['params'].items()],util=50,density=.50,lb_addon=.20,orfs_var=basis['orfs_var'],die_skew=150,link_hold_pad=0,link_hold_abs_min=basis.get('link_hold_abs_min_ps'),route_period=770,ideal_io=False,io_lat=None,cores=a.cores,need=a.need))
+ L.cmd_prep(argparse.Namespace(inst=a.inst,case=a.case,src=a.src,knob=[f'{k}={v}' for k,v in basis['params'].items()],util=50,density=.50,lb_addon=.20,orfs_var=[kv for kv in basis['orfs_var'] if kv.split('=',1)[0] not in {o.split('=',1)[0] for o in a.orfs_var}]+a.orfs_var,die_skew=150,link_hold_pad=0,link_hold_abs_min=basis.get('link_hold_abs_min_ps'),route_period=770,ideal_io=False,io_lat=None,cores=a.cores,need=a.need))
  cfg=a.case/'config.mk';s=cfg.read_text().replace('export DESIGN_NAME = ot_rom_pkg_ctrl_wfc\n',f'export DESIGN_NAME = ot_dsrom_wfc_tokpipe_{a.inst}\n')
  s=s.replace('export VERILOG_FILES = ',f'export VERILOG_FILES = /src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_{a.inst}.sv ')
  if os.environ.get('OT_ORFS_CORNER_OVERRIDE')=='TC':
