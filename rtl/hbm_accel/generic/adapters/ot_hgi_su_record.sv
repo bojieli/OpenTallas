@@ -30,7 +30,9 @@
 module ot_hgi_su_record #(
     parameter integer MUT_ISTRIDE = 0,     // mutant: Xsi = istride (no 0 -> 1, no ibcast)
     parameter integer MUT_EARLY = 0,       // mutant: retire on the unit's accept, not on its completion
-    parameter integer GLU = 0,             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
+    parameter integer GLU = 0,
+    parameter integer STREAM_OK = 0,       // 1 (the D1 SU unit): A may be STREAM (stream 0, SM -> SU), O may be STREAM
+                                           //    (SU -> ARGMAX); reported on op_strm with the op             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
                                            //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
@@ -48,6 +50,7 @@ module ot_hgi_su_record #(
     output reg           rec_fault,
     output wire          halted,
     output wire          drained,         // no record held, decoded or executing
+    output reg  [1:0]    op_strm,         // {O STREAM, A STREAM} of the op on op_w (STREAM_OK)
     // legacy op port (the DS control path)
     input  wire          lg_v,
     output wire          lg_rdy,
@@ -116,13 +119,16 @@ module ot_hgi_su_record #(
                               (e1 == E1_ADDC));      // c_pair: C is A's pair element, not an operand
     wire use_d = (qm != 3'd0) || (ad == AD_D);
     function automatic not_vm(input p, input [255:0] d); not_vm = p && (d[1:0] != 2'd1); endfunction
+    function automatic not_vs(input p, input [255:0] d);
+        not_vs = p && !(d[1:0] == 2'd1 || (STREAM_OK && d[1:0] == 2'd2));
+    endfunction
     function automatic [23:0] isi(input [255:0] d);
         isi = MUT_ISTRIDE ? {8'd0, d[135:120]} : (d[5] ? 24'd0 : (d[135:120] == 16'd0) ? 24'd1 : {8'd0, d[135:120]});
     endfunction
     wire [19:0] nout = a_q[87:68];
     wire bad = glu_bad || (!GLU && ((hdr_q[127:124] != 4'd2) || (hdr_q[123:118] != 6'd0) || !hdr_q[92])) || (|sut_e[255:142]) ||
                (su_vec != 2'd0) || !pa ||
-               not_vm(pa, a_q) || not_vm(pb, b_q) || not_vm(pc, c_q) || not_vm(pd, d_q) || not_vm(po, o_q) ||
+               not_vs(pa, a_q) || not_vm(pb, b_q) || not_vm(pc, c_q) || not_vm(pd, d_q) || not_vs(po, o_q) ||
                not_vm(pr, r_q) || not_vm(pi, i_q) ||
                (a_src != 2'd0) || (b_src != 2'd0) || (c_src != 2'd0) || (d_src != 2'd0) ||
                (use_b && !pb) || (use_c && !pc) || (use_d && !pd) ||
@@ -159,6 +165,7 @@ module ot_hgi_su_record #(
             if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (raw_v) begin                                  // E1: the decoded word
                 raw_v <= 1'b0; dec_v <= 1'b1; w_q <= w_dec; nop_q <= nop; bad_q <= bad;
+                op_strm <= {po && o_q[1:0] == 2'd2, a_q[1:0] == 2'd2};
             end
             // a refusal or an empty op retires in order: only once the op ahead of it has retired
             if (dec_v && !exec && !halt_q && (bad_q || nop_q)) begin

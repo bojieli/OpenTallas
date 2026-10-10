@@ -80,7 +80,10 @@ module ot_hgi_sm_record #(
     output wire [NSM*4-1:0]   lg_ret,
     // SM element ports
     output wire [NSM*106-1:0] sm_cmd,
-    input  wire [NSM*4-1:0]   sm_ret
+    input  wire [NSM*4-1:0]   sm_ret,
+    // coarse SM clock gate (redesign-hbm-cg, OT_SMH_CG): one broadcast level, high from the record's accept through
+    // its retire (start leaves at E3, so the tiles' ICGs open >= 2 edges before the first start); legacy path: tie 1
+    output reg                sm_cg_en
 );
     localparam integer CW = 106;
     // ---- registered reset: rst_n lands in a 2-flop synchroniser; every flop below resets from rst_i (recovery from
@@ -88,6 +91,8 @@ module ot_hgi_sm_record #(
     reg [1:0] rs;
     always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rst_i = rs[1];
+    reg rv_q;
+    always @(posedge clk) begin rv_q <= rec_v && rec_rdy; sm_cg_en <= rst_i && (rv_q || raw_v || s1_v || busy); end
     // ---- station
     reg          raw_v, dec_ok, busy, halt_q, s1_v, rdy_r;
     reg  [127:0] hdr_q;

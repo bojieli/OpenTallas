@@ -1,0 +1,4 @@
+case 0: 1 records retired in 3640 cycles (stage + compute + drain)
+case 1: 1 records retired in 2800 cycles (stage + compute + drain)
+summary: 2 SU data cases through stage / compute / drain, 5376 VM words exact
+HGI_SFU_UNIT PASS

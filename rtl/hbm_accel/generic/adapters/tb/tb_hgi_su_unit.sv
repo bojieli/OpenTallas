@@ -23,7 +23,12 @@ module tb_hgi_su_unit;
     integer errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [2196:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
-    ot_hgi_su_unit #(.N(32), .M(8), .LV(7), .MUT_DIRTY(MD)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+`ifdef UNIT_SFU
+    localparam integer GL = 1;
+`else
+    localparam integer GL = 0;
+`endif
+    ot_hgi_su_unit #(.N(32), .M(8), .LV(7), .GLU(GL), .MUT_DIRTY(MD)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
         .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
         .rec_n_a(cur[2196:2176]), .rec_done(done), .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur));
@@ -78,7 +83,8 @@ module tb_hgi_su_unit;
             words = words + nve; cases = cases + 1;
         end
         $display("summary: %0d SU data cases through stage / compute / drain, %0d VM words exact", cases, words);
-        if (errors == 0 && cases > 0) $display("HGI_SU_UNIT PASS"); else $display("HGI_SU_UNIT FAIL errors=%0d", errors);
+        if (errors == 0 && cases > 0) begin if (GL) $display("HGI_SFU_UNIT PASS"); else $display("HGI_SU_UNIT PASS"); end
+        else begin if (GL) $display("HGI_SFU_UNIT FAIL errors=%0d", errors); else $display("HGI_SU_UNIT FAIL errors=%0d", errors); end
         $finish;
     end
 endmodule

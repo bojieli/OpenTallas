@@ -1,0 +1,5 @@
+case 0: K 256, record -> retire 6244 cycles
+case 1: K 800, record -> retire 9668 cycles
+case 2: K 28672, record -> retire 136333 cycles
+summary: 3 HC_MIX records, 72 O words exact
+HGI_HC_UNIT PASS
