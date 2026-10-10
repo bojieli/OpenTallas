@@ -15310,3 +15310,22 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
+    """G24 count/map block sizing before RTL; estimates pending physical closure."""
+    if not 1 <= k <= 2048 or group not in (1, 2, 4, 8, 96) or not 0 <= batch <= 255:
+        raise ValueError('illegal OWNED shape')
+    return dict(schema='opentallas.hgi_idx_owned_g24.v1',
+        MACs_per_cycle=0, ids_per_cycle=1, compute='integer owner/local arithmetic and serial ceil division',
+        memory_port_bytes_per_cycle=32, vm_request_bits=338, vm_response_bits=274,
+        communication_bytes=dict(input_twice=8*k, output_R=4*k, output_O_max=4*k, output_D=8),
+        replicas_per_die=1, replica_mux_demux=0, vm_outstanding=4,
+        count_bits=96*12, added_storage_bits_estimate=96+2+8+13+13+12+4+1,
+        batch_division_cycles=14 if batch>1 else 1,
+        added_latency_cycles_estimate=(14 if batch>1 else 1)+2,
+        latency_composition='two K-entry passes + 96-owner max + padded output + VM packer stalls + G24 division/D write',
+        routing=dict(boundary_tracks=622, channel_capacity='inherits IDX unit physical slot; not yet measured'),
+        area=dict(added_ff_estimate=149, slot_fit='requires re-route of IDX unit', physical_qualified=False),
+        fanout=dict(slot_shift_add=2, batch_to_division=13),
+        physical_adoption=False)
