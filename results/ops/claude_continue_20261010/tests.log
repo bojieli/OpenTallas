@@ -1,0 +1,47 @@
+test_buffer_load_crash_does_not_type (__main__.ContinueTests) ... ok
+test_completed_spinner_is_history (__main__.ContinueTests) ... ok
+test_evidence_ready_status_is_eligible (__main__.ContinueTests) ... ok
+test_initial_sender_lock_prevents_any_capture (__main__.ContinueTests) ... ok
+test_limit_logs_and_retries_only_at_next_30min (__main__.ContinueTests) ... ok
+test_malformed_state_fails_closed (__main__.ContinueTests) ... ok
+test_never_competes_with_initial_or_uncertain_handoff (__main__.ContinueTests) ... ok
+test_no_interference_before_noon_even_sent_state (__main__.ContinueTests) ... ok
+test_old_rate_error_does_not_override_current_busy_footer (__main__.ContinueTests) ... ok
+test_old_rate_error_does_not_override_later_active_spinner (__main__.ContinueTests) ... ok
+test_partial_input_and_no_prompt_never_modified (__main__.ContinueTests) ... ok
+test_paste_crash_has_durable_reservation_never_same_slot_retry (__main__.ContinueTests) ... ok
+test_recheck_stops_paste_if_user_starts_typing (__main__.ContinueTests) ... ok
+test_send_buffer_and_enter_once_bind_initial_nonce (__main__.ContinueTests) ... ok
+test_unavailable_pane_logged_no_commands (__main__.ContinueTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.047s
+
+OK
+{"outcome": "DELIVERY_UNCERTAIN_RESERVED", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "CONTINUATION_SENT", "prompt_status": "idle", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "CONTINUATION_SENT", "prompt_status": "idle", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "SENDER_LOCK_BUSY", "time_utc": "2026-10-10T12:30:08.788795+00:00"}
+{"outcome": "CONTINUATION_SENT", "prompt_status": "limited_idle", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "CADENCE_NOT_DUE", "slot": 995367, "time_utc": "2026-10-10T19:35:00+00:00"}
+{"outcome": "CONTINUATION_SENT", "prompt_status": "limited_idle", "slot": 995367, "time_utc": "2026-10-10T19:45:00+00:00"}
+{"outcome": "STATE_UNREADABLE", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"handoff_status": "monitoring_reset", "outcome": "INITIAL_HANDOFF_NOT_CONFIRMED", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"handoff_status": "usage_requested", "outcome": "INITIAL_HANDOFF_NOT_CONFIRMED", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"handoff_status": "usage_checked_reset", "outcome": "INITIAL_HANDOFF_NOT_CONFIRMED", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"handoff_status": "delivery_reserved", "outcome": "INITIAL_HANDOFF_NOT_CONFIRMED", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"handoff_status": null, "outcome": "INITIAL_HANDOFF_NOT_CONFIRMED", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "BEFORE_NOON_RESET", "time_utc": "2026-10-10T18:59:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "busy", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "busy", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "partial_input", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "partial_input", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "no_prompt", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_NOT_IDLE_EMPTY", "prompt_status": "partial_input", "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "DELIVERY_UNCERTAIN_RESERVED", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "DUPLICATE_SLOT", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PROMPT_CHANGED_NO_PASTE", "prompt_status": "partial_input", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "DUPLICATE_SLOT", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "CONTINUATION_SENT", "prompt_status": "idle", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "DUPLICATE_SLOT", "slot": 995366, "time_utc": "2026-10-10T19:15:00+00:00"}
+{"outcome": "PANE_UNAVAILABLE", "time_utc": "2026-10-10T19:15:00+00:00"}

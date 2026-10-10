@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.claude_continue.validation.v1",
+  "parent_commit": "9a086ad7bff45bcfbf2db796af6b07831be4aa25",
+  "source_sha256": {
+    "tools/takeover/claude_continue.py": "63c53ecdbac8985af89561a098747df52a9383538df807f46b9f46ea136f4b79",
+    "tests/test_claude_continue.py": "14d388ea03defc72da4834eed73f17c6c218b457f1760abdbee249c2a6bc427e",
+    "results/ops/claude_continue_20261010/claude-continue.service": "5bb2015bf9a6dc6ac446caaf5509e42ac5610ee69f0e23933b50f7d7a3742148",
+    "results/ops/claude_continue_20261010/claude-continue.timer": "6279fac82151a562618cc98b4b07323bce06de84909712d47dcb972cc8284743"
+  },
+  "tests_command": "PYTHONPATH=. python3 tests/test_claude_continue.py -v",
+  "tests_passed": 15,
+  "tmux_delivery": "mocked only; no live input sent",
+  "units_verified": "systemd-analyze verify and calendar passed; root installs after merge",
+  "cadence": "every :15/:45, Persistent=true; no Codex cadence changes",
+  "scope": "ALL Codex and prior Claude streams, after initial handoff_sent/evidence_ready and noon gate"
+}
