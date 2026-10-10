@@ -7,6 +7,7 @@ The sequencer's component closure never closes the complete native-binding row.
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -17,10 +18,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as S
 
 GROUPS = {
-    ('capture', 'mtp'): ('f_rv', 'f_rd', 't_rg'),
-    ('mtp', 'collective'): ('t_tv', 't_td', 'f_tg', 't_sv', 't_sd', 'f_sg', 't_acc'),
-    ('vm', 'mtp'): ('f_wv', 'f_wd', 't_wg', 'f_qv', 'f_qd', 't_qg'),
-    ('mtp', 'vm'): ('t_hv', 't_hd', 'f_hg'),
+    ('capture', 'mtp'): ('f_rv', 'f_rd'),
+    ('mtp', 'capture'): ('t_rg',),
+    ('mtp', 'collective'): ('t_tv', 't_td', 't_sv', 't_sd', 't_acc'),
+    ('collective', 'mtp'): ('f_tg', 'f_sg'),
+    ('vm', 'mtp'): ('f_wv', 'f_wd', 'f_qv', 'f_qd', 'f_hg'),
+    ('mtp', 'vm'): ('t_hv', 't_hd', 't_wg', 't_qg'),
 }
 SRCS = ['rtl/dsrom_sys/mtp/' + p for p in
         ('dsfd_mtp_tops.sv', 'ot_dsrom_mtp_seq.sv', 'ot_dsrom_mtp_link_pair.sv', 'ot_dsrom_mtp_skid.sv')]
@@ -38,16 +41,22 @@ def audit(floorplan):
         log = subprocess.run(['vvp', str(d / 'audit.vvp')], check=True, capture_output=True, text=True).stdout
     widths = {a: int(b) for _, a, b in (l.split() for l in log.splitlines() if l.startswith('PORT '))}
     assert set(widths) == set(ports), 'missing elaborated ports'
+    header = (ROOT / SRCS[0]).read_text().split('module dsfd_mtp_seq', 1)[1].split(');', 1)[0]
+    directions = dict((p, direction) for direction, p in re.findall(
+        r'\b(input|output)\s+wire\s+(?:\[[^\]]+\]\s*)?(\w+)', header))
     fp = json.loads(floorplan.read_text())
     chains = {c['chain']: c for c in fp['chains']}
     buses = []
     for a, b, bits, src_port, dst_port in S.MTP_SEQ_BUSES:
         parts = GROUPS[(a, b)]
+        expected_direction = 'input' if b == 'mtp' else 'output'
+        assert all(directions[p] == expected_direction for p in parts), (a, b, parts, directions)
         actual = sum(widths[p] for p in parts)
-        chain = chains[f'hb_{a}_{b}']
-        assert actual == bits == sum(chain['lanes']), (a, b, actual, bits, chain['lanes'])
+        chain = chains.get(f'hb_{a}_{b}')
+        assert actual == bits, (a, b, actual, bits)
+        matches = chain is not None and actual == sum(chain['lanes'])
         buses.append(dict(source=a, destination=b, bits=actual, ports={p: widths[p] for p in parts},
-                          chain=chain))
+                          chain=chain, floorplan_chain_matches=matches))
     assert len(buses) == len(GROUPS), 'missing bus class'
     assert fp['variant']['mtp_seq'] is not None, 'head die does not carry sequencer'
     hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in
@@ -58,6 +67,7 @@ def audit(floorplan):
                 floorplan_sha256=hashlib.sha256(floorplan.read_bytes()).hexdigest(),
                 port_elaboration_log=log, static_config_bits=widths['f_cfg'], buses=buses,
                 aggregate_bits=sum(b['bits'] for b in buses), bus_binding_passed=True,
+                floorplan_binding_passed=all(b['floorplan_chain_matches'] for b in buses),
                 identity_composition_qualified=False, physical_qualified=False,
                 remaining=['seed/draft native endpoint identity join', 'verify causal path',
                            'rollback committed-state join', 'full production head inventory',
@@ -75,4 +85,5 @@ if __name__ == '__main__':
     with a.out.open('x') as f:
         json.dump(receipt, f, indent=2)
         f.write('\n')
-    print(f"MTP BUS BINDING PASS {receipt['aggregate_bits']} bits across {len(receipt['buses'])} chains; integration OPEN")
+    print(f"MTP DIRECTED PORT CONTRACT PASS {receipt['aggregate_bits']} bits across {len(receipt['buses'])} chains; "
+          f"floorplan binding {'PASS' if receipt['floorplan_binding_passed'] else 'FAIL (regenerate)'}; integration OPEN")
