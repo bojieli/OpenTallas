@@ -15297,3 +15297,9 @@ def hbm_indexer_t4_join_model():
 def hbm_native_hgi_index_join_model():
     from hbm_indexer_r25i_model import hbm_native_hgi_index_join_model as impl
     return impl()
+
+
+def hbm_native_hgi_lease_join_model():
+    """Source-pinned actual CP/native INDEX metadata boundary, default off."""
+    from hbm_indexer_r25i_model import hbm_native_hgi_lease_join_model as model
+    return model()

@@ -1,0 +1,36 @@
+{
+  "scope": "Actual full native unit metadata and3stage wrapper only; child frame-state and completion injected to isolate tag/accept/done transport, not arithmetic or actual VM/service drain proof",
+  "tests": {
+    "0": {
+      "rc": 0,
+      "output": "PASS actual lease metadata MODE0 captures3/launch3 a1 d1 f0\n"
+    },
+    "1": {
+      "rc": 0,
+      "output": "PASS actual lease metadata MODE1 captures3/launch3 a0 d0 f1\n"
+    },
+    "2": {
+      "rc": 0,
+      "output": "PASS actual lease metadata MODE2 captures3/launch3 a0 d0 f1\n"
+    },
+    "3": {
+      "rc": 0,
+      "output": "PASS actual lease metadata MODE3 captures3/launch3 a1 d0 f1\n"
+    }
+  },
+  "adopted": false,
+  "actor_ABI_source": "75e910e72",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit_lease.sv": "695d8b079d0b2cf35a8de20220b2926288d1a02ae1ea0c7b3739ca063e4f4d0b",
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_index_lease.sv": "41ef1f3db5fb421fc473a72034524a421c0d4cc8213ba5f49b4762f51faea023",
+    "physical/hbm_accel_die_views/hgi_idx_lease/rtl/hfd_hgi_idx_lease.sv": "24af8e1041a8605e31692901a81f79ce3d6b3b9ebb13816d6fbe96c39757e75f",
+    "physical/hbm_accel_die_views/hgi_idx_lease/rtl/tb_hfd_hgi_idx_lease.sv": "b65717cb9e1dc5d332a8948d54dd36b4f16b279a8cbaf0cc0b306ba843b74b30"
+  },
+  "negative_tag_mutant": {
+    "status": "REJECTED",
+    "return_code": 1,
+    "output": "FATAL: native frame job/gen/pos",
+    "mutation": "Replace actual held full73 generation/job with historical constants0"
+  },
+  "provider": "OPEN: allocator/visibility/four-quarter native99 receiver, service read drain, source idle and selector idle must be actual sourcebound actors"
+}

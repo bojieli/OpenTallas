@@ -1,0 +1,41 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "actor_ABI_source": "75e910e72",
+  "commands": {
+    "record_bits": 1819,
+    "lease_bits": 74,
+    "lease_layout": "frame73,valid1",
+    "capture_stages": 3
+  },
+  "events": {
+    "bits": 76,
+    "layout": "held_frame73,fault1,done1,accepted1",
+    "launch_stages": 3
+  },
+  "added_state_FF_bits": 152,
+  "added_pipeline_FF_bits": 450,
+  "FF_area_floor_um2": 175.5432,
+  "slot_um": [
+    640.008,
+    600.48
+  ],
+  "slot_fit": "Outline reservation only; actual full unit synthesis unqualified",
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "replicas": 1,
+  "boundaries_bits_per_cycle": {
+    "inbound": 74,
+    "outbound": 76
+  },
+  "routing_tracks_required": 150,
+  "routing_channel_capacity": "OPEN: actual physical CP actor port/relay capacity not bound",
+  "fanout": "Local protected full73 equality, record-position compare and native frame tag fields",
+  "mux_demux": "One metadata seat and one actual acceptance event; no lease sharing or payload replicas",
+  "latency": "3 capture+actual unit acceptance+3 event launch; CP actor retains record until framed acceptance, native execution/VM ACK drain and service/selector drains separately priced",
+  "readiness": "Record and metadata captured at same3 stages; disarmed until recordvalid drops; lease retained after native unit VM completion",
+  "correctness": "INDEX position matches full73[72:53], layer32<40; actual job32/gen4/pos20 frame tags; missing metadata or corruption fails closed",
+  "grant_provider": "OPEN: external allocation/visibility and four per-quarter native99 receivers/source/read drain actors required",
+  "physical_qualified": false,
+  "rate_credit": 0
+}
