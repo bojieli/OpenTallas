@@ -69,11 +69,23 @@ def corner_sta(work: Path, nick: str, out: Path):
 def main():
  p=argparse.ArgumentParser();p.add_argument('cmd',choices=['prep','sta','check']);p.add_argument('--inst',choices=['src','stg'],required=True)
  p.add_argument('--case',type=Path,required=True);p.add_argument('--src',type=Path,default=ROOT);p.add_argument('--cores',type=int,default=12);p.add_argument('--need',type=int,default=32)
+ # mtp-lead 2026-10-09 (WFC SOURCE HARD route 5b11f631f-tc-cx): rtlmp put the 4 SRAMs in orientation S against the
+ # LEFT die edge (x 6.052 um), so each macro's right-edge pin column (128 w_mask_in + 30 rr/cr tie pins + 58 wd_in)
+ # faced a ~2 um usable sliver (halo 4); ~624 tie cells overflowed it to y ~230 um (~190 um TIEHIx1 wires) and 4
+ # w_mask_in pins missed max slew (387.75 / 320 ps), failing the TC electrical check that gates the hold ECO.
+ # --macro-x: the same S stack and Y rows (DRC-0 placement of that route), shifted right by a multiple of 0.432 um
+ # (= lcm of the 0.054 site and 0.048 M4 pitch, so pin/track phase is unchanged) to open a channel for those cells.
+ p.add_argument('--macro-x',type=float,default=None,help='SOURCE only: fixed SRAM stack x origin (um); default rtlmp')
  a=p.parse_args();basis=json.loads((ROOT/f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json').read_text())
  L.CTRL='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv'
  if a.cmd=='sta':
   L.WF.corner_sta=corner_sta
-  return L.cmd_sta(argparse.Namespace(case=a.case,macros=a.inst=='src'))
+  result=L.cmd_sta(argparse.Namespace(case=a.case,macros=a.inst=='src'))
+  if a.inst=='src':
+   # Actual TC electrical signoff is independent of SS sensitivity.
+   drv=L.drv_check(a.case.resolve(),True,corners=('TT',))
+   (a.case/'wf_drv_TT.json').write_text(json.dumps(drv,indent=1)+'\n')
+  return result
  if a.cmd=='check':return L.cmd_check(argparse.Namespace(case=a.case))
  # Size before route: retained full-shape basis, same macro count and registered
  # interfaces; SOURCE metadata +1cycle, current-user STAGE tuple +0cycles.
@@ -85,11 +97,28 @@ def main():
   s=s.replace('export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)', 'export WC_LIB_FILES = $(TC_NLDM_LIB_FILES)')
   s=s.replace('_ss.lib', '_tt.lib')
   s+='\n# TC route: WC alias reads TC stdcell and TT macro liberties\n'
+ if a.macro_x is not None and a.inst=='src':
+  k=round((a.macro_x-6.052)/0.432);mx=round(6.052+0.432*k,3)
+  rows={(1,1):2.208,(0,1):31.968,(0,0):61.776,(1,0):91.536}
+  t=['# mtp-lead: SOURCE SRAM stack, orientation S (R180), x %.3f um (rtlmp 6.052 + 0.432*%d)'%(mx,k),'set n 0',
+     'foreach m [[ord::get_db_block] getInsts] {',
+     ' if {[[$m getMaster] getName] ne "ot_sram_1r1w_512x128_m4_r2c2"} {continue}',
+     ' set nm [string map [list "\\\\" ""] [$m getName]]',
+     ' if {![regexp {g_bank\\[([01])\\]\\.g_col\\[([01])\\]\\.u_m$} $nm -> b c]} {error "WFC_MACRO_PLACE unexpected $nm"}',
+     ' set y [dict get {%s} $b$c]'%' '.join('%d%d %.3f'%(b,c,y) for (b,c),y in rows.items()),
+     ' place_inst -name [$m getName] -location [list %.3f $y] -orientation R180 -status FIRM'%mx,
+     ' puts "WFC_MACRO_PLACE $nm %.3f $y"; incr n'%mx,'}']
+  t.append('if {$n != 4} {error "WFC_MACRO_PLACE placed $n of 4"}');t.append('puts "WFC_MACRO_PLACE x %.3f n $n"'%mx)
+  (a.case/'macro_place.tcl').write_text('\n'.join(t)+'\n')
+  s+='export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n'
  cfg.write_text(s)
  run=a.case/'run.sh';s=run.read_text().replace('tools/dsrom_wfc_split_physical.py sta',f'tools/dsrom_wfc_tokpipe_physical.py sta --inst {a.inst}').replace('tools/dsrom_wfc_split_physical.py check',f'tools/dsrom_wfc_tokpipe_physical.py check --inst {a.inst}')
+ # Wrapper infers SRAM macro STA from --inst src; the base generator's --macros
+ # option belongs to dsrom_wfc_split_physical and is redundant/invalid here.
+ s=s.replace(' --case $W --macros', ' --case $W')
  # Calibrate stops atCTS; subsequent route keeps the same pinned source and recipe.
  s=s.replace('finish\" > $W/flow.log','${WFC_TARGET:-finish}\" > $W/flow.log')
  s=s.replace('cd $S && python3', 'if [[ "${WFC_TARGET:-finish}" != "finish" ]]; then exit 0; fi\ncd $S && python3',1)
  run.write_text(s)
- print(json.dumps(dict(master=f'ot_dsrom_wfc_tokpipe_{a.inst}',basis=f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json',source_cycles_added=1 if a.inst=='src' else 0,registered_boundary_unchanged=True)))
+ print(json.dumps(dict(master=f'ot_dsrom_wfc_tokpipe_{a.inst}',basis=f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json',source_cycles_added=1+basis['params'].get('PROMPT_EXTRA',0) if a.inst=='src' else 0,registered_boundary_unchanged=True)))
 if __name__=='__main__':main()
