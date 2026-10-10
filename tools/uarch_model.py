@@ -15227,3 +15227,20 @@ def hbm_sfu_reset_tree_sizing():
                 pin_bits_per_um=2251/450.36,
                 physical_qualified=False,
                 qualification='route full lane with normal one-cycle reset arcs; then grow quarter for 32 taller lanes')
+
+
+def hbm_sfu_reset_tree_wide_sizing():
+    """Same registered reset tree; preserve the existing quarter height."""
+    r = hbm_sfu_reset_tree_sizing()
+    r.update(candidate='sfu_rstpipe3_wide', lane_um=[237.6,330.48],
+             lane_core_um=[235.44,329.4], lane_area_um2=237.6*330.48,
+             quarter_lane_area_delta_um2=32*(237.6-159.84)*330.48,
+             estimated_util=34909/(235.44*329.4),
+             quarter_um=[797.448,5529.576],
+             quarter_channel_um=456.624-2*(237.6-159.84),
+             pin_min_distance_tracks=3,
+             channel_capacity_tracks=(456.624-2*(237.6-159.84))/.064*2*.5,
+             channel_required_tracks=1743+1024+2,
+             routing_assumptions='two vertical layers at64nm pitch,50% usable; real cuts still must pass lint',
+             qualification='full widened lane then unchanged-height quarter, real reset arcs and channel lint')
+    return r
