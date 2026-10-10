@@ -118,7 +118,7 @@ def run_case(name, spec, out: Path):
         return rec
     r = subprocess.run(["vvp", "-n", str(d / "sim.vvp")], capture_output=True, text=True, cwd=d)
     (d / "run.log").write_text(r.stdout + r.stderr)
-    tag = {"tb_mtp_rom_s0": "MTP_S0", "tb_mtp_rom_stg": "MTP_STG", "tb_mtp_rom_tok": "MTP_TOK",
+    tag = {"tb_mtp_rom_s0": "MTP_S0", "tb_mtp_rom_s0_rtt": "MTP_S0", "tb_mtp_rom_stg": "MTP_STG", "tb_mtp_rom_tok": "MTP_TOK",
            "tb_mtp_rom_fan": "MTP_FAN"}[spec["tb"]]
     m = re.search(rf"^{tag} (PASS|FAIL).*$", r.stdout, re.M)
     got = m.group(1).lower() if m else "nolog"
