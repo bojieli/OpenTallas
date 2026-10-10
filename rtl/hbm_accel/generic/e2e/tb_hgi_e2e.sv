@@ -21,7 +21,7 @@
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
-    parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
+    parameter integer FUSED_SCRATCH = 256064, FUSED_UN = 32, FUSED_UM = 8;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
@@ -169,7 +169,7 @@ module tb_hgi_e2e;
     wire f_rdy, f_done, f_fault; wire [682:0] fq_rec; reg q_done_s;
 `ifdef E2E_FUSED
     generate if (REAL_FUSED) begin : g_fused
-        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
+        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH), .UN(FUSED_UN), .UM(FUSED_UM)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
             .rec_rdy(f_rdy), .rec_hdr(f_hdr), .rec_desc(f_desc), .rec_n(f_n), .rec_done(f_done), .rec_fault(f_fault),
             .q_rec(fq_rec), .q_done(REAL_QUANT ? q_ret[1] : q_done_s), .q_fault(REAL_QUANT ? q_ret[2] : 1'b0));
     end else begin : g_fused_stub

@@ -174,8 +174,9 @@ module ot_hgi_seq #(
     wire [4:0]  rlen = 5'd1 + {3'd0, h_tmpl, 1'b0} + {1'b0, npres, 1'b0};
     // ops per unit (spec.json uop.ops), units 0..10 exist on r25
     function automatic [3:0] nops(input [3:0] u);
+        // hgi-e2e F9: HC has 3 ops since spec G22 (HC_MIX, HC_MIX_ROWS, HC_MIX_POST; hbm_generic_iface D_OPS)
         case (u) 4'd0: nops = 4'd8; 4'd4: nops = 4'd7; 4'd5: nops = 4'd2; 4'd6: nops = 4'd6; 4'd8: nops = 4'd4;
-                 4'd9: nops = 4'd5; 4'd1, 4'd2, 4'd3, 4'd7, 4'd10: nops = 4'd1; default: nops = 4'd0; endcase
+                 4'd9: nops = 4'd5; 4'd10: nops = 4'd3; 4'd1, 4'd2, 4'd3, 4'd7: nops = 4'd1; default: nops = 4'd0; endcase
     endfunction
     // slot of the m-th present descriptor
     function automatic [2:0] mth(input [6:0] o, input [2:0] m);

@@ -211,7 +211,8 @@ endmodule
 // excluded from the checks).
 `ifdef E2E_FUSED
 module hgi_e2e_fused_slot #(
-    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064
+    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064,
+    parameter integer UN = 32, parameter integer UM = 8        // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -227,7 +228,7 @@ module hgi_e2e_fused_slot #(
     input  wire          q_fault
 );
     wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv; wire [337:0] fq, mq; wire [273:0] fr, mr;
-    ot_hgi_fused_record #(.UNIT(1)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'(SCRATCH)), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'(SCRATCH)), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_a(rec_desc[0 +: 256]), .rec_b(rec_desc[256 +: 256]), .rec_c(rec_desc[512 +: 256]),
         .rec_o(rec_desc[1024 +: 256]), .rec_n_a(rec_n[0 +: 21]), .rec_n_b(rec_n[21 +: 21]), .rec_n_o(rec_n[84 +: 21]),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(),
