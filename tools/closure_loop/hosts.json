@@ -88,7 +88,7 @@
    "label": "EPYC1",
    "cores": 128,
    "cap": 141,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "base": "/srv/opentallas/claude/closure-loop",
    "max_job_threads": 128,
    "max_job_ram_gb": 1076,
    "min_free_disk_gb": 200,
@@ -100,7 +100,8 @@
    ],
    "ram_gb": 1133,
    "disk_roots": {
-    "/": 100
+    "/": 100,
+    "/srv/opentallas-scratch": 50
    },
    "external_jobs": [
     {
@@ -137,7 +138,8 @@
     }
    ],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "note": " | 2026-10-10 11:5x drive-1010: run root moved to /srv/opentallas (2.7 TB free) -- /srv/opentallas-scratch hit 95 % (152 GB < the 200 GB floor) and EPYC1 admitted nothing at load 59/128 with 437 GB RAM free; running jobs keep their scratch run dirs (floor 50 GB there)."
   },
   {
    "name": "ot-epyc2",
