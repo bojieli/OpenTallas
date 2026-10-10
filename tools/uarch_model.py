@@ -15263,3 +15263,21 @@ def hbm_su_lane_dualface_sizing():
                 boundary_bits_per_cycle_change=0,
                 routing_obligation='M6 used inside lane; quarter M7 over-lane capacity and real tile channel cuts must pass before adoption',
                 physical_qualified=False)
+
+
+def hbm_su_tile_lockup_sizing():
+    """Registered SU tile links, including their half-cycle visibility."""
+    r=hbm_su_lane_dualface_sizing()
+    r.update(candidate='su_tile_lockup', positive_register_bits=2506,
+             output_lockup_bits=2191, register_bits_per_tile=4697,
+             quarter_lockup_register_bits=192*2191,
+             outputs_visibility_half_cycles_added=1,
+             receiving_positive_edge_cycles_added=0,
+             boundary_bits_per_tile=[1743,448],
+             io_max_ps=166.6,io_min_ps=25,output_hold_delay_ps=-25,
+             external_launch_phases=['rising','falling'],
+             external_clock_source_latency='measured matched-root interior insertion, TT and FF separately',
+             root_skew_test_ps=[-100,100],
+             register_strip_um=[100.224,164.16],
+             qualification='full-shape tile no IO falsepaths, calibrated phase budgets and emitted macro arcs; then quarter channel cuts')
+    return r

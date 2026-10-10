@@ -285,6 +285,32 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
       set bts [[$dit getNet] getBTerms]
       if {[llength $bts] == 1 && [[lindex $bts 0] getIoType] eq "INPUT"} { set bn [[lindex $bts 0] getName] }
     }
+    # Opt-in tile boundary: a logical XOR may precede the first register.
+    # Trace only combinational drivers, at most three physical cell levels;
+    # anchor only when exactly one external input bit owns this register.
+    if {$bn eq "" && [info exists ::env(OT_WS_INPUT_COMB)] && $::env(OT_WS_INPUT_COMB) eq "1" && $dit ne "NULL" && [$dit getNet] ne "NULL"} {
+      set frontier [list [$dit getNet]]; set seen {}; set owners {}
+      for {set depth 0} {$depth < 4 && [llength $frontier]} {incr depth} {
+        set nxt {}
+        foreach nn $frontier {
+          if {[lsearch -exact $seen $nn] >= 0} continue
+          lappend seen $nn
+          foreach bt [$nn getBTerms] {
+            if {[$bt getIoType] eq "INPUT"} {lappend owners [$bt getName]}
+          }
+          foreach it [$nn getITerms] {
+            set di [$it getInst]
+            if {![$it isOutputSignal] || [[$di getMaster] isSequential]} continue
+            foreach ai [$di getITerms] {
+              if {[$ai isInputSignal] && [$ai getNet] ne "NULL"} {lappend nxt [$ai getNet]}
+            }
+          }
+        }
+        set frontier $nxt
+      }
+      set owners [lsort -unique $owners]
+      if {[llength $owners] == 1} {set bn [lindex $owners 0]}
+    }
     if {$bn eq ""} {
       set qit [$i findITerm QN]
       if {$qit eq "NULL"} { set qit [$i findITerm Q] }
