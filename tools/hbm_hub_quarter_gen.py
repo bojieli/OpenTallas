@@ -743,7 +743,7 @@ def main():
     if not a.lane_size and q.get('lane_wh'):
         a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
     if a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
-        a.lane_size = [TILE_W, round(q['lane_wh'][1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
+        a.lane_size = [TILE_W, round(q['lane_wh'][1] + 2.16, 3)]   # lane at y 1.056 (M4 track lattice: lane origin y = 0 mod 0.048 so its LEF M4 pins land on tracks; 1.08 put them half a pitch off -> DRT-0073)
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
         tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
                              mname='u_tile' if a.tiled else 'u_lane')
@@ -777,9 +777,9 @@ def main():
         td.mkdir(exist_ok=True)
         (td / 'io_place.tcl').write_text(emit_tile_io(P, tw, th))
         (td / 'macro_place.tcl').write_text(
-            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} 1.080}} -orientation R0 -exact\n')
+            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} 1.056}} -orientation R0 -exact\n')
         (td / 'tile.json').write_text(json.dumps(dict(master='hfd_su_tile', w_um=tw, h_um=th, strip_w=TILE_SW,
-                                                      lane=q['lane'], lane_xy=[TILE_SW, 1.08], LB=P.LB, WCT=P.WCT,
+                                                      lane=q['lane'], lane_xy=[TILE_SW, 1.056], LB=P.LB, WCT=P.WCT,
                                                       RB=P.RB, RA=P.RA, LO=P.LO), indent=1) + '\n')
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out))
     if a.tiled:
