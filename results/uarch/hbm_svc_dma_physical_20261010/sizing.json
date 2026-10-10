@@ -18,6 +18,8 @@
   "ready_bits": 1,
   "edge_traffic_bits": 2220,
   "initial_credits": 64,
+  "credit_scope": "provisional end-to-end credits; independent local credits may decouple front RTT",
+  "qualification": "relay ledger for proposed geometry, not measured hardware latency or achieved bandwidth",
   "loader": {
     "name": "hb_loader",
     "x_um": 14735.952,
@@ -36,10 +38,10 @@
   ],
   "stacks": {
     "SW": {
-      "internal_one_way_cycles_bound": 21,
-      "composed_credit_rtt_cycles_bound": 138,
-      "credit_utilization_upper_bound": 0.463768115942029,
-      "minimum_credits_for_90pct": 125,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 136,
+      "credit_utilization_at_planned_worst_path": 0.47058823529411764,
+      "minimum_credits_for_90pct": 123,
       "next_power_of_two_credit_depth": 256,
       "placement_fit": false,
       "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
@@ -50,10 +52,10 @@
       ]
     },
     "SE": {
-      "internal_one_way_cycles_bound": 22,
-      "composed_credit_rtt_cycles_bound": 144,
-      "credit_utilization_upper_bound": 0.4444444444444444,
-      "minimum_credits_for_90pct": 130,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 140,
+      "credit_utilization_at_planned_worst_path": 0.45714285714285713,
+      "minimum_credits_for_90pct": 126,
       "next_power_of_two_credit_depth": 256,
       "placement_fit": false,
       "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
@@ -64,10 +66,10 @@
       ]
     },
     "NW": {
-      "internal_one_way_cycles_bound": 21,
-      "composed_credit_rtt_cycles_bound": 174,
-      "credit_utilization_upper_bound": 0.367816091954023,
-      "minimum_credits_for_90pct": 157,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 172,
+      "credit_utilization_at_planned_worst_path": 0.37209302325581395,
+      "minimum_credits_for_90pct": 155,
       "next_power_of_two_credit_depth": 256,
       "placement_fit": false,
       "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
@@ -78,10 +80,10 @@
       ]
     },
     "NE": {
-      "internal_one_way_cycles_bound": 22,
-      "composed_credit_rtt_cycles_bound": 180,
-      "credit_utilization_upper_bound": 0.35555555555555557,
-      "minimum_credits_for_90pct": 162,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 176,
+      "credit_utilization_at_planned_worst_path": 0.36363636363636365,
+      "minimum_credits_for_90pct": 159,
       "next_power_of_two_credit_depth": 256,
       "placement_fit": false,
       "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
