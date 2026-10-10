@@ -3,7 +3,11 @@
 // Both resets assert before training; dst admission follows both releases.
 // No repeated pulse synchronizer; Gray count retains every unconsumed event.
 module ot_hbm_retry_pop_cdc #(
- parameter CAPACITY=256,CW=$clog2(CAPACITY)+2
+ parameter CAPACITY=256,CW=$clog2(CAPACITY)+2,
+ // OBS_REG (cont-takeover 2026-10-09, default 0): the Gray->binary decode of the synchronised count is registered
+ // (+1 cycle of transport latency); pending / d_pop start at flops (TU -lkv core_clk -34.8: sync2 -> XOR chain ->
+ // subtract -> d_pop -> consumed).
+ parameter OBS_REG=0
 )(
  input wire s_clk,s_rst_n,s_pop,
  input wire d_clk,d_rst_n,
@@ -24,7 +28,9 @@ end
  wire[CW-1:0] observed;
  for(genvar b=0;b<CW;b=b+1)begin:g_binary
  assign observed[b]=^sync2[CW-1:b];end
- assign pending=observed-consumed;
+ reg[CW-1:0] obs_q;
+ always@(posedge d_clk or negedge d_rst_n) if(!d_rst_n) obs_q<=0; else obs_q<=observed;
+ assign pending=(OBS_REG?obs_q:observed)-consumed;
  assign d_pop=d_rst_n && !fault && pending!=0 && pending<=CAPACITY;
  always@(posedge d_clk or negedge d_rst_n)begin
  if(!d_rst_n)begin sync1<=0;sync2<=0;consumed<=0;fault<=0;end

@@ -9,7 +9,11 @@ module ot_hbm_link_retry_sram #(
  parameter TIMEOUT=2048, MAX_RETRY=8,
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
- parameter NOEPOCH=0
+ parameter NOEPOCH=0,
+ // HEAD_FREE (cont-takeover 2026-10-09, default 0): replay_head / head_seq load on every read response (no reset);
+ // head_valid alone carries the acceptance condition.  A read is requested only with head_valid low, so the overwrite
+ // never replaces a valid head.  Removes the 551-bit enable from the feedback -> rewind cone (TU -lkv pclk -499).
+ parameter HEAD_FREE=0
 )(
  input wire clk, rst_n, input wire [EW-1:0] session,
  input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
@@ -81,6 +85,7 @@ module ot_hbm_link_retry_sram #(
   if(DEPTH<2 || (DEPTH & (DEPTH-1))!=0 || DEPTH>=(1<<(SW-1))) $fatal(1,"ambiguous replay window");
   if(TIMEOUT<1 || MAX_RETRY<1) $fatal(1,"invalid retry bound");
  end
+ always @(posedge clk) if(HEAD_FREE && ENABLE && read_response) begin replay_head<=read_data;head_seq<=read_seq; end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    base<=0; next_seq<=0; cursor<=0; expected<=0;
@@ -94,7 +99,8 @@ module ot_hbm_link_retry_sram #(
     read_pending<=0;
     if(read_ue) fault<=1;
     else if(read_seq==cursor && (NOEPOCH || read_epoch==session) && !rewind) begin
-     replay_head<=read_data;head_seq<=read_seq;head_valid<=1;
+     if(!HEAD_FREE) begin replay_head<=read_data;head_seq<=read_seq; end
+     head_valid<=1;
     end
    end
    if(launched && replaying) head_valid<=0;
