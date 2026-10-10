@@ -65,7 +65,7 @@ module hfd_hgi_vm (
     assign w_vmu_rst_n = {1{rst_n}};
     assign w_vmu_cq = {i_f_hgi_dma[337:0], i_f_hgi_hc[337:0], i_f_hgi_sfu[337:0], i_f_hgi_su[337:0], i_f_hgi_argmax[337:0], i_f_hgi_idx[337:0], i_f_hgi_quant[337:0], i_f_hgi_cp[337:0]};
     assign w_vmu_wq = {i_f_hgi_vmw_dma[8959:0]};
-    ot_hgi_vm_unit #(.NC(8), .WP(32), .WDIRECT(1)) u_vmu (.clk(w_vmu_clk), .rst_n(w_vmu_rst_n), .cq(w_vmu_cq), .cr(w_vmu_cr), .status(w_vmu_status), .wq(w_vmu_wq), .wq_done(w_vmu_wq_done));
+    ot_hgi_vm_unit #(.NC(8), .WP(32), .WDIRECT(1), .ECC(0)) u_vmu (.clk(w_vmu_clk), .rst_n(w_vmu_rst_n), .cq(w_vmu_cq), .cr(w_vmu_cr), .status(w_vmu_status), .wq(w_vmu_wq), .wq_done(w_vmu_wq_done));
     wire [273:0] od_t_hgi_argmax = {w_vmu_cr[1095:822]};
     wire [273:0] o_t_hgi_argmax;
     for (genvar k = 0; k < 274; k = k + 1) begin : g_o_t_hgi_argmax

@@ -3,7 +3,7 @@
 // HGI-1 vector memory core (hgi-takeover die integration, 2026-10-09; GH-d VM endpoint).
 //
 // 262,144 FP32 words = 32,768 sectors of 8 words, in NB = 32 banks (sector s: bank s[4:0], row s[14:5]); each bank is
-// two ot_sram_1r1w_1024x256 macros side by side holding 8 x 39-bit words: every FP32 word carries its own (39,32)
+// (ECC 1) two ot_sram_1r1w_1024x256 macros side by side holding 8 x 39-bit words: every FP32 word carries its own (39,32)
 // SECDED code (owner rule: mutable SRAM payload SECDED), so word-masked writes need no read-modify-write.  1R1W per
 // bank per cycle.
 //
@@ -26,6 +26,9 @@ module ot_hgi_vm_core #(
                                        //   only; one 32-lane group per wide client: the SU and the SFU wide stage)
     parameter integer W2 = 0,          // hgi-unitrate: wide WRITE lanes of the client groups, 0 or 32 x groups (lane
                                        //   g*32 + b writes bank b only; the SU / SFU drain)
+    parameter integer ECC = 1,         // 1: per-word (39,32) SECDED, 2 macros a bank; 0 (owner 10-10, academic-validation
+                                       //   SRAM ECC policy): plain FP32 words, ONE 1024x256 macro a bank (32 macros), no
+                                       //   check bits / correction; ce = 0, ue = 0 (claims assume fault-free SRAM)
     parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
                                        //   3 write responses skip the read pipeline (out of order: must FAIL),
                                        //   4 the wide port ignores its word mask, 5 a wide read response goes to
@@ -79,6 +82,8 @@ module ot_hgi_vm_core #(
     input  wire [38:0]       inj_mask
 );
     localparam integer NB = 32;
+    localparam integer WB = ECC ? 39 : 32, SW = 8 * WB;   // stored word / sector bits
+
     // ---------------------------------------------------------------- (39,32) SECDED (Hsiao-style odd-weight columns)
     // column of data bit i: the i-th 7-bit vector with 3 ones (35 of them; the first 32 used).  The H matrix is a
     // constant computed ONCE at elaboration (COLS / ROWM): every encoder is 7 XOR trees over fixed data-bit masks and
@@ -111,13 +116,14 @@ module ot_hgi_vm_core #(
         integer j; reg [6:0] c;
         begin for (j = 0; j < 7; j = j + 1) c[j] = ^(d & ROWM[j*32 +: 32]); chk = c; end
     endfunction
-    function automatic [38:0] enc(input [31:0] d);
-        enc = {chk(d), d};
+    function automatic [WB-1:0] enc(input [31:0] d);
+        reg [38:0] e; begin e = {chk(d), d}; enc = e[WB-1:0]; end      // ECC 0: the plain word
     endfunction
     // decode: {ue, ce, corrected data}
-    function automatic [33:0] dec(input [38:0] w);
-        reg [6:0] syn; integer i; reg [31:0] d; reg hit;
+    function automatic [33:0] dec(input [WB-1:0] wi);
+        reg [6:0] syn; integer i; reg [31:0] d; reg hit; reg [38:0] w;
         begin
+            w = 39'd0; w[WB-1:0] = wi;
             d = w[31:0]; syn = chk(w[31:0]) ^ w[38:32]; hit = 1'b0;
             if (syn != 7'd0) begin
                 for (i = 0; i < 32; i = i + 1) if (syn == COLS[i*7 +: 7]) begin d[i] = ~d[i]; hit = 1'b1; end
@@ -125,6 +131,7 @@ module ot_hgi_vm_core #(
                 if (syn == 7'd1 || syn == 7'd2 || syn == 7'd4 || syn == 7'd8 || syn == 7'd16 || syn == 7'd32 || syn == 7'd64) hit = 1'b1;
             end
             dec = {(syn != 7'd0) && !hit, (syn != 7'd0) && hit, (MUT == 1) ? w[31:0] : d};
+            if (ECC == 0) dec = {2'b00, w[31:0]};                // no check bits stored: the word as read
         end
     endfunction
     // ---------------------------------------------------------------- request fields
@@ -134,7 +141,7 @@ module ot_hgi_vm_core #(
     wire [31:0]   c_bm   [0:NC-1];
     wire [15:0]   c_tag  [0:NC-1];
     wire [4:0]    c_bank [0:NC-1];
-    wire [311:0]  c_enc  [0:NC-1];                        // the client's write data, encoded once (not per bank)
+    wire [SW-1:0]  c_enc  [0:NC-1];                        // the client's write data, encoded once (not per bank)
     wire [7:0]    c_wm   [0:NC-1];                        // whole-word write mask
     wire          c_mf   [0:NC-1];                        // a partial word mask (mask fault)
     reg  [2:0]    ocnt [0:NC-1];                          // requests outstanding (granted, response not yet taken)
@@ -150,17 +157,17 @@ module ot_hgi_vm_core #(
         assign c_we[g]  = q[336];
         assign c_bank[g] = (MUT == 2) ? c_sec[g][5:1] : c_sec[g][4:0];
         for (k = 0; k < 8; k = k + 1) begin : g_w
-            assign c_enc[g][k*39 +: 39] = enc(c_wd[g][k*32 +: 32]);
+            assign c_enc[g][k*WB +: WB] = enc(c_wd[g][k*32 +: 32]);
             assign c_wm[g][k] = &c_bm[g][k*4 +: 4];
         end
         assign c_mf[g] = |(c_bm[g] & ~{{4{c_wm[g][7]}}, {4{c_wm[g][6]}}, {4{c_wm[g][5]}}, {4{c_wm[g][4]}},
                                          {4{c_wm[g][3]}}, {4{c_wm[g][2]}}, {4{c_wm[g][1]}}, {4{c_wm[g][0]}}});
     end
     // wide lanes, encoded once per lane
-    wire [311:0] l_enc [0:WP-1];
+    wire [SW-1:0] l_enc [0:WP-1];
     for (g = 0; g < WP; g = g + 1) begin : g_le
         for (k = 0; k < 8; k = k + 1) begin : g_w
-            assign l_enc[g][k*39 +: 39] = enc(wl_d[g*256 + k*32 +: 32]);
+            assign l_enc[g][k*WB +: WB] = enc(wl_d[g*256 + k*32 +: 32]);
         end
     end
     // ---------------------------------------------------------------- per bank arbitration (lowest index wins)
@@ -245,8 +252,8 @@ module ot_hgi_vm_core #(
     reg  [NB-1:0] m_re, m_we;
     reg  [9:0]    m_ra [0:NB-1];
     reg  [9:0]    m_wa [0:NB-1];
-    reg  [311:0]  m_wd [0:NB-1];
-    reg  [311:0]  m_wm [0:NB-1];
+    reg  [SW-1:0]  m_wd [0:NB-1];
+    reg  [SW-1:0]  m_wm [0:NB-1];
     wire [511:0]  m_rd [0:NB-1];
     reg  [NB-1:0] word_ok;
     integer w;
@@ -262,8 +269,8 @@ module ot_hgi_vm_core #(
                     integer lq; lq = 32 * w2_g[b] + b;
                     m_wa[b] <= w2_sec[lq*15 + 5 +: 10];
                     for (w = 0; w < 8; w = w + 1) begin
-                        m_wd[b][w*39 +: 39] <= enc(w2_d[lq*256 + w*32 +: 32]);
-                        m_wm[b][w*39 +: 39] <= {39{w2_m[lq*8 + w]}};
+                        m_wd[b][w*WB +: WB] <= enc(w2_d[lq*256 + w*32 +: 32]);
+                        m_wm[b][w*WB +: WB] <= {WB{w2_m[lq*8 + w]}};
                     end
                 end
                 if (wb_hit[b]) begin : wide
@@ -271,15 +278,15 @@ module ot_hgi_vm_core #(
                     m_wa[b] <= wl_sec[lp*15 + 5 +: 10];
                     m_wd[b] <= l_enc[lp];
                     for (w = 0; w < 8; w = w + 1)
-                        m_wm[b][w*39 +: 39] <= {39{wl_m[lp*8 + w] | (MUT == 4)}};   // MUT 4: the word mask ignored
+                        m_wm[b][w*WB +: WB] <= {WB{wl_m[lp*8 + w] | (MUT == 4)}};   // MUT 4: the word mask ignored
                 end
                 for (c = 0; c < NC; c = c + 1) begin
                     if (gr_r[b][c]) m_ra[b] <= c_sec[c][14:5];
                     if (gr_w[b][c]) begin
                         m_wa[b] <= c_sec[c][14:5];
                         for (w = 0; w < 8; w = w + 1) begin
-                            m_wd[b][w*39 +: 39] <= c_enc[c][w*39 +: 39] ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask : 39'd0);
-                            m_wm[b][w*39 +: 39] <= {39{c_wm[c][w]}};
+                            m_wd[b][w*WB +: WB] <= c_enc[c][w*WB +: WB] ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask[WB-1:0] : {WB{1'b0}});
+                            m_wm[b][w*WB +: WB] <= {WB{c_wm[c][w]}};
                         end
                         if (c_mf[c]) mask_fault <= 1'b1;
                     end
@@ -288,24 +295,28 @@ module ot_hgi_vm_core #(
         end
     end
     for (k = 0; k < NB; k = k + 1) begin : g_bank
-        wire [511:0] wd = {200'd0, m_wd[k]};
-        wire [511:0] wm = {200'd0, m_wm[k]};
+        wire [511:0] wd = {{(512-SW){1'b0}}, m_wd[k]};
+        wire [511:0] wm = {{(512-SW){1'b0}}, m_wm[k]};
         ot_sram_1r1w_1024x256_m2_r2c2 u_lo (.clk(clk), .r_ce_in(m_re[k]), .r_addr_in(m_ra[k]), .rd_out(m_rd[k][255:0]),
             .w_ce_in(m_we[k]), .w_addr_in(m_wa[k]), .wd_in(wd[255:0]), .w_mask_in(wm[255:0]),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        if (ECC == 0) begin : g_noecc
+            assign m_rd[k][511:256] = 256'd0;
+        end else begin : g_ecc
         ot_sram_1r1w_1024x256_m2_r2c2 u_hi (.clk(clk), .r_ce_in(m_re[k]), .r_addr_in(m_ra[k]), .rd_out(m_rd[k][511:256]),
             .w_ce_in(m_we[k]), .w_addr_in(m_wa[k]), .wd_in(wd[511:256]), .w_mask_in(wm[511:256]),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
     end
     // wide read lanes: acceptance -> address at the pins (r1) -> macro read edge (rm) -> rd_out captured (r2) -> decoded
     // response flop: the client pipeline's 4 edges
-    reg [NB-1:0] r1_v, rm_v, r2_v; reg [311:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
+    reg [NB-1:0] r1_v, rm_v, r2_v; reg [SW-1:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
     reg [33:0] dwr, dwc; reg [15:0] ce_w; reg ue_w;
     always @* begin                                   // wide-lane corrected / uncorrectable words this edge
         ce_w = 16'd0; ue_w = 1'b0;
         for (integer lb = 0; lb < NB; lb = lb + 1)
             if (RP > 0 && r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
-                dwc = dec(r2_raw[lb][q*39 +: 39]);
+                dwc = dec(r2_raw[lb][q*WB +: WB]);
                 if (dwc[32]) ce_w = ce_w + 16'd1;
                 if (dwc[33]) ue_w = 1'b1;
             end
@@ -320,13 +331,13 @@ module ot_hgi_vm_core #(
                 integer lb; lb = ln % 32;
                 rl_rsp[ln*257 + 256] <= (RP > 0) && r2_v[lb] && ((MUT == 5) ? (ln / 32 == 0) : (r2_g[lb] == 2'(ln / 32)));
                 if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
-                    dwr = dec(r2_raw[lb][q*39 +: 39]);
+                    dwr = dec(r2_raw[lb][q*WB +: WB]);
                     rl_rsp[ln*257 + q*32 +: 32] <= dwr[31:0];
                 end
             end
             w2_d1 <= w2_acc; w2_done <= w2_d1;
         end
-    always @(posedge clk) for (integer lb = 0; lb < NB; lb = lb + 1) if (rm_v[lb]) r2_raw[lb] <= m_rd[lb][311:0];
+    always @(posedge clk) for (integer lb = 0; lb < NB; lb = lb + 1) if (rm_v[lb]) r2_raw[lb] <= m_rd[lb][SW-1:0];
     // ---------------------------------------------------------------- response pipeline (per client, one outstanding)
     reg [NC-1:0] p1_v, pm_v, p2_v;                // p1: address at the macro pins; pm: macro read edge; p2: rd_out captured
     reg [NC-1:0] p1_we, p2_we;
@@ -336,7 +347,7 @@ module ot_hgi_vm_core #(
     reg [4:0]    pm_bank [0:NC-1];
     reg [15:0]   pm_tag [0:NC-1];
     reg [15:0]   p2_tag [0:NC-1];
-    reg [311:0]  p2_raw [0:NC-1];
+    reg [SW-1:0]  p2_raw [0:NC-1];
     reg [33:0]   dw;
     reg [15:0]   ce_n;
     reg          ue_n;
@@ -372,7 +383,7 @@ module ot_hgi_vm_core #(
                 if (wsk) pk = {p1_tag[c], 1'b1, 256'd0};
                 else if (p2_v[c]) begin
                     for (w = 0; w < 8; w = w + 1) begin
-                        dw = dec(p2_raw[c][w*39 +: 39]);
+                        dw = dec(p2_raw[c][w*WB +: WB]);
                         if (!p2_we[c]) begin
                             pk[w*32 +: 32] = dw[31:0];
                             if (dw[32]) ce_n = ce_n + 16'd1;
@@ -404,6 +415,6 @@ module ot_hgi_vm_core #(
     // capture the macro output of the client's bank one edge after the access (rd_out is valid after the access edge)
     always @(posedge clk)
         for (integer pc = 0; pc < NC; pc = pc + 1)
-            if (pm_v[pc]) p2_raw[pc] <= m_rd[pm_bank[pc]][311:0];
+            if (pm_v[pc]) p2_raw[pc] <= m_rd[pm_bank[pc]][SW-1:0];
 endmodule
 `default_nettype wire

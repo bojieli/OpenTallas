@@ -7,7 +7,8 @@
 // early, out of order) must FAIL.
 module tb_hgi_vm_core;
  parameter integer MUT = 0;
- parameter integer WP = 1, WDIRECT = 0;      // WP 32 + WDIRECT 1: random wide-lane writes (lane b, bank b) beside the clients
+ parameter integer WP = 1, WDIRECT = 0;
+ parameter integer ECC = 1;                  // 0: no SECDED (one macro a bank): the CE / UE phase checks ce = ue = 0 instead      // WP 32 + WDIRECT 1: random wide-lane writes (lane b, bank b) beside the clients
  localparam integer NC = 3;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [NC-1:0] req_v = 0, rsp_r = 0; reg [NC*337-1:0] req = 0; wire [NC-1:0] req_r, rsp_v; wire [NC*273-1:0] rsp;
@@ -16,7 +17,7 @@ module tb_hgi_vm_core;
  reg [WP-1:0] wl_v; reg [WP*15-1:0] wl_sec = 0; reg [WP*256-1:0] wl_d = 0; reg [WP*8-1:0] wl_m = 0;   // wl_v: set in the initial block (an initializer gives the core's @* no event)
  wire [WP-1:0] wl_done; wire wl_conflict; integer nwl = 0, nwd = 0;
  always @(posedge clk) begin : cnt_wd integer p; for (p = 0; p < WP; p = p + 1) if (wl_done[p]) nwd = nwd + 1; end
- ot_hgi_vm_core #(.NC(NC), .WP(WP), .WDIRECT(WDIRECT), .MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .req_v(req_v), .req_r(req_r), .req(req), .rsp_v(rsp_v),
+ ot_hgi_vm_core #(.NC(NC), .WP(WP), .WDIRECT(WDIRECT), .ECC(ECC), .MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .req_v(req_v), .req_r(req_r), .req(req), .rsp_v(rsp_v),
   .rsp_r(rsp_r), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault), .inj_v(inj_v), .inj_bank(inj_bank), .inj_word(inj_word),
   .inj_mask(inj_mask), .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wl_done), .wl_conflict(wl_conflict));
  reg [31:0] ref_m [0:32767];               // window: sectors 0..4095 (32,768 words)
@@ -105,8 +106,12 @@ reg [255:0] last;
   repeat (4) @(posedge clk);
   if (WDIRECT != 0 && (nwl == 0 || nwd != nwl || wl_conflict)) $fatal(1, "FATAL: wide lanes %0d writes %0d dones conflict %0d", nwl, nwd, wl_conflict);
   if (ce !== 0 || ue || mask_fault) $fatal(1, "FATAL: fault-free phase reported ce=%0d ue=%0d mask=%0d", ce, ue, mask_fault);
-  // CE: a single-bit flip on a write of sector 5 word 3 (bank 5), read back corrected
   rsp_r = {NC{1'b1}};
+  if (ECC == 0) begin
+   xact(1, 15'd5, {8{32'h12345678}}); xact(0, 15'd5, 256'd0);
+   if (last !== {8{32'h12345678}} || ce != 0 || ue) $fatal(1, "FATAL: ECC 0 readback %h ce %0d ue %0d", last, ce, ue);
+  end else begin
+  // CE: a single-bit flip on a write of sector 5 word 3 (bank 5), read back corrected
   @(negedge clk); inj_v = 1; inj_bank = 5; inj_word = 3; inj_mask = 39'd1 << 17;
   xact(1, 15'd5, {8{32'h12345678}}); inj_v = 0;
   xact(0, 15'd5, 256'd0);
@@ -116,6 +121,7 @@ reg [255:0] last;
   xact(1, 15'd6, {8{32'h0f0f0f0f}}); inj_v = 0;
   xact(0, 15'd6, 256'd0);
   if (!ue) $fatal(1, "FATAL: UE not reported");
+  end
   // a misrouted wide lane (lane 3 carrying a bank-4 sector) is dropped and latches wl_conflict
   if (WDIRECT != 0) begin
    @(negedge clk); wl_v = 0; wl_v[3] = 1; wl_sec[3*15 +: 15] = 15'd4; wl_m[3*8 +: 8] = 8'hFF; wl_d[3*256 +: 256] = {8{32'hDEADBEEF}};
@@ -124,7 +130,7 @@ reg [255:0] last;
    for (w = 0; w < 8; w = w + 1) if (last[w*32 +: 32] !== ref_m[4*8 + w]) $fatal(1, "FATAL: a misrouted wide lane wrote sector 4");
    if (!wl_conflict) $fatal(1, "FATAL: misrouted wide lane not flagged");
   end
-  $display("PASS HGI-VM core clients=%0d wide_writes=%0d reads=%0d writes=%0d cycles=%0d max_outstanding=%0d in-order CE corrected UE flagged", NC, nwl, nrd, nwr, cycles, maxo);
+  $display("PASS HGI-VM core clients=%0d wide_writes=%0d reads=%0d writes=%0d cycles=%0d max_outstanding=%0d in-order ECC=%0d (1: CE corrected UE flagged, 0: no SECDED)", NC, nwl, nrd, nwr, cycles, maxo, ECC);
   $finish;
  end
 endmodule

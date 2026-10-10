@@ -14,6 +14,7 @@ module ot_hgi_vm_unit #(
     parameter integer RP = 0,            // hgi-unitrate: wide READ lanes (lane b <-> bank b): the SU / SFU wide stage
     parameter integer W2 = 0,            // hgi-unitrate: second wide WRITE group (lane b <-> bank b): the SU / SFU drain
     parameter integer LQ = 8,            // per-lane request queue depth = the credits the lane's client holds
+    parameter integer ECC = 1,           // 0: no SRAM SECDED (owner 10-10 academic-validation policy): 32 macros, ce/ue 0
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -106,7 +107,7 @@ module ot_hgi_vm_unit #(
     wire [NC*273-1:0] rsp;
     wire [15:0] ce; wire ue, mask_fault;
     reg proto;
-    ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .WDIRECT(WDIRECT), .RP(RP), .W2(W2), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
+    ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .WDIRECT(WDIRECT), .RP(RP), .W2(W2), .ECC(ECC), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
         .rsp_v(rsp_v), .rsp_r({NC{1'b1}}), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault),
         .inj_v(1'b0), .inj_bank(5'd0), .inj_word(3'd0), .inj_mask(39'd0),
         .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wq_done), .wl_conflict(wl_conflict),
