@@ -887,6 +887,19 @@ DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect -
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
                  f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+# HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
+# consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
+# the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
+# EMERGENCY_FREE_GB available it SIGKILLs the single largest process (>= 8 GB RSS) whose oom_score_adj is >= 0 (never a
+# -900 die process, never sshd / systemd / dockerd / containerd) and logs it to /tmp/ot_emergency_kill.log on the host.
+EMERGENCY_FREE_GB = 12
+EMERGENCY_PROBE = ("(a=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo); "
+                   f"if [ \"$a\" -lt {EMERGENCY_FREE_GB} ]; then "
+                   "v=$(ps -eo pid=,rss=,comm= --sort=-rss | while read p r c; do [ \"$r\" -ge 8388608 ] || break; "
+                   "case $c in sshd|systemd|dockerd|containerd|containerd-shim*) continue;; esac; "
+                   "[ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" -ge 0 ] 2>/dev/null && { echo $p; break; }; done); "
+                   "[ -n \"$v\" ] && { echo \"$(date -Is) MemAvailable ${a}G: kill -9 $v $(tr '\\0' ' ' < /proc/$v/cmdline | cut -c1-200)\" "
+                   ">> /tmp/ot_emergency_kill.log; kill -9 $v; echo OT_EMERGENCY_KILL $v; }; fi) 2>/dev/null; true")
 DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}} {{{{{{{{range .Mounts}}}}}}}}{{{{{{{{.Source}}}}}}}} {{{{{{{{end}}}}}}}}' $c "
                       f"| grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
@@ -962,7 +975,7 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
-{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}""", timeout=40)
+{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}; {EMERGENCY_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -1773,7 +1786,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
                                                           "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
@@ -4076,6 +4089,22 @@ def precollect_cmd(spec):
     return None
 
 
+ROUTE_CORNER_CHECK = "ttb_routed_at_TC"
+
+
+def route_corner_check_cmd(c):
+    """LOOP-CORNER 2026-10-10: the ttb_routed_at_TC check only grepped {CL}/ttb_corner.txt, where tt_overlay also writes
+    'TC ...' for unrelated patches (direct config.mk); SM piece routes that loaded SS liberties passed it (and closed at
+    the wrong corner).  The check now also proves the corner from the route logs: every setup corner's read_liberty
+    lines in the place / CTS / GRT logs under {RUN} name TT views (route_corner_check.py, sent inline so a job launched
+    before the helper existed is judged the same way).  Other checks: unchanged."""
+    cmd = c.get("cmd") or ""
+    if c.get("name") != ROUTE_CORNER_CHECK or "route_corner_check" in cmd:
+        return cmd
+    src = (HERE / "route_corner_check.py").read_text()
+    return f"( {cmd} ) && python3 -c {shlex.quote(src)} {{RUN}} --want TT"
+
+
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
@@ -4098,7 +4127,7 @@ def do_verdict(j, fleet, stl):
     for c in v.get("checks", []):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
-        ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
+        ok, out = remote_ok(j, route_corner_check_cmd(c), timeout=c.get("timeout_s", 1800))
         if not ok and TRANSIENT_RE.search(out):
             # an ssh failure is not a failed check (hbm_stn_mcast_r6b: 'Connection reset by peer' failed lef_check_MATCH
             # while check.json said MATCH): raise, so the verdict backs off and is re-taken
@@ -5406,6 +5435,62 @@ def stale24_sweep(jobs, now=None, force=False):
     return done
 
 
+# MEM-GUARD (drive-1010 2026-10-10): EPYC2 (08:33, MemAvailable 6 GB) and EPYC4 (11:50-55, 7 GB) both hung -- sshd
+# stopped answering and every job on them was lost -- after running stages grew past their admission snapshot.  The
+# kernel OOM killer did not fire in time.  When a fresh probe shows a host below MEM_GUARD_GB (or MEM_GUARD_FRAC of its
+# RAM) available, the loop stops its OWN youngest loop stage there (largest declared peak first among the youngest),
+# puts the job back to READY at that stage (it relaunches when memory allows), logs it, and does at most one per host
+# per MEM_GUARD_EVERY_S.  Die runs and ECO stages (results live in the run dir) are never chosen.
+MEM_GUARD_GB = 24
+MEM_GUARD_FRAC = 0.03
+MEM_GUARD_EVERY_S = 300
+_MEM_GUARD_LAST = {}
+
+
+def mem_guard(jobs, fleet, now=None):
+    """returns [(host, job name)] stopped this call"""
+    now = time.time() if now is None else now
+    done = []
+    for h in hosts_table():
+        name = h["name"]
+        good = getattr(fleet, "last_good", {}).get(name)
+        if not good or now - good[0] > 120:
+            continue
+        floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
+        if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
+            continue
+        cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
+        if not cand:
+            continue
+        def key(j):
+            try:
+                age = now - dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+            except (TypeError, ValueError):
+                age = 1e9
+            return (int(age // 3600), -float(j["spec"].get("peak_ram_gb") or 0))   # youngest hour first, biggest within it
+        victim = sorted(cand, key=key)[0]
+        _MEM_GUARD_LAST[name] = now
+        try:
+            with job_lock(victim["name"]):
+                x = load_job(victim["name"])
+                if x["status"] != "RUNNING":
+                    continue
+                kill_own_stage(x)
+                why = (f"MEM-GUARD: {host_cfg(name)['label']} MemAvailable {good[1].get('mem_gb')} GB < {floor:.0f} GB floor "
+                       f"(hosts hung at 6-7 GB on 10-10); stopped this youngest stage ({x.get('stage_key')}), relaunches when memory allows")
+                event(x, why)
+                for k in ("stage_tag", "stage_started"):
+                    x.pop(k, None)
+                x.update(status="READY", wait=why[:200])
+                save_job(x)
+            log(why + f" [{victim['name']}]")
+            done.append((name, victim["name"]))
+        except Exception:  # noqa: BLE001
+            log("mem guard error:\n" + traceback.format_exc())
+    return done
+
+
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
@@ -5923,6 +6008,10 @@ def tick(fleet):
         release_deep(all_jobs())
     except Exception:  # noqa: BLE001
         log("release_deep error:\n" + traceback.format_exc())
+    try:
+        mem_guard(all_jobs(), fleet)
+    except Exception:  # noqa: BLE001
+        log("mem guard error:\n" + traceback.format_exc())
     try:
         stale24_sweep(all_jobs())
     except Exception:  # noqa: BLE001

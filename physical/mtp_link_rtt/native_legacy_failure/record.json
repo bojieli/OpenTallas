@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "scope": "Expected failure of unchanged current native D4/history3 at actual head631 directed relay geometries; successor remains opt-in/default-off",
+  "binding_receipt_commit": "904003986543ede4108e28090fe67252eeae9c32",
+  "binding_receipt": "results/rtl/mtp_takeover_20261010/head631_native_binding_verified.json",
+  "sources": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "20ac6d0044c0865a4af05bdc050c9597c2905429ea2b556f217e95ec7287b5a3",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv": "08e31c414aeec6ce790f2b3df35d95e7fc99c9e4d17933426399b8558d76d04e",
+    "rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv": "ebdeb18e576fed258e58fcb363182e9dca25f6c027cf5c467af1c151f14f2d68"
+  },
+  "runs": [
+    {
+      "name": "f5_r6_s0_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f5_r6_s1_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f6_r7_s0_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f6_r7_s1_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f9_r10_s0_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f9_r10_s1_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f10_r9_s0_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    },
+    {
+      "name": "f10_r9_s1_e0_depth4",
+      "expect": "FAIL",
+      "observed_rc": 1,
+      "gate_pass": true,
+      "measurement": {},
+      "mechanism": "Unchanged native fixed-three grant history forgets older in-flight grants before return/data RTT drains"
+    }
+  ]
+}

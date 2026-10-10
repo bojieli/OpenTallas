@@ -1,0 +1,3 @@
+LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)
+FATAL: rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv:115: LINK_REG overflow
+       Time: 685000 Scope: tb_mtp_link_rtt.rx.g_rtt.u_rx

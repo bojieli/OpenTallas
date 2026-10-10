@@ -11,7 +11,7 @@
     "available": false,
     "reason": "no qualified speculative composition implemented"
    },
-   "exactness": "reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed re-proof (claude-takeover qwen-1010.log)"
+   "exactness": "stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned"
   }
  ]
 }

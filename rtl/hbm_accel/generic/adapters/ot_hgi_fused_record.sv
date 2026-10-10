@@ -32,7 +32,10 @@ module ot_hgi_fused_record #(
     parameter integer UN = 32, UM = 8, ULV = 7,
     parameter integer UWIDE = 0,           // hgi-unitrate: 1 = the internal die body is the wide successor (32-lane VM stage
                                            //    / drain, record pipeline: ot_hgi_su_unit WIDE); its lanes leave on wrq / wwq
-    parameter integer ULWB = 17
+    parameter integer ULWB = 17,
+    parameter integer URWB = 6             // UWIDE = 0: log2 rows of the internal SU's reducer-result file: a reduction whose
+                                           //   result rows exceed it (the HC mix: d rows; ROW_NORM sum of squares: nseg rows)
+                                           //   runs as chunks of 2^URWB rows (hgi-1010/d: the lane-local SU keeps R in a file)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -122,6 +125,15 @@ module ot_hgi_fused_record #(
                  (d != 21'd0) && (d < 21'd16384);
     reg  [2:0] hk;                                      // HC_POST copy k
     reg  [17:0] x_b;                                    // HC_PRE_NORM: the mixed x (BF16 values) in scratch
+    // reduction chunks: ce = the first result row of the current chunk; a chunk is min(RC, total - ce) rows
+    localparam integer RCL = (UWIDE != 0) ? 20 : URWB;   // the wide body keeps R in its memory: one chunk
+    localparam [20:0] RC = 21'd1 << RCL;
+    reg  [20:0] ce;
+    wire [20:0] ce_n = ce + RC;
+    wire [19:0] cr_d = (d - ce > RC) ? RC[19:0] : 20'(d - ce);                 // rows of a d-row chunk
+    wire [19:0] cr_s = ({5'd0, nseg} - ce > RC) ? RC[19:0] : 20'({5'd0, nseg} - ce);   // rows of an nseg-row chunk
+    wire [17:0] ce18 = ce[17:0];
+    reg  [17:0] cea;                                    // ce x d (accumulated: + d << URWB a chunk, no multiplier)
     wire [17:0] xa = (op == 6'd0) ? x_b : dA[25:8];    // the norm's input
     // binary32 of d and of 1/d (d a power of two), registered at S_G3
     wire [43:0] dm = {23'd0, d} << (5'd23 - lg_d);
@@ -130,7 +142,7 @@ module ot_hgi_fused_record #(
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
     generate if (UNIT) begin : g_unit
-        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
+        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
             .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
             .vmq(vmq), .vmr(vmr), .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0), .am_stream(), .am_rdy(1'b0),
@@ -156,7 +168,7 @@ module ot_hgi_fused_record #(
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; mixed <= 1'b0; hk <= 3'd0; x_b <= 18'd0; rec_done <= 1'b0; rec_fault <= 1'b0; mv_v <= 1'b0; mv <= 0; s_v <= 1'b0; ne_v <= 1'b0;
+            st <= S_IDLE; mixed <= 1'b0; hk <= 3'd0; ce <= 21'd0; cea <= 18'd0; x_b <= 18'd0; rec_done <= 1'b0; rec_fault <= 1'b0; mv_v <= 1'b0; mv <= 0; s_v <= 1'b0; ne_v <= 1'b0;
             ne_job <= 0; q_rec <= 0; hdr <= 0; dA <= 0; dB <= 0; dC <= 0; dO <= 0; nA <= 0; nB <= 0; nO <= 0; sudone <= 0;
             s_hdr <= 0; s_sut <= 0; s_a <= 0; s_b <= 0; s_c <= 0; s_o <= 0; s_r <= 0; s_n <= 0;
         end else begin
@@ -204,20 +216,28 @@ module ot_hgi_fused_record #(
                     else if (in_mvd && op == 6'd0 && !mixed) begin   // (0b) x = bf16(seq_j pre[j] h[j]) -> X
                         s_hdr <= suh(7'b0100011);       // A, B, R
                         s_sut <= (256'd1 << 16) | (256'd3 << 38) | (256'd1 << 42);   // M1 AB, red SEQ, red_rnd
-                        s_a <= vmd(dA[25:8], 20'd4, d[19:0], 32'd1, 1'b0) | (256'd0 + ({240'd0, d[15:0]} << 120)); s_n <= 21'd4;
-                        s_b <= vmd(dC[25:8], 20'd4, d[19:0], 32'd0, 1'b0);
-                        s_r <= vmd(x_b, d[19:0], 20'd1, 32'd1, 1'b0);
+                        s_a <= vmd(dA[25:8], 20'd4, cr_d, 32'd1, 1'b0) | (256'd0 + ({240'd0, d[15:0]} << 120)); s_n <= 21'd4;
+                        s_b <= vmd(dC[25:8], 20'd4, cr_d, 32'd0, 1'b0);
+                        s_r <= vmd(x_b, cr_d, 20'd1, 32'd1, 1'b0);
                         s_v <= 1'b1; mixed <= 1'b1; st <= S_MX;
                     end
                     else if (in_mvd || (op == 6'd0 && mixed)) begin    // (1) sum of squares per segment -> S
                         s_hdr <= suh(7'b0100001);       // A, R
                         s_sut <= (256'd1 << 38) | (256'd1 << 40);                    // red SUM, red_sq
-                        s_a <= vmd(xa, d[19:0], {4'd0, nseg}, {11'd0, d}, 1'b0); s_n <= d;
-                        s_r <= vmd(s1_b, {4'd0, nseg}, 20'd1, 32'd1, 1'b0); mixed <= 1'b0;
-                        s_v <= 1'b1; sudone <= 2'd0; st <= S_OP1;
+                        s_a <= vmd(xa, d[19:0], cr_s, {11'd0, d}, 1'b0); s_n <= d;
+                        s_r <= vmd(s1_b, cr_s, 20'd1, 32'd1, 1'b0); mixed <= 1'b0; ce <= 21'd0;
+                        cea <= 18'(d << RCL); s_v <= 1'b1; sudone <= 2'd0; st <= S_OP1;
                     end
                 end
-                S_OP1: if (s_done) begin              // (2) r = rsqrt(s * 1/d + eps) (or s / d) -> S2
+                S_OP1: if (s_done && ce_n < {5'd0, nseg}) begin   // (1) next chunk of segments
+                    ce <= ce_n; cea <= cea + 18'(d << RCL);
+                    s_a <= vmd(xa + cea, d[19:0], ({5'd0, nseg} - ce_n > RC) ? RC[19:0] : 20'({5'd0, nseg} - ce_n),
+                               {11'd0, d}, 1'b0);
+                    s_r <= vmd(s1_b + ce_n[17:0], ({5'd0, nseg} - ce_n > RC) ? RC[19:0] : 20'({5'd0, nseg} - ce_n), 20'd1, 32'd1, 1'b0);
+                    s_v <= 1'b1;
+                end
+                else if (s_done) begin                // (2) r = rsqrt(s * 1/d + eps) (or s / d) -> S2
+                    ce <= 21'd0;
                     s_hdr <= suh(7'b0010001);           // A, O
                     s_sut <= ((d_pow2 && op == 6'd1 ? 256'd3 : 256'd5) << 16) | (256'd4 << 24) | (256'd2 << 27) |
                              (256'd1 << 36) | ({224'd0, d_pow2 && op == 6'd1 ? f_inv : f_d} << 46) | ({224'd0, hdr[63:32]} << 78);
@@ -235,17 +255,28 @@ module ot_hgi_fused_record #(
                     s_v <= 1'b1; st <= S_OP3;
                 end
                 S_OP3: if (s_done) begin rec_done <= 1'b1; st <= S_IDLE; end
-                S_MX: if (s_done) st <= S_MVW;                // the mix landed: on to the norm (mixed = 1)
+                S_MX: if (s_done) begin                         // a mix chunk landed: the next, else on to the norm
+                    if (ce_n < d) begin
+                        ce <= ce_n;
+                        s_a <= vmd(dA[25:8] + ce_n[17:0], 20'd4, (d - ce_n > RC) ? RC[19:0] : 20'(d - ce_n), 32'd1, 1'b0) |
+                               (256'd0 + ({240'd0, d[15:0]} << 120));
+                        s_b <= vmd(dC[25:8], 20'd4, (d - ce_n > RC) ? RC[19:0] : 20'(d - ce_n), 32'd0, 1'b0);
+                        s_r <= vmd(x_b + ce_n[17:0], (d - ce_n > RC) ? RC[19:0] : 20'(d - ce_n), 20'd1, 32'd1, 1'b0);
+                        s_v <= 1'b1;
+                    end else begin ce <= 21'd0; st <= S_MVW; end
+                end
                 // HC_POST copy k: (a) mix_k[d] = seq_j comb[j][k] res[j][d] -> scratch G; (b) out_k = bf16(post_k y + mix_k)
                 S_PM: if (!s_v) begin
                     s_hdr <= suh(7'b0100011);           // A, B, R
                     s_sut <= (256'd1 << 16) | (256'd3 << 38);                  // M1 AB, red SEQ (FP32)
-                    s_a <= vmd(dB[25:8], 20'd4, d[19:0], 32'd1, 1'b0) | ({240'd0, d[15:0]} << 120); s_n <= 21'd4;
-                    s_b <= vmd(dC[25:8] + 18'd4 + {15'd0, hk}, 20'd4, d[19:0], 32'd0, 1'b0) | (256'd4 << 120);
-                    s_r <= vmd(g_b, d[19:0], 20'd1, 32'd1, 1'b0);
+                    s_a <= vmd(dB[25:8] + ce18, 20'd4, cr_d, 32'd1, 1'b0) | ({240'd0, d[15:0]} << 120); s_n <= 21'd4;
+                    s_b <= vmd(dC[25:8] + 18'd4 + {15'd0, hk}, 20'd4, cr_d, 32'd0, 1'b0) | (256'd4 << 120);
+                    s_r <= vmd(g_b + ce18, cr_d, 20'd1, 32'd1, 1'b0);
                     s_v <= 1'b1; st <= S_PO;
                 end
-                S_PO: if (s_done) begin
+                S_PO: if (s_done && ce_n < d) begin ce <= ce_n; st <= S_PM; end   // the next mix chunk
+                else if (s_done) begin
+                    ce <= 21'd0;
                     s_hdr <= suh(7'b0010111);           // A, B, C, O
                     s_sut <= (256'd1 << 16) | (256'd2 << 24) | (256'd1 << 35) | (256'd1 << 36);   // M1 AB, AD C, rnd, VM
                     s_a <= vmd(dA[25:8], d[19:0], 20'd1, 32'd0, 1'b0); s_n <= d;

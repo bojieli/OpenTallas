@@ -292,10 +292,7 @@ Q_LINK = dict(rmsnorm1="VM -> SU", qkv="VM -> tile band broadcast (tree)", qknor
 KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
 
 
-EXACTNESS_QWEN_ROM = ("reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference "
-                      "topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the "
-                      "sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed "
-                      "re-proof (claude-takeover qwen-1010.log)")
+EXACTNESS_QWEN_ROM = 'stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned'
 
 
 def qwen_kvdie():
@@ -1144,9 +1141,14 @@ def ds_rom_mtp(ar=None):
     n = d.add("accept.commit", "accept / commit: compare drafts vs targets, emit accepted tokens, roll back KV", "A", "ctl",
               sc * com_c / (seed_c + com_c) * CY, src("modelled", DS_SLICES, "measured_reduced.commit_cycles", note=note_sc),
               op="accept.commit", start=t, elements=MTP_CLASSES_EXTRA[1]["elements"][:1], instances=[])
-    mark(n, "accept", hw("partial", "ot_hdc_accept closed as a block (accept_a0, SS +55.27 / FF +13.99 ps in the HBM control "
-                         "inventory) but is on no S81 die; the ROM commit path is ISA-level (ot_hdc_accept + CTL ACCEPT)",
-                         evidence=HBM_CTL + " rows[accept_a0]"))
+    # mtp-wfc 2026-10-10: on the DS ROM the accept / commit is the head-die sequencer's accept mirror (ot_dsrom_mtp_seq:
+    # greedy prefix accept, hold of the closing + squashed RESULTs, release), bound on head631 as dsfd_mtp_seq_rtt
+    # (RTT-sized receivers for the head631 relay chains); the KV roll-back is the WFC's WAVE rewind
+    mark(n, "accept", hw("built", "dsfd_mtp_seq_rtt (ot_dsrom_mtp_seq accept mirror + RTT-sized grant receivers) CLOSED "
+                         "TT +34.32 / FF +8.52 (mtp-seqrtt-c-20ec697d1) and TT +27.44 / FF +8.17 (mtp-seq-rtt-native-61b4bc729), "
+                         "placed on head631 (s81_dies_recipe head631rtt, --mtp-seq-rtt); exact at transaction level behind the "
+                         "head631 relay stations (tb_mtp_rom_s0 SEQ_RTT RLY)",
+                         evidence="physical/s81_ph_views/closed/dsfd_mtp_seq_rtt; results/rtl/dsrom_wfc_integration_20261010/record.json"))
     t += n["cycles"]
     if (ROOT / ENGRAM).exists():
         er = J(ENGRAM)["mtp_history_restore"]
