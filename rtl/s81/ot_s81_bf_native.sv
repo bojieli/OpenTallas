@@ -283,7 +283,11 @@ module ot_s81_bf_native #(
         assign xb_d_i = xb_d;
         assign busy = busy_e; assign fault = fault_e;
     end
-    if (RECUT != 0 && HCOL != 0) begin : g_rc
+    // Three independent, mutually exclusive generate blocks (not an if / else-if chain): a 3-way else-if chain makes Yosys
+    // wrap the later branches in genblkN (g_rc.u_elem became genblk3.g_rc.u_elem when HCOL was added), which broke every
+    // flat-hierarchy physical hook (place.tcl g_rc.u_elem.g_mac[0].g_pp.u_rom0, synth.tcl selectors, CTS groups).  Separate
+    // blocks keep the pre-HCOL names g_rc.u_elem / g_orig.u_elem exactly; HCOL's front/column pair is g_hc.
+    if (RECUT != 0 && HCOL != 0) begin : g_hc
         // bf-arch HCOL: front core + two hardened columns (the column interface c_* crosses an abutted boundary)
         localparam integer CTW = $clog2(NCH) + 3 + $clog2(NSEG) + (MTP != 0 ? 1 : 0) + 6;
         wire c_issue, c_i1_v, c_i1_bk, c_i1_bf, c_ze_d;
@@ -318,7 +322,8 @@ module ot_s81_bf_native #(
 `ifndef SYNTHESIS
         initial if (TCG == 0 || QZE == 0 || HALF != 0) $fatal(1, "HCOL requires RECUT, TCG = 1, QZE = 1, HALF = 0");
 `endif
-    end else if (RECUT != 0) begin : g_rc
+    end
+    if (RECUT != 0 && HCOL == 0) begin : g_rc
         ot_v41_rom_elem_qx_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
@@ -332,7 +337,8 @@ module ot_s81_bf_native #(
 `ifndef SYNTHESIS
         initial if (FAST == 0 || PP == 0 || BP != 0 || HALF != 0) $fatal(1, "RECUT requires FAST = 1, PP = 1, BP = 0, HALF = 0");
 `endif
-    end else begin : g_orig
+    end
+    if (RECUT == 0) begin : g_orig
         ot_v41_rom_elem_w10 #(
             .NSEG(NSEG),
             .NCH(NCH),
