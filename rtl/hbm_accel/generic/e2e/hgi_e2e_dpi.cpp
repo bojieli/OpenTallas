@@ -252,6 +252,13 @@ extern "C" void e2e_coll_part(int q, int f, svBitVecVal* out) {
         out[j] = (q >= 0 && q < coll_g && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
     }
 }
+// rank q's A words w0 .. w0 + 15 (zero past n): a sliced gather's flit (hgi-takeover F3)
+extern "C" void e2e_coll_part_w(int q, int w0, svBitVecVal* out) {
+    for (int j = 0; j < 16; j++) {
+        int e = w0 + j;
+        out[j] = (q >= 0 && q < coll_g && e >= 0 && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
+    }
+}
 // the golden result flit gi at O (BF16: 32 halves from O[gi*32 + j]; FP32: 16 words from O[gi*16 + j])
 extern "C" void e2e_coll_res(int obase, int gi, int bf16, svBitVecVal* out) {
     for (int j = 0; j < 16; j++) out[j] = 0;

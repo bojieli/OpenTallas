@@ -95,6 +95,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer PFMAX  = 64,
     parameter integer LANES  = 16,
     parameter integer BF16   = 1,
+    parameter integer BF16RT = 0,   // hgi-takeover F2: 1 = the result packing follows the bf16 pin per collective (O.fmt)
     parameter integer NPT    = 8,
     parameter integer INJ    = 2,
     parameter integer DEL    = 4,
@@ -120,6 +121,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     input  wire                 mcast_all, // validated GROUP_REDUCE_MCAST
     input  wire [3:0]           gsz,      // static: 4'hF legacy (DS, reset), 0..3 = log2 group size
     input  wire                 byp,      // static: 1 = exact gather bypass (no adder), see the header
+    input  wire                 res_bf16, // BF16RT = 1: reduced results packed BF16 (1) or FP32 (0) this collective
     input  wire [15:0]          pf,              // flits per contributor this collective (runtime)
     input  wire                 go,
     output wire                 start_ready,
@@ -149,7 +151,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
-        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp;
+        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp; reg run_bf16;
         reg pending_start, completed, started;
         reg [15:0] rx_pending;
         wire active_desc = REARM && (started || pending_start || completed);
@@ -158,6 +160,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [3:0] eff_gsz = active_desc ? run_gsz : gsz;
         wire ALL_DEST = active_desc ? run_mcast : mcast_all;
         wire BYP = active_desc ? run_byp : byp;
+        wire BFX = BF16RT ? (active_desc ? run_bf16 : res_bf16) : (BF16 != 0);
         wire[7:0] OUTER_G = active_desc ? run_outer : mcast_group_size;
         wire[3:0] OUTER_LG = (OUTER_G==2) ? 1 : (OUTER_G==4) ? 2 : 3;
         wire [31:0] RANK = {24'b0, eff_rank};
@@ -178,7 +181,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire req_aligned = LEG ? (({16'd0,eff_pf} % NC) == 0) :
                                  (({16'd0,eff_pf} & ((32'd1 << eff_gsz) - 1)) == 0);
         wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && req_aligned &&
-                         (req_of <= OFMX) && (!BF16 || !req_of[0]);
+                         (req_of <= OFMX) && (!BFX || !req_of[0]);
 `ifdef OT_COLL_MUT_MODE_GUARD
         wire ACCEPT_MODE = 1'b1;
 `else
@@ -195,7 +198,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire CONTRIB = LEG ? (RANK < NOG * NC) : 1'b1;
         wire [31:0] PF = {16'b0, eff_pf};
         wire [31:0] OF = LEG ? PF / NC : PF >> LG;
-        wire [31:0] ROF = BF16 ? OF / 2 : OF;
+        wire [31:0] ROF = BFX ? OF / 2 : OF;
         // registered run constants (hbm-coll-rtl): rank and pf are static during a collective, so the runtime
         // multiplies and the f / OF, f % OF divisions become compares / adds against these flops (exact; they settle
         // one edge after rank / pf, before the first injection)
@@ -218,10 +221,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;end
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;end
             else if (REARM) begin
                 if (go && start_ready && ACCEPT_MODE) begin
-                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;run_byp<=byp;pending_start<=1;
+                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;run_byp<=byp;run_bf16<=res_bf16;pending_start<=1;
                 end else if(pending_start) pending_start<=0;
             end
         reg [INJ*16-1:0] r_idx;
@@ -365,7 +368,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             else begin
                 r_v <= 1'b0;
                 if (NC > 1 && lvv[LV]) begin
-                    if (BF16) begin
+                    if (BFX) begin
                         if (!ti_d[0]) for (integer ln = 0; ln < LANES; ln = ln + 1)
                             hold[16*ln +: 16] <= bf16(lvl[LV][0][32*ln +: 32]);
                         else begin
@@ -547,7 +550,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 end
             end
         // Count actual endpoint events; port FIFOs, credits and serializer state are never reset at rearm.
-        localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16) ? 2 : 1);
+        localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16 && !BF16RT) ? 2 : 1);
         reg [RMX-1:0] result_seen;
         reg result_error;
         reg [15:0] tx_count, delivery_count, own_count, produced_count;

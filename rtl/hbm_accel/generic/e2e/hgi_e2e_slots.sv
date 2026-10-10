@@ -134,6 +134,7 @@ module hgi_e2e_coll_slot #(
     import "DPI-C" function void e2e_vm_wr(input int unit, input int a, input int v);
     import "DPI-C" function int e2e_coll_load(input int k, input int g);
     import "DPI-C" function void e2e_coll_part(input int q, input int f, output bit [511:0] out);
+    import "DPI-C" function void e2e_coll_part_w(input int q, input int w0, output bit [511:0] out);
     import "DPI-C" function void e2e_coll_res(input int obase, input int gi, input int bf16, output bit [511:0] out);
     localparam integer LANES = 16, FW = 512, PWT = FW + 33, NPT = 8, INJ = 2, DEL = 4;
     wire [INJ*16-1:0] ii; wire [INJ-1:0] ir; reg [4*INJ*FW-1:0] injq;
@@ -146,8 +147,13 @@ module hgi_e2e_coll_slot #(
     // what-ifs (COLL_BF16 = 0 / COLL_PFMAX != 64): tools/hgi_e2e/run.py compiles a copy of ot_hgi_coll_ep whose PSG
     // instance carries those parameters in place of the die's (Verilator applies a defparam even in a dead generate
     // branch, so the copy is the reliable form); these parameters only tell the models what the endpoint was built with
-    initial if (u_ce.u_ep.BF16 != COLL_BF16 || u_ce.u_ep.PFMAX != COLL_PFMAX)
-        $fatal(1, "E2E COLL: endpoint BF16 %0d PFMAX %0d, models expect %0d / %0d", u_ce.u_ep.BF16, u_ce.u_ep.PFMAX, COLL_BF16, COLL_PFMAX);
+    // hgi-takeover F2 / F4: the die endpoint packs results per collective (BF16RT = 1: O.fmt from the record, r_bf16)
+    // and carries PFMAX 512; a static what-if copy (BF16RT 0) still pins BF16 = COLL_BF16
+    initial if ((u_ce.u_ep.BF16RT == 0 && u_ce.u_ep.BF16 != COLL_BF16) || u_ce.u_ep.PFMAX != COLL_PFMAX)
+        $fatal(1, "E2E COLL: endpoint BF16 %0d (RT %0d) PFMAX %0d, models expect %0d / %0d", u_ce.u_ep.BF16, u_ce.u_ep.BF16RT,
+               u_ce.u_ep.PFMAX, COLL_BF16, COLL_PFMAX);
+    integer rbf;
+    always @* rbf = (u_ce.u_ep.BF16RT != 0) ? int'(u_ce.r_bf16) : COLL_BF16;
     // ---- record context (what the endpoint was told)
     integer k = -1, n_a = 0, gsize = 4, pf = 1, rnk = 0, nsub = 4, isbyp = 0, mall = 0;
     integer abase, obase;
@@ -189,12 +195,14 @@ module hgi_e2e_coll_slot #(
                 reg [PWT-1:0] f; reg [511:0] d; integer kind, dst, idx, OG, J, OF, ROF, sl, jp, m, base, nown, o0;
                 f = txf[p*PWT +: PWT]; kind = int'(f[PWT-1]); dst = int'(f[FW+24 +: 8]); idx = int'(f[FW +: 16]);
                 cin[p*QD + ct[p] % QD] = cyc + CRED; ct[p] = ct[p] + 1;
-                OG = rnk / nsub; J = rnk % nsub; OF = pf / nsub; ROF = COLL_BF16 ? OF / 2 : OF;
+                OG = rnk / nsub; J = rnk % nsub; OF = pf / nsub; ROF = rbf ? OF / 2 : OF;
                 if (isbyp != 0) begin                       // gathered flit m: every peer's flit m
                     base = (mall != 0) ? 0 : (rnk / gsize) * gsize;
                     m = idx - (rnk - base) * pf;
                     for (integer q = base; q < base + gsize; q = q + 1) if (q != rnk) begin
-                        e2e_coll_part(q, m, d);
+                        // F3: a sliced gather carries peer q's slice words s_q + 16 m .. (s_q = floor((q - base) n / G))
+                        if (u_ce.g_slice) e2e_coll_part_w(q, (((q - base) * n_a) / gsize) + 16 * m, d);
+                        else e2e_coll_part(q, m, d);
                         sched((q + m) % NPT, cyc + LATC + (q % 5), {1'b1, 8'hFF, 8'(q), 16'((q - base) * pf + m), d});
                     end
                 end else if (kind == 0) begin               // partial to owner dst: peer 2J - s sends us its slice-J flit
@@ -208,7 +216,7 @@ module hgi_e2e_coll_slot #(
 `endif
                     nown = (mall != 0) ? gsize : nsub; o0 = (mall != 0) ? 0 : OG * nsub;
                     for (integer o = o0; o < o0 + nown; o = o + 1) if (o != rnk) begin
-                        e2e_coll_res(obase, o * ROF + m, COLL_BF16, d);
+                        e2e_coll_res(obase, o * ROF + m, rbf, d);
                         sched((o + m) % NPT, cyc + LATC, {1'b1, 8'hFF, 8'(o / nsub), 16'(o * ROF + m), d});
                     end
                 end
@@ -239,14 +247,17 @@ module hgi_e2e_coll_slot #(
 `ifdef E2E_COLL_DEBUG
                 $display("E2E COLL DBG cyc %0d deliver lane %0d gi %0d src %0d", cyc, l, gi, int'(f[FW+16 +: 8]));
 `endif
-                if (isbyp != 0) begin
+                if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
+                    for (integer j = 0; j < 16; j = j + 1)
+                        if (j < int'(f[FW+24 +: 8])) e2e_vm_wr(6, obase + gi + j, int'(f[32*j +: 32]));
+                end else if (isbyp != 0) begin
                     q = gi / pf; m = gi % pf;
                     lo = (q * n_a) / gsize; hi = ((q + 1) * n_a) / gsize;
                     for (integer j = 0; j < 16; j = j + 1) begin
                         e = 16 * m + j;
                         if (e >= lo && e < hi) e2e_vm_wr(6, obase + e, int'(f[32*j +: 32]));
                     end
-                end else if (COLL_BF16 != 0) begin
+                end else if (rbf != 0) begin
                     for (integer j = 0; j < 32; j = j + 1) e2e_vm_wr(6, obase + 32 * gi + j, int'({f[16*j +: 16], 16'h0}));
                 end else begin
                     for (integer j = 0; j < 16; j = j + 1) e2e_vm_wr(6, obase + 16 * gi + j, int'(f[32*j +: 32]));
