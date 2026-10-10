@@ -220,6 +220,47 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
     return bad + stray;
 }
 
+// ------------------------------------------------------------------------------------------------ collective model
+// coll_<k>.bin: every rank's A operand (rank-major, n words each) of COLL record k; the golden O is record k's VM writes.
+static int coll_k = -1, coll_g = 0, coll_n = 0;
+static std::vector<uint32_t> coll_a;
+static std::unordered_map<uint32_t, uint32_t> coll_o;
+extern "C" int e2e_coll_load(int k, int g) {
+    if (k == coll_k) return coll_n;
+    std::vector<uint8_t> b;
+    char nm[64]; snprintf(nm, sizeof nm, "/coll_%d.bin", k);
+    if (!read_file(dir + nm, b) || g <= 0) { fprintf(stderr, "E2E COLL: no %s\n", nm); return -1; }
+    coll_k = k; coll_g = g; coll_n = (int)(b.size() / 4 / g);
+    coll_a.resize(b.size() / 4); memcpy(coll_a.data(), b.data(), b.size());
+    coll_o.clear();
+    const Rec& r = recs[k];
+    for (uint64_t i = 0; i < r.vm_n; i++) coll_o[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1];
+    return coll_n;
+}
+// rank q's A flit f (16 words; zero past n)
+extern "C" void e2e_coll_part(int q, int f, svBitVecVal* out) {
+    for (int j = 0; j < 16; j++) {
+        int e = f * 16 + j;
+        out[j] = (q >= 0 && q < coll_g && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
+    }
+}
+// the golden result flit gi at O (BF16: 32 halves from O[gi*32 + j]; FP32: 16 words from O[gi*16 + j])
+extern "C" void e2e_coll_res(int obase, int gi, int bf16, svBitVecVal* out) {
+    for (int j = 0; j < 16; j++) out[j] = 0;
+    if (bf16) {
+        for (int j = 0; j < 32; j++) {
+            auto it = coll_o.find((uint32_t)(obase + gi * 32 + j));
+            uint32_t v = it == coll_o.end() ? 0 : (it->second >> 16);
+            out[j / 2] |= v << (16 * (j % 2));
+        }
+    } else {
+        for (int j = 0; j < 16; j++) {
+            auto it = coll_o.find((uint32_t)(obase + gi * 16 + j));
+            out[j] = it == coll_o.end() ? 0 : it->second;
+        }
+    }
+}
+
 extern "C" int e2e_finish(long long cyc, int token, int status) {
     int vbad = 0;
     for (int a = 0; a < VMW; a++) if (!skip_final.count(a) && vm[a] != vm_final[a]) {

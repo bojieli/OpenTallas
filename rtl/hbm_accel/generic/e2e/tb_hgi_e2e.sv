@@ -20,7 +20,8 @@
 // DIE GAP used by the harness: the ux_* ports of ot_hgi_cp_die carry valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0;
+    parameter integer COLL_BF16 = 1, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -142,6 +143,14 @@ module tb_hgi_e2e;
     end else begin : g_quant_stub
         assign q_ret = 3'b001;
     end endgenerate
+    // COLL (unit 6): the collective block body + inject / deliver / switch-tier models (hgi_e2e_slots.sv)
+    wire [2:0] c_ret; reg c_kv; reg [31:0] c_k;
+    generate if (REAL_COLL) begin : g_coll
+        hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec),
+            .cfg(cfg_bus), .ret(c_ret), .k_v(c_kv), .k_in(c_k), .group_size(host[46][7:0]));
+    end else begin : g_coll_stub
+        assign c_ret = 3'b001;
+    end endgenerate
     // IDX (unit 9)
     wire [2:0] i_ret;
     generate if (REAL_IDX) begin : g_idx
@@ -171,7 +180,7 @@ module tb_hgi_e2e;
         ux_rdy = 16'd0;
         for (integer u = 1; u < 16; u = u + 1) ux_rdy[u] = REAL_UX[u] ? r_rdy[u] : (sbusy[u] == 0);
         ux_done = (s_done & ~REAL_UX) | (r_done & REAL_UX); ux_fault = r_fault & REAL_UX;
-        coll_ret = {1'b0, s6_done, 1'b1};
+        coll_ret = REAL_COLL ? c_ret : {1'b0, s6_done, 1'b1};
         quant_ret = {q_ret[2], q_ret[1] | s4_done, 1'b1};
         idx_ret = REAL_IDX ? i_ret : {1'b0, s9_done, 1'b1};
     end
@@ -205,7 +214,13 @@ module tb_hgi_e2e;
                 if (m != 0 || q_ret[2]) begin real_bad = real_bad + 1; $display("E2E REAL QUANT record %0d: %0d mismatches fault %0d", k, m, q_ret[2]); end
             end
             // record-bus units (4 coll 6 idx 9): a valid edge starts the slot
-            if (coll_rec[0]) begin k = kpop(6); sbusy[6] = 1; sk[6] = k; scnt[6] = e2e_cost(k); end
+            c_kv <= 1'b0;
+            if (REAL_COLL && (c_ret[1] || c_ret[2])) begin
+                k = kpop(6); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
+                if (m != 0 || c_ret[2]) begin real_bad = real_bad + 1; $display("E2E REAL COLL record %0d: %0d mismatches fault %0d", k, m, c_ret[2]); end
+            end
+            if (coll_rec[0] && REAL_COLL) begin c_kv <= 1'b1; c_k <= kq[6][kh[6] % 8]; end
+            else if (coll_rec[0]) begin k = kpop(6); sbusy[6] = 1; sk[6] = k; scnt[6] = e2e_cost(k); end
             if (idx_rec[0] && !REAL_IDX) begin k = kpop(9); sbusy[9] = 1; sk[9] = k; scnt[9] = e2e_cost(k); end
             if (quant_rec[0]) begin
                 if (REAL_QUANT && quant_rec[1 + 118 +: 6] >= 6'd4) begin q_rec <= quant_rec; q_inflight = 1; end
