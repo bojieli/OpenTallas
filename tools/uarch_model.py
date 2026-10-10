@@ -110,3 +110,9 @@ def hbm_svc_dma_wide_admission_model(**kwargs):
     """Actual four-stack HBM bandwidth/window/corridor/SRAM admission sizing."""
     from hbm_svc_dma_wide_model import wide_model
     return wide_model(**kwargs)
+
+
+def qwen_ctlm_deep_queue_model():
+    """Full-shape registered control-tile wider-slot/relay alternatives."""
+    from uarch_model_qwen_ctlm_queue import model
+    return model()
