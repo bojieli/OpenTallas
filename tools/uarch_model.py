@@ -58,3 +58,9 @@ def hbm_visibility_fence_pin_return_model():
     """Default-off output registers with registered accepted-beat credit return."""
     from tools.hbm_fence_pin_return_model import model
     return model()
+
+
+def hbm_collective_port2_tiles_model():
+    """Pair two independently hardened protected halves without seam traffic."""
+    from tools.hbm_coll_port2_tiles_model import model
+    return model()
