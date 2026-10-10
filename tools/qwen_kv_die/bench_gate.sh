@@ -9,7 +9,7 @@ MODE=$1; OUT=$2; MUT=${3:-2}
 SRC=$(pwd)
 mkdir -p "$OUT"
 if [ "$MODE" = pos ]; then
-  STACK=h bash rtl/test/qwen_kv_die/bench_run.sh "$SRC" "$OUT" 28 1 7 5 29 28 34 0 || exit 3
+  STACK=h bash rtl/test/qwen_kv_die/bench_run.sh "$SRC" "$OUT" 28 1 7 5 29 28 34 0 || exit 3   # env DQ / HBMT* pass through
   python3 - "$OUT/results.jsonl" <<'PY'
 import json, sys
 rows = [json.loads(x) for x in open(sys.argv[1]) if x.strip()]
@@ -25,7 +25,7 @@ V=$OUT/v/8192_normal
 mkdir -p "$OUT/log"
 python3 tools/qwen_nearhbm_attn_ref.py vectors --ctx 8192 --seed $((8192*7+6)) --kind normal --out "$V" > "$OUT/log/vec.log" 2>&1 || exit 3
 STACK=h bash rtl/test/qwen_kv_die/build_qkvd_tb.sh "$OUT/bm" -GR=8 -GLINK=7 -GROM_ST=28 -GKV_ST=1 -GPHY_LAT=5 -GQX=29 -GRX=28 -GKVL=34 \
-  -GMUT=$MUT > "$OUT/log/build.log" 2>&1 || exit 3
+  -GMUT=$MUT ${DQ:+-GDQ=$DQ} > "$OUT/log/build.log" 2>&1 || exit 3
 r=$("$OUT/bm/Vtb" "$V" 0 2> "$OUT/log/mut.err"); rc=$?
 echo "{\"run\": \"mut$MUT\", \"rc\": $rc, \"res\": ${r:-null}}" | tee "$OUT/mut.json"
 python3 -c "import json,sys; d=json.load(open('$OUT/mut.json')); sys.exit(0 if d['res'] and d['res']['exact'] else 1)"
