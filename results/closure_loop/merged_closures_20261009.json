@@ -1531,9 +1531,9 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 38,
-   "merged": 38,
-   "record_only": 6
+   "closed": 55,
+   "merged": 50,
+   "record_only": 11
   },
   "jobs": {
    "hcreader-plain300-lk-b678636a2-tc-cl": "ADOPTED (credit-relay version); source on main; record 961fd8c83",
@@ -1573,7 +1573,24 @@
    "hgi_mtp_core18_specf2-ea10e67a9-pd48-tc-cl-cal": "ADOPTED: ot_hgi_mtp_core18 SPECF=2 (ot_dshbm_spec_state_r, additive g_state2 in ot_dshbm_dspark_top_m) + token18 benches/cfgs from ea10e67a9; record 3f16c868e; TT +16.85 / FF +16.02 DRC 0 -- relaunched false fail; ctl18 / accept18 PASS, ctl MUT1 FAIL locally",
    "qkd_kvwq_ctl_a-3b6caa6b2-tc-hm10": "ADOPTED: kv_wq tile split (ot_qkvd_kv_wq_tiles/_dist/_tiles_top, cfgs, signoff) from 3b6caa6b2, ot_qkvd_kv_wq.sv 3-way merged with f7e45bead; record ['73eb2979b']; TT +96.29 / FF +3.72 DRC 0; lint + kvwq_dist pos PASS / neg DETECTED + kv_wq_bench long exact locally",
    "qkd_kvwq_grp_a-3b6caa6b2-tc-hm10": "ADOPTED: same source; record ['0cf2ef779']; TT +188.44 / FF +26.58 DRC 0",
-   "qfd_link_rx128_o302_afw-1d3c576bbtc": "source already on main (1d3c576bb); record e8ac8efbe; CLOSED after VT-swap ECO TT +15.44 / FF +0.64 DRC 0 (the third ECO-reference false fail, relaunched); rx128_exact PASS_ALL, rxbuf_overflow NEG and cdc_ch AFW mut_rsl detected locally"
+   "qfd_link_rx128_o302_afw-1d3c576bbtc": "source already on main (1d3c576bb); record e8ac8efbe; CLOSED after VT-swap ECO TT +15.44 / FF +0.64 DRC 0 (the third ECO-reference false fail, relaunched); rx128_exact PASS_ALL, rxbuf_overflow NEG and cdc_ch AFW mut_rsl detected locally",
+   "qfd_tt_up4_b-618516521-tc": "ADOPTED: tree-top split (ot_qfd_tt_split / tt_ctlm, spine_band TTS hook, split_ctrl.py, cfgs) from 618516521; record 806b4ab67; TT +219.95 / FF +18.95; benches = loop sb_tts_exact PASS / UMUT=2 FAIL (local re-run of the 40k-cycle spine_band timed out compiling, 2400 s)",
+   "qkd_kvwq_grp_b-3b6caa6b2-tc-hm10": "variant of merged grp_a (TT +156.91 / FF +25.16); record already on main byte-identical",
+   "hbm_svc_SE_s7_ps_65d804e91_tc_hm10-cl": "source on main; record eb36f9552; TT +5.89 / FF +6.85",
+   "s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0": "source 9ac26e269 on main (the 70c57b636 multivt flow overlay is not merged: main's flow is newer); record f98763ed7; TT +11.01 / FF +10.69",
+   "hgi_adp_sm_b-e9600091f-tc-cl": "ADOPTED (source on main, hgi-adapters round 5); record 7520b3943; TT +12.04 / FF +8.56",
+   "hgi_adp_sm_finr-c113fa577-tc-rvt-hm10-cl-r2": "record only 9a6e09726: redesign-hbm's FINR fix of the same -404 path conflicts with main's adopted e9600091f (completion condition) and costs +1 edge per record; not merged",
+   "qfd_link_rx128_rxp_a-4941a227d-tc": "source on main; record 1d761e4b0; TT +33.98 / FF +2.86",
+   "qfd_link_rx128_rxp_b-4941a227d-tc-lvt": "variant of rxp_a (TT +80.14 / FF +3.73); its record writes the same variant_fill paths -> not recorded",
+   "bfh_front280_28fa6290c-cl": "ADOPTED: BF hardened front/column hierarchy (ot_s81_bf_front, bf_col, tile_clk, bf16_lanes3; TCG/BXST/FXST/HCOL opt-in, defaults unchanged in ot_v41_rom_elem_qx_w10) from 28fa6290c + bench evidence results/rtl/s81_bf_arch_20261009 (bf_txn_bench recut L2 TXN MATCH 456 rows, mutants detected); record 9561bfe4f; TT +1.47 / FF +7.10",
+   "bfh_front280i222_28fa6290c-cl": "same source; record 1c9be8d8d; TT +97.56 / FF +7.38",
+   "hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl": "ADOPTED: route_qb_cl.sh GRTA (c891a57cf; gated quad RTL already on main); record c047d96a4; TT +69.95 / FF +43.84; loop benches PASS",
+   "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl": "variant of hm01 (TT +66.98 / FF +42.48); same view paths -> not recorded",
+   "hcmean-mc560-lk-a7bdfef93-tc-cl": "source + record already on main; TT +39.36 / FF +14.80",
+   "hgi_seq-fde1a8677-tc-hm10-cl": "source on main; record 13effa499; TT +18.60 / FF +0.44; loop benches PASS",
+   "mtprb-dskvwb_spec_p2a-5ce6c3c62-tc": "source + record already on main; TT +8.69 / FF +0.69",
+   "hgi_adp_hc_a-804a35913-tc-cl": "ADOPTED (source on main); record 4e4ea49f3; TT +81.26 / FF +27.40",
+   "hgi_adp_hc_b-804a35913-tc-cl": "variant of hc_a; record ce31a9dc7; TT +100.47 / FF +10.38"
   }
  }
 }

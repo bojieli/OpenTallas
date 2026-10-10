@@ -8,7 +8,8 @@
 // still sets fault directly; the gating reacts one cycle later), ACC_REG=1 registers the accepted beat before the SECDED
 // encoders (+1 cycle from accept to write/complete).  PRE_DEC=1 (rb-a TT -53 / SS -440: pin-FIFO head -> identity /
 // expert compare -> accept mux -> acc_data_q, 23 levels) decodes each lane (target bank, identity / expert match) into a
-// per-lane ot_sc_pfifo stage, so the accept sees registered flags (+1 cycle input latency, full rate).  All default 0:
+// per-lane register-output skid (ot_mtp_p2_regskid: out_data IS a register, no FIFO head select), so the accept sees
+// registered flags and acc_data_q's D is a 2:1 of registers (+1 cycle input latency, full rate).  All default 0:
 // the original logic.
 module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0,
   parameter integer SB_REG=0, parameter integer ACC_REG=0, parameter integer PRE_DEC=0) (
@@ -89,7 +90,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     if(PRE_DEC) begin: predec
       wire [1:0] pr; wire [523:0] fd[0:1];
       for(genvar pl=0;pl<2;pl=pl+1) begin: lanes
-        ot_sc_pfifo #(.W(524),.S(2),.G(32)) q(.clk(clk),.rst_n(rst_n),
+        ot_mtp_p2_regskid #(.W(524)) q(.clk(clk),.rst_n(rst_n),
           .in_valid(in_v[pl]&&lane_open),.in_ready(pr[pl]),
           .in_data({in_data[512*pl+:512],in_word[7*pl+:7],in_last[pl],pl?rd1:rd0}),
           .out_valid(x_v[pl]),.out_ready(x_r[pl]),.out_data(fd[pl]));
@@ -215,5 +216,23 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
       end
     end
   end endgenerate
+endmodule
+// Register-output skid buffer: out_data / out_valid are flops (no read-select mux), in_ready = !skid_full (a flop).
+// Full rate; a stalled head parks the next beat in the skid register.
+module ot_mtp_p2_regskid #(parameter integer W=8)(
+  input wire clk, rst_n, input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
+  output reg out_valid, input wire out_ready, output reg [W-1:0] out_data);
+  reg sv; reg [W-1:0] sq;
+  assign in_ready=!sv;
+  wire push=in_valid&&!sv;
+  wire load=!out_valid||out_ready;
+  always @(posedge clk or negedge rst_n)
+    if(!rst_n) begin out_valid<=0; sv<=0; end
+    else if(load) begin out_valid<=sv||push; sv<=0; end
+    else if(push) sv<=1;
+  always @(posedge clk) begin
+    if(load) out_data<=sv?sq:in_data;
+    else if(push) sq<=in_data;
+  end
 endmodule
 `default_nettype wire
