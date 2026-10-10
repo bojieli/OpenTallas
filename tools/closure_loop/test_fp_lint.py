@@ -138,6 +138,22 @@ class Lint(unittest.TestCase):
         self.assertIn(("far", "reach"), kinds)
         self.assertIn(("back", "far_side"), kinds)
 
+    def test_die_margin_pin_anchor(self):
+        # mtp-head-1010: a 1,000 um wide driver whose output pin sits on its EAST end; the relay beside that pin is
+        # behind the driver's CENTRE (legacy far side) but not behind its pin (anchor mode); a relay truly behind the
+        # pin is still caught
+        I = lambda n, k, x, y, w=10.0, h=10.0: SimpleNamespace(name=n, kind=k, x=x, y=y, w=w, h=h)
+        insts = [I('d', 'blk', 0.0, 0.0, 1000.0, 50.0), I('r', 'rly', 1000.0, 60.0), I('l', 'blk', 1400.0, 60.0)]
+        buses = [('b0', 'x', 8, [('d', 'o'), ('r', 'i')]), ('b1', 'x', 8, [('r', 'o'), ('l', 'i')])]
+        pin = {('d', 'o'): (995.0, 25.0), ('l', 'i'): (1400.0, 65.0)}
+        anc = lambda it, port: pin.get((it.name, port))
+        self.assertEqual(F.die_margin(insts, buses, ('rly',), edges=True)['far_side_relays'], 0)
+        insts[1] = I('r', 'rly', 600.0, 60.0)         # beside the centre, 400 um behind the east pin
+        self.assertEqual(F.die_margin(insts, buses, ('rly',), edges=True)['far_side_relays'], 0)
+        self.assertEqual(F.die_margin(insts, buses, ('rly',), edges=True, anchor=anc)['far_side_relays'], 1)
+        pin[('d', 'o')] = (5.0, 25.0)                    # pin on the WEST end: the centre relay advances
+        self.assertEqual(F.die_margin(insts, buses, ('rly',), edges=True, anchor=anc)['far_side_relays'], 0)
+
     def test_cli_exit_codes(self):
         import tempfile
         with tempfile.TemporaryDirectory() as td:

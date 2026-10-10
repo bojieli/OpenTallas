@@ -1280,7 +1280,8 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
-    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
+    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg', 'mkg', 'mkdrv',
+                                   'mknode', 'mkl'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
         return POWER8[it.kind][0]
@@ -1347,6 +1348,53 @@ SS_REACH_UM = 504.0
 TT_REACH_UM = 674.0             # TT wire fit 261 ps + 0.76 ps/um within 833.333 - 60 ps (reported, option B)
 
 
+def _real_pin_pt(it, port):
+    """mtp-head-1010: die point of a REAL macro port (pin-centroid of the bound real pins, orientation applied); None
+    when the master is not a known real LEF"""
+    rel = None
+    for r_ in (Q_LEF, CFG_LEF, HEAD_A_LEF, HEAD_B_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF):
+        try:
+            if real_lef(r_)['name'] == it.master:
+                rel = r_
+                break
+        except (OSError, KeyError, AttributeError):
+            continue
+    if rel is None or port is None:
+        return None
+    r = real_lef(rel)
+    base, lo, hi = pslice(port)
+    names = (real_ports().get(r['name'], {}) or {}).get(base)
+    if names:
+        names = names[lo:hi + 1] if lo is not None else names
+    else:
+        names = [n_ for n_ in r['pins'] if n_ == base or re.fullmatch(rf'{re.escape(base)}\[(\d+)\]', n_)]
+        if lo is not None:
+            names = [n_ for n_ in names if '[' in n_ and lo <= int(n_.rsplit('[', 1)[1][:-1]) <= hi]
+    pts = [r['pins'][n_][1] for n_ in names if n_ in r['pins']]
+    if not pts:
+        return None
+    x = sum((q[0] + q[2]) / 2 for q in pts) / len(pts)
+    y = sum((q[1] + q[3]) / 2 for q in pts) / len(pts)
+    if it.orient in ('MY', 'R180'):
+        x = r['w'] - x
+    if it.orient in ('MX', 'R180'):
+        y = r['h'] - y
+    return it.x + x, it.y + y
+
+
+def pin_anchor_fn(m):
+    """(inst, port) -> die point of the port's pin: generated face anchor, else real LEF pin centroid, else None"""
+    M = masters(m, 1)
+    cache = {}
+
+    def f(it, port):
+        k_ = (it.name, port)
+        if k_ not in cache:
+            cache[k_] = (_anchor(M.get(it.master), it, port) if port else None) or _real_pin_pt(it, port)
+        return cache[k_]
+    return f
+
+
 def margin_lint(m):
     import fp_margin_lint as FPL
     # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
@@ -1354,7 +1402,17 @@ def margin_lint(m):
     # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
     data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
     edges = os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1'
-    out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges)
+    if RELAY_PIN_PATH and edges:
+        # mtp-head-1010: far-side measured pin to pin (driver output pin -> next input pin); the legacy centre count
+        # is reported beside it (centre_far_side_relays) so the change of measure is never hidden
+        legacy = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges, limit=10)
+        out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges,
+                             anchor=pin_anchor_fn(m))
+        out['far_side_measure'] = 'pin'
+        out['centre_far_side_relays'] = legacy['far_side_relays']
+        out['centre_far_side_examples'] = legacy['far_side_examples']
+    else:
+        out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges)
     # s81-gen 2026-10-10: the sign-off corner is TT (owner option B); the SS 504 um verdict above stays the gate, and the
     # TT reach (833.333 - 60 ps setup unc. = 261 ps + 0.76 ps/um x L -> 674 um) is reported beside it
     tt = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=TT_REACH_UM, edges=edges, limit=5)
@@ -2334,8 +2392,28 @@ HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take wh
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
 FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
+RELAY_PIN_PATH = False         # --relay-pin-path (mtp-head-1010): column relays on the pin-anchor path, each advancing
+HOP_M0 = None                  # pass-1 (--hop-fix) generated masters: pin anchors for --relay-pin-path
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
 HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
+# --markov-full340 (mtp-head-1010 2026-10-10, default off): the production full340 Markov head
+# (rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv) on the head die: per bundle 4 ot_dsrom_markov_head_driver row
+# engines (one per A element, 2 x 2 under the A row) + one Markov bundle glue (start / embedding fan-out to the 4
+# drivers, ready / head_go AND, 4 -> 1 lowest-row first-max pick, fault); per head-bundle frame the Markov stream enters
+# and the frame's best leaves through the column FIFO (one more W512 meso slot each way); die level: a FAN-8 registered
+# broadcast tree from the Markov root (dsfd_mkl: shared-lookup stream head + die argmax root, beside the MTP sequencer)
+# to the frames and a registered FAN-2 pick tree back.  Outlines are model placeholders until the routed views exist:
+# the driver must be slot-conforming (2 a 1,182.8 um frame row): rg1a's 600 x 600 slot is 2 slots tall and 1 a row.
+MARKOV_FULL340 = False
+MKDRV_WH = (583.2, 315.36)                  # driver outline (rg1a cells 31.9k um2 + 2 ROM4096 16.9k um2 -> 26.5 % util)
+MKG_WH = (172.8, 151.2)                     # Markov bundle glue (pick 2 x 83 + result 50 + pins 327 / 87 x 2 + 4 x 55)
+MKN_WH = (64.8, 64.8)                       # die tree node (bcast 327 b FAN 8 / pick 2 x 87 -> 87)
+MKL_WH = (216.0, 172.8)                     # die Markov root
+MK_SB, MK_RB, MK_DB, MK_HB = 327, 87, 55, 33  # stream word, frame result {seen,valid,key,row,bits,4 status}, driver result, A join
+
+
+def hb_h():
+    return HB_H + (2 * (MKDRV_WH[1] + 4.32) if MARKOV_FULL340 else 0.0)
 HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
 HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)
 SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spread at 3 tracks (r8 GRT: a 52 um station
@@ -2544,7 +2622,10 @@ def real_ports_r8():
         he = dict(x=_bus('x', 256), go=['go'], ck=['clk'], rs=['rst_n'], row0=_bus('row0', 17), bv=['b_v'],
                   bd=_bus('b_d', 32), ov=['o_v'], od=_bus('o_d', 32), done=['done'], brow=_bus('best_row', 17),
                   bbits=_bus('best_bits', 32), bkey=_bus('best_key', 32), flt=['fault'])
-        out[real_lef(HEAD_A_LEF)['name']] = he
+        if MARKOV_FULL340:      # the joined head logit (l_v, l_d) feeds the A's Markov driver (head_valid / head_bits)
+            out[real_lef(HEAD_A_LEF)['name']] = dict(he, lj=['l_v'] + _bus('l_d', 32))
+        else:
+            out[real_lef(HEAD_A_LEF)['name']] = he
         out[real_lef(HEAD_B_LEF)['name']] = he
     return out
 
@@ -2556,7 +2637,7 @@ UNUSED_BY_DESIGN = {('ot_dsrom_head_elem_A', p_) for p_ in ('o_v', 'o_d', 'l_v',
 
 
 def HB_PER_FRAME():
-    return int(column_height() / HB_H + 1e-6)
+    return int(column_height() / hb_h() + 1e-6)
 
 
 def frame_plan_r8():
@@ -2845,6 +2926,15 @@ def build_r8(variant=None):
         HOP_PLAN = {}
         m0 = build_r8(variant)
         finalize_r8(m0)
+        if RELAY_PIN_PATH:
+            # --relay-pin-path: pass 1 (centre relays) gives the pin anchors; pass 1b places the column relays on
+            # those pin paths and the hop plan is measured on pass 1b, so pass 2's hop-fix stations see the relays
+            # where pass 2 puts them (a plan from pass 1 left stale hops: headp2 +132 reach, +255 far side)
+            global HOP_M0
+            HOP_M0 = masters(m0, 1)
+            RLY_FACES.clear()
+            m0 = build_r8(variant)
+            finalize_r8(m0)
         HOP_PLAN = hop_plan(m0)
         RLY_FACES.clear()
     variant = dict(variant or {})
@@ -2888,8 +2978,18 @@ def build_r8(variant=None):
             ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
             frames[r].update(elems=[], bundles=hbf[r], last_slot=hbf[r] - 1, ret_stages=0)
             for b in range(hbf[r]):
-                yb = y0 + b * HB_H + 4.32
+                yb = y0 + b * hb_h() + 4.32
                 g = f'g{r}_{b}'
+                if MARKOV_FULL340:
+                    insts.append(Inst(f'{g}mk', 'dsfd_mkg', x0 + 4.32 + HB_PITCH[0] + HB_GLUE[0] + 8.64, yb + 64.8,
+                                      MKG_WH[0] - SHAVE, MKG_WH[1] - SHAVE, kind='mkg', region=f'frame_{r}',
+                                      power_w=1600 * FLOP_CLK_W * 1.5))
+                    for q in range(4):
+                        i_, j_ = q % 2, q // 2
+                        insts.append(Inst(f'{g}d{q}', 'dsfd_mkdrv', x0 + 4.32 + i_ * (MKDRV_WH[0] + 4.32),
+                                          yb - 4.32 + HB_H + 4.32 + j_ * (MKDRV_WH[1] + 4.32), MKDRV_WH[0] - SHAVE,
+                                          MKDRV_WH[1] - SHAVE, kind='mkdrv', region=f'frame_{r}',
+                                          power_w=50426 * FLOP_CLK_W * 1.5))
                 insts.append(Inst(f'{g}b', rb_['name'], x0 + 4.32, yb, rb_['w'], rb_['h'], kind='hb_elem',
                                   region=f'frame_{r}', power_w=HEAD_ELEM_W['B']))
                 insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,
@@ -3299,6 +3399,17 @@ def buses_r8(m):
             bus(f'hbod_{r}_{b}', 'hb_root', 32, [(f'{gn}b', 'od'), (gn, 'bod')])
             bus(f'hr0b_{r}_{b}', 'hb_ctl', 17, [(gn, 'r0b'), (f'{gn}b', 'row0')])
             bus(f'hbf_{r}_{b}', 'stat', 1, [(f'{gn}b', 'flt'), (gn, 'bflt')])
+            if MARKOV_FULL340:
+                mk, pmk = f'{gn}mk', f'g{r}_{b - 1}mk'
+                dr = [f'{gn}d{q}' for q in range(4)]
+                col_ck += [(mk, 'ck')] + [(d_, 'ck') for d_ in dr]
+                col_rs += [(mk, 'rs')] + [(d_, 'rs') for d_ in dr]
+                bus(f'mkx_{r}_{b}', 'x_lane', MK_SB, [((cf, 'mkx') if b == 0 else (pmk, 'mkxo')), (mk, 'mkxi')])
+                bus(f'mkd_{r}_{b}', 'x_lane', MK_SB, [(mk, 'mkd')] + [(d_, 'emb') for d_ in dr])
+                bus(f'mkr_{r}_{b}', 'col_ret', MK_RB, [(mk, 'mkro'), ((pmk, 'mkri') if b else (cf, 'mkri'))])
+                for q in range(4):
+                    bus(f'mkq_{r}_{b}_{q}', 'stat', MK_DB, [(dr[q], 'res'), (mk, f'q{q}')])
+                    bus(f'mkh_{r}_{b}_{q}', 'hb_res', MK_HB, [(f'{gn}a{q}', 'lj'), (dr[q], 'hb')])
             for q in range(4):
                 a = f'{gn}a{q}'
                 bus(f'hr0_{r}_{b}_{q}', 'hb_ctl', 17, [(gn, f'r0a{q}'), (a, 'row0')])
@@ -3307,6 +3418,8 @@ def buses_r8(m):
                     bus(f'h{pt}_{r}_{b}_{q}', 'hb_res', w_, [(a, pt), (gn, f'a{q}{pt}')])
         bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
+    if MARKOV_FULL340:
+        _markov_die_trees(m, P, cor, bus)
     # ---------------- field, per frame
     for r, f in m['frames'].items():
         if f.get('bundles'):
@@ -3648,6 +3761,9 @@ def buses_r8(m):
             rst[d_].append((it.name, 'rst'))
         elif it.kind == 'hstn':
             dom[HSTN_DOM[it.domain]].append((it.name, 'ck'))
+        elif it.kind in ('mknode', 'mkl'):            # --markov-full340 die tree (stream domain)
+            dom['stream'].append((it.name, 'ck'))
+            rst['stream'].append((it.name, 'rs'))
         elif it.kind == 'pqrom':
             dom['stream'].append((it.name, 'ck'))
         elif it.kind == 'svc':
@@ -4321,6 +4437,77 @@ def _hop_fix(m, P):
                         tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
 
 
+def _markov_die_trees(m, P, cor, bus):
+    """--markov-full340: Markov root beside the MTP sequencer; registered FAN-8 broadcast of the Markov stream to every
+    head-bundle frame's column FIFO, registered FAN-2 pick tree of the frame results back to the root (stream domain;
+    hops over reach get hop-fix stations like every die bus)"""
+    W, H = DIE
+    allowed = list(cor.values())
+    hub = m['hub']
+    anchor = hub.get('mtp') or hub['collective']
+    ax, ay = anchor.x + anchor.w / 2, anchor.y + anchor.h / 2
+
+    def place(name, master, wh, cx, cy, kind):
+        pl = None
+        for span, rows in ((300.0, 30), (1200.0, 120), (4000.0, 400)):
+            pl = P.near(cx, cy, wh[0] + 4.32, wh[1] + 4.32, allowed, span=span, rows=rows)
+            if pl:
+                break
+        if pl is None:
+            pl = P.near(cx, cy, wh[0] + 4.32, wh[1] + 4.32, [(0.0, 0.0, W, H)], span=4000.0, rows=400)
+        assert pl, (name, cx, cy)
+        it = Inst(name, master, up(pl[0] + 2.16, GX), up(pl[1] + 2.16, GY), wh[0] - SHAVE, wh[1] - SHAVE, kind=kind,
+                  region='hub', domain='stream_1p2', power_w=600 * FLOP_CLK_W * 1.5)
+        P.add(it)
+        return it
+    root = place('mkl', 'dsfd_mkl', MKL_WH, ax, ay - anchor.h / 2 - MKL_WH[1], 'mkl')
+    if 'mtp' in hub:
+        bus('mkc', 'mk_ctl', 50, [(hub['mtp'].name, 'mkc'), (root.name, 'mkc')])
+        bus('mkres', 'mk_ctl', 52, [(root.name, 'mkres'), (hub['mtp'].name, 'mkres')])
+    by = {it.name: it for it in m['insts']}
+    cen = lambda n: (by[n].x + by[n].w / 2, by[n].y + by[n].h / 2)
+    leaves = [f'cf{r}' for r, f in sorted(m['frames'].items()) if f.get('bundles')]
+    # broadcast: FAN 8 levels (children stay in frame order = W/E half, tier, column: spatial neighbours)
+    lvl, k, nodes = [(n_, 'mks') for n_ in leaves], 0, 0
+    while len(lvl) > 8:
+        nxt = []
+        for g0 in range(0, len(lvl), 8):
+            grp = lvl[g0:g0 + 8]
+            cx = sum(cen(n_)[0] for n_, _ in grp) / len(grp)
+            cy = sum(cen(n_)[1] for n_, _ in grp) / len(grp)
+            nd = place(f'mkb{k}_{g0 // 8}', 'dsfd_mkb', MKN_WH, cx, cy, 'mknode')
+            by[nd.name] = nd
+            nodes += 1
+            bus(f'mkbc_{nd.name}', 'mk_bc', MK_SB, [(nd.name, 'mkbo')] + grp)
+            nxt.append((nd.name, 'mkbi'))
+        lvl, k = nxt, k + 1
+    bus('mkbc_root', 'mk_bc', MK_SB, [(root.name, 'mkbo')] + lvl)
+    # pick: FAN 2 levels back to the root
+    lvl, k = [(n_, 'mkrs') for n_ in leaves], 0
+    while len(lvl) > 2:
+        nxt = []
+        for g0 in range(0, len(lvl), 2):
+            grp = lvl[g0:g0 + 2]
+            if len(grp) == 1:
+                nxt.append(grp[0])
+                continue
+            cx = sum(cen(n_)[0] for n_, _ in grp) / 2
+            cy = sum(cen(n_)[1] for n_, _ in grp) / 2
+            nd = place(f'mkp{k}_{g0 // 2}', 'dsfd_mkp', MKN_WH, cx, cy, 'mknode')
+            by[nd.name] = nd
+            nodes += 1
+            for j, (n_, p_) in enumerate(grp):
+                bus(f'mkpk_{nd.name}_{j}', 'mk_pick', MK_RB, [(n_, p_), (nd.name, 'mkpa' if j == 0 else 'mkpb')])
+            nxt.append((nd.name, 'mkpo'))
+        lvl, k = nxt, k + 1
+    for j, (n_, p_) in enumerate(lvl):
+        bus(f'mkpk_root_{j}', 'mk_pick', MK_RB, [(n_, p_), (root.name, 'mkra' if j == 0 else 'mkrb')])
+    m['markov_full340'] = dict(frames=len(leaves), bundles=sum(f.get('bundles', 0) for f in m['frames'].values()),
+                               drivers=sum(1 for it in m['insts'] if it.kind == 'mkdrv'), tree_nodes=nodes,
+                               driver_outline_um=list(MKDRV_WH), bundle_glue_outline_um=list(MKG_WH),
+                               note='outlines are model placeholders until the routed views exist')
+
+
 def _col_relays(m, P):
     """common-clock column nets whose driver -> load centre distance exceeds BANK_RULE_UM get relay registers
     (one cycle each) at equal spacing on an L path, inside the frame.  Records per frame the relays on the worst x
@@ -4343,16 +4530,25 @@ def _col_relays(m, P):
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
         fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
-        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+        if RELAY_PIN_PATH and HOP_M0 is not None:
+            # mtp-head-1010: pin anchors (generated faces), centres only for real macros / relays
+            def anc(it, port):
+                return _anchor(HOP_M0.get(it.master), it, port) or cen(it)
+            a = anc(d0, eps[0][1])
+            ends = [(anc(by[e[0]], e[1]), by[e[0]]) for e in eps[1:] if e[0] in by]
+            fe = max(ends, key=lambda t_: _mh(a, t_[0]), default=None)
+            far, b = (fe[1], fe[0]) if fe else (None, None)
+        else:
+            far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+            a, b = cen(d0), (cen(far) if far is not None else None)
         if far is None:
             out.append((bid, cls, bits, eps))
             continue
-        L = _mh(cen(d0), cen(far))
+        L = _mh(a, b)
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
-        a, b = cen(d0), cen(far)
         path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
         prev, cur = eps[0], a
         chain = [a]
@@ -4361,11 +4557,26 @@ def _col_relays(m, P):
         for k in range(n):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
+            if RELAY_PIN_PATH:
+                # every relay advances toward the load: never farther from it than the previous chain point (+ the
+                # 20 um lint slack), so no relay stands on the far side of its driver
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', 1e9), _mh(cur, b) + 20.0))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
+            if pl is None and RELAY_PIN_PATH:
+                # wider in the frame, then (head / PQ dies) beside it, both reaches and the advance kept
+                for span_, rows_ in ((400.0, 40), (800.0, 80)):
+                    pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=span_,
+                                rows=rows_, **NR)
+                    if pl:
+                        break
+                if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
+                    pl = _tt_place(P, cx, cy, w_, h_, cur, BANK_RULE_UM + 50.0, b, NR['nreach'], True)
             if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
+                if RELAY_PIN_PATH:
+                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', 1e9), _mh(cur, b) + 20.0))
                 pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
                             rows=40, **nr_tt)
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
@@ -5049,7 +5260,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
 
 
 # ---------------------------------------------------------------------------------------- r8 ports / masters
-GLUE_PREFIX = ('dsfd_xstg', 'dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+GLUE_PREFIX = ('dsfd_xstg', 'dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg', 'dsfd_mkb', 'dsfd_mkp')
 
 
 def is_glue(master):
@@ -5811,6 +6022,16 @@ def die_options(ap):
     ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
                     'reach takes the nearest box within this TT reach in um (option B: TT setup; 600 = 717 ps of TT wire); '
                     'listed in hop_fix.tt_reach_relays / col_relays.tt_reach_relays; default off')
+    ap.add_argument('--markov-full340', action='store_true', help='mtp-head-1010 2026-10-10: head die: the production '
+                    'full340 Markov head (4 ot_dsrom_markov_head_driver a bundle + Markov bundle glue, column-FIFO Markov '
+                    'stream / result lanes, die broadcast + pick trees to a Markov root beside the MTP sequencer); '
+                    'placeholder outlines --mkdrv-wh; default off')
+    ap.add_argument('--mkdrv-wh', help='--markov-full340 driver outline W,H um (default 583.2,315.36)')
+    ap.add_argument('--relay-pin-path', action='store_true', help='mtp-head-1010 2026-10-10: column relays (ret_leaf / '
+                    'cfg / go / col_ret ...) are counted and placed on the driver-pin -> load-pin path (generated face '
+                    'anchors from the --hop-fix pass-1 masters; centres for real macros) instead of centre -> centre, and '
+                    'each relay must not stand farther from the load than the previous chain point (no far-side relay: '
+                    'a 1,003 um bf driver put y_rt_* 409 um behind its own r1 pin); default off')
     ap.add_argument('--frame-out-relay', action='store_true', help='s81-dies: a frame relay with no spot in its full '
                     'frame takes the nearest legal spot within reach outside it, as --pq-place does (head die); default off')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
@@ -5887,6 +6108,15 @@ def apply_options(a):
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
+    global MARKOV_FULL340, MKDRV_WH
+    MARKOV_FULL340 = bool(getattr(a, 'markov_full340', False))
+    if MARKOV_FULL340:
+        assert a.die == 'head' and a.gen == 'r8', '--markov-full340 is the r8 head die'
+    if getattr(a, 'mkdrv_wh', None):
+        MKDRV_WH = tuple(float(v) for v in a.mkdrv_wh.split(','))
+    global RELAY_PIN_PATH, HOP_M0
+    RELAY_PIN_PATH = bool(getattr(a, 'relay_pin_path', False))
+    HOP_M0 = None
     HOST_SLAB = bool(getattr(a, 'host', False))
     global COLL_SPLIT3, COLL_SPLIT3_CR, COLL_SPLIT3_COMP, CK_RULE, Q_X1B
     Q_X1B = bool(getattr(a, 'q_x1b', False))
