@@ -117,12 +117,11 @@ module ot_hgi_hc_unit #(
             end
         end
     end
+    reg ack_f;
     always @* begin
-        wq_ack = 8'd0;
-        if (!hq_v || hq_rdy) begin : ack
-            reg f; f = 1'b0;
-            for (k = 0; k < 8; k = k + 1) if (!f && wq_v[k]) begin f = 1'b1; wq_ack[k] = 1'b1; end
-        end
+        wq_ack = 8'd0; ack_f = 1'b0;
+        if (!hq_v || hq_rdy)
+            for (k = 0; k < 8; k = k + 1) if (!ack_f && wq_v[k]) begin ack_f = 1'b1; wq_ack[k] = 1'b1; end
     end
     wire p_iss = (!hq_v || hq_rdy) && p_req && !(|wq_v);
 
