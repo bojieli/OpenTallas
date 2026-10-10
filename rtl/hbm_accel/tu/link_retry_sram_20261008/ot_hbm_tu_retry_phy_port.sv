@@ -160,7 +160,7 @@ module ot_hbm_tu_retry_phy_port #(
  // output registers.  RDPIPE turns on the replay SRAMs' MUXREG (registered bank select before the syndrome, +1 read
  // edge, retry storage and PHY ingress) and resets the wrapper's own pin / output registers from the synchronised run
  // gates the core already uses (async assert from the flops, sync release).
- parameter RDPIPE=`ifdef OT_TU_RDPIPE 1 `else 0 `endif
+ parameter RDPIPE=`ifdef OT_TU_RDPIPE2 2 `elsif OT_TU_RDPIPE 1 `else 0 `endif  // 2 (ds-1010): + replay SRAM OREG
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,

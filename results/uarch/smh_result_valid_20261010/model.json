@@ -12,7 +12,7 @@
   "reduction_gate_upper_bound": 32,
   "replicas": 1,
   "mux_demux_cost": 0,
-  "control_fanout_max": 2,
+  "control_fanout_max": 3,
   "local_routing_tracks_upper_bound": 24,
   "floorplan_slot_fit": "existing south-front result landing; <=5*columns small gates, physical route required",
   "added_cycles": 0,

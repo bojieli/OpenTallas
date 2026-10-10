@@ -55,18 +55,10 @@ module ot_hgi_vm_core #(
 );
     localparam integer NB = 32;
     // ---------------------------------------------------------------- (39,32) SECDED (Hsiao-style odd-weight columns)
-    function automatic [6:0] chk(input [31:0] d);
-        integer i; reg [6:0] c; reg [6:0] col;
-        begin
-            c = 7'd0;
-            for (i = 0; i < 32; i = i + 1) begin
-                col = colv(i);
-                if (d[i]) c = c ^ col;
-            end
-            chk = c;
-        end
-    endfunction
-    // column of data bit i: the i-th 7-bit vector with 3 ones (35 of them; the first 32 used)
+    // column of data bit i: the i-th 7-bit vector with 3 ones (35 of them; the first 32 used).  The H matrix is a
+    // constant computed ONCE at elaboration (COLS / ROWM): every encoder is 7 XOR trees over fixed data-bit masks and
+    // every decoder 32 constant compares, so the netlist is the same as before but elaboration no longer re-runs the
+    // column enumeration inside every encoder instance (hgi-1010: the WP 32 / NC 8 view spent hours in canonicalize).
     function automatic [6:0] colv(input integer i);
         integer a, b, c, n; reg [6:0] v;
         begin
@@ -80,6 +72,20 @@ module ot_hgi_vm_core #(
             colv = v;
         end
     endfunction
+    function automatic [32*7-1:0] cols_all(input integer dummy);
+        integer i; reg [32*7-1:0] r;
+        begin r = '0; for (i = 0; i < 32; i = i + 1) r[i*7 +: 7] = colv(i); cols_all = r; end
+    endfunction
+    localparam [32*7-1:0] COLS = cols_all(0);
+    function automatic [7*32-1:0] rows_all(input integer dummy);
+        integer i, j; reg [7*32-1:0] r;
+        begin r = '0; for (j = 0; j < 7; j = j + 1) for (i = 0; i < 32; i = i + 1) r[j*32 + i] = COLS[i*7 + j]; rows_all = r; end
+    endfunction
+    localparam [7*32-1:0] ROWM = rows_all(0);              // check bit j = XOR of the data bits in ROWM[j]
+    function automatic [6:0] chk(input [31:0] d);
+        integer j; reg [6:0] c;
+        begin for (j = 0; j < 7; j = j + 1) c[j] = ^(d & ROWM[j*32 +: 32]); chk = c; end
+    endfunction
     function automatic [38:0] enc(input [31:0] d);
         enc = {chk(d), d};
     endfunction
@@ -89,7 +95,7 @@ module ot_hgi_vm_core #(
         begin
             d = w[31:0]; syn = chk(w[31:0]) ^ w[38:32]; hit = 1'b0;
             if (syn != 7'd0) begin
-                for (i = 0; i < 32; i = i + 1) if (syn == colv(i)) begin d[i] = ~d[i]; hit = 1'b1; end
+                for (i = 0; i < 32; i = i + 1) if (syn == COLS[i*7 +: 7]) begin d[i] = ~d[i]; hit = 1'b1; end
                 // a check-bit error (weight-1 syndrome) leaves the data correct
                 if (syn == 7'd1 || syn == 7'd2 || syn == 7'd4 || syn == 7'd8 || syn == 7'd16 || syn == 7'd32 || syn == 7'd64) hit = 1'b1;
             end
@@ -103,6 +109,9 @@ module ot_hgi_vm_core #(
     wire [31:0]   c_bm   [0:NC-1];
     wire [15:0]   c_tag  [0:NC-1];
     wire [4:0]    c_bank [0:NC-1];
+    wire [311:0]  c_enc  [0:NC-1];                        // the client's write data, encoded once (not per bank)
+    wire [7:0]    c_wm   [0:NC-1];                        // whole-word write mask
+    wire          c_mf   [0:NC-1];                        // a partial word mask (mask fault)
     reg  [2:0]    ocnt [0:NC-1];                          // requests outstanding (granted, response not yet taken)
     reg  [NC-1:0] busy;
 
@@ -115,6 +124,19 @@ module ot_hgi_vm_core #(
         assign c_sec[g] = q[323:309];                     // byte address [335:304]: sector = byte >> 5
         assign c_we[g]  = q[336];
         assign c_bank[g] = (MUT == 2) ? c_sec[g][5:1] : c_sec[g][4:0];
+        for (k = 0; k < 8; k = k + 1) begin : g_w
+            assign c_enc[g][k*39 +: 39] = enc(c_wd[g][k*32 +: 32]);
+            assign c_wm[g][k] = &c_bm[g][k*4 +: 4];
+        end
+        assign c_mf[g] = |(c_bm[g] & ~{{4{c_wm[g][7]}}, {4{c_wm[g][6]}}, {4{c_wm[g][5]}}, {4{c_wm[g][4]}},
+                                         {4{c_wm[g][3]}}, {4{c_wm[g][2]}}, {4{c_wm[g][1]}}, {4{c_wm[g][0]}}});
+    end
+    // wide lanes, encoded once per lane
+    wire [311:0] l_enc [0:WP-1];
+    for (g = 0; g < WP; g = g + 1) begin : g_le
+        for (k = 0; k < 8; k = k + 1) begin : g_w
+            assign l_enc[g][k*39 +: 39] = enc(wl_d[g*256 + k*32 +: 32]);
+        end
     end
     // ---------------------------------------------------------------- per bank arbitration (lowest index wins)
     reg [NC-1:0] gr_r [0:NB-1];
@@ -171,22 +193,21 @@ module ot_hgi_vm_core #(
             for (b = 0; b < NB; b = b + 1) begin
                 m_re[b] <= |gr_r[b]; m_we[b] <= |gr_w[b] | wb_hit[b];
                 if (wb_hit[b]) begin : wide
-                    integer lp; lp = wb_lane[b];
+                    integer lp; lp = (WDIRECT != 0) ? b : wb_lane[b];      // WDIRECT: lane b is bank b (no lane mux)
                     m_wa[b] <= wl_sec[lp*15 + 5 +: 10];
-                    for (w = 0; w < 8; w = w + 1) begin
-                        m_wd[b][w*39 +: 39] <= enc(wl_d[lp*256 + w*32 +: 32]);
+                    m_wd[b] <= l_enc[lp];
+                    for (w = 0; w < 8; w = w + 1)
                         m_wm[b][w*39 +: 39] <= {39{wl_m[lp*8 + w] | (MUT == 4)}};   // MUT 4: the word mask ignored
-                    end
                 end
                 for (c = 0; c < NC; c = c + 1) begin
                     if (gr_r[b][c]) m_ra[b] <= c_sec[c][14:5];
                     if (gr_w[b][c]) begin
                         m_wa[b] <= c_sec[c][14:5];
                         for (w = 0; w < 8; w = w + 1) begin
-                            m_wd[b][w*39 +: 39] <= enc(c_wd[c][w*32 +: 32]) ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask : 39'd0);
-                            m_wm[b][w*39 +: 39] <= {39{&c_bm[c][w*4 +: 4]}};
-                            if (|c_bm[c][w*4 +: 4] && !(&c_bm[c][w*4 +: 4])) mask_fault <= 1'b1;
+                            m_wd[b][w*39 +: 39] <= c_enc[c][w*39 +: 39] ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask : 39'd0);
+                            m_wm[b][w*39 +: 39] <= {39{c_wm[c][w]}};
                         end
+                        if (c_mf[c]) mask_fault <= 1'b1;
                     end
                 end
             end

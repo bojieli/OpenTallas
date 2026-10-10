@@ -72,12 +72,32 @@ module ot_hbm_replay_sram #(
  end
  wire[SW-1:0] stored_seq=corrected[W+:SW];
  wire[EW-1:0] stored_epoch=corrected[W+SW+:EW];
- assign o_valid=&valid;
  wire[SW-1:0] seq_o=MUXREG?seqp[5]:seqp[4];wire[EW-1:0] ep_o=MUXREG?ep[5]:ep[4];
- assign o_ue=o_valid && ((|ue) || (!NOEPOCH && (stored_seq!=seq_o || stored_epoch!=ep_o)));
- assign o_ce=o_valid && |ce;
- assign o_data=o_ue ? {W{1'b0}}:corrected[W-1:0];
- assign o_seq=seq_o;assign o_session=ep_o;
+ wire d_valid=&valid;
+ wire d_ue=d_valid && ((|ue) || (!NOEPOCH && (stored_seq!=seq_o || stored_epoch!=ep_o)));
+ wire d_ce=d_valid && |ce;
+ // MUXREG>=2 (ds-1010 2026-10-10, opt-in): OREG -- the response (valid, UE verdict incl. the stored seq/epoch compare,
+ // CE, corrected payload, seq, session) is registered before it leaves the store; +1 read edge.  iqs4-a TT -176.85 was
+ // seqp[5] -> 28-bit stored seq/epoch compare -> o_ue -> 545-bit zero mask + the client's head write enables in one
+ // edge.  The UE zero mask is now driven by a flop.  Clients are latency insensitive (reserved / single-outstanding).
+ if(MUXREG>=2) begin:g_oreg
+  reg ov_q,ue_q,ce_q;reg[W-1:0] d_q;reg[SW-1:0] s_q;reg[EW-1:0] e_q;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) begin ov_q<=0;ue_q<=0;ce_q<=0; end
+   else begin ov_q<=d_valid;ue_q<=d_ue;ce_q<=d_ce; end
+  always @(posedge clk) begin d_q<=corrected[W-1:0];s_q<=seq_o;e_q<=ep_o; end
+  assign o_valid=ov_q;assign o_ue=ue_q;assign o_ce=ce_q;
+`ifdef OT_TU_OREG_MUT
+  assign o_data=ue_q ? {W{1'b0}}:corrected[W-1:0];        // mutant: payload not registered with its valid (one edge skew)
+`else
+  assign o_data=ue_q ? {W{1'b0}}:d_q;
+`endif
+  assign o_seq=s_q;assign o_session=e_q;
+ end else begin:g_ocomb
+  assign o_valid=d_valid;assign o_ue=d_ue;assign o_ce=d_ce;
+  assign o_data=d_ue ? {W{1'b0}}:corrected[W-1:0];
+  assign o_seq=seq_o;assign o_session=ep_o;
+ end
  initial begin
   if(DEPTH<128 || DEPTH%128 || (DEPTH&(DEPTH-1)) || AW>SW) $fatal(1,"invalid SRAM replay depth");
  end

@@ -30,5 +30,15 @@
   "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF, one ICG ENA forced 0",
   "original_record_commit": "13323125b",
   "clock_period_ns": 0.833
+ },
+ "sm_front_s": {
+  "a20_w": 0.046075329184532166,
+  "a00_w": 0.02608656696975231,
+  "gated": false,
+  "source": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933.kv",
+  "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933.src",
+  "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF; UNGATED (no ICG): replaces the pre-qualifier front_s (8e93e5a83) a20 0.045765 / a00 0.025817",
+  "original_record_commit": "a622542cf (closure 38381d798, source 933923316 RESULT_VALID qualifier)",
+  "clock_period_ns": 0.833
  }
 }
