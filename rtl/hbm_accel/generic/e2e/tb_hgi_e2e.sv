@@ -414,7 +414,9 @@ module tb_hgi_e2e;
         end
         // END's wait mask may be 0 (the Qwen layer program): the completion can precede the last records' writes;
         // drain every unit (the sequencer's busy = a job runs or a unit has work outstanding) before the final checks
-        w = 0; while (cpd.u_cp.u_seq.busy && w < 2000000) begin @(negedge clk); w = w + 1; end
+        // a fault completion halts the CP by design (outstanding count of the faulted unit is never retired; recovery
+        // = drained reset): do not wait for busy to drop then
+        w = 0; while (c_st == 0 && cpd.u_cp.u_seq.busy && w < 2000000) begin @(negedge clk); w = w + 1; end
         t_drain = cyc;
         repeat (20) @(negedge clk);
         fin = e2e_finish(t_cpl - t_db, c_tok, c_st);
