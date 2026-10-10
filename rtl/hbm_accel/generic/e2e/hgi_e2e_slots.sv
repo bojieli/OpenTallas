@@ -143,9 +143,11 @@ module hgi_e2e_coll_slot #(
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
         .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfg), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma));
-    generate if (COLL_BF16 == 0) begin : g_fp32 defparam u_ce.u_ep.BF16 = 0; end endgenerate   // what-if: FP32 results
-    generate if (COLL_PFMAX == 512) begin : g_pf512 defparam u_ce.u_ep.PFMAX = 512; end      // what-if: 8,192 FP32 a contributor
-    else if (COLL_PFMAX != 64) begin : g_pfbad initial $fatal(1, "COLL_PFMAX: 64 or 512"); end endgenerate
+    // what-ifs (COLL_BF16 = 0 / COLL_PFMAX != 64): tools/hgi_e2e/run.py compiles a copy of ot_hgi_coll_ep whose PSG
+    // instance carries those parameters in place of the die's (Verilator applies a defparam even in a dead generate
+    // branch, so the copy is the reliable form); these parameters only tell the models what the endpoint was built with
+    initial if (u_ce.u_ep.BF16 != COLL_BF16 || u_ce.u_ep.PFMAX != COLL_PFMAX)
+        $fatal(1, "E2E COLL: endpoint BF16 %0d PFMAX %0d, models expect %0d / %0d", u_ce.u_ep.BF16, u_ce.u_ep.PFMAX, COLL_BF16, COLL_PFMAX);
     // ---- record context (what the endpoint was told)
     integer k = -1, n_a = 0, gsize = 4, pf = 1, rnk = 0, nsub = 4, isbyp = 0, mall = 0;
     integer abase, obase;

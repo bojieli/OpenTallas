@@ -56,6 +56,51 @@ TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
+_DEFS = None
+LAST_SRC = []
+SKIP_MODS = {"ot_sram_1r1w_256x256_m2_r2c2"}     # the sequencer ring macro: USE_MACRO = 0 in the harness
+
+
+def _defs():
+    """module name -> defining files under rtl/ (cached)"""
+    global _DEFS
+    if _DEFS is None:
+        _DEFS = {}
+        for f in (sorted((ROOT / "rtl").rglob("*.sv")) + sorted((ROOT / "rtl").rglob("*.v")) +
+                  sorted((ROOT / "physical").glob("*/*/rtl/*.sv"))):
+            try:
+                txt = f.read_text(errors="replace")
+            except OSError:
+                continue
+            for m in re.findall(r"^\s*module\s+(\w+)", txt, re.M):
+                _DEFS.setdefault(m, []).append(str(f.relative_to(ROOT)))
+    return _DEFS
+
+
+def closure(roots, have=()):
+    """the source files a set of root files needs (instantiated modules, resolved to their rtl/ definition; a file
+    named after the module wins, test / pinned / recovered copies lose); `have` = files already in the list"""
+    defs = _defs()
+    bad = ("/test/", "pinned", "recovered", "/tb_", "_sim.sv")
+    files, todo, seen = [], list(roots), set()
+    known = {m for f in have for m in re.findall(r"^\s*module\s+(\w+)", (ROOT / f).read_text(errors="replace"), re.M)}
+    while todo:
+        f = todo.pop(0)
+        if f in files:
+            continue
+        files.append(f)
+        txt = re.sub(r"//.*", "", (ROOT / f).read_text(errors="replace"))
+        for m in sorted(set(re.findall(r"\b(\w+)\s*(?:#\s*\(|\s+\w+\s*\()", txt))):
+            if m not in defs or m in seen or m in known or m in SKIP_MODS:
+                continue
+            seen.add(m)
+            c = defs[m]
+            pick = sorted(c, key=lambda x: (any(b in x for b in bad) and "sram" not in m, x.startswith("physical/"),
+                                            not Path(x).name.startswith(m), len(x)))[0]
+            todo.append(pick)
+    return files
+
+
 def prep(d: Path):
     from hgi_sim.records import Rec, MDesc, decode_program, encode_program
     meta = json.loads((d / "meta.json").read_text())
@@ -101,20 +146,33 @@ def prep(d: Path):
 def script(a):
     real = [x for x in a.real.split(",") if x]
     src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
+    src = list(dict.fromkeys(src + closure(src)))
     gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
     gp += (" +define+E2E_COLL_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     tag = ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    gd = dict(g.split("=", 1) for g in a.g)
+    wi = ""
+    if "coll" in real and ("COLL_BF16" in gd or "COLL_PFMAX" in gd):
+        # what-if copy of the collective block body: the PSG endpoint built with these parameters
+        bf, pfm = gd.get("COLL_BF16", "1"), gd.get("COLL_PFMAX", "64")
+        orig = "rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"
+        src = [x for x in src if x != orig]
+        wi = (f"sed 's/ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1),/ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .BF16({bf}), "
+              f".PFMAX({pfm}),/' $S/{orig} > $O/ot_hgi_coll_ep_whatif.sv\ngrep -q 'PFMAX({pfm})' $O/ot_hgi_coll_ep_whatif.sv\n")
+        src.append("WHATIF")
+    srcs = " ".join(("$O/ot_hgi_coll_ep_whatif.sv" if s_ == "WHATIF" else "$S/" + s_) for s_ in src)
+    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"] if wi else [])
     return f"""#!/bin/bash
 # hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
 set -e
 S=${{SRC:-src}}; V=${{VEC:-vec}}/{a.vehicle}; O=${{OUT:-out}}/{a.vehicle}_{tag}_f{a.flat}k{a.klat}
 mkdir -p $O
-VER=${{VERILATOR:-verilator}}
+{wi}VER=${{VERILATOR:-verilator}}
 $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
   -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
-  {' '.join('$S/' + s for s in src)} \\
+  {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
 $O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt > $O/run.log 2>&1; rc=$?
@@ -176,6 +234,7 @@ def main():
     elif a.cmd == "script":
         a.out.write_text(script(a))
         a.out.chmod(0o755)
+        a.out.with_suffix(".src").write_text("\n".join(LAST_SRC + TB) + "\n")
     else:
         res = report(a.run, None)
         txt = json.dumps(res, indent=1, default=int) + "\n"
