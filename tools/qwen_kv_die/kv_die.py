@@ -566,9 +566,12 @@ def masters(m, k=1, port_bits=None):
             if mst == 'qkd_astk' and p[0] in 'ef' and p[1].isdigit():
                 face = 'W' if int(p[1]) < 4 else 'E'
             layer = 'M4' if face in ('E', 'W') else 'M5'
-            if (mst == 'qkd_ectl' and p == 'so') or (mst == 'qkd_rhead' and p == 'nb') or \
-                    (mst == 'qkd_astk' and p[0] in 'ef' and p[1].isdigit() and p[-1] != 'o'):
-                layer = 'M6'                     # control so / head nb on M6, control si on M4 (same faces)
+            if (mst == 'qkd_ectl' and p == 'so') or (mst == 'qkd_astk' and p[0] == 'e' and p[-1] == 'i'):
+                layer = 'M6'                     # control so on M6, control si on M4 (same face)
+            # the head tile is placed MX / R180 below the control tile: a mirrored master's horizontal pins must be
+            # mirror-legal on every layer at once (origin = 2 off - H mod pitch per layer).  M4 (off 12 / 48) and M8 (116 /
+            # 80) agree mod 16, M6 (16 / 64) agrees with neither (die_kv8: 'qkd_rhead MX y has no legal origin') -> the
+            # head's node beat on M4, its clock / reset area pins on M8, nothing on M6 (the astk faces it on M4)
             L = mm.h if face in ('E', 'W') else mm.w
             fl = face_load.setdefault((mst, face), [])
             # re-cut D faces are narrow enough for 2-track pitch (1-track first bits had no access point next to the
