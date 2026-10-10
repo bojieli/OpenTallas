@@ -204,4 +204,5 @@ proc ::ot_pin_place_auto {re depth} {
     return $placed
 }
 # Only the new front flops own these pins; hold repair remains enabled.
-ot_pin_place_auto {^g_fetch_pin\.(front_addr|front_v)} 14
+set ot_cp_pin_count [ot_pin_place_auto {^(f_req_addr|f_req_v)(\[|\$)} 14]
+if {$ot_cp_pin_count != 41} { error "CP fetch pin boundary: expected41 anchored flops, got $ot_cp_pin_count" }
