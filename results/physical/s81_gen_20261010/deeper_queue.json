@@ -1,0 +1,33 @@
+{
+  "recorded_utc": "2026-10-10T12:30:07.067028+00:00",
+  "source": "28d7cb869",
+  "scope": "source-pinned fullshape static structural generator; no physical/adoption verdict",
+  "admission": {
+    "host": "ot-epyc1tb",
+    "guard": "/srv/opentallas-scratch/admit.sh",
+    "reservation_gib": 2,
+    "observed_fullshape_hwm_kib": 413428,
+    "observed_ss450_rss_kib": 376412,
+    "margin": "more than4x same fullshape observed memory, plus actual inventory compared; no per-process cap"
+  },
+  "jobs": [
+    {
+      "name": "x1b_ss400_extra3_codex",
+      "pid": 187445,
+      "options": "s81_layer1_full_x1b_ss400_extra3.opts",
+      "status": "RUNNING",
+      "physical_ready": false,
+      "blocked_by": "zeroSS reach, actual packet-age gate and explicit added-hop model composition"
+    },
+    {
+      "name": "x1b_ss375_extra4_codex",
+      "pid": 187446,
+      "options": "s81_layer1_full_x1b_ss375_extra4.opts",
+      "status": "RUNNING",
+      "physical_ready": false,
+      "blocked_by": "zeroSS reach, actual packet-age gate and explicit added-hop model composition"
+    }
+  ],
+  "constraints": "SS geometric reach504um retained; clock833.333ps and60/25uncertainty retained; TT fallback counted and may not substitute for SS",
+  "taller_q": "taller_q_model.json: any230.04+ frame forces8slots and fails1792pair diefit; no taller physical job submitted"
+}
