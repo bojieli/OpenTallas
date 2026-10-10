@@ -5,6 +5,11 @@
 // CF-KV linear append + DS KVWB x 2 (expected hbm_out / vm_out) and 60 random LOAD / STORE records (every format,
 // stride, alignment; hgi_sim decode_fmt / encode_fmt).  Prints HGI_MOVER PASS / FAIL.
 module tb_hgi_mover_record;
+`ifdef MUT_WIDE_MASK
+    localparam integer VMUT = 4;
+`else
+    localparam integer VMUT = 0;
+`endif
 `ifdef MUT_RNE
     localparam integer MR = 1;
 `else
@@ -40,8 +45,9 @@ module tb_hgi_mover_record;
         .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr0));
-    ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status());
+        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr0), .wl(wl), .wl_done(wl_done));
+    wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
+    ot_hgi_vm_unit #(.NC(2), .WP(1), .MUT(VMUT)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status(), .wq(wl), .wq_done(wl_done));
     // ---- kport lane HBM model
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0, pwe; reg [36:0] pa; reg [255:0] pd; reg [31:0] ps;

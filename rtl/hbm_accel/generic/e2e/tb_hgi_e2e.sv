@@ -144,11 +144,13 @@ module tb_hgi_e2e;
             .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
         wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
+        wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
         ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
             .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-            .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(vq), .vmr(vr));
+            .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(vq), .vmr(vr), .wl(wl), .wl_done(wl_done));
+        hgi_e2e_vmw #(.UNIT(8)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
         hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
             .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
         hgi_e2e_vmc #(.UNIT(8), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
@@ -377,6 +379,22 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
             rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = c + LAT; t = t + 1;
         end
         if (h < t && due[h % 16] <= c) begin r <= {1'b1, rq[h % 16]}; h = h + 1; end
+    end
+endmodule
+
+// VM wide write port model (hgi-takeover 2026-10-10): lane {v, sector 15, wdata 256, word mask 8}, never
+// back-pressured; the write lands on the VM model at once, done 3 edges later (the VM unit's pin flop + 2)
+module hgi_e2e_vmw #(parameter integer UNIT = 8) (input wire clk, input wire rst_n, input wire [279:0] wl, output reg done);
+    import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
+                                               input bit [31:0] mask, output bit [255:0] rd);
+    reg [2:0] dl = 0;
+    always @(posedge clk) begin
+        dl <= {dl[1:0], rst_n && wl[279]}; done <= dl[2];
+        if (rst_n && wl[279]) begin : w
+            bit [255:0] rd; bit [31:0] m;
+            for (integer t = 0; t < 8; t = t + 1) m[4*t +: 4] = {4{wl[t]}};
+            e2e_vm_sector(UNIT, int'(wl[278:264]), 1'b1, wl[263:8], m, rd);
+        end
     end
 endmodule
 

@@ -37,6 +37,8 @@ module ot_hfd_loader_hgi #(
     output wire [2:0]   dma_ret,        // {fault, done, ready}
     output wire [337:0] dma_vmq,
     input  wire [273:0] dma_vmr,
+    output wire [279:0] dma_vmw,        // the VM wide write port lane (hfd_hgi_vm wq), {v, sector, data, word mask}
+    input  wire         dma_vmw_done,
     output wire irq,
     output wire fault
 );
@@ -59,7 +61,7 @@ module ot_hfd_loader_hgi #(
         .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
         .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
-        .k_rsp_data(k_rsp_data[767:512]), .k_fault(1'b0), .vmq(dma_vmq), .vmr(dma_vmr));
+        .k_rsp_data(k_rsp_data[767:512]), .k_fault(1'b0), .vmq(dma_vmq), .vmr(dma_vmr), .wl(dma_vmw), .wl_done(dma_vmw_done));
     assign dma_ret = {d_fault, d_done, d_rdy};
     ot_hgi_loader_cp u_cpw (.clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),

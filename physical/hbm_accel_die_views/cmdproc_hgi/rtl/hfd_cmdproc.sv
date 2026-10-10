@@ -15,6 +15,7 @@ module hfd_cmdproc (
     input wire [2:0] f_hgi_quant,
     input wire [273:0] f_hgi_vmr,
     input wire [18:0] f_hgi_vmstat,
+    input wire [516:0] f_mtp,
     input wire [0:0] rst,
     output wire [63:0] t_barrier,
     output wire [24:0] t_coll,
@@ -24,6 +25,7 @@ module hfd_cmdproc (
     output wire [221:0] t_hgi_loader,
     output wire [682:0] t_hgi_quant,
     output wire [337:0] t_hgi_vmq,
+    output wire [178:0] t_mtp,
     output wire [63:0] t_su_NE,
     output wire [63:0] t_su_NW,
     output wire [63:0] t_su_SE,
@@ -92,6 +94,11 @@ module hfd_cmdproc (
     reg [18:0] i2_f_hgi_vmstat; always @(posedge clk) i2_f_hgi_vmstat <= i1_f_hgi_vmstat;
     reg [18:0] i3_f_hgi_vmstat; always @(posedge clk) i3_f_hgi_vmstat <= i2_f_hgi_vmstat;
     reg [18:0] i_f_hgi_vmstat; always @(posedge clk) i_f_hgi_vmstat <= i3_f_hgi_vmstat;
+    reg [516:0] i0_f_mtp; always @(posedge clk) i0_f_mtp <= f_mtp;
+    reg [516:0] i1_f_mtp; always @(posedge clk) i1_f_mtp <= i0_f_mtp;
+    reg [516:0] i2_f_mtp; always @(posedge clk) i2_f_mtp <= i1_f_mtp;
+    reg [516:0] i3_f_mtp; always @(posedge clk) i3_f_mtp <= i2_f_mtp;
+    reg [516:0] i_f_mtp; always @(posedge clk) i_f_mtp <= i3_f_mtp;
     wire [0:0] w_cpd_clk;
     wire [0:0] w_cpd_rst_n;
     wire [418:0] w_cpd_lcp;
@@ -319,6 +326,12 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_vmq[k]), .q(o_t_hgi_vmq[k]));
     end
     assign t_hgi_vmq[337:0] = o_t_hgi_vmq[337:0];
+    wire [178:0] od_t_mtp = {179'd0};
+    wire [178:0] o_t_mtp;
+    for (genvar k = 0; k < 179; k = k + 1) begin : g_o_t_mtp
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_mtp[k]), .q(o_t_mtp[k]));
+    end
+    assign t_mtp[178:0] = o_t_mtp[178:0];
     wire [63:0] od_t_su_NE = {64'd0};
     wire [63:0] o_t_su_NE;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE

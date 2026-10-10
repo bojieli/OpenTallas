@@ -91,7 +91,9 @@
     "dma_rec": "die:f_hgi_cmdproc[0:704]",
     "dma_ret": "die:t_hgi_cmdproc[0:3]",
     "dma_vmq": "die:t_hgi_vmq[0:338]",
-    "dma_vmr": "die:f_hgi_vmr[0:274]"
+    "dma_vmr": "die:f_hgi_vmr[0:274]",
+    "dma_vmw": "die:t_hgi_vmw[0:280]",
+    "dma_vmw_done": "die:f_hgi_vmw[0:1]"
    }
   }
  ],

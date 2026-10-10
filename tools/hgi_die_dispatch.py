@@ -200,6 +200,11 @@ def install(m, buses, paths, units):
             for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, 't_hgi_vmq'), (vm, f'f_hgi_{u}')]),
                                     (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+        if 'dma' in vm_cl:
+            # the VM wide write port lane of the DMA unit (coordinator 2026-10-10): 280 b loader -> VM, done back
+            for name, bits, eps in (('hgi_vmw_dma', 280, [(hub[UNITS['dma'][1]].name, 't_hgi_vmw'), (vm, 'f_hgi_vmw_dma')]),
+                                    ('hgi_vmw_dma_done', 1, [(vm, 't_hgi_vmw_dma'), (hub[UNITS['dma'][1]].name, 'f_hgi_vmw')])):
+                buses.append((name, 'hub', bits, eps)); paths[name] = [name]
         buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
         paths['hgi_vmstat'] = ['hgi_vmstat']
         rec['vm_clients'] = vm_cl
