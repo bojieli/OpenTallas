@@ -1,0 +1,93 @@
+{
+  "schema": "opentallas.hbm_svc.dma_stream_wide.v1",
+  "verdict": "FAIL",
+  "correctness": "FAIL",
+  "bandwidth": "FAIL",
+  "raw_roof": "FAIL",
+  "sources_unchanged": false,
+  "read_latency_cycles": 104,
+  "credit_rtt_cycles": 192,
+  "initial_credits": 256,
+  "lanes": 32,
+  "tag_bits": 6,
+  "window_sectors": 16384,
+  "native_leases_per_pc": 32,
+  "write_commit_cycles": 3,
+  "read_publication_cycles": 5,
+  "rate_commands": 512,
+  "backend_calendar_sectors_per_24_cycles_per_stack": 593,
+  "aggregate_bytes_per_cycle": 0,
+  "nominal_bytes_per_cycle": 3333.3333333333335,
+  "sustained_bytes_per_cycle": 3166.6666666666665,
+  "gate_bytes_per_cycle": 3000,
+  "stack_rates": [],
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u.command\n"
+    },
+    {
+      "case": "data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "index_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "fault_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_pc_map_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:74: bad request map/burst stack=0 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:74: bad request map/burst stack=1 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:74: bad request map/burst stack=2 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:74: bad request map/burst stack=3 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_drop_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3015000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3015000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3015000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3015000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "response_tag_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u.dut.pc_tiles[7].u\n"
+    },
+    {
+      "case": "response_beat_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=0 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=1 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=2 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:87: wide scoreboard stack=3 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1215000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "raw_roof_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u.command\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:30: tag reuse before complete\n       Time: 5155000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u.command\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_pc_tile_wide.sv": "017bcd13d628ad7803d1ddf40cc695768615e610fcb16bebded3a2d7968e27b3",
+    "rtl/ot_hbm_svc_dma_stream_wide.sv": "17474c5751e1d636da3224aaf7735f0cdbf0eb1ff558aad56febb3c090c701e5",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv": "9eb739467625f59e996950ae20e985ebe412f4a19b0f944172ce1b7471b1687c",
+    "tools/hbm_svc_dma_stream_wide_bench.py": "fb4cdc093a1f589e0cc6edbb41d19fb8109217e6f3ac21a583050bd68ebb37b4"
+  },
+  "scope": "Wide central CPU data-array baseline with actual RTL write-commit/read-publication pipelines, finite32nativeCAM leases, out-of-order tagged returns and conservative raw backend calendar. Actual SRAM/cache integration and physical closure remain separate; no zero-latency bank claim."
+}
