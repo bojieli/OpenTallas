@@ -5,7 +5,7 @@ from pathlib import Path
 
 cfg=json.load(sys.stdin); now=time.time(); cutoff=now-48*3600
 apply=cfg.get('apply', False); protected=set(cfg['protected']); used=set()
-audit=[]; old=[]; clk=os.sysconf('SC_CLK_TCK')
+audit=[]; old=[]; process_refs={}; clk=os.sysconf('SC_CLK_TCK')
 uptime=float(Path('/proc/uptime').read_text().split()[0])
 tools={'yosys','openroad','verilator','verilator_bin','iverilog','vvp','g++','gcc','cc1plus','cc1','ld','make','ninja','sta'}
 def run(args):
@@ -18,12 +18,13 @@ for p in Path('/proc').glob('[0-9]*'):
     try:
         stat=(p/'stat').read_text(); fields=stat[stat.rfind(')')+2:].split()
         start=fields[19]; age=uptime-float(start)/clk
-        cwd=os.readlink(p/'cwd'); used.add(cwd)
+        cwd=os.readlink(p/'cwd'); used.add(cwd); refs={cwd}
         for fd in (p/'fd').iterdir():
-            try: used.add(os.readlink(fd))
+            try:
+                ref=os.readlink(fd); used.add(ref); refs.add(ref)
             except OSError: pass
         argv=(p/'cmdline').read_bytes().decode(errors='replace'); env=(p/'environ').read_bytes().decode(errors='replace')
-        used.update(paths(argv+' '+env))
+        refs.update(paths(argv+' '+env)); used.update(refs); process_refs[int(p.name)]=refs
         comm=(p/'comm').read_text().strip(); uid=p.stat().st_uid
         project=any(t in cwd+' '+argv for t in ('opentallas','OpenTallas','/claude/','claude-1000','closure-loop'))
         if uid==cfg['uid'] and age>48*3600 and comm in tools and project:
@@ -33,23 +34,6 @@ docker=run(['docker','ps','-q'])
 if docker.returncode==0 and docker.stdout.split():
     mounts=run(['docker','inspect','-f','{{range .Mounts}}{{.Source}}\n{{end}}',*docker.stdout.split()])
     used.update(mounts.stdout.splitlines())
-for row in old:
-    p=Path('/proc')/str(row['pid'])
-    try:
-        if identity(p)!=row['start']: continue
-        if apply:
-            os.kill(row['pid'],signal.SIGCONT); os.kill(row['pid'],signal.SIGTERM)
-        audit.append(dict(row,action='TERM' if apply else 'STALE_COMPUTE'))
-    except (OSError,ValueError): pass
-if apply and old:
-    time.sleep(5)
-    for row in old:
-        p=Path('/proc')/str(row['pid'])
-        try:
-            if identity(p)==row['start']:
-                os.kill(row['pid'],signal.SIGKILL)
-                audit.append(dict(row,action='KILL_AFTER_TERM'))
-        except (OSError,ValueError): pass
 
 def overlap(d, refs):
     return any(d==p or d.startswith(p.rstrip('/')+'/') or p.startswith(d+'/') for p in refs if p.startswith('/'))
@@ -72,6 +56,54 @@ def reason(d):
         if max(st.st_mtime,st.st_ctime)>cutoff: return 'touched within 48h'
     except OSError: return 'incomplete traversal; retained'
     return None
+def process_guard(row, approvals, protected, references=()):
+    # Age is only a review trigger. Identity-pinned root review authorizes stale compute,
+    # while active source/evidence and .keep remain protected even after that review.
+    if not any(str(a.get('pid'))==str(row['pid']) and str(a.get('start'))==row['start'] for a in approvals):
+        return 'age alone is not staleness; identity-pinned review required'
+    d=row['cwd']
+    if any(overlap(ref,protected) for ref in references): return 'pinned argv/env/fd source dependency'
+    if overlap(d,protected): return 'pinned evidence/job/source reference'
+    try:
+        base=Path(d)
+        if not base.is_dir(): return 'cwd unavailable; retained'
+        for parent in [base,*base.parents]:
+            if (parent/'.keep').exists(): return '.keep'
+        for current,dirs,files in os.walk(base,followlinks=False):
+            if '.keep' in dirs or '.keep' in files: return '.keep'
+            if '.git' in dirs or '.git' in files: return 'git/source checkout retained'
+            if any(f in files for f in ('STATUS.md','terminal.json','SOURCE_COMMIT')): return 'registered source/evidence'
+            if any(f.endswith(('.v','.sv','.py','.tcl','.cpp','.c','.h','.patch')) for f in files): return 'source/evidence retained'
+            if any(f.startswith(('corner_sta','verdict','failure')) and f.endswith('.json') for f in files): return 'immutable pass/failure evidence'
+            for f in dirs+files:
+                st=os.lstat(os.path.join(current,f))
+                if max(st.st_mtime,st.st_ctime)>cutoff: return 'outputs touched within 48h; progress protection'
+    except OSError: return 'protection scan incomplete; retained'
+    return None
+
+eligible=[]
+for row in old:
+    why=process_guard(row,cfg.get('approved_stale',[]),protected,process_refs.get(row['pid'],()))
+    if why:
+        audit.append(dict(row,action='KEEP_OLD_COMPUTE',reason=why)); continue
+    p=Path('/proc')/str(row['pid'])
+    try:
+        if identity(p)!=row['start']: continue
+        if apply:
+            os.kill(row['pid'],signal.SIGCONT); os.kill(row['pid'],signal.SIGTERM)
+        eligible.append(row)
+        audit.append(dict(row,action='TERM' if apply else 'REVIEWED_STALE_COMPUTE'))
+    except (OSError,ValueError): pass
+if apply and eligible:
+    time.sleep(5)
+    for row in eligible:
+        p=Path('/proc')/str(row['pid'])
+        try:
+            if identity(p)==row['start'] and not process_guard(row,cfg.get('approved_stale',[]),protected,process_refs.get(row['pid'],())):
+                os.kill(row['pid'],signal.SIGKILL)
+                audit.append(dict(row,action='KILL_AFTER_TERM'))
+        except (OSError,ValueError): pass
+
 for root in cfg['roots']:
     try: children=list(Path(root).iterdir())
     except OSError: continue

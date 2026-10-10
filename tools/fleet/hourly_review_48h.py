@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """Concurrent fleet health/48h scratch review, with central-only git reads."""
-import concurrent.futures, datetime, json, os, re, subprocess, sys
+import argparse, concurrent.futures, datetime, json, os, re, subprocess, sys
 from pathlib import Path
 
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--apply', action='store_true', help='Apply guarded scratch cleanup; process signaling requires explicit reviewed identities.')
+parser.add_argument('--approved-stale', type=Path, help='Reviewed JSON mapping host names to stale pid/start identity records.')
+args=parser.parse_args()
+approved=json.loads(args.approved_stale.read_text()) if args.approved_stale else {}
 HERE=Path(__file__).resolve().parent; REPO=Path('/home/ubuntu/OpenTallas')
 OUT=Path(os.environ.get('OT_FLEET_REVIEW_OUTPUT','/home/ubuntu/codex-takeover-20261010/fleet'))
 OUT.mkdir(parents=True,exist_ok=True)
@@ -31,9 +36,9 @@ for h in hosts:
 protected.difference_update(generic)
 def review(h):
     name=h['name']; roots=scratch if name!='localhost' else ['/tmp/claude-1000']
-    cfg={'apply':'--apply' in sys.argv,'uid':1000,'protected':sorted(protected),'roots':roots,'disk_roots':sorted({'/',h['base'],*h.get('disk_roots',{})})}
+    cfg={'apply':args.apply,'approved_stale':approved.get(name,[]),'uid':1000,'protected':sorted(protected),'roots':roots,'disk_roots':sorted({'/',h['base'],*h.get('disk_roots',{})})}
     payload=source.replace('cfg=json.load(sys.stdin);', 'cfg='+repr(cfg)+';')
-    cmd=['sudo','-n','python3','-'] if name=='localhost' else ['ssh','-o','BatchMode=yes','-o','ConnectTimeout=8','-o','ConnectionAttempts=1',name,'sudo -n python3 -']
+    cmd=['sudo','-n','python3','-'] if name=='localhost' else ['ssh','-o','ControlMaster=no','-o','ControlPath=none','-o','BatchMode=yes','-o','ConnectTimeout=8','-o','ConnectionAttempts=1',name,'sudo -n python3 -']
     try:
         r=subprocess.run(cmd,input=payload,capture_output=True,text=True)
         return {'host':name,'result':json.loads(r.stdout)} if r.returncode==0 else {'host':name,'error':r.stderr[-400:]}
