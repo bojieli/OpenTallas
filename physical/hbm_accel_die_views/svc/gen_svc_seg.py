@@ -53,6 +53,9 @@ def fc_face(po, x0, x1):
             return 'E'
     return None
 PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
+# svc-fix 2026-10-10: segments whose ks face needs the group unit's plain port register (ot_svs_grp OPR = 1, +1 row
+# cycle): routed SE_s4 pspr TT -67.35 / -71.17 ps on u_gp5.od -> ks5 (enabled od not pin-anchorable, ~250 ps of wire)
+GRP_OPR = {'hfd_svc_SE_s4'}
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -662,7 +665,8 @@ def build(pl):
                     pp = 4 * k + jj
                     body.append(f"  assign gp{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b11); "
                                 f"assign gp{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
-                body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp{k}_sv), .sq_i(gp{k}_sq), '
+                opr = int(PS and not FC and names[j] in GRP_OPR)
+                body.append(f'  ot_svs_grp #(.K({k}){", .OPR(1)" if opr else ""}) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp{k}_sv), .sq_i(gp{k}_sq), '
                             f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
             elif u.startswith('pc'):
                 p = int(u[2:])

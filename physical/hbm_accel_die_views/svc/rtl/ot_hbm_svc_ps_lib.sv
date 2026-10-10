@@ -172,7 +172,7 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   always @(posedge ck) if (di_v) do_d <= di_d;
 endmodule
 
-module ot_svs_grp #(parameter integer K = 0) (
+module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0) (
   input wire ck, input wire rst, input wire rn,
   input wire [3:0] sv_i, input wire [4*277-1:0] sq_i,     // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
@@ -253,7 +253,19 @@ module ot_svs_grp #(parameter integer K = 0) (
       ot <= rq[asel][aslot];
   end
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
-  assign ks = {fck, fck, fck, od, ot, ov};
+  // svc-fix 2026-10-10 (OPR = 1; routed SE_s4 pspr TT -67 / -71 ps, u_gp5.od -> ks5 output budget): od is an
+  // enabled (av) register with async reset, so its Q also feeds its own hold mux and the output pin anchoring
+  // (OT_WS_OUTPUT_PINREG) cannot place it at the ks pins; 1,088 od bits sat up to ~250 ps of wire from the face.
+  // OPR = 1 adds a plain port register per ks bit (D from od / ot / ov, Q only to its pin): one more row cycle
+  // on the stream path (+1, the beat order and the credit queue unchanged; ov is delayed with the payload).
+  generate if (OPR != 0) begin : opr
+    reg [1087:0] pd; reg [9:0] pt; reg pv;
+    always @(posedge ck) begin pd <= od; pt <= ot; end
+    always @(posedge ck or negedge rn) if (!rn) pv <= 1'b0; else pv <= ov;
+    assign ks = {fck, fck, fck, pd, pt, pv};
+  end else begin : nopr
+    assign ks = {fck, fck, fck, od, ot, ov};
+  end endgenerate
   // credits: forwarded {fclk, v}, falling-edge capture + two-clock FIFO (as the e port); the PC of each credited row
   // sent is queued, and a returned credit goes to the PC at the head (the consumer returns credits in row order)
   localparam integer QD = 64;
