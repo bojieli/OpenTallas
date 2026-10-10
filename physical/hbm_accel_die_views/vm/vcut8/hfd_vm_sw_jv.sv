@@ -23,6 +23,6 @@ module hfd_vm_sw_jv (
 );
     wire [3033:0] w2e; wire [5400:0] e2w;
     wire [3033:0] w2e_x = w2e;
-    hfd_vm_sw_w u_w (.*, .ckw(ck), .cke(ck), .ckn(ck));
-    hfd_vm_sw_e u_e (.*, .w2e(w2e_x), .ckw(ck), .cke(ck), .ckn(ck));
+    hfd_vm_sw_w u_w (.*, .ckw0(ck), .ckw1(ck), .ckw2(ck), .ckw3(ck), .cke0(ck), .cke1(ck), .cke2(ck), .cke3(ck), .ckn0(ck), .ckn1(ck));
+    hfd_vm_sw_e u_e (.*, .w2e(w2e_x), .ckw0(ck), .ckw1(ck), .ckw2(ck), .ckw3(ck), .cke0(ck), .cke1(ck), .cke2(ck), .cke3(ck), .ckn0(ck), .ckn1(ck));
 endmodule

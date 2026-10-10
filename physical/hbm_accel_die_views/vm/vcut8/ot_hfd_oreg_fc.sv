@@ -19,3 +19,11 @@ endmodule
 module ot_hfd_oreg1y (input wire clk, input wire clkf, input wire d, output reg q);
     always @(posedge clkf) q <= d;
 endmodule
+// ot_hfd_oreg2x: the root half's output register (vm8-seam 2026-10-10): one more core stage (posedge clk) before the
+// negedge lockup, so root logic (seat decode -> tap_data, status) gets a full cycle; pin register on the tap leaf.
+module ot_hfd_oreg2x (input wire clk, input wire clkf, input wire d, output reg q);
+    reg s0, l;
+    always @(posedge clk) s0 <= d;
+    always @(negedge clk) l <= s0;
+    always @(posedge clkf) q <= l;
+endmodule

@@ -22,6 +22,6 @@ module hfd_vm_ne_jv (
 );
     wire [2865:0] w2e; wire [2047:0] e2w;
     wire [2865:0] w2e_x = w2e;
-    hfd_vm_ne_w u_w (.*, .ckw(ck), .cke(ck), .cks(ck));
-    hfd_vm_ne_e u_e (.*, .w2e(w2e_x), .ckw(ck), .cke(ck), .cks(ck));
+    hfd_vm_ne_w u_w (.*, .ckw0(ck), .ckw1(ck), .ckw2(ck), .ckw3(ck), .cke0(ck), .cke1(ck), .cke2(ck), .cke3(ck), .cks0(ck), .cks1(ck));
+    hfd_vm_ne_e u_e (.*, .w2e(w2e_x), .ckw0(ck), .ckw1(ck), .ckw2(ck), .ckw3(ck), .cke0(ck), .cke1(ck), .cke2(ck), .cke3(ck), .cks0(ck), .cks1(ck));
 endmodule

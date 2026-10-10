@@ -1,8 +1,15 @@
 # hfd_vm_ne_e: 8-way VM half pins, vertical cut (vm/vcut8/make_vm_vcut8.py)
 place_pin -pin_name {ck[0]} -layer M7 -location {175.3760 500.0280} -pin_size {0.0320 0.2880}
-place_pin -pin_name {cke[0]} -layer M7 -location {346.4480 530.0280} -pin_size {0.0320 0.2880}
-place_pin -pin_name {cks[0]} -layer M7 -location {205.3920 4.0000} -pin_size {0.0320 0.2880}
-place_pin -pin_name {ckw[0]} -layer M7 -location {3.9840 530.0280} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cke0[0]} -layer M7 -location {346.4480 125.1450} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cke1[0]} -layer M7 -location {346.4480 375.1650} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cke2[0]} -layer M7 -location {346.4480 625.1850} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cke3[0]} -layer M7 -location {346.4480 875.2050} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cks0[0]} -layer M7 -location {87.8240 4.0000} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cks1[0]} -layer M7 -location {263.0560 4.0000} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckw0[0]} -layer M7 -location {3.9840 125.1450} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckw1[0]} -layer M7 -location {3.9840 375.1650} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckw2[0]} -layer M7 -location {3.9840 625.1850} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckw3[0]} -layer M7 -location {3.9840 875.2050} -pin_size {0.0320 0.2880}
 place_pin -pin_name {e2w[0]} -layer M4 -location {0.0960 578.7000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {e2w[1]} -layer M6 -location {0.0960 578.8320} -pin_size {0.1920 0.0320}
 place_pin -pin_name {e2w[2]} -layer M4 -location {0.0960 579.0840} -pin_size {0.1920 0.0240}
@@ -7705,7 +7712,7 @@ place_pin -pin_name {qNE[578]} -layer M4 -location {350.6640 174.7800} -pin_size
 place_pin -pin_name {qNE[579]} -layer M6 -location {350.6640 174.8000} -pin_size {0.1920 0.0320}
 place_pin -pin_name {qNE[580]} -layer M4 -location {350.6640 175.0680} -pin_size {0.1920 0.0240}
 place_pin -pin_name {qNE[581]} -layer M6 -location {350.6640 175.0560} -pin_size {0.1920 0.0320}
-place_pin -pin_name {rst[0]} -layer M5 -location {9.9960 999.9600} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M7 -location {10.0000 125.1450} -pin_size {0.0320 0.2880}
 place_pin -pin_name {t_s_wr[0]} -layer M5 -location {165.9000 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_s_wr[1]} -layer M7 -location {165.9040 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {t_s_wr[2]} -layer M5 -location {166.0440 0.0960} -pin_size {0.0240 0.1920}
