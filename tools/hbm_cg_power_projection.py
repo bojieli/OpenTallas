@@ -72,7 +72,8 @@ def main():
                         # SM parts have independent ICGs. Use each measured floor where available;
                         # unmeasured gated tiles retain the residual bracket, fronts stay clocked.
                         aliases = {"sm_tile_w": "sm_tile_wg", "sm_tile_e": "sm_tile_eg",
-                                   "sm_be_w": "sm_be_wg", "sm_be_e": "sm_be_eg"}
+                                   "sm_be_w": "sm_be_wg", "sm_be_e": "sm_be_eg",
+                                   "sm_front_s": "sm_front_s"}   # the qualified (RESULT_VALID) south front: ungated
                         if any(key in meas for key in aliases.values()):
                             idle_each = v["w_each"]["a00"]
                             for part in v["parts"]:
@@ -82,8 +83,11 @@ def main():
                                 block = d["blocks"][part["part"]]
                                 old_idle = block["w"]["a00"]
                                 measured = meas.get(key)
-                                floor = (measured["gated_idle_w"] if measured else
-                                         r * old_idle + (block.get("leak_w") or 0.0))
+                                if key == "sm_front_s":   # ungated: its clocked idle floor is its own measured a00
+                                    floor = measured["a00_w"] if measured else old_idle
+                                else:
+                                    floor = (measured["gated_idle_w"] if measured else
+                                             r * old_idle + (block.get("leak_w") or 0.0))
                                 idle_each += part["count"] * (floor - old_idle)
                                 if measured and "a20_w" in measured:
                                     a20 += v["n"] * part["count"] * (measured["a20_w"] - part["w_each_a20"])
