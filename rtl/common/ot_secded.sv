@@ -25,7 +25,9 @@ module ot_secded_enc #(parameter integer K = 64, parameter integer R = 8, parame
   always @(posedge clk) q <= {c, d};
 endmodule
 
-module ot_secded_dec #(parameter integer K = 64, parameter integer R = 8) (
+// DPIPE=1 (sys-takeover 2026-10-10, opt-in; default 0 = unchanged): the column match (K compares + OR) is registered
+// before the correction / flag stage: +1 edge (collvmpub u_dec.s1 -> ue 13 levels at K 256).
+module ot_secded_dec #(parameter integer K = 64, parameter integer R = 8, parameter integer DPIPE = 0) (
   input wire clk, input wire rst_n, input wire v, input wire [K+R-1:0] w,
   output reg ov, output reg [K-1:0] d, output reg ce, output reg ue,
   output reg [31:0] n_ce, output reg [31:0] n_ue
@@ -48,15 +50,24 @@ module ot_secded_dec #(parameter integer K = 64, parameter integer R = 8) (
     for (i = 0; i < K; i = i + 1) if (s1 == COLS[16*i +: R]) begin fix[i] = 1'b1; hit = 1'b1; end
     if (odd && (s1 & (s1 - 1)) == 0) hit = 1'b1;            // a check bit flipped: data is clean
   end
+  // DPIPE: stage 2a registers the match (fix vector, hit, odd, syndrome non-zero) and the data; stage 2b corrects
+  reg [K-1:0] fix2, d2; reg hit2, odd2, nz2, v2;
+  always @(posedge clk or negedge rst_n) if (!rst_n) v2 <= 1'b0; else v2 <= v1;
+  always @(posedge clk) begin fix2 <= fix; d2 <= d1; hit2 <= hit; odd2 <= odd; nz2 <= (s1 != 0); end
+  wire        vx   = DPIPE ? v2 : v1;
+  wire        nzx  = DPIPE ? nz2 : (s1 != 0);
+  wire        oddx = DPIPE ? odd2 : odd;
+  wire        hitx = DPIPE ? hit2 : hit;
+  wire [K-1:0] dx  = DPIPE ? (d2 ^ fix2) : (d1 ^ fix);
   always @(posedge clk or negedge rst_n)
     if (!rst_n) begin ov <= 1'b0; ce <= 1'b0; ue <= 1'b0; n_ce <= 0; n_ue <= 0; end
     else begin
-      ov <= v1;
-      ce <= v1 && (s1 != 0) && odd && hit;
-      ue <= v1 && (s1 != 0) && !(odd && hit);
-      if (v1 && (s1 != 0) && odd && hit) n_ce <= n_ce + 1;
-      if (v1 && (s1 != 0) && !(odd && hit)) n_ue <= n_ue + 1;
+      ov <= vx;
+      ce <= vx && nzx && oddx && hitx;
+      ue <= vx && nzx && !(oddx && hitx);
+      if (vx && nzx && oddx && hitx) n_ce <= n_ce + 1;
+      if (vx && nzx && !(oddx && hitx)) n_ue <= n_ue + 1;
     end
-  always @(posedge clk) d <= d1 ^ fix;
+  always @(posedge clk) d <= dx;
 endmodule
 `default_nettype wire
