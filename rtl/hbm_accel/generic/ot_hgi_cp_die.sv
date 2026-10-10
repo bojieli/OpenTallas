@@ -16,7 +16,7 @@
 //     the translator holds its valid), and the completion of a translator-launched job returns to the translator, not
 //     the loader.  Kernel entries / kstride = the committed MD words 16-26 / 49.  MTP=0: x_* unused, as before.
 module ot_hgi_cp_die #(
-    parameter integer RW = 512,
+    parameter integer RW = 4096,       // 64 KB record ring (hgi-1010: DFlash verify bodies are 39.6 KB; 512 = the old 8 KB)
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports)

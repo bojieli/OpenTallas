@@ -75,7 +75,7 @@
    "required": 1,
    "required_basis": "ds_rom_mtp.json: MTP 4,238.4 = tau 4.159 x step 1,177,528 cyc; draft groups D0-D2 (~105k cyc) + DH 42.5k + MC.draft 16k on the step path",
    "designed": 0,
-   "designed_basis": "ds_rom_mtp.json notes: \"Hatched operators have no closed hardware: the three DSpark stages and the seed run on dies the S81 binding does not contain (mtp.* weights are unowned there) ... wavefront controller and accept unit closed as blocks but are not integrated\"; composition.json still_modelled \"L1+L2 NV5 draft (56.07 us): SS pre-layout screen fails, not closed\"",
+   "designed_basis": "ds_rom_mtp.json notes: \"Hatched operators have no closed hardware: the three DSpark stages and the seed run on dies the S81 binding does not contain (mtp.* weights are unowned there) ... wavefront controller and accept unit closed as blocks but are not integrated\". (NV5 struck 2026-10-10: the headline prices the draft head as 5 serial sweeps on the CLOSED NV1 head elements A/B, group DH 42,457.5 cyc; L2 NV5 is a rejected optional lever, +2.9% < 5% gate, see mtp-nv5-1010)",
    "margin": 0.0,
    "critical_path": true,
    "tok_s_if_as_designed": 1447.7,

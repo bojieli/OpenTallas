@@ -1,0 +1,5 @@
+INGRESS_DROP kind0 tag524
+W_DISPATCH tag516
+EPS_RESULT stream=2 W=1 KV=1 IK=1 drops=1
+FATAL: results/rtl/svc_eps_hol_rootcause_20261010/tb_eps_hol.sv:34: EPS_LOST_COMMAND
+       Time: 205824000 Scope: tb

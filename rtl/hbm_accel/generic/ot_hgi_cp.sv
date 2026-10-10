@@ -9,7 +9,7 @@
 //   host write: cmd_addr[5] = CFG window; cmd_addr[4:0] = descriptor word pair (2a, 2a+1); window + 5'h1F = CFG_COMMIT.
 module ot_hgi_cp #(
     parameter integer SETTLE = 64,
-    parameter integer RW = 512,
+    parameter integer RW = 4096,
     parameter integer USE_MACRO = 1,
     parameter integer FETCH_PIN_FIFO = 0
 ) (

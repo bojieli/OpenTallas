@@ -13,6 +13,9 @@ composes no aggregate (the HBM accelerator), or for an older export without it, 
 import json, os, subprocess, threading
 from pathlib import Path
 
+HBM_RATE_LABEL = 'simulator table rate; RTL-calibrated rate pending unit fixes'
+HBM_MTP_PENDING = 'pending (generic-die MTP program not yet compiled)'
+
 class Landing:
     def __init__(self, repo, log=print):
         self.repo = Path(repo); self.log = log; self.lock = threading.Lock(); self.key = None; self.cache = None
@@ -30,7 +33,7 @@ class Landing:
 
     def numbers(self):
         tp = self._latest('token_path_2*', 'index.json'); rp = self._latest('reprice_2*', 'reprice.json')
-        files = [tp / f for f in ('qwen_rom.json', 'ds_rom.json', 'ds_rom_mtp.json', 'hbm_ds.json', 'hbm_ds_mtp.json', 'systems.json')] + [
+        files = [tp / f for f in ('qwen_rom.json', 'ds_rom.json', 'ds_rom_mtp.json', 'hbm_gen_ds.json', 'systems.json')] + [
             rp / 'reprice.json', self.repo / 'results/external/registry.json', self.repo / 'results/arch/prefill_ingest.json',
             self.repo / 'results/arch/v41_lanes.json', self.repo / 'results/arch/qwen3_budget.json'] + sorted((self.repo / 'results/arch').glob('qwen_tp8_vs_sysdie_*/result.json'))
         key = tuple((str(f), f.stat().st_mtime) for f in files if f.is_file())
@@ -97,10 +100,11 @@ class Landing:
                      per_user=ours('ds_rom.json'), per_user_mtp=ours('ds_rom_mtp.json'), capacity=ds_cap,
                      aggregate=stale(lanes['sat1024']['rom']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024.rom.aggregate_tokens_s', lanes_d, ds_note + '; 1,024 users'),
                      aggregate_mtp=stale(lanes['sat1024_mtp']['rom']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024_mtp.rom.aggregate_tokens_s', lanes_d, ds_note + '; 1,024 users')),
-                dict(id='hbm_ds', name='HBM accelerator', model='DeepSeek-V4.1 Flash', context='1M', mode='AR / MTP',
-                     per_user=ours('hbm_ds.json'), per_user_mtp=ours('hbm_ds_mtp.json'),
-                     aggregate=stale(lanes['sat1024']['hbm']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024.hbm.aggregate_tokens_s', lanes_d, 'earlier HBM comparator design point; 1,024 users'),
-                     aggregate_mtp=stale(lanes['sat1024_mtp']['hbm']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024_mtp.hbm.aggregate_tokens_s', lanes_d, 'earlier HBM comparator design point; 1,024 users')),
+                dict(id='hbm_gen_ds', name='HBM accelerator (generic die)', model='DeepSeek-V4.1 Flash', context='1M', mode='AR / MTP',
+                     per_user=dict(ours('hbm_gen_ds.json'), rate_label=HBM_RATE_LABEL),
+                     per_user_mtp=dict(value=None, pending=HBM_MTP_PENDING, status=HBM_MTP_PENDING),
+                     aggregate=stale(lanes['sat1024']['hbm']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024.hbm.aggregate_tokens_s', lanes_d, 'HBM aggregate not recomposed for the generic die; 1,024 users'),
+                     aggregate_mtp=stale(lanes['sat1024_mtp']['hbm']['aggregate_tokens_s'], 'results/arch/v41_lanes.json', 'energy.1048576.sat1024_mtp.hbm.aggregate_tokens_s', lanes_d, 'HBM aggregate not recomposed for the generic die; 1,024 users')),
             ],
             gpu=dict(
                 qwen=dict(per_user=ext('new:dflash_table3_table4', ['qwen3_8b_b200_c1_math500', 'dflash_tok_s'], 'B200 + DFlash speculative decoding, SGLang, concurrency 1, MATH-500 (tau 8.01)'),
@@ -150,7 +154,7 @@ class Landing:
             if a:
                 D['ds_rom'][key] = a
         hb = {t['id']: t for t in S['hbm']['targets']}
-        for did, blk in (('qwen_rom', q), ('ds_rom', d), ('hbm_ds', hb.get('hbm_ds'))):
+        for did, blk in (('qwen_rom', q), ('ds_rom', d), ('hbm_gen_ds', hb.get('hbm_gen_ds'))):
             if blk and did in D:
                 D[did]['system'] = dict(dies=blk.get('dies'), power=blk.get('power'), efficiency=blk.get('efficiency'),
                                         cost=blk.get('cost'), source=src)

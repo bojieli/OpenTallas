@@ -78,7 +78,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -251,6 +251,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
         before_relays(v, m)
+    if seam_free:
+        _seam_free(v, m)      # after every pin-plan rule, before the relays (they are derived from the moved pins)
+    m['b3r2']['r22ks_seam_free'] = seam_free
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -2201,6 +2204,129 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
             M.face(port, nb, face, layer, centre, 1)
         return out
     v.masters = masters
+
+
+def _abutter(model, me, face, gap=2.0, frac=0.5):
+    """name of the block (not a relay) whose edge lies within `gap` um of `me`'s `face` over at least `frac` of that
+    face, or None."""
+    for o in model['insts']:
+        if o is me or o.name.startswith('rly_'):
+            continue
+        if face in 'NS':
+            d = (o.y - (me.y + me.h)) if face == 'N' else (me.y - (o.y + o.h))
+            ov = min(me.x + me.w, o.x + o.w) - max(me.x, o.x)
+            L = me.w
+        else:
+            d = (o.x - (me.x + me.w)) if face == 'E' else (me.x - (o.x + o.w))
+            ov = min(me.y + me.h, o.y + o.h) - max(me.y, o.y)
+            L = me.h
+        if -0.5 <= d <= gap and ov >= frac * L:
+            return o.name
+    return None
+
+
+OPP = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}
+
+
+def _seam_free(v, m):
+    """r22ks (qwen-1010/d 2026-10-10, opt-in): no word leaves a block through a face that another block abuts, unless
+    it is an abutted pair (the peer is that block, on its facing face).  r22k4's full-die GRT put all of its 159,448
+    overflow in one 90 x 60 um window: the tree top's ty (1,538 b) on its S face and the VM's rb3-rb5 (3 x 551 b) on
+    its N face sat on the zero-width tree-top / VM seam, under both blocks' M1-M7 obstructions, so every wire escaped
+    by an M8 / M9 via stack at the seam.  A violating word moves to the face on the other axis toward its peer (or
+    the peer's side when the peer is the abutting block), at the end of that face nearer the peer, clear of the pins
+    already there.  Single-instance blocks only (a shared master's faces serve every instance); clock / reset nets
+    are built by the die clock tree.  The decision is taken once, on the pre-relay buses, and then held (after the
+    relays a word's peer is its first relay, which was placed for the moved pin)."""
+    base = v.masters
+    cache = {}
+    moves = m.setdefault('r22ks_seam_moves', {})
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        insts = [i for i in model['insts'] if not i.name.startswith('rly_')]
+        n_of = {}
+        for i in insts:
+            n_of[i.master] = n_of.get(i.master, 0) + 1
+        by = {i.name: i for i in model['insts']}
+        if True:
+            peers = {}
+            for bid, cl, nb, eps in model['buses']:
+                if cl in ('clock_trunk', 'reset'):
+                    continue
+                for j, (inst, port) in enumerate(eps):
+                    peers.setdefault((inst, port.lstrip('*')), []).extend(
+                        (e[0], e[1].lstrip('*'), nb) for q, e in enumerate(eps) if q != j)
+            for it in insts:
+                M_ = out.get(it.master)
+                if M_ is None or n_of.get(it.master) != 1:
+                    continue
+                for pn, sp in list(M_.ports.items()):
+                    if sp[0] != 'face' or (it.name, pn) not in peers or (it.master, pn) in cache:
+                        continue
+                    if any(q[0].startswith('rly_') for q in peers[(it.name, pn)]):
+                        continue           # after the relays: only the pre-relay decisions hold
+                    f = sp[2]
+                    ab = _abutter(model, it, f)
+                    if ab is None:
+                        continue
+                    pp = peers[(it.name, pn)]
+                    paired = all(q[0] == ab for q in pp) and all(
+                        (out[by[ab].master].ports.get(q[1]) or ('',))[0] == 'face'
+                        and out[by[ab].master].ports[q[1]][2] == OPP[f] for q in pp)
+                    if paired:
+                        continue
+                    o = by[pp[0][0]]
+                    osp = out[o.master].ports.get(pp[0][1]) if o.master in out else None
+                    if f in 'NS':
+                        nf = 'E' if o.cx > it.cx + 1.0 else 'W' if o.cx < it.cx - 1.0 else None
+                    else:
+                        nf = 'N' if o.cy > it.cy + 1.0 else 'S' if o.cy < it.cy - 1.0 else None
+                    if nf is None and osp is not None and osp[0] == 'face' and osp[2] != OPP[f]:
+                        nf = osp[2]        # the peer straight across the seam: leave on the side of its pin
+                    cands = [x for x in ((nf,) if nf else ()) + tuple('NSEW') if x != f]
+                    nf = next((x for x in cands if _abutter(model, it, x) is None), None)
+                    if nf is None:
+                        raise ValueError(f'r22ks: {it.name}.{pn}: every other face is abutted')
+                    low = (o.cx < it.cx) if nf in 'NS' else (o.cy < it.cy)
+                    cache[(it.master, pn)] = (nf, low, sum(q[2] for q in pp), ab)
+        for (mn, pn), (nf, low, nb, ab) in cache.items():
+            M_ = out[mn]
+            sp = M_.ports[pn]
+            if sp[0] == 'face' and sp[2] == nf:
+                continue
+            w_ = sp[1]
+            layer = 'M5' if nf in 'NS' else 'M4'
+            along = M_.w if nf in 'NS' else M_.h
+            n = max(1, math.ceil(w_ / k)) if k > 1 else w_
+            span = n * F.TRK[layer][1] * k
+            M_.ports.pop(pn)
+            used = sorted(_face_used(M_, nf, k))
+            a_ = 4.0 if low else along - 4.0 - span - 2.0
+            for _ in range(len(used) + 1):
+                hit = [u for u in used if u[0] < a_ + span + 2.0 and u[1] > a_]
+                if not hit:
+                    break
+                a_ = max(u[1] for u in hit) if low else min(u[0] for u in hit) - span - 2.0
+            if a_ < 1.0 or a_ + span + 2.0 > along - 1.0 or hit:
+                raise ValueError(f'r22ks: {mn}.{pn} ({w_} b) does not fit the {nf} face')
+            M_.ports[pn] = ('face', w_, nf, layer, a_ + 1.0 + span / 2, 1)
+            if k == 1:
+                moves[f'{mn}.{pn}'] = dict(face=f'{sp[2]}->{nf}', bits=w_, seam_with=ab)
+        # pin plan frozen at its pre-relay state: the default face rule re-derives a block's pins from its CURRENT
+        # buses, so after the relay pass a word's pin turned toward its last relay (r22k: VM rb3 W face at pitch 4,
+        # where its relays were planned, became an N-face seam pin) -- pins first, relays from the pins, never back
+        if k in snap:
+            for (mn, pn), sp in snap[k].items():
+                if mn in out and pn in out[mn].ports:
+                    out[mn].ports[pn] = sp
+        else:
+            snap[k] = {(i.master, pn): sp for i in insts if n_of.get(i.master) == 1 and i.master in out
+                       for pn, sp in out[i.master].ports.items()}
+        return out
+    snap = {}
+    v.masters = masters
+    masters(m, 1)             # decide on the pre-relay buses (the relay pass rewrites them as it goes)
 
 
 def _face_used(M, face, k):

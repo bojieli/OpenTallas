@@ -20,15 +20,20 @@
 <header>
   <h1>Critical path of one token</h1>
   <p>One decode token of each design as its critical chain: the stages and operators it passes through, the element class
-     each runs on, and when. Cycles come from the measured RTL records and the composition tools, priced as of the
-     2026-10-08 re-price; every operator says where its number comes from. AR | MTP switches between one plain decode
-     token and one speculative (MTP) verify step: draft → verify → accept.</p>
+     each runs on, and when. ROM designs: cycles from the measured RTL records and the composition tools (2026-10-08
+     re-price). HBM generic die: every operator is one record of the compiled HGI-1 program, timed by the hgi_sim
+     command-processor schedule; click one to read the decoded record. Every operator says where its number comes from.
+     AR | MTP switches between one plain decode token and one speculative step: draft → verify → accept.</p>
   <a href="/explorer">&larr; Chip Explorer</a> <a href="/explorer/coverage/">Coverage &rarr;</a>
 </header>
 <main><div id="app"></div><div id="err"></div></main>
 <script type="module">
-import { mountTokenExplorer, DESIGNS } from './token.js';
-const parse = () => Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map((kv) => kv.split('=').map(decodeURIComponent)));
+import { mountTokenExplorer, DESIGNS, canonDesign } from './token.js';
+const parse = () => {
+  const q = Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map((kv) => kv.split('=').map(decodeURIComponent)));
+  if (q.design && canonDesign(q.design) !== q.design) { q.design = canonDesign(q.design); q.group = null; if (q.mode === 'mtp') q.mode = null; }
+  return q;
+};
 const h0 = parse();
 const design = DESIGNS.some((d) => d.id === h0.design) ? h0.design : 'qwen_rom';
 let api;
