@@ -83,7 +83,7 @@ module ot_hgi_sm_xload #(
                 else begin
                     busy <= 1'b1; base <= x_base[17:0]; kk <= x_n; pp <= x_p; st <= x_stride[17:0];
                     gn <= ((x_n - 21'd1) >> 9) + 8'd1; g <= 8'd0; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0; ph <= 2'd0;
-                    nb <= ((x_p * 13'd3152) + 13'd2047) >> 11;
+                    nb <= ({12'd0, x_p} * 16'd3152 + 16'd2047) >> 11;    // 16 b: P x XC reaches 25,216
                 end
             end
             if (busy && ph == 2'd0) begin
