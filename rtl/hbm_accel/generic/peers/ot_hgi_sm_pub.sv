@@ -10,7 +10,9 @@
 // (rows R_s = clamp(M - s Q, 0, Q)) received AND every write acknowledged.  The SM result port has no ready, so the
 // per-SM buffers (one sector + one pending flush a slot) bound the absorbable rate: a row every 8 / (P x NSM / NPC)
 // cycles is sustained; a faster stream raises pub_fault (overrun, fail closed; never a silent drop).
-// O must be VM (O STREAM goes to the SU stream, not here) and O.base + p O.stride 8-aligned is NOT required.
+// O VM: O.base + p O.stride 8-aligned is NOT required.  O STREAM (space 2, the Qwen head: SM -> SU stream 0): every
+// result (slot p, global row g) leaves as one STREAM 0 beat {s0_v, s0_idx = p M + g, s0_data} through a SQ-entry FIFO,
+// one beat an edge, in arrival order (the SU unit lands beats by index, so order is free); overrun faults.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_pub #(
     parameter integer NSM = 32,
@@ -34,8 +36,13 @@ module ot_hgi_sm_pub #(
     input  wire [NSM*12-1:0]  sm_rrow,
     input  wire [NSM*NC*32-1:0] sm_rdata,
     output reg  [NPC*338-1:0] vmq,
-    input  wire [NPC*274-1:0] vmr
+    input  wire [NPC*274-1:0] vmr,
+    output reg                s0_v,
+    output reg  [19:0]        s0_idx,
+    output reg  [31:0]        s0_data
 );
+    localparam integer SQ = 64;
+    reg sm_m; reg [51:0] sfq [0:SQ-1]; reg [6:0] sh, stt; wire [6:0] sn = stt - sh; integer spush;
     reg busy; reg [17:0] ob; reg [17:0] ost; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
     assign pub_rdy = !busy;
     // registered result capture (the SM's output register drives a long wire: land it first)
@@ -63,15 +70,16 @@ module ot_hgi_sm_pub #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0; qh <= 0; qt <= 0; cbusy <= 0; vmq <= 0;
+            sm_m <= 1'b0; sh <= 0; stt <= 0; s0_v <= 1'b0; s0_idx <= 20'd0; s0_data <= 32'd0;
             for (s = 0; s < NSM * NC; s = s + 1) bval[s] <= 1'b0;
             for (s = 0; s < NSM; s = s + 1) begin need[s] <= 0; recv[s] <= 0; end
         end else begin
             pub_done <= 1'b0;
             for (c = 0; c < NPC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             if (pub_v && pub_rdy) begin
-                if (pub_space != 2'd1 || pub_p == 4'd0 || pub_p > NC) pub_fault <= 1'b1;
+                if (!(pub_space == 2'd1 || pub_space == 2'd2) || pub_p == 4'd0 || pub_p > NC) pub_fault <= 1'b1;
                 else begin
-                    busy <= 1'b1; ob <= pub_base[17:0]; ost <= pub_stride[17:0]; mm <= pub_m; qq <= pub_q; pp <= pub_p;
+                    busy <= 1'b1; sm_m <= (pub_space == 2'd2); ob <= pub_base[17:0]; ost <= pub_stride[17:0]; mm <= pub_m; qq <= pub_q; pp <= pub_p;
                     for (s = 0; s < NSM; s = s + 1) begin
                         r0 = s * pub_q;
                         need[s] <= (pub_m > r0) ? (((pub_m - r0) > {7'd0, pub_q}) ? {7'd0, pub_q} : pub_m - r0) : 20'd0;
@@ -80,9 +88,18 @@ module ot_hgi_sm_pub #(
                 end
             end
             // results -> sector buffers (flush on a sector change: one push a buffer a cycle at most)
-            push = 0;
+            push = 0; spush = 0;
             for (s = 0; s < NSM; s = s + 1)
-                if (busy && rv_q[s]) begin
+                if (busy && sm_m && rv_q[s]) begin                                // STREAM: one beat a result
+                    recv[s] <= recv[s] + 20'd1;
+                    for (p = 0; p < NC; p = p + 1)
+                        if (p < pp) begin
+                            sfq[(stt + spush) % SQ] <= {p * mm + (MUT_ROW ? 20'd0 : s * {7'd0, qq}) + {8'd0, rr_q[s]},
+                                                        rd_q[s][32*p +: 32]};
+                            spush = spush + 1;
+                        end
+                end
+                else if (busy && rv_q[s]) begin
                     recv[s] <= recv[s] + 20'd1;
                     for (p = 0; p < NC; p = p + 1)
                         if (p < pp) begin
@@ -109,6 +126,10 @@ module ot_hgi_sm_pub #(
                     end
             end
             if (qn + push > QD - 1) pub_fault <= 1'b1;                       // overrun: fail closed
+            if (sn + spush > SQ - 1) pub_fault <= 1'b1;
+            s0_v <= 1'b0;
+            if (sn != 0) begin s0_v <= 1'b1; {s0_idx, s0_data} <= sfq[sh % SQ]; end
+            stt <= stt + spush[6:0]; sh <= sh + ((sn != 0) ? 7'd1 : 7'd0);
             // drain: the lowest free client takes the head
             begin : dr
                 reg taken; taken = 1'b0;
@@ -122,7 +143,8 @@ module ot_hgi_sm_pub #(
             end
             for (c = 0; c < NPC; c = c + 1) if (cbusy[c] && vr[c][273] && vr[c][256]) cbusy[c] <= 1'b0;
             qt <= qt + push[6:0];
-            if (busy && all_rows && !any_buf && push == 0 && qn == 0 && cbusy == 0) begin busy <= 1'b0; pub_done <= 1'b1; end
+            if (busy && all_rows && !any_buf && push == 0 && qn == 0 && cbusy == 0 && spush == 0 && sn == 0) begin
+                busy <= 1'b0; pub_done <= 1'b1; end
         end
     end
 endmodule

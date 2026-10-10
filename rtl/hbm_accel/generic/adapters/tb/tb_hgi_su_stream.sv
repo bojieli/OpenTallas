@@ -3,7 +3,7 @@
 // unit (head_scale SU.VOP: A STREAM, B VM scales staged from the REAL HGI VM, O STREAM) -> the 523-b stream -> ARGMAX
 // (ot_hgi_argmax_record + the REAL ot_hgi_argmax18_m) -> {value, id} in VM.  Records exactly as the hbm-sim Qwen token
 // program issues them (n 300 / 1,001 / 37,984).  Prints HGI_SU_STREAM PASS / FAIL.
-module tb_hgi_su_stream;
+module tb_hgi_su_stream #(parameter integer MUTR = 0);
     `include "ss_sizes.svh"
     reg clk = 0; always #1 clk = ~clk;
     reg [3139:0] casem [0:NCASE-1]; reg [63:0] strm [0:NSTR-1]; reg [63:0] vmm [0:NVM-1];
@@ -14,7 +14,26 @@ module tb_hgi_su_stream;
     end
     integer errors = 0, cyc = 0, seed = 9; always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [2196:0] sur; reg su_v = 0; reg [682:0] amr = 0; reg [7:0] rank = 0;
+`ifdef PUB
+    // the SM side: 32 SM result ports (rows in order per SM, random gaps) -> ot_hgi_sm_pub STREAM mode -> stream 0
+    localparam integer NSM = 32;
+    wire s0_v; wire [19:0] s0_idx; wire [31:0] s0_data;
+    reg pub_v = 0; wire pub_rdy, pub_done, pub_fault; reg [12:0] pq = 0; reg [19:0] pm = 0;
+    reg [NSM-1:0] sm_rv = 0; reg [NSM*12-1:0] sm_rrow = 0; reg [NSM*8*32-1:0] sm_rdata = 0;
+    ot_hgi_sm_pub #(.NSM(NSM), .NC(8), .NPC(1), .MUT_ROW(MUTR)) u_pub (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
+        .pub_base(40'd0), .pub_stride(32'd0), .pub_space(2'd2), .pub_m(pm), .pub_q(pq), .pub_p(4'd1),
+        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(),
+        .vmr(274'd0), .s0_v(s0_v), .s0_idx(s0_idx), .s0_data(s0_data));
+    reg [31:0] logit [0:65535]; integer bchk = 0, rmask = 63;
+    initial if (!$value$plusargs("RMASK=%d", rmask)) rmask = 63;
+    always @(posedge clk) if (rst_n && s0_v) begin
+        if (s0_data !== logit[s0_idx]) begin
+            if (bchk < 8) $display("ERR stream beat idx %0d data %h expected %h", s0_idx, s0_data, logit[s0_idx]);
+            bchk = bchk + 1; end
+    end
+`else
     reg s0_v = 0; reg [19:0] s0_idx = 0; reg [31:0] s0_data = 0;
+`endif
     wire su_rdy, su_done, su_fault, su_halt; wire [522:0] ams; wire am_rdy; wire [2:0] am_ret; wire nan_flag;
     wire [337:0] sq, aq; wire [273:0] sr, ar, tr; reg [337:0] tq = 0;
     ot_hgi_su_unit #(.N(32), .M(8), .LV(7)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(su_v), .rec_rdy(su_rdy),
@@ -60,11 +79,34 @@ module tb_hgi_su_stream;
             @(posedge clk); #0.1 su_v = 0;
             @(negedge clk); amr = casem[c][682:0];
             @(negedge clk); amr[0] = 1'b0;
+`ifdef PUB
+            for (j = 0; j < n; j = j + 1) logit[strm[s0 + j][51:32]] = strm[s0 + j][31:0];
+            pm = n; pq = (n + NSM - 1) / NSM;
+            @(negedge clk); pub_v = 1; @(negedge clk); pub_v = 0;
+            begin : sms
+                integer sr [0:NSM-1]; integer s2, left, rows;
+                for (s2 = 0; s2 < NSM; s2 = s2 + 1) sr[s2] = 0;
+                left = n;
+                while (left > 0) begin
+                    @(negedge clk); sm_rv = 0;
+                    for (s2 = 0; s2 < NSM; s2 = s2 + 1) begin
+                        rows = (n > s2 * pq) ? ((n - s2 * pq > pq) ? pq : n - s2 * pq) : 0;
+                        if (sr[s2] < rows && ($random(seed) & rmask) == 0) begin
+                            sm_rv[s2] = 1; sm_rrow[s2*12 +: 12] = sr[s2]; sm_rdata[s2*256 +: 32] = logit[s2 * pq + sr[s2]];
+                            sr[s2] = sr[s2] + 1; left = left - 1;
+                        end
+                    end
+                end
+                @(negedge clk); sm_rv = 0;
+            end
+            if (pub_fault) begin $display("ERR case %0d: pub fault", c); errors = errors + 1; end
+`else
             for (j = 0; j < n; j = j + 1) begin
                 @(negedge clk); s0_v = 1; s0_idx = strm[s0 + j][51:32]; s0_data = strm[s0 + j][31:0];
                 if (($random(seed) & 3) == 0) begin @(negedge clk); s0_v = 0; end
             end
             @(negedge clk); s0_v = 0;
+`endif
             t = 0; while (amd == 0 && suf == 0 && t < 2000000) begin @(posedge clk); t = t + 1; end
             if (amd != 1 || suf != 0 || sud != 1) begin $display("ERR case %0d: argmax done %0d su done %0d faults %0d", c, amd, sud, suf); errors = errors + 1; end
             ob = amr[385 + 8 +: 32];
@@ -74,7 +116,11 @@ module tb_hgi_su_stream;
             if (qd !== ei) begin $display("ERR case %0d id %0d expected %0d", c, qd, ei); errors = errors + 1; end
             $display("case %0d: n %0d, stream -> scale -> argmax in %0d cycles", c, n, cyc - t0); $fflush;
         end
+`ifdef PUB
+        if (errors == 0) $display("HGI_PUB_STREAM PASS"); else $display("HGI_PUB_STREAM FAIL errors=%0d", errors);
+`else
         if (errors == 0) $display("HGI_SU_STREAM PASS"); else $display("HGI_SU_STREAM FAIL errors=%0d", errors);
+`endif
         $finish;
     end
 endmodule
