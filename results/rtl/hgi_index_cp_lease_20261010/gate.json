@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hgi.index_cp_lease.gate.v1",
+  "exact": "PASS cases19 real_native_control1",
+  "mutant": "expected FAIL case2 stale full73 grant accepted when frame compare removed",
+  "default_enabled": false,
+  "provider_bound": false,
+  "physical_closed": false,
+  "performance_credit": 0,
+  "acceptance": "actor cmd_v&&cmd_r captures real1819 record; upstream must pair exact CP dispatch with this handshake",
+  "native_binding": "native_rec bit0 is actual downstream command; hold record stable until native_r",
+  "receipt_semantics": "grant and key/query/prefetch/drain receipts are exactly-once pulses on actor clk; CDC endpoint supplies checked retained pulse",
+  "external_providers_open": [
+    "protected CP full73 owner acceptance",
+    "exclusive query/result and key allocation grant owner",
+    "all-sector durable key SECDED commit ledger",
+    "prefetch request admission joined to real service",
+    "service reads-drained and native VM-ACK-drained receipts"
+  ],
+  "row_mapping": "explicit provider row0/exclusive_end; no inferred layer->row mapping"
+}

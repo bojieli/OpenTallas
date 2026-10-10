@@ -15308,3 +15308,9 @@ def hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token=0):
         exact_gate='CP38 + conformance66 + stalled fetch FIFO ordering and TOKX mutant',
         physical_gate='TT setup>=0 FF hold>=0 DRC0 with SRAM SS/FF corner views',
         physical_qualified=False)
+
+
+def hgi_index_cp_lease_model():
+    """Opt-in dispatch lease actor; real grant/service providers remain OPEN."""
+    from tools.hgi_index_cp_lease_model import model
+    return model()
