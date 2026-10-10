@@ -70,6 +70,8 @@ class Overlay(unittest.TestCase):
         new = po.patch(head + po.MAIN_OLD, procs)
         self.assertIn("ot_pf_ref [all_inputs -no_clocks]", new)
         self.assertIsNone(po.patch(new, procs))
+        self.assertIn('$ot_glob ne "*"', new)                     # REFGLOB='*' is no reference
+        self.assertIn('$ot_glob ne "*"', po.patch(new.replace(po.GLOB_NEW, po.GLOB_OLD), procs))
         kit = "# kit\nforeach {clk sk ins outs} {\n  ck 150 {a} {b}\n} {\n" + po.KIT_OLD + "  set_input_delay 1 [get_ports $ins]\n}\n"
         self.assertIn("ot_pf_ref [get_ports $ins]", po.patch(kit, procs))
         self.assertIn("pinflop_overlay.py", cl.HELPERS)
