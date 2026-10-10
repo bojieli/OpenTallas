@@ -1,0 +1,67 @@
+{
+  "recorded_utc": "2026-10-10T12:31:35.698620+00:00",
+  "active_inventory_counts": {
+    "ECO": 48,
+    "RUNNING": 194,
+    "READY": 11,
+    "QUEUED": 7
+  },
+  "daemon_runtime_pin": "d1675252287b7399ff8430ae83535ad8383ebdc0",
+  "daemon_running_pid": 1712330,
+  "codex_wakeup": "codex-takeover-drive.timer every hour :07/:37 queues into active thread even when provider refuses a turn",
+  "claude_wakeup": "claude-continue.timer every hour :15/:45, enabled; before noon/initial handoff logs only, afterwards requests continuation at idle empty prompt even quota limited",
+  "quota_boundary": "Timers do not bypass quotas. Admitted pinned jobs continue independently. New design/adoption decisions require a model turn and actual gates.",
+  "variants": [
+    {
+      "target": "BF",
+      "owner": "bf_deadline",
+      "candidate": "TCG+BXST2+FXST2+PINLAT at 1.2GHz and900MHz",
+      "source": "c8a5b4352",
+      "physical_jobs": [
+        "bfa_tcg_pinlat_a_c8a5b4352-cl",
+        "bfa_tcg_pinlat_c900_c8a5b4352-cl"
+      ],
+      "state": "specs ingested; full-shape positive plus six mutant proof compiling/running",
+      "cost": "1614 latchbits; conservative470.64um2/element proxy, no added cycles relative to full948; same outline",
+      "adoption_gate": "Pinned exact bench and final TTsetup/FFhold/DRC0 plus loop independent reSTA"
+    },
+    {
+      "target": "BF",
+      "owner": "bf_deadline",
+      "candidate": "Compact hardened column/front, greater vertical slot",
+      "state": "model/pin/legal generator verification before build",
+      "cost": "modeled pair1000.512um wide and220.32um high, about15.6percent vertical footprint increase; model1792pairs fit unchanged33000x26000 outline",
+      "adoption_gate": "Full-shape HCOL exactness, pin/track/legalfit, independently closed column/front and composed context"
+    },
+    {
+      "target": "Qwen ROM",
+      "owner": "rom_takeover/qwen",
+      "candidate": "Registered ctlm 1036.8x2073.6 and1296x2073.6 structural slot variants",
+      "state": "model and source preparation; existing a/b preserved",
+      "adoption_gate": "Widened die/channel fit, actual controller-pair exactness and physical closure"
+    },
+    {
+      "target": "DeepSeek ROM",
+      "owner": "rom_takeover",
+      "candidate": "SS400 extra3 and SS375 extra4 actual field relay geometry",
+      "source": "28d7cb869",
+      "state": "two measured2GiB geometry/model jobs admittedEPYC1; not physical/adoption ready",
+      "adoption_gate": "ZeroSSreach<=504um, actual input packet-age equality/minimum transaction proof, added relay latency and contextclosure"
+    },
+    {
+      "target": "DeepSeek ROM",
+      "owner": "rom_takeover/ds_collective",
+      "candidate": "True pin-output flops parallel with core next-state equations",
+      "state": "preRTL sizing and source proof preparation",
+      "cost": "1468 outputflops, restores1wrappercycle; defaultoff",
+      "adoption_gate": "Exact transaction and negativecontrols, legalfloorplan, pinnedphysicalclosure"
+    },
+    {
+      "target": "HBM",
+      "owner": "hbm_takeover/svc_dma",
+      "candidate": "Wider protected VM/service/front and format-specific expansion",
+      "state": "unified actualrawHBM bandwidth and bankport sizing; completed bank/pin workers reassigned",
+      "adoption_gate": ">=90percent3.8TB/s sustained actualcontract, realformatbytes and measuredRTT, protectedSRAMII/area/pins, exactness and contextphysicalclosure"
+    }
+  ]
+}
