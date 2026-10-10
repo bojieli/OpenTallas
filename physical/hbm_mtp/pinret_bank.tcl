@@ -90,8 +90,9 @@ foreach net [$ot_blk getNets] {
  set bt [$ot_blk findBTerm $port]; set bb [$bt getBBox]
  set px [expr {double([$bb xMin]+[$bb xMax])/2.0/$ot_dbu}]
  set py [expr {double([$bb yMin]+[$bb yMax])/2.0/$ot_dbu}]
- set side [expr {$py>=$cy1 ? "T" : "B"}]
- lappend cand [list $side $px $ff $px $py INPUT]
+ if {$px <= $cx0} {set side L} elseif {$px >= $cx1} {set side R} elseif {$py <= $cy0} {set side B} else {set side T}
+ set pos [expr {($side eq "L" || $side eq "R") ? $py : $px}]
+ lappend cand [list $side $pos $ff $px $py INPUT]
  incr returned_count
 }
 if {$returned_count != 2} {error "PINRET expected two handshake-return capture flops, got $returned_count"}
