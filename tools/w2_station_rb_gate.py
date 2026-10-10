@@ -81,6 +81,7 @@ def run(cmd, log):
 
 RELREG = False
 HALFV = False
+NO2CHAIN = False
 CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)('
 DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0'
 SAFEV = False
@@ -171,7 +172,7 @@ def quarter_bench(out, tag, rb=True, mutant=None):
     if rb:
         old = 'ot_hbm_native_quarter_chain #(.ENABLE(1)) chain('
         assert tb.count(old) == 1
-        tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)) chain(')
+        tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)%s) chain(' % (',.NO2_CHAIN(1)' if NO2CHAIN else ''))
     if HALFV and rb:
         tb = tb.replace('.u_station.held.', '.u_station.hs.u_core.held.')
         # half rate: the registered drained/warm status settles in <=40 edges (2x the core step)
@@ -205,8 +206,9 @@ def main():
     ap.add_argument('--half', action='store_true', help='half-rate station shell (quarter bench only)')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
+    ap.add_argument('--no2-chain', action='store_true', help='FALLBACK: quarter as 7 NO2 stations (chain NO2_CHAIN=1)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG, SAFEV, HALFV, PHASE_SEAT; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
+    global RELREG, SAFEV, HALFV, PHASE_SEAT, NO2CHAIN; NO2CHAIN=a.no2_chain; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     if a.quarter_only:
         r = quarter_bench(out, 'quarter_rb', True)
@@ -233,6 +235,7 @@ def main():
         r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
+    res['no2_chain'] = NO2CHAIN
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
     pin_paths = [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]
