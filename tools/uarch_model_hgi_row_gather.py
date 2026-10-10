@@ -4,6 +4,45 @@ import hashlib
 import re
 
 
+def publisher_fifo_model():
+    """Real synchronous SRAM, four prefetched encoded heads per delivery lane."""
+    inverse = inverse_selected_model()
+    lanes, words, coded, heads = 4, 17, 663, 4
+    ff = lanes * ((heads+2)*coded + 2*(8+7+7+3+2+2+3+8+1+1+1))
+    return dict(schema='hgi.publisher-fifo.candidate.v1', default_enable=0,
+        qualification='MODEL BEFORE RTL; no physical or rate credit',
+        models=inverse['models'], replicas_per_die=1,
+        delivery_lanes=lanes, total_live_capacity_per_lane=128,
+        sram_words_per_lane=128, head_prefetch_words=heads,
+        capacity_contract='128 total admitted entries including input, SRAM, read pipeline and head; head slots do not add admitted capacity',
+        payload_bits=544, protected_words=words, encoded_bits=coded,
+        secded='17 independent (39,32) records; encoded input/capture/head; correct at consumer boundary before valid; UE suppresses pop and latches fault',
+        sram_macros=12, macro_area_um2=inverse['macro_area_um2'],
+        sram_area_um2=12*inverse['macro_area_um2'],
+        macro_lef=inverse['macro_lef'], macro_lef_sha256=inverse['macro_lef_sha256'],
+        register_bits=ff, register_area_proxy_um2=ff*.2916,
+        register_basis='four encoded prefetched head words, input and SRAM capture per lane; mirrored counters/pointers/valids',
+        mux_cost='4:1x663 head selector per lane, registered boundary; 17 independent syndrome correctors per lane',
+        mutable_control_protection='complement each SRAM count/read-write pointer/headcredit/headcount/headpointers/totalcount/readvalid/inputvalid; range and occupancy conservation checks; corrupt control blocks read/write/pop',
+        pipeline='push/encode pin capture -> macro write -> fetch macro read -> raw capture -> protected head enqueue; output correction at consumer pin capture',
+        first_head_latency_edges=5, initiation_interval=1,
+        initiation_interval_basis='four head credits cover fetch/read/capture/head pipeline; one independent 1R1W macro read and write per cycle',
+        memory_read_bytes_per_cycle=lanes*3*32,
+        memory_write_bytes_per_cycle=lanes*3*32,
+        bits_per_cycle_input=lanes*544, bits_per_cycle_consumer=lanes*544,
+        ack_contract='FIFO pop transfers ownership to finite consumer; endpoint credit return only after both sector macro-commit ACKs or validated padding filter',
+        flush='drain all FIFO pipeline/heads and downstream ACK ledger; no discard of live or posted writes; reset is external transaction cancellation and cannot be normal epoch flush',
+        ring_reuse='7bit per-lane selected record IDs reused only after both ACKs and ordered per-lane retire; epoch changes only drained; stale/duplicate half ACK faults without credit return',
+        external_ack_ledger_bits=3072+56+16+12,
+        external_ack_ledger_basis='512 live+two-halfACK records with complementary bits, four mirrored7bit retire pointers, four mirrored2bit headsent masks, one mirrored6bit epoch',
+        macs_per_cycle=0, compute_intensity='bit-preserving protected FIFO',
+        routing_tracks_needed=4*544, routing_capacity=6250,
+        routing_basis='four locally owned lanes; separate input and consumer faces, pin/capture registers; actual context route pending',
+        floorplan_slot_um=[600,240],
+        area_fit_status='macro+FF subtotal only; ECC combinational/mux/clock/control placement not qualified',
+        latency_contribution='native transport plus lookup and5 FIFO edges plus consumer arbitration/ACK and ordered retirement; measured credit stalls required')
+
+
 def inverse_selected_model(k=512, group=96, row_words=32):
     """Candidate compact inverse OWNED map; no throughput/adoption credit."""
     if not (1 <= k <= 2048 and group in (1, 2, 4, 8, 96) and row_words in (9, 16, 32)):
