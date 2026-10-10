@@ -1,0 +1,12 @@
+{
+  "job": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+  "tag": "bench_mutant_1.a1b1",
+  "reason": "runner errexit returned actual vvp1 before printing consuming failure; recover omitted stdout from original sim.log",
+  "original_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "sim_sha256": "0511fc412617d497c4c214e268bd3617e250b069e1f377f0eb16dc857b5dacc4",
+  "actual_rc_preserved": 1,
+  "original_launcher_pid_missing": 1981410,
+  "source": "f6d441b6a",
+  "utc": "2026-10-09T13:31:28.792759+00:00",
+  "verdict_unchanged": true
+}

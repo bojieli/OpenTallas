@@ -16,7 +16,7 @@
 module tb_qfd_spine_band;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
     parameter integer TCUT = 3, GT = 48 << TCUT, TG = 4, SMIN = TCUT, SMAX = TCUT + 6, NS = 8;
-    parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0, AMR = 0;
+    parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0, AMR = 0, TTS = 0, TT_NU = 4, TT_CR = 1, TT_SPRE = 1, TT_SMUT = 0;
     parameter integer QB = 8;              // quiet windows: 2^QB of every 2^(QB+2) engine edges without issue
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
@@ -104,7 +104,7 @@ module tb_qfd_spine_band;
     ot_qfd_spine_band #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
         .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .MEM_EXTRA(MEM_EXTRA), .SCALE_LOCAL(SCALE_LOCAL),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .MUL_LAT(MUL_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT), .AMR(AMR))
+        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT), .AMR(AMR), .TTS(TTS), .TT_NU(TT_NU), .TT_CR(TT_CR), .TT_SPRE(TT_SPRE), .TT_SMUT(TT_SMUT))
         u_b (.land_cnt(land_cnt), `SPINE_PORTS(b_));
     integer g, l;
     always @(posedge gclk) begin

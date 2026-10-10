@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Separate hardened successor of closed src controller; no extra boundary registers.
 module ot_dsrom_wfc_tokpipe_src #(
+    parameter integer PROMPT_EXTRA = 0, // token HARD +2edges, off by default
     parameter integer DECODED_READ = 0,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
     parameter integer PREFIX_INC = 0, // explicit balanced position carry
@@ -149,6 +150,7 @@ module ot_dsrom_wfc_tokpipe_src #(
 );
 
     ot_rom_pkg_ctrl_wfc_tokpipe #(
+        .PROMPT_EXTRA(PROMPT_EXTRA),
         .DECODED_READ(DECODED_READ),
         .HEADER_LOCAL(HEADER_LOCAL),
         .PREFIX_INC(PREFIX_INC),

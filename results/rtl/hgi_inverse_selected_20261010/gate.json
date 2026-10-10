@@ -1,0 +1,169 @@
+{
+  "schema": "hgi.inverse-selected.exact-gate.v1",
+  "base_commit": "018395ed6a1cecdc2e6fe99558b3732ba0e1721f",
+  "source_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv": "e339999528cf1c723ae755f241a847634be761c76ec4cffa5c0975360718045c",
+    "rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv": "211392ddd3850c2f01b54dfaab5e632193251ce06133ed173ce1c9f235f52ec9",
+    "rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv": "799e8c99aaebf29c03218f3e97c384ae0f78f52636581931bed1115d6bc19e3f",
+    "rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv": "1077e59cc8d6eba7a6580c47ff78c47fba2d3c0e9856a0f53aea4a4c98f2685c",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hgi_inverse_selected_bench.py": "004dd692ae46c2155a88cf584a1688c97fcbcc414f19337165672166325a3e44",
+    "tools/uarch_model_hgi_inverse.py": "3f4df4a7e18cace16bd7592cc7dd85a4b3307b415195717dda7d1668404a2a37",
+    "tools/uarch_model.py": "a3f4ca74c14821a4b479e5889efba74a4a64f56f121f14b6c5db827c61836144"
+  },
+  "simulator": "Icarus Verilog version 11.0 (stable) ()",
+  "variants": {
+    "positive": {
+      "returncode": 0,
+      "gate": "PASS",
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-I/home/ubuntu/wt-codex-g25-inverse/rtl/common",
+        "-s",
+        "tb_hgi_inverse_selected",
+        "-o",
+        "/home/ubuntu/g25-inverse-final/source-final/positive.vvp",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/common/ot_secded.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv"
+      ]
+    },
+    "default_off": {
+      "returncode": 0,
+      "gate": "PASS",
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-I/home/ubuntu/wt-codex-g25-inverse/rtl/common",
+        "-s",
+        "tb_hgi_inverse_selected",
+        "-Ptb_hgi_inverse_selected.ENABLETEST=0",
+        "-o",
+        "/home/ubuntu/g25-inverse-final/source-final/default_off.vvp",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/common/ot_secded.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv"
+      ]
+    },
+    "wrong_selected_index": {
+      "returncode": 1,
+      "gate": "EXPECTED_FAIL",
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-I/home/ubuntu/wt-codex-g25-inverse/rtl/common",
+        "-s",
+        "tb_hgi_inverse_selected",
+        "-Ptb_hgi_inverse_selected.MUT=1",
+        "-o",
+        "/home/ubuntu/g25-inverse-final/source-final/wrong_selected_index.vvp",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/common/ot_secded.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv"
+      ]
+    },
+    "dropped_filtered": {
+      "returncode": 1,
+      "gate": "EXPECTED_FAIL",
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-I/home/ubuntu/wt-codex-g25-inverse/rtl/common",
+        "-s",
+        "tb_hgi_inverse_selected",
+        "-Ptb_hgi_inverse_selected.MUT=2",
+        "-o",
+        "/home/ubuntu/g25-inverse-final/source-final/dropped_filtered.vvp",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/common/ot_secded.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv"
+      ]
+    },
+    "ignored_write_mask": {
+      "returncode": 1,
+      "gate": "EXPECTED_FAIL",
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-I/home/ubuntu/wt-codex-g25-inverse/rtl/common",
+        "-s",
+        "tb_hgi_inverse_selected",
+        "-DMASKMUT=1",
+        "-o",
+        "/home/ubuntu/g25-inverse-final/source-final/ignored_write_mask.vvp",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/common/ot_secded.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_mem.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_selected.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+        "/home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv"
+      ]
+    }
+  },
+  "model": {
+    "schema": "hgi.inverse-selected.rtl-candidate.v1",
+    "default_enable": 0,
+    "qualified": false,
+    "replicas_per_die": 1,
+    "read_lanes": 4,
+    "MACs_per_cycle": 0,
+    "protected_macro_control_complement_bits": 2448,
+    "protected_record_identity_bits": "owner7 inside32b owner record; compactaddr11 inside32b map record",
+    "owner_macros": 4,
+    "map_macros": 12,
+    "macro_bits": 32768,
+    "macro_area_um2": 62265.23136,
+    "macro_lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "slot_um": [
+      600,
+      240
+    ],
+    "slot_sram_fraction": 0.43239743999999997,
+    "slot_fit": "logic/clock channels pending",
+    "count_storage": "owner SRAM payload12b count,12b base,valid; SECDED39; no unprotected count array",
+    "map_storage": "selected i11b plus compactaddr11 and valid; SECDED39,6 records/256b bitmasked write; overwritten K records",
+    "source": "immutable R snapshot across two serialized request/response passes",
+    "malformed": "first pass requires slot==prior owner count; second requires slot<count; K/group/rank bounds",
+    "build_cycles_conservative": 71376,
+    "build_delta_vs_initial": 58880,
+    "build_basis": "real protected count read/modify/write, owner prefix, second owner read + inverse write; pins/capture/encode included",
+    "lookup_added_cycles": 14,
+    "lookup_issue_per_cycle": 4,
+    "logic_area": "pin/capture and ECC pipeline registers estimated<17000FF; cell mapping/area unqualified",
+    "control_ff_ceiling_estimate": 17000,
+    "lookup_basis": "two registered packed SRAM read pipelines plus bounds/filtered result",
+    "io_bits": {
+      "R_request": 13,
+      "R_response": 46,
+      "lookup_in": 144,
+      "lookup_out": 120
+    },
+    "memory_read_bytes_per_cycle": 256,
+    "memory_write_bytes_per_cycle": 128,
+    "replica_mux_demux": "four owner banks and3map banks/lane; registered3:1x256 then6:1x39",
+    "write_fanout": 4,
+    "routing_tracks_needed": 415,
+    "routing_capacity": 6250,
+    "protected_metadata_complement_bits": 1890,
+    "build_cycles_base": 63184,
+    "R_response_delay_basis": "base excludes source backpressure/waits; conservative includes0..2 wait edges per entry/pass",
+    "control_protection": "build counters and prefix complemented; invalid/complement mismatch faults sticky",
+    "retirement": "lookup response always consumed; tag captured with request; no consumer stall allowed",
+    "latency_contribution": "build + lookup14; collective delivery/VM arbitration and row FIFO priced by parent",
+    "no_rate_credit": true
+  },
+  "physical_qualified": false,
+  "measured_build_K512_G8_cycles": 16527,
+  "measured_build_K2048_G96_cycles": 67263,
+  "measured_lookup_clock_stages": 14,
+  "interface_contract": "four independent requests/cycle, return always consumed; immutable protected R source span/version held through retire; faults sticky until reset"
+}

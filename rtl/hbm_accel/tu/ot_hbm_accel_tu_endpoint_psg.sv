@@ -8,6 +8,13 @@
 // ((p0+p1)+(p2+p3)) + (+0 ...) = the rank-order pairwise tree of the n contributors exactly (x + (+0) = x; every zero
 // result is +0 in this datapath, as in the golden), at the same latency as DS.  16 / 32 / 64 are rejected encodings
 // (review-0412).  gsz is quasi-static (set before `go`, false-path from the cfg_act register).
+// GATHER BYPASS (hgi-takeover 2026-10-09, review 10:45 decision 1): byp = 1 (latched at go) is an exact gather on the same
+// links, credits, ports and delivery lanes: every rank of the group (2^gsz aligned ranks, or with mcast_all the outer
+// group 2 / 4 / 8 / 96) sends each of its pf flits once, unchanged, as a multicast result {1, FF, src = rank,
+// gi = (rank - group base) * pf + f, data}; its own flits go to its own delivery queue; receivers drop other groups'
+// flits.  No adder, no BF16 packing: ALL_GATHER / TOPK_MERGE / ARGMAX_MERGE / ROW_GATHER payloads are bit-exact
+// (-0, NaN payloads).  Done after pf sent and group * pf delivered with count, sum and xor of gi equal to the
+// 0 .. group * pf - 1 set (a duplicate or a lost flit faults); a partial flit in bypass faults.
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ot_hbm_accel_tu_endpoint_ps (stream hbm-coll-rtl, 2026-10-08): the PER-PORT SPLIT of ot_hbm_accel_tu_endpoint_sr for
@@ -88,6 +95,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer PFMAX  = 64,
     parameter integer LANES  = 16,
     parameter integer BF16   = 1,
+    parameter integer BF16RT = 0,   // hgi-takeover F2: 1 = the result packing follows the bf16 pin per collective (O.fmt)
     parameter integer NPT    = 8,
     parameter integer INJ    = 2,
     parameter integer DEL    = 4,
@@ -113,6 +121,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
     input  wire [7:0]           mcast_group_size, // static outer membership 2/4/8/96, ignored when mcast_all=0
     input  wire                 mcast_all, // validated GROUP_REDUCE_MCAST
     input  wire [3:0]           gsz,      // static: 4'hF legacy (DS, reset), 0..3 = log2 group size
+    input  wire                 byp,      // static: 1 = exact gather bypass (no adder), see the header
+    input  wire                 res_bf16, // BF16RT = 1: reduced results packed BF16 (1) or FP32 (0) this collective
     input  wire [15:0]          pf,              // flits per contributor this collective (runtime)
     input  wire                 go,
     output wire                 start_ready,
@@ -153,7 +163,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign ecc_ce=(|port_ce)|(|h_ce)|(|d_ce)|dq_ce;
         always @(posedge clk or negedge rst_n)
           if(!rst_n)payload_error<=1'b0; else if(ue_now)payload_error<=1'b1;
-        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer;
+        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp; reg run_bf16;
         reg pending_start, completed, started;
         reg [15:0] rx_pending;
         wire active_desc = REARM && (started || pending_start || completed);
@@ -161,6 +171,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [15:0] eff_pf = active_desc ? run_pf : pf;
         wire [3:0] eff_gsz = active_desc ? run_gsz : gsz;
         wire ALL_DEST = active_desc ? run_mcast : mcast_all;
+        wire BYP = active_desc ? run_byp : byp;
+        wire BFX = BF16RT ? (active_desc ? run_bf16 : res_bf16) : (BF16 != 0);
         wire[7:0] OUTER_G = active_desc ? run_outer : mcast_group_size;
         wire[3:0] OUTER_LG = (OUTER_G==2) ? 1 : (OUTER_G==4) ? 2 : 3;
         wire [31:0] RANK = {24'b0, eff_rank};
@@ -168,13 +180,24 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire[31:0] OUTER_BASE = (OUTER_G==96) ? 0 : ((RANK >> OUTER_LG) << OUTER_LG);
         wire MODE_OK = (LEG || ((eff_gsz <= 3) && ((32'd1 << eff_gsz) <= NC))) && (!ALL_DEST || (!LEG && eff_gsz >= 1 && eff_gsz <= 3 &&
             (OUTER_G==2 || OUTER_G==4 || OUTER_G==8 || OUTER_G==96) && OUTER_G <= NOG*NC && (32'd1<<eff_gsz)<=OUTER_G));
+        // gather bypass group: GN ranks from GBASE (outer group with mcast_all, else the 2^gsz aligned group)
+        wire [31:0] GN = ALL_DEST ? {24'd0, OUTER_G} : (32'd1 << eff_gsz[1:0]);
+        wire [31:0] GBASE = ALL_DEST ? OUTER_BASE : ((RANK >> eff_gsz[1:0]) << eff_gsz[1:0]);
+        wire BYP_OK = !LEG && (ALL_DEST ? ((OUTER_G==2 || OUTER_G==4 || OUTER_G==8 || OUTER_G==96) && OUTER_G <= NOG*NC) :
+                                          (eff_gsz <= 3 && (32'd1 << eff_gsz) <= NOG*NC));
+        wire BYP_PAY_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC);
         wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << eff_gsz) : 1);
-        wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && (({16'd0,eff_pf} % REQ_NA) == 0) &&
-                         (({16'd0,eff_pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,eff_pf} / REQ_NA) % 2 == 0));
+        // Valid small groups have power-of-two NA. Avoid synthesizing a general32-bit divider
+        // merely to validate a descriptor; legacy NC remains a constant-expression divisor.
+        wire [31:0] req_of = LEG ? ({16'd0,eff_pf} / NC) : ({16'd0,eff_pf} >> eff_gsz);
+        wire req_aligned = LEG ? (({16'd0,eff_pf} % NC) == 0) :
+                                 (({16'd0,eff_pf} & ((32'd1 << eff_gsz) - 1)) == 0);
+        wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && req_aligned &&
+                         (req_of <= OFMX) && (!BFX || !req_of[0]);
 `ifdef OT_COLL_MUT_MODE_GUARD
         wire ACCEPT_MODE = 1'b1;
 `else
-        wire ACCEPT_MODE = MODE_OK && PAYLOAD_OK;
+        wire ACCEPT_MODE = BYP ? (BYP_OK && BYP_PAY_OK) : (MODE_OK && PAYLOAD_OK);
 `endif
         reg mode_error;
         always @(posedge clk or negedge rst_n)
@@ -187,16 +210,22 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire CONTRIB = LEG ? (RANK < NOG * NC) : 1'b1;
         wire [31:0] PF = {16'b0, eff_pf};
         wire [31:0] OF = LEG ? PF / NC : PF >> LG;
-        wire [31:0] ROF = BF16 ? OF / 2 : OF;
+        wire [31:0] ROF = BFX ? OF / 2 : OF;
         // registered run constants (hbm-coll-rtl): rank and pf are static during a collective, so the runtime
         // multiplies and the f / OF, f % OF divisions become compares / adds against these flops (exact; they settle
         // one edge after rank / pf, before the first injection)
         reg [15:0] mOF [0:NC];
-        reg [15:0] cOGPF, cGI0;
+        reg [15:0] cOGPF, cGI0, cBYP0, cBYPT;
         always @(posedge clk) begin
             for (integer m = 0; m <= NC; m = m + 1) mOF[m] <= 16'(m * OF);
             cOGPF <= 16'(OG * PF);
             cGI0  <= 16'((OG * NA + J) * ROF);
+`ifdef OT_COLL_MUT_BYP_GI
+            cBYP0 <= 16'd0;                                   // NEGATIVE: every rank's segment at gi 0 .. pf-1
+`else
+            cBYP0 <= 16'((RANK - GBASE) * PF);
+`endif
+            cBYPT <= 16'(GN * PF);
         end
 
         // ================= hub issue -> HUBW wire stages ==========================================
@@ -204,10 +233,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;end
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;end
             else if (REARM) begin
                 if (go && start_ready && ACCEPT_MODE) begin
-                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;pending_start<=1;
+                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;run_byp<=byp;run_bf16<=res_bf16;pending_start<=1;
                 end else if(pending_start) pending_start<=0;
             end
         reg [INJ*16-1:0] r_idx;
@@ -215,9 +244,9 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @* begin
             r_idx = '0; r_rd = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (CONTRIB && started && k + i < PF && (LEG || NA > 1 || i == 0)) begin
+                if (CONTRIB && started && k + i < PF && ((!BYP && (LEG || NA > 1)) || i == 0)) begin
                     r_rd[i] = 1'b1;           // rotated slice order: own slice last in each round
-                    r_idx[16*i +: 16] = (NC == 1) ? 16'(k + i) : LEG ?
+                    r_idx[16*i +: 16] = (NC == 1 || BYP) ? 16'(k + i) : LEG ?
                         16'(mOF[(J + 1 + 32'((k + i) % NC)) % NC] + 16'((k + i) / NC)) :
                         16'(mOF[(J + 1 + (32'(k + i) & (NA - 1))) & (NA - 1)] + 16'(32'(k + i) >> LG));
                 end
@@ -231,7 +260,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                     if(pending_start) started<=1'b1;
                     if(completed && done_ready) begin started<=0;k<=0;end
                 end else if (go && !started && ACCEPT_MODE) started <= 1'b1;
-                if (|r_rd) k <= k + ((LEG || NA > 1) ? INJ : 1);
+                if (|r_rd) k <= k + ((!BYP && (LEG || NA > 1)) ? INJ : 1);
             end
         wire [INJ-1:0] h_v;
         wire [INJ*(16+16+FW)-1:0] h_d;   // {injection ordinal, flit index, data}
@@ -311,7 +340,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `else
         always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (NC > 1 && rptr < OF) ? (pres[c][rptr] || c >= NA) : 1'b0;
 `endif
-        wire issue = &col;
+        wire issue = &col && !BYP;
         wire [FW-1:0] lvl [0:LV][0:NC-1];
         wire [LV:0] lvv;
         reg [NC-1:0] cw_v;
@@ -360,7 +389,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             else begin
                 r_v <= 1'b0;
                 if (NC > 1 && lvv[LV]) begin
-                    if (BF16) begin
+                    if (BFX) begin
                         if (!ti_d[0]) for (integer ln = 0; ln < LANES; ln = ln + 1)
                             hold[16*ln +: 16] <= bf16(lvl[LV][0][32*ln +: 32]);
                         else begin
@@ -384,14 +413,22 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [PWT-1:0] dq_own_head;
         reg dq_own_pop;
         wire [QAW:0] dc0;
-        (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(QAW)) u_dqo (.ecc_ce(dq_ce),.ecc_ue(dq_ue),.ecc_drop(dq_drop),.clk(clk), .rst_n(rst_n), .push(r_v), .din(res_flit),
+        // bypass: the rank's own flits (hub output, one a cycle) enter the own delivery queue unchanged
+        wire own_byp_v = BYP && h_v[0];
+`ifdef OT_COLL_MUT_BYP_OWNSIGN
+        wire [PWT-1:0] own_byp_f = {1'b1, 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0] & ~{LANES{32'h80000000}}};  // NEGATIVE: sign dropped
+`else
+        wire [PWT-1:0] own_byp_f = {1'b1, 8'hFF, 8'(RANK), cBYP0 + h_d[FW +: 16], h_d[FW-1:0]};
+`endif
+        (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(QAW)) u_dqo (.ecc_ce(dq_ce),.ecc_ue(dq_ue),.ecc_drop(dq_drop),.clk(clk), .rst_n(rst_n), .push(r_v || own_byp_v), .din(own_byp_v ? own_byp_f : res_flit),
             .pop(dq_own_pop), .empty(dq_own_empty), .dout(dq_own_head), .ovf(dq_own_ovf), .count(dc0));
 
         // ================= receive dispatch and delivery =========================================
         wire[NPT-1:0] result_for_group;
         for(genvar pg=0;pg<NPT;pg=pg+1)begin:g_membership
             wire[31:0] producer_base = 32'(rb_head[pg][FW+16+:8]) << LG;
-            assign result_for_group[pg] = LEG || (ALL_DEST ?
+            wire[31:0] src_rank = {24'd0, rb_head[pg][FW+16+:8]};
+            assign result_for_group[pg] = BYP ? (src_rank >= GBASE && src_rank < GBASE + GN) : LEG || (ALL_DEST ?
                 (producer_base>=OUTER_BASE && producer_base<OUTER_BASE+OUTER_G) :
                 rb_head[pg][FW+16+:8]==8'(OG));
         end
@@ -407,11 +444,11 @@ module ot_hbm_accel_tu_endpoint_psg #(
             rb_pop = '0; dq_own_pop = 1'b0; dv = '0; ctk = '0;
             for (integer i = 0; i < DEL; i = i + 1) dfl[i] = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (NC > 1 && h_v[i] && integer'(hs[i]) == J) ctk[J % NC] = 1'b1;   // hub own slice first (cannot stall)
+                if (NC > 1 && !BYP && h_v[i] && integer'(hs[i]) == J) ctk[J % NC] = 1'b1;   // hub own slice first (cannot stall)
             for (integer p = 0; p < NPT; p = p + 1)
                 if (!rb_empty[p] && !rb_head[p][PWT-1]) begin                    // partials -> slots
                     c = integer'(rb_head[p][FW+16 +: 8]);
-                    if (c >= NA) rb_pop[p] = 1'b1;                                 // malformed: popped, flagged
+                    if (c >= NA || BYP) rb_pop[p] = 1'b1;                          // malformed (or any partial in bypass): popped, flagged
                     else if (!ctk[c]) begin rb_pop[p] = 1'b1; ctk[c] = 1'b1; end   // else waits a cycle in rb
                 end
             // Small static groups must not consume another group's multicast result.
@@ -457,7 +494,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             reg [NPT-1:0] pw;
             cw_v = '0; cw_dupe = 1'b0; hw = '0; pw = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (NC > 1 && h_v[i] && integer'(hs[i]) == J) begin
+                if (NC > 1 && !BYP && h_v[i] && integer'(hs[i]) == J) begin
                     hw[i] = 1'b1;
                     if (pres[J % NC][hfo[i]]) cw_dupe = 1'b1;
                 end
@@ -465,7 +502,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 if (rb_pop[p] && !rb_head[p][PWT-1]) begin
                     c  = integer'(rb_head[p][FW+16 +: 8]);
                     fl = integer'(rb_head[p][FW +: 16]);
-                    if (c >= NA || fl >= OF || pres[c % NC][fl[$clog2(OFMX)-1:0]] || rb_head[p][FW+24 +: 8] != 8'(RANK)) cw_dupe = 1'b1;
+                    if (BYP || c >= NA || fl >= OF || pres[c % NC][fl[$clog2(OFMX)-1:0]] || rb_head[p][FW+24 +: 8] != 8'(RANK)) cw_dupe = 1'b1;
                     else pw[p] = 1'b1;
                 end
             // one writer per column (dispatch arbitration): the column's word is the OR of its one-hot sources
@@ -496,6 +533,9 @@ module ot_hbm_accel_tu_endpoint_psg #(
                     if (NC == 1) begin            // gather: the flit IS the result; sent once, multicast
                         qr_push[pt] = 1'b1;
                         qr_din[pt] = {1'b1, 8'hFF, 8'(OG), cOGPF + 16'(f), h_d[(32+FW)*i +: FW]};
+                    end else if (BYP) begin       // gather bypass: unchanged, multicast, src = rank
+                        qr_push[pt] = 1'b1;
+                        qr_din[pt] = {1'b1, 8'hFF, 8'(RANK), cBYP0 + 16'(f), h_d[(32+FW)*i +: FW]};
                     end else begin
                         s = integer'(hs[i]);
                         if (s != J) begin
@@ -531,23 +571,38 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 end
             end
         // Count actual endpoint events; port FIFOs, credits and serializer state are never reset at rearm.
-        localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16) ? 2 : 1);
+        localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16 && !BF16RT) ? 2 : 1);
         reg [RMX-1:0] result_seen;
         reg result_error;
         reg [15:0] tx_count, delivery_count, own_count, produced_count;
         integer ntx, nrx, npop, ndel;
         reg [RMX-1:0] seen_next;
         reg bad_result;
-        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : (LEG ? NOG*NC : ALL_DEST ? OUTER_G : NA)*ROF;
-        wire [31:0] expected_tx = (NC==1) ? PF : PF-OF+ROF;
+        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : BYP ? {16'd0, cBYPT} : (LEG ? NOG*NC : ALL_DEST ? OUTER_G : NA)*ROF;
+        wire [31:0] expected_tx = (NC==1 || BYP) ? PF : PF-OF+ROF;
+        // bypass delivery set check: count (delivery_count), sum and xor of gi equal those of 0 .. T-1 (T = group * pf)
+        reg  [31:0] byp_sum, byp_sum_n, byp_sum_exp;
+        reg  [15:0] byp_xor, byp_xor_n, byp_xor_exp;
+        always @(posedge clk) begin
+            byp_sum_exp <= ({16'd0, cBYPT} * ({16'd0, cBYPT} - 32'd1)) >> 1;
+            case (cBYPT[1:0])     // xor of 0 .. T-1 = g(T-1): n % 4 = 0 -> n, 1 -> 1, 2 -> n+1, 3 -> 0
+                2'd1: byp_xor_exp <= cBYPT - 16'd1;
+                2'd2: byp_xor_exp <= 16'd1;
+                2'd3: byp_xor_exp <= cBYPT;
+                default: byp_xor_exp <= 16'd0;
+            endcase
+        end
         always @* begin
-            ntx=0;nrx=0;npop=0;ndel=0;seen_next=result_seen;bad_result=0;
+            ntx=0;nrx=0;npop=0;ndel=0;seen_next=result_seen;bad_result=0;byp_sum_n=byp_sum;byp_xor_n=byp_xor;
             for(integer p=0;p<NPT;p=p+1)begin
                 ntx=ntx+ph_tx_v[p];nrx=nrx+ph_rx_v[p];npop=npop+(rb_pop[p]&&!rb_empty[p])+integer'(rx_drop[p]);
             end
             for(integer l=0;l<DEL;l=l+1)if(del_valid[l])begin
                 integer gi;gi=integer'(del_flit[l*PWT+FW+:16]);ndel=ndel+1;
-                if(gi>=RMX)bad_result=1;
+                if(BYP)begin
+                    if(gi>=integer'(cBYPT))bad_result=1;
+                    byp_sum_n=byp_sum_n+32'(gi);byp_xor_n=byp_xor_n^16'(gi);
+                end else if(gi>=RMX)bad_result=1;
                 else if(seen_next[gi])bad_result=1;
                 else begin
                     seen_next[gi]=1;
@@ -555,18 +610,29 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 end
             end
         end
+        reg [31:0] dcnt32, ndel32;
+        reg byp_over, byp_badset;
+        always @* begin
+            dcnt32 = {16'd0, delivery_count}; ndel32 = ndel;
+            byp_over = BYP && (dcnt32 + ndel32 > expected_delivery);
+            byp_badset = BYP && dcnt32 == expected_delivery && ndel32 == 0 && (byp_sum != byp_sum_exp || byp_xor != byp_xor_exp);
+        end
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin
                 result_seen<=0;result_error<=0;tx_count<=0;delivery_count<=0;own_count<=0;produced_count<=0;rx_pending<=0;completed<=0;
+                byp_sum<=0;byp_xor<=0;
             end else if(REARM)begin
                 rx_pending<=rx_pending+16'(nrx)-16'(npop);
                 if(started && !completed)begin
                     tx_count<=tx_count+16'(ntx);delivery_count<=delivery_count+16'(ndel);
                     own_count<=own_count+16'(dq_own_pop&&!dq_own_empty);produced_count<=produced_count+16'(r_v);
-                    result_seen<=seen_next;
+                    result_seen<=seen_next;byp_sum<=byp_sum_n;byp_xor<=byp_xor_n;
                     if(bad_result || npop>rx_pending+nrx)result_error<=1;
+                    // bypass: more deliveries than group * pf, or all of them with a wrong gi set (a duplicate + a loss)
+                    if(byp_over || byp_badset)result_error<=1;
                     if(!fault && !bad_result && ntx==0 && nrx==0 && npop==0 && ndel==0 &&
-                       k>=PF && (NC==1 || (rptr>=OF && produced_count==ROF && own_count==ROF)) &&
+                       k>=PF && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
+                                 (!BYP && rptr>=OF && produced_count==ROF && own_count==ROF)) &&
                        tx_count==expected_tx && delivery_count==expected_delivery && rx_pending==0 &&
                        (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue)
                         completed<=1;
@@ -575,7 +641,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `endif
                 end
                 if(completed && done_ready)begin
-                    completed<=0;result_seen<=0;tx_count<=0;delivery_count<=0;own_count<=0;produced_count<=0;
+                    completed<=0;result_seen<=0;tx_count<=0;delivery_count<=0;own_count<=0;produced_count<=0;byp_sum<=0;byp_xor<=0;
                 end
             end
         reg anyovf;

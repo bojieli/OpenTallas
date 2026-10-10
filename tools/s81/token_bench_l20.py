@@ -116,7 +116,7 @@ def cmd_run(a):
     f = work / "field"
     if not (f / "build" / "tb").exists():
         sh([PY, "tools/dsrom_1m_field.py", "build", "--work", f, "--qelem", QELEM], env=env, log=work / "build.log")
-    rc_field = subprocess.run([PY, "tools/dsrom_1m_field.py", "run", "--work", f, "--jobs", a.jobs],
+    rc_field = subprocess.run([PY, "tools/dsrom_1m_field.py", "run", "--work", str(f), "--jobs", str(a.jobs)],
                               cwd=ROOT, env=dict(os.environ, **env)).returncode
     sel = run_select(work)
     rc = finish(work, rc_field, sel)

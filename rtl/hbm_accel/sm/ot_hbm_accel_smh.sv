@@ -52,7 +52,8 @@ module ot_hbm_accel_smh #(
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,         // leaves (rows) per hardened tile
-    parameter integer ENABLE_INT8 = 0, // opt-in fmt3; enabled front adds one registered cycle
+    parameter integer ENABLE_INT8 = 0,
+    parameter integer PIPE_INT8 = 0, // opt-in second elastic conversion stage
     parameter integer REQCR = 1         // 1 (production): request port with ready latency 2 (req_ready captured raw;
                                         // see front_s); 0: the m3b same-cycle port (bench comparison only)
 ) (
@@ -89,6 +90,13 @@ module ot_hbm_accel_smh #(
     output wire                    arrive,
     input  wire                    release_in,
     output wire                    released
+`ifdef OT_SMH_CG
+    ,
+    // redesign-hbm 2026-10-09: per-SM coarse clock-gating WAKE (level; from the SM record adapter's per-SM busy, legacy 1):
+    // tiles and back ends run on their own ICG (ot_cg_tile), the wake daisy-chained from the hop-1 tiles outward and
+    // from each column's bottom tile to its back end; the front strips stay on the raw clock (they own the SM pins)
+    input  wire                    cg_en
+`endif
 );
     localparam integer LB    = SUB * LBS;
     localparam integer LF    = SUB * LSB;
@@ -172,7 +180,7 @@ module ot_hbm_accel_smh #(
             .bout_r0(f_br[0 +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
             .fi_row0(n_row0), .fi_pbz(n_pbz));
         ot_hbm_accel_smh_front_c #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .RMAX(RMAX), .XD(XD),
-                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT), .ENABLE_INT8(ENABLE_INT8)) u_fc (
+                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT), .ENABLE_INT8(ENABLE_INT8), .PIPE_INT8(PIPE_INT8)) u_fc (
             .clk(clk), .rst_n(rst_n), .rout_l1(f_rl[RBW +: RBW]), .rout_r1(f_rr[RBW +: RBW]),
             .rout_l2(f_rl[2*RBW +: RBW]), .rout_r2(f_rr[2*RBW +: RBW]), .bout_l1(f_bl[BBW +: BBW]),
             .bout_r1(f_br[BBW +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
@@ -196,6 +204,10 @@ module ot_hbm_accel_smh #(
     wire [NC*NP*BBW-1:0]  t_bi, t_bo;
     wire [NC*NP*TGI-1:0]  t_gi;
     wire [NC*NP*SUB*GLW-1:0] t_go;
+`ifdef OT_SMH_CG
+    wire [NC*NP-1:0] t_cgi, t_cgo;
+    wire [NC-1:0]    e_cgo;
+`endif
     wire [NC*(NH-1)*QLW-1:0] e_qi;
     wire [NC*NH*QLW-1:0]     e_qo;
     genvar c, p, j;
@@ -240,6 +252,37 @@ module ot_hbm_accel_smh #(
                 assign sg1[j*5 +: 5] = SG1;
                 assign sg2[j*5 +: 5] = SG2;
             end
+`ifdef OT_SMH_CG
+            // the wake: hop-1 tiles from the SM's cg_en, every other tile from its row neighbour nearer the front
+            if (c == NL - 1 || c == NL) begin : g_cw1
+                assign t_cgi[T] = cg_en;
+            end else if (c < NL - 1) begin : g_cwl
+                assign t_cgi[T] = t_cgo[(c+1)*NP+p];
+            end else begin : g_cwr
+                assign t_cgi[T] = t_cgo[(c-1)*NP+p];
+            end
+            if (DEF != 0 && c < NL) begin : g_tw
+                ot_hbm_accel_smh_tile_wg u_t (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgi[T]), .cgo(t_cgo[T]), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
+                .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
+                .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
+                .gout(t_go[T*SUB*GLW +: SUB*GLW]));
+            end else if (DEF != 0) begin : g_te
+                ot_hbm_accel_smh_tile_eg u_t (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgi[T]), .cgo(t_cgo[T]), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
+                .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
+                .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
+                .gout(t_go[T*SUB*GLW +: SUB*GLW]));
+            end else begin : g_tp
+                ot_hbm_accel_smh_tile_g #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW),
+                                        .XD(XD), .NBEAT(NBEAT), .TCK(TCK), .A1B(A1B), .A2B(A2B)) u_t (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgi[T]), .cgo(t_cgo[T]), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
+                .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
+                .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
+                .gout(t_go[T*SUB*GLW +: SUB*GLW]));
+            end
+        end
+`else
             if (DEF != 0 && c < NL) begin : g_tw
                 ot_hbm_accel_smh_tile_w u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
@@ -261,6 +304,7 @@ module ot_hbm_accel_smh #(
                 .gout(t_go[T*SUB*GLW +: SUB*GLW]));
             end
         end
+`endif
         // column back end: lanes from the bottom tile; result lanes from the neighbour farther from the front
         if (c < NL) begin : g_ql
             if (c == 0) begin : g_q0
@@ -275,6 +319,21 @@ module ot_hbm_accel_smh #(
                 assign e_qi[c*(NH-1)*QLW +: (NH-1)*QLW] = e_qo[(c+1)*NH*QLW +: (NH-1)*QLW];
             end
         end
+`ifdef OT_SMH_CG
+        if (DEF != 0 && c < NL) begin : g_be_e
+            ot_hbm_accel_smh_be_eg u_be (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgo[c*NP+NP-1]), .cgo(e_cgo[c]), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
+                .qin(e_qi[c*(NH-1)*QLW +: (NH-1)*QLW]), .qout(e_qo[c*NH*QLW +: NH*QLW]));
+        end else if (DEF != 0) begin : g_be_w
+            ot_hbm_accel_smh_be_wg u_be (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgo[c*NP+NP-1]), .cgo(e_cgo[c]), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
+                .qin(e_qi[c*(NH-1)*QLW +: (NH-1)*QLW]), .qout(e_qo[c*NH*QLW +: NH*QLW]));
+        end else begin : g_bp
+            ot_hbm_accel_smh_be_g #(.SUB(SUB), .RPT(RPT), .IL(IL), .RMAX(RMAX), .LEV(LEV), .TAGW(TAGW), .NH(NH)) u_be (
+                .clk(clk), .rst_n(rst_n), .cgi(t_cgo[c*NP+NP-1]), .cgo(e_cgo[c]), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
+                .qin(e_qi[c*(NH-1)*QLW +: (NH-1)*QLW]), .qout(e_qo[c*NH*QLW +: NH*QLW]));
+        end
+`else
         if (DEF != 0 && c < NL) begin : g_be_e
             ot_hbm_accel_smh_be_e u_be (
                 .clk(clk), .rst_n(rst_n), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
@@ -288,6 +347,7 @@ module ot_hbm_accel_smh #(
                 .clk(clk), .rst_n(rst_n), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
                 .qin(e_qi[c*(NH-1)*QLW +: (NH-1)*QLW]), .qout(e_qo[c*NH*QLW +: NH*QLW]));
         end
+`endif
     end
     endgenerate
     // the front's result lanes: lane k = the column k hops + 1 away
@@ -947,6 +1007,7 @@ endmodule
 
 module ot_hbm_accel_smh_front_c #(
     parameter integer ENABLE_INT8 = 0,
+    parameter integer PIPE_INT8 = 0,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -1086,11 +1147,32 @@ module ot_hbm_accel_smh_front_c #(
             if (!rst_n) input_open <= 1'b0;
             else if (h_pop) input_open <= 1'b1;
             else if (issue_line_end) input_open <= 1'b0;
-        wire demand = input_open && !issue_line_end;
-        assign w_ready = unpack_ready && demand;
-        ot_hbm_accel_int8_line u_unpack (.clk(clk), .rst_n(rst_n),
-            .int8_mode(fmt_q == 2'd3), .s_valid(w_valid && demand), .s_ready(unpack_ready), .s_data(w_data),
-            .m_valid(issue_w_valid), .m_ready(issue_w_ready), .m_data(issue_w_data));
+        wire intake_credit;
+        if (PIPE_INT8) begin : g_credit
+            ot_hbm_accel_int8_credit #(.RW(RW)) u_credit (
+                .clk(clk),.rst_n(rst_n),.launch(h_pop),.take(w_valid && w_ready),
+                .int8_mode(fmt_q==2'd3),.op_rows(h_rows),.op_g(h_g),.op_c(h_c),
+                .intake_credit(intake_credit));
+        end else begin : g_credit_legacy
+            assign intake_credit=1'b1;
+        end
+        wire demand = input_open && !issue_line_end && intake_credit;
+        // hbm-forks 2026-10-09 (HGI-1 CF-SM / CF-1): formats 0-2 BYPASS the adapter (zero added cycles: the DS formats
+        // are cycle-identical to ENABLE_INT8 = 0); fmt3 lines go through it.  A DS op behind a fmt3 op waits for the
+        // adapter to drain (order kept).
+        wire a_busy, a_v; wire [1087:0] a_d;
+        wire fmt3 = (fmt_q == 2'd3);
+`ifdef OT_SMH_MUT_NOBYP
+        wire byp = 1'b0;                                      // NEGATIVE CONTROL: every format through the adapter
+`else
+        wire byp = !fmt3 && !a_busy;
+`endif
+        assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
+        ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
+            .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
+            .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+        assign issue_w_valid = byp ? w_valid : a_v;
+        assign issue_w_data  = byp ? w_data : a_d;
     end else begin : g_no_int8
         assign issue_w_valid = w_valid;
         assign w_ready = issue_w_ready;
@@ -1302,6 +1384,7 @@ module ot_hbm_accel_smh_front_c #(
 endmodule
 
 module ot_hbm_accel_smh_front_s #(
+    parameter integer RESULT_VALID = `ifdef OT_SMH_RESULT_VALID 1 `else 0 `endif,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -1315,7 +1398,10 @@ module ot_hbm_accel_smh_front_s #(
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,
     parameter integer NFMT = SUB * LBS * 8 + SUB,
-    parameter integer REQCR = 1
+    parameter integer REQCR = 1,
+    parameter integer PT4 = 1           // hbm-forks 2026-10-09: = ot_hbm_accel_smh_tile PT4 (m3h: a 4th row-bundle register per
+                                        //   tile hop, so a column's results arrive 1 more cycle per hop: the result deskew is
+                                        //   (5 + PT4) a hop; m3h left it at 5 and columns at hop >= 2 merged a wrong row)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -1408,31 +1494,36 @@ module ot_hbm_accel_smh_front_s #(
                     .d(lin[QLW-1 -: 2]), .q(land[QLW-1 -: 2]));
                 ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_ld (.clk(clk), .rst_n(rst_n), .en(1'b1),
                     .d(lin[QLW-3:0]), .q(land[QLW-3:0]));
-                ot_hbm_accel_smv_chain #(.W(2), .D(5*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(2), .D((5+PT4)*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-1 -: 2]), .q(al[COLN*QLW + QLW - 2 +: 2]));
-                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(5*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(QLW-2), .D((5+PT4)*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-3:0]), .q(al[COLN*QLW +: QLW-2]));
             end
         end
     end endgenerate
     wire [NC-1:0]    cf_a;
+    wire [NC-1:0]    cv_a;
+    wire result_v, result_fault;
     wire [NC*32-1:0] cy_a;
     genvar cc;
     generate for (cc = 0; cc < NC; cc = cc + 1) begin : g_al
         assign cf_a[cc] = al[cc*QLW + QLW - 2];
+        assign cv_a[cc] = al[cc*QLW + QLW - 1];
         assign cy_a[32*cc +: 32] = al[cc*QLW + RW +: 32];
     end endgenerate
+    ot_hbm_accel_smh_result_valid #(.NC(NC), .ENABLE(RESULT_VALID)) u_result_valid (
+        .valids(cv_a), .faults(cf_a), .row_valid(result_v), .fault_event(result_fault));
     // retire: stage 1 of m2's three, at the north face (front_c lands it and adds the third beside the issue)
-    ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(fsv));
+    ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(result_v), .q(fsv));
     reg fault_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0;
-        else fault_q <= fault_q | (|cf_a)
+        else fault_q <= fault_q | result_fault
 `ifdef OT_SMH_RCH_NONEMPTY
             | rch_state_fault
 `endif
             ;
-    ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(rv));
+    ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d(result_v), .q(rv));
     ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_pfo (.clk(clk), .rst_n(rst_n), .d(fault_q), .q(fault));
     ot_hbm_accel_smv_chain #(.W(RW + NC*32), .D(PIO), .RST(0)) u_prd_o (.clk(clk), .rst_n(rst_n),
         .d({al[RW-1:0], cy_a}), .q({rrow, rdata}));
@@ -2005,4 +2096,94 @@ module ot_hbm_accel_smh_be_w (
     input  wire clk, input wire rst_n, input wire [199:0] gin, input wire [137:0] qin, output wire [183:0] qout
 );
     ot_hbm_accel_smh_be u (.*);
+endmodule
+
+// ---------------------------------------------------------------------------
+// redesign-hbm 2026-10-09: COARSE CLOCK-GATED pieces (one ICG per hardened tile / back end, ot_cg_tile).  The piece
+// netlist is unchanged (ot_hbm_accel_smh_tile / _be on the gated clock, x-store macros included); cgi lands in the
+// gate's ungated pin flop, cgo forwards it.  _wg / _eg are the production masters (pin sides as _w / _e).
+// ---------------------------------------------------------------------------
+module ot_hbm_accel_smh_tile_g #(
+    parameter integer SUB = 4, parameter integer RPT = 2, parameter integer LBS = 2, parameter integer LSB = 16,
+    parameter integer NC = 8, parameter integer IL = 8, parameter integer TAGW = 16, parameter integer XD = 128,
+    parameter integer NBEAT = 13, parameter integer TCK = 1, parameter integer NMG = 32, parameter integer A1B = 9,
+    parameter integer A2B = 7, parameter integer PT4 = 1, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
+) (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
+    input  wire [RPT*A1B-1:0] xs_a1, input wire [RPT*5-1:0] xs_g1, input wire [RPT*A2B-1:0] xs_a2, input wire [RPT*5-1:0] xs_g2,
+    input  wire [RPT*(6+TAGW+LBS*266+LSB*16+1+$clog2(XD))-1:0] rin,
+    input  wire [1+$clog2(XD)+NBEAT+2048-1:0]                  bin,
+    output wire [RPT*(6+TAGW+LBS*266+LSB*16+1+$clog2(XD))-1:0] rout,
+    output wire [1+$clog2(XD)+NBEAT+2048-1:0]                  bout,
+    input  wire [(SUB-RPT)*(2+32+TAGW)-1:0]                    gin,
+    output wire [SUB*(2+32+TAGW)-1:0]                          gout
+);
+    wire gclk;
+    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
+                            .NBEAT(NBEAT), .TCK(TCK), .NMG(NMG), .A1B(A1B), .A2B(A2B), .PT4(PT4)) u (
+        .clk(gclk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .rin(rin), .bin(bin),
+        .rout(rout), .bout(bout), .gin(gin), .gout(gout));
+endmodule
+module ot_hbm_accel_smh_be_g #(
+    parameter integer SUB = 4, parameter integer RPT = 2, parameter integer IL = 8, parameter integer RMAX = 4096,
+    parameter integer LEV = 4, parameter integer TAGW = 16, parameter integer NH = 4, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
+) (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
+    input  wire [SUB*(2+32+TAGW)-1:0]          gin,
+    input  wire [(NH-1)*(2+32+$clog2(RMAX))-1:0] qin,
+    output wire [NH*(2+32+$clog2(RMAX))-1:0]     qout
+);
+    wire gclk;
+    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    ot_hbm_accel_smh_be #(.SUB(SUB), .RPT(RPT), .IL(IL), .RMAX(RMAX), .LEV(LEV), .TAGW(TAGW), .NH(NH)) u (
+        .clk(gclk), .rst_n(rst_n), .gin(gin), .qin(qin), .qout(qout));
+endmodule
+module ot_hbm_accel_smh_tile_eg (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
+    input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
+    input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
+    input  wire [99:0] gin, output wire [199:0] gout
+);
+    ot_hbm_accel_smh_tile_g u (.*);
+endmodule
+module ot_hbm_accel_smh_tile_wg (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
+    input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
+    input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
+    input  wire [99:0] gin, output wire [199:0] gout
+);
+    ot_hbm_accel_smh_tile_g u (.*);
+endmodule
+module ot_hbm_accel_smh_be_eg (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo, input wire [199:0] gin, input wire [137:0] qin,
+    output wire [183:0] qout
+);
+    ot_hbm_accel_smh_be_g u (.*);
+endmodule
+module ot_hbm_accel_smh_be_wg (
+    input  wire clk, input wire rst_n, input wire cgi, output wire cgo, input wire [199:0] gin, input wire [137:0] qin,
+    output wire [183:0] qout
+);
+    ot_hbm_accel_smh_be_g u (.*);
+endmodule
+
+// Optional gated-result consumer qualification, sized before RTL in
+// results/uarch/smh_result_valid_20261010/model.json. No arithmetic or latency changes.
+// ENABLE=0 preserves the released south-front valid/fault contract exactly.
+module ot_hbm_accel_smh_result_valid #(
+    parameter integer NC = 8,
+    parameter integer ENABLE = 0
+) (
+    input wire [NC-1:0] valids,
+    input wire [NC-1:0] faults,
+    output wire row_valid,
+    output wire fault_event
+);
+    wire all_valid = &valids;
+    wire partial_valid = (|valids) && !all_valid;
+    assign row_valid = ENABLE ? all_valid : valids[0];
+    assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
 endmodule

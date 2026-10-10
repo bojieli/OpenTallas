@@ -1,0 +1,11 @@
+CALL G=1 B=8 K=7 W=32 destinations=1 badrow=-1 cycles=1135
+CALL G=1 B=8 K=512 W=32 destinations=1 badrow=-1 cycles=82945
+CALL G=1 B=8 K=2048 W=32 destinations=1 badrow=-1 cycles=331777
+CALL G=1 B=3 K=7 W=2 destinations=1 badrow=-1 cycles=365
+CALL G=1 B=255 K=7 W=2 destinations=1 badrow=-1 cycles=365
+CALL G=1 B=8 K=7 W=32 destinations=1 badrow=3 cycles=491
+CALL G=2 B=8 K=7 W=32 destinations=2 badrow=-1 cycles=1135
+CALL G=2 B=8 K=512 W=32 destinations=2 badrow=-1 cycles=82945
+CALL G=2 B=8 K=2048 W=32 destinations=2 badrow=-1 cycles=331777
+FATAL: /srv/opentallas-scratch/codex/hgi-row-42ee27e47/src/rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:35: owner/local/word mismatch g2 b3 idx2 got0/983/0 expected1/983/0
+       Time: 8331030000  Scope: tb_hgi_coll_row_formatter.call

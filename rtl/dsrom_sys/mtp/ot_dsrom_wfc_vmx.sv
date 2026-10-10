@@ -38,6 +38,7 @@ module ot_dsrom_wfc_vmx #(
     parameter integer PRE    = 4,       // fast-side pre-queue (two pushes a cycle: last write + start)
     parameter integer RQ     = 16,       // slow-side read-response queue
     parameter integer RDEPTH = 8,       // slow -> fast ratio FIFO entries
+    parameter integer RQFREE = `ifdef OT_WFCVMX_PRED 2 `elsif OT_WFCVMX_RQ_FREE 1 `else 0 `endif,   // struct-close: vm_rq without the vm_re enable
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
                                         // a max-delay write-period path with no hold check; +1 write cycle each way)
 ) (
@@ -147,7 +148,27 @@ module ot_dsrom_wfc_vmx #(
         wire [VWA-1:0] ra_sd = vm_raddr - SIDE_TXB[VWA-1:0] + XWORDS[VWA-1:0];
         assign ra = (ra_tx < XWORDS) ? ra_tx : ra_sd;
     end endgenerate
-    always @(posedge fclk) if (vm_re) vm_rq <= stg[ra[IB-1:0]];
+    // struct-close 2026-10-09 ("-cl" line).  RQFREE 1: the read register loads every edge (no vm_re enable; the WFC
+    // samples vm_rq exactly one edge after vm_re, so other cycles are never observed).
+    // RQFREE 2 (PREDICTED READ): the WFC reads the outbound words in staging order (TXB + tx_k, then the SIDE words,
+    // one read per word per job), so the staging index of the next read is a counter: vm_rq <= stg[pred] every edge
+    // (reg -> reg; no pin in the 64:1 x 512 data path, which failed at -488 ps from f_vr), pred advances on vm_re
+    // and wraps after SD reads.  The pin address is checked one edge later (registered compare, 6 bits + the high
+    // bits): a read whose index differs from pred raises the sticky fault (fail-closed, never silent).  0 cycles.
+    // RQFREE 0 = the enabled register indexed from the pin.
+    reg [IB-1:0] pred; reg pchk_v; reg [VWA-1:0] pchk_a; reg [IB-1:0] pchk_p; reg pfault;
+    always @(posedge fclk) begin
+        if (RQFREE == 2) vm_rq <= stg[pred];
+        else if (vm_re || RQFREE != 0) vm_rq <= stg[ra[IB-1:0]];
+        if (!frst_n) begin pred <= `ifdef OT_WFCVMX_MUT_PREDOFF 1 `else 0 `endif; pchk_v <= 1'b0; pfault <= 1'b0; end
+        else begin
+            if (vm_re) pred <= (pred == SD - 1) ? {IB{1'b0}} : pred + 1'b1;
+            pchk_v <= vm_re && RQFREE == 2; pchk_a <= ra; pchk_p <= pred;
+`ifndef OT_WFCVMX_MUT_NOPCHK
+            if (pchk_v && pchk_a != {{(VWA-IB){1'b0}}, pchk_p}) pfault <= 1'b1;
+`endif
+        end
+    end
     // credit return: the slow side's issued-write count, sampled flop -> flop
     reg [3:0] wcnt_s, wcnt_f, wcnt_seen;
     always @(posedge fclk) begin
@@ -246,5 +267,5 @@ module ot_dsrom_wfc_vmx #(
         end
     end
     reg fs_f;
-    always @(posedge fclk) begin fs_f <= fault_s; fault <= fault_f || fs_f; end
+    always @(posedge fclk) begin fs_f <= fault_s; fault <= fault_f || fs_f || pfault; end
 endmodule

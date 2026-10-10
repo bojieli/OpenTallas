@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.p2.rootpipe-bench.v1",
+  "source_commit": "9dda063ff",
+  "adopted": false,
+  "physical_status": "queued_candidate",
+  "mechanism": "ROOTPIPE1 corrected SRAM data/verdict stage, static DSTAGE decode separation, native pin output release-credit station",
+  "path_cycles": 6192,
+  "parent_rb3_cycles": 5954,
+  "extra_cycles_parent": 238,
+  "baseline_cycles": 5467,
+  "extra_cycles_baseline": 725,
+  "source_sha256": {
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv": "4a5c58dcf79bee5e7953f02fe9aab7c900ae1d62c705be7014c7f71e74098643",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv": "41b267818aa761c5b866170efc29569697511083a12028969094f4dd41057220",
+    "tools/mtp_p2_rootpipe_gate.py": "2d72f72ec24ba20e98dca73e1d38d4f77cfd016bc51c7d470841ec9b62dccc88"
+  },
+  "qualification": "Eight-case full-width transaction/component gate PASS; physical TT setup/FF hold/DRC still required. Generic block IO pathfinding; production topology budget unresolved."
+}

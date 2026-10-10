@@ -105,6 +105,7 @@ int main(int argc, char** argv) {
     int res_owed = 0, faults = 0, dh_owed = 0, gwreq_ret = 0;
     int64_t t_ctl = -1, t_start = -1, a_first = -1, a_last = -1, res_first = -1, res_last = -1, t_emb_req = -1, t_embd_last = -1;
     int poisoned = 0;
+    uint64_t last_progress = 0;      // a run that stops making progress for 20,000 cycles ends (a caught mutant)
     while (cyc < MAXC && !(nout == NH * HD && (int)embd.size() == 65 && (int)hctl.size() == 2 && (int)toks.size() == 1 && nkvw == 4)) {
         int64_t now = (int64_t)cyc;
         // ---- ROM faces ----
@@ -188,6 +189,8 @@ int main(int argc, char** argv) {
             rr[s] = (rr[s] + 1) % R;
         }
         if (top->faults) faults |= top->faults;
+        if (top->ar_v || top->eq_v || top->dh_v || top->tok_v || top->kvw_v) last_progress = cyc;
+        if (cyc > last_progress + 20000) break;
     }
     int mism = 0, first_bad = -1;
     for (int i = 0; i < NH * HD; i++) if (got[i] != 1 || out[i] != gold[i]) { if (first_bad < 0) first_bad = i; mism++; }

@@ -1,0 +1,216 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hcmean-mc560-lk-a7bdfef93-tc-cl",
+ "block": "ot_dsrom_hc_mean_capture",
+ "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+ "source_branch": "claude/cont-takeover-20261009",
+ "record_branch": "codex/closure-record-hcmean-mc560-lk-a7bdfef93-tc-cl",
+ "source_commit": "a7bdfef930705b7dae6fdff6a0ccc92611f2f2a2",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hcmean-mc560-lk-a7bdfef93-tc-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 39.36,
+  "ff_ps": 14.8,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -214.22,
+  "ss_sensitivity_tns_ps": -344106.1,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hcmean-mc560-lk-a7bdfef93-tc-cl/routes/hcmean_mc560_lk_a7bdfef93_tc_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hcmean-mc560-lk-a7bdfef93-tc-cl/routes/hcmean_mc560_lk_a7bdfef93_tc_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hcmean-mc560-lk-a7bdfef93-tc-cl/routes/hcmean_mc560_lk_a7bdfef93_tc_cl/work/orfs/logs/asap7/opentallas_ot_dsrom_hc_mean_capture_asap7_mtp_hcmean_mc560_lk_a7bdfef93_tc_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_mean_mc_lk_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS full shape 3x1280 BF16 means 120 flits cycles=16943 CE=0\nPASS full shape 3x1280 BF16 means 120 flits cycles=17795 CE=0\nHCB_mean_mc_lk_PASS\n",
+   "track": "parallel"
+  },
+  "bench_mean_mc_lk_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "HCB_mean_mc_lk_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1157,
+    "mean": 829.8,
+    "min": 819.1,
+    "max": 842.6
+   },
+   "all": {
+    "n": 17854,
+    "mean": 831.4,
+    "min": 812.0,
+    "max": 871.5
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1157,
+    "mean": 526.6,
+    "min": 517.0,
+    "max": 537.3
+   },
+   "all": {
+    "n": 17854,
+    "mean": 528.0,
+    "min": 510.7,
+    "max": 562.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 643,
+   "CK_SS_ALL_MEAN": 644,
+   "CK_SS_MIN": 633,
+   "CK_SS_ALL_MIN": 626,
+   "CK_SS_MAX": 654,
+   "CK_SS_ALL_MAX": 682,
+   "CK_TT_MEAN": 643,
+   "CK_TT_ALL_MEAN": 644,
+   "CK_TT_MIN": 633,
+   "CK_TT_ALL_MIN": 626,
+   "CK_TT_MAX": 654,
+   "CK_TT_ALL_MAX": 682,
+   "CK_FF_MEAN": 527,
+   "CK_FF_ALL_MEAN": 528,
+   "CK_FF_MIN": 517,
+   "CK_FF_ALL_MIN": 511,
+   "CK_FF_MAX": 537,
+   "CK_FF_ALL_MAX": 563,
+   "CK_SSLIB_MEAN": 830,
+   "CK_SSLIB_MIN": 819,
+   "CK_SSLIB_MAX": 843,
+   "CK_SSLIB_ALL_MEAN": 831,
+   "CK_SSLIB_ALL_MIN": 812,
+   "CK_SSLIB_ALL_MAX": 872,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "+1 cycle per frame read (40 frames/capture), write 0, +1 cycle input skid (cmd, beat), +1 cycle output skid; credit relay: +2 cycles per channel (pin flop + landing), full rate at round trip <= 8",
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T01:02:30-07:00",
+ "job_spec": {
+  "name": "hcmean-mc560-lk-a7bdfef93-tc-cl",
+  "block": "ot_dsrom_hc_mean_capture",
+  "element": "ot_dsrom_hc_mean_capture",
+  "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+  "purpose": "cont-takeover 2026-10-09 DS HC distributed (ot_dsrom_hc_mean_capture): registered macro read capture + registered write word (eccpipe r4: TT -235 ps rd_out -> parity tree, macro clk 753 ps insertion in a 1000 um frame at 3.5 % util); 560 um frame, macros centred; LINK_CREDIT=1: every stream boundary is the die-link credit relay (REVIEW ~11:30), signed off against the die-link budget (LB=1). Option B (TT setup / FF hold / DRC 0), TC route.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-pve1"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "claude/cont-takeover-20261009",
+   "commit": "a7bdfef930705b7dae6fdff6a0ccc92611f2f2a2"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "mean_mc_lk_exact",
+     "cmd": "bash tools/cont_takeover/hc_bench.sh mean_mc_lk pos {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "HCB_mean_mc_lk_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "mean_mc_lk_mutant",
+     "cmd": "bash tools/cont_takeover/hc_bench.sh mean_mc_lk neg {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "HCB_mean_mc_lk_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_dsrom_hc_mean_capture --source rtl/common/ot_link_credit.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_skid.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv --param SINGLE_CAPTURE=1 --param ECC_PIPE=1 --param MACRO_CAP=1 --param IN_SKID=1 --param OUT_SKID=1 --param LINK_CREDIT=1 --param LINK_DEPTH=8 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 5 5 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/cont_takeover/hcmean_560_macro_place.tcl --die-area 0 0 560 560 --core-area 2.16 2.16 557.84 557.84 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 12,
+    "peak_ram_gb": 32
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_dsrom_hc_mean_capture --source rtl/common/ot_link_credit.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_skid.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv --param SINGLE_CAPTURE=1 --param ECC_PIPE=1 --param MACRO_CAP=1 --param IN_SKID=1 --param OUT_SKID=1 --param LINK_CREDIT=1 --param LINK_DEPTH=8 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 5 5 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/cont_takeover/hcmean_560_macro_place.tcl --die-area 0 0 560 560 --core-area 2.16 2.16 557.84 557.84",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": "+1 cycle per frame read (40 frames/capture), write 0, +1 cycle input skid (cmd, beat), +1 cycle output skid; credit relay: +2 cycles per channel (pin flop + landing), full rate at round trip <= 8",
+  "merge_target": null,
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/cont_takeover_hc_20261009/hcmean-mc560-lk"
+   }
+  ]
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

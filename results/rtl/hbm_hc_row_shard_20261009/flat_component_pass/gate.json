@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS",
+  "source_commit": "f2b6e05ae",
+  "remote": "/srv/opentallas-data/codex/hc-row-shard-r2/flat_component_r3",
+  "fresh_generated_objects": true,
+  "verilator": "5.050",
+  "K": 20480,
+  "exact_bf16_bits": 327680,
+  "macro_count": 24,
+  "arms": [
+    "BASE",
+    "CE",
+    "CHECK",
+    "UE",
+    "DUP",
+    "BADLEASE"
+  ],
+  "scope": "minimum private activation SRAM component; not die integration",
+  "logs_sha256": {
+    "UE.log": "23db33551d73d3c421e799c5d82cedfbbd8b50d83b14048ca3c18c7065893059",
+    "CHECK.log": "a94bd5106cea3bcebb06d111c1f88b272b1fb88044b01ff919cfcd2416482395",
+    "build.log": "f8af035497957b4de05dd8ef71ab44dc65ebc5334014ef5da8540261bb971faa",
+    "BADLEASE.log": "86068d71cebc3866f1c464d671177f08fe084abd844b16acb39a20d7802dd192",
+    "DUP.log": "a2b1b9f2f9d8a64857cdb0cd673294bad58f6fefba6f3200f8fd741b06f79463",
+    "CE.log": "5c8b6dab90357e0347bcb0f4764a06dedf92c7fc3982c3cff2b4d7e411db0e65",
+    "run.log": "969811257ae1a2b3eb5ddf8e4f34aa48e751cd07da679cf72c4c8de196c5b729",
+    "BASE.log": "32ef82af4638827760375f44666b916b4635a34dfe62acd4354f57ab4cc08c55"
+  }
+}

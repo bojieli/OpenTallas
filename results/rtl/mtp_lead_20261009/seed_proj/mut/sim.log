@@ -1,0 +1,15 @@
+SEED_PROJ MISMATCH token 0 row 2 got bee15d98/bee1 want bee15d90/bee1
+SEED_PROJ MISMATCH token 0 row 9 got 411a1704/411a want 411a1703/411a
+SEED_PROJ MISMATCH token 0 row 11 got be8187a0/be82 want be8187a8/be82
+SEED_PROJ MISMATCH token 0 row 13 got c155e69e/c156 want c155e69d/c156
+SEED_PROJ MISMATCH token 0 row 14 got c17cf9d5/c17d want c17cf9d6/c17d
+SEED_PROJ TOKEN 0 rows=16 first_x_to_done=11780 last_x_to_done=11540
+SEED_PROJ MISMATCH token 1 row 2 got bee15d98/bee1 want bee15d90/bee1
+SEED_PROJ MISMATCH token 1 row 9 got 411a1704/411a want 411a1703/411a
+SEED_PROJ MISMATCH token 1 row 11 got be8187a0/be82 want be8187a8/be82
+SEED_PROJ MISMATCH token 1 row 13 got c155e69e/c156 want c155e69d/c156
+SEED_PROJ MISMATCH token 1 row 14 got c17cf9d5/c17d want c17cf9d6/c17d
+SEED_PROJ TOKEN 1 rows=16 first_x_to_done=11780 last_x_to_done=11540
+[19677000] %Fatal: tb_dsrom_mtp_seed_proj.sv:51: Assertion failed in tb_dsrom_mtp_seed_proj: SEED_PROJ FAIL 10 mismatching rows
+%Error: /srv/opentallas-scratch/claude/mtp-seedproj/src/rtl/dsrom_sys/mtp/tb_dsrom_mtp_seed_proj.sv:51: Verilog $stop
+Aborting...

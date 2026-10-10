@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-09T13:23:18.769316+00:00",
+  "preserved_worker": 1388774,
+  "duplicate_pids_termed": [
+    1390011,
+    1390009,
+    1390006
+  ],
+  "equivalent_rtl_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv": "f940c1051ce72d9d10a480f756a0542eef15a6158ea8c49f90a736955844ed9a"
+  },
+  "recipe_equivalent": true,
+  "checkpoint": "/srv/opentallas-scratch/codex/hgi-ehash-boundary-bfe349ad8/duplicate_retirement/temp_checkpoint",
+  "required_old_phase": {
+    "cmd": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -q -p read_verilog -sv -DSYNTHESIS -I/tmp/rtlb_b7wt0fx_/rtl/common /tmp/rtlb_b7wt0fx_/rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv /tmp/rtlb_b7wt0fx_/rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv /tmp/rtlb_b7wt0fx_/rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv; chparam -set ENABLE_GENERIC 1 -set NSLOT 8 -set MUTANT 0 ot_hbm_idx_ehash_ds; hierarchy -top ot_hbm_idx_ehash_ds; proc; flatten; opt_clean; techmap; opt_clean; write_json /tmp/rtlb_b7wt0fx_/n.json ",
+    "pgid": 1388768,
+    "sid": 1388768,
+    "hwm_kib": 26091748,
+    "rss_kib": 24431764
+  },
+  "old_capacity_gib": 32,
+  "entry": {
+    "name": "hgi-ehash-boundary-27186",
+    "pid": 1388774,
+    "command_match": "yosys",
+    "launcher_pid": 1388772,
+    "peak_ram_gb": 32,
+    "owner": "generic_index_decode/ehash",
+    "reason": "Measured old required boundary techmap HWM26091748KiB plus current parent; owner approved32GiB conservative capacity margin. Corrected duplicate retired after exact threeRTL/recipe equivalence. Not a cap."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "base": {
+    "rc": 0,
+    "stdout": "PASS native boundary transport 400 cycles 2172 bits three captures\n",
+    "stderr": ""
+  },
+  "swap": {
+    "rc": 1,
+    "stdout": "FATAL: physical/hbm_accel_die_views/hgi_idx_native/rtl/tb_hfd_hgi_idx_native_boundary.sv:42: OUTPUT t_sel_qb cycle3\n       Time: 46000 Scope: tb\n",
+    "stderr": ""
+  },
+  "credit": {
+    "rc": 1,
+    "stdout": "FATAL: physical/hbm_accel_die_views/hgi_idx_native/rtl/tb_hfd_hgi_idx_native_boundary.sv:50: INPUT f_sel_qbr cycle3\n       Time: 46000 Scope: tb\n",
+    "stderr": ""
+  },
+  "scope": "Boundary register transport only, actual real controller elaborated but output streams forced at unit boundary; arithmetic/finite credit integration not claimed",
+  "cycles": 400,
+  "native_bits": 2172,
+  "adopted": false
+}

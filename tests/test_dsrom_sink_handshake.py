@@ -27,5 +27,9 @@ def test_arithmetic_and_core_files_remain_pinned():
     for name in ('ot_hdc_v41_xu.sv','ot_hdc_sinkhorn_mc.sv','ot_hdc_sinkhorn.sv','ot_hdc_sk_arith.sv'):
         path='rtl/hdc/v41/'+name
         assert (ROOT/path).read_bytes()==subprocess.check_output(['git','show','7a073a767:'+path],cwd=ROOT)
-    for path in ('rtl/hdc/v41x/ot_hdc_core_v41x.sv','rtl/hdc/v41x/dspark/ot_hdc_core_v41x.sv'):
-        assert (ROOT/path).read_bytes()==subprocess.check_output(['git','show','7a073a767:'+path],cwd=ROOT)
+    # canonical core re-pinned at b03898cfe: after 7a073a767 it changed only in the DYN table (ring DYN25/26 enable,
+    # 3dea693b1 / aff63db74) and the verbatim move of that table into ot_hdc_v41x_dyn_unit (b03898cfe, 0 cycles;
+    # campaign 14 PASS 428,093 / 15 FAIL cycle-identical). Nothing on the sink handshake path moved.
+    for path,pin in (('rtl/hdc/v41x/ot_hdc_core_v41x.sv','b03898cfe'),('rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv','b03898cfe'),
+                     ('rtl/hdc/v41x/dspark/ot_hdc_core_v41x.sv','7a073a767')):
+        assert (ROOT/path).read_bytes()==subprocess.check_output(['git','show',pin+':'+path],cwd=ROOT)

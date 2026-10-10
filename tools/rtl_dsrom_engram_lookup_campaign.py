@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -197,7 +198,9 @@ def compare(out_path: Path, t, wins, injected):
 # -- simulation -----------------------------------------------------------------------------
 def build(obj: Path, sources, nslot, pipe=0, wrap=1):
     exe = obj / "Vtb_dsrom_engram_lookup"
-    subprocess.run(["verilator", *VL, "--top-module", "tb_dsrom_engram_lookup", f"-GNSLOT={nslot}", f"-GPIPE={pipe}",
+    # sys-takeover 2026-10-09: OT_ENGRAM_CRCMAT=1 builds the lookup with the matrix CRC (define-selected default)
+    crcmat = ["+define+OT_ENGRAM_CRCMAT"] if os.environ.get("OT_ENGRAM_CRCMAT") else []
+    subprocess.run(["verilator", *VL, *crcmat, "--top-module", "tb_dsrom_engram_lookup", f"-GNSLOT={nslot}", f"-GPIPE={pipe}",
                     f"-GWRAP={wrap}",
                     "-Mdir", str(obj),
                     *map(str, sources), str(TB), str(HARNESS), "-CFLAGS", "-O1 -DVTOP=Vtb_dsrom_engram_lookup"],

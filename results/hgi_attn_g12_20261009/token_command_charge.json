@@ -1,0 +1,22 @@
+{
+  "ds_v41_flash": {
+    "layer_count": 40,
+    "kv_heads": 1,
+    "TP": 96,
+    "local_KV_heads": 1,
+    "ATT_QK_PV_invocations": 80,
+    "standalone_command_edges": 240,
+    "standalone_command_ns": 199.99992,
+    "scope": "Conservative additive station charge perQK/PVcall,4stack copiesconcurrent; compiler/barrier/gather/formatter costs not replaced; baseline delta not claimed"
+  },
+  "qwen3_8b": {
+    "layer_count": 36,
+    "kv_heads": 8,
+    "TP": 4,
+    "local_KV_heads": 2,
+    "ATT_QK_PV_invocations": 144,
+    "standalone_command_edges": 432,
+    "standalone_command_ns": 359.999856,
+    "scope": "Conservative additive station charge perQK/PVcall,4stack copiesconcurrent; compiler/barrier/gather/formatter costs not replaced; baseline delta not claimed"
+  }
+}

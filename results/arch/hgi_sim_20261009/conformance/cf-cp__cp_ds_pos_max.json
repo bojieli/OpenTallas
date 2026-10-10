@@ -1,0 +1,72 @@
+{
+ "id": "cp_ds_pos_max",
+ "row": "CF-CP",
+ "mode": "DS",
+ "what": "DS reset: token 129,279 and position 2^20 - 1 accepted",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 129279,
+  "pos": 1048575
+ },
+ "records_hex": "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "2069e32b94e10914a0d25cc48f9d7b825343609d622afe9c791f6ec7e13daf24"
+ },
+ "mutants": []
+}

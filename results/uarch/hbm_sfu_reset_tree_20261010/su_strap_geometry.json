@@ -1,0 +1,34 @@
+{
+  "scope": "Cross-owner SU strap candidate check on R25GPHT4 abstract geometry only",
+  "hub_ports_sha256": "8a7e6015d9a5ed0a8aa5bc8449ddf97462dad3aab992f9a9b2c594a6370db3fd",
+  "qid": [
+    "face",
+    2,
+    "E",
+    "M4",
+    4450.764,
+    2
+  ],
+  "qid_in_order": true,
+  "clashes": [],
+  "geometry": {
+    "instances": 1250,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 32,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "margin_lint": {
+    "mode": "chains",
+    "chains": 2045,
+    "reach_um": 504.0,
+    "reach_violations": 0,
+    "far_side_relays": 0,
+    "reach_examples": [],
+    "far_side_examples": [],
+    "verdict": "PASS"
+  }
+}

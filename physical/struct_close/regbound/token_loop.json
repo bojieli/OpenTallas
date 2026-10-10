@@ -1,0 +1,53 @@
+{
+ "src": "rtl/hbm_accel/control/ot_hbm_token_loop.sv",
+ "module": "ot_hbm_token_loop",
+ "core": "ot_hbm_token_loop_core",
+ "clk": "clk",
+ "reset": "rst_n",
+ "why": "pi-tokloop-c7c53c4c2 TT -497 (reg2reg +131): unregistered boundary; job / cpl in and hr / db out through pin FIFOs, the rest flopped. host_stop stays a direct input (its stop-after-the-raising-step semantics are cycle-relative; one bit, no fan-out).",
+ "in_hs": [
+  {
+   "v": "job_v",
+   "r": "job_rdy",
+   "data": [
+    "job_id",
+    "job_tok",
+    "job_pos",
+    "job_ngen",
+    "job_eos",
+    "job_eos_en",
+    "job_maxpos",
+    "job_mtp"
+   ]
+  },
+  {
+   "v": "cpl_v",
+   "r": "cpl_rdy",
+   "data": [
+    "cpl_token",
+    "cpl_status"
+   ]
+  }
+ ],
+ "out_hs": [
+  {
+   "v": "hr_v",
+   "r": "hr_rdy",
+   "data": [
+    "hr_d"
+   ]
+  },
+  {
+   "v": "db_v",
+   "r": "db_rdy",
+   "data": [
+    "db_token",
+    "db_pos",
+    "db_job"
+   ]
+  }
+ ],
+ "pass": [
+  "host_stop"
+ ]
+}

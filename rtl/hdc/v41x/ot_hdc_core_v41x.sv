@@ -72,6 +72,7 @@ module ot_hdc_core_v41x #(
     parameter integer KV_HBM = 0,
     parameter integer ME0_HBM = 0,       // selected re-specified ME weight op uses an HBM window
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
+    parameter integer ROLLBACK_RING_DYN = 1, // V36: four same-source ring8 campaign gates qualified
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
@@ -370,7 +371,15 @@ module ot_hdc_core_v41x #(
     reg [PAW-1:0] pc;
     reg [NW-1:0] tok_r, pos_r;
     localparam integer NDYN = FULL_SHAPE ? 64 : 32;
-    reg [AW-1:0] dyn [0:NSLOT*NDYN-1];
+    // DYN table: ot_hdc_v41x_dyn_unit u_dyn (read ports in DYI_* order)
+    localparam integer DY_NRD = 17, DY_RIW = 8;
+    localparam integer DYI_ME_D_NOUT = 0, DYI_ME_D_TILES = 1, DYI_ME_D_K = 2, DYI_ME_D_WBASE = 3, DYI_SU_D_NOUT = 4,
+                       DYI_SU_D_NIN = 5, DYI_XU_D_N = 6, DYI_XU_D_K = 7, DYI_ME_D_XBASE = 8, DYI_ME_D_OBASE = 9,
+                       DYI_A_D = 10, DYI_B_D = 11, DYI_C_D = 12, DYI_D_D = 13, DYI_O_D = 14, DYI_QE_D_OBASE = 15,
+                       DYI_ROPE = 16;
+    wire [DY_NRD*3-1:0]      dy_slot;
+    wire [DY_NRD*DY_RIW-1:0] dy_idx;
+    wire [DY_NRD*AW-1:0]     dy_val;
     reg [2:0]    ds;                        // DYN bank being computed
     reg [INSTR_BITS-1:0] ir;
     reg        me_go, su_go, qe_go, xu_go, he_go;
@@ -407,7 +416,23 @@ module ot_hdc_core_v41x #(
     //: the instruction's DYN bank (its position slot)
     wire [2:0] c_dslot = (NSLOT > 1) ? ir[O_DSLOT +: W_DSLOT] : 3'd0;
     `define F(name) ir[O_``name +: W_``name]
-    `define DY(name) dyn[c_dslot * NDYN + ir[O_``name +: W_``name]]
+    `define DY(name) dy_val[DYI_``name * AW +: AW]
+    assign dy_slot[DYI_ME_D_NOUT * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_NOUT * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_NOUT +: W_ME_D_NOUT]);
+    assign dy_slot[DYI_ME_D_TILES * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_TILES * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_TILES +: W_ME_D_TILES]);
+    assign dy_slot[DYI_ME_D_K * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_K * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_K +: W_ME_D_K]);
+    assign dy_slot[DYI_ME_D_WBASE * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_WBASE * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_WBASE +: W_ME_D_WBASE]);
+    assign dy_slot[DYI_SU_D_NOUT * 3 +: 3] = c_dslot; assign dy_idx[DYI_SU_D_NOUT * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_SU_D_NOUT +: W_SU_D_NOUT]);
+    assign dy_slot[DYI_SU_D_NIN * 3 +: 3] = c_dslot; assign dy_idx[DYI_SU_D_NIN * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_SU_D_NIN +: W_SU_D_NIN]);
+    assign dy_slot[DYI_XU_D_N * 3 +: 3] = c_dslot; assign dy_idx[DYI_XU_D_N * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_XU_D_N +: W_XU_D_N]);
+    assign dy_slot[DYI_XU_D_K * 3 +: 3] = c_dslot; assign dy_idx[DYI_XU_D_K * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_XU_D_K +: W_XU_D_K]);
+    assign dy_slot[DYI_ME_D_XBASE * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_XBASE * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_XBASE +: W_ME_D_XBASE]);
+    assign dy_slot[DYI_ME_D_OBASE * 3 +: 3] = c_dslot; assign dy_idx[DYI_ME_D_OBASE * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_ME_D_OBASE +: W_ME_D_OBASE]);
+    assign dy_slot[DYI_A_D * 3 +: 3] = c_dslot; assign dy_idx[DYI_A_D * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_A_D +: W_A_D]);
+    assign dy_slot[DYI_B_D * 3 +: 3] = c_dslot; assign dy_idx[DYI_B_D * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_B_D +: W_B_D]);
+    assign dy_slot[DYI_C_D * 3 +: 3] = c_dslot; assign dy_idx[DYI_C_D * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_C_D +: W_C_D]);
+    assign dy_slot[DYI_D_D * 3 +: 3] = c_dslot; assign dy_idx[DYI_D_D * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_D_D +: W_D_D]);
+    assign dy_slot[DYI_O_D * 3 +: 3] = c_dslot; assign dy_idx[DYI_O_D * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_O_D +: W_O_D]);
+    assign dy_slot[DYI_QE_D_OBASE * 3 +: 3] = c_dslot; assign dy_idx[DYI_QE_D_OBASE * DY_RIW +: DY_RIW] = DY_RIW'(ir[O_QE_D_OBASE +: W_QE_D_OBASE]);
 
     reg [2:0]  d_unit;
     reg [2:0]  d_ctl, d_cslot, d_clane;
@@ -464,7 +489,8 @@ module ot_hdc_core_v41x #(
     assign rope_pf_v = FULL_SHAPE && st == S_ISSUE && d_unit == 3'd0 &&
                        d_ctl == 3'd5 && waited && rope_ctl_ok;
     assign rope_pf_kind = d_clane[0];
-    assign rope_pf_pos = NW'(dyn[d_cslot * NDYN + 4]);
+    assign dy_slot[DYI_ROPE * 3 +: 3] = d_cslot; assign dy_idx[DYI_ROPE * DY_RIW +: DY_RIW] = DY_RIW'(4);
+    assign rope_pf_pos = NW'(dy_val[DYI_ROPE * AW +: AW]);
     assign rope_pf_release = FULL_SHAPE && st == S_ISSUE && d_unit == 3'd0 &&
                              d_ctl == 3'd6 && waited && su_idle && rope_ctl_ok;
 
@@ -590,83 +616,14 @@ module ot_hdc_core_v41x #(
     end
 
     // DYN values (tools/hdc_isa_v41.dyn_values): bank ds from (stok[ds], pos + ds),
-    // once per step and at a DYN control step
+    // once per step and at a DYN control step.  Table + read selectors: ot_hdc_v41x_dyn_unit (moved verbatim).
     wire [NW-1:0] b_tok = (NSLOT > 1) ? stok[ds * NW +: NW] : tok_r;
     wire [NW-1:0] b_pos = pos_r + ds;
-    wire [NW-1:0] p1 = b_pos + 1'b1;
-    wire [NW-1:0] n2 = p1 >> 1;
-    wire [NW-1:0] ns1 = (p1 < TOPK) ? p1 : TOPK;
-    wire [NW-1:0] ns2 = (n2 < TOPK) ? n2 : TOPK;
-    function automatic [AW-1:0] rnds(input [NW-1:0] x);
-        rnds = (x == 0) ? 0 : ((x - 1) >> LG) + 1;
-    endfunction
-    function automatic [AW-1:0] rnd16(input [NW-1:0] x);      // 16-row tiles: head-group KV ops
-        rnd16 = (x == 0) ? 0 : ((x - 1) >> $clog2(W)) + 1;
-    endfunction
-    integer di;
-    wire [$clog2(NSLOT*NDYN)-1:0] db = ds * NDYN;
-    always @(posedge clk) if (st == S_DYN) begin
-        for (di = 0; di < NDYN; di = di + 1) dyn[db + di] <= 0;
-        dyn[db + 1] <= b_tok * DIM;
-        dyn[db + 2] <= b_pos * ROPE_PAIR;
-        dyn[db + 3] <= (b_pos == 0) ? 0 : (b_pos - 1) * ROPE_PAIR;
-        dyn[db + 4] <= b_pos;
-        dyn[db + 5] <= p1;
-        dyn[db + 6] <= n2;
-        dyn[db + 7] <= (n2 == 0) ? 0 : n2 - 1;
-        dyn[db + 8] <= ns1;
-        dyn[db + 9] <= ns2;
-        dyn[db + 10] <= p1 + ns1;
-        dyn[db + 11] <= p1 + ns2;
-        dyn[db + 12] <= rnds(p1);
-        dyn[db + 13] <= rnds(n2);
-        dyn[db + 14] <= rnds(p1 + ns1);
-        dyn[db + 15] <= rnds(p1 + ns2);
-        dyn[db + 16] <= b_pos * HDIM;
-        dyn[db + 17] <= p1 * HDIM;
-        dyn[db + 18] <= b_pos[0] ? 4 : 0;
-        dyn[db + 19] <= b_pos[0] ? 64 : 0;
-        dyn[db + 20] <= (n2 == 0) ? 0 : (n2 - 1) * HDIM;
-        dyn[db + 21] <= rnd16(p1);
-        dyn[db + 22] <= rnd16(n2);
-        dyn[db + 23] <= rnd16(p1 + ns1);
-        dyn[db + 24] <= rnd16(p1 + ns2);
-        if (NSLOT > 1) begin
-            //: MTP: the compressor slot ring of 8, the pooled pair's base, the Markov row
-            dyn[db + 25] <= {b_pos[2:0], 2'b00};
-            dyn[db + 26] <= {b_pos[2:1], 7'd0};
-            dyn[db + 27] <= b_tok * 32;
-        end
-        if (FULL_SHAPE) begin
-            dyn[db + FDYN_WIN] <= (p1 < FULL_WINDOW) ? p1 : FULL_WINDOW;
-            dyn[db + FDYN_NC1] <= p1;
-            dyn[db + FDYN_NC2] <= n2;
-            dyn[db + FDYN_NS1] <= ns1;
-            dyn[db + FDYN_NS2] <= ns2;
-            dyn[db + FDYN_T0] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW);
-            dyn[db + FDYN_T1] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns1;
-            dyn[db + FDYN_T2] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns2;
-            dyn[db + FDYN_SC1] <= (p1 + FULL_TP - 1) / FULL_TP;
-            dyn[db + FDYN_SC2] <= (n2 + FULL_TP - 1) / FULL_TP;
-            dyn[db + FDYN_SCR] <= (((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP;
-            dyn[db + FDYN_NSL1] <= (((p1 + FULL_TP - 1) / FULL_TP) < TOPK) ?
-                                     ((p1 + FULL_TP - 1) / FULL_TP) : TOPK;
-            dyn[db + FDYN_NSL2] <= (((n2 + FULL_TP - 1) / FULL_TP) < TOPK) ?
-                                     ((n2 + FULL_TP - 1) / FULL_TP) : TOPK;
-            dyn[db + FDYN_NSLR] <= (((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) < TOPK) ?
-                                     ((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) : TOPK;
-            dyn[db + FDYN_CEIL_SC1_16] <= (((p1 + FULL_TP - 1) / FULL_TP) + 15) >> 4;
-            dyn[db + FDYN_CEIL_SC1_8] <= (((p1 + FULL_TP - 1) / FULL_TP) + 7) >> 3;
-            dyn[db + FDYN_CEIL_SC2_16] <= (((n2 + FULL_TP - 1) / FULL_TP) + 15) >> 4;
-            dyn[db + FDYN_CEIL_SCR_16] <= (((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) + 15) >> 4;
-            dyn[db + FDYN_CEIL_T0_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + 31) >> 5;
-            dyn[db + FDYN_CEIL_T1_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns1 + 31) >> 5;
-            dyn[db + FDYN_CEIL_T2_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns2 + 31) >> 5;
-            dyn[db + FDYN_WINM1] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1;
-            dyn[db + FDYN_WIN_ROW] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) * HDIM;
-            dyn[db + FDYN_WINM1_ROW] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1) * HDIM;
-        end
-    end
+    ot_hdc_v41x_dyn_unit #(.FULL_SHAPE(FULL_SHAPE), .W(W), .G(G), .AW(AW), .NW(NW), .DIM(DIM), .TOPK(TOPK), .HDIM(HDIM),
+        .ROPE_PAIR(ROPE_PAIR), .FULL_WINDOW(FULL_WINDOW), .FULL_SCAN_CAP(FULL_SCAN_CAP), .FULL_TP(FULL_TP), .NSLOT(NSLOT),
+        .ROLLBACK_RING_DYN(ROLLBACK_RING_DYN), .NRD(DY_NRD), .RIW(DY_RIW)) u_dyn (
+        .clk(clk), .cap(st == S_DYN), .ds(ds), .b_tok(b_tok), .b_pos(b_pos),
+        .rd_slot(dy_slot), .rd_idx(dy_idx), .rd_val(dy_val));
 
     // Decode: bases and counts add their DYN value.
     wire [NW-1:0] c_me_nout = `F(ME_NOUT) + `DY(ME_D_NOUT);

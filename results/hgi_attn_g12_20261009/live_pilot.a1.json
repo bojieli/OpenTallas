@@ -1,0 +1,42 @@
+[
+  {
+    "name": "hgi-att-g12-140-187a8471c-tc-cx",
+    "time_utc": "2026-10-09T13:11:37.572747+00:00",
+    "container": "399ff7e10a6b06db1334da18d79d3e6014c7c03fd9a1150937c514e224dce309",
+    "init_pid": 2542174,
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "image_tag": "openroad/orfs:latest",
+    "memory": {
+      "memory.current": 424546304,
+      "memory.peak": 573460480
+    },
+    "corner_config": [
+      "export CORNER = WC",
+      "export OT_HOLD_MM = 1",
+      "export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)",
+      "export CORNERS = WC BC",
+      "export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)",
+      "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"
+    ]
+  },
+  {
+    "name": "hgi-att-g12-120-187a8471c-tc-cx",
+    "time_utc": "2026-10-09T13:11:37.573076+00:00",
+    "container": "86f1b6170b57b50d0b9e0c0babe3f4747d10b2f83a02a55f1396b93db5db7e5f",
+    "init_pid": 2542166,
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "image_tag": "openroad/orfs:latest",
+    "memory": {
+      "memory.current": 398757888,
+      "memory.peak": 545972224
+    },
+    "corner_config": [
+      "export CORNER = WC",
+      "export OT_HOLD_MM = 1",
+      "export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)",
+      "export CORNERS = WC BC",
+      "export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)",
+      "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"
+    ]
+  }
+]

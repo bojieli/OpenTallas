@@ -62,6 +62,16 @@
    "value": 28,
    "grade": "estimate",
    "source": "C3b: dispatcher reads the U32 index word from the VM (cmdproc -> hub 12 + VM read 4 + back 12) before the address arithmetic"
+  },
+  "dispatch_edges": {
+   "value": {
+    "FUSED.QDQ": 11,
+    "COLL": 4,
+    "ARGMAX": 5,
+    "IDX": 17
+   },
+   "grade": "derived",
+   "source": "hgi-takeover 07:50 (R25G normative seq v1.0 dispatch buses, tools/hgi_die_dispatch.py on claude/hgi-die-20261009 f98724333, a relay every 504 um): cmdproc -> quant 11 edges (5.08 mm), coll 4 (1.62 mm), argmax / MTP slot 5 (2.44 mm), indexer 17 (8.08 mm); {ready, done, fault} return the same. One cycle a relay edge; the units not listed keep dispatch_wire / retire_wire"
   }
  },
  "hbm": {
@@ -151,6 +161,19 @@
    "value": 0.0625,
    "grade": "estimate",
    "source": "16 compares a cycle on the streamed logits"
+  },
+  "ARGMAX.LOCAL.vm_per_elem": {
+   "value": 1.0,
+   "grade": "measured",
+   "source": "hgi-adapters (main e90b00c03): a VM-read ARGMAX.LOCAL takes ~38k cycles (32 us) for the Qwen head's 37,984 logits -> 1 element a cycle; per_elem (16 a cycle) applies to the STREAM input"
+  },
+  "STREAM.tail": {
+   "value": {
+    "ARGMAX": 20,
+    "SU": 60
+   },
+   "grade": "estimate",
+   "source": "a STREAM consumer finishes this many cycles after its producer's last element (argmax compare tree; SU pipeline depth ~55 + issue)"
   }
  }
 }

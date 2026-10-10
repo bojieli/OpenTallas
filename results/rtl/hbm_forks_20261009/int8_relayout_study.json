@@ -1,0 +1,125 @@
+{
+ "schema": "opentallas.hbm_forks.int8_relayout_study.v1",
+ "owner_rule": "adopt one-beat INT8 only if the SM re-layout fits: <= 60 % util, <= 858 mm2, <= 26 mm height",
+ "calibration": {
+  "tile_cts_instance_um2": 108103.0,
+  "cts_receipt": "results/uarch/hbm_smh_tile_headroom_20261007/measurement.json",
+  "x_store_macros": 8,
+  "macro_um2": 3891.577,
+  "tile_std_cell_cts_um2": 76970.4,
+  "tile_yosys_mapped_um2": 63459.78534,
+  "yosys_to_cts_growth": 1.2129,
+  "note": "growth = CTS std-cell area (instance area minus the x-store macros) / yosys mapped area of the same tile; it carries placement resizing, CTS and hold buffers"
+ },
+ "base": {
+  "R25G_W_um": 31734.288,
+  "R25G_H_um": 25161.84,
+  "R25G_mm2": 798.49,
+  "element_um": [
+   3214.08,
+   1131.84
+  ],
+  "tile_um": [
+   319.68,
+   509.76
+  ],
+  "tile_core_util": 0.6707
+ },
+ "cases": [
+  {
+   "case": "converters_0",
+   "added_mapped_um2_per_tile": 31948.8,
+   "projected_tile_cts_instance_um2": 146853.7,
+   "projected_util_in_todays_slot": 0.9112,
+   "core_area_needed_at_60pct_um2": 244756.2,
+   "added_tile_area_die_mm2_at_60pct": 42.79,
+   "largest_tile_in_reticle_3x3": {
+    "tile_um": [
+     345.6,
+     578.88
+    ],
+    "max_instance_um2_at_60pct": 118841.2,
+    "shortfall_pct": 23.6
+   },
+   "n_candidates": 160,
+   "n_fit": 0,
+   "closest": {
+    "grid": [
+     3,
+     3
+    ],
+    "tile_um": [
+     345.6,
+     717.12
+    ],
+    "core_util": 0.5981,
+    "element_um": [
+     3421.44,
+     1546.56
+    ],
+    "die_W_um": 32978.448,
+    "die_H_um": 27650.16,
+    "die_mm2": 911.86,
+    "fits": false,
+    "over": {
+     "W_um": 0,
+     "H_um": 1650.2,
+     "mm2": 53.86
+    }
+   },
+   "generator_check": null
+  },
+  {
+   "case": "converters_upper_bound",
+   "added_mapped_um2_per_tile": 33123.1,
+   "projected_tile_cts_instance_um2": 148278.0,
+   "projected_util_in_todays_slot": 0.92,
+   "core_area_needed_at_60pct_um2": 247130.0,
+   "added_tile_area_die_mm2_at_60pct": 44.01,
+   "largest_tile_in_reticle_3x3": {
+    "tile_um": [
+     345.6,
+     578.88
+    ],
+    "max_instance_um2_at_60pct": 118841.2,
+    "shortfall_pct": 24.8
+   },
+   "n_candidates": 160,
+   "n_fit": 0,
+   "closest": {
+    "grid": [
+     3,
+     3
+    ],
+    "tile_um": [
+     345.6,
+     725.76
+    ],
+    "core_util": 0.5967,
+    "element_um": [
+     3421.44,
+     1563.84
+    ],
+    "die_W_um": 32978.448,
+    "die_H_um": 27753.84,
+    "die_mm2": 915.28,
+    "fits": false,
+    "over": {
+     "W_um": 0,
+     "H_um": 1753.8,
+     "mm2": 57.28
+    }
+   },
+   "generator_check": null
+  }
+ ],
+ "verdict": "NO_FIT",
+ "decision": "keep the two-beat INT8 front (owner rule: the re-layout does not fit); the dense 1,024-bit fmt3 line + per-row scales on the DMA stream stay adopted",
+ "source_sha256": {
+  "tools/hbm_accel_die_fp.py": "d25759b8e636b371f062afc6ed4151a9cf543c3eb75e75a6c2975c6e1f350565",
+  "tools/hbm_accel_smh_physical.py": "b079eef600e58cdf91d912332e37a1f0cb52bf0f3332ea69bb9b2aaab0669ece",
+  "tools/hgi_int8_relayout_study.py": "6d687bab0e4d07687eb7296bd2df26b5da4b0382d66419b08aa308e45815b67e",
+  "results/uarch/hbm_smh_tile_headroom_20261007/measurement.json": "9e124d8feac8a33b535b68496ca8e08d6648550f09031717dc74c9afff6aa926",
+  "physical/hbm_forks/int8_issue_area.sh": "27e752092f8993799a2d380d57f6c4d5445a5feb197c1d86de410d33435a4e4a"
+ }
+}

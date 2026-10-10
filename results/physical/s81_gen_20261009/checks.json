@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.s81_gen.checks.v1",
+ "date": "2026-10-09",
+ "note": "tools/dsrom_s81_fulldie.py check + tools/die_top_lint.py lint, remote (EPYC1 /srv/opentallas-scratch/claude/s81-gen/chk, EPYC3 .../lint). q LEF = physical/s81_die_views/q_elem_qs5f (the die-evidence chain's) unless noted. margin = per-segment walk, data nets only, SS reach 504 um.",
+ "recipes": {"layer1_full": "results/physical/s81_gen_20261009/s81_layer1_full.opts", "layer1e": "results/physical/s81_gen_20261009/s81_layer1e.opts"},
+ "runs": [
+  {"case": "layer1 full (default q LEF)", "src": "7bb71184d", "overlaps": 0, "outside": 0, "pin_clashes": 0, "k16_clashes": 0, "reach_violations": 0, "far_side": 1685, "lint_connectivity_errors": 0},
+  {"case": "layer1e (default q LEF)", "src": "7bb71184d", "overlaps": 0, "outside": 0, "pin_clashes": 0, "k16_clashes": 0, "reach_violations": 0, "far_side": 1685, "lint_connectivity_errors": 0},
+  {"case": "layer1 full + --fwd-iface (qs5f)", "src": "617e4f57a", "overlaps": 0, "pin_clashes": 0, "k16_clashes": 0, "reach_violations": 768, "far_side": 3209, "clock_plan_viol": {"inter": 0, "intra": 5, "worst_intra_ps": 70.5}},
+  {"case": "layer1e + --fwd-iface (qs5f) lint", "src": "aaa403334", "lint_connectivity_errors": 0, "unresolved_modules": 0, "reach_violations": 768, "far_side": 3082},
+  {"case": "--bf-hier 520.128 (qs5f) check + lint", "src": "aaa403334", "die_um": [39358.224, 26000.0], "bf_frame_extra_um": 289.008, "overlaps": 0, "pin_clashes": 0, "k16_clashes": 0, "lint_connectivity_errors": 0, "reach_violations": 768, "far_side": 2057},
+  {"case": "--bf-hier 600.264 (qs5f) check", "src": "352176a46", "overlaps": 0, "pin_clashes": 0, "reach_violations": 768, "far_side": 2883},
+  {"case": "--coll-split3 --ck-rule, hub 1814.4 / VCH 1468.8 (qs5f)", "src": "0853b48e0", "overlaps": 0, "outside": 0, "pin_clashes": 0, "k16_clashes": 0, "placed_mm2": 418.27, "reach_violations": 768, "far_side": 3080},
+  {"case": "--relay-tt-reach 650 (qs5f)", "src": "597e2db7f", "reach_violations": 768, "note": "no legal box within 640 um of both ends: the qs5f frame is packed (needs frame area)"}
+ ],
+ "open": [
+  "768 SS-reach violations in every qs5f build: g_xb_<frame>_7 -> bank bs* 670-678 um (6 per frame x 128); no free 19.4 um box within 590-640 um of both ends; default q LEF: 0. Needs frame area (cont-takeover options a/b/c) or a lane re-plan.",
+  "far-side relays: pre-existing pass-1 column relay classes y_rt_*a/b, y_so, pqs (l1w baseline 2,188; full recipe 1,685 with the default q LEF).",
+  "lint unbound: ot_s81_cfg7_seq ef / go_tag on the 1,024 non-PQ sequencers and the qxpq 'walking' diagnostic (pre-existing, TA-10); dsfd_stnv_256x1 fo0 x 12; link-split stnh / serdes missing pins x 6 (pre-existing).",
+  "--bf-hier is over the 858 mm2 reticle (39.36 x 26 mm at 520, 42.88 x 26 at 600); at the 33 mm width 8 columns/half fit -> 1,344 pairs/die (-25 %) and PQ root r128 needs re-binning."
+ ]
+}

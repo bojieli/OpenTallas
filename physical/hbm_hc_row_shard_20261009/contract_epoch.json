@@ -1,0 +1,54 @@
+{
+  "scope": "FULLSHAPE_PATHFINDING_ONLY",
+  "production_clock_required_hz": 900000000,
+  "actual_pll_cdc_die_budget": "PENDING",
+  "die_um": [
+    1400,
+    1400
+  ],
+  "macro_count": 64,
+  "macro_size_um": [
+    94.824,
+    41.04
+  ],
+  "macro_area_um2": 249060.92544,
+  "estimated_logic_area_um2": 800000,
+  "estimated_total_utilization": 0.5352351660408162,
+  "target_utilization_max": 0.6,
+  "macro_spacing_um": [
+    30.176,
+    40.96
+  ],
+  "macro_pin_edge_distance_um_min": 200,
+  "pathfinding_io_delay_fraction": 0.2,
+  "setup_corner": "SS",
+  "hold_corner": "FF",
+  "clock_uncertainty_ps": [
+    60,
+    25
+  ],
+  "adoption_margin_ps": [
+    15,
+    15
+  ],
+  "DRC_required": 0,
+  "realclock_binding": "existing900MHzPLLserialclock; signalserviceat1200MHzrequiresactualregisteredCDCandcredits",
+  "component_cycle_measurements": [
+    3998,
+    4009
+  ],
+  "operand_input": "natural BF16256-bit finite snapshot publication",
+  "existing_40_macro_run": "preserved immutable; separate successor vehicle",
+  "element": "ot_hbm_hc_row_private_epoch",
+  "source_commit": "c3b3f94c8",
+  "parameter": {
+    "ENABLE_EPOCH_IDENTITY": 1
+  },
+  "FN_request_lease_bits": 16,
+  "FN_response_lease_bits": 16,
+  "additional_boundary_tracks": 32,
+  "additional_state_bits": 16,
+  "epoch_compare_control": "beforeacceptandwritecommit",
+  "native_die_IO_CDC_context": "PENDING; existingprivate64 job hasoldportlayout; noheadlinecredit",
+  "opt_in_default": false
+}

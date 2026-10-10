@@ -1,0 +1,20 @@
+{
+  "scope": "identical pair RTL core used by full-shape released golden/negative gate and one physical pair vehicle",
+  "exact_commit": "6bc32587a",
+  "physical_source": "f6869fa",
+  "core_file": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port_pp.sv",
+  "exact_core_sha256": "04a9f381c0ba67de2d01d77f09b70053cc7ff8e55c321155c5686131aebf95ed",
+  "physical_core_sha256": "04a9f381c0ba67de2d01d77f09b70053cc7ff8e55c321155c5686131aebf95ed",
+  "identical_core": true,
+  "core_module": "ot_dsrom_markov_embed_pp_pair",
+  "exact_gate_record": "results/uarch/dsrom_markov_embed_pp_md6_20261009/lookup_gate_r1/verdict.json",
+  "positive": {"exit": 0, "released_beats_checked": 160},
+  "golden_bit_mutant": {"exit": -6, "expected_failure": true, "same_compiled_binary": true},
+  "other_negatives": ["same-parity consecutive macro read faults before enable", "token129280 bounds", "token131071 bounds", "default-off suppresses requests"],
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "released_tensor": "mtp.2.markov_head.embed.weight",
+  "released_payload_sha256": "104a00ec3452e79e0b41dcfe89870a925303b9620020828707599ca92a25b71a",
+  "ROM_ECC": false,
+  "timing_model": "real macro SS clkq744ps, two-edge capture; simulation INSTANCE names select images, synthesis uses same pair wiring and physical macro black boxes",
+  "limits": "Physical pair has no transaction identity registers. Historical full lookup gate retains its old transaction interface; it does not establish selected token-only full-head controller or full253-bank/broadcast electrical qualification."
+}

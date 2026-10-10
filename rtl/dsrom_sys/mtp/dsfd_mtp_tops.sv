@@ -127,7 +127,8 @@ endmodule
 module dsfd_wfc_vmx #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10, parameter integer VWA = 15,
     parameter integer TXB = 0, parameter integer XWORDS = 46, parameter integer SIDE_TXB = 0, parameter integer SIDE_WORDS = 0,
-    parameter integer LAG = 0
+    parameter integer LAG = 0,
+    parameter integer RQFREE = `ifdef OT_WFCVMX_PRED 2 `elsif OT_WFCVMX_RQ_FREE 1 `else 0 `endif
 ) (
     input  wire [0:0]        ck,
     input  wire [0:0]        ckv,
@@ -163,7 +164,7 @@ module dsfd_wfc_vmx #(
     wire swv, swr, srv, srr; wire [VWA-1:0] swa, sra; wire [FLIT-1:0] swd;
     wire ks; wire [USER_W-1:0] ku; wire [NW-1:0] kt, kp; wire cd; wire [NW-1:0] ct; wire [31:0] cv; wire vc, fl;
     ot_dsrom_wfc_vmx #(.FLIT(FLIT), .NW(NW), .USER_W(USER_W), .VWA(VWA), .TXB(TXB), .XWORDS(XWORDS),
-                       .SIDE_TXB(SIDE_TXB), .SIDE_WORDS(SIDE_WORDS), .LAG(LAG)) u_vmx (
+                       .SIDE_TXB(SIDE_TXB), .SIDE_WORDS(SIDE_WORDS), .LAG(LAG), .RQFREE(RQFREE)) u_vmx (
         .fclk(fclk), .frst_n(frn), .vm_we(f_vw[VWA+FLIT]), .vm_waddr(f_vw[FLIT +: VWA]), .vm_wdata(f_vw[FLIT-1:0]),
         .vm_re(f_vr[VWA]), .vm_raddr(f_vr[VWA-1:0]), .vm_rq(t_vq),
         .core_start(f_cs[USER_W+2*NW]), .core_user(f_cs[2*NW +: USER_W]), .core_token(f_cs[NW +: NW]), .core_pos(f_cs[NW-1:0]),

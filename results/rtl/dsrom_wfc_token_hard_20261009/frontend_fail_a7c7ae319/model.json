@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.dsrom.wfc-token-hard.v1",
+  "adopted": false,
+  "default_enabled": false,
+  "clock_ghz": 1.2,
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": "one request/response per cycle",
+  "memory_ports": {
+    "token_read_bytes_per_cycle": 44.0,
+    "draft_write_bytes_per_cycle": 27.5
+  },
+  "boundaries_bits_per_cycle": {
+    "draft": 513,
+    "request": 36,
+    "response": 22,
+    "config": 55
+  },
+  "routing_tracks": {
+    "draft": 2052,
+    "request": 144,
+    "response": 88,
+    "config": 220
+  },
+  "replicas": {
+    "stores": 1,
+    "user_read_banks": 8
+  },
+  "mux": {
+    "per_user_entries": 16,
+    "final_users": 8,
+    "data_width": 44,
+    "request_address_fanout_banks": 8,
+    "draft_write_slots": 5
+  },
+  "area": {
+    "predecessor_measured_cells_um2": 7145,
+    "added_register_bits_upper": 440,
+    "added_cells_proxy_um2": 880,
+    "outline_um": [
+      162,
+      151.2
+    ],
+    "estimated_fill": 0.3276259063296101,
+    "proxy_is_not_physical_measurement": true
+  },
+  "latency": {
+    "response_edges": 4,
+    "original_edges": 1,
+    "r3_edges": 2,
+    "added_cycles_original": 3,
+    "added_cycles_r3": 2,
+    "added_ns_original": 2.5,
+    "initiation_interval_cycles": 1,
+    "draft_visibility_edges": 2,
+    "source_matching_metadata_required": true
+  },
+  "failure_path": {
+    "start": "f_pr[25]",
+    "end": "u_tok.pr_q[16]",
+    "report": "mtp_wfc_tok_a_e1c20dfb6_tc/physical_artifacts/6_finish.rpt",
+    "historical_tt_setup_ps": -478.67
+  },
+  "qualification": "Remote exact/mutant minimum gate, matched SOURCE integration, and own TT/FF/DRC route with SS sensitivity remain required"
+}

@@ -78,6 +78,18 @@ module ot_qwen_rom_core_ctrl #(
     // engine instruction reaches NEXT, before its go, so issue timing is
     // unchanged.  0 keeps the engine clock free-running.
     parameter integer ME_IDLE_GATE = 0,
+    // ICUT (struct-close 2026-10-09, REVIEW_20261009 Q3 "register fault, move it out of the me_ts cone, re-cut with A6";
+    // 0 = unchanged): d06ab7a00 pre-route -872.7 = the issue cone: the d_chase 16-bit progress compare (d_chase_rows /
+    // d_unit muxed, the flop yosys named me_ts[0]) -> chased -> issue -> load -> the decode enables (d_base, r_so, ~1k
+    // flops) and dyn_tiles_bad_instruction -> fault.  ICUT = 1: (a) fault takes the REGISTERED bad-instruction term (+1
+    // status edge); (b) the slow readiness term of the issue (barrier / chase / wait / unit ready) is a REGISTER, ready_q,
+    // evaluated one edge ahead for the op that will hold NEXT after the edge (the head word when loading) against the
+    // status predicted after the edge (the unit issued on this edge reads busy: idle / ready / progress 0, as the issue
+    // shell reports from its accepting edge; the other unit's status only improves).  ready_q => the live term, so every
+    // ICUT issue is a legal issue at that edge (checked by an assertion off SYNTHESIS); an issue can only be later by one
+    // edge when a status improves on exactly that edge, or for a back-to-back same-unit op.  me_en, kv_gate and w_gate
+    // stay live.  Op ORDER is unchanged (one in-order NEXT).
+    parameter integer ICUT = 0,
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -514,9 +526,12 @@ localparam integer W_ME_AMC = 1;
     //: chase_n progress.
     wire chased = ((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n;
     //: issue NEXT this cycle; the unit latches its fields on this edge
-    wire issue = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&
+    wire issue_live = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&
                  (d_barrier ? drained : ((!d_chase || chased) && (!d_wait_me || me_idle) && (!d_wait_su || su_idle)))
                  && unit_ready && kv_gate && w_gate;
+    reg ready_q;
+    wire issue = (ICUT == 0) ? issue_live :
+                 ((st == S_RUN) && nx_v && (d_unit != 2'd0) && ready_q && (d_unit != 2'd1 || me_en) && kv_gate && w_gate);
     assign me_go = issue && (d_unit == 2'd1);
     assign su_go = issue && (d_unit == 2'd2);
     wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained;
@@ -652,6 +667,50 @@ localparam integer W_ME_AMC = 1;
         red <= `F(RED); redsq <= `F(RED_SQ); r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2);
     end
+    // ICUT: readiness of the op that holds NEXT after this edge, against the status predicted after this edge
+    function automatic rdy_eval(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu,
+                                input mi, input si, input mr, input sr, input kd,
+                                input [15:0] mp, input [15:0] sp, input [15:0] sw);
+        reg chd;
+        begin
+            chd = ((u == 2'd1) ? (chr ? sw : sp) : mp) >= chn;
+            rdy_eval = (bar ? (mi && si && (!KV_VEC_WRITE_BRIDGE || kd)) : ((!ch || chd) && (!wme || mi) && (!wsu || si)))
+                       && ((u == 2'd1) ? mr : (sr && (!KV_VEC_WRITE_BRIDGE || (si && kd))));
+        end
+    endfunction
+    generate if (ICUT != 0) begin : g_icut
+        wire mi_n = me_idle && !(issue && d_unit == 2'd1);
+        wire mr_n = me_ready && !(issue && d_unit == 2'd1);
+        wire [15:0] mp_n = (issue && d_unit == 2'd1) ? 16'd0 : me_progress;
+        wire si_n = su_idle && !(issue && d_unit == 2'd2);
+        wire sr_n = su_ready && !(issue && d_unit == 2'd2);
+        wire [15:0] sp_n = (issue && d_unit == 2'd2) ? 16'd0 : su_progress;
+        wire [15:0] sw_n = (issue && d_unit == 2'd2) ? 16'd0 : su_rows;
+        wire kd_n = kv_write_drained && !(issue && d_unit == 2'd2);
+`ifdef OT_ICUT_MUT_NOPRED
+        // mutant: the status is NOT predicted (the issuing unit still reads ready / idle after its own go)
+        wire r_load = rdy_eval(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU),
+                               me_idle, su_idle, me_ready, su_ready, kv_write_drained, me_progress, su_progress, su_rows);
+        wire r_hold = rdy_eval(d_unit, d_barrier, d_chase, d_chase_rows, d_chase_n, d_wait_me, d_wait_su,
+                               me_idle, su_idle, me_ready, su_ready, kv_write_drained, me_progress, su_progress, su_rows);
+`else
+        wire r_load = rdy_eval(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU),
+                               mi_n, si_n, mr_n, sr_n, kd_n, mp_n, sp_n, sw_n);
+        wire r_hold = rdy_eval(d_unit, d_barrier, d_chase, d_chase_rows, d_chase_n, d_wait_me, d_wait_su,
+                               mi_n, si_n, mr_n, sr_n, kd_n, mp_n, sp_n, sw_n);
+`endif
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) ready_q <= 1'b0;
+            else ready_q <= load ? r_load : r_hold;
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && issue && !issue_live) begin
+            $display("ICUT_ILLEGAL_ISSUE t=%0t unit=%0d", $time, d_unit);
+            $fatal(1, "ICUT issue without the live issue condition");
+        end
+`endif
+    end else begin : g_noicut
+        always @(posedge clk) ready_q <= 1'b0;
+    end endgenerate
     `undef F
 
     // -- units ----------------------------------------------------------------------
@@ -855,9 +914,14 @@ localparam integer W_ME_AMC = 1;
     assign wrom_su = su_wrom_re;
     assign wrom_addr = su_wrom_re ? su_wrom_addr : me_wrom_addr;
 
+    // ICUT: the bad-instruction fault term registered (+1 status edge; it no longer sits behind issue -> load)
+    reg bad_dyn_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) bad_dyn_q <= 1'b0;
+        else bad_dyn_q <= (ICUT != 0) && dyn_tiles_bad_instruction && !(start && st == S_IDLE);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || (|embed_faults) || dyn_tiles_bad_instruction) fault <= 1'b1;
+        else if (me_fault || su_fault || (|embed_faults) || ((ICUT != 0) ? bad_dyn_q : dyn_tiles_bad_instruction)) fault <= 1'b1;
     end
 endmodule

@@ -1,0 +1,219 @@
+{
+ "id": "loop2_l1stride",
+ "row": "CF-LOOP2",
+ "mode": "GENERIC",
+ "what": "CTL.LOOP level 0 (3) around level 1 (4): base + L lstride + L1 l1stride on A, O and R",
+ "cfg": {
+  "cp_vocab": 151936,
+  "cp_ctx_max": 40960,
+  "coll_group_size": 4
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000003000000000040000000000000000000040001000000400000000000000000000000003006000020000003005000000000100000000000000000000000000000000000000000000001000000000010001000000000000000004000000000000000000800000000000100040000001000100000000000000000400000000000000000080000000000010010000000010010000000000000000004000000000000008000000000000000000000000000000000000000008000000000000000000000000000000080000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000300000000004000",
+  "00000000000000000400010000004000",
+  "000000000000000000000030060000200000030050000000001000000000000000000000000000000000000000000000010000000000100010000000000000000040000000000000000008000000000001000400000010001000000000000000004000000000000000000800000000000100100000000100100000000000000000040000000000000080000000000000",
+  "00000000000000000000000000008000",
+  "00000000000000000000000000008000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "CTL",
+   "op": "LOOP",
+   "param": 3,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {}
+  },
+  {
+   "unit": "CTL",
+   "op": "LOOP",
+   "param": 65540,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {}
+  },
+  {
+   "unit": "SU",
+   "op": "VOP",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": true,
+   "sut": {
+    "m1": 3,
+    "dst": 1,
+    "red": 1,
+    "imm1": 1073741824
+   },
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 16,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 64,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 16,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 1024,
+     "n": 16,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 64,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 16,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 4096,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 4,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 1,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "ENDLOOP",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {}
+  },
+  {
+   "unit": "CTL",
+   "op": "ENDLOOP",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {}
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "L",
+  "L1",
+  "body",
+  "L1",
+  "L",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "0d7a0840a356f33ea9afb43fa12c663f6909de3f1e3d2dbf1d579cbf8de479bf72e001bfeaebbc3ee417b3bf3a660c4050e8303e34de873e545fa5be3f3e07c0b0c8d73f48cdae3f7ac99bbf6e2633bf04b9003f557ef13f137c53bde76691bfd312253b08f0623fe69f183f1decaf3ec11988bf14ae893d73d52abe0c0694bf797ae1be10509fbea15e76bf2bb6e53fb258f13e8a50c53fc44d803f760dc6beb096803f27c9883eae29f1bf6d3f303f97cc283f38c357bf2f6c95bf22b57d3f3d3a7d3f17c525bf7fb2453ffe2ccbbf1fb2ffbeb6d33ebeda9139bc39de033f9426c4bfefd38a3f3b29e23f7fa24c3f93f8c6bf3a16da3f871e2f3f3177a2be27fe883fb7aea2be12e5833d38de7e3e0310edbf9c80f5be6672f5beb5309fbec7fcde3fe6a4923f03f80e3ff47a89bf811ecabec861b0be3ab2cbbe1d3c86bf7e005b3e7ab0133f07125abf80c4f23ea5ec6e3f4310703ddbaf193f8db76abe70f89bbeaf34d7be87ec0dbf9425d63f92a7363fc23cabbe38e2d9bf7d08783f3d7e6a3fd30dc1bec9dbfe3e57ef6ebedc06b93f4fc01b3eb7b4c33efe939dbfdae1d7bf6718eabf03e6213ea1e7c53f2ca131bfa2cc5e3f0f4253bfb67ebabf1657f23c0b24cd3d3cf48d3fcf181abffdb7c2be2390a6bdbbcfaabe7337663fd3a9b13f63f0123fb7c622bf2742c5bfde22873f7054d1bde9befabe3028eb3f89db9a3f0eafc0bf6248373facf856bf570585bf75dabbbfcc9d6fbfe21833bebc4a93bf28c7b73f7a84dcbf344f13c018c9203dae753b3fa0857b3e5ce5e3be8cbcbdbf31f3943fa418f83edc1041be241be2bf75bdb3be590230bfe263eb3e5eaeff3f8a8ad2be0d2c15bf92a9bdbebded03bf1ac9fcbe3ac888bdb5ef97be5d2eaebfb97cf6be2cbb1f3f7c5ae0be07f1463f987e8c3f3a069d3ebb6883bc28b067becb277f3d347902be41a7fb3dd10807bf204ad03faa128ebf951d3d3f91df25bfa9daaf3fb09cf53e2f007abfd76b5a3f39c8793f2788623f959d31bf3a19983efa77b23c9827fd3e7cf612c0e9f7d03e6b53b03fc43f3e3f99a46dbf"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      1024,
+      "0d7a8840a356733fa9af3440a12ce63f69095e401e3dadbf1d571cc08de4f9bf72e081bfeaeb3c3fe41733c03a668c4050e8b03e34de073f545f25bf3f3e87c0b0c8574048cd2e407ac91bc06e26b3bf04b9803f557e7140137cd3bde76611c0d312a53b08f0e23fe69f983f1dec2f3fc11908c014ae093e73d5aabe0c0614c0797a61bf10501fbfa15ef6bf2bb66540b258713f8a504540c44d0040760d46bfb096004027c9083fae2971c06d3fb03f97cca83f38c3d7bf2f6c15c022b5fd3f3d3afd3f17c5a5bf7fb2c53ffe2c4bc01fb27fbfb6d3bebeda91b9bc39de833f942644c0efd30a403b2962407fa2cc3f93f846c03a165a40871eaf3f317722bf27fe0840b7ae22bf12e5033e38defe3e03106dc09c8075bf667275bfb5301fbfc7fc5e40e6a4124003f88e3ff47a09c0811e4abfc86130bf3ab24bbf1d3c06c07e00db3e7ab0933f0712dabf80c4723fa5ecee3f4310f03ddbaf993f8db7eabe70f81bbfaf3457bf87ec8dbf9425564092a7b63fc23c2bbf38e259c07d08f83f3d7eea3fd30d41bfc9db7e3f57efeebedc0639404fc09b3eb7b4433ffe931dc0dae157c067186ac003e6a13ea1e745402ca1b1bfa2ccde3f0f42d3bfb67e3ac01657723d0b244d3e3cf40d40cf189abffdb742bf239026bebbcf2abf7337e63fd3a9314063f0923fb7c6a2bf274245c0de220740705451bee9be7abf30286b4089db1a400eaf40c06248b73facf8d6bf570505c075da3bc0cc9defbfe218b3bebc4a13c028c737407a845cc0344f93c018c9a03dae75bb3fa085fb3e5ce563bf8cbc3dc031f31440a418783fdc10c1be241b62c075bd33bf5902b0bfe2636b3f5eae7f408a8a52bf0d2c95bf92a93dbfbded83bf1ac97cbf3ac808beb5ef17bf5d2e2ec0b97c76bf2cbb9f3f7c5a60bf07f1c63f987e0c403a061d3fbb6803bd28b0e7becb27ff3d347982be41a77b3ed10887bf204a5040aa120ec0951dbd3f91dfa5bfa9da2f40b09c753f2f00fabfd76bda3f39c8f93f2788e23f959db1bf3a19183ffa77323d98277d3f7cf692c0e9f7503f6b533040c43fbe3f99a4edbf"
+     ],
+     [
+      4096,
+      "64f89b4044476c40b53b9b40c2527d4063526fc0e16268408d5997c064ebb440dd8a66c124dfc6c0d2d40840ae769740"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "2017a3557ed8a53837b69bf44458a54e490bb3d1311c7b1cba425b92980fd208"
+ },
+ "mutants": [
+  {
+   "name": "l1_as_l",
+   "defect": "level-1 counter driving lstride",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "5a086cb2957c0325adf707e2c9c5f12baac7d015d55768d252b01ebd5fb848da"
+  }
+ ]
+}

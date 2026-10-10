@@ -1,0 +1,39 @@
+{
+  "source_commit": "dd407494d",
+  "host": "ot-pve1",
+  "cases": {
+    "0": {
+      "expected_rc": 0,
+      "evidence": "PASS EHASH DS LOCKSTEP HISTORY ACCEPT 10 cases 240 row ids",
+      "peak_compile_kib": 30524
+    },
+    "1": {
+      "expected_rc": 1,
+      "evidence": "FATAL: tb_hbm_idx_ehash_ds.sv:33: unexpected fault",
+      "peak_compile_kib": 30804
+    },
+    "2": {
+      "expected_rc": 1,
+      "evidence": "FATAL: tb_hbm_idx_ehash_ds.sv:37: EHASH mismatch case=6 col=0 got=13982181 ref=1313684",
+      "peak_compile_kib": 30780
+    },
+    "3": {
+      "expected_rc": 1,
+      "evidence": "FATAL: tb_hbm_idx_ehash_ds.sv:37: EHASH mismatch case=1 col=0 got=8463405 ref=7077617",
+      "peak_compile_kib": 30824
+    },
+    "4": {
+      "expected_rc": 1,
+      "evidence": "FATAL: tb_hbm_idx_ehash_ds.sv:54: EHASH B mismatch was not rejected",
+      "peak_compile_kib": 30536
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv": "384d91c6b9c649bfeea2f5ca6fcd567986afad681bc8ecab19bbc0b84db661f2",
+    "rtl/hbm_accel/generic_20261009/tb_hbm_idx_ehash_ds.sv": "2a02952d3324b878db65d8448d228bb0fb3ea282bb4f209eef6c0f016b5d9768",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98"
+  },
+  "DS_exact_pass": true,
+  "generic_B_complete": false,
+  "conformance_vectors_pending": "hbm-sim CF-EHASH"
+}

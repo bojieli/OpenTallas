@@ -1,0 +1,14 @@
+{
+ "verdict":"PASS",
+ "source_commit":"ba96ec982",
+ "actual_component":"ot_hbm_index_lines behavioral return assembler",
+ "allocated_blocks":[1,2,3],
+ "observed_lines":[4,8,12],
+ "final_credit_debt":0,
+ "source_gap":"Prior d603 source emitted extra valid lines for odd blocks; immutable FAIL preserved",
+ "change":"Only existing line bounds gate port valid, available-credit requirement and credit debit; surplus returns checked against actual debit",
+ "extra_FF":0,
+ "extra_cycles":0,
+ "native_storage_successor_qualification":"owned separately by timed_iks_gate",
+ "physical_adoption":false
+}

@@ -1,0 +1,247 @@
+{
+  "bank": {
+    "payload_STAGE0_DIST1": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "summary": [
+        "CE_REPAIR edges=15",
+        "PASS_W2_VETO words=37 stage=0 dist=1 red=1 checks=44 normal_edges_monitored=48 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+      ]
+    },
+    "small_STAGE1_DIST0": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "summary": [
+        "CE_REPAIR edges=13",
+        "PASS_W2_VETO words=37 stage=1 dist=0 red=1 checks=44 normal_edges_monitored=48 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+      ]
+    },
+    "small_STAGE1_DIST0_RED0": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "summary": [
+        "CE_REPAIR edges=11",
+        "PASS_W2_VETO words=37 stage=1 dist=0 red=0 checks=44 normal_edges_monitored=36 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+      ]
+    },
+    "payload_STAGE0_DIST1_RED0": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "summary": [
+        "CE_REPAIR edges=13",
+        "PASS_W2_VETO words=37 stage=0 dist=1 red=0 checks=44 normal_edges_monitored=36 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+      ]
+    }
+  },
+  "quarter": {
+    "rb": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96,
+        "LAST_SM_ACK": 124,
+        "QUARTER_ACK": 213,
+        "PARENT_RELEASE": 218,
+        "WARM_ACK": 220
+      },
+      "summary": [
+        "PASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    }
+  },
+  "negative_controls": {
+    "B1_live_q_no_alignment": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/bench_src_a1/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data"
+      ]
+    },
+    "B2_copy_check_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "summary": [
+        "CE_REPAIR edges=15",
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/bench_src_a1/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: commit-select copy corruption permitted"
+      ]
+    },
+    "B3_controller_check_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "summary": [
+        "CE_REPAIR edges=15",
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/bench_src_a1/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: controller corruption permitted"
+      ]
+    },
+    "B4_red_data_not_delayed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/bench_src_a1/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data"
+      ]
+    },
+    "S1_sm_duplicate_mask_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S1_sm_duplicate_mask_removed_tb.sv:187: duplicate or mismatched actual SM tap i=0"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S2_parent_ack_mask_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96,
+        "LAST_SM_ACK": 124,
+        "QUARTER_ACK": 213
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S2_parent_ack_mask_removed_tb.sv:240: parent release identity/conservation"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S3_frame_check_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96,
+        "LAST_SM_ACK": 124,
+        "QUARTER_ACK": 213,
+        "PARENT_RELEASE": 218,
+        "WARM_ACK": 220
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S3_frame_check_removed_tb.sv:253: wrong full73 receipt fabricated retirement"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S4_held_release_ignored": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96,
+        "LAST_SM_ACK": 124
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S4_held_release_ignored_tb.sv:234: held full73 receipt lost across repair/warm/backpressure"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S6_cross_bank_veto_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/bench_src_a1/rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv:60: VETO: station acted after a station rail fault (edge 18)"
+      ]
+    },
+    "S7_ack_frame_stage_skipped": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S7_ack_frame_stage_skipped_tb.sv:184: unexpected parent/chain fault"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S8_rel_q_decision_removed": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 124,
+      "passed": false,
+      "calendar": {},
+      "summary": [],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    },
+    "S5_learned_send_not_recorded": {
+      "expected": "FAIL",
+      "failed": true,
+      "compile_exit": 0,
+      "runtime_exit": 1,
+      "passed": false,
+      "calendar": {
+        "TAP_ACCEPT": 16,
+        "ALL_SM": 96
+      },
+      "summary": [
+        "FATAL: /srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/gate/neg_S5_learned_send_not_recorded_tb.sv:184: unexpected parent/chain fault"
+      ],
+      "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+    }
+  },
+  "veto": {
+    "rb": {
+      "compile_exit": 0,
+      "runtime_exit": 0,
+      "passed": true,
+      "summary": [
+        "PASS_W2_RB_CROSS_BANK_VETO checks=7 veto_edges=6"
+      ]
+    }
+  },
+  "calendar_delta_edges_vs_legacy": {},
+  "bench_edits": [
+    "fixed 12-edge wait for the empty-receipt release -> bounded 200-edge wait (same check)",
+    "held-receipt CE: wait for the (registered, <=20 edge) withdrawal before the 4-edge hold check; withdrawal is now itself checked",
+    "STRONGER stimulus: the parent-side ACK gate stays open one more edge, so a held quarter ACK presented twice is counted by the existing quarter_acks==1 check",
+    "registered drained/warm status: <=8 edges after warm_ack (same check)"
+  ],
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "e418d1f148803f05a1b9a76b50453878d534585b2cc17ad9c206cd3042261e2b",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+    "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+    "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9"
+  },
+  "passed": true
+}

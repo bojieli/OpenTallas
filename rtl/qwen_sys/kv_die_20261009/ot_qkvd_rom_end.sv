@@ -10,8 +10,7 @@
 //        RQD = 32 credits, the gateway's ABI)
 //   eq   link EMBD -> SU: posted (the SU's embedding face always accepts, the r21c ABI)
 //   dc   sequencer CTL words (ATTN / TOKEN / CSR_RSP) + valid, credit back;  dh  HCTL words -> sequencer, credit back
-//   pll_fwd / rst_fwd   the KV-die PLL clock and reset bumps beside the macro, buffered out to the clock root
-//                       (qfd_clkrx); package bumps (pll_fwd_pad, rst_fwd_pad) are not die nets
+//   (the forwarded KV-die PLL clock and reset arrive through their own bump cell, qfd_ckbump, straight to qfd_clkrx)
 // Every face input is captured at the pin, every output launched from a flop.  Contract:
 // results/arch/qwen_kv_die_20261009/CONTRACT.md.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -52,15 +51,9 @@ module ot_qkvd_rom_end #(
     output wire [FW-1:0] tx_flit,
     input  wire          rx_v,
     input  wire [FW-1:0] rx_flit,
-    input  wire          pll_fwd_pad,
-    input  wire          rst_fwd_pad,
-    output wire          pll_fwd_o,
-    output wire          rst_fwd_o,
     output reg           fault,
     output reg  [7:0]    fault_cause
 );
-    assign pll_fwd_o = pll_fwd_pad;               // bump -> clock-root trunk (CTS buffers it)
-    assign rst_fwd_o = rst_fwd_pad;               // async reset, synchronised at qfd_clkrx
     // ---- input capture ----
     reg          xv, ev, dv;
     reg [522:0]  xd;
@@ -81,11 +74,11 @@ module ot_qkvd_rom_end #(
     wire         xpop = !xe && ((x_q && tc[1] != 0) || (x_kv && tc[2] != 0) || (!x_q && !x_kv));
     wire         epop = !ee && tc[3] != 0;
     wire         dpop = !de && tc[0] != 0;
-    ot_qkvd_fifo #(.W(523), .D(XS)) u_x (.clk(clk), .rst_n(rst_n), .push(xv), .din(xd), .pop(xpop), .dout(xh),
+    ot_qkvd_fifo #(.RH(1), .W(523), .D(XS)) u_x (.clk(clk), .rst_n(rst_n), .push(xv), .din(xd), .pop(xpop), .dout(xh),
                                           .empty(xe), .full(xf), .count());
-    ot_qkvd_fifo #(.W(25), .D(RQD)) u_e (.clk(clk), .rst_n(rst_n), .push(ev), .din(ed), .pop(epop), .dout(eh),
+    ot_qkvd_fifo #(.RH(1), .W(25), .D(RQD)) u_e (.clk(clk), .rst_n(rst_n), .push(ev), .din(ed), .pop(epop), .dout(eh),
                                          .empty(ee), .full(ef), .count());
-    ot_qkvd_fifo #(.W(W), .D(DCD)) u_d (.clk(clk), .rst_n(rst_n), .push(dv), .din(dd), .pop(dpop), .dout(dh_w),
+    ot_qkvd_fifo #(.RH(1), .W(W), .D(DCD)) u_d (.clk(clk), .rst_n(rst_n), .push(dv), .din(dd), .pop(dpop), .dout(dh_w),
                                         .empty(de), .full(df), .count());
     reg [3:0]    tv;
     reg [4*W-1:0] td;

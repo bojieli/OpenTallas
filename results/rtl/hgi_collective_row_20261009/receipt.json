@@ -1,0 +1,17 @@
+{
+  "source": "42ee27e47",
+  "model_source": "edb9b5b35",
+  "driver_source": "67ad8c11d",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch/codex/hgi-row-42ee27e47",
+  "golden": "PASS30calls12925rows411340words2085452cycles",
+  "mutants": {
+    "MUT_OWNER": "actualFATAL owner/local/word mismatch",
+    "MUT_ORDER": "actualFATAL payload/list-order/count mismatch",
+    "MUT_WRITTEN": "actualFATAL unwritten row leaked instead of fault"
+  },
+  "scope": "smallest mechanism RTL with current-reader protocol fixture, not installed HBM reader/die binding; pending simulator-normalized CF vectors",
+  "observed_whole_pg_peak_bytes": 11833344,
+  "samples": 630,
+  "admission_gib": 1
+}

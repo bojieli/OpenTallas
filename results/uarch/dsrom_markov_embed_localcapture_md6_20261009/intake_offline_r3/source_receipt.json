@@ -1,0 +1,21 @@
+{
+ "recipe_source": "f59bf7441",
+ "model_before_corrected_anchors": "756664b5c",
+ "qualified_RTL_source": "f6b11ded4",
+ "exact_gate_remote_source": "88557c82e52532f4017e5402f318ccbc58c03b07",
+ "RTL_sha256": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+ "host": "ot-epyc1tb",
+ "floorplan_source": "8d5a1fe5f",
+ "floorplan_controller_PID": 2340421,
+ "floorplan_admission_GiB": 4,
+ "floorplan_cores": 8,
+ "offline_controller_PID": 2362211,
+ "offline_admission_GiB": 1,
+ "remote_output": "/srv/opentallas-scratch/claude/md6-z7-intake-f59bf7441",
+ "mapped_reuse": "Completed floorplanSTOP database reused for routine face-local capture placement and hard row-sliver blockage. No duplicate synthesis or full route.",
+ "offline_scope": "Actual512FIRMcaptures; direct macroq->D topology, no captureFFoverlaps, origin-distance max13.452um. fp_lint PASS on actual floorplan with macros/rows/PDN/blockages; pins0 because IO placement has not run.",
+ "route_qualification": false,
+ "pending": ["IO pin placement and final fp_lint", "CTS leaf fanout<=16", "TC electrical slew/cap/fanout clean", "TT setup>=0", "FF hold>=0", "DRC0", "SS sensitivity"],
+ "preserved_failures": ["intake_floorplan_r1 MPL-0050 anchoring before macroplacer", "intake_floorplan_r2 all-left anchors unqualified and 8.37um unblocked row sliver"],
+ "full_route_authority": "Claude exclusive intake; no Codex full-route job launched"
+}

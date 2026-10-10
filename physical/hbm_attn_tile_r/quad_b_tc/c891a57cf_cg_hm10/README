@@ -1,0 +1,4 @@
+# redesign-hbm 2026-10-10: GATED attention quad (ot_attn_tile_m6h1q CG=1, coarse clock gating: HC on the raw clock, the 4 hgrp leaves on one ICG woken by the quad input valids, HOLD 256).
+# Closure-loop record of hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl: TT +69.95 / FF +43.84 ps DRC 0 (hm03 twin: TT +66.98 / FF +42.48).
+# The loop wrote it over quad_b_tc/6ce4b64fd (the ungated closed view); that record is kept unchanged on main, this is the gated view.
+# Bench: rtl/test/tb_hdc_v41x_attn_tile_m6h1r_lockstep.sv HALF 2 CG 1: 0 mismatches / 3,597 outputs; late-wake and HOLD 0 mutants FAIL.

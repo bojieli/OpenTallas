@@ -32,13 +32,13 @@ def test_engram_branch_is_off_the_critical_path():
 
 
 def test_token_path_carries_the_engram_nodes():
-    d = json.loads((ROOT / "results/arch/token_path_20261008/ds_rom.json").read_text())
+    d = json.loads((ROOT / "results/arch/token_path_20261009/ds_rom.json").read_text())
     ids = {n["id"]: n for n in d["nodes"]}
     for L in (1, 14):
         for k in ("lead_flit", "hash", "hbm_read", "rows_allgather", "wkv", "knorm"):
             n = ids[f"E{L}.{k}"]
             assert not n["critical"] and n["src"]["grade"] == "modelled" and n["slack"] > 0
-    m = json.loads((ROOT / "results/arch/token_path_20261008/ds_rom_mtp.json").read_text())
+    m = json.loads((ROOT / "results/arch/token_path_20261009/ds_rom_mtp.json").read_text())
     assert any(n["id"] == "accept.engram_rewind" for n in m["nodes"])
 
 

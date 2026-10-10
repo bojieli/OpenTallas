@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hgi_mtp_native",
+ "kind": "mtp_hgi",
+ "status": "closed",
+ "lef": "hgi_mtp_native.lef",
+ "lib": {
+  "ss": "hgi_mtp_native_ss.lib",
+  "ff": "hgi_mtp_native_ff.lib",
+  "tt": "hgi_mtp_native_tt.lib"
+ },
+ "files_sha256": {
+  "hgi_mtp_native.lef": "238cf6f5ed6139dc5fc4cf007d0b4c3312fb3ca68fe23e278d037aecd75dbd5b",
+  "hgi_mtp_native_ss.lib": "86f243d4ee4957b056d25e9b7159823979d25ace27497ba9137cbf3ffcaa577b",
+  "hgi_mtp_native_ff.lib": "a138fe6355ddfd3539f7154b7de8dccbff3a41e6e956adb893b53d80cabc4824",
+  "hgi_mtp_native_tt.lib": "a021827fe04bc2d2440e796f65580a4c8abcaf1f01f9c6a168d757621f3db695"
+ },
+ "check": {
+  "macro": "hgi_mtp_native",
+  "size_um": [
+   286.56,
+   200.88
+  ],
+  "ports": {
+   "clk": {
+    "dir": "input",
+    "bits": 1
+   },
+   "f_cmdproc": {
+    "dir": "input",
+    "bits": 197
+   },
+   "f_coll": {
+    "dir": "input",
+    "bits": 1
+   },
+   "f_router": {
+    "dir": "input",
+    "bits": 59
+   },
+   "rst_n": {
+    "dir": "input",
+    "bits": 1
+   },
+   "t_cmdproc": {
+    "dir": "output",
+    "bits": 517
+   },
+   "t_coll": {
+    "dir": "output",
+    "bits": 19
+   },
+   "t_router": {
+    "dir": "output",
+    "bits": 58
+   }
+  },
+  "lef_pin_bits": 853,
+  "netlist_bits": 853,
+  "missing": [],
+  "n_missing": 0,
+  "extra": [],
+  "n_extra": 0,
+  "verdict": "MATCH",
+  "scope": "LEF vs routed netlist ports"
+ },
+ "size_um": [
+  286.56,
+  200.88
+ ],
+ "source": {
+  "job": "hgi_mtp_native-nreg-a-lvt-eaea6da41-tc",
+  "host": "ot-epyc3",
+  "installed_base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_mtp_native-nreg-a-lvt-eaea6da41-tc/routes/hgi_mtp_native_nreg_a_lvt_eaea6da41_tc/work/orfs/results/asap7/opentallas_hgi_mtp_native_asap7_mtp_hgi_mtp_native_nreg_a_lvt_eaea6da41_tc/base",
+  "record_commit": "8ada8c419",
+  "merged_main": "331227e92",
+  "installed_inputs_sha256": {
+   "6_final.odb": "b0fc83b0e382f3dd19c0804d606e46d597f9172c617f409807f11a11862c1281",
+   "6_final.sdc": "51da57f8f67b20f1e3644606bc18ed9c9576d90b965b76e172d49cc2bc7bd27a",
+   "6_final.spef": "32b0534d0ae7d4394eb9c995e32f1c2ba197edf0f4c32a4317b1285a62efd7bb"
+  },
+  "eco": "installed 2026-10-09T15:57:56-07:00 (combo ECO cl/eco-combo1); exported from the installed 6_final.odb (sha256 b0fc83b0e382..., the same db the CLOSED corner_sta timed); 6_final.odb.pre_eco is NOT the view"
+ },
+ "signoff_833": {
+  "tt_setup_ps": 10.43,
+  "ff_hold_ps": 1.8,
+  "ss_sensitivity_ps": -389.68,
+  "drc": 0
+ },
+ "die_binding": {
+  "variant": "R25G preset r25gm (claude/mtp-hbmdie-20261009; spine_slot_masters mtp = GENERIC_MASTER \"hgi_mtp_native\", MD-7 slot 466.56 x 200.88)",
+  "status": "VIEW READY, generator check not run: r25gm lives on claude/mtp-hbmdie-20261009, which does not merge onto main cleanly (add/add conflict in tools/hgi_die_dispatch.py + hbm_accel_die_fp.py / RTL hunks); the merge is hgi-takeover's (mtp-lead -> hgi-takeover log)",
+  "ports": "853 pin bits = contract groups CP 197 in / 517 out, router 59 in / 58 out, coll 1 in / 19 out, clk, rst_n (fork F decision.json widths)",
+  "size_note": "view 286.56 x 200.88 = the master's share of the 466.56 x 200.88 MTP slot; the ARGMAX unit (ot_hgi_argmax18_m, hgi-takeover) takes the rest. The generator places one slot master: the slot needs a two-instance wrapper or a slot split before `hbm_die_views.py check` can MATCH"
+ },
+ "note": "R25G auto-on (_mtp_generic_closed) still also needs the MX1 CP-south band CLOSED (hfd_cmdproc_s_mtp_native_mx1_rb-*: hold stall, NEEDS_RTL).",
+ "export": {
+  "tool": "physical/hbm_mtp/views/run_export.sh + mk_export.py (openroad/orfs:asap7lock)",
+  "sdc": "6_final.sdc of the installed database (the timing models carry the block SDC; sign-off numbers below are the loop corner_sta with its post-SDCs)",
+  "libraries": "ASAP7 RVT + LVT/SLVT twins (ECO / LVT cells present)"
+ },
+ "port_check": "port_check.json: abstract LEF pins == routed 6_final.v top ports, bit for bit"
+}

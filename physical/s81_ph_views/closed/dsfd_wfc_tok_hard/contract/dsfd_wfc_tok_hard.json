@@ -1,0 +1,81 @@
+{
+ "master": "dsfd_wfc_tok_hard",
+ "w_um": 162.0,
+ "h_um": 151.2,
+ "domain": "stream_1p2",
+ "note": "Default-off HARD_READ=1: full eight-user/16-slot token table; pin capture, 16-slot bank read, eight-user select, tag/output. Four response edges, +3 cycles original/+2 r3. Model tools/uarch_model.py dsrom_wfc_token_hard_model. 7145um2 measured predecessor plus880um2 register proxy; own closure required.",
+ "ports": [
+  [
+   "f_dw",
+   513,
+   "input",
+   "W",
+   "M4",
+   3,
+   0.5
+  ],
+  [
+   "f_pr",
+   36,
+   "input",
+   "E",
+   "M4",
+   4,
+   0.2
+  ],
+  [
+   "t_pr",
+   22,
+   "output",
+   "E",
+   "M4",
+   4,
+   0.48
+  ],
+  [
+   "t_cfg",
+   52,
+   "output",
+   "E",
+   "M4",
+   4,
+   0.78
+  ],
+  [
+   "t_ft",
+   1,
+   "output",
+   "E",
+   "M4",
+   1,
+   0.97
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.05
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.09
+  ],
+  [
+   "f_c",
+   55,
+   "input",
+   "S",
+   "M5",
+   4,
+   0.55
+  ]
+ ]
+}

@@ -1,0 +1,109 @@
+{
+ "name": "qkd_kvwq_a-f7e45bead-tc-hm10-cl2",
+ "block": "ot_qkvd_kv_wq",
+ "owner": "Claude:kv-die",
+ "purpose": "kv-die 2026-10-09 review-1149 KV14: the KV-die landing write queue (ot_qkvd_kv_wq, NPC 32, QD 4): new-position K/V rows -> 4 sectors on 4 PCs through the STREAM4 CDC write side (credits w_room, write-done tags) -> pcport KVW 2. Frame 172.8 x 1,296 (a slice of the qkd_land column), PD 0.50, TT sign-off. Every input captured at the pin, every output a flop. Exactness: kv_write_bench.json (end-to-end write path, base + 144-row run exact, 4 mutants fail).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-die-20261009",
+  "commit": "f7e45bead",
+  "required_files": [
+   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq.sv",
+   "physical/qwen_die_masters/cfg/qkd_kvwq_a.env",
+   "physical/qwen_die_masters/signoff/qkd_kvwq_a.sdc",
+   "results/arch/qwen_kv_die_20261009/kv_write_bench.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_wq rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "write_path_exact_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/kv_write_bench.json')); sys.exit(0 if d['ok'] and d['runs']['base']['exact'] else 1)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "pc_swap_mutant_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/kv_write_bench.json')); sys.exit(1 if not d['runs']['mut1']['exact'] else 0)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_wq rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_kvwq_a.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qkd_kvwq_a {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_kvwq_a --post-sdc physical/qwen_die_masters/signoff/qkd_kvwq_a.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_kvwq_a > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_kvwq_a.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "current corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r22k budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_kv_die_20261009/qkd_kvwq_a-f7e45bead-tc-hm10-cl2"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "new element (KV-die landing write queue); posted path, 0 cycles on the token path",
+ "merge_target": "main"
+}

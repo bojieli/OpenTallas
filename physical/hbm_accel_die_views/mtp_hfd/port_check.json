@@ -1,0 +1,300 @@
+{
+ "macro": "hfd_mtp_x_stop",
+ "size_um": [
+  466.56,
+  200.88
+ ],
+ "ports": {
+  "am_fault": {
+   "dir": "output",
+   "bits": 1
+  },
+  "am_idx": {
+   "dir": "output",
+   "bits": 17
+  },
+  "am_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "cfg_eos": {
+   "dir": "input",
+   "bits": 17
+  },
+  "cfg_eos_en": {
+   "dir": "input",
+   "bits": 1
+  },
+  "cfg_force": {
+   "dir": "input",
+   "bits": 1
+  },
+  "cfg_gamma": {
+   "dir": "input",
+   "bits": 4
+  },
+  "cfg_maxpos": {
+   "dir": "input",
+   "bits": 21
+  },
+  "cfg_ngen": {
+   "dir": "input",
+   "bits": 21
+  },
+  "cfg_plen": {
+   "dir": "input",
+   "bits": 21
+  },
+  "clk": {
+   "dir": "input",
+   "bits": 1
+  },
+  "cmd_idx": {
+   "dir": "output",
+   "bits": 8
+  },
+  "cmd_ncol": {
+   "dir": "output",
+   "bits": 4
+  },
+  "cmd_op": {
+   "dir": "output",
+   "bits": 4
+  },
+  "cmd_pos": {
+   "dir": "output",
+   "bits": 32
+  },
+  "cmd_ready": {
+   "dir": "input",
+   "bits": 1
+  },
+  "cmd_tok1": {
+   "dir": "output",
+   "bits": 17
+  },
+  "cmd_toks": {
+   "dir": "output",
+   "bits": 136
+  },
+  "cmd_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "cyc_engine": {
+   "dir": "output",
+   "bits": 32
+  },
+  "cyc_markov": {
+   "dir": "output",
+   "bits": 32
+  },
+  "cyc_total": {
+   "dir": "output",
+   "bits": 32
+  },
+  "done": {
+   "dir": "output",
+   "bits": 1
+  },
+  "e_idx": {
+   "dir": "output",
+   "bits": 20
+  },
+  "e_ready": {
+   "dir": "input",
+   "bits": 1
+  },
+  "e_tok": {
+   "dir": "output",
+   "bits": 17
+  },
+  "e_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "eng_done": {
+   "dir": "input",
+   "bits": 1
+  },
+  "f_addr": {
+   "dir": "output",
+   "bits": 23
+  },
+  "f_tok": {
+   "dir": "input",
+   "bits": 17
+  },
+  "lg_bias": {
+   "dir": "input",
+   "bits": 256
+  },
+  "lg_bias_en": {
+   "dir": "input",
+   "bits": 1
+  },
+  "lg_last": {
+   "dir": "input",
+   "bits": 1
+  },
+  "lg_mask": {
+   "dir": "input",
+   "bits": 8
+  },
+  "lg_v": {
+   "dir": "input",
+   "bits": 1
+  },
+  "lg_vals": {
+   "dir": "input",
+   "bits": 256
+  },
+  "n_committed": {
+   "dir": "output",
+   "bits": 32
+  },
+  "p_addr": {
+   "dir": "output",
+   "bits": 20
+  },
+  "p_tok": {
+   "dir": "input",
+   "bits": 17
+  },
+  "rst_n": {
+   "dir": "input",
+   "bits": 1
+  },
+  "sa_addr": {
+   "dir": "output",
+   "bits": 32
+  },
+  "sa_err": {
+   "dir": "output",
+   "bits": 1
+  },
+  "sa_last": {
+   "dir": "output",
+   "bits": 1
+  },
+  "sa_pad": {
+   "dir": "output",
+   "bits": 1
+  },
+  "sa_tok": {
+   "dir": "output",
+   "bits": 17
+  },
+  "sa_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "sr_idx": {
+   "dir": "input",
+   "bits": 16
+  },
+  "sr_kind": {
+   "dir": "input",
+   "bits": 4
+  },
+  "sr_pos": {
+   "dir": "input",
+   "bits": 32
+  },
+  "sr_ready": {
+   "dir": "output",
+   "bits": 1
+  },
+  "sr_v": {
+   "dir": "input",
+   "bits": 1
+  },
+  "start": {
+   "dir": "input",
+   "bits": 1
+  },
+  "step_a": {
+   "dir": "output",
+   "bits": 3
+  },
+  "step_g": {
+   "dir": "output",
+   "bits": 4
+  },
+  "step_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "steps": {
+   "dir": "output",
+   "bits": 21
+  },
+  "stop_status": {
+   "dir": "output",
+   "bits": 3
+  },
+  "t_col": {
+   "dir": "output",
+   "bits": 3
+  },
+  "t_ids": {
+   "dir": "output",
+   "bits": 54
+  },
+  "t_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "u_clr": {
+   "dir": "input",
+   "bits": 1
+  },
+  "u_flush": {
+   "dir": "input",
+   "bits": 1
+  },
+  "u_id": {
+   "dir": "output",
+   "bits": 9
+  },
+  "u_last": {
+   "dir": "output",
+   "bits": 1
+  },
+  "u_mask": {
+   "dir": "output",
+   "bits": 8
+  },
+  "u_ready": {
+   "dir": "input",
+   "bits": 1
+  },
+  "u_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "x_col": {
+   "dir": "input",
+   "bits": 3
+  },
+  "x_draft": {
+   "dir": "input",
+   "bits": 1
+  },
+  "x_ids": {
+   "dir": "input",
+   "bits": 54
+  },
+  "x_v": {
+   "dir": "input",
+   "bits": 1
+  }
+ },
+ "lef_pin_bits": 1358,
+ "netlist_bits": 1358,
+ "missing": [],
+ "n_missing": 0,
+ "extra": [],
+ "n_extra": 0,
+ "verdict": "MATCH"
+}

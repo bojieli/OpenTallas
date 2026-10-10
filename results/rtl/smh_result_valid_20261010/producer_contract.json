@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.smh-result-valid-producer-contract.v1",
+  "source_commit": "933923316",
+  "shape": {
+    "physical_columns": 8,
+    "required_producer_mask": "0xff",
+    "per_column_output_mask_supported": false
+  },
+  "op_c_semantics": "reduction-line count (ti0..op_c-1), not physical output-column count",
+  "short_shapes": "op_c1/2/odd values alter issue duration, not output producer mask; short op_rows padding shares row_ok across columns",
+  "format_semantics": "fmt_q replicated into fmt_r; one operation format broadcast to all columns",
+  "transport_contract": "each row bundle carries shared valid through identical leaf arithmetic and depth-compensated column-result paths; result_valid detects any violation rather than consuming partial data",
+  "qualification_scope": "current SMH broadcast row/format and no per-column masking; future producer masks need a priced active-mask protocol before this successor applies",
+  "evidence": [
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+      "sha256": "689c9b98e06000f2891f6382e1457d67801b4382b188631fa27e0d691b0918d8",
+      "source_slices": [
+        {
+          "line": 1240,
+          "text": "s1_cv <= {adv && row_ok, i_first, i_last}"
+        },
+        {
+          "line": 1197,
+          "text": ".d(fmt_q)"
+        },
+        {
+          "line": 1254,
+          "text": ".d(s1_c[S1W-1 -: 3])"
+        },
+        {
+          "line": 1909,
+          "text": "jv_b <= iv_b; jv_f <= iv_f"
+        }
+      ]
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+      "sha256": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+      "source_slices": [
+        {
+          "line": 242,
+          "text": "c_end <= op_c - 1"
+        },
+        {
+          "line": 128,
+          "text": "lt_n_q <= (ti_n == c_end)"
+        },
+        {
+          "line": 155,
+          "text": "assign iss_last = last_t"
+        }
+      ]
+    }
+  ]
+}

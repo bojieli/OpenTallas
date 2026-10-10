@@ -1,0 +1,42 @@
+{
+  "source": "bfe349ad8",
+  "driver_sha256": "2d41c60b910d73e1e1ccc35cf7ce119e1ebfe260423192d6660d49dbef71fe45",
+  "variants": {
+    "a": {
+      "cfg_sha256": "227fc109b0317ea10c3c6a723e23305afb1701334020d5ff621f046d6194f34b",
+      "corner": "WC",
+      "overlay": "TC",
+      "density": "0.45",
+      "outline": [
+        "400",
+        "300"
+      ],
+      "generated_lib_lines": [
+        "export CORNERS = WC BC",
+        "export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)",
+        "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)",
+        "export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)"
+      ],
+      "setup_scene": "WC maps TT libs",
+      "hold_scene": "BC FF libs retained"
+    },
+    "b": {
+      "cfg_sha256": "274541fec964710c016667e20d757bd3329b1e0815b13a3e2c6cd1c3fd07933b",
+      "corner": "WC",
+      "overlay": "TC",
+      "density": "0.35",
+      "outline": [
+        "400",
+        "300"
+      ],
+      "generated_lib_lines": [
+        "export CORNERS = WC BC",
+        "export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)",
+        "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)",
+        "export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)"
+      ],
+      "setup_scene": "WC maps TT libs",
+      "hold_scene": "BC FF libs retained"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "source": "497929409",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch/codex/hgi-coll-497929409",
+  "launcher": 984081,
+  "exit": 0,
+  "cases": 16651,
+  "mutants": {
+    "MUT_GROUP": "actualFATAL group isolation",
+    "MUT_ROW_BLOCK": "actualFATAL owner block mismatch"
+  },
+  "peak_child_rss_kib": 7484,
+  "peak_whole_process_group_rss": "not sampled: gate completed in0.67seconds",
+  "admission_gib": 1,
+  "admission_basis": "conservative smallIcarus source inventory, not measured peak",
+  "scope": "exact headercontrol decode only; endpoint arithmetic proof separate; rowbackend integration not claimed"
+}

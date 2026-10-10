@@ -1,0 +1,202 @@
+{
+  "at": "2026-10-09T14:00:48.836549+00:00",
+  "names": [
+    "hgi-ehash-ds-a-95f75fa1e-tc-cx",
+    "hgi-ehash-ds-b-95f75fa1e-tc-cx",
+    "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+    "hgi_coll_decode_b_pinanchor-d261d43c7-tc-cx",
+    "hgi_coll_row_formatter_counter_a-c0c8382da-tc-cx",
+    "hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx"
+  ],
+  "verified_cache_keys": [
+    "88974f51ea2a1f8b8faf79cd",
+    "4a062e4e19f382b05dfcceaa",
+    "e2f3c31d5b09b5d5b2a7614d"
+  ],
+  "bench_first": false,
+  "local_synthesis_fallback_blocked": true,
+  "checks": [
+    {
+      "cfg": "hgi_ehash_ds_a_cx",
+      "pins": 1869,
+      "die_um": [
+        400.0,
+        300.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 2.0,
+      "limit": 12.0,
+      "est": {
+        "W": 7.68,
+        "E": 7.68,
+        "N": 0.41,
+        "S": 0.36
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds: registered boundary (in->reg 16, reg->out 3 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 16,
+        "reg_to_out_max": 3,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_ehash_ds_b_cx",
+      "pins": 1869,
+      "die_um": [
+        400.0,
+        300.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 2.0,
+      "limit": 12.0,
+      "est": {
+        "W": 7.68,
+        "E": 7.68,
+        "N": 0.41,
+        "S": 0.36
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds: registered boundary (in->reg 16, reg->out 3 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 16,
+        "reg_to_out_max": 3,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_coll_decode_a",
+      "pins": 264,
+      "die_um": [
+        300.0,
+        160.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 1.8,
+        "E": 0.82,
+        "S": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_coll_decode: registered boundary (in->reg 4, reg->out 2 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 4,
+        "reg_to_out_max": 2,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_coll_decode_b",
+      "pins": 264,
+      "die_um": [
+        300.0,
+        160.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 1.8,
+        "E": 0.82,
+        "S": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_coll_decode: registered boundary (in->reg 4, reg->out 2 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 4,
+        "reg_to_out_max": 2,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_coll_row_formatter_a",
+      "pins": 1253,
+      "die_um": [
+        600.0,
+        240.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 6.44,
+        "E": 6.07,
+        "S": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_coll_row_formatter: registered boundary (in->reg 8, reg->out 3 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 8,
+        "reg_to_out_max": 3,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_coll_row_formatter_b",
+      "pins": 1253,
+      "die_um": [
+        600.0,
+        240.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 6.44,
+        "E": 6.07,
+        "S": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_coll_row_formatter: registered boundary (in->reg 8, reg->out 3 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 8,
+        "reg_to_out_max": 3,
+        "levels": 16,
+        "strict": true
+      }
+    }
+  ]
+}

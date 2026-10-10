@@ -1,0 +1,58 @@
+{
+  "source_commits": {
+    "private64": "7d395f463",
+    "weight_fault_gate": "d0cbd681e",
+    "flat_r2": "f2b6e05ae"
+  },
+  "private64": {
+    "verdict": "PASS",
+    "K": 20480,
+    "W": 32,
+    "real_fp": true,
+    "cycles": 4009,
+    "golden_hex": "40c340af",
+    "macro_count": 64,
+    "negative_FN": "REJECTED",
+    "bad_activation_lease": "REJECTED",
+    "scope": "component only; die producer clock and physical closure pending"
+  },
+  "weight_component": {
+    "verdict": "PASS",
+    "arms": [
+      "BASE",
+      "CE",
+      "CHECK",
+      "UE",
+      "DUP"
+    ]
+  },
+  "flat_r2": {
+    "verdict": "FAIL_BENCH_OR_STALE_GENERATION",
+    "reason": "expected reject prints PASS then unexpectedflatfault fatal; no clean fault gate credit; new fresh-object r3 remote admitted"
+  },
+  "logs_sha256": {
+    "private64/exact.log": "99cd0465ae73f093cb312d7692764db9e7e5862c1e20c326bbe4fb1b0366b71e",
+    "private64/badlease.log": "b63efcf707e4e7c3cc4e821275b09ff8df2b20047d9a0b204b58e49616b3e8cb",
+    "private64/build.log": "50257055381194baec1669fe816ac55399d9835515c21d682c1c82fc337530e9",
+    "private64/negative.log": "b1de47ff7bbfa3bb2cb56cecb1365b8d801b9089fc71cc901e690c4a469abbdf",
+    "sram_component_pass/UE.log": "5483b6b90c4e50399fdd3b7cfc8a2b20d13d9047f2bb7fd5bef4750013e86330",
+    "sram_component_pass/CHECK.log": "e982c7aa2e45270d6423266ddeb2042b2229dc5ee65d4192a246c4fcb76df48f",
+    "sram_component_pass/build.log": "912c32b874353e89503daeb668d13d5bdf68f7bcb18b2991f4166257cc1452e8",
+    "sram_component_pass/DUP.log": "ac1943763eafa4ac57014a33c287f7a5b0a3c5552c5053dd1588f1123129d77a",
+    "sram_component_pass/CE.log": "43164a183436d5c9e00e924de45ae76c8e4b0986b8dfc7b4b6da8e7741a03c0b",
+    "sram_component_pass/run.log": "0f2a84f9051af939670c7ddfb784673fcb542df960ce22526549b146f5156690",
+    "sram_component_pass/BASE.log": "03b054f63b3b41ff55e7ab7217a5e158e604703a70764f9378d30abf9a8ad3ba",
+    "sram_component_first/UE.log": "b079f9161b7b754d4134c56cb03e08fe39d4e252d7e2f2713bd3bc4cde5aaa61",
+    "sram_component_first/CHECK.log": "e982c7aa2e45270d6423266ddeb2042b2229dc5ee65d4192a246c4fcb76df48f",
+    "sram_component_first/CE.log": "43164a183436d5c9e00e924de45ae76c8e4b0986b8dfc7b4b6da8e7741a03c0b",
+    "sram_component_first/BASE.log": "03b054f63b3b41ff55e7ab7217a5e158e604703a70764f9378d30abf9a8ad3ba",
+    "flat_component_r2_failure/UE.log": "ae56afdb3167a35142bfb2b953398eadb0616a27e75330b270b1390e2bf0cdc8",
+    "flat_component_r2_failure/CHECK.log": "a94bd5106cea3bcebb06d111c1f88b272b1fb88044b01ff919cfcd2416482395",
+    "flat_component_r2_failure/build.log": "238e2f51113d3f32ea2ec943f734ad2d6c0eb5608a4110c4bca2da0050eefbe9",
+    "flat_component_r2_failure/BADLEASE.log": "afc085ef217f364d6e48a22ca3f34aab78d520438b5058e1557ce7eea54c2a13",
+    "flat_component_r2_failure/DUP.log": "0ad1fd28de374aead4595e6e2768a945da10638c31c86f39f9349e3fe19652b2",
+    "flat_component_r2_failure/CE.log": "5c8b6dab90357e0347bcb0f4764a06dedf92c7fc3982c3cff2b4d7e411db0e65",
+    "flat_component_r2_failure/run.log": "0f2a84f9051af939670c7ddfb784673fcb542df960ce22526549b146f5156690",
+    "flat_component_r2_failure/BASE.log": "32ef82af4638827760375f44666b916b4635a34dfe62acd4354f57ab4cc08c55"
+  }
+}

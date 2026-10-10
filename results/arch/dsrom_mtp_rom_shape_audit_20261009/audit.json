@@ -1,0 +1,116 @@
+{
+  "schema": "opentallas.dsrom.mtp-released-shape-audit.v1",
+  "checkpoint": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "source": "actual released safetensors binary headers",
+  "tensors": {
+    "mtp.2.markov_head.head.weight": {
+      "file": "model-00046-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          71470552,
+          137661912
+        ]
+      },
+      "file_header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    },
+    "mtp.2.markov_head.embed.weight": {
+      "file": "model-00046-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          5279192,
+          71470552
+        ]
+      },
+      "file_header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    },
+    "mtp.0.main_proj.weight": {
+      "file": "model-00044-of-00048.safetensors",
+      "header": {
+        "dtype": "F8_E4M3",
+        "shape": [
+          5120,
+          15360
+        ],
+        "data_offsets": [
+          309076440,
+          387719640
+        ]
+      },
+      "file_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e"
+    },
+    "mtp.0.main_norm.weight": {
+      "file": "model-00044-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          5120
+        ],
+        "data_offsets": [
+          5268440,
+          5278680
+        ]
+      },
+      "file_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e"
+    },
+    "norm.weight": {
+      "file": "model-00043-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          5120
+        ],
+        "data_offsets": [
+          1323827200,
+          1323837440
+        ]
+      },
+      "file_header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54"
+    }
+  },
+  "markov": {
+    "released_k": 256,
+    "historical_reduced_k": 32,
+    "embed_bytes": 66191360,
+    "logical_head_pair_payload_bytes": 262144,
+    "logical_two_macro_pairs": 253,
+    "historical_four_macro_storage_pairs": 127,
+    "full_head_dot_k": 5120,
+    "released_markov_to_fullhead_macs_ratio": 0.05
+  },
+  "seed": {
+    "released_hidden_dim": 5120,
+    "concatenated_layers": 3,
+    "global_bf16_bytes": 30720,
+    "tp4_rank_bf16_bytes": 7680,
+    "tp4_rank_512b_flits": 120,
+    "historical_global_bf16_bytes": 24576
+  },
+  "bindings": {
+    "head": "Original ot_dsrom_head_elem has root4096/root1024 join, but no Markov bias input. New dedicated K256 component exactness does not establish full head binding.",
+    "hidden": "SEND_HIDDEN carries ordinary output activation. Independent mean capture and trailing seed transport remain unimplemented obligations.",
+    "WFC_R6": "Original CONTROL_PIPE captures cur_user/kv_base_i on same edge that changes them to launching job. Successor captures st_user/st_user*KVW; new SOURCE/STG views must close."
+  },
+  "qualification": {
+    "adopted": false,
+    "full_head_qualified": false,
+    "seed_transport_qualified": false,
+    "headline_rate_credit": false
+  },
+  "work": {
+    "markov_component_branch": "codex/mtp-markov-20261008",
+    "markov_exact_record": "results/rtl/dsrom_markov_row_20261008/record.json",
+    "embedding_port_commit": "43e847b7d",
+    "P2_whole_row_schedule_commit": "7497c75af",
+    "WFC_successor_commit": "47ac37e1b"
+  }
+}

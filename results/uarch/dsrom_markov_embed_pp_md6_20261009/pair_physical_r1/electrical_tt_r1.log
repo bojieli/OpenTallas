@@ -1,0 +1,124 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_CORNER tt
+OT_WS 2.4978069612657805e-10
+OT_TNS 0.0
+Startpoint: addr[0] (input port clocked by core_clk)
+Endpoint: m1 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 450.00  450.00 ^ input external delay
+   0.00  450.00 ^ addr[0] (in)
+  92.35  542.35 ^ input7/Y (BUFx2_ASAP7_75t_R)
+  41.61  583.96 ^ _1674_/Y (AND3x1_ASAP7_75t_R)
+  32.40  616.35 ^ _1675_/Y (OA21x2_ASAP7_75t_R)
+   1.06  617.42 ^ m1/ce_in (ot_rom_4096x274_m8)
+         617.42   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  30.06  863.39 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.17  886.56 ^ delaybuf_1_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.28  909.83 ^ delaybuf_2_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.65  933.48 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.02  957.51 ^ clkbuf_1_1__f_clk/Y (BUFx24_ASAP7_75t_R)
+   1.27  958.77 ^ m1/clk (ot_rom_4096x274_m8)
+ -60.00  898.77   clock uncertainty
+   0.00  898.77   clock reconvergence pessimism
+ -31.58  867.20   library setup time
+         867.20   data required time
+---------------------------------------------------------
+         867.20   data required time
+        -617.42   data arrival time
+---------------------------------------------------------
+         249.78   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 266.821899
+OT_WS_OUT 314.010864
+OT_WS_R2R 364.512543
+OT_WS_I2R 249.780701
+OT_ELECTRICAL_TT_BEGIN
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+place802/A                            250.00  389.94 -139.94 (VIOLATED)
+place803/A                            250.00  361.79 -111.79 (VIOLATED)
+place760/A                            250.00  336.41  -86.41 (VIOLATED)
+_1303_/B                              250.00  334.87  -84.87 (VIOLATED)
+place785/A                            250.00  323.80  -73.80 (VIOLATED)
+_1135_/B                              250.00  319.44  -69.44 (VIOLATED)
+_1261_/B                              250.00  306.17  -56.17 (VIOLATED)
+place783/A                            250.00  296.53  -46.53 (VIOLATED)
+place797/A                            250.00  289.04  -39.04 (VIOLATED)
+place804/A                            250.00  282.53  -32.53 (VIOLATED)
+place777/A                            250.00  282.36  -32.36 (VIOLATED)
+_1257_/B                              250.00  282.34  -32.34 (VIOLATED)
+place786/A                            250.00  280.72  -30.72 (VIOLATED)
+place801/A                            250.00  280.21  -30.21 (VIOLATED)
+place792/A                            250.00  280.16  -30.16 (VIOLATED)
+place784/A                            250.00  279.27  -29.27 (VIOLATED)
+place787/A                            250.00  275.24  -25.24 (VIOLATED)
+place774/A                            250.00  275.21  -25.21 (VIOLATED)
+_1305_/B                              250.00  272.06  -22.06 (VIOLATED)
+place759/A                            250.00  271.24  -21.24 (VIOLATED)
+place798/A                            250.00  268.48  -18.48 (VIOLATED)
+_1307_/B                              250.00  266.36  -16.36 (VIOLATED)
+_1227_/B                              250.00  265.12  -15.12 (VIOLATED)
+_1265_/B                              250.00  256.21   -6.21 (VIOLATED)
+_1267_/B                              250.00  255.41   -5.41 (VIOLATED)
+_1363_/B                              250.00  251.76   -1.76 (VIOLATED)
+
+max fanout
+
+Pin                                   Limit Fanout  Slack
+---------------------------------------------------------
+clkbuf_leaf_0_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_1_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_2_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_4_clk_regs/Y                 16     17        (VIOLATED)
+
+max capacitance
+
+Pin                                    Limit     Cap   Slack
+------------------------------------------------------------
+m0/rd_out[221]                         46.08   52.83   -6.75 (VIOLATED)
+
+m0/rd_out[223]                         46.08   52.72   -6.64 (VIOLATED)
+
+m0/rd_out[210]                         46.08   51.99   -5.91 (VIOLATED)
+
+m0/rd_out[220]                         46.08   51.74   -5.66 (VIOLATED)
+
+m0/rd_out[162]                         46.08   51.56   -5.48 (VIOLATED)
+
+m0/rd_out[209]                         46.08   50.82   -4.74 (VIOLATED)
+
+m0/rd_out[215]                         46.08   50.19   -4.11 (VIOLATED)
+
+m0/rd_out[156]                         46.08   48.36   -2.28 (VIOLATED)
+
+OT_ELECTRICAL_TT_END

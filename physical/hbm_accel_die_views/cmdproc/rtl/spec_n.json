@@ -338,5 +338,6 @@
    "class": "debug",
    "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live"
   }
- }
+ },
+ "replaced_when_hgi": "cp"
 }

@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.mtp_ring_dyn.dynunit_campaign.v1",
+ "host": "ot-epyc2",
+ "fixtures": "camp-628000701 L14 prepare (EPYC4), fresh obj dirs",
+ "core_sha256": "13a25c4a9e0b3e05365a4053a8dc6688933c51d5aaaf6b3f672ce347d2f9c6ad",
+ "dyn_unit_sha256": "d5859787a61f670d65a0137fc2a5e068e8db2f66479b3d9e04d5a34b3bdd26a1",
+ "runs": {
+  "c14_pos_wfc_w1": {
+   "verdict": "PASS",
+   "cycles": 428093,
+   "reference_cycles": 428093
+  },
+  "c15_neg_wf_w0": {
+   "verdict": "FAIL (protocol, as required)",
+   "cycles": 428088,
+   "reference_cycles": 428088
+  }
+ },
+ "cycles_identical": true,
+ "record_pass": true
+}

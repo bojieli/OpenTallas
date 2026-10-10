@@ -11,8 +11,12 @@ from dsrom_markov_head_binding_gate import viamap,packed
 from dsrom_markov_head_bundle_image import build
 from uarch_model_dsrom_markov_head_binding import model
 
-def main(out,manifest,windows,cases=None):
- out.mkdir(parents=True,exist_ok=False);(out/'model.json').write_text(json.dumps(model(),indent=2))
+def main(out,manifest,windows,cases=None,lookup_pp=False):
+ out.mkdir(parents=True,exist_ok=False);
+ if lookup_pp:
+  from uarch_model_dsrom_markov_embed_pp import model as pp_model
+  (out/'embedding_pp_model.json').write_text(json.dumps(pp_model(),indent=2))
+ (out/'model.json').write_text(json.dumps(model(),indent=2))
  receipt=json.loads((ROOT/'input/released_inputs.json').read_text());token=receipt['token']
  e=np.fromfile(ROOT/'input/embed.bin',dtype='<u2');z=np.load(ROOT/'input/head_ref.npz')
  xf=(z['xf'].astype(np.float32).reshape(-1).view(np.uint32)>>16).astype('<u2')
@@ -34,7 +38,7 @@ def main(out,manifest,windows,cases=None):
   ew={token*16+b:packed(e[b*16:b*16+16]) for b in range(16)}
   viamap(images/'zero.viamap.hex',{})
   for macro in range(506):
-   words={a%4096:v for a,v in ew.items() if a//4096==macro}
+   words={((a%8192)//2 if lookup_pp else a%4096):v for a,v in ew.items() if (2*(a//8192)+a%2 if lookup_pp else a//4096)==macro}
    if words:viamap(images/f'macro{macro:03}.viamap.hex',words)
    else:(images/f'macro{macro:03}.viamap.hex').symlink_to('zero.viamap.hex')
   macro=case/'macro_ss.v';macro.write_text((ROOT/'input/macro_source.v').read_text().replace('rd_out <= word_read(addr_in)','rd_out <= #0.744 word_read(addr_in)'))
@@ -43,7 +47,7 @@ module tb;
  reg clk=0;always #0.4165 clk=~clk;reg rst_n=0,start=0;wire start_ready;
  reg[16:0]row0=ROW0,d_i=TOKEN;reg[31:0]transaction=32'h12345;reg[255:0]xa=0,xb=0;
  wire head_go,done,best_valid,fault;wire[3:0]joined_valid;wire[127:0]joined_bits;wire[67:0]joined_row;wire[16:0]best_row;wire[31:0]best_bits;
- ot_dsrom_markov_head_bundle #(.ENABLE(1),.PINREG(2),.CACHE_PINREG(1),.VALID_ROWS(NVALID),.A_INPUT_STAGES(4))dut(.*);
+ ot_dsrom_markov_head_bundle #(.ENABLE(1),.LOOKUP_PP(LOOKUP_PP_VALUE),.PINREG(2),.CACHE_PINREG(1),.VALID_ROWS(NVALID),.A_INPUT_STAGES(4))dut(.*);
  reg[255:0]am[0:255],bm[0:63];reg[31:0]ag[0:127],bg[0:127],hg[0:127],jg[0:127];
  integer cyc=0,g0=-1,q,k,nb=0,njoin=0,na[0:3],nh[0:3],nj[0:3];integer bmax[0:3],amax[0:3],headmax[0:3];
  integer first_b=-1,last_b=-1,first_a=-1,last_a=-1,first_join=-1,last_join=-1;reg[8*1024-1:0]dir;
@@ -81,14 +85,14 @@ endmodule
  if({a}.g_join.fb_n>bmax[{q}])bmax[{q}]={a}.g_join.fb_n;if({a}.g_join.fa_n>amax[{q}])amax[{q}]={a}.g_join.fa_n;
  if({m}.hn>headmax[{q}])headmax[{q}]={m}.hn;
  if(joined_valid[{q}])begin k=32*{q}+nj[{q}];if(k>=NVALID||joined_row[17*{q}+:17]!=ROW0+k||joined_bits[32*{q}+:32]!==jg[k])$fatal(1,"Markov rowidentity/padding q{q}");nj[{q}]=nj[{q}]+1;njoin=njoin+1;if(first_join<0)first_join=cyc;last_join=cyc;end''')
-  txt=tb.read_text().replace('MONITORS','\n'.join(monitors)).replace('NVALID',str(nv)).replace('ROW0',str(r0)).replace('TOKEN',str(token)).replace('BESTROW',str(r0+best)).replace('BESTBITS',f"32'h{int(joined.view(np.uint32)[best]):08x}");tb.write_text(txt)
-  src=['rtl/hdc/ot_hdc_delay.sv','rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/v41rom/ot_dsrom_head_elem.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_bundle.sv']
+  txt=tb.read_text().replace('LOOKUP_PP_VALUE',str(int(lookup_pp))).replace('MONITORS','\n'.join(monitors)).replace('NVALID',str(nv)).replace('ROW0',str(r0)).replace('TOKEN',str(token)).replace('BESTROW',str(r0+best)).replace('BESTBITS',f"32'h{int(joined.view(np.uint32)[best]):08x}");tb.write_text(txt)
+  src=['rtl/hdc/ot_hdc_delay.sv','rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/v41rom/ot_dsrom_head_elem.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port_pp.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_bundle.sv']
   obj=case/'obj';p=subprocess.run(['verilator','--binary','--timing','-j','8','-Wno-fatal','--top-module','tb','--Mdir',str(obj),*[str(ROOT/s) for s in src],str(macro),str(tb)],capture_output=True,text=True);(case/'compile.log').write_text(p.stdout+p.stderr)
   if p.returncode:raise RuntimeError(p.stderr)
   p=subprocess.run([str(obj/'Vtb'),f'+DIR={case}',f'+OT_ROM_DIR={images}'],capture_output=True,text=True);(case/'sim.log').write_text(p.stdout+p.stderr);print(p.stdout,flush=True)
   results.append(dict(die=die,bundle=bundle,valid_rows=nv,exit=p.returncode,passed=p.returncode==0 and 'PASS actualB' in p.stdout,image_manifest=image))
   if p.returncode:break
- record=dict(passed=len(results)==len(cases or [(0,83),(0,84),(2,84)]) and all(x['passed'] for x in results),scope='one actual 4A+1B+4Markov successor bundle; shared lookup; A_INPUT_STAGES4; manifest interior and shard ends21/22; not full die/physical closure',results=results,activation_and_embedding=receipt,manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),window_provenance=json.loads((windows/'transfer_provenance.json').read_text()),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src},physical_qualified=False)
+ record=dict(LOOKUP_PP=lookup_pp,passed=len(results)==len(cases or [(0,83),(0,84),(2,84)]) and all(x['passed'] for x in results),scope='one actual 4A+1B+4Markov successor bundle; shared lookup; A_INPUT_STAGES4; manifest interior and shard ends21/22; not full die/physical closure',results=results,activation_and_embedding=receipt,manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),window_provenance=json.loads((windows/'transfer_provenance.json').read_text()),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src},physical_qualified=False)
  (out/'verdict.json').write_text(json.dumps(record,indent=2)+'\n');return record['passed']
 if __name__=='__main__':
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--case',type=int,nargs=2,action='append');ap.add_argument('--manifest',type=Path,required=True);ap.add_argument('--windows',type=Path,required=True);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.manifest,a.windows,a.case) else 1)
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--lookup-pp',action='store_true');ap.add_argument('--case',type=int,nargs=2,action='append');ap.add_argument('--manifest',type=Path,required=True);ap.add_argument('--windows',type=Path,required=True);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.manifest,a.windows,a.case,a.lookup_pp) else 1)

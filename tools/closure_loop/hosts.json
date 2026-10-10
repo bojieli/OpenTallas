@@ -29,6 +29,54 @@
      "peak_ram_gb": 128,
      "owner": "Codex:qwen_hbm_unify",
      "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
+    },
+    {
+     "name": "qwen-fmt3-wide-calibration",
+     "pid": 1835875,
+     "command_match": "qwen-fmt3-wide-2831b78d5/src/tools/qwen_r25_fmt3_physical.py --wide",
+     "peak_ram_gb": 64,
+     "owner": "Codex:qwen_hbm_unify/fmt3",
+     "reason": "Admitted fullshape three-strip wide FMT3 calibration;64GiB inventory future envelope, preserve original nominal route; primarydriverRSS subtraction is conservative, worker memory already reflected MemAvailable"
+    },
+    {
+     "name": "qwen-fmt3-pipe-calibration",
+     "pid": 1855945,
+     "command_match": "qwen-fmt3-pipe-77ec33a0e",
+     "peak_ram_gb": 64,
+     "owner": "Codex:qwen_hbm_unify/fmt3",
+     "reason": "Owner verified admitted fullshape pipeline calibration; persistent64GiB future inventory until terminal"
+    },
+    {
+     "name": "mtp-ring-dyn-fixed-simulation-positive",
+     "pid": 1855952,
+     "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
+     "peak_ram_gb": 1,
+     "owner": "Codex:mtp_numerical_repair",
+     "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains"
+    },
+    {
+     "name": "mtp-ring-dyn-fixed-simulation-negative",
+     "pid": 1855953,
+     "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
+     "peak_ram_gb": 1,
+     "owner": "Codex:mtp_numerical_repair",
+     "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains"
+    },
+    {
+     "name": "mtp-ring-dyn-same-source19-build-positive",
+     "pid": 1915153,
+     "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+     "peak_ram_gb": 1,
+     "owner": "Codex:mtp_numerical_repair",
+     "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains"
+    },
+    {
+     "name": "mtp-ring-dyn-same-source19-build-negative",
+     "pid": 1915154,
+     "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+     "peak_ram_gb": 1,
+     "owner": "Codex:mtp_numerical_repair",
+     "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains"
     }
    ]
   },
@@ -59,6 +107,30 @@
      "peak_ram_gb": 128,
      "owner": "Codex:hbm_system/hc_shard",
      "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
+    },
+    {
+     "name": "hbm-hc-epoch-physical",
+     "pid": 1366211,
+     "command_match": "hc-row-shard-r2/physical_epoch_c3b3f94c8/run.sh",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "Admitted full W32 realFP64macro epoch-identity route; futurephase estimate128GiB until actual peak measured"
+    },
+    {
+     "name": "hbm-retry545-pipeline-physical",
+     "pid": 2706708,
+     "command_match": "hbm-retry545-pipeline-pathfinding-r2/work",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "New protected545/512 controller16realSRAM fullshape pathfinding; prior related GRT4.3GiB but futureDRT unmeasured, keep24GiB inventory"
+    },
+    {
+     "name": "hbm-retry545-pipeline-guard-physical",
+     "pid": 1878057,
+     "command_match": "hbm-retry545-pipeline-guard-pathfinding-r1/work",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "Owner verified actual admitted driver; preserve progressing sixteen-macro route with24GiB future inventory"
     }
    ]
   },
@@ -68,8 +140,8 @@
    "cores": 128,
    "cap": 141,
    "base": "/srv/opentallas-data/claude/closure-loop",
-   "max_job_threads": 0,
-   "max_job_ram_gb": 0,
+   "max_job_threads": 128,
+   "max_job_ram_gb": 1076,
    "min_free_disk_gb": 200,
    "caps": [
     "verilator",
@@ -82,7 +154,7 @@
     "/": 100,
     "/srv/opentallas-scratch2": 100
    },
-   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs.",
+   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs. | 2026-10-10 runtime reconciliation: source restores actual runtime 128-thread/1076-GiB host inventory; admission remains measured MemAvailable >= per-job request + 16 GiB, disk-floor and pause guards. 12:26 UTC: 124.6 GiB available, 681.3 GiB run-root free; no pause marker. External inventories retained and identity-probed; no future-growth subtraction added.",
    "external_jobs": [
     {
      "name": "hbm-indexer-deepcredit-exact",
@@ -124,19 +196,14 @@
      "owner": "Codex:hbm_continuation/selector_capture",
      "reason": "Active fullshape T1 LA7 MEMV1 READLAT2 calibration; stablelauncher preserves120GiB declared futurepeak until terminal; liveYosys OPT phase"
     }
-   ],
-   "paused_admission_previous": {
-    "max_job_threads": 128,
-    "max_job_ram_gb": 1076
-   },
-   "admission_disabled_reason": "OWNER2026-10-09 transient EPYC2memorypressure audit: pause NEW compute until activefuturepeaks accounted; preserveprogressingjobs"
+   ]
   },
   {
    "name": "ot-epyc4",
    "label": "EPYC4",
    "cores": 128,
-   "cap": 384,
-   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+   "cap": 141,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
    "max_job_threads": 64,
    "max_job_ram_gb": 900,
    "min_free_disk_gb": 200,
@@ -149,17 +216,17 @@
    "ram_gb": 1133,
    "disk_roots": {
     "/": 100,
-    "/srv/opentallas-scratch": 200
+    "/srv/opentallas-scratch2": 30
    },
-   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path).",
+   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free.",
    "external_jobs": [
     {
      "name": "hbm-indexer-t1-exact",
      "pid": 952687,
      "command_match": "hbm-indexer-3a6f720d4",
-     "peak_ram_gb": 250,
+     "peak_ram_gb": 200,
      "owner": "Codex:hbm_continuation",
-     "reason": "admitted 250GiB; measured Verilator parent RSS120GiB still growing"
+     "reason": "Measured compile-tail inventory:9804of9805CPP compiled, one180.84MB CPP remains; fullsubtree125.8GiB, onecompilerHWM5.616GiB,1.035GB objectarchive/link input. Owner confirmed200GiB phase envelope leaves~74GiB additional headroom; soft reservation, no process cap/restart."
     },
     {
      "name": "hbm-indexer-nk4-synthesis",
@@ -195,7 +262,25 @@
    "disk_roots": {
     "/": 100
    },
-   "min_free_ram_gb": 16
+   "min_free_ram_gb": 16,
+   "external_jobs": [
+    {
+     "name": "ha2-owner-opposite-phase-minimum-gate",
+     "pid": 299770,
+     "command_match": "ha2-owner-cx-20261009/run-gate.sh",
+     "peak_ram_gb": 12,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "Actual admitted fullPF384 NC8 NPT8 INJ2 owner positive/changed-phase mutant minimum; pinnedVerilator5.050 source31f18f89a. Owner fullshape inventory12GiB envelope, soft capacity reservation until terminal"
+    },
+    {
+     "name": "s81-bf-input-holdseats-exact-gate",
+     "pid": 303289,
+     "command_match": "bf_txn_bench.py",
+     "peak_ram_gb": 40,
+     "owner": "Codex:s81_continuation",
+     "reason": "Actual admitted fullshape INPUT_HOLD_SEATS4 CG0 source82a708f5e,8compiler inventory. Frontend1.64GiB observed, peak unmeasured;40GiB original conservative build envelope until phase/terminal evidence"
+    }
+   ]
   },
   {
    "name": "ot-agidock128",

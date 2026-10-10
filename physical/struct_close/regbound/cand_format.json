@@ -1,0 +1,4 @@
+{"src": "rtl/hbm_accel/index/ot_hbm_native_candidate_format.sv", "module": "ot_hbm_native_candidate_format", "core": "ot_hbm_native_candidate_format_core",
+ "clk": "clk", "reset": "por_n",
+ "why": "sp-candfmt-006e20771 TT -353.8 (reg2reg +83): IO-only failure; the co credit stream and owner levels in, tu valid/ready out.",
+ "out_hs": [{"v": "tu_v", "r": "tu_r", "data": ["tu", "tu_owner"]}]}

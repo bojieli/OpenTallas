@@ -1,0 +1,87 @@
+{
+  "name": "hgi-ehash-ds-a-27186ef49-tc-cx",
+  "block": "ot_hbm_idx_ehash_ds",
+  "owner": "Codex:generic_index_decode/ehash",
+  "purpose": "Owner-approved HGI-1 partial DS EHASH history binding only. Immutable shipped datapath, exact row ids, 8-slot push-once and ACCEPT restore. Dynamic B unsupported: fail-closed typed validation; not generic CF-EHASH complete. Two variants PD .45/.35.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/hgi-ehash-20261009",
+    "commit": "27186ef4916226efb73a2bc2ce30a6c74685f3cb"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact_ds",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hbm_idx_ehash_ds -Ptb_hbm_idx_ehash_ds.MUTANT=0 -o {RUN}/bench/gate0 rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv rtl/hbm_accel/generic_20261009/tb_hbm_idx_ehash_ds.sv && vvp {RUN}/bench/gate0",
+        "expect": "pass",
+        "pass_regex": "PASS EHASH DS LOCKSTEP HISTORY ACCEPT",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mutant_accept_restore",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hbm_idx_ehash_ds -Ptb_hbm_idx_ehash_ds.MUTANT=2 -o {RUN}/bench/gate2 rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv rtl/hbm_accel/generic_20261009/tb_hbm_idx_ehash_ds.sv && vvp {RUN}/bench/gate2",
+        "expect": "fail",
+        "fail_regex": "EHASH mismatch case=6",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current route_master remeasures propagated boundary TT/FF IO reference within run."
+    },
+    "route": {
+      "cmd": "SRC={SRC} OT_ROUTE_HOLD_CORNERS=mm bash physical/qwen_die_masters/jobs/route_master.sh hgi_ehash_ds_a_cx {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_ehash_ds_a_cx.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "Partial DS-history vehicle priced model; current route_master measured TT/FF context, no genericB claim"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_ehash_20261009/hgi-ehash-ds-a-2620ad224-tc-cx"
+    }
+  ],
+  "cycles_added": 25,
+  "merge_target": null,
+  "memory_claim": {
+    "kind": "initial_inventory_estimate_not_measured",
+    "explanation": "16GiB initial admitted reservation, not process cap; 8 slotsx4x17 window+snapshot FFs, immutable 48-column LAT12 hash with constant tables. Compile measured30824KiB; physical peaks will be collected before any reservation reduction."
+  }
+}

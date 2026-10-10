@@ -1,0 +1,6 @@
+{"src": "rtl/hbm_accel/control/ot_hbm_native_index_control.sv", "module": "ot_hbm_native_index_control", "core": "ot_hbm_native_index_control_core",
+ "clk": "clk", "reset": "por_n",
+ "why": "sp-ictl-006e20771 TT -814.7 (930 ep; hm25 -759, reg2reg -0.4): owner_frame / allocation_frame -> lease_ok compare -> kin / fs outputs (in->out -815) and -> mask / desc loads (in->reg -513).",
+ "in_hs": [{"v": "command_v", "r": "command_r", "data": ["command_frame", "command_rank", "command_ndie", "command_k", "command_cand", "command_keep", "command_layer", "command_key_row0"]},
+           {"v": "keep_v", "r": "keep_r", "data": ["keep_frame", "keep_quarter", "keep_bitmap"]}],
+ "out_hs": [{"v": "source_start_v", "r": "source_start_r", "data": []}]}

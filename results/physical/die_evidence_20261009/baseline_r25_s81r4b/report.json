@@ -1,0 +1,1046 @@
+{
+ "schema": "opentallas.die_evidence_report.v1",
+ "date": "2026-10-09 07:25 PDT",
+ "basis": "BRIEF.md owner steer 2026-10-07 (academic validation) + option B (TT setup / FF hold)",
+ "tool": "tools/die_evidence_report.py",
+ "dies": {
+  "hbm": {
+   "name": "HBM accelerator die r25",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25",
+   "sta_case": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3",
+   "status_log": [
+    "2026-10-08 18:38:00 PDT STA with pads:  | ",
+    "2026-10-08 18:43:22 PDT grt3 case ready: placeholder libs 3/3 | {\"planned_sinks\": 291, \"relay_sinks\": 1852, \"relays_without_domain\": 0}",
+    "2026-10-08 20:58:08 PDT grt3 STA with pads:  | OT_CLOCK_CONTEXT corner=tt bound=2144 missing=0 OT_WNS corner=tt pads=nopad ns=-7.573685004627965 tns_ns=-196712.44637450555 OT_HOLD_PADS corner=tt pins=2480 arcs_padded=2253 missing=227 OT_WNS corner=tt pads=pad ns=-7.573685004627965 tns_ns=-196712.44637450555 OT_CLOCK_CONTEXT corner=ff bound=2144 missing=0 OT_WNS corner=ff pads=nopad ns=-3.034104608991097 tns_ns=-106774.8338030502 OT_HOLD_PADS corner=ff pins=2480 arcs_padded=2253 missing=227 OT_WNS corner=ff pads=pad ns=-3.034104608991097 tns_ns=-106774.8338030502 OT_CLOCK_CONTEXT corner=ss bound=2144 missing=0 OT_WNS corner=ss pads=nopad ns=-6.9859857653861095 tns_ns=-198903.68838348082 OT_HOLD_PADS corner=ss pins=2480 arcs_padded=2253 missing=227 OT_WNS corner=ss pads=pad ns=-6.9859857653861095 tns_ns=-198903.68838348082"
+   ],
+   "views": {
+    "real_views": 52,
+    "real_views_ss_as_tt": [
+     "hfd_attn_tile",
+     "hfd_sm",
+     "ot_pdie_serdes"
+    ],
+    "classes": "real = manifest real_views (routed abstracts + libs); relay = hfd_rly_* die relays; placeholder = analytic / interim masters"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 97,
+      "instance_frac": 0.0402,
+      "area_mm2": 138.411,
+      "area_frac": 0.315,
+      "masters": 35
+     },
+     "real": {
+      "instances": 465,
+      "instance_frac": 0.1926,
+      "area_mm2": 300.259,
+      "area_frac": 0.6833,
+      "masters": 52
+     },
+     "relay": {
+      "instances": 1852,
+      "instance_frac": 0.7672,
+      "area_mm2": 0.758,
+      "area_frac": 0.0017,
+      "masters": 1852
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "done",
+    "log": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/grt_sta.log",
+    "overflow_total": 0,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "wirelength_m": 1028.6
+   },
+   "sta": {
+    "tt": {
+     "status": "done",
+     "check": "setup",
+     "all_nopad": {
+      "wns_ps": -7573.69,
+      "tns_ps": -196712446.4
+     },
+     "all_pad": {
+      "wns_ps": -7573.69,
+      "tns_ps": -196712446.4
+     },
+     "split_padded": {
+      "real": {
+       "endpoints": 111273,
+       "wns_ps": -2752.08,
+       "tns_ps": -143281539.8,
+       "viol": 110590
+      },
+      "real+relay": {
+       "endpoints": 147670,
+       "wns_ps": -7573.69,
+       "tns_ps": -176882701.6,
+       "viol": 146361
+      },
+      "placeholder_touching": {
+       "endpoints": 12464,
+       "wns_ps": -3014.91,
+       "tns_ps": -13555219.4,
+       "viol": 12445
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     },
+     "clock_context": "clock context: 2144 view clock pins bound, 0 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)",
+     "split_nopad": {
+      "real": {
+       "endpoints": 111273,
+       "wns_ps": -2752.08,
+       "tns_ps": -143281539.8,
+       "viol": 110590
+      },
+      "real+relay": {
+       "endpoints": 147670,
+       "wns_ps": -7573.69,
+       "tns_ps": -176882701.6,
+       "viol": 146361
+      },
+      "placeholder_touching": {
+       "endpoints": 12464,
+       "wns_ps": -3014.91,
+       "tns_ps": -13555219.4,
+       "viol": 12445
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     }
+    },
+    "ff": {
+     "status": "done",
+     "check": "hold",
+     "all_nopad": {
+      "wns_ps": -3034.1,
+      "tns_ps": -106774833.8
+     },
+     "all_pad": {
+      "wns_ps": -3034.1,
+      "tns_ps": -106774833.8
+     },
+     "split_padded": {
+      "real": {
+       "endpoints": 0,
+       "wns_ps": null,
+       "tns_ps": 0.0,
+       "viol": 0
+      },
+      "real+relay": {
+       "endpoints": 3200,
+       "wns_ps": -125.76,
+       "tns_ps": -29149.0,
+       "viol": 756
+      },
+      "placeholder_touching": {
+       "endpoints": 38009,
+       "wns_ps": -3034.11,
+       "tns_ps": -32523160.4,
+       "viol": 38009
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     },
+     "clock_context": "clock context: 2144 view clock pins bound, 0 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)",
+     "split_nopad": {
+      "real": {
+       "endpoints": 101,
+       "wns_ps": -20.21,
+       "tns_ps": -1255.6,
+       "viol": 97
+      },
+      "real+relay": {
+       "endpoints": 3316,
+       "wns_ps": -125.76,
+       "tns_ps": -30404.7,
+       "viol": 853
+      },
+      "placeholder_touching": {
+       "endpoints": 38009,
+       "wns_ps": -3034.11,
+       "tns_ps": -32523160.4,
+       "viol": 38009
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     }
+    },
+    "ss": {
+     "status": "done",
+     "check": "setup (sensitivity)",
+     "all_nopad": {
+      "wns_ps": -6985.99,
+      "tns_ps": -198903688.4
+     },
+     "all_pad": {
+      "wns_ps": -6985.99,
+      "tns_ps": -198903688.4
+     },
+     "split_padded": {
+      "real": {
+       "endpoints": 111273,
+       "wns_ps": -2828.23,
+       "tns_ps": -144602292.5,
+       "viol": 110590
+      },
+      "real+relay": {
+       "endpoints": 183015,
+       "wns_ps": -6978.99,
+       "tns_ps": -179027207.2,
+       "viol": 179394
+      },
+      "placeholder_touching": {
+       "endpoints": 41731,
+       "wns_ps": -3790.93,
+       "tns_ps": -19876482.3,
+       "viol": 41731
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     },
+     "clock_context": "clock context: 2144 view clock pins bound, 0 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)",
+     "split_nopad": {
+      "real": {
+       "endpoints": 111273,
+       "wns_ps": -2828.23,
+       "tns_ps": -144602292.5,
+       "viol": 110590
+      },
+      "real+relay": {
+       "endpoints": 183015,
+       "wns_ps": -6978.99,
+       "tns_ps": -179027207.2,
+       "viol": 179394
+      },
+      "placeholder_touching": {
+       "endpoints": 41731,
+       "wns_ps": -3790.93,
+       "tns_ps": -19876482.3,
+       "viol": 41731
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     }
+    }
+   },
+   "sta_prior_r25_grt": {
+    "status": "superseded (pending sta_pad replaces it)",
+    "run": "/srv/opentallas-scratch/claude/hbm-die/r25_grt",
+    "views": "2026-10-07 22:29 PT kit: interim SM / attn_tile views, 22 view clocks missing, no hold pads; endpoints classed with the CURRENT r25 real-view set, so SM / attn_tile paths count as real here although this kit had them interim",
+    "tt": {
+     "all": {
+      "wns_ps": -7573.69,
+      "tns_ps": -176403501.9
+     },
+     "split": {
+      "real": {
+       "endpoints": 111273,
+       "wns_ps": -2752.08,
+       "tns_ps": -143281539.8,
+       "viol": 110590
+      },
+      "real+relay": {
+       "endpoints": 133493,
+       "wns_ps": -7573.69,
+       "tns_ps": -174696629.5,
+       "viol": 132004
+      },
+      "placeholder_touching": {
+       "endpoints": 0,
+       "wns_ps": null,
+       "tns_ps": 0.0,
+       "viol": 0
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     },
+     "clock_context": "clock context: 2492 view clock pins bound, 22 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)"
+    },
+    "ff": {
+     "all": {
+      "wns_ps": -1335.0,
+      "tns_ps": -93517318.3
+     },
+     "split": {
+      "real": {
+       "endpoints": 101,
+       "wns_ps": -20.21,
+       "tns_ps": -1255.6,
+       "viol": 97
+      },
+      "real+relay": {
+       "endpoints": 10494,
+       "wns_ps": -125.76,
+       "tns_ps": -212164.6,
+       "viol": 5015
+      },
+      "placeholder_touching": {
+       "endpoints": 0,
+       "wns_ps": null,
+       "tns_ps": 0.0,
+       "viol": 0
+      },
+      "method": "exact: start+end masters of each listed endpoint's worst path"
+     },
+     "clock_context": "clock context: 2492 view clock pins bound, 22 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)"
+    }
+   },
+   "clock_plan": {
+    "status": "done",
+    "plan": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/clock/plan.json",
+    "source_commit": "f4dc31d3d",
+    "regions": 44,
+    "synchronous_pairs": 1110,
+    "max_intra_skew_ss_ps": 56.7,
+    "max_inter_skew_ss_ps": 66.9,
+    "policy": {
+     "inter_ps": 150.0,
+     "intra_default_ps": 90.0,
+     "intra_margin_ps": 25.0,
+     "ocv": 0.05,
+     "hold_io_ps": 50.0
+    },
+    "violations_intra": 0,
+    "violations_inter": 0,
+    "violation_rows": [],
+    "trees": 4
+   },
+   "regions": [
+    {
+     "region": "attn",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_attn",
+     "window_um": [
+      9996.48,
+      6000.0,
+      11500.0,
+      7500.0
+     ],
+     "area_mm2": 2.255,
+     "kept_instances": 11,
+     "boundary": {
+      "nets": 19951,
+      "guided_pins": 9698,
+      "projected_pins": 2937,
+      "no_track": 3237,
+      "unpinned_crossing_frac": 0.162,
+      "intruders_as_obstructions": 3,
+      "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
+     },
+     "drt": {
+      "final_violations": 0,
+      "logged": 2
+     },
+     "status": "pending (detail route running or queued)"
+    },
+    {
+     "region": "chain2",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_chain2",
+     "window_um": [
+      11513.232,
+      6607.44,
+      13500.0,
+      12137.016
+     ],
+     "area_mm2": 10.986,
+     "kept_instances": 12,
+     "boundary": {
+      "nets": 18718,
+      "guided_pins": 657,
+      "projected_pins": 16420,
+      "no_track": 16559,
+      "unpinned_crossing_frac": 0.885,
+      "intruders_as_obstructions": 40,
+      "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
+     },
+     "drt": {
+      "final_violations": 0,
+      "logged": 2
+     },
+     "status": "pending (detail route running or queued)"
+    },
+    {
+     "region": "hub2",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_hub2",
+     "window_um": [
+      14163.552,
+      11600.0,
+      15700.0,
+      13119.816
+     ],
+     "area_mm2": 2.335,
+     "kept_instances": 31,
+     "boundary": {
+      "nets": 52074,
+      "guided_pins": 26135,
+      "projected_pins": 7588,
+      "no_track": 19672,
+      "unpinned_crossing_frac": 0.378,
+      "intruders_as_obstructions": 6,
+      "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
+     },
+     "drt": {
+      "final_violations": 0,
+      "logged": 1
+     },
+     "status": "pending (detail route running or queued)"
+    },
+    {
+     "region": "ioedge2",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_ioedge2",
+     "window_um": [
+      13500.0,
+      3600.0,
+      16021.56,
+      6235.896
+     ],
+     "area_mm2": 6.647,
+     "kept_instances": 41,
+     "boundary": {
+      "nets": 24849,
+      "guided_pins": 4595,
+      "projected_pins": 539,
+      "no_track": 1725,
+      "unpinned_crossing_frac": 0.069,
+      "intruders_as_obstructions": 1,
+      "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
+     },
+     "drt": {
+      "final_violations": 93924,
+      "logged": 14
+     },
+     "status": "pending (detail route running or queued)"
+    }
+   ],
+   "probe_s": 18.6,
+   "ir": {
+    "status": "done (stale placement)",
+    "placement": "r23 (not r25)",
+    "windows_pass": "125/125 load windows",
+    "worst_interior_rail_to_rail_mv": 33.26,
+    "budget_mv": 35.0,
+    "worst_window": "c_w10_09",
+    "caveat": "18 no-load windows (4 PSM segfaults, all no-load row 10); r25 IR not re-run",
+    "source": "hbm-die.log 2026-10-07 19:23 PT (EPYC2 hbm-die/ir)"
+   }
+  },
+  "s81": {
+   "name": "DeepSeek-V4.1 ROM die S81 (m221pq)",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch/claude/s81-die",
+   "r4": {
+    "status": "done",
+    "summary": "tt worst slack max -855.2 tns max -7855718.5 \nff worst slack min -301.0 tns min -71856224.0 \nss worst slack max -901.6 tns max -8632910.0",
+    "note": "r4 = r3 + --nxt-reach relay placement (fixes the 776-906 um g_rt_*_8a_y1 relays behind TT -244)",
+    "gen_log_tail": [
+     "{\"case\": \"a\", \"instances\": 57806, \"generated_pins\": 192474, \"nets_bits\": 6595496, \"variant\": {\"su_area_mm2\": 25.61188, \"hub_column_width_um\": 1728.0, \"gen\": \"r8\", \"geometry_fix\": true, \"cfifo_v2\": true, \"cfifo_colck\": false, \"link_fix\": true, \"link_split\": true, \"sel_xstg\": true, \"pin_relay\": true, \"nxt_reach\": true, \"vm_face_mm2\": null, \"ch_heights\": [501.12, 544.3199999999999, 630.72, 630.72, 544.3199999999999, 501.12, 259.2], \"vch_w\": 1641.6, \"hc_corr\": 1512.0, \"hc_xface\": true, \"hop_fix\": true, \"meso_d8\": true, \"fwd_pitch\": 430.56, \"corr_interleave\": true, \"rev\": \"r9\", \"cc_reach_um\": 215.0, \"vch_interleave\": true, \"q_lef\": \"physical/s81_die_views/q_elem_qs5f/q_elem.lef.gz\", \"head_dies\": 12, \"die\": \"layer1\", \"role\": \"layer die, 1 HBM3E stack (292 of the rack)\", \"pairs\": 1792, \"bf\": 512, \"nv\": 0, \"head_bundles\": 0, \"stacks\": [\"SW\"], \"elem_frame_h\": 198.72, \"q_elem_frame_h\": 221.4, \"frame_h\": 2646.0, \"slot_h\": 280.8, \"slots\": 9}}"
+    ]
+   },
+   "sta_run": {
+    "run": "/srv/opentallas-scratch/claude/s81-die/m221pq_r4b",
+    "sta": "/srv/opentallas-scratch/claude/s81-die/m221pq_r4b/grt",
+    "kit": "/srv/opentallas-scratch/claude/s81-die/m221pq_r4b/kit",
+    "summary": [
+     "tt worst slack max -855.2 tns max -7855718.5 ",
+     "ff worst slack min -301.0 tns min -71856224.0 ",
+     "ss worst slack max -901.6 tns max -8632910.0"
+    ]
+   },
+   "views": {
+    "masters_by_view": {
+     "assembled": 4,
+     "closed": 19,
+     "interim": 118,
+     "macro": 4,
+     "partitioned": 4
+    },
+    "classes": "real = closed routed views + assembled slab ETMs + macros; relay = dsfd_rly_* die relays (INTERIM lib constants, real GRT wire); placeholder = interim + partitioned slabs (tiles closed, no composite view)"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 12407,
+      "instance_frac": 0.2146,
+      "area_mm2": 336.113,
+      "area_frac": 0.8075,
+      "masters": 85
+     },
+     "real": {
+      "instances": 14039,
+      "instance_frac": 0.2429,
+      "area_mm2": 70.683,
+      "area_frac": 0.1698,
+      "masters": 27
+     },
+     "relay": {
+      "instances": 31360,
+      "instance_frac": 0.5425,
+      "area_mm2": 9.463,
+      "area_frac": 0.0227,
+      "masters": 37
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "done",
+    "log": "/srv/opentallas-scratch/claude/s81-die/m221pq_r4b/grt/grt.log",
+    "overflow_total": 0,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "wirelength_m": 1652.9
+   },
+   "sta": {
+    "tt": {
+     "status": "done",
+     "check": "setup",
+     "all": {
+      "wns_ps": -855.2,
+      "tns_ps": -7855718.5
+     },
+     "split": {
+      "real": {
+       "wns_ps": null,
+       "wns_range_ps": [
+        -198.6,
+        null
+       ],
+       "exact": false,
+       "endpoints_on_tier": 174350,
+       "viol_upper_bound": 256,
+       "tns_ps_lower_bound": -38373.7,
+       "listed_paths": 0
+      },
+      "real+relay": {
+       "wns_ps": -855.2,
+       "wns_range_ps": [
+        -855.2,
+        -855.2
+       ],
+       "exact": true,
+       "endpoints_on_tier": 2548110,
+       "viol_upper_bound": 15481,
+       "tns_ps_lower_bound": -7855730.7,
+       "listed_paths": 25501
+      },
+      "placeholder_touching": {
+       "endpoint_on_placeholder": {
+        "endpoints": 3347904,
+        "wns_ps": 219.6,
+        "tns_ps": 0,
+        "viol": 0
+       },
+       "listed_paths": 499
+      },
+      "method": "end report classifies the endpoint master only (lower bound on real-only WNS: every real-only path ends on a real endpoint); the top-N path report gives the startpoint (upper bound: a listed real-only path); exact when the two agree"
+     }
+    },
+    "ff": {
+     "status": "done",
+     "check": "hold",
+     "all": {
+      "wns_ps": -301.0,
+      "tns_ps": -71856224.0
+     },
+     "split": {
+      "real": {
+       "wns_ps": null,
+       "wns_range_ps": [
+        -50.9,
+        null
+       ],
+       "exact": false,
+       "endpoints_on_tier": 174350,
+       "viol_upper_bound": 4642,
+       "tns_ps_lower_bound": -93242.7,
+       "listed_paths": 0
+      },
+      "real+relay": {
+       "wns_ps": -301.0,
+       "wns_range_ps": [
+        -301.0,
+        -301.0
+       ],
+       "exact": true,
+       "endpoints_on_tier": 2548110,
+       "viol_upper_bound": 815943,
+       "tns_ps_lower_bound": -30470086.2,
+       "listed_paths": 25600
+      },
+      "placeholder_touching": {
+       "endpoint_on_placeholder": {
+        "endpoints": 3347904,
+        "wns_ps": -103.7,
+        "tns_ps": -41386375.9,
+        "viol": 1543445
+       },
+       "listed_paths": 400
+      },
+      "method": "end report classifies the endpoint master only (lower bound on real-only WNS: every real-only path ends on a real endpoint); the top-N path report gives the startpoint (upper bound: a listed real-only path); exact when the two agree"
+     }
+    },
+    "ss": {
+     "status": "done",
+     "check": "setup (sensitivity)",
+     "all": {
+      "wns_ps": -901.6,
+      "tns_ps": -8632910.0
+     }
+    }
+   },
+   "clock_plan": {
+    "status": "done",
+    "plan": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/clock_v3_4500/plan.json",
+    "source_commit": "a1f23fa0b+tt+dg(83e16fb96 dsrom_s81_fulldie)",
+    "regions": 168,
+    "synchronous_pairs": 69984,
+    "max_intra_skew_ss_ps": 52.2,
+    "max_inter_skew_ss_ps": 82.1,
+    "policy": {
+     "inter_ps": 150.0,
+     "intra_default_ps": 90.0,
+     "intra_margin_ps": 25.0,
+     "ocv": 0.05,
+     "hold_io_ps": 50.0
+    },
+    "violations_intra": 0,
+    "violations_inter": 0,
+    "violation_rows": [],
+    "trees": 131
+   },
+   "ir": {
+    "status": "done",
+    "record": "/srv/opentallas-scratch/claude/s81-die/m221pq/ir/ir_record.json",
+    "die": "m221pq (same generator options as r3)",
+    "windows": {
+     "band_s": {
+      "pass_interior": true,
+      "rail_to_rail_interior_mv": 25.5,
+      "rail_to_rail_worst_mv": 42.2,
+      "budget_mv": 35.0
+     },
+     "field": {
+      "pass_interior": true,
+      "rail_to_rail_interior_mv": 26.04,
+      "rail_to_rail_worst_mv": 39.3,
+      "budget_mv": 35.0
+     },
+     "field_bf": {
+      "pass_interior": true,
+      "rail_to_rail_interior_mv": 25.71,
+      "rail_to_rail_worst_mv": 36.6,
+      "budget_mv": 35.0
+     },
+     "spine": {
+      "pass_interior": true,
+      "rail_to_rail_interior_mv": 30.94,
+      "rail_to_rail_worst_mv": 38.0,
+      "budget_mv": 35.0
+     }
+    },
+    "caveat": "judged inside the window interior (one bump pitch from each window edge: the die continues); edge cells exceed 35 mV by construction of the window cut"
+   },
+   "region_drc_classes": {
+    "bfcol": {
+     "total": 1120,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "inner"
+       ],
+       1119,
+       [
+        [
+         "net:n_nf_0_19[0] net:n_rt_0_19a[38]",
+         13325.66,
+         5391.34
+        ],
+        [
+         "net:n_nf_0_19[0] net:n_rt_0_19a[38]",
+         13325.69,
+         5391.34
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Short",
+        "M5",
+        "net",
+        "inner"
+       ],
+       1,
+       [
+        [
+         "net:n_aSW_d9[301] net:n_aSW_d9[492]",
+         13490.11,
+         4157.78
+        ]
+       ]
+      ]
+     ]
+    },
+    "pqstrip": {
+     "total": 156,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "inner"
+       ],
+       116,
+       [
+        [
+         "net:n_rt_24_1a[0] net:n_rt_24_1a[11]",
+         9752.35,
+         10303.18
+        ],
+        [
+         "net:n_rt_24_1b[0] net:n_rt_24_1b[49]",
+         9752.35,
+         10380.94
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       40,
+       [
+        [
+         "net:n_rt_24_1b[39] net:n_rt_24_3a[1]",
+         9756.1,
+         10380.94
+        ],
+        [
+         "net:n_rt_24_1b[39] net:n_rt_24_3a[1]",
+         9756.12,
+         10380.94
+        ]
+       ]
+      ]
+     ]
+    },
+    "spine": {
+     "total": 4,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       3,
+       [
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ],
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Short",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       1,
+       [
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ]
+       ]
+      ]
+     ]
+    },
+    "summary": "m221pq_r3 bfcol 1,129 / pqstrip 158 / spine 4: 0 window artefacts (no violation within 10 um of a window edge). 1,275 (bfcol 1,119, pqstrip 156) = fixed-shape M5 Lef58EolKeepOut between DIFFERENT-net face pins of abutted field-node masters (dsfd_node_* stacks, 0.024 um SHAVE gap < 0.025 EOL keepout): real, generator -> fixed by dsrom_s81_fulldie --face-pin-inset (re-validated in m221pq_r3fx regions). 5 (bfcol 1 Short, spine 3 EolKeepOut + 1 Short) = router wire vs pin tip at 1-track-pitch station faces (dsfd_stnv_1026x1 / _566x1, every M5 track a pin): real pin-access density residue; parse misses ~13 of 1,291.",
+    "method": "drt_drc.rpt bbox vs window box (edge distance) + srcs; locations probed in region_drt.odb (abutting instance pairs)"
+   },
+   "regions": [
+    {
+     "region": "bfcol",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/regions/region_bfcol",
+     "box_um": [
+      12900.0,
+      3450.0,
+      14200.0,
+      6600.0
+     ],
+     "kept_instances": 220,
+     "boundary_ports": 14626,
+     "drt": {
+      "final_drc": 1129,
+      "iterations": 65,
+      "first_iter": 41325
+     },
+     "antenna": "0",
+     "wirelength": {
+      "nets": 43634,
+      "grt_total_um": 12542414.0,
+      "drt_total_um": 12476827.5,
+      "total_ratio": 0.9948,
+      "median_ratio": 0.9935,
+      "p95_ratio": 1.0015,
+      "max_ratio": 2.242
+     },
+     "slack_ps": {
+      "ss": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "tt": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "ff": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      }
+     },
+     "caveat": "crop keeps whole nets inside the box and turns every cut net into a boundary port at its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly inside the box (timing delta unmeasurable there)"
+    },
+    {
+     "region": "ioedge",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/regions/region_ioedge",
+     "box_um": [
+      0.0,
+      10300.0,
+      1500.0,
+      13000.0
+     ],
+     "kept_instances": 398,
+     "boundary_ports": 4086,
+     "drt": {
+      "final_drc": 1100,
+      "iterations": 65,
+      "first_iter": 27460
+     },
+     "antenna": "0",
+     "wirelength": {
+      "nets": 39349,
+      "grt_total_um": 8727921.0,
+      "drt_total_um": 8609019.8,
+      "total_ratio": 0.9864,
+      "median_ratio": 0.9866,
+      "p95_ratio": 0.9976,
+      "max_ratio": 5.106
+     },
+     "slack_ps": {
+      "ss": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "tt": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "ff": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      }
+     },
+     "caveat": "crop keeps whole nets inside the box and turns every cut net into a boundary port at its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly inside the box (timing delta unmeasurable there)"
+    },
+    {
+     "region": "pqstrip",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/regions/region_pqstrip",
+     "box_um": [
+      9300.0,
+      9600.0,
+      10600.0,
+      10500.0
+     ],
+     "kept_instances": 71,
+     "boundary_ports": 10013,
+     "drt": {
+      "final_drc": 158,
+      "iterations": 65,
+      "first_iter": 6536
+     },
+     "antenna": "0",
+     "wirelength": {
+      "nets": 18827,
+      "grt_total_um": 4747713.0,
+      "drt_total_um": 4720390.5,
+      "total_ratio": 0.9942,
+      "median_ratio": 0.9931,
+      "p95_ratio": 1.0002,
+      "max_ratio": 2.399
+     },
+     "slack_ps": {
+      "ss": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "tt": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      },
+      "ff": {
+       "grt": Infinity,
+       "drt": Infinity,
+       "delta_ps": null
+      }
+     },
+     "caveat": "crop keeps whole nets inside the box and turns every cut net into a boundary port at its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly inside the box (timing delta unmeasurable there)"
+    },
+    {
+     "region": "spine",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/regions/region_spine",
+     "box_um": [
+      9000.0,
+      12870.0,
+      14000.0,
+      13430.0
+     ],
+     "kept_instances": 134,
+     "boundary_ports": 18998,
+     "drt": {
+      "final_drc": 4,
+      "iterations": 53,
+      "first_iter": 54123
+     },
+     "antenna": "0",
+     "wirelength": {
+      "nets": 60065,
+      "grt_total_um": 20020664.0,
+      "drt_total_um": 19914085.9,
+      "total_ratio": 0.9947,
+      "median_ratio": 0.9939,
+      "p95_ratio": 1.0011,
+      "max_ratio": 1.137
+     },
+     "slack_ps": {
+      "ss": {
+       "grt": 524.0,
+       "drt": 578.2,
+       "delta_ps": 54.2
+      },
+      "tt": {
+       "grt": 571.7,
+       "drt": 625.2,
+       "delta_ps": 53.5
+      },
+      "ff": {
+       "grt": -58.0,
+       "drt": -58.0,
+       "delta_ps": 0.0
+      }
+     },
+     "caveat": "crop keeps whole nets inside the box and turns every cut net into a boundary port at its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly inside the box (timing delta unmeasurable there)"
+    },
+    {
+     "region": "bfcol (r3fx face-pin-inset)",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3fx/regions/region_bfcol",
+     "box_um": [
+      12900.0,
+      3450.0,
+      14200.0,
+      6600.0
+     ],
+     "drt": {
+      "final_drc": 19,
+      "iterations": 57
+     },
+     "wirelength": {
+      "nets": 43635,
+      "grt_total_um": 12545506.8,
+      "drt_total_um": 12480811.3,
+      "total_ratio": 0.9948,
+      "median_ratio": 0.9934,
+      "p95_ratio": 1.0014,
+      "max_ratio": 2.544
+     }
+    },
+    {
+     "region": "pqstrip (r3fx face-pin-inset)",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3fx/regions/region_pqstrip",
+     "box_um": [
+      9300.0,
+      9600.0,
+      10600.0,
+      10500.0
+     ],
+     "drt": {
+      "final_drc": 0,
+      "iterations": 9
+     },
+     "wirelength": {
+      "nets": 18827,
+      "grt_total_um": 4748845.6,
+      "drt_total_um": 4721520.4,
+      "total_ratio": 0.9942,
+      "median_ratio": 0.9931,
+      "p95_ratio": 1.0002,
+      "max_ratio": 1.96
+     }
+    },
+    {
+     "region": "spine (r3fx face-pin-inset)",
+     "status": "done",
+     "dir": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3fx/regions/region_spine",
+     "box_um": [
+      9000.0,
+      12870.0,
+      14000.0,
+      13430.0
+     ],
+     "drt": {
+      "final_drc": 4,
+      "iterations": 57
+     },
+     "wirelength": {
+      "nets": 60065,
+      "grt_total_um": 20016979.6,
+      "drt_total_um": 19910699.7,
+      "total_ratio": 0.9947,
+      "median_ratio": 0.9938,
+      "p95_ratio": 1.0012,
+      "max_ratio": 1.413
+     }
+    }
+   ],
+   "probe_s": 17.9
+  }
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "macro": "ot_hgi_argmax18_m",
+ "size_um": [
+  180.0,
+  140.0
+ ],
+ "ports": {
+  "cfg_imm_a": {
+   "dir": "input",
+   "bits": 18
+  },
+  "cfg_rank": {
+   "dir": "input",
+   "bits": 7
+  },
+  "clk": {
+   "dir": "input",
+   "bits": 1
+  },
+  "fault": {
+   "dir": "output",
+   "bits": 1
+  },
+  "in_bias": {
+   "dir": "input",
+   "bits": 256
+  },
+  "in_bias_en": {
+   "dir": "input",
+   "bits": 1
+  },
+  "in_last": {
+   "dir": "input",
+   "bits": 1
+  },
+  "in_mask": {
+   "dir": "input",
+   "bits": 8
+  },
+  "in_v": {
+   "dir": "input",
+   "bits": 1
+  },
+  "in_vals": {
+   "dir": "input",
+   "bits": 256
+  },
+  "out_idx": {
+   "dir": "output",
+   "bits": 18
+  },
+  "out_nan": {
+   "dir": "output",
+   "bits": 1
+  },
+  "out_range_fault": {
+   "dir": "output",
+   "bits": 1
+  },
+  "out_v": {
+   "dir": "output",
+   "bits": 1
+  },
+  "out_value": {
+   "dir": "output",
+   "bits": 32
+  },
+  "rst_n": {
+   "dir": "input",
+   "bits": 1
+  }
+ },
+ "lef_pin_bits": 604,
+ "netlist_bits": 604,
+ "missing": [],
+ "n_missing": 0,
+ "extra": [],
+ "n_extra": 0,
+ "verdict": "MATCH"
+}

@@ -1,0 +1,7 @@
+PLANNED q-element abstract (cont-takeover 2026-10-09) = q_elem_qs5f/q_elem.lef.gz with the PQ loader handshake outputs
+bank_free / sh_free moved from the N face (x 208.6 / 221.0) to the S face beside go / go_tag (x 226.080 / 284.544, M5,
+y 0-0.084), i.e. the bottom pin group of tools/dsrom_qelem_cl/launch.sh with OT_Q_EF_SOUTH=1.  Their only consumer is the
+pair's own ot_s81_cfg7_seq in the cfg band BELOW the q frame: on the N face each ef bit crossed the 221.4 um frame plus
+the band (> the 215 um cc reach) and took a 2-bit hop relay in the band above (rly_2_*), which filled the packed frame_0
+bands and trapped the return-tree relay rt_0_8a_y1 (m221pq_r4c GEN_FAIL).  Geometry/size otherwise byte-identical;
+replaced by the routed view of the OT_Q_EF_SOUTH q route when it closes.

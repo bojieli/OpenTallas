@@ -61,7 +61,7 @@ def s81_clock_family(inst):
         return "SELECT"
     if inst == "bk_collector" or inst.startswith(("xsco_", "hco_")):
         return "COLLECT"
-    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_")):
+    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_", "hr_")):
         return "GATHER"
     return None
 
@@ -232,7 +232,7 @@ def clock_nets(d, trees, groups, group):
             fam = defaultdict(list)
             for r, sl in regs.items():
                 rect = r.split(':', 1)[1] if ':' in r else r
-                fk = re.sub(r'^(G[NS][EW])[we]$', r'\1', rect.split('.')[0])
+                fk = re.sub(r'^(G[NS][EW])(?:[we]|c[0-9])$', r'\1', rect.split('.')[0])   # hbm-forks: 3 x 3 retile cuts c0-c2
                 if d.get('die', '').startswith('s81') and fk not in ('SELECT', 'COLLECT', 'GATHER'):
                     fk = rect  # retain existing tree roots outside the local functional families
                 fam[fk] += [(r, p) for p in sl]

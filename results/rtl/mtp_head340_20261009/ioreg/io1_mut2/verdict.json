@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.mtp.head_full340_gate.v1",
+  "ioreg": 1,
+  "die": 0,
+  "first_bundle": 81,
+  "nb": 4,
+  "row_base": 10368,
+  "die_rows": 405,
+  "token": 21946,
+  "pinreg": 1,
+  "mutant": 2,
+  "mutant_bundle": 0,
+  "golden": {
+    "best_row": 10371,
+    "best_bits": "40a382e6"
+  },
+  "passed": false,
+  "exit": -6,
+  "metrics": null,
+  "bundles": [
+    {
+      "bundle": 81,
+      "row0": 10368,
+      "valid": 128,
+      "released_payload_sha256": "a2bdea911a5eb5db20d6ee48c54aca6091a91aa230e84c208342cdba549a73cb"
+    },
+    {
+      "bundle": 82,
+      "row0": 10496,
+      "valid": 128,
+      "released_payload_sha256": "62916d2f62a9f02ee034443a543d9dca6497620a5e829b9a118b7bedec4cb986"
+    },
+    {
+      "bundle": 83,
+      "row0": 10624,
+      "valid": 128,
+      "released_payload_sha256": "1efd757eab192cfad7e0a70230b95bfcb0c506c005d73cd5d5c36321858563b9"
+    },
+    {
+      "bundle": 84,
+      "row0": 10752,
+      "valid": 21,
+      "released_payload_sha256": "18cc210a22c582ce904e90b561e81a866da2bd51629c33f7964b2340e2f2b259"
+    }
+  ],
+  "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+  "checkpoint": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "1fd607d6540d3a644ba64fcc7c596bf9c52ce6bdb9a2c068883aaf7f56252034",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv": "acd4663aff09cd4b8ffce232a431734cfc34cc41682e616c72d4a85fde1d2da5",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv": "fa067df88cd68f0cbff16ac4ed8f9b54dd4bdbc7f0a3b416125f08bfa9be35b9",
+    "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv": "193abfb38da09952deaedd190f04e7c14f4d19f2144430bd966574e7d8951d2b"
+  },
+  "physical_qualified": false
+}

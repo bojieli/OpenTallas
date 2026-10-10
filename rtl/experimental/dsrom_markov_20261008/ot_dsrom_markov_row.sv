@@ -11,7 +11,12 @@ module ot_dsrom_markov_row #(
  parameter [8:0] CUT=511,
  parameter integer SPLIT9=1,
  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
- parameter integer MUTANT_FOLD=0
+ parameter integer MUTANT_FOLD=0,
+ // RINGDLY (mtp-lead 2026-10-10, default 0 = unchanged): the lane skew delay lines (s*SK deep, 32 b, 19,712 flops at
+ // SK 11) become ring buffers: D-1 slots written by a rotating one-hot pointer + an AND-OR read into one output
+ // register. Same delay (D) and same values; no zero-logic flop->flop chain (the routed io1a FF hold class: 43k
+ // shift-register endpoints at -5 ps inside a 30 ps margin), and one slot toggles per cycle instead of the whole line.
+ parameter integer RINGDLY=0
 )(
  input wire clk,rst_n,
  input wire start,
@@ -75,7 +80,22 @@ module ot_dsrom_markov_row #(
   for(s=0;s<8;s=s+1) begin:g_add
    wire [31:0] pd;
    if(s==0) assign pd=p[c*8+s];
-   else begin:g_delay
+   else if(RINGDLY!=0) begin:g_ring
+    localparam integer N=s*SK-1+(RINGDLY==2); // slots; the output register supplies the last cycle (RINGDLY 2: bench mutant, one late)
+    reg [N-1:0] ptr;                      // rotating one-hot write/read pointer
+    reg [31:0] slot[0:N-1];
+    reg [31:0] q;
+    reg [31:0] rd;
+    integer d;
+    always @(posedge clk or negedge rst_n)
+     if(!rst_n) ptr<={{(N-1){1'b0}},1'b1}; else ptr<={ptr[N-2:0],ptr[N-1]};
+    always @(*) begin rd=32'b0; for(d=0;d<N;d=d+1) rd=rd|({32{ptr[d]}}&slot[d]); end
+    always @(posedge clk) begin
+     for(d=0;d<N;d=d+1) if(ptr[d]) slot[d]<=p[c*8+s];
+     q<=rd;
+    end
+    assign pd=q;
+   end else begin:g_delay
     reg [31:0] q[0:s*SK-1];
     integer d;
     always @(posedge clk) begin

@@ -13,5 +13,11 @@ verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-UNUSEDSIGNAL -Wno-UNUSEDPARAM
 grep -c "%Warning-\(UNDRIVEN\|PINMISSING\|IMPLICIT\)" $O/lint.log >> $O/result.txt
 cd $O/gen
 iverilog -g2012 -o sim tb_$m.sv $m.sv *_simstub.sv && vvp -n sim > pos.log; echo "pos_rc=$?" >> ../result.txt; grep OT_RESULT pos.log >> ../result.txt
+# su inject-ownership gate (tb_out_q<qid>.mem): every quarter id must match its own reference, and the no-gate mutant
+# (every quarter drives t_coll) must FAIL
+if [ -f tb_out_q1.mem ]; then
+  for qd in 1 2 3; do iverilog -g2012 -Ptb.QID=$qd -o sim$qd tb_$m.sv $m.sv *_simstub.sv && vvp -n sim$qd > pos$qd.log; echo "pos_rc=$?" | sed 's/pos_rc=0$/pos_rc=0/;s/pos_rc=[1-9].*/pos_rc_FAIL q'$qd'/' >> ../result.txt; grep OT_RESULT pos$qd.log >> ../result.txt; done
+  iverilog -g2012 -Ptb.QID=1 -DOT_HFD_SU_MUT_NOGATE -o simg tb_$m.sv $m.sv *_simstub.sv && vvp -n simg > gmut.log; echo "gate_mut_rc=$?" >> ../result.txt; grep OT_RESULT gmut.log | sed 's/^OT_RESULT/GATE_MUT/' >> ../result.txt
+fi
 iverilog -g2012 -o simn tb_$m.sv ${m}_neg.sv *_simstub.sv && vvp -n simn > neg.log; echo "neg_rc=$?" >> ../result.txt; grep OT_RESULT neg.log >> ../result.txt
 cat ../result.txt

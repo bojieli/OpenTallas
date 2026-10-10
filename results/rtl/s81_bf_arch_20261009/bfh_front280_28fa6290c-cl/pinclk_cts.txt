@@ -1,0 +1,5 @@
+BF_PINCLK group: 1024 g_pin.r_* register clock pins moved from clk to bf_pinclk (driver bf_pinclk_root BUFx24_ASAP7_75t_R at 114.06 2.16 um)
+BF_PINCLK group: 600 g_pin.r_* register clock pins moved from clk to bf_pinclk1 (driver bf_pinclk_root1 BUFx24_ASAP7_75t_R at 142.263 4.769 um)
+BF_PINCLK groups: 2 for 1624 pin registers (link 60 um); 0 matching registers on other clock nets left in place
+BF_PINCLK post_cts pin group n 1624 arrival min 265.3 mean 274.3 max 285.3 (max-mean 11.0) | other regs n 12034 min 260.4 mean 289.8 max 321.8
+BF_IO boundary registers 1624 insertion mean max 221.99653491379294 min 212.57997586206878

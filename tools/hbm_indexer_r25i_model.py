@@ -152,3 +152,50 @@ def hbm_indexer_quarter_end_model():
       purpose='Lossless candidate quarter termination; whole-frame co.last cannot flush partial quarter flits',
       source='33b02c114 EXPOSE_QUARTER_LAST',
       physical='Fresh6903pin native master; historical6902pin record and failedroute preserved')
+
+
+def hbm_indexer_t4_join_model():
+    """Prebuild sizing for four real L4 taps behind the native L16 boundary."""
+    return dict(default_enabled=False, adopted=False,
+      taps_per_stack=4, lanes_per_tap=4, stacks=4,
+      MACs_per_stack_cycle=16*32*128,
+      tap_payload_bits=153, tap_landing_depth=128,
+      landing_bits_per_stack=4*153*128,
+      landing_FF_floor_um2_per_stack=4*153*128*0.2916,
+      output_payload_bits=609, output_credits=128,
+      bits_per_cycle=dict(tap_inputs=4*154, output=610,
+                          tap_credits=4, output_credit=1),
+      tap_slot_um=[1400,1250], grid_slot_um=[2800,2500],
+      grid_outline_mm2_per_stack=7.0,
+      composed_native_slot_um=[2800.128,3000.264],
+      composed_native_outline_mm2_per_stack=2800.128*3000.264/1e6,
+      composed_native_extra_outline_mm2_per_die=4*(2800.128-2000.16)*3000.264/1e6,
+      historical_native_outline_mm2_per_stack=2000.16*3000.264/1e6,
+      added_grid_outline_mm2_per_die=4*(7-2000.16*3000.264/1e6),
+      join_slot_um=[420,360], join_slot_um2=420*360,
+      join_outline_status='Separate hardened join required; mapped area and actual routing tracks unmeasured',
+      query_latency_extra_cycles_per_tap=3,
+      join_latency_min_cycles=2,
+      token_latency_status='Must measure tap/query/join/backpressure and compose8index layers; no rate credit',
+      acceptance='Atomic lane order and last agreement with finite credits; arbitrary tap skew and stalled downstream; dropped credit and lane swap negatives rejected; actual four-tap arithmetic exact gate and physical views remain required')
+
+
+def hbm_native_hgi_index_join_model():
+    """Price the actual HGI native-frame ports before exposing their RTL."""
+    return dict(default_enabled=False,adopted=False,MACs_per_cycle=0,
+      outgoing=dict(fs=90,qb=1048,kin=345,toc=1,coc=1,total_bits_per_cycle=1485),
+      incoming=dict(qbr=1,to=612,co=72,ev=2,total_bits_per_cycle=687),
+      memory_port=dict(vmq_bits=338,vmr_bits=274,peak_read_bytes_per_cycle=32),
+      face_stages=3,extra_pin_pipeline_FF_bits=(1485+687)*3,
+      extra_pin_pipeline_FF_floor_um2=(1485+687)*3*0.2916,
+      slot_um=[640.008,600.48],slot_um2=640.008*600.48,
+      input_capture_extra_cycles=3,output_launch_extra_cycles=3,
+      qb_initial_credits=4,query_blocks_per_frame=128,
+      output_FIFO=dict(depth_each=8,topk_bits=612,candidate_bits=72,total_payload_bits=8*(612+72),
+                       occupancy_bits=8,occupancy_FF_floor_um2=8*0.2916,
+                       added_latency_cycles=0,replicas=1,fanout='Two local4bit counters and credit-sized queue boundary comparators'),
+      readiness='Frame issued once; query and output streams retain native finite credits across relay roundtrips',
+      selector_boundary='Native T1 LA7 selector full payloads; co_quarter_last is not required by per-lane streaming candidate compaction, which ends on co.last wholeframe',
+      qualification='Port-exposure candidate only; actual core synthesis, longest clock hops and exact connected fullframe tests remain required',
+      routing_tracks='2172 newly exposed native bits; actual die relay/corridor layer capacity remains unqualified',
+      token_latency='Three capture plus three launch edges per crossing, plus real path hops and credit stalls; no performance credit before measured composition')

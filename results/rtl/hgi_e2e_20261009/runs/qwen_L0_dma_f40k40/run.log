@@ -1,0 +1,8 @@
+E2E: 34 golden records, 100221 HBM sectors loaded
+E2E SUMMARY cycles 145843 token 0 status 0 dispatched 34/34 dispatch_mismatch 0 final_vm_mismatch 0 final_hbm_mismatch 0 unloaded_hbm_reads 249
+E2E CFG status err 0 loaded 1
+E2E drained 145871 cycles after the doorbell (completion 145843)
+E2E completion token 0 (golden 0) status 0 cp_cycles 145837 doorbell->completion 145843
+E2E real-unit records 9, mismatching 0
+HGI_E2E PASS
+rc=0

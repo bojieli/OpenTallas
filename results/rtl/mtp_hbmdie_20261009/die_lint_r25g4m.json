@@ -1,0 +1,316 @@
+{
+ "schema": "opentallas.hgi_mtp_die_lint_extract.v1",
+ "tool": "tools/die_top_lint.py lint --die hbm --variant r25g4m",
+ "census": {
+  "instances": 1047,
+  "buses": 1572,
+  "net_bits": 1249394,
+  "masters": 444,
+  "real_instances": 54,
+  "placeholder_instances": 993
+ },
+ "margin_lint": "PASS",
+ "mtp_findings": {
+  "connectivity": [
+   {
+    "check": "floating",
+    "cls": "hub",
+    "signature": "hfd_cmdproc_s_mtp_native_mx1.f_hgi_argmax + ot_hgi_argmax18_m.t_hgi_cmdproc",
+    "nets": 1,
+    "bits": 3,
+    "examples": [
+     "hgi_argmax_ret"
+    ]
+   },
+   {
+    "check": "floating",
+    "cls": "hub",
+    "signature": "hfd_cmdproc_s_mtp_native_mx1.t_hgi_argmax + ot_hgi_argmax18_m.f_hgi_cmdproc",
+    "nets": 1,
+    "bits": 683,
+    "examples": [
+     "hgi_argmax_cmd"
+    ]
+   },
+   {
+    "check": "multi_driven",
+    "cls": "control",
+    "signature": "hfd_cmdproc_s_mtp_native_mx1.c* + hfd_stn_r12.a",
+    "nets": 2,
+    "bits": 66,
+    "examples": [
+     "ct_SW_0",
+     "ct_SE_0"
+    ]
+   },
+   {
+    "check": "port_not_found",
+    "cls": "hub",
+    "signature": "hfd_cmdproc_s_mtp_native_mx1.f_hgi_argmax",
+    "nets": 1,
+    "bits": 3,
+    "examples": [
+     "hgi_argmax_ret"
+    ]
+   },
+   {
+    "check": "port_not_found",
+    "cls": "hub",
+    "signature": "hfd_cmdproc_s_mtp_native_mx1.t_hgi_argmax",
+    "nets": 1,
+    "bits": 683,
+    "examples": [
+     "hgi_argmax_cmd"
+    ]
+   },
+   {
+    "check": "port_not_found",
+    "cls": "hub",
+    "signature": "ot_hgi_argmax18_m.f_hgi_cmdproc",
+    "nets": 1,
+    "bits": 683,
+    "examples": [
+     "hgi_argmax_cmd"
+    ]
+   },
+   {
+    "check": "port_not_found",
+    "cls": "hub",
+    "signature": "ot_hgi_argmax18_m.t_hgi_cmdproc",
+    "nets": 1,
+    "bits": 3,
+    "examples": [
+     "hgi_argmax_ret"
+    ]
+   },
+   {
+    "check": "undriven",
+    "cls": "hub",
+    "signature": "hfd_cmdproc_n.xb + hfd_cmdproc_s_mtp_native_mx1.xb",
+    "nets": 1,
+    "bits": 16,
+    "examples": [
+     "hb_cmdproc_x1"
+    ]
+   }
+  ],
+  "unbound_real_pins": [
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "f_am",
+    "insts": 1,
+    "bits": 18,
+    "dir": "input",
+    "width": 18
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "f_backend",
+    "insts": 1,
+    "bits": 73,
+    "dir": "input",
+    "width": 73
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "f_emit_host",
+    "insts": 1,
+    "bits": 2,
+    "dir": "input",
+    "width": 2
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "f_host",
+    "insts": 1,
+    "bits": 216,
+    "dir": "input",
+    "width": 216
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "f_provider",
+    "insts": 1,
+    "bits": 179,
+    "dir": "input",
+    "width": 179
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_abort",
+    "insts": 1,
+    "bits": 1,
+    "dir": "output",
+    "width": 1
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_backend",
+    "insts": 1,
+    "bits": 271,
+    "dir": "output",
+    "width": 271
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_drained",
+    "insts": 1,
+    "bits": 1,
+    "dir": "output",
+    "width": 1
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_emit",
+    "insts": 1,
+    "bits": 38,
+    "dir": "output",
+    "width": 38
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_emit_host",
+    "insts": 1,
+    "bits": 100,
+    "dir": "output",
+    "width": 100
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_host",
+    "insts": 1,
+    "bits": 5,
+    "dir": "output",
+    "width": 5
+   },
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "port": "t_provider",
+    "insts": 1,
+    "bits": 43,
+    "dir": "output",
+    "width": 43
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "cfg_imm_a",
+    "insts": 1,
+    "bits": 18,
+    "dir": "input",
+    "width": 18
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "cfg_rank",
+    "insts": 1,
+    "bits": 7,
+    "dir": "input",
+    "width": 7
+   }
+  ],
+  "clocking": [
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "view": "real",
+    "clock": "no_clock_port",
+    "instances": 1
+   },
+   {
+    "master": "hgi_mtp_native",
+    "view": "real",
+    "clock": "has_clock_port",
+    "instances": 1
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "view": "real",
+    "clock": "has_clock_port",
+    "instances": 1
+   }
+  ],
+  "reset": [
+   {
+    "master": "hfd_cmdproc_s_mtp_native_mx1",
+    "net": "reset_tree",
+    "instances": 1
+   },
+   {
+    "master": "hgi_mtp_native",
+    "net": "reset_tree",
+    "instances": 1
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "net": "reset_tree",
+    "instances": 1
+   }
+  ]
+ },
+ "physical": {
+  "missing_pins": [],
+  "face_away": [
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "in_bias_en",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "hb_mtp_am.in_bias_en face W peer 115 um behind (hb_su_red_am_in_bias_en)"
+    ]
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "in_last",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "hb_mtp_am.in_last face W peer 115 um behind (hb_su_red_am_in_last)"
+    ]
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "in_mask",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 8,
+    "examples": [
+     "hb_mtp_am.in_mask face W peer 116 um behind (hb_su_red_am_in_mask)"
+    ]
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "in_v",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "hb_mtp_am.in_v face W peer 117 um behind (hb_su_red_am_in_v)"
+    ]
+   },
+   {
+    "master": "ot_hgi_argmax18_m",
+    "port": "in_vals",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 256,
+    "examples": [
+     "hb_mtp_am.in_vals face W peer 142 um behind (hb_su_red_am_in_vals)"
+    ]
+   }
+  ],
+  "pin_spread": [],
+  "pin_spread_count": [],
+  "abut_without_channel": []
+ },
+ "classification": {
+  "hgi_argmax_cmd/ret floating + port_not_found": "dispatch adapter (argmax slot) and CP-south dispatch ports: hgi-takeover obligations",
+  "cfg_rank / cfg_imm_a unbound": "driven by the dispatch adapter",
+  "MX1 host/provider/backend/f_am unbound": "generic backend translator + CTL.AMAX (hgi-takeover) + host path",
+  "multi_driven ct_SW_0 / ct_SE_0 (MX1 c* inout + hfd_stn_r12.a)": "inherited hfd_cmdproc_s inout SM control tree, visible now that the S band is a real RTL view (baseline r25g4 S band is a placeholder)",
+  "undriven hb_cmdproc_x1 xb": "pre-existing in baseline r25g4 (N band placeholder)",
+  "face_away argmax in_*": "argmax view pins in_* on W / top faces; su_red is north: repin in_vals / in_bias to top (hgi-takeover cfg) or accept the spine wire",
+  "controller hgi_mtp_native buses": "no findings: all 6 groups (CP 197/517, router 59/58, coll 19/1) bound both ends"
+ }
+}

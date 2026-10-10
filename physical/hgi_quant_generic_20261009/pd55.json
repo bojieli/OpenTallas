@@ -1,0 +1,129 @@
+{
+  "name": "hgi_quant_pd55-7202d4ec4-tc-cx",
+  "block": "ot_hgi_quant_decode",
+  "owner": "Codex:generic_quant_decode/quant_physical_pair",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "codex/hgi-quant-decode-20261009",
+    "commit": "7202d4ec4",
+    "extra_paths": [
+      "results/hgi_generic/cf_qdq_891b4b555"
+    ]
+  },
+  "purpose": "Owner-approved HGI-1 G8 full32-lane/128-bit record quant decode; SATFINITE opt-in E4M3 corrected fork; all ports live. Physical-only density variant. Standalone boundary contract is provisional and explicitly not legacyhfd_quant die budget match. No adoption until generic die integration budget approved. Parent exact lockstep/CF-QDQ/mutants must pass before fleet intake.",
+  "registered_io": true,
+  "rtl_boundary": {
+    "levels": 16
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "ds_lockstep_and_mutant",
+        "cmd": "bash tools/hgi_quant_decode_bench.sh {RUN}/bench_ds",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 2
+      },
+      {
+        "name": "ds_mutant_rejected",
+        "cmd": "test -s {RUN}/bench_ds/mutant.rc && test $(cat {RUN}/bench_ds/mutant.rc) != 0 && grep -q 'ARITHMETIC mismatch' {RUN}/bench_ds/mutant.log && exit 1; exit 0",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "cf_qdq_and_mutant",
+        "cmd": "bash tools/hgi_quant_vector_bench.sh {RUN}/bench_cf +VECTORS=results/hgi_generic/cf_qdq_891b4b555 +N8=49 +N4=49 +N4E=86",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 2
+      },
+      {
+        "name": "cf_scale_mutant_rejected",
+        "cmd": "test -s {RUN}/bench_cf/mutant.rc && test $(cat {RUN}/bench_cf/mutant.rc) != 0 && grep -q 'CF-QDQ golden mismatch' {RUN}/bench_cf/mutant.log && exit 1; exit 0",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 12,
+      "peak_ram_gb": 10
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
+      "logs": [
+        "{RUN}/routes/{NAME}/flow.log"
+      ],
+      "peak_ram_gb": 48
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc"
+    ]
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "New fullgeneric128-bit record/control interface absent from legacyhfd_quant budget. Explicit standalone route_master allinter150ps measuredTT reference/H1 boundary80fF load150ps transition used for pathfinding. Genericdie integration must supply and approve finalbudget before adoption."
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "cycles_added": 15,
+  "cycles_note": "E4M3 native8edges aligned by15edges to23edges; DSnative23edges unchanged; physicaldensityvariant adds0edges; illegaldecode_fault1edge",
+  "bench_memory_basis": "95eba5a81 actual five whole-PG samples max1002060KiB;2GiB conservative admissionenvelope for sequential8workerbuilds,not a cap/routepeak",
+  "route_memory_basis": {
+    "nearest_job": "hbm_quant_e7c2e5b06-tt",
+    "host": "ot-epyc3",
+    "baseline_cells": 112153,
+    "baseline_area_um2": 16816.63032,
+    "baseline_outline_um": [
+      1399.656,
+      358.536
+    ],
+    "new_cells": 122121,
+    "new_area_um2": 18541.0944,
+    "new_outline_um": [
+      1800,
+      600
+    ],
+    "baseline_cal_cts_peak_kib": 3462408,
+    "baseline_drt_peak_kib": 18642752,
+    "formula": "actual baseline phase peak * max(cellratio,arearatio) * outlinearea ratio * 1.10growth, then conservative wholeGiB rounding",
+    "scale_without_growth": 2.3728269383289358,
+    "cal_estimate_gib_unrounded": 8.618607016824889,
+    "drt_estimate_gib_unrounded": 46.40543610115453,
+    "admission_estimate_gib": {
+      "calibrate": 10,
+      "route": 48
+    },
+    "status": "Estimates derived from measured sibling phase peaks, not measured G8 peaks or hard caps"
+  },
+  "corner_scene_audit": "cfg contains noCORNER assignment; current route_master --orfs-corner ${CORNER:-WC}, holdcornersWC,BC. OT_ORFS_CORNER_OVERRIDE=TC overlaysWC_LIB_FILESwithTT liberties withoutTCscene rename. ActualgeneratedconfigWC/BC+60/25+833.333 mandatorypostlaunch.",
+  "hold_eco": {
+    "reexport": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/hgi_quant_generic_20261009/results/pd55"
+    }
+  ],
+  "merge_target": null
+}

@@ -1,0 +1,26 @@
+{
+  "returncode": 0,
+  "command": [
+    "bash",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/src/tools/w2_c1_eco_current/flow/tools/closure_loop/hold_eco.sh",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/signoff_seed",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco",
+    "ot_hbm_native_frame_station_rb"
+  ],
+  "env": {
+    "SETUP_LIB": "TT",
+    "ACC_SS": "0",
+    "ACC_FF": "0",
+    "ECO_RB_DB": "6_final.odb",
+    "SDC_NAME": "6_final.sdc",
+    "ECO_SESSION": "mm",
+    "THREADS": "8",
+    "HM": "0",
+    "SM": "40",
+    "FILT": "40",
+    "ALLOW": "12",
+    "PASSES": "2",
+    "MAXL": "M7"
+  }
+}

@@ -1,0 +1,11 @@
+EHASH_CYCLES layer=0 slot=0 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=1 slot=0 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=1 slot=1 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=0 slot=1 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=0 slot=2 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=1 slot=2 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=0 slot=0 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=1 slot=0 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=1 slot=0 command_to_ready=41 first_row_wait=16
+EHASH_CYCLES layer=0 slot=0 command_to_ready=41 first_row_wait=16
+PASS EHASH DS LOCKSTEP HISTORY ACCEPT 10 cases 240 row ids

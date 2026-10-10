@@ -2,6 +2,9 @@
 # core_clk (ck, the die clock) comes from run_abi3_physical; clk_i = the ingest core clock = ck / 2 (own root);
 # clk_h = the host link user clock (1 GHz).  The three domains cross only through Gray-pointer async FIFOs and a
 # toggle-qualified static CSR, so they are asynchronous groups.  Host-face IO is timed against clk_h at 20 %.
+# struct-close 2026-10-09: clk_period exists only in the ORFS SDC; the sign-off corner_sta session reads this file as a
+# --post-sdc where it is undefined (Tcl error -> null metrics -> hing_dsfd_A/B, hing_hfd_A "verdict inputs missing").
+if {![info exists clk_period]} { set clk_period [get_property [get_clocks core_clk] period] }
 create_clock -name clk_i -period [expr $clk_period * 2] [get_ports clk_i]
 create_clock -name clk_h -period 1000 [get_ports clk_h]
 set_clock_uncertainty -setup 60 [get_clocks {clk_i clk_h}]

@@ -5,8 +5,8 @@ program.json) as an HGI-1 record stream for one die, scheduled with the command 
 Lowering (spec section 3.8 native engine ops; one record per program op):
   mv            SM.MATVEC fmt 0 / 1 / 2 (BF16 / FP8 / FP4 block dot); A x (VM), B weights (HBM), O (VM)
   hc_mixes      HC.HC_MIX                 hc_pre_norm / final_norm   FUSED.HC_PRE_NORM     hc_post  FUSED.HC_POST
-  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK_LOCAL
-  route / cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
+  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK
+  route  IDX.TOPK;  cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
   attend        ATT.QK (the tile job) + SU.VOP (the fused softmax / PV-normalise / inverse-RoPE chain)
   q_norm_kv_row / q_rope / router_act / moe_sum / compressor / engram_mix   SU.VOP (one record a fused chain)
   swiglu        SFU.GLU                   argmax_local  ARGMAX.LOCAL
@@ -45,11 +45,11 @@ PROGRAM = ROOT / "results/rtl/dshbm_baseline_measured_20261004/program.json"
 FMT = {"fp8": (1, "FP8E4M3", 1.0), "fp4": (2, "FP4E2M1", 0.5), "bf16": (0, "BF16", 2.0)}
 LOCAL_UNIT = {"hc_mixes": ("HC", "HC_MIX"), "hc_pre_norm": ("FUSED", "HC_PRE_NORM"),
               "final_norm": ("FUSED", "HC_PRE_NORM"), "hc_post": ("FUSED", "HC_POST"),
-              "index_q": ("IDX", "INDEX_Q"), "index_scores": ("IDX", "INDEX_SCORES"),
-              "topk_local": ("IDX", "TOPK_LOCAL"), "route": ("IDX", "SELECT"), "cand_local": ("IDX", "SELECT"),
-              "cand_apply": ("IDX", "SELECT"), "cand_mask": ("IDX", "SELECT"), "swiglu": ("SFU", "GLU"),
+              "index_q": ("SU", "VOP"), "index_scores": ("IDX", "INDEX"),     # G18: RoPE + scale on the SU, one frame
+              "route": ("IDX", "TOPK"), "swiglu": ("SFU", "GLU"),
               "argmax_local": ("ARGMAX", "LOCAL"), "engram_fetch": ("DMA", "LOAD")}
-SUB = {"route": 0, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
+SUB = {"route": 6 | (1 << 12)}
+FRAME_OPS = ("topk_local", "cand_local", "cand_apply", "cand_mask")   # G18: part of the IDX.INDEX frame record
 TP = 96
 C3B = [False]
 
@@ -95,6 +95,7 @@ def lower(prog, die=0):
     b.add = add
     for lay in prog["layers"]:
         L = lay["layer"]
+        frame = None
         for op in lay["ops"]:
             k = op["kind"]
             src = dict(layer=L, op=op)
@@ -107,12 +108,17 @@ def lower(prog, die=0):
                 bdesc = H(fmt, op["k"], rows)
                 slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
                 if slot and op["w"][0] < 6 and C3B[0]:      # routed expert: indexed descriptor on the router id word
-                    bdesc.dyn_sel, bdesc.lstride, bdesc.dyn_mul = 31, vm("route_ids", 8) + op["w"][0], 1 << 20
-                r = Rec("SM", "MATVEC", param=fp, desc=dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304),
-                                                            B=bdesc, O=V(op["out"], op["n"])),
+                    bdesc.indexed, bdesc.dyn_mul = 1, 1 << 20
+                dd = dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304), B=bdesc, O=V(op["out"], op["n"]))
+                if bdesc.indexed:
+                    dd["I"] = MDesc(space="VM", fmt="U32", base=vm("route_ids", 8) + op["w"][0], n=1)
+                r = Rec("SM", "MATVEC", param=fp, desc=dd,
                         tag=op["tag"], family="mv." + op["fn"])
                 r.src = src
                 b.add(r, [xin] + (["expert_w"] if slot else []), [op["out"]])
+            elif k == "local" and op["fn"] in FRAME_OPS and frame is not None:
+                frame.src.setdefault("extra", []).append(op)      # priced inside the IDX.INDEX frame (G18)
+                continue
             elif k == "local":
                 fn = op["fn"]
                 _, rd, wr = io[fn]
@@ -136,6 +142,8 @@ def lower(prog, die=0):
                         tag=op["tag"], family=fn)
                 r.src = src
                 b.add(r, rd, wr)
+                if fn == "index_scores":
+                    frame = r
             elif k in ("all_gather", "all_reduce", "topk_merge", "kv_gather"):
                 uop = {"all_gather": "ALL_GATHER", "kv_gather": "ALL_GATHER", "all_reduce": "ALL_REDUCE_SUM",
                        "topk_merge": "ARGMAX_MERGE" if op.get("what") == "argmax" else "TOPK_MERGE"}[k]
@@ -194,6 +202,17 @@ class WalkCost:
     def __call__(self, r, dyn, L):
         if r.src is None:
             return 1.0, "estimate", "END"
+        ex = r.src.get("extra")
+        if ex:                                 # a record that runs several w19 ops (the G18 indexer frame)
+            import copy as _c
+            base = _c.copy(r)
+            base.src = {k: v for k, v in r.src.items() if k != "extra"}
+            c, g, how = self(base, dyn, L)
+            for op in ex:
+                x = _c.copy(r)
+                x.src = dict(base.src, op=op)
+                c += self(x, dyn, L)[0]
+            return c, g, how + f" (+ {len(ex)} ops of the frame)"
         op, Lsrc = r.src["op"], r.src["layer"]
         if op.get("fn") == "hc_mixes":
             return self.mix_us * 1200, "measured", self.mix_how
@@ -277,7 +296,7 @@ def main():
         hol_and_drain_vs_dataflow_pct=round(100 * (t2 - t0) / t2, 2),
         s2_vs_published_walk_pct=round(100 * (t2 / (walk_us * 1200) - 1), 2))
     print(json.dumps(res["overheads"], indent=1))
-    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 v0.9 (024fa2af1)", position=1048575,
+    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 1.0 (approved encoding)", position=1048575,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                grade="unit costs = the DS composition's (measured / measured_tu_budget / modelled rows as there); "
                      "CP entries estimates (calibration.json)", result=res, calibration_cp=T.CAL["cp"])

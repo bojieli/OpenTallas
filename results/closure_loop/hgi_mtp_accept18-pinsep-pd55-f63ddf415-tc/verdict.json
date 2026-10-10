@@ -1,0 +1,169 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc",
+ "block": "ot_hgi_mtp_accept18",
+ "owner": "Claude:mtp-lead",
+ "source_branch": "claude/mtp-lead-20261009",
+ "record_branch": "codex/closure-record-hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc",
+ "source_commit": "f63ddf4155ee406cbf54c45e9e0640af02cf0aa7",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 227.68,
+  "ff_ps": 21.94,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -17.5,
+  "ss_sensitivity_tns_ps": -46.9,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/work/orfs/logs/asap7/opentallas_hgi_mtp_accept18_route_asap7_qdm_hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_accept_positive": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 7232\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 785\n\tVoluntary context switches: 1\n\tInvoluntary context switches: 0\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 8\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+   "track": "parallel"
+  },
+  "bench_accept_width_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 7220\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 784\n\tVoluntary context switches: 1\n\tInvoluntary context switches: 0\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 8\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+   "track": "parallel"
+  },
+  "bench_accept_bonus_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 7356\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 785\n\tVoluntary context switches: 1\n\tInvoluntary context switches: 0\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 8\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T07:36:10-07:00",
+ "job_spec": {
+  "name": "hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc",
+  "block": "ot_hgi_mtp_accept18",
+  "owner": "Claude:mtp-lead",
+  "purpose": "mtp-lead 2026-10-09: HGI-1 item 4 MTP accept18, same RTL/benches as 4bffda75f; clk / rst_n pins split into separate top regions (both 4bffda75f routes: only DRC 1, M5 Metal Spacing rst_n vs clk). 0 cycles.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc3",
+   "ot-epyc2",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+   "branch": "claude/mtp-lead-20261009",
+   "commit": "f63ddf4155ee406cbf54c45e9e0640af02cf0aa7"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "accept_positive",
+     "expect": "pass",
+     "threads": 2,
+     "peak_ram_gb": 1,
+     "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_positive 0; rc=$?; cat {RUN}/bench/accept_positive/run.log; exit $rc",
+     "pass_regex": "HGI_ACCEPT18 PASS"
+    },
+    {
+     "name": "accept_width_mutant",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 1,
+     "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_width_mutant 1; rc=$?; cat {RUN}/bench/accept_width_mutant/run.log; exit $rc",
+     "fail_regex": "FATAL:"
+    },
+    {
+     "name": "accept_bonus_mutant",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 1,
+     "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_bonus_mutant 2; rc=$?; cat {RUN}/bench/accept_bonus_mutant/run.log; exit $rc",
+     "fail_regex": "FATAL:"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Current route_master recomputes true corner reference at every route phase"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm; SRC={SRC} PD=0.55 HM=0.035 NC=8 bash physical/qwen_die_masters/jobs/route_master.sh hgi_mtp_accept18_pinsep {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "route_corner": "TC",
+  "cycles_added": 1,
+  "merge_target": null,
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/mtp_lead_20261009/routes/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc"
+   }
+  ],
+  "admission_evidence": {
+   "status": "OWN_PHASE_MEASURED_FULL_ROUTE_CONSERVATIVE_ESTIMATE",
+   "source_measured": "377249427",
+   "claim_gib": 4,
+   "floorplan_peak_kib": 322588,
+   "mapped_cells": 2137,
+   "source_delta": "67 input seat FF; fixed180x140/noSRAM",
+   "rationale": "4GiB >=12x nearest own measured floorplan .308GiB; full-route peak not measured",
+   "evidence": "43b313543"
+  },
+  "notes": "Opt-in PINREG1, +1 accept command latency priced757907078; actual108PASS+2mutantsFAIL and boundary0/0 PASS; fullrouteclaim4GiB conservative estimate from ownphase .308GiB, NOTmeasuredDRT. TT>=0FF>=0DRC0. CurrentflowdeclaresWC+BC, TT viaoverlay; noCORNER=TC.",
+  "rtl_boundary": {
+   "source": "4bffda75f",
+   "evidence": "results/rtl/hgi_token18_20261009/accept_seat/rtl_boundary.json",
+   "status": "PASS",
+   "input_to_reg_max": 0,
+   "reg_to_out_max": 0
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

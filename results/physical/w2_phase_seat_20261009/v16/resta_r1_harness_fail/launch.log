@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/tools/w2_baseline_tt25_resta.py", line 44, in <module>
+    probe=sta('TT','probe_TT.log',sdc);ffprobe=sta('FF','probe_FF.log',sdc)
+  File "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/tools/w2_baseline_tt25_resta.py", line 40, in sta
+    if p.returncode or re.search(r'(?m)^\[ERROR|^Error:',log):raise RuntimeError(f'{corner} STA rc={p.returncode}: {log[-3000:]}')
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: TT STA rc=1: t_R)
+  28.51  127.28 ^ clkbuf_1_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.67  155.95 ^ clkbuf_1_0_1_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.86  184.81 ^ clkbuf_2_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  31.38  216.19 ^ clkbuf_3_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  30.83  247.02 ^ clkbuf_4_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  32.11  279.13 ^ clkbuf_5_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  35.05  314.18 ^ clkbuf_7_0__f_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  60.92  375.09 ^ clkbuf_leaf_1498_clk_sm/Y (BUFx24_ASAP7_75t_R)
+   4.19  379.29 ^ _281096_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  404.29   clock uncertainty
+   0.00  404.29   clock reconvergence pessimism
+  15.64  419.92   library hold time
+         419.92   data required time
+---------------------------------------------------------
+         419.92   data required time
+        -366.49   data arrival time
+---------------------------------------------------------
+         -53.44   slack (VIOLATED)
+
+
+Startpoint: in_data[517] (input port clocked by clk_sm)
+Endpoint: _281084_ (rising edge-triggered flip-flop clocked by clk_sm)
+Path Group: clk_sm
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_sm (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 347.17  347.17 v input external delay
+   1.20  348.37 v in_data[517] (in)
+  18.68  367.04 v input2937/Y (BUFx2_ASAP7_75t_R)
+   0.12  367.16 v _281084_/D (DFFHQNx1_ASAP7_75t_R)
+         367.16   data arrival time
+
+   0.00    0.00   clock clk_sm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_sm (in)
+  46.92   46.92 ^ wire17215/Y (BUFx16f_ASAP7_75t_R)
+  51.85   98.77 ^ clkbuf_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.51  127.28 ^ clkbuf_1_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.67  155.95 ^ clkbuf_1_0_1_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.86  184.81 ^ clkbuf_2_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  31.38  216.19 ^ clkbuf_3_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  30.83  247.02 ^ clkbuf_4_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  32.11  279.13 ^ clkbuf_5_0_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  35.05  314.18 ^ clkbuf_7_0__f_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  60.92  375.09 ^ clkbuf_leaf_1498_clk_sm/Y (BUFx24_ASAP7_75t_R)
+   4.62  379.71 ^ _281084_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  404.71   clock uncertainty
+   0.00  404.71   clock reconvergence pessimism
+  15.78  420.49   library hold time
+         420.49   data required time
+---------------------------------------------------------
+         420.49   data required time
+        -367.16   data arrival time
+---------------------------------------------------------
+         -53.33   slack (VIOLATED)
+
+
+Group                                  Slack
+--------------------------------------------
+asynchronous                          -38.24
+asynchronous                          -38.24
+
+[WARNING STA-0366] port 'rst_n' not found.
+[WARNING STA-0471] no valid objects specified for -from.
+[ERROR STA-0511] report_checks command failed.
+Error: sta.tcl, 23 STA-0511
+

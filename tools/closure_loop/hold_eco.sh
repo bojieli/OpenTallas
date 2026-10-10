@@ -34,6 +34,12 @@ IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
 [ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
 if [ -n "${ECO_GUARD:-}" ]; then python3 "$CLD/eco_recovery.py" verify "$ECO_GUARD"; fi
 mkdir -p "$OUT"
+# mtp-lead 2026-10-09: per-job opt-in knobs in <run>/hold_eco_opts.env (CLD = <run>/cl), e.g. REPAIR_DRV=1 DRV_SLEW_MARGIN=50.
+# Only REPAIR_DRV / DRV_SLEW_MARGIN / DRV_CAP_MARGIN / DRV_MAX_WIRE are read from it; absent file = default ECO, unchanged.
+if [ -f "$CLD/../hold_eco_opts.env" ]; then
+  while IFS='=' read -r k v; do case "$k" in REPAIR_DRV|DRV_SLEW_MARGIN|DRV_CAP_MARGIN|DRV_MAX_WIRE) [[ "$v" =~ ^[0-9.]+$ ]] && export "$k=$v" ;; esac; done < "$CLD/../hold_eco_opts.env"
+  echo "OT_ECO job opts: REPAIR_DRV=${REPAIR_DRV:-0} DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20} DRV_MAX_WIRE=${DRV_MAX_WIRE:-0}" | tee "$OUT/job_opts.log"
+fi
 DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6_final.odb: stacked ECO on an installed ECO (drive-1243)
 # (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
@@ -86,7 +92,9 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
            -e OT_RES_AWARE=${RESAWARE:-1} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8}
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
-           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0})
+           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0}
+           -e OT_REPAIR_DRV=${REPAIR_DRV:-0} -e OT_DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} -e OT_DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20}
+           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0})
   # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
   # Legacy merged-corner selection remains an explicit request.
   SESSION=ff

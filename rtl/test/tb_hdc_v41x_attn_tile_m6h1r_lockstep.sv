@@ -14,7 +14,10 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     parameter integer RV = 0;
     parameter integer PMID = 0;            // HALF = 3: ot_attn_tile_m6h1p PMID (RIN 3 + PMID)
     parameter integer POUT = 0;            // HALF = 3: ot_attn_tile_m6h1p POUT (XD 2 + POUT)
-    parameter integer HALF = 0;            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
+    parameter integer HALF = 0;
+    // redesign-hbm 2026-10-09 (HALF = 2): CG 1 gates every quad (ot_attn_tile_m6h1q CG); IDLE > 0 alternates ACT busy
+    // cycles with IDLE fully idle cycles (no ld_v / ld_w2v / iv) so the gates close; MUTCG 1 = wake 2 edges late (must FAIL)
+    parameter integer CG = 0, IDLE = 0, ACT = 200, MUTCG = 0, HOLDQ = 256;            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
     localparam integer RIN = (HALF == 3) ? 3 + PMID : (HALF == 2) ? 1 : HALF ? 2 : 3 + RV + RMID, XD = 2 + ((HALF == 3) ? POUT : HALF ? 0 : ROC);
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
@@ -44,7 +47,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF == 2) begin : g_quad
-        ot_attn_tile_m6h1x u_s (
+        ot_attn_tile_m6h1x #(.CG(CG), .HOLD(HOLDQ), .MUT_CG(MUTCG)) u_s (
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF != 0) begin : g_half
@@ -57,7 +60,11 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end endgenerate
     assign oy_c = (NEG != 0) ? {oy_s[H*32-1:64], oy_s[31:0], oy_s[63:32]} : oy_s;
-    integer cyc = 0, mism = 0, nov = 0, i;
+    integer cyc = 0, mism = 0, nov = 0, i, ngated = 0;
+    wire idle_w = (IDLE > 0) && (cyc > 50) && ((cyc % (ACT + IDLE)) >= ACT);
+    generate if (CG != 0 && HALF == 2) begin : g_cgmon
+        always @(posedge clk) if (!g_quad.u_s.g_q[0].u_q.g_cg.u_cgt.en) ngated <= ngated + 1;
+    end endgenerate
     function automatic [15:0] rbf16(input integer dummy);
         reg [15:0] x;
         begin
@@ -84,25 +91,27 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (cyc == 4) rst_n <= 1'b1;
-        ld_v <= (($urandom % 3) == 0);
+        ld_v <= (($urandom % 3) == 0) && !idle_w;
         ld_mode <= $urandom % 2;
-        ld_w2v <= $urandom % 2;
+        ld_w2v <= ($urandom % 2) && !idle_w;
         ld_bank <= $urandom % NBANK;
         ld_grp <= (($urandom % 8) == 0) ? $urandom : ($urandom % H);
         for (i = 0; i < PWORDS * TD; i = i + 1) ld_w[i*16 +: 16] <= rbf16(0);
-        iv <= (($urandom % 4) != 0);
+        iv <= (($urandom % 4) != 0) && !idle_w;
         ibank <= $urandom % NBANK;
         for (i = 0; i < TD; i = i + 1) ib[i*18 +: 18] <= relem(0);
         if (rst_n) begin
             if (ov_l) nov <= nov + 1;
-            if (cyc > RIN + XD + 8 && (ov_l !== ov_s || oy_l !== oy_c || of_l !== of_s)) begin
+            // CG: a gated leaf holds oy / oflt while ov is low (the ungated leaf registers its raw datapath there every cycle;
+            // oflt 'raises with its output', ot_hdc_v41x_attn_tile.sv); ov is compared every cycle, oy and oflt wherever ov is set
+            if (cyc > RIN + XD + 8 && (ov_l !== ov_s || ((CG == 0 || ov_l) && (oy_l !== oy_c || of_l !== of_s)))) begin
                 mism <= mism + 1;
                 if (mism < 5) $display("MISMATCH cyc=%0d ov %b/%b oy %h / %h of %h / %h", cyc, ov_l, ov_s, oy_l, oy_s,
                                        of_l, of_s);
             end
         end
         if (cyc == NCYC) begin
-            $display("TILERLOCK cycles=%0d mismatches=%0d ov=%0d", cyc, mism, nov);
+            $display("TILERLOCK cycles=%0d mismatches=%0d ov=%0d gated_quad0=%0d", cyc, mism, nov, ngated);
             // nonzero exit on any mismatch, or if no output was ever compared (rule 2026-10-05)
             if (mism != 0 || nov == 0) $fatal(1, "TILERLOCK FAIL mismatches=%0d ov=%0d", mism, nov);
             $finish;

@@ -1,0 +1,285 @@
+{
+  "scope": "CURRENT_DIE_CANDIDATE_PLACEMENT_NOT_FUNCTIONAL_INTEGRATION",
+  "variant": "R25I",
+  "variant_dict": {
+    "n_mirror_fix": true,
+    "x_chain": true,
+    "w_my": true,
+    "strip_d": 864.0,
+    "port_fix": true,
+    "ew_corridor": true,
+    "sm_xmid": true,
+    "lanes": true,
+    "spch": 1244.16,
+    "root_pins": true,
+    "serdes_mg": 250.56,
+    "orient_fix": true,
+    "clk_dom": true,
+    "sm_rtl_w": true,
+    "sm_desc": true,
+    "link_rtl": true,
+    "coll_rtl": true,
+    "attn_rtl": true,
+    "hub_io": true,
+    "fwd": true,
+    "rq_chain": true,
+    "stn_share": true,
+    "hub_h": 12100.0,
+    "spine_h": 7500.0,
+    "spine_w": 1399.68,
+    "face_vm": 2000.0,
+    "attn_tile_w_um": 1778.544,
+    "attn_tile_h_um": 1350.0,
+    "face_fix": true,
+    "router_env": [
+      9338.688,
+      326.28
+    ],
+    "corner_rule": {
+      "hfd_stn_r26": {
+        "keep": 1.0,
+        "tail": 8
+      },
+      "hfd_stn_r11": {
+        "keep": 1.0,
+        "tail": 8
+      },
+      "hfd_stn_r19": {
+        "keep": 1.0,
+        "tail": 8
+      },
+      "hfd_stn_r21": {
+        "keep": 1.0,
+        "tail": 8
+      },
+      "hfd_stn_r23": {
+        "keep": 1.0,
+        "tail": 8
+      },
+      "hfd_meso_r1": {
+        "keep": 1.0,
+        "tail": 8
+      }
+    },
+    "pin_centre": {
+      "('hfd_stn_r23', 'rst')": 10.0,
+      "('hfd_router', 'rst')": 366.0253,
+      "('hfd_router', 'ck')": 612.5932,
+      "('hfd_loader', 'rst')": 366.0253,
+      "('hfd_loader', 'ck')": 612.5932
+    },
+    "split_masters": {
+      "hfd_index_q": "physical/hbm_accel_die_views/index_q/split/split.json",
+      "hfd_cmdproc": "physical/hbm_accel_die_views/cmdproc/split/split.json"
+    },
+    "split_lattice": {
+      "hfd_index_q": {
+        "hfd_index_q_b1:R0": 0.27,
+        "hfd_index_q_b4:R0": 1.62,
+        "hfd_index_q_b1:MX": 1.62,
+        "hfd_index_q_b0:R0": 0.0,
+        "hfd_index_q_b2:R0": 0.0,
+        "hfd_index_q_b3:R0": 0.0,
+        "hfd_index_q_b5:R0": 0.0,
+        "hfd_index_q_b0:MX": 0.0,
+        "hfd_index_q_b2:MX": 0.0,
+        "hfd_index_q_b3:MX": 0.0,
+        "hfd_index_q_b4:MX": 0.0,
+        "hfd_index_q_b5:MX": 0.0
+      }
+    },
+    "spine_slots": {
+      "su_red": [
+        1399.656,
+        218.136
+      ],
+      "su_full": [
+        346.008,
+        347.736
+      ]
+    },
+    "split_x_masters": "physical/hbm_accel_die_views/svc/split/split.json",
+    "host_bb": true,
+    "budget_stages": true,
+    "hub_stage_all": true,
+    "fwd_hub": true,
+    "spine_region": true,
+    "barrier_low": true,
+    "ck_centre": true,
+    "vm_split": true,
+    "pin_stage_roots": true,
+    "vm_ck_centre": true,
+    "iv_pin_stn": true,
+    "relay_all": true,
+    "hub_scale": 2.0,
+    "stable_roles": true,
+    "hub_pin_window": 1200.0,
+    "split_stations": [
+      "hfd_mcast_r6"
+    ],
+    "attn_tile_w0_um": 1349.136,
+    "attn_grow_mid": true,
+    "serdes_w_um": 2462.4,
+    "vm_cross_aligned": true,
+    "fix_station_pins": [
+      "hfd_cdist_r14",
+      "hfd_cdist_r15",
+      "hfd_gath_r10",
+      "hfd_gath_r24",
+      "hfd_gath_r25",
+      "hfd_gath_r8",
+      "hfd_gath_r9",
+      "hfd_meso_r28",
+      "hfd_meso_r32",
+      "hfd_stn_r2",
+      "hfd_stn_r34",
+      "hfd_stn_r18",
+      "hfd_stn_r20",
+      "hfd_stn_r31"
+    ],
+    "hub_ck_seg": 8,
+    "hub_pin_p4": true,
+    "vm_cross_2layer": true,
+    "hub_ports_file": "physical/hbm_accel_die_views/hub_ports_r24p.json",
+    "native_indexer": true,
+    "W": 30590.352,
+    "H": 24621.84
+  },
+  "geo": {
+    "W": 30590.352,
+    "H": 24621.84,
+    "x0": 365.904,
+    "grp_w": 10107.072,
+    "grp_h": 4665.599999999999,
+    "mid_ch": 8780.832,
+    "hub_h": 12100.32,
+    "side_h": 6260.24,
+    "core_w": 28994.976000000002,
+    "cx": 14863.392,
+    "hub_y": [
+      6607.44,
+      18014.4
+    ],
+    "ew_y": {
+      "S": 9828.576000000001,
+      "N": 15230.16
+    },
+    "spch": 1244.16
+  },
+  "new_slot": {
+    "name": "hb_hc_row",
+    "master": "hfd_hc_row",
+    "box_um": [
+      14163.552,
+      6650.64,
+      15563.552,
+      8050.64
+    ],
+    "area_um2": 1960000,
+    "macro_count": 64,
+    "production_clock_hz": 900000000
+  },
+  "overlaps": [],
+  "peers": {
+    "coll": {
+      "box_um": [
+        14163.552,
+        11607.84,
+        15563.208,
+        13011.816
+      ],
+      "center_distance_um": 4959.36
+    },
+    "loader": {
+      "box_um": [
+        14163.552,
+        8773.92,
+        15563.208,
+        9011.496
+      ],
+      "center_distance_um": 1542.2400000000007
+    },
+    "su_red": {
+      "box_um": [
+        14163.552,
+        16169.76,
+        15563.207999999999,
+        16387.896
+      ],
+      "center_distance_um": 8928.359999999999
+    },
+    "su_full": {
+      "box_um": [
+        14690.592,
+        16606.08,
+        15036.6,
+        16953.816000000003
+      ],
+      "center_distance_um": 9429.352000000003
+    },
+    "hc_row": {
+      "box_um": [
+        14163.552,
+        6650.64,
+        15563.552,
+        8050.64
+      ],
+      "center_distance_um": 0.0
+    }
+  },
+  "clock_contract": {
+    "status": "unqualified-explicit-source-contract",
+    "selected": false,
+    "external_generation_assumed": true,
+    "periods_ns": {
+      "stream": 0.8333333333333334,
+      "serial": 1.1111111111111112,
+      "hbm": 1.024,
+      "link": 0.8333333333333334
+    },
+    "serial_relationship": "external source phase locked: three serial edges per four stream edges; common rising edge every 10/3 ns",
+    "link_relationship": "independent phase; only actual dual-clock FIFO crossings may receive timing exceptions",
+    "hbm_protocol_exception": "1.024 ns (976.5625 MHz) HBM service clock remains distinct from 1.2 GHz streaming",
+    "reset_contract": "four active-high reset assertions; domain-local synchronized release must be implemented and checked",
+    "input_pin_count": 8,
+    "clock_pin_count": 4,
+    "reset_pin_count": 4,
+    "clock_pad_or_receiver_area_um2": null,
+    "external_generation_power_w": null,
+    "source_dynamic_power_w_per_input_ff": {
+      "stream": 5.879999999999999e-07,
+      "serial": 4.4099999999999994e-07,
+      "hbm": 4.785156249999999e-07,
+      "link": 5.879999999999999e-07
+    },
+    "power_basis": "C*V^2*f at 0.7 V, per fF; actual receiver/package capacitance and clock-generator power unmeasured",
+    "cts_status": "must rebuild from physical south-edge entries; historical hb_coll-root insertion numbers do not apply",
+    "remaining_gates": [
+      "actual full collective clk_stream/clk_link/por_stream/por_link pins",
+      "external source jitter, 3:4 phase relationship and reset release proof",
+      "package/clock receiver area, capacitance and external source energy",
+      "measured south-entry CTS for every real consumer with SS/FF uncertainty",
+      "CDC verification for every asynchronous edge; no blanket false paths"
+    ]
+  },
+  "producer": {
+    "port": "x_valid/x_ready,x_lease16,x_beat11,x_data256",
+    "beats": 1280,
+    "live_bytes": 40960,
+    "body_snapshots_per_die": 20,
+    "body_bytes": 819200,
+    "binding": "direct SU-tail BF16 publisher and finite CDC collar pending"
+  },
+  "remaining": [
+    "actual SU BF16 publication and admission binding",
+    "HBM service registered clock crossing and transaction binding",
+    "row-result collective/mixing consumer and finite credits",
+    "actual endpoint pin placements and SS/FF I/O budgets",
+    "clock source jitter/phase receiver costs and local reset release"
+  ],
+  "source_sha256": {
+    "hbm_hc_row_die_context.py": "5970e3dedd15704c6b89a85e9c5320064136b3f238d9619978e01eb2ac9b265c",
+    "hbm_accel_die_fp.py": "bbc71e173ffb9b6234fe53090143a59efd95d1d5969c77257deffd69cc4978a5",
+    "hbm_die_clock_inputs.py": "0e28cb73df3ea0c92ba8ca52a33ec2ed6b7c363cd120dbe0aa614e37ccdd3298"
+  }
+}

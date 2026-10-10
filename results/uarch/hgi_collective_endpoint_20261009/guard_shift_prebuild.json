@@ -1,0 +1,14 @@
+{
+  "source_baseline": "3208d76a3",
+  "change": "Replace runtime32bit divide/modulo in validpayload gate by shift/mask for legal power-of-two modes; preserve legacy constantNC expression",
+  "macs_per_cycle": 0,
+  "new_memory_bytes_per_cycle": 0,
+  "new_boundary_bits": 0,
+  "new_state_bits": 0,
+  "new_cycles": 0,
+  "latency": "combinational validity only, acceptedcommandsettling unchanged",
+  "routing_tracks": "no new wires crossing any boundary; fewer combinational cells expected but actual synthesis measurement pending",
+  "replicas": 1,
+  "area_slot": "same endpoint, no expanded storage or floorplan; mapped area difference not claimed until measured",
+  "qualification": "exhaustive original-expression vs actual RTL gate requested; DSdata path unchanged"
+}

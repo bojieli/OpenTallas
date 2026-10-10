@@ -133,6 +133,15 @@ def contract():
                  'ot_qkvd_rom_end.sv', kv_seq='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv',
                  bench='rtl/test/qwen_kv_die/ot_qkvd_layer_tb.sv + tb_qkvd_layer.cpp'),
         per_layer_bits=dict(rom_to_kv=(1 + 8 + 32) * WORD_BITS, kv_to_rom=64 * WORD_BITS),
+        version='1.1',
+        kv_merge=dict(rule='write-then-read fence (review-0528 KV4): the t = T-1 row request waits at the head of its '
+                           "engine's in-order queue until row {v, g} of this layer {T-1, layer} is merged at the landing; "
+                           'the response is replaced by the kept row; no timing assumption (a KVN stall is a stall)',
+                      rtl='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv', cost_cycles_per_layer=8,
+                      bench='mut7 (fence off, rows held 400 cycles): caught; mut8 (base, rows held 400): exact'),
+        ack_identity=dict(rule='AB5 / Q6 (struct-close e0aa47d8d): no 64-bit head identity on any ACK; an ACK lane is '
+                               '{pc[4:0], mask[1:0]} in queue order; no class of this contract carries a head ID',
+                          head_owner='ot_qfd_pc_head_owner_n'),
         clocking='one 1.2 GHz domain on both dies, from the KV-die PLL; ROM die clock = the forwarded PLL clock '
                  '(mesochronous); no CDC FIFO in our logic (the UCIe macro retimes); the HBM 976.6 MHz domain and its '
                  'CDC stay on the KV die',

@@ -1,0 +1,373 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_CORNER tt
+OT_WS 3.693584327280064e-11
+OT_TNS 0.0
+Startpoint: select_output$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: captured_data[108] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  25.04   25.04 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.95   48.99 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  28.77   77.76 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  29.10  106.86 ^ clkbuf_2_0__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  60.08  166.93 ^ clkbuf_leaf_9_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   2.17  169.11 ^ select_output$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  79.14  248.25 v select_output$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  37.60  285.86 v load_slew926/Y (BUFx3_ASAP7_75t_R)
+  41.07  326.92 v place733/Y (BUFx3_ASAP7_75t_R)
+  54.88  381.80 v place729/Y (BUFx3_ASAP7_75t_R)
+  37.37  419.17 v place728/Y (BUFx3_ASAP7_75t_R)
+  45.88  465.05 v place727/Y (BUFx3_ASAP7_75t_R)
+  34.08  499.13 v _1455_/Y (OA21x2_ASAP7_75t_R)
+  23.78  522.91 v wire830/Y (BUFx10_ASAP7_75t_R)
+  17.99  540.90 v wire1623/Y (BUFx12f_ASAP7_75t_R)
+ 125.69  666.59 v wire829/Y (BUFx10_ASAP7_75t_R)
+  33.56  700.15 v wire685/Y (BUFx12_ASAP7_75t_R)
+   1.25  701.40 v captured_data[108] (out)
+         701.40   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+ -35.00  738.33   output external delay
+         738.33   data required time
+---------------------------------------------------------
+         738.33   data required time
+        -701.40   data arrival time
+---------------------------------------------------------
+          36.94   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 279.847076
+OT_WS_OUT 36.935844
+OT_WS_R2R 495.071655
+OT_WS_I2R 279.847076
+OT_I16_OUTPUT captured_data[0]
+OT_I16_OUTPUT captured_data[100]
+OT_I16_OUTPUT captured_data[101]
+OT_I16_OUTPUT captured_data[102]
+OT_I16_OUTPUT captured_data[103]
+OT_I16_OUTPUT captured_data[104]
+OT_I16_OUTPUT captured_data[105]
+OT_I16_OUTPUT captured_data[106]
+OT_I16_OUTPUT captured_data[107]
+OT_I16_OUTPUT captured_data[108]
+OT_I16_OUTPUT captured_data[109]
+OT_I16_OUTPUT captured_data[10]
+OT_I16_OUTPUT captured_data[110]
+OT_I16_OUTPUT captured_data[111]
+OT_I16_OUTPUT captured_data[112]
+OT_I16_OUTPUT captured_data[113]
+OT_I16_OUTPUT captured_data[114]
+OT_I16_OUTPUT captured_data[115]
+OT_I16_OUTPUT captured_data[116]
+OT_I16_OUTPUT captured_data[117]
+OT_I16_OUTPUT captured_data[118]
+OT_I16_OUTPUT captured_data[119]
+OT_I16_OUTPUT captured_data[11]
+OT_I16_OUTPUT captured_data[120]
+OT_I16_OUTPUT captured_data[121]
+OT_I16_OUTPUT captured_data[122]
+OT_I16_OUTPUT captured_data[123]
+OT_I16_OUTPUT captured_data[124]
+OT_I16_OUTPUT captured_data[125]
+OT_I16_OUTPUT captured_data[126]
+OT_I16_OUTPUT captured_data[127]
+OT_I16_OUTPUT captured_data[128]
+OT_I16_OUTPUT captured_data[129]
+OT_I16_OUTPUT captured_data[12]
+OT_I16_OUTPUT captured_data[130]
+OT_I16_OUTPUT captured_data[131]
+OT_I16_OUTPUT captured_data[132]
+OT_I16_OUTPUT captured_data[133]
+OT_I16_OUTPUT captured_data[134]
+OT_I16_OUTPUT captured_data[135]
+OT_I16_OUTPUT captured_data[136]
+OT_I16_OUTPUT captured_data[137]
+OT_I16_OUTPUT captured_data[138]
+OT_I16_OUTPUT captured_data[139]
+OT_I16_OUTPUT captured_data[13]
+OT_I16_OUTPUT captured_data[140]
+OT_I16_OUTPUT captured_data[141]
+OT_I16_OUTPUT captured_data[142]
+OT_I16_OUTPUT captured_data[143]
+OT_I16_OUTPUT captured_data[144]
+OT_I16_OUTPUT captured_data[145]
+OT_I16_OUTPUT captured_data[146]
+OT_I16_OUTPUT captured_data[147]
+OT_I16_OUTPUT captured_data[148]
+OT_I16_OUTPUT captured_data[149]
+OT_I16_OUTPUT captured_data[14]
+OT_I16_OUTPUT captured_data[150]
+OT_I16_OUTPUT captured_data[151]
+OT_I16_OUTPUT captured_data[152]
+OT_I16_OUTPUT captured_data[153]
+OT_I16_OUTPUT captured_data[154]
+OT_I16_OUTPUT captured_data[155]
+OT_I16_OUTPUT captured_data[156]
+OT_I16_OUTPUT captured_data[157]
+OT_I16_OUTPUT captured_data[158]
+OT_I16_OUTPUT captured_data[159]
+OT_I16_OUTPUT captured_data[15]
+OT_I16_OUTPUT captured_data[160]
+OT_I16_OUTPUT captured_data[161]
+OT_I16_OUTPUT captured_data[162]
+OT_I16_OUTPUT captured_data[163]
+OT_I16_OUTPUT captured_data[164]
+OT_I16_OUTPUT captured_data[165]
+OT_I16_OUTPUT captured_data[166]
+OT_I16_OUTPUT captured_data[167]
+OT_I16_OUTPUT captured_data[168]
+OT_I16_OUTPUT captured_data[169]
+OT_I16_OUTPUT captured_data[16]
+OT_I16_OUTPUT captured_data[170]
+OT_I16_OUTPUT captured_data[171]
+OT_I16_OUTPUT captured_data[172]
+OT_I16_OUTPUT captured_data[173]
+OT_I16_OUTPUT captured_data[174]
+OT_I16_OUTPUT captured_data[175]
+OT_I16_OUTPUT captured_data[176]
+OT_I16_OUTPUT captured_data[177]
+OT_I16_OUTPUT captured_data[178]
+OT_I16_OUTPUT captured_data[179]
+OT_I16_OUTPUT captured_data[17]
+OT_I16_OUTPUT captured_data[180]
+OT_I16_OUTPUT captured_data[181]
+OT_I16_OUTPUT captured_data[182]
+OT_I16_OUTPUT captured_data[183]
+OT_I16_OUTPUT captured_data[184]
+OT_I16_OUTPUT captured_data[185]
+OT_I16_OUTPUT captured_data[186]
+OT_I16_OUTPUT captured_data[187]
+OT_I16_OUTPUT captured_data[188]
+OT_I16_OUTPUT captured_data[189]
+OT_I16_OUTPUT captured_data[18]
+OT_I16_OUTPUT captured_data[190]
+OT_I16_OUTPUT captured_data[191]
+OT_I16_OUTPUT captured_data[192]
+OT_I16_OUTPUT captured_data[193]
+OT_I16_OUTPUT captured_data[194]
+OT_I16_OUTPUT captured_data[195]
+OT_I16_OUTPUT captured_data[196]
+OT_I16_OUTPUT captured_data[197]
+OT_I16_OUTPUT captured_data[198]
+OT_I16_OUTPUT captured_data[199]
+OT_I16_OUTPUT captured_data[19]
+OT_I16_OUTPUT captured_data[1]
+OT_I16_OUTPUT captured_data[200]
+OT_I16_OUTPUT captured_data[201]
+OT_I16_OUTPUT captured_data[202]
+OT_I16_OUTPUT captured_data[203]
+OT_I16_OUTPUT captured_data[204]
+OT_I16_OUTPUT captured_data[205]
+OT_I16_OUTPUT captured_data[206]
+OT_I16_OUTPUT captured_data[207]
+OT_I16_OUTPUT captured_data[208]
+OT_I16_OUTPUT captured_data[209]
+OT_I16_OUTPUT captured_data[20]
+OT_I16_OUTPUT captured_data[210]
+OT_I16_OUTPUT captured_data[211]
+OT_I16_OUTPUT captured_data[212]
+OT_I16_OUTPUT captured_data[213]
+OT_I16_OUTPUT captured_data[214]
+OT_I16_OUTPUT captured_data[215]
+OT_I16_OUTPUT captured_data[216]
+OT_I16_OUTPUT captured_data[217]
+OT_I16_OUTPUT captured_data[218]
+OT_I16_OUTPUT captured_data[219]
+OT_I16_OUTPUT captured_data[21]
+OT_I16_OUTPUT captured_data[220]
+OT_I16_OUTPUT captured_data[221]
+OT_I16_OUTPUT captured_data[222]
+OT_I16_OUTPUT captured_data[223]
+OT_I16_OUTPUT captured_data[224]
+OT_I16_OUTPUT captured_data[225]
+OT_I16_OUTPUT captured_data[226]
+OT_I16_OUTPUT captured_data[227]
+OT_I16_OUTPUT captured_data[228]
+OT_I16_OUTPUT captured_data[229]
+OT_I16_OUTPUT captured_data[22]
+OT_I16_OUTPUT captured_data[230]
+OT_I16_OUTPUT captured_data[231]
+OT_I16_OUTPUT captured_data[232]
+OT_I16_OUTPUT captured_data[233]
+OT_I16_OUTPUT captured_data[234]
+OT_I16_OUTPUT captured_data[235]
+OT_I16_OUTPUT captured_data[236]
+OT_I16_OUTPUT captured_data[237]
+OT_I16_OUTPUT captured_data[238]
+OT_I16_OUTPUT captured_data[239]
+OT_I16_OUTPUT captured_data[23]
+OT_I16_OUTPUT captured_data[240]
+OT_I16_OUTPUT captured_data[241]
+OT_I16_OUTPUT captured_data[242]
+OT_I16_OUTPUT captured_data[243]
+OT_I16_OUTPUT captured_data[244]
+OT_I16_OUTPUT captured_data[245]
+OT_I16_OUTPUT captured_data[246]
+OT_I16_OUTPUT captured_data[247]
+OT_I16_OUTPUT captured_data[248]
+OT_I16_OUTPUT captured_data[249]
+OT_I16_OUTPUT captured_data[24]
+OT_I16_OUTPUT captured_data[250]
+OT_I16_OUTPUT captured_data[251]
+OT_I16_OUTPUT captured_data[252]
+OT_I16_OUTPUT captured_data[253]
+OT_I16_OUTPUT captured_data[254]
+OT_I16_OUTPUT captured_data[255]
+OT_I16_OUTPUT captured_data[25]
+OT_I16_OUTPUT captured_data[26]
+OT_I16_OUTPUT captured_data[27]
+OT_I16_OUTPUT captured_data[28]
+OT_I16_OUTPUT captured_data[29]
+OT_I16_OUTPUT captured_data[2]
+OT_I16_OUTPUT captured_data[30]
+OT_I16_OUTPUT captured_data[31]
+OT_I16_OUTPUT captured_data[32]
+OT_I16_OUTPUT captured_data[33]
+OT_I16_OUTPUT captured_data[34]
+OT_I16_OUTPUT captured_data[35]
+OT_I16_OUTPUT captured_data[36]
+OT_I16_OUTPUT captured_data[37]
+OT_I16_OUTPUT captured_data[38]
+OT_I16_OUTPUT captured_data[39]
+OT_I16_OUTPUT captured_data[3]
+OT_I16_OUTPUT captured_data[40]
+OT_I16_OUTPUT captured_data[41]
+OT_I16_OUTPUT captured_data[42]
+OT_I16_OUTPUT captured_data[43]
+OT_I16_OUTPUT captured_data[44]
+OT_I16_OUTPUT captured_data[45]
+OT_I16_OUTPUT captured_data[46]
+OT_I16_OUTPUT captured_data[47]
+OT_I16_OUTPUT captured_data[48]
+OT_I16_OUTPUT captured_data[49]
+OT_I16_OUTPUT captured_data[4]
+OT_I16_OUTPUT captured_data[50]
+OT_I16_OUTPUT captured_data[51]
+OT_I16_OUTPUT captured_data[52]
+OT_I16_OUTPUT captured_data[53]
+OT_I16_OUTPUT captured_data[54]
+OT_I16_OUTPUT captured_data[55]
+OT_I16_OUTPUT captured_data[56]
+OT_I16_OUTPUT captured_data[57]
+OT_I16_OUTPUT captured_data[58]
+OT_I16_OUTPUT captured_data[59]
+OT_I16_OUTPUT captured_data[5]
+OT_I16_OUTPUT captured_data[60]
+OT_I16_OUTPUT captured_data[61]
+OT_I16_OUTPUT captured_data[62]
+OT_I16_OUTPUT captured_data[63]
+OT_I16_OUTPUT captured_data[64]
+OT_I16_OUTPUT captured_data[65]
+OT_I16_OUTPUT captured_data[66]
+OT_I16_OUTPUT captured_data[67]
+OT_I16_OUTPUT captured_data[68]
+OT_I16_OUTPUT captured_data[69]
+OT_I16_OUTPUT captured_data[6]
+OT_I16_OUTPUT captured_data[70]
+OT_I16_OUTPUT captured_data[71]
+OT_I16_OUTPUT captured_data[72]
+OT_I16_OUTPUT captured_data[73]
+OT_I16_OUTPUT captured_data[74]
+OT_I16_OUTPUT captured_data[75]
+OT_I16_OUTPUT captured_data[76]
+OT_I16_OUTPUT captured_data[77]
+OT_I16_OUTPUT captured_data[78]
+OT_I16_OUTPUT captured_data[79]
+OT_I16_OUTPUT captured_data[7]
+OT_I16_OUTPUT captured_data[80]
+OT_I16_OUTPUT captured_data[81]
+OT_I16_OUTPUT captured_data[82]
+OT_I16_OUTPUT captured_data[83]
+OT_I16_OUTPUT captured_data[84]
+OT_I16_OUTPUT captured_data[85]
+OT_I16_OUTPUT captured_data[86]
+OT_I16_OUTPUT captured_data[87]
+OT_I16_OUTPUT captured_data[88]
+OT_I16_OUTPUT captured_data[89]
+OT_I16_OUTPUT captured_data[8]
+OT_I16_OUTPUT captured_data[90]
+OT_I16_OUTPUT captured_data[91]
+OT_I16_OUTPUT captured_data[92]
+OT_I16_OUTPUT captured_data[93]
+OT_I16_OUTPUT captured_data[94]
+OT_I16_OUTPUT captured_data[95]
+OT_I16_OUTPUT captured_data[96]
+OT_I16_OUTPUT captured_data[97]
+OT_I16_OUTPUT captured_data[98]
+OT_I16_OUTPUT captured_data[99]
+OT_I16_OUTPUT captured_data[9]
+OT_I16_OUTPUT captured_valid
+OT_I16_OUTPUT fault
+OT_I16_ELECTRICAL_BEGIN
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+captured_data[28]                     250.00  482.75 -232.75 (VIOLATED)
+captured_data[36]                     250.00  379.04 -129.04 (VIOLATED)
+captured_data[56]                     250.00  372.14 -122.14 (VIOLATED)
+captured_data[13]                     250.00  355.61 -105.61 (VIOLATED)
+captured_data[109]                    250.00  342.16  -92.16 (VIOLATED)
+captured_data[17]                     250.00  340.90  -90.90 (VIOLATED)
+captured_data[52]                     250.00  339.72  -89.72 (VIOLATED)
+captured_data[121]                    250.00  339.36  -89.36 (VIOLATED)
+captured_data[113]                    250.00  339.18  -89.18 (VIOLATED)
+captured_data[77]                     250.00  331.75  -81.75 (VIOLATED)
+captured_data[44]                     250.00  328.60  -78.60 (VIOLATED)
+captured_data[53]                     250.00  328.05  -78.05 (VIOLATED)
+captured_data[48]                     250.00  325.90  -75.90 (VIOLATED)
+captured_data[37]                     250.00  324.28  -74.28 (VIOLATED)
+captured_data[32]                     250.00  322.77  -72.77 (VIOLATED)
+captured_data[73]                     250.00  320.37  -70.37 (VIOLATED)
+captured_data[40]                     250.00  319.98  -69.98 (VIOLATED)
+captured_data[16]                     250.00  318.23  -68.23 (VIOLATED)
+captured_data[49]                     250.00  318.11  -68.11 (VIOLATED)
+captured_data[20]                     250.00  313.64  -63.64 (VIOLATED)
+captured_data[69]                     250.00  313.08  -63.08 (VIOLATED)
+captured_data[25]                     250.00  309.69  -59.69 (VIOLATED)
+captured_data[60]                     250.00  303.79  -53.79 (VIOLATED)
+captured_data[24]                     250.00  287.72  -37.72 (VIOLATED)
+captured_data[64]                     250.00  266.57  -16.57 (VIOLATED)
+captured_data[41]                     250.00  264.23  -14.23 (VIOLATED)
+captured_data[57]                     250.00  262.63  -12.63 (VIOLATED)
+captured_data[93]                     250.00  259.49   -9.49 (VIOLATED)
+captured_data[29]                     250.00  257.68   -7.68 (VIOLATED)
+captured_data[21]                     250.00  251.42   -1.42 (VIOLATED)
+
+OT_I16_ELECTRICAL_END
+OT_I16_CAPTURES 512
+OT_I16_CAPTURE_DISTANCE 13.839
+OT_I16_ROW_MISMATCH 0
+OT_I16_CLOCK_LEAVES 47
+OT_I16_CLOCK_LEAF_MAX 13
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_I16_PG_VDD_PASS
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_I16_PG_VSS_PASS

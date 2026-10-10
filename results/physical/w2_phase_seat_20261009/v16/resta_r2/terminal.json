@@ -1,0 +1,196 @@
+{
+  "schema": "opentallas.w2-baseline-tt25.v1",
+  "source": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+  "baseline": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc",
+  "policy": "Option B TT setup>=0 FF hold>=0; SS sensitivity; 833.333ps setup60/hold25; all async checks included",
+  "baseline_artifact_sha256": {
+    "work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb": "e05d7c501b59f71fb4724d41bd93d8ed4d577c741720312cacc6b7ea7e5cafde",
+    "work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef": "5fcc3924103802c6eb0a0d07eb29e191680994beceb97d310472cb7f7baa906c",
+    "work/orfs/signoff.sdc": "921adce62b1fae447dcfb1d913df22aa0c780bc9ccf5121182b0187665287e03",
+    "signoff.json": "9cc0e2c414d7a0f4ac44cdfda087cb1c9833ff54a3f6c2533dfbe6985469c9cd"
+  },
+  "probe_unchanged_io": {
+    "TT": {
+      "worst": {
+        "max": -28.66,
+        "min": -54.74
+      },
+      "latency_rise": [
+        329.41,
+        381.45
+      ],
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc:/baseline:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2:/evidence",
+        "-e",
+        "LIBC=TT",
+        "-e",
+        "ODB=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb",
+        "-e",
+        "SPEF=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef",
+        "-e",
+        "SDC=/evidence/probe.sdc",
+        "openroad/orfs:asap7lock",
+        "bash",
+        "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /evidence/sta.tcl"
+      ]
+    },
+    "FF": {
+      "worst": {
+        "max": -59.18,
+        "min": -5.94
+      },
+      "latency_rise": [
+        267.04,
+        314.97
+      ],
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc:/baseline:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2:/evidence",
+        "-e",
+        "LIBC=FF",
+        "-e",
+        "ODB=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb",
+        "-e",
+        "SPEF=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef",
+        "-e",
+        "SDC=/evidence/probe.sdc",
+        "openroad/orfs:asap7lock",
+        "bash",
+        "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /evidence/sta.tcl"
+      ]
+    }
+  },
+  "sdc_generation_command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_w2_rb_station_20261006/make_sdc.py",
+    "--period-ps",
+    "833.333",
+    "--l-min",
+    "329.41",
+    "--l-max",
+    "381.45",
+    "--l-ff-min",
+    "267.04",
+    "--l-ff-max",
+    "314.97",
+    "--hold-skew-ps",
+    "25",
+    "--out",
+    "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2/actual_tt_ref_25ps.sdc"
+  ],
+  "actual_tt_ref": {
+    "TT": {
+      "worst": {
+        "max": 48.49,
+        "min": -54.74
+      },
+      "latency_rise": [
+        329.41,
+        381.45
+      ],
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc:/baseline:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2:/evidence",
+        "-e",
+        "LIBC=TT",
+        "-e",
+        "ODB=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb",
+        "-e",
+        "SPEF=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef",
+        "-e",
+        "SDC=/evidence/actual_tt_ref_25ps.sdc",
+        "openroad/orfs:asap7lock",
+        "bash",
+        "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /evidence/sta.tcl"
+      ]
+    },
+    "FF": {
+      "worst": {
+        "max": 51.24,
+        "min": -5.94
+      },
+      "latency_rise": [
+        267.04,
+        314.97
+      ],
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc:/baseline:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2:/evidence",
+        "-e",
+        "LIBC=FF",
+        "-e",
+        "ODB=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb",
+        "-e",
+        "SPEF=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef",
+        "-e",
+        "SDC=/evidence/actual_tt_ref_25ps.sdc",
+        "openroad/orfs:asap7lock",
+        "bash",
+        "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /evidence/sta.tcl"
+      ]
+    },
+    "SS": {
+      "worst": {
+        "max": -181.48,
+        "min": -161.22
+      },
+      "latency_rise": [
+        431.49,
+        491.87
+      ],
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc:/baseline:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2:/evidence",
+        "-e",
+        "LIBC=SS",
+        "-e",
+        "ODB=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.odb",
+        "-e",
+        "SPEF=/baseline/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_final.spef",
+        "-e",
+        "SDC=/evidence/actual_tt_ref_25ps.sdc",
+        "openroad/orfs:asap7lock",
+        "bash",
+        "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /evidence/sta.tcl"
+      ]
+    }
+  },
+  "accept": {
+    "TT_setup_ps": 48.49,
+    "FF_hold_ps": -5.94,
+    "TT_ok": true,
+    "FF_ok": false
+  },
+  "historical_failure_preserved": true
+}

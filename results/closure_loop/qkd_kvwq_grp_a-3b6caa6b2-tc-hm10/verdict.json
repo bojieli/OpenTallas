@@ -1,0 +1,210 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qkd_kvwq_grp_a-3b6caa6b2-tc-hm10",
+ "block": "qkd_kvwq_grp",
+ "owner": "Claude:redesign-qwen",
+ "source_branch": "claude/redesign-qwen-20261009",
+ "record_branch": "codex/closure-record-qkd_kvwq_grp_a-3b6caa6b2-tc-hm10",
+ "source_commit": "3b6caa6b2b52a4affe312debbdafb82a3b3d1c1a",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 188.44,
+  "ff_ps": 26.58,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -47.87,
+  "ss_sensitivity_tns_ps": -3588.7,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10/routes/qkd_kvwq_grp_a_3b6caa6b2_tc_hm10/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_kvwq_grp_a.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10/routes/qkd_kvwq_grp_a_3b6caa6b2_tc_hm10/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10/routes/qkd_kvwq_grp_a_3b6caa6b2_tc_hm10/work/orfs/logs/asap7/opentallas_ot_qkvd_kv_wq_grp_asap7_qdm_qkd_kvwq_grp_a_3b6caa6b2_tc_hm10/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)\n- Verilator: Built from 0.043 MB sources in 4 modules, into 0.038 MB in 5 C++ files needing 0.000 MB\n- Verilator: Walltime 0.011 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.011 s on 1 threads; alloced 8.383 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_kvwq_dist_pos": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "{\"mut\": 0, \"rows\": 24, \"retired\": 24, \"writes\": 96, \"missing\": 0, \"bad_codeword\": 0, \"ecc_bad\": 0, \"rewrites\": 0, \"faults\": 0, \"cycles\": 842, \"exact\":  true}\n{\"mut\": 0, \"rows\": 144, \"retired\": 144, \"writes\": 576, \"missing\": 0, \"bad_codeword\": 0, \"ecc_bad\": 0, \"rewrites\": 0, \"faults\": 0, \"cycles\": 10699, \"exact\":  true}\nKVWQ_DIST_PASS\n",
+   "track": "parallel"
+  },
+  "bench_kvwq_dist_neg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "mut1: {\"mut\": 1, \"rows\": 24, \"retired\": 24, \"writes\": 96, \"missing\": 0, \"bad_codeword\": 48, \"ecc_bad\": 192, \"rewrites\": 0, \"faults\": 0, \"cycles\": 842, \"exact\": false}\nmut2: {\"mut\": 2, \"rows\": 24, \"retired\": 24, \"writes\": 96, \"missing\": 0, \"bad_codeword\": 96, \"ecc_bad\": 384, \"rewrites\": 0, \"faults\": 0, \"cycles\": 842, \"exact\": false}\nmut3: {\"mut\": 3, \"rows\": 24, \"retired\": 0, \"writes\": 3, \"missing\": 93, \"bad_codeword\": 0, \"ecc_bad\": 0, \"rewrites\": 0, \"faults\": 0, \"cycles\": 60001, \"exact\": false}\nKVWQ_DIST_NEG_DETECTED\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 3,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T22:44:57-07:00",
+ "job_spec": {
+  "name": "qkd_kvwq_grp_a-3b6caa6b2-tc-hm10",
+  "block": "qkd_kvwq_grp",
+  "owner": "Claude:redesign-qwen",
+  "purpose": "redesign-qwen 2026-10-09 (owner: no monoliths / pin walls): KV-die landing write queue as tiles; ot_qkvd_kv_wq_grp (4 quarter-group tiles beside their PCs + 1 control tile, registered abutted boundaries). The single-master distributed queue failed on its 9.3k-pin face (EF -1,238). Variant a.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/redesign-qwen-20261009",
+   "commit": "3b6caa6b2b52a4affe312debbdafb82a3b3d1c1a"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_wq_grp rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_tiles.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "kvwq_dist_pos",
+     "cmd": "DIST=2 RLY=1 bash physical/redesign_qwen/kvwq_dist_bench.sh pos {RUN}/bench/kvwq_pos",
+     "expect": "pass",
+     "pass_regex": "^KVWQ_DIST_PASS",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "kvwq_dist_neg",
+     "cmd": "DIST=2 RLY=1 bash physical/redesign_qwen/kvwq_dist_bench.sh neg {RUN}/bench/kvwq_neg",
+     "expect": "fail",
+     "fail_regex": "^KVWQ_DIST_NEG_DETECTED",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_wq_dist rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_dist.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_kvwq_grp_a.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qkd_kvwq_grp_a {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_kvwq_grp_a --post-sdc physical/qwen_die_masters/signoff/qkd_kvwq_grp_a.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_kvwq_grp_a > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qkd_kvwq_grp_a.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r22k budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/redesign_qwen_20261009/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10"
+   }
+  ],
+  "cycles_added": 3,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "new element (KV-die landing write queue); posted path, 0 cycles on the token path",
+  "merge_target": "main",
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T15:32:04-07:00",
+   "est_as_configured": {
+    "W": 7.82,
+    "E": 7.82,
+    "N": 0.02
+   },
+   "est_fix": {
+    "W": 0.41,
+    "E": 3.72,
+    "N": 0.01
+   },
+   "why": "ordered pin group(s) > 200 pins (^(kvw_|rw_|fault)[a-z_0-9]*(\\[|$) 1072, ^(w_|wd_)[a-z_0-9]*(\\[|$) 9632) fall back in the IO placer (PPL-0107) || measured pin-density failure (the estimate is a lower bound); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7') -> 3.72 b/um"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

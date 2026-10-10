@@ -1,0 +1,4149 @@
+[
+  {
+    "host": "ot-epyc3",
+    "result": {
+      "time_utc": "2026-10-10T11:56:58Z",
+      "cores": 128,
+      "load": [
+        89.47802734375,
+        97.974609375,
+        114.0234375
+      ],
+      "mem_available_gib": 79.4,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 813.7,
+          "used_pct": 2.3
+        },
+        {
+          "path": "/srv/opentallas-scratch",
+          "free_gib": 2162.3,
+          "used_pct": 21.2
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+          "free_gib": 725.2,
+          "used_pct": 70.2
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/engram",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/die-evidence-2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/drive-0158",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/cont-takeover",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-codex-recovery",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-views",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-draftdie",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-dies",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-assemble-tt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-blocks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-missing",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-qwen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/safehbm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ds-control",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/r25gp-power",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/tk-hbm-harvest",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-die-r20",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/drive-2125-cfgrep",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbm-unify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/rebudget",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-mask-metrics",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/die-evidence",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-gen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-field-spine",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-hbm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-secded96-041b11f2a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-blocks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-kport-33c891ec7",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/tuhalf-sdc-test",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/mtp-hbmdie",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/bfpinclk",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/mtp-shared-fixture-99a7a7e0a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/multivt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-kport-331f5f391",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-secded96-32e457463",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/ttfix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/preroute-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/safe-qwen-bench",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/mtp-v36-witness-eb890e7d8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/s81-rerun",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-counter-lint-c0c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-layout-physical",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ds-dispatch-d2086a9af",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-2d63f8854",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-rspseat",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-stg-tt-installed-20261009-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-38b9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-u2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-final",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-synth-e442d85c4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-refcheck",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-816f9ea51",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/source-boundary-5b11-a26011-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-native-q-h1hook-validator",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-lint-8d33d3b03",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-boundary-d52820055",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-layout",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-5f1ebf5fb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-layout-boundary",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-qdq-4bf9c74b2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-ds-lockstep",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-lint-7c38e6508",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-qdq-d61ca29fc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-layout-physical-a2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-credit-a9abd575e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-exact-deep-ad9f0b290",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-vmx-harness-aea8f3f06",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-query-9a3ffdc19",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/h7-hb2-audit-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-11a6e367f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-5740",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-row-42ee27e47",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-gate-7c38e6508",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-inplace",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-seatcheck",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ds-control",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-497929409",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native690-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-registered-364f0306b",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-5c50",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-format-qlast",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-laneseat",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/native512-9d5f3c86c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-synth-0858a3066",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-e951b3f45",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-292b4fb50",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-decoder-electrical-d261d43c7",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-quarter",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-format-33b02c114",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-rspseat-trace",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-lint-99230c46e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ds-dispatch-2f0a34dee",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-sum96-a2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-router-dr3-needs-e384a2d2c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-sum96-a8f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-registered-d52820055",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-c033",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/native512-3eddcd6fa",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-qdq-891b4b555",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-1857",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-3ba2a5b2e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-counter-bb9a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/source-boundary-5b11-b811b4-a2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-eb8ec",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-57814c941",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ds-dispatch-669daaaf6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-515c33b87",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-remaining",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-ar-credit16-19892fbc3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-cc25",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-query1-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hc-row-shard-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-counter-lint-fa514",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-10d737",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74-v5050",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-topk-fb2efd543",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-counter-61a9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/native512-8591723ac",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-numerical-firstdiff-cefb5aa18",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/source-boundary-5b11-52281d-a3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-cp-mtp-native-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-coll-gate-8d33d3b03",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-wide-2831b78d5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-die-integration-baseline",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-epyc1tb",
+    "result": {
+      "time_utc": "2026-10-10T11:56:58Z",
+      "cores": 128,
+      "load": [
+        143.564453125,
+        154.3349609375,
+        162.74853515625
+      ],
+      "mem_available_gib": 180.8,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 801.0,
+          "used_pct": 3.7
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/closure-loop",
+          "free_gib": 278.4,
+          "used_pct": 90.5
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/multivt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/gaps-design",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-suchains",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-adapters",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-e26c4bd54",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-s81-window-bind",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-z7-intake-f59bf7441",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-localcapture-gate-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-3a86f288d",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-rtl-finish",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-image-gate-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-rollback",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-seed-qs5f-b5b6a2817",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-r4-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-band-integrate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/candidate-store-fabadc73c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-elements",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-lookup-pp-source",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-exact",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-reader-012774206",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-wiring",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-seed-qs5f-b1079dc53",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/struct-close",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbm-unify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-pp-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-q-99a7a7e0a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/drive2155_cls",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-e2e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/rebudget",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbm-takeover",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bficg",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-localcapture-gate-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-markov-pinreg2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bfpinclk",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-indexer",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/r25gp-power",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-markov-pinreg-c79d0eeb5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-su",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-r3-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-lead",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/realmem",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-split-exact",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-z7-intake-8d5a1fe5f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/safe-s81",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/die-evidence-2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-source",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-mask-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/takeover-ds",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-hbm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/vm8seam-bench-71b59c2c2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-lookup-pair-approved-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-z7-queue-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-seed-qs5f-f398618f5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-dspark",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-lookup-pp-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/embedding-qualified82",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-norm-split",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-gen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-seed-qs5f-cc0dcb501",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/die-evidence",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-reader-e30dbaef1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-ds",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qframe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-906347f3a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-dies",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-lookup-pair-route-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/cont-takeover",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-compact-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-head340",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-blocks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-lookup-pair-physical-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-clock-source",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/tk-ds-head",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bfarch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-missing",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-draftdie",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/kv-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/dsrom-field-spine",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-physical-7279623a2-a2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-r2-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-physical-7279623a2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-qwen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/tk-hbm-harvest",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-seedproj",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/meso-fifo",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-core-decode",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-qframe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/safe-qwen-tok",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/spine-cdc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-stream4-cdc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-fh-close",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/ha1-txcount",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fmax-1p2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/layer-parallel-sim",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fence-loop",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-wavefront",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-clock-loops",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-seqfix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-edge-scorer",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-dspark-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-recovery-head",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-frontier",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-hop-closed",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-core-ctx",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-qpipe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-phys",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-sm-struct",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-die-feas",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fully-measured",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dsfd-selt-q-cx-380c1cd21",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/fleet-spec-validate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-resident-fc3cdc6f8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/h7-hb2-audit-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/corner-sta-receipts-0a50149d2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-a29a48c28",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-ta15-corner-r4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-service-striped-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-wt-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-s7-control-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/field-spine-optionb-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry545-pipeline-pathfinding-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-ta15-production-boot",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-w1-dequant-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-far-bus-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-w1-native-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-native-q-hold-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry545-pipeline-guard-pathfinding-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/pq-terminal-optionb-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-loader-divider-diagnosis",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-amax-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-w1-released-ed7eb1197",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-cfifo-rd-eco-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry545-pipeline-pathfinding-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-wiring-r25i",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-collector-dpl-inspect-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-real-ports-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-image-audit-9e1c32a22",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-wt-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-guard-wt-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-ta15-ready-aon",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-argmax-gather-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-sram-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-image-audit-6bcad233e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-qend-pins",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-wfc-hard",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hc-row-shard-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-numerical-firstdiff-cefb5aa18",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-router-dr3-02b165495",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hostnative-clock-binding-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/svc-sb5-b1a58c10f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-map-39b818fdd",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-epyc2",
+    "result": {
+      "time_utc": "2026-10-10T11:56:59Z",
+      "cores": 128,
+      "load": [
+        224.6552734375,
+        227.4453125,
+        223.79931640625
+      ],
+      "mem_available_gib": 327.0,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 680.1,
+          "used_pct": 21.6
+        },
+        {
+          "path": "/srv/opentallas-data/claude/closure-loop",
+          "free_gib": 750.4,
+          "used_pct": 74.4
+        },
+        {
+          "path": "/srv/opentallas-scratch2",
+          "free_gib": 1168.6,
+          "used_pct": 60.2
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/drive-0158",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbm-unify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-lead",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-views",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bfpinclk",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-assemble-tt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/engram",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/r25gp-power",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-qwen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-adapters",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-e2e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bfarch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/bfinhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-byp-bench2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-byp-bench",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/s81-rerun",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/drive1443_ha2_resta",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-su",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-idx-index-bench",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-byp-bench4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/emb-hbm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-attn",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/s81-ph",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-byp-bench3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/qwen-die-r17",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hbm-router",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/s81-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/bfhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/multivt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/tk-hbm-harvest",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/s81tail",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-cache2-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-mask-metrics-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/mtp-hist-latency-b68bf29e6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-caf38a801-wt-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-binding-r5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-caf38a801-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/hbm-die-views",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-binding-r6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-compact-r2-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-compact-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/sc-resrds",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/flow-fix-0410",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-clock-source",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-pinreg2-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-metrics-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-pg-diag-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/mtp-hist-latency-d1db2e154",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/vm8ana",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-driver-caf38a801",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/drive0602",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/sc-hcoll",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/md6-head-binding-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-data/claude/mtp-hist-view-190e09324",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/meso-fifo",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-core-decode",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-qframe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/safe-qwen-tok",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/spine-cdc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-stream4-cdc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-fh-close",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/ha1-txcount",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fmax-1p2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/layer-parallel-sim",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fence-loop",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-wavefront",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-clock-loops",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-seqfix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-edge-scorer",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-dspark-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-recovery-head",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-frontier",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-hop-closed",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-core-ctx",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-qpipe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/qwen-async-phys",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-sm-struct",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-die-feas",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/hbm-fully-measured",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas/scratch-overflow/claude/dsrom-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-prenorm-oraclefix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-die-fit-0cb3d9624",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-prenorm-3506a4dfa",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-native-q-hold-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-dispatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-ec8174332",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-stage",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-ta15-physical",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native690-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-wide-f8b8bd3c9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-cmdproc18-program-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-wiring-r25i",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-prenorm-6d7369801",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-mask",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-station-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/q5-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-hc-mean-308a0500e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/hbm-iks-timed-refpb-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/hbm-service-striped-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/hbm-index-sram-20261008",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/qwen-native-amax-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/item7-parents-20261006",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-hc-mean-32d007ee5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-epyc4",
+    "result": {
+      "time_utc": "2026-10-10T11:56:58Z",
+      "cores": 128,
+      "load": [
+        233.22900390625,
+        227.02294921875,
+        195.26953125
+      ],
+      "mem_available_gib": 136.3,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 815.7,
+          "used_pct": 2.1
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/closure-loop",
+          "free_gib": 1926.6,
+          "used_pct": 33.3
+        },
+        {
+          "path": "/srv/opentallas-scratch2",
+          "free_gib": 1016.1,
+          "used_pct": 64.3
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-hbmdie",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-vm-wp32",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-lint-out",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/die-evidence-2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-head-driver-compact-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-lint",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/emb-hub-sram-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-e2e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-hbm-takeover",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-head340",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-head-driver-compact-r2-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/main-health",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/drive-0532-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/r25gp-power",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-dma-front",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-lead",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-bundle-r4-wt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-dskvfix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/cont-takeover",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/flow-fix-0410",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/struct-close-trav",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/drive2155_hstn",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/struct-close-ldiv",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-quant-record-c1b26e674",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/struct-close-crom3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-quant-record-663b17eb0",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/struct-close-vm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-mtp18-rstr-37df6ec29",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-mtp18-specf-9257bfecf",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/d0758-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/hgi-mtp18-rstr-439089b11",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/selq_bench_src",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch2/scratch/claude/eco-sweep-test",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-xfifo-cdc-audit-1d3c576bb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-slice-nk4-recovery",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-leaf-20a69df3f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-quarter-ar",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-quarter-service",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-index-protected-final",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-quarter-model",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native690-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/__pycache__",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-parser-protected",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-station-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-leaf",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74-epyc4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-group-flop-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-format-protected",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-cp-mtp-am197-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-cp-mtp-native-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-pve1",
+    "result": {
+      "time_utc": "2026-10-10T11:56:57Z",
+      "cores": 28,
+      "load": [
+        48.4462890625,
+        46.478515625,
+        42.943359375
+      ],
+      "mem_available_gib": 105.4,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 1299.5,
+          "used_pct": 29.4
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/closure-loop",
+          "free_gib": 1299.5,
+          "used_pct": 29.4
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-outputlanding-dpl-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-pg-fix-c2c07c284",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-loadfix-validate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-abstracts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-output-master-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-die",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-pgfix-validate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-pg-diag-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-cts-protect-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-electrical-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/multivt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-outputlanding-intake-preflight",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/md6-ctsphase-validate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-assemble-tt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dskv-shadow-sdc-compat-6e4afafe1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-kv-seq-namespace",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-37c24d8a4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-hub-boot-merge-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-vmx-readpipe-v14-b2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hfd-hc-gather-cx",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-g12-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-coll-capture-bb1ab3e48",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-bias7",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-format-protected",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-vmx-harness-aea8f3f06",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-b23a29da4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/markov-p1-b4-rejudge-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-bf-inhold-cx-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-group-flop-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-q5-final-views-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-boundary-bfe349ad8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-correct-clock",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-inline-6a23406c6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/live-element-registry-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ha2-owner-cx-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-3e3f1cd55",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-vmx-readpipe-v14-c3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-wfc-hard-f8f493123",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-g12-record-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/wfc-hard-tt-export-a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-f6d441b6a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-zero8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-token18-6a63",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/fleet-pinregex-748ffcbae",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-boundary-registered",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-dd407494d",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/mtp-vmx-readpipe-v14",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-argmax18-b2837a331",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/fleet-currentbase-policy-ba35177c7",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-cp-mtp-mx1-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-accept-seat-4bff",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-boundary-27186ef49",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hgi-ehash-27186ef49",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-agidock128",
+    "result": {
+      "time_utc": "2026-10-10T11:56:56Z",
+      "cores": 64,
+      "load": [
+        11.48828125,
+        11.08056640625,
+        12.986328125
+      ],
+      "mem_available_gib": 41.2,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 114.2,
+          "used_pct": 88.5
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/closure-loop",
+          "free_gib": 114.2,
+          "used_pct": 88.5
+        }
+      ],
+      "audit": [
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-band-integrate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hgi-decoder-electrical-probe-b529",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-missing",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-forks",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flowhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-hbm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttbatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/ttviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-abstracts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/redesign-qwen",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/h1verify",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-system",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/flow-fix-0410-kr",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/qwen-vm-me",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/vm8fc-bench3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/multivt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/mtp-shared-q-682e6d076",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/s81-assemble-tt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-capture-diagnostic-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-real-ports-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r7",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-native-scale-37c6b83d1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ta15-body-export-206798f3f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/sysctl-pb2-19699b86e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-417eafdc9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-native-plain",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-pair-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-pair-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-publication-elab-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-geometry-current",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/item7-column-20261006",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-collective-w-resta",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-fence-cx-20261009",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-phy-gate-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-protected-diagnostics",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-dispatch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-row-protected-e48bf0907",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-ar-realcp",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-native-bind-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dsfd-selt-q-cd333-e2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/closure-mm-diagnostic-20261007",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/submit-lint-cache-only",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tile-cx-integration",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-loader-cx-reset-acf210158",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-boot-crc-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ds-control",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-native-bind-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-tt-975fdada2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-w1-lookup-0951f6c3d",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-pcowner-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-afifo-fixed",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-w1-lookup-70dc3a9ca",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-bounds-v1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-shape-v3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-r25imwx-547e0a110",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-pair-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-key-quant-a47acb560",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-transient-kv-8e26b397f",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-retirement-84984110a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-afifo-238c238fb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-global-final-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-row-e1c2c3dbf",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-quiescent-reset-889caec93",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-collective-cx-f8693b17c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-svc-prefix-d6ffdf0a1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/prompt-fault-9e1cfa74b",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tile-cx-exact833",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dsfd-selt-q-cx-380c1cd21",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-aperture-e492b5f52",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-bank-pair-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-rowendpoint-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-boot-crc-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pin-network",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-install-aeaec142a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-rank4-v1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-stack-elaboration",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/main-model-smoke-2657fb660",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/item8-hbglue-hier-20261006",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-geometry-grid92",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/smh-front-ne-rails-20261007",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-global-scan-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-dispatch-d61d74519",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-loader-cx-reset-5d80584eb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-4ef8e1333",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-selector-qend-aa7127b87",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-bus92-existing-fit",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-retry-pipeline-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-owner74",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-wide-source",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-native-74948ef0d",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-skid-depth-4781b9632",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/sysctl-pb2-gen-bdddbe1c1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tile-cx-4943f1ee6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-region-e944968c8",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-protected-a1af75a5b",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-router-dr3-needs-e384a2d2c",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/vm8-face-hierarchy-e49-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-nativecmd-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-xfifo-j6-validator",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-shape-v4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-release-checked",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ctl-stn-356c2052b",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-b0e160c42",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-native-bind-r4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-protected-fixed",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-transient-protected-d2d34e799",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-r25i-budget-20261009-r1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-cdc-gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-ar-coalesce",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r6",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-protected-phy-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-rectangles-current",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-tile-cx-833ps",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-native-publication-elab-20261009-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-ordered-e4a9a67fa",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-d6545bfe9",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/ctl-stn-2893e73ac",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-590abccdb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-2946c2e81",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-ar-inventory",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/dspq-recovery",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-clock-data-2626dd7b3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-loader-cx-c0ac0076e",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-79abaa962",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/emb-native-bind-r2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/s81-visibility-71062a5da",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/seq-sys-d94dcdbb5",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/qwen-r25-mask",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/srv/opentallas-scratch/codex/hbm-publication-gate-20261009-r4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "localhost",
+    "result": {
+      "time_utc": "2026-10-10T11:56:56Z",
+      "cores": 32,
+      "load": [
+        19.775390625,
+        12.34423828125,
+        10.60107421875
+      ],
+      "mem_available_gib": 171.5,
+      "disks": [
+        {
+          "path": "/",
+          "free_gib": 175.8,
+          "used_pct": 90.2
+        },
+        {
+          "path": "/home/ubuntu/closure-loop-local",
+          "free_gib": 175.8,
+          "used_pct": 90.2
+        }
+      ],
+      "audit": [
+        {
+          "path": "/tmp/claude-1000/p2b",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/kvp",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/rd",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/-home-ubuntu",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/rope_t",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/sel_equiv",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/de2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/md",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/t3",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/prg",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bffpl",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bfarch",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bud24",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/xshots",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/msurvey",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mx1d",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/attn-lockh-probe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bfinhold",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtp-dskvfix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/seedproj",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/r22kseq",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/p2fix",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/rxp_gate",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/negt",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/idxq",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtp-lead-jobs",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/w2gate_safe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/d0212",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/engram-lkp-ndultz8g",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtpviews",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/d0758",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/s81a",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/dg",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtphbm_lint",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/forkH",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/wfcg",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/t4",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/strip",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/hw",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/d1956",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/sd",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/covT2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/dieev",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/crom_img_relay",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/pinregion",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/rx128_resta",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mb",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/optst",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/-home-ubuntu-OpenRealtime",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bash-edit-diff",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/ff0410",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/reprice",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/cov_t1",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/drive-resume",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/merge-eco",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bfrl",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bfdl",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/engram",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/ha2",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/pqjobs",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/covplan",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/rxp_prep",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/bundled-skills",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtpm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/eco-sweep",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/ring8old",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/fuse",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/dier",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/st.JIQE",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/wpm",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/hfdpipe",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/sutg",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/scripts",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/hc",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtpx",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/mtphbm_lint0",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        },
+        {
+          "path": "/tmp/claude-1000/forkE",
+          "action": "KEEP",
+          "reason": "pinned evidence/job/source reference"
+        }
+      ]
+    }
+  },
+  {
+    "host": "ot-pve2",
+    "error": "ssh: Could not resolve hostname bsql-host2.01.me: Name or service not known\nkex_exchange_identification: Connection closed by remote host\nConnection closed by UNKNOWN port 65535\n"
+  },
+  {
+    "host": "ot-pve3",
+    "error": "ssh: Could not resolve hostname bsql-host3.01.me: Name or service not known\nkex_exchange_identification: Connection closed by remote host\nConnection closed by UNKNOWN port 65535\n"
+  }
+]

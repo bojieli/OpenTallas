@@ -11,17 +11,20 @@ import closure_loop as cl
 
 
 class ExternalReservationTests(unittest.TestCase):
-    def test_measured_remaining_peak_is_subtracted_without_cpu_gate(self):
+    def test_admission_is_measured_memory_plus_fixed_safety(self):
+        # drive-resume 2026-10-09 (owner: never reserve for future growth): external remaining peaks, recent claims and
+        # a %-of-RAM headroom are NOT subtracted; admit iff MemAvailable >= request + ADMIT_SAFETY_GB (16)
         cfg = dict(name='remote', label='remote', max_job_threads=128,
                    max_job_ram_gb=1000, min_free_disk_gb=10, ram_gb=1000)
         fleet = cl.Fleet()
         info = dict(load1=10000, mem_gb=400, disk_gb=1000,
                     roots_gb={}, external_remaining_gb=300)
+        fleet.pending['remote'] = [(__import__('time').time(), 16, 224, 'other-job')]
         with patch.object(cl, 'host_cfg', return_value=cfg), patch.object(fleet, 'probe', return_value=info):
-            self.assertTrue(fleet.fits('remote', 16, 40)[0])
-            self.assertFalse(fleet.fits('remote', 16, 80)[0])
-            info['external_remaining_gb'] = 0
-            self.assertTrue(fleet.fits('remote', 16, 80)[0])
+            self.assertTrue(fleet.fits('remote', 16, 384)[0])
+            ok, why = fleet.fits('remote', 16, 385)
+            self.assertFalse(ok)
+            self.assertIn("MemAvailable 400 GB < 385+16", why)
 
     def test_live_command_identity_has_measured_remaining_peak(self):
         cfg = dict(name='remote', base='/scratch', external_jobs=[dict(name='large', pid=os.getpid(),

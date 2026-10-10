@@ -1,0 +1,12 @@
+[Unit]
+Description=Persistent Claude continuation at :15 and :45
+
+[Timer]
+OnCalendar=*-*-* *:15,45:00
+Persistent=true
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=claude-continue.service
+
+[Install]
+WantedBy=timers.target

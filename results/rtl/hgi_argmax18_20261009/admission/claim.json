@@ -1,0 +1,15 @@
+{
+  "host": "ot-epyc4",
+  "native_job": "mtp_argmax_f1-d30fa5f39-tc",
+  "source": "d30fa5f39",
+  "native_drt_peak_kib": 7956564,
+  "native_cts_peak_kib": 884264,
+  "native_gp_peak_kib": 937244,
+  "route_claim_gib": 16,
+  "calibration_claim_gib": 2,
+  "claim_basis": "ceil2x same leaf measured phases; generic extra value/index/offset registers, no macros; not an own measured peak",
+  "hashes": {
+    "native.5_2_route.log": "4fbff0e3d904b8a6e0b2c35740d6538db64080e43dffcdfc9e35abe5fc0d4645",
+    "native.4_1_cts.log": "32833459adcec9b4e34fd910c12de6c5196a93feca82f8f9201164a4e2169957"
+  }
+}

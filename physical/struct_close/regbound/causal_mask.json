@@ -1,0 +1,5 @@
+{"src": "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_flat.sv", "module": "ot_qwen_r25_causal_mask", "core": "ot_qwen_r25_causal_mask_core",
+ "clk": "clk", "reset": "rst_n",
+ "why": "sp-cmask-006e20771 TT -365/-372 (reg2reg +425): unregistered boundary; in / out valid/ready through pin FIFOs.",
+ "in_hs": [{"v": "in_v", "r": "in_rdy", "data": ["in_checked", "in_owner", "in_query_positions", "in_queries", "in_row0"]}],
+ "out_hs": [{"v": "out_v", "r": "out_rdy", "data": ["out_owner", "out_row0", "out_valid_lengths", "out_live"]}]}

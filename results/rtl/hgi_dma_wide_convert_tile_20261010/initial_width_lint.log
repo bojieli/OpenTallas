@@ -1,0 +1,5 @@
+%Warning-WIDTH: rtl/hbm_accel/generic/peers/ot_hgi_dma_wide_convert_tile.sv:79:41: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'target' generates 19 bits.
+                                                                                 : ... In instance ot_hgi_dma_wide_convert_tile
+   79 |      if(!found&&remain[sidx][pp]&&target%NB==TILE*4+bb)begin
+      |                                         ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.

@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS",
+  "source_commit": "c3b3f94c8",
+  "remote_source": "40060541aecc433044976e4a21f020e229c5ecec",
+  "remote_host": "ot-epyc1tb",
+  "remote_root": "/srv/opentallas-scratch/codex/hc-row-shard-r2/epoch_c3b3f94c8",
+  "real_fp": true,
+  "K": 20480,
+  "W": 32,
+  "macro_count": 64,
+  "parameter": {
+    "ENABLE_EPOCH_IDENTITY": 1
+  },
+  "cycles": 4009,
+  "golden_hex": "40c340af",
+  "wrong_FN": "rejected before first commit",
+  "late_prior_FN": "first full row exact; next command lease incremented; old lease rejected before first commit",
+  "wrong_X": "rejected",
+  "FN_mutant": "negative exactness gate rejected",
+  "physical": {
+    "status": "ADMITTED_RUNNING_NOT_QUALIFIED",
+    "host": "ot-epyc1tb",
+    "stable_launcher": 1366211,
+    "root": "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_epoch_c3b3f94c8",
+    "source": "5a36e9af83412d33fc1a92c844422ee77321a937",
+    "peak_reservation_gib": 128
+  },
+  "integration": "native service held table, CDC, I/O timing and producer/collective binding pending",
+  "sha256": {
+    "exact.log": "b5aa71ec4d8f22f2df06aa7b98e1fea013c528cc407e9d5ce497fc0d57f91a38",
+    "WRONGFN.log": "f252dd09c02be1e7aff68fd7f71b572e384914f19e9bbafca60cae8449b636a5",
+    "pinned_run.sh": "ce40757a75a1bf0f9b7c6ba675d16a05608519a26c20304ca97eeddd2c2cbaee",
+    "LATEFN.log": "b4300bfe9d5fdb4a001cf2d7ea8c1e2e929993d1effb3207ad1603c6b153c138",
+    "build.log": "85dce2688319c5b668807f2400a4b7d5c82ed594d1cb9b90c0da2f90ba8e6b45",
+    "negative.log": "a22c41fd3714f7e03d86b53e68261f39335bfc10689f7a020f7d5954a72d72db",
+    "BADLEASE.log": "734de14ed1558ad968d20a95ac77d82b9ffd5db3fa16805119242b4aa17e0b87"
+  }
+}

@@ -179,7 +179,7 @@ def relay_lint(chains, reach_um=504.0, back_slack_um=20.0, metric="manhattan"):
     return bad
 
 
-def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20):
+def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False):
     """Die generator lint (dsrom_s81_fulldie / hbm_accel_die_fp / die_top_lint).  insts: objects with name, kind, x, y,
     w, h; buses: (bid, cls, bits, [(inst, port), ...]) with eps[0] the driver.  Every driver -> relay ... -> load chain
     through instances of relay_kinds is checked:
@@ -212,7 +212,39 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 succ[eps[0][0]].append((bid, e[0]))
                 pred[e[0]].add(eps[0][0])
     reach_bad, far_bad, n_chains, done = [], [], 0, set()
-    for d0 in list(succ):
+    if edges:
+        # s81-gen 2026-10-09 (edges=True): the same reach / far-side tests once per register segment instead of once per
+        # enumerated driver -> relay ... -> load chain.  Both tests depend only on (driver, relay, next) and the segment's
+        # bus, so the verdict and the violation sets are those of every chain through the relays reachable from a
+        # non-relay driver (the chain walk re-tests shared tree segments per leaf: > 5 h on the S81 layer1 die).
+        # 'chains' then counts register segments.
+        seen_e, frontier = set(), [x for x in succ if by[x].kind not in relay_kinds]
+        seen_n = set(frontier)
+        while frontier:
+            cur = frontier.pop()
+            for b_, nx in succ.get(cur, ()):
+                if (cur, nx, b_) in seen_e or (by[cur].kind not in relay_kinds and by[nx].kind not in relay_kinds):
+                    continue
+                seen_e.add((cur, nx, b_))
+                n_chains += 1
+                L = seg(by[cur], by[nx])
+                hops = max(1, stages(b_, L)) if stages else 1
+                if L / hops > reach_um:
+                    reach_bad.append(dict(chain=f'{cur}->{nx}', seg=f'{cur}->{nx}', um=round(L, 1), hops=hops))
+                if by[nx].kind in relay_kinds:
+                    nxs = {x for _, x in succ.get(nx, ())}
+                    if len(nxs) == 1 and len(pred[nx]) == 1:
+                        q = c(by[next(iter(nxs))])
+                        if mh(c(by[nx]), q) > mh(c(by[cur]), q) + back_slack_um:
+                            far_bad.append(dict(chain=f'{cur}->{next(iter(nxs))}', relay=nx,
+                                                back_um=round(mh(c(by[nx]), q) - mh(c(by[cur]), q), 1)))
+                    if nx not in seen_n:
+                        seen_n.add(nx)
+                        frontier.append(nx)
+        succ_ = {}
+    else:
+        succ_ = succ
+    for d0 in list(succ_):
         if by[d0].kind in relay_kinds:
             continue
         stack = [([d0, r0], [bid0]) for bid0, r0 in succ[d0] if by[r0].kind in relay_kinds]
@@ -242,7 +274,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                     if mh(c(b_), nx) > mh(c(a_), nx) + back_slack_um:
                         far_bad.append(dict(chain=f'{path[0]}->{path[-1]}', relay=path[i],
                                             back_um=round(mh(c(b_), nx) - mh(c(a_), nx), 1)))
-    out = dict(chains=n_chains, reach_um=reach_um, reach_violations=len(reach_bad), far_side_relays=len(far_bad),
+    out = dict(mode='edges' if edges else 'chains', chains=n_chains, reach_um=reach_um, reach_violations=len(reach_bad), far_side_relays=len(far_bad),
                reach_examples=sorted(reach_bad, key=lambda r: -r['um'])[:limit],
                far_side_examples=sorted(far_bad, key=lambda r: -r['back_um'])[:limit])
     if sliver_um > 0:

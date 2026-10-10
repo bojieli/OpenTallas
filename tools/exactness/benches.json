@@ -187,7 +187,11 @@
     "exact": true,
     "cycles": null
    },
-   "last_pass": null,
+   "last_pass": {
+    "commit": "4dc3e0062",
+    "source": "token-exact 2026-10-09 (main 54268eb16 + --jobs fix)",
+    "evidence": "results/rtl/token_exact_20261009/s81/token_bench.json"
+   },
    "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture /srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20 (prep on the checkpoint host)."
   },
   {

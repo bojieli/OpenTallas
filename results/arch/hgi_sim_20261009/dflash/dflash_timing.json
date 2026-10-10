@@ -1,0 +1,1170 @@
+{
+ "schema": "opentallas.hgi_sim.dflash_timing.v1",
+ "generated_utc": "2026-10-09T18:48:25Z",
+ "grade": "pathfinding: unit entries are calibration.json estimates/measurements; not a closed rate",
+ "drafter": "z-lab/Qwen3-8B-DFlash-b16 (5 layers, BF16 weights unchanged, target layers [1,9,17,25,33])",
+ "tau": {
+  "16": {
+   "published": [
+    8.01,
+    "DFlash (Chen, Liang, Liu), arXiv:2602.06036v2 Table 3: Qwen3-8B, B200, SGLang, concurrency 1, MATH-500, tau 8.01 (block 16) -- the largest published Qwen3-8B tau (results/external/registry.json new:dflash_table3_table4)"
+   ],
+   "measured": [
+    3.656,
+    "our 264-turn DFlash b16 run, cycle-weighted, 9 primary workloads (results/speculative/dflash_block_acceptance.json blocks.16.pooled.primary; equal-weighted 4.662)"
+   ],
+   "measured_eq": [
+    4.662,
+    "same, mean of workloads"
+   ]
+  },
+  "8": {
+   "published": [
+    5.584,
+    "no published block-8 tau: 8.01 x (our MATH-500 non-thinking tau_direct block 8 / block 16 = 5.8265 / 8.3572; our block-16 value 8.36 reproduces the paper's 8.01 setting)"
+   ],
+   "measured": [
+    3.2956,
+    "our 264-turn run AT block 8 (direct), cycle-weighted primary (dflash_block_acceptance.json blocks.8.pooled.primary; equal-weighted 3.748)"
+   ],
+   "measured_eq": [
+    3.7478,
+    "same, mean of workloads"
+   ]
+  }
+ },
+ "ar": {
+  "two_beat": {
+   "cycles": 1258136.1,
+   "tok_s": 953.8
+  },
+  "one_beat": {
+   "cycles": 919011.2,
+   "tok_s": 1305.8
+  }
+ },
+ "steps": [
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "position": 8184,
+   "records_in_image": 1094,
+   "image_bytes": 144832,
+   "records_executed": 5762,
+   "step_cycles": 2682537.9,
+   "step_us": 2235.45,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 11814.5,
+     "idle_true_dep": 2279644.0,
+     "idle_issue": 397967.4,
+     "records": 266
+    },
+    "SM": {
+     "busy": 1383055.4,
+     "idle_true_dep": 1285090.5,
+     "idle_issue": 4272.0,
+     "records": 178
+    },
+    "SU": {
+     "busy": 912179.0,
+     "idle_true_dep": 1728094.8,
+     "idle_issue": 42191.1,
+     "records": 4066
+    },
+    "COLL": {
+     "busy": 269576.0,
+     "idle_true_dep": 2411047.9,
+     "idle_issue": 1463.0,
+     "records": 98
+    },
+    "FUSED": {
+     "busy": 129700.0,
+     "idle_true_dep": 2445053.9,
+     "idle_issue": 21325.0,
+     "records": 766
+    },
+    "ATT": {
+     "busy": 229743.0,
+     "idle_true_dep": 2199156.9,
+     "idle_issue": 49610.0,
+     "records": 328
+    },
+    "SFU": {
+     "busy": 2460.0,
+     "idle_true_dep": 2495791.9,
+     "idle_issue": 984.0,
+     "records": 41
+    },
+    "ARGMAX": {
+     "busy": 331903.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 2349634.9,
+     "records": 16
+    },
+    "CTL": {
+     "busy": 11.0,
+     "idle_true_dep": 353.0,
+     "idle_issue": 2682173.9,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 2477178.4,
+    "draft": 792153.2,
+    "accept": 681.0,
+    "rope": 210.6,
+    "mtp": 104.6,
+    "swiglu": 104.0,
+    "end": 10.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 454860.0,
+    "verify_softmax": 399168.0,
+    "verify_down": 233676.0,
+    "verify_all_reduce": 226224.0,
+    "verify_argmax": 171840.0,
+    "draft_argmax": 168824.0,
+    "draft_head_scale": 152748.0,
+    "verify_head_scale": 152748.0,
+    "draft_head": 152630.0,
+    "verify_head": 152630.0,
+    "verify_qkv": 123084.0,
+    "verify_prenorm": 102200.0,
+    "verify_attention_qk": 95046.5,
+    "verify_attention_pv": 95046.5,
+    "verify_o": 86220.0,
+    "draft_gu": 80765.2,
+    "verify_pv_normalize": 43776.0,
+    "verify_row_scale": 43056.0,
+    "draft_down": 41030.1,
+    "verify_round_q": 34560.0,
+    "draft_all_reduce": 31420.0,
+    "verify_mask": 25920.0,
+    "draft_softmax": 25380.0,
+    "draft_qkv": 21162.5,
+    "draft_attention_qk": 19825.0,
+    "draft_attention_pv": 19825.0,
+    "draft_fc": 17950.0,
+    "verify_rope": 17568.0,
+    "draft_prenorm": 15225.0,
+    "draft_o": 14540.0
+   }
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "position": 8184,
+   "records_in_image": 1094,
+   "image_bytes": 144832,
+   "records_executed": 5762,
+   "step_cycles": 2262637.4,
+   "step_us": 1885.53,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 11814.5,
+     "idle_true_dep": 1974943.3,
+     "idle_issue": 282767.5,
+     "records": 266
+    },
+    "SM": {
+     "busy": 963154.8,
+     "idle_true_dep": 1285090.5,
+     "idle_issue": 4272.0,
+     "records": 178
+    },
+    "SU": {
+     "busy": 804478.1,
+     "idle_true_dep": 1415895.1,
+     "idle_issue": 42191.1,
+     "records": 4066
+    },
+    "COLL": {
+     "busy": 269576.0,
+     "idle_true_dep": 1991147.4,
+     "idle_issue": 1463.0,
+     "records": 98
+    },
+    "FUSED": {
+     "busy": 129700.0,
+     "idle_true_dep": 2052078.6,
+     "idle_issue": 21325.0,
+     "records": 766
+    },
+    "ATT": {
+     "busy": 229743.0,
+     "idle_true_dep": 1840605.8,
+     "idle_issue": 49610.0,
+     "records": 328
+    },
+    "SFU": {
+     "busy": 2460.0,
+     "idle_true_dep": 2132000.3,
+     "idle_issue": 984.0,
+     "records": 41
+    },
+    "ARGMAX": {
+     "busy": 224202.1,
+     "idle_true_dep": 973.0,
+     "idle_issue": 2037435.2,
+     "records": 16
+    },
+    "CTL": {
+     "busy": 11.0,
+     "idle_true_dep": 353.0,
+     "idle_issue": 2262273.4,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 2003427.5,
+    "draft": 630602.0,
+    "accept": 681.0,
+    "rope": 210.6,
+    "mtp": 104.6,
+    "swiglu": 104.0,
+    "end": 10.0
+   },
+   "family_unit_cycles": {
+    "verify_softmax": 399168.0,
+    "verify_gu": 295416.7,
+    "verify_all_reduce": 226224.0,
+    "verify_down": 152370.3,
+    "verify_argmax": 117989.6,
+    "draft_argmax": 114973.6,
+    "verify_prenorm": 102200.0,
+    "draft_head_scale": 98897.6,
+    "verify_head_scale": 98897.6,
+    "draft_head": 98779.6,
+    "verify_head": 98779.6,
+    "verify_attention_qk": 95046.5,
+    "verify_attention_pv": 95046.5,
+    "verify_qkv": 80847.2,
+    "draft_gu": 80765.2,
+    "verify_o": 57006.1,
+    "verify_pv_normalize": 43776.0,
+    "verify_row_scale": 43056.0,
+    "draft_down": 41030.1,
+    "verify_round_q": 34560.0,
+    "draft_all_reduce": 31420.0,
+    "verify_mask": 25920.0,
+    "draft_softmax": 25380.0,
+    "draft_qkv": 21162.5,
+    "draft_attention_qk": 19825.0,
+    "draft_attention_pv": 19825.0,
+    "draft_fc": 17950.0,
+    "verify_rope": 17568.0,
+    "draft_prenorm": 15225.0,
+    "draft_o": 14540.0
+   }
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "position": 8184,
+   "records_in_image": 1094,
+   "image_bytes": 144832,
+   "records_executed": 5762,
+   "step_cycles": 10348704.5,
+   "step_us": 8623.92,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 11814.5,
+     "idle_true_dep": 8966802.6,
+     "idle_issue": 1376975.4,
+     "records": 266
+    },
+    "SM": {
+     "busy": 9049222.0,
+     "idle_true_dep": 1285090.5,
+     "idle_issue": 4272.0,
+     "records": 178
+    },
+    "SU": {
+     "busy": 1747827.0,
+     "idle_true_dep": 8517144.5,
+     "idle_issue": 83660.1,
+     "records": 4066
+    },
+    "COLL": {
+     "busy": 269576.0,
+     "idle_true_dep": 10077214.5,
+     "idle_issue": 1463.0,
+     "records": 98
+    },
+    "FUSED": {
+     "busy": 129700.0,
+     "idle_true_dep": 9883316.5,
+     "idle_issue": 21325.0,
+     "records": 766
+    },
+    "ATT": {
+     "busy": 229743.0,
+     "idle_true_dep": 9266155.5,
+     "idle_issue": 49610.0,
+     "records": 328
+    },
+    "SFU": {
+     "busy": 2460.0,
+     "idle_true_dep": 9663142.5,
+     "idle_issue": 984.0,
+     "records": 41
+    },
+    "ARGMAX": {
+     "busy": 1167551.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 9180153.5,
+     "records": 16
+    },
+    "CTL": {
+     "busy": 11.0,
+     "idle_true_dep": 353.0,
+     "idle_issue": 10348340.5,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 9779706.4,
+    "draft": 2827087.9,
+    "accept": 681.0,
+    "rope": 210.6,
+    "mtp": 104.6,
+    "swiglu": 104.0,
+    "end": 10.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 3551436.0,
+    "verify_down": 1781964.0,
+    "verify_qkv": 897228.0,
+    "verify_argmax": 627648.0,
+    "verify_head_scale": 608556.0,
+    "verify_head": 608438.0,
+    "verify_o": 602316.0,
+    "draft_argmax": 548664.0,
+    "draft_head_scale": 532588.0,
+    "draft_head": 532470.0,
+    "draft_gu": 493255.0,
+    "verify_softmax": 399168.0,
+    "draft_down": 247495.0,
+    "verify_all_reduce": 226224.0,
+    "draft_qkv": 124615.0,
+    "verify_prenorm": 102200.0,
+    "verify_attention_qk": 95046.5,
+    "verify_attention_pv": 95046.5,
+    "draft_fc": 87065.0,
+    "draft_o": 83655.0,
+    "draft_ctx": 48403.5,
+    "verify_pv_normalize": 43776.0,
+    "verify_row_scale": 43056.0,
+    "verify_round_q": 34560.0,
+    "draft_all_reduce": 31420.0,
+    "verify_mask": 25920.0,
+    "draft_softmax": 25380.0,
+    "draft_attention_qk": 19825.0,
+    "draft_attention_pv": 19825.0,
+    "verify_rope": 17568.0
+   }
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "position": 8184,
+   "records_in_image": 1094,
+   "image_bytes": 144832,
+   "records_executed": 5762,
+   "step_cycles": 6387456.5,
+   "step_us": 5322.88,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 11814.5,
+     "idle_true_dep": 5657234.6,
+     "idle_issue": 725295.4,
+     "records": 266
+    },
+    "SM": {
+     "busy": 5087974.0,
+     "idle_true_dep": 1285090.5,
+     "idle_issue": 4272.0,
+     "records": 178
+    },
+    "SU": {
+     "busy": 1178067.0,
+     "idle_true_dep": 5125656.5,
+     "idle_issue": 83660.1,
+     "records": 4066
+    },
+    "COLL": {
+     "busy": 269576.0,
+     "idle_true_dep": 6115966.5,
+     "idle_issue": 1463.0,
+     "records": 98
+    },
+    "FUSED": {
+     "busy": 129700.0,
+     "idle_true_dep": 6074004.5,
+     "idle_issue": 21325.0,
+     "records": 766
+    },
+    "ATT": {
+     "busy": 229743.0,
+     "idle_true_dep": 5690699.5,
+     "idle_issue": 49610.0,
+     "records": 328
+    },
+    "SFU": {
+     "busy": 2460.0,
+     "idle_true_dep": 6030342.5,
+     "idle_issue": 984.0,
+     "records": 41
+    },
+    "ARGMAX": {
+     "busy": 597791.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 5788665.5,
+     "records": 16
+    },
+    "CTL": {
+     "busy": 11.0,
+     "idle_true_dep": 353.0,
+     "idle_issue": 6387092.5,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 5476602.4,
+    "draft": 2029423.9,
+    "accept": 681.0,
+    "rope": 210.6,
+    "mtp": 104.6,
+    "swiglu": 104.0,
+    "end": 10.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 1781964.0,
+    "verify_down": 897228.0,
+    "draft_gu": 493255.0,
+    "verify_qkv": 454860.0,
+    "verify_softmax": 399168.0,
+    "verify_argmax": 323776.0,
+    "verify_o": 307404.0,
+    "verify_head_scale": 304684.0,
+    "verify_head": 304566.0,
+    "draft_argmax": 282776.0,
+    "draft_head_scale": 266700.0,
+    "draft_head": 266582.0,
+    "draft_down": 247495.0,
+    "verify_all_reduce": 226224.0,
+    "draft_qkv": 124615.0,
+    "verify_prenorm": 102200.0,
+    "verify_attention_qk": 95046.5,
+    "verify_attention_pv": 95046.5,
+    "draft_fc": 87065.0,
+    "draft_o": 83655.0,
+    "draft_ctx": 48403.5,
+    "verify_pv_normalize": 43776.0,
+    "verify_row_scale": 43056.0,
+    "verify_round_q": 34560.0,
+    "draft_all_reduce": 31420.0,
+    "verify_mask": 25920.0,
+    "draft_softmax": 25380.0,
+    "draft_attention_qk": 19825.0,
+    "draft_attention_pv": 19825.0,
+    "verify_rope": 17568.0
+   }
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "position": 8176,
+   "records_in_image": 2142,
+   "image_bytes": 287392,
+   "records_executed": 11458,
+   "step_cycles": 5364526.1,
+   "step_us": 4470.44,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 19656.3,
+     "idle_true_dep": 4523919.5,
+     "idle_issue": 833060.2,
+     "records": 471
+    },
+    "SM": {
+     "busy": 2766110.8,
+     "idle_true_dep": 2554412.2,
+     "idle_issue": 33867.0,
+     "records": 356
+    },
+    "SU": {
+     "busy": 1824065.0,
+     "idle_true_dep": 3437870.9,
+     "idle_issue": 102501.2,
+     "records": 8128
+    },
+    "COLL": {
+     "busy": 539738.0,
+     "idle_true_dep": 4821386.0,
+     "idle_issue": 2935.0,
+     "records": 197
+    },
+    "FUSED": {
+     "busy": 259575.0,
+     "idle_true_dep": 4882762.0,
+     "idle_issue": 135714.0,
+     "records": 1533
+    },
+    "ATT": {
+     "busy": 459392.9,
+     "idle_true_dep": 4387167.2,
+     "idle_issue": 111274.0,
+     "records": 656
+    },
+    "SFU": {
+     "busy": 4920.0,
+     "idle_true_dep": 5002058.0,
+     "idle_issue": 1968.0,
+     "records": 82
+    },
+    "ARGMAX": {
+     "busy": 666215.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 4697303.0,
+     "records": 32
+    },
+    "CTL": {
+     "busy": 19.0,
+     "idle_true_dep": 361.0,
+     "idle_issue": 5364146.0,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 4951894.5,
+    "draft": 1586668.2,
+    "accept": 689.0,
+    "rope": 213.2,
+    "mtp": 105.3,
+    "swiglu": 104.0,
+    "end": 18.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 909720.0,
+    "verify_softmax": 798336.0,
+    "verify_down": 467352.0,
+    "verify_all_reduce": 452448.0,
+    "verify_argmax": 343680.0,
+    "draft_argmax": 340664.0,
+    "draft_head_scale": 305496.0,
+    "verify_head_scale": 305496.0,
+    "draft_head": 305260.0,
+    "verify_head": 305260.0,
+    "verify_qkv": 246168.0,
+    "verify_prenorm": 204400.0,
+    "verify_attention_qk": 190046.4,
+    "verify_attention_pv": 190046.4,
+    "verify_o": 172440.0,
+    "draft_gu": 161530.4,
+    "verify_pv_normalize": 87552.0,
+    "verify_row_scale": 86112.0,
+    "draft_down": 82060.2,
+    "verify_round_q": 69120.0,
+    "draft_all_reduce": 62840.0,
+    "verify_mask": 51840.0,
+    "draft_softmax": 50760.0,
+    "draft_qkv": 42325.1,
+    "draft_attention_qk": 39650.1,
+    "draft_attention_pv": 39650.1,
+    "draft_fc": 35900.1,
+    "verify_rope": 35136.0,
+    "draft_prenorm": 30625.0,
+    "draft_o": 29080.1
+   }
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "position": 8176,
+   "records_in_image": 2142,
+   "image_bytes": 287392,
+   "records_executed": 11458,
+   "step_cycles": 4524724.9,
+   "step_us": 3770.6,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 19656.3,
+     "idle_true_dep": 3914518.0,
+     "idle_issue": 602660.6,
+     "records": 471
+    },
+    "SM": {
+     "busy": 1926309.7,
+     "idle_true_dep": 2554412.2,
+     "idle_issue": 33867.0,
+     "records": 356
+    },
+    "SU": {
+     "busy": 1608663.3,
+     "idle_true_dep": 2813471.4,
+     "idle_issue": 102501.2,
+     "records": 8128
+    },
+    "COLL": {
+     "busy": 539738.0,
+     "idle_true_dep": 3981584.9,
+     "idle_issue": 2935.0,
+     "records": 197
+    },
+    "FUSED": {
+     "busy": 259575.0,
+     "idle_true_dep": 4069886.1,
+     "idle_issue": 135714.0,
+     "records": 1533
+    },
+    "ATT": {
+     "busy": 459392.9,
+     "idle_true_dep": 3670064.8,
+     "idle_issue": 111274.0,
+     "records": 656
+    },
+    "SFU": {
+     "busy": 4920.0,
+     "idle_true_dep": 4272216.3,
+     "idle_issue": 1968.0,
+     "records": 82
+    },
+    "ARGMAX": {
+     "busy": 450813.3,
+     "idle_true_dep": 973.0,
+     "idle_issue": 4072903.6,
+     "records": 32
+    },
+    "CTL": {
+     "busy": 19.0,
+     "idle_true_dep": 361.0,
+     "idle_issue": 4524344.9,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 4004392.3,
+    "draft": 1263565.5,
+    "accept": 689.0,
+    "rope": 213.2,
+    "mtp": 105.3,
+    "swiglu": 104.0,
+    "end": 18.0
+   },
+   "family_unit_cycles": {
+    "verify_softmax": 798336.0,
+    "verify_gu": 590833.3,
+    "verify_all_reduce": 452448.0,
+    "verify_down": 304740.7,
+    "verify_argmax": 235979.1,
+    "draft_argmax": 232963.1,
+    "verify_prenorm": 204400.0,
+    "draft_head_scale": 197795.1,
+    "verify_head_scale": 197795.1,
+    "draft_head": 197559.1,
+    "verify_head": 197559.1,
+    "verify_attention_qk": 190046.4,
+    "verify_attention_pv": 190046.4,
+    "verify_qkv": 161694.3,
+    "draft_gu": 161530.4,
+    "verify_o": 114012.2,
+    "verify_pv_normalize": 87552.0,
+    "verify_row_scale": 86112.0,
+    "draft_down": 82060.2,
+    "verify_round_q": 69120.0,
+    "draft_all_reduce": 62840.0,
+    "verify_mask": 51840.0,
+    "draft_softmax": 50760.0,
+    "draft_qkv": 42325.1,
+    "draft_attention_qk": 39650.1,
+    "draft_attention_pv": 39650.1,
+    "draft_fc": 35900.1,
+    "verify_rope": 35136.0,
+    "draft_prenorm": 30625.0,
+    "draft_o": 29080.1
+   }
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "position": 8176,
+   "records_in_image": 2142,
+   "image_bytes": 287392,
+   "records_executed": 11458,
+   "step_cycles": 20772827.3,
+   "step_us": 17310.69,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 19656.3,
+     "idle_true_dep": 17760622.7,
+     "idle_issue": 3004658.1,
+     "records": 471
+    },
+    "SM": {
+     "busy": 18174412.0,
+     "idle_true_dep": 2554412.2,
+     "idle_issue": 33867.0,
+     "records": 356
+    },
+    "SU": {
+     "busy": 3571329.0,
+     "idle_true_dep": 17015970.1,
+     "idle_issue": 185439.2,
+     "records": 8128
+    },
+    "COLL": {
+     "busy": 539738.0,
+     "idle_true_dep": 20229687.2,
+     "idle_issue": 2935.0,
+     "records": 197
+    },
+    "FUSED": {
+     "busy": 259575.0,
+     "idle_true_dep": 20063159.2,
+     "idle_issue": 135714.0,
+     "records": 1533
+    },
+    "ATT": {
+     "busy": 459392.9,
+     "idle_true_dep": 18597132.4,
+     "idle_issue": 111274.0,
+     "records": 656
+    },
+    "SFU": {
+     "busy": 4920.0,
+     "idle_true_dep": 19455735.2,
+     "idle_issue": 1968.0,
+     "records": 82
+    },
+    "ARGMAX": {
+     "busy": 2413479.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 18358340.2,
+     "records": 32
+    },
+    "CTL": {
+     "busy": 19.0,
+     "idle_true_dep": 361.0,
+     "idle_issue": 20772447.2,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 19556950.5,
+    "draft": 5884441.3,
+    "accept": 689.0,
+    "rope": 213.2,
+    "mtp": 105.3,
+    "swiglu": 104.0,
+    "end": 18.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 7102872.0,
+    "verify_down": 3563928.0,
+    "verify_qkv": 1794456.0,
+    "verify_argmax": 1255296.0,
+    "verify_head_scale": 1217112.0,
+    "verify_head": 1216876.0,
+    "verify_o": 1204632.0,
+    "draft_argmax": 1176312.0,
+    "draft_head_scale": 1141144.0,
+    "draft_head": 1140908.0,
+    "draft_gu": 986510.0,
+    "verify_softmax": 798336.0,
+    "draft_down": 494990.0,
+    "verify_all_reduce": 452448.0,
+    "draft_qkv": 249230.0,
+    "verify_prenorm": 204400.0,
+    "verify_attention_qk": 190046.4,
+    "verify_attention_pv": 190046.4,
+    "draft_fc": 174130.0,
+    "draft_o": 167310.0,
+    "draft_ctx": 96747.0,
+    "verify_pv_normalize": 87552.0,
+    "verify_row_scale": 86112.0,
+    "verify_round_q": 69120.0,
+    "draft_all_reduce": 62840.0,
+    "verify_mask": 51840.0,
+    "draft_softmax": 50760.0,
+    "draft_attention_qk": 39650.1,
+    "draft_attention_pv": 39650.1,
+    "verify_rope": 35136.0
+   }
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "position": 8176,
+   "records_in_image": 2142,
+   "image_bytes": 287392,
+   "records_executed": 11458,
+   "step_cycles": 12812347.3,
+   "step_us": 10676.96,
+   "n_races": 0,
+   "races": [],
+   "per_unit": {
+    "DMA": {
+     "busy": 19656.3,
+     "idle_true_dep": 11141486.7,
+     "idle_issue": 1663314.1,
+     "records": 471
+    },
+    "SM": {
+     "busy": 10213932.0,
+     "idle_true_dep": 2554412.2,
+     "idle_issue": 33867.0,
+     "records": 356
+    },
+    "SU": {
+     "busy": 2393825.0,
+     "idle_true_dep": 10232994.1,
+     "idle_issue": 185439.2,
+     "records": 8128
+    },
+    "COLL": {
+     "busy": 539738.0,
+     "idle_true_dep": 12269207.2,
+     "idle_issue": 2935.0,
+     "records": 197
+    },
+    "FUSED": {
+     "busy": 259575.0,
+     "idle_true_dep": 12254615.2,
+     "idle_issue": 135714.0,
+     "records": 1533
+    },
+    "ATT": {
+     "busy": 459392.9,
+     "idle_true_dep": 11408236.4,
+     "idle_issue": 111274.0,
+     "records": 656
+    },
+    "SFU": {
+     "busy": 4920.0,
+     "idle_true_dep": 12127575.2,
+     "idle_issue": 1968.0,
+     "records": 82
+    },
+    "ARGMAX": {
+     "busy": 1235975.0,
+     "idle_true_dep": 973.0,
+     "idle_issue": 11575364.2,
+     "records": 32
+    },
+    "CTL": {
+     "busy": 19.0,
+     "idle_true_dep": 361.0,
+     "idle_issue": 12811967.2,
+     "records": 3
+    }
+   },
+   "unit_busy_by_phase": {
+    "verify": 10950742.5,
+    "draft": 4175161.3,
+    "accept": 689.0,
+    "rope": 213.2,
+    "mtp": 105.3,
+    "swiglu": 104.0,
+    "end": 18.0
+   },
+   "family_unit_cycles": {
+    "verify_gu": 3563928.0,
+    "verify_down": 1794456.0,
+    "draft_gu": 986510.0,
+    "verify_qkv": 909720.0,
+    "verify_softmax": 798336.0,
+    "verify_argmax": 647552.0,
+    "verify_o": 614808.0,
+    "verify_head_scale": 609368.0,
+    "verify_head": 609132.0,
+    "draft_argmax": 606552.0,
+    "draft_head_scale": 571384.0,
+    "draft_head": 571148.0,
+    "draft_down": 494990.0,
+    "verify_all_reduce": 452448.0,
+    "draft_qkv": 249230.0,
+    "verify_prenorm": 204400.0,
+    "verify_attention_qk": 190046.4,
+    "verify_attention_pv": 190046.4,
+    "draft_fc": 174130.0,
+    "draft_o": 167310.0,
+    "draft_ctx": 96747.0,
+    "verify_pv_normalize": 87552.0,
+    "verify_row_scale": 86112.0,
+    "verify_round_q": 69120.0,
+    "draft_all_reduce": 62840.0,
+    "verify_mask": 51840.0,
+    "draft_softmax": 50760.0,
+    "draft_attention_qk": 39650.1,
+    "draft_attention_pv": 39650.1,
+    "verify_rope": 35136.0
+   }
+  }
+ ],
+ "table": [
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "published",
+   "tau": 5.584,
+   "step_cycles": 2682537.9,
+   "tok_s": 2497.9,
+   "vs_ar": 2.619
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "measured",
+   "tau": 3.2956,
+   "step_cycles": 2682537.9,
+   "tok_s": 1474.2,
+   "vs_ar": 1.546
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "measured_eq",
+   "tau": 3.7478,
+   "step_cycles": 2682537.9,
+   "tok_s": 1676.5,
+   "vs_ar": 1.758
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "published",
+   "tau": 5.584,
+   "step_cycles": 2262637.4,
+   "tok_s": 2961.5,
+   "vs_ar": 2.268
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "measured",
+   "tau": 3.2956,
+   "step_cycles": 2262637.4,
+   "tok_s": 1747.8,
+   "vs_ar": 1.339
+  },
+  {
+   "B": 8,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "measured_eq",
+   "tau": 3.7478,
+   "step_cycles": 2262637.4,
+   "tok_s": 1987.7,
+   "vs_ar": 1.522
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "published",
+   "tau": 5.584,
+   "step_cycles": 10348704.5,
+   "tok_s": 647.5,
+   "vs_ar": 0.679
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "measured",
+   "tau": 3.2956,
+   "step_cycles": 10348704.5,
+   "tok_s": 382.1,
+   "vs_ar": 0.401
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "measured_eq",
+   "tau": 3.7478,
+   "step_cycles": 10348704.5,
+   "tok_s": 434.6,
+   "vs_ar": 0.456
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "published",
+   "tau": 5.584,
+   "step_cycles": 6387456.5,
+   "tok_s": 1049.1,
+   "vs_ar": 0.803
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "measured",
+   "tau": 3.2956,
+   "step_cycles": 6387456.5,
+   "tok_s": 619.1,
+   "vs_ar": 0.474
+  },
+  {
+   "B": 8,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "measured_eq",
+   "tau": 3.7478,
+   "step_cycles": 6387456.5,
+   "tok_s": 704.1,
+   "vs_ar": 0.539
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "published",
+   "tau": 8.01,
+   "step_cycles": 5364526.1,
+   "tok_s": 1791.8,
+   "vs_ar": 1.879
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "measured",
+   "tau": 3.656,
+   "step_cycles": 5364526.1,
+   "tok_s": 817.8,
+   "vs_ar": 0.857
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": false,
+   "tau_kind": "measured_eq",
+   "tau": 4.662,
+   "step_cycles": 5364526.1,
+   "tok_s": 1042.9,
+   "vs_ar": 1.093
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "published",
+   "tau": 8.01,
+   "step_cycles": 4524724.9,
+   "tok_s": 2124.3,
+   "vs_ar": 1.627
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "measured",
+   "tau": 3.656,
+   "step_cycles": 4524724.9,
+   "tok_s": 969.6,
+   "vs_ar": 0.743
+  },
+  {
+   "B": 16,
+   "sm_mode": "spec",
+   "one_beat_int8": true,
+   "tau_kind": "measured_eq",
+   "tau": 4.662,
+   "step_cycles": 4524724.9,
+   "tok_s": 1236.4,
+   "vs_ar": 0.947
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "published",
+   "tau": 8.01,
+   "step_cycles": 20772827.3,
+   "tok_s": 462.7,
+   "vs_ar": 0.485
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "measured",
+   "tau": 3.656,
+   "step_cycles": 20772827.3,
+   "tok_s": 211.2,
+   "vs_ar": 0.221
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": false,
+   "tau_kind": "measured_eq",
+   "tau": 4.662,
+   "step_cycles": 20772827.3,
+   "tok_s": 269.3,
+   "vs_ar": 0.282
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "published",
+   "tau": 8.01,
+   "step_cycles": 12812347.3,
+   "tok_s": 750.2,
+   "vs_ar": 0.575
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "measured",
+   "tau": 3.656,
+   "step_cycles": 12812347.3,
+   "tok_s": 342.4,
+   "vs_ar": 0.262
+  },
+  {
+   "B": 16,
+   "sm_mode": "reissue",
+   "one_beat_int8": true,
+   "tau_kind": "measured_eq",
+   "tau": 4.662,
+   "step_cycles": 12812347.3,
+   "tok_s": 436.6,
+   "vs_ar": 0.334
+  }
+ ]
+}

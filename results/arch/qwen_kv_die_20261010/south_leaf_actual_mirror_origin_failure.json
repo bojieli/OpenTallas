@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.actual-def-pin-origin.v1",
+ "source_sha256": "68e74adc9d423f96ac3f3f509f5a4f8e28b9fe9464fc7ac354a251c1ad3f979e",
+ "size_nm": [
+  86400,
+  183600
+ ],
+ "signal_pin_shapes": 896,
+ "orientations": {
+  "R0": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       0,
+       48
+      ],
+      [
+       "M7",
+       0,
+       64
+      ]
+     ],
+     "period_nm": 192,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  },
+  "MY": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       24,
+       48
+      ],
+      [
+       "M7",
+       32,
+       64
+      ]
+     ],
+     "period_nm": 192,
+     "allowed_origin_residues_nm": [],
+     "compatible": false
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": false
+  },
+  "MX": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       0,
+       48
+      ],
+      [
+       "M7",
+       0,
+       64
+      ]
+     ],
+     "period_nm": 192,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  },
+  "R180": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       24,
+       48
+      ],
+      [
+       "M7",
+       32,
+       64
+      ]
+     ],
+     "period_nm": 192,
+     "allowed_origin_residues_nm": [],
+     "compatible": false
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": false
+  }
+ }
+}

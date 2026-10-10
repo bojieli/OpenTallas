@@ -1,0 +1,109 @@
+{
+  "name": "pcmux_preg_a-e90a814c7-tc-rd",
+  "block": "ot_s81_native_pc_mux_plain",
+  "element": "ot_s81_native_pc_mux",
+  "owner": "Codex:ds_collective",
+  "purpose": "Opt-in true parallel next-equation PCMUX output pin registers: remove core-output Q -> copy D hold paths; 4x8x340 full shape, all1468 outputs same reference edge, one boundary output cycle faster than OREG. Bench/model pinned first; no adoption until measured TT/FF/DRC and loop independent reSTA.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc4",
+    "ot-agidock128"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/ds-collective-takeover-20261010",
+    "commit": "e90a814c7d82e46af69c193d072c7b9668e052c7"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact_preg",
+        "cmd": "python3 physical/redesign_ds/pcmux/pcmux_preg_bench.py pos {RUN}/bench_preg_pos",
+        "expect": "pass",
+        "min_count_regex": "PCMUX_PREG_EQUIV cycles=(\\d+)",
+        "min_count": 3000,
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "neg_preg_data_age",
+        "cmd": "python3 physical/redesign_ds/pcmux/pcmux_preg_bench.py neg_data {RUN}/bench_preg_neg_data",
+        "expect": "fail",
+        "fail_regex": "PCMUX_PREG_NEG_DETECTED",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "neg_preg_credit_age",
+        "cmd": "python3 physical/redesign_ds/pcmux/pcmux_preg_bench.py neg_credit {RUN}/bench_preg_neg_credit",
+        "expect": "fail",
+        "fail_regex": "PCMUX_PREG_NEG_DETECTED",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.45 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_s81_native_pc_mux_plain --source physical/redesign_ds/pcmux/ot_s81_native_pc_mux_plain_preg.sv --param ENABLE=1 --param PICK=1 --param PRE=1 --clock-port ck --die-area 0 0 240 480 --core-area 0.54 0.54 239.46 479.46 --pin-region '^src_.*=top' --pin-region '^(rq|rk|wd|rv|r_data|r_tag|r_beat|ctrl_live)(\\[.*\\])?$=bottom' --pin-region '^(ck|rst_n)$=left' --pin-region '^(fault|ce|pending)$=right' --pin-regions-exhaustive --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M5 M7' --param OREG=0 --param PREG=1 --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "threads": 12,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    },
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.45 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_s81_native_pc_mux_plain --source physical/redesign_ds/pcmux/ot_s81_native_pc_mux_plain_preg.sv --param ENABLE=1 --param PICK=1 --param PRE=1 --clock-port ck --die-area 0 0 240 480 --core-area 0.54 0.54 239.46 479.46 --pin-region '^src_.*=top' --pin-region '^(rq|rk|wd|rv|r_data|r_tag|r_beat|ctrl_live)(\\[.*\\])?$=bottom' --pin-region '^(ck|rst_n)$=left' --pin-region '^(fault|ce|pending)$=right' --pin-regions-exhaustive --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M5 M7' --param OREG=0 --param PREG=1 --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 12,
+      "peak_ram_gb": 32
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": "Existing input pin flops +1; PREG output edge equals core (0 added), -1 vs OREG. Metadata/payload/credits on same edge, one active transaction per PC unchanged; 8 credits unchanged.",
+  "notes": "Analytical model3d92eae58, bench sourcee90a814c7: 3504cycles/217transactions zero mismatches; payload-age and credit-age mutants detected. Historical outputs immutable. Admission must cover actual host late ramp; prior surgical OOM was global host failure.",
+  "merge_target": null,
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/redesign_ds/routes/pcmux_preg_a-e90a814c7-tc-rd"
+    }
+  ],
+  "registered_io": true,
+  "rtl_boundary": {
+    "top": "ot_s81_native_pc_mux_plain",
+    "sources": [
+      "physical/redesign_ds/pcmux/ot_s81_native_pc_mux_plain_preg.sv"
+    ],
+    "params": {
+      "ENABLE": 1,
+      "PICK": 1,
+      "PRE": 1,
+      "OREG": 0,
+      "PREG": 1
+    }
+  }
+}

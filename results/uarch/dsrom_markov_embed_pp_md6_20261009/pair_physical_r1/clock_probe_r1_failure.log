@@ -1,0 +1,6 @@
+Read-only calibration attempt, not P&R. Guard1GiB, source md6-clock-source/tools/w18/clock_insertion.py, pinned container sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29.
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/md6-clock-source/tools/w18/clock_insertion.py", line 17, in <module>
+    from corner_sta import LIBS, PLAT, ROOT
+ModuleNotFoundError: No module named 'corner_sta'
+Exit1; no clock measurement produced. Repair uses PYTHONPATH to complete physical source tools/w18, preserving RTL, constraints and failed attempt.

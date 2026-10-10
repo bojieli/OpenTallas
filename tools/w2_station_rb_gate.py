@@ -51,7 +51,7 @@ BANK_MUTANTS = {
  'B1_live_q_no_alignment': (BANK, '  assign q[g*64+:64]=q_d2[g];', '  assign q[g*64+:64]=raw64(code[g]);'),
  'B2_copy_check_removed': (BANK, '   f2<=m_ctlbad || (|m_cbad) ||', '   f2<=m_ctlbad || 1\'b0 ||'),
  'B3_controller_check_removed': (BANK, '   f2<=m_ctlbad ||', '   f2<=1\'b0 ||'),
- 'B4_red_data_not_delayed': (BANK, '  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=q_d1[w];', '  always @*for(integer w=0;w<WORDS;w=w+1)r_q[w]=q_d1[w];'),
+ 'B4_red_data_not_delayed': (BANK, '  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=d1_seat[w];', '  always @*for(integer w=0;w<WORDS;w=w+1)r_q[w]=q_d1[w];'),
 }
 CHAIN_MUTANTS = {
  'S1_sm_duplicate_mask_removed': (CHAIN, '   assign sm_v[I]=ov[t]&&!fault&&!smj[I];assign ready[t]=sm_r[I]&&!fault&&!smj[I];',
@@ -84,6 +84,7 @@ HALFV = False
 CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)('
 DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0'
 SAFEV = False
+PHASE_SEAT = False
 
 
 def relreg(out, files):
@@ -96,6 +97,10 @@ def relreg(out, files):
             t = Path(f).read_text(); assert t.count(DEF_OLD) == 1
             d = out/('relreg_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
             m = d/Path(f).name; m.write_text(t.replace(DEF_OLD, DEF_OLD.replace('REL_REG=0,SAFE=0', 'REL_REG=1,SAFE=%d' % (1 if SAFEV else 0)))); f = str(m)
+        if PHASE_SEAT and f.endswith(('ot_hbm_native_frame_station_rb.sv','ot_hbm_w2_protected_bank_veto.sv')):
+            t=Path(f).read_text(); t=t.replace('LOCAL_PHASE=0,HOLD_SEAT=0','LOCAL_PHASE=1,HOLD_SEAT=1').replace('RESET_SEAT=0','RESET_SEAT=1')
+            d=out/('seats_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
+            m=d/Path(f).name;m.write_text(t);f=str(m)
         res.append(f)
     return res
 
@@ -194,13 +199,14 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--phase-seat', action='store_true', help='enable localphase, physical hold/reset seats in source copies')
     ap.add_argument('--quarter-only', action='store_true')
     ap.add_argument('--neg-only', default=None, help='run one chain mutant only (exit 1 = rejected)')
     ap.add_argument('--half', action='store_true', help='half-rate station shell (quarter bench only)')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG, SAFEV, HALFV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
+    global RELREG, SAFEV, HALFV, PHASE_SEAT; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     if a.quarter_only:
         r = quarter_bench(out, 'quarter_rb', True)

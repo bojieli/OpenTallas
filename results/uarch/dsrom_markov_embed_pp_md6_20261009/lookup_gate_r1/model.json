@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.md6.embed-pp.v1",
+  "scope": "real two-edge pair read/capture plus full-shape lookup; not full-head physical qualification",
+  "shape": [
+    129280,
+    256
+  ],
+  "dtype": "BF16",
+  "payload_bytes": 66191360,
+  "macs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity_bytes_per_lookup": 512,
+  "ports": {
+    "request_bits": 49,
+    "response_bytes_per_cycle": 32,
+    "macro_bytes_per_cycle": 32
+  },
+  "boundary_bits_per_cycle": {
+    "request": 49,
+    "macro_pair_local": 256,
+    "group_to_final": 4096,
+    "response": 293,
+    "per_pair_macro_q_inputs": 512,
+    "per_pair_capture_output": 256
+  },
+  "macro": {
+    "rows": 4096,
+    "width": 274,
+    "payload_width": 256,
+    "pairs": 253,
+    "count": 506,
+    "clkq_ss_ps": 744.0,
+    "capture_cycles": 2,
+    "capture_edges_after_read": 2,
+    "mapping": "bank=globalword//8192; macro=2*bank+globalword%2; addr=(globalword%8192)//2",
+    "same_macro_read_interval_cycles": 2,
+    "interval_guard": "consecutive same-parity read rejected before macro enable; sticky fault suppresses response"
+  },
+  "hierarchy": {
+    "groups": 16,
+    "banks_per_group": 16,
+    "group_select_mux": 16,
+    "final_select_mux": 16,
+    "address_fanout_max": 32,
+    "replicas": 1,
+    "bank_selector_FF_added": 253,
+    "pipeline_metadata_FF_added": 13,
+    "pair_interval_guard_FF_added": 759,
+    "bank_capture": "unconditional payload capture, qualified consumption; removes globalvalid to64768 capture enable muxes"
+  },
+  "routing": {
+    "group_boundary_tracks_needed": 4096,
+    "response_tracks_needed": 293,
+    "channel_capacity_tracks": null,
+    "fit": "unproven; requires dedicated slot",
+    "per_pair_data_tracks": 768,
+    "local_pair_corridor_um": 40,
+    "M2_M3_pitch_um": 0.036,
+    "tracks_per_layer_raw": 1111,
+    "at70pct_tracks_per_layer": 777,
+    "local_pair_fit": "768tracks against777per-layer analytical capacity; macro pinaccess and PG/routed fit pending"
+  },
+  "area": {
+    "macro_area_mm2": 3.9879884,
+    "at_60pct_mm2": 6.646647333333333,
+    "queue_FF_lower_bound_mm2": 0.0006835104,
+    "capture_and_select_FF_lower_bound_mm2": 0.0202898196,
+    "includes_logic": false,
+    "slot_fit": false,
+    "hardened_pair_slot_um": [
+      300,
+      200
+    ],
+    "hardened_pair_macro_um2": 15762.7,
+    "hardened_pair_capture_payload_FF": 256,
+    "hardened_pair_control_FF": 8
+  },
+  "latency": {
+    "request_cycles": 2,
+    "macro_and_capture_cycles": 3,
+    "group_select_cycles": 1,
+    "final_select_cycles": 1,
+    "response_queue_cycles": 1,
+    "first_beat_cycles": 8,
+    "last_beat_cycles": 23,
+    "ns_last": 19.166666666666668,
+    "issue_beats": 16,
+    "queue_depth": 8,
+    "max_reserved": 8,
+    "backpressure": "issue only when issued-minus-consumed < 8",
+    "pipeline_valid_stages": 6,
+    "added_cycles": 1
+  },
+  "enabled_default": false,
+  "ROM_ECC": false,
+  "qualification": "pending exactness and SS/FF contextual timing",
+  "timing": {
+    "SS_clkq_ps": 744,
+    "clock_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "capture_FF_setup_budget_ps": 25,
+    "pre_mux_two_edge_margin_ps": 837.6659999999999,
+    "minimum_required_margin_ps": 15,
+    "SS_FF_qualified": false
+  },
+  "energy": "Unconditional capture invalid-payload switching unmeasured; no energy credit",
+  "composed_head_latency": {
+    "prior_actual_bundle_query_to_done_cycles": 8620,
+    "PP_expected_query_to_done_cycles": 8621,
+    "PP_actual_pending": true,
+    "A_input_transport_cycles_included": 4
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_native_frame_station_rb_NO2",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T14:06:03.885934+00:00",
+      "owner": "Codex:hbm_system/expert_steering",
+      "description": "NO2 SAFE REL_REG STATUS_PIN original fec final ODB repaired by already CLOSED C1 hold-only ECO. Exact job/source binding corrects generic block alias; preserve prior failed verdicts. No additional route required for the completed standalone TT/FF gate.",
+      "source": {
+        "commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+        "paths": [
+          "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv",
+          "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv"
+        ]
+      },
+      "job_bindings": [
+        {
+          "name": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+          "block": "ot_hbm_native_frame_station_rb",
+          "source_commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+          "reason": "Original jobblockNO2_SAFE route --no2 sourcefec; C1 hold-only uses same immutable final ODB/SPEF, no RTL/synthesis."
+        }
+      ],
+      "implementation": {
+        "status": "recorded",
+        "evidence": [
+          "results/physical/w2_phase_seat_20261009/no2_registry_binding/original_no2_job_lineage.json"
+        ]
+      },
+      "model": {
+        "status": "unchanged existing NO2 model; no added RTL latency",
+        "evidence": [
+          "results/physical/w2_phase_seat_20261009/c1_eco_terminal/terminal_receipt.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS",
+          "evidence": [
+            "results/physical/w2_phase_seat_20261009/c1_eco_readiness/original_exact_terminal.json",
+            "results/physical/w2_phase_seat_20261009/c1_eco_terminal/route_preflight.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS genuine S3 runtime FATAL; S8 watchdog/nontermination not qualifying",
+          "evidence": [
+            "results/physical/w2_phase_seat_20261009/c1_eco_readiness/original_s3_mutant.run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PASS standalone TT setup48.74ps FFhold5.65ps DRC0; SS sensitivity\u2212178.61ps",
+        "evidence": [
+          "results/physical/w2_phase_seat_20261009/c1_eco_terminal/terminal_receipt.json",
+          "results/physical/w2_phase_seat_20261009/c1_output_attribution/attribution_receipt.json"
+        ],
+        "job": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+        "source_commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+        "odb_sha256": "8a0caf763854c17743a5a171cf59e7727dd55553b1a6a376d42dcbbbe12eb4c8",
+        "sdc_sha256": "0b392970af0403ca530a88108ec6028ed2fd0f271ae597b7767ec7979d2f8f4f",
+        "clock_ps": 833.333,
+        "uncertainty_ps": {
+          "setup": 60,
+          "hold": 25
+        }
+      },
+      "dependencies": [
+        "Forwarded-clock downstream phase/skew/waveform/pulse and actual link contract pending in context.",
+        "Retained23980um M7 wiring does not establish M6-only qualification."
+      ],
+      "integration": {
+        "status": "pending context adoption; standalone TT/FF physical closure only",
+        "evidence": [
+          "results/physical/w2_phase_seat_20261009/c1_output_attribution/attribution_receipt.json"
+        ]
+      }
+    }
+  ]
+}

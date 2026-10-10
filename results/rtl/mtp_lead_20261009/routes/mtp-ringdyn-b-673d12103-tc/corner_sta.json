@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-ringdyn-b-673d12103-tc/routes/mtp_ringdyn_b_673d12103_tc/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_dsrom_ring_dyn_vehicle\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_c",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 30.74,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 30.74,
+  "worst_reg_to_reg_slack_ps": 30.74,
+  "worst_input_to_reg_slack_ps": 323.7,
+  "worst_output_port_slack_ps": 321.32,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "6e496701005afd9c2971e6a2308073b1df8ddcd0eeda444b9c2181cf28436c61",
+  "spef_sha256": "daf3005dc15b12f0a4e5c3c6f358983345c7ff48f1ad359ba32f509befce9ff8",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "e43927739214d7b2a79a8da65fef0cadf63fa017e3d740b130e9b7654de902ec"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -306.29,
+  "tns_ps": -102594.5,
+  "worst_register_d_slack_ps": -306.29,
+  "worst_reg_to_reg_slack_ps": -306.29,
+  "worst_input_to_reg_slack_ps": 311.34,
+  "worst_output_port_slack_ps": 191.24,
+  "violating_d_pins": 1091,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "6e496701005afd9c2971e6a2308073b1df8ddcd0eeda444b9c2181cf28436c61",
+  "spef_sha256": "daf3005dc15b12f0a4e5c3c6f358983345c7ff48f1ad359ba32f509befce9ff8",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "e43927739214d7b2a79a8da65fef0cadf63fa017e3d740b130e9b7654de902ec"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 3.96,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 3.96,
+  "worst_reg_to_reg_slack_ps": 11.01,
+  "worst_input_to_reg_slack_ps": 3.96,
+  "worst_output_port_slack_ps": 6.63,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "6e496701005afd9c2971e6a2308073b1df8ddcd0eeda444b9c2181cf28436c61",
+  "spef_sha256": "daf3005dc15b12f0a4e5c3c6f358983345c7ff48f1ad359ba32f509befce9ff8",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "e43927739214d7b2a79a8da65fef0cadf63fa017e3d740b130e9b7654de902ec"
+ },
+ "post_sdc": {
+  "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+  "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "f66cdafb09fe13d61388da7a4458d2928db63582af041985d1d345ac8635d7d3"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -306.29,
+ "closes_signoff": true
+}

@@ -1,0 +1,52 @@
+{
+  "source": "13f82f895",
+  "functional_RTL": "6529f2bd2",
+  "core_source": "b827340df",
+  "host": "ot-epyc3",
+  "admission_estimate_GiB": 4,
+  "driver_pid": 1076592,
+  "driver_terminal": true,
+  "driver_rc": 0,
+  "positive": {
+    "cases": 193,
+    "words": 8112,
+    "released_golden_beats": 184,
+    "E4_half_tail": 16,
+    "E4_full_plus_half_tail": 48,
+    "credit_stress_words": 2048,
+    "read_write_stalls": true,
+    "actual_write_ACK_delay": true,
+    "fault_cases": [
+      "provider fault with pendingread drained",
+      "tagmismatch drained",
+      "arithmetic NaN fault with23edge retirement drained",
+      "idle coldreset ready/drained"
+    ]
+  },
+  "mutants": {
+    "drop_vo": {
+      "rc": 134,
+      "checker": "DROP/CREDIT timeout"
+    },
+    "early_done": {
+      "rc": 134,
+      "checker": "EARLY_DONE actualACK accounting"
+    },
+    "credit_overflow": {
+      "rc": 134,
+      "checker": "WRITE mismatch realqueueoverflow at2048wordrecord"
+    }
+  },
+  "SHA256": {
+    "m0.log": "cd09010c74af100980f948617f9a5d6c9ed07d2d47dfc4e8d39a9280ddba31af",
+    "driver.log": "f7e8e3079e697b554a7a4e4fd0589ffa09f7456e8f7e243b4fad3fe1d5fecab1",
+    "m3.log": "8420b1463d5a88f1d603d9b3ad2b07cc73241f369d4e141c6e73ea5c280a7674",
+    "m1.log": "0c4b5b72c8aea4842f16d73218ea9ecd854f0be487ecfcff5faf302a57c8a5de",
+    "m2.log": "983d07add4e2cffe965f7a89fabcc29bbd088f57f41b7ccd406fc730717f9f06"
+  },
+  "limits": [
+    "physical VMdie ingress not yetbound",
+    "slot synthfit andtwo currentflowroutespending"
+  ],
+  "rss_note": "driver GNUtime peak is measured singleprocess/tree inherited maximum, not simultaneous wholePG sum"
+}

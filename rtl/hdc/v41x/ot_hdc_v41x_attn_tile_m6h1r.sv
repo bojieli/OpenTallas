@@ -219,7 +219,16 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_attn_tile_m6h1q #(
     parameter integer GB = 0,
-    parameter integer QH = 2               // HC copies: 1 (one bank for the quad) or 2 (one per column, beside its two leaves)
+    parameter integer QH = 2,              // HC copies: 1 (one bank for the quad) or 2 (one per column, beside its two leaves)
+    // redesign-hbm 2026-10-09 (coordinator: die 613.5 W vs 474.56 W, attention 180.3 W at ~5-8 % duty): CG 1 = coarse
+    // clock gating of the quad (TPU / NVDLA practice: one ICG per unit).  The HC bank stays on the raw clock; the four
+    // leaves run on ONE ICG (ot_cg_tile, cloned per sink cluster by cg_pushdown.tcl).  Wake = the quad's own input
+    // valids (ld_v | ld_w2v | iv | !rst_n) registered in the gate's wake flop, i.e. aligned with HC: the leaves are
+    // clocked on exactly the edge they would first see a valid (or their reset) from HC, and HOLD edges after the last.
+    // No new pins, so the quad's die views are unchanged.  MUT_CG (bench only): the wake 2 edges late.
+    parameter integer CG = 0,
+    parameter integer HOLD = 256,
+    parameter integer MUT_CG = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -244,6 +253,14 @@ module ot_attn_tile_m6h1q #(
     generate for (gq = 0; gq < QH; gq = gq + 1) begin : g_hc
         (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(pk), .q(hc_q[gq*PW +: PW]));
     end endgenerate
+    wire lclk;
+    generate if (CG != 0) begin : g_cg
+        wire cg_wo;
+        ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_CG != 0 ? 2 : 0)) u_cgt (.clk(clk), .rst_n(rst_n),
+            .cgi(ld_v | ld_w2v | iv | !rst_n), .cgo(cg_wo), .gclk(lclk));
+    end else begin : g_nocg
+        assign lclk = clk;
+    end endgenerate
     genvar s, r;
     generate
         for (r = 0; r < 2; r = r + 1) begin : g_r
@@ -261,7 +278,7 @@ module ot_attn_tile_m6h1q #(
                 assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} =
                     hc_q[((QH > 1) ? s : 0)*PW +: PW];
                 ot_attn_hgrp_m6h1 u_g (
-                    .clk(clk), .rst_n(l_rst_n), .gid(qgid | LG), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
+                    .clk(lclk), .rst_n(l_rst_n), .gid(qgid | LG), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
                     .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
                     .ibank(l_ibank), .ib(l_ib), .ov(hv), .oy(hy), .oflt(hf));
                 assign {gov[L], oflt[L], oy[L*32 +: 32]} = {hv, hf, hy};
@@ -284,7 +301,9 @@ endmodule
 
 // The H16 tile as four quads (function; each quad is the hardened element, the packet's fan-out to the four quads
 // is the enclosing tile's / die's distribution)
-module ot_attn_tile_m6h1x (
+module ot_attn_tile_m6h1x #(
+    parameter integer CG = 0, parameter integer HOLD = 256, parameter integer MUT_CG = 0   // redesign-hbm: quad gating (bench)
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -306,7 +325,7 @@ module ot_attn_tile_m6h1x (
         localparam integer GB = (q / 2) * 8 + (q % 2) * 2;     // 0, 2, 8, 10
         wire [3:0]   qv, qf;
         wire [127:0] qy;
-        ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        ot_attn_tile_m6h1q #(.CG(CG), .HOLD(HOLD), .MUT_CG(MUT_CG)) u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
             .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer G = GB + 4 * (l / 2) + (l % 2);

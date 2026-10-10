@@ -1,0 +1,5 @@
+STAGE L0 done cycles=4517 start_cyc=7 end_cyc=4524 me_busy=2906/2906 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll
+STAGE L1 done cycles=4507 start_cyc=4525 end_cyc=9032 me_busy=2806/2806 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 c
+STAGE L2 done cycles=4507 start_cyc=9033 end_cyc=13540 me_busy=2806/2806 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 
+WRITEBACK drained=1 after 0 cycles past the last stage
+QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=3 cycles=13540 edges=13540 settle_max=2 wall_s=5330.3 RSS_KiB=13883656 threads=16 kv_ideal=0

@@ -1,0 +1,3 @@
+fp_margin_lint: FAIL  util 57.1% (+hold 57.2%), pins 0, max pin density 0 b/um, macros 2, slivers 1, channel worst 0.004
+fp_margin_lint: FAIL sliver: 1 macro gap(s) < 12 um hold placement rows without a hard placement blockage (m0|m1 gap 8.37 um rows 507.4 um2): block them (sliver_block.tcl) or widen to >= 12 um
+FLOORPLAN_MARGIN: sliver: 1 macro gap(s) < 12 um hold placement rows without a hard placement blockage (m0|m1 gap 8.37 um rows 507.4 um2): block them (sliver_block.tcl) or widen to >= 12 um

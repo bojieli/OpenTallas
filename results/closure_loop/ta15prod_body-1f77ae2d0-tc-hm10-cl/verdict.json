@@ -1,0 +1,165 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "ta15prod_body-1f77ae2d0-tc-hm10-cl",
+ "block": "ot_hbm_production_clock_digital_body",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/struct-close-20261009",
+ "record_branch": "codex/closure-record-ta15prod_body-1f77ae2d0-tc-hm10-cl",
+ "source_commit": "1f77ae2d0e313d86c7e515f85259978a45efe8e7",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/ta15prod_body-1f77ae2d0-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 269.46,
+  "ff_ps": 8.03,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 201.5,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/ta15prod_body-1f77ae2d0-tc-hm10-cl/routes/ta15prod_body_1f77ae2d0_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/ta15prod_body-1f77ae2d0-tc-hm10-cl/routes/ta15prod_body_1f77ae2d0_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/ta15prod_body-1f77ae2d0-tc-hm10-cl/routes/ta15prod_body_1f77ae2d0_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_hbm_production_clock_digital_body_asap7_mtp_ta15prod_body_1f77ae2d0_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_ta15_cl_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "seed 1: TA15_LOCKSTEP PASS events=400 ready_rises=200 ready_cycles=2254\nseed 2: TA15_LOCKSTEP PASS events=400 ready_rises=206 ready_cycles=2294\nseed 3: TA15_LOCKSTEP PASS events=400 ready_rises=184 ready_cycles=2160\n",
+   "track": "parallel"
+  },
+  "bench_ta15_cl_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "seed 1: TA15_LOCKSTEP FAIL mismatches=5036 ready_rises=200\n",
+   "track": "parallel"
+  },
+  "bench_ta15_cl_composition": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS production composition stopped-clock readiness and POR\ntests/rtl/tb_hbm_production_clock_control.sv:42: $finish called at 82610 (1ps)\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T03:21:38-07:00",
+ "job_spec": {
+  "name": "ta15prod_body-1f77ae2d0-tc-hm10-cl",
+  "block": "ot_hbm_production_clock_digital_body",
+  "element": "TA15 production clock controller readiness",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 (coordinator: TA15 production body hard element, dual-track '-cl'). pi-ta15prod-c7c53c4c2-tc-hm10-cl TT -353.9 / FF +10.3: all 4 failing endpoints are cross-domain/async (released AND of 17 destination resets -> ready output -399 and -> ready_meta -256; AON state -> raw collar reset recovery -188; async inputs -> status_meta -46/-30). -cl: collars_rs (closed 006e20771) + per-destination 2-flop AON synchronisers, ready = AND(synced) && sequence_ready && pll_lock (same rise edges, same immediate drop), production_body_cl.sdc = owner SDC + bounded 500/0 window on synchroniser stage flops only. 0 cycles. Lock-step bench vs the original: 3 seeds PASS, NODROP mutant FAIL; owner composition tb PASS. Variant a: HM 10.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "1f77ae2d0e313d86c7e515f85259978a45efe8e7",
+   "extra_paths": [
+    "tests"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "ta15_cl_lockstep",
+     "cmd": "bash tests/rtl/struct_close/run_ta15_lockstep.sh {RUN}/bench_pos pos 1 2 3",
+     "expect": "pass",
+     "pass_regex": "seed 3: TA15_LOCKSTEP PASS",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "ta15_cl_mutant",
+     "cmd": "bash tests/rtl/struct_close/run_ta15_lockstep.sh {RUN}/bench_neg neg 1",
+     "expect": "fail",
+     "fail_regex": "TA15_LOCKSTEP FAIL",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "ta15_cl_composition",
+     "cmd": "mkdir -p {RUN}/bench_c && iverilog -g2012 -s tb -o {RUN}/bench_c/c.vvp rtl/hbm_accel/control/ot_hbm_reset_seq.sv rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv tests/rtl/tb_hbm_production_clock_control.sv && vvp -n {RUN}/bench_c/c.vvp",
+     "expect": "pass",
+     "pass_regex": "^PASS production composition",
+     "threads": 1,
+     "peak_ram_gb": 2
+    }
+   ],
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=4 UTIL=40 PD=0.55 HM=0.010 LB=0 SDCX=physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_production_clock_digital_body --source rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv --source rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv --source rtl/hbm_accel/control/ot_hbm_reset_seq.sv --clock-port clk_stream --die-area 0 0 100.224 99.36 --core-area 1.08 1.08 99.144 98.28",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "enabled": false,
+    "reason": "multi-clock boot body (five clocks redefined by production_body.sdc): no single core_clk insertion to calibrate; IO is the owner's provisional AON budget in that SDC"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/clock_boundary/production_body.sdc",
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "cycles added: 0 (RTL as written)",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

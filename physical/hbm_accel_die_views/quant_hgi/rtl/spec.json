@@ -1,0 +1,23 @@
+{
+ "master": "hfd_quant",
+ "hgi_unit": "quant",
+ "note": "HGI-1 quant view (hgi-takeover 2026-10-09): ot_hgi_quant_unit = ot_hgi_quant_record (normative record bus from the sequencer) -> the qualified Codex VM transport (ot_hgi_quant_decode inside: FP8 / FP4 UE8M0 / FP4 E4M3 SATFINITE, 23 edges) -> VM packet client of hfd_hgi_vm. Replaces the legacy streaming wrapper (v tied, outputs folded) when hgi_dispatch includes quant. Connected bench rtl/test/hbm_accel/generic/tb_hgi_quant_vm_connected.sv: all released CF-QDQ vectors exact through record -> transport -> ECC VM.",
+ "instances": [
+  {
+   "name": "qu",
+   "module": "ot_hgi_quant_unit",
+   "file": "rtl/hbm_accel/generic/ot_hgi_quant_unit.sv",
+   "params": {},
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec": "die:f_hgi_cmdproc[0:683]",
+    "ret": "die:t_hgi_cmdproc[0:3]",
+    "vmq": "die:t_hgi_vmq[0:338]",
+    "vmr": "die:f_hgi_vmr[0:274]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5
+}

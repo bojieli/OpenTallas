@@ -51,7 +51,10 @@ module ot_qfd_crom #(
     parameter integer LROWS = 148,              // narrow rows a layer
     parameter integer FN_ROW0 = 5328,
     parameter [63:0] QSCALE_WORD = 64'h3db504f3_00000000,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // LB (redesign-qwen 2026-10-09; 0 = unchanged): global index of lane 0 -- an 8-lane GROUP TILE (SW 8: 2 wide columns +
+    // 1 narrow column = 6 macros) checks its lanes' alignment against lanes LB .. LB + SW - 1 of the 64-lane contract
+    parameter integer LB = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -108,7 +111,7 @@ module ot_qfd_crom #(
                 else if (a < A_DSC0) begin k = K_NARROW; off = a - A_OSC0; r = lbase + R_QKR + off[6 +: RW]; end
                 else if (a < A_END) begin k = K_NARROW; off = a - A_DSC0; r = lbase + R_QKR64 + off[6 +: RW]; end
                 else k = K_BAD;
-                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != l[5:0]) al = 1'b0;
+                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != (l[5:0] + LB[5:0])) al = 1'b0;
                 t_v[l] <= re1[l];
                 t_kind[l*3 +: 3] <= k;
                 t_row[l*RW +: RW] <= r;
@@ -164,7 +167,7 @@ module ot_qfd_crom #(
                 `ifdef SYNTHESIS
                 ot_rom_4096x266_m8 u_m (.clk(clk),
 `else
-                ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_w_c%0d_d%0d", g, d))) u_m (.clk(clk),
+                ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_w_c%0d_d%0d", g + LB / WL, d))) u_m (.clk(clk),
 `endif
                     .ce_in(w_ce[g] && w_row[g*RW + 12] == d[0]), .addr_in(w_row[g*RW +: 12]),
                     .rd_out(w_rd[(g*2 + d)*266 +: 266]));
@@ -176,7 +179,7 @@ module ot_qfd_crom #(
                 `ifdef SYNTHESIS
                 ot_rom_4096x266_m8 u_m (.clk(clk),
 `else
-                ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_n_c%0d_d%0d", g, d))) u_m (.clk(clk),
+                ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_n_c%0d_d%0d", g + LB / NL, d))) u_m (.clk(clk),
 `endif
                     .ce_in(n_ce[g] && n_row[g*RW + 12] == d[0]), .addr_in(n_row[g*RW +: 12]),
                     .rd_out(n_rd[(g*2 + d)*266 +: 266]));
@@ -228,4 +231,23 @@ module ot_qfd_crom #(
             end
         end
     end
+endmodule
+
+
+// Die master qfd_crom_g (redesign-qwen 2026-10-09): ONE 8-lane group of the constant ROM (2 wide macro columns + 1 narrow
+// column, 2 deep = 6 x ot_rom_4096x266_m8), replicated x 8 beside the 8 constant-buffer group tiles (qfd_su_cbuf_g) it fills;
+// the 48-macro qfd_crom48 (777.6 x 1,000, a 5.6 k-pin top face, DRT-0255 pin access) as one regular element.  Lane group 0
+// shown (the alignment check's lane base is the only RTL difference between the 8 copies; the mask content differs as any ROM).
+module ot_qfd_crom_g (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [7:0]        crom_re,
+    input  wire [8*24-1:0]   crom_addr,
+    input  wire [5:0]        crom_stage,
+    output wire [8*64-1:0]   crom_q,
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+    ot_qfd_crom #(.SW(8), .LB(0)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .crom_stage(crom_stage), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule

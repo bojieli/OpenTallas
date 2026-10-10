@@ -20,6 +20,7 @@ FIX = Path('rtl/test/data/v41x_coll')
 RTL = [Path('rtl/chip/ot_chip_v41x_coll_dma.sv'), Path('rtl/chip/ot_chip_v41x_die.sv'),
        Path('rtl/chip/ot_chip_v41x_tile.sv'), Path('rtl/rom/ot_rom_oneshot_px.sv'),
        Path('rtl/hdc/v41x/ot_hdc_core_v41x.sv'),
+       Path('rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv'),
        Path('rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh')]
 BENCH = [Path('rtl/test/tb_v41x_coll_dma.sv'), Path('rtl/test/tb_v41x_coll_pairwise.sv'),
          Path('rtl/test/tb_v41x_coll_wo_b.sv')]

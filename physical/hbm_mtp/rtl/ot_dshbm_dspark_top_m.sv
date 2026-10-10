@@ -156,6 +156,13 @@ module ot_dshbm_dspark_top_m #(
         .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok),
         .req_v(sr_v), .req_ready(sr_ready), .req_kind(sr_kind), .req_idx(sr_idx), .req_pos(sr_pos),
         .a_v(sa_v), .a_addr(sa_addr), .a_tok(sa_tok), .a_pad(sa_pad), .a_last(sa_last), .a_err(sa_err));
+    end else if (SPECF == 2) begin : g_state2   // hgi-takeover: one output register stage (+1 edge on a_*)
+    ot_dshbm_spec_state_r #(.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST),
+        .NSRC(NSRC), .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) u_state (
+        .clk(clk), .rst_n(rst_n), .n_set(n_set), .n_val(n_val), .n(n_committed),
+        .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok),
+        .req_v(sr_v), .req_ready(sr_ready), .req_kind(sr_kind), .req_idx(sr_idx), .req_pos(sr_pos),
+        .a_v(sa_v), .a_addr(sa_addr), .a_tok(sa_tok), .a_pad(sa_pad), .a_last(sa_last), .a_err(sa_err));
     end else begin : g_state1
     ot_dshbm_spec_state_f #(.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST),
         .NSRC(NSRC), .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) u_state (

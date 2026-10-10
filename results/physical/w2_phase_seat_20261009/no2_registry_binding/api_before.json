@@ -1,0 +1,131 @@
+{
+  "t": 1791554649.8954024,
+  "rows": [
+    {
+      "element": "ot_hbm_native_frame_station_rb",
+      "target": "HBM accelerator",
+      "variants": [],
+      "category": "closed (TT era)",
+      "via": "",
+      "purpose": "C1 approved hold-only repair of immutable fec1faadd final ODB with frozen actual TT60/FF25 reference; no RTL, synthesis, calibration or seat variant",
+      "jobs": 1,
+      "live": 0,
+      "failed": 0,
+      "closed_jobs": 1,
+      "best": {
+        "tt": 48.74,
+        "ff": 5.65,
+        "ss": -178.61,
+        "drc": 0,
+        "job": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+        "corner": "TT",
+        "source_commit": "fac2006f589832219516f4d0a9d6be8f536c1b36"
+      },
+      "area": null,
+      "revoked": null,
+      "latest": {
+        "t": 1791548274.0,
+        "job": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+        "status": "CLOSED",
+        "text": "CLOSED: CLOSED TT +48.74 / FF +5.65 ps DRC 0; SS sensitivity -178.61 ps | record codex/w2-phase-seat-20261009 4ed2c6bde (1 files) | no merge target"
+      },
+      "closed_t": 1791548274.0,
+      "owner": "Codex:expert_steering C1 routine approved existing-ODB",
+      "evidence_history": [],
+      "qualification": null,
+      "superseded": null
+    },
+    {
+      "element": "ot_hbm_native_frame_station_rb_NO3",
+      "target": "HBM accelerator",
+      "variants": [
+        "ot_hbm_native_frame_station_rb_NO3_HALF",
+        "ot_hbm_native_frame_station_rb_NO3_SAFE"
+      ],
+      "category": "failed, re-running",
+      "via": "",
+      "purpose": "W2 rb station SAFE (registered permission decision, REL_REG, margin hold model), route 730 / sign-off 833.333, in parallel with r4",
+      "jobs": 17,
+      "live": 3,
+      "failed": 10,
+      "closed_jobs": 0,
+      "best": {
+        "tt": null,
+        "ff": -35.58,
+        "ss": -34.49,
+        "drc": 0,
+        "job": "w2-rb-safe-no3-e9e514e40",
+        "corner": "SS",
+        "source_commit": "e9e514e4017b667151ce0c3146fde4976f1d0697"
+      },
+      "area": null,
+      "revoked": null,
+      "latest": {
+        "t": 1791554266.0,
+        "job": "w2-rb-safe-no3-stpin-w640-fec1faadd-tc",
+        "status": "READY",
+        "text": "source fec1faadd784 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-stpin-w640-fec1faadd-tc/src"
+      },
+      "closed_t": null,
+      "owner": "Claude:struct-close",
+      "evidence_history": [],
+      "qualification": null,
+      "superseded": null
+    },
+    {
+      "element": "ot_hbm_native_frame_station_rb_NO2",
+      "target": "HBM accelerator",
+      "variants": [
+        "ot_hbm_native_frame_station_rb_NO2_HALF",
+        "ot_hbm_native_frame_station_rb_NO2_SAFE"
+      ],
+      "category": "needs redesign (no live job)",
+      "via": "",
+      "purpose": "W2 rb station SAFE (registered permission decision, REL_REG, margin hold model), route 730 / sign-off 833.333, in parallel with r4",
+      "jobs": 17,
+      "live": 0,
+      "failed": 11,
+      "closed_jobs": 0,
+      "best": {
+        "tt": null,
+        "ff": -34.56,
+        "ss": -18.92,
+        "drc": 0,
+        "job": "w2-rb-safe-no2-e9e514e40",
+        "corner": "SS",
+        "source_commit": "e9e514e4017b667151ce0c3146fde4976f1d0697"
+      },
+      "area": null,
+      "revoked": null,
+      "latest": {
+        "t": 1791553570.0,
+        "job": "w2-rb-safe-no2-c09f9b505",
+        "status": "NEEDS_HUMAN",
+        "text": "route bulk released (drive-resume disk cleanup, NEEDS_HUMAN; MB before/after 0 0); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+      },
+      "closed_t": null,
+      "owner": "Codex:hbm_w2",
+      "evidence_history": [],
+      "qualification": null,
+      "superseded": null
+    }
+  ],
+  "sources": {
+    "option_b": "results/closure_loop/option_b_status_20261007/status.json",
+    "option_b_decided": "2026-10-07 22:4x PT (integrate, per OWNER option B + coordinator)",
+    "jobs": 2646,
+    "revoked_jobs": "/home/ubuntu/claude-takeover-20261007/revoked_closures.json",
+    "n_revoked_jobs": 15,
+    "registry": "results/fleet_viz/element_registry",
+    "registry_records": 72,
+    "registry_errors": [
+      {
+        "path": "results/fleet_viz/element_registry/qwen_kv_die_20261009.json",
+        "error": "record requires source.paths"
+      }
+    ],
+    "superseded": "/home/ubuntu/claude-takeover-20261007/superseded_elements.json",
+    "n_superseded": 36
+  },
+  "idle_before": 46
+}

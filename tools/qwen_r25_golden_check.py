@@ -83,7 +83,7 @@ def main():
     a = ap.parse_args()
     t0 = time.time()
     torch.set_num_threads(8)
-    m = R.QwenR25(a.snapshot, a.cache)
+    m = R.QwenR25(a.snapshot, a.cache, perm=False)    # the harness runs the checkpoint (natural) order
     toks = PROMPT[:a.tokens]
     T, nl = len(toks), a.layers
     # the golden, position by position

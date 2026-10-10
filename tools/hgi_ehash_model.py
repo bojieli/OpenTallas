@@ -1,0 +1,17 @@
+"""Sizing for HGI DS EHASH binding before RTL; dynamic B remains unresolved."""
+def model():
+    return dict(schema="opentallas.hgi-ehash-model.v1", default_generic=False,
+        replicas=1, macs_per_cycle=0, integer_hash_products=8,
+        memory_bytes_per_cycle=dict(constants=0, row_output=4),
+        boundary_bits_per_cycle=dict(token=17, selected_row=32, constants=1792),
+        constants_note="typed validation tuple only; not a normative serialized B ABI",
+        history_bits=8*4*17+3*17, replica_mux_cost="48x29 selected-layer rows, then24-row serialized mux",
+        routing=dict(signal_bits=1900, two_layer_pin_spread=True, channel_tracks_required=950,
+                     channel_tracks_capacity=2400, slot_um=[400,300]),
+        floorplan=dict(area_slot_um2=120000, utilization_target=0.45, measured_area_pending=True),
+        latency=dict(registered_command_landing=1, history_window=1, replay_window_to_shipped_hash=4, shipped_hash=12,
+                     row_emit=24, total_no_backpressure=42, original_window_hash=16,
+                     added_serialization_cycles_per_command=26, DS_layer_commands_per_token=2,
+                     DS_two_layer_serial_cycles=84, original_all_layer_hash_cycles=16,
+                     conservative_added_cycles_per_token=68, predecessor_measured_command_to_ready_cycles=41, registered_successor_measurement_pending=True),
+        approval_gate="exact DS lockstep + CF-EHASH + mutant + TT/FF/DRC; no generic-B claim")

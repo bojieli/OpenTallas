@@ -1,0 +1,4 @@
+{"src": "rtl/hbm_accel/index/ot_hbm_native_index_query_credit.sv", "module": "ot_hbm_native_index_query_credit", "core": "ot_hbm_native_index_query_credit_core",
+ "clk": "clk", "reset": "por_n",
+ "why": "sp-qcredit-006e20771 TT -548 (reg2reg +118): unregistered boundary. block valid/ready through a pin FIFO, qb (credit stream) / qbr (credit return) and owner levels flopped.",
+ "in_hs": [{"v": "block_v", "r": "block_r", "data": ["block_frame", "block_rank", "block_head", "block_number", "block_data", "head_weight"]}]}

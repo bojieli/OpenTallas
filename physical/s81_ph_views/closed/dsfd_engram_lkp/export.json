@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_engram_lkp",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_engram_lkp.lef": "06e8e08de07cec18fa2abe9235eaee1d6cc4d63a4d792eb987f09bcb4b0abfce",
+    "dsfd_engram_lkp_ff.lib": "adb3f2f1d119286d7b389cfe378a82f619eb08d52e7b4ca137d6b313ad80782f",
+    "dsfd_engram_lkp_ss.lib": "2d288f766fe1f3195b266238d4e3788a1133a3af41020752fbf39fe55c2a3854"
+  },
+  "ok": true
+}

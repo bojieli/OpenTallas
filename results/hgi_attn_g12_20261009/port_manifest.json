@@ -1,0 +1,43 @@
+{
+  "schema": "hgi.g12.ports.v1",
+  "module": "ot_hgi_att_row_sources_p",
+  "source_commit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+  "inputs": {
+    "clk": 1,
+    "rst_n": 1,
+    "cmd_v": 1,
+    "ring": 1,
+    "pos1": 21,
+    "b_n": 21,
+    "b_m": 21,
+    "c_n": 21,
+    "c_id_v": 1,
+    "c_id": 32,
+    "row_r": 1
+  },
+  "outputs": {
+    "cmd_r": 1,
+    "c_id_r": 1,
+    "row_v": 1,
+    "row_source": 1,
+    "row_last": 1,
+    "row_index": 20,
+    "row_ordinal": 21,
+    "busy": 1,
+    "done": 1,
+    "fault": 1
+  },
+  "role": "Metadata row-front-end upstream existing gather reader; payload/formatter/tile arithmetic unchanged",
+  "producer_contract": "One acknowledged command owns exactly c_n selected IDs in list order; no unsolicited ID beat, no new command before completion. No payload is supplied by this block.",
+  "consumer_contract": "Ready/valid held row tuple; source0=B physical ring/linear slot,source1=C selected ID; ordinal concatenated B then C; last identifies final request.",
+  "latency": {
+    "first_request_cycles": 3,
+    "II": 1
+  },
+  "default_selection": "Standalone opt-in hardening vehicle; original ot_hgi_att_row_sources defaultENABLE_G12=0 bypasses unchanged legacy stream",
+  "unconnected_pending": [
+    "HGI descriptor receiver/row-gather request adapter",
+    "Claude entry formatter load-mode/bank/grp/w2v association",
+    "die generator slot/stream-net binding"
+  ]
+}

@@ -15,7 +15,12 @@ module ot_qfd_pkgctl #(
     parameter integer D    = 4,
     parameter integer NW   = 18,
     parameter integer AW   = 24,
-    parameter integer WDOG = 1 << 22
+    parameter integer WDOG = 1 << 22,
+    // drive-0158 '-cl' (default 0 = reviewed form): DONE_REG=1 registers the D-die reductions (all done for the current
+    // generation, any fault, token/value agreement) one edge before use; cleared at a start so a stale previous-
+    // generation completion is never seen.  Step completion +1 edge.  Fixes qfd_sysctl_stn_pb2 a3e585f3f TT -91
+    // (reg->reg d_gen -> all_done -> n_steps / eng_next_*: compare tree + 100-load enable fan-out in one cycle).
+    parameter integer DONE_REG = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -51,16 +56,24 @@ module ot_qfd_pkgctl #(
     reg busy;
     reg [31:0] wd;
     integer k;
-    reg agree, all_done, any_fault;
+    reg agree_c, all_done_c, any_fault_c;
+    reg agree_q, all_done_q, any_fault_q;
+    wire agree = DONE_REG ? agree_q : agree_c;
+    wire all_done = DONE_REG ? all_done_q : all_done_c;
+    wire any_fault = DONE_REG ? any_fault_q : any_fault_c;
     always @(*) begin
-        agree = 1'b1; all_done = 1'b1; any_fault = 1'b0;
+        agree_c = 1'b1; all_done_c = 1'b1; any_fault_c = 1'b0;
         for (k = 0; k < D; k = k + 1) begin
             if (d_next_token[k*NW +: NW] != d_next_token[0 +: NW] || d_next_val[k*32 +: 32] != d_next_val[0 +: 32])
-                agree = 1'b0;
-            if (!(d_done[k] && d_drained[k] && d_done_gen[k*2 +: 2] == d_gen)) all_done = 1'b0;
-            if (d_done[k] && d_done_gen[k*2 +: 2] == d_gen && d_fault[k]) any_fault = 1'b1;
+                agree_c = 1'b0;
+            if (!(d_done[k] && d_drained[k] && d_done_gen[k*2 +: 2] == d_gen)) all_done_c = 1'b0;
+            if (d_done[k] && d_done_gen[k*2 +: 2] == d_gen && d_fault[k]) any_fault_c = 1'b1;
         end
     end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin agree_q <= 1'b1; all_done_q <= 1'b0; any_fault_q <= 1'b0; end
+        else if (eng_start || !busy) begin agree_q <= 1'b1; all_done_q <= 1'b0; any_fault_q <= 1'b0; end
+        else begin agree_q <= agree_c; all_done_q <= all_done_c; any_fault_q <= any_fault_c; end
     assign eng_fault = die_fault || disagree || wdog_fault || start_unready;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

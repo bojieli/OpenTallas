@@ -1,0 +1,14 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MD6_LOCALCAP bank=0 origin=15.984,10.8 direct_captures=256
+MD6_LOCALCAP bank=1 origin=15.984,82.08 direct_captures=256
+OT_PG_VDD_BEGIN
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_VDD_PASS
+OT_PG_VSS_BEGIN
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_VSS_PASS
+[ERROR ORD-0047] You can't load a new db file as the db is already populated
+Error: check.tcl, 15 ORD-0047

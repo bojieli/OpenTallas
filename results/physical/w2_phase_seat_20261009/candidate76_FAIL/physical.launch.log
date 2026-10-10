@@ -1,0 +1,6 @@
+prepared bank_veto_static.sv station_rb_static.sv
+/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-76e087a20/physical_no2_cal/station.sdc {'in_max': 925.0835000000001, 'in_min': 0.0, 'out_max': -24.916499999999928, 'out_min': -220.0, 'link': 113.5, 'S': 254.91649999999998, 'R': 254.91649999999998, 'legacy': False}
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs []
+FAILED: TypeError: pins() takes 1 positional argument but 3 were given
+partial record written to /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-76e087a20/physical_no2_cal/physical.json

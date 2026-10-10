@@ -1,0 +1,169 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_hbm_ecc_provider_b-11dbd8935-tc",
+ "block": "qfd_emb_pcport_kvw",
+ "owner": "Claude:sys-takeover",
+ "source_branch": "claude/sys-takeover-ecc-20261009",
+ "record_branch": "codex/closure-record-qfd_hbm_ecc_provider_b-11dbd8935-tc",
+ "source_commit": "11dbd893505c7a45df3a33fffa4594100bfb47fc",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hbm_ecc_provider_b-11dbd8935-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "clk": 1024.0
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 26.39,
+  "ff_ps": 4.72,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "clk": 1024.0
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -175.6,
+  "ss_sensitivity_tns_ps": -27153.6,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hbm_ecc_provider_b-11dbd8935-tc/routes/qfd_hbm_ecc_provider_b_11dbd8935_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hbm_ecc_provider_b-11dbd8935-tc/routes/qfd_hbm_ecc_provider_b_11dbd8935_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hbm_ecc_provider_b-11dbd8935-tc/routes/qfd_hbm_ecc_provider_b_11dbd8935_tc/work/orfs/logs/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_hbm_ecc_provider_b_11dbd8935_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_ecc_provider_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "",
+   "track": "parallel"
+  },
+  "bench_ecc_provider_neg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL clean phase got=64 ce=64 ue=0\nFATAL data mismatch entry 1\nHBM_ECC_PROVIDER_NEG_DETECTED 2/2\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "owner_TT_FF_nonnegative": {
+   "ok": true,
+   "out": ""
+  },
+  "route_WC_scene_reads_TT": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T08:45:40-07:00",
+ "job_spec": {
+  "name": "qfd_hbm_ecc_provider_b-11dbd8935-tc",
+  "block": "qfd_emb_pcport_kvw",
+  "owner": "Claude:sys-takeover",
+  "purpose": "qfd_hbm_ecc_provider (registry: physical ECC32 provider missing; owner rule SECDED on mutable HBM payload via the HBM3E side-band, not in-band): ot_qfd_emb_pcport KVW=1 11dbd8935 encodes KV write data into 288-b codewords (layout = ot_qfd_kv_landing_ecc); 0 cycles, +1,152 flops; outline 150.12 um. Default pcport CLOSED f42e102ca (SS +86.6 / FF +38.5). Variant b: route HM 0.025.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/sys-takeover-ecc-20261009",
+   "commit": "11dbd8935"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "ecc_provider_exact",
+     "cmd": "bash physical/sys_takeover/hbm_ecc_provider_bench.sh pos {RUN}/bpos",
+     "expect": "pass",
+     "pass_regex": "HBM_ECC_PROVIDER_PASS",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "ecc_provider_neg",
+     "cmd": "bash physical/sys_takeover/hbm_ecc_provider_bench.sh neg {RUN}/bneg",
+     "expect": "fail",
+     "fail_regex": "HBM_ECC_PROVIDER_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 2
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+   },
+   "route": {
+    "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_emb_pcport_kvw.sdc; HM=0.025 SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_emb_pcport_kvw {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_emb_pcport --out {RUN}/record/views/qfd_emb_pcport --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_emb_pcport_kvw.sdc"
+   ],
+   "checks": [
+    {
+     "name": "owner_TT_FF_nonnegative",
+     "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+    },
+    {
+     "name": "route_WC_scene_reads_TT",
+     "cmd": "grep -q 'corner WC reads the TT' {RUN}/routes/{LABEL}/flow.log"
+    }
+   ],
+   "macros": []
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/emb_hbm_closure_20261008/qfd_emb_pcport-f42e102ca-tc"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "element": "qfd_hbm_ecc_provider"
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

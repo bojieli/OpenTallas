@@ -174,6 +174,8 @@ def full_dyn(pos: int, tok: int = 0, rank: int = 0) -> list[int]:
     d[18], d[19] = (4 if pos & 1 else 0), (64 if pos & 1 else 0)
     d[20] = (n2 - 1) * HD if n2 else 0
     d[21], d[22], d[23], d[24] = rnd16(p1), rnd16(n2), rnd16(p1 + ns1), rnd16(p1 + ns2)
+    # ROLLBACK_RING_DYN (default 1, every shape): the compressor record ring-8 selectors
+    d[25], d[26] = (pos % 8) * 4, ((pos >> 1) % 4) * 128
     win = min(p1, WINDOW)
     sc1, sc2 = cdiv(p1, TP), cdiv(n2, TP)
     scr = cdiv(min(p1, SCAN_CAP), TP)

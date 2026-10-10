@@ -1,0 +1,104 @@
+{
+  "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+  "block": "ot_hgi_argmax18_m",
+  "owner": "Codex:generic_token18/argmax18",
+  "purpose": "Owner-approved HGI-1 CF-ARG width18 + row-bound rank*imm_a offset; qualified FAST1 native leaf; DS default off. Two physical alternatives.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/hgi-argmax18-20261009",
+    "commit": "f6d441b6a"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact_cf_arg_ds_lockstep",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
+        "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
+        "peak_ram_gb": 1,
+        "expect": "pass",
+        "min_count_regex": "rows=([0-9]+)",
+        "min_count": 6
+      },
+      {
+        "name": "mutant_1",
+        "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1 || bench_rc=$?; cat {RUN}/bench_mut1/sim.log; exit \"$bench_rc\"",
+        "peak_ram_gb": 1,
+        "expect": "fail"
+      },
+      {
+        "name": "mutant_2",
+        "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2 || bench_rc=$?; cat {RUN}/bench_mut2/sim.log; exit \"$bench_rc\"",
+        "peak_ram_gb": 1,
+        "expect": "fail"
+      },
+      {
+        "name": "mutant_3",
+        "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3 || bench_rc=$?; cat {RUN}/bench_mut3/sim.log; exit \"$bench_rc\"",
+        "peak_ram_gb": 1,
+        "expect": "fail"
+      },
+      {
+        "name": "mutant_value_zero",
+        "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4 || bench_rc=$?; cat {RUN}/bench_mut4/sim.log; exit \"$bench_rc\"",
+        "peak_ram_gb": 1,
+        "expect": "fail"
+      },
+      {
+        "name": "mutant_nan_payload",
+        "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5 || bench_rc=$?; cat {RUN}/bench_mut5/sim.log; exit \"$bench_rc\"",
+        "peak_ram_gb": 1,
+        "expect": "fail"
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes cts",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 2
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_argmax18_20261009/u35"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "Memory claim16GiB conservative ceil2x measured nearest native LP8/FLAT7/FAST1 DRT7956564KiB(7.588GiB); calibration2GiB based native CTS884264KiB and GP937244KiB, new winner/index/offset flop overhead. These are admission claims, not generic measured peaks or hard caps. Own synth mapped area required <=11918um2 before continuing physical adoption. Corrected source own synthesis mapped area=5767.945um\u00b2 <=11918um\u00b2, exact6rows +5compiledmutants PASS; actual remote boundary PASS12/1 levels. Native sibling16GiB route reservation remains conservative.",
+  "registered_io": true,
+  "rtl_boundary": {
+    "levels": 16
+  }
+}

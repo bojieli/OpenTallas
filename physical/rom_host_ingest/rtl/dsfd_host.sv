@@ -2,7 +2,7 @@
 // dsfd_host (stream ingest 2026-10-08): die master of the host / KV-ingest block = ot_rom_host_ingest with this die's
 // parameters.  DeepSeek-V4.1 S81 layer / head die: ROWS (compressed + window KV rows), IKEY (indexer keys), RAW; QKV and RMW fail closed.
 // Clocks: clk_h host link user clock, clk_i ingest core clock (the die clock / 2, its own CTS root, no gating), ck die clock.
-module dsfd_host (
+module dsfd_host #(parameter integer ENG_TRIM = 0, parameter integer APIPE = 0) (   // sys-takeover: engine options (ot_rom_host_ingest)
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -23,5 +23,5 @@ module dsfd_host (
     input  wire [255:0]  i_rd,
     output wire          fault
 );
-    ot_rom_host_ingest #(.KVHMAX(1), .HDMAX(16), .QKV_EN(0), .RMW_EN(0)) u_hi (.rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(t_v), .t_d(t_d), .t_cr(t_cr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr), .i_rv(i_rv), .i_rd(i_rd), .fault(fault));
+    ot_rom_host_ingest #(.KVHMAX(1), .HDMAX(16), .QKV_EN(0), .RMW_EN(0), .ENG_TRIM(ENG_TRIM), .APIPE(APIPE)) u_hi (.rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(t_v), .t_d(t_d), .t_cr(t_cr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr), .i_rv(i_rv), .i_rd(i_rd), .fault(fault));
 endmodule

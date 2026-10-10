@@ -38,7 +38,8 @@ def used(d):
     return None
 def has_status(d):   # a stream's run registry: any STATUS.md inside marks a registered run root
     if not os.path.isdir(d): return ''
-    _,o=sh(f"find '{d}' -maxdepth 4 -name STATUS.md -print -quit 2>/dev/null"); return o
+    # token-exact 2026-10-09: a .keep marker (exactness fixtures) anywhere inside also keeps the root
+    _,o=sh(f"find '{d}' -maxdepth 4 \\( -name STATUS.md -o -name .keep \\) -print -quit 2>/dev/null"); return o
 def live_sibling(d):  # src-*/ beside a live route: keep while any sibling is touched <24h or in use
     import re as _re
     if not _re.match(r'^src([-_.].*)?$',os.path.basename(d)): return ''

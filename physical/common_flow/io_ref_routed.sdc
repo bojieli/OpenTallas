@@ -129,6 +129,7 @@ if {[llength [all_outputs]]} {
     dict set ot_ir_bnd [regsub {/[^/]+$} [get_full_name [get_property $pe startpoint]] {}] 1 }
 }
 set ot_ir_ins [dict create]
+set ::ot_ir_moved [dict create]
 set ot_ir_nreg [dict create]
 foreach cn $ot_ir_real {
   set b {}; set a {}
@@ -186,4 +187,61 @@ foreach c [all_clocks] {
   set_clock_latency -source 0 [get_clocks $vn]
   set_clock_latency $L [get_clocks $vn]
   puts [format "OT_IOREF %s %s mean %.1f min %.1f max %.1f n %d %s" $vn $rc $L $lo $hi $n $kind]
+  dict set ::ot_ir_moved $vn [list $L $rc]
+}
+# PINFLOP-INPUT (drive-0849 2026-10-10, coordinator class-1 extension): ROUTE-TIME ONLY (env OT_IOREF_INPUT_PF=1, exported
+# by the closure loop for calibrate / route stages; never set for the verdict re-STA or the post-route ECOs).  The input
+# side of every moved insertion-reference clock is re-referenced from the boundary-register mean L to the mean arrival
+# Lpf (this scene) of the INPUT PIN FLOPS (input port -> D directly or through <= 2 buffers): each input delay on that
+# clock is re-issued at value + (Lpf - L).  Outputs keep L.  Why: the FF-scene hold repair of the route_mtp /
+# hbm_accel_smh / dsrom qs / markov-driver recipes saw inputs referenced to the mean of ALL boundary registers, hundreds of
+# ps before the capture pin flops' clock, and flooded (39 EARLY_FAIL_HOLD; ehash / core18 closed only after naming the
+# pin flops by hand).  The verdict still re-times at the routed boundary mean.  No pin flops / any error -> unchanged.
+if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" && [info exists ::ot_ir_moved] && [dict size $::ot_ir_moved]} {
+  if {[catch {
+    set ot_pf_seen [dict create]; set ot_pf_pins {}
+    foreach port [all_inputs -no_clocks] {
+      set nets [get_nets -quiet [get_full_name $port]]
+      for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} {
+        set next {}
+        foreach nn $nets {
+          foreach pin [get_pins -quiet -of_objects $nn] {
+            if {[string first / [get_full_name $pin]] < 0} continue
+            if {[get_property $pin direction] ne "input"} continue
+            set c [get_cells -quiet -of_objects $pin]
+            if {![llength $c]} continue
+            set fn [get_full_name $c]
+            set ck [get_pins -quiet "$fn/CLK"]
+            if {[llength $ck]} {
+              if {[get_property $pin lib_pin_name] ne "CLK" && ![dict exists $ot_pf_seen $fn]} { dict set ot_pf_seen $fn 1; lappend ot_pf_pins $ck }
+            } elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} {
+              foreach op [get_pins -quiet -of_objects $c] { if {[get_property $op direction] eq "output"} { lappend next [get_nets -quiet -of_objects $op] } }
+            }
+          }
+        }
+        set nets $next
+      }
+    }
+    set ot_pf_v {}
+    set ot_pf_rc [lindex [lindex [dict values $::ot_ir_moved] 0] 1]
+    foreach p $ot_pf_pins { set v [ot_ir_arr $p $ot_pf_rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend ot_pf_v $v } }
+    if {[llength $ot_pf_v]} {
+      set s 0.0; foreach v $ot_pf_v { set s [expr {$s + $v}] }
+      set Lpf [expr {$s / [llength $ot_pf_v]}]
+      set ot_pf_tmp [file join [expr {[info exists ::env(TMPDIR)] ? $::env(TMPDIR) : "/tmp"}] "ot_pf_[pid]_[clock clicks].sdc"]
+      write_sdc $ot_pf_tmp
+      set fh [open $ot_pf_tmp r]; set txt [read $fh]; close $fh; file delete $ot_pf_tmp
+      set redo {}; set ports [dict create]
+      foreach ln [split $txt "\n"] {
+        if {![regexp {^set_input_delay\s+(\S+)\s+(.*-clock \[get_clocks \{([^\}]+)\}\].*?)(\[get_ports .*\])\s*$} $ln -> val mid ck tgt]} continue
+        if {![dict exists $::ot_ir_moved $ck]} continue
+        set d [expr {$Lpf - [lindex [dict get $::ot_ir_moved $ck] 0]}]
+        lappend redo [list [expr {$val + $d}] $mid $tgt]
+        dict set ports "$ck|$tgt" [list $ck $tgt]
+      }
+      dict for {k v} $ports { lassign $v ck tgt; unset_input_delay -clock $ck [subst $tgt]; unset_input_delay -clock $ck -clock_fall [subst $tgt] }
+      foreach r $redo { lassign $r val mid tgt; eval "set_input_delay $val $mid $tgt" }
+      puts [format "OT_IOREF_PF input pin flops %d mean %.1f: %d input delays re-referenced (ports %d)" [llength $ot_pf_v] $Lpf [llength $redo] [dict size $ports]]
+    } else { puts "OT_IOREF_PF no input pin flops: input reference unchanged" }
+  } ot_pf_err]} { puts "OT_IOREF_PF WARNING: $ot_pf_err -- input reference unchanged"; if {[info exists ::env(OT_IOREF_PF_DEBUG)]} { puts $::errorInfo } }
 }

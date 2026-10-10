@@ -43,8 +43,50 @@ def dispatcher_model(pc_x, *, landing_x, landing_y, station_y=50.0,
         writes='Independent actual source2 WB transport and physical completion ledger; this read corridor gives no write routing credit',
         token_latency_credit=False, adopted=False)
 
+def native_burst_model():
+    """Bounded native burst lease sized before RTL; physical admission withheld."""
+    return {'scope': 'native service burst lease before RTL; no physical/token claim',
+     'default_enable_native_burst': 0,
+     'sectors_min': 1,
+     'sectors_max': 8,
+     'MACs_per_cycle': 0,
+     'compute_intensity': 0,
+     'bytes_per_response_cycle': 32,
+     'bytes_per_burst_max': 256,
+     'request_bits': 51,
+     'response_bits': 277,
+     'replicas_per_stack': 32,
+     'stacks_per_die': 4,
+     'mux_demux': 'existing one-active-PC stack response mux; one local length check per PC',
+     'register_bits_per_PC': 329,
+     'incremental_register_bits_per_PC': 13,
+     'normal_added_cycles': 0,
+     'latency': {'request_capture': 1,
+                 'first_response_capture': 1,
+                 'one_burst_minimum_cycles': 'sectors + 3 without downstream PHY wait',
+                 'lease_released': 'final response consumer acceptance',
+                 'system_composition': '256 sectors at length8: 32 command admissions plus same 256 '
+                                       'data cycles; downstream wait and dispatcher must be composed'},
+     'elastic_response_depth': 1,
+     'backpressure': 'PHY advances only when register empty or consumer accepts current beat',
+     'identity': 'native tag and sequential beat 0..length-1 checked before PHY acceptance',
+     'routing': {'request_incremental_tracks': 4,
+                 'response_incremental_tracks': 0,
+                 'channel_capacity': None,
+                 'admitted': False},
+     'area': {'incremental_FF_per_die': 1664,
+              'slot_fit': 'actual lease element measurement required',
+              'incremental_FF_per_die_including_boundary': 1680},
+     'token_credit': False,
+     'physical_admitted': False,
+     'caller_address_contract': 'All requested K sectors belong to selected PC; global address '
+                                'translator splits bursts at every PC boundary (mapped consecutive '
+                                'groups may limit length to4).',
+     'stack_boundary_length_bits': 4}
+
 def model():
     return dict(scope='native loader sector endpoint; explicit external address translation and real service completion required',
+      native_burst=native_burst_model(),
       parameters=dict(default_enable=0,native_address_bits=32,native_address_parameter_min=32,sector_bits=30,pc_bits=5,tag_bits=16,data_bits=256,stack_instances=4),
       request_bits=291,response_bits=1+5+16+4+256,
       state_bits=3,saved_request_bits=1+5+30+16+256,saved_reply_bits=256,

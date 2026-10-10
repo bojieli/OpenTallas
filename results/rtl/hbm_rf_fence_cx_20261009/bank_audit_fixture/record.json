@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "source_commit": "6ff27e699fdad5d2b09a85e63d77f9a0ac33a431",
+  "source_sha256": {
+    "tools/hbm_rf_fence_cx_bank_audit.py": "197767ff20fd9fd4e3300302da8f6e5ba646dd5b907e845c2ce2057ab8e290b2",
+    "tools/hbm_rf_fence_cx_bank_audit_bench.py": "b693e9db0d3c1ae0c46d95887144e24220920ab853e1693e037cfbecef1a12a7",
+    "physical/hbm_mtp/audit/rf_cx_banks.tcl": "a6980793601dd6b2856d3731470675921c61736708c7f004a48dcc52e4cc075d"
+  },
+  "host": "ot-agidock128",
+  "remote_path": "/srv/opentallas-scratch/codex/hbm-fence-cx-20261009/bank-audit",
+  "admission": "/srv/opentallas-scratch/admit.sh 1",
+  "exit_code": 0,
+  "scope": "audit algorithm fixture only; positive130 banks/390controls/16438payloadFFs and three rejected topology mutants; actual mapped synthesis outcome UNMEASURED",
+  "mapped_status": "PENDING_CLAUDE_PHYS_INTAKE"
+}

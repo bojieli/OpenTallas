@@ -1,0 +1,158 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_pc_head_owner_rb-937531860-tc-hm10-cl",
+ "block": "qfd_pc_head_owner",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/struct-close-20261009",
+ "record_branch": "codex/closure-record-qfd_pc_head_owner_rb-937531860-tc-hm10-cl",
+ "source_commit": "9375318607a0ada5bbc889754ea9ba603bb0a89f",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 119.88,
+  "ff_ps": 2.43,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -196.4,
+  "ss_sensitivity_tns_ps": -1024701.6,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl/routes/qfd_pc_head_owner_rb_937531860_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl/routes/qfd_pc_head_owner_rb_937531860_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl/routes/qfd_pc_head_owner_rb_937531860_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_qfd_pc_head_owner_cl_asap7_qdm_qfd_pc_head_owner_rb_937531860_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_rb_pc_head_owner_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS pcowner finite16 full304payload ID64, independentVhalf delayedACK, actual16credits\nPASS pcowner all432stored singlebit corrections, corrected payload+identity\nPASS pcowner UE overflow wrongID duplicatehalf mutableowner failclosed\n/srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl/bench_pos/tb.sv:53: $finish called at 80951000000 (1fs)\n\nRB_pc_head_owner_PASS\n",
+   "track": "parallel"
+  },
+  "bench_rb_pc_head_owner_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "NEG_DETECTED pcowner incorrect SECDED encoder\nFATAL: /srv/opentallas-data/claude/closure-loop/qfd_pc_head_owner_rb-937531860-tc-hm10-cl/bench_neg/tb.sv:14: unexpected PC owner fault\n       Time: 115000000  Scope: tb_qfd_pc_head_owner\n\nRB_pc_head_owner_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T04:16:15-07:00",
+ "job_spec": {
+  "name": "qfd_pc_head_owner_rb-937531860-tc-hm10-cl",
+  "block": "qfd_pc_head_owner",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 registered-boundary batch ('-cl'): qfd_pc_head_owner_cl-9512a1e94 b TT -423.7: ack_data -> ack_bad -> safe -> mem write enables (in->reg -487), head_v reg->out -108.5. Every input/output flopped at the pin (+1 / +1). Also fixes the -cl core's write index (Icarus dropped the 16th entry; the drive-0158 bench failed). Bench regbound pc_head_owner (golden + SECDED encoder mutant). Variant LVT (as b).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "9375318607a0ada5bbc889754ea9ba603bb0a89f"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "rb_pc_head_owner_exact",
+     "cmd": "python3 physical/struct_close/regbound/bench.py pc_head_owner pos {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "RB_pc_head_owner_PASS",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "rb_pc_head_owner_mutant",
+     "cmd": "python3 physical/struct_close/regbound/bench.py pc_head_owner neg {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "RB_pc_head_owner_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 2
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "verilator --lint-only -Wno-fatal -Irtl/common --top-module ot_qfd_pc_head_owner_cl rtl/common/ot_secded.sv rtl/qwen_sys/system_20261009/ot_qfd_pc_head_owner_cl.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MULTI_VT=lvt; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_pc_head_owner_rb.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_pc_head_owner_rb {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_pc_head_owner_cl --post-sdc physical/qwen_die_masters/signoff/qfd_pc_head_owner_cl.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_pc_head_owner_cl > {RUN}/record/route/export.log 2>&1 && cp {CL}/bench_*.log {RUN}/record/route/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_pc_head_owner_cl.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "cycles_added": 2,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "Minimumcomponent fullwidth/finite16,128replicas modeled. Ingress1+rawcapture1+decode2+headcapture1 edges; true reverseack transport separate. No direct rawsector alias or completeproductionbinding claim.",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

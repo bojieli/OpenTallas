@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_hdc_v41_fh_ep_view",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r4-cd3cbef4b-tt/routes/dshead_ep_r4_cd3cbef4b_tt/work/orfs",
+ "post_sdc": "physical/dsrom_fh_safe/gen/signoff_ep.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-3.3428126933188196e-10",
+  "ws_min": "-1.317622122520845e-10"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "-1.479194544629081e-11",
+  "ws_min": "1.533734250713792e-11"
+ },
+ "files": {
+  "ot_hdc_v41_fh_ep_view.lef": "094eadb7e25b5af97798a1c719edb0463ab3476a85cdde411f174ed31f31747a",
+  "ot_hdc_v41_fh_ep_view_ff.lib": "beb5cf534dc2bd8d0db5451e8d49e9c2693de9c1b46e69d6290ffb2984688598",
+  "ot_hdc_v41_fh_ep_view_ss.lib": "8facecf96ae1ec0bbbb2e2a541873f5924b2de713b48f86235e482177d9579ab"
+ }
+}

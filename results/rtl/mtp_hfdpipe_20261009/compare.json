@@ -1,0 +1,426 @@
+[
+ {
+  "gate": "stop",
+  "case": 0,
+  "key": "k0r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 550
+  },
+  "new": {
+   "cycles": 550
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=550"
+ },
+ {
+  "gate": "stop",
+  "case": 1,
+  "key": "k0r",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "stop",
+  "case": 2,
+  "key": "k1r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 550
+  },
+  "new": {
+   "cycles": 550
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=550"
+ },
+ {
+  "gate": "stop",
+  "case": 3,
+  "key": "k1r",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "stop",
+  "case": 4,
+  "key": "k2r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 541
+  },
+  "new": {
+   "cycles": 541
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=541"
+ },
+ {
+  "gate": "stop",
+  "case": 5,
+  "key": "k2r",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "stop",
+  "case": 6,
+  "key": "k2r",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "stop",
+  "case": 7,
+  "key": "k0r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 564
+  },
+  "new": {
+   "cycles": 564
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=564"
+ },
+ {
+  "gate": "stop",
+  "case": 8,
+  "key": "k1r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 564
+  },
+  "new": {
+   "cycles": 564
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=564"
+ },
+ {
+  "gate": "stop",
+  "case": 9,
+  "key": "k2r",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 549
+  },
+  "new": {
+   "cycles": 549
+  },
+  "tail_new": "PASS stop-aware nativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=549"
+ },
+ {
+  "gate": "core",
+  "case": 0,
+  "key": "k0r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 942
+  },
+  "new": {
+   "cycles": 942
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=942"
+ },
+ {
+  "gate": "core",
+  "case": 1,
+  "key": "k0r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1497
+  },
+  "new": {
+   "cycles": 1497
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=1497"
+ },
+ {
+  "gate": "core",
+  "case": 2,
+  "key": "k1r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 942
+  },
+  "new": {
+   "cycles": 942
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=942"
+ },
+ {
+  "gate": "core",
+  "case": 3,
+  "key": "k1r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1497
+  },
+  "new": {
+   "cycles": 1497
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=1497"
+ },
+ {
+  "gate": "core",
+  "case": 4,
+  "key": "k2r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 889
+  },
+  "new": {
+   "cycles": 889
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=889"
+ },
+ {
+  "gate": "core",
+  "case": 5,
+  "key": "k2r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1444
+  },
+  "new": {
+   "cycles": 1444
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=1444"
+ },
+ {
+  "gate": "cpres",
+  "case": 0,
+  "key": "k0r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 826
+  },
+  "new": {
+   "cycles": 826
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=826"
+ },
+ {
+  "gate": "cpres",
+  "case": 1,
+  "key": "k0r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1353
+  },
+  "new": {
+   "cycles": 1353
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=1353"
+ },
+ {
+  "gate": "cpres",
+  "case": 2,
+  "key": "k1r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 826
+  },
+  "new": {
+   "cycles": 826
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=826"
+ },
+ {
+  "gate": "cpres",
+  "case": 3,
+  "key": "k1r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1353
+  },
+  "new": {
+   "cycles": 1353
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=1353"
+ },
+ {
+  "gate": "cpres",
+  "case": 4,
+  "key": "k2r0",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 811
+  },
+  "new": {
+   "cycles": 811
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=811"
+ },
+ {
+  "gate": "cpres",
+  "case": 5,
+  "key": "k2r1",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1338
+  },
+  "new": {
+   "cycles": 1338
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=1338"
+ },
+ {
+  "gate": "mx1",
+  "case": 0,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 25486
+  },
+  "new": {
+   "cycles": 25486
+  },
+  "tail_new": "PASS MX1 drained reset twice native40layer pairedresults finitequeue cycles=25486"
+ },
+ {
+  "gate": "mx1",
+  "case": 1,
+  "key": "kNoner",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "hgi",
+  "case": 0,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 25486
+  },
+  "new": {
+   "cycles": 25486
+  },
+  "tail_new": "PASS MX1 drained reset twice native40layer pairedresults finitequeue cycles=25486"
+ },
+ {
+  "gate": "hgi",
+  "case": 1,
+  "key": "kNoner",
+  "rc_old": 1,
+  "rc_new": 1,
+  "old": {},
+  "new": {},
+  "tail_new": ""
+ },
+ {
+  "gate": "hgi",
+  "case": 2,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 826
+  },
+  "new": {
+   "cycles": 826
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=826"
+ },
+ {
+  "gate": "hgi",
+  "case": 3,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1353
+  },
+  "new": {
+   "cycles": 1353
+  },
+  "tail_new": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=1353"
+ },
+ {
+  "gate": "hgi",
+  "case": 4,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 826
+  },
+  "new": {
+   "cycles": 826
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=826"
+ },
+ {
+  "gate": "hgi",
+  "case": 5,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1353
+  },
+  "new": {
+   "cycles": 1353
+  },
+  "tail_new": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=1353"
+ },
+ {
+  "gate": "hgi",
+  "case": 6,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 811
+  },
+  "new": {
+   "cycles": 811
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=811"
+ },
+ {
+  "gate": "hgi",
+  "case": 7,
+  "key": "kNoner",
+  "rc_old": 0,
+  "rc_new": 0,
+  "old": {
+   "cycles": 1338
+  },
+  "new": {
+   "cycles": 1338
+  },
+  "tail_new": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=1338"
+ }
+]

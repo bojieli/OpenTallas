@@ -78,6 +78,49 @@ def hgi_collective_payload_secded_model(widths=(544,545), ports=8):
         qualification='unadopted until connected fault-free lockstep, CE/UE and physical gates')
 
 
+def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
+    """Option-4 boundary successor, sized before RTL; no new rate claim."""
+    start_bits = 1 + 2 * nw + 12
+    snapshot_bits = 24 + 1 + 16 + 16
+    return dict(schema="opentallas.qwen-seq-su-boundary.v1", opt_in_default=False,
+        macs_per_cycle=0, memory_bytes_per_cycle_added=0, replicas=1,
+        start_bits_per_cycle=start_bits, snapshot_bits_per_cycle=snapshot_bits,
+        endpoint_count_input_bits_per_cycle=24,
+        output_bits_per_cycle_added=start_bits+snapshot_bits,
+        register_bits_added=24*is_stages+(start_bits+snapshot_bits)*os_stages,
+        input_pipeline_cycles=is_stages, output_pipeline_cycles=os_stages,
+        snapshot_endpoint_to_ctlm_cycles=is_stages+os_stages+relay_stages,
+        layer_start_to_ctlm_cycles=os_stages+relay_stages,
+        start_source="tp_seq core_start/core_token/core_pos/prog_base, each layer",
+        count_source="SU endpoint go acceptance, cumulative until global reset; never controller issue",
+        snapshot_alignment="raw SU endpoint count/idle/progress/rows sampled at same input edge, same IS and OS",
+        routing_tracks_added=24+start_bits+snapshot_bits,
+        routing_capacity_qualification="new pins and relay corridor require measured placement; not physically qualified",
+        area_qualification="130 sequential bits at IS=OS=1 before existing relay stations; cell area awaits synthesis",
+        mux_demux_cost="none; one point-to-point snapshot and one point-to-point start bundle",
+        fanout="one tree-top ctlm consumer per bundle; pin stations beside their pins",
+        floorplan_slot_fit="existing east-side seq slot, successor physical view pending",
+        latency_composition="add OS+15 hops to each layer-start and IS+OS+15 to cross-SU snapshots; dependency waits compose in split-controller component gate",
+        adoption="requires endpoint accepted counter successor, exact mechanism gate, and option-B physical closure")
+
+
+def qwen_su_endpoint_accept_model(os_stages=1):
+    """Endpoint acceptance count before its opt-in master is built."""
+    return dict(schema="opentallas.qwen-su-endpoint-accept.v1",opt_in_default=False,
+        replicas=1,macs_per_cycle_added=0,memory_bytes_per_cycle_added=0,
+        output_bits_per_cycle_added=24,register_bits_added=24*(1+os_stages),
+        counter_bits=24,counter_epoch="same rs reset as actual vstream/embedding endpoint; no per-layer reset",
+        accept_condition="go_s && s_ready: after embedding prefetch, exactly ot_hdc_vstream accept",
+        status_alignment="accepted counter included in same OS bundle as idle/progress/rows",
+        output_latency_cycles=os_stages,added_latency_cycles=0,
+        routing_tracks_added=24,mux_demux_cost="none",fanout="one sequencer count input",
+        area_qualification="48 sequential bits and24-bit increment/accept gate before synthesis",
+        routing_capacity_qualification="E issue/status+accept24,S constant pins,N VM pins; physical capacity pending",
+        floorplan_slot_fit="existing SU777.6x2058.48um envelope before synthesis; not yet physically qualified",
+        latency_composition="counter uses existing OS path, no extra stages; compose SU OS+seq IS+seq OS+interior relay+ctlm IS from real relay inventory",
+        qualification="minimum real embedding-prefetch/vstream-control gate, lane arithmetic isolated; full controller integration and physical route gates pending")
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
@@ -279,6 +322,63 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hgi_seq_vm_loop_model(vm_response_cycles=4, loops_per_token=8):
+    """G24: one scalar VM read at each data-dependent LOOP header, after waits.
+
+    Reuses the existing single-outstanding 18-bit-address/32-bit-data VM port.
+    No MACs, macros, replicas or die wires are added. One 16-bit count latch
+    plus valid flag isolates range checking from loop-stack write enables.
+    Costs are incremental to the existing static LOOP header path.
+    """
+    return dict(schema="opentallas.hgi_seq_vm_loop.v1", macs_per_cycle=0,
+                compute_intensity="scalar control", communication_bytes_per_loop=4,
+                vm_read_bytes_per_cycle_peak=4, vm_write_bytes_per_cycle=0,
+                existing_boundary_bits=18+32+4, added_boundary_bits=0,
+                added_routing_tracks=0, replicas=1, added_mux_inputs=2,
+                added_register_bits=17, area_mm2_estimate=17*2/1e6,
+                floorplan_slot_fit="existing sequencer slot; physical requalification required",
+                wait_latency_cycles="producer retirement, unchanged wait mask",
+                added_header_cycles=vm_response_cycles+4,
+                added_token_cycles=loops_per_token*(vm_response_cycles+4),
+                loops_per_token=loops_per_token, vm_response_cycles=vm_response_cycles,
+                admission="scalar-only; no large build or array simulation",
+                qualification="analytical sizing; no timing or adoption claim")
+
+
+def hbm_attention_result_valid_model():
+    """Fixed 16-head die result: validate the arriving hardened-quad boundary."""
+    return dict(schema="opentallas.hbm_attention_result_valid.v1", heads=16,
+                macs_per_cycle=0, compute_intensity="control-only valid reduction",
+                replicas_per_tile=1, input_bytes_per_cycle=64+4,
+                output_bytes_per_cycle=64+2, existing_boundary_bits=529,
+                added_boundary_bits=0, added_routing_tracks=0,
+                valid_reduction_fanin=16, valid_reduction_depth=4,
+                payload_mux_bits=512, fault_mux_bits=16, added_register_bits=0,
+                added_area_mm2_estimate=600*0.2/1e6,
+                floorplan_slot_fit="inside existing tile/hi result merge; successor route required",
+                added_latency_cycles=0, token_latency_delta_cycles=0,
+                action_on_partial_valid="explicit all-head fault, zero result payload",
+                required_heads="all16: current interface has no active-head mask",
+                opt_in="CG=1 at die tile and both half tops; default0",
+                qualification="analytical sizing only; no physical adoption credit")
+
+
+def hgi_collective_row_formatter_model(**kwargs):
+    from uarch_model_hgi_collective_decode import row_formatter_model
+    return row_formatter_model(**kwargs)
+
+
+def hgi_collective_endpoint_model():
+    from uarch_model_hgi_collective_decode import endpoint_model
+    return endpoint_model()
+
+
+def hgi_collective_decode_model():
+    """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
+    from uarch_model_hgi_collective_decode import model
+    return model()
+
+
 def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
     """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
 
@@ -473,6 +573,12 @@ def hbm_ha2_relay_tx_physical_model():
 def hbm_ha2_fixedpin_model():
     """Physical-only full-shape HA2 half-rate boundary relocation; no latency credit."""
     from hbm_ha2_fixedpin_model import model
+    return model()
+
+
+def hgi_ehash_binding_model():
+    """Approved HGI EHASH decode/history around immutable DS shipped hash."""
+    from hgi_ehash_model import model
     return model()
 
 
@@ -14704,6 +14810,48 @@ def dsrom_wfc_prompt_pipe_model():
     from dsrom_wfc_prompt_pipe_model import model
     return model()
 
+def dsrom_wfc_token_hard_model():
+    """Size the four-edge token lookup before RTL; no physical credit."""
+    entry_bits = 43
+    added_bits = 36 + 8 * (entry_bits + 1) + 2 * 26
+    return dict(schema='opentallas.dsrom.wfc-token-hard.v1', adopted=False,
+        default_enabled=False, clock_ghz=1.2, macs_per_cycle=0,
+        compute_intensity=0, communication_intensity='one request/response per cycle',
+        memory_ports=dict(token_read_bytes_per_cycle=8*44/8,
+                          draft_write_bytes_per_cycle=5*44/8),
+        boundaries_bits_per_cycle=dict(draft=513, request=36, response=22, config=55),
+        routing_tracks=dict(draft=2052, request=144, response=88, config=220),
+        replicas=dict(stores=1, user_read_banks=8),
+        mux=dict(per_user_entries=16, final_users=8, data_width=44,
+                 request_address_fanout_banks=8, draft_write_slots=5),
+        area=dict(predecessor_measured_cells_um2=7145,
+                  added_register_bits_upper=added_bits,
+                  added_cells_proxy_um2=added_bits*2,
+                  outline_um=[162,151.2],
+                  estimated_fill=(7145+added_bits*2)/(162*151.2),
+                  proxy_is_not_physical_measurement=True),
+        latency=dict(response_edges=4, original_edges=1, r3_edges=2,
+                     added_cycles_original=3, added_cycles_r3=2,
+                     added_ns_original=3/1.2, initiation_interval_cycles=1,
+                     draft_visibility_edges=2,
+                     source_matching_metadata_required=True),
+        measured_latency=dict(original_ingress_edges=0, original_read_response_edges=1,
+                              r3_ingress_edges=0, r3_read_response_edges=2,
+                              hard_ingress_edges=1, hard_read_response_edges=3,
+                              hard_total_edges=4, delta_original_edges=3,
+                              delta_r3_edges=2,
+                              evidence='results/rtl/dsrom_wfc_token_hard_20261009/'
+                                       'baselines_5d64607cd/summary.json'),
+        finite_flow=dict(token_inflight_slots=4, initiation_interval_cycles=1,
+                         fixed_response_no_backpressure=True,
+                         source_return_queue_entries=4,
+                         source_metadata_extra_stages_required=2),
+        failure_path=dict(start='f_pr[25]', end='u_tok.pr_q[16]',
+            report='mtp_wfc_tok_a_e1c20dfb6_tc/physical_artifacts/6_finish.rpt',
+            historical_tt_setup_ps=-478.67),
+        qualification='Remote exact/mutant minimum gate, matched SOURCE integration, '
+                      'and own TT/FF/DRC route with SS sensitivity remain required')
+
 def s81_ctrl_die_model(column_width_um, role='layer', stage_handoffs=121):
     """RQ-DSC1/2 native controller shell sizing before build; closure credit is zero."""
     if column_width_um <= 0 or role not in ('layer', 'source', 'head'):
@@ -14833,6 +14981,34 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         replay_steady_records_per_cycle=1/7,
         token_fault_free_added_cycles=0,
         adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
+
+
+def hbm_link_replay_response_cut_model(payload_bits=545, seq_bits=12, session_bits=24, depth=512):
+    """Before-build pricing: decoder hit-summary and replay response registers.
+
+    R25G generic HBM Qwen/DeepSeek retry only; ROM designs unaffected.
+    The old six-edge DP path combines syndrome hit OR, tag compare and the
+    downstream 545-bit enable. Register the hit summaries and final response.
+    """
+    base = hbm_link_replay_sram_model(payload_bits, seq_bits, session_bits, depth, 1)
+    chunks = base['secded_chunks']
+    extra_bits = chunks * (256 + 4 + 4) + payload_bits + seq_bits + session_bits + 3 + 2*(seq_bits+session_bits) + 2
+    return dict(base, candidate='HBM_REPLAY_DP_RESPONSE_CUT',
+        decoder_edges=4, read_response_edges=8, prior_dp_response_edges=6,
+        added_replay_edges=2, added_replay_ns=2/1.2,
+        token_fault_free_added_cycles=0, fault_free_forward_added_edges=0,
+        replay_initial_read_edges=10, replay_steady_records_per_cycle=1/11,
+        additional_register_bits=extra_bits,
+        added_ff_body_um2_proxy=extra_bits*DFF_UM2,
+        added_ff_55pct_reservation_um2_proxy=extra_bits*DFF_UM2/.55,
+        external_boundary_bits_delta=0, memory_port_bandwidth_delta=0,
+        registered_internal_boundary_bits=[chunks*(256+4+4),payload_bits+seq_bits+session_bits+3],
+        fanout='four 64-column hit summaries per SECDED chunk; response flags are registered',
+        routing_tracks_delta_external=0, floorplan_um=[690,460],
+        slot_fit='UNVALIDATED: existing 690x460 vehicle; route admission requires actual utilization',
+        design_applicability={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+            'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True},
+        physical_qualified=False, adoption='OPEN: full-depth exactness, mutants and TT/FF/DRC route')
 
 
 def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
@@ -15079,3 +15255,517 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hbm_w2_phase_seat_model(no=2):
+    """Full-shaped default-off W2 phase locality and held-delay seats."""
+    from w2_phase_seat_model import model
+    return model(no)
+
+
+def mtp_ring_dyn_model():
+    """Price one-position ring addressing independently of multi-token slot state."""
+    return json.loads((ROOT / 'physical/mtp_ring_dyn/model.json').read_text())
+
+
+def hgi_attention_row_sources_model():
+    """HGI-1 G12 ordered-row frontend; arithmetic and gather engines unchanged."""
+    return dict(schema='hgi.att-row-sources.v1', enable_default=False,
+        model_before_build=True, MACs_per_cycle=0, arithmetic_order='B then C; existing tile chunk8/tree unchanged',
+        full_shape=dict(Qwen_rows=8192, maximum_linear_rows=1048576, effective_count_bits=21, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
+        replicas=4, placement='one frontend per HBM stack, upstream of existing gather reader',
+        ports=dict(command_bits=85, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
+                   selected_ID_bytes_per_cycle=4, HBM_payload_bytes_per_cycle=0),
+        boundary_bits_per_cycle=43, mux_cost='one B/C row-index mux; no payload mux',
+        fanout='local command registers only, 4 independent replicas',
+        latency_cycles=dict(command_to_first_request=3, initiation_interval=1,
+                            added_row_payload_cycles=0, post_command_tail=0),
+        token_latency='Three frontend command edges per attention invocation; existing gather/tile/formatter separately priced; no ideal throughput credit',
+        slot_um=[120,120], initial_state_bit_upper_bound=384, area_measured_um2=None,
+        floorplan_utilisation_target=0.55, fit='pending synthesis and route, no physical claim',
+        routing=dict(signal_bits_estimate=220, pin_layers=2, pitch_um=0.48,
+                     perimeter_tracks_capacity=1000, capacity_fraction=0.22,
+                     actual_pin_lint='required before route'),
+        source_binding='B ring physical index; C existing selected-ID stream, does not replace DS nine-sector gather reader',
+        clock_ns=0.833333, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def hgi_attention_record_adapter_model():
+    """Normative ATT records to G12 row front + existing ATT controller, no payload arithmetic."""
+    return dict(schema='hgi.att-record-adapter.v1',model_before_build=True,
+        transport_ABI='valid1/header128/SUT256/MDESC1024 actual3fae tuple; normative fields required',
+        upstream_gap='3fae sequencer is legacy fields/count20; Claude must supply normative header and full typed counts',
+        sideband_bits=dict(POS1=21,effective_B_count=32,effective_C_count=32),
+        replicas=4,MACs_per_cycle=0,memory_bytes_per_cycle=0,
+        record_payload_bits=1408,record_transport_bytes=176,
+        ATT_setup_payload_bits=1152,row_command_payload_bits=85,
+        state_bits_upper_bound=2656,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
+        slot_variants_um=[[320,320],[360,360]],stdcell_area_measured_um2=None,utilisation_target=0.55,
+        routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
+                     perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
+                     face_capacity_320=1316,actual_submit_lint='mandatory'),
+        latency_cycles=dict(added_record_command_edges=3,record_to_first_row_edges_including_G12=6,row_II=1),
+        token_charge=dict(DS_40_layers_QK_PV=240,Qwen_36_layers_two_local_KV_heads_QK_PV=432),
+        retirement='rows_done AND actual_ATT_done; sticky fault halts CP without completion; recovery only by externally drained reset',
+        selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
+        physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)
+
+
+def hgi_quant_vm_transport_model(depth=32, vm_rtt=4):
+    """HGI QDQ component using existing CP 337/273 byte-sector ABI."""
+    if depth < 24 or vm_rtt < 1:
+        raise ValueError("result reservation must cover nonelastic 23-edge pipe")
+    return dict(candidate="HGI_QUANT_VM_TRANSPORT", default_enabled=False,
+        clock_domain="opt-in stream1p2 pending TT/FF physical qualification; legacy serial0p9 unchanged",
+        CDC_qualified=False, command_capture_validate_edges=2,
+        replicas=1, MACs_per_cycle=0, compute="existing 32-lane QDQ core,23 edges,II1",
+        input_words_per_beat=32, read_sector_bytes=32, write_sector_bytes=32,
+        max_VM_bytes_per_cycle=32, request_bits=337, response_bits=273,
+        core_input_bits=1024, core_output_bits=512, record_bits=1409,
+        output_queue_depth=depth, output_queue_flop_bits=depth*512,
+        output_queue_SRAM_macros=0, input_assembly_flop_bits=1024, request_boundary_flop_bits=338, response_boundary_flop_bits=274,
+        held_descriptors_flop_bits=512, held_header_flop_bits=128,
+        address_count_control_declared_flop_bits=716,
+        declared_adapter_flop_bits_excluding_core=19376,
+        note_storage="preoptimization declared register inventory; unused descriptor fields may optimize away; actual mapped sequential cells govern floorplan",
+        result_capacity_rule="reserve before first read; release only after final write ACK",
+        maximum_reserved_beats=depth, VM_outstanding_requests=1,
+        throughput_bound_beats_per_cycle=1/(8*(vm_rtt+1)),
+        latency_cycles_first_result="min(record_beats,depth)*4*(VM_RTT+3)read edges + max(23-drain overlap,0) +4*(VM_RTT+3)ACK edges; measure component",
+        legal_shapes="UE n%32=0;E4 n%16=0;VM FP32 input/BF16-or-FP32 output; multirow/innerstride/broadcast fallback",
+        fallback="one word selected per physical32byte sector; widenedFP32word mask writes; boundedonependingACK",
+        strided_latency="up to64*(VM_RTT+3)+23 edges per32element block, preservegoldenblockorder",
+        address_registers="two32bit currentword addresses androwbases, two20bit row/col cursors, two16bit innerstrides, two32bit rowstrides",
+        E4_tail="two8word sectors;zero-fill absent half;publish exactly16 widenedBF16 words",
+        routing_tracks_boundary_bits=337+273+1409+6,
+        routing_tracks_required=2030, corridor_capacity_tracks="two layer faces; cmd0.4003/req0.7152/rsp0.5794 b/um/layer vs currentflow12limit",
+        slot_area_um2=496080, legacy_die_slot_area_um2=500000, required_die_slot_delta_um2=0,
+        current_die_slot_fit="outline fits1814.376x276.456; rails/halos/pinmap pending", die_geometry_adoption_requires_coordinator=True,
+        actual_stdcell_area_um2=29130.81084, actual_cells=200951,
+        slot_fit_proven=True, slot_fit_source="2cb556822 actualTTsizing fitcompact1800x275.6; physicalqualification pending",
+        floorplan_requirement="size from synthesized flop/core area at55percent before route",
+        fanout="record header held once;one selected result queue mux; no payload ECC on flops",
+        token_latency="sum actual 8sector handshakes perfull beat +23edges, no invented overlap credit",
+        physical_qualified=False)
+
+def hgi_quant_decode_model():
+    """Owner-approved G8: existing DS arithmetic, generic record dispatch."""
+    return dict(element='ot_hgi_quant_decode', replicas=1, macs_per_cycle=0,
+        elements_per_cycle=32, memory_ports=dict(A_native_bytes_per_beat=128,
+            O_native_BF16_bytes_per_beat=64,O_VM_FP32_bytes_per_beat=128,
+            VM_assembly_and_publication="external finite transport: four8word reads/four8word writes; separately priced"),
+        boundary_bits=dict(A=1024,O=512,record=128), input_decode_fanout=2,
+        max_reduction_inputs=32, output_mux_inputs=2, additional_register_bits=15*(512+2)+23*2,
+        ue8m0_latency_edges=23,e4m3_native_latency_edges=8,e4m3_latency_edges=23,
+        e4m3_added_edges_per_record=15, ds_token_added_edges_upper_bound=40*15,
+        ds_token_reference_cycles=461646, ds_token_added_fraction_upper_bound=600/461646,
+        ds_default='legacy fp4 input selects unchanged margin core with generic_enable=0',
+        provisional_slot_um=[1800,600], provisional_area_mm2=1.08,
+        slot_basis='historical quant reservation 0.502mm2 plus second existing DS fp4 engine and alignment flops; measurement required',
+        two_layer_pin_spread=True, tracks_required_per_face=1024,
+        tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
+        new_numerical_format=False, performance_gain_claim=None,
+        adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')
+
+def hgi_token18_contract_model():
+    """HGI-1 token endpoints: size before build; estimated area, zero new cycles.
+
+    Wrapper on the released FAST1/PRL2 DS control. Acceptance uses the plain
+    NSLOT8 leaf, not the historical protected/leased accept implementation.
+    """
+    tw, slots = 18, 8
+    accept_inputs = 2 + 4 + 3 * tw + 3 * 3
+    accept_outputs = 2 * slots * tw + 2 + 3 + 4 + tw
+    extra_accept_ff = 2 * slots + 1  # one widened bit per slot + bonus
+    return dict(schema='opentallas.hgi_token18.v1', default_off=True,
+        model_scope=['DeepSeek-V4.1 HBM', 'Qwen3-8B HBM AR'],
+        qwen_rom_mtp=False, replicas_per_die=1, MACs_per_cycle=0,
+        memory_ports_bytes_per_cycle=0, memory_storage='none',
+        accept=dict(input_bits=accept_inputs, output_bits=accept_outputs,
+                    slot_count=slots, storage_bits=2*slots*tw+tw,
+                    extra_ff_vs_17=extra_accept_ff,
+                    latency_cycles=1, added_cycles_vs_DS17=0,
+                    comparators=slots-1, comparator_width=tw,
+                    mux_inputs=slots, mux_width=tw),
+        control=dict(qualified_FAST=1, qualified_PRL=2, token_width=tw,
+                     token_ports=['p_tok','f_tok','e_tok','cmd_tok1','am_idx','tw_tok'],
+                     operand_bus_bits=slots*tw, added_cycles_vs_DS17=0,
+                     added_boundary_bits=6+slots),
+        routing=dict(assumed_slot_um=[466.56,200.88],
+                     two_layer_pitch_um=.064, reserve_fraction=.30,
+                     channel_tracks=int(2*200.88/.064*.70),
+                     accept_boundary_tracks=accept_inputs+accept_outputs,
+                     extra_control_boundary_tracks=6+slots),
+        area=dict(estimated_accept_widening_um2=extra_accept_ff*DFF_UM2,
+                  slot_area_um2=466.56*200.88,
+                  estimate_only=True, route_required=True),
+        latency=dict(token_added_cycles=0, accept_cycles=1,
+                     control_read_wait_cycles=2),
+        fanout=dict(replica_mux_demux=0, token_bit_max_accept_compare_fanout=1),
+        exact_gate='DS17 lockstep + upper-bit mismatch + accept lengths0..7 + true mutants')
+
+
+def hgi_token18_accept_seat_model():
+    """Physical boundary repair, priced before RTL: parallel command pin seat."""
+    d=hgi_token18_contract_model()
+    seat_bits=4+3*18+3*3
+    d['accept'].update(pin_seat_bits=seat_bits, extra_ff_with_seat=17+seat_bits,
+                       latency_cycles=2, added_cycles_vs_DS17=1)
+    d['latency'].update(accept_cycles=2, token_added_cycles=1)
+    d['area'].update(estimated_accept_widening_um2=(17+seat_bits)*DFF_UM2)
+    d['physical_measured_base']=dict(stdcell_area_um2=263.752, cells=2137,
+        peak_floorplan_kib=322588, source='377249427', evidence='43b313543')
+    d['reason']='rtl_boundary actual source377 input->register34 levels; inputseat required'
+    return d
+
+
+def hgi_token18_fullcore_model():
+    """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
+    return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,
+        models=['DeepSeek-V4.1 HBM MTP'],replicas_per_die=1,
+        topology='qualified ot_hfd_mtp_core TW18 XSEL1',
+        MACs_per_cycle=0, fp32_bias_adds_per_cycle=8,
+        memory_ports_bytes_per_cycle=0, history_token_bits=16*18,
+        local_logit_input_bits_per_cycle=2*8*32+8+3,
+        command_operand_bits=8*18, token_port_bits=18,
+        source_selector_inputs=6*9, local_expert_selectors=0,
+        window_ring_slots=256, sliding_window_rows=128,
+        compressor_ring_slots=10, layers=40, model_maxpos=1048576,
+        added_cycles_vs_qualified_DS_core=0,
+        qualified_boundary_edges=4, qualified_prompt_read_wait=2,
+        added_token_cycles_vs_bare_controller=4,
+        slot_um=[466.56,200.88], area_slot_um2=466.56*200.88,
+        estimated_token_widening_ff=128,
+        estimated_width_area_um2=128*DFF_UM2,
+        routing_tracks_available=int(2*200.88/.064*.70),
+        routing_boundary_tracks_estimate=1200, macro_replicas=1,
+        replica_mux_demux=0, new_token_ff_fanout=1,
+        exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
+        physical_fit_measured=False, routes_required=2,
+        exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
+    """G24 count/map block sizing before RTL; estimates pending physical closure."""
+    if not 1 <= k <= 2048 or group not in (1, 2, 4, 8, 96) or not 0 <= batch <= 255:
+        raise ValueError('illegal OWNED shape')
+    return dict(schema='opentallas.hgi_idx_owned_g24.v1',
+        MACs_per_cycle=0, ids_per_cycle=1, compute='integer owner/local arithmetic and serial ceil division',
+        memory_port_bytes_per_cycle=32, vm_request_bits=338, vm_response_bits=274,
+        communication_bytes=dict(input_twice=8*k, output_R=4*k, output_O_max=4*k, output_D=8),
+        replicas_per_die=1, replica_mux_demux=0, vm_outstanding=4,
+        count_bits=96*12, added_storage_bits_estimate=96+2+8+13+13+12+4+1,
+        batch_division_cycles=14 if batch>1 else 1,
+        added_latency_cycles_estimate=(14 if batch>1 else 1)+2,
+        latency_composition='two K-entry passes + 96-owner max + padded output + VM packer stalls + G24 division/D write',
+        routing=dict(boundary_tracks=622, channel_capacity='inherits IDX unit physical slot; not yet measured'),
+        area=dict(added_ff_estimate=149, slot_fit='requires re-route of IDX unit', physical_qualified=False),
+        fanout=dict(slot_shift_add=2, batch_to_division=13),
+        physical_adoption=False)
+
+
+def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
+    """Full-shape structural successor; price before RTL, no adoption credit."""
+    assert ns == 8 and db == 64 and crb >= ns
+    latency = 2*ns + 5
+    slot_w, slot_h = 259.2, 324.0
+    boundary = 1+3+6 + 1+1+1+20+16+512
+    ff = 64*38 + 3*557 + 2*551 + 8*38 + 38 + 2*10 + 32
+    return dict(schema='opentallas.qwen_result_slot_conveyor.v1',
+        adopted=False, default_off=True, models=['Qwen3-8B ROM'],
+        MACs_per_cycle=0, compute_intensity_MACs_per_byte=0,
+        replicas=dict(bands=6,slots_per_band=ns,total_slot_macros=6*ns),
+        memory=dict(bytes_per_write_cycle=64,bytes_per_read_cycle=64,
+                    macro='ot_sram_1r1w_64x512_m1_r2c2',depth=db),
+        boundary=dict(request_bits_per_cycle=10,response_bits_per_cycle=551,
+                      producer_bits_per_slot=557,credit_bits_per_cycle=1),
+        routing=dict(estimated_tracks=boundary,available_tracks=int(2*slot_h/.064*.70),
+                     pin_layers=['M4','M6','M5','M7']),
+        replicas_cost=dict(global_data_mux_inputs=0,local_response_mux_inputs=2,
+                            metadata_read_mux_levels=[8,8],control_fanout='local pin seat per slot'),
+        area=dict(slot_um=[slot_w,slot_h],slot_area_um2=slot_w*slot_h,
+                  macro_area_um2=171.288*77.760,estimated_FF=ff,
+                  FF_area_proxy_um2=ff*DFF_UM2,controller_slot_um=[216,216],
+                  band_area_um2=ns*slot_w*slot_h+216*216,physical_fit=False),
+        latency=dict(request_to_response_cycles=latency,burst_issue_cycles=ns,
+                     worst_full_burst_response_cycles=latency+ns-1,
+                     ingress_to_request_cycles=3,ingress_to_first_slot0_output_cycles=latency+3,
+                     ingress_to_first_slot7_or_empty_output_cycles=latency+10,
+                     baseline_first_beat_cycles=5,added_first_beat_cycles_min=latency+3-5,
+                     added_first_beat_cycles_max=latency+10-5,
+                     token_cost='+19..26 first-beat edges according to first used slot; sparse slots still consume issue tokens; measured landed token bench required',
+                     stall_budget_edges=rs,store_headroom_bursts=5,
+                     ready_threshold=db-rs-5),
+        capacity=dict(credits=crb,reserve_per_request=1,disabled_slot_refund=True,
+                      measured_full_burst_span_cycles=4311/359,
+                      measured_empty_burst_span_cycles=4139/359,
+                      measured_profile_bursts=360,
+                      profile_scope='saturated element, immediate consumer credit, full shape actual SRAM model; not token rate'),
+        exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
+
+
+def hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token=0):
+    """CP-only registered fetch boundary; no arithmetic or scheduling reorder."""
+    return dict(schema='opentallas.hgi_cp_fetch_pin_fifo.v1', default_enabled=False,
+        targets=['Qwen3-8B HBM', 'DeepSeek-V4.1 HBM'], replicas_per_die=1,
+        MACs_per_cycle=0, compute_intensity=0, communication_intensity='40 address bits/request',
+        local_memory_bytes_per_cycle=0, fetch_payload_bytes_per_cycle=32,
+        boundary_bits_per_cycle=dict(request=41, credit=1, response=257),
+        added_storage_ff_bits=82, mux_inputs_per_address_bit=3, demuxes=0,
+        ready_fanout=1, output_address_fanout=1, queue_depth=2,
+        request_initiation_interval_cycles=1, registered_backpressure=True,
+        added_first_fetch_latency_cycles=1,
+        conservative_serial_token_added_cycles=fetch_sectors_per_token,
+        token_latency_composition='one extra cycle per dependent fetch, II1 streaming overlap measured by component',
+        estimated_added_area_um2=82*DFF_UM2, slot_um=[420,420],
+        slot_fit='same CP slot; 82 FF increment priced, measured cell inventory and route gate adoption',
+        routing_tracks_required=42, routing_tracks_available=int(420/.064*.5),
+        exact_gate='CP38 + conformance66 + stalled fetch FIFO ordering and TOKX mutant',
+        physical_gate='TT setup>=0 FF hold>=0 DRC0 with SRAM SS/FF corner views',
+        physical_qualified=False)
+
+
+def hbm_indexer_t4_join_model():
+    from hbm_indexer_r25i_model import hbm_indexer_t4_join_model as impl
+    return impl()
+
+
+def hgi_quant_serial_shape_model(records_per_token=80):
+    """Size exact serial shape arithmetic before building quant transport RTL."""
+    return dict(element='ot_hgi_quant_vm_transport', opt_in='SERIAL_SHAPE',
+        default_enabled=False, replicas=1, MACs_per_cycle=0,
+        arithmetic='four unsigned 20x32/16 products, four parallel64bit shift-add accumulators; registered sum; existing registered bounds checks',
+        memory_bytes_per_cycle=0, additional_boundary_bits=0,
+        register_bits=4*(64+64+20)+5+1,
+        mux_inputs_per_accumulator=2, accumulator_fanout=1,
+        routing_tracks_added_external=0, slot_area_um2=496080,
+        estimated_extra_area_um2=4*(148*0.5+64*0.4),
+        slot_fit='less than0.1percent existing slot; actual synthesis/route required',
+        validation_cycles_old=4, validation_cycles_new=25,
+        token_added_cycles=21*records_per_token,
+        token_latency='+21cycles per quant record, compose actual dispatch count; no payload throughput change',
+        physical_qualified=False, exact_gate='existing458transportcases+mutants and product/range edgecases')
+
+
+def hbm_smh_result_valid_model(columns=8, row_bits=12):
+    """Size the optional south-front result qualification before RTL changes."""
+    if columns < 1 or row_bits < 1:
+        raise ValueError("positive shape required")
+    return dict(schema="opentallas.smh-result-valid.v1", opt_in_default=False,
+        master="ot_hbm_accel_smh_front_s", columns=columns,
+        macs_per_cycle=0, memory_bytes_per_cycle=0,
+        existing_result_bits_per_cycle=columns*(34+row_bits),
+        added_boundary_bits_per_cycle=0, added_data_registers=0,
+        qualification_and_gates=columns,
+        reduction_gate_upper_bound=4*columns, replicas=1,
+        mux_demux_cost=0, control_fanout_max=2,
+        local_routing_tracks_upper_bound=3*columns,
+        floorplan_slot_fit="existing south-front result landing; <=5*columns small gates, physical route required",
+        added_cycles=0, token_latency_added_ns=0.0,
+        correctness="fault only with own-column valid; row retires only with all columns valid; any partial valid vector raises fault",
+        physical_gate="refresh full NC8 front_s timing/DRC with RESULT_VALID=1; unchanged BE/tile closures do not qualify it")
+
+
+def hbm_visibility_fence_pin_return_model():
+    """Default-off output registers with registered accepted-beat credit return."""
+    from tools.hbm_fence_pin_return_model import model
+    return model()
+
+
+def hbm_collective_port2_tiles_model():
+    """Pair two independently hardened protected halves without seam traffic."""
+    from tools.hbm_coll_port2_tiles_model import model
+    return model()
+
+
+def hbm_svc_dma_wide_admission_model(**kwargs):
+    """Actual four-stack HBM bandwidth/window/corridor/SRAM admission sizing."""
+    from hbm_svc_dma_wide_model import wide_model
+    return wide_model(**kwargs)
+
+
+def qwen_ctlm_deep_queue_model():
+    """Full-shape registered control-tile wider-slot/relay alternatives."""
+    from uarch_model_qwen_ctlm_queue import model
+    return model()
+
+
+def hbm_native_hgi_index_join_model():
+    from hbm_indexer_r25i_model import hbm_native_hgi_index_join_model as impl
+    return impl()
+
+
+def dsrom_mtp_p2_rootpipe_model():
+    """Static decode separation and pin-local single-flight P2 output sizing."""
+    from dsrom_mtp_p2_transport_model import rootpipe_model
+    return rootpipe_model()
+
+
+def pcmux_parallel_pin_model():
+    """Size the optional full-shape next-equation pin outputs before RTL."""
+    from pcmux_parallel_pin_model import model
+    return model()
+
+
+def hbm_sfu_reset_tree_sizing():
+    """Physical SFU successor: registered reset fanout, inset PG and taller lane.
+
+    Three reset admission clocks are real RTL stages. No datapath cycle changes
+    and no reset multicycle exception. Closure remains a measurement obligation.
+    """
+    return dict(candidate='sfu_rstpipe3', lane_count_per_quarter=32,
+                lane_um=[159.84, 450.36], lane_core_um=[157.68,449.28],
+                prior_lane_um=[159.84,330.48],
+                lane_area_um2=159.84*450.36,
+                quarter_lane_area_delta_um2=32*159.84*(450.36-330.48),
+                measured_prior_std_area_um2=34909, estimated_reset_registers=62,
+                estimated_util=34909/(157.68*449.28),
+                reset_admission_cycles=3, data_cycles_added=0,
+                reset_pin_fanout=1, reset_bank_fanout_max=8,
+                reset_leaf_consumers=53, reset_bits_per_cycle=1,
+                macs_per_cycle_change=0, memory_bytes_per_cycle_change=0,
+                boundary_bits_per_cycle_change=0,
+                pin_bits_per_um=2251/450.36,
+                physical_qualified=False,
+                qualification='route full lane with normal one-cycle reset arcs; then grow quarter for 32 taller lanes')
+
+
+def hbm_sfu_reset_tree_wide_sizing():
+    """Same registered reset tree; preserve the existing quarter height."""
+    r = hbm_sfu_reset_tree_sizing()
+    r.update(candidate='sfu_rstpipe3_wide', lane_um=[237.6,330.48],
+             lane_core_um=[235.44,329.4], lane_area_um2=237.6*330.48,
+             quarter_lane_area_delta_um2=32*(237.6-159.84)*330.48,
+             estimated_util=34909/(235.44*329.4),
+             quarter_um=[797.448,5529.576],
+             quarter_channel_um=456.624-2*(237.6-159.84),
+             pin_min_distance_tracks=3,
+             channel_capacity_tracks=(456.624-2*(237.6-159.84))/.064*2*.5,
+             channel_required_tracks=1743+1024+2,
+             routing_assumptions='two vertical layers at64nm pitch,50% usable; real cuts still must pass lint',
+             qualification='full widened lane then unchanged-height quarter, real reset arcs and channel lint')
+    return r
+
+
+def hbm_su_lane_dualface_sizing():
+    """Pin density successor to the failed single-M4 83.16um lane."""
+    return dict(candidate='su_lane_dualface', lane_um=[85.32,162.0],
+                lane_core_um=[83.16,160.92], lane_count_per_quarter=192,
+                prior_lane_um=[83.16,162.0], tile_um=[187.056,164.16],
+                prior_tile_um=[184.896,164.16],
+                quarter_lane_area_delta_um2=192*2.16*162,
+                signal_pin_layers=['M4','M6'], signal_route_top='M6',
+                pin_min_distance_tracks=2, measured_prior_pin_bits_per_um=20.8,
+                expected_pin_bits_per_um_layer=20.8/2,
+                expected_pin_bits_per_um_face=2251/(2*162),
+                quarter_channel_um=84.7-2*2.16,
+                reset_admission_cycles_change=0, data_cycles_added=0,
+                macs_per_cycle_change=0, memory_bytes_per_cycle_change=0,
+                boundary_bits_per_cycle_change=0,
+                routing_obligation='M6 used inside lane; quarter M7 over-lane capacity and real tile channel cuts must pass before adoption',
+                physical_qualified=False)
+
+
+def hbm_su_tile_lockup_sizing():
+    """Registered SU tile links, including their half-cycle visibility."""
+    r=hbm_su_lane_dualface_sizing()
+    r.update(candidate='su_tile_lockup', positive_register_bits=2506,
+             output_lockup_bits=2191, register_bits_per_tile=4697,
+             quarter_lockup_register_bits=192*2191,
+             outputs_visibility_half_cycles_added=1,
+             receiving_positive_edge_cycles_added=0,
+             boundary_bits_per_tile=[1743,448],
+             io_max_ps=166.6,io_min_ps=25,output_hold_delay_ps=-25,
+             external_launch_phases=['rising','falling'],
+             external_clock_source_latency='measured matched-root interior insertion, TT and FF separately',
+             root_skew_test_ps=[-100,100],
+             register_strip_um=[100.224,164.16],
+             qualification='full-shape tile no IO falsepaths, calibrated phase budgets and emitted macro arcs; then quarter channel cuts')
+    return r
+
+
+def hbm_su_tiled_gating_sizing():
+    """Physical proposal: gated XL tile quarter, not adopted before route/interface checks.
+
+    Wake uses raw clocks and a falling-edge register at every root crossing.
+    Tile data clocks contain the lane, broadcast, capture, accumulation and
+    output lockups. HOLD64 drains the16-hop chains; steady data latency is0
+    added cycles, with the compiler asserting wake3 edges before new data.
+    """
+    tiles, crossings, hold = 192, 42, 64
+    return dict(status='proposal_unqualified', tiles=tiles, icg_count=tiles,
+                hold_cycles=hold, wake_lead_cycles=3, data_cycles_added=0,
+                raw_clock_state_bits=tiles * (1 + 7 + 1) + crossings * 2 + 1,
+                wake_root_crossings=crossings,
+                tile_lockup_bits=tiles * (1743 + 448),
+                broadcast_bits_per_tile_hop=1743,
+                accumulate_bits_per_tile_hop=448,
+                wake_reset_bits_per_tile_hop=2,
+                lane_mac_cycles_unchanged=True,
+                cycles_per_chain=16, replica_fanout='one gate per tile, one wake successor',
+                tile_um=[187.056, 164.16], quarter_um=[1406.136, 5529.576],
+                added_wake_boundary_bits=1,
+                power_saving_w=0,
+                power_note='No savings adopted until real gated clock load closes and activity is measured',
+                obligations=['matched-root TT/FF macro budgets including output lockups',
+                             '192 real tile ICGs in quarter CTS, physical clock access',
+                             'M7 over-macro/channel capacity and full interface route',
+                             'qid static ownership straps at real E/M4 sites, timed capture'])
+
+
+def s81_bf_tcg_pinlat_model():
+    """Size the exact clock-lockup + tile-clock full-rate BF combination."""
+    from uarch_model_s81_bf_pinlat import model
+    return model()
+
+
+def qwen_kvwq_binary_feed_model():
+    """Posted KV control tile binary-feed successor; removes off-tile encoders."""
+    from uarch_model_qwen_kvwq_binary import model
+    return model()
+
+
+def hbm_su_r25gpht4_tile_sizing():
+    """Current full pin contract changes transport width, not lane arithmetic."""
+    return dict(status='proposal_unqualified', source_ports='R25GPHT4 norm_selector3fd1fdc91 plus exact E/M4 qid endpoint4450.812',
+                macs_per_cycle_added=0, memory_port_bytes_per_cycle_added=0,
+                face_input_bits=11539, face_output_bits=6487,
+                middle_input_bits=8350, middle_output_bits=5463,
+                static_qid_capture_cycles=5, static_qid_relay_bits=10,
+                static_qid_added_init_cycles_vs_old=4,
+                broadcast_bits_per_hop=1743, accumulate_bits_per_hop=456,
+                broadcast_bytes_per_cycle=1743 / 8, accumulate_bytes_per_cycle=456 / 8,
+                tile_registered_bits=1743 + 315 + 456,
+                tile_lockup_bits=1743 + 456, tiles=192,
+                extra_bits_vs_448_tile=192 * 16,
+                replica_fanout='one predecessor and successor per transport direction',
+                tile_um=[187.056, 164.16], quarter_um=[1406.136, 5529.576],
+                per_chain_tiles=16, whole_data_cycles_added=0,
+                added_half_cycle_visibility=1, wake_lead_cycles=3, hold_cycles=64,
+                clock_gates=192, adopted_power_savings_w=0,
+                scheduler_wake_binding='cg_en pin and actual three-edge-ahead schedule missing from current29-port contract',
+                track_requirement_bits_per_boundary=1743 + 456,
+                channel_capacity_status='actual macro abstractions and M7/channel route pending',
+                slot_fit_status='same tile outline; full actual placement/corner gate pending',
+                single_user_latency_status='transport envelope; controller schedule remains separately unqualified')
+
+
+def hgi_dma_wide_vm_model(**kwargs):
+    """Opt-in raw-routing DMA and actual protected shared VM physical sizing."""
+    from hgi_dma_wide_vm_model import model
+    return model(**kwargs)
+
+
+def hgi_inverse_selected_candidate_model(k=2048, group=96):
+    """G25 protected inverse candidate; no physical or adoption credit."""
+    try:
+        from tools.uarch_model_hgi_inverse import model
+    except ModuleNotFoundError:
+        from uarch_model_hgi_inverse import model
+    return model(k=k, group=group)
+
+
+def hgi_att_scaled_model():
+    """Original scaled-FP4 provenance into the existing exact attention engine."""
+    from hgi_att_scaled_model import model
+    return model()

@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.mtp_ring_dyn_four_campaign_gate.v1",
+  "passed": true,
+  "decision": "V36 conditional default-enable gate satisfied on the original ring8 fixture",
+  "source": {
+    "core_sha256": "8422e52a3f112298a7b954204e8bbf6aa1ea625f8c34d8a4039ca84690b7bd1c",
+    "tool_sha256": "1c85e16d5a13bf6835294268d8403ac50f88d0ad2350a19e195063412972957a"
+  },
+  "cases": [
+    {
+      "campaign": 14,
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74-v5050/campaign14_vehicle_bound.json",
+      "sha256": "bb7e3443e0b0376a66bf830279aceeb087df5490c90d2bfcccc697ae1ff7820c",
+      "total_cycles": 428093,
+      "role": "positive_exactness"
+    },
+    {
+      "campaign": 15,
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74-v5050/campaign15_vehicle_bound.json",
+      "sha256": "bcf0e96fad6b49a6ceafadf6dc5305c372881af19cc8f50af82bb715f8cba2b6",
+      "total_cycles": 428088,
+      "role": "negative_protocol_control"
+    },
+    {
+      "campaign": 19,
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/campaign19_terminal.json",
+      "sha256": "4b1cb0c3676b1f410cc213c8fc00650c617497b7e1bc27e0b54f7aaefb42c2c4",
+      "total_cycles": 237482,
+      "role": "positive_exactness"
+    },
+    {
+      "campaign": 20,
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/campaign20_terminal.json",
+      "sha256": "41ac464a0f7b477d84e9ce0c7630419276c4fc6be13d5c0b6dec781672b734d2",
+      "total_cycles": 237477,
+      "role": "negative_protocol_control"
+    }
+  ],
+  "native_production_exactness_qualified": false,
+  "sequencer_context_ss_ff_qualified": false,
+  "latency": "Five extra state bits per slot; zero added sequencer cycles. Invalid old numerical run is not a speed baseline."
+}

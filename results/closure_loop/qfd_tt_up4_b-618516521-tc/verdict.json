@@ -1,0 +1,188 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_tt_up4_b-618516521-tc",
+ "block": "qfd_tt_up4",
+ "owner": "Claude:redesign-qwen",
+ "source_branch": "claude/redesign-qwen-relay-20261009",
+ "record_branch": "codex/closure-record-qfd_tt_up4_b-618516521-tc",
+ "source_commit": "618516521862d0a8769ed729956a92395b568596",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tt_up4_b-618516521-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 219.95,
+  "ff_ps": 18.95,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -40.34,
+  "ss_sensitivity_tns_ps": -937.0,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tt_up4_b-618516521-tc/routes/qfd_tt_up4_b_618516521_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_tt_up4_b.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tt_up4_b-618516521-tc/routes/qfd_tt_up4_b_618516521_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tt_up4_b-618516521-tc/routes/qfd_tt_up4_b_618516521_tc/work/orfs/logs/asap7/opentallas_ot_qfd_band_upper_asap7_qdm_qfd_tt_up4_b_618516521_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_sb_tts_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "split 3 ops 17\nsplit 4 ops 33\nsplit 5 ops 35\nsplit 6 ops 34\nsplit 7 ops 25\nsplit 8 ops 43\nsplit 9 ops 30\nPASS qfd_spine_band GT=384 TCUT=3 splits=3..9 LNK=0 CLNK=0 RD=5 engine_edges=11368 ops=217 bursts=3448 rows=31896 landed=3448 idle_checks=6 (early 0)\n",
+   "track": "parallel"
+  },
+  "bench_sb_tts_mut_upper": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "split 3 ops 1\nsplit 4 ops 6\nsplit 5 ops 9\nsplit 6 ops 15\nsplit 7 ops 11\nsplit 8 ops 9\nsplit 9 ops 7\nFAIL qfd_spine_band engine_edges=2937 oob=0 mism=783 first=216/8 burst_bad=299 prog_ahead=0 ovbad=0 idle_bad=143 img_bad=82 faults ser000000 w0 wh0 bursts=968 rows=6112 idle_checks=2 early=143\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T23:08:40-07:00",
+ "job_spec": {
+  "name": "qfd_tt_up4_b-618516521-tc",
+  "block": "qfd_tt_up4",
+  "owner": "Claude:redesign-qwen",
+  "purpose": "redesign-qwen 2026-10-09 (owner: tree top as pipelined sub-tiles, registered boundaries, no single-face pin wall; combined root-cause fix of the seq<->tree-top relay): tree-top UPPER sub-tile (ot_qfd_band_upper NL 4: levels 11/12 for 4 lanes, 16 FP32 adders LAT 7, 768-b band-word pin flops, 384-b return station; 4 per tree top). Replaces qfd_sp_tree_top_b (never closed: TT -1,475 post-place, 36k endpoints, 3,084-pin W face). Variant b: see cfg physical/qwen_die_masters/cfg/qfd_tt_up4_b.env. 0 cycles (CR relay absorbed by the upper DLY; SPRE / AMR as before).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/redesign-qwen-relay-20261009",
+   "commit": "618516521862d0a8769ed729956a92395b568596"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "sb_tts_exact",
+     "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_exact -GTTS=1 -GAMR=1 -GCYCLES=40000",
+     "expect": "pass",
+     "pass_regex": "^PASS qfd_spine_band",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "sb_tts_mut_upper",
+     "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_mut_upper -GTTS=1 -GAMR=1 -GUMUT=2 -GCYCLES=8000",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_tt_up4_b.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_tt_up4_b {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 128
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tt_up4_b --post-sdc physical/qwen_die_masters/signoff/qfd_tt_up4_b.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_tt_up4_b > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_tt_up4_b.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/redesign_qwen_20261009/qfd_tt_up4_b-618516521-tc"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T19:30:25-07:00",
+   "est_as_configured": {
+    "W": 20.84,
+    "E": 4.52,
+    "N": 15.38,
+    "S": 6.23
+   },
+   "est_fix": {
+    "W": 0.68,
+    "E": 0.33,
+    "N": 0.99,
+    "S": 0.4
+   },
+   "why": "pin density > 12.0 b/um/layer as configured (W/M4 20.84 b/um (group ^(b_pw|b_pv|b_lf)(\\[|$) 3084 pins); N/M5 15.38 b/um (group ^(tt_ty|tt_use|tt_v)(\\[|$) 1538 pins)); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7') -> 0.99 b/um"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

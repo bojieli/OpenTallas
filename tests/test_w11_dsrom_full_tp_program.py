@@ -162,3 +162,19 @@ def test_ratio2_projection_gathers_do_not_mix_gate_and_latent_rows(program):
         assert len(gathers)==2 and [c['n'] for c in gathers]==[128,128]
         assert gathers[1]['destination']-gathers[0]['destination']==512
         assert any(m['logical_key'][-1]=='cwgate' and m['rows_per_rank']==128 for m in s['matrices'])
+
+
+def test_ratio2_compressor_ring8_deep_order_isa():
+    """MR-5 at the shipped shape: the emitted ring-8 compressor words survive 5 squashed successors after an odd
+    corrected position (golden pooling, bit exact); the legacy two-record ring (negative control) does not."""
+    import mtp_ring8_fullshape_isa as M
+    F.G.set_arith('chunk8');F.G.set_fuse('')
+    old=F.I.SU_LANES;F.I.SU_LANES=8
+    try:
+        b,ops,s=M.compressor_ops(2,8)
+        assert M.case(b,ops,s,2,8,3,5,12)['passed']
+        b,ops,s=M.compressor_ops(2,2)
+        bad=M.case(b,ops,s,2,2,3,5,12)
+        assert bad['clean_equals_golden'] and not bad['passed']
+    finally:
+        F.I.SU_LANES=old;F.RING_ENTRIES=8

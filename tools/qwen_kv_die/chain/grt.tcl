@@ -36,4 +36,8 @@ step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestio
 step guides { write_guides /work/route.guide }
 step ckpt { write_db /work/ckpt_grt.odb }
 step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }
+# die-evidence-2 2026-10-09: GRT parasitics are extracted HERE, in the routing session, and written as SPEF. A later
+# session cannot get them from the guides: read_guides + estimate_parasitics -global_routing gives NO wire RC (GRT-0008),
+# so every die STA that did that timed the die with zero wire load.  sta_tcl.py reads this SPEF instead.
+step spef { estimate_parasitics -global_routing; write_spef /work/die_grt.spef }
 puts OT_GRT_DONE

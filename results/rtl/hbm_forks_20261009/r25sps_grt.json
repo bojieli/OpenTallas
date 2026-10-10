@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.hbm_forks.grt_channel_check.v1",
+ "item": "RQ-HF-4 (4) / review-0412 U1(c): R25SPS (r25s + PS svc split + half_ps + attn_entry8: 8 ks chains a stack) vs the R25S baseline, die-level global route at gcell k=16",
+ "host": "ot-epyc1tb", "run": "/srv/opentallas-scratch/claude/hbm-forks/grt/{r25s_k16,r25sps_k16}", "exit": {"r25s": 0, "r25sps": 0},
+ "r25s":   {"usage_pct": 4.57, "wirelength_um": 58201678, "overflow_gcells": 53, "max_overflow_H": 5, "max_overflow_V": 4},
+ "r25sps": {"usage_pct": 7.21, "wirelength_um": 92215033, "overflow_gcells": 97, "max_overflow_H": 4, "max_overflow_V": 5},
+ "reading": "the 7 extra 1,041-b entry chains a stack add +34.0 m of wire (+2.6 pct-points usage) and route; residual overflow is the same class as the baseline (single gcells over by 1-2 tracks, cap 10-11, at hub-edge crossings incl. ks0/ks1 SE), max overflow 4-5 in both: CHANNEL CHECK PASS at the die-generator rule level; the local 1-2-track gcells are for the die-top route to spread (no channel widening needed).",
+ "status": "PASS (die-level GRT, not a detailed route)"
+}

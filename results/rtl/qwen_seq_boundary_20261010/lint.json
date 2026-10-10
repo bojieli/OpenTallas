@@ -1,0 +1,7 @@
+{
+  "verdict": "PASS",
+  "tool": "Verilator 5.x lint-only",
+  "scope": "full successor elaboration with real controller, tp_seq and issue shell",
+  "log_sha256": "5dc607ca96e823134ff84f22c5811f4bffd6f5461360293299de4733ff61e814",
+  "warnings": "legacy WIDTHCONCAT tied-zero unused full-shape inputs; no fatal errors"
+}

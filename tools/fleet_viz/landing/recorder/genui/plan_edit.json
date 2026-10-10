@@ -1,0 +1,16 @@
+[
+ {"type":"full","say":"Make a page with our website traffic for 2026 from data/web_analytics.csv: visits per month as a line chart, and a table of the top pages with visits and signups."},
+ {"type":"patch","say":"Make the chart a bar chart."},
+ {"type":"patch","say":"Add a filter row for device: All, Mobile, Desktop, Tablet."},
+ {"type":"patch","click":"mobile","else":"Filter to mobile."},
+ {"type":"patch","say":"Add a bounce-rate column to the top pages table."},
+ {"type":"patch","say":"Use a dark theme."},
+ {"type":"full","say":"New page from data/project_hours.csv: hours per person per project for Q3 2026, as a stacked bar chart."},
+ {"type":"patch","say":"Add a table under the chart with totals per person and per project."},
+ {"type":"patch","say":"Highlight anyone averaging over 45 hours a week in red."},
+ {"type":"patch","say":"Change the chart colours to a colour-blind-safe palette."},
+ {"type":"full","say":"New page from data/inventory.csv: items below their reorder point first, with days of stock left."},
+ {"type":"patch","say":"Group it by warehouse."},
+ {"type":"patch","say":"Add a column with the reorder cost (reorder point minus on hand, times unit cost) and a total per warehouse."},
+ {"type":"patch","say":"Make the font larger and the theme high-contrast."}
+]

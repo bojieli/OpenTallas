@@ -1,0 +1,80 @@
+{
+  "name": "ot_hgi_quant_decode",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/routes/hgi_quant_c360p_12c0bd9da_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/routes/hgi_quant_c360p_12c0bd9da_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/routes/hgi_quant_c360p_12c0bd9da_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/routes/hgi_quant_c360p_12c0bd9da_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/hgi_quant_c360p-12c0bd9da-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_hgi_quant_decode.lef": "676b940647e9d212d769f080e2084f04fb24b82b0c540490a13ee7c54345bfd2",
+    "ot_hgi_quant_decode_ff.lib": "11557625a9691603a7c7c87b9fe053a7292422ff42c69cdd65d854946ba5fdd1",
+    "ot_hgi_quant_decode_ss.lib": "bb9640af6ce16bf8acf431ed852b578942e9cc83ce06e0019e66dded3a7cabb2",
+    "ot_hgi_quant_decode_tt.lib": "04c6b96aca93ab7179847384ea094bba265df13a9e9dd7e648ac4320b77448f0"
+  },
+  "ok": true
+}

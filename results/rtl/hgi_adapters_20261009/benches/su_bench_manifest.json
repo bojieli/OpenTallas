@@ -1,0 +1,286 @@
+{
+ "schema": "opentallas.hgi_adapters.su_bench.v1",
+ "cases": [
+  {
+   "kind": "data",
+   "id": "bcast_per_row_scalar",
+   "dispatches": 1,
+   "ref_kinds": [
+    0
+   ]
+  },
+  {
+   "kind": "data",
+   "id": "loop2_l1stride",
+   "dispatches": 12,
+   "ref_kinds": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "data",
+   "id": "rope_ds_tail64",
+   "dispatches": 1,
+   "ref_kinds": [
+    0
+   ]
+  },
+  {
+   "kind": "data",
+   "id": "rope_qwen_permuted_128",
+   "dispatches": 1,
+   "ref_kinds": [
+    0
+   ]
+  },
+  {
+   "kind": "fields",
+   "id": "qwen3_8b_token_su_unique",
+   "dispatches": 12,
+   "ref_kinds": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "fields",
+   "id": "random_legal_templates_64",
+   "dispatches": 64,
+   "ref_kinds": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "fields",
+   "id": "empty_ops",
+   "dispatches": 2,
+   "ref_kinds": [
+    1,
+    1
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "unit_not_su",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "op_not_vop",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "no_template",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "sut_reserved_bit",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "su_vec_set",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "a_in_hbm",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "o_in_stream",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "b_src_rom",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "m1_ab_without_b",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "qm_without_d",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "dst_kv",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "dst_vm_without_o",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "red_without_r",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "gather_without_i",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "a_ind_3",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "nin_2p16",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  },
+  {
+   "kind": "negative",
+   "id": "no_a",
+   "dispatches": 1,
+   "ref_kinds": [
+    2
+   ]
+  }
+ ],
+ "dispatches": 110,
+ "vm_in_words": 3208,
+ "vm_out_words": 2572
+}

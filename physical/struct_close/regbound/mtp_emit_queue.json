@@ -1,0 +1,7 @@
+{"src": "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue.sv", "module": "ot_hbm_native_mtp_emit_queue", "core": "ot_hbm_native_mtp_emit_queue_core",
+ "clk": "clk", "reset": "rst_n",
+ "why": "pi-mtpemitq-c7c53c4c2 TT -369.7 (reg2reg passes): unregistered boundary; job / emit (valid = emit[0]) in and host / host_done out through pin FIFOs, the rest flopped.",
+ "in_hs": [{"v": "job_v", "r": "job_rdy", "data": ["job_id", "job_generation", "job_epoch"]},
+           {"v": "emit[0]", "r": "emit_ready", "data": ["emit"]}],
+ "in_after": [{"pulse": "native_done", "data": ["native_status"], "after": 1}],
+ "out_hs": [{"v": "host_v", "r": "host_ready", "data": ["host_data"]}, {"v": "host_done_v", "r": "host_done_ready", "data": ["host_status"], "after": 0}]}

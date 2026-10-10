@@ -1,0 +1,36 @@
+{
+  "observed_utc": "2026-10-09T11:12:48.657285+00:00",
+  "source_commit": "19a1b52dc",
+  "historical_only": true,
+  "overall_terminal_exists": false,
+  "mutants": {
+    "S1_sm_duplicate_mask_removed": {
+      "run.log": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S1_sm_duplicate_mask_removed.run.log",
+        "sha256": "fd845c4c631c6a8db7b1f0b97579e084dcab86ed0a1837f4eab9cbc8493d4752"
+      },
+      "compile.log": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S1_sm_duplicate_mask_removed.compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "sv": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S1_sm_duplicate_mask_removed_tb.sv",
+        "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+      }
+    },
+    "S2_parent_ack_mask_removed": {
+      "run.log": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S2_parent_ack_mask_removed.run.log",
+        "sha256": "c4666dcc57bd7579c7201f0ecbe7e2711f9ef0cf8f5078dec4987b6fc0e8adc1"
+      },
+      "compile.log": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S2_parent_ack_mask_removed.compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "sv": {
+        "path": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S2_parent_ack_mask_removed_tb.sv",
+        "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+      }
+    }
+  }
+}

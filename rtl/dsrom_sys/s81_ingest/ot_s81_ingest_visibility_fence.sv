@@ -7,7 +7,15 @@
 // PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
 // PROTECT=0: the 8-entry FLOP queue stores the raw 64-bit word (SECDED is for SRAM only, X2) and the pointer/credit/
 // commit/snapshot/landed parity bits are not checked.  The add-overflow, snapshot-monotonic and credit range checks stay.
-module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0)(
+// PIPE=1 (sys-takeover 2026-10-09, opt-in; dsfd_host_native TT -194: the 8:1 head mux -> landed compare -> pop -> queue
+// write enable / out_d / fh in one clk_h edge, 37-40 levels): the head's release condition is a REGISTER (hr_q), computed
+// from the current state and cleared on the edge of every pop and while the queue is empty, so it can only be late
+// (landed only grows); the overflow fault no longer looks at the pop (the sender's credits make count == 8 with in_v
+// impossible).  +1 clk_h edge per completion word (the pop after a pop waits one edge).
+// PIPE=2 (sys-takeover 2026-10-09, hostnative_pipe_a TT -47: landed -> snapshot < landed compare -> landed, 39 levels):
+// PIPE 1 plus the monotonic check registered (snap_lt_q, computed every edge from the held snapshot: snapshot is written
+// before req toggles and stays until the handshake, so the registered compare at the handshake edge is current).
+module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIPE=0)(
  input wire rst_n,ck,clk_h,input wire[7:0] ack_n,
  input wire in_v,input wire[63:0] in_d,output reg in_cr,
  output reg out_v,output reg[63:0] out_d,input wire out_cr,
@@ -31,7 +39,8 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0)(
     end
    end
   end
-  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;
+  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;reg snap_lt_q;
+  always @(posedge clk_h) snap_lt_q<=snapshot<landed;
   localparam integer QW=PROTECT?72:64;
   reg[QW-1:0] q[0:7];reg[2:0] wp,rp;reg[3:0] count;reg qp;
   reg[2:0] host_credits;reg hp;
@@ -45,7 +54,17 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0)(
   wire is_done=head[63:56]==8'h01;
   wire bad_q=PROTECT&&(qp!=(^{wp,rp,count}));wire bad_h=PROTECT&&(hp!=(^host_credits));
   wire bad_land=PROTECT&&(landed_p!=(^landed));
-  wire pop=count!=0&&host_credits!=0&&!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land&&!uncorrectable&&(!is_done||landed>=head[31:0]);
+  wire hr_now=count!=0&&(!is_done||landed>=head[31:0]);
+  reg hr_q;
+  wire pop=(PIPE!=0)?(hr_q&&host_credits!=0&&!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land&&!uncorrectable):
+       (count!=0&&host_credits!=0&&!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land&&!uncorrectable&&(!is_done||landed>=head[31:0]));
+  always @(posedge clk_h or negedge rst_n)
+   if(!rst_n)hr_q<=1'b0;
+`ifdef OT_FENCE_MUT_HRSTALE
+   else hr_q<=hr_now;                                  // mutant: release flag not cleared on a pop (next head unchecked)
+`else
+   else hr_q<=hr_now&&!pop;
+`endif
   assign fault=fc2|fh;assign landed_debug=landed;
   reg[2:0] nw,nr,nh;reg[3:0] nc;
   always @(posedge clk_h or negedge rst_n)begin
@@ -54,7 +73,11 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0)(
    end else begin
     rc1<=req;rc2<=rc1;fc1<=fc;fc2<=fc1;in_cr<=0;out_v<=0;
     if(rc2!=ack_host)begin
-     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||snapshot<landed)fh<=1;
+`ifdef OT_FENCE_MUT_LTSTALE
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?1'b0:(snapshot<landed)))fh<=1;   // mutant: monotonic check dropped
+`else
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?snap_lt_q:(snapshot<landed)))fh<=1;
+`endif
      else begin landed<=snapshot;landed_p<=^snapshot;end
      ack_host<=rc2;
     end
@@ -62,7 +85,7 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0)(
     nw=wp;nr=rp;nc=count;nh=host_credits;
     if(!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land)begin
      if(in_v)begin
-      if(count==8&&!pop)fh<=1;
+      if(count==8&&(PIPE!=0||!pop))fh<=1;
       else begin q[wp]<=encoded;nw=wp+1'b1;nc=nc+1'b1;end
      end
      if(out_cr)begin if(host_credits==4&&!pop)fh<=1;else nh=host_credits+1'b1;end

@@ -1,0 +1,37 @@
+BUILD K512 G8 shape0 cycles16527
+BAD lane2 tag74 owner0 slot74 idx490 filt0 err0 wantx
+BAD lane0 tag148 owner1 slot73 idx484 filt0 err0 wantx
+BAD lane2 tag222 owner2 slot73 idx485 filt0 err0 wantx
+BAD lane0 tag296 owner3 slot73 idx486 filt0 err0 wantx
+BAD lane2 tag370 owner4 slot73 idx487 filt0 err0 wantx
+BAD lane0 tag444 owner5 slot73 idx488 filt0 err0 wantx
+BAD lane2 tag518 owner6 slot73 idx489 filt0 err0 wantx
+BAD lane3 tag519 owner7 slot0 idx496 filt0 err0 wantx
+BUILD K2048 G96 shape1 cycles67263
+BUILD K2048 G96 shape0 cycles67263
+BUILD K2048 G1 shape0 cycles65553
+BUILD K17 G4 shape0 cycles615
+BUILD K7 G2 shape0 cycles259
+BUILD K1 G96 shape2 cycles1759
+FAULT malformed1 PASS
+FAULT malformed2 PASS
+FAULT malformed3 PASS
+FAULT malformed4 PASS
+FAULT malformed5 PASS
+BUILD K17 G4 shape0 cycles615
+PASS SINGLE_BIT_CORRECTION
+BUILD K17 G4 shape0 cycles615
+PASS DOUBLE_BIT_POISON
+BUILD K17 G4 shape0 cycles615
+PASS WRONG_RECORD_IDENTITY
+BUILD K17 G4 shape0 cycles615
+PASS OWNER_RANGE_FAULT
+BUILD K17 G4 shape0 cycles615
+PASS CONTROL_COMPLEMENT
+BUILD K17 G4 shape0 cycles615
+PASS SOURCE_VERSION
+PASS BAD_SHAPE K0 G96
+PASS BAD_SHAPE K2049 G96
+PASS BAD_SHAPE K16 G3
+FATAL: /home/ubuntu/wt-codex-g25-inverse/rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv:116: 303 mismatches
+       Time: 459964000000 Scope: tb_hgi_inverse_selected

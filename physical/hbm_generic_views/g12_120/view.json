@@ -1,0 +1,29 @@
+{
+  "schema": "hgi.g12.physical-view.v1",
+  "source_commit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+  "native_lef_lib_cell": "ot_hgi_att_row_sources_p",
+  "variant": "G12_120",
+  "outline_um": [
+    120,
+    120
+  ],
+  "replicas": 4,
+  "total_outline_mm2": 0.0576,
+  "signal_pin_count": 171,
+  "port_manifest": "results/hgi_attn_g12_20261009/port_manifest.json",
+  "export_done": true,
+  "TT_setup_ps": 149.18649648976157,
+  "FF_hold_ps": 1.0199757705109391,
+  "SS_sensitivity_ps": -91.43397150523924,
+  "DRC": 0,
+  "TT_FF_DRC_gate": "PASS",
+  "adopted": false,
+  "pending": [
+    "externalhbm-simCF-ATT",
+    "descriptor/gather/formatter binding",
+    "dieintegration"
+  ],
+  "bulk_artifacts": "results/hgi_attn_g12_20261009/final_artifacts.json",
+  "command_latency_cycles": 3,
+  "II": 1
+}

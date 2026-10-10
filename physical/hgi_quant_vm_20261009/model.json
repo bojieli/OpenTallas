@@ -1,0 +1,47 @@
+{
+  "model": "tools/uarch_model.py:hgi_quant_vm_transport_model",
+  "source_RTL": "6529f2bd2",
+  "slot_um": [
+    1800,
+    275.6
+  ],
+  "replicas": 1,
+  "cellarea_status": "actual adapter synth pending; originalcore18541.0944um2 is only nearest measuredreference",
+  "outputflopqueue_bits": 16384,
+  "inputassembly_bits": 1024,
+  "request_boundary_bits": 338,
+  "channelplan": {
+    "cmd_bottom_2layers": 0.4002840909090909,
+    "req_right_2layers": 0.30089285714285713,
+    "rsp_left_2layers": 0.24375
+  },
+  "IOcontract": "provisional standalone833.333ps 60/25 TTreference allports150psinter H1 and80fF outputload; finalgenericdie budget pending",
+  "adopted": false,
+  "routevariants": [
+    "pd50",
+    "pd55"
+  ],
+  "unready_gates": [
+    "submitpinlint",
+    "two physicalvariants",
+    "normativealiaspolicy",
+    "VMproducerbinding"
+  ],
+  "actual_stdcell_area_um2": 29130.81084,
+  "actual_cells": 200951,
+  "actual_sequential_area_um2": 15587.94456,
+  "actual_synth_source": "2cb556822",
+  "core_area_um2": 487132.0704000001,
+  "synth_utilisation_percent": 5.980064259797088,
+  "legacy_generator_slot_um": [
+    1814.376,
+    276.456
+  ],
+  "outline_fit": "geometricPASS usingcurrentquant ceil500000/spine/GY2.16 thenSHAVE.024; halos/rails/pintransform requireactualP&R/integration",
+  "boundary_density_bits_per_um_per_layer": {
+    "cmd": 0.4002840909090909,
+    "req": 0.7151952461799661,
+    "rsp": 0.5793718166383701
+  },
+  "actual_stdcell_area_status": "currentfullshapeTTsource2cb actual"
+}

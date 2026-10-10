@@ -1,0 +1,22 @@
+{
+  "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
+  "status": "RUNNING",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+  "stage_key": "calibrate",
+  "stage_tag": "calibrate.a1",
+  "events": [
+    "2026-10-09T06:16:25-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hgi_quant_pd50-7202d4ec4-tc-cx.json",
+    "2026-10-09T06:16:25-07:00 submit lint PASS (estimate {'W': 7.82, 'E': 5.12, 'N': 0.08, 'S': 1.28} b/um, limit 12.0); PASS rtl_boundary ot_hgi_quant_decode: registered boundary (in->reg 10, reg->out 2 levels)",
+    "2026-10-09T06:16:31-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-09T06:17:21-07:00 source 7202d4ec4eb9 synced to ot-epyc2:/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/src",
+    "2026-10-09T06:17:34-07:00 bench track: launched bench_ds_lockstep_and_mutant (bench_ds_lockstep_and_mutant.a1b1) beside None",
+    "2026-10-09T06:17:40-07:00 launched calibrate (attempt 1) on ot-epyc2",
+    "2026-10-09T06:18:29-07:00 bench track: bench_ds_lockstep_and_mutant PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-09T06:18:32-07:00 bench track: launched bench_ds_mutant_rejected (bench_ds_mutant_rejected.a1b1) beside calibrate"
+  ],
+  "verified_cal_driver_pid": 2733060,
+  "source_commit": "7202d4ec4",
+  "config_gate": "actualWC_LIB_FILES/BC_LIB_FILES andCORNERSWCBC withTTWCdata verified; route770ps,signoff833.333ps60/25unchanged",
+  "verification_time_utc": "2026-10-09T13:19:00Z"
+}

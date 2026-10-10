@@ -1,0 +1,13 @@
+    input wire [0:0] chb,
+    input wire [0:0] ck,
+    output wire [2:0] flt,
+    output wire [552:0] li_d,
+    input wire [0:0] li_r,
+    output wire [0:0] li_v,
+    input wire [552:0] lo_d,
+    output wire [0:0] lo_r,
+    input wire [0:0] lo_v,
+    input wire [0:0] rs,
+    input wire [514:0] rx,
+    output wire [0:0] tf,
+    output wire [511:0] tx

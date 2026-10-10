@@ -1,0 +1,94 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_dsrom_wfc_tokpipe_stg\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 770.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 127.38,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 127.38488,
+  "worst_reg_to_reg_slack_ps": 127.38,
+  "worst_input_to_reg_slack_ps": 290.22,
+  "worst_output_port_slack_ps": 254.451263,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "2e7c2d0947a0ab2167a92801941f6eaf489f204dee42a9588e560f39a5451a99",
+  "spef_sha256": "36f7ea2a981cfc139c10009da95ff259d93226829959240a5d93360c09a0ea94",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -184.98,
+  "tns_ps": -92247.6,
+  "worst_register_d_slack_ps": -184.977921,
+  "worst_reg_to_reg_slack_ps": -184.98,
+  "worst_input_to_reg_slack_ps": 215.75,
+  "worst_output_port_slack_ps": 158.721313,
+  "violating_d_pins": 2403,
+  "errors": [],
+  "odb_sha256": "2e7c2d0947a0ab2167a92801941f6eaf489f204dee42a9588e560f39a5451a99",
+  "spef_sha256": "36f7ea2a981cfc139c10009da95ff259d93226829959240a5d93360c09a0ea94",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -8.17,
+  "tns_ps": -884.9,
+  "worst_register_d_slack_ps": -8.168105,
+  "worst_reg_to_reg_slack_ps": 18.95,
+  "worst_input_to_reg_slack_ps": -8.17,
+  "worst_output_port_slack_ps": 30.903975,
+  "violating_d_pins": 399,
+  "errors": [],
+  "odb_sha256": "2e7c2d0947a0ab2167a92801941f6eaf489f204dee42a9588e560f39a5451a99",
+  "spef_sha256": "36f7ea2a981cfc139c10009da95ff259d93226829959240a5d93360c09a0ea94",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26"
+ },
+ "post_sdc": {
+  "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc": "ca2fe779ea1d75f1ecfd64b8046fb6a04bc25d7b2c253d268f38113e3eeb6ce3"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": -184.98,
+ "closes_signoff": false,
+ "oracle_private_orfs_dir": "/srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/orfs",
+ "oracle_equivalence": {
+  "original_tt": 127.4,
+  "original_ff": -8.2,
+  "union_tt": 127.38,
+  "union_ff": -8.17,
+  "rounding_tolerance_ps": 0.1,
+  "equivalent": true
+ },
+ "oracle_private_objects_manifest": "2e7c2d0947a0ab2167a92801941f6eaf489f204dee42a9588e560f39a5451a99  /srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/orfs/results/asap7/wfc_stg_route/base/6_final.odb\n1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26  /srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/orfs/results/asap7/wfc_stg_route/base/6_final.sdc\n36f7ea2a981cfc139c10009da95ff259d93226829959240a5d93360c09a0ea94  /srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/orfs/results/asap7/wfc_stg_route/base/6_final.spef\nca2fe779ea1d75f1ecfd64b8046fb6a04bc25d7b2c253d268f38113e3eeb6ce3  /srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/src/physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc\n75780a480cb42e47178265999ab90cd83520b6324fc80dde44dc6f9e4519a36d  /srv/opentallas-scratch/claude/mtp-tokpipe-eco-scope-observer-20261009-a1/src/physical/dsrom_wfc_tokpipe/eco_scope/signoff_9f7a7f35e.sdc\n"
+}

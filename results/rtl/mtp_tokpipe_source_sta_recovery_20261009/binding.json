@@ -1,0 +1,36 @@
+{
+  "job": "mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+  "source": {
+    "branch": "codex/mtp-wfc-token-r3-route-20261009",
+    "commit": "9f7a7f35e",
+    "extra_paths": [
+      "results/rtl/dshbm_dspark_rtl_20261003/traces"
+    ],
+    "required_files": [
+      "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+      "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv",
+      "physical/dsrom_wfc_tokpipe/src_basis.json"
+    ]
+  },
+  "status": "NEEDS_HUMAN",
+  "stage": "route.a2",
+  "benches": {
+    "bench_exact_src": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"s0_tr_dspark\", \"expected\": \"pass\", \"pass_\": true, \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_dspark.cfg.json\", \"plen\": 8, \"ngen\": 16, \"passes\": 15, \"drafter\": \"dspark\", \"accepted\": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, \"log\": \"s0_tr_dspark/run.log\", \"returncode\": 0}]\n",
+      "track": "parallel"
+    },
+    "bench_negative_src": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "",
+      "track": "parallel"
+    }
+  },
+  "scope": "Completed full route, STA parser failure only. Existing original wrapper with --inst src reads actual four SRAM macro libraries automatically. Remove redundant base-generator --macros argument; no RTL, frequency/uncertainty, macro timing or route changes.",
+  "correction_sha256": "98cb8083b083bd95708e74443a61f2033564038db73e7be16a1b89f40d7f7b1c",
+  "reservation_basis": "SRC6_report.log measured5465992KB=5.21GiB;6GiB admittedserialSTA, actualmacro CLKQ included in sameoriginalwrapper."
+}

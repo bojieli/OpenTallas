@@ -1,0 +1,31 @@
+{
+  "source_commit": "7202d4ec4",
+  "host": "ot-epyc3",
+  "driver": 1022073,
+  "driver_terminal": true,
+  "synth_exit": 0,
+  "library_corner": "FF sizing only; actual routes setupTT/holdFF via currentflow",
+  "actual_stdcell_area_um2": 18541.0944,
+  "core_area_um2": 1069650.6624,
+  "utilisation_percent": 1.7333784806339407,
+  "variants": {
+    "pd50": {
+      "density": 0.5,
+      "stdcell_capacity_um2": 534825.3312,
+      "fit": "PASS"
+    },
+    "pd55": {
+      "density": 0.55,
+      "stdcell_capacity_um2": 588307.86432,
+      "fit": "PASS"
+    }
+  },
+  "boundary_result": "strictPASS in->reg10/reg->out2,noinput->outputpaths",
+  "yosys_peak_rss_kib": 1377244,
+  "container_cgroup_peak_sampled_bytes": 1639903232,
+  "container_peak_note": "memory.peak sampled2seconds; finalsamplebeforeautorm; terminalunsampledtail notclaimed",
+  "synth_elapsed": "3:26.26",
+  "physical_run_directory": "/srv/opentallas-scratch2/scratch/codex/hgi-quant-physical-7202d4ec4",
+  "route_memory_claim_gib": 60,
+  "route_memory_basis": "Still inherited conservativelegacyquant envelope, NOT measuredG8routepeak. 1.53GiB completedFFsynth cannot substitute for unmeasuredplacement/routinggrowth."
+}

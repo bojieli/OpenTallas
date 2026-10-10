@@ -1,0 +1,262 @@
+{
+ "schema": "opentallas.qwen-split-interleave.v1",
+ "program": "/tmp/kvd/img/L1-d0/program.hex",
+ "instructions": 29,
+ "transitions": {
+  "dep": 18,
+  "same": 6,
+  "cross": 1
+ },
+ "same_unit_transitions": [
+  {
+   "at": 4,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  },
+  {
+   "at": 8,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  },
+  {
+   "at": 9,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  },
+  {
+   "at": 10,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  },
+  {
+   "at": 19,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  },
+  {
+   "at": 27,
+   "unit": "SU",
+   "independent_other_unit_op": null
+  }
+ ],
+ "movable": 0,
+ "rows": [
+  {
+   "n": 0,
+   "unit": "SU",
+   "waits": [],
+   "kind": "start"
+  },
+  {
+   "n": 1,
+   "unit": "ME",
+   "waits": [],
+   "kind": "cross"
+  },
+  {
+   "n": 2,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 3,
+   "unit": "SU",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 4,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 5,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 6,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 7,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 8,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 9,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 10,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 11,
+   "unit": "ME",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 12,
+   "unit": "SU",
+   "waits": [
+    "wait_me"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 13,
+   "unit": "ME",
+   "waits": [
+    "chase"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 14,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 15,
+   "unit": "SU",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 16,
+   "unit": "ME",
+   "waits": [
+    "chase"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 17,
+   "unit": "END",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "end"
+  },
+  {
+   "n": 18,
+   "unit": "SU",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 19,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 20,
+   "unit": "ME",
+   "waits": [
+    "chase"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 21,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 22,
+   "unit": "SU",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 23,
+   "unit": "SU",
+   "waits": [
+    "wait_su"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 24,
+   "unit": "ME",
+   "waits": [
+    "chase"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 25,
+   "unit": "END",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "end"
+  },
+  {
+   "n": 26,
+   "unit": "SU",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "dep"
+  },
+  {
+   "n": 27,
+   "unit": "SU",
+   "waits": [],
+   "kind": "same"
+  },
+  {
+   "n": 28,
+   "unit": "END",
+   "waits": [
+    "barrier"
+   ],
+   "kind": "end"
+  }
+ ],
+ "verdict": "0 of 6 same-unit back-to-back issues have an independent op of the other unit to interleave; 18 transitions are data dependencies (barrier / wait / chase) that no reorder can fill"
+}

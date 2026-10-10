@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Minimum actual issuer+unpacker geometry with group-slot padded wave.
-module tb_qwen_r25_int8_image;
+module tb_qwen_r25_int8_image #(parameter integer PIPE = 0);
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start_v=0;
  wire launch,w_valid,w_ready,iss_v,row_ok,line_end;
@@ -14,7 +14,7 @@ module tb_qwen_r25_int8_image;
  else if(launch) input_open<=1;else if(line_end) input_open<=0;
  wire demand=input_open&&!line_end;
  wire source_valid=line_no<24 && cycles%5!=2;
- ot_hbm_accel_int8_line unpack(.clk(clk),.rst_n(rst_n),.int8_mode(1'b1),
+ ot_hbm_accel_int8_line #(.PIPE(PIPE)) unpack(.clk(clk),.rst_n(rst_n),.int8_mode(1'b1),
   .s_valid(source_valid&&demand),.s_ready(raw_ready),.s_data(image[line_no<24?line_no:0]),
   .m_valid(w_valid),.m_ready(w_ready),.m_data(out_data));
  ot_hbm_accel_issue_pq #(.IL(8),.RMAX(4096),.XDEPTH(128)) issue(

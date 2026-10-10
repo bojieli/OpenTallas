@@ -1,0 +1,155 @@
+{
+ "name": "qfd_tt_ctlm_wide1036-c397fe7eb-tc-hm50",
+ "block": "qfd_tt_ctlm_wide1036",
+ "owner": "Codex:qwen-deep-queue",
+ "purpose": "Full-shape registered ctlm structural wide1036 fallback. Larger real hard slot plus widened die/channel model precedes route. Source logic/clock/uncertainties unchanged; original a/b progress preserved. Terminal physical evidence cannot adopt before actual controller-pair exactness and die pin/relay context gates.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/qwen-deepqueue-20261010",
+  "commit": "c397fe7eb0c7cfa7760ed146b349efe86be90fbe",
+  "extra_paths": [
+   "tools/uarch_model_qwen_ctlm_queue.py",
+   "results/uarch/qwen_ctlm_deep_queue_20261010"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "wide_slot_prebuild_model",
+    "cmd": "python3 -c \"import sys; sys.path.insert(0,'tools'); from uarch_model import qwen_ctlm_deep_queue_model; j=qwen_ctlm_deep_queue_model(); v=next(v for v in j['variants'] if v['name']=='wide1036'); assert v['floorplan']['reticle_fit'] and v['floorplan']['vertical_fit']; print('PASS qwen_ctlm_wide_model')\"",
+    "expect": "pass",
+    "pass_regex": "^PASS qwen_ctlm_wide_model",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sb_tts_exact",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_exact -GTTS=1 -GAMR=1 -GTT_SPRE=2 -GTT_SPRE=2 -GCYCLES=40000",
+    "expect": "pass",
+    "pass_regex": "^PASS qfd_spine_band",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sb_tts_link",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_link -GTTS=1 -GAMR=1 -GTT_SPRE=2 -GTT_SPRE=2 -GLNK=1 -GCLNK=2 -GTT_CR=2 -GCYCLES=40000",
+    "expect": "pass",
+    "pass_regex": "^PASS qfd_spine_band",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sb_tts_qwen",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=16 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_qwen -GTTS=1 -GAMR=1 -GTT_SPRE=2 -GTT_SPRE=2 -GTCUT=7 -GSMAX=11 -GMAXT=2 -GMAXK=2 -GQB=10 -GCYCLES=240000",
+    "expect": "pass",
+    "pass_regex": "^PASS qfd_spine_band",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sb_tts_mut_upper",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_mut_upper -GTTS=1 -GAMR=1 -GTT_SPRE=2 -GTT_SPRE=2 -GUMUT=2 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sb_tts_mut_relay",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_tts_mut_relay -GTTS=1 -GAMR=1 -GTT_SPRE=2 -GTT_SPRE=2 -GTT_SMUT=1 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "reg_spine_band_default",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_exact -GCYCLES=40000",
+    "expect": "pass",
+    "pass_regex": "^PASS qfd_spine_band",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_tt_ctlm_a.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_tt_ctlm_wide1036 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 128
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tt_ctlm_wide1036 --post-sdc physical/qwen_die_masters/signoff/qfd_tt_ctlm_a.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_tt_ctlm_wide1036 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_tt_ctlm_a.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_deep_queue_20261010/qfd_tt_ctlm_wide1036-c397fe7eb-tc-hm50"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "latency_accounting": "Hard element zero extra cycles. Widened die communication carries explicit conservative bound in model; actual source-pinned relay inventory/program composition required before adoption.",
+ "adoption_prerequisites": [
+  "actual controller-pair minimum exactness gate",
+  "source-matched hardened pin views and widened die/clock/relay context",
+  "measured TT setup>=0, FF hold>=0, DRC0 under unchanged constraints"
+ ]
+}

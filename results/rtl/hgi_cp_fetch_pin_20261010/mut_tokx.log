@@ -1,0 +1,59 @@
+WARNING: /tmp/codex_cp_fetch_pin_tb.sv:122: $readmemh(hgi_seq_vmw.mem): Not enough words in the file for the requested range [0:4095].
+SEQ case 0: 1163 dispatches, token 77777 status 0, 67691 cycles
+SEQ case 1: 1163 dispatches, token 77777 status 0, 67187 cycles
+SEQ case 2: 48 dispatches, token 131071 status 3, 3628 cycles
+SEQ case 3: 48 dispatches, token 131071 status 3, 3407 cycles
+SEQ case 4: 48 dispatches, token 131071 status 3, 3497 cycles
+SEQ case 5: 48 dispatches, token 131071 status 0, 3389 cycles
+SEQ case 6: 1 dispatches, token 0 status 3, 59 cycles
+SEQ case 7: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 8: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 9: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 10: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 11: 1 dispatches, token 0 status 3, 66 cycles
+FAIL case 12 TOKX beat 1: token 1007 pos 101
+FAIL case 12 TOKX beat 2: token 2007 pos 102
+FAIL case 12 TOKX beat 3: token 3007 pos 103
+FAIL case 12 TOKX beat 4: token 4007 pos 104
+FAIL case 12 TOKX beat 5: token 5007 pos 105
+FAIL case 12 TOKX beat 6: token 6007 pos 106
+FAIL case 12 TOKX beat 7: token 7007 pos 107
+FAIL case 12 TOKX beat 8: token 8007 pos 108
+FAIL case 12 TOKX beat 9: token 9007 pos 109
+FAIL case 12 TOKX beat 10: token 10007 pos 110
+FAIL case 12 TOKX beat 11: token 11007 pos 111
+FAIL case 12 TOKX beat 12: token 12007 pos 112
+FAIL case 12 TOKX beat 13: token 13007 pos 113
+FAIL case 12 TOKX beat 14: token 14007 pos 114
+SEQ case 12: 1 dispatches, token 4242 status 0, 282 cycles
+FAIL case 13 TOKX beat 1: token 11 pos 101
+FAIL case 13 TOKX beat 2: token 22 pos 102
+SEQ case 13: 1 dispatches, token 4242 status 0, 147 cycles
+FAIL case 14 TOKX beat 1: token 11 pos 101
+FAIL case 14 TOKX beat 2: token 22 pos 102
+SEQ case 14: 1 dispatches, token 4242 status 0, 198 cycles
+SEQ case 15: 1 dispatches, token 0 status 3, 88 cycles
+SEQ case 16: 1 dispatches, token 0 status 3, 92 cycles
+FAIL case 17 TOKX beat 1: token 4 pos 101
+FAIL case 17: token 4242/0 status 0/3 dispatches 1/1
+SEQ case 18: 1 dispatches, token 0 status 3, 62 cycles
+SEQ case 19: 1 dispatches, token 0 status 3, 70 cycles
+SEQ case 20: 1 dispatches, token 0 status 3, 70 cycles
+SEQ case 21: 1 dispatches, token 0 status 3, 71 cycles
+SEQ case 22: 1 dispatches, token 0 status 3, 120 cycles
+SEQ case 23: 3 dispatches, token 0 status 3, 264 cycles
+SEQ case 24: 1 dispatches, token 0 status 3, 113 cycles
+SEQ case 25: 1 dispatches, token 0 status 3, 79 cycles
+SEQ case 26: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 27: 1 dispatches, token 0 status 3, 71 cycles
+SEQ case 28: 1 dispatches, token 0 status 3, 71 cycles
+SEQ case 29: 1 dispatches, token 0 status 3, 60 cycles
+SEQ case 30: 1 dispatches, token 0 status 3, 61 cycles
+SEQ case 31: 1 dispatches, token 151936 status 3, 85 cycles
+SEQ case 32: 1 dispatches, token 151935 status 0, 86 cycles
+SEQ case 33: 31 dispatches, token 0 status 3, 3309 cycles
+SEQ case 34: 0 dispatches, token 0 status 3, 3 cycles
+SEQ case 35: 0 dispatches, token 0 status 3, 3 cycles
+SEQ case 36: 0 dispatches, token 0 status 3, 3 cycles
+SEQ case 37: 4 dispatches, token 0 status 1, 303 cycles
+HGI_SEQ FAIL 20

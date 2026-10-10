@@ -61,7 +61,19 @@ module ot_s81ph_coll_core #(
     // into 4 x 2,099 queue write enables in the cycle it arrives (dossier D: valid_out -> u_oq.m[2][480] -1,600).
     // room2 stays safe with one push in flight: room2(t) => n(t) <= D-2, so the in-flight push and this cycle's
     // push both fit.  Status (hv / room / room2) is taken from slice 0; the other slices are identical replicas.
-    parameter integer OQPIPE = 0
+    parameter integer OQPIPE = 0,
+    // QPIPE (cont-takeover 2026-10-09, default 0): every VM input queue drains into a 2-slot skid (ot_s81ph_skid2), so the
+    // engine / lane endpoints read queue words from flops, not through the queue's D:1 read mux (oqpipe-p4 pre-route
+    // -899 ps: g_q[0].u_q.rp -> 8:1 head mux -> u_eng FIFO SRAM wd_in, 2,542 endpoints).  +1 cycle per queue word.
+    parameter integer QPIPE = 0,
+    // OQX (redesign-ds 2026-10-09, default 0): the output queue lives in ANOTHER tile (dsfd_coll_cb, the slab's VM-side
+    // bottom tile of the three-tile core split).  The packer word leaves registered on bw_v / bw_d (one push a cycle at
+    // most, as the OQPIPE word), the remote queue's free slots are tracked by a credit counter (OQX_D at reset, -1 a push,
+    // +1 per bw_cr pulse the remote tile returns on every pop): the packer's room flag is cred != 0 (the counter already
+    // includes every push issued, so a push is always into a free remote slot).  t_vm / ts are unused (the remote tile
+    // owns them); bw_flt carries the remote queue's sticky fault into fv_flt.
+    parameter integer OQX = 0,
+    parameter integer OQX_D = 16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -84,7 +96,12 @@ module ot_s81ph_coll_core #(
     output wire [7:0]        x_li_r,
     input  wire [8*552-1:0]  x_li_d,
     input  wire [7:0]        x_li_l,
-    input  wire [23:0]       x_lflt         // per lane {meso end fault, gearbox fault, endpoint fault}
+    input  wire [23:0]       x_lflt,        // per lane {meso end fault, gearbox fault, endpoint fault}
+    // OQX = 1: packer word stream to the remote output queue + its credit return / fault
+    output reg               bw_v,
+    output reg  [2099:1]     bw_d,
+    input  wire              bw_cr,
+    input  wire              bw_flt
 );
     localparam integer W = FB * 8;                         // 552
     localparam integer FFW = SEQW + 1 + W + 32;            // 595
@@ -124,9 +141,20 @@ module ot_s81ph_coll_core #(
     wire [W+33:0] q_hd [0:5];                              // {last, mode, tag, data}
     generate for (j = 0; j < 6; j = j + 1) begin : g_q
         wire psh = fv && ((j == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == j - 1));
+        if (QPIPE) begin : g_qp
+            wire f_hv, f_pop; wire [W+33:0] f_hd;
+            ot_s81ph_rfifo #(.W(W + 34), .D((j == 0) ? QD0 : QD)) u_q (.clk(clk), .rst_n(rst_n), .push(psh),
+                .wd({flast, fmode, ftag, fdata}), .pop(f_pop), .hv(f_hv), .hd(f_hd), .room(), .room2(),
+                .fault(q_flt[j]));
+            wire sk_ir;
+            assign f_pop = f_hv && sk_ir;
+            ot_s81ph_skid2 #(.W(W + 34)) u_qs (.clk(clk), .rst_n(rst_n), .in_v(f_hv), .in_r(sk_ir), .in_d(f_hd),
+                .out_v(q_hv[j]), .out_r(q_pop[j]), .out_d(q_hd[j]));
+        end else begin : g_qd
         ot_s81ph_rfifo #(.W(W + 34), .D((j == 0) ? QD0 : QD)) u_q (.clk(clk), .rst_n(rst_n), .push(psh),
             .wd({flast, fmode, ftag, fdata}), .pop(q_pop[j]), .hv(q_hv[j]), .hd(q_hd[j]), .room(), .room2(),
             .fault(q_flt[j]));
+        end
     end endgenerate
 
     // ------------------------------------------------------------------ links
@@ -309,13 +337,39 @@ module ot_s81ph_coll_core #(
     // header [51:1] (bit 0 = valid at the pin)
     wire [2099:1] b_word = {b_d, rank, fv_flt, fault, b_cr, pk_emit ? pk_err : 1'b0, in_gat && !pk_emit,
                             pt_push ? ep_ol[3 + pt_l] : 1'b0, b_last, b_mask, pt_push ? pt_l : 3'd0, b_type};
-    generate if (OQPIPE == 0) begin : g_oq0
+    generate if (OQX != 0) begin : g_oqx
+        // cred = OQX_D - (pushes not yet credited back): a pessimistic copy of the remote queue's free slots (it also
+        // counts words and credits in flight).  Controllable pushes (gather / pass-through / status) need cred >= 2, as
+        // room2 on a local queue; the packer's reduce emits are not back-pressured (as in the local queue), so OQX_D
+        // must exceed the local depth (4) by the credit round trip (~6 edges): OQX_D 16.  Signed, never wraps.
+        reg signed [7:0] cred;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin cred <= OQX_D; bw_v <= 1'b0; end
+            else begin
+`ifdef OT_S81PH_MUT_SPLIT_NOCR
+                cred <= cred - (oq_push ? 8'sd1 : 8'sd0);                   // negative control: credits never returned
+`else
+                cred <= cred - (oq_push ? 8'sd1 : 8'sd0) + (bw_cr ? 8'sd1 : 8'sd0);
+`endif
+                bw_v <= oq_push;
+            end
+        always @(posedge clk) bw_d <= b_word;
+        assign oq_room2 = cred >= 8'sd2;
+        assign oq_hv = 1'b0;
+        assign oq_hd = {2099{1'b0}};
+        assign oq_flt = bw_flt;
+    end else if (OQPIPE == 0) begin : g_oq0
+        always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         ot_s81ph_rfifo #(.W(2099), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(oq_push), .wd(b_word),
             .pop(oq_hv && ts[0]), .hv(oq_hv), .hd(oq_hd), .room(), .room2(oq_room2), .fault(oq_flt));
     end else begin : g_oqp
+        always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;     // 9 queue slices (the last one 51 b)
         reg  [2099:1]  wq;                                              // registered packer word
-        reg  [ONS-1:0] pq;                                              // registered push, one replica per slice
+        // FLOW-FIX-0410 2026-10-09: (* keep *) + physical/common_flow/ot_keep_regs.tcl (SYNTH_CANONICALIZE_TCL, default on)
+        // keep the ONS replicas as ONS flops; a plain reg was folded by the yosys opt_merge into one push flop that fanned
+        // out to every slice again.  Attribute only: simulation unchanged.
+        (* keep *) reg [ONS-1:0] pq;                                    // registered push, one replica per slice
         wire [ONS-1:0] s_hv, s_r2, s_flt;
         always @(posedge clk) wq <= b_word;
         always @(posedge clk or negedge rst_n)

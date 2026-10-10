@@ -1,0 +1,88 @@
+{
+  "_comment": "Chip Explorer dies (explorer_geom.py). Each die is exported from the recipe its die runs use. 'commit' pins the source; otherwise the recipe commit is the last commit under 'paths' reachable from 'ref' (fallbacks in 'ref_fallback'), and the cache is re-exported when it changes. 'reach_um' is the die's one-cycle wire reach, used for the geometric link budget on element cards.",
+  "dies": [
+    {
+      "id": "qwen_r21b",
+      "label": "Qwen ROM die r21b",
+      "target": "Qwen ROM",
+      "kind": "qwen",
+      "recipe": "r21b",
+      "tool": "tools/qwen_rom_fulldie_b3r2.py --recipe r21b (die-evidence qwen_r21b_chain.sh)",
+      "ref": "main",
+      "ref_fallback": [
+        "origin/main"
+      ],
+      "paths": [
+        "tools/qwen_rom_fulldie.py",
+        "tools/qwen_rom_fulldie_b3r2.py",
+        "tools/qwen_rom_fulldie_pg_r3.py",
+        "tools/die_top_lint.py"
+      ],
+      "note": "die-evidence chain source: claude/die-evidence-20261008 (merged into main)",
+      "reach_um": 430.56,
+      "reach_note": "r21 relay pitch (measured 430.56 um reach)"
+    },
+    {
+      "id": "hbm_r25",
+      "label": "HBM accelerator die r25",
+      "target": "HBM accelerator",
+      "kind": "hbm",
+      "variant": "r25",
+      "relays": true,
+      "tool": "tools/hbm_die_views.py die --case sta --relays (adopted R25; die-evidence hbm_r25_chain.sh)",
+      "ref": "main",
+      "ref_fallback": [
+        "origin/main"
+      ],
+      "paths": [
+        "tools/hbm_accel_die_fp.py",
+        "tools/hbm_die_views.py",
+        "tools/hbm_die_relays.py",
+        "tools/die_top_lint.py",
+        "physical/hbm_accel_die_views/index.json"
+      ],
+      "index_file": "physical/hbm_accel_die_views/index.json",
+      "reach_um": 359.0,
+      "reach_note": "REACH_INTER_UM (hbm_die_relays.py; 412 within a block)"
+    },
+    {
+      "id": "hbm_r25s",
+      "label": "HBM accelerator die r25s (attention split)",
+      "target": "HBM accelerator",
+      "kind": "hbm",
+      "variant": "r25s",
+      "relays": true,
+      "tool": "tools/hbm_die_views.py --variant r25s die --case sta --relays (claude/attn-split-20261008; not adopted until both halves close)",
+      "ref": "claude/attn-split-20261008",
+      "ref_fallback": [
+        "origin/claude/attn-split-20261008"
+      ],
+      "paths": [
+        "tools/hbm_accel_die_fp.py",
+        "tools/hbm_die_views.py",
+        "tools/hbm_die_relays.py",
+        "tools/die_top_lint.py",
+        "physical/hbm_accel_die_views/index.json"
+      ],
+      "index_file": "physical/hbm_accel_die_views/index.json",
+      "reach_um": 359.0,
+      "reach_note": "REACH_INTER_UM (hbm_die_relays.py; 412 within a block)"
+    },
+    {
+      "id": "s81_layer_r3",
+      "label": "DeepSeek ROM S81 layer die (m221pq r3)",
+      "target": "DeepSeek ROM",
+      "kind": "s81",
+      "tool": "tools/dsrom_s81_fulldie.py real <opts> (EPYC3 s81-die/m221pq_r3 via mk_chain3.sh; source tree src_fe09924a8 = a1f23fa0b+tt, whose generator files are a1f23fa0b's)",
+      "commit": "a1f23fa0b",
+      "opts": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4 --pq-place --die layer1",
+      "env": {
+        "OT_S81_Q_LEF": "physical/s81_die_views/q_elem_qs5f/q_elem.lef.gz"
+      },
+      "index_file": "results/rtl/s81_die_view_index_20261008/index.json",
+      "note": "r4 (= r3 + --nxt-reach) generation failed 2026-10-09 01:30 PT; r3 is the latest built die",
+      "reach_um": 215.0,
+      "reach_note": "--cc-reach-um 215"
+    }
+  ]
+}

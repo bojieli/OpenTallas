@@ -253,6 +253,12 @@ module tb_hbm_accel_tu_endpoint #(
     end
 
 `ifdef TU_GSZ
+    always @(negedge clk) if(rst_n && dut.g_on.started && dut.g_on.rptr<dut.g_on.OF)begin
+      reg active_present;active_present=1;
+      for(integer c=0;c<DNC;c=c+1)if(c<dut.g_on.NA && !dut.g_on.pres[c][dut.g_on.rptr])active_present=0;
+      if(active_present && !(|dut.g_on.h_v) && (&dut.g_on.rb_empty) && !dut.g_on.issue)
+        $fatal(1,"PAD_PROGRESS all active contributor operands present but inactivecolumns block issue");
+    end
     initial begin
       wait(go_clk); #700;
       $display("GSZDEBUG rank=%0d gs=%0d started=%0d k=%0d NA=%0d OF=%0d ptr=%0d pres0=%h col=%h rv=%b",rank,dut.gsz,dut.g_on.started,dut.g_on.k,dut.g_on.NA,dut.g_on.OF,dut.g_on.rptr,dut.g_on.pres[0],dut.g_on.col,dut.g_on.r_v);

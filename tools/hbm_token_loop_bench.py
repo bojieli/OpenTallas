@@ -16,6 +16,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ['rtl/hbm_accel/control/ot_hbm_token_loop.sv', 'rtl/test/hbm_accel/tb_hbm_token_loop.sv']
+# struct-close 2026-10-09: OT_TOKLOOP_SRC (space-separated, absolute or repo-relative) swaps the sources (registered-boundary
+# wrapper + its pin FIFO + a tb copy whose hierarchical references point into the core); default unchanged
+import os
+SRC = os.environ.get('OT_TOKLOOP_SRC', '').split() or SRC
 EOS = 1    # compiler/models/deepseek-v4.1-flash/config.json eos_token_id
 
 

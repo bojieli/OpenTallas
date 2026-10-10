@@ -76,5 +76,46 @@ class Boundary(unittest.TestCase):
         self.assertIn("WARN rtl_boundary", r["message"])
 
 
+WFC_TOP = """module ot_dsrom_wfc_tokpipe_src #(
+    parameter integer PROMPT_EXTRA = 0,
+    parameter integer REC_SRAM = 1
+) (input wire clk, input wire [7:0] a, output reg [7:0] q);
+  reg [7:0] a_q;
+  initial if (PROMPT_EXTRA > 9) $fatal(1, "bad");
+  always @(posedge clk) begin a_q <= a; q <= a_q; end
+endmodule
+"""
+
+
+class Ac1(unittest.TestCase):
+    """drive-resume (review-0542 AC1): the WFC SOURCE recipe is read; a registered_io:true spec never SKIPs silently"""
+    WFC = {"name": "w-cx", "registered_io": True, "source": {"commit": "c0ffee"}, "stages": {"route": {"cmd":
+           "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst src --case {RUN}/route"}}}
+
+    def test_wfc_recipe(self):
+        files = {"physical/dsrom_wfc_tokpipe/src_basis.json": '{"params": {"PROMPT_EXTRA": 2, "REC_SRAM": 0, "WAVE": 1}}',
+                 "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": WFC_TOP}
+        r = B.recipe(self.WFC, show_for(files))
+        self.assertEqual(r["top"], "ot_dsrom_wfc_tokpipe_src")
+        self.assertEqual(r["params"], {"PROMPT_EXTRA": "2", "REC_SRAM": "0"})      # WAVE is not a top parameter
+        self.assertNotIn(B.WFC_MACRO_BB, r["sources"])
+        files["rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv"] = "module unused_ctrl(input wire x); endmodule\n"
+        self.assertEqual(B.check(self.WFC, show_for(files))["verdict"], "PASS")   # $fatal guard elaborates
+
+    def test_requested_check_that_cannot_run_refuses(self):
+        r = B.check(self.WFC, show_for({}))
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("cannot run", r["message"])
+        waived = dict(self.WFC, rtl_boundary={"waive": "unchanged closed SOURCE ports"})
+        self.assertEqual(B.check(waived, show_for({}))["verdict"], "WARN")
+        default_strict = {k: v for k, v in self.WFC.items() if k != "registered_io"}
+        self.assertEqual(B.check(default_strict, show_for({}))["verdict"], "SKIP")
+
+    def test_explicit_recipe(self):
+        s = dict(spec("nope", "rtl/none.sv"), registered_io=True,
+                 rtl_boundary={"top": "t_reg", "sources": ["rtl/t.sv"]})
+        self.assertEqual(B.check(s, show_for({"rtl/t.sv": REG}))["verdict"], "PASS")
+
+
 if __name__ == "__main__":
     unittest.main()

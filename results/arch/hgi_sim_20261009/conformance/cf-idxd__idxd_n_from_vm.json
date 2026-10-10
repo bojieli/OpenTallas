@@ -1,0 +1,158 @@
+{
+ "id": "idxd_n_from_vm",
+ "row": "CF-IDXD",
+ "mode": "GENERIC",
+ "what": "n_sel = 63: n = U32(VM[I + I.stride + L]) = 37 elements",
+ "cfg": {
+  "cp_vocab": 151936,
+  "cp_ctx_max": 40960,
+  "coll_group_size": 4
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "0000000000000000000000200a000080000000000004000010000000000000000000000000000000007e000000000000010000000000000010000000000000000000000000000000007e00000000000015000400000001001000000100000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "0000000000000000000000200a000080000000000004000010000000000000000000000000000000007e000000000000010000000000000010000000000000000000000000000000007e0000000000001500040000000100100000010000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "DMA",
+   "op": "LOAD",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "HBM",
+     "fmt": "FP32",
+     "base": 17179869184,
+     "n": 0,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 63,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 0,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 63,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "I": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 1024,
+     "n": 1,
+     "m": 1,
+     "stride": 1,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "load_n_from_vm",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     1024,
+     "0000000025000000"
+    ]
+   ],
+   "hbm_in": [
+    [
+     17179869184,
+     "6cbd92be425582bf1c05163c86f6403fd5725c3f8d3dae3fafab173fa2e7023fd4292cbf7939443d71ff21be17bb453fd722323e475f0bbf5623f7be2e61fabee68a913e18e66f3ff305bebf04e6a43d5d79ef3ef30d3cbf8e999d3e2e824a3f070f3dbf86dc8b3ea2fbc8be7a5dbdbe2836ef3d2b13383f56017abf65c54f3c70dd30bfbd448f3ec0ab643f43fa75bfa9678c3e545ee4bcf5aed53e308cce3f2e76093e9bd2a23f87e807bfd9fb94bdf269ce3f288daf3f2b8506402c51463f6cc49c3edcfa22bf6b77e23ea25c3c3d415c643f66ea62be008f083ff436d03faf97823fa9e89fbe700182bfe378a2bf259791bd2d655e3ee26aa7bfb8744a3f"
+    ]
+   ]
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      0,
+      "6cbd92be425582bf1c05163c86f6403fd5725c3f8d3dae3fafab173fa2e7023fd4292cbf7939443d71ff21be17bb453fd722323e475f0bbf5623f7be2e61fabee68a913e18e66f3ff305bebf04e6a43d5d79ef3ef30d3cbf8e999d3e2e824a3f070f3dbf86dc8b3ea2fbc8be7a5dbdbe2836ef3d2b13383f56017abf65c54f3c70dd30bfbd448f3ec0ab643f43fa75bfa9678c3e"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "480d71d92413385312e832a6c3749ef010a7afa8834d04eb5ce0247df6589f2a"
+ },
+ "mutants": [
+  {
+   "name": "static_n",
+   "defect": "n_sel 63 ignored (n = 0 -> nothing moved)",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "a25a02a634a9c5263112901cc46c15d9ac458247ec8bd7555ccfcab8d8fa2a0b"
+  }
+ ]
+}

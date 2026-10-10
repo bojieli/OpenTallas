@@ -1,0 +1,5 @@
+{"src": "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv", "module": "ot_hbm_native_ar_token_join", "core": "ot_hbm_native_ar_token_join_core",
+ "clk": "clk", "reset": "rst_n", "pass": ["host_stop"],
+ "why": "pi-artokjoin-c7c53c4c2 TT -308 (IO only): registered boundary; job in / hr out through pin FIFOs, every other port flopped (host_stop direct, as tokloop).",
+ "in_hs": [{"v": "job_v", "r": "job_rdy", "data": ["job_id", "job_tok", "job_eos", "job_pos", "job_ngen", "job_eos_en", "job_maxpos", "job_generation"]}],
+ "out_hs": [{"v": "hr_v", "r": "hr_rdy", "data": ["hr_d"]}]}

@@ -1,0 +1,228 @@
+JOB node=0 user=0 pos=0 hdr=58 pay=58 cstart=58 start=58 done=9005
+JOB node=0 user=0 pos=1 hdr=9087 pay=9087 cstart=9087 start=9087 done=19004
+JOB node=1 user=0 pos=0 hdr=9078 pay=9154 cstart=9156 start=9156 done=21272
+OUT msg=0 cycle=21324
+JOB node=0 user=0 pos=2 hdr=19086 pay=19086 cstart=19086 start=19086 done=29239
+JOB node=1 user=0 pos=1 hdr=19077 pay=21350 cstart=21352 start=21352 done=33642
+OUT msg=1 cycle=33694
+JOB node=0 user=0 pos=3 hdr=29321 pay=29321 cstart=29321 start=29321 done=39972
+JOB node=1 user=0 pos=2 hdr=29312 pay=33720 cstart=33722 start=33722 done=46418
+OUT msg=2 cycle=46470
+JOB node=0 user=0 pos=4 hdr=40054 pay=40054 cstart=40054 start=40054 done=50441
+JOB node=1 user=0 pos=3 hdr=40045 pay=46496 cstart=46498 start=46498 done=58612
+OUT msg=3 cycle=58664
+JOB node=0 user=0 pos=5 hdr=50523 pay=50523 cstart=50523 start=50523 done=60742
+JOB node=1 user=0 pos=4 hdr=50514 pay=58690 cstart=58692 start=58692 done=71283
+OUT msg=4 cycle=71335
+JOB node=0 user=0 pos=6 hdr=60824 pay=60824 cstart=60824 start=60824 done=71656
+JOB node=0 user=0 pos=7 hdr=71738 pay=71738 cstart=71738 start=71738 done=82394
+JOB node=1 user=0 pos=5 hdr=60815 pay=71361 cstart=71363 start=71363 done=83843
+OUT msg=5 cycle=83895
+JOB node=0 user=0 pos=8 hdr=83931 pay=83931 cstart=83931 start=83931 done=94382
+JOB node=1 user=0 pos=6 hdr=71729 pay=83921 cstart=83923 start=83923 done=97013
+OUT msg=6 cycle=97065
+JOB node=0 user=0 pos=3 hdr=97101 pay=97101 cstart=97101 start=97101 done=107362
+JOB node=1 user=0 pos=7 hdr=83923 pay=97091 cstart=97093 start=97093 done=109704
+OUT msg=7 cycle=109756
+JOB node=0 user=0 pos=4 hdr=109792 pay=109792 cstart=109792 start=109792 done=120501
+JOB node=1 user=0 pos=8 hdr=97093 pay=109782 cstart=109784 start=109784 done=122664
+OUT msg=8 cycle=122716
+JOB node=0 user=0 pos=5 hdr=122752 pay=122752 cstart=122752 start=122752 done=133324
+JOB node=1 user=0 pos=3 hdr=109784 pay=122742 cstart=122744 start=122744 done=135050
+OUT msg=9 cycle=135102
+JOB node=0 user=0 pos=6 hdr=135138 pay=135138 cstart=135138 start=135138 done=145740
+JOB node=1 user=0 pos=4 hdr=122744 pay=135128 cstart=135130 start=135130 done=147722
+OUT msg=10 cycle=147774
+JOB node=0 user=0 pos=7 hdr=147810 pay=147810 cstart=147810 start=147810 done=158428
+JOB node=1 user=0 pos=5 hdr=135130 pay=147800 cstart=147802 start=147802 done=160621
+OUT msg=11 cycle=160673
+JOB node=0 user=0 pos=8 hdr=160709 pay=160709 cstart=160709 start=160709 done=171101
+JOB node=1 user=0 pos=6 hdr=147802 pay=160699 cstart=160701 start=160701 done=173072
+OUT msg=12 cycle=173124
+JOB node=0 user=0 pos=9 hdr=173160 pay=173160 cstart=173160 start=173160 done=183773
+JOB node=1 user=0 pos=7 hdr=160701 pay=173150 cstart=173152 start=173152 done=185760
+OUT msg=13 cycle=185812
+JOB node=0 user=0 pos=10 hdr=185848 pay=185848 cstart=185848 start=185848 done=196467
+JOB node=1 user=0 pos=8 hdr=173152 pay=185838 cstart=185840 start=185840 done=198546
+OUT msg=14 cycle=198598
+JOB node=0 user=0 pos=11 hdr=198634 pay=198634 cstart=198634 start=198634 done=209249
+JOB node=1 user=0 pos=9 hdr=185840 pay=198624 cstart=198626 start=198626 done=211223
+OUT msg=15 cycle=211275
+JOB node=1 user=0 pos=10 hdr=198626 pay=211301 cstart=211303 start=211303 done=224245
+OUT msg=16 cycle=224297
+JOB node=1 user=0 pos=11 hdr=211303 pay=224323 cstart=224325 start=224325 done=237429
+OUT msg=17 cycle=237481
+VIS kind=KV pkg=0 stack=0 job=1 words=9 wlast=978 vis=1004 lat=31 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=2 words=14 wlast=11032 vis=11072 lat=45 need=12308 pending=0
+VIS kind=KV pkg=0 stack=0 job=3 words=16 wlast=21255 vis=21300 lat=51 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=4 words=18 wlast=31500 vis=31772 lat=274 need=32866 pending=0
+VIS kind=KV pkg=0 stack=0 job=5 words=18 wlast=42221 vis=42260 lat=46 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=6 words=18 wlast=52467 vis=52580 lat=113 need=53784 pending=0
+VIS kind=KV pkg=0 stack=0 job=7 words=18 wlast=63173 vis=63216 lat=51 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=8 words=18 wlast=73917 vis=73972 lat=66 need=75209 pending=0
+VIS kind=KV pkg=0 stack=0 job=9 words=20 wlast=86109 vis=86416 lat=318 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=10 words=18 wlast=99259 vis=99300 lat=46 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=11 words=17 wlast=111929 vis=111968 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=12 words=10 wlast=125078 vis=125232 lat=194 need=126505 pending=0
+VIS kind=KV pkg=0 stack=0 job=13 words=19 wlast=137275 vis=137316 lat=49 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=14 words=22 wlast=149964 vis=150016 lat=63 need=151256 pending=0
+VIS kind=KV pkg=0 stack=0 job=15 words=18 wlast=162640 vis=162680 lat=75 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=16 words=19 wlast=175323 vis=175376 lat=57 need=176477 pending=0
+VIS kind=KV pkg=0 stack=0 job=17 words=19 wlast=187981 vis=188036 lat=55 need=-1 pending=0
+VIS kind=KV pkg=0 stack=0 job=18 words=26 wlast=200674 vis=200752 lat=78 need=202097 pending=0
+VIS kind=KV pkg=0 stack=1 job=1 words=9 wlast=979 vis=1004 lat=31 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=2 words=14 wlast=11033 vis=11068 lat=41 need=12311 pending=0
+VIS kind=KV pkg=0 stack=1 job=3 words=16 wlast=21255 vis=21296 lat=51 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=4 words=18 wlast=31501 vis=31772 lat=274 need=32872 pending=0
+VIS kind=KV pkg=0 stack=1 job=5 words=17 wlast=42222 vis=42260 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=6 words=18 wlast=52468 vis=52508 lat=50 need=53793 pending=0
+VIS kind=KV pkg=0 stack=1 job=7 words=18 wlast=63174 vis=63216 lat=47 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=8 words=18 wlast=73918 vis=73972 lat=66 need=75221 pending=0
+VIS kind=KV pkg=0 stack=1 job=9 words=20 wlast=86110 vis=86416 lat=318 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=10 words=16 wlast=99260 vis=99300 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=11 words=17 wlast=111930 vis=111968 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=12 words=10 wlast=125079 vis=125232 lat=194 need=126514 pending=0
+VIS kind=KV pkg=0 stack=1 job=13 words=19 wlast=137276 vis=137316 lat=49 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=14 words=22 wlast=149965 vis=150016 lat=63 need=151268 pending=0
+VIS kind=KV pkg=0 stack=1 job=15 words=18 wlast=162641 vis=162692 lat=75 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=16 words=19 wlast=175324 vis=175360 lat=55 need=176492 pending=0
+VIS kind=KV pkg=0 stack=1 job=17 words=19 wlast=187982 vis=188036 lat=55 need=-1 pending=0
+VIS kind=KV pkg=0 stack=1 job=18 words=26 wlast=200675 vis=200752 lat=77 need=202115 pending=0
+VIS kind=KV pkg=0 stack=2 job=1 words=8 wlast=973 vis=1004 lat=31 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=2 words=14 wlast=11028 vis=11068 lat=41 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=3 words=16 wlast=21259 vis=21296 lat=51 need=22536 pending=0
+VIS kind=KV pkg=0 stack=2 job=4 words=19 wlast=31502 vis=31772 lat=274 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=5 words=16 wlast=42219 vis=42260 lat=59 need=43503 pending=0
+VIS kind=KV pkg=0 stack=2 job=6 words=18 wlast=52465 vis=52508 lat=50 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=7 words=18 wlast=63175 vis=63216 lat=47 need=64492 pending=0
+VIS kind=KV pkg=0 stack=2 job=8 words=19 wlast=73919 vis=73972 lat=66 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=9 words=19 wlast=86107 vis=86416 lat=318 need=87512 pending=0
+VIS kind=KV pkg=0 stack=2 job=10 words=17 wlast=99261 vis=99300 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=11 words=16 wlast=111927 vis=111968 lat=59 need=113232 pending=0
+VIS kind=KV pkg=0 stack=2 job=12 words=10 wlast=125076 vis=125232 lat=194 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=13 words=19 wlast=137277 vis=137320 lat=49 need=138594 pending=0
+VIS kind=KV pkg=0 stack=2 job=14 words=23 wlast=149966 vis=150016 lat=63 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=15 words=17 wlast=162638 vis=162692 lat=75 need=163797 pending=0
+VIS kind=KV pkg=0 stack=2 job=16 words=19 wlast=175321 vis=175372 lat=55 need=-1 pending=0
+VIS kind=KV pkg=0 stack=2 job=17 words=19 wlast=187983 vis=188044 lat=61 need=189138 pending=0
+VIS kind=KV pkg=0 stack=2 job=18 words=27 wlast=200676 vis=200932 lat=269 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=1 words=8 wlast=973 vis=1004 lat=31 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=2 words=14 wlast=11028 vis=11068 lat=41 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=3 words=16 wlast=21260 vis=21296 lat=51 need=22540 pending=0
+VIS kind=KV pkg=0 stack=3 job=4 words=19 wlast=31503 vis=31772 lat=274 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=5 words=16 wlast=42220 vis=42260 lat=59 need=43510 pending=0
+VIS kind=KV pkg=0 stack=3 job=6 words=18 wlast=52466 vis=52508 lat=50 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=7 words=18 wlast=63176 vis=63216 lat=50 need=64502 pending=0
+VIS kind=KV pkg=0 stack=3 job=8 words=19 wlast=73920 vis=73972 lat=66 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=9 words=19 wlast=86108 vis=86416 lat=318 need=87525 pending=0
+VIS kind=KV pkg=0 stack=3 job=10 words=17 wlast=99262 vis=99300 lat=59 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=11 words=16 wlast=111928 vis=111968 lat=59 need=113239 pending=0
+VIS kind=KV pkg=0 stack=3 job=12 words=10 wlast=125077 vis=125232 lat=194 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=13 words=21 wlast=137278 vis=137320 lat=49 need=138604 pending=0
+VIS kind=KV pkg=0 stack=3 job=14 words=23 wlast=149967 vis=150016 lat=63 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=15 words=17 wlast=162639 vis=162692 lat=75 need=163810 pending=0
+VIS kind=KV pkg=0 stack=3 job=16 words=19 wlast=175322 vis=175372 lat=55 need=-1 pending=0
+VIS kind=KV pkg=0 stack=3 job=17 words=19 wlast=187984 vis=188020 lat=55 need=189154 pending=0
+VIS kind=KV pkg=0 stack=3 job=18 words=27 wlast=200677 vis=200932 lat=269 need=-1 pending=0
+VIS kind=IK pkg=1 stack=0 job=1 words=1 wlast=11736 vis=11986 lat=250 need=12438 pending=0
+VIS kind=IK pkg=1 stack=0 job=2 words=1 wlast=24338 vis=24574 lat=236 need=25038 pending=0
+VIS kind=IK pkg=1 stack=0 job=3 words=1 wlast=36590 vis=36659 lat=69 need=37294 pending=0
+VIS kind=IK pkg=1 stack=0 job=4 words=1 wlast=49271 vis=49340 lat=69 need=49974 pending=0
+VIS kind=IK pkg=1 stack=0 job=5 words=1 wlast=61433 vis=61502 lat=69 need=62134 pending=0
+VIS kind=IK pkg=1 stack=0 job=6 words=1 wlast=74119 vis=74386 lat=267 need=74822 pending=0
+VIS kind=IK pkg=1 stack=0 job=7 words=1 wlast=86782 vis=86851 lat=69 need=87486 pending=0
+VIS kind=IK pkg=1 stack=0 job=8 words=1 wlast=99948 vis=100017 lat=69 need=100654 pending=0
+VIS kind=IK pkg=1 stack=0 job=9 words=1 wlast=112624 vis=112693 lat=69 need=113326 pending=0
+VIS kind=IK pkg=1 stack=0 job=10 words=1 wlast=125347 vis=125416 lat=69 need=126046 pending=0
+VIS kind=IK pkg=1 stack=0 job=11 words=1 wlast=137990 vis=138059 lat=69 need=138694 pending=0
+VIS kind=IK pkg=1 stack=0 job=12 words=1 wlast=150650 vis=150719 lat=69 need=151350 pending=0
+VIS kind=IK pkg=1 stack=0 job=13 words=1 wlast=163318 vis=163387 lat=69 need=164022 pending=0
+VIS kind=IK pkg=1 stack=0 job=14 words=1 wlast=176006 vis=176190 lat=184 need=176710 pending=0
+VIS kind=IK pkg=1 stack=0 job=15 words=1 wlast=188685 vis=188757 lat=72 need=189390 pending=0
+VIS kind=IK pkg=1 stack=0 job=16 words=1 wlast=201347 vis=201416 lat=69 need=202046 pending=0
+VIS kind=IK pkg=1 stack=0 job=17 words=1 wlast=214024 vis=214093 lat=69 need=214726 pending=0
+VIS kind=IK pkg=1 stack=0 job=18 words=1 wlast=227203 vis=227355 lat=152 need=227902 pending=0
+VIS kind=KV pkg=1 stack=0 job=1 words=25 wlast=13050 vis=13112 lat=226 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=2 words=29 wlast=25657 vis=25716 lat=65 need=26906 pending=0
+VIS kind=KV pkg=1 stack=0 job=3 words=30 wlast=37920 vis=37964 lat=50 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=4 words=30 wlast=50604 vis=50648 lat=54 need=51718 pending=0
+VIS kind=KV pkg=1 stack=0 job=5 words=31 wlast=62936 vis=63064 lat=143 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=6 words=31 wlast=75460 vis=75516 lat=75 need=76804 pending=0
+VIS kind=KV pkg=1 stack=0 job=7 words=32 wlast=88128 vis=88184 lat=223 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=8 words=32 wlast=101300 vis=101348 lat=75 need=102605 pending=0
+VIS kind=KV pkg=1 stack=0 job=9 words=41 wlast=114032 vis=114092 lat=77 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=10 words=30 wlast=126676 vis=126736 lat=71 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=11 words=31 wlast=139328 vis=139372 lat=59 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=12 words=31 wlast=151988 vis=152028 lat=59 need=153115 pending=0
+VIS kind=KV pkg=1 stack=0 job=13 words=32 wlast=164724 vis=164784 lat=83 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=14 words=32 wlast=177356 vis=177408 lat=113 need=178655 pending=0
+VIS kind=KV pkg=1 stack=0 job=15 words=41 wlast=190040 vis=190100 lat=77 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=16 words=45 wlast=202700 vis=202756 lat=79 need=204001 pending=0
+VIS kind=KV pkg=1 stack=0 job=17 words=42 wlast=215440 vis=215500 lat=89 need=-1 pending=0
+VIS kind=KV pkg=1 stack=0 job=18 words=46 wlast=228564 vis=228628 lat=99 need=229946 pending=0
+VIS kind=KV pkg=1 stack=1 job=1 words=25 wlast=13050 vis=13112 lat=226 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=2 words=29 wlast=25658 vis=25716 lat=65 need=26910 pending=0
+VIS kind=KV pkg=1 stack=1 job=3 words=30 wlast=37921 vis=37964 lat=50 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=4 words=30 wlast=50605 vis=50656 lat=54 need=51726 pending=0
+VIS kind=KV pkg=1 stack=1 job=5 words=31 wlast=62937 vis=63180 lat=258 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=6 words=31 wlast=75461 vis=75520 lat=75 need=76816 pending=0
+VIS kind=KV pkg=1 stack=1 job=7 words=32 wlast=88129 vis=88192 lat=223 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=8 words=32 wlast=101301 vis=101372 lat=75 need=102621 pending=0
+VIS kind=KV pkg=1 stack=1 job=9 words=41 wlast=114033 vis=114104 lat=79 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=10 words=30 wlast=126677 vis=126736 lat=71 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=11 words=31 wlast=139329 vis=139380 lat=59 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=12 words=31 wlast=151989 vis=152048 lat=63 need=153127 pending=0
+VIS kind=KV pkg=1 stack=1 job=13 words=32 wlast=164725 vis=164788 lat=83 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=14 words=32 wlast=177357 vis=177428 lat=113 need=178671 pending=0
+VIS kind=KV pkg=1 stack=1 job=15 words=41 wlast=190041 vis=190112 lat=77 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=16 words=45 wlast=202701 vis=202780 lat=83 need=204021 pending=0
+VIS kind=KV pkg=1 stack=1 job=17 words=42 wlast=215441 vis=215528 lat=89 need=-1 pending=0
+VIS kind=KV pkg=1 stack=1 job=18 words=46 wlast=228565 vis=228656 lat=99 need=229970 pending=0
+VIS kind=KV pkg=1 stack=2 job=1 words=25 wlast=13055 vis=13108 lat=230 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=2 words=30 wlast=25659 vis=25712 lat=133 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=3 words=30 wlast=37922 vis=37972 lat=54 need=39037 pending=0
+VIS kind=KV pkg=1 stack=2 job=4 words=31 wlast=50606 vis=50656 lat=54 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=5 words=31 wlast=62938 vis=63204 lat=282 need=64256 pending=0
+VIS kind=KV pkg=1 stack=2 job=6 words=32 wlast=75462 vis=75520 lat=70 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=7 words=32 wlast=88130 vis=88192 lat=223 need=89441 pending=0
+VIS kind=KV pkg=1 stack=2 job=8 words=33 wlast=101302 vis=101372 lat=75 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=9 words=41 wlast=114034 vis=114104 lat=78 need=115329 pending=0
+VIS kind=KV pkg=1 stack=2 job=10 words=31 wlast=126678 vis=126732 lat=66 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=11 words=31 wlast=139330 vis=139384 lat=59 need=140661 pending=0
+VIS kind=KV pkg=1 stack=2 job=12 words=32 wlast=151990 vis=152048 lat=62 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=13 words=32 wlast=164726 vis=164788 lat=74 need=165874 pending=0
+VIS kind=KV pkg=1 stack=2 job=14 words=33 wlast=177358 vis=177428 lat=113 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=15 words=41 wlast=190042 vis=190112 lat=78 need=191336 pending=0
+VIS kind=KV pkg=1 stack=2 job=16 words=46 wlast=202702 vis=202780 lat=82 need=-1 pending=0
+VIS kind=KV pkg=1 stack=2 job=17 words=43 wlast=215442 vis=215528 lat=90 need=216752 pending=0
+VIS kind=KV pkg=1 stack=2 job=18 words=47 wlast=228566 vis=228656 lat=99 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=1 words=25 wlast=13056 vis=13112 lat=230 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=2 words=30 wlast=25660 vis=25712 lat=61 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=3 words=30 wlast=37923 vis=37972 lat=54 need=39043 pending=0
+VIS kind=KV pkg=1 stack=3 job=4 words=31 wlast=50607 vis=50656 lat=54 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=5 words=31 wlast=62939 vis=63144 lat=209 need=64266 pending=0
+VIS kind=KV pkg=1 stack=3 job=6 words=32 wlast=75463 vis=75520 lat=70 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=7 words=32 wlast=88131 vis=88192 lat=223 need=89455 pending=0
+VIS kind=KV pkg=1 stack=3 job=8 words=33 wlast=101303 vis=101372 lat=75 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=9 words=42 wlast=114035 vis=114104 lat=86 need=115347 pending=0
+VIS kind=KV pkg=1 stack=3 job=10 words=31 wlast=126679 vis=126736 lat=70 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=11 words=31 wlast=139331 vis=139384 lat=59 need=140671 pending=0
+VIS kind=KV pkg=1 stack=3 job=12 words=32 wlast=151991 vis=152048 lat=61 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=13 words=32 wlast=164727 vis=164788 lat=86 need=165888 pending=0
+VIS kind=KV pkg=1 stack=3 job=14 words=33 wlast=177359 vis=177428 lat=113 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=15 words=41 wlast=190043 vis=190112 lat=77 need=191354 pending=0
+VIS kind=KV pkg=1 stack=3 job=16 words=46 wlast=202703 vis=202780 lat=81 need=-1 pending=0
+VIS kind=KV pkg=1 stack=3 job=17 words=42 wlast=215443 vis=215528 lat=89 need=216774 pending=0
+VIS kind=KV pkg=1 stack=3 job=18 words=47 wlast=228567 vis=228656 lat=179 need=-1 pending=0
+NODE node=0 busy=187268 side_wait=0 tx_wait=0 starved=66593 jobs=18 state_mismatch=0
+HBM_NODE node=0 q_bad=0 q_words=15120 q_reads=194832 q_fault=0 idx_records=0 idx_writes=0 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=59624
+NODE node=1 busy=226967 side_wait=0 tx_wait=0 starved=26894 jobs=18 state_mismatch=0
+HBM_NODE node=1 q_bad=0 q_words=16272 q_reads=214416 q_fault=0 idx_records=18 idx_writes=216 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=116390
+KVHBM ops=216 words=6592 writes=8028 holds=26037 state_bad=0 fault=00
+IDXHBM_USERS read=1 wrote=1
+HDC41_ARRAY nodes=2 users=1 generated=0 mismatches=0 logit_mismatch=0 lm_head_checks=0 state_mismatch=0 total_cycles=237482
+USERS_DONE 0
+LINK_STALLS 0
+STAGE_OUT msgs=18 out_mismatch=0
+PASS
+- /srv/opentallas-scratch/claude/mtp-lead/camp-628000701/p19/obj_stage2_wfc_w1_deep_ringdyn/tb_dsrom_wavefront_array_stage2.sv:1241: Verilog $finish

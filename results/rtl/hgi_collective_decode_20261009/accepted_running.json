@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-09T13:24:18.339721+00:00",
+  "source": "7c38e6508",
+  "host": "ot-agidock128",
+  "rows": [
+    {
+      "name": "hgi_coll_decode_a-7c38e6508-tc-cx",
+      "launcher": 2552938,
+      "container": "4627837476a1",
+      "container_init": 2555335,
+      "status": "RUNNING route.a1 verified actualprocess/docker",
+      "golden": "daemon PASS"
+    },
+    {
+      "name": "hgi_coll_decode_b-7c38e6508-tc-cx",
+      "launcher": 2552948,
+      "container": "0e44ac9fb28c",
+      "container_init": 2555266,
+      "status": "RUNNING route.a1 verified actualprocess/docker",
+      "golden": "daemon PASS"
+    },
+    {
+      "name": "hgi_coll_row_formatter_a-7c38e6508-tc-cx",
+      "launcher": 2553036,
+      "container": "e70150812a42",
+      "container_init": 2557258,
+      "status": "RUNNING route.a1 verified actualprocess/docker",
+      "golden": "daemon PASS"
+    },
+    {
+      "name": "hgi_coll_row_formatter_b-7c38e6508-tc-cx",
+      "launcher": 2552959,
+      "container": "376ab1c1171e",
+      "container_init": 2557232,
+      "status": "RUNNING route.a1 verified actualprocess/docker",
+      "golden": "daemon PASS"
+    }
+  ],
+  "gate": "submitlintPASS cached exactsource recipe/RTL/cfg/helpers receipts checked; normal gate enabled",
+  "not_terminal": "TT/FF/DRC and final electrical physical gates pending; noclosure claim"
+}

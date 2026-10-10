@@ -1,0 +1,75 @@
+{
+  "source_commit": "c70fcb1e5",
+  "source_failure": "mtp_fence_p-d30fa5f39-tc",
+  "input_sha256": {
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv": "b69db5c9bbf5c9f3c6ac5be0f16d88ea4dc139e4787efb75f76ae24bb39556e3",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid_banked_cx.sv": "0dd66fc04ce002586032a46f4da3755a451b8b7a854fbfa7b4b9731e7f26184a",
+    "physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_cx.sv": "03d028295d4177b0d98abcdd81df376aed4e4894e7089df64ff768bbe006d06b",
+    "physical/hbm_mtp/bench/tb_fence_cx.sv": "3617a6d6abe74e03575a24045e4c1691150df2fefda47b9b82ce51c43efcdf90",
+    "physical/hbm_mtp/bench/tb_skid_cx.sv": "4ca1a9f5623f30c38942850429bbf9be276ff69a5d4a0a6dbd2b5af78fd739f3",
+    "tools/hbm_rf_fence_cx_model.py": "31aa97e77f9529637aa0d686571a00a4158c9c92e2295df4d14dab52f90ca667",
+    "tools/uarch_model.py": "63c45c73cb257bedcb6951499aa53b571c9414e2f1504e36616b46431371177b"
+  },
+  "scope": "full4096 transaction streams vs original fence; cycle-exact4114bit skid valid/data under stalls and promotion; no control protection or new protocol",
+  "cases": [
+    {
+      "name": "fence7",
+      "negative": false,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "1f4f273bbe8ccf2672523314ba77e438310823a5e8cce7e127a6ad746be6e4fe"
+    },
+    {
+      "name": "fence3",
+      "negative": false,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "ca7c5a18ae5742f740430e8c2420241b45409813083e9e17a28b09b36c3bcc9c"
+    },
+    {
+      "name": "fence11",
+      "negative": false,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "0b42a0183c31996b43adbe395f3cfc74b449e7aaf9d5c5999875f6808cb77716"
+    },
+    {
+      "name": "fence29",
+      "negative": false,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "0ac7e690f37392f77c3b8a42fd9d53a981af14567bad66d60b9171181c1777da"
+    },
+    {
+      "name": "fence_mutant",
+      "negative": true,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "8040d37ad48c1dd9831f47f3fa0d78069b3cb67be32a30901d42aab00c2bb246"
+    },
+    {
+      "name": "skid",
+      "negative": false,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "raw_sha256": "ee5d6aac4769009d9d8c1890900816b7ad31d50e0c2b7742bc1032dbd3765572"
+    },
+    {
+      "name": "skid_mutant",
+      "negative": true,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 1,
+      "raw_sha256": "6281e6d0f52a07f1372cd02a2217253a3e54d72ba48ea50d2bad146b704b172b"
+    }
+  ],
+  "verdict": "PASS",
+  "adopted": false
+}

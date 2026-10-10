@@ -1,0 +1,23 @@
+E2E: 91 golden records, 10104 HBM sectors loaded
+E2E REAL 0 (attn_norm) VM[41152] = 00000000 golden bb320000
+E2E REAL 0 (attn_norm) VM[41153] = 00000000 golden bb870000
+E2E REAL 0 (attn_norm) VM[41154] = 00000000 golden bb150000
+E2E REAL 0 (attn_norm) VM[41155] = 00000000 golden bb080000
+E2E REAL 0 (attn_norm) VM[41156] = 00000000 golden bc050000
+E2E REAL 0 (attn_norm) VM[41157] = 00000000 golden 3d140000
+E2E REAL 0 (attn_norm) VM[41158] = 00000000 golden 3cb40000
+E2E REAL 0 (attn_norm) VM[41159] = 00000000 golden bcdb0000
+E2E FINAL VM[0] = bc4d0000 golden bcdc0000
+E2E FINAL VM[1] = bcae0000 golden bcab0000
+E2E FINAL VM[2] = bc1a0000 golden 3d940000
+E2E FINAL VM[3] = bc270000 golden bda70000
+E2E FINAL VM[4] = bd060000 golden 3cd80000
+E2E FINAL VM[5] = 3e1c0000 golden 3e090000
+E2E FINAL VM[6] = 3da40000 golden 3dc60000
+E2E FINAL VM[7] = be140000 golden be2d0000
+E2E SUMMARY cycles 400585 token -1 status 15 dispatched 1/91 dispatch_mismatch 0 final_vm_mismatch 91314 final_hbm_mismatch 992 unloaded_hbm_reads 0
+E2E CFG status err 0 loaded 1
+E2E REAL FUSED record 0: 5120 mismatches fault 1
+E2E WATCHDOG: no dispatch / retire for 400000 cycles at cyc 400585; ux_v 0000 ux_rdy fffe stub busy SU 0 SFU 0 DMA 0; real kq depth SU 0 SFU 0 DMA 0
+HGI_E2E FAIL (watchdog)
+rc=0

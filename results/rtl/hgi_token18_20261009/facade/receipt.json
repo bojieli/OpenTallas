@@ -1,0 +1,28 @@
+{
+  "source": "84d4ba0ca",
+  "fixture_upstream": "d7cdfd630:physical/hbm_generic/die_mtp18/hfd_mtp_generic18.sv",
+  "fixture_sha256": "f5056127fa54438fe90f4fa26c8fdd082b1a4b60dd23f075b8671cf3f2f97f5a",
+  "actual_vehicle": "two production-shaped384expert/max1m fullcores, optinTW18/XSEL1/PRL2/SPECF0; facade66portssplit131/506/523/59/58/19/1",
+  "mechanism": "native versus actual facade220cycles, all grouped outputs compared, two reset assertion/release sequences, highbit p/f token starts and62commands observed",
+  "positive": {
+    "build_rc": 0,
+    "sim_rc": 0,
+    "commands": 62
+  },
+  "genuine_mutants": {
+    "width17": {
+      "build_rc": 0,
+      "sim_rc": 1,
+      "failure": "FACADE_PORT_MISMATCH cycle15"
+    },
+    "reset_release_bypass": {
+      "build_rc": 0,
+      "sim_rc": 1,
+      "failure": "FACADE_RESET_MISMATCH cycle5"
+    }
+  },
+  "preserved_initial_failure": "scalar f_coll part-select elaboration failure, corrected declaration84d4ba0ca",
+  "scope": "port wiring + actual two-flop reset release/startup against selected native core; NOT whole-modelnumericalconformance and NOT simulator-provider vectors; CPrecordproducer+winningvalue consumer remain gaps",
+  "clock_period_ns": 0.833333,
+  "remote": "ot-epyc4:/srv/opentallas-scratch2/scratch/codex/hgi-fullcore-77f/facade/"
+}

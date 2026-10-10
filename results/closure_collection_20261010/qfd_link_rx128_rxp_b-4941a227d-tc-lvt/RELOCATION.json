@@ -1,0 +1,128 @@
+{
+  "schema": "opentallas.evidence_relocation.v1",
+  "job": "qfd_link_rx128_rxp_b-4941a227d-tc-lvt",
+  "source_commit": "4941a227d8a129d28343031232931ab03bc15013",
+  "original_record_commit": "bd67150f92908e5357c5b96fa3afe104ed27ea3e",
+  "status": "HISTORICAL_CLOSED_VARIANT",
+  "adoption": "The rxp_a variant is already adopted. This collection preserves the sibling closure without changing selected views or RTL.",
+  "reason": "Original collect destination reused a prior fill-5 path. Original payload bytes and their internal historical paths are preserved; this manifest records the actual unique destination.",
+  "signoff": {
+    "TT_setup_ps": 80.14,
+    "FF_hold_ps": 3.73,
+    "DRC": 0,
+    "SS_sensitivity_ps": -163.67
+  },
+  "bench_binding": [
+    {
+      "path": "rtl/physical/ot_qwen_die_cdc_ch.sv",
+      "source_blob": "00a95067d240774ea14cd7810a872220f098300f",
+      "main_blob": "00a95067d240774ea14cd7810a872220f098300f"
+    },
+    {
+      "path": "rtl/test/sys_takeover/tb_cdc_ch_rxp.sv",
+      "source_blob": "c9d702fc9271ac3423ef8baac8f9df7584e573a8",
+      "main_blob": "c9d702fc9271ac3423ef8baac8f9df7584e573a8"
+    },
+    {
+      "path": "physical/redesign_qwen/rx128_rxp_bench.sh",
+      "source_blob": "a80a4e933489c0093df786b246d286f8ebaaac70",
+      "main_blob": "a80a4e933489c0093df786b246d286f8ebaaac70"
+    },
+    {
+      "path": "physical/qwen_die_masters/cfg/qfd_link_rx128_rxp.env",
+      "source_blob": "489414374104649d99739b53bc84d35890460c51",
+      "main_blob": "489414374104649d99739b53bc84d35890460c51"
+    },
+    {
+      "path": "physical/qwen_die_masters/signoff/qfd_link_rx128_rxp.sdc",
+      "source_blob": "6359a407ee4032f1bee38711656e9b37640001dd",
+      "main_blob": "6359a407ee4032f1bee38711656e9b37640001dd"
+    }
+  ],
+  "files": [
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/qfd_link_rx128_rxp-1d3c576bbtc/STATUS",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/qfd_link_rx128_rxp-1d3c576bbtc/STATUS",
+      "git_blob": "7abbc32983519815c63ec4bc3538afe4ab872a66",
+      "sha256": "bffa32a90760d5fdc4e579c7c33f02fc915a60952b21b9ff48057b7002406e3b"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/qfd_link_rx128_rxp-1d3c576bbtc/corner_sta.json",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/qfd_link_rx128_rxp-1d3c576bbtc/corner_sta.json",
+      "git_blob": "0465173cf053f836528693c209a7da1ef5e2cb50",
+      "sha256": "6589217e93ebc9443c3fe4bf60b4ebed17dfb450a4cd829c4b1c1703aaca4d89"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/qfd_link_rx128_rxp-1d3c576bbtc/export.log",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/qfd_link_rx128_rxp-1d3c576bbtc/export.log",
+      "git_blob": "ac801fd1f044799821b4eae978a6736fb9ed0427",
+      "sha256": "c6bcc639a241da0b5385c2f4a12f9dbd7f32af7f504f59a3fea3dcec5c8d1289"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/qfd_link_rx128_rxp-1d3c576bbtc/signoff.sdc",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/qfd_link_rx128_rxp-1d3c576bbtc/signoff.sdc",
+      "git_blob": "6359a407ee4032f1bee38711656e9b37640001dd",
+      "sha256": "4c7d0645a7b688fb581af9861af82fdbc5a4863961490a395c41e8dc90d1c8cc"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/qfd_link_rx128_rxp-1d3c576bbtc/status",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/qfd_link_rx128_rxp-1d3c576bbtc/status",
+      "git_blob": "847460ccfc1dfdec28ade65020d452299fcbe87f",
+      "sha256": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/abstract.json",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/abstract.json",
+      "git_blob": "aed4831a2c9546b656ff9bbbabdbcbb906a38285",
+      "sha256": "f9f8c80330d9d6fc380e43412af59b8ed72ac4d377ac9c6af78a243b3d966b05"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/export_ff.log",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/export_ff.log",
+      "git_blob": "49610bb2577cd11ccfcc4b67d61bc6f28202046a",
+      "sha256": "4ec9c7da3ecd17532d39c1131d7840a911cadb24cb19cf1f64674ce965b48943"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/export_ff.tcl",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/export_ff.tcl",
+      "git_blob": "fd4419018ed041021ea8371a171bad7f1243bf76",
+      "sha256": "359a758d376c576a23ad0355b4dd787e6b6560df2c70f0aa141038d947e275b1"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/export_ss.log",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/export_ss.log",
+      "git_blob": "1f483231db0e6349c45c377a8afe7f19f82d79df",
+      "sha256": "a35620c1319fd97ada77e89419ccdb646badfce13016137023076e7814e28c63"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/export_ss.tcl",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/export_ss.tcl",
+      "git_blob": "c7509e4d3665548637ee06f4e48e1b0c045f390b",
+      "sha256": "5f5a7971d045efe42bb4d8dff70477052712fd6041028d77621110155c3204c8"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/qfd_link_rx128.lef",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/qfd_link_rx128.lef",
+      "git_blob": "5d6f47c36ac73f89d4957bb67785c7d8e4ce2a3e",
+      "sha256": "7ced226c8da302446b3c584d47d9c2d8334e55242abe138ddf3e371eb9616a98"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/qfd_link_rx128_ff.lib",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/qfd_link_rx128_ff.lib",
+      "git_blob": "1d5dce70148fbbc2bb200bf6785ba88d20575624",
+      "sha256": "498cf6a4e71446ea0682b331a9f95d0d779e5dc66c1b43c3289ae690cd65e0e1"
+    },
+    {
+      "original_path": "physical/variant_fill/qfd_link_rx128_rxp-1d3c576bbtc-f5-lvt/views/qfd_link_rx128/qfd_link_rx128_ss.lib",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/artifacts/views/qfd_link_rx128/qfd_link_rx128_ss.lib",
+      "git_blob": "754bec49acc27e49b0f17a0f8ef8f1bdb6ba2de9",
+      "sha256": "66e19c2a00c9857778f0c1f0a91c078fd728e1108e4c3fccb157ecb9032029f3"
+    },
+    {
+      "original_path": "results/closure_loop/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/verdict.json",
+      "relocated_path": "results/closure_collection_20261010/qfd_link_rx128_rxp_b-4941a227d-tc-lvt/original_verdict.json",
+      "git_blob": "186a83274b46e6cb2e1c238eb16521e374734e30",
+      "sha256": "0deb11f9f15d5a041b8fc73a5305fcf4737333e13af800f9c54eea21898f7bd6"
+    }
+  ]
+}

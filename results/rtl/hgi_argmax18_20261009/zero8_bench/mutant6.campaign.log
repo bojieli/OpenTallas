@@ -1,0 +1,26 @@
+FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=5 idx=0 exp=0 nan=0 range=0
+       Time: 15873949 Scope: tb_hgi_argmax18
+Command exited with non-zero status 1
+	Command being timed: "bash physical/hbm_generic/argmax18/run_bench.sh out6 6"
+	User time (seconds): 58.85
+	System time (seconds): 0.50
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:59.35
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 315188
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 102738
+	Voluntary context switches: 33
+	Involuntary context switches: 91
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 43168
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

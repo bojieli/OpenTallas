@@ -29,7 +29,8 @@ module ot_dsrom_wfc_tok_r3 #(
     parameter integer MAXU   = 8,       // users with a draft block
     parameter integer PU     = 8,       // users with prompt memory
     parameter integer PMAX   = 16,      // prompt positions per user
-    parameter integer G      = 5
+    parameter integer G      = 5,
+    parameter integer HARD_READ = 0 // off by default; separate four-edge master
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -109,6 +110,7 @@ module ot_dsrom_wfc_tok_r3 #(
         if (rst_n && dv && dd[HDR_TYPE +: 4] == MT_DRAFT && d_u < MAXU && dd[DR_N +: 3] <= G)
             for (k = 0; k < G; k = k + 1) if (k < dd[DR_N +: 3]) tv[d_u[UB-1:0] * PMAX + dpk(d_b, k)] <= 1'b1;
     end
+    generate if (HARD_READ == 0) begin : legacy_read
     // DR5: selected entry + identity captured together; tag compare/output one cycle later.
     reg [TW-1:0] e;
     reg e_v, read_v, u_ok;
@@ -126,7 +128,41 @@ module ot_dsrom_wfc_tok_r3 #(
               && (e[TW-1] || e[TW-2-:4]==read_ep)
 `endif
               ;
-    always @(posedge clk) if(read_v) begin pr_qk<=hit;pr_q<=e[NW-1:0];end
+    always @(posedge clk) if(read_v) begin pr_qk<=hit;pr_q<=e[NW-1:0];end    end else begin : hard_read
+        // E1: request lands directly at pin registers. E2: each user reads
+        // one of 16 slots. E3: select one of eight users. E4: tag/output.
+        // Read/write collision semantics are the E2 table snapshot; callers
+        // fence DRAFT visibility before issuing a dependent prompt request.
+        reg [PB-1:0] pos_q;
+        reg [UB-1:0] user_q, user_b;
+        reg ok_q, ok_b, ok_e;
+        reg [NW-PB-1:0] hi_q, hi_b, hi_e;
+        reg [3:0] ep_q, ep_b, ep_e;
+        reg [2:0] valid_pipe;
+        reg [TW:0] bank [0:MAXU-1];
+        reg [TW:0] entry_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) valid_pipe <= 0;
+            else valid_pipe <= {valid_pipe[1:0],pr_re};
+        always @(posedge clk) begin
+            pos_q <= pr_pos[PB-1:0]; user_q <= pr_user[UB-1:0];
+            ok_q <= pr_user < MAXU; hi_q <= pr_pos[NW-1:PB]; ep_q <= pr_blk;
+            user_b <= user_q; ok_b <= ok_q; hi_b <= hi_q; ep_b <= ep_q;
+            entry_q <= bank[user_b]; ok_e <= ok_b; hi_e <= hi_b; ep_e <= ep_b;
+        end
+        for (genvar u = 0; u < MAXU; u = u + 1) begin : bank_read
+            always @(posedge clk) bank[u] <= {tv[u*PMAX+pos_q],tb[u*PMAX+pos_q]};
+        end
+        wire hard_hit = ok_e && entry_q[TW] && entry_q[NW+:NW-PB] == hi_e
+`ifndef OT_WFCTOK_MUT_NOEPOCH
+            && (entry_q[TW-1] || entry_q[TW-2-:4] == ep_e)
+`endif
+            ;
+        always @(posedge clk) if (valid_pipe[2]) begin
+            pr_qk <= hard_hit; pr_q <= entry_q[NW-1:0];
+        end
+    end endgenerate
+
 endmodule
 
 module dsfd_wfc_tok_r3 #(
@@ -156,4 +192,25 @@ module dsfd_wfc_tok_r3 #(
     assign t_cfg = {cu, cp, cg};
     assign t_pr = {qk, q};
     assign t_ft = fl;
+endmodule
+
+// Separate opt-in physical master; original and r3 defaults remain unchanged.
+module dsfd_wfc_tok_hard (
+    input wire [0:0] ck, rst,
+    input wire [54:0] f_c, output wire [51:0] t_cfg,
+    input wire [512:0] f_dw, input wire [35:0] f_pr,
+    output wire [21:0] t_pr, output wire [0:0] t_ft
+);
+    wire rn;
+    ot_dsrom_mtp_rstsync rs (.clk(ck[0]),.rst_n_async(rst[0]),.rst_n(rn));
+    reg [54:0] c_q; always @(posedge ck[0]) c_q <= f_c;
+    wire [9:0] cu; wire [20:0] cp,cg,q; wire qk,ft;
+    ot_dsrom_wfc_tok_r3 #(.HARD_READ(1)) tok (
+        .clk(ck[0]),.rst_n(rn),.c_we(c_q[54]),.c_sel(c_q[52+:2]),
+        .c_user(c_q[42+:10]),.c_pos(c_q[21+:21]),.c_val(c_q[20:0]),
+        .cfg_users(cu),.cfg_prompt_len(cp),.cfg_gen_len(cg),
+        .dw_v(f_dw[512]),.dw_d(f_dw[511:0]),.pr_re(f_pr[35]),
+        .pr_user(f_pr[25+:10]),.pr_pos(f_pr[4+:21]),.pr_blk(f_pr[3:0]),
+        .pr_q(q),.pr_qk(qk),.fault(ft));
+    assign t_cfg={cu,cp,cg}; assign t_pr={qk,q}; assign t_ft=ft;
 endmodule

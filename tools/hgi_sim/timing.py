@@ -36,7 +36,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import hbm_generic_iface as HGI  # noqa: E402
 import hdc_isa_v41 as I  # noqa: E402
 
-from .records import ISTRIDE_BCAST, rec_bytes  # noqa: E402
+from .records import rec_bytes  # noqa: E402
 
 CAL = json.loads((Path(__file__).with_name("calibration.json")).read_text())
 ROOT = Path(__file__).resolve().parents[2]
@@ -94,26 +94,31 @@ def cv(sec, key):
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
 def expand(recs, pos, token=0, rank=0):
-    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay and predicates."""
-    out, pc, loop, L = [], 0, None, 0
+    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay (two levels: CTL.LOOP
+    param[15:0] count, [16] level) and predicates.  L is the level-0 counter (L1 is not used by the cost model)."""
+    out, pc, loops = [], 0, []
     while pc < len(recs):
         r = recs[pc]
         p = r.pred
+        L = next((x[2] for x in reversed(loops) if x[3] == 0), 0)
+        L1 = next((x[2] for x in reversed(loops) if x[3] == 1), 0)
         if not (p == "ALWAYS" or (p == "POS0" and pos == 0) or (p == "NOT_POS0" and pos != 0)
-                or (p == "LAST_ITER" and loop and L == loop[1] - 1)):
+                or (p == "LAST_ITER" and loops and loops[-1][2] == loops[-1][1] - 1)):
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "LOOP":
-            loop, L, pc = (pc + 1, r.param), 0, pc + 1
+            loops.append([pc + 1, r.param & 0xFFFF, 0, (r.param >> 16) & 1])
+            pc += 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
-            L += 1
-            if L < loop[1]:
-                pc = loop[0]
+            loops[-1][2] += 1
+            if loops[-1][2] < loops[-1][1]:
+                pc = loops[-1][0]
                 continue
-            loop, L, pc = None, 0, pc + 1
+            loops.pop()
+            pc += 1
             continue
-        out.append((pc, L))
+        out.append((pc, L, L1))
         if r.unit == "CTL" and r.op == "END":
             break
         pc += 1
@@ -126,12 +131,12 @@ class Dyn:
 
 
 def eff(d, dyn, L):
-    if d.dyn_sel == 31:                       # C3b indexed descriptor: timing uses index 0 (values are not modelled)
-        base = d.base
+    if d.indexed:                             # C3b indexed descriptor: timing uses id 0 (values are not modelled)
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride
     else:
-        base = d.base + L * d.lstride + dyn.v[d.dyn_sel] * d.dyn_mul
-    n = dyn.v[d.n_sel] if d.n_sel else d.n
-    ist = 0 if d.istride == ISTRIDE_BCAST else (d.istride or 1)
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride + dyn.v[d.dyn_sel] * d.dyn_mul
+    n = dyn.v[d.n_sel] if 0 < d.n_sel < 63 else d.n
+    ist = 0 if d.ibcast else (d.istride or 1)
     return base, n, d.m, d.stride, ist
 
 
@@ -152,8 +157,8 @@ def intervals(d, dyn, L):
     if 1 < m <= 64 and st:
         out = []
         for o in range(m):
-            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "dyn_sel": 0, "dyn_mul": 0,
-                             "n_sel": 0, "n": n})
+            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "l1stride": 0, "dyn_sel": 0,
+                             "dyn_mul": 0, "n_sel": 0, "n": n, "indexed": 0})
             out.append(interval(sub, dyn, 0))
         return out
     return [interval(d, dyn, L)]
@@ -163,15 +168,16 @@ def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
-    for d in r.desc.values():
-        if d.dyn_sel == 31:                   # the index word the dispatcher reads
-            reads.append(("VM", d.lstride, d.lstride + 1))
     for kind, iv in getattr(r, "implicit", ()):
         (writes if kind == "w" else reads).append(iv)
+    half = r.unit == "SU" and r.sut is not None and r.sut.get("b_half")
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
             continue
-        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))
+        if half and k in ("B", "D") and not (0 < d.n_sel < 63):
+            # b_half: B / D are read at inner index i >> 1 (adjacent-pair tables), so the span is ceil(n / 2)
+            d = type(d)(**{**d.__dict__, "n": (d.n + 1) // 2})
+        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))      # I (id table): a read
     if r.unit == "SU" and r.sut and r.sut.get("c_pair") and "A" in r.desc:
         pass                                             # partner lies inside A's head span (aligned)
     return reads, writes
@@ -221,7 +227,10 @@ def su_cost(r, dyn, L):
         f["rso"] = max(1, r.desc["R"].stride)
     lay = VC.layout(f, 1024, 256)
     depth = lay["dR"] if t["red"] else lay["dP"]
-    return lay["nv"] + depth + cv("units", "SU.issue_overhead"), f"SU model nv {lay['nv']} + depth {depth}"
+    hbm = any(d.space == "HBM" for d in r.desc.values())       # an HBM source pays the first access before row 0
+    fa = first_access() if hbm else 0.0
+    return lay["nv"] + depth + cv("units", "SU.issue_overhead") + fa, \
+        f"SU model nv {lay['nv']} + depth {depth}" + (f" + HBM first access {fa:.0f}" if hbm else "")
 
 
 TRANSPORT = cv("hbm", "fmt3_transport")       # bytes moved per code byte (fmt3 line stride / codes)
@@ -257,7 +266,7 @@ def cost(r, dyn, L, cfg=None):
         c, how = su_cost(r, dyn, L)
         return c, ("measured_depth_model" if MEAS.get("SU.model_check", {}).get("value") else "model"), how
     if u == "FUSED":
-        seg = r.param & 0xFF
+        seg = (r.param >> 6) & 0xFF
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
@@ -282,8 +291,11 @@ def cost(r, dyn, L, cfg=None):
     if u == "COLL":
         return cv("units", f"COLL.{op}"), CAL["units"][f"COLL.{op}"]["grade"], op
     if u == "ARGMAX":
-        _, n, m, _, _ = eff(r.desc["A"], dyn, L)
-        return 20 + n * m * cv("units", "ARGMAX.LOCAL.per_elem"), "estimate", "argmax"
+        a = r.desc["A"]
+        _, n, m, _, _ = eff(a, dyn, L)
+        if a.space == "STREAM":
+            return 20 + n * m * cv("units", "ARGMAX.LOCAL.per_elem"), "estimate", "argmax on the streamed logits"
+        return 20 + n * m * cv("units", "ARGMAX.LOCAL.vm_per_elem"), "measured", "argmax reading VM"
     if u == "CTL":
         return 1, "estimate", "ctl"
     raise KeyError((u, op))
@@ -304,13 +316,22 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     n = len(ex)
     units = HGI.UNITS
     costs, fps = [], []
-    for (k, L) in ex:
+    for (k, L, L1) in ex:
         r = recs[k]
-        dyn.v[4] = L
+        dyn.v[4], dyn.v[8] = L, L1
         costs.append(cost_fn(r, dyn, L))
         fps.append(footprint(r, dyn, L))
+    dread = []
+    for (k, L, L1) in ex:
+        r = recs[k]
+        if "I" in r.desc and any(d.indexed for d in r.desc.values()):
+            dyn.v[4], dyn.v[8] = L, L1
+            dread.append([interval(r.desc["I"], dyn, L)])
+        else:
+            dread.append([])
     # true dependences (exact intervals): producer = last writer of an overlapping region (RAW / WAW), readers since
     deps = [[] for _ in range(n)]
+    ddeps = [[] for _ in range(n)]     # WAR on an indexed record's I table: the id is read at dispatch (spec 2.2.4)
     writers, readers = [], []          # (interval, j)
     for i in range(n):
         rd, wr = fps[i]
@@ -324,7 +345,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                     deps[i].append(j)
             for (x, j) in readers:
                 if overlap(iv, x):
-                    deps[i].append(j)
+                    (ddeps if x in dread[j] else deps)[i].append(j)
         for iv in wr:
             writers = [(w, j) for (w, j) in writers if not (w[0] == iv[0] and iv[1] <= w[1] and w[2] <= iv[2])]
             writers.append((iv, i))
@@ -332,6 +353,20 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         for iv in rd:
             readers.append((iv, i))
         deps[i] = sorted(set(deps[i]))
+        ddeps[i] = sorted(set(ddeps[i]) - set(deps[i]))
+    # STREAM producer -> consumer pairs (credit-ordered: the consumer runs alongside its producer, no wait bit)
+    tails = CAL["units"].get("STREAM.tail", {}).get("value", {})
+    sdep, last_prod = [None] * n, {}
+    for i, (k, *_) in enumerate(ex):
+        r = recs[k]
+        for key in ("A", "B", "C", "D"):
+            d = r.desc.get(key)
+            if d is not None and d.space == "STREAM" and d.base in last_prod:
+                sdep[i] = last_prod[d.base]                 # every consumer of the stream rides its producer
+        for key in ("O", "R"):
+            d = r.desc.get(key)
+            if d is not None and d.space == "STREAM":
+                last_prod[d.base] = i
     cpc = CAL["cp"]
     fetch_lat, fetch_iss, req = cpc["fetch_latency"]["value"], cpc["fetch_issue_cycles"]["value"], \
         cpc["fetch_req_bytes"]["value"]
@@ -339,8 +374,15 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     dwire, rwire, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
     if not wires:
         dwire = rwire = 0
-    nm_rd = [set(getattr(recs[k], "reads", ())) for k, _ in ex]
-    nm_wr = [set(getattr(recs[k], "writes", ())) for k, _ in ex]
+    edges = cpc.get("dispatch_edges", {}).get("value", {}) if wires else {}
+
+    def wire_of(rec):
+        """per-unit dispatch / retire wire stages (R25G floorplan edges where priced, else the estimate)"""
+        if rec.unit == "FUSED" and rec.op.startswith("QDQ") and "FUSED.QDQ" in edges:
+            return edges["FUSED.QDQ"]
+        return edges.get(rec.unit, dwire)
+    nm_rd = [set(getattr(recs[k], "reads", ())) for k, *_ in ex]
+    nm_wr = [set(getattr(recs[k], "writes", ())) for k, *_ in ex]
     # record byte offsets in the image (for fetch); loop replays hit the ring when the body fits
     offs, o = [], 0
     for r in recs:
@@ -373,15 +415,18 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     outstanding_end = defaultdict(float)      # per unit: retire time of the last dispatched record
     cp_t = 0.0
     dec_t = 0.0
+    ret_w = defaultdict(lambda: float(rwire))             # retire wire of each unit's last record
     hol_block = [0.0] * n
     wait_block = [0.0] * n
+    why = [None] * n                          # S2: (ready, wait, queue, cp, wait unit) of each dispatch
     cp_busy = 0.0
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         r = recs[k]
         c = costs[i][0]
         u = r.unit
         if mode == "S0":
-            t0 = max([end[j] for j in deps[i]] + [last_end_unit[u] if u not in PIPELINED else 0.0])
+            t0 = max([end[j] for j in deps[i]] + [start[j] for j in ddeps[i]] +
+                     [last_end_unit[u] if u not in PIPELINED else 0.0])
             if u in PIPELINED and unit_starts[u]:
                 t0 = max(t0, unit_starts[u][-1] + PIPELINED[u])
             start[i] = t0
@@ -389,20 +434,20 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             nch = (1 if r.sut is not None else 0) + len(r.descs_in_order())
             dcyc = 0.0 if mode in ("S1",) else cpc["decode_header"]["value"] + nch * cpc["decode_per_chunk"]["value"]
             alat = 0.0 if mode in ("S1",) else cpc["addr_latency"]["value"]
-            nidx = sum(1 for d in r.desc.values() if d.dyn_sel == 31)
+            nidx = sum(1 for d in r.desc.values() if d.indexed)
             f_r = fetch_ready(i, k, L)
             dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2", "SX") else (dec_t + dcyc)
             ready = dec_t + alat
-            wt = 0.0
+            wt, wun = 0.0, None
             for b, un in enumerate(units):
-                if r.wait >> b & 1:
-                    wt = max(wt, outstanding_end[un] + rwire)
+                if r.wait >> b & 1 and outstanding_end[un] + ret_w[un] > wt:
+                    wt, wun = outstanding_end[un] + ret_w[un], un
             q = unit_starts[u]
             qt = q[-qd] if len(q) >= qd else 0.0
             if nidx:
                 # C3b: the dispatcher reads the index word only after its producer retired (the wait is satisfied)
-                ivs = [("VM", d.lstride, d.lstride + 1) for d in r.desc.values() if d.dyn_sel == 31]
-                prod = max([end[j] + rwire for j in deps[i]
+                ivs = [interval(r.desc["I"], dyn, L)] if "I" in r.desc else []
+                prod = max([end[j] + ret_w[recs[ex[j][0]].unit] for j in deps[i]
                             if any(overlap(w_, iv) for w_ in fps[j][1] for iv in ivs)] + [0.0])
                 ready = max(ready, prod + cpc["indexed_read"]["value"] * nidx)
             if mode == "S1":
@@ -420,16 +465,24 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                 cp_busy += dcyc + cpc["dispatch_cycles"]["value"]
             else:
                 d_t = max(ready, cp_t + cpc["dispatch_cycles"]["value"], wt, qt)
+                why[i] = (ready, wt, qt, cp_t + cpc["dispatch_cycles"]["value"], wun)
                 wait_block[i] = max(0.0, wt - max(ready, cp_t + 1, qt))
                 hol_block[i] = max(0.0, d_t - max(ready, wt, qt))
                 cp_busy += dcyc + cpc["dispatch_cycles"]["value"]
                 cp_t = d_t
             disp[i] = d_t
-            t0 = max(d_t + (dwire if mode != "S1" else 0.0), last_end_unit[u] if u not in PIPELINED else 0.0)
+            t0 = max(d_t + (wire_of(r) if mode != "S1" else 0.0), last_end_unit[u] if u not in PIPELINED else 0.0)
             if u in PIPELINED and q:
                 t0 = max(t0, q[-1] + PIPELINED[u])
             start[i] = t0
-        end[i] = start[i] + c
+        if sdep[i] is not None:
+            j = sdep[i]
+            start[i] = max(start[i], start[j])
+            end[i] = max(start[i] + c, end[j] + tails.get(u, 20))
+        else:
+            end[i] = start[i] + c
+        if mode not in ("S0", "S1"):
+            ret_w[u] = wire_of(r) if wires else 0.0
         if u in PIPELINED:
             end[i] = max(end[i], last_end_unit[u])         # in-order retire
         last_end_unit[u] = end[i]
@@ -444,10 +497,15 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                                                        and recs[ex[i][0]].unit not in PIPELINED):
                     races.append(dict(rec=ex[i][0], L=ex[i][1], tag=recs[ex[i][0]].tag, producer=recs[ex[j][0]].tag,
                                       early=round(end[j] - start[i], 1)))
+            for j in ddeps[i]:
+                if disp[j] > start[i] + 1e-9:
+                    races.append(dict(rec=ex[i][0], L=ex[i][1], tag=recs[ex[i][0]].tag, producer=recs[ex[j][0]].tag,
+                                      early=round(disp[j] - start[i], 1),
+                                      kind="I table overwritten before the dispatcher read it"))
     # per-unit busy / idle split: idle caused by true dependences vs by issue (CP, HOL, drain waits)
     per_unit = defaultdict(lambda: dict(busy=0.0, idle_true_dep=0.0, idle_issue=0.0, records=0))
     prev = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         u = recs[k].unit
         pu = per_unit[u]
         pu["records"] += 1
@@ -459,12 +517,12 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         pu["idle_issue"] += gap_issue
         prev[u] = end[i]
     fam = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         fam[recs[k].family or recs[k].tag] += end[i] - start[i]
     return dict(mode=mode, total_cycles=total, records_executed=n, deps=deps, start=start, end=end, disp=disp,
                 costs=costs, ex=ex, races=races, per_unit={k: {a: round(b, 1) for a, b in v.items()}
                                                            for k, v in per_unit.items()},
-                cp_busy=round(cp_busy, 1), hol_block=round(sum(hol_block), 1), wait_block=round(sum(wait_block), 1),
+                why=why, cp_busy=round(cp_busy, 1), hol_block=round(sum(hol_block), 1), wait_block=round(sum(wait_block), 1),
                 family_unit_cycles={k: round(v, 1) for k, v in sorted(fam.items(), key=lambda x: -x[1])})
 
 
@@ -478,7 +536,7 @@ def critical_path(s, recs):
     seen = set()
     while i is not None and i not in seen:
         seen.add(i)
-        k, L = s["ex"][i]
+        k, L, *_ = s["ex"][i]
         path.append(dict(tag=recs[k].tag, L=L, unit=recs[k].unit, start=round(s["start"][i], 1),
                          end=round(s["end"][i], 1)))
         cands = [(s["end"][j], j) for j in s["deps"][i]]
@@ -504,7 +562,7 @@ def reorder(recs, pos, cost_fn=cost, rebuild=None):
     producer ends), so the program's results are unchanged."""
     s0 = schedule(recs, pos, "S0", cost_fn=cost_fn)
     first = {}
-    for i, (k, L) in enumerate(s0["ex"]):
+    for i, (k, L, *_) in enumerate(s0["ex"]):
         first.setdefault(k, (s0["start"][i], s0["end"][i], i))
     out, seg = [], []
 
@@ -533,7 +591,7 @@ def rebuild_waits(recs):
     return assign_waits(out)
 
 
-def list_schedule(recs, pos, cost_fn=cost):
+def list_schedule(recs, pos, cost_fn=cost, alpha=0.0):
     """Compiler pass: CP-aware list scheduling of a straight-line record stream (no LOOP).  Records keep every
     program-order hazard edge (RAW / WAR / WAW on region names); among the records whose predecessors are all
     issued, issue next the one that would START earliest on the modelled command processor (in-order dispatch,
@@ -549,21 +607,23 @@ def list_schedule(recs, pos, cost_fn=cost):
     cst = [cost_fn(r, dyn, 0)[0] for r in body]
     rd = [set(getattr(r, "reads", ())) for r in body]
     wr = [set(getattr(r, "writes", ())) for r in body]
+    hrd = [set(_hz(r, "reads")) for r in body]           # legality (program-order hazard edges)
+    hwr = [set(_hz(r, "writes")) for r in body]
     preds = [set() for _ in range(n)]
     last_w, readers = {}, {}
     for i in range(n):
-        for x in rd[i]:
+        for x in hrd[i]:
             if x in last_w:
                 preds[i].add(last_w[x])
-        for x in wr[i]:
+        for x in hwr[i]:
             if x in last_w:
                 preds[i].add(last_w[x])
             for j in readers.get(x, ()):
                 preds[i].add(j)
-        for x in wr[i]:
+        for x in hwr[i]:
             last_w[x] = i
             readers[x] = []
-        for x in rd[i]:
+        for x in hrd[i]:
             readers.setdefault(x, []).append(i)
         if body[i].unit == "SU" and False:
             pass
@@ -591,7 +651,7 @@ def list_schedule(recs, pos, cost_fn=cost):
             qt = q[-qd] if len(q) >= qd else 0.0
             d_t = max(cp_t + 1, wt, qt)
             st = max(d_t + dw, unit_end.get(r.unit, 0.0))
-            key = (st, -blev[i], i)
+            key = (st - alpha * blev[i], -blev[i], i)
             if best is None or key < best[0]:
                 best = (key, i, d_t, st)
         _, i, d_t, st = best
@@ -618,3 +678,158 @@ def list_schedule(recs, pos, cost_fn=cost):
         if hasattr(r, "src"):
             r2.src = r.src
     return b.recs
+
+
+def _hz(r, k):
+    """legality names: hz_reads / hz_writes when the caller set them (e.g. the union over per-die images), else the
+    record's own region names (which also set its wait mask); plus the STREAM ids the record pushes / pops (a stream
+    orders its producer before its consumer by credits, without a wait bit, but a reorder must keep that order)"""
+    base = getattr(r, "hz_" + k, None)
+    base = list(base if base is not None else getattr(r, k, ()))
+    keys = ("O", "R") if k == "writes" else ("A", "B", "C", "D")
+    return base + [f"~STREAM{d.base}" for kk, d in r.desc.items() if kk in keys and d.space == "STREAM"]
+
+
+def _hazard(a, b):
+    """Region-name hazard between two records (RAW / WAR / WAW); CTL records other than NOP are barriers."""
+    if (a.unit == "CTL" and a.op != "NOP") or (b.unit == "CTL" and b.op != "NOP"):
+        return True
+    ra, wa = set(_hz(a, "reads")), set(_hz(a, "writes"))
+    rb, wb = set(_hz(b, "reads")), set(_hz(b, "writes"))
+    return bool(wa & (rb | wb)) or bool(ra & wb)
+
+
+def asap_seed(recs):
+    """A restart point: each record (in program order) placed directly after the last earlier record it has a hazard
+    with (CTL barriers stay), so every producer -> consumer chain starts at its earliest legal slot."""
+    out = []
+    for r in recs:
+        p = len(out)
+        while p > 0 and not _hazard(out[p - 1], r):
+            p -= 1
+        out.insert(p, r)
+    return out
+
+
+def improve_order(recs, pos, cost_fn=cost, rounds=6, seeds=("given", "asap"), ils=True, **kw):
+    """The compiler's CP-aware order: improve_order_seed from each seed (the given order; the ASAP re-seed), the
+    cheaper kept; then one iterated-local-search sweep (each record relocated to its ASAP slot, a short re-search,
+    kept when the objective drops) to leave the local optimum."""
+    for i, r in enumerate(recs):                 # ids of the INPUT order (the caller maps the permutation by them)
+        r._cid = i
+    best = None
+    for sd in seeds:
+        start = list(recs) if sd == "given" else asap_seed(list(recs))
+        o, info = improve_order_seed(start, pos, cost_fn=cost_fn, rounds=rounds, **kw)
+        info = dict(info, seed=sd)
+        if best is None or info["output_cycles"] < best[1]["output_cycles"] - 0.5:
+            best = (o, info)
+    order, info = best
+    if ils:
+        bt, moved = info["output_cycles"], 0
+        cf = info.pop("_cf")
+        idx = 0
+        while idx < len(order):
+            r = order[idx]
+            p = idx
+            if not (r.unit == "CTL" and r.op != "NOP"):
+                while p > 0 and not _hazard(order[p - 1], r):
+                    p -= 1
+            if p < idx:
+                o = order[:p] + [r] + order[p:idx] + order[idx + 1:]
+                o2, i2 = improve_order_once(o, pos, cost_fn=cf, passes=2, alphas=(), **kw)
+                if i2["output_cycles"] < bt - 0.5:
+                    order, bt, moved = [x for x in o2], i2["output_cycles"], moved + 1
+            idx += 1
+        info = dict(info, ils_moves=moved, output_cycles=bt)
+        order = rebuild_waits(order)
+    info.pop("_cf", None)
+    return order, info
+
+
+def improve_order_seed(recs, pos, cost_fn=cost, rounds=6, **kw):
+    """improve_order_once repeated on its own output until a round gains < 1 cycle (the list schedules restart from
+    the improved order, so a later round can escape the previous round's local optimum)."""
+    out, info = improve_order_once(recs, pos, cost_fn=cost_fn, **kw)
+    first = info["input_cycles"]
+    hist = [info["output_cycles"]]
+    for _ in range(rounds - 1):
+        o2, i2 = improve_order_once(out, pos, cost_fn=cost_fn, **kw)
+        if i2["output_cycles"] > hist[-1] - 1.0:
+            break
+        out, info = o2, i2
+        hist.append(i2["output_cycles"])
+    info = dict(info, input_cycles=first, rounds=hist, _cf=info.get("_cf"))
+    return out, info
+
+
+def improve_order_once(recs, pos, cost_fn=cost, passes=16, alphas=(0.05, 0.2, 1.0), exhaustive=False, steady=True):
+    """Compiler pass after list scheduling: CP-aware local search on a straight-line record stream.
+
+    Start from the best list schedule over `alphas`, then repeatedly try to hoist each record to the earliest slot it
+    may legally occupy (just after the last earlier record it has a region hazard with) or to just after its unit's
+    previous record; keep a move when the modelled S2 time of the stream (waits recomputed) drops.  A hoist is the
+    fix for a drain over-wait: a consumer placed right behind its producer drains that unit before the next,
+    independent record of the unit is dispatched.  Only hazard-free moves are made, so the results are unchanged
+    (and the race check of `schedule` re-verifies every dependence on exact address intervals).
+    Returns (records with waits rebuilt, dict of the search)."""
+    memo = {}
+
+    def cf(r, dyn, L):
+        k = getattr(r, "_cid", None)
+        if k is None:
+            return cost_fn(r, dyn, L)
+        if (k, L) not in memo:
+            memo[(k, L)] = cost_fn(r, dyn, L)
+        return memo[(k, L)]
+    base = [r for r in recs]
+    for i, r in enumerate(base):
+        if getattr(r, "_cid", None) is None:
+            r._cid = i
+
+    import copy as _cp
+
+    def total(order):
+        """steady: the cost of the stream run twice back to back (a layer followed by the next layer of its type),
+        so an order that overlaps its tail with the next layer's head is preferred; else one copy"""
+        seq = order + [_cp.copy(x) for x in order] if steady else order
+        return schedule(rebuild_waits(seq), pos, "S2", cost_fn=cf)["total_cycles"]
+    t_in = total(base)
+    best, bt, ba = base, t_in, None
+    for a in alphas:
+        o = [x for x in list_schedule(rebuild_waits(base), pos, cost_fn=cf, alpha=a)]
+        t = total(o)
+        if t < bt:
+            best, bt, ba = o, t, a
+    order = list(best)
+    moves = 0
+    for _ in range(passes):
+        improved = False
+        i = 1
+        while i < len(order):
+            r = order[i]
+            if r.unit == "CTL" and r.op != "NOP":
+                i += 1
+                continue
+            e = i
+            while e > 0 and not _hazard(order[e - 1], r):
+                e -= 1
+            cands = set(range(e, i)) if exhaustive else {e}
+            for j in range(i - 1, e - 1, -1):
+                if order[j].unit == r.unit:
+                    cands.add(j + 1)
+                    break
+            done = False
+            for p in sorted(cands):
+                if p >= i:
+                    continue
+                o2 = order[:p] + [r] + order[p:i] + order[i + 1:]
+                t2 = total(o2)
+                if t2 < bt - 0.5:
+                    order, bt, moves, improved, done = o2, t2, moves + 1, True, True
+                    break
+            i += 1
+        if not improved:
+            break
+    return rebuild_waits(order), dict(input_cycles=round(t_in, 1), list_alpha=ba, moves=moves,
+                                      output_cycles=round(bt, 1), _cf=cf)
