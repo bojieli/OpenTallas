@@ -1,0 +1,20 @@
+FATAL: topk_k6_n384_m1_asc word 65536 = 000000c0, expected 00000005
+FATAL: topk_k6_n384_m1_asc word 65537 = 00000029, expected 00000009
+FATAL: topk_k6_n384_m1_asc word 65539 = 0000016a, expected 00000029
+FATAL: topk_k6_n384_m1_asc word 65540 = 00000005, expected 000000c0
+IDX topk_k512_n4096_m1_asc: fault as expected
+IDX topk_k1_n64_m3: exact (558 cycles)
+IDX topk_k2_n64_m2: exact (404 cycles)
+IDX topk_k8_n128_m2: exact (908 cycles)
+IDX topk_k512_n2048_m2: exact (24830 cycles)
+FATAL: topk_k8_n128_m1_asc word 65536 = 00000077, expected 00000005
+FATAL: topk_k8_n128_m1_asc word 65537 = 0000005d, expected 00000009
+FATAL: topk_k8_n128_m1_asc word 65539 = 00000056, expected 00000037
+FATAL: topk_k8_n128_m1_asc word 65540 = 00000037, expected 00000056
+IDX topk_k9_n128_m1_asc: fault as expected
+IDX topk_nan_fails_closed: fault as expected
+FATAL: IDX unit 2 vectors failed
+- rtl/hbm_accel/generic/idx/tb_hgi_idx_unit.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.495 s; speed 47.757 us/s
+- Verilator: cpu 0.330 s on 1 threads; allocated 13 MB
