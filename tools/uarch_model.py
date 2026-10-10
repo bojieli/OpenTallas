@@ -60,6 +60,23 @@ def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15)
         adoption="requires endpoint accepted counter successor, exact mechanism gate, and option-B physical closure")
 
 
+def qwen_su_endpoint_accept_model(os_stages=1):
+    """Endpoint acceptance count before its opt-in master is built."""
+    return dict(schema="opentallas.qwen-su-endpoint-accept.v1",opt_in_default=False,
+        replicas=1,macs_per_cycle_added=0,memory_bytes_per_cycle_added=0,
+        output_bits_per_cycle_added=24,register_bits_added=24*(1+os_stages),
+        counter_bits=24,counter_epoch="same rs reset as actual vstream/embedding endpoint; no per-layer reset",
+        accept_condition="go_s && s_ready: after embedding prefetch, exactly ot_hdc_vstream accept",
+        status_alignment="accepted counter included in same OS bundle as idle/progress/rows",
+        output_latency_cycles=os_stages,added_latency_cycles=0,
+        routing_tracks_added=24,mux_demux_cost="none",fanout="one sequencer count input",
+        area_qualification="48 sequential bits and24-bit increment/accept gate before synthesis",
+        routing_capacity_qualification="E issue/status+accept24,S constant pins,N VM pins; physical capacity pending",
+        floorplan_slot_fit="existing SU777.6x2058.48um envelope before synthesis; not yet physically qualified",
+        latency_composition="counter uses existing OS path, no extra stages; compose SU OS+seq IS+seq OS+interior relay+ctlm IS from real relay inventory",
+        qualification="minimum real embedding-prefetch/vstream-control gate, lane arithmetic isolated; full controller integration and physical route gates pending")
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
