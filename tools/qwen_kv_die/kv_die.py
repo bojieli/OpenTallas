@@ -538,6 +538,12 @@ def masters(m, k=1, port_bits=None):
         for p, bits in sorted(ports.items()):
             if p in mm.ports:
                 continue
+            if mst == 'qkd_rhead' and p in ('ck', 'rst_n'):
+                # the MX head's clock / reset are W-face M4 pins (as its route, cfg qkd_rhead_c): with M8 area pins
+                # the mirrored origin needs H = 12 mod 30 nm, which no 2.16-um frame - 0.024 meets (die_kv9: 'site grid
+                # never meets the legal residues mod 240'); M4 alone needs H = 0 mod 6 nm (453.576 is)
+                mm.face(p, 1, 'W', 'M4', mm.h / 2 + (8.0 if p == 'ck' else -8.0), 1)
+                continue
             if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))):
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
                 mm.area(p, 1, min(mm.w - 1.0, max(1.0, mm.w / 2 + ((j % 12) - 6) * 1.6)),
