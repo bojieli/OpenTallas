@@ -1,245 +1,117 @@
 `timescale 1ps/1fs
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
-// hbm-forks / hbm-phys [svc] 2026-10-10: svc-side DMA STREAM (hgi-takeover.log "SPEC for hbm-forks: svc-side DMA stream
-// <-> hgi-takeover DMA front", agreed 03:15 PT) -- the hub unit that terminates the die nets.
+// hbm-phys [svc] 2026-10-10: svc-side DMA STREAM v2 (agreed with hgi-1010/c, hgi-1010.log "AGREED svc DMA stream v2").
 //
 //   request  dq  = {v, tag 4, nsec 9, addr 37}  (front -> svc; addr = die byte address of the first 32-B sector, stack
-//                  bits [36:35]; the stack-local sector s = addr[34:5] lives in PC s[6:2] ^ s[11:7] ^ s[16:12]
-//                  (ot_hbm_loader_kport_address), sector address s)
+//                  bits [36:35]; the stack-local sector s = addr[34:5] lives in PC r[4:0] ^ r[9:5] ^ r[14:10], r = s >> 2
+//                  (ot_hbm_loader_kport_address)); nsec 1..256
 //   accept       the front holds dq until it sees dq_rdy; dq_rdy is this unit's register, so a request is taken when
 //                the pin-flopped dq is valid and dq_rdy was high one cycle earlier (the cycle the front sampled it)
-//   data     dd  = 8 lanes x {v, fault, tag 4, idx 8, data 256} (lane l = idx % 8, per lane in idx order, a request's
-//                  sectors before the next request's on every lane), one beat a lane only with a credit (dd_cr pulses,
-//                  CR0 initial = the front's lane buffer depth)
+//   data         32 lanes a stack, lane p = PC p, each {v, fault, tag 4, idx 8, data 256}: every sector of a request
+//                leaves exactly once, on the lane of the PC that stores it; no ordering rule (the front places a beat by
+//                tag + idx).  The lanes leave per GROUP: group k's port carries lanes 4k .. 4k+3 on the svc N face at
+//                the group's x (die nets t_hgi_dsd<k> 1,080 b / f_hgi_dsc<k> 4 b), so nothing converges along the strip.
+//   credit       per-lane pulses from the front, CR0 initial (= the front's lane buffer LD); never a beat without one.
 //
-// Structure (one stack; the hub sits mid-strip, its PCs split into a WEST and an EAST side, SIDE[p] = 1: PC p east):
-//   R  request FIFO (pin-flopped dq, depth 8) -> request start: the request's sectors get a contiguous range of the
-//      stack's sector SEQUENCE G starting on a fresh row slot (G0 = the next G multiple of 4 + s % 4: every HBM row of
-//      4 sectors is one row slot gq = G / 4, never shared by two requests); the request queue RQ (NQ entries {tag, G0,
-//      nsec}) is the lanes' order.
-//   I  issue: up to two rows a cycle in row order, each to its PC (command {v, pc5, gq10, row28, 3'd0}) when the PC has
-//      a hub credit (DH rows in flight a PC) and the row's G lies inside the reorder window (G < Gmin + 8 DP, Gmin = the
-//      slowest lane's next G); a command leaves on its PC's side's command chain (cmdw / cmde, two slots a cycle each).
-//   A  arrivals: rows come back on one inward chain a side (aw / ae, {gq10, pc5, data1024}, one row a cycle a side);
-//      each row writes its valid sectors (mask table by gq) into its side's half of the reorder buffer: ROB = 2 sides x
-//      8 banks x DP sectors (bank = G % 8, address = (G / 8) % DP) -- one write a bank a cycle by construction (a side
-//      delivers one row a cycle, its 4 sectors in 4 distinct banks); the PC's hub credit returns.
-//   L  lanes: lane l walks its request's sectors idx = l, l + 8, ... (G = G0 + idx, bank = G % 8); a sector leaves when
-//      it is valid (in either side's half), the lane holds a credit and the lane wins its (side, bank) read port (lanes
-//      on the same request use distinct banks; across requests the older request wins).  ROB read -> lane register.
-// No protection beyond the PS units' (REVIEW_20261009): fault is 0.
+// v1 (one 8-lane hub per stack with a reorder buffer, d8fc11d34) is retired: the 259-um strip cannot carry the
+// convergence (cut capacity ~2.67 kb, 1.9-2.5 kb used on SW cuts 0-3) and it delivered 256 B/cycle a stack, not the
+// 792 B/cycle of 3.80 TB/s a die.
+//
+// ot_svd_req: the request unit beside the e port.  Pin flops, an 8-deep request FIFO, registered dq_rdy; a request
+// is broadcast on both sides' request daisy chains (rqw / rqe -> the PCs, ot_svs_pcs DMA = 1) when every PC's request
+// queue has room: issued - min(pop counts) < QD - 1, the pop counts coming back on each side's min chain (a stale
+// minimum is a smaller one: safe).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_svd_hub #(parameter integer DH = 16, parameter integer DP = 256, parameter integer NQ = 8,
-                    parameter integer CR0 = 64, parameter [31:0] SIDE = 32'hFFFF0000) (
+module ot_svd_req #(parameter integer QD = 16, parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) (
   input wire ck, input wire rn,
   input wire [50:0] dq, output wire dq_rdy,
-  output wire [8*270-1:0] dd, input wire [7:0] dd_cr,
-  output reg  [93:0] cmdw, output reg [93:0] cmde,     // {c1 47, c0 47}, c = {v, pc5, gq10, row28, 3'd0}
-  input wire awv, input wire [1038:0] awd,             // west inward chain {gq10, pc5, data1024}
-  input wire aev, input wire [1038:0] aed);            // east inward chain
-  localparam integer AW = $clog2(DP);
-  localparam integer GW = 16;
-  localparam integer QW = $clog2(NQ);
-  localparam integer MW = AW + 1;                      // mask table index = gq % 2DP
-  localparam integer HW = $clog2(DH + 1);              // hub credits a PC
-  localparam integer CW = $clog2(CR0 + 1);             // lane credit counter (the front's lane buffer depth)
-  // ------------------------------------------------------------------ R: pin flops, request FIFO, dq_rdy
-  reg [50:0] dq_q; reg [7:0] cr_q; reg rdy_q, rdy_d;
+  output reg rqw_v, output reg [42:0] rqw, output reg rqe_v, output reg [42:0] rqe,   // {tag4, nsec9, s30}
+  input wire [7:0] pmw, input wire [7:0] pme);
+  reg [50:0] dq_q; reg rdy_q, rdy_d;
   reg [49:0] rf [0:7]; reg [2:0] rf_h, rf_t; reg [3:0] rf_n;
+  reg [7:0] iss, pmw_q, pme_q;
   wire take = dq_q[50] && rdy_d;
-  wire pop;
+  wire [7:0] pmin = (WEMPTY != 0) ? pme_q : (EEMPTY != 0) ? pmw_q : ($signed(pmw_q - pme_q) < 0) ? pmw_q : pme_q;
+  wire room = $signed(8'(iss - pmin)) < $signed(8'(QD - 1));
+  wire pop = (rf_n != 4'd0) && room;
+  wire [49:0] rh = rf[rf_h];
   always @(posedge ck or negedge rn)
-    if (!rn) begin dq_q <= 51'd0; cr_q <= 8'd0; rdy_q <= 1'b0; rdy_d <= 1'b0; rf_h <= 3'd0; rf_t <= 3'd0; rf_n <= 4'd0; end
-    else begin
-      dq_q <= dq; cr_q <= dd_cr; rdy_d <= rdy_q;
+    if (!rn) begin
+      dq_q <= 51'd0; rdy_q <= 1'b0; rdy_d <= 1'b0; rf_h <= 3'd0; rf_t <= 3'd0; rf_n <= 4'd0; iss <= 8'd0;
+      pmw_q <= 8'd0; pme_q <= 8'd0; rqw_v <= 1'b0; rqe_v <= 1'b0; rqw <= 43'd0; rqe <= 43'd0;
+    end else begin
+      dq_q <= dq; rdy_d <= rdy_q; pmw_q <= pmw; pme_q <= pme;
       if (take) rf_t <= rf_t + 3'd1;
       if (pop) rf_h <= rf_h + 3'd1;
       rf_n <= rf_n + (take ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
       // room for this cycle's take, the two requests the front may still send on rdy seen high, and one spare
       rdy_q <= (rf_n + (take ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0)) <= 4'd4;
+      if (pop) iss <= iss + 8'd1;
+      rqw_v <= pop && WEMPTY == 0; rqe_v <= pop && EEMPTY == 0;
+      if (pop) begin rqw <= {rh[49:46], rh[45:37], rh[34:5]}; rqe <= {rh[49:46], rh[45:37], rh[34:5]}; end
     end
   always @(posedge ck) if (take) rf[rf_t] <= dq_q[49:0];
   assign dq_rdy = rdy_q;
-  // ------------------------------------------------------------------ request queue (lanes' order)
-  reg [3:0] rq_tag [0:NQ-1]; reg [GW-1:0] rq_g0 [0:NQ-1]; reg [8:0] rq_ns [0:NQ-1]; reg [NQ-1:0] rqv;
-  reg [QW-1:0] rq_h, rq_t;
-  // ------------------------------------------------------------------ issue engine
-  reg act; reg [27:0] ir; reg [6:0] ik; reg [GW-3:0] igq; reg [1:0] ia, ilast; reg ifst;
-  reg [GW-1:0] gn;                                     // next free G
-  reg [GW-1:0] gmin;                                   // registered lower bound of every lane's next G
-  wire [49:0] rh = rf[rf_h];
-  wire [29:0] s0 = rh[34:5];
-  wire [8:0] ns0 = rh[45:37];
-  wire [1:0] a0 = s0[1:0];
-  // a request starts on a FRESH row slot gq (never the previous request's last gq: two requests' rows sharing a gq would
-  // share its mask-table entry and its ROB row) at the offset of its first sector within its HBM row
-  wire [GW-1:0] gn4 = (gn + GW'(3)) & ~GW'(3);
-  wire [GW-1:0] g0 = gn4 + GW'(a0);
-  // at most NQ - 1 requests queued: a lane that finished every request waits at rq_t, which is then never valid
-  wire [QW-1:0] rq_t1 = rq_t + 1'b1;
-  wire rq_full = rqv[rq_t1];
-  assign pop = (rf_n != 4'd0) && !act && !rq_full;
-  // two candidate rows
-  wire [27:0] ir1 = ir + 28'd1;
-  wire [4:0] pc0 = ir[4:0] ^ ir[9:5] ^ ir[14:10];
-  wire [4:0] pc1 = ir1[4:0] ^ ir1[9:5] ^ ir1[14:10];
-  reg [HW-1:0] hc [0:31];                              // hub credits in use a PC
-  wire [GW-1:0] ge0 = {igq, 2'b11};
-  wire [GW-1:0] ge1 = ge0 + GW'(4);
-  wire win0 = (GW'(ge0 - gmin)) < GW'(8 * DP);
-  wire win1 = (GW'(ge1 - gmin)) < GW'(8 * DP);
-  wire ok0 = act && win0 && (hc[pc0] != HW'(DH));
-  wire ok1 = ok0 && (ik >= 7'd2) && win1 && (hc[pc1] != HW'(DH)) && (pc1 != pc0);
-  wire sd0 = SIDE[pc0], sd1 = SIDE[pc1];
-  function automatic [3:0] rmask(input fst, input lst, input [1:0] a, input [1:0] l);
-    integer j;
-    begin for (j = 0; j < 4; j = j + 1) rmask[j] = (!fst || j >= a) && (!lst || j <= l); end
-  endfunction
-  wire [3:0] m0 = rmask(ifst, ik == 7'd1, ia, ilast);
-  wire [3:0] m1 = rmask(1'b0, ik == 7'd2, ia, ilast);
-  reg [3:0] mt [0:2*DP-1];
-  always @(posedge ck) begin
-    if (ok0) mt[igq[MW-1:0]] <= m0;
-    if (ok1) mt[MW'(igq + 1'b1)] <= m1;
-  end
-  // ------------------------------------------------------------------ arrivals (registered at the hub), h = 0 W / 1 E
-  reg [1:0] r_v; reg [1038:0] r_d [0:1];
-  always @(posedge ck or negedge rn) if (!rn) r_v <= 2'b00; else r_v <= {aev, awv};
-  always @(posedge ck) begin r_d[0] <= awd; r_d[1] <= aed; end
-  wire [9:0] r_gq [0:1]; wire [4:0] r_pc [0:1]; wire [3:0] r_m [0:1]; wire [AW-1:0] r_ad [0:1];
-  genvar gh;
-  generate for (gh = 0; gh < 2; gh = gh + 1) begin : ar
-    assign r_gq[gh] = r_d[gh][1038:1029]; assign r_pc[gh] = r_d[gh][1028:1024];
-    assign r_m[gh] = mt[r_gq[gh][MW-1:0]]; assign r_ad[gh] = r_gq[gh][AW:1];
-  end endgenerate
-  // ------------------------------------------------------------------ ROB valid bits (side x bank)
-  reg [DP-1:0] vb [0:15];                              // index h * 8 + bank
-  // ------------------------------------------------------------------ lanes
-  reg [QW-1:0] lq [0:7]; reg [8:0] li [0:7]; reg [CW-1:0] lcr [0:7];
-  wire [7:0] lact, lreq, lh; wire [2:0] lbank [0:7]; wire [AW-1:0] laddr [0:7]; wire [GW-1:0] lg [0:7];
-  wire [7:0] ladv;
-  genvar gl;
-  generate for (gl = 0; gl < 8; gl = gl + 1) begin : lv
-    wire [GW-1:0] g = rq_g0[lq[gl]] + GW'(li[gl]);
-    wire vw = vb[{1'b0, g[2:0]}][g[3 +: AW]], ve = vb[{1'b1, g[2:0]}][g[3 +: AW]];
-    assign lact[gl] = rqv[lq[gl]];
-    assign ladv[gl] = lact[gl] && (li[gl] >= rq_ns[lq[gl]]);
-    assign lbank[gl] = g[2:0];
-    assign laddr[gl] = g[3 +: AW];
-    assign lh[gl] = ve;
-    assign lreq[gl] = lact[gl] && !ladv[gl] && (vw || ve) && (lcr[gl] != CW'(0));
-    // the lane's next G for the window: its position, clamped to its request's end
-    assign lg[gl] = !lact[gl] ? gn : rq_g0[lq[gl]] + GW'((li[gl] < rq_ns[lq[gl]]) ? li[gl] : rq_ns[lq[gl]]);
-  end endgenerate
-  // read-port arbitration per (side, bank): lanes on one request never share a bank; across requests the older request
-  // (nearer rq_h) wins
-  wire [7:0] lgnt;
-  generate for (gl = 0; gl < 8; gl = gl + 1) begin : la
-    wire [QW-1:0] age = lq[gl] - rq_h;
-    reg lose; integer o;
-    always @* begin
-      lose = 1'b0;
-      for (o = 0; o < 8; o = o + 1)
-        if (o != gl && lreq[o] && lbank[o] == lbank[gl] && lh[o] == lh[gl] && QW'(lq[o] - rq_h) < age) lose = 1'b1;
-    end
-    assign lgnt[gl] = lreq[gl] && !lose;
-  end endgenerate
-  // ROB sub-banks: one write (its side's chain) and one read (the granted lane) a sub-bank a cycle
-  wire [255:0] rdo [0:15];
-  genvar gb;
-  generate for (gb = 0; gb < 16; gb = gb + 1) begin : bk
-    localparam integer SH = gb / 8, BK = gb % 8;
-    wire par = r_gq[SH][0];                            // row slot parity: banks 0-3 (even gq) / 4-7 (odd gq)
-    wire we = r_v[SH] && (par == (BK >= 4)) && r_m[SH][BK % 4];
-    wire [255:0] wd = r_d[SH][(BK % 4) * 256 +: 256];
-    reg rv; reg [AW-1:0] ra; integer o;
-    always @* begin
-      rv = 1'b0; ra = {AW{1'b0}};
-      for (o = 0; o < 8; o = o + 1) if (lgnt[o] && lbank[o] == BK[2:0] && lh[o] == SH[0]) begin rv = 1'b1; ra = laddr[o]; end
-    end
-    ot_svd_rob_bank #(.DP(DP)) u_b (.ck(ck), .re(rv), .ra(ra), .rd(rdo[gb]), .we(we), .wa(r_ad[SH]), .wd(wd));
-  end endgenerate
-  // ------------------------------------------------------------------ lane output registers
-  reg [7:0] p_v; reg [3:0] p_b [0:7]; reg [3:0] p_t [0:7]; reg [7:0] p_i [0:7];
-  reg [7:0] o_v; reg [3:0] o_t [0:7]; reg [7:0] o_i [0:7]; reg [255:0] o_d [0:7];
-  generate for (gl = 0; gl < 8; gl = gl + 1) begin : lo
-    assign dd[gl*270 +: 270] = {o_v[gl], 1'b0, o_t[gl], o_i[gl], o_d[gl]};
-  end endgenerate
-  // ------------------------------------------------------------------ sequential
-  integer l, b, p, h;
-  always @(posedge ck or negedge rn)
-    if (!rn) begin
-      act <= 1'b0; gn <= {GW{1'b0}}; gmin <= {GW{1'b0}}; rqv <= {NQ{1'b0}}; rq_h <= {QW{1'b0}}; rq_t <= {QW{1'b0}};
-      cmdw <= 94'd0; cmde <= 94'd0; p_v <= 8'd0; o_v <= 8'd0;
-      for (p = 0; p < 32; p = p + 1) hc[p] <= {HW{1'b0}};
-      for (b = 0; b < 16; b = b + 1) vb[b] <= {DP{1'b0}};
-      for (l = 0; l < 8; l = l + 1) begin lq[l] <= {QW{1'b0}}; li[l] <= 9'(l); lcr[l] <= CW'(CR0); end
-    end else begin : seq
-      reg [GW-1:0] mn;
-      // request start
-      if (pop) begin
-        act <= 1'b1; ir <= s0[29:2]; igq <= g0[GW-1:2]; ia <= a0; ifst <= 1'b1;
-        ik <= 7'(({7'd0, a0} + {1'b0, ns0} + 9'd3) >> 2);
-        ilast <= 2'(a0 + ns0[1:0] - 2'd1);
-        gn <= g0 + GW'(ns0);
-        rq_tag[rq_t] <= rh[49:46]; rq_g0[rq_t] <= g0; rq_ns[rq_t] <= ns0; rqv[rq_t] <= 1'b1; rq_t <= rq_t1;
-      end else if (ok0) begin
-        ifst <= 1'b0;
-        ir <= ok1 ? ir + 28'd2 : ir1; igq <= igq + (ok1 ? 2'd2 : 2'd1);
-        ik <= ik - (ok1 ? 7'd2 : 7'd1);
-        if (ik == (ok1 ? 7'd2 : 7'd1)) act <= 1'b0;
-      end
-      // each command on its PC's side's chain (slot 0 = the first row, slot 1 = the second)
-      cmdw <= {ok1 && !sd1, pc1, 10'(igq + 1'b1), ir1, 3'd0, ok0 && !sd0, pc0, 10'(igq), ir, 3'd0};
-      cmde <= {ok1 &&  sd1, pc1, 10'(igq + 1'b1), ir1, 3'd0, ok0 &&  sd0, pc0, 10'(igq), ir, 3'd0};
-      // hub credits: taken at issue, returned at arrival
-      for (p = 0; p < 32; p = p + 1)
-        hc[p] <= hc[p] + (((ok0 && pc0 == 5'(p)) || (ok1 && pc1 == 5'(p))) ? HW'(1) : HW'(0))
-                       - (r_v[0] && r_pc[0] == 5'(p) ? HW'(1) : HW'(0)) - (r_v[1] && r_pc[1] == 5'(p) ? HW'(1) : HW'(0));
-      // ROB valid bits: set by arrivals, cleared by lane reads
-      for (h = 0; h < 2; h = h + 1)
-        for (b = 0; b < 8; b = b + 1)
-          if (r_v[h] && (r_gq[h][0] == (b >= 4)) && r_m[h][b % 4]) vb[h * 8 + b][r_ad[h]] <= 1'b1;
-      for (l = 0; l < 8; l = l + 1) if (lgnt[l]) vb[{lh[l], lbank[l]}][laddr[l]] <= 1'b0;
-      // lanes
-      for (l = 0; l < 8; l = l + 1) begin
-        lcr[l] <= lcr[l] - (lgnt[l] ? CW'(1) : CW'(0)) + (cr_q[l] ? CW'(1) : CW'(0));
-        if (ladv[l]) begin lq[l] <= lq[l] + 1'b1; li[l] <= 9'(l); end
-        else if (lgnt[l]) li[l] <= li[l] + 9'd8;
-        p_v[l] <= lgnt[l]; p_b[l] <= {lh[l], lbank[l]}; p_t[l] <= rq_tag[lq[l]]; p_i[l] <= li[l][7:0];
-        o_v[l] <= p_v[l];
-      end
-      // request queue head: free once every lane has passed it
-      if (rqv[rq_h] && lq[0] != rq_h && lq[1] != rq_h && lq[2] != rq_h && lq[3] != rq_h && lq[4] != rq_h &&
-          lq[5] != rq_h && lq[6] != rq_h && lq[7] != rq_h) begin rqv[rq_h] <= 1'b0; rq_h <= rq_h + 1'b1; end
-      // window bound: gn minus the largest lag of any lane (registered: a stale bound is a smaller, safe one)
-      mn = gn;
-      for (l = 0; l < 8; l = l + 1) if (GW'(gn - lg[l]) > GW'(gn - mn)) mn = lg[l];
-      gmin <= mn;
-    end
-  // output payload reset: no X on the die net before the first beat
-  always @(posedge ck or negedge rn)
-    if (!rn) for (l = 0; l < 8; l = l + 1) begin o_t[l] <= 4'd0; o_i[l] <= 8'd0; o_d[l] <= 256'd0; end
-    else for (l = 0; l < 8; l = l + 1) if (p_v[l]) begin o_t[l] <= p_t[l]; o_i[l] <= p_i[l]; o_d[l] <= rdo[p_b[l]]; end
 endmodule
 
-// one ROB bank: DP x 256 1R1W, read data the cycle after the read (the ASAP7 1R1W macro's registered output)
-module ot_svd_rob_bank #(parameter integer DP = 128) (
-  input wire ck, input wire re, input wire [$clog2(DP)-1:0] ra, output wire [255:0] rd,
-  input wire we, input wire [$clog2(DP)-1:0] wa, input wire [255:0] wd);
-`ifdef OT_SVD_MACRO
-  generate if (DP == 128) begin : m
-    ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ck), .r_ce_in(re), .r_addr_in(ra), .rd_out(rd), .w_ce_in(we), .w_addr_in(wa),
-      .wd_in(wd), .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_svd_stack: one stack's DMA stream for benches (the front's tb and tb_svd2_stack): the request unit, 32 PC units
+// (ot_svs_pcs DMA = 1; PCs 0-15 west, 16-31 east of the request unit, each side one daisy chain, RH stages a link),
+// 8 group units (ot_svs_grp DMA = 1, PC k -> group k / 4, PH stages each way between a PC and its group, like the c_rs
+// / c_cr chains of the segments).  The PHY side of the 32 PCs is a port bundle (tb_svd_phy is the bench model).
+// No SM / PS traffic here (iss_v / PS descriptors tied off): the DMA path alone.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_svd_stack #(parameter integer CR0 = 32, parameter integer QD = 16, parameter integer MF = 32,
+                      parameter integer RH = 1, parameter integer PH = 3) (
+  input wire ck, input wire rn,
+  input wire [50:0] dq, output wire dq_rdy,
+  output wire [32*270-1:0] dd, input wire [31:0] dd_cr,
+  output wire [31:0] k_v, input wire [31:0] k_rdy, output wire [32*30-1:0] k_addr, output wire [32*4-1:0] k_len,
+  output wire [32*17-1:0] k_tag,
+  input wire [31:0] kr_v, output wire [31:0] kr_rdy, input wire [32*17-1:0] kr_tag, input wire [32*4-1:0] kr_beat,
+  input wire [32*256-1:0] kr_data,
+  output wire [7:0] ovf);
+  wire rqw_v, rqe_v; wire [42:0] rqw, rqe; wire [7:0] pmw, pme;
+  ot_svd_req #(.QD(QD)) u_rq (.ck(ck), .rn(rn), .dq(dq), .dq_rdy(dq_rdy), .rqw_v(rqw_v), .rqw(rqw), .rqe_v(rqe_v),
+    .rqe(rqe), .pmw(pmw), .pme(pme));
+  // chain wiring: position i on a side = distance from the request unit (west: PC 15 - i, east: PC 16 + i)
+  wire [31:0] ri_v, ro_v; wire [42:0] ri [0:31]; wire [42:0] ro [0:31]; wire [7:0] po [0:31];
+  wire [31:0] bv, sv; wire [276:0] bq [0:31]; wire [276:0] sq [0:31];
+  wire [31:0] lc_g, lc_p;
+  genvar p;
+  generate for (p = 0; p < 32; p = p + 1) begin : pc
+    localparam integer E = p >= 16;
+    localparam integer POS = E ? p - 16 : 15 - p;
+    localparam integer UP = E ? p - 1 : p + 1;          // nearer the request unit
+    localparam integer DN = E ? p + 1 : p - 1;          // farther
+    localparam integer LAST = POS == 15;
+    wire [7:0] pmo_;
+    if (POS == 0) begin : h
+      ot_svc_vpipe #(.W(43), .N(RH)) u_r (.ck(ck), .rst_n(rn), .v(E ? rqe_v : rqw_v), .d(E ? rqe : rqw), .qv(ri_v[p]), .q(ri[p]));
+      if (E) begin : e_ assign pme = pmo_; end else begin : w_ assign pmw = pmo_; end
+    end else begin : n
+      ot_svc_vpipe #(.W(43), .N(RH)) u_r (.ck(ck), .rst_n(rn), .v(ro_v[UP]), .d(ro[UP]), .qv(ri_v[p]), .q(ri[p]));
+    end
+    // min chain: each PC's registered pm_o (reset) feeds the PC nearer the request unit (one register a link)
+    wire bvp; wire [16:0] bt; wire [3:0] bb; wire [255:0] bd; wire dov, dnook, dnoph; wire [61:0] dod;
+    ot_svs_pcs #(.PCID(p), .END(LAST), .DMA(1), .CR0(CR0), .QD(QD), .MF(MF)) u_p (.ck(ck), .rn(rn), .rdy_q2(1'b1),
+      .iss_v(1'b0), .iss_d(51'd0), .k_v(k_v[p]), .k_rdy(k_rdy[p]), .k_addr(k_addr[p*30 +: 30]), .k_len(k_len[p*4 +: 4]),
+      .k_tag(k_tag[p*17 +: 17]), .kr_v(kr_v[p]), .kr_tag(kr_tag[p*17 +: 17]), .kr_beat(kr_beat[p*4 +: 4]),
+      .kr_data(kr_data[p*256 +: 256]), .b_v(bvp), .b_t(bt), .b_b(bb), .b_d(bd), .di_v(1'b0), .di_d(62'd0), .do_v(dov),
+      .do_d(dod), .dni_ok(1'b1), .dni_ph(1'b0), .dno_ok(dnook), .dno_ph(dnoph), .cr_v(1'b0), .kr_rdy_o(kr_rdy[p]),
+      .rq_iv(ri_v[p]), .rq_i(ri[p]), .rq_ov(ro_v[p]), .rq_o(ro[p]), .pm_i(LAST ? 8'd0 : po[DN]), .pm_o(pmo_),
+      .lc_v(lc_p[p]));
+    assign po[p] = pmo_;
+    ot_svc_vpipe #(.W(277), .N(PH)) u_s (.ck(ck), .rst_n(rn), .v(bvp), .d({bt, bb, bd}), .qv(sv[p]), .q(sq[p]));
+    wire lq_; ot_svc_vpipe #(.W(1), .N(PH)) u_c (.ck(ck), .rst_n(rn), .v(lc_g[p]), .d(1'b0), .qv(lc_p[p]), .q(lq_));
   end endgenerate
-`else
-  reg [255:0] m [0:DP-1]; reg [255:0] r;
-  always @(posedge ck) begin
-    if (re) r <= m[ra];
-    if (we) m[wa] <= wd;
-  end
-  assign rd = r;
-`endif
+  genvar g;
+  generate for (g = 0; g < 8; g = g + 1) begin : gp
+    wire [1101:0] ks; wire [3:0] cr;
+    ot_svs_grp #(.K(g), .DMA(1)) u_g (.ck(ck), .rst(rn), .rn(rn), .sv_i(sv[4*g +: 4]),
+      .sq_i({sq[4*g+3], sq[4*g+2], sq[4*g+1], sq[4*g]}), .kq(2'b00), .sg_v(1'b0), .sg_d(13'd0), .cr(cr), .ks(ks),
+      .ovf(ovf[g]), .dd(dd[g*1080 +: 1080]), .dc(dd_cr[4*g +: 4]), .dcr(lc_g[4*g +: 4]));
+  end endgenerate
 endmodule
 `default_nettype wire

@@ -1,0 +1,10 @@
+rand_s1 rc=0 SVD2_STACK requests=400 sectors=52164 cycles=2885 rate=18.075 sectors/cycle phy_stall_beats=0 errors=0 
+rand_s2 rc=0 SVD2_STACK requests=400 sectors=51452 cycles=4221 rate=12.187 sectors/cycle phy_stall_beats=0 errors=0 
+rand_s3 rc=0 SVD2_STACK requests=400 sectors=52457 cycles=18865 rate=2.781 sectors/cycle phy_stall_beats=517157 errors=0 
+bw_lat54 rc=0 SVD2_STACK requests=300 sectors=76800 cycles=3267 rate=23.501 sectors/cycle phy_stall_beats=0 errors=0 SVD2_STACK steady rate=24.410 sectors/cycle = 781.1 B/cycle a stack = 98.9 % of the PHY's 24.69 (gate: >= 22.3 sectors/cycle) 
+bw_lat104 rc=0 SVD2_STACK requests=300 sectors=76800 cycles=3498 rate=21.949 sectors/cycle phy_stall_beats=0 errors=0 SVD2_STACK steady rate=22.968 sectors/cycle = 735.0 B/cycle a stack = 93.0 % of the PHY's 24.69 (gate: >= 22.3 sectors/cycle) 
+neg_rdy rc=1 (must be nonzero) ERR lane 13 beat without a credit
+neg_pc rc=1 (must be nonzero) ERR PC 16 got a row of another PC
+neg_mask rc=1 (must be nonzero) ERR lane 17 carries a sector of PC 31
+neg_room rc=1 (must be nonzero) ERR timeout: beats 256 / 2488, requests 17 accepted 17
+DMA_GATE rc=0

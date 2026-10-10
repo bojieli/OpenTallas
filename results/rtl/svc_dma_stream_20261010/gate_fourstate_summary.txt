@@ -1,9 +1,0 @@
-rand_s1 rc=0 SVD_STACK requests=400 sectors=53866 cycles=9148 rate=5.888 sectors/cycle (of 8) phy_stall_beats=32904 errors=0 
-rand_s2 rc=0 SVD_STACK requests=400 sectors=50602 cycles=11353 rate=4.457 sectors/cycle (of 8) phy_stall_beats=25028 errors=0 
-rand_s3 rc=0 SVD_STACK requests=400 sectors=52770 cycles=59000 rate=0.894 sectors/cycle (of 8) phy_stall_beats=8917 errors=0 
-bw_lat54 rc=0 SVD_STACK requests=300 sectors=76800 cycles=10218 rate=7.515 sectors/cycle (of 8) phy_stall_beats=81252 errors=0 SVD_STACK steady rate=7.668 sectors/cycle (of 8) = 95.9 % 
-bw_lat104 rc=0 SVD_STACK requests=300 sectors=76800 cycles=10313 rate=7.446 sectors/cycle (of 8) phy_stall_beats=103217 errors=0 SVD_STACK steady rate=7.631 sectors/cycle (of 8) = 95.4 % 
-neg_gq rc=1 (must be nonzero) ERR timeout: beats 308 / 1626, requests 15 accepted 14
-neg_rdy rc=1 (must be nonzero) ERR group 7 overflow
-neg_half rc=1 (must be nonzero) ERR X on lane 3
-DMA_GATE rc=0

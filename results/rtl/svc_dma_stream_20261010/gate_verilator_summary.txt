@@ -1,9 +1,0 @@
-rand_s1 rc=0 SVD_STACK requests=400 sectors=48322 cycles=8777 rate=5.505 sectors/cycle (of 8) phy_stall_beats=28515 errors=0 
-rand_s2 rc=0 SVD_STACK requests=400 sectors=52657 cycles=11434 rate=4.605 sectors/cycle (of 8) phy_stall_beats=28305 errors=0 
-rand_s3 rc=0 SVD_STACK requests=400 sectors=50986 cycles=56998 rate=0.895 sectors/cycle (of 8) phy_stall_beats=8561 errors=0 
-bw_lat54 rc=0 SVD_STACK requests=300 sectors=76800 cycles=10167 rate=7.553 sectors/cycle (of 8) phy_stall_beats=86598 errors=0 SVD_STACK steady rate=7.663 sectors/cycle (of 8) = 95.8 % 
-bw_lat104 rc=0 SVD_STACK requests=300 sectors=76800 cycles=10264 rate=7.482 sectors/cycle (of 8) phy_stall_beats=112466 errors=0 SVD_STACK steady rate=7.631 sectors/cycle (of 8) = 95.4 % 
-neg_gq rc=1 (must be nonzero) ERR lane 0 req 4: got tag 4 idx 0, want tag 4 idx 0 (data BAD)
-neg_rdy rc=1 (must be nonzero) ERR group 3 overflow
-neg_half rc=1 (must be nonzero) ERR lane 6 req 0: got tag 0 idx 6, want tag 0 idx 6 (data BAD)
-DMA_GATE rc=0
