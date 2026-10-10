@@ -18,10 +18,10 @@
       "candidate": "TCG+BXST2+FXST2+PINLAT at 1.2GHz and900MHz",
       "source": "c8a5b4352",
       "physical_jobs": [
-        "bfa_tcg_pinlat_a_c8a5b4352-cl",
+        "bfa_tcg_pinlat_a1200_c8a5b4352-cl",
         "bfa_tcg_pinlat_c900_c8a5b4352-cl"
       ],
-      "state": "specs ingested; full-shape positive plus six mutant proof compiling/running",
+      "state": "Both pinned physical jobs RUNNING on EPYC4 and EPYC3; independent full-shape exactness/mutant gate remains adoption prerequisite",
       "cost": "1614 latchbits; conservative470.64um2/element proxy, no added cycles relative to full948; same outline",
       "adoption_gate": "Pinned exact bench and final TTsetup/FFhold/DRC0 plus loop independent reSTA"
     },
