@@ -69,7 +69,7 @@ module ot_qfd_res_tiles_ctl #(parameter integer RS=42,CRB=16)(
  reg [5:0] cr;reg cpin;reg pin_v;reg [550:0] pin_d;
  wire can=n!=0 && cr!=0;
  wire pop=can && slot==7;
- wire refund=rv && !rd[550];
+ wire refund=pin_v && !pin_d[550];
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin pe<=0;po<=0;cv<=0;n<=0;rp<=0;slot<=0;cr<=CRB;cpin<=0;
    rq_v<=0;o_v<=0;pin_v<=0;rok<=0;fault<=0;end
