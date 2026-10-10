@@ -5,8 +5,8 @@
  "instances": [
   {
    "name": "ix",
-   "module": "ot_hgi_idx_unit",
-   "file": "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv",
+   "module": "ot_hgi_idx_unit_native",
+   "file": "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit_native.sv",
    "params": {},
    "bind": {
     "clk": "clk",

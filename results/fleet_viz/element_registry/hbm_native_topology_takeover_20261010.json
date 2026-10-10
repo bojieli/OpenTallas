@@ -16,7 +16,7 @@
         ]
       },
       "implementation": {
-        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins. Optional R25GPHT4 uses actual hfd_hgi_idx_native controller endpoints with all native functional ports bound; actual controller dependencies elaborate."
+        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins. Optional R25GPHT4 uses actual hfd_hgi_idx_native controller endpoints with all native functional ports bound; actual controller dependencies elaborate. Immutable native unit/adapter successor fixes full8 output FIFO occupancy, with exact FIFO order and ninth-beat fault minimum gate."
       },
       "model": {
         "status": "Prebuild sized, no rate credit",
@@ -45,7 +45,8 @@
         "positive": {
           "status": "PASS342 atomic lane beats under skew and500cycle downstream credit stall; arithmetic and full composition remain unqualified",
           "evidence": [
-            "results/rtl/hbm_native_t4_join_20261010/gate.json"
+            "results/rtl/hbm_native_t4_join_20261010/gate.json",
+            "results/uarch/hbm_indexer_t4_20261010/hgi_native_output_fifo_gate.json"
           ]
         },
         "negative": {

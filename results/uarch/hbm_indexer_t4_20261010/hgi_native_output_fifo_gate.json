@@ -1,0 +1,24 @@
+{
+  "scope": "Minimum real native adapter output beat FIFO, initialized at active state; both full8 queues blocked then drain in exact beat order; no query arithmetic claim",
+  "gate": {
+    "base": {
+      "rc": 0,
+      "output": "PASS drain eight full credited beats topk+candidate\n"
+    },
+    "legacy": {
+      "rc": 1,
+      "output": "FATAL: rtl/test/hbm_accel/tb_hgi_idx_native_output_fifo.sv:31: full eight-beat FIFO failed to drain tc0 cc0\n       Time: 3120000 Scope: tb\n"
+    },
+    "overflow": {
+      "rc": 0,
+      "output": "PASS refused ninth beat beyond eight credits\n"
+    }
+  },
+  "adopted": false,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_index_native.sv": "6ea2c519d9d7d11e33ccddf1f7585601294ac8897338ae30a4aad7e70f8b4c85",
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv": "f212fe8da27230f4ee55729fd84c3e6efe5170c63af36fb953967eccedd05b7d",
+    "rtl/test/hbm_accel/tb_hgi_idx_native_output_fifo.sv": "9f2a89cb39e76bad829c9f1c03df2a91650f101d70048b4ae1360d98c4a99ff0"
+  },
+  "boundary_transport_regression": "PASS400cycles/2172bits, real ot_hgi_idx_unit_native dependencies elaborate"
+}
