@@ -41,7 +41,11 @@ module ot_qfd_crom_lbuf #(
     parameter integer NW = 18,
     parameter integer FLP = 5,                 // far ROM: strobe -> answer edges at this block (ot_qfd_crom 5 + 2 x relays)
     parameter [63:0] QSCALE_WORD = 64'h3db504f3_00000000,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // SRAM = 1: the narrow banks are one ot_sram_1r1w_1024x256 per 8-lane group (rows: bank 0 at 0, bank 1 at 256, HEAD at
+    // 512; the banking contract makes every lane of a group read one row, as the ROM's narrow macro columns), rope rows
+    // in flops.  Same answers, same edges (the macro's read register is the e3 stage).  0 = behavioural flop arrays.
+    parameter integer SRAM = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -226,19 +230,66 @@ module ot_qfd_crom_lbuf #(
         if (!rst_n) begin m_v <= 0; c_v <= 0; end
         else begin m_v <= t_v & ~t_miss; c_v <= m_v; end
     end
-    always @(posedge clk) begin
-        m_kind <= t_kind; c_kind <= m_kind; c_w <= m_w;
-        for (lr = 0; lr < SW; lr = lr + 1) begin : g_rd
-            reg [RB-1:0] r;
-            r = t_row[lr*RB +: RB];
-            case (t_bank[lr*2 +: 2])
-                2'd0: m_w[lr*64 +: 64] <= {32'd0, bn0[lr*NWIN + r]};
-                2'd1: m_w[lr*64 +: 64] <= {32'd0, bn1[lr*NWIN + r]};
-                2'd2: m_w[lr*64 +: 64] <= {32'd0, bf[lr*NHD + r]};
-                default: m_w[lr*64 +: 64] <= r[0] ? br1[lr] : br0[lr];
-            endcase
+    reg grp_dis;                               // SRAM: lanes of one group disagree on the row (contract violation)
+    generate if (SRAM == 0) begin : g_flop
+        always @(posedge clk) begin
+            m_kind <= t_kind; c_kind <= m_kind; c_w <= m_w;
+            for (lr = 0; lr < SW; lr = lr + 1) begin : g_rd
+                reg [RB-1:0] r;
+                r = t_row[lr*RB +: RB];
+                case (t_bank[lr*2 +: 2])
+                    2'd0: m_w[lr*64 +: 64] <= {32'd0, bn0[lr*NWIN + r]};
+                    2'd1: m_w[lr*64 +: 64] <= {32'd0, bn1[lr*NWIN + r]};
+                    2'd2: m_w[lr*64 +: 64] <= {32'd0, bf[lr*NHD + r]};
+                    default: m_w[lr*64 +: 64] <= r[0] ? br1[lr] : br0[lr];
+                endcase
+            end
         end
-    end
+        always @(posedge clk) grp_dis <= 1'b0;
+    end else begin : g_sram
+        localparam integer NG = SW / 8;
+        wire [NG*256-1:0] rd;
+        wire [NG-1:0] gdis;
+        reg  [SW-1:0] m_nar;                   // lane's answer comes from its group macro
+        genvar gg;
+        for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
+            reg ce; reg [9:0] ra; reg dis;
+            integer j;
+            always @(*) begin
+                ce = 1'b0; ra = 10'd0; dis = 1'b0;
+                for (j = 7; j >= 0; j = j - 1)
+                    if (t_v[gg*8 + j] && !t_miss[gg*8 + j] && t_bank[(gg*8 + j)*2 +: 2] != 2'd3 && t_kind[(gg*8 + j)*3 +: 3] == K_NARROW) begin
+                        ce = 1'b1;
+                        ra = {t_bank[(gg*8 + j)*2 +: 2], t_row[(gg*8 + j)*RB +: RB]};
+                    end
+                for (j = 0; j < 8; j = j + 1)
+                    if (t_v[gg*8 + j] && !t_miss[gg*8 + j] && t_kind[(gg*8 + j)*3 +: 3] == K_NARROW &&
+                        {t_bank[(gg*8 + j)*2 +: 2], t_row[(gg*8 + j)*RB +: RB]} != ra) dis = 1'b1;
+            end
+            assign gdis[gg] = dis;
+            reg [255:0] wd; reg [9:0] wa; reg wce;
+            integer k;
+            always @(*) begin
+                wce = rv_done && (rt_kind == F_STAGE || rt_kind == F_HEADB);
+                wa = (rt_kind == F_HEADB) ? {2'b10, rt_row} : {1'b0, rt_sel, rt_row};
+                for (k = 0; k < 8; k = k + 1) wd[k*32 +: 32] = f_q[(gg*8 + k)*64 +: 32];
+            end
+            ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(ce), .r_addr_in(ra), .rd_out(rd[gg*256 +: 256]),
+                .w_ce_in(wce), .w_addr_in(wa), .wd_in(wd), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+        always @(posedge clk) begin
+            m_kind <= t_kind; c_kind <= m_kind;
+            grp_dis <= |gdis;
+            for (lr = 0; lr < SW; lr = lr + 1) begin : g_rr
+                m_nar[lr] <= (t_bank[lr*2 +: 2] != 2'd3);
+                m_w[lr*64 +: 64] <= t_row[lr*RB] ? br1[lr] : br0[lr];      // rope lanes (row bit 0 = slot)
+            end
+            for (lr = 0; lr < SW; lr = lr + 1) begin : g_cw
+                c_w[lr*64 +: 64] <= m_nar[lr] ? {32'd0, rd[(lr / 8)*256 + (lr % 8)*32 +: 32]} : m_w[lr*64 +: 64];
+            end
+        end
+    end endgenerate
     reg [SW*64-1:0] q_r;
     always @(posedge clk) begin
         for (lo = 0; lo < SW; lo = lo + 1) begin : g_out
@@ -256,8 +307,8 @@ module ot_qfd_crom_lbuf #(
     always @(posedge clk) if (rv_done) begin
         for (lw = 0; lw < SW; lw = lw + 1) begin : g_fw
             case (rt_kind)
-                F_STAGE: if (rt_sel) bn1[lw*NWIN + rt_row] <= f_q[lw*64 +: 32]; else bn0[lw*NWIN + rt_row] <= f_q[lw*64 +: 32];
-                F_HEADB: bf[lw*NHD + rt_row] <= f_q[lw*64 +: 32];
+                F_STAGE: if (SRAM != 0) ; else if (rt_sel) bn1[lw*NWIN + rt_row] <= f_q[lw*64 +: 32]; else bn0[lw*NWIN + rt_row] <= f_q[lw*64 +: 32];
+                F_HEADB: if (SRAM == 0) bf[lw*NHD + rt_row] <= f_q[lw*64 +: 32];
                 F_ROPE:  if (rt_sel) br1[lw] <= f_q[lw*64 +: 64]; else br0[lw] <= f_q[lw*64 +: 64];
                 default: ;
             endcase
@@ -265,6 +316,6 @@ module ot_qfd_crom_lbuf #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin fault <= 1'b0; fault_code <= 2'd0; end
-        else if (!fault && ((|t_miss) || f_fault)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : 2'd2; end
+        else if (!fault && ((|t_miss) || f_fault || grp_dis)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : f_fault ? 2'd2 : 2'd3; end
     end
 endmodule

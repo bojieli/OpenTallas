@@ -6,7 +6,7 @@
 // of one region a cycle, random lane subsets, random gaps).  PASS: every answered lane equals the reference, no fault.
 module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11, parameter integer NTOK = 3,
                           parameter integer RPS = 300, parameter integer SEED = 1,
-                          parameter integer NOWAIT = 0);   // 1: the SU does not wait for st_rdy (negative: must FAIL)
+                          parameter integer NOWAIT = 0, parameter integer SRAM = 0);   // 1: the SU does not wait for st_rdy (negative: must FAIL)
     localparam integer SW = 64, AW = 24, LW = 6, NW = 18;
     localparam integer QK0 = 4096, POST0 = 5376, QSCALE = 9472, ROPE0 = 9473, OSC0 = 533761, DSC0 = 537857, END = 541953;
     localparam integer HEAD = 36;
@@ -29,7 +29,7 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
     reg  [SW-1:0] re; reg [SW*AW-1:0] addr; reg [LW-1:0] cst, stage; reg tok_start; reg [NW-1:0] tpos;
     wire [SW*64-1:0] q; wire st_rdy, fault; wire [1:0] fcode;
     wire [SW-1:0] f_re; wire [SW*AW-1:0] f_addr; wire [LW-1:0] f_stage; reg [SW*64-1:0] f_q;
-    ot_qfd_crom_lbuf #(.FLP(FLP), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(cst),
+    ot_qfd_crom_lbuf #(.FLP(FLP), .MUT(MUT), .SRAM(SRAM)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(cst),
         .crom_q(q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy), .f_re(f_re), .f_addr(f_addr),
         .f_stage(f_stage), .f_q(f_q), .f_fault(1'b0), .fault(fault), .fault_code(fcode));
     // far ROM: answers FLP edges after the strobe (registered pipeline)
