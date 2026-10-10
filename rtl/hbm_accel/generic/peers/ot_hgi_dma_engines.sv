@@ -71,11 +71,22 @@ module ot_hgi_dma_engines #(
     // one a cycle at most, so any lane's done is the mover's while the front is idle
     reg [32*280-1:0] m_wlx;
     always @* begin m_wlx = '0; if (m_wl[279]) m_wlx[m_wl[268:264]*280 +: 280] = m_wl; end
-    assign wl = f_wl | m_wlx;
+    // per lane: the front's lane when it is valid (its data bits are not cleared between writes), else the mover's
+    genvar gl;
+    generate for (gl = 0; gl < 32; gl = gl + 1) begin : g_wl
+        assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
+    end endgenerate
     ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && !to_f), .mv_rdy(m_rdy), .mv(mv), .mv_done(m_done),
         .mv_fault(m_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr), .wl(m_wl), .wl_done(|wl_done));
+`ifndef SYNTHESIS
+    reg trc; initial trc = $test$plusargs("DMA_TRACE");
+    always @(posedge clk) if (trc && rst_n && mv_v && mv_rdy)
+        $display("ENGINES move -> %s ssp %0d sf %0d src %h sst %0d sis %0d dsp %0d df %0d dst %h dstr %0d dis %0d m %0d n %0d",
+                 to_f ? "front" : "mover", mv[1:0], mv[4:2], mv[44:5], mv[76:45], mv[92:77], mv[94:93], mv[97:95], mv[137:98],
+                 mv[169:138], mv[185:170], mv[205:186], mv[226:206]);
+`endif
 endmodule
 `default_nettype wire
