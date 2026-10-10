@@ -104,3 +104,9 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
                       measured_profile_bursts=360,
                       profile_scope='saturated element, immediate consumer credit, full shape actual SRAM model; not token rate'),
         exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
+
+
+def hbm_svc_dma_wide_admission_model(**kwargs):
+    """Actual four-stack HBM bandwidth/window/corridor/SRAM admission sizing."""
+    from hbm_svc_dma_wide_model import wide_model
+    return wide_model(**kwargs)
