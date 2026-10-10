@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.hbm_svc.dma_stream.v1",
+  "verdict": "FAIL",
+  "correctness": "PASS",
+  "bandwidth": "FAIL",
+  "initial_credits": 4,
+  "credit_rtt_cycles": 32,
+  "bandwidth_measurement": "Four full stacks, 14 consecutive 256-sector commands; all command startup/drain included; 1024 bytes/cycle aggregate peak",
+  "stack_rates": [
+    {
+      "stack": 0,
+      "bytes": 114688,
+      "cycles": 3808,
+      "bytes_per_cycle": 30.11764705882353,
+      "efficiency": 0.11764705882352941
+    },
+    {
+      "stack": 1,
+      "bytes": 114688,
+      "cycles": 3808,
+      "bytes_per_cycle": 30.11764705882353,
+      "efficiency": 0.11764705882352941
+    },
+    {
+      "stack": 2,
+      "bytes": 114688,
+      "cycles": 3808,
+      "bytes_per_cycle": 30.11764705882353,
+      "efficiency": 0.11764705882352941
+    },
+    {
+      "stack": 3,
+      "bytes": 114688,
+      "cycles": 3808,
+      "bytes_per_cycle": 30.11764705882353,
+      "efficiency": 0.11764705882352941
+    }
+  ],
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "returncode": 0,
+      "output": "BANDWIDTH stack=0 bytes=114688 cycles=3808 peak_bytes_per_cycle=256\nBANDWIDTH stack=1 bytes=114688 cycles=3808 peak_bytes_per_cycle=256\nBANDWIDTH stack=2 bytes=114688 cycles=3808 peak_bytes_per_cycle=256\nBANDWIDTH stack=3 bytes=114688 cycles=3808 peak_bytes_per_cycle=256\nPASS full_shape four_stacks arbitrary_PC_delays delayed_first_sector per_lane_order credit_backpressure\n"
+    },
+    {
+      "case": "data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=0 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=1 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=2 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=3 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    },
+    {
+      "case": "index_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=0 phase=0 lane=4 idx=5 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=1 phase=0 lane=4 idx=5 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=2 phase=0 lane=4 idx=5 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=3 phase=0 lane=4 idx=5 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    },
+    {
+      "case": "fault_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=0 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=1 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=2 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=3 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_pc_map_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:60: bad issue pc=0 addr=0001234000 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:60: bad issue pc=0 addr=0801234000 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:60: bad issue pc=0 addr=1001234000 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:60: bad issue pc=0 addr=1801234000 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_drop_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=0 phase=0 lane=0 idx=8 expected=0 tag=0\n       Time: 1895000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=1 phase=0 lane=0 idx=8 expected=0 tag=0\n       Time: 1895000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=2 phase=0 lane=0 idx=8 expected=0 tag=0\n       Time: 1895000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=3 phase=0 lane=0 idx=8 expected=0 tag=0\n       Time: 1895000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=0 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=1 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=2 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv:73: scoreboard stack=3 phase=0 lane=4 idx=4 expected=4 tag=0\n       Time: 135000 Scope: tb_hbm_svc_dma_stream.genblk1[3].u\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_stream.sv": "c514e053a7a7b3faba87b02fae9ebcc9c2fbcce9a70300aade94859a75c40e32",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_stream.sv": "0debb51e4f911a9a7ba214ae1effe8f04a05ba603f1a5844489becc0ad4eb269",
+    "tools/hbm_svc_dma_stream_bench.py": "b6d5a0bd4f5bc9740db1236d21d33986e7097cee9e7ab83e8fb70c72782e67f7"
+  },
+  "scope": "Transaction-exact CPU memory backend; physical closure and mutable-state ECC not established by this bench"
+}

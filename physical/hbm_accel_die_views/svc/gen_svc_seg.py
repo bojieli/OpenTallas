@@ -934,5 +934,33 @@ def main():
         print(' cycles:', {k: v['added'] for k, v in o['cycles'].items()})
 
 
+def dma_sizing_manifest():
+    """Opt-in proposed DMA tile allocation; never modifies released segment files.
+
+    The route gate deliberately remains closed until actual new pins, cell
+    usage, front position and timing are supplied. Raw track capacity alone
+    cannot establish physical fit.
+    """
+    from hbm_svc_dma_model import svc_dma_model
+    model = svc_dma_model()
+    model['segment_proposals'] = {}
+    for fam in ('SW', 'SE'):
+        pl = plan_family(fam)
+        model['segment_proposals'][fam] = [dict(
+            segment=f'hfd_svc_{fam}_s{j}',
+            x_interval_um=[a, b],
+            pc_ids=[p for p in range(32) if pl['seg_of'](pl['U'][f'pc{p}'][0]) == j],
+            distributed_reorder_bits=8192 * sum(pl['seg_of'](pl['U'][f'pc{p}'][0]) == j for p in range(32)),
+            existing_cell_area_um2=None,
+            actual_dma_pin_plan=None,
+            fit_verdict='HOLD: existing usage and DMA lane pins not assigned')
+            for j, (a, b) in enumerate(pl['segs'])]
+    model['route_admission'] = False
+    return model
+
+
 if __name__ == '__main__':
-    main()
+    if '--dma-sizing' in sys.argv:
+        print(json.dumps(dma_sizing_manifest(), indent=2))
+    else:
+        main()
