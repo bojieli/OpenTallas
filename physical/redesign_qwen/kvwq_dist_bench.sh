@@ -5,7 +5,7 @@
 #   kvwq_dist_bench.sh neg OUT : mutants 1 (PC group swap) and 2 (wrong quarter) must be inexact, 3 (quarter 0 never pushed)
 #                                must not retire every row -> KVWQ_DIST_NEG_DETECTED (rc 1)
 set -u
-m=$1; O=$(readlink -f $2); mkdir -p $O
+m=$1; mkdir -p "$2"; O=$(readlink -f "$2")
 W=$(cd "$(dirname "$0")/../.." && pwd)/rtl
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 [ -x "$VL" ] || VL=verilator
