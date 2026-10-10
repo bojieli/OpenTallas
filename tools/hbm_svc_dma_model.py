@@ -3,7 +3,7 @@ import importlib.util
 import math
 from pathlib import Path
 
-def svc_dma_model(initial_credits=256, window=1024):
+def svc_dma_model(initial_credits=256, window=2048):
     root = Path(__file__).resolve().parents[1]
     src=root/'physical/hbm_accel_die_views/svc/gen_svc_seg.py'
     spec=importlib.util.spec_from_file_location('svc_dma_geometry',src)
@@ -32,7 +32,7 @@ def svc_dma_model(initial_credits=256, window=1024):
             latency_to_first_sector_lower_bound_cycles=max(hops)+2,
             fixed_window_latency_cycles=math.ceil(256/8),
             sustained_payload_bytes_per_cycle_per_stack=256)
-    storage=window*(256+1+4+8+1)+4*(37+9+4)+32*24
+    storage=window*(256+1+4+8+1)+(window//256)*(37+9+4)+32*16*26
     return dict(schema=1,verdict='SIZED_NOT_PHYSICALLY_QUALIFIED',macs_per_cycle=0,
         compute_intensity=0,communication_intensity_payload_fraction=256/270,
         stacks=4,pcs_per_stack=32,lanes_per_stack=8,payload_bytes_per_cycle=1024,
@@ -42,7 +42,7 @@ def svc_dma_model(initial_credits=256, window=1024):
         native_response_latency_sweep_cycles=[54,104],
         latency_basis='SourceT_RCD19;54/104areexplicit conservative validation scenarios, not measuredPHYtiming',
         pc_map='s[6:2] XOR s[11:7] XOR s[16:12]; s=byte_address[34:5]',
-        reorder_sector_window=window,descriptor_queue_depth=4,storage_bits_per_stack=storage,
+        reorder_sector_window=window,descriptor_queue_depth=window//256,storage_bits_per_stack=storage,
         area_assumed_flop_um2_per_bit=2.0,storage_only_area_um2=2*storage,
         area_status='HOLD: storage estimate excludes mux/control/relay and existing service cell usage',
         multiplexer_cost='8 lanes, each selects 32 PC sector responses; local partition required',

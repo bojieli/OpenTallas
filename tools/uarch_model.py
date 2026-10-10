@@ -15312,7 +15312,7 @@ def hgi_token18_fullcore_model():
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
 
 
-def hbm_svc_dma_stream_model(initial_credits=64, window=1024):
+def hbm_svc_dma_stream_model(initial_credits=256, window=2048):
     """Source-derived full-shape service stream model, qualified independently of its RTL."""
     from hbm_svc_dma_model import svc_dma_model
     return svc_dma_model(initial_credits=initial_credits, window=window)
