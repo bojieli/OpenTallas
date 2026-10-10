@@ -67,7 +67,7 @@ def _defs():
     if _DEFS is None:
         _DEFS = {}
         for f in (sorted((ROOT / "rtl").rglob("*.sv")) + sorted((ROOT / "rtl").rglob("*.v")) +
-                  sorted((ROOT / "physical").glob("*/*/rtl/*.sv"))):
+                  sorted((ROOT / "physical").glob("*/*/rtl/*.sv")) + sorted((ROOT / "physical").glob("*/*/common/*.sv"))):
             try:
                 txt = f.read_text(errors="replace")
             except OSError:
