@@ -62,7 +62,7 @@ module hfd_hgi_idx_native (
     assign w_ix_sel_to = {i_f_sel_to[611:0]};
     assign w_ix_sel_co = {i_f_sel_co[71:0]};
     assign w_ix_sel_ev = {i_f_sel_ev[1:0]};
-    ot_hgi_idx_unit u_ix (.clk(w_ix_clk), .rst_n(w_ix_rst_n), .rec(w_ix_rec), .ret(w_ix_ret), .vmq(w_ix_vmq), .vmr(w_ix_vmr), .sel_fs(w_ix_sel_fs), .sel_qb(w_ix_sel_qb), .sel_qbr(w_ix_sel_qbr), .sel_kin(w_ix_sel_kin), .sel_to(w_ix_sel_to), .sel_toc(w_ix_sel_toc), .sel_co(w_ix_sel_co), .sel_coc(w_ix_sel_coc), .sel_ev(w_ix_sel_ev));
+    ot_hgi_idx_unit_native u_ix (.clk(w_ix_clk), .rst_n(w_ix_rst_n), .rec(w_ix_rec), .ret(w_ix_ret), .vmq(w_ix_vmq), .vmr(w_ix_vmr), .sel_fs(w_ix_sel_fs), .sel_qb(w_ix_sel_qb), .sel_qbr(w_ix_sel_qbr), .sel_kin(w_ix_sel_kin), .sel_to(w_ix_sel_to), .sel_toc(w_ix_sel_toc), .sel_co(w_ix_sel_co), .sel_coc(w_ix_sel_coc), .sel_ev(w_ix_sel_ev));
     wire [2:0] od_t_hgi_cmdproc = {w_ix_ret[2:0]};
     wire [2:0] o_t_hgi_cmdproc;
     for (genvar k = 0; k < 3; k = k + 1) begin : g_o_t_hgi_cmdproc
