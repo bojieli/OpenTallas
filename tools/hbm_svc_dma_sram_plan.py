@@ -39,10 +39,16 @@ def plan():
     for family,f in physical['families'].items():
         for tile in f['tiles']:
             macros=[];groups=[]
+            previous_right=None
             for pc in tile['pc_ids']:
                 pcx=pcs['hfd_svc_'+family]['pc_x'][pc]-tile['x0_um']
-                x=max(edge+halo,min(pcx-group_width/2,tile['w_um']-edge-halo-group_width))
-                x=round(math.ceil(x/.048)*.048,4)
+                low=math.ceil((edge+halo)/.048)*.048
+                high=math.floor((tile['w_um']-edge-halo-group_width)/.048)*.048
+                if previous_right is not None:
+                    low=max(low,math.ceil((previous_right+2*halo)/.048-1e-8)*.048)
+                assert low<=high, (tile['master'],pc,'insufficient group pitch')
+                x=round(max(low,min(math.ceil((pcx-group_width/2)/.048)*.048,high)),4)
+                previous_right=x+group_width
                 group=[]
                 for row in range(2):
                     for col in range(2):
@@ -70,7 +76,7 @@ def plan():
             # distributed implementation can later price proven sparse lanes.
             relay_rows=math.ceil(tile['w_um']/P.HOP)+2
             relay_bits=relay_rows*physical['edge_traffic_bits']
-            pc_meta_bits=1536*len(tile['pc_ids'])
+            pc_meta_bits=(1248+416)*len(tile['pc_ids'])
             macro_pin_bits=(2*(256+7+1)+256+1)*len(macros)
             ff_bits=relay_bits+pc_meta_bits+macro_pin_bits
             ff_floor=ff_bits*ff_area
@@ -92,7 +98,7 @@ def plan():
                 clock_channel_y_um=[round(y+height,4),round(y+height+gap,4)]))
     return dict(schema=1,status='SIZED_SRAM_RESERVATION_NOT_IMPLEMENTED',
         sources=[source(p) for p in [lef,d/(MACRO+'.v'),d/(MACRO+'_ss.lib'),d/(MACRO+'_ff.lib'),seq,geometry,
-            ROOT/'tools/hbm_svc_dma_physical.py']],
+            ROOT/'tools/hbm_svc_dma_physical.py',ROOT/'tools/hbm_svc_dma_sram_plan.py']],
         macro=dict(master=MACRO,width_um=width,height_um=height,area_um2=round(width*height,4),
             depth=128,width_bits=256,per_pc_count=4,pc_count_per_stack=32,stacks=4,total_macros=512),
         storage=dict(groups_per_pc=32,sectors_per_group=4,sector_capacity_per_pc=128,
@@ -106,7 +112,7 @@ def plan():
             mean_required_sectors_per_pc_per_edge=.25,
             initiation_interval_edges=2,extra_read_fill_cycles=2,
             qualification='schedule sizing, not measured SRAM/ECC throughput or timing'),
-        dff_cell_area_um2=ff_area,pc_metadata_reservation_basis='1536 bits/PC prospective reserve; no actual metadata RTL claim',
+        dff_cell_area_um2=ff_area,pc_metadata_reservation_basis='1248 cache SECDED metadata bits +416 native CAM bits/PC; prospective reserve, not mapped RTL',
         macro_pin_capture_basis='input address/enable/data and output data registered; masks charged too',
         tiles=records,geometry_fit=all(t['geometry_fit'] for t in records),
         area_reservation_fit=all(t['area_reservation_fit'] for t in records),route_admission=False,
