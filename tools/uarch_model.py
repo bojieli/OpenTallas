@@ -15287,3 +15287,8 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hbm_indexer_t4_join_model():
+    from hbm_indexer_r25i_model import hbm_indexer_t4_join_model as impl
+    return impl()
