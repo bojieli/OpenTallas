@@ -92,6 +92,16 @@ initial begin
  @(negedge clk);qv[0]=1;q[0+:337]={1'b0,32'd32000,256'd0,32'd0,16'hdead};
  repeat(3)begin @(posedge clk);if(qr[0])$fatal(1,"uninitialized read admitted");end
  @(negedge clk);qv[0]=0;
+ // Cold masked initialization: unreadable until all eight words actually commit.
+ expected_tag[0]=16'hac01;
+ @(negedge clk);coll[0+:DW+16]={1'b1,SB'(1000),{8{32'h12345678}},8'h0f,expected_tag[0]};
+ do @(posedge clk);while(!cr[0]);@(negedge clk);coll=0;repeat(8)@(negedge clk);
+ qv[0]=1;q[0+:337]={1'b0,32'd32000,256'd0,32'd0,16'hac01};
+ repeat(3)begin @(posedge clk);if(qr[0])$fatal(1,"partially initialized sector read");end
+ @(negedge clk);qv=0;expected_tag[0]=16'hac02;
+ coll[0+:DW+16]={1'b1,SB'(1000),{8{32'h98765432}},8'hf0,expected_tag[0]};
+ do @(posedge clk);while(!cr[0]);@(negedge clk);coll=0;repeat(8)@(negedge clk);
+ packet_read(0,1000,16'ha5ff);
  // High addresses and unaligned byte addresses are fail-closed (not aliases).
  @(negedge clk);qv=1;q[0+:337]={1'b0,32'h00800000,256'd0,32'd0,16'hdead};
  repeat(3)begin @(posedge clk);if(qr[0])$fatal(1,"high bounds accepted");end

@@ -24,7 +24,7 @@ module ot_hgi_vm_wide #(
  reg [CB-1:0] count[0:NC-1],count_n[0:NC-1];
  reg [16:0] meta[0:NC-1][0:OUT-1],meta_n[0:NC-1][0:OUT-1];
  reg [1:0] state[0:NC-1][0:OUT-1],state_n[0:NC-1][0:OUT-1]; // 0 free,1 pending,2 committed
- reg [255:0] result[0:NC-1][0:OUT-1];
+ reg [255:0] result[0:NC-1][0:OUT-1],result_n[0:NC-1][0:OUT-1];reg healthy;
  integer p,c,s,l,b,ph,owner,slot;reg [336:0] q;
  reg [DW-1:0] d;reg [DW+15:0] n;reg [SB-1:0] sec;
  reg [PB-1:0] selected_w,selected_r;
@@ -44,12 +44,21 @@ module ot_hgi_vm_wide #(
  if(NB<2 || (1<<LB)!=NB || OUT<2 || (1<<SP)!=OUT || NC>7 || CW>8 || SB>18) $fatal(1,"wide VM parameters");
  end
  always @* begin
+ healthy=1;
+ for(c=0;c<NC;c=c+1)begin
+ if(head_n[c]!=~head[c] || tail_n[c]!=~tail[c] || count_n[c]!=~count[c])healthy=0;
+ for(s=0;s<OUT;s=s+1)if(state_n[c][s]!=~state[c][s] || meta_n[c][s]!=~meta[c][s] || (state[c][s]==2 && result_n[c][s]!=~result[c][s]))healthy=0;
+ end
+ for(p=0;p<PB;p=p+1)begin
+ if(iv_n[p]!=~iv[p] || native_rr_n[p]!=~native_rr[p])healthy=0;
+ for(s=0;s<5;s=s+1)if(im_n[p][s]!=~im[p][s])healthy=0;
+ end
  dma_ready=0;coll_ready=0;req_r=0;rsp_v=0;rsp=0;wv=0;rv=0;selected_w=0;selected_r=0;
  for(p=0;p<PB;p=p+1)begin wa[p]=0;ra[p]=0;wm[p]=0;data[p]=0;wt[p]=0;rt[p]=0;end
  // Packet responses retire in client order despite different read/write publication.
- for(c=0;c<NC;c=c+1)if(ENABLE && state[c][head[c]]==2)begin
+ for(c=0;c<NC;c=c+1)if(ENABLE && healthy && state[c][head[c]]==2)begin
  rsp_v[c]=1;rsp[c*273+:273]={meta[c][head[c]][15:0],meta[c][head[c]][16],result[c][head[c]]};end
- if(ENABLE && !fault)begin
+ if(ENABLE && healthy && !fault)begin
  // Native publishers have priority. Conflicting lane holds its transaction until admitted.
  for(p=0;p<PB;p=p+1)for(l=0;l<CW;l=l+1)begin
  lane=(native_rr[p]+l)%CW;
@@ -91,9 +100,9 @@ module ot_hgi_vm_wide #(
  for(y=0;y<5;y=y+1)begin im[x][y]<=0;im_n[x][y]<=~16'd0;end
  end
  for(x=0;x<NC;x=x+1)begin head[x]<=0;tail[x]<=0;count[x]<=0;head_n[x]<=~SP'(0);tail_n[x]<=~SP'(0);count_n[x]<=~CB'(0);
- for(y=0;y<OUT;y=y+1)begin state[x][y]<=0;state_n[x][y]<=~2'd0;meta[x][y]<=0;meta_n[x][y]<=~17'd0;result[x][y]<=0;end end
+ for(y=0;y<OUT;y=y+1)begin state[x][y]<=0;state_n[x][y]<=~2'd0;meta[x][y]<=0;meta_n[x][y]<=~17'd0;result[x][y]<=0;result_n[x][y]<=~256'd0;end end
  end else begin
- dma_done<=0;coll_done<=0;bad=|bf;corrections=0;
+ dma_done<=0;coll_done<=0;bad=(|bf)||!healthy;corrections=0;
  for(x=0;x<NC;x=x+1)begin
  if(head_n[x]!=~head[x] || tail_n[x]!=~tail[x] || count_n[x]!=~count[x])bad=1;
  for(y=0;y<OUT;y=y+1)if(state_n[x][y]!=~state[x][y] || meta_n[x][y]!=~meta[x][y])bad=1;
@@ -122,14 +131,14 @@ module ot_hgi_vm_wide #(
  else if(o<CW)begin if(coll_done[o])bad=1;coll_done[o]<=1;coll_done_tag[o*16+:16]<=(MUT==1)?16'(t^1):16'(t);end
  else if(o>=9 && o<9+NC && t<OUT)begin
  if(state[o-9][t]!=1 || !meta[o-9][t][16])bad=1;
- state[o-9][t]<=2;state_n[o-9][t]<=~2'd2;result[o-9][t]<=0;end
+ state[o-9][t]<=2;state_n[o-9][t]<=~2'd2;result[o-9][t]<=0;result_n[o-9][t]<=~256'd0;end
  else bad=1;
  end
  if(rd[k])begin
  o=rtag[k][19:16];t=rtag[k][15:0];corrections=corrections+ce[k];bad=bad|ue[k];
  if(o>=9 && o<9+NC && t<OUT)begin
  if(state[o-9][t]!=1 || meta[o-9][t][16])bad=1;
- state[o-9][t]<=2;state_n[o-9][t]<=~2'd2;result[o-9][t]<=rdata[k];end else bad=1;
+ state[o-9][t]<=2;state_n[o-9][t]<=~2'd2;result[o-9][t]<=rdata[k];result_n[o-9][t]<=~rdata[k];end else bad=1;
  end
  end
  corrected_count<=corrected_count+corrections;if(bad)fault<=1;
