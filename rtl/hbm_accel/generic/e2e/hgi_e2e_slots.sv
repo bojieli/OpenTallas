@@ -12,7 +12,8 @@ module hgi_e2e_su_slot #(
     parameter integer M = 8,
     parameter integer LV = 6,
     parameter integer LWB = 18,
-    parameter integer VLAT = 6
+    parameter integer VLAT = 6,
+    parameter integer WIDE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -26,12 +27,20 @@ module hgi_e2e_su_slot #(
     output wire          rec_fault
 );
     wire [337:0] vq; wire [273:0] vr;
-    ot_hgi_su_unit #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(rec_v),
+    wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
+    if (WIDE) begin : g_lanes
+        hgi_e2e_vmlanes #(.UNIT(UNIT)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+            .wq_cr(wwq_cr), .wq_done(wwq_done));
+    end else begin : g_nolanes
+        assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
+    end
+    ot_hgi_su_unit #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .WIDE(WIDE)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_desc[0 +: 256]), .rec_b(rec_desc[256 +: 256]),
         .rec_c(rec_desc[512 +: 256]), .rec_d(rec_desc[768 +: 256]), .rec_o(rec_desc[1024 +: 256]),
         .rec_r(rec_desc[1280 +: 256]), .rec_i(rec_desc[1536 +: 256]), .rec_n_a(rec_n_a), .rec_done(rec_done),
         .rec_fault(rec_fault), .halted(), .vmq(vq), .vmr(vr), .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0),
-        .am_stream(), .am_rdy(1'b1));
+        .am_stream(), .am_rdy(1'b1), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
+        .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
     hgi_e2e_vmc #(.UNIT(UNIT), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
 endmodule
 `endif
@@ -212,7 +221,8 @@ endmodule
 `ifdef E2E_FUSED
 module hgi_e2e_fused_slot #(
     parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064,
-    parameter integer UN = 32, parameter integer UM = 8        // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
+    parameter integer UN = 32, parameter integer UM = 8,       // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
+    parameter integer UWIDE = 0                                // 1: its D1 body is the WIDE successor (VM wide lanes)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -229,12 +239,21 @@ module hgi_e2e_fused_slot #(
     input  wire [17:0]   scratch           // the compiler-reserved scratch base (static; default SCRATCH)
 );
     wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv; wire [337:0] fq, mq; wire [273:0] fr, mr;
-    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(scratch), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
+    if (UWIDE) begin : g_lanes
+        hgi_e2e_vmlanes #(.UNIT(4)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+            .wq_cr(wwq_cr), .wq_done(wwq_done));
+    end else begin : g_nolanes
+        assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
+    end
+    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(scratch), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_a(rec_desc[0 +: 256]), .rec_b(rec_desc[256 +: 256]), .rec_c(rec_desc[512 +: 256]),
         .rec_o(rec_desc[1024 +: 256]), .rec_n_a(rec_n[0 +: 21]), .rec_n_b(rec_n[21 +: 21]), .rec_n_o(rec_n[84 +: 21]),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(),
         .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
         .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(fq), .vmr(fr),
+        .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(), .rg_gnt(1'b1),
+        .wg_req(), .wg_gnt(1'b1),
         .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_done), .q_fault(q_fault));
     wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
     wire [31:0] k_ws; wire [15:0] k_tag; wire [279:0] wl; wire wl_done;

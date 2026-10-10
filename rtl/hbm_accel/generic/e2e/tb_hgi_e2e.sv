@@ -23,7 +23,8 @@ module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
     parameter integer FUSED_SCRATCH = 256064, FUSED_UN = 32, FUSED_UM = 8;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
-    parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
+    parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;
+    parameter integer SU_WIDE = 0, FUSED_UWIDE = 0;      // 1: the D1 body's WIDE successor (32-lane VM stage / drain; hgi-1010/b)   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
     parameter integer REAL_FETCH = 1;  // 1: the record-ring fetch goes through the REAL ot_hfd_loader_kport (lane 1: one
                                        // transaction outstanding per lane, native endpoint) to a stack-service model at
@@ -156,7 +157,7 @@ module tb_hgi_e2e;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
-        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(su_rec[0]),
+        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV), .WIDE(SU_WIDE)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(su_rec[0]),
             .rec_rdy(r_rdy[2]), .rec_hdr(su_rec[128:1]), .rec_sut(su_rec[384:129]), .rec_desc(su_rec[2176:385]), .rec_n_a(su_rec[2197:2177]),
             .rec_done(r_done[2]), .rec_fault(r_fault[2]));
     end else begin : g_su_stub
@@ -167,7 +168,7 @@ module tb_hgi_e2e;
 `endif
 `ifdef E2E_VEC
     generate if (REAL_SFU) begin : g_sfu
-        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(sfu_rec[0]),
+        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV), .WIDE(SU_WIDE)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(sfu_rec[0]),
             .rec_rdy(r_rdy[3]), .rec_hdr(sfu_rec[128:1]), .rec_sut(256'd0), .rec_desc({512'd0, sfu_rec[1152:897], 256'd0, sfu_rec[896:129]}), .rec_n_a(sfu_rec[1173:1153]),
             .rec_done(r_done[3]), .rec_fault(r_fault[3]));
     end else begin : g_sfu_stub
@@ -214,7 +215,7 @@ module tb_hgi_e2e;
     wire f_rdy, f_done, f_fault; wire [682:0] fq_rec; reg q_done_s;
 `ifdef E2E_FUSED
     generate if (REAL_FUSED) begin : g_fused
-        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH), .UN(FUSED_UN), .UM(FUSED_UM)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
+        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH), .UN(FUSED_UN), .UM(FUSED_UM), .UWIDE(FUSED_UWIDE)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
             .rec_rdy(f_rdy), .rec_hdr(f_hdr), .rec_desc(f_desc), .rec_n(f_n), .rec_done(f_done), .rec_fault(f_fault),
             .q_rec(fq_rec), .q_done(REAL_QUANT ? q_ret[1] : q_done_s), .q_fault(REAL_QUANT ? q_ret[2] : 1'b0),
             .scratch(fscr));
@@ -466,6 +467,43 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
         if (h < t && due[h % 16] <= c) begin
             r <= (mut != 0) ? {1'b1, rq[h % 16][272:256], prev_d} : {1'b1, rq[h % 16]};
             prev_d = rq[h % 16][255:0]; h = h + 1;
+        end
+    end
+endmodule
+
+// VM wide lanes model (hgi-1010/e, for ot_hgi_su_unit WIDE = 1; the formats of ot_hgi_vm_unit RP / W2): 32 read lanes
+// rq b {v, sector 15} (bank = sector mod 32 must be b), rr b {v, data 256} in request order LAT edges later (+VJIT
+// random, in order per lane), rq_cr b one edge after the request (it reached its bank); 32 write lanes w2q b {v, sector 15,
+// wdata 256, word mask 8}: the write lands at once, w2q_cr next edge, w2q_done 3 edges later. A lane holding more than LQ
+// requests (the client overran its credits) or a request on the wrong bank is FATAL (protocol check).
+module hgi_e2e_vmlanes #(parameter integer UNIT = 2, parameter integer LAT = 5, parameter integer LQ = 8) (
+    input wire clk, input wire rst_n, input wire [32*16-1:0] rq, output reg [31:0] rq_cr, output reg [32*257-1:0] rr,
+    input wire [32*280-1:0] wq, output reg [31:0] wq_cr, output reg [31:0] wq_done);
+    import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
+                                               input bit [31:0] mask, output bit [255:0] rd);
+    reg [255:0] rd_q [0:31][0:63]; longint due [0:31][0:63]; integer h [0:31], t [0:31]; longint ld [0:31];
+    reg [31:0] wd1 = 0, wd2 = 0; longint c = 0; integer jit = 0;
+    initial begin void'($value$plusargs("VJIT=%d", jit)); for (int b = 0; b < 32; b++) begin h[b] = 0; t[b] = 0; ld[b] = 0; end
+        rq_cr = 0; rr = '0; wq_cr = 0; wq_done = 0; end
+    always @(posedge clk) begin
+        c <= c + 1; rr <= '0; rq_cr <= '0; wq_cr <= '0; wd2 <= wd1; wq_done <= wd2; wd1 <= '0;
+        if (rst_n) for (int b = 0; b < 32; b++) begin
+            if (rq[b*16 + 15]) begin : rd
+                bit [255:0] d; longint dd; int sec; sec = int'(rq[b*16 +: 15]);
+                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide read lane %0d got sector %0d of bank %0d (unit %0d)", b, sec, sec % 32, UNIT);
+                if (t[b] - h[b] >= LQ) $fatal(1, "E2E FAIL: VM wide read lane %0d over %0d outstanding (unit %0d)", b, LQ, UNIT);
+                e2e_vm_sector(UNIT, sec, 1'b0, 256'd0, 32'd0, d);
+                dd = c + LAT + ((jit > 0) ? $urandom_range(0, jit) : 0); if (dd < ld[b]) dd = ld[b]; ld[b] = dd;
+                rd_q[b][t[b] % 64] = d; due[b][t[b] % 64] = dd; t[b] = t[b] + 1; rq_cr[b] <= 1'b1;
+            end
+            if (h[b] < t[b] && due[b][h[b] % 64] <= c) begin rr[b*257 +: 257] <= {1'b1, rd_q[b][h[b] % 64]}; h[b] = h[b] + 1; end
+            if (wq[b*280 + 279]) begin : wr
+                bit [255:0] x; bit [31:0] m; int sec; sec = int'(wq[b*280 + 264 +: 15]);
+                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide write lane %0d got sector %0d (unit %0d)", b, sec, UNIT);
+                for (int k = 0; k < 8; k++) m[4*k +: 4] = {4{wq[b*280 + k]}};
+                e2e_vm_sector(UNIT, sec, 1'b1, wq[b*280 + 8 +: 256], m, x);
+                wq_cr[b] <= 1'b1; wd1[b] <= 1'b1;
+            end
         end
     end
 endmodule
