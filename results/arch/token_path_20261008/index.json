@@ -12,7 +12,8 @@
     "verdict": "AR_MODE",
     "source": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
     "reason": "AR only by the owner's decision (2026-10-05, results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json verdict AR_MODE): the Qwen3-8B ROM is compute-balanced (weight read rate = MAC rate), so a multi-position verify costs about as much per position as an AR layer and DSpark measured below AR (best np3: 0.691-0.744x AR). DSpark stays built and exact but off; speculation pays only where the dominant per-token cost is shared across positions (the DS ROM and the HBM accelerator)."
-   }
+   },
+   "exactness": "reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed re-proof (claude-takeover qwen-1010.log)"
   },
   {
    "design": "ds_rom",

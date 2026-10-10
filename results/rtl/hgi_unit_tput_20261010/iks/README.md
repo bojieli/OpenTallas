@@ -10,7 +10,8 @@ Verilator 5.050).  Controller model: a 4-sector read a PC a cycle, beats in orde
 | q3 (quarter 3, N 9,000) | 99 | 396 / 396 | 174 | 309.5 B/cycle | 172 | 1.01 |
 | q0a (adversarial stalls + credits every 23 cycles) | 342 | exact | 2,603 | exactness only | | |
 | q3m (MUT 1: B_q of the previous quarter) | | **FAIL as required** (1,368 lines for 99 blocks) | | | | |
+| qmis (key-region base not row-aligned: base[19:0] = 4,096) | | **FAIL as required** (issuer fault, nothing issued) | | | | |
 
-Open: the frame's key-region row0 per stack is an issuer INPUT; its source (record field or the layer's key-region
-table in the model descriptor) is a compiler / spec decision (owner e), and the die wiring of the four e commands to
-the stacks' svc e ports is hbm-phys's.
+row0 (lead decision 10-10): from the record's key-region descriptor base, row0 = base[34:20]; the issuer faults unless
+base[19:0] = 0 and base[36:35] = 0.  Open: the IDX.INDEX record must carry that descriptor (proposed operand I; compiler
+owner e) and the die idx bus must carry it; the four e beats go to the stacks' svc e ports (hbm-phys).

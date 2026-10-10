@@ -35,7 +35,7 @@ module ot_hfd_loader_hgi #(
     // hgi-takeover (hgi-e2e DIE GAP / F6): the DMA unit (unit 8) beside the loader: record adapter ot_hgi_dma_record +
     // the full-rate mover ot_hgi_dma_mover on kport lane 2 (HBM) and one hfd_hgi_vm packet client
     input  wire [703:0] dma_rec,        // {pos1, n_O, n_A, O, A, header, valid}
-    output wire [2:0]   dma_ret,        // {fault, done, ready}
+    output wire [3:0]   dma_ret,        // {wr_quiet, fault, done, ready} (wr_quiet: no posted DMA write in flight)
     output wire [337:0] dma_vmq,
     input  wire [273:0] dma_vmr,
     // hgi-takeover 2026-10-10 (DMA streaming, coordinator): ot_hgi_dma_engines = the DMA front (every unit-stride
@@ -57,12 +57,12 @@ module ot_hfd_loader_hgi #(
     wire [31:0] l_req_wstrb; wire [15:0] l_req_tag, l_rsp_tag;
     wire [2:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [47:0] k_rsp_tag; wire [767:0] k_rsp_data;
     // ---- DMA unit
-    wire d_mv_src, d_mv_pdone, d_mv_fdone;
+    wire d_mv_src, d_mv_pdone, d_mv_fdone, d_wq;
     wire d_mv_v, d_mv_rdy, d_mv_done, d_mv_fault, d_fv, d_frdy, d_fdone, d_rdy, d_done, d_fault, dm_fault;
     wire [226:0] d_mv; wire d_kv, d_kwe, d_krr; wire [36:0] d_ka; wire [255:0] d_kd; wire [31:0] d_ks; wire [15:0] d_kt;
     ot_hgi_dma_record #(.LEGACY(0)) u_dma (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(d_rdy),
         .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
-        .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(d_done), .rec_fault(d_fault), .halted(),
+        .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(d_done), .rec_fault(d_fault), .halted(), .wr_quiet(d_wq),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
@@ -73,7 +73,7 @@ module ot_hfd_loader_hgi #(
         .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
         .k_rsp_data(k_rsp_data[767:512]), .vmq(dma_vmq), .vmr(dma_vmr), .dq(dma_dq), .dq_rdy(dma_dq_rdy), .dd(dma_dd),
         .dd_cr(dma_dd_cr), .wl(dma_vmw), .wl_done(dma_vmw_done));
-    assign dma_ret = {d_fault, d_done, d_rdy};
+    assign dma_ret = {d_wq, d_fault, d_done, d_rdy};
     ot_hgi_loader_cp #(.BURST(1)) u_cpw (   // 16-deep burst queue: the CP die holds FQCR 16 credits
    .clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),
