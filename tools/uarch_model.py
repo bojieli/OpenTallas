@@ -15369,11 +15369,17 @@ def hbm_hc_group_root_icg_model():
     """
     groups=22
     group_register_sinks=162+512+136
+    lockups={"0_1":162,"0_4":162,"0_7":162,"1_1":162,"1_4":162,"1_7":162,
+        "0_8":512,"0_5":512,"0_2":512,"1_8":512,"1_5":512,"1_2":512,"0_0":512}
     return dict(candidate='HBM_HC_GROUP_ROOT_ICG', enabled_default=False,
         model_source='physical/hbm_accel_die_views/hcp/rtl_xlcg/{plan,floorplan}.json',
         footprint_um=[550.776,5529.576], footprint_mm2=550.776*5529.576/1e6,
         lanes=88, lanes_per_group=4, clock_face_roots=8, group_clock_roots=groups,
-        registers_per_group_clock=group_register_sinks, macro_clock_pins_per_group=4,
+        positive_edge_registers_per_group_clock=group_register_sinks,
+        negative_edge_lockup_bits_per_group=lockups, total_negative_edge_lockup_bits=sum(lockups.values()),
+        max_register_sinks_per_group_clock=group_register_sinks+max(lockups.values()),
+        total_group_clock_register_sinks=groups*group_register_sinks+sum(lockups.values()),
+        macro_clock_pins_per_group=4,
         HOLD=64, wake_cycles_per_group=1, wake_bits_per_group=1,
         gate_enable_fanout=1, automatic_gate_cloning=False,
         extra_wake_or_data_cycles=0, single_user_token_added_cycles=0,
