@@ -34,6 +34,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def pcmux_parallel_pin_model():
+    """Size the optional full-shape next-equation pin outputs before RTL."""
+    from pcmux_parallel_pin_model import model
+    return model()
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
