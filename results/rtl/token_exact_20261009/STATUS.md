@@ -35,7 +35,7 @@ exists but a fixture or host is missing.
 | Band lanes (levels 8-10, 16 lanes, LNK 0/2) | exact: band_exact_nl16 / lnk2 PASS; mut_order / mut_upper FAIL | `qwen_comp/STATUS.txt` |
 | Split spine end to end (BANDF slab ports, LNK1/CLNK2, die geometry GT 6,144, splits 7-11) | exact: sb_exact / sb_link / sb_qwen PASS; 4 mutants FAIL | `qwen_comp/STATUS.txt` |
 | Q / new-K / V -> KV die -> attention result crossing, **with the KV4 write-then-read fence** (kv-die 224d19c30, STACK d) | exact: 14/14 base runs (7 vectors incl. ctx 8192 normal/peaky, 8191, 4097, 2048, 129, 1; stall 0/1) at best / typical / worst PHY latency (8192 layer step 1,827 / 1,829 / 1,841 cycles); mutants 1-5 and 7 FAIL; base-RTL controls 6 (TIGHT) and 8 (fence stall 400) exact. Measured by the kv-die stream (run11), harvested here | `kv_die/run11_results.jsonl.txt` |
-| Embedding from HBM (boot load, gateway, PC strip, far bus, SU landing) | pending (9 variants running; see COLLECT). Last record: the emb-hbm stream's own PASS | COLLECT |
+| Embedding from HBM (boot load, gateway, PC strip, far bus, SU landing) | exact: base_kv0/1/2 + twin_kv1/2 PASS (mean fill latency 459-488 cycles); mut_row / mut_scale / mut_ecc / mut_gate FAIL; 160-token image | `qwen_comp/emb_hbm_run.json` |
 | Head (LM head + argmax) on the split core | not run: no L35 X fixture (TP4 36-layer gold regen blocked by the GPU, which needs a reset) | - |
 | Collective tags at full shape (one stage program per start: tags repeat across the 36 layer stages) | open, not an observed mismatch: qwen-system C03 counts 14,288 tag collisions in 152 stage runs; fix `ot_qwen_tp_seq_w12_fs` (0 collisions) awaits review | qwen-system.log, review_queue/qwen-system.md |
 
