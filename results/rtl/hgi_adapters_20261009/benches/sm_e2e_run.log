@@ -1,0 +1,16 @@
+case 0: 512 x words loaded at cycle 3594
+case 0: record -> retire 535 cycles
+case 1: 3072 x words loaded at cycle 25690
+case 1: record -> retire 2154 cycles
+case 2: 4096 x words loaded at cycle 56860
+case 2: record -> retire 2762 cycles
+case 3: 1024 x words loaded at cycle 66819
+case 3: record -> retire 830 cycles
+case 4: 1200 x words loaded at cycle 76071
+case 4: record -> retire 1459 cycles
+case 5: 16384 x words loaded at cycle 192296
+case 5: record -> retire 9942 cycles
+case 6: 512 x words loaded at cycle 205942
+case 6: record -> retire 536 cycles
+summary: 7 SM.MATVEC records end to end, 95 result words checked
+HGI_SM_E2E PASS
