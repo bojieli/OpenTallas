@@ -1734,12 +1734,12 @@ for e in ${PATH//:/ }; do
       # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
-      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
         -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1982,6 +1982,10 @@ def launch_stage(j, st, cmd):
             ship_helpers(j["host"], j["run"])
             env += (f"python3 {j['run']}/cl/pinflop_overlay.py {j.get('stage_source', j['run'] + '/src')} "
                     f"{j['run']}/cl/pinflop_ref.tcl || true\n")
+            # PINFLOP-INPUT (drive-0849 2026-10-10): the route-time FF hold scene's io_ref_routed.sdc re-references the
+            # INPUT delays to the input pin flops' mean arrival (route_mtp / hbm_accel_smh / dsrom qs / markov-driver
+            # recipes); the verdict re-STA and ECO sessions never see this variable
+            env += "export OT_IOREF_INPUT_PF=1\n"
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it

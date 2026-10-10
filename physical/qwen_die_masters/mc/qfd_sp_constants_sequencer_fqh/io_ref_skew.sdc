@@ -58,7 +58,7 @@ proc ot_pf_ref {ports} {
   return [lindex $m 1]
 }
 set qdm_ref {}
-if {$ot_glob ne ""} {
+if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default
   foreach c [get_cells -quiet -hierarchical $ot_glob] {
     set p [get_pins -quiet "[get_full_name $c]/CLK"]
     if {[llength $p]} { set qdm_ref $p; break }

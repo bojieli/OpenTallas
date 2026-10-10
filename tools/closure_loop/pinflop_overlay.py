@@ -16,7 +16,7 @@ foreach c [get_cells -quiet -hierarchical $ot_glob] {
 if {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }
 '''
 MAIN_NEW = '''set qdm_ref {}
-if {$ot_glob ne ""} {
+if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default
   foreach c [get_cells -quiet -hierarchical $ot_glob] {
     set p [get_pins -quiet "[get_full_name $c]/CLK"]
     if {[llength $p]} { set qdm_ref $p; break }
@@ -30,9 +30,14 @@ KIT_NEW = ('  set ref {}\n  if {[llength $ins]} { set ref [ot_pf_ref [get_ports 
            '  if {![llength $ref]} { set ref [lindex [all_registers -clock $clk -clock_pins] 0] }\n')
 
 
+GLOB_OLD = 'if {$ot_glob ne ""} {\n'
+GLOB_NEW = 'if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default\n'
+
+
 def patch(text, procs):
     if "proc ot_pf_ref" in text:
-        return None
+        # 6cd79a9f8-era snapshot: upgrade the glob test so REFGLOB='*' (no named reference) also gets the pin flops
+        return text.replace(GLOB_OLD, GLOB_NEW, 1) if GLOB_OLD in text else None
     if text.count(MAIN_OLD) == 1:
         return text.replace(MAIN_OLD, procs + MAIN_NEW, 1)
     if text.count(KIT_OLD) == 1 and "$ins" in text:
