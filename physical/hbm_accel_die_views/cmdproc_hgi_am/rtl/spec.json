@@ -31,7 +31,19 @@
     "idx_rec": "die:t_hgi_idx[0:1819]",
     "idx_ret": "die:f_hgi_idx[0:3]",
     "am_rec": "die:t_hgi_argmax[0:691]",
-    "am_ret": "die:f_hgi_argmax[0:3]"
+    "am_ret": "die:f_hgi_argmax[0:3]",
+    "sm_rec": "fold",
+    "sm_ret": "const:0",
+    "su_rec": "die:t_hgi_su[0:2198]",
+    "su_ret": "die:f_hgi_su[0:3]",
+    "sfu_rec": "die:t_hgi_sfu[0:1174]",
+    "sfu_ret": "die:f_hgi_sfu[0:3]",
+    "att_rec": "fold",
+    "att_ret": "const:0",
+    "dma_rec": "die:t_hgi_dma[0:704]",
+    "dma_ret": "die:f_hgi_dma[0:3]",
+    "hc_rec": "die:t_hgi_hc[0:939]",
+    "hc_ret": "die:f_hgi_hc[0:3]"
    }
   }
  ],
@@ -43,5 +55,23 @@
  "open_items": [
   "ux_* (12 units) wait for the hgi-adapters record adapters",
   "wr_quiet needs the DMA / svc write-visibility signal"
- ]
+ ],
+ "ties": {
+  "cpd.sm_rec": {
+   "class": "by_design",
+   "reason": "the unit's record adapter sits INSIDE this CP block (hgi-adapters placement: SM drives the SM launch tree from here; ATT behind Codex's G12 adapter until the ATT load protocol D4): bound here when the adapter lands; until then ready = 0 (a record of this unit waits at dispatch: fail-closed)"
+  },
+  "cpd.sm_ret": {
+   "class": "by_design",
+   "reason": "the unit's record adapter sits INSIDE this CP block (hgi-adapters placement: SM drives the SM launch tree from here; ATT behind Codex's G12 adapter until the ATT load protocol D4): bound here when the adapter lands; until then ready = 0 (a record of this unit waits at dispatch: fail-closed)"
+  },
+  "cpd.att_rec": {
+   "class": "by_design",
+   "reason": "the unit's record adapter sits INSIDE this CP block (hgi-adapters placement: SM drives the SM launch tree from here; ATT behind Codex's G12 adapter until the ATT load protocol D4): bound here when the adapter lands; until then ready = 0 (a record of this unit waits at dispatch: fail-closed)"
+  },
+  "cpd.att_ret": {
+   "class": "by_design",
+   "reason": "the unit's record adapter sits INSIDE this CP block (hgi-adapters placement: SM drives the SM launch tree from here; ATT behind Codex's G12 adapter until the ATT load protocol D4): bound here when the adapter lands; until then ready = 0 (a record of this unit waits at dispatch: fail-closed)"
+  }
+ }
 }

@@ -52,9 +52,17 @@ module ot_hgi_hc_record #(
     assign job = hen ? job_q : lg_job;
     assign lg_rdy = !hen && job_rdy;
     wire [6:0] opq = hdr_q[99:93];
-    wire bad = (hdr_q[127:124] != 4'd10) || (hdr_q[123:118] != 6'd0) || !opq[0] || !opq[1] || !opq[4] ||
+    // G22 (hgi-takeover 2026-10-09): op 0 HC_MIX (24 rows + post), op 1 HC_MIX_ROWS (rows imm_a .. imm_a + O.n - 1,
+    // the raw x r mixes only), op 2 HC_MIX_POST (A = the 24 gathered mixes -> [pre | post | comb]; B = the weight set,
+    // whose 4 head sectors hold scale / base)
+    wire [5:0] hop = hdr_q[123:118];
+    wire [31:0] r0 = hdr_q[63:32];
+    wire bad_n = (hop == 6'd0) ? (no_q != 21'd24) :
+                 (hop == 6'd1) ? (no_q == 21'd0 || no_q > 21'd24 || r0 > 32'd23 || r0 + {11'd0, no_q} > 32'd24) :
+                                 (no_q != 21'd24 || na_q != 21'd24);
+    wire bad = (hdr_q[127:124] != 4'd10) || (hop > 6'd2) || !opq[0] || !opq[1] || !opq[4] ||
                (a_q[1:0] != 2'd1) || (o_q[1:0] != 2'd1) || (b_q[1:0] != 2'd0) || (na_q == 21'd0) || (|na_q[2:0]) ||
-               (|na_q[20:18]) || (no_q != 21'd24) || (|b_q[12:8]);
+               (|na_q[20:18]) || bad_n || (|b_q[12:8]);
     // binary32 of K (exact, K < 2^24): exponent 127 + msb, mantissa = K << (23 - msb)
     reg [4:0] msb; integer i;
     always @* begin msb = 5'd0; for (i = 0; i < 21; i = i + 1) if (na_q[i]) msb = i[4:0]; end
@@ -77,7 +85,8 @@ module ot_hgi_hc_record #(
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; iss <= 1'b1;
-                    job_q <= {29'd0, o_q[25:8], nwords, b_q[47:13] /* w_hbm: B.base >> 5 */, a_q[25:8], 16'd0, eps_q, nf,
+                    // pad bits: {op 2 [201:200], row0 5 [206:202], nrows 5 [211:207]}
+                    job_q <= {17'd0, no_q[4:0], (hop == 6'd1) ? r0[4:0] : 5'd0, hop[1:0], o_q[25:8], nwords, b_q[47:13] /* w_hbm: B.base >> 5 */, a_q[25:8], 16'd0, eps_q, nf,
                               1'b1, nchunk, 5'd24, 1'b1};
                 end
             end

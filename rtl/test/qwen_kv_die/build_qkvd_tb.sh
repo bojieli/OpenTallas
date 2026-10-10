@@ -12,6 +12,10 @@ RR=8; RST=24
 if [ "${STACK:-p}" = c ]; then
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_c.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv"
   DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_LBD=${LBD:-2}"
+elif [ "${STACK:-p}" = h ]; then
+  # STACK=h: re-cut H (re-cut D with the row engine as hard sub-tiles: 4 head tiles + an engine control tile)
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT}"
 elif [ "${STACK:-p}" = e ]; then
   # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"

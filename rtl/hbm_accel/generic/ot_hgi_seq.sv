@@ -31,7 +31,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_seq #(
     parameter integer RW   = 512,        // ring words (16 B); a power of two
-    parameter integer NOS  = 8,          // fetch sectors outstanding
+    parameter integer NOS  = 48,         // fetch sectors outstanding (F5 2026-10-09: 48 x 2 words covers ~128 cycles of
+                                         // memory latency at the program's peak record rate; the link must keep them in order)
     parameter integer USE_MACRO = 0,     // 1: the ring is one ot_sram_1r1w_256x256_m2_r2c2 (RW must be 512)
     parameter integer DS_TPL = 2,        // DS full-shape DYN: log2 TP (4)
     parameter integer DS_WIN = 128,      //   window
@@ -56,6 +57,8 @@ module ot_hgi_seq #(
     input  wire [3:0]    db_gen,
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,       // verify columns: bounds the TOKX count k
+    input  wire [3:0]    db_kernel,     // G23: entry 3 = KERNEL, offset = MD word 16 + db_kernel
+    input  wire [11*32-1:0] md_k,       // G23: MD words 16 .. 26 (cfg master)
     // record fetch: 32 B sectors, in-order responses
     output wire          f_req_v,
     input  wire          f_req_rdy,
@@ -96,7 +99,7 @@ module ot_hgi_seq #(
 );
     // ---- registered boundary (submit rule X4): every data / status input lands in a pin flop (config words are
     // quasi-static, retire / fault pulses and VM read data one cycle later: the drain mask only waits longer)
-    reg [159:0] md_d_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
+    reg [159:0] md_d_r; reg [11*32-1:0] md_k_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
     // reset: asynchronous assert, synchronous release through two flops (route: rst_n recovery -89 ps, fanout ~3k);
     // every other register resets on rn
@@ -107,7 +110,7 @@ module ot_hgi_seq #(
         if (!rn) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
         else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; f_rsp_v_r <= f_rsp_v; end
     always @(posedge clk) begin
-        md_d_r <= md_d; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data; f_rsp_data_r <= f_rsp_data;
+        md_d_r <= md_d; md_k_r <= md_k; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data; f_rsp_data_r <= f_rsp_data;
     end
     localparam integer RB = $clog2(RW);
     localparam integer RS = RW / 2;                       // sectors
@@ -126,7 +129,7 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
     reg [39:0]  faddr, faddr_n, img_q;   // faddr_n = faddr + 32 kept registered (the push selects; no 40-bit add)
-    reg [4:0]   inflight, drop;
+    reg [6:0]   inflight, drop;
     reg         fetching;
     wire [RB:0] frp_al = {frp[RB:1], 1'b0};
     wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0};
@@ -138,7 +141,7 @@ module ot_hgi_seq #(
     always @(posedge clk) avail_ok <= (avail >= {{(RB-4){1'b0}}, rlen});
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
     reg [255:0] rd_sec; reg rd_hi;
-    wire        ring_we = f_rsp_v_r && (drop == 5'd0);
+    wire        ring_we = f_rsp_v_r && (drop == 7'd0);
     always @(posedge clk) rd_hi <= rd_ptr[0];
     generate if (USE_MACRO) begin : g_ring_m
         initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
@@ -340,14 +343,14 @@ module ot_hgi_seq #(
     assign db_rdy = db_rdy_q;
     // timing pass 4: the doorbell is captured at the port (db_v -> the FSM's job-start enables was -239 ps); the FSM
     // starts from the captured copy one edge later
-    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol; reg [1:0] dbq_entry;
+    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
         else if (db_v && db_rdy_q) db_pend <= 1'b1;
         else if (st == S_IDLE) db_pend <= 1'b0;
     // the fields follow the port while ready is high (enable = the ready flop alone; db_v -> 70 enables was -65 ps)
     always @(posedge clk) if (db_rdy_q) begin
-        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry;
+        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel;
     end
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
@@ -383,10 +386,13 @@ module ot_hgi_seq #(
         if (!rn) u_tk <= 16'd0;
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
-    wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
+    reg [3:0] kern_q;
+    wire [31:0] kern_off = (kern_q > 4'd10) ? 32'd0 : md_k_r[kern_q*32 +: 32];
+    wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] :
+                             (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
     reg [20:0] img_l; reg [19:0] img_ha, img_hb;
-    wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
+    wire [6:0] infl_p1 = inflight + 7'd1, infl_m1 = inflight - 7'd1;   // from flops: the ready only selects
     // fetch requests leave through a 2-entry FIFO (registered boundary: f_req_rdy only pops it); inflight counts
     // requests PUSHED and not yet answered (every pushed request is sent and answered; a new doorbell drops them)
     reg [39:0] rqf [0:1]; reg rqh; reg [1:0] rqn;
@@ -408,7 +414,7 @@ module ot_hgi_seq #(
             if (rq_pop) rqh <= ~rqh;
             rqn <= rq_pop ? (rq_push ? rqn : rqn_m1) : (rq_push ? rqn_p1 : rqn);   // f_req_rdy only selects
         end
-    wire [4:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
+    wire [6:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
     wire       is_ctl = (h_unit == 4'd0);
     wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
     wire [1:0] top = depth - 2'd1;
@@ -518,7 +524,7 @@ module ot_hgi_seq #(
             if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_n + 40'd32; end
             // ---- fetch responses -> ring (one sector a response)
             if (f_rsp_v_r) begin
-                if (drop != 0) drop <= drop - 5'd1;
+                if (drop != 0) drop <= drop - 7'd1;
                 else begin wp <= wp + 2'd2; wv <= 1'b1; end         // the ring write: g_ring_*
             end
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
@@ -528,7 +534,7 @@ module ot_hgi_seq #(
             end else case (st)
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
-                    db_entry_q <= dbq_entry;
+                    db_entry_q <= dbq_entry; kern_q <= dbq_kernel;
 `ifdef OT_HGI_SEQ_CC_PRESET
                     cc_lo <= 16'hFF00; cc_hi <= 16'd0; cc_c <= 1'b0;   // bench: start near the low half's wrap
 `else
@@ -539,7 +545,7 @@ module ot_hgi_seq #(
                 end
                 S_DB: begin                                         // the doorbell checks registered (cfg -> ring resets)
                     pos1_q <= {1'b0, pos} + 21'd1;
-                    db_bad <= (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r);
+                    db_bad <= (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r) || (db_entry_q == 2'd3 && kern_off == 32'd0);   // G23: an absent kernel
                     img_l <= {1'b0, img_a[19:0]} + {1'b0, entry_off[19:0]};   // image base + entry offset, 20 b a cycle
                     img_ha <= img_a[39:20]; img_hb <= entry_off[39:20];
                     st <= S_DB2;

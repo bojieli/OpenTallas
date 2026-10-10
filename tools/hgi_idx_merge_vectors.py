@@ -24,9 +24,9 @@ def main():
     pool = np.array([5.0, 5.0, 2.5, 1.0, 0.0, -0.0, -1.0, np.inf, -np.inf, np.nan, 3.25, 7.0], dtype=np.float32)
     cases = []
     specs = [(96, 512, 512, 0), (96, 8, 512, 0), (4, 512, 512, 0), (8, 64, 100, 0), (1, 300, 300, 0), (96, 6, 512, 1),
-             (128, 4, 600, 0), (3, 5, 20, 0), (2, 16, 7, 0), (96, 512, 512, 0)]
+             (128, 4, 600, 0), (3, 5, 20, 0), (2, 16, 7, 0), (96, 512, 2048, 0), (96, 512, 512, 0)]
     for c, (G, n, k, key) in enumerate(specs):
-        if c == len(specs) - 1:
+        if c >= len(specs) - 2:
             vals = rng.standard_normal((G, n)).astype(np.float32)       # realistic DS-like case, no special values
         else:
             vals = rng.choice(pool, size=(G, n)) if c % 2 == 0 else \

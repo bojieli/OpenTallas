@@ -56,7 +56,42 @@ module tb_hbm_accel_sm_pq_seq;
         .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr),
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
-        .release_in(release_in), .released(released));
+        .release_in(release_in), .released(released)
+`ifdef OT_SMH_CG
+        , .cg_en(1'b1)            // the reference: always awake (functionally the ungated element)
+`endif
+        );
+`ifdef OT_SMH_CG_LOCKSTEP
+    // redesign-hbm 2026-10-09: COARSE CLOCK-GATING LOCKSTEP.  dut_g is the same element with tiles / back ends gated by
+    // cg_en, driven by the adapter contract (wake while an x load, a start or an op is in flight; +GAP inserts fully idle
+    // gaps so the gates really close).  Every output is compared every cycle (data fields where their valid is set).
+    wire g_start_ready, g_busy, g_d_ready, g_req_v, g_rv, g_fault, g_arrive, g_released;
+    wire [31:0] g_req_addr; wire [9:0] g_req_tag; wire [RW-1:0] g_rrow; wire [NC*32-1:0] g_rdata;
+    reg cg_wake = 1'b1;
+    ot_hbm_accel_smh #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
+                       .MAX_OUT(512), .HAZ(HAZ), .REQCR(REQCR), .ENABLE_INT8(ENABLE_INT8), .PIPE_INT8(PIPE_INT8)) dut_g (
+        .clk(clk), .rst_n(rst_n), .start(start), .start_ready(g_start_ready), .op_rows(op_rows), .op_c(op_c),
+        .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(g_busy), .d_valid(d_valid),
+        .d_ready(g_d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(g_req_v), .req_ready(req_ready), .req_addr(g_req_addr),
+        .req_tag(g_req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
+        .xw_grp(xw_grp), .xw_data(xw_data), .rv(g_rv), .rrow(g_rrow), .rdata(g_rdata), .fault(g_fault), .arrive(g_arrive),
+        .release_in(release_in), .released(g_released), .cg_en(cg_wake));
+    integer cg_mis = 0, cg_gated = 0, n_started = 0;
+    always @(posedge clk) if (start && start_ready) n_started <= n_started + 1;
+    // the adapter contract (set at the negedge with the stimulus): awake while an x beat, a start or an op is in flight
+    always @(negedge clk) cg_wake <= !rst_n || xw_en || start || (n_started > ndone) || d_valid;
+    always @(posedge clk) if (rst_n) begin
+        if (!dut_g.g_c[0].g_p[0].g_tp.u_t.u_cgt.en) cg_gated <= cg_gated + 1;
+        if (g_start_ready !== start_ready || g_busy !== busy || g_d_ready !== d_ready || g_req_v !== req_v ||
+            (req_v && (g_req_addr !== req_addr || g_req_tag !== req_tag)) || g_rv !== rv ||
+            (rv && (g_rrow !== rrow || g_rdata !== rdata)) || g_fault !== fault || g_arrive !== arrive ||
+            g_released !== released) begin
+            if (cg_mis < 8) $display("CG_MISMATCH cyc %0d rv %b/%b rrow %0d/%0d req_v %b/%b arrive %b/%b busy %b/%b",
+                                     cyc, rv, g_rv, rrow, g_rrow, req_v, g_req_v, arrive, g_arrive, busy, g_busy);
+            cg_mis <= cg_mis + 1;
+        end
+    end
+`endif
 `define OT_DP dut.g_fp.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
 `define OT_DCROW dut.g_fp.u_fs.al[RW-1:0]
 `else
@@ -89,6 +124,7 @@ module tb_hbm_accel_sm_pq_seq;
     integer t_lastline [0:MAXOPS-1]; integer t_firstline [0:MAXOPS-1]; integer consumed [0:MAXOPS-1];
     integer t_dpost [0:MAXOPS-1]; integer t_ready [0:MAXOPS-1];
     integer cur, cons_total, line_op;
+    integer cg_gap;
     reg [1023:0] dir;
     initial for (ii = 0; ii < 512; ii = ii + 1) p_use[ii] = 0;
     always @(posedge clk) begin
@@ -155,6 +191,7 @@ module tb_hbm_accel_sm_pq_seq;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         if (!$value$plusargs("NOPS=%d", nops)) nops = 1;
+        if (!$value$plusargs("GAP=%d", cg_gap)) cg_gap = 0;
         seed = 7; cyc = 0; cur = 0; cons_total = 0; line_op = 0; ndone = 0;
         $readmemh({dir, "/seq.hex"}, seq);
         $readmemh({dir, "/lines.hex"}, lines);
@@ -181,6 +218,10 @@ module tb_hbm_accel_sm_pq_seq;
                     for (j = ndone; j < op; j = j + 1) if (overlap(op, j)) ok = 0;
                     if (!ok) @(negedge clk);
                 end
+            end
+            if (cg_gap > 0) begin                                     // +GAP: drain, then a fully idle gap
+                while (ndone < op) @(negedge clk);
+                repeat (cg_gap) @(negedge clk);
             end
             t_load0[op] = cyc;
             if (seq[op * NW + 6] != 0) begin
@@ -210,6 +251,10 @@ module tb_hbm_accel_sm_pq_seq;
                     op, t_load0[op], t_ready[op], t_post[op], t_firstline[op], t_lastline[op], t_first[op],
                     t_last[op], t_done[op], nres[op], seq[op * NW + 4], consumed[op], fault);
         $fwrite(fo, "# total_cycles %0d\n", cyc);
+`ifdef OT_SMH_CG_LOCKSTEP
+        $fwrite(fo, "# cg_lockstep mismatches %0d gated_cycles_tile00 %0d of %0d\n", cg_mis, cg_gated, cyc);
+        $display("CG_LOCKSTEP mismatches %0d gated_cycles_tile00 %0d of %0d", cg_mis, cg_gated, cyc);
+`endif
         $fclose(fo);
         $finish;
     end

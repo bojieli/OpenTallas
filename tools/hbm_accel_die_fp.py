@@ -539,6 +539,12 @@ MTP_HGI_WH, ARGMAX_HGI_WH = (286.56, 200.88), (180.0, 140.0)
 ARGMAX_HGI_IN = (('in_v', 1), ('in_last', 1), ('in_bias_en', 1), ('in_mask', 8), ('in_vals', 256), ('in_bias', 256))
 ARGMAX_HGI_OUT = (('out_v', 1), ('out_idx', 18), ('out_nan', 1), ('fault', 1), ('out_range_fault', 1), ('out_value', 32))
 R25GM = _hgi_mtp(R25G)
+# hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): the generic die as an HGI-1 machine on the closing views (R25GP): the single
+# CP (ot_hgi_cp_die) with every record unit on a die record bus (tools/hgi_die_dispatch.py: sm / att inside the CP block,
+# su / sfu / hc at the SW quarter, dma beside the loader, coll, quant, idx, argmax in the MTP slot), the HGI VM with 8
+# packet clients, and the MTP slot (hgi_mtp_native + the dispatched ARGMAX unit hfd_hgi_am)
+HGI_FULL = ['argmax', 'cp', 'coll', 'quant', 'idx', 'sm', 'su', 'sfu', 'att', 'dma', 'hc']
+R25GPH = dict(_hgi_mtp(R25GP), hgi_dispatch=HGI_FULL, router_exact=True)
 R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full network build)
 if _mtp_generic_closed():
     R25G, R25G4 = R25GM, R25G4M
@@ -1844,6 +1850,34 @@ def _xy_or_split_spec(ports):
     return spec, order
 
 
+def fc_tap_latency(rel, band, pins):
+    """Per-segment face clock tap latency from the segment's block timing model: set_clock_latency -source <ps> on
+    ckw / cke in its SDC (the split record's sibling sdc_* directories, <band>*.sdc), read in ps (values < 10 are ns).
+    Returns {pin: {ps, source}} for the pins that have one."""
+    out = {}
+    base = (ROOT / rel).parent.parent
+    tag = (ROOT / rel).parent.name.replace('split', '')            # split_psfc -> _psfc
+    for d in [base / f'sdc{tag}'] + sorted(p_ for p_ in base.glob('sdc*') if p_.name != f'sdc{tag}'):
+        for f in sorted(d.glob(f'{band}*.sdc')) if d.is_dir() else []:
+            for ln in f.read_text().splitlines():
+                mm = re.match(r'\s*set_clock_latency\s+(.*)$', ln)
+                if not mm or '-source' not in mm.group(1):
+                    continue
+                toks = mm.group(1)
+                val = re.search(r'(?:^|\s)(-?[0-9]+(?:\.[0-9]+)?)(?=\s)', ' ' + re.sub(r'\[.*', '', toks) + ' ')
+                tgt = re.search(r'\[get_(?:ports|clocks)\s+\{?([^\]\}]*)', toks)
+                if not val or not tgt:
+                    continue
+                v = float(val.group(1))
+                ps = v * 1000.0 if v < 10 else v
+                for tp in pins:
+                    if re.search(rf'(^|\s|\{{){tp}(\[0\])?(\s|\}}|$)', tgt.group(1)) and tp not in out:
+                        out[tp] = dict(ps=round(ps, 3), source=str(f.relative_to(ROOT)))
+        if out:
+            break
+    return out
+
+
 def apply_splits_x(m, rel):
     """r16j: x-axis split (hbm_die_split_x.v1).  Each instance of a split parent is replaced by its bands in the same
     slot (same orientation; MY / R180 mirror the band x), parent-port bus ends move to the owning band under its band
@@ -1852,6 +1886,7 @@ def apply_splits_x(m, rel):
     bands of each parent instance."""
     V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
+    fc_lat_ = {}
     fixed = m.setdefault('fixed_ports', {})
     # r25m (MTP-DIE, RQ-ING-4): ports a die variant adds to a split parent (the loader memory chains on the stream
     # services): each lands on the band under its peer's x, as an inner-face (master N) M5 run at the free face span nearest the peer's x at the peer's x (an
@@ -1881,6 +1916,8 @@ def apply_splits_x(m, rel):
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
         fc_taps[bn] = [p_ for p_ in ('ckw', 'cke') if p_ in rec['ports']]
+        if fc_taps[bn]:
+            fc_lat_[bn] = fc_tap_latency(rel, bn, fc_taps[bn])
         spec, order = _xy_or_split_spec(rec['ports'])
         for pn_, t_ in extra_x.get(bn, {}).items():
             # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
@@ -1979,6 +2016,21 @@ def apply_splits_x(m, rel):
                 nb.append((f'{inst}_x{j}', 'hub', x['bits'], [(names[fb], fp), (names[tb], tp)]))
     m['buses'] = nb
     m.setdefault('splits', {})['svc_x'] = dict(record=rel, instances=sorted(repl))
+    # coordinator 2026-10-09 ~22:10: a face clock tap (ckw / cke) clocks the segment's face registers directly, while ck
+    # reaches its interior registers through the segment's own tree (insertion I ~480-540 ps).  The block timing model
+    # declares I as set_clock_latency -source on ckw / cke; the die clock plan must deliver those leaves I LATER than
+    # the segment's ck leaf (a per-leaf delay / tap in the die tree) so face and interior registers line up.
+    rows_ = []
+    for inst, names in repl.items():
+        for bn, nm in names.items():
+            for tp in fc_taps.get(bn, ()):
+                lat = fc_lat_[bn].get(tp)
+                rows_.append(dict(net='clk_hbm', inst=nm, master=bn, pin=tp, ref_pin='ck',
+                                  offset_ps=lat['ps'] if lat else None, source=lat['source'] if lat else None,
+                                  status='resolved' if lat else 'PENDING: no set_clock_latency -source on this pin in the '
+                                  'segment timing model yet (segment not closed)'))
+    if rows_:
+        m['clock_leaf_offsets'] = rows_
 
 
 # ------------------------------------------------------------------------------------------------ station masters
@@ -3544,6 +3596,7 @@ def plan_record(m):
                                       where='multicast stations (one per SM column) + the x trunk stations', grade='sized: '
                                       '4 stages x bus width x 0.2916 um2 DFF at 0.6 utilisation')),
         power=die_power(m), pdn=pdn_plan(m), clock_region_list=clock_regions(m), notes=m['notes'], variant=m['variant'],
+        clock_leaf_offsets=m.get('clock_leaf_offsets', []),
         generator_decisions=DECISIONS,
         **r15_record(m))
 
@@ -3908,7 +3961,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gph=R25GPH, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

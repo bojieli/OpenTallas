@@ -1,0 +1,118 @@
+{
+  "host": "ot-pve1",
+  "source": "27186ef4916226efb73a2bc2ce30a6c74685f3cb",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "parameters": {
+    "ENABLE_GENERIC": 1,
+    "NSLOT": 8,
+    "MUTANT": 0
+  },
+  "boundary_timeout": null,
+  "results": {
+    "hgi-ehash-ds-b-27186ef49-tc-cx": {
+      "key": "013253938549096fa8395227",
+      "recipe": {
+        "top": "ot_hbm_idx_ehash_ds",
+        "sources": [
+          "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+          "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ],
+        "params": {
+          "ENABLE_GENERIC": "1",
+          "NSLOT": "8",
+          "MUTANT": "0"
+        },
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "result": {
+        "in_to_out_bits": 1,
+        "in_to_out_max": 3,
+        "in_to_out_example": [
+          "cmd_ready"
+        ],
+        "in_to_reg_max": 189,
+        "reg_to_out_max": 44,
+        "reg_to_out_example": "row_id[9]",
+        "cells": 7630732,
+        "ctrl_ports": [
+          "clk",
+          "rst_n"
+        ],
+        "top": "ot_hbm_idx_ehash_ds",
+        "levels": 16,
+        "strict": true,
+        "verdict": "REFUSE",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds (registered_io): 1 output bit(s) combinational from data inputs (max 3 levels, e.g. cmd_ready); input->register 189 gate levels > 16; register->output 44 gate levels > 16 (e.g. row_id[9])"
+      }
+    },
+    "hgi-ehash-ds-a-27186ef49-tc-cx": {
+      "key": "013253938549096fa8395227",
+      "recipe": {
+        "top": "ot_hbm_idx_ehash_ds",
+        "sources": [
+          "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+          "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ],
+        "params": {
+          "ENABLE_GENERIC": "1",
+          "NSLOT": "8",
+          "MUTANT": "0"
+        },
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "result": {
+        "in_to_out_bits": 1,
+        "in_to_out_max": 3,
+        "in_to_out_example": [
+          "cmd_ready"
+        ],
+        "in_to_reg_max": 189,
+        "reg_to_out_max": 44,
+        "reg_to_out_example": "row_id[9]",
+        "cells": 7630732,
+        "ctrl_ports": [
+          "clk",
+          "rst_n"
+        ],
+        "cached": true,
+        "top": "ot_hbm_idx_ehash_ds",
+        "levels": 16,
+        "strict": true,
+        "verdict": "REFUSE",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds (registered_io): 1 output bit(s) combinational from data inputs (max 3 levels, e.g. cmd_ready); input->register 189 gate levels > 16; register->output 44 gate levels > 16 (e.g. row_id[9])"
+      }
+    }
+  }
+}
+	Command being timed: "python3 /srv/opentallas-scratch/codex/hgi-ehash-boundary-27186ef49/check.py"
+	User time (seconds): 1349.59
+	System time (seconds): 81.55
+	Percent of CPU this job got: 130%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 18:13.95
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 26091748
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 18660278
+	Voluntary context switches: 135014
+	Involuntary context switches: 30542
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 12039440
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

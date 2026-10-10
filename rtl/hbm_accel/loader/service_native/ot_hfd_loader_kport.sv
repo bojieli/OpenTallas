@@ -59,20 +59,25 @@ module ot_hfd_loader_kport #(
     wire [15:0] e_rsp_tag [0:3];
     wire [255:0] e_rsp_data [0:3];
     reg  [ND-1:0] owner [0:3];                             // lane holding the stack's transaction (one-hot)
-    reg  [3:0]  rr;                                        // per stack: lane 1 has priority next
+    reg  [1:0]  rr [0:3];                                  // per stack: the lane with priority next (rotating, ND <= 4)
     wire [ND-1:0] want [0:3];
     wire [ND-1:0] grant [0:3];
     for (s = 0; s < 4; s = s + 1) begin : g_st
         for (d = 0; d < ND; d = d + 1) begin : g_want
             assign want[s][d] = ENABLE && req_v[d] && !l_busy[d] && l_ok[d] && l_stack[d] == s && !(|owner[s]);
         end
-        if (ND == 1) begin : g_g1
-            assign grant[s] = want[s];
-        end else begin : g_g2
-            assign grant[s][0] = want[s][0] && !(rr[s] && want[s][1]);
-            assign grant[s][1] = want[s][1] && !grant[s][0];
+        // rotating priority from rr[s] (ND 1 .. 4; hgi-takeover: ND 3 for the DMA unit's lane)
+        reg [ND-1:0] gr_; reg [1:0] gs_;
+        always @* begin : arb
+            integer t, dd; reg found;
+            gr_ = {ND{1'b0}}; gs_ = 2'd0; found = 1'b0;
+            for (t = 0; t < ND; t = t + 1) begin
+                dd = (rr[s] + t) % ND;
+                if (!found && want[s][dd]) begin gr_[dd] = 1'b1; gs_ = 2'(dd); found = 1'b1; end
+            end
         end
-        wire gsel = (ND > 1) && grant[s][ND > 1 ? 1 : 0];
+        assign grant[s] = gr_;
+        wire [1:0] gsel = gs_;
         wire        ev   = |grant[s];
         wire        ewe  = req_we[gsel];
         wire [36:0] ea   = req_addr[gsel*37 +: 37];
@@ -111,9 +116,9 @@ module ot_hfd_loader_kport #(
         wire owp = e_busy[s] && |(owner[s] & req_we) && !e_rsp_v[s];
         assign lq[s*346 +: 346] = {owp, rd_rsp_rdy, rd_tag, rd_addr, rd_pc, rd_v, wr_packet, wr_v};
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= 1'b0; end
+            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= 2'd0; end
             else begin
-                if (ev && e_req_rdy[s]) begin owner[s] <= grant[s]; rr[s] <= ~gsel; end
+                if (ev && e_req_rdy[s]) begin owner[s] <= grant[s]; rr[s] <= 2'((gsel + 2'd1) % ND); end
                 else if (e_rsp_v[s] && |(owner[s] & rsp_rdy)) owner[s] <= {ND{1'b0}};
             end
     end

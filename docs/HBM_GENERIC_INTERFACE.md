@@ -136,6 +136,8 @@ A record names each operand by a **memory descriptor** whose `space` field selec
 
 STREAM operands implement the project's dataflow rule that a value returns to shared memory only when another lane, unit or die needs it (AGENTS.md dataflow level 2).
 
+**How engines reach VM.** VM is one shared, banked memory with variable latency: its clients send request packets and receive responses in order, with up to 4 requests outstanding each. The stream unit, the special-function unit, the fused paths, the attention controller and the hyper-connection unit have fixed-latency, no-stall operand ports, so they do not read VM directly. Each keeps its own local operand memory, as on r25. The unit's record adapter **stages** the record's VM operands into that local memory and **drains** the results back to VM, both through VM's packet interface. The local memory is double-buffered, so staging the next record overlaps the current record's compute. The record retires when its last result is drained, so ordering and exactness (§4) stay at record level, and the program sees one VM. VM itself does not become fixed-latency. The simulator charges the stage and drain traffic of every record against VM's bandwidth.
+
 ### 2.5 Data flow through a token
 
 For one token, data moves in a fixed pattern:
@@ -415,7 +417,9 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 |---|---|---|
 | 0 | magic `0x31494748` ("HGI1") | CP |
 | 1 | version 1.0 (minor in bits 7:0, major in 15:8), length 64 (bits 23:16) | CP |
-| 2–31 | reserved | — |
+| 2–15 | reserved | — |
+| 16–26 | MTP backend kernel entries 0 … 10 (G23): record offsets in the image, 16-byte units; 0 = absent | CP |
+| 27–31 | reserved | — |
 | 32–39 | sha256 of the model manifest | software |
 | 40 | `cp_vocab` (bits 17:0) | CP |
 | 41 | `cp_ctx_max` (bits 20:0) | CP |
@@ -579,7 +583,7 @@ Bit 7 and bits 255:239 are reserved.
 
 | Stream id | Producer | Consumer | Use |
 |---|---|---|---|
-| 0 | SM (`SM.MATVEC` O) | SU lanes (`SU.VOP` A) | LM-head rows into the row scale (Qwen, DFlash) |
+| 0 | SM (`SM.MATVEC` O) | SU lanes (`SU.VOP` A) | LM-head rows into the row scale (Qwen, DFlash); the SU's STREAM input port |
 | 1 | SU reduction output | ARGMAX (`ARGMAX.LOCAL` A) | scaled head logits into the argmax |
 | 2 | SM (`SM.MATVEC` O) | ARGMAX (`ARGMAX.LOCAL` A) | LM head straight into the argmax (DS) |
 
@@ -628,7 +632,7 @@ Operation codes are the index of each operation in its unit's list in `spec.json
 | Argmax unit (ARGMAX) | LOCAL | `imm_a` = id offset multiplier | numpy argmax: lowest index on ties; NaN flag reported; global id = local id + RANK · `imm_a` |
 | DMA engine (DMA) | LOAD, STORE, FENCE, KVWB_DS | — | LOAD/STORE: HBM ↔ VM row moves, including the linear KV append, recurrent state and the indexed row stream (§3.3). FENCE: makes the DMA unit's writes visible. KVWB_DS: the DS window-ring KV write-back. |
 | Indexer / top-k (IDX) | INDEX, MERGE, TOPK, OWNED, EHASH (op codes 0 … 4) | OWNED: `[7:0]` owner block B (a power of two ≤ 128), `[15:8]` group G (1, 2, 4, 8, 96). MERGE: `[11:0]` k (1 … 2,048), `[12]` key (0 = larger value first, 1 = lower id first). INDEX: `[11:0]` k (the local top-k, DS 512), `[12]` cand_en, `[13]` keep_en; `imm_a` = n (the keys scored), `imm_b` = layer. TOPK: `[11:0]` k (1 … 2,048); `[12]` order (0 = descending score, 1 = ascending id; order 1 is legal for k ≤ 8 only, otherwise E_RANGE). EHASH: `[2:0]` Engram layer index | INDEX: one DS indexer frame on the indexer engine: the query blocks of A are quantised with the head weights of B, the die's index keys (rank-owned blocks of 8 below n) are scored and reduced, and O / R receive the local top-k (ids in ascending id order, values with their ids). With `keep_en` the scores are masked first by C, the layer-20 candidate table (the O | R of that layer's candidate `COLL.TOPK_MERGE`: C.n block ids U32 in row 0, their values FP32 in row 1 at C's stride): the engine keeps the blocks it owns (block g on rank g mod 96, die ordinal g div 96) that are listed with a value above −∞ (G18a; the golden cand_apply rule — the program never builds a bitmap); with `cand_en` D receives the block candidates (the layer-20 pass) in the same layout: block ids (U32) at D's base + j and their values at base + D's stride + j. A is 4,096 FP32 words (head-major, 8-word aligned), B holds 32 BF16 values in FP32 words (low 16 bits zero, else E_RANGE), k ≤ 512, n ≤ 10,944. R values are the BF16 scores widened to FP32; a masked lane's value is −∞. RoPE and the weight scale are not part of INDEX: the program applies them in SU records before it (exact: same arithmetic, same order). OWNED (the ROW_GATHER helper, G21): A = the selected row ids (U32, K ≤ 2,048, id < 2^20); with the ROW_GATHER owner rule, O = this rank's owned local rows in list order padded with 0 to M, R = for every list entry its row r · M + j in the gathered output (j = its slot among owner r's entries), D[0] = M = the largest owned count. MERGE: A (FP32) and B (U32) are G = m rows of n {value, id} pairs (G ≤ 128), every row already sorted by the key; O / R receive the first k elements of the merged order (key 0: larger value first, −0 = +0, NaN after every number, equal values to the lower id — the golden lexsort; key 1: lower id first). A row out of key order faults (E_RANGE). Fewer than k elements in all rows: O / R hold all of them. TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index (with `order` = 1, the same selected set in ascending id order: the DS router top-6); R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. |
-| Hyper-connections (HC) | HC_MIX | — | The DS hyper-connection mix |
+| Hyper-connections (HC) | HC_MIX, HC_MIX_ROWS, HC_MIX_POST (op codes 0 … 2) | HC_MIX_ROWS: `imm_a` = first row | HC_MIX: the DS hyper-connection mix over all 24 rows (A = the HC state, B = the mix weights fn in HBM, O = [pre | post | comb]). HC_MIX_ROWS (G22): only rows `imm_a` … `imm_a` + O.n − 1 of the raw x·fn mixes, written to O (FP32), reading only those rows of B from HBM. HC_MIX_POST: A = the 24 gathered raw mixes → O = [pre | post | comb] (sigmoid and Sinkhorn), no HBM. On a TP group the program shards the rows: each die runs HC_MIX_ROWS on its rows of the `COLL.ALL_GATHER` even-split rule (n = 24, rank r owns rows ⌊24r/G⌋ … ⌊24(r+1)/G⌋ − 1), one exact `COLL.ALL_GATHER` collects the 24 mixes, and every die runs HC_MIX_POST. The result equals HC_MIX bit for bit (rows are independent dot products; the post stage is unchanged). B layout (the HC weight set in HBM, base sector S0): sectors S0 … S0 + 3 hold scale[0..2] in words 0–2 and base[0..23] in words 8–31 (so HC_MIX_POST needs no K); row o, bank k (k < 8), word r of fn is at sector S0 + 4 + (8o + k)·R·SPW + r·SPW, with R = ⌈K / 8 / W⌉ and SPW = W / 8 (W the unit's word width). HC_MIX_ROWS refuses O.n = 0, O.n > 24, `imm_a` > 23 and `imm_a` + O.n > 24 (E_RANGE); HC_MIX_POST requires A.n = O.n = 24. |
 | SIMT engine (SIMT) | RUN | `[13:0]` entry PC; `imm_a` = SM mask | Optional unit, absent on r25 (§2.3) |
 
 ### 6.8 Dynamic values (DYN)
@@ -689,10 +693,12 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 
 | Record | Fields (width in bits) |
 |---|---|
-| Doorbell | `token` 18, `pos` 20, `job` 32, `gen` 4, `entry` 2, `ncol` 4 |
+| Doorbell | `token` 18, `pos` 20, `job` 32, `gen` 4, `entry` 2, `ncol` 4, `kernel` 4 |
 | Completion | `token` 18, `pos` 20, `job`, `gen`, `status` 4, `cycles` |
 
 Completion status: 0 OK, 1 unit fault, 2 no result, 3 bad command or range.
+
+**Entry 3 = KERNEL (G23).** A doorbell with `entry` 3 starts the program at MD word 16 + `kernel` (a kernel entry of 0, or `kernel` > 10, completes at once with status 3). The generic die's native DSpark MTP controller uses it: its operations (the DS draft, verify and head steps) are expanded by the CP's backend translator into one KERNEL doorbell per launch, in the order of the shipped DS-V4.1 DSpark expansion, each with that launch's `token` and `pos`. The completion of a head kernel (the verify-row and draft heads) carries the merged argmax id read by its `CTL.END`; the translator hands it to the controller. The host never needs entry 3; the translator owns the doorbell while a native MTP job runs.
 
 ### 6.12 Model manifest schema
 
@@ -747,6 +753,7 @@ The acceptance test is identical tokens and per-unit outputs against the existin
 | Window ring plus selected rows in one attention | ATT C operand and `ring` flag | **Small hardware:** the ATT row-fetch front end takes a second row list and wraps a power-of-two ring counter |
 | Engram hash ids | `IDX.EHASH` | Existing DS Engram hash engine behind IDX. Until it is wired, the host writes the ids into an HBM table before the doorbell and a `DMA.LOAD` stages them; the rest of the program is identical |
 | Exact gathers and merges | `COLL.ALL_GATHER`, `COLL.TOPK_MERGE`, `COLL.ARGMAX_MERGE`, `COLL.ROW_GATHER` | **Small hardware:** a gather bypass mode on the collective endpoint: each rank's flits are multicast unchanged (no adder, no BF16 packing) on the existing links, credits and delivery lanes, so −0 and NaN payloads survive; completion checks the count, sum and xor of the delivered indices (a duplicate or a loss faults) |
+| Engine operands from the shared VM | Every unit's VM operands (§2.4) | **Small hardware, per unit:** the record adapter stages VM operands into the unit's existing local fixed-latency operand memory (double-buffered) and drains results back, through VM's packet interface with up to 4 requests outstanding; VM stays variable-latency. The stream unit also gets the STREAM input port of stream id 0 (SM → SU) |
 | Selected compressed rows from owner dies | `COLL.ROW_GATHER` | Software (G21): `IDX.OWNED` computes this rank's owned rows (padded to the group's largest count M) and the list-order table; then per slot an indexed `DMA.LOAD`, one exact `COLL.ALL_GATHER` and a `DMA.STORE` to rows r · M + j. The only hardware is the OWNED op in the IDX unit; no HBM ports on the collective, no reorder window |
 
 ### 7.2 Qwen3-8B: the 28 families

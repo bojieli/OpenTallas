@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.qwen-kv-die.recut-h.v1",
+ "date": "2026-10-09",
+ "what": "re-cut H: re-cut D with the row engine as hard sub-tiles (4 x ot_qwen_nearhbm_head_h + ot_qwen_nearhbm_ectl_h), rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv (tools/qwen_kv_die/stack_h_gen.py)",
+ "why": "every monolithic row-engine route failed: _p a / b PREROUTE -6.0 / -4.4 ns (S3 -> product), E -3.6 ns (sc_addr -> lmax), D floorplan repair at -49 ns (central reset leaf -> local-tree bank)",
+ "bench": "rtl/test/qwen_kv_die/bench_run.sh STACK=h (run13_h, ot-epyc1tb), the layer step through the ROM <-> KV link, 7 vectors x VM stall 0 / 1, t = T-1 rows poisoned, typical PHY",
+ "exact_all": true,
+ "runs": 14,
+ "step_8192": 1806,
+ "step_8192_d": 1789,
+ "delta_vs_d": 17,
+ "mutants": {
+  "mut1": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 0,
+   "faults": 1
+  },
+  "mut2": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 1024,
+   "faults": 0
+  },
+  "mut3": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 0,
+   "faults": 6
+  },
+  "mut4": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 736,
+   "faults": 1
+  },
+  "mut5": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 128,
+   "faults": 0
+  },
+  "mut6": {
+   "rc": 0,
+   "exact": true,
+   "mismatches": 0,
+   "faults": 0
+  },
+  "mut7": {
+   "rc": 1,
+   "exact": false,
+   "mismatches": 511,
+   "faults": 0
+  },
+  "mut8": {
+   "rc": 0,
+   "exact": true,
+   "mismatches": 0,
+   "faults": 0
+  }
+ },
+ "mutant_expect": "mut1-5, 7 inexact; mut6, mut8 exact",
+ "ok": true,
+ "hmut": {
+  "what": "decision word one edge late in the head tiles (KVD_HMUT)",
+  "exact": false,
+  "mismatches": 1024,
+  "verdict": "CAUGHT"
+ },
+ "phy_cases": {
+  "best": 1804,
+  "typical": 1806,
+  "worst": 1818
+ },
+ "adopted": true
+}
