@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.hgi_sfu_d1_phase_census.v1",
+  "source_commit": "4ec4f4042",
+  "bench_source_commit": "8b782ce65",
+  "functional_unit_source": "199dc0b71",
+  "verdict": "PASS",
+  "checked_words": 5376,
+  "measured": [
+    {
+      "case": 0,
+      "total": 3929,
+      "span": 144,
+      "stage": 2134,
+      "compute": 485,
+      "drain": 1158,
+      "states": {
+        "0": 7,
+        "1": 6,
+        "2": 132,
+        "3": 6,
+        "4": 7,
+        "5": 2127,
+        "6": 1,
+        "7": 484,
+        "8": 3,
+        "9": 1155,
+        "10": 1,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+      }
+    },
+    {
+      "case": 1,
+      "total": 3017,
+      "span": 144,
+      "stage": 1606,
+      "compute": 389,
+      "drain": 870,
+      "states": {
+        "0": 7,
+        "1": 6,
+        "2": 132,
+        "3": 6,
+        "4": 7,
+        "5": 1599,
+        "6": 1,
+        "7": 388,
+        "8": 3,
+        "9": 867,
+        "10": 1,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+      }
+    }
+  ],
+  "vector_sha256": {
+    "su_case.mem": "0deefee706111949ad6928e54e6ab230ec2ff4526ce49146a1e82690b6a82006",
+    "su_sizes.svh": "cc237594af16b9dac39cfa39e4933004986533b6f764def3bfbebd55f76f4907",
+    "su_bench.json": "487f0bd4ddd060b3612c0790f38142c91bf3f67426a0bed11d604a60ad04b97c",
+    "su_rec.mem": "3b7949344010133857bb9a2ead7fccd85e0bebd33c136fee694aa30b30753e30",
+    "su_vme.mem": "eda077527a341af6ebaf975f5639d9cd4bda61df55eb92090eb59b0abb26082c",
+    "su_ref.mem": "bf1d07dba6f8243f6ec60efa75562df2bd59e63c3989f6bdc13b3f2e48102a85",
+    "su_vmi.mem": "38c1f23bfe7216ae6701826b22dbbc661cfde5cd014cfcbb155108feb6b819be"
+  },
+  "build_command": "--binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN --top-module tb_hgi_su_unit -I/home/ubuntu/claude-takeover-20261007/codex-sfu-d1-census/vec -DUNIT_SFU -Mdir /home/ubuntu/claude-takeover-20261007/codex-sfu-d1-census/obj rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv rtl/hdc/v41x/ot_hdc_v41x_vec.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_unit.sv -j 4",
+  "scope": "Same reducedN32/M8 realD1peer and unchanged productionrecord shapes as flow4e2 receipt; no production tokenrate ratio or successor gain claim",
+  "source_note": "Only passivebench instrumentation; no functionalRTL change. Phase sums exactly equal elapsed edge conventions. Stage already4outstanding; need actual request/credit census before diagnosing root cause."
+}
