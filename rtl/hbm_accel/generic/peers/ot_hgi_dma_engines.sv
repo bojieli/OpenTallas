@@ -22,6 +22,9 @@ module ot_hgi_dma_engines #(
     input  wire [226:0]        mv,
     output wire                mv_done,
     output wire                mv_fault,
+    output wire                mv_src,      // the mover's source-consumed pulse (posted STORE / KVWB retire)
+    output wire                mv_pdone,    // the mover's done
+    output wire                mv_fdone,    // the front's done
     input  wire                fence_v,
     output wire                fence_rdy,
     output wire                fence_done,
@@ -56,13 +59,16 @@ module ot_hgi_dma_engines #(
                 ((sf == 3'd0 || sf == 3'd5) ? mv[208:206] == 3'd0 : (sf == 3'd1) ? mv[209:206] == 4'd0 : mv[210:206] == 5'd0) &&
                 mv[205:186] != 20'd0 && mv[226:206] != 21'd0;
     wire to_f = (FRONT != 0) && elig;
-    wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
+    wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault, m_src; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
     assign mv_rdy = to_f ? f_rdy : m_rdy;
     assign mv_done = f_done | m_done;
     assign mv_fault = f_fault | m_fault;
+    assign mv_src = m_src; assign mv_pdone = m_done; assign mv_fdone = f_done;
     generate if (FRONT != 0) begin : g_front
         ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f),
-            .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
+            .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault),
+            .ix_v(1'b0), .ix_rdy(), .ix_cmd(175'd0), .id_v(1'b0), .id_rdy(), .id(32'd0),   // indexed stream: wired by the next step (DMA unit I-list reader)
+            .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
             .wl(f_wl), .wl_done(wl_done));
     end else begin : g_nofront
         assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign dq = '0; assign dd_cr = '0; assign f_wl = '0;
@@ -77,7 +83,7 @@ module ot_hgi_dma_engines #(
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
     ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && !to_f), .mv_rdy(m_rdy), .mv(mv), .mv_done(m_done),
-        .mv_fault(m_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+        .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr), .wl(m_wl), .wl_done(|wl_done));
