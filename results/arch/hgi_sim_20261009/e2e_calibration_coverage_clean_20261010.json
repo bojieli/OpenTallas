@@ -1,19 +1,19 @@
 {
  "schema": "opentallas.hgi_sim.e2e_calibration.v1",
- "generated_utc": "2026-10-10T12:05:22Z",
+ "generated_utc": "2026-10-10T12:15:49Z",
  "reports": [
-  "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
-  "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json"
+  "/home/ubuntu/wt-codex-hbm-sim-rates-20261010/results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
+  "/home/ubuntu/wt-codex-hbm-sim-rates-20261010/results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json"
  ],
  "result": {
   "runs": {
    "ds_L0": {
-    "run": "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
+    "run": "/home/ubuntu/wt-codex-hbm-sim-rates-20261010/results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
     "cycles": 20467,
     "real_records": 23
    },
    "qwen_L0": {
-    "run": "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json",
+    "run": "/home/ubuntu/wt-codex-hbm-sim-rates-20261010/results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json",
     "cycles": 35818,
     "real_records": 22
    }
@@ -125,6 +125,11 @@
    "DMA": "F6 mover boot-path rate (one element / 4 edges + a kport round trip a sector miss)",
    "CP": "F5 one 32 B fetch sector in flight"
   },
+  "calibration_vehicle_limits": {
+   "source": "cad18afa7: rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv and tb_hgi_e2e.sv",
+   "SU_SFU": "reference vec N64/M64/LV7 with direct fixed-latency DPI VM; model uses N1024/M256. Ratios are reduced-vehicle sensitivity, not production-width measured costs. The D1 peer's local operand staging and result drain are absent from this vehicle.",
+   "token": "SM/ATT/HC remain replay stubs; this is not a full-production-unit token timing measurement"
+  },
   "sensitivity": {
    "ds_1M": {
     "scale": {
@@ -204,23 +209,23 @@
      ],
      "scope": "measured unit-service ratios replayed on the modelled token; uncalibrated operations retain their model costs (not a measured whole-token rate)"
     },
-    "fixed_rtl_cycles": 1259072.1,
-    "fixed_rtl_tok_s": 953.1,
-    "current_rtl_cycles": 1347525.3,
-    "current_rtl_tok_s": 890.5,
+    "fixed_rtl_cycles": 1258136.1,
+    "fixed_rtl_tok_s": 953.8,
+    "current_rtl_cycles": 1347272.6,
+    "current_rtl_tok_s": 890.7,
     "scale_dma_full_bw": {
      "SU.VOP": 2.896,
      "COLL.ALL_REDUCE_SUM": 0.911,
      "SFU.GLU": 2.517
     },
     "dma_full_bw_assumption": "DMA service ratios omitted: full-bandwidth successor budget, not a measured DMA result",
-    "current_rtl_dma_full_bw_cycles": 1345007.5,
-    "current_rtl_dma_full_bw_tok_s": 892.2
+    "current_rtl_dma_full_bw_cycles": 1344071.5,
+    "current_rtl_dma_full_bw_tok_s": 892.8
    },
    "dflash_b16": {
     "fixed_rtl": {
-     "step_cycles": 5365618.1,
-     "tok_s_tau_8_01": 1791.4,
+     "step_cycles": 5364526.1,
+     "tok_s_tau_8_01": 1791.8,
      "calibration_coverage": {
       "measured_ops": [],
       "uncalibrated_ops": [
@@ -242,8 +247,8 @@
      }
     },
     "current_rtl_dma_full_bw": {
-     "step_cycles": 7627207.5,
-     "tok_s_tau_8_01": 1260.2,
+     "step_cycles": 7626115.5,
+     "tok_s_tau_8_01": 1260.4,
      "calibration_coverage": {
       "measured_ops": [
        "COLL.ALL_REDUCE_SUM",
@@ -266,8 +271,8 @@
      }
     },
     "current_rtl": {
-     "step_cycles": 7647100.2,
-     "tok_s_tau_8_01": 1256.9,
+     "step_cycles": 7646687.4,
+     "tok_s_tau_8_01": 1257.0,
      "calibration_coverage": {
       "measured_ops": [
        "COLL.ALL_REDUCE_SUM",
@@ -291,22 +296,9 @@
     }
    }
   },
-  "reading": "ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM rates published by reprice assume the FIXED RTL (simulator tables); 'current_rtl' is what the token would cost with today's RTL units (open defects listed)",
-  "calibration_vehicle_limits": {
-   "source": "cad18afa7: rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv and tb_hgi_e2e.sv",
-   "SU_SFU": "reference vec N64/M64/LV7 with direct fixed-latency DPI VM; model uses N1024/M256. Ratios are reduced-vehicle sensitivity, not production-width measured costs. The D1 peer's local operand staging and result drain are absent from this vehicle.",
-   "token": "SM/ATT/HC remain replay stubs; this is not a full-production-unit token timing measurement"
-  }
+  "reading": "ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM rates published by reprice assume the FIXED RTL (simulator tables); 'current_rtl' is what the token would cost with today's RTL units (open defects listed)"
  },
- "scope": "Historical coverage replay on pending source snapshot: source hashes recorded; not a committed production source and not a headline basis. Use e2e_calibration_coverage_clean_20261010.json for the committed-source replay.",
+ "source_commit": "6dac1a31b",
  "source_program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
- "source_snapshot_sha256": {
-  "tools/hgi_sim/ds_native.py": "95a5124f662821f98035c14367cd4a6297d186b6e613ce232f2a38b0058c5eac",
-  "tools/hgi_sim/machine.py": "9a69c8741d7db70548456c197360b0be6428b75334a85c61475ce018d879dd6d",
-  "tools/hgi_sim/timing.py": "4344d85940bdfb90f50d72a49c2dd4ab277bc41690e15e4d52ac54838a49ea3b",
-  "tools/hgi_sim/ds_native_timing.py": "b6e87d87184d769448eaea06854de178d738e6fe432834833abd3b4548d7ba15",
-  "tools/hgi_sim/perf.py": "9f1b064095ec5c773d3c158d714153ba9c43c19016ec4991f61f747930bd2487",
-  "tools/hgi_sim/e2e_calibration.py": "17e0077f54eff101000b65bc5d672dd2056174b468a659e0b88f2b79d4821c30",
-  "tools/hgi_sim/calibration.json": "a27422681d7939a7f606039f750c617fb361e5003523e745f1fcea9493e28dd0"
- }
+ "scope": "Committed-source replay of prior runs_fuse5 exact program; reports are reduced/reference-unit service sensitivities, not a production whole-token measurement."
 }
