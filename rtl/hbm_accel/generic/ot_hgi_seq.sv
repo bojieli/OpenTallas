@@ -31,7 +31,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_seq #(
     parameter integer RW   = 512,        // ring words (16 B); a power of two
-    parameter integer NOS  = 8,          // fetch sectors outstanding
+    parameter integer NOS  = 48,         // fetch sectors outstanding (F5 2026-10-09: 48 x 2 words covers ~128 cycles of
+                                         // memory latency at the program's peak record rate; the link must keep them in order)
     parameter integer USE_MACRO = 0,     // 1: the ring is one ot_sram_1r1w_256x256_m2_r2c2 (RW must be 512)
     parameter integer DS_TPL = 2,        // DS full-shape DYN: log2 TP (4)
     parameter integer DS_WIN = 128,      //   window
@@ -126,7 +127,7 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
     reg [39:0]  faddr, faddr_n, img_q;   // faddr_n = faddr + 32 kept registered (the push selects; no 40-bit add)
-    reg [4:0]   inflight, drop;
+    reg [6:0]   inflight, drop;
     reg         fetching;
     wire [RB:0] frp_al = {frp[RB:1], 1'b0};
     wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0};
@@ -138,7 +139,7 @@ module ot_hgi_seq #(
     always @(posedge clk) avail_ok <= (avail >= {{(RB-4){1'b0}}, rlen});
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
     reg [255:0] rd_sec; reg rd_hi;
-    wire        ring_we = f_rsp_v_r && (drop == 5'd0);
+    wire        ring_we = f_rsp_v_r && (drop == 7'd0);
     always @(posedge clk) rd_hi <= rd_ptr[0];
     generate if (USE_MACRO) begin : g_ring_m
         initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
@@ -386,7 +387,7 @@ module ot_hgi_seq #(
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
     reg [20:0] img_l; reg [19:0] img_ha, img_hb;
-    wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
+    wire [6:0] infl_p1 = inflight + 7'd1, infl_m1 = inflight - 7'd1;   // from flops: the ready only selects
     // fetch requests leave through a 2-entry FIFO (registered boundary: f_req_rdy only pops it); inflight counts
     // requests PUSHED and not yet answered (every pushed request is sent and answered; a new doorbell drops them)
     reg [39:0] rqf [0:1]; reg rqh; reg [1:0] rqn;
@@ -408,7 +409,7 @@ module ot_hgi_seq #(
             if (rq_pop) rqh <= ~rqh;
             rqn <= rq_pop ? (rq_push ? rqn : rqn_m1) : (rq_push ? rqn_p1 : rqn);   // f_req_rdy only selects
         end
-    wire [4:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
+    wire [6:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
     wire       is_ctl = (h_unit == 4'd0);
     wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
     wire [1:0] top = depth - 2'd1;
@@ -518,7 +519,7 @@ module ot_hgi_seq #(
             if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_n + 40'd32; end
             // ---- fetch responses -> ring (one sector a response)
             if (f_rsp_v_r) begin
-                if (drop != 0) drop <= drop - 5'd1;
+                if (drop != 0) drop <= drop - 7'd1;
                 else begin wp <= wp + 2'd2; wv <= 1'b1; end         // the ring write: g_ring_*
             end
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)

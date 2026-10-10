@@ -76,7 +76,7 @@ module ot_hgi_cp #(
     always @(posedge clk) begin a_q <= cmd_addr; wd_q <= cmd_wdata; end
     wire win = a_q[5];
     wire c_commit = we_q && win && (a_q[4:0] == 5'h1F);
-    wire c_wr = we_q && win && !c_commit;
+    wire c_wr = we_q && win;           // F1 (hgi_e2e 2026-10-09): the commit write stages MD words 62 / 63 too
     wire hold, seq_busy;
     wire [5*32-1:0] md_d;
     ot_hgi_cfg_master #(.SETTLE(SETTLE)) u_cfg (.clk(clk), .rst_n(rst_n), .w_en(c_wr), .w_pair(a_q[4:0]),
