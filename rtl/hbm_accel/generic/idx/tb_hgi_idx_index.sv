@@ -15,7 +15,7 @@
 module tb_hgi_idx_index;
   parameter integer MUT = 0;
   parameter integer IKS = 1;           // hbm-phys [svc] 10-10: check the unit's index-key STREAM commands (4 stacks)
-  parameter integer IKS_MUT = 0;       // 1: the issuer's quarter split off by one -> must FAIL
+  parameter integer IKS_MUT = 0;       // 1: the issuer's quarter split off by one; 2: ik_base from the wrong operand-I slice -> must FAIL
   parameter integer LEG = 24;          // relay stages per die net (each direction)
   parameter integer FA = 4;
   parameter integer KEYLEG = 0;       // service key data and credit return stages
@@ -81,10 +81,10 @@ module tb_hgi_idx_index;
     assign sco[g] = cv_;
   end endgenerate
   // ---- the IDX unit (record -> frame adapter) and its VM model (one request outstanding, 2..6 cycles)
-  reg [1818:0] rec = 0; wire [2:0] uret; wire [337:0] vmq; reg [273:0] vmr = 0;
+  reg [2074:0] rec = 0; wire [2:0] uret; wire [337:0] vmq; reg [273:0] vmr = 0;
   wire [511:0] iks_e; localparam [39:0] IK_BASE = 40'h0012300000;      // aligned: row0 = IK_BASE[34:20] = 0x123
   ot_hgi_idx_unit #(.MUT(MUT), .IKS(IKS), .IKS_MUT(IKS_MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
-    .iks_e(iks_e), .ik_base(IK_BASE),
+    .iks_e(iks_e),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
     .sel_ev(ev));
   // IKS monitor: every valid beat must be the expected STREAM command of its stack for the frame in flight
@@ -221,9 +221,9 @@ module tb_hgi_idx_index;
       lanes_t = 0; lanes_c = 0;
       begin : mkrec
         reg [127:0] h; h = 0; h[127:124] = 4'd9; h[123:118] = 6'd0;
-        h[99:93] = {2'b01, 1'b1, 1'(f_cand[fr]), 1'(f_keep[fr]), 2'b11};          // R O D C B A
+        h[99:93] = {2'b11, 1'b1, 1'(f_cand[fr]), 1'(f_keep[fr]), 2'b11};          // I R O D C B A (I: index-key region)
         h[88:64] = {11'd0, 1'(f_keep[fr]), 1'(f_cand[fr]), 12'(f_k[fr])}; h[63:32] = 32'(f_ndie[fr]); h[31:0] = 32'd20;
-        rec = {8'(f_rank[fr]), 20'(f_pos[fr]), 21'd512, 21'd512, 21'd4096, 21'(ncand == 0 ? 1 : ncand), 21'd32, 21'd4096,
+        rec = {md(3'd0, IK_BASE, 20'd0, 20'd0, 32'd0), 8'(f_rank[fr]), 20'(f_pos[fr]), 21'd512, 21'd512, 21'd4096, 21'(ncand == 0 ? 1 : ncand), 21'd32, 21'd4096,
                md(3'd0, 40'h04000, 20'd512, 20'd1, 32'd0), md(3'd5, 40'h03000, 20'd512, 20'd1, 32'd0),
                md(3'd0, 40'h05000, 20'd2048, 20'd2, 32'd4096), md(3'd5, 40'h06000, 20'(ncand == 0 ? 1 : ncand), 20'd2, 32'd4096),
                md(3'd0, 40'h02000, 20'd32, 20'd1, 32'd0), md(3'd0, 40'h01000, 20'd4096, 20'd1, 32'd0), h, 1'b1};

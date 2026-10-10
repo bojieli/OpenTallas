@@ -2,7 +2,8 @@
 # hgi-takeover: IDX.INDEX record -> ot_hgi_idx_unit / ot_hgi_idx_index -> hfd_idx_sel + 4 hfd_idx_score (tb_hgi_idx_index),
 # vectors from tools/hbm_idx_die_bench.py prepare; base + mutants MUT=2 (head weight of the next head), MUT=3 (R lane).
 # hbm-phys [svc] 10-10: IKS 1 everywhere (the unit's index-key STREAM commands checked per frame, IKS_RESULT); case k =
-# IKS_MUT 1 (quarter split off by one) must FAIL its IKS check.
+# IKS_MUT 1 (quarter split off by one) must FAIL its IKS check; case j = IKS_MUT 2 (ik_base from the wrong operand-I
+# slice: descriptor [39:0] instead of [47:8]) must FAIL (misaligned-base fault / wrong row0).
 # usage: run_index_bench.sh ROOT VEC OUT     -> OUT/<case>/verdict.json (compare), OUT/SUMMARY
 set -uo pipefail
 R=$1; VEC=$2; OUT=$3; mkdir -p "$OUT"
@@ -18,12 +19,12 @@ SRC="$I/rtl/hfd_idx_lib.sv $I/rtl/hfd_idx_score.sv $I/rtl/hfd_idx_sel.sv
  $R/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv $R/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv
  $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_owned.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_merge.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv
  $R/rtl/hbm_accel/generic/idx/tb_hgi_idx_index.sv"
-for m in 0 2 3 k; do
-  G="-GMUT=$m"; [ $m = k ] && G="-GMUT=0 -GIKS_MUT=1"
+for m in 0 2 3 k j; do
+  G="-GMUT=$m"; [ $m = k ] && G="-GMUT=0 -GIKS_MUT=1"; [ $m = j ] && G="-GMUT=0 -GIKS_MUT=2"
   ( mkdir -p $OUT/b$m && cd $OUT/b$m && $V --binary --timing -O2 -j 8 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK \
       -Wno-MULTIDRIVEN --top-module tb_hgi_idx_index $G -Mdir obj $SRC > build.log 2>&1; echo $? > build.exit )
 done
-for m in 0 2 3 k; do
+for m in 0 2 3 k j; do
   ( cd $OUT/b$m && [ "$(cat build.exit)" = 0 ] && stdbuf -oL ./obj/Vtb_hgi_idx_index +DIR=$VEC +ODIR=. +SEED=7 +GAP=3 > sim.log 2>&1;
     cd $R && python3 tools/hbm_idx_die_bench.py compare --work $VEC --run $OUT/b$m > $OUT/b$m/compare.log 2>&1;
     echo "MUT=$m $(grep -o '"verdict": "[A-Z]*"' $OUT/b$m/verdict.json 2>/dev/null) $(grep -h IKS_RESULT $OUT/b$m/sim.log) $(grep HGIIDX_FRAME $OUT/b$m/sim.log | tr '\n' ' ')" > $OUT/b$m/line ) &

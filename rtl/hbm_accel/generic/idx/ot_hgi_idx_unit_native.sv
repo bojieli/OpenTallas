@@ -17,7 +17,7 @@
 // Return {fault, done, ready}: ready = no record in flight.
 module ot_hgi_idx_unit_native #(
     parameter integer IKS = 0,
-    parameter integer IKS_MUT = 0,      // bench: the issuer's MUT (1 = quarter split off by one)          // hbm-phys [svc] 10-10: 1 = IDX.INDEX issues the index-key STREAM to the 4 svc stacks (on once the die binds iks_e / ik_base)
+    parameter integer IKS_MUT = 0,      // bench: 1 = the issuer's quarter split off by one; 2 = ik_base from the wrong I slice          // hbm-phys [svc] 10-10: 1 = IDX.INDEX issues the index-key STREAM to the 4 svc stacks (on once the die binds iks_e / ik_base)
     parameter integer MUT = 0           // bench mutants: 1 ascending sort compares scores instead of ids
 ) (
     input  wire          clk,
@@ -26,9 +26,8 @@ module ot_hgi_idx_unit_native #(
     output reg  [2:0]    ret,
     // IKS (ot_hgi_idx_iks_issue): one svc STREAM command a stack at the IDX.INDEX frame start ({payload 127, valid} x 4,
     // launched on clk: the die forwards clk as each stack's e_fclk); ik_base = the record's key-region base (operand I,
-    // hgi-1010/e adds it to the IDX record; die binding pending)
+    // bound from the record: I.base = rec[1866:1827], operand I present = header operand mask bit 6)
     output wire [511:0]  iks_e,
-    input  wire [39:0]   ik_base,
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
     // native selector (IDX.INDEX)
@@ -50,7 +49,7 @@ module ot_hgi_idx_unit_native #(
     reg busy, started, eng_done, eng_err;
     reg [31:0] w_sc;
     reg [11:0] o_k;                      // output index within the row (descending order)
-    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie;
+    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR, dI; reg [19:0] rpos; reg [7:0] rdie;
     wire [5:0]  op    = hdr[123:118];
     wire [6:0]  opnd  = hdr[99:93];
     wire [11:0] k     = hdr[75:64];
@@ -79,9 +78,13 @@ module ot_hgi_idx_unit_native #(
     // ---------------------------------------------------------------- IKS issuer (index keys striped over 32 PCs a stack)
     reg [12:0] iks_tag;                                  // load tag: frame counter
     wire iks_fault;
-    wire iks_misaligned = (IKS != 0) && (ik_base[19:0] != 20'd0 || ik_base[36:35] != 2'd0);
+    // operand I (hgi-1010/g, the record MSBs): the key-region descriptor; base = descriptor bits [47:8].  No I -> no
+    // index-key stream (the frame runs as before); a non-row-aligned base faults the record (never issued)
+    wire has_i = opnd[6];
+    wire [39:0] ik_base = IKS_MUT == 2 ? dI[39:0] : dI[47:8];      // bench MUT 2: the wrong descriptor slice
+    wire iks_misaligned = (IKS != 0) && has_i && (ik_base[19:0] != 20'd0 || ik_base[36:35] != 2'd0);
     generate if (IKS != 0) begin : g_iks
-        ot_hgi_idx_iks_issue #(.MUT(IKS_MUT)) u_iks (.clk(clk), .rst_n(rst_n), .go(x_go), .n(hdr[63:32]), .ik_base(ik_base), .tag(iks_tag),
+        ot_hgi_idx_iks_issue #(.MUT(IKS_MUT == 1 ? 1 : 0)) u_iks (.clk(clk), .rst_n(rst_n), .go(x_go && has_i), .n(hdr[63:32]), .ik_base(ik_base), .tag(iks_tag),
             .no_credit(1'b0), .e_d(iks_e), .blocks(), .fault(iks_fault));
     end else begin : g_no_iks
         assign iks_e = 512'd0; assign iks_fault = 1'b0;
@@ -151,7 +154,7 @@ module ot_hgi_idx_unit_native #(
             // record intake
             if (!busy && rec[0]) begin
                 hdr <= rec[128:1]; dA <= rec[384:129]; dB <= rec[640:385]; dC <= rec[896:641]; dD <= rec[1152:897];
-                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811];
+                dO <= rec[1408:1153]; dR <= rec[1664:1409]; dI <= rec[2074:1819]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811];
                 busy <= 1'b1; ret[0] <= 1'b0; e_cmd_v <= 1'b0; r_row <= 20'd0; r_col <= 20'd0; r_done <= 1'b0;
                 c_ok <= 1'b0; w_cnt <= 32'd0; b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; o_k <= 12'd0;
             end else if (busy && !e_cmd_v && r_row == 20'd0 && r_col == 20'd0 && !r_done && !e_in_v && !vm_pend && w_cnt == 32'd0 && !started) begin
