@@ -30,7 +30,7 @@ cmd = ["verilator", "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-lint", "-
 b = subprocess.run(cmd, capture_output=True, text=True)
 (out / f"build_{tag}.log").write_text(b.stdout + b.stderr)
 if b.returncode:
-    print("BUILD_FAIL"); print("\n".join(l for l in (b.stdout + b.stderr).splitlines() if "rror" in l][:15])); sys.exit(2)
+    print("BUILD_FAIL"); print("\n".join([l for l in (b.stdout + b.stderr).splitlines() if "rror" in l][:15])); sys.exit(2)
 r = subprocess.run([str(out / f"obj_{tag}" / "Vtb_ot_s81ph_vm_mem"), *plus], capture_output=True, text=True)
 log = r.stdout + r.stderr
 (out / f"run_{tag}.log").write_text(log)
