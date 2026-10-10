@@ -16,7 +16,8 @@ module ot_hgi_index_cp_lease #(parameter integer ENABLE=0)(
  input wire query_ACK,input wire [72:0] query_ACK_frame,
  output wire prefetch_v,output wire [1:0] prefetch_quarter,
  input wire prefetch_accepted,input wire [72:0] prefetch_frame,input wire [1:0] prefetch_accepted_quarter,
- output wire native_v,input wire native_r,output wire [1818:0] native_rec,
+ // native_r is a checked exactly-once acceptance receipt, not delayed ready.
+ output wire native_v,input wire native_r,input wire [72:0] native_accepted_frame,output wire [1818:0] native_rec,
  output wire [72:0] held_frame,output wire [5:0] held_layer,
  output wire [6:0] held_rank,output wire [14:0] held_key_row0,output wire [8:0] held_blocks,
  output wire [59:0] held_key_rows,output wire [35:0] held_block_counts,
@@ -75,6 +76,7 @@ module ot_hgi_index_cp_lease #(parameter integer ENABLE=0)(
      (key_visible&&(state!=VISIBLE||seen[0]||key_visible_frame!=frame))||
      (query_ACK&&(state!=VISIBLE||seen[1]||query_ACK_frame!=frame))||
      (prefetch_accepted&&(!prefetch_v||prefetch_frame!=frame||prefetch_accepted_quarter!=quarter))||
+     (native_r&&(state!=LAUNCH||native_accepted_frame!=frame))||
      ((reads_drained||consumer_done||VM_ACKs_drained)&&
       (state!=RUN||drain_frame!=frame||(reads_drained&&seen[2])||
        (consumer_done&&seen[3])||(VM_ACKs_drained&&seen[4]))))begin fault<=1;st(FAULT);end

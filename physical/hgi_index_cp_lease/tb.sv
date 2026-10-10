@@ -8,7 +8,11 @@ module tb;
  reg[63:0]grant_row_ends;reg[35:0]grant_block_counts;
  reg key_visible=0,query_ACK=0,prefetch_accepted=0;
  reg[72:0]key_visible_frame,query_ACK_frame,prefetch_frame;
- wire prefetch_v,native_v,native_r;wire[1:0]prefetch_quarter;reg[1:0]prefetch_accepted_quarter;wire[1818:0]native_rec;
+ wire prefetch_v,native_v,native_r;wire ctl_command_r;reg stale_native_receipt=0;wire[72:0]native_accepted_frame=held_frame^(stale_native_receipt?73'd1:73'd0);
+ reg[2:0]native_accept_pipe=0;
+ always@(posedge clk or negedge por_n)if(!por_n)native_accept_pipe<=0;
+  else native_accept_pipe<={native_accept_pipe[1:0],native_v&&ctl_command_r};
+ assign native_r=native_accept_pipe[2];wire[1:0]prefetch_quarter;reg[1:0]prefetch_accepted_quarter;wire[1818:0]native_rec;
  wire[72:0]held_frame;wire[5:0]held_layer;wire[6:0]held_rank;
  wire[14:0]held_key_row0;wire[8:0]held_blocks;wire[59:0]held_key_rows;wire[35:0]held_block_counts;
  reg reads_drained=0,consumer_done=0,VM_ACKs_drained=0;reg[72:0]drain_frame;
@@ -22,7 +26,7 @@ module tb;
   .clk(clk),.por_n(por_n),.owner_valid(owner_valid),.owner_fault(owner_fault),
   .allocation_granted(retained),.owner_frame(owner_frame),.allocation_frame(held_frame),
   .producer_published(1'b1),.producer_drained(1'b1),.selector_idle(1'b1),
-  .command_v(native_v),.command_r(native_r),.command_frame(held_frame),
+  .command_v(native_v),.command_r(ctl_command_r),.command_frame(held_frame),
   .command_rank(held_rank),.command_ndie(native_rec[46:33]),.command_k(10'd4),
   .command_cand(1'b0),.command_keep(1'b0),.command_layer(held_layer),.command_key_row0(held_key_row0),
   .key_visible(1'b0),.key_visibility_frame(73'b0),.prefetch_v(),.prefetch_accepted(1'b0),
@@ -37,7 +41,7 @@ module tb;
  task reset_case;begin
   por_n=0;cmd_v=0;grant_v=0;key_visible=0;query_ACK=0;prefetch_accepted=0;
   reads_drained=0;consumer_done=0;VM_ACKs_drained=0;release_r=0;source_idle=1;selector_idle=1;
-  owner_valid=1;owner_fault=0;src_done=0;event_idx=0;
+  owner_valid=1;owner_fault=0;src_done=0;event_idx=0;stale_native_receipt=0;
   owner_frame=(73'd9<<53)|73'h12345678;cmd_rec=0;cmd_rec[0]=1;
   cmd_rec[32:1]=20;cmd_rec[64:33]=64;cmd_rec[1810:1791]=9;cmd_rec[1818:1811]=103;
   grant_frame=owner_frame;grant_layer=20;grant_rank=7;grant_pos=9;
@@ -54,7 +58,9 @@ module tb;
    if(held_blocks!=0)begin prefetch_accepted=1;prefetch_accepted_quarter=i;end
    tick;prefetch_accepted=0;
   end
-  check(native_v,"native launch after all quarters");tick;check(!native_v,"single native acceptance");
+  check(native_v,"native launch after all quarters");
+  waits=0;while(native_v&&waits<8)begin tick;waits=waits+1;end
+  check(!native_v&&!fault,"single native acceptance after real3edge receipt");
  end endtask
  task expect_fault;begin tick;check(fault&&retained&&!native_v&&!release_v,"fault retains and blocks");end endtask
  initial begin
@@ -99,6 +105,9 @@ module tb;
   reset_case;cmd_rec[64:33]=4100;grant_block_counts={9'd0,9'd0,9'd171,9'd342};command;grant;visible;accepted;check(!fault,"n4100 342+171 blocks");
   reset_case;cmd_rec[64:33]=10944;grant_block_counts={4{9'd342}};command;grant;visible;accepted;check(!fault,"full shape four342 blocks");
   reset_case;cmd_rec[64:33]=0;grant_block_counts=0;command;grant;query_ACK=1;tick;query_ACK=0;check(!prefetch_v,"zero keys no zero descriptor");accepted;check(!fault,"zero keys native empty frame");
+  reset_case;command;grant;visible;
+  for(i=0;i<4;i=i+1)begin if(held_blocks!=0)begin prefetch_accepted=1;prefetch_accepted_quarter=i;end tick;prefetch_accepted=0;end
+  stale_native_receipt=1;repeat(5)tick;expect_fault;
   reset_case;command;dut.record_bar[1]=dut.record[1];expect_fault;
   $display("CP_INDEX_LEASE PASS cases=%0d real_native_control=1",cases);$finish;
  end
