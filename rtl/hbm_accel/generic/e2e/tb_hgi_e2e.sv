@@ -73,6 +73,7 @@ module tb_hgi_e2e;
     wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
+    wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE
     wire [690:0] am_rec; wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     // ---------------------------------------------------------------- MTP=1: controller + collar <-> translator (x_*)
     wire [516:0] n_t; wire [196:0] n_f; reg [215:0] f_host = 0; wire [4:0] t_host; wire [178:0] prov; wire [42:0] t_prov;
@@ -106,7 +107,7 @@ module tb_hgi_e2e;
         .sm_rec(sm_rec), .sm_ret({ux_fault[1], ux_done[1], ux_rdy[1]}), .su_rec(su_rec), .su_ret({ux_fault[2], ux_done[2], ux_rdy[2]}),
         .sfu_rec(sfu_rec), .sfu_ret({ux_fault[3], ux_done[3], ux_rdy[3]}), .att_rec(att_rec), .att_ret({ux_fault[5], ux_done[5], ux_rdy[5]}),
         .dma_rec(dma_rec), .dma_ret({ux_fault[8], ux_done[8], ux_rdy[8]}), .hc_rec(hc_rec), .hc_ret({ux_fault[10], ux_done[10], ux_rdy[10]}),
-        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1),
+        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(dma_wq),   // CTL.FENCE drains posted DMA writes
         .x_cmd_v(t_be[0]), .x_cmd_ready(xcr), .x_cmd(t_be[1 +: 201]), .x_cmd_job(t_be[202 +: 32]), .x_cmd_gen(t_be[234 +: 4]),
         .x_cmd_seq(t_be[238 +: 32]), .x_cpl_v(xcplv), .x_cpl_ready(t_be[270]), .x_cpl_job(xj), .x_cpl_gen(xg), .x_cpl_seq(xs),
         .x_cpl_fault(xcplf), .x_am_v(xamv), .x_am_idx(xam), .x_drained_ready(xdr), .x_ext_fault(t_abort), .x_noise(17'd128799),
@@ -178,7 +179,7 @@ module tb_hgi_e2e;
         wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done; wire [226:0] mv;
         ot_hgi_dma_record #(.LEGACY(0), .POSTED(DMA_POSTED)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
             .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
-            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
+            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(), .wr_quiet(dma_wq),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
             .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
             .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
@@ -198,7 +199,7 @@ module tb_hgi_e2e;
             .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
         hgi_e2e_vmc #(.UNIT(8), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
     end else begin : g_dma_stub
-        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0;
+        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0; assign dma_wq = 1'b1;
     end endgenerate
     // QUANT (unit 4, QDQ ops) behind the harness's unit-4 split (or behind the FUSED front when REAL_FUSED)
     reg  [682:0] q_rec;                 // to the real quant unit

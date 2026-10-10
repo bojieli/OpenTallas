@@ -10,7 +10,8 @@
    "mtp": {
     "available": false,
     "reason": "no qualified speculative composition implemented"
-   }
+   },
+   "exactness": "reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed re-proof (claude-takeover qwen-1010.log)"
   }
  ]
 }

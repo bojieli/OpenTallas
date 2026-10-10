@@ -757,6 +757,8 @@ def lint_at_submit(j):
         event(j, f"submit lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
         return
     v = res["verdict"]
+    if res.get("rtl_boundary"):
+        j["rtl_boundary_verdict"] = res["rtl_boundary"].get("verdict")    # LOOP-AUTO class c reads it
     if v == "SKIP":
         return
     if v == "PASS":
@@ -924,6 +926,7 @@ class Fleet:
             time.sleep(delay)
             measured_at = time.time()
             info = self._probe_once(host)
+        note_host(host, info is not None)
         if info is None:
             good = self.last_good.get(host)
             if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
@@ -1130,6 +1133,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             allh = [h for h in allh if h in spec["host_require"]]
         # a host marked smoke_only (hosts.json) admits only smoke-test jobs (spec "smoke": true) until it is re-enabled
         allh = [h for h in allh if not host_cfg(h).get("smoke_only") or spec.get("smoke")]
+        allh = [h for h in allh if not host_down(h)]       # HOST-DOWN: smoke_only-equivalent while it is down
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
         def score(h):
@@ -1771,7 +1775,8 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
-                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
+                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1830,14 +1835,14 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -2084,6 +2089,15 @@ def launch_stage(j, st, cmd):
             # INPUT delays to the input pin flops' mean arrival (route_mtp / hbm_accel_smh / dsrom qs / markov-driver
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
+            j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
+        if j["spec"].get("sliver_block"):
+            # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
+            # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
+            # (tools/orfs_hold_mm.py SLV_CODE); main's hook scripts are shipped into snapshots that predate them
+            ship_helpers(j["host"], j["run"])
+            sdir = f"{j.get('stage_source', j['run'] + '/src')}/physical/common_flow"
+            env += (f"mkdir -p {sdir} && for f in macro_sliver_block.tcl edge_sliver_block.tcl; do "
+                    f"[ -f {sdir}/$f ] || cp {j['run']}/cl/$f {sdir}/$f; done\nexport OT_SLIVER_BLOCK=1\n")
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
@@ -2220,9 +2234,8 @@ def poll_stage(j):
     r = ssh(j["host"], f"""if [ -f {run}/cl/{t}.rc ]; then echo RC $(cat {run}/cl/{t}.rc)
 elif [ -f {run}/cl/{t}.pid ] && kill -0 $(cat {run}/cl/{t}.pid) 2>/dev/null; then echo RUNNING
 elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout=40)
-    if r.returncode:
-        return "UNREACHABLE", None
-    w = r.stdout.split()
+    w = r.stdout.split() if not r.returncode else []
+    note_host(j.get("host"), bool(w))
     if not w:
         return "UNREACHABLE", None
     return (w[0], int(w[1])) if w[0] == "RC" else (w[0], None)
@@ -2416,6 +2429,109 @@ def defer_record_merge(j, out, sparse, dry=False):
     return True
 
 
+# AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
+# STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
+#   - its source branch is claude/*  (Codex / other branches stay with a human),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
+#   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
+#     record files (verdict + recorded views) come from the record commit on top.
+# Anything else (conflict, push race x4, failed guard) is appended to <takeover>/AUTO_MERGE_PENDING.md for a human /
+# agent, never forced.
+AUTO_MERGE_PENDING = Path(os.environ.get("CL_TAKEOVER", "/home/ubuntu/claude-takeover-20261007")) / "AUTO_MERGE_PENDING.md"
+
+
+def auto_merge_policy():
+    try:
+        return bool(json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_guarded'))
+    except (OSError, ValueError):
+        return False
+
+
+def auto_merge_guard(j):
+    """None when the closure may be auto-merged, else the reason it may not"""
+    spec = j['spec']
+    if not auto_merge_policy():
+        return "auto-merge policy off"
+    if spec.get('auto_merge') is False or spec.get('hold_merge'):
+        return f"spec opts out ({spec.get('hold_merge') or 'auto_merge false'})"
+    try:
+        holds = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_hold_prefixes') or []
+    except (OSError, ValueError):
+        holds = []
+    hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
+    if hit:
+        return f"held by policy prefix {hit} (gate outside the loop benches)"
+    if not str(spec['source'].get('branch', '')).startswith('claude/'):
+        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    benches = j.get('benches') or {}
+    if not benches:
+        return "no loop benches ran"
+    bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
+    if bad:
+        return f"benches not as expected: {', '.join(bad[:4])}"
+    if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
+        return "no positive bench"
+    if not j.get('commit_full'):
+        return "no verified source commit"
+    return None
+
+
+def auto_merge_closure(j, out, record_paths, dry=False):
+    """merge commit_full + the record files into main (clean merges only); returns a status string"""
+    why = auto_merge_guard(j)
+    if why:
+        if why != "auto-merge policy off":
+            append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
+                                              f"record {out.get('record_branch')} {str(out.get('branch_commit'))[:9]}\n")
+        return f"AUTO-MERGE skipped: {why}"
+    mwt = STATE / 'git' / (j['name'] + '-automerge')
+    sparse = ["/" + t.rstrip("/") for t in record_paths] + ["/tools/closure_loop/"]
+    status = None
+    for attempt in range(4):
+        gfetch('main', timeout=600)
+        wt_add(mwt, "origin/main", sparse)
+        if sh(["git", "-C", str(mwt), "merge-base", "--is-ancestor", j['commit_full'], "HEAD"], timeout=120).returncode == 0:
+            pass  # source already on main: only the record goes in
+        else:
+            m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
+                    "merge", "--no-ff", "--no-edit", "-m",
+                    f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    j['commit_full']], timeout=1800)
+            if m.returncode:
+                conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
+                sh(["git", "-C", str(mwt), "merge", "--abort"], timeout=300)
+                status = f"AUTO-MERGE CONFLICT ({len(conf)} files: {', '.join(conf[:6])})"
+                break
+        co = sh(["git", "-C", str(mwt), "checkout", out["branch_commit"], "--", *record_paths], timeout=600)
+        if co.returncode:
+            status = f"AUTO-MERGE record checkout failed: {co.stderr[-200:]}"
+            break
+        sh(["git", "-C", str(mwt), "add", "--sparse", "--", *record_paths], timeout=300)
+        if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
+            git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
+                f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
+                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+        head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
+        if dry:
+            status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
+            break
+        p = sh(["git", "-C", str(mwt), "push", "-q", "origin", "HEAD:refs/heads/main"], timeout=900)
+        if p.returncode == 0:
+            status = f"AUTO-MERGED into main {head[:9]}"
+            break
+        log(f"[{j['name']}] auto-merge push rejected (attempt {attempt}): {p.stderr[-300:]}")
+    else:
+        status = "AUTO-MERGE PUSH-RACE: could not push after 4 attempts"
+    wt_rm(mwt)
+    if not status.startswith("AUTO-MERGED") and not status.startswith("AUTO-MERGE dry-run"):
+        append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec']['block']}): {status}; source "
+                                          f"{j['spec']['source']['branch']} @ {j['commit_full'][:9]}, record {out.get('record_branch')} "
+                                          f"{str(out.get('branch_commit'))[:9]}\n")
+    return status
+
+
 def merge_record(j, out, sparse, dry=False):
     spec = j['spec']
     branch, target = out.get('record_branch', j['spec']['source']['branch']), j['spec'].get('merge_target')
@@ -2555,6 +2671,16 @@ def publish(j, metrics):
     else:
         raise RuntimeError(f"could not push the record to {branch}")
     wt_rm(cwt)
+    if claude_owns_main() and auto_merge_policy():
+        try:
+            out["merge"] = auto_merge_closure(j, out, tos, dry)
+        except Exception as ex:  # noqa: BLE001
+            out["merge"] = f"AUTO-MERGE error: {type(ex).__name__}: {str(ex)[:200]}"
+            append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']}: {out['merge']}\n")
+        if out["merge"].startswith("AUTO-MERGED"):
+            return out
+        notify_claude_record(j["name"], branch, out["branch_commit"])
+        return out
     if target:
         return merge_record(j, out, sparse, dry)
     out["merge"] = "no merge target"
@@ -2630,6 +2756,7 @@ def write_status(fleet_note="", fleet=None):
 # ------------------------------------------------------------------------------------------------ state machine
 def finish(j, status, reason, ledger_text):
     j["status"], j["reason"] = status, reason
+    j["finished_at"] = now_iso()       # LOOP-AUTO: the auto-react / READY_NEXT pass judges each finish once
     event(j, f"{status}: {reason}")
     ledger(j, ledger_text)
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
@@ -3051,7 +3178,7 @@ def offload_bench_location(j, fleet, st):
     need = bench_needs(j["spec"])
     for cfg in hosts_table():
         h = cfg["name"]
-        if h == j["host"] or cfg.get("smoke_only") or not need <= set(cfg.get("caps", [])):
+        if h == j["host"] or cfg.get("smoke_only") or host_down(h) or not need <= set(cfg.get("caps", [])):
             continue
         if not fleet.compatible(h, dict(j["spec"], stages={"bench": j["spec"].get("stages", {}).get("bench", [])})):
             continue
@@ -3769,6 +3896,8 @@ def step(j, fleet):
                 early_fail_gate(j, st)
             return
         if state == "UNREACHABLE":
+            if host_down_requeue(j, st["kind"]):
+                return
             j["unreachable"] = j.get("unreachable", 0) + 1
             if j["unreachable"] in (1, 30):
                 event(j, f"{j['host']} unreachable while polling {st['key']} (will keep polling)")
@@ -3841,6 +3970,8 @@ def step(j, fleet):
         return
     if s in ("ECO", "ECO_INSTALL"):
         state, rc = poll_stage(j)
+        if state == "UNREACHABLE" and host_down_requeue(j, s):
+            return
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
             return
         if s == "ECO":
@@ -3885,6 +4016,8 @@ def step(j, fleet):
         return
     if s == "SUMMARY":
         state, rc = poll_stage(j)
+        if state == "UNREACHABLE" and host_down_requeue(j, s):
+            return
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
             return
         text = failure_text(j)
@@ -4361,6 +4494,11 @@ def start_hold_eco(j, fleet, m):
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+    keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
+    if keepwires:
+        # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
+        # KEEPWIRES -> OT_KEEP_UNTOUCHED); same HM / SM / acceptance as the default ECO
+        env += " KEEPWIRES=1"
     if he.get("repair_drv"):
         # mtp-lead 2026-10-09: opt-in DRV repair inside the ECO (hold_eco.tcl OT_REPAIR_DRV); default off
         env += f" REPAIR_DRV=1 DRV_SLEW_MARGIN={float(he.get('drv_slew_margin', 30)):g} " \
@@ -4386,7 +4524,8 @@ def start_hold_eco(j, fleet, m):
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {out} {j['spec']['block']} {post}"
     ship_helpers(j["host"], j["run"])
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
-                    setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
+                    setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
+                    keepwires=keepwires)
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_token = fleet.reserve_launch(j["host"], 8, 32)
     try:
@@ -4394,8 +4533,8 @@ def start_hold_eco(j, fleet, m):
     finally:
         fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
-    event(j, f"hold-only miss ({setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f}, DRC 0): post-route hold ECO launched on "
-             f"{rb}/5_2_route.odb")
+    event(j, f"hold-only miss ({setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f}, DRC 0): post-route hold ECO "
+             f"{'(KEEPWIRES) ' if keepwires else ''}launched on {rb}/5_2_route.odb")
     experiment(j, "running: post-route hold ECO")
     return True
 
@@ -5319,6 +5458,448 @@ def release_deep(jobs, now=None):
     return n
 
 
+# ------------------------------------------------------------------------------------------------ AUTO-REACT / READY_NEXT
+# LOOP-AUTO (owner concern 2026-10-10: session limits stall design work 2-6 h; the loop must keep closing elements with
+# no agent alive).  Every failure verdict (AUTO_REACT_FAIL) finished at most AUTO_REACT_MAX_AGE_H ago is judged ONCE
+# (j["auto_react_judged"] = its finished_at) by a recovery pass:
+#   a  hold-only miss within 30 ps (TT >= 0, -30 <= FF < 0, DRC 0, checks/benches clean, no installed ECO): the SAME job
+#      re-opens at its verdict and runs the narrow KEEPWIRES hold ECO (hold_eco.sh KEEPWIRES=1: untouched nets keep
+#      their wires) -- also after a route crash / requeue that never reached an ECO;
+#   b  thin TT AND FF miss (combo_eligible: TT in [-45, 0), FF in [-30, 0)) whose combo ECO never ran: same job re-opens
+#      at its verdict, where the combo ECO fires;
+#   c  EARLY_FAIL_HOLD on a block whose RTL boundary is registered (rtl_boundary PASS) and whose route ran without the
+#      pin-flop IO reference -> successor job <job>-arc, same commit, pinflop_ref on (REFGLOB median, OT_IOREF_INPUT_PF);
+#   d  FLOORPLAN_MARGIN whose only failing lint check is "sliver" -> successor <job>-ard with "sliver_block": true (the
+#      macro + core-edge sliver blockage hooks at PRE GLOBAL_PLACE, before the lint);
+#   e  DRT-0073 (no access point) -> successor <job>-are with the recipe's min-width / pin-keepout knob (DRT_RECIPES).
+# A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
+# loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
+# one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
+# auto_react_parent) gets no new-job successor of its own.  Anything else -- or a class already used -- is one line in
+# the owner's stream log (owner_log_path).  Spec "auto_react": false opts out.
+# READY_NEXT (deep queue): READY_NEXT/<element>.json = a list of 1-2 full job specs, each with "after": <block or
+# job-name prefix>.  When a job of that element ends in a failure verdict with no auto-react action and the element has
+# no other live (or pending-intake) job, the first spec goes to DROP (normal intake), a copy to READY_NEXT/done/, and the
+# file keeps the rest (moved to done/ when empty).  Bad files are logged once per content and skipped.
+TAKEOVER = Path(os.environ.get("CL_TAKEOVER", "/home/ubuntu/claude-takeover-20261007"))
+READY_NEXT = Path(os.environ.get("CL_READY_NEXT_DIR", str(TAKEOVER / "READY_NEXT")))
+AUTO_REACT_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
+AUTO_REACT_MAX_AGE_H = 6.0          # < DEEP_RELEASE_AGE_H: an in-place ECO needs the route products
+AR_HOLD_FF_FLOOR = -30.0
+PINFLOP_SINCE = "2026-10-10T03:05"  # PINFLOP-REF overlay deployed (36795a58e): a route started later used it
+FP_LINT_CHECKS = ("bank_distance", "channel", "macro_edge", "pin_density", "pin_width", "sliver", "util")
+# (cmd regex the recipe must match, env knob, repo file at the job commit that must honour it, marker text in that file)
+DRT_RECIPES = (
+    (r"route_lane\.sh", "PINKO", "physical/hbm_accel_die_views/su/route_lane.sh", "PINKO"),
+    (r"qwen_rom_fulldie|qwen_kv_die|kv_die\.py", "OT_MINW_PINS", "tools/qwen_rom_fulldie.py", "OT_MINW_PINS"),
+)
+OWNER_LOG_MAP = ((r"hgi", "hgi-1010.log"), (r"mtp|wfc|dspark", "mtp-wfc-1010.log"),
+                 (r"qwen|kv-die|kv_die|qfd|qkd|r22k", "qwen-1010.log"),
+                 (r"(?<![a-z])ds(?![a-z])|dsrom|dsfd|s81|redesign-ds", "ds-1010.log"),
+                 (r"hbm|vm8|svc|sfu|stn|forks|hfd", "hbm-phys-1010.log"))
+_RN_BAD = set()
+
+
+def owner_log_path(j):
+    """the owner's 1010 stream log: an owner naming <stream>-1010 with a log, else by owner/block/name keywords"""
+    spec = j.get("spec") or {}
+    owner = str(spec.get("owner", ""))
+    for s in re.findall(r"([A-Za-z0-9][\w-]*-1010)", owner):
+        if (TAKEOVER / f"{s}.log").exists():
+            return TAKEOVER / f"{s}.log"
+    text = f"{owner} {spec.get('block', '')} {j.get('name', '')}".lower()
+    for rx, f in OWNER_LOG_MAP:
+        if re.search(rx, text):
+            return TAKEOVER / f
+    return TAKEOVER / "drive-1010.log"
+
+
+def owner_note(j, text):
+    p = owner_log_path(j)
+    line = f"{now_iso()} [loop auto-react] {j['name']}: {j['status']} {str(j.get('reason') or '')[:160]} -- {text}\n"
+    try:
+        append_locked(p, line)
+    except OSError as ex:
+        log(f"[{j['name']}] owner log {p} not writable: {ex}")
+    event(j, f"auto-react: {text} (noted in {p.name})")
+
+
+def _verdict_idx(j):
+    stl = stage_list(j["spec"])
+    return next((i for i, x in enumerate(stl) if x["kind"] == "verdict"), None)
+
+
+def _at_verdict(j):
+    i = _verdict_idx(j)
+    return i is not None and j.get("stage_idx") == i
+
+
+def _benches_ok(j):
+    return all(b.get("ok") for b in (j.get("benches") or {}).values())
+
+
+def ar_hold_window(j):
+    """class a: a hold-only miss within 30 ps on a route at its verdict, no KEEPWIRES ECO tried yet"""
+    m, he = j.get("metrics") or {}, j["spec"].get("hold_eco") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if j["status"] != "NEEDS_RTL" or not _at_verdict(j) or he.get("enabled", True) is False:
+        return False
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (tt, ff)):
+        return False
+    if not (tt >= SS_MIN and AR_HOLD_FF_FLOOR <= ff < FF_MIN and m.get("drc") == 0 and not m.get("errors")):
+        return False
+    e = j.get("eco") or {}
+    if blocking_checks(j) or not _benches_ok(j) or e.get("installed") or j.get("eco_stack") or he.get("keep_wires"):
+        return False
+    return not any((x or {}).get("keepwires") for x in [*(j.get("eco_history") or []), e])
+
+
+def ar_combo_window(j):
+    """class b: thin TT and FF miss at the verdict whose combo ECO never ran"""
+    if j["status"] != "NEEDS_RTL" or not _at_verdict(j):
+        return False
+    return combo_eligible(j, j.get("metrics") or {}, blocking_checks(j), _benches_ok(j))
+
+
+def rtl_boundary_verdict(j):
+    if j.get("rtl_boundary_verdict"):
+        return j["rtl_boundary_verdict"]
+    for e in j.get("events") or []:
+        mm = re.search(r"submit lint (?:PASS|FIX)\b.*?; (PASS|WARN|REFUSE|SKIP) ", e)
+        if mm:
+            return mm.group(1)
+    try:
+        import rtl_boundary
+        git_ = submit_lint.Git(REPO)
+        return rtl_boundary.check(j.get("spec_submitted") or j["spec"], git_.show).get("verdict")
+    except Exception as ex:  # noqa: BLE001
+        log(f"[{j['name']}] auto-react rtl_boundary check failed: {type(ex).__name__}: {str(ex)[:160]}")
+        return None
+
+
+def pinflop_used(j):
+    spec = j["spec"]
+    return bool(j.get("pinflop_ref_applied")) or (spec.get("pinflop_ref", True) is not False
+                                                   and str(j.get("stage_started") or "") >= PINFLOP_SINCE)
+
+
+def _stage_cmds(spec):
+    st = spec.get("stages") or {}
+    return " ".join(str((st.get(k) or {}).get("cmd", "")) for k in ("calibrate", "route"))
+
+
+def fp_lint_checks(j):
+    return set(re.findall(r"(?:^|\|\s*)(" + "|".join(FP_LINT_CHECKS) + r"):", str(j.get("reason") or "")))
+
+
+def drt0073_seen(j):
+    txt = str(j.get("reason") or "") + " ".join(str(c.get("tail", "")) + str(c.get("first_error", "")) + str(c.get("why", ""))
+                                                for c in j.get("crashes") or [])
+    return "DRT-0073" in txt
+
+
+def drt_recipe(j):
+    """(knob, why) for the first DRT_RECIPES entry this job's recipe matches and does not set yet, honoured at its commit"""
+    spec = j.get("spec_submitted") or j["spec"]
+    cmds = _stage_cmds(spec)
+    for rx, knob, path, marker in DRT_RECIPES:
+        if not re.search(rx, cmds) or re.search(rf"\b{knob}=", cmds):
+            continue
+        try:
+            body = submit_lint.Git(REPO).show(str(spec["source"]["commit"]), path) or ""
+        except Exception:  # noqa: BLE001
+            body = ""
+        if marker in body:
+            return knob
+    return None
+
+
+def ar_successor(j, cls, why, mutate):
+    """drop <job>-ar<cls> (the submitted spec, same commit, mutated) into DROP; returns its name or None"""
+    base = json.loads(json.dumps(j.get("spec_submitted") or j["spec"]))
+    suffix = f"-ar{cls}"
+    name = j["name"][:96 - len(suffix)] + suffix
+    base.update(name=name, auto_react_parent=j["name"], auto_react_class=cls)
+    base.pop("submit_lint", None)
+    mutate(base)
+    if jpath(name).exists() or (DROP / f"{name}.json").exists():
+        return None
+    DROP.mkdir(parents=True, exist_ok=True)
+    tmp = DROP / f".{name}.json.tmp"
+    tmp.write_text(json.dumps(base, indent=1) + "\n")
+    os.replace(tmp, DROP / f"{name}.json")
+    return name
+
+
+def _prefix_env(spec, knob):
+    for k in ("calibrate", "route"):
+        st = (spec.get("stages") or {}).get(k)
+        if isinstance(st, dict) and st.get("cmd"):
+            st["cmd"] = f"export {knob}=1; " + st["cmd"]
+
+
+def ar_plan(j):
+    """(class, kind, detail) for the first recipe that applies, else (None, None, why)"""
+    spec = j["spec"]
+    if ar_hold_window(j):
+        return "a", "in-place", "hold-only miss within 30 ps -> narrow KEEPWIRES hold ECO"
+    if ar_combo_window(j):
+        return "b", "in-place", "thin TT and FF miss -> combo ECO"
+    succ_ok = not spec.get("auto_react_parent")
+    if j["status"] == "EARLY_FAIL_HOLD":
+        if not succ_ok:
+            return None, None, "auto-react successor failed again (EARLY_FAIL_HOLD)"
+        if pinflop_used(j):
+            return None, None, "CTS/GRT hold flood with the pin-flop reference already in use"
+        if re.search(r"\bOT_REF_PINFLOP=0\b", _stage_cmds(spec)):
+            return None, None, "hold flood; recipe pins OT_REF_PINFLOP=0 (owner choice)"
+        rb = rtl_boundary_verdict(j)
+        if rb != "PASS":
+            return None, None, f"hold flood; RTL boundary {rb or 'unknown'} (register the boundary first)"
+        return "c", "successor", "hold flood on a registered boundary -> pin-flop IO reference"
+    if j["status"] == "FLOORPLAN_MARGIN":
+        checks = fp_lint_checks(j)
+        if checks == {"sliver"} and not spec.get("sliver_block") and succ_ok:
+            return "d", "successor", "sliver-only floorplan lint fail -> macro/edge sliver blockage hooks"
+        return None, None, f"floorplan lint {sorted(checks) or 'unparsed'}" + ("" if succ_ok else " (auto-react successor)")
+    if drt0073_seen(j):
+        knob = drt_recipe(j) if succ_ok else None
+        if knob:
+            return "e", "successor", f"DRT-0073 no access point -> {knob}=1 pin variant"
+        return None, None, "DRT-0073 with no pin-variant knob for this recipe"
+    if spec.get("auto_react_parent"):
+        return None, None, f"auto-react successor (class {spec.get('auto_react_class')}) failed"
+    return None, None, "no recipe"
+
+
+def ar_reopen(j, cls, detail):
+    e = j.get("eco") or {}
+    if e:
+        j.setdefault("eco_history", []).append(e)
+    j["eco"] = {}
+    if cls == "a":
+        j["auto_react_keepwires"] = True
+    j.update(status="READY", stage_idx=_verdict_idx(j), stage_key="verdict", attempt=j["attempt"] + 1, retries_used=0,
+             errors=[], reason=None)
+    event(j, f"auto-react {cls}: {detail}; re-opened at the verdict (earlier ECO kept in eco_history)")
+    ledger(j, f"AUTO-REACT {cls} (loop): {detail}; re-opened in place")
+
+
+def ready_next_files():
+    """[(path, specs)] of valid READY_NEXT files; a bad file is logged once per content and skipped"""
+    out = []
+    for p in sorted(READY_NEXT.glob("*.json")) if READY_NEXT.is_dir() else []:
+        try:
+            raw = p.read_text()
+        except OSError:
+            continue
+        key = (p.name, hashlib.sha256(raw.encode()).hexdigest())
+        try:
+            specs = json.loads(raw)
+            if not isinstance(specs, list) or not 1 <= len(specs) <= 2:
+                raise ValueError("must be a JSON list of 1-2 job specs")
+            for s in specs:
+                if not isinstance(s, dict) or not isinstance(s.get("after"), str) or not s["after"].strip():
+                    raise ValueError("every spec needs a non-empty \"after\" (block or job-name prefix)")
+                errs = validate({k: v for k, v in s.items() if k != "after"})
+                if errs:
+                    raise ValueError(f"{s.get('name')}: " + "; ".join(errs)[:400])
+        except (ValueError, TypeError) as ex:
+            if key not in _RN_BAD:
+                _RN_BAD.add(key)
+                log(f"READY_NEXT {p} invalid, skipped: {ex}")
+            continue
+        out.append((p, specs))
+    return out
+
+
+def _element_match(after, block, name):
+    return block == after or str(name).startswith(after)
+
+
+def pending_drop_specs():
+    """specs in DROP not ingested yet (no job state): they count as live work of their element"""
+    out = []
+    for p in DROP.glob("*.json") if DROP.is_dir() else []:
+        if jpath(p.stem).exists():
+            continue
+        try:
+            s = json.loads(p.read_text())
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(s, dict):
+            out.append(s)
+    return out
+
+
+def ready_next_take(j, live):
+    """ingest the next READY_NEXT spec for j's element (j just failed, no auto-react action); returns its name"""
+    block = j["spec"].get("block")
+    pend = pending_drop_specs()
+    for p, specs in ready_next_files():
+        after = specs[0]["after"]
+        if not _element_match(after, block, j["name"]):
+            continue
+        if any(x["name"] != j["name"] and _element_match(after, x["spec"].get("block"), x["name"]) for x in live) or \
+                any(_element_match(after, s.get("block"), s.get("name", "")) for s in pend):
+            event(j, f"READY_NEXT {p.name}: element {after} has another live job; not ingested")
+            return None
+        nxt = dict(specs[0])
+        nxt.pop("after")
+        nxt["ready_next_from"] = f"{p.name} after {j['name']} {j['status']}"
+        if jpath(nxt["name"]).exists() or (DROP / f"{nxt['name']}.json").exists():
+            log(f"READY_NEXT {p}: {nxt['name']} already exists; spec dropped from the file")
+        else:
+            DROP.mkdir(parents=True, exist_ok=True)
+            tmp = DROP / f".{nxt['name']}.json.tmp"
+            tmp.write_text(json.dumps(nxt, indent=1) + "\n")
+            os.replace(tmp, DROP / f"{nxt['name']}.json")
+        done = READY_NEXT / "done"
+        done.mkdir(parents=True, exist_ok=True)
+        (done / f"{p.stem}.{nxt['name']}.json").write_text(json.dumps(specs[0], indent=1) + "\n")
+        rest = specs[1:]
+        if rest:
+            tmp = p.with_name(f".{p.name}.tmp")
+            tmp.write_text(json.dumps(rest, indent=1) + "\n")
+            os.replace(tmp, p)
+        else:
+            os.replace(p, done / f"{p.stem}.{now_iso().replace(':', '')}.json")
+        event(j, f"READY_NEXT: ingested {nxt['name']} from {p.name} ({len(rest)} left)")
+        ledger(j, f"READY_NEXT {p.name}: successor {nxt['name']} dropped for intake after {j['status']}")
+        return nxt["name"]
+    return None
+
+
+def auto_react(jobs, now=None):
+    """the AUTO-REACT + READY_NEXT recovery pass (header above); returns [(job, action)]"""
+    now = now or time.time()
+    acted = []
+    live = [x for x in jobs if x["status"] not in TERMINAL]
+    closed = closed_blocks(jobs)
+    for j0 in jobs:
+        fin = j0.get("finished_at")
+        if j0["status"] not in AUTO_REACT_FAIL or not fin or j0.get("auto_react_judged") == fin:
+            continue
+        age = _iso_age_h(fin, now)
+        if age is None or age > AUTO_REACT_MAX_AGE_H:
+            continue
+        with job_lock(j0["name"]):
+            j = load_job(j0["name"])
+            if j["status"] not in AUTO_REACT_FAIL or j.get("finished_at") != fin or j.get("auto_react_judged") == fin:
+                continue
+            j["auto_react_judged"] = fin
+            spec, block = j["spec"], j["spec"].get("block")
+            if spec.get("auto_react") is False:
+                event(j, "auto-react: off (spec auto_react false)")
+                save_job(j)
+                continue
+            if block in closed or any(x["name"] != j["name"] and x["spec"].get("block") == block for x in live):
+                event(j, f"auto-react: block {block} has a live or closed sibling job; no action")
+                save_job(j)
+                continue
+            cls, kind, detail = ar_plan(j)
+            done = j.setdefault("auto_react", {})
+            action = None
+            if cls and cls in done:
+                cls, detail = None, f"auto-react class {cls} already used ({done[cls]}); {detail}"
+            if cls and kind == "in-place":
+                if j.get("bulk_released") or j.get("deep_released"):
+                    cls, detail = None, f"{detail}: route products released"
+                else:
+                    ar_reopen(j, cls, detail)
+                    done[cls] = "in-place"
+                    action = f"{cls}:in-place"
+            elif cls:
+                if cls == "c":
+                    def mut(s):
+                        s["pinflop_ref"] = True
+                elif cls == "d":
+                    def mut(s):
+                        s["sliver_block"] = True
+                else:
+                    knob = drt_recipe(j)
+
+                    def mut(s, knob=knob):
+                        _prefix_env(s, knob)
+                if cls == "d":
+                    release_route_key(j)     # the lint stopped it before global placement: no route spent
+                name = ar_successor(j, cls, detail, mut)
+                if name:
+                    done[cls] = name
+                    action = f"{cls}:{name}"
+                    event(j, f"auto-react {cls}: {detail}; successor {name} dropped for intake (same commit)")
+                    ledger(j, f"AUTO-REACT {cls} (loop): {detail}; successor {name}")
+                else:
+                    cls, detail = None, f"{detail}: successor name already taken"
+            if not action:
+                rn = ready_next_take(j, live)
+                owner_note(j, f"{detail}; structural fix needed" + (f"; READY_NEXT ingested {rn}" if rn else ""))
+                action = f"none{':' + rn if rn else ''}"
+            save_job(j)
+            acted.append((j["name"], action))
+    return acted
+
+
+# HOST-DOWN (drive-1010 2026-10-10: ot-epyc2 unreachable from 08:46, 30 jobs requeued by hand): every probe of a host
+# (fleet admission probe, stage poll) records success / failure; a host whose probes have ALL failed for more than
+# HOST_DOWN_S is "down": it admits no new job (in memory, like smoke_only; hosts.json untouched) and its RUNNING
+# calibrate / route / bench stages are requeued from scratch on another host (status QUEUED, host / run None, stage 0,
+# attempt + 1, source_synced False).  ECO / ECO_INSTALL / SUMMARY jobs (a finished route on that host) wait up to
+# HOST_DOWN_ECO_WAIT_S for the host, then the same.  The first successful probe clears the state.
+HOST_DOWN_S = 1800
+HOST_DOWN_ECO_WAIT_S = 6 * 3600
+HOST_DOWN = {}                      # host -> time of the first failed probe since the last success
+_HOST_DOWN_LOCK = threading.Lock()
+
+
+def note_host(host, ok, now=None):
+    if not host:
+        return
+    now = now or time.time()
+    with _HOST_DOWN_LOCK:
+        if ok:
+            t = HOST_DOWN.pop(host, None)
+            if t is not None and now - t > HOST_DOWN_S:
+                log(f"HOST-DOWN: {host} reachable again after {(now - t) / 60:.0f} min")
+        else:
+            HOST_DOWN.setdefault(host, now)
+
+
+def host_down_s(host, now=None):
+    t = HOST_DOWN.get(host)
+    return ((now or time.time()) - t) if t else 0.0
+
+
+def host_down(host, now=None):
+    return host_down_s(host, now) > HOST_DOWN_S
+
+
+def host_down_requeue(j, kind, now=None):
+    """requeue j from scratch when its host is down (RUNNING calibrate/route/bench) or down > 6 h (ECO/SUMMARY)"""
+    d = host_down_s(j.get("host"), now)
+    if j["status"] == "RUNNING" and kind in ("calibrate", "route", "bench"):
+        if d <= HOST_DOWN_S:
+            return False
+    elif j["status"] in ("ECO", "ECO_INSTALL", "SUMMARY"):
+        if d <= HOST_DOWN_ECO_WAIT_S:
+            return False
+    else:
+        return False
+    host, stage = j.get("host"), j.get("stage_key")
+    if j.get("eco"):
+        j.setdefault("eco_history", []).append(dict(j["eco"], abandoned=f"host {host} down"))
+        j["eco"] = {}
+    for k in ("stage_tag", "stage_key", "resume", "hold_stop", "checkpoint_affinity", "bench_location", "ctrack", "metrics"):
+        j.pop(k, None)
+    j["btrack"] = {k: v for k, v in (j.get("btrack") or {}).items() if v.get("state") == "done"}
+    j.update(status="QUEUED", host=None, run=None, stage_idx=0, attempt=j["attempt"] + 1, retries_used=0, errors=[],
+             source_synced=False, unreachable=0, reason=None)
+    event(j, f"HOST-DOWN: {host} failed every probe for {d / 60:.0f} min; {stage} abandoned, re-queued from scratch "
+             f"(another host)")
+    ledger(j, f"REQUEUED automatically: host {host} down {d / 60:.0f} min (stage {stage})")
+    return True
+
+
 def tick(fleet):
     try:
         ingest()
@@ -5410,6 +5991,10 @@ _RECOVERY_FUTURE = None
 def recover_jobs():
     # Historical log reads can wait on an unreachable host for minutes. They
     # must neither block live dispatch nor suppress unrelated recovery classes.
+    try:
+        auto_react(all_jobs())      # LOOP-AUTO: judges its own sibling / live-element rules, so it sees every job
+    except Exception:  # noqa: BLE001
+        log("auto_react error:\n" + traceback.format_exc())
     for recover in (reevaluate_benches, requeue_toolchain, requeue_budget,
                     requeue_hold_only, requeue_ssh_verdict, auto_requeue):
         try:
