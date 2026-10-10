@@ -1715,7 +1715,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 

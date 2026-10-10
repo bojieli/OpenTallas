@@ -26,7 +26,11 @@ PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
-SN=""; grep -q -- "--sdc-name" tools/w18/corner_sta.py && SN="--sdc-name $SDC_NAME"
+# CORNER-STA (drive-1010 2026-10-10): a pre option-B source snapshot has a corner_sta.py without setup_tt; the ECO then
+# failed every time ("corner_sta without setup_tt", vtswap exit 8 -> combo "no vtswap base" rc=3, selt_q r6 cx-f5-hm0).
+# Sign-off STA is the loop's, like the verdict re-STA: use the shipped helper copy when the snapshot's lacks setup_tt.
+CSTA=tools/w18/corner_sta.py; grep -q setup_tt "$CSTA" 2>/dev/null || { [ -f "$(dirname "$0")/corner_sta.py" ] && CSTA="$(cd "$(dirname "$0")" && pwd)/corner_sta.py"; }
+SN=""; grep -q -- "--sdc-name" "$CSTA" && SN="--sdc-name $SDC_NAME"
 ACC_SS=${ACC_SS:-0}; ACC_FF=${ACC_FF:-0}
 P=$OUT/pass1; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
 cp "$OB/$SDC_NAME" "$EB/6_final.sdc"; [ "$SDC_NAME" = 6_final.sdc ] || cp "$OB/$SDC_NAME" "$EB/$SDC_NAME"
@@ -51,10 +55,10 @@ orun $P/eco_vtswap.log vtswap_eco.tcl -e OT_DB=/in/$DB -e OT_SDC_SS=/p/mode_ss.s
 cat $P/eco_vtswap.log | grep -v "^\[WARNING STA-1212\]" >> $OUT/eco.log
 grep -q "OT_ECO done" $P/eco_vtswap.log || { echo "VT-swap pass failed (no OT_ECO done)"; tail -30 $P/eco_vtswap.log; exit 9; }
 cp $SPEF $EB/6_final.spef
-python3 tools/w18/corner_sta.py $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
+python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
   || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
 if [ -n "${SETUP_POST_SDC:-}" ]; then
-  python3 tools/w18/corner_sta.py $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
+  python3 $CSTA $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
     --orfs-dir $P/orfs --output $P/corner_sta_setup_post.json > $P/corner_setup_post.log 2>&1 \
     || { echo "setup post-SDC corner_sta failed"; tail $P/corner_setup_post.log; exit 8; }
   cp $P/corner_sta.json $P/corner_sta_hold_model.json
