@@ -4066,6 +4066,14 @@ def _hop_fix(m, P):
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rc['nxt_die'] = rc.get('nxt_die', 0) + 1
                             break
+                if pl is None and NR and RELAY_TT_REACH and RELAY_TT_REACH > R:
+                    # s81-gen: the TT tier honours BOTH reaches, so it runs before the legacy prev-only search (qs5f
+                    # frames: the legacy tier put g_xb_*_7 beside its driver, 677 um short of the bank)
+                    nr_tt = (RELAY_TT_REACH - 10.0) if k == n - 1 else (n - k) * (RELAY_TT_REACH - 10.0)
+                    pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, b, nr_tt, horiz)
+                    if pl:
+                        rc['tt_reach'] = rc.get('tt_reach', 0) + 1
+                        tt.append(f'g_{bid}_{e[0]}_{k}')
                 if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
                     rc['nxt_relaxed'] = rc.get('nxt_relaxed', 0) + 1   # (an int in rec broke the summary)
                     for PAD in (2.16, 1.08, 0.0):
