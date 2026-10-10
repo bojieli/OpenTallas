@@ -7,21 +7,28 @@ set cc [$cb getCoreArea]
 set anchored {}
 foreach ff [$cb getInsts] {
   set name [$ff getName]
-  if {![regexp {^(.*g_ram\[[0-9]+\])\.cap_q\[([0-9]+)\]} $name -> bank bit]} continue
+  regsub -all {\\} $name {} plain
+  if {![regexp {^(.*g_ram\[[0-9]+\])\.cap_q\[([0-9]+)\]} $plain -> bank bit]} continue
   if {![string match DFF* [[$ff getMaster] getName]]} continue
-  set mi [$cb findInst $bank.storage]
+  regsub {\.cap_q.*$} $name {.storage} macro_name
+  set mi [$cb findInst $macro_name]
   if {$mi eq "NULL" || $mi eq ""} { error "Missing SRAM for capture $name" }
   set bb [$mi getBBox]
   set orient [$mi getOrient]
-  if {$orient ni {R0 MY}} { error "Capture collar does not support macro orientation $orient" }
+  if {$orient ni {R0 MY MX R180}} { error "Capture collar does not support macro orientation $orient" }
   set width [expr {double([[$ff getMaster] getWidth])/$cd}]
   set col [expr {$bit % 8}]
   set mx [expr {double([$bb xMin])/$cd}]
   set my [expr {double([$bb yMin])/$cd}]
   # The compiler LEF puts rd_out[b] on west face at y=1.536+0.096*b.
   # MY mirrors that face to the east, retaining its y coordinate.
-  set y [expr {floor(($my + 1.536 + 0.096*$bit)/0.27)*0.27}]
-  if {$orient eq "R0"} {
+  set pin_y [expr {1.536 + 0.096*$bit}]
+  if {$orient in {MX R180}} {
+    set y [expr {floor((double([$bb yMax])/$cd - $pin_y)/0.27)*0.27}]
+  } else {
+    set y [expr {floor(($my + $pin_y)/0.27)*0.27}]
+  }
+  if {$orient in {R0 MX}} {
     set x [expr {$mx-1.08-($col+1)*0.70}]
   } else {
     set x [expr {double([$bb xMax])/$cd+1.08+$col*0.70}]
