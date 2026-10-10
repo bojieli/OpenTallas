@@ -1,0 +1,42 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "full_shapes": [
+    {
+      "G": 96,
+      "M": 18,
+      "words": 9,
+      "flits": 15552
+    },
+    {
+      "G": 96,
+      "M": 32,
+      "words": 16,
+      "flits": 49152
+    },
+    {
+      "G": 8,
+      "M": 16,
+      "words": 32,
+      "flits": 4096
+    },
+    {
+      "G": 1,
+      "M": 1,
+      "words": 9,
+      "flits": 9
+    }
+  ],
+  "negative_control": "MUT_ORDER=1 rejected obsolete owner-major layout",
+  "extra_cases": [
+    "nonrecipient drains without publication",
+    "bad src/gi identity faults"
+  ],
+  "endpoint_integration_status": "building; no qualification",
+  "native_enabled": false,
+  "pending": [
+    "generic record/HBM frontend and protected staging binding",
+    "destination write acknowledgement before retirement",
+    "executed software fallback for PF>512",
+    "routed physical closure in context"
+  ]
+}
