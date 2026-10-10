@@ -46,6 +46,7 @@ module ot_hgi_dma_record #(
     output reg           rec_done,
     output reg           rec_fault,
     output wire          halted,
+    output wire          wr_quiet,       // no posted STORE / KVWB in flight (CTL.FENCE waits for it); updates with rec_done
     // legacy (DS control path) mover / fence ports
     input  wire          lg_mv_v,
     output wire          lg_mv_rdy,
@@ -78,6 +79,7 @@ module ot_hgi_dma_record #(
     // the current (non-posted) move's completion: a front done, or a mover done that is not the posted move's
     wire cur_done = (POSTED != 0) ? (in_fd || (in_pd && !pst)) : in_done;
     assign halted = halt_q;
+    assign wr_quiet = !pst;
     assign rec_rdy = hen && rdy_r;                                       // registered
     assign mv_v    = hen ? (iss && !is_fence) : lg_mv_v;
     assign mv      = hen ? mv_q : lg_mv;
