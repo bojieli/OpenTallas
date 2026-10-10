@@ -1,0 +1,18 @@
+ERR fault (record faults 8000396, block fault 1)
+ERR retired 0 of 13
+checked 30848 O words over 13 gathers, 672 delivery flits
+REC 0 n 1280 pf 1 disp 0 ret -1 service -1
+REC 1 n 512 pf 1 disp 124 ret -1 service -1
+REC 2 n 5120 pf 4 disp 248 ret -1 service -1
+REC 3 n 384 pf 1 disp 372 ret -1 service -1
+REC 4 n 2304 pf 2 disp 496 ret -1 service -1
+REC 5 n 2304 pf 2 disp 1000498 ret -1 service -1
+REC 6 n 2304 pf 2 disp 2000500 ret -1 service -1
+REC 7 n 2304 pf 2 disp 3000502 ret -1 service -1
+REC 8 n 2304 pf 2 disp 4000504 ret -1 service -1
+REC 9 n 2304 pf 2 disp 5000506 ret -1 service -1
+REC 10 n 2304 pf 2 disp 6000508 ret -1 service -1
+REC 11 n 5120 pf 4 disp 7000510 ret -1 service -1
+REC 12 n 2304 pf 2 disp 8000512 ret -1 service -1
+SEQUENCE 13 gathers in 8000514 cycles (LAT 453 CRED 137 rank 37)
+HGI_COLL_PIPE FAIL errors=23554
