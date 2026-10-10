@@ -102,12 +102,18 @@ EXTRA=(); [ -n "${CTSA:-}" ] && EXTRA=(--orfs-var "CTS_ARGS=$CTSA")
 # pins on its N face); on the N face each bit crossed the frame and took a 2-bit hop relay that filled the packed S81
 # frame bands (m221pq_r4c GEN_FAIL rt_0_8a_y1).  Pin placement only: RTL, cycles, outline unchanged.
 if [ "${OT_Q_EF_SOUTH:-0}" = 1 ]; then QEF_TOP=; QEF_BOT='|bank_free|sh_free'; else QEF_TOP='|bank_free|sh_free'; QEF_BOT=; fi
+# OT_Q_X1_REGION (cont-takeover 2026-10-10, default unset = x1 in the bottom group): the second x-lane input (xs_q1 /
+# xs_e1, the bank's i_x1) gets its own pin region toward the slot station, e.g. 'bottom:400.08-505.44' (S face, east end:
+# the L-lane element's x1 lands above the slot station at frame x 365-538) or 'right:2.16-110.16' (E face, bottom).  s81-gen
+# 2026-10-10: 768 g_xb slot hops per die (557.8 um) cross the 100 %-packed cfg band to an i_x1 at the S-face middle.
+QX1_BOT='|xs_q1|xs_e1'; QX1_ARGS=()
+if [ -n "${OT_Q_X1_REGION:-}" ]; then QX1_BOT=; QX1_ARGS=(--pin-region "^(xs_q1|xs_e1).*=${OT_Q_X1_REGION}"); fi
 exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track-gate-record $J/macro_gate.json \
  --persistent-workdir $J/work --launch-receipt $J/receipt.json \
  --view asap7 --top ot_v41_rom_elem_q_qxpq_w10 $SRCS \
  --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns ${UNC:-0.06} --io-delay-fraction 0.2 --stages pnr \
  --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density ${PD:-0.6} --macro-place-halo 2 2 \
- --pin-region "^(p|busy|fault|walking${QEF_TOP}).*=top:136.08-374.76" --pin-region "^(clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1${QEF_BOT}).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
+ --pin-region "^(p|busy|fault|walking${QEF_TOP}).*=top:136.08-374.76" --pin-region "^(clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0${QX1_BOT}${QEF_BOT}).*=bottom:${XLO:-136.08}-${XHI:-374.76}" "${QX1_ARGS[@]}" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
  --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=${PDH:-physical/abi3/dsrom_q_pin_keepout2.tcl} \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag dsrom_qx10qm_${RUN}_20261006 \
