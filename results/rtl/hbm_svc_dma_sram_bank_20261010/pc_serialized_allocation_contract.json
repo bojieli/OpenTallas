@@ -1,0 +1,30 @@
+{
+  "scope": "currentcacheAPI one sector/bank allocation per edge",
+  "allocation_II_cycles": 1,
+  "burst_sectors": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "allocation_latency_cycles": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "minimum_allocation_rate_sectors_per_PC_cycle": 1,
+  "cache_read_capacity_sectors_per_PC_cycle": 2,
+  "composed_admission_ceiling_sectors_per_PC_cycle": 1,
+  "required_sectors_per_PC_cycle": 1,
+  "mandatory_preissue_contract": "all Nsector ownership/epochs and nativeingressbeat credits must be accepted BEFORE any physical nativeburst issue; alloc_len does notreserveotherbanks",
+  "bank_start_wrap": "nativecontroller emits individual perbeat bank=(srcsector+i)&3 and computedgroup/epoch; crossing128sectorboundary must updateordinal/group",
+  "native_CAM_and_ingress": "separatelyowned,32entries/bank; notpartofcachemappedarea",
+  "boundary_bits_per_cycle_peak_corrected": {
+    "allocate": 31,
+    "return": 271,
+    "fetch": 15,
+    "bundle_including_metadata_fault": 1031
+  },
+  "total_peak_boundary_tracks": 1348
+}

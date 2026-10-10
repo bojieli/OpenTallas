@@ -1,0 +1,7 @@
+{
+  "record": "pc_cpu_gate.json",
+  "verdict": "historical FAIL retained",
+  "cause": "bench attempted sameepoch reallocation ofgroup70 afterall256groups populated; allocation correctly backpressured",
+  "source_provenance": "bench was corrected while firstbaseline simulator was running; firstrecord source_sha256 reflects final disk snapshot, not exact compiled bench; this record cannot serve as a source-pinned gate",
+  "authoritative_successor": "pc_cpu_gate_r2.json captures before/after source hashes and all sources remained unchanged"
+}
