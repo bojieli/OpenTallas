@@ -42,6 +42,16 @@ def fc_cmd(c):
     """the --fc face-clock variant (gen_svc_seg.py --ps --fc): its own split / RTL / SDC dirs and the ck* clock ports"""
     c = (c.replace('OT_SVC_SPLIT=split_ps', 'OT_SVC_SPLIT=split_psfc').replace('/svc/split_ps/', '/svc/split_psfc/')
           .replace('/svc/rtl/seg_ps/', '/svc/rtl/seg_psfc/').replace('/svc/sdc_ps/', '/svc/sdc_psfc/'))
+    # coordinator 2026-10-09 (option 1): the face leaves carry the segment's calibrated interior insertion as SOURCE
+    # latency (the die tree delays ckw / cke by the same amount; the ETM's per-pin insertion carries it), so the face
+    # registers sit in the main skew group: TT for setup / route, FF in the FF hold scenes (calib.env, sourced before
+    # the route; the CTS-only calibrate uses the defaults)
+    lat = ('L_=physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc; '
+           'printf "%s\\n" "if {[llength [get_libs -quiet *_FF_*]]} { set ot_fcl ${CK_FF_MEAN:-400} } else { set ot_fcl ${CK_TT_MEAN:-480} }" '
+           '"set_clock_latency -source \\$ot_fcl [get_ports -quiet {ckw[0] cke[0]}]" > $L_; ')
+    c = c.replace("export OT_MM_FF_SDC='", lat + "export OT_MM_FF_SDC='physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ")
+    c = c.replace('POSTSDC="', 'POSTSDC="physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ')
+    c = c.replace("--orfs-var GPL_ROUTABILITY_DRIVEN=0", "--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc")
     return c.replace('SRC="{SRC}" OUT=', "CKP='ck*' SRC=\"{SRC}\" OUT=")
 
 
