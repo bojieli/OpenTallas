@@ -1,0 +1,4265 @@
+{
+  "schema": 1,
+  "status": "COMPLETE_INGRESS_STORAGE_FLOOR_SENSITIVITY_NOT_MAPPED_TOTAL",
+  "sources": {
+    "results/uarch/hbm_svc_dma_physical_20261010/ingress_model_cfc724c70.py": "3024a63f6bf76fd6cd3b1a749e0bd7be6b30c9753dae9caccc15723450bb5d3e",
+    "tools/hbm_svc_dma_wide_ingress_sweep.py": "a13ade43e943b86a21f2de6aaf9480e5f25dc0c9085d5e1602164c5828062bc4",
+    "tools/hbm_svc_dma_wide_control_sweep.py": "3b456d7f93fec5d1a1636415e18ec175d83d6e2c177f0b02195daeaeef46183a",
+    "results/uarch/hbm_svc_dma_physical_20261010/native32_reference_mappedshape.json": "12bb605e3d89218943ef05455353928c99fa89aa3116f5efb2bd6417404ef101",
+    "results/uarch/hbm_svc_dma_physical_20261010/bank_wide_mappedshape.json": "bc69c264e71fcabb562e769f22f6fc1abf7897fce425fe614f95d213026a3671",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+  },
+  "native_model_source_commit": "cfc724c70",
+  "native_ingress_source_inventory": {
+    "proposed_entries_per_bank": 32,
+    "banks_per_PC": 4,
+    "entries_per_PC": 128,
+    "payload_bits_per_entry": 256,
+    "planned_SECDED_bits_per_entry": 32,
+    "slot_index_fault_metadata_bits_per_entry": 15,
+    "planned_paired_metadata_bits_per_entry": 30,
+    "protected_storage_bits_per_PC": 40704,
+    "aggregate_four_stack_storage_bits": 5210112,
+    "native_return_backpressure_allowed": false,
+    "reserve_every_burst_beat_before_native_issue": true,
+    "reservation_release_point": "queued_beat_dispatch_into_fixed_write_commit_pipeline",
+    "worst_case_reserved_sectors_per_bank_with32_fourbeat_leases": 32,
+    "four_entries_per_bank_predecessor_admission": "FAIL:16beats total cannot hide104cycle native latency without inventing PHY return backpressure",
+    "arrival_sector_per_PC_cycle": 1,
+    "per_bank_service_sector_per_cycle": 0.5,
+    "balanced_per_bank_arrival_sector_per_cycle": 0.25,
+    "finite_queue_BW_validation_required": true,
+    "rationale": "direct CAM-to-bank selected response stalls at bankII2; bank-local elastic queues decouple OOO return bursts without changing raw roof or descriptor workload",
+    "no_guarantee_for_arbitrarily_unbalanced_bank_streams": true
+  },
+  "predecessor": {
+    "cache_native_only_record": "results/uarch/hbm_svc_dma_physical_20261010/wide32_control_reserve_sensitivity.json",
+    "predecessor_record_preserved": true,
+    "predecessor_does_not_include_mandatory_native_ingress": true,
+    "four_entry_proposal_admission": "FAIL preserved: PHY cannot be backpressured; reserve all beats before native issue"
+  },
+  "storage": {
+    "entries_per_bank": 32,
+    "banks_per_pc": 4,
+    "entries_per_pc": 128,
+    "payload_ECC_bits_per_pc": 36864,
+    "paired_metadata_bits_per_pc": 3840,
+    "total_protected_bits_per_pc": 40704,
+    "total_protected_bits_four_stacks": 5210112,
+    "additional_to_cache_context_and_native_CAM": true,
+    "DFFHQNx1_area_um2": 0.2916,
+    "DFFASRHQNx1_area_um2": 0.37908,
+    "policies": [
+      {
+        "name": "data_ECC_unreset_metadata_reset",
+        "payload_ECC_FF_area_um2": 10749.5424,
+        "paired_metadata_FF_area_um2": 1455.6671999999999,
+        "area_floor_um2_per_pc": 12205.2096,
+        "qualification": "data/ECC no reset; protected metadata reset; control/reset RTL gate pending"
+      },
+      {
+        "name": "all_storage_reset_conservative",
+        "payload_ECC_FF_area_um2": 13974.40512,
+        "paired_metadata_FF_area_um2": 1455.6671999999999,
+        "area_floor_um2_per_pc": 15430.07232,
+        "qualification": "sensitivity if implementation resets all storage, not a required reset policy"
+      }
+    ],
+    "logic_area_um2": null
+  },
+  "admission_contract": {
+    "PHY_return_backpressure": false,
+    "reserve_every_burst_beat_before_issue": true,
+    "reservation_release": "dispatch queued beat into fixed write-commit pipeline",
+    "worst_case_four_sector_native_leases_per_pc": 32,
+    "arbitrarily_unbalanced_bank_stream_guarantee": false
+  },
+  "native_reference": {
+    "reserve_um2_per_pc": 1000,
+    "reference_mapped_area_um2_per_pc": 495.18054000000006,
+    "reference_mapping_commit": "12f583320",
+    "reference_metadata_ff_count": 832,
+    "reference_metadata_protected": false,
+    "reference_RTL_sha256": {
+      "rtl/ot_hbm_svc_dma_pc_tile_wide.sv": "017bcd13d628ad7803d1ddf40cc695768615e610fcb16bebded3a2d7968e27b3"
+    },
+    "protected_uplift_um2_per_pc": null,
+    "protected_uplift_allowance_um2_per_pc": 504.81945999999994,
+    "status": "unprotected native32 reference mapped; protected uplift UNKNOWN, separate1000 reservation provisional; no timing claim"
+  },
+  "protected_cache_minimum": {
+    "metadata_records": 1024,
+    "metadata_flags_per_record": 3,
+    "paired": true,
+    "metadata_ff_count": 6144,
+    "metadata_ff_cell": "DFFASRHQNx1_ASAP7_75t_R",
+    "metadata_cell_area_um2": 0.37908,
+    "metadata_ff_area_floor_um2": 2329.0675199999996,
+    "context_payload_ff_count": 4096,
+    "context_ff_cell": "DFFHQNx1_ASAP7_75t_R",
+    "context_cell_area_um2": 0.2916,
+    "context_ff_area_floor_um2": 1194.3936,
+    "combined_cache_ff_area_floor_um2": 3523.46112,
+    "excludes": [
+      "cache address/selection logic",
+      "native CAM",
+      "CTS and hold repair",
+      "cell routing"
+    ],
+    "qualification": "minimum proposed protected cache inventory, not mapped cache RTL area"
+  },
+  "die": {
+    "original_outline_um": [
+      31734.288,
+      25282.8
+    ],
+    "proposed_outline_um": [
+      31734.288,
+      25999.92
+    ],
+    "original_area_mm2": 802.3316566464,
+    "proposed_area_mm2": 825.08894925696,
+    "added_area_mm2": 22.75729261056,
+    "insertion_per_band_um": 358.56,
+    "insertion_grid_um": 2.16,
+    "insertion_cut_y_um": [
+      1466.616,
+      23816.16
+    ],
+    "reticle_fit": true,
+    "naive_360um_band_insertion_height_um": 26002.8,
+    "newly_introduced_existing_block_overlaps": [],
+    "outline_failures": [],
+    "baseline_existing_overlap_count": 0
+  },
+  "geometry_fit": true,
+  "points": [
+    {
+      "cache_reserve_um2_per_pc": 5000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "data_ECC_unreset_metadata_reset",
+      "ingress_FF_area_floor_um2_per_pc": 12205.2096,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6923644586037366,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -20680.634112000058,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": 3727.365887999942,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 28135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 52543.36588799994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 421828.19184000004,
+          "complete_inventory_utilization_floor": 0.6729463646861351,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -14383.647840000049,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": 16958.240159999987,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 48300.128159999964,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 79642.01615999994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6661734277907709,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -8205.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": 17161.989887999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 42529.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 67897.22188799985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6562494449042283,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -3218.6181120000547,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": 22532.613887999963,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 48283.84588799992,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 74035.077888,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 256751.47958400002,
+          "complete_inventory_utilization_floor": 0.6805537520229626,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -11526.967584000027,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": 7336.456415999972,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 26199.88041599997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 45063.30441599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6624132201425423,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -6333.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": 19177.989887999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 44689.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 70201.22188799985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6630419655434775,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -6648.122112000012,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": 18839.30188799993,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 44326.72588799993,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 69814.14988799999,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6198019252436483,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": 16467.333887999994,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 43732.869888000016,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 70998.40588800004,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 98263.94188800006,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6923644586037366,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -20680.634112000058,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": 3727.365887999942,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 28135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 52543.36588799994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 421828.19184000004,
+          "complete_inventory_utilization_floor": 0.6755037272246512,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -15926.17584000004,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": 15297.056159999978,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 46520.28815999994,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 77743.52016000001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6630719355737866,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -6663.098111999978,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": 18823.17388799996,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 44309.44588800002,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 69795.71788799996,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 421828.19184000004,
+          "complete_inventory_utilization_floor": 0.6359000146165825,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": 9353.312159999914,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 42521.12015999999,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 75688.92815999995,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 108856.73616000003,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6978650349262229,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -23181.626112000027,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": 1033.9898879999528,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": 25249.605887999933,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 49465.22188799997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 337984.63411200006,
+          "complete_inventory_utilization_floor": 0.6430735360088846,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": 3640.389887999918,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": 29919.237887999916,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 56198.085887999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 82476.93388799991,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 256751.47958400002,
+          "complete_inventory_utilization_floor": 0.7001368022178244,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -18385.97558400003,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -50.16758400000981,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": 18285.640415999922,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 36621.44841599994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 256751.47958400002,
+          "complete_inventory_utilization_floor": 0.6147924204181839,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": 14703.49641599995,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 35584.64841599995,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 56465.80041600001,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 77346.95241599996,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.7001368022178244,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "cache_reserve_um2_per_pc": 7000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "data_ECC_unreset_metadata_reset",
+      "ingress_FF_area_floor_um2_per_pc": 12205.2096,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.7087525280891512,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -28680.634112000058,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -4272.634112000058,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 20135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 44543.36588799994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 431828.19184000004,
+          "complete_inventory_utilization_floor": 0.6888994559613002,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -24383.64784000005,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": 6958.240159999987,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 38300.128159999964,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 69642.01615999994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.681941563038482,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -16205.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": 9161.989887999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 34529.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 59897.221887999855,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.6717826823042875,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -11218.618112000055,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": 14532.613887999963,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 40283.84588799992,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 66035.077888,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 262751.479584,
+          "complete_inventory_utilization_floor": 0.6964575455230186,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -17526.967584000027,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": 1336.4564159999718,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 20199.88041599997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 39063.30441599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.6780923523464764,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -14333.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": 11177.989887999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 36689.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 62201.221887999855,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.6787359799719266,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -14648.122112000012,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": 10839.301887999929,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 36326.72588799993,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 61814.149887999985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.634472460236982,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": 8467.333887999994,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 35732.869888000016,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 62998.40588800004,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 90263.94188800006,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.7087525280891512,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -28680.634112000058,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -4272.634112000058,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 20135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 44543.36588799994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 431828.19184000004,
+          "complete_inventory_utilization_floor": 0.6915174441902748,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -25926.17584000004,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": 5297.056159999978,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 36520.28815999994,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 67743.52016000001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.6787666593843148,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -14663.098111999978,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": 10823.173887999961,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 36309.44588800002,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 61795.717887999956,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 431828.19184000004,
+          "complete_inventory_utilization_floor": 0.6509748727440776,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": -646.687840000086,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 32521.12015999999,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 65688.92815999995,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 98856.73616000003,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.7143833014861155,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -31181.626112000027,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": -6966.010112000047,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": 17249.605887999933,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 41465.22188799997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 345984.63411200006,
+          "complete_inventory_utilization_floor": 0.6582949033991141,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": -4359.610112000082,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": 21919.237887999916,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 48198.085887999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 74476.93388799991,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 262751.479584,
+          "complete_inventory_utilization_floor": 0.716498230086179,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -24385.97558400003,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -6050.16758400001,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": 12285.640415999922,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 30621.44841599994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 262751.479584,
+          "complete_inventory_utilization_floor": 0.6291594438467764,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": 8703.49641599995,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 29584.648415999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 50465.80041600001,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 71346.95241599996,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.716498230086179,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "cache_reserve_um2_per_pc": 10000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "data_ECC_unreset_metadata_reset",
+      "ingress_FF_area_floor_um2_per_pc": 12205.2096,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7333346323172731,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -40680.63411200006,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -16272.634112000058,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 8135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 32543.365887999942,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 446828.19184000004,
+          "complete_inventory_utilization_floor": 0.7128290928740477,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -39383.64784000005,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": -8041.759840000013,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 23300.128159999964,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 54642.01615999994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7055937659100486,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -28205.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": -2838.0101120000472,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 22529.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 47897.221887999855,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.6950825384043763,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -23218.618112000055,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": 2532.6138879999635,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 28283.845887999923,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 54035.077888,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 271751.479584,
+          "complete_inventory_utilization_floor": 0.7203132357731026,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -26526.967584000027,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": -7663.543584000028,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 11199.88041599997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 30063.30441599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7016110506523775,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -26333.626112000085,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": -822.0101120000472,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 24689.605887999875,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 50201.221887999855,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7022770016146003,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -26648.122112000012,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": -1160.698112000071,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 24326.725887999928,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 49814.149887999985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.6564782627269825,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": -3532.6661120000063,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 23732.869888000016,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 50998.40588800004,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 78263.94188800006,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7333346323172731,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -40680.63411200006,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -16272.634112000058,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 8135.365887999942,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 32543.365887999942,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 446828.19184000004,
+          "complete_inventory_utilization_floor": 0.7155380196387101,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -40926.17584000004,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": -9702.943840000022,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 21520.28815999994,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 52743.520160000015,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7023087451001072,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -26663.098111999978,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": -1176.8261120000388,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 24309.445888000017,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 49795.717887999956,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 61026.048,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 446828.19184000004,
+          "complete_inventory_utilization_floor": 0.6735871599353205,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": -15646.687840000086,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 17521.12015999999,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 50688.92815999995,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 83856.73616000003,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.7391607013259544,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -43181.62611200003,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": -18966.010112000047,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": 5249.605887999933,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 29465.22188799997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 48820.8384,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 357984.63411200006,
+          "complete_inventory_utilization_floor": 0.6811269544844585,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": -16359.610112000082,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": 9919.237887999916,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 36198.085887999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 62476.93388799991,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 271751.479584,
+          "complete_inventory_utilization_floor": 0.741040371888711,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -33385.97558400003,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -15050.16758400001,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": 3285.640415999922,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 21621.44841599994,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 36615.6288,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 271751.479584,
+          "complete_inventory_utilization_floor": 0.650709978989665,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": -296.50358400004916,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 20584.648415999953,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 41465.80041600001,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 62346.95241599996,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.741040371888711,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SW_s7_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32",
+          "hfd_svc_dma_SE_s7_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "cache_reserve_um2_per_pc": 5000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "all_storage_reset_conservative",
+      "ingress_FF_area_floor_um2_per_pc": 15430.07232,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.7187890957718781,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -33580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -9172.084992000018,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 15235.915007999982,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 39643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 437952.50544000004,
+          "complete_inventory_utilization_floor": 0.6986696293471536,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -30507.961440000043,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": 833.9265599999926,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 32175.81455999997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 63517.70255999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6915984635529016,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -21105.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": 4262.5390079999925,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 29630.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 54997.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6812957240104085,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -16118.068992000015,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": 9633.163008000003,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 35384.39500799996,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 61135.62700800004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 266426.067744,
+          "complete_inventory_utilization_floor": 0.706197527405417,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -21201.555744000012,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": -2338.131744000013,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 16525.292255999986,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 35388.716255999985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6876947446057514,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -19233.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": 6278.5390079999925,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 31790.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 57301.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6883474865722012,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -19547.572991999972,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": 5939.851007999969,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 31427.275007999968,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 56914.699008000025,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6434571559348768,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": 3567.8830080000334,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 30833.419008000055,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 58098.95500800008,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 85364.4910080001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.7187890957718781,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -33580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -9172.084992000018,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 15235.915007999982,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 39643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 437952.50544000004,
+          "complete_inventory_utilization_floor": 0.7013247466501866,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -32050.489440000034,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": -827.2574400000158,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 30395.974559999944,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 61619.20656000002,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.6883786004324209,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -19562.548991999938,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": 5923.723008000001,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 31409.995008000056,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 56896.267007999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 360802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 437952.50544000004,
+          "complete_inventory_utilization_floor": 0.6602071886089066,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": -6771.00144000008,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 26396.806559999997,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 59564.61455999996,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 92732.42256000004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.724499605940233,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -36081.07699199999,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": -11865.460992000008,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": 12350.155007999972,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 36565.77100800001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 289163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 350884.084992,
+          "complete_inventory_utilization_floor": 0.667616946130972,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": -9259.060992000042,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": 17019.787007999956,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 43298.635007999954,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 69577.48300799995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 266426.067744,
+          "complete_inventory_utilization_floor": 0.7265184816071373,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -28060.563744000014,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -9724.755743999995,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": 8611.052255999937,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 26946.860255999956,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 220135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 266426.067744,
+          "complete_inventory_utilization_floor": 0.6379582595443011,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": 5028.908255999966,
+              "reservation_floor_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 25910.060255999968,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 46791.21225600003,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 67672.36425599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.7265184816071373,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "cache_reserve_um2_per_pc": 7000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "all_storage_reset_conservative",
+      "ingress_FF_area_floor_um2_per_pc": 15430.07232,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7351771652572927,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -41580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -17172.08499200002,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 7235.915007999982,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 31643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 447952.50544000004,
+          "complete_inventory_utilization_floor": 0.7146227206223187,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -40507.96144000004,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": -9166.073440000007,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 22175.81455999997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 53517.70255999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7073665988006127,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -29105.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": -3737.4609920000075,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 21630.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 46997.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.6968289614104677,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -24118.068992000015,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": 1633.1630080000032,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 27384.395007999963,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 53135.62700800004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 272426.067744,
+          "complete_inventory_utilization_floor": 0.722101320905473,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -27201.555744000012,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": -8338.131744000013,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 10525.292255999986,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 29388.716255999985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7033738768096855,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -27233.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": -1721.4609920000075,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 23790.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 49301.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7040415010006503,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -27547.572991999972,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": -2060.1489920000313,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 23427.275007999968,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 48914.699008000025,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.6581276909282106,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": -4432.116991999967,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 22833.419008000055,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 50098.95500800008,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 77364.4910080001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7351771652572927,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -41580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -17172.08499200002,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": 7235.915007999982,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 31643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 447952.50544000004,
+          "complete_inventory_utilization_floor": 0.7173384636158102,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -42050.489440000034,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": -10827.257440000016,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 20395.974559999944,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 51619.20656000002,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7040733242429492,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -27562.548991999938,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": -2076.276991999999,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 23409.995008000056,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 48896.267007999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 370802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 447952.50544000004,
+          "complete_inventory_utilization_floor": 0.6752820467364018,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": -16771.00144000008,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 16396.806559999997,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 49564.61455999996,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 82732.42256000004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.7410178725001255,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -44081.07699199999,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": -19865.460992000008,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": 4350.155007999972,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 28565.77100800001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 297163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 358884.084992,
+          "complete_inventory_utilization_floor": 0.6828383135212016,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": -17259.060992000042,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": 9019.787007999956,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 35298.635007999954,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 61577.48300799995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 272426.067744,
+          "complete_inventory_utilization_floor": 0.742879909475492,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -34060.563744000014,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -15724.755743999995,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": 2611.052255999937,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 20946.860255999956,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 226135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 272426.067744,
+          "complete_inventory_utilization_floor": 0.6523252829728935,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": -971.0917440000339,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 19910.060255999968,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 40791.21225600003,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 61672.36425599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.742879909475492,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SW_s7_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32",
+          "hfd_svc_dma_SE_s7_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "cache_reserve_um2_per_pc": 10000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "ingress_FF_policy": "all_storage_reset_conservative",
+      "ingress_FF_area_floor_um2_per_pc": 15430.07232,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7597592694854146,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -53580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -29172.08499200002,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": -4764.084992000018,
+              "reservation_floor_fit": false
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 19643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 462952.50544000004,
+          "complete_inventory_utilization_floor": 0.7385523575350662,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_ff_floor_um2": -55507.96144000004,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 438786.43200000003,
+              "remaining_ff_floor_um2": -24166.073440000007,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_ff_floor_um2": 7175.81455999997,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 501470.208,
+              "remaining_ff_floor_um2": 38517.70255999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7310188016721794,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_ff_floor_um2": -41105.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 355146.624,
+              "remaining_ff_floor_um2": -15737.460992000008,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 380514.23999999993,
+              "remaining_ff_floor_um2": 9630.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 405881.8559999999,
+              "remaining_ff_floor_um2": 34997.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7201288175105564,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_ff_floor_um2": -36118.068992000015,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 360517.248,
+              "remaining_ff_floor_um2": -10366.836991999997,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_ff_floor_um2": 15384.395007999963,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 412019.71200000006,
+              "remaining_ff_floor_um2": 41135.62700800004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 281426.067744,
+          "complete_inventory_utilization_floor": 0.7459570111555569,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_ff_floor_um2": -36201.55574400001,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_ff_floor_um2": -17338.131744000013,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_ff_floor_um2": 1525.292255999986,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 301814.784,
+              "remaining_ff_floor_um2": 20388.716255999985,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7268925751155867,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_ff_floor_um2": -39233.076992000046,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 357162.624,
+              "remaining_ff_floor_um2": -13721.460992000008,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382674.23999999993,
+              "remaining_ff_floor_um2": 11790.155007999914,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 408185.8559999999,
+              "remaining_ff_floor_um2": 37301.771007999894,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.727582522643324,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_ff_floor_um2": -39547.57299199997,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_ff_floor_um2": -14060.148992000031,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382311.36,
+              "remaining_ff_floor_um2": 11427.275007999968,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407798.78400000004,
+              "remaining_ff_floor_um2": 36914.699008000025,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.680133493418211,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_ff_floor_um2": -16432.116991999967,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 381717.5040000001,
+              "remaining_ff_floor_um2": 10833.419008000055,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.0400000001,
+              "remaining_ff_floor_um2": 38098.95500800008,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 436248.5760000001,
+              "remaining_ff_floor_um2": 65364.4910080001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7597592694854146,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_ff_floor_um2": -53580.08499200002,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_ff_floor_um2": -29172.08499200002,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_ff_floor_um2": -4764.084992000018,
+              "reservation_floor_fit": false
+            },
+            "80": {
+              "capacity_um2": 390528.0,
+              "remaining_ff_floor_um2": 19643.91500799998,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 462952.50544000004,
+          "complete_inventory_utilization_floor": 0.7413590390642455,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_ff_floor_um2": -57050.489440000034,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 437125.248,
+              "remaining_ff_floor_um2": -25827.257440000016,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_ff_floor_um2": 5395.974559999944,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 499571.71200000006,
+              "remaining_ff_floor_um2": 36619.20656000002,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7276154099587416,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 331321.5360000001,
+              "remaining_ff_floor_um2": -39562.54899199994,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_ff_floor_um2": -14076.276992,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_ff_floor_um2": 11409.995008000056,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 407780.352,
+              "remaining_ff_floor_um2": 36896.267007999995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "existing_bank_cache_native_relay_reservation_um2": 385802.14384000003,
+          "protected_ingress_storage_bits": 203520,
+          "protected_ingress_FF_area_floor_um2": 77150.3616,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 462952.50544000004,
+          "complete_inventory_utilization_floor": 0.6978943339276446,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 431181.50399999996,
+              "remaining_ff_floor_um2": -31771.00144000008,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 464349.31200000003,
+              "remaining_ff_floor_um2": 1396.8065599999973,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_ff_floor_um2": 34564.61455999996,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 530684.9280000001,
+              "remaining_ff_floor_um2": 67732.42256000004,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.7657952723399645,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_ff_floor_um2": -56081.07699199999,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_ff_floor_um2": -31865.460992000008,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_ff_floor_um2": -7649.844992000028,
+              "reservation_floor_fit": false
+            },
+            "80": {
+              "capacity_um2": 387449.856,
+              "remaining_ff_floor_um2": 16565.77100800001,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "existing_bank_cache_native_relay_reservation_um2": 309163.79571200005,
+          "protected_ingress_storage_bits": 162816,
+          "protected_ingress_FF_area_floor_um2": 61720.28928,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 370884.084992,
+          "complete_inventory_utilization_floor": 0.705670364606546,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_ff_floor_um2": -29259.060992000042,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_ff_floor_um2": -2980.2129920000443,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_ff_floor_um2": 23298.635007999954,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 420461.56799999997,
+              "remaining_ff_floor_um2": 49577.48300799995,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 281426.067744,
+          "complete_inventory_utilization_floor": 0.7674220512780239,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_ff_floor_um2": -43060.563744000014,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 256701.312,
+              "remaining_ff_floor_um2": -24724.755743999995,
+              "reservation_floor_fit": false
+            },
+            "75": {
+              "capacity_um2": 275037.11999999994,
+              "remaining_ff_floor_um2": -6388.947744000063,
+              "reservation_floor_fit": false
+            },
+            "80": {
+              "capacity_um2": 293372.92799999996,
+              "remaining_ff_floor_um2": 11946.860255999956,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "existing_bank_cache_native_relay_reservation_um2": 235135.850784,
+          "protected_ingress_storage_bits": 122112,
+          "protected_ingress_FF_area_floor_um2": 46290.21696,
+          "ingress_mux_protection_control_logic_um2": null,
+          "ingress_pointer_credit_reservation_logic_um2": null,
+          "complete_inventory_area_floor_um2": 281426.067744,
+          "complete_inventory_utilization_floor": 0.6738758181157821,
+          "planning_thresholds": {
+            "65": {
+              "capacity_um2": 271454.97599999997,
+              "remaining_ff_floor_um2": -9971.091744000034,
+              "reservation_floor_fit": false
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_ff_floor_um2": 10910.060255999968,
+              "reservation_floor_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.28,
+              "remaining_ff_floor_um2": 31791.212256000028,
+              "reservation_floor_fit": true
+            },
+            "80": {
+              "capacity_um2": 334098.432,
+              "remaining_ff_floor_um2": 52672.36425599997,
+              "reservation_floor_fit": true
+            }
+          },
+          "qualification": "floor only; all additional ingress logic/CTS/hold/routing remains UNKNOWN"
+        }
+      ],
+      "max_complete_inventory_utilization_floor": 0.7674220512780239,
+      "fits_all_floor_reservations_at_percent": {
+        "65": false,
+        "70": false,
+        "75": false,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SW_s7_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32",
+          "hfd_svc_dma_SE_s7_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "80": []
+      }
+    }
+  ],
+  "current_total_fit": "UNKNOWN: actual complete protected ingress/cache/native mapping and physical closure pending",
+  "planning_policy": "65/70/75/80% sensitivity points, not hard adoption caps; spend area for physical closure",
+  "route_admission": false,
+  "bulk_jobs_launched": false,
+  "required_gates": [
+    "actual complete protected ingress mapping and bank occupancy/reservations",
+    "every PHY return accepted without backpressure at full workload",
+    "exactness and measured >=90% real HBM roof",
+    "real corridor, clock, SS setup/FF hold and DRC closure"
+  ]
+}
