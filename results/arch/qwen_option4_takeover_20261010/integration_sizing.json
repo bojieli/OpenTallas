@@ -265,16 +265,16 @@
   },
   "missing_seq_outputs": {
     "su_snapshot": [
-      "x_sacc",
-      "x_sidle",
-      "x_sprog",
-      "x_srows"
+      "su_acc_o",
+      "su_idle_o",
+      "su_prog_o",
+      "su_rows_o"
     ],
     "me_layer_start": [
-      "me_start",
-      "me_token",
-      "me_pos",
-      "me_prog_base"
+      "me_start_o",
+      "me_token_o",
+      "me_pos_o",
+      "me_prog_base_o"
     ]
   },
   "blockers": [
