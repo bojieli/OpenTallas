@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_NATIVE_WRAPPER",
+  "direct_endpoint": "PASS G96 M18 W9 4601cycles, G96 M17 W9 4387cycles",
+  "native_root_cause": "wrapper omitted NOG12; PSG defaultNOG8 rejectsrank77",
+  "qualification": "initialW9shape differsfromactualFP32W32compiler; no ratecredit, notsourcequalifiedsuccessor",
+  "successor": "chunkednative NOG12; actualM18W32 twoepochs; pendingexactbench",
+  "initial_source_context": "base4ecabf9b8 with priorready-gate variant; failure retained and ineligibleforadoption"
+}

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// tb_hgi_coll_bypass (hgi-takeover 2026-10-09): the PSG endpoint's exact gather BYPASS (review 10:45 decision 1) at one
+// Native G25 full-shape bench, derived from established tb_hgi_coll_bypass: the PSG endpoint's exact gather BYPASS (review 10:45 decision 1) at one
 // rank of a group, the rest of the group and one foreign group modelled by a switch stub (the established single-rank
 // method of tb_hbm_accel_tu_endpoint): every departure of the DUT's flit m releases flit m of every group peer and a
 // foreign rank's flit (which must be dropped).  Payload words include -0, quiet / signalling NaNs with payloads,
@@ -9,10 +9,10 @@
 //   +GN=1|2|4|8|96 +RANK=r +PF=p +SEED=s   (GN = 96: mcast_all outer group)
 module tb_hgi_coll_row_native;
     parameter integer MUT_MULTI = 0, MUT_TIE = 0, MUT_ORDER = 0;
-    localparam integer NC = 8, NOG = 12, PFMAX = 512, LANES = 16, NPT = 8, INJ = 2, DEL = 4, RXAW = 8;
+    localparam integer NC = 8, NOG = 12, PFMAX = 512, STOREMAX=1024, LANES = 16, NPT = 8, INJ = 2, DEL = 4, RXAW = 8;
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
     integer gn, rank, pf, pf2, seed, base, lat, dupe, peer, die, amx = 0; reg [31:0] exp_tok;
-    reg [FW-1:0] part [0:NR*PFMAX-1];
+    reg [FW-1:0] part [0:NR*STOREMAX-1];
     reg clk = 0, rst_n = 0, go = 0, done_ready = 0;
     always #0.4166665 clk = ~clk;
     reg [15:0] pf_in;
@@ -20,48 +20,26 @@ module tb_hgi_coll_row_native;
     wire [NPT-1:0] txv, rxc; wire [NPT*PWT-1:0] txf;
     reg [NPT-1:0] crr = 0, rxv = 0; reg [NPT*PWT-1:0] rxf = 0;
     wire [DEL-1:0] dv; wire [DEL*PWT-1:0] dfl; wire flt, start_ready, done_valid; wire [31:0] cst;
-    always @(ii or rank) for (integer i = 0; i < INJ; i = i + 1) idata[FW*i +: FW] = part[rank * PFMAX + integer'(ii[16*i +: 16])];
-`ifdef BYP_REC
-    // +define+BYP_REC: the die block body ot_hgi_coll_ep driven by a normative COLL.ALL_GATHER record (unit 6, op 1,
-    // A = FP32 n = 16 pf) with the group size from the config bus (word 46) and die_id = rank
-    reg [967:0] rec = 0; reg [39:0] cfgb = 0; wire [2:0] ret; wire [93:0] rfo; wire [79:0] vma;
-    assign start_ready = ret[0]; assign done_valid = ret[1];
-    // SU-quarter inject: lane h of flit i comes from quarter i mod 4 (SW, NW, SE, NE), the others drive 0;
-    // +MULTI=1 also drives junk from a second quarter on flit 2 (the sticky multi-driver flag must fault the record)
-    reg [4*INJ*FW-1:0] injq; integer multi;
-    always @* begin
-        injq = 0;
-        for (integer i = 0; i < INJ; i = i + 1) begin
-            if (ir[i]) injq[(integer'(ii[16*i +: 16]) % 4) * INJ * FW + i * FW +: FW] = idata[FW*i +: FW];
-            if (multi != 0 && ir[i] && ii[16*i +: 16] == 2) injq[((2 + 1) % 4) * INJ * FW + i * FW +: FW] = {16{32'h1}};
-        end
-    end
-    ot_hgi_coll_ep #(.MUT_MULTI(MUT_MULTI), .MUT_TIE(MUT_TIE)) dut (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
-        .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
-        .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
-        .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfgb), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma));
-    function automatic [255:0] md(input [2:0] fmt, input [39:0] base_, input [19:0] n);
-        begin md = 256'd0; md[1:0] = 2'd1; md[4:2] = fmt; md[47:8] = base_; md[67:48] = n; md[87:68] = 20'd1; end
-    endfunction
-`else
+    always @(ii or rank or load_row or rst_n) for (integer i = 0; i < INJ; i = i + 1) idata[FW*i +: FW] = part[rank * STOREMAX + integer'(ii[16*i +: 16])+integer'(load_row)*words];
     ot_hgi_coll_row_native #(.ENABLE(1),.MUT_ORDER(MUT_ORDER),.PFMAX(PFMAX),.NPT(NPT),.INJ(INJ),.DEL(DEL)) dut(
       .clk(clk),.rst_n(rst_n),.rank(8'(rank)),.group_size(8'(gn)),.destinations(8'(gn)),
-      .slots(16'(pf/words)),.row_words(words),.start(go),.ready(start_ready),.done(done_valid),
+      .slots(16'(pf/words)),.row_words(words),.load_v(load_v),.load_r(1'b1),.load_row(load_row),.load_rows(load_rows),.start(go),.ready(start_ready),.done(done_valid),
       .inj_idx(ii),.inj_rd(ir),.inj_data(idata),.ph_tx_v(txv),.ph_tx_flit(txf),.sw_cr_ret(crr),
       .ph_rx_v(rxv),.ph_rx_flit(rxf),.rx_credit(rxc),.out_v(mv),.out_data(md),.out_row(mr),.out_word(mw),
       .fault(flt),.stat_credit_stall(cst));
     assign dv=dut.dv;assign dfl=dut.df;
-`endif
 
     wire [DEL-1:0] mv; wire [DEL*FW-1:0] md; wire [DEL*20-1:0] mr; wire [DEL*16-1:0] mw; wire map_done,map_fault;
-    reg [15:0] words=9; integer mapped=0; reg [15:0] nslots;
+    wire load_v;wire [15:0] load_row,load_rows;
+    wire [15:0] epoch_pf=load_rows*words;
+    reg [15:0] words=32; integer mapped=0; reg [15:0] nslots;
     assign map_fault=flt;
     always @(negedge clk) if(rst_n)begin
       if(map_fault)$fatal(1,"native map fault");
       for(integer l=0;l<DEL;l=l+1)if(mv[l])begin : check_native
         integer row_, word_, src_, slot_;
         row_=mr[l*20+:20];word_=mw[l*16+:16];src_=row_%gn+base;slot_=row_/gn;
-        if(row_>=gn*(pf/words)||word_>=words||md[l*FW+:FW]!==part[src_*PFMAX+slot_*words+word_])
+        if(row_>=gn*(pf/words)||word_>=words||md[l*FW+:FW]!==part[src_*STOREMAX+slot_*words+word_])
           $fatal(1,"native slot-major payload mismatch row=%0d word=%0d",row_,word_);
         mapped=mapped+1;
       end
@@ -98,18 +76,18 @@ module tb_hgi_coll_row_native;
     always @(posedge clk) if (rst_n) begin
         for (integer p = 0; p < NPT; p = p + 1) if (txv[p]) begin : dep
             reg [PWT-1:0] f; integer gi, m, q, mm;
-            f = txf[p*PWT +: PWT]; gi = integer'(f[FW +: 16]); m = gi - (rank - base) * pf;
+            f = txf[p*PWT +: PWT]; gi = integer'(f[FW +: 16]); m = gi - (rank - base) * integer'(epoch_pf);
             ndep = ndep + 1;
-            if (f[PWT-1] !== 1'b1 || f[FW+24 +: 8] !== 8'hFF || integer'(f[FW+16 +: 8]) != rank || m < 0 || m >= pf ||
-                f[FW-1:0] !== part[rank * PFMAX + m])
+            if (f[PWT-1] !== 1'b1 || f[FW+24 +: 8] !== 8'hFF || integer'(f[FW+16 +: 8]) != rank || m < 0 || m >= epoch_pf ||
+                f[FW-1:0] !== part[rank * STOREMAX + integer'(load_row)*words + m])
                 $fatal(1, "BYP_TX bad departure gi=%0d m=%0d src=%0d", gi, m, f[FW+16 +: 8]);
             cin[p*QD + ct[p] % QD] = cyc + 6; ct[p] = ct[p] + 1;
             for (q = base; q < base + gn; q = q + 1) if (q != rank)
                 begin mm = (dupe != 0 && m == 1 && q == peer) ? 0 : m;
-                sched((q + m) % NPT, cyc + lat + (q % 5), {1'b1, 8'hFF, 8'(q), 16'((q - base) * pf + mm), part[q * PFMAX + mm]}); end
+                sched((q + m) % NPT, cyc + lat + (q % 5), {1'b1, 8'hFF, 8'(q), 16'((q - base) * epoch_pf + mm), part[q * STOREMAX + integer'(load_row)*words + mm]}); end
             if (gn < NR) begin   // a foreign group's flit on the same fabric: must be dropped
                 q = (base + gn) % NR;
-                sched((q + m) % NPT, cyc + lat, {1'b1, 8'hFF, 8'(q), 16'(m), ~part[q * PFMAX + m]}); nforeign = nforeign + 1;
+                sched((q + m) % NPT, cyc + lat, {1'b1, 8'hFF, 8'(q), 16'(m), ~part[q * STOREMAX + integer'(load_row)*words + m]}); nforeign = nforeign + 1;
             end
         end
         for (integer p = 0; p < NPT; p = p + 1) begin
@@ -126,19 +104,20 @@ module tb_hgi_coll_row_native;
     end
 
     // ---- delivery checker ------------------------------------------------------------------------------------
-    reg seen [0:NR*PFMAX-1];
+    reg seen [0:NR*STOREMAX-1];
     integer got = 0, mism = 0;
     always @(posedge clk) if (rst_n) for (integer l = 0; l < DEL; l = l + 1) if (dv[l]) begin : chk
         reg [PWT-1:0] f; integer gi, q, m;
-        f = dfl[l*PWT +: PWT]; gi = integer'(f[FW +: 16]); q = base + gi / pf; m = gi % pf;
+        f = dfl[l*PWT +: PWT]; q=integer'(f[FW+16+:8]); m=integer'(f[FW+:16])-(q-base)*integer'(epoch_pf);
+        gi=(q-base)*pf+integer'(load_row)*words+m;
         if (amx != 0) begin
             if (gi != 0 || f[FW-1:0] !== {{(FW-32){1'b0}}, exp_tok}) begin mism = mism + 1; $display("AMX_MISMATCH tok=%0d want=%0d", f[31:0], exp_tok); end
             got = got + 1;
         end else begin
-        if (gi >= gn * pf || seen[gi] || integer'(f[FW+16 +: 8]) != q || f[FW-1:0] !== part[q * PFMAX + m]) begin
+        if (gi >= gn * pf || seen[gi] || integer'(f[FW+16 +: 8]) != q || f[FW-1:0] !== part[q * STOREMAX + integer'(load_row)*words + m]) begin
             mism = mism + 1; if (mism < 8) $display("BYP_MISMATCH gi=%0d src=%0d q=%0d", gi, f[FW+16 +: 8], q);
         end
-        if (gi < NR * PFMAX) seen[gi] = 1;
+        if (gi < NR * STOREMAX) seen[gi] = 1;
         got = got + 1;
         end
     end
@@ -159,9 +138,9 @@ module tb_hgi_coll_row_native;
     function automatic [31:0] amx_ref(input integer b, input integer n);
         reg [31:0] bv, bi, v, i; reg take;
         begin
-            bv = part[b * PFMAX][31:0]; bi = part[b * PFMAX][63:32];
+            bv = part[b * STOREMAX][31:0]; bi = part[b * STOREMAX][63:32];
             for (integer q = b + 1; q < b + n; q = q + 1) begin
-                v = part[q * PFMAX][31:0]; i = part[q * PFMAX][63:32];
+                v = part[q * STOREMAX][31:0]; i = part[q * STOREMAX][63:32];
                 if (isnan(v) != isnan(bv)) take = isnan(bv);
                 else if (isnan(v)) take = i < bi;
                 else if (f2r(v) > f2r(bv)) take = 1;
@@ -175,33 +154,10 @@ module tb_hgi_coll_row_native;
     task run(input integer p_);
         integer t;
         begin
-            pf = p_; mapped=0; got = 0; ndep = 0; for (integer i = 0; i < NR * PFMAX; i = i + 1) seen[i] = 0;
+            pf = p_; mapped=0; got = 0; ndep = 0; for (integer i = 0; i < NR * STOREMAX; i = i + 1) seen[i] = 0;
             @(negedge clk); while (!start_ready) @(negedge clk);
-`ifdef BYP_REC
-            begin reg [127:0] h; h = 0; h[127:124] = 4'd6; h[123:118] = 6'd1; h[99:93] = 7'b0010001;
-                if (amx != 0) begin h[123:118] = 6'd3;
-                    rec = {8'(die), 21'd0, 21'd1, 21'd2, 256'd0, md(3'd6, 40'h2000, 20'd1), md(3'd0, 40'h1000, 20'd2), h, 1'b1}; end
-                else
-                // A / O BF16 (n = 32 pf): the whole-row bypass path; a 32-bit ALL_GATHER is SLICED (F3, covered by the
-                // die-level hgi-e2e bench), its delivered flits carry {lanes, word offset}
-                rec = {8'(die), 21'd0, 21'(pf * 32), 21'(pf * 32), 256'd0, md(3'd1, 40'h2000, 20'(pf * 32)),
-                       md(3'd1, 40'h1000, 20'(pf * 32)), h, 1'b1}; end
-            @(negedge clk); rec[0] = 0;
-            if (pf2 == 0) $fatal(1, "unused");
-`else
             pf_in = 16'(pf); go = 1; @(negedge clk); go = 0;
-`endif
             t = 0; while (!done_valid && !flt && t < 200000) begin @(negedge clk); t = t + 1; end
-`ifdef BYP_REC
-            if (multi != 0) begin
-                if (flt) begin : rf
-                    integer w; reg seen_rf; seen_rf = 0;
-                    for (w = 0; w < 20; w = w + 1) begin if (ret[2]) seen_rf = 1; @(negedge clk); end
-                    if (seen_rf) begin $display("PASS HGI_COLL_BYPASS_MULTI fault=1 record_fault=1"); $finish; end
-                end
-                $fatal(1, "BYP_MULTI_NOT_DETECTED done=%0d fault=%0d", done_valid, flt);
-            end
-`endif
             if (dupe) begin   // a peer's duplicate flit (its flit 0 twice, flit 1 never): the endpoint must fault, not retire
                 if (flt && !done_valid) begin $display("PASS HGI_COLL_BYPASS_DUPE fault=1 gn=%0d rank=%0d pf=%0d", gn, rank, pf); $finish; end
                 $fatal(1, "BYP_DUPE_NOT_DETECTED done=%0d fault=%0d got=%0d", done_valid, flt, got);
@@ -216,9 +172,7 @@ module tb_hgi_coll_row_native;
             if (mapped != gn*pf || got != gn * pf || mism != 0 || ndep != pf)
                 $fatal(1, "BYP_COUNT got=%0d want=%0d mism=%0d ndep=%0d", got, gn * pf, mism, ndep);
             $display("BYP_RUN gn=%0d rank=%0d base=%0d pf=%0d delivered=%0d cycles=%0d", gn, rank, base, pf, got, t);
-`ifndef BYP_REC
             @(negedge clk);
-`endif
         end
     endtask
 
@@ -226,46 +180,38 @@ module tb_hgi_coll_row_native;
         if (!$value$plusargs("GN=%d", gn)) gn = 8;
         if (!$value$plusargs("RANK=%d", rank)) rank = 3;
         if (!$value$plusargs("DIE=%d", die)) die = rank; else rank = die % 96;   // record mode: die id; endpoint rank = die mod 96
-        if (!$value$plusargs("PF=%d", pf2)) pf2 = 162;
-        if (!$value$plusargs("WORDS=%d", words)) words=9;
+        if (!$value$plusargs("PF=%d", pf2)) pf2 = 576;
+        if (!$value$plusargs("WORDS=%d", words)) words=32;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("LAT=%d", lat)) lat = 40;
         if (!$value$plusargs("DUPE=%d", dupe)) dupe = 0;
-`ifdef BYP_REC
-        if (!$value$plusargs("MULTI=%d", multi)) multi = 0;
-        if (!$value$plusargs("AMX=%d", amx)) amx = 0;
-`endif
         base = (gn == 96) ? 0 : (rank / gn) * gn;
         peer = (rank == base) ? base + 1 : base;
-        for (integer i = 0; i < NR * PFMAX; i = i + 1)
+        for (integer i = 0; i < NR * STOREMAX; i = i + 1)
             for (integer w = 0; w < LANES; w = w + 1)
                 part[i][32*w +: 32] = ((i + w) % 3 == 0) ? special(i * 7 + w + seed) : $random(seed);
         if (amx != 0) begin   // one flit a rank: {value, id}; ties, -0 / +0, NaNs, infinities; ids NOT in rank order
             for (integer q = 0; q < NR; q = q + 1) begin
-                part[q * PFMAX] = 0;
+                part[q * STOREMAX] = 0;
                 case ((q + seed) % 7)
-                    0, 1: part[q * PFMAX][31:0] = 32'h40A00000;   // 5.0 (tie)
-                    2: part[q * PFMAX][31:0] = 32'h7FC00001;      // NaN
-                    3: part[q * PFMAX][31:0] = 32'h80000000;      // -0
-                    4: part[q * PFMAX][31:0] = 32'h00000000;      // +0
-                    5: part[q * PFMAX][31:0] = (seed % 2) ? 32'h7F800000 : 32'h3F800000;   // +inf or 1.0
-                    default: part[q * PFMAX][31:0] = 32'hFF800000; // -inf
+                    0, 1: part[q * STOREMAX][31:0] = 32'h40A00000;   // 5.0 (tie)
+                    2: part[q * STOREMAX][31:0] = 32'h7FC00001;      // NaN
+                    3: part[q * STOREMAX][31:0] = 32'h80000000;      // -0
+                    4: part[q * STOREMAX][31:0] = 32'h00000000;      // +0
+                    5: part[q * STOREMAX][31:0] = (seed % 2) ? 32'h7F800000 : 32'h3F800000;   // +inf or 1.0
+                    default: part[q * STOREMAX][31:0] = 32'hFF800000; // -inf
                 endcase
-                part[q * PFMAX][63:32] = (NR - q) * 1000 + 7;
+                part[q * STOREMAX][63:32] = (NR - q) * 1000 + 7;
             end
             pf2 = 1;
             exp_tok = amx_ref(base, gn);
         end
         pf_in = 0;
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
-`ifdef BYP_REC
-        cfgb = {1'b0, 1'b1, 6'd46, 32'(gn)}; @(negedge clk); cfgb = {1'b1, 1'b0, 6'd0, 32'd0}; @(negedge clk); cfgb = 0;
-        repeat (4) @(negedge clk);
-`endif
         run(pf2);
         run((pf2 > words) ? pf2 - words : pf2);
-        $display("PASS HGI_COLL_BYPASS gn=%0d rank=%0d pf=%0d,%0d foreign_dropped=%0d fault=%0d", gn, rank, pf2,
-                 (pf2 == PFMAX) ? 1 : pf2 + 1, nforeign, flt);
+        $display("PASS HGI_COLL_ROW_NATIVE gn=%0d rank=%0d pf=%0d,%0d foreign_dropped=%0d fault=%0d", gn, rank, pf2,
+                 (pf2 > words) ? pf2 - words : pf2, nforeign, flt);
         $finish;
     end
 endmodule

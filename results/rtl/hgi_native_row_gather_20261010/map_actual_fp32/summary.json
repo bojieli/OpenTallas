@@ -1,0 +1,15 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "actual_program_shape": {
+    "format": "FP32",
+    "n": 512,
+    "bytes_per_row": 2048,
+    "words_per_row": 32,
+    "epoch_M": 16,
+    "pf": 512,
+    "G": 96,
+    "full_job_M18_requires_epochs": 2
+  },
+  "negative_control": "obsolete owner-major mapping fails",
+  "qualification": "mapper only; actual PSG epoch/chunk control terminal results pending, no HBM writer credit"
+}

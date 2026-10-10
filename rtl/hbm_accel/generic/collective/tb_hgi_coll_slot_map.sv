@@ -51,7 +51,7 @@ module tb_hgi_coll_slot_map;
  endtask
  initial begin
   repeat(3)@(negedge clk);rst_n=1;
-  run(96,77,18,9);run(96,0,32,16);run(8,3,16,32);run(1,0,1,9);
+  run(96,77,18,9);run(96,0,32,16);run(96,77,16,32);run(8,3,16,32);run(1,0,1,9);
   // Non-recipient rank drains the wire stream but publishes no rows.
   @(negedge clk);G=96;R=77;D=64;PF=9;W=9;start=1;
   @(negedge clk);start=0;iv=1;flit[0+:545]={1'b1,8'hff,8'd0,16'd0,payload(0,0,0)};
