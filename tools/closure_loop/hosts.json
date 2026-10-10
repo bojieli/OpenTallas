@@ -88,7 +88,7 @@
    "label": "EPYC1",
    "cores": 128,
    "cap": 141,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "base": "/srv/opentallas/claude/closure-loop",
    "max_job_threads": 128,
    "max_job_ram_gb": 1076,
    "min_free_disk_gb": 200,
@@ -100,7 +100,8 @@
    ],
    "ram_gb": 1133,
    "disk_roots": {
-    "/": 100
+    "/": 100,
+    "/srv/opentallas-scratch": 50
    },
    "external_jobs": [
     {
@@ -137,7 +138,8 @@
     }
    ],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "note": " | 2026-10-10 11:5x drive-1010: run root moved to /srv/opentallas (2.7 TB free) -- /srv/opentallas-scratch hit 95 % (152 GB < the 200 GB floor) and EPYC1 admitted nothing at load 59/128 with 437 GB RAM free; running jobs keep their scratch run dirs (floor 50 GB there)."
   },
   {
    "name": "ot-epyc2",
@@ -159,7 +161,7 @@
     "/": 100,
     "/srv/opentallas-scratch2": 100
    },
-   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs. | 2026-10-10 runtime reconciliation: source restores actual runtime 128-thread/1076-GiB host inventory; admission remains measured MemAvailable >= per-job request + 16 GiB, disk-floor and pause guards. 12:26 UTC: 124.6 GiB available, 681.3 GiB run-root free; no pause marker. External inventories retained and identity-probed; no future-growth subtraction added.",
+   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs. | 2026-10-10 runtime reconciliation: source restores actual runtime 128-thread/1076-GiB host inventory; admission remains measured MemAvailable >= per-job request + 16 GiB, disk-floor and pause guards. 12:26 UTC: 124.6 GiB available, 681.3 GiB run-root free; no pause marker. External inventories retained and identity-probed; no future-growth subtraction added. | 2026-10-10 11:0x drive-1010: DOWN since ~08:46 (ssh banner timeout) -> smoke_only (admission skips it) until it answers again. | 2026-10-10 16:3x drive-1010: hard-rebooted 16:22 (Cherry API); earlyoom + ot-heavy + per-disk admit_disk installed -> smoke_only lifted.",
    "external_jobs": [
     {
      "name": "hbm-indexer-deepcredit-exact",
@@ -225,7 +227,7 @@
     "/": 100,
     "/srv/opentallas-scratch2": 30
    },
-   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free.",
+   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free. | 2026-10-10 12:1x drive-1010: DOWN (ssh port 22 timeout) after MemAvailable fell to 7 GB at 11:50-11:55 -> smoke_only until it answers. | 2026-10-10 16:3x drive-1010: hard-rebooted 16:22 (Cherry API); earlyoom + ot-heavy + per-disk admit_disk installed -> smoke_only lifted.",
    "external_jobs": [
     {
      "name": "hbm-indexer-t1-exact",

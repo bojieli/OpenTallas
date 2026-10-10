@@ -249,9 +249,14 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
     """[ss, ff, tt] clock insertion carried INSIDE a view's arcs (closed: its routed measurement, else the calib.json
     boundary mean beside the lib; assembled: mean over its tiles); interim / partitioned / macro carry none"""
     if view == 'closed':
-        if mst in mi:
-            return [mi[mst][c] for c in ('ss', 'ff', 'tt')]
         cj = libpath and Path(libpath).parent / 'calib.json'
+        # ds-1010 2026-10-10: an ALTERNATE view of the block (e.g. views_colck/dsfd_cfifo, bound by --cfifo-colck) carries
+        # its own route's insertion, not the default view's routed measurement in measured_insertion.json (keyed by block
+        # name).  r4f FF: the colck cfifo was balanced with the plain cfifo's 263 ps while its cr arcs carry ~206 ps, so its
+        # read side launched ~57 ps early into the first column relays (cf<c> cr -> y_xa_<c>_0_0, -107 ps).
+        alt = libpath and Path(libpath).parent.parent.name != 'views'
+        if mst in mi and not (alt and cj and cj.exists()):
+            return [mi[mst][c] for c in ('ss', 'ff', 'tt')]
         if cj and cj.exists():
             j = json.loads(cj.read_text())
             ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
@@ -364,6 +369,13 @@ def main():
     rec = dict(masters={}, clocks=[])
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
+    if getattr(S, 'CFIFO_COLCK', False):
+        # ds-1010 2026-10-10: --cfifo-colck binds the colck cfifo view (its column side clocked from cr); the kit itself
+        # selects it (chains used to sed the lib paths AFTER the kit had balanced the column tree with the plain view)
+        for c_ in ('ss', 'tt', 'ff'):
+            lp = vroot / f'physical/s81_die_views/views_colck/dsfd_cfifo/dsfd_cfifo_{c_}.lib'
+            if lp.exists():
+                cls_[c_]['dsfd_cfifo'] = (lp, 'closed')
     parts = dict(PARTS)
     if getattr(S, 'COLL_SPLIT3_CR', False):
         parts['dsfd_sp_collective'] = COLL_CR_PARTS + ('dsfd_coll_ck',)

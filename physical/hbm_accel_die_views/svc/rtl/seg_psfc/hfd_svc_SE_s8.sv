@@ -378,7 +378,7 @@ module hfd_svc_SE_s8 (
   assign phy[340] = 1'b0;
   assign phy[341] = 1'b0;
   assign pc31_kr_v = phy[343];
-  assign phy[344] = rdy_q;
+  ot_svs_rdyp u_rdyp344 (.ck(c), .rn(rn), .q(phy[344]));
   assign pc31_kr_tag[0] = phy[345];
   assign pc31_kr_tag[1] = phy[346];
   assign pc31_kr_tag[2] = phy[347];

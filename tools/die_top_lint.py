@@ -216,8 +216,20 @@ def _strip(t):
     return re.sub(r'^\s*`(ifdef|ifndef|else|endif|elsif)\b[^\n]*', '', t, flags=re.M)
 
 
+_TERN = re.compile(r'\(([^()?:]+)\?([^()?:]+):([^()?:]+)\)')
+
+
+def _untern(expr):
+    """parenthesised SV ternaries (a ? b : c) -> python ((b) if (a) else (c)), innermost first"""
+    while True:
+        e = _TERN.sub(lambda m: f'(({m.group(2)}) if ({m.group(1)}) else ({m.group(3)}))', expr)
+        if e == expr:
+            return e
+        expr = e
+
+
 def _eval(expr, env):
-    e = expr.replace('$clog2', 'clog2')
+    e = _untern(expr).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
@@ -274,7 +286,7 @@ def parse_module(path, module, params=None):
         if dm:
             cur_dir = dm.group(1)
             if dm.group(2):
-                hi, lo = dm.group(2)[1:-1].split(':')
+                hi, lo = _untern(dm.group(2)[1:-1]).split(':')     # a ternary in the range (vm_unit RP) is one term
                 cur_w = abs(_eval(hi, env) - _eval(lo, env)) + 1
             else:
                 cur_w = 1
@@ -495,6 +507,19 @@ def real_blocks_kv():
     out['qkd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL, kind='RTL (routed per-PC CDC element, the '
                           'r21c qfd_cdc, on the KV die)', params=dict(TAGW=9),
                           ports=parse_module(QCDC_RTL, 'ot_qwen_stream4_cdc_pc', dict(TAGW=9))['ports'], binding=bind)
+    # qwen-1010/b 2026-10-10: the write-leaf plan variants (kv_die.build kv_wq_*) split the CDC's core face into its
+    # read side (co, the landing) and its write side (wi / wr / cf, the per-PC leaf): the same RTL, bound by its ports
+    cports = out['qkd_cdc']['ports']
+    def _bits(names):
+        r = []
+        for pn in names:
+            w = cports[pn][1]
+            r += [pn] if w == 1 else [f'{pn}[{i}]' for i in range(w)]
+        return r
+    wb = dict(ho=bind['ho'], hi=bind['hi'], co=co,
+              wi=_bits(['w_v', 'w_sec', 'w_data', 'w_tag']), wr=_bits(['w_room', 'wd_v', 'wd_tag']), cf=_bits(['c_fault']))
+    wb.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
+    out['qkd_cdc_wleaf'] = dict(out['qkd_cdc'], binding=wb, kind=out['qkd_cdc']['kind'] + ' -- write side to its leaf')
     out[KV_UCIE] = _kv_macro(KV_UCIE_BB, KV_UCIE)
     out[KV_SERDES] = _kv_macro(KV_SERDES_BB, KV_SERDES)
     return out
@@ -666,7 +691,9 @@ def build(die, top_fix=False):
         return m, S.port_widths(m, 1), S.masters(m, 1), 'tools/dsrom_s81_fulldie.py --gen r8'
     if die == 'qwen_kv':
         from qwen_kv_die import kv_die as KV
-        m = KV.build()
+        # qwen-1010/b 2026-10-10: --variant names KV-die write-queue plan options (comma list of kv_die.build flags,
+        # e.g. kv_wq_mirror); '' = the generator default
+        m = KV.build(**{k: True for k in VARIANT.split(',') if k})
         m['buses'] = [(bid, cls, bits, [(i, p.lstrip('*')) for i, p in eps]) for bid, cls, bits, eps in m['buses']]
         m['clock_regions'] = [dict(name=r['name'], rect=r['rect']) for r in m['regions']]
         return m, KV.port_widths(m, 1), KV.masters(m, 1), 'tools/qwen_kv_die/kv_die.py'
@@ -781,6 +808,8 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls in ('hbm_cdc', 'cdc_core', 'phy_dfi', 'd2d_fdi'):
         return 'complement'
+    if cls == 'constant':                             # kv-die write leaves: a die-top tie (chain tail, lane strap) into one input
+        return [(0, bits, 'in')]
     if cls == 'kvn':                                  # kv-die: word + valid down, one credit back
         return flow(j, bits, bits - 1)
     if cls == 'd2d_face':                             # kv-die: N class words (529 b each) down, N credits back
@@ -828,6 +857,10 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
+        if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
+            # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the
+            # loader 394 out / 393 in for its 406 / 381 host-facing ports
+            return flow(j, bits, V['host_h'][0])
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
@@ -954,6 +987,12 @@ def lint_connectivity(die, m, real, ports_w):
                 add('undirected_bits', cls, f'{mst}.{port}', bid, int((~cov).sum()))
         sig = ' + '.join(sorted({(by[i].master if i != 'TOP' else 'TOP') + '.' + re.sub(r'[SN][WE]$|\d+$', '*', p)
                                  for i, p in eps}))
+        if cls == 'constant':
+            # qwen-1010/b 2026-10-10: a die-top tie (tie cells next to the one input it straps: KV write-leaf chain tail,
+            # lane index); driven by construction, so only a driver on the net would be a defect
+            if int((drv > 0).sum()) or len(eps) != 1:
+                add('constant_not_a_tie', cls, sig, bid, bits)
+            continue
         for check, mask in (('undriven', (ld > 0) & (drv == 0)), ('unloaded', (drv > 0) & (ld == 0)),
                             ('multi_driven', drv > 1), ('floating', (drv == 0) & (ld == 0))):
             n = int(mask.sum())

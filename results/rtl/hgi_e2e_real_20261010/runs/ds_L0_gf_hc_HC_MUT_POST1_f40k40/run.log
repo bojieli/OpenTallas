@@ -1,0 +1,31 @@
+E2E: 93 golden records, 9358 HBM sectors loaded
+E2E: hcw.bin 8 HC weight-set sectors
+E2E REAL 27 (hc_attn__mixes_+_Sinkhorn__post) VM[41024] = 3cfd84f7 golden 3cfd8710
+E2E REAL 27 (hc_attn__mixes_+_Sinkhorn__post) VM[41025] = 37cf2b9d golden 37d78f19
+E2E REAL 27 (hc_attn__mixes_+_Sinkhorn__post) VM[41026] = 3a00607b golden 3a00a397
+E2E REAL 27 (hc_attn__mixes_+_Sinkhorn__post) VM[41027] = 3f7e3d88 golden 3f7e3d99
+E2E REAL 40 (hc_ffn__mixes_+_Sinkhorn__post) VM[41088] = 3f4c7738 golden 3f4c7749
+E2E REAL 40 (hc_ffn__mixes_+_Sinkhorn__post) VM[41089] = 3dba016e golden 3dba01f4
+E2E REAL 40 (hc_ffn__mixes_+_Sinkhorn__post) VM[41090] = 3b47fe03 golden 3b480eca
+E2E REAL 40 (hc_ffn__mixes_+_Sinkhorn__post) VM[41091] = 3d722dbb golden 3d722ec7
+E2E FINAL VM[41024] = 3cfd84f7 golden 3cfd8710
+E2E FINAL VM[41025] = 37cf2b9d golden 37d78f19
+E2E FINAL VM[41026] = 3a00607b golden 3a00a397
+E2E FINAL VM[41027] = 3f7e3d88 golden 3f7e3d99
+E2E FINAL VM[41088] = 3f4c7738 golden 3f4c7749
+E2E FINAL VM[41089] = 3dba016e golden 3dba01f4
+E2E FINAL VM[41090] = 3b47fe03 golden 3b480eca
+E2E FINAL VM[41091] = 3d722dbb golden 3d722ec7
+E2E SUMMARY cycles 13451 token 1234 status 0 dispatched 93/93 dispatch_mismatch 0 final_vm_mismatch 8 final_hbm_mismatch 0 unloaded_hbm_reads 2046
+E2E CFG status err 0 loaded 1
+E2E REAL unit 10 record 27: 4 mismatches fault 0
+E2E REAL unit 10 record 40: 4 mismatches fault 0
+E2E drained 13460 cycles after the doorbell (completion 13451)
+E2E completion token 1234 (golden 1234) status 0 cp_cycles 13445 doorbell->completion 13451
+E2E real-unit records 2, mismatching 2
+HGI_E2E FAIL (finish 8, errors 0, real mismatching 2)
+- /srv/opentallas-scratch/claude/hgi-tput-1010/src_e2e/rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv:409: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 28us; walltime 5.433 s; speed 5.069 us/s
+- Verilator: cpu 4.344 s on 1 threads; allocated 46 MB
+rc=0

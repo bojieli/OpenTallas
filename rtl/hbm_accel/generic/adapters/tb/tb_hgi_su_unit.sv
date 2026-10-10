@@ -29,6 +29,12 @@ module tb_hgi_su_unit;
     localparam integer GL = 0;
 `endif
     ot_hgi_su_unit #(
+`ifdef MUT_LAT
+    .MUT_LAT(`MUT_LAT),
+`endif
+`ifdef SU_BEH
+    .MACRO(0),
+`endif
 `ifdef NO_PAYLOAD_RST
     .PAYLOAD_RESET(0),
 `endif
@@ -46,13 +52,13 @@ module tb_hgi_su_unit;
         .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
         .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
         .rec_n_a(cur[2196:2176]), .rec_done(shadow_done), .rec_fault(shadow_fault), .halted(shadow_halted),
-        .op_v(shadow_opv), .op_w(shadow_opw), .op_strm(shadow_strm), .op_rdy(u.u_ctl.op_rdy_r),
-        .su_idle(u.u_ctl.su_idle_r), .su_fault(u.u_ctl.su_fault_r), .lg_v(1'b0), .lg_w(670'd0), .lg_rdy(), .drained());
+        .op_v(shadow_opv), .op_w(shadow_opw), .op_strm(shadow_strm), .op_rdy(u.g_ctl.u_ctl.op_rdy_r),
+        .su_idle(u.g_ctl.u_ctl.su_idle_r), .su_fault(u.g_ctl.u_ctl.su_fault_r), .lg_v(1'b0), .lg_w(670'd0), .lg_rdy(), .drained());
     always @(posedge clk) if (rst_n) begin
-        if ({rec_rdy, done, fault, halted, u.u_ctl.op_v} !==
+        if ({rec_rdy, done, fault, halted, u.g_ctl.u_ctl.op_v} !==
             {shadow_rdy, shadow_done, shadow_fault, shadow_halted, shadow_opv})
             $fatal(1, "PAYLOAD valid/control differed");
-        if (shadow_opv && ({u.u_ctl.op_w, u.u_ctl.strm} !== {shadow_opw, shadow_strm}))
+        if (shadow_opv && ({u.g_ctl.u_ctl.op_w, u.g_ctl.u_ctl.strm} !== {shadow_opw, shadow_strm}))
             $fatal(1, "PAYLOAD visible word differed");
     end
 `endif

@@ -2,7 +2,7 @@
 // 8 q heads, 2 KV heads, head_dim 128) THROUGH the ROM die <-> KV die link, against the golden
 // (tools/hdc_golden.py via tools/qwen_nearhbm_attn_ref.py vectors).  It also drives every other crossing class once
 // (TOKEN out to the host, EMBQ -> gateway -> EMBD row back, two HCTL host words) and checks them bit for bit.
-//   ./Vtb <vector dir> [stall=0] [hbm_latency=16] [bytes_per_cycle=750] [max_cycles=400000]
+//   ./Vtb <vector dir> [stall=0] [hbm_latency=16] [bytes_per_cycle=750] [max_cycles=400000] [hbmt=0]
 // HBM: per-engine in-order request queues, a BPC-byte/cycle token bucket per stack, fixed latency; the rows of the
 // new position t = T-1 come back POISONED (0xA5): the K / V crossed on KVN must be merged by the KV-die sequencer.
 // stall=1: the ROM-side RES consumer withholds its credits for 300 cycles from the first RES word (back-pressure
@@ -54,6 +54,10 @@ int main(int argc, char** argv) {
     int STALL = argc > 2 ? atoi(argv[2]) : 0;
     int LAT = argc > 3 ? atoi(argv[3]) : 16;
     int BPC = argc > 4 ? atoi(argv[4]) : 750;
+    // qwen-1010/b 2026-10-10: argv[6] = 1 -> rows timed by the tb's HBMT stacks (timed HBM3E model); the token bucket is off
+    int HBMT = argc > 6 ? atoi(argv[6]) : 0;
+    // argv[7]: start offset in cycles (the layer starts OFS cycles later: its phase against the HBM refresh schedule)
+    int64_t OFS = argc > 7 ? atoll(argv[7]) : 0;
     uint64_t MAXC = argc > 5 ? strtoull(argv[5], 0, 10) : 400000;
     int T = 0;
     { std::ifstream m(dir + "/meta.json"); std::string s((std::istreambuf_iterator<char>(m)), std::istreambuf_iterator<char>());
@@ -110,11 +114,11 @@ int main(int argc, char** argv) {
         int64_t now = (int64_t)cyc;
         // ---- ROM faces ----
         top->x3_v = 0; top->ea_v = 0; top->dc_v = 0;
-        if (now >= 40) {
+        if (now >= 40 + OFS) {
             if (!dcq.empty() && dcc > 0) { put_word(top->dc_d, 0, dcq.front()); dcq.pop_front(); dcc--; top->dc_v = 1; if (t_ctl < 0) t_ctl = now; }
             if (!x3q.empty() && x3c > 0) { const Word& w = x3q.front(); for (int bb = 0; bb < 512; bb += 32) sb(top->x3_d, bb, 32, wget(w, bb, 32));
                                            top->x3_tag = (uint32_t)wget(w, 512, 11); x3q.pop_front(); x3c--; top->x3_v = 1; }
-            if (now >= 60 && !eaq.empty() && eac > 0) { top->ea_kind = eaq.front().first; top->ea_addr = eaq.front().second; ga.push_back(eaq.front());
+            if (now >= 60 + OFS && !eaq.empty() && eac > 0) { top->ea_kind = eaq.front().first; top->ea_addr = eaq.front().second; ga.push_back(eaq.front());
                                                         eaq.pop_front(); eac--; top->ea_v = 1; }
         }
         top->ar_cr = 0;
@@ -123,7 +127,7 @@ int main(int argc, char** argv) {
         top->emb_req_cr = gwreq_ret > 0; if (gwreq_ret > 0) gwreq_ret--;
         // ---- host words ----
         top->hc_v = 0;
-        if (now >= 60 && !hq.empty() && hcred > 0) { put_word(top->hc_d, 0, hq.front()); hq.pop_front(); hcred--; top->hc_v = 1; }
+        if (now >= 60 + OFS && !hq.empty() && hcred > 0) { put_word(top->hc_d, 0, hq.front()); hq.pop_front(); hcred--; top->hc_v = 1; }
         // ---- gateway row words ----
         top->emb_q_v = 0;
         if (!gw.empty() && gwcred > 0) { put_word(top->emb_q_d, 0, gw.front()); gsent.push_back(gw.front()); gw.pop_front(); gwcred--; top->emb_q_v = 1; }
@@ -178,7 +182,17 @@ int main(int argc, char** argv) {
             if (r.t >= T || ((r.t % 512) / 128) != x / R) { fprintf(stderr, "bad request t=%d x=%d\n", r.t, x); return 3; }
             rq[x].push_back(r);
         }
-        for (int s = 0; s < 4; s++) {
+        if (HBMT) {
+            for (int x = 0; x < E; x++) if (gb(top->hrow_rdy, x, 1)) {
+                Req r{(int)gb(top->hrow_v, x, 1), (int)gb(top->hrow_g, x, 1), (int)gb(top->hrow_t, 13 * x, 13)};
+                if (rq[x].empty() || rq[x].front().v != r.v || rq[x].front().g != r.g || rq[x].front().t != r.t) {
+                    fprintf(stderr, "HBMT row out of order x=%d t=%d\n", x, r.t); faults |= 128;
+                } else rq[x].pop_front();
+                pend[x].push_back(Rsp{cyc, r.v, r.g, r.t});
+            }
+            if (top->hrow_fault) faults |= 256;
+        }
+        for (int s = 0; s < 4 && !HBMT; s++) {
             tok[s] += BPC; if (tok[s] > BPC + HD) tok[s] = BPC + HD;
             for (int k = 0; k < R; k++) {
                 int x = s * R + (rr[s] + k) % R;
@@ -199,12 +213,12 @@ int main(int argc, char** argv) {
     int hc_bad = hctl.size() != 2 || hctl[0] != hsent[0] || hctl[1] != hsent[1];
     int tk_bad = toks.size() != 1 || wget(toks[0], 0, 18) != (uint64_t)TOKEN || wget(toks[0], 524, 4) != 2;
     bool exact = mism == 0 && faults == 0 && nout == NH * HD && !emb_bad && !hc_bad && !tk_bad && nkvw == 4 && kvw_ok;
-    printf("{\"ctx\": %d, \"R\": %d, \"stall\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, \"outputs\": %d, "
+    printf("{\"ctx\": %d, \"R\": %d, \"hbmt\": %d, \"stall\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, \"outputs\": %d, "
            "\"mismatches\": %d, \"first_bad\": %d, \"faults\": %d, \"poisoned_rows_merged\": %d, \"kvw_rows\": %d, "
            "\"kvw_ok\": %s, \"embd_ok\": %s, \"hctl_ok\": %s, \"token_ok\": %s, \"exact\": %s, \"cycles\": %llu, "
            "\"marks\": {\"ctl_sent\": %lld, \"attn_start\": %lld, \"attn_out_first\": %lld, \"attn_out_last\": %lld, "
            "\"res_first_at_vm\": %lld, \"res_last_at_vm\": %lld, \"emb_req_at_gw\": %lld, \"embd_last_at_su\": %lld}}\n",
-           T, R, STALL, LAT, BPC, nout, mism, first_bad, faults, poisoned, nkvw, kvw_ok ? "true" : "false",
+           T, R, HBMT, STALL, LAT, BPC, nout, mism, first_bad, faults, poisoned, nkvw, kvw_ok ? "true" : "false",
            emb_bad ? "false" : "true", hc_bad ? "false" : "true", tk_bad ? "false" : "true", exact ? "true" : "false",
            (unsigned long long)cyc, (long long)t_ctl, (long long)t_start, (long long)a_first, (long long)a_last,
            (long long)res_first, (long long)res_last, (long long)t_emb_req, (long long)t_embd_last);

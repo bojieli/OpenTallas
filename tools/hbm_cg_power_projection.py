@@ -33,13 +33,22 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--measured", default=None, help="JSON of MEASURED gated floors: {part: {'gated_idle_w': W, 'source': ...}} "
                     "(e.g. attn_hgrp: its leakage, the leaf's clock pin stopped by the routed gated quad's ICG)")
+    ap.add_argument("--scale", action="append", default=[], help="MASTER=F: scale a master's instance count (right-sizing)")
+    ap.add_argument("--r25gq", action="store_true", help="owner Option A right-sizing (R25GQ): attention 64 -> 32 tiles, SU 1024 -> 512 "
+                    "lanes, SFU half width, index 72 -> 36 lanes (idx_score grid + index_q); SM 32 / HC 4 unchanged")
     a = ap.parse_args()
+    scale = {}
+    if a.r25gq:
+        scale.update({"hfd_attn_half_lo": 0.5, "hfd_attn_half_hi": 0.5, "hfd_su": 0.5, "hfd_sfu": 0.5,
+                      "hfd_idx_score_native_grid": 0.5, **{f"hfd_index_q_b{i}": 0.5 for i in range(6)}})
+    for kv in a.scale:
+        k, f = kv.split("="); scale[k] = float(f)
     d = json.loads(Path(a.evidence).read_text())
     meas = json.loads(Path(a.measured).read_text()) if a.measured else {}
     limit = d["cooling_limit_w"]
     out_meas = meas
     out = dict(schema="opentallas.redesign_hbm.cg_power_projection.v1", evidence=a.evidence, cooling_limit_w=limit,
-               grade="PROJECTION (measured per-block a20 / a00 + measured duties; gated residual r bracketed) -- to be "
+               scale=scale or None, grade="PROJECTION (measured per-block a20 / a00 + measured duties; gated residual r bracketed) -- to be "
                      "replaced by die-evidence-2's re-measure of the gated routes", workloads={}, measured_gated_floors=out_meas)
     for wl, mix in d["options"]["b_duty_mix"].items():
         duty = mix["duty"]
@@ -56,6 +65,8 @@ def main():
                     leak = v.get("leak_w", 0.0) or 0.0
                     u = UNIT.get(v["kind"]) or HUB.get(m) or "ON"
                     dt = duty.get(u, 1.0)
+                    if scale.get(m, 1.0) < 1.0:   # same work on fewer instances: each is busy 1/f longer (capped at 1)
+                        dt = min(1.0, dt / scale[m])
                     if scen == "none":
                         gs = 0.0
                     elif scen == "smatt":
@@ -92,7 +103,7 @@ def main():
                                 if measured and "a20_w" in measured:
                                     a20 += v["n"] * part["count"] * (measured["a20_w"] - part["w_each_a20"])
                             idle = idle_each * v["n"]
-                    tot += dt * a20 + (1 - dt) * idle
+                    tot += (dt * a20 + (1 - dt) * idle) * scale.get(m, 1.0)
                 tot += d["relay_stations"]["w"]["a00"] + mix.get("wire_w", 0.0)
                 res[f"{scen}_r{int(r*100):02d}"] = round(tot, 1)
         out["workloads"][wl] = dict(duty=duty, evidence_no_icg_w=mix.get("no_icg_w"), evidence_with_icg_w=mix.get("with_icg_w"),

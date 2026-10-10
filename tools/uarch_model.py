@@ -319,6 +319,39 @@ def hbm_attention_result_valid_model():
                 qualification="analytical sizing only; no physical adoption credit")
 
 
+def hgi_row_gather_hw_model(K=512, F=32, G=96, M=18, DEL=4, gathers_per_token=8, sw_cycles_per_gather=126353 / 8,
+                            lat=110, tail_per_flit=0.003):
+    """G25 hardware COLL.ROW_GATHER (hgi-1010/a, ot_hgi_coll_rgx_src / _sink + the PSG endpoint RGX mode).
+
+    Every destination receives exactly the K selected rows (K F 64-byte flits) on its DEL delivery lanes, so the
+    destination delivery rate is the bound; a rank's own injection (its owned rows only, one flit a cycle) and its HBM
+    reads (2 sectors a cycle) run under it unless one rank owns more than K / DEL of the rows.  Measured fit (one real
+    rank of 96 against the switch model, DEL 4): 167 / 4,242 / 16,690 cycles at K F = 224 / 16,384 / 65,536.
+    The software form (G21 / G24) moves 96 M padded rows in ceil(M / c) gathers, then re-reads K rows into list order.
+    """
+    deliver = K * F / DEL
+    inject = M * F                         # the busiest owner, one flit a cycle
+    cycles = lat + max(deliver, inject) + tail_per_flit * K * F
+    flit_b = 64
+    return dict(schema="opentallas.hgi_row_gather_hw.v1", macs_per_cycle=0, compute_intensity="data movement",
+                cost_formula="110 + max(K*F/DEL, Mmax*F) + 0.003*K*F cycles (DEL 4: ~110 + 0.253 K F)",
+                cycles=round(cycles), K=K, F=F, G=G, M=M, DEL=DEL,
+                rows_moved=K, rows_moved_software_form=G * M,
+                hbm_read_bytes_per_cycle_peak=2 * 32, delivery_bytes_per_cycle=DEL * flit_b,
+                sink_write_bytes_per_cycle=DEL * flit_b,
+                added_boundary_bits=dict(list_read=1 + 32 + 1 + 512, hbm_read_lanes=2 * (1 + 35 + 8) + 2 * (1 + 8 + 256),
+                                         sink_write_lanes=DEL * (1 + 40 + 512 + 1)),
+                macros=dict(source_ring="2 x ot_sram_1r1w_128x256 (256 sectors)",
+                            sink_fifo=f"{DEL} lanes x 3 x ot_sram_1r1w_128x256 (64 x 568 b)"),
+                replicas=dict(source=1, sink_lane=DEL),
+                latency_contribution_cycles=round(cycles),
+                token_cycles=round(gathers_per_token * cycles),
+                token_cycles_software_form=round(gathers_per_token * sw_cycles_per_gather),
+                token_cycles_saved=round(gathers_per_token * (sw_cycles_per_gather - cycles)),
+                del8_option="DEL 8 (8 sink lanes, 512 B/cycle): K 512 2,173, K 2048 8,502 cycles measured",
+                qualification="RTL bench (tb_hgi_coll_rgx, full G 96 shape against the switch model); physical closure pending")
+
+
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
     return row_formatter_model(**kwargs)
@@ -15724,4 +15757,101 @@ def hgi_inverse_selected_candidate_model(k=2048, group=96):
 def hgi_att_scaled_model():
     """Original scaled-FP4 provenance into the existing exact attention engine."""
     from hgi_att_scaled_model import model
+
+def hbm_svc_reset_boundary_model():
+    from hbm_svc_reset_boundary_model import model
     return model()
+
+
+def hgi_dma_credit_model(**kwargs):
+    from hgi_dma_credit_model import model
+    return model(**kwargs)
+
+
+def hbm_svc_eps_queue_model():
+    from hbm_svc_eps_queue_model import model
+    return model()
+
+
+def qwen_crom_native_group_binding_model():
+    """Full-shape native constant-ROM group binding; unclosed composition remains explicitly priced."""
+    return {'schema': 'opentallas.uarch.qwen_crom_native_binding.v1',
+     'design': 'native eight-group64-lane constant ROM binding; group0 unchanged physicalwrapper, '
+               'groups1..7 SW8/LB8g children; exact fault first-cause aggregation',
+     'replicas': 8,
+     'shape': {'lanes_per_group': 8,
+               'wide_columns_per_group': 2,
+               'narrow_columns_per_group': 1,
+               'depth_macros_per_column': 2,
+               'macros_per_group': 6,
+               'total_ROM_macros': 48,
+               'ROM_macro': 'ot_rom_4096x266_m8',
+               'AW': 24,
+               'LW': 6,
+               'lane_bases': [0, 8, 16, 24, 32, 40, 48, 56]},
+     'compute': {'MACs_per_cycle': 0,
+                 'operation': 'registered decode/select and ROM read; no numerical reordering',
+                 'arithmetic_intensity_MAC_per_byte': 0},
+     'ports': {'legacy_and_composed_input_per_cycle_bits': {'read_enables': 64,
+                                                            'addresses': 1536,
+                                                            'stage': 6},
+               'legacy_and_composed_output_per_cycle_bits': {'data': 4096, 'fault': 1, 'fault_code': 2},
+               'group_input_per_cycle_bits': {'read_enables': 8, 'addresses': 192, 'stage': 6},
+               'group_output_per_cycle_bits': {'data': 512, 'fault': 1, 'fault_code': 2},
+               'payload_bytes_per_cycle_per_group': 64,
+               'payload_bytes_per_cycle_full_shape': 512,
+               'narrow_nonzero_payload_bytes_per_cycle_full_shape': 256,
+               'each_macro_port_bits': {'ce': 1, 'addr': 12, 'read': 266},
+               'aggregate_macro_read_capacity_bytes_per_cycle': 1596.0,
+               'max_simultaneously_active_macros': 24,
+               'max_active_macro_read_bytes_per_cycle': 798.0,
+               'fault_aggregation_seam_bits': 24},
+     'replica_mux_and_fanout': {'per_group_macro_read_select': 'same original two wide4-lane+one '
+                                                               'narrow8-lane row selectors and2-depth '
+                                                               'selects; no global data mux',
+                                'global_stage_fanout': 8,
+                                'global_read_clock_fanout': '48macros plus local stations; physical tree '
+                                                            'not yet composed',
+                                'fault_OR_tree_levels': 3,
+                                'first_cause_logic': 'priority range1 over alignment2 over '
+                                                     'column-disagreement3 only at first global fault;2bit '
+                                                     'latch plus1seenbit; same-edge output uses '
+                                                     'combinational candidate until latched'},
+     'channel_price': {'signal_tracks_per_group_boundary_upper_bound': 721,
+                       'group_signal_boundary_um': 194.4,
+                       'routing_signal_layers': 4,
+                       'reference_pitch_um': 0.054,
+                       'gross_tracks_per_group_face': 14400,
+                       'track_demand_fraction_without_clock_PDN_obstructions': 0.050069444444444444,
+                       'limitation': 'gross capacity only; actual pin clusters, halo, routing reach, stage '
+                                     'and fault trees must be composed by ROMroot'},
+     'area_um2': {'closed_ROM_group_outline': 100776.95999999999,
+                  'eight_ROM_group_outlines': 806215.6799999999,
+                  'old_monolith_outline': 777600.0,
+                  'one_closed_cbuf_group_outline': 41990.4,
+                  'eight_cbuf_group_outlines': 335923.2,
+                  'abutted_ROM_cbuf_total': 1142138.88,
+                  'provisional_fault_control_slot': 46656,
+                  'total_with_provisional_control_slot': 1188794.88},
+     'latency': {'accepted_read_to_answer_edges': 5,
+                 'added_read_edges_vs_original': 0,
+                 'fault_edges_vs_original': '0 required and tested each edge by candidate combinational '
+                                            'first-cause/held latch output',
+                 'cbuf_warm_prefetch_rows': 148,
+                 'HEAD_prefetch_rows': 64,
+                 'rope_prefetch_rows': 1,
+                 'prefetch_first_use_cost': 'not zero; local controller st_rdy guards stage start and token '
+                                            'position; compose measured fills+far_latency',
+                 'steady_single_user_token_delta': 'pending actual ROM/cbuf placements, relay count, '
+                                                   'readiness and measured stage timing; no adoption claim'},
+     'flow_control': {'ROM': 'fixed5-edge read strobes, held output when no read; no invented infinite '
+                             'queue',
+                      'cbuf': 'one fill at a time, finite f_out and banks0/1/HEAD+2rope entries; downstream '
+                              'binding owned by ROMroot'},
+     'physical_reuse': {'group0': 'call original ot_qfd_crom_g byte-identical; closed view valid only at '
+                                  'original executable/ABI/constraints',
+                        'group1_to7': 'native LB8g changes alignment control and mask mapping; no exact '
+                                      'original view identity claim, no new PNR queued',
+                        'aggregate_fault_logic': 'new small block needs physical integration/closure; no '
+                                                 'in-context claim'},
+     'model_before_RTL': True}

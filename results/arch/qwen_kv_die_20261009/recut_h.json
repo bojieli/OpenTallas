@@ -112,5 +112,15 @@
    "qkd_rhead_c-2dc20f7de-tc-hm10-cl",
    "qkd_ectl_c-f8a6d7c30-tc-hm10-cl"
   ]
+ },
+ "timing_fix_2": {
+  "commit": "df9afb422",
+  "route": "qkd_ectl_c-f8a6d7c30 EARLY_FAIL_SETUP TT -519 (req_* across the tile, row-FIFO pop fanout, lmax reset, unanchored pin flops)",
+  "change": "request relay RQD 2 to W-face pin flops; q beat mid stage (q_ready on delayed valid); row-FIFO pop via quadrant + slice registered stages (read at q+ps+pq); score/lmax reset leaf",
+  "bench": "bench_run.sh STACK=h 28 1 7 5 29 28 34 (EPYC4 qwen-1010b/b_df9 vs HEAD 4cc6deef9 b_4cc): 14/14 exact; mutants 1-5,7 inexact, 6,8 exact (as expected)",
+  "step_8192": 1837,
+  "step_8192_head": 1830,
+  "cost_cycles_8192": 7,
+  "successor_route": "qkd_ectl_c-31a4f64a0-tc-hm10-cl"
  }
 }

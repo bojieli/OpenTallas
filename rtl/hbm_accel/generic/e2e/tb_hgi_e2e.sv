@@ -20,13 +20,23 @@
 // (closed by hgi-takeover: every unit has a die record bus; the real slots read their payload from it) DIE GAP was: the ux_* ports of ot_hgi_cp_die carried valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0, REAL_ATT = 0, REAL_HC = 0;
+    parameter integer HC_W = 32, HC_MUT_POST = 0;   // REAL_HC: HCP lanes per group (8 W MAC lanes); bench mutant (pre without + hc_eps)
     parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
+    parameter integer ATT_H = 16, ATT_D = 512, ATT_TD = 64, ATT_NL = 4, ATT_PIPE = 0, ATT_MUT_ROW = 0;   // REAL_ATT: r25 engine geometry
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
+    // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
+    // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
+    // (the backend translator: one KERNEL doorbell per launch, G23 entries / G26 per-layer bodies).  The host starts a
+    // job (forced drafter) instead of a doorbell; vectors: tools/hgi_sim/ds_mtp_kernels.py sim --export.  host.mem words
+    // 64.. : plen, gamma, ngen, rank, ncol, maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
+    // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
+    parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
                                                input bit [31:0] mask, output bit [255:0] rd);
@@ -40,12 +50,13 @@ module tb_hgi_e2e;
     import "DPI-C" function int e2e_finish(input longint cyc, input int token, input int status);
     import "DPI-C" function void e2e_ignore(input int lo, input int hi);
     import "DPI-C" function void e2e_watch(input int a);
+    import "DPI-C" function void e2e_vm_wr(input int unit, input int a, input int v);
 
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     longint cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg [8*512-1:0] dir, outp;
-    reg [31:0] host [0:79];        // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68
+    reg [31:0] host [0:127];       // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68 (MTP: see above)
     // ---------------------------------------------------------------- host AXI-lite + loader + CP die
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
     reg [31:0] s_wdata = 0; wire s_awready, s_wready, s_bvalid, s_arready, s_rvalid; wire [31:0] s_rdata;
@@ -61,18 +72,49 @@ module tb_hgi_e2e;
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
-    wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
+    wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
+    wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE
     wire [690:0] am_rec; wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
-    ot_hgi_cp_die #(.USE_MACRO(0)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
+    // ---------------------------------------------------------------- MTP=1: controller + collar <-> translator (x_*)
+    wire [516:0] n_t; wire [196:0] n_f; reg [215:0] f_host = 0; wire [4:0] t_host; wire [178:0] prov; wire [42:0] t_prov;
+    wire [37:0] t_emit; reg [1:0] f_eh = 2'b01; wire [99:0] t_eh; wire t_abort, t_drained; wire [270:0] t_be; wire [72:0] f_be;
+    wire xcr, xcplv, xcplf, xamv, xdr; wire [16:0] xam; wire [31:0] xj, xs; wire [3:0] xg;
+    wire [16:0] p_tok = host[72 + t_prov[2:0]][16:0], f_tok = host[80 + t_prov[22:20]][16:0];
+    assign prov = {39'd0, 1'b1, 55'd0, 2'd0, f_tok, p_tok, 48'd0};
+    assign f_be = {1'b0, xdr, xcplf, xs, xg, xj, xcplv, xcr};
+    wire [196:0] c_t_mtp; wire [4:0] c_t_host; wire [42:0] c_t_prov; wire [37:0] c_t_emit; wire [99:0] c_t_eh;
+    wire c_t_abort, c_t_drained;
+    generate if (MTP) begin : g_mtp
+        hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t), .f_router(59'b0), .t_router(),
+            .t_coll(), .f_coll(1'b1));
+        if (MTP == 1) begin : g_ext_collar           // the collar outside the CP die (x_* ports)
+            hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) collar (.ck(clk), .rst(~rst_n), .f_mtp(n_t), .emit_pend(n_t[43]),
+                .t_mtp(n_f), .f_host(f_host), .t_host(t_host), .f_provider(prov), .t_emit(t_emit), .t_provider(t_prov),
+                .f_emit_host(f_eh), .t_emit_host(t_eh), .t_abort(t_abort), .t_drained(t_drained), .f_am({xam, xamv}),
+                .f_backend(f_be), .t_backend(t_be));
+        end else begin : g_int_collar               // MTP=2: the collar inside ot_hgi_cp_die (f_mtp / t_mtp, mh_*)
+            assign n_f = c_t_mtp; assign t_host = c_t_host; assign t_prov = c_t_prov; assign t_emit = c_t_emit;
+            assign t_eh = c_t_eh; assign t_abort = c_t_abort; assign t_drained = c_t_drained; assign t_be = '0;
+        end
+    end else begin : g_nomtp
+        assign n_t = '0; assign n_f = '0; assign t_host = '0; assign t_prov = '0; assign t_emit = '0; assign t_eh = '0;
+        assign t_abort = 1'b0; assign t_drained = 1'b0; assign t_be = '0;
+    end endgenerate
+    ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
         .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
         .sm_rec(sm_rec), .sm_ret({ux_fault[1], ux_done[1], ux_rdy[1]}), .su_rec(su_rec), .su_ret({ux_fault[2], ux_done[2], ux_rdy[2]}),
         .sfu_rec(sfu_rec), .sfu_ret({ux_fault[3], ux_done[3], ux_rdy[3]}), .att_rec(att_rec), .att_ret({ux_fault[5], ux_done[5], ux_rdy[5]}),
         .dma_rec(dma_rec), .dma_ret({ux_fault[8], ux_done[8], ux_rdy[8]}), .hc_rec(hc_rec), .hc_ret({ux_fault[10], ux_done[10], ux_rdy[10]}),
-        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(dma_wq),   // CTL.FENCE drains posted DMA writes
+        .x_cmd_v(t_be[0]), .x_cmd_ready(xcr), .x_cmd(t_be[1 +: 201]), .x_cmd_job(t_be[202 +: 32]), .x_cmd_gen(t_be[234 +: 4]),
+        .x_cmd_seq(t_be[238 +: 32]), .x_cpl_v(xcplv), .x_cpl_ready(t_be[270]), .x_cpl_job(xj), .x_cpl_gen(xg), .x_cpl_seq(xs),
+        .x_cpl_fault(xcplf), .x_am_v(xamv), .x_am_idx(xam), .x_drained_ready(xdr), .x_ext_fault(t_abort), .x_noise(17'd128799),
+        .f_mtp(n_t), .t_mtp(c_t_mtp), .mh_f_host(f_host), .mh_t_host(c_t_host), .mh_f_provider(prov), .mh_t_provider(c_t_prov),
+        .mh_t_emit(c_t_emit), .mh_f_emit_host(f_eh), .mh_t_emit_host(c_t_eh), .mh_t_abort(c_t_abort), .mh_t_drained(c_t_drained));
     // hgi-takeover (DIE GAP closed): units 1-10 have die record buses; real slots take the payload from the bus (no
     // internal tap); the handshake fields {fault, done, ready} are the harness's per-unit ux_* values
     wire [15:0] ux_v = ux_v_raw | {5'd0, hc_rec[0], 1'b0, dma_rec[0], am_rec[0], 1'b0, att_rec[0], 1'b0, sfu_rec[0], su_rec[0], sm_rec[0], 1'b0};
@@ -103,12 +145,54 @@ module tb_hgi_e2e;
     end
     // ---------------------------------------------------------------- unit slots
     localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
-                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0);
+                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0) | (REAL_ATT ? 16'h0020 : 16'h0) | (REAL_HC ? 16'h0400 : 16'h0);
     localparam [15:0] REAL_UX = REALM & ~16'h0250;            // real units on ux_* ports
     wire [15:0] r_rdy, r_done, r_fault;                       // their handshakes
     assign r_rdy[1:0] = 2'b0; assign r_done[1:0] = 2'b0; assign r_fault[1:0] = 2'b0;
-    assign r_rdy[7:4] = 4'b0; assign r_done[7:4] = 4'b0; assign r_fault[7:4] = 4'b0;
-    assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
+    assign r_rdy[4] = 1'b0; assign r_done[4] = 1'b0; assign r_fault[4] = 1'b0;
+    assign r_rdy[7:6] = 2'b0; assign r_done[7:6] = 2'b0; assign r_fault[7:6] = 2'b0;
+    // ATT (unit 5, hgi-1010/g): the die body ot_hgi_att_unit (r25 engine geometry ATT_H / ATT_NL / ATT_TD, head_dim ATT_D)
+    // on the die att record bus, its VM packet client on the VM model, its HBM read lane on an in-order KLAT model
+`ifdef E2E_ATT
+    generate if (REAL_ATT) begin : g_att
+        wire [337:0] vq; wire [273:0] vr; wire hq_v, hq_rdy, hr_v; wire [34:0] hq_addr; wire [7:0] hq_tag, hr_tag; wire [255:0] hr_data;
+        ot_hgi_att_unit #(.H(ATT_H), .D(ATT_D), .TD(ATT_TD), .NL(ATT_NL), .PIPE(ATT_PIPE), .MUT_ROW(ATT_MUT_ROW)) u_a (.clk(clk), .rst_n(rst_n),
+            .rec_v(att_rec[0]), .rec_rdy(r_rdy[5]), .rec_hdr(att_rec[128:1]), .rec_a(att_rec[640:385]), .rec_b(att_rec[896:641]),
+            .rec_c(att_rec[1152:897]), .rec_o(att_rec[1408:1153]), .rec_n_b(att_rec[1429:1409]), .rec_n_c(att_rec[1450:1430]),
+            .rec_pos1(att_rec[1471:1451]), .rec_done(r_done[5]), .rec_fault(r_fault[5]), .halted(), .vmq(vq), .vmr(vr),
+            .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
+        hgi_e2e_vmc #(.UNIT(5), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+        hgi_e2e_att_hbm #(.LAT(KLAT)) u_hb (.clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .req_sec(hq_addr),
+            .req_tag(hq_tag), .rsp_v(hr_v), .rsp_tag(hr_tag), .rsp_d(hr_data));
+    end else begin : g_att_stub
+        assign r_rdy[5] = 1'b0; assign r_done[5] = 1'b0; assign r_fault[5] = 1'b0;
+    end endgenerate
+`else
+    assign r_rdy[5] = 1'b0; assign r_done[5] = 1'b0; assign r_fault[5] = 1'b0;
+`endif
+    assign r_rdy[9] = 1'b0; assign r_done[9] = 1'b0; assign r_fault[9] = 1'b0;
+    assign r_rdy[15:11] = 5'b0; assign r_done[15:11] = 5'b0; assign r_fault[15:11] = 5'b0;
+    // HC (unit 10, hgi-1010/g): the die body ot_hgi_hc_unit (record adapter + x staging + r25 HCP on 8 weight windows +
+    // post + r25 Sinkhorn + drain) on the die hc record bus, its VM packet client on the VM model, its HBM lane on an
+    // in-order KLAT model serving the HC weight sets (hcw.bin, tools/hgi_e2e/hc_weights.py)
+`ifdef E2E_HC
+    generate if (REAL_HC) begin : g_hc
+        wire [337:0] vq; wire [273:0] vr; wire hq_v, hq_rdy, hr_v; wire [34:0] hq_addr; wire [2:0] hq_len;
+        wire [4 + $clog2(128) - 1:0] hq_tag, hr_tag; wire [1:0] hr_beat; wire [255:0] hr_data;
+        ot_hgi_hc_unit #(.W(HC_W), .MUT_POST(HC_MUT_POST)) u_h (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(32'h358637BD),
+            .rec_v(hc_rec[0]), .rec_rdy(r_rdy[10]), .rec_hdr(hc_rec[128:1]), .rec_a(hc_rec[384:129]), .rec_b(hc_rec[640:385]),
+            .rec_o(hc_rec[896:641]), .rec_n_a(hc_rec[917:897]), .rec_n_o(hc_rec[938:918]), .rec_done(r_done[10]),
+            .rec_fault(r_fault[10]), .halted(), .vmq(vq), .vmr(vr), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
+            .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data));
+        hgi_e2e_vmc #(.UNIT(10), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+        hgi_e2e_hc_hbm #(.LAT(KLAT), .TG(4 + $clog2(128))) u_hb (.clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy),
+            .req_sec(hq_addr), .req_len(hq_len), .req_tag(hq_tag), .rsp_v(hr_v), .rsp_tag(hr_tag), .rsp_beat(hr_beat), .rsp_d(hr_data));
+    end else begin : g_hc_stub
+        assign r_rdy[10] = 1'b0; assign r_done[10] = 1'b0; assign r_fault[10] = 1'b0;
+    end endgenerate
+`else
+    assign r_rdy[10] = 1'b0; assign r_done[10] = 1'b0; assign r_fault[10] = 1'b0;
+`endif
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
@@ -136,19 +220,20 @@ module tb_hgi_e2e;
     wire dma_rdy, dma_done, dma_fault;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
-        wire mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done; wire [226:0] mv;
-        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
+        wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done; wire [226:0] mv;
+        ot_hgi_dma_record #(.LEGACY(0), .POSTED(DMA_POSTED)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
             .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
-            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
+            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(), .wr_quiet(dma_wq),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
             .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
-            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+            .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
         wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
         // the VM wide write port (32 lanes) + the svc DMA stream (hgi-takeover 2026-10-10); DMA_FRONT 0 = mover only
         wire [32*280-1:0] wl; wire [31:0] wl_done; wire [4*51-1:0] dq; wire [3:0] dq_rdy; wire [32*270-1:0] dd; wire [31:0] dd_cr;
         ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
-            .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+            .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
+            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
             .k_rsp_data(k_rd), .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
@@ -158,7 +243,7 @@ module tb_hgi_e2e;
             .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
         hgi_e2e_vmc #(.UNIT(8), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
     end else begin : g_dma_stub
-        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0;
+        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0; assign dma_wq = 1'b1;
     end endgenerate
     // QUANT (unit 4, QDQ ops) behind the harness's unit-4 split (or behind the FUSED front when REAL_FUSED)
     reg  [682:0] q_rec;                 // to the real quant unit
@@ -216,7 +301,7 @@ module tb_hgi_e2e;
     reg q_inflight;                     // unit-4 record went to the real quant unit
     integer errs = 0, real_recs = 0, real_bad = 0, faults = 0, qs_busy = 0, qs_cnt = 0, qs_k = -1;
     function automatic integer is_real(input integer u, input integer quant_now);
-        is_real = (u == 8 && REAL_DMA != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
+        is_real = (u == 8 && REAL_DMA != 0) || (u == 5 && REAL_ATT != 0) || (u == 10 && REAL_HC != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
     endfunction
     task automatic kpush(input integer u, input integer k); begin kq[u][kt[u] % 8] = k; kt[u] = kt[u] + 1; end endtask
     function automatic integer kpop(input integer u);
@@ -340,15 +425,42 @@ module tb_hgi_e2e;
         axr(12'hC24);
         $display("E2E CFG status err %0d loaded %0d", rd[3:1], rd[0]);
         if (rd[3:1] != 0 || !rd[0]) begin errs = errs + 1; end
-        axw(12'hC00, host[64]); axw(12'hC04, host[65]); axw(12'hC08, 32'h0E2E); axw(12'hC0C, {20'd0, host[68][3:0], 8'h01});
-        t_db = cyc;
-        axw(12'hC10, 1);
-        w = 0; rd = 0;
-        while (rd[10:8] == 0 && w < 2000000) begin axr(12'hC20); w = w + 1; end
-        if (rd[10:8] == 0) begin
-            $display("E2E FAIL: no completion (timeout)"); errs = errs + 1; c_tok = -1; c_st = 15; c_cyc = 0;
+        if (MTP) begin : mtpjob
+            integer ne, nk; reg [16:0] em [0:15];
+            if (MUT_HT) e2e_vm_wr(0, 261184 + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
+            // job config (179 b): gamma [1+:4], force [5], ngen [6+:21], plen [27+:21], eos off, maxpos [158+:21]
+            f_host = 0; f_host[37 + 1 +: 4] = host[65][3:0]; f_host[37 + 5] = 1'b1; f_host[37 + 6 +: 21] = host[66][20:0];
+            f_host[37 + 27 +: 21] = host[64][20:0]; f_host[37 + 158 +: 21] = host[69][20:0];
+            f_host[1 +: 32] = 32'h12345678; f_host[33 +: 4] = 4'hb;
+            t_db = cyc;
+            @(negedge clk); f_host[0] = 1'b1; @(posedge clk); while (!t_host[0]) @(posedge clk); @(negedge clk); f_host[0] = 1'b0;
+            ne = 0; nk = 0; w = 0;
+            while (!t_eh[74] && w < 40000000) begin
+                @(posedge clk); w = w + 1;
+                if (t_eh[0] && f_eh[0]) begin if (ne < 16) em[ne] = t_eh[1 +: 17];
+                    $display("E2E MTP emit %0d token %0d idx %0d cyc %0d", ne, t_eh[1 +: 17], t_eh[18 +: 20], cyc - t_db); ne = ne + 1; end
+                if (cpd.cpl_v && cpd.x_run) begin
+                    $display("E2E KCPL %0d cyc %0d token %0d status %0d", nk, cyc - t_db, cpd.cpl_token, cpd.cpl_status); nk = nk + 1; end
+                if (t_abort || t_host[3] || t_host[4]) begin $display("E2E MTP FAIL: control fault (abort %0d id %0d)", t_abort, t_host[3]); errs = errs + 1; w = 40000000; end
+            end
+            t_cpl = cyc;
+            c_st = t_eh[75 +: 3]; c_tok = ne; c_cyc = int'(cyc - t_db);
+            $display("E2E MTP host done: %0d emitted (golden %0d) status %0d accepted_count %0d commit n %0d (golden %0d) launches %0d job %0d cycles",
+                     ne, host[70], c_st, t_eh[78 +: 21], n_t[357 +: 32], host[71], nk, cyc - t_db);
+            if (!t_eh[74] || ne != host[70] || n_t[357 +: 32] != host[71]) errs = errs + 1;
+            for (integer i = 0; i < ne && i < 16; i = i + 1)
+                if (em[i] != host[88 + i][16:0]) begin $display("E2E MTP FAIL: emitted %0d = %0d golden %0d", i, em[i], host[88 + i]); errs = errs + 1; end
         end else begin
-            axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
+        axw(12'hC00, host[64]); axw(12'hC04, host[65]); axw(12'hC08, 32'h0E2E); axw(12'hC0C, {20'd0, host[68][3:0], 8'h01});
+            t_db = cyc;
+            axw(12'hC10, 1);
+            w = 0; rd = 0;
+            while (rd[10:8] == 0 && w < 2000000) begin axr(12'hC20); w = w + 1; end
+            if (rd[10:8] == 0) begin
+                $display("E2E FAIL: no completion (timeout)"); errs = errs + 1; c_tok = -1; c_st = 15; c_cyc = 0;
+            end else begin
+                axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
+            end
         end
         // END's wait mask may be 0 (the Qwen layer program): the completion can precede the last records' writes;
         // drain every unit (the sequencer's busy = a job runs or a unit has work outstanding) before the final checks
@@ -359,7 +471,7 @@ module tb_hgi_e2e;
         $display("E2E drained %0d cycles after the doorbell (completion %0d)", t_drain - t_db, t_cpl - t_db);
         $display("E2E completion token %0d (golden %0d) status %0d cp_cycles %0d doorbell->completion %0d", c_tok, host[66], c_st, c_cyc, t_cpl - t_db);
         $display("E2E real-unit records %0d, mismatching %0d", real_recs, real_bad);
-        if (c_tok != host[66] || c_st != 0) errs = errs + 1;
+        if (!MTP && (c_tok != host[66] || c_st != 0)) errs = errs + 1;
         if (fin == 0 && errs == 0 && real_bad == 0) $display("HGI_E2E PASS");
         else $display("HGI_E2E FAIL (finish %0d, errors %0d, real mismatching %0d)", fin, errs, real_bad);
         $finish;

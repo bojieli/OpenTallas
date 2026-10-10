@@ -1,0 +1,189 @@
+{
+ "schema": "opentallas.dsrom.S81.mtp-binding.v1",
+ "released_mtp_tensors": 2401,
+ "bound_tensors": 2401,
+ "missing": [],
+ "extra": [],
+ "released_mtp_bytes": 7932874632,
+ "matrix_rank_slice_area_exact": true,
+ "area_failures": [],
+ "expert_tensors_rowpack": 1152,
+ "address_overlaps": 0,
+ "capacity_failures": 0,
+ "head_pairs_used": 338,
+ "head_pairs_recipe": 631,
+ "primary_max_pair_fill": 1752,
+ "primary_phase_groups": {
+  "mtp.0:wq_a+wkv": {
+   "runs": 224,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:wq_b.rows0+wq_b.rows4608": {
+   "runs": 1408,
+   "max_addresses_a_pair_in_phase": 120,
+   "l0_max_addresses_a_pair_in_phase": 120,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:wo_a.group0.rows0+wo_a.group0.rows768+wo_a.group1.rows0+wo_a.group1.rows768": {
+   "runs": 1024,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 768,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:wo_b.rows0+wo_b.rows4608": {
+   "runs": 1280,
+   "max_addresses_a_pair_in_phase": 128,
+   "l0_max_addresses_a_pair_in_phase": 128,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:gate": {
+   "runs": 32,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 256,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:shared.w1+shared.w3": {
+   "runs": 576,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:shared.w2": {
+   "runs": 640,
+   "max_addresses_a_pair_in_phase": 72,
+   "l0_max_addresses_a_pair_in_phase": 72,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:wq_a+wkv": {
+   "runs": 224,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:wq_b.rows0+wq_b.rows4608": {
+   "runs": 1408,
+   "max_addresses_a_pair_in_phase": 120,
+   "l0_max_addresses_a_pair_in_phase": 120,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:wo_a.group0.rows0+wo_a.group0.rows768+wo_a.group1.rows0+wo_a.group1.rows768": {
+   "runs": 1024,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 768,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:wo_b.rows0+wo_b.rows4608": {
+   "runs": 1280,
+   "max_addresses_a_pair_in_phase": 128,
+   "l0_max_addresses_a_pair_in_phase": 128,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:gate": {
+   "runs": 32,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 256,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:shared.w1+shared.w3": {
+   "runs": 576,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.1:shared.w2": {
+   "runs": 640,
+   "max_addresses_a_pair_in_phase": 72,
+   "l0_max_addresses_a_pair_in_phase": 72,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:wq_a+wkv": {
+   "runs": 224,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:wq_b.rows0+wq_b.rows4608": {
+   "runs": 1408,
+   "max_addresses_a_pair_in_phase": 120,
+   "l0_max_addresses_a_pair_in_phase": 120,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:wo_a.group0.rows0+wo_a.group0.rows768+wo_a.group1.rows0+wo_a.group1.rows768": {
+   "runs": 1024,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 768,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:wo_b.rows0+wo_b.rows4608": {
+   "runs": 1280,
+   "max_addresses_a_pair_in_phase": 128,
+   "l0_max_addresses_a_pair_in_phase": 128,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:gate": {
+   "runs": 32,
+   "max_addresses_a_pair_in_phase": 256,
+   "l0_max_addresses_a_pair_in_phase": 256,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:shared.w1+shared.w3": {
+   "runs": 576,
+   "max_addresses_a_pair_in_phase": 160,
+   "l0_max_addresses_a_pair_in_phase": 160,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.2:shared.w2": {
+   "runs": 640,
+   "max_addresses_a_pair_in_phase": 72,
+   "l0_max_addresses_a_pair_in_phase": 72,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  },
+  "mtp.0:main_proj": {
+   "runs": 640,
+   "max_addresses_a_pair_in_phase": 480,
+   "l0_max_addresses_a_pair_in_phase": null,
+   "pairs_distinct": true,
+   "not_above_l0": true
+  }
+ },
+ "primary_phase_reads_not_above_l0": true,
+ "PASS": true,
+ "inputs": {
+  "results/uarch/dsrom_s81_released_binding_20261004/canonical/auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+  "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+  "results/uarch/dsrom_s81_released_binding_20261004/canonical/providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+  "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz": "6eee0e381b7de8c1ab138dcf044a0bd1584236ed7585467f072cba353a43d8d3",
+  "tools/dsrom_s81_mtp_binding.py": "3969a5eb556c24cbc3822aef90745cbeb7232c3710e12089b5617231ad62d2ee"
+ },
+ "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+ "source_commit": "cdcd03346420b2c3cf54fcaa4e719df82d239491",
+ "qualification": {
+  "storage_binding": true,
+  "field_schedule_qualified": false,
+  "physical_qualified": false,
+  "note": "storage owners are bound; primary pair rule preserves L0 per-phase pair reads; draft-die field schedule = rowpack (generated image bench pair 0 PASS); routes/STA of the added dies open"
+ }
+}

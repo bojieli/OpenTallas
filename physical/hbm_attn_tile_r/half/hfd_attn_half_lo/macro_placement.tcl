@@ -66,10 +66,10 @@ place_macro -macro_name {g_y0.g_x\[0\].u_row.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -loc
 place_macro -macro_name {g_y0.g_x\[1\].u_row.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {1055.808 491.592} -orientation R0 -exact
 place_macro -macro_name {g_y0.g_x\[1\].u_row.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {1055.808 505.560} -orientation R0 -exact
 place_macro -macro_name {g_y0.g_x\[1\].u_row.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {1055.808 519.576} -orientation R0 -exact
-place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {15.000 458.596} -orientation MY -exact
-place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {15.000 598.596} -orientation MY -exact
-place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1743.408 458.596} -orientation R0 -exact
-place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1743.408 598.596} -orientation R0 -exact
+place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {15.000 458.592} -orientation MY -exact
+place_macro -macro_name {g_y0.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {15.000 598.608} -orientation MY -exact
+place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1743.408 458.592} -orientation R0 -exact
+place_macro -macro_name {g_y0.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1743.408 598.608} -orientation R0 -exact
 foreach ot_i [[ord::get_db_block] getInsts] {
   if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }
 }
