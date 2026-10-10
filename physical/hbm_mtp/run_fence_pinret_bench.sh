@@ -12,6 +12,6 @@ for seed in "${@:-7}"; do
   vvp -n "$out/pinret_${mutant}_${seed}.vvp" > "$out/pinret_${mutant}_${seed}.log" 2>&1 || sim_rc=$?
   cat "$out/pinret_${mutant}_${seed}.log"
   if [ "$sim_rc" != 0 ]; then rc=1; fi
-  if ! rg -q '^FENCE_P PASS' "$out/pinret_${mutant}_${seed}.log"; then rc=1; fi
+  if ! grep -q '^FENCE_P PASS' "$out/pinret_${mutant}_${seed}.log"; then rc=1; fi
  done
 exit "$rc"
