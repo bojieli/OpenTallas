@@ -52,3 +52,23 @@ def model(qd=4, stacks=4, relay_forward=14, relay_return=13):
                            exact='full32PC ctl+leaves+CDC+KVW2 path, representative rows, lane/address/data mutants',
                            pinned_default='old ctl RTL and closed views byte-identical',
                            adoption='exact gate and physical record plus closed-view pin/context mapping'))
+
+
+def leaf_s_model():
+    """Physical leaf variant: write pins S, then MX below the CDC S face."""
+    return dict(schema='opentallas.qwen-kv-write-leaf-s.v1', model_precedes_pnr=True,
+        adopted=False, macs_per_cycle=0, compute_intensity_macs_per_byte=0,
+        replicas=128, slot_um=[86.4,183.6], slot_area_mm2=128*86.4*183.6/1e6,
+        rtl='unchanged ot_qkvd_kv_wq_leaf; lane strap and registered hops unchanged',
+        memory_ports_bytes_per_cycle=0, held_sector_bits=256+24+9,
+        boundary_bits_per_cycle=dict(feed_in=293, feed_out=293, done_in=2, done_out=2,
+                                     CDC_write=290, CDC_return=11),
+        routing=dict(S_pins=293+2+290+11, S_two_layer_capacity=int(2*86.4/.096),
+                     N_pins=293+2, E_pins=5, S_density_estimate=596/(2*86.4),
+                     CDC_source_pin_x_span=[77.484,106.284],
+                     placement='MX immediately below183.72-square CDC; leaf centre aligns CDC S write bundle',
+                     final_segment_target_um=100, SS_reach_sensitivity_um=504),
+        mux_demux_fanout=dict(lane_compare_bits=3, sector_head_depth=1, CDC_handshake_fanout=1),
+        area_delta_vs_old_leaf_um2=0, added_cycles=0,
+        fit='same full183.6-high leaf RTL; route measures cell area and utilization',
+        qualification='own optionB TT>=0 FF>=0 DRC0; exact unchanged component; real LEF pin-to-pin reach and mirror legality')
