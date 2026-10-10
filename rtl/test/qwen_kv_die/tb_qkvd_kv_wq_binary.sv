@@ -7,7 +7,7 @@
 // computed here independently), the stored 288-b codeword is the SECDED72 x 4 encoding of the row's bytes (decoded
 // here with no error), exactly NROW x 4 writes, every row retired (rw_v), no fault.
 // MUT: 1..3 the write-queue mutants (ot_qkvd_kv_wq), 4 the pcport check-column mutant (MUT 4 in ot_qfd_emb_pcport).
-module tb_qkvd_kv_wq_binary #(parameter integer FLANE_BINARY = 1, parameter integer DIST = 3, parameter integer RLY = 1, parameter integer MUT = 0, parameter integer NROW = 24, parameter integer CTRL_LAT = 6);
+module tb_qkvd_kv_wq_binary #(parameter integer HEAD_PIPE = 0, parameter integer FLANE_BINARY = 1, parameter integer DIST = 3, parameter integer RLY = 1, parameter integer MUT = 0, parameter integer NROW = 24, parameter integer CTRL_LAT = 6);
     localparam integer HD = 128, NPC = 32, TAGW = 9;
     import ot_qfd_emb_pkg::*;
     reg clk = 0, hclk = 0, rst_n = 0;
@@ -36,7 +36,7 @@ module tb_qkvd_kv_wq_binary #(parameter integer FLANE_BINARY = 1, parameter inte
         .kvw_cr(kvw_cr), .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v),
         .wd_tag(wd_tag), .rw_v(rw_v), .rw_id(rw_id), .fault(wq_fault));
     end else if (DIST == 3) begin : g_wql
-    ot_qkvd_kv_wq_leaves_binary #(.HD(HD), .NPC(NPC), .QD(4), .TAGW(TAGW), .MUT(MUT >= 1 && MUT <= 5 ? MUT : 0), .FLANE_BINARY(FLANE_BINARY), .RLY(RLY)) u_wq (
+    ot_qkvd_kv_wq_leaves_binary #(.HD(HD), .NPC(NPC), .QD(4), .TAGW(TAGW), .MUT(MUT >= 1 && MUT <= 5 ? MUT : 0), .FLANE_BINARY(FLANE_BINARY), .HEAD_PIPE(HEAD_PIPE), .RLY(RLY)) u_wq (
         .clk(clk), .rst_n(rst_n), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
         .kvw_cr(kvw_cr), .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v),
         .wd_tag(wd_tag), .rw_v(rw_v), .rw_id(rw_id), .fault(wq_fault));

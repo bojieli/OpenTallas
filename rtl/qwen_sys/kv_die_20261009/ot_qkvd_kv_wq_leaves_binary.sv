@@ -8,6 +8,7 @@ module ot_qkvd_kv_wq_leaves_binary #(
     parameter integer TAGW = 9,
     parameter integer MUT  = 0,
     parameter integer RLY  = 0,
+    parameter integer HEAD_PIPE = 0,
     parameter integer FLANE_BINARY = 0
 ) (
     input  wire                  clk,
@@ -31,7 +32,7 @@ module ot_qkvd_kv_wq_leaves_binary #(
 );
     wire [3:0] fv, rv, rb, fv_d, rv_d, rb_d;
     wire [4*256-1:0] fd, fd_d; wire [4*24-1:0] fs, fs_d; wire [4*8-1:0] fl, fl_d; wire [4*TAGW-1:0] ft, ft_d;
-    ot_qkvd_kv_wq_ctl_binary #(.HD(HD), .QD(QD), .TAGW(TAGW), .MUT(MUT), .FLANE_BINARY(FLANE_BINARY)) u_ctl (.clk(clk), .rst_n(rst_n), .kvw_v(kvw_v),
+    ot_qkvd_kv_wq_ctl_binary #(.HD(HD), .QD(QD), .TAGW(TAGW), .MUT(MUT), .FLANE_BINARY(FLANE_BINARY), .HEAD_PIPE(HEAD_PIPE)) u_ctl (.clk(clk), .rst_n(rst_n), .kvw_v(kvw_v),
         .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d), .kvw_cr(kvw_cr), .f_v(fv), .f_d(fd),
         .f_sec(fs), .f_lane(fl), .f_tag(ft), .r_v(rv_d), .r_bad(rb_d), .rw_v(rw_v), .rw_id(rw_id), .fault(fault));
     ot_hdc_delay #(.W(4), .D(RLY), .RESET(1)) u_rf (.clk(clk), .rst_n(rst_n), .d(fv), .q(fv_d));
