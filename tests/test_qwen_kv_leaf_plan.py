@@ -74,6 +74,27 @@ class LeafPlan(unittest.TestCase):
         self.assertEqual(status['qkd_cdc_wleaf']['size_um'],[183.72,183.72])
         self.assertEqual(status['qkd_cdc_wleaf']['mapped_shapes'],1202)
 
+    def test_head_capture_wide_slots_preserve_exact_feed_binding(self):
+        plan=K.build(kv_wq_head=True,kv_wq_wide=True)
+        self.assertEqual(K.check(plan)['overlaps'],0)
+        self.assertEqual(K.check(plan)['outside'],0)
+        by={i.name:i for i in plan['insts']}
+        for st in K.STACKS:
+            ctl=by[f'wctl_{st}']
+            self.assertEqual(ctl.master,'qkd_kvwq_ctl_bin_h')
+            self.assertAlmostEqual(ctl.w+K.SHAVE,216.0)
+            self.assertAlmostEqual(ctl.h+K.SHAVE,648.0)
+            for pc in range(32):
+                self.assertEqual(by[f'wleaf_{st}_{pc}'].w,129.6)
+        self.assertEqual(K.BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'],dict(FLANE_BINARY=1,HEAD_PIPE=1))
+        self.assertEqual(K.port_widths(plan)[('qkd_kvwq_ctl_bin_h','f0')],298)
+        self.assertEqual(plan['geo']['edge_channel'],K.CHAN)
+        self.assertEqual(max(plan['relay_stages'][f'kvn_{st}'] for st in K.STACKS),42)
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'die.v'
+            K.write_netlist(plan,1,path)
+            self.assertIn('ctl_lane_high5_unused_WS_0',path.read_text())
+
     def test_candidate_cannot_launch_physical_case(self):
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaisesRegex(ValueError, 'plan-only'):
