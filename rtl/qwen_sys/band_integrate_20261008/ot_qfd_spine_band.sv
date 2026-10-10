@@ -53,7 +53,9 @@ module ot_qfd_spine_band #(
     parameter integer UMUT = 0,
     parameter integer PBANDF = 1,          // 0: port groups indexed by position, not the band-local group (mutant)
     parameter integer DMUT = 0,            // 1: the tree top's upper control delay without the CLNK relays (mutant)
-    parameter integer AMR = 0              // ot_qfd_sp_tree_top AMR (safe-qwen S-D1)
+    parameter integer AMR = 0,             // ot_qfd_sp_tree_top AMR (safe-qwen S-D1)
+    parameter integer TTS = 0,             // redesign-qwen: 1 = the tree top as sub-tiles (ot_qfd_sp_tree_top_s)
+    parameter integer TT_NU = 4, TT_CR = 1, TT_SPRE = 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -135,6 +137,7 @@ module ot_qfd_spine_band #(
     wire x_dv;
     wire [AW-1:0] x_dc, x_dcs;
     wire [3:0] x_dsp;
+    generate if (TTS == 0) begin : g_tt
     ot_qfd_sp_tree_top #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
@@ -156,6 +159,29 @@ module ot_qfd_spine_band #(
         .ov(ov), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(progress), .fault(fault));
+    end else begin : g_tts
+    ot_qfd_sp_tree_top_s #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
+        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
+        .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT), .BAND(1), .NB(NB), .LNK(LNK),
+        .CLNK((DMUT != 0) ? 0 : CLNK), .UMUT(UMUT), .AMR(AMR), .NU(TT_NU), .CR(TT_CR), .SPRE(TT_SPRE)) u_tt (
+        .clk(clk), .rst_n(rst_n), .b_pw(u_pw), .b_pv(u_pv), .b_lf(u_lf), .tt_ty(tt_ty), .tt_use(tt_use), .tt_v(tt_v),
+        .land_cnt(land_cnt), .go(go), .ready(ready), .idle(idle),
+        .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+        .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
+        .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
+        .i_jsh(i_jsh), .i_split(i_split), .i_wcs(i_wcs), .i_round(i_round),
+        .i_obase(i_obase), .i_ots(i_ots), .i_ojs(i_ojs),
+        .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
+        .wrom_re(wrom_re), .wrom_addr(wrom_addr), .kv_re(kv_re),
+        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
+        .x_rdy(1'b1), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
+        .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault),
+        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault),
+        .ov(ov), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
+        .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
+        .progress(progress), .fault(fault));
+    end endgenerate
     // ---- x root (in die master qfd_sp_vector_memory) ----
     wire [NXC*32-1:0] xl0;
     ot_qfd_vm_xroot #(.AW(AW), .GT(GT), .TG(TG), .SMAX(SMAX), .XVM(XVM)) u_xr (
