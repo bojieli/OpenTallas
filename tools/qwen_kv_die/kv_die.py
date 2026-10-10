@@ -981,18 +981,16 @@ def case(m, work):
     # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to
     # overlay a rail of its own net (die_kv11: VDD PASS by that coincidence, every VSS rail open, PSM-0069).  The grid now
     # crosses the rails with vertical M5 straps (M5 is free over the PHY: OBS M1-M4 only), M4 -> M5 at every crossing,
-    # M5 -> M8 stacked at every strap crossing, M8 -> M9.
+    # M5 -> M8 stacked onto the CORE grid's M8 (which runs over the PHY).  The grid's own M8 / M9 copy is gone: with it
+    # VSS still failed (die_kv12 PSM-0069); without it VSS passes (pgb test on the die_kv11 floorplan).
     (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
 set phy_cells {}
 foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
   add_pdn_stripe -grid {phy} -layer {M5} -width {0.12} -pitch {10.88} -offset {1.0}
-  add_pdn_stripe -grid {phy} -layer {M8} -width {0.48} -pitch {10.88} -offset {1.0}
-  add_pdn_stripe -grid {phy} -layer {M9} -width {0.48} -pitch {10.88} -offset {1.0}
   add_pdn_connect -grid {phy} -layers {M4 M5}
   add_pdn_connect -grid {phy} -layers {M5 M8}
-  add_pdn_connect -grid {phy} -layers {M8 M9}
 }
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
