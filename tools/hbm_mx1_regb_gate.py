@@ -57,7 +57,8 @@ def run(work, name, top, srcs, params=()):
     if b.returncode:
         return dict(case=name, phase='compile', returncode=b.returncode, output=b.stderr[-4000:])
     r = subprocess.run(['vvp', '-n', str(exe)], capture_output=True, text=True)
-    return dict(case=name, returncode=r.returncode, output=r.stdout[-3000:])
+    # stderr kept: a simulator abort (e.g. a vvp assertion) must be visible, not an empty FAIL
+    return dict(case=name, returncode=r.returncode, output=r.stdout[-3000:] + r.stderr[-1000:])
 
 
 def fcstep(work, name, mut):
@@ -71,9 +72,15 @@ def fcstep(work, name, mut):
         fc = work / 'ar_fc_mut.sv'; fc.write_text(t.replace(FC_MUT[0], FC_MUT[1]))
     srcs = [ROOT / s for s in TOP if not s.endswith('hfd_cmdproc_s_fc.sv')] + [fc, ROOT / TB_F]
     c = run(work, name, 'tb_hfd_cmdproc_s_fc_lockstep', srcs)
-    ok = 'LOCKSTEP PASS' in c['output']
-    if c.get('phase') != 'compile':
-        c['returncode'] = 0 if ok else 1
+    if c.get('phase') == 'compile':
+        return c
+    if mut:   # a mutant is killed only by a functional verdict, never by a crash or an empty run
+        if 'LOCKSTEP FAIL' in c['output']:
+            c['returncode'] = 1
+        else:
+            c.update(returncode=2, phase='compile')
+    else:
+        c['returncode'] = 0 if 'LOCKSTEP PASS' in c['output'] else 1
     return c
 
 
