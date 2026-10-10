@@ -369,6 +369,13 @@ def main():
     rec = dict(masters={}, clocks=[])
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
+    if getattr(S, 'CFIFO_COLCK', False):
+        # ds-1010 2026-10-10: --cfifo-colck binds the colck cfifo view (its column side clocked from cr); the kit itself
+        # selects it (chains used to sed the lib paths AFTER the kit had balanced the column tree with the plain view)
+        for c_ in ('ss', 'tt', 'ff'):
+            lp = vroot / f'physical/s81_die_views/views_colck/dsfd_cfifo/dsfd_cfifo_{c_}.lib'
+            if lp.exists():
+                cls_[c_]['dsfd_cfifo'] = (lp, 'closed')
     parts = dict(PARTS)
     if getattr(S, 'COLL_SPLIT3_CR', False):
         parts['dsfd_sp_collective'] = COLL_CR_PARTS + ('dsfd_coll_ck',)
