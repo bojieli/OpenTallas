@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 37,
-   "merged": 37,
+   "closed": 38,
+   "merged": 38,
    "record_only": 6
   },
   "jobs": {
@@ -1572,7 +1572,8 @@
    "hgi-ehash-ds-a-5c9a3849e-tc-cl-cal": "ADOPTED: ot_hbm_idx_ehash_ds (LAND state, b_* pin flops) + cx cfgs from 5c9a3849e; record 6d7867a2c; TT +11.83 / FF +4.00 DRC 0 -- the VT-swap false fail (-229, dropped w18_extra) relaunched under the ECO-reference fix; exact_ds PASS / MUT2 FAIL locally",
    "hgi_mtp_core18_specf2-ea10e67a9-pd48-tc-cl-cal": "ADOPTED: ot_hgi_mtp_core18 SPECF=2 (ot_dshbm_spec_state_r, additive g_state2 in ot_dshbm_dspark_top_m) + token18 benches/cfgs from ea10e67a9; record 3f16c868e; TT +16.85 / FF +16.02 DRC 0 -- relaunched false fail; ctl18 / accept18 PASS, ctl MUT1 FAIL locally",
    "qkd_kvwq_ctl_a-3b6caa6b2-tc-hm10": "ADOPTED: kv_wq tile split (ot_qkvd_kv_wq_tiles/_dist/_tiles_top, cfgs, signoff) from 3b6caa6b2, ot_qkvd_kv_wq.sv 3-way merged with f7e45bead; record ['73eb2979b']; TT +96.29 / FF +3.72 DRC 0; lint + kvwq_dist pos PASS / neg DETECTED + kv_wq_bench long exact locally",
-   "qkd_kvwq_grp_a-3b6caa6b2-tc-hm10": "ADOPTED: same source; record ['0cf2ef779']; TT +188.44 / FF +26.58 DRC 0"
+   "qkd_kvwq_grp_a-3b6caa6b2-tc-hm10": "ADOPTED: same source; record ['0cf2ef779']; TT +188.44 / FF +26.58 DRC 0",
+   "qfd_link_rx128_o302_afw-1d3c576bbtc": "source already on main (1d3c576bb); record 09172ceed; CLOSED after VT-swap ECO TT +15.44 / FF +0.64 DRC 0 (the third ECO-reference false fail, relaunched); rx128_exact PASS_ALL, rxbuf_overflow NEG and cdc_ch AFW mut_rsl detected locally"
   }
  }
 }
