@@ -42,7 +42,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
 TILE_SW = 80.352               # tiled su: the tile's register strip width (186 x 0.432), the lane beside it
-TILE_W = 160.704              # tile width (372 x 0.432): strip + lane 79.92 + 0.432
+TILE_W = 161.568              # tile width (374 x 0.432): strip + lane 79.92 + 1.3 um (the lane fits the core with its halo)
 EDGE_BAND = 160.0              # um: the end port bands sit at the far-end lane group (south / north)
 HOP = 480.0                    # um a face-chain stage (owner rule 2026-10-07: stages <= 480 um apart)
 QUARTERS = {
@@ -742,7 +742,7 @@ def main():
     if not a.lane_size and q.get('lane_wh'):
         a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
     if a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
-        a.lane_size = [TILE_W, round(q['lane_wh'][1] + 1.08, 3)]
+        a.lane_size = [TILE_W, round(q['lane_wh'][1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
         tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
                              mname='u_tile' if a.tiled else 'u_lane')
@@ -776,9 +776,9 @@ def main():
         td.mkdir(exist_ok=True)
         (td / 'io_place.tcl').write_text(emit_tile_io(P, tw, th))
         (td / 'macro_place.tcl').write_text(
-            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} 0.540}} -orientation R0 -exact\n')
+            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} 1.080}} -orientation R0 -exact\n')
         (td / 'tile.json').write_text(json.dumps(dict(master='hfd_su_tile', w_um=tw, h_um=th, strip_w=TILE_SW,
-                                                      lane=q['lane'], lane_xy=[TILE_SW, 0.54], LB=P.LB, WCT=P.WCT,
+                                                      lane=q['lane'], lane_xy=[TILE_SW, 1.08], LB=P.LB, WCT=P.WCT,
                                                       RB=P.RB, RA=P.RA, LO=P.LO), indent=1) + '\n')
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out))
     if a.tiled:

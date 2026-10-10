@@ -14,7 +14,7 @@ export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SE
 echo "tile $TW x $TH PD=${PD:-0.55} HM=${HM:-0.010} CP=${CP:-0.770} $*" > $W/args; cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 LS="rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv"
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top hfd_su_tile \
-  --source $T/hfd_su_tile.sv --macro-view ot_su12_light=$V/lane/ot_su12_light --macro-place-halo 1 1 \
+  --source $T/hfd_su_tile.sv --macro-view ot_su12_light=$V/lane/ot_su12_light --macro-place-halo 0.5 0.5 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$T/tile/macro_place.tcl \
   --clock-port clk --clock-period-ns ${CP:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
