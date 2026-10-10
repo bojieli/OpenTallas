@@ -13,6 +13,7 @@ import closure_loop as cl
 
 cl.DEEP_RELEASE_AGE_H=48
 APPLY='--apply' in sys.argv
+HOST=sys.argv[sys.argv.index('--host')+1] if '--host' in sys.argv else None
 OUT=Path(os.environ.get('OT_FLEET_REVIEW_OUTPUT','/home/ubuntu/codex-takeover-20261010/fleet'))
 OUT.mkdir(parents=True,exist_ok=True)
 LIVE=r'''
@@ -54,6 +55,7 @@ for j in jobs:
     if j.get('run'): shared.setdefault((j.get('host'),j['run'].rstrip('/')),[]).append(j)
 candidates=[]
 for j in jobs:
+    if HOST and j.get('host')!=HOST: continue
     if cl._terminal_age_h(j)<48 or not j.get('run'): continue
     mode=cl.deep_release_mode(j,closed,ev)
     if not mode or any(x['status'] not in cl.TERMINAL or cl._terminal_age_h(x)<48 for x in shared[(j.get('host'),j['run'].rstrip('/'))]): continue
