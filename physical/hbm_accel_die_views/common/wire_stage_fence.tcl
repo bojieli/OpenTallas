@@ -301,6 +301,7 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
           foreach x [list [expr {$xb + $s*$sitew}] [expr {$xb - $s*$sitew}]] {
             if {$done || $x < $rx0 || $x + $wr > $rx1} continue
             if {[ws_free $ri $x [expr {$x+$wr}]]} {
+              $i setPlacementStatus PLACED     ;# a fenced stage flop is FIRM: unfix before moving (ODB-0359)
               $i setOrient [lindex $row 5]; $i setLocation $x $ry; $i setPlacementStatus FIRM
               lappend occ($ri) [list $x [expr {$x+$wr}]]
               set done 1
