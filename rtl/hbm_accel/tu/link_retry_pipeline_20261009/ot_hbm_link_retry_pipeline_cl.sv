@@ -30,7 +30,13 @@ module ot_hbm_link_retry_pipeline #(
  //       consumed item exactly as before; rx_ready = !rp_v.  Throughput is unchanged (one beat per 2 edges, as the
  //       landing bubble already imposed); +1 edge receive latency; +580 flops.
  //   fb: feedback inputs registered (+1 edge on ACK/NAK feedback; the mailbox coalescing is unchanged).
- IN_PIN=`ifdef OT_RETRY_IN_PIN 1 `else 0 `endif
+ IN_PIN=`ifdef OT_RETRY_IN_PIN 1 `else 0 `endif,
+ // [link] 2026-10-10 IN_WPIN (opt-in, needs RSTR): txrx 860d4ad8e routed TT -54.45 at the routed IO reference has ONE
+ // setup class left: in_data port -> replay-SRAM SECDED encoder (14 levels) -> u_enc.q.  The replay write now leaves the
+ // TX slot register (txd_u, already the accepted beat's pin-side copy) one edge after acceptance: w_valid / w_seq
+ // registered, w_data = txd_u (held: the slot is occupied from acceptance until launch).  +1 edge write latency,
+ // covered by write_guard 3 (no replay read of a beat before its write); throughput unchanged.
+ IN_WPIN=`ifdef OT_RETRY_IN_WPIN 1 `else 0 `endif
 )(
  input wire clk,rst_n,input wire [EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire [W-1:0] in_data,
@@ -167,12 +173,23 @@ module ot_hbm_link_retry_pipeline #(
  reg [SW-1:0] retained_q;
  always @(posedge clk or negedge rst_i) if(!rst_i) retained_q<=0; else retained_q<=next_seq-base;
  assign retained=retained_q;assign fault=fault_r;assign replay_count=retries;
+ reg wq_v; reg [SW-1:0] wq_seq;
+ always @(posedge clk or negedge rst_i) if(!rst_i) wq_v<=1'b0; else wq_v<=accepted&&!fault_r;
+ always @(posedge clk) if(accepted) wq_seq<=next_seq;
+ wire st_wv = (IN_WPIN!=0) ? wq_v : accepted;
+`ifndef OT_RETRY_MUT_WPIN_DATA
+ wire [W-1:0] st_wd = (IN_WPIN!=0) ? txd_u : in_data;
+`else
+ wire [W-1:0] st_wd = in_data;   // mutant: the delayed write takes the live input port, not the accepted beat's slot copy
+`endif
+ wire [SW-1:0] st_ws = (IN_WPIN!=0) ? wq_seq : next_seq;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
- .clk(clk),.rst_n(rst_i),.w_valid(accepted),.w_data(in_data),
- .w_seq(next_seq),.w_session(session_i),.r_valid(request_read),
+ .clk(clk),.rst_n(rst_i),.w_valid(st_wv),.w_data(st_wd),
+ .w_seq(st_ws),.w_session(session_i),.r_valid(request_read),
  .r_seq(cursor),.r_session(session_i),.o_valid(rd_v),.o_data(rd_data),
  .o_seq(rd_seq),.o_session(rd_epoch),.o_ce(rd_ce),.o_ue(rd_ue));
  initial begin
+ if(IN_WPIN!=0&&RSTR==0)$fatal(1,"IN_WPIN needs RSTR (the write data is the TX slot register txd_u)");
  if(DEPTH<2||(DEPTH&(DEPTH-1))!=0||DEPTH>=(1<<(SW-1)))$fatal(1,"ambiguous replay window");
  if(TIMEOUT<8||MAX_RETRY<1)$fatal(1,"invalid retry bound");
  end
@@ -213,7 +230,12 @@ module ot_hbm_link_retry_pipeline #(
  if(accepted)begin
  txv<=1;tx_replay<=0;txd<=in_data;txs<=next_seq;
  
- next_seq<=next_seq+1'b1;write_guard<=2;
+ next_seq<=next_seq+1'b1;
+`ifndef OT_RETRY_MUT_WPIN_GUARD
+ write_guard<=(IN_WPIN!=0)?2'd3:2'd2;
+`else
+ write_guard<=2'd2;   // mutant: the read-after-write guard not extended for the delayed write
+`endif
  end
  if(launched)begin
  txv<=0;
