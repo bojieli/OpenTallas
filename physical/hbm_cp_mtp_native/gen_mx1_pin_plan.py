@@ -16,9 +16,20 @@ def generate():
             lines.append(f'place_pin -pin_name {{{name}}} -layer {layer} -location {{{(x0+x1)/2:.6f} {(y0+y1)/2:.6f}}} -pin_size {{{x1-x0:.6f} {y1-y0:.6f}}}')
     return '\n'.join(lines)+'\n',len(seen)
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');a=ap.parse_args();text,n=generate();out=P/'io_place.tcl'
+    ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');ap.add_argument('--actual-record',type=Path);a=ap.parse_args();text,n=generate();out=P/'io_place.tcl'
     if a.check:
         assert out.read_text()==text,'MX1 IO pin plan does not match full committed pin contract'
-    else:out.write_text(text)
+    elif not a.actual_record:out.write_text(text)
+    if a.actual_record:
+        import csv
+        actual={}
+        for row in csv.DictReader(a.actual_record.open(),delimiter='\t'):
+            name=row['name'];assert name not in actual,('multiple rectangles',name)
+            actual[name]=[row['layer']]+[float(row[k]) for k in ('x0_um','y0_um','x1_um','y1_um')]
+        expected={q[0]:q[1:] for r in json.loads((P/'ports.json').read_text())['ports'].values() for q in r['pins']}
+        assert set(actual)==set(expected),('actual pin names',sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected)))
+        for name,e in expected.items():
+            v=actual[name];assert v[0]==e[0] and all(abs(x-y)<=0.001001 for x,y in zip(v[1:],e[1:])),('actual pin geometry',name,v,e)
+        print(f'MX1_ACTUAL_PIN_PLAN PASS {len(actual)} measured pins')
     print(f'MX1_PIN_PLAN PASS {n} unique pins')
 if __name__=='__main__':main()
