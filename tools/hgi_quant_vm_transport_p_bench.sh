@@ -5,7 +5,7 @@
 #   connected bench (ot_hgi_quant_unit PIPE=1 -> real ECC VM unit, 5,888 words): TMUT 0 PASS, 4 / 5 FAIL
 #   (MUTANT 6 is caught by the transport bench's random CP stalls; the connected VM never exposes the landing gap)
 set -uo pipefail
-out=$1; shift; mut=${*:-0 1 2 3 5 6}
+out=$1; shift; [ "${1:-}" = "--one" ] && mut="" || mut=${*:-0 1 2 3 5 6}
 mkdir -p "$out"
 hdc=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv)
 mem=(rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v)
@@ -23,6 +23,11 @@ co() {
  m=$1
  iverilog -g2012 -I rtl/hbm_accel/generic -Ptb_hgi_quant_vm_connected.PIPE=1 -Ptb_hgi_quant_vm_connected.TMUT=$m -o "$out/c$m.vvp" -s tb_hgi_quant_vm_connected "${csrc[@]}" > "$out/c$m.build" 2>&1 && vvp "$out/c$m.vvp" > "$out/c$m.log" 2>&1; echo $? > "$out/c$m.rc"
 }
+if [ "${1:-}" = "--one" ]; then   # closure-loop mutant bench: one transport mutant, exit = its sim rc (expect FAIL)
+ m=$2; tr $m; cat $out/t$m.log | tail -3
+ grep -Eq 'WRITE mismatch|DROP/CREDIT|EARLY_DONE|unexpected fault|FAULT' $out/t$m.log || exit 0
+ exit 1
+fi
 for m in $mut; do tr $m & done
 for m in 0 4 5; do co $m & done
 wait
