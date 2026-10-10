@@ -21,6 +21,10 @@ module tb_hgi_su_unit;
         $readmemh({dir, "/su_vmi.mem"}, vmim); $readmemh({dir, "/su_vme.mem"}, vmem);
     end
     integer errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
+    // Bench-only passive census. Sample stable pre-edge ctl state; snapshots use the same edge convention as cyc.
+    integer phase_count [0:15]; integer phase_start [0:15]; integer phase_ix, phase_sum;
+    initial for (phase_ix = 0; phase_ix < 16; phase_ix = phase_ix + 1) phase_count[phase_ix] = 0;
+    always @(posedge clk) phase_count[u.u_ctl.st] <= phase_count[u.u_ctl.st] + 1;
     reg rst_n = 0; reg [2196:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
 `ifdef UNIT_SFU
@@ -38,7 +42,7 @@ module tb_hgi_su_unit;
         begin
             @(negedge clk); tq = {1'b1, we, word[29:3], 5'd0, {8{data}}, (32'hF << (4 * word[2:0])), 16'h0BE0};
             @(negedge clk); tq[337] = 1'b0;
-            tw = 0; while (!tr[273] && tw < 1000) begin @(negedge clk); tw = tw + 1; end
+            tw = 0; while (!tr[273]) begin @(negedge clk); tw = tw + 1; end
             qd = tr[32 * word[2:0] +: 32];
         end
     endtask
@@ -60,14 +64,22 @@ module tb_hgi_su_unit;
                 if (j + 1 == nve || vmem[ve0 + j + 1][63:32] != gaddr) vm_req(1'b1, gaddr, 32'hA5A5A5A5, qd);
             end
             k = 0; nf = 0; t0 = cyc;
+            for (phase_ix = 0; phase_ix < 16; phase_ix = phase_ix + 1) phase_start[phase_ix] = phase_count[phase_ix];
             for (j = 0; j < nr; j = j + 1) begin
                 @(negedge clk); cur = recm[r0 + j]; rec_v = 1;
-                t = 0; while (!rec_rdy && t < 2000000) begin @(negedge clk); t = t + 1; end
+                t = 0; while (!rec_rdy) begin @(negedge clk); t = t + 1; end
                 @(posedge clk); #0.1 rec_v = 0;
             end
-            t = 0; while (k < nr && nf == 0 && t < 2000000) begin @(posedge clk); t = t + 1; end
+            t = 0; while (k < nr && nf == 0) begin @(posedge clk); t = t + 1; end
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
             $display("case %0d: %0d records retired in %0d cycles (stage + compute + drain)", c, k, cyc - t0); $fflush;
+            phase_sum = 0;
+            for (phase_ix = 0; phase_ix < 16; phase_ix = phase_ix + 1) begin
+                $display("SU_PHASE case=%0d state=%0d cycles=%0d", c, phase_ix, phase_count[phase_ix] - phase_start[phase_ix]);
+                phase_sum = phase_sum + phase_count[phase_ix] - phase_start[phase_ix];
+            end
+            $display("SU_PHASE_SUM case=%0d counted=%0d elapsed=%0d", c, phase_sum, cyc - t0);
+            if (phase_sum != cyc - t0) begin errors = errors + 1; $display("ERR phase census accounting"); end
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
                 if (qd !== vmem[ve0 + j][31:0]) begin
