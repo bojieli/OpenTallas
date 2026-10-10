@@ -1,0 +1,42 @@
+{
+  "scope": "DMA front finite lane buffers; streaming1.2GHz",
+  "MACs_per_cycle": 0,
+  "compute_intensity": "format conversion unchanged",
+  "source_bytes_per_cycle": 1024,
+  "destination_bytes_per_cycle": 1024,
+  "port_bytes_per_cycle": {
+    "lane": 32,
+    "VM": 1024
+  },
+  "boundary_bits": {
+    "data": 8640,
+    "credit": 32,
+    "VM": 8960
+  },
+  "replicas": {
+    "stacks": 4,
+    "lanes_per_stack": 8,
+    "buffer_entries": 64
+  },
+  "memory_bits": 561152,
+  "added_memory_bits": 526080,
+  "added_pointer_bits": 384,
+  "composed_credit_round_trip_cycles": 68,
+  "credit_window_rate_upper_bound": 0.9411764705882353,
+  "required_depth_at_90pct": 62,
+  "fifo_mux_inputs": 64,
+  "lane_demux_count": 32,
+  "latency": {
+    "data_hops": 32,
+    "credit_hops": 32,
+    "front_internal_edges": 4,
+    "token_added_cycles": "transport cycles compose with actual DMA critical path"
+  },
+  "tracks_added": 0,
+  "channel_capacity": "same boundary wires, svc owner independently sizes corridor",
+  "area": "measure mapped storage or SRAM master; no inferred slot fit",
+  "floorplan_fit": false,
+  "physical_admitted": false,
+  "adoption": false,
+  "source_note": "32 service-internal worst-case credit RTT from actual8500um strips plus provisional32cycles loader leg; exact loader distance must replace bound"
+}

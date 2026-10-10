@@ -15209,3 +15209,8 @@ def hgi_quant_decode_model():
 def hbm_svc_reset_boundary_model():
     from hbm_svc_reset_boundary_model import model
     return model()
+
+
+def hgi_dma_credit_model(**kwargs):
+    from hgi_dma_credit_model import model
+    return model(**kwargs)
