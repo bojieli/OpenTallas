@@ -106,6 +106,24 @@ foreach row [$ot_blk getRows] {
  lappend rows [list [$bb yMin] [$bb xMin] [$bb xMax] [$row getSite] [$row getOrient]]
 }
 set used [dict create]
+# FILL-9 2026-10-10: reserve every site already held by a fixed cell (tapcells / well taps, placed at 2_3 floorplan).
+# Without this the bank put 97 pin flops FIRM on top of TAP_TAPCELL_ROW_* and DPL check failed (DPL-0005/0033) at
+# 3_5 (job mtp-fence-pinret-10a658adf-tc-hm0-f8): the bank must only take free row sites.
+set ot_fixed_sites 0
+foreach inst [$ot_blk getInsts] {
+ if {![$inst isFixed]} continue
+ set ib [$inst getBBox]
+ foreach row $rows {
+  lassign $row y x0 x1 site orient
+  set sh [$site getHeight]; set sw [$site getWidth]
+  if {[$ib yMax] <= $y || [$ib yMin] >= $y+$sh} continue
+  if {[$ib xMax] <= $x0 || [$ib xMin] >= $x1} continue
+  set k0 [expr {int(floor(double([$ib xMin]-$x0)/$sw))}]
+  set k1 [expr {int(ceil(double([$ib xMax]-$x0)/$sw))}]
+  for {set k $k0} {$k<$k1} {incr k} {dict set used "$y:$k" 1; incr ot_fixed_sites}
+ }
+}
+puts "PINRET_LEGAL_BANK reserved $ot_fixed_sites row sites under fixed cells"
 set count 0
 foreach c [lsort -real -index 1 $cand] {
  lassign $c side pos ff px py io
