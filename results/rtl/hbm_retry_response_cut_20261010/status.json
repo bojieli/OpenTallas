@@ -1,0 +1,9 @@
+{
+  "source_base": "37eef72ef",
+  "unit_initial": "W551/EW16/DEPTH512 latency8 PASS",
+  "full_shape_gate": "running W545/EW24/DEPTH512",
+  "pipeline": "PASS_ALL + duplicate mutant FAIL",
+  "bank_select_mutant": "FAIL (stream mismatch)",
+  "physical": "unqualified",
+  "cost": "two edges versus original DP, zero fault-free token edges"
+}

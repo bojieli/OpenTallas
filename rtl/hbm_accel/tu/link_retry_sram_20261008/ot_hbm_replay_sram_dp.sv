@@ -6,8 +6,8 @@
 // Borrowed ideas: replicated control trees (one registered bank-select copy per 64 captured bits, fanout <= 64) and
 // generous pipelining at every hop (partial syndromes per 64-bit chunk, registered, then the 4-way combine).
 //   request edge0 -> macro read edge1 -> capture edge2 -> BANK-SELECTED word edge3 -> 4 partial syndromes edge4
-//   -> syndrome (4-way XOR, registered with 4 replicas) edge5 -> corrected response edge6       (was edge4: +2 edges)
-// The +2 edges are on the REPLAY read only (a link-error path; the pipeline waits on rd_v / read_pending, no fixed
+//   -> syndrome (4-way XOR, registered with 4 replicas) edge5 -> located-data edge6 -> flags edge7 -> registered response edge8 (was edge4: +4 edges)
+// The +4 edges are on the REPLAY read only (a link-error path; the pipeline waits on rd_v / read_pending, no fixed
 // latency is assumed); the forward token path is unchanged (0 cycles).  Same Hsiao code (ot_secded_cols.svh), same
 // correction / poison rules, same transaction tags: exact.
 module ot_hbm_replay_sram #(
@@ -25,7 +25,7 @@ module ot_hbm_replay_sram #(
  output wire[SW-1:0] o_seq,output wire[EW-1:0] o_session,
  output wire o_ce,o_ue
 );
- localparam LAT=6, NS=(NM*256+63)/64;           // NS bank-select replicas (one per 64 captured bits)
+ localparam LAT=8, NS=(NM*256+63)/64;           // NS bank-select replicas (one per 64 captured bits)
  wire[NC*256-1:0] record_in={{(NC*256-RW){1'b0}},w_session,w_seq,w_data};
  wire[CW-1:0] encoded;
  for(genvar c=0;c<NC;c=c+1) begin:g_enc
@@ -80,14 +80,27 @@ module ot_hbm_replay_sram #(
  end
  wire[SW-1:0] stored_seq=corrected[W+:SW];
  wire[EW-1:0] stored_epoch=corrected[W+SW+:EW];
- assign o_valid=&valid;
- assign o_ue=o_valid && ((|ue) || stored_seq!=seqp[LAT] || stored_epoch!=ep[LAT]);
- assign o_ce=o_valid && |ce;
- assign o_data=o_ue ? {W{1'b0}}:corrected[W-1:0];
- assign o_seq=seqp[LAT];assign o_session=ep[LAT];
+ // Decoder response edge7 -> registered response edge8. Tags remain aligned
+ // with their request even if the retry cursor/session moves while in flight.
+ reg response_v, response_ce, response_ue;
+ reg [W-1:0] response_data;
+ reg [SW-1:0] response_seq;
+ reg [EW-1:0] response_epoch;
+ wire bad_response = (|ue) || stored_seq!=seqp[LAT-1] || stored_epoch!=ep[LAT-1];
+ always @(posedge clk or negedge rst_n)
+   if(!rst_n) begin response_v<=0; response_ce<=0; response_ue<=0; end
+   else begin response_v<=&valid; response_ce<=(&valid) && |ce;
+     response_ue<=(&valid) && bad_response; end
+ always @(posedge clk) begin
+   response_data<=corrected[W-1:0];
+   response_seq<=seqp[LAT-1]; response_epoch<=ep[LAT-1];
+ end
+ assign o_valid=response_v; assign o_ue=response_ue; assign o_ce=response_ce;
+ assign o_data=response_ue ? {W{1'b0}}:response_data;
+ assign o_seq=response_seq; assign o_session=response_epoch;
  initial begin
   if(DEPTH<128 || DEPTH%128 || (DEPTH&(DEPTH-1)) || AW>SW) $fatal(1,"invalid SRAM replay depth");
  end
 endmodule
 
-// the 3-edge decoder ot_secded_dec_dp lives in rtl/common/ot_secded_dec_dp.sv (beside ot_secded_cols.svh)
+// the 4-edge decoder ot_secded_dec_dp lives in rtl/common/ot_secded_dec_dp.sv (beside ot_secded_cols.svh)
