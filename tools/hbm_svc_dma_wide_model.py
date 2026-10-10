@@ -52,6 +52,10 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
         fixed_WP128_raw_Bcycle_roofs_by_format=dict(FP32_U32=4096,BF16=2048,FP8E4M3_INT8=1024),
         WP512_logical_write_bits_per_cycle=512*280,
         VM_physical_minimum_banks_single_write_per_cycle=512,
+        VM_physical_minimum_banks_protected_II2=1024,
+        VM512_protected_II2_raw_Bcycle_roof_FP8=512*32/2/4,
+        VM512_protected_II2_fails_FP8_owner_gate=True,
+        VM_physical_bank_II_must_be_measured=True,
         VM128bank_singleport_is_insufficient_for_FP8_or_BF16_owner_gate=True,
         format_conversion_location='beside512physicalVMbanks; raw272bitlane longlinks then4localdestination-sector writes; no unpriced expanded143360bit diebus',
         conversion_replica_count=128,
@@ -83,7 +87,7 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
         cache_bank_count_is_new_inventory=True,
         MACs_per_cycle=0,compute_intensity=0,
         physical_floorplan_fit=False,implemented_wire_relays=False,
-        adoption_gate='Exact fullshape native/controller bandwidth >=3000Bcycle plus real expanded floorplan, SRAM/control/relay timing and VM128bank write consumption',
+        adoption_gate='Exact fullshape native/controller bandwidth >=3000Bcycle plus real expanded floorplan, SRAM/control/relay timing and format-expanded VM sink:512logical32Bwrite ports with provenII1, or1024interleaved physicalII2banks',
         exclusions='No assumption that4096Bportpeak is actualHBM bandwidth; no zero-hop credit or unpriced prefetch')
     return record
 if __name__=='__main__':print(json.dumps(wide_model(),indent=2))
