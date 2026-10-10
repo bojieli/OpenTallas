@@ -201,6 +201,9 @@ module hgi_e2e_coll_slot #(
                     sched(p, cyc + LATC, {1'b0, 8'(rnk), 8'(OG * nsub + jp), 16'(idx), d});
                 end else begin                               // our result m: every other owner's result m
                     m = idx - (OG * nsub + J) * ROF;
+`ifdef E2E_COLL_DEBUG
+                    $display("E2E COLL DBG cyc %0d result dep port %0d idx %0d m %0d src %0d dst %0d", cyc, p, idx, m, int'(f[FW+16 +: 8]), dst);
+`endif
                     nown = (mall != 0) ? gsize : nsub; o0 = (mall != 0) ? 0 : OG * nsub;
                     for (integer o = o0; o < o0 + nown; o = o + 1) if (o != rnk) begin
                         e2e_coll_res(obase, o * ROF + m, COLL_BF16, d);
@@ -231,6 +234,9 @@ module hgi_e2e_coll_slot #(
             for (integer l = 0; l < DEL; l = l + 1) if (dv[l]) begin : del
                 reg [PWT-1:0] f; integer gi, q, m, e, lo, hi;
                 f = dfl[l*PWT +: PWT]; gi = int'(f[FW +: 16]);
+`ifdef E2E_COLL_DEBUG
+                $display("E2E COLL DBG cyc %0d deliver lane %0d gi %0d src %0d", cyc, l, gi, int'(f[FW+16 +: 8]));
+`endif
                 if (isbyp != 0) begin
                     q = gi / pf; m = gi % pf;
                     lo = (q * n_a) / gsize; hi = ((q + 1) * n_a) / gsize;
