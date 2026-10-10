@@ -3680,6 +3680,9 @@ def step(j, fleet):
                           f"after {res}")
                 m = j.get("metrics", {})
                 prev = j["eco"]
+                if (prev.get("kind") == "combo" and res and combo_hold_retry_eligible(res)
+                        and start_combo_hold_retry(j, fleet, m, prev)):
+                    return             # drive-0849: one stacked hold pass on the combo result
                 if vt and vtswap_eligible(j, m, j.get("failed_checks") or []) and start_vtswap_eco(j, fleet, m):
                     if j["eco"] is prev:   # no capacity yet: re-judged at the verdict stage next tick, which relaunches
                         j["status"] = "READY"
@@ -3847,6 +3850,10 @@ def do_verdict(j, fleet, stl):
         if "OT_HOLD_STALL" in r.stdout and stall_worst is not None and stall_worst > ff + 2.0:
             event(j, f"hold-stall window worst {stall_worst:+.1f} is shallower than sign-off FF {ff:+.1f}: "
                      f"the miss grew after the stalled repair -> post-route hold ECO, not NEEDS_RTL")
+        elif "OT_HOLD_STALL" in r.stdout and combo_eligible(j, m, failed, benches_ok) and start_combo_eco(j, fleet, m):
+            # drive-0849 2026-10-09: a thin TT AND FF miss behind a stalled route hold repair (hgi_cp-9cfc3b131: TT -44.29 /
+            # FF -0.71, window I2R=20@-7.1) gets the combo ECO before the guard ends it as NEEDS_RTL
+            return
         elif "OT_HOLD_STALL" in r.stdout:
             j["hold_window"] = r.stdout[-6000:]
             cls = " ".join(f"{a}={b}@{c}" for a, b, c in wins)
@@ -3962,7 +3969,7 @@ def start_vtswap_eco(j, fleet, m):
     if e:
         j.setdefault("eco_history", []).append(e)
         j["attempt"] += 1          # a fresh stage tag: hold_eco.a<attempt>.rc of the previous ECO stays as evidence
-    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    post_sdcs = eco_post_sdcs(j, m, "VT-swap ECO")
     tt = m["ss_ps"]
     out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
     env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
@@ -3983,6 +3990,53 @@ def start_vtswap_eco(j, fleet, m):
              f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
     ledger(j, f"VT-SWAP ECO launched (loop): TT {tt:+.2f} / FF {m['ff_ps']:+.2f}, target {target:g}, LVT cap {cap:g} %")
     experiment(j, "running: post-route VT-swap setup ECO")
+    return True
+
+
+COMBO_HOLD_RETRY_FF = -5.0      # drive-0849: a combo result with TT >= 0 and FF in [-5, 0) gets one stacked hold pass
+
+
+def combo_hold_retry_eligible(res):
+    tt, ff = res.get("ss_ps"), res.get("ff_ps")
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    return tt >= SS_MIN and COMBO_HOLD_RETRY_FF <= ff < FF_MIN and res.get("drc") == 0 and not res.get("errors")
+
+
+def start_combo_hold_retry(j, fleet, m, prev):
+    """hold_eco.sh stacked on the combo ECO's own result (ECO_RB_DB=6_final.odb of {combo out}): HM 0 + ALLOW 4 (the
+    manual COMBO_MODE=hold launch of hgi_cp-8a62bf98b, TT +4.89 / FF -0.13).  Once per combo."""
+    if prev.get("hold_retry"):
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"combo hold retry waiting for capacity: {why}")
+        j["status"] = "READY"
+        return True
+    v = j["spec"].get("verdict", {})
+    post = list(prev.get("post_sdc") or [])
+    pq = " ".join(shlex.quote(p) for p in post)
+    sdcn = shlex.quote(prev.get("sdc_name") or "6_final.sdc")
+    mac = shlex.quote(" ".join(v.get("macros", [])))
+    blk = j["spec"]["block"]
+    out = prev["out"] + "-h"
+    henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
+            f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
+    cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"])
+    prev["hold_retry"] = True
+    j.setdefault("eco_history", []).append(prev)
+    j["attempt"] += 1
+    j["eco"] = dict(tried=True, kind="combo_hold", rb=prev["rb"], ob=prev["ob"], combo_vtswap=prev.get("combo_vtswap"),
+                    out=out, post_sdc=post, sdc_name=prev.get("sdc_name") or "6_final.sdc",
+                    setup_post_sdc=list(prev.get("setup_post_sdc") or []), pre=prev.get("pre"), started=now_iso(),
+                    hold_retry=True, auto=True)
+    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"combo ECO result {prev.get('result', {}).get('ss_ps')} / FF {prev.get('result', {}).get('ff_ps')} misses hold by "
+             f"< {-COMBO_HOLD_RETRY_FF:g} ps: one stacked hold pass (HM 0, ALLOW 4) on the combo db; out {out}")
     return True
 
 
@@ -4018,7 +4072,7 @@ def start_combo_eco(j, fleet, m):
     if e:
         j.setdefault("eco_history", []).append(e)
         j["attempt"] += 1
-    post = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    post = eco_post_sdcs(j, m, "combo ECO")
     pq = " ".join(shlex.quote(p) for p in post)
     n = len(j.get("eco_history") or []) + 1
     outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
@@ -4078,6 +4132,31 @@ def baked_post_sdcs(j, m, cands):
     return [p for p in cands if p in hit]
 
 
+def eco_post_sdcs(j, m, what="ECO"):
+    """the post-SDC list an ECO must be timed with = the route verdict's reference.  COREKV-ECO 2026-10-08 (hold ECO): a
+    route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (route_master Qwen-die masters: the block
+    signoff SDC) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and an ECO without it is timed at
+    the 770 ps route SDC with plain IO.  drive-0849 2026-10-09: the VT-swap and COMBO ECOs skipped this (EHASH -11 vs
+    ECO pre -229, core18 -31 vs -94, link_rx128 -29 vs -93: false fails); every launcher now uses this one helper."""
+    v = j["spec"].get("verdict", {})
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
+    if not baked and not any(p for p in post_sdcs if p != IOREF_SDC):
+        # a route whose in-run STA read a w18_extra.sdc that the spec does not name (route_master --extra-sdc from the
+        # cfg, hgi_mtp_core18 specf2: spec post_sdc None): copy it into the job's src and pass that copy
+        orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+        rel = ".cl_eco/w18_extra.sdc"
+        if orfs and j.get("host") and j.get("run"):
+            r = ssh(j["host"], f"test -f {shlex.quote(orfs)}/w18_extra.sdc && mkdir -p {shlex.quote(j['run'])}/src/.cl_eco && "
+                               f"cp {shlex.quote(orfs)}/w18_extra.sdc {shlex.quote(j['run'])}/src/{rel} && echo COPIED; true", timeout=60)
+            if "COPIED" in (r.stdout or ""):
+                baked = [rel]
+    if baked:
+        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
+        event(j, f"{what}: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
+    return post_sdcs
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
@@ -4099,15 +4178,7 @@ def start_hold_eco(j, fleet, m):
         # mtp-lead 2026-10-09: opt-in DRV repair inside the ECO (hold_eco.tcl OT_REPAIR_DRV); default off
         env += f" REPAIR_DRV=1 DRV_SLEW_MARGIN={float(he.get('drv_slew_margin', 30)):g} " \
                f"DRV_CAP_MARGIN={float(he.get('drv_cap_margin', 20)):g} DRV_MAX_WIRE={float(he.get('drv_max_wire_um', 0)):g}"
-    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
-    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
-    if baked:
-        # COREKV-ECO 2026-10-08: a route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (Qwen core
-        # signoff833_skew90.sdc) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and the ECO was
-        # timed at the 770 ps route SDC (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 cells; TT -97 = route
-        # SDC). The verdict read it, so the ECO reads it too, before io_ref_routed (always last).
-        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
-        event(j, f"hold ECO: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
+    post_sdcs = eco_post_sdcs(j, m, "hold ECO")
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
     # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
@@ -4154,6 +4225,15 @@ def eco_install_cmd(j):
         for f in ("6_final.odb", "6_final.spef", "6_final.v"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
+    if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
+        # drive-0849 2026-10-09: a combo db carries LVT masters, but its VT-swap stage alone never scored >= 0, so
+        # vtswap_eco.sh did not add the LVT libraries to the route's w18_sta_{ss,ff}.tcl: the routed-insertion re-STA of
+        # the installed db would leave the swapped cells without liberty (paths through them untimed).  Add them here.
+        W0 = "/".join(rb.split("/")[:-6])
+        lines.append(f"for t in {W0}/work/orfs/w18_sta_ss.tcl {W0}/work/orfs/w18_sta_ff.tcl; do [ -f $t ] || continue; "
+                     f"[ -f $t.pre_vtswap ] || cp $t $t.pre_vtswap; grep -q '_LVT_' $t || "
+                     "sed -i -E 's#^(read_liberty (/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_[A-Za-z0-9]+)_RVT_(SS|FF|TT)_(.*))$#\\1\\nread_liberty \\2_LVT_\\3_\\4#; "
+                     "s#^(read_lef (.*)_28_R_1x(.*))$#\\1\\nread_lef \\2_28_L_1x\\3#' $t; done")
     if isinstance(he.get("reexport"), str) and he["reexport"].strip():   # drive-0849: a spec with reexport: true (bool)
         lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:

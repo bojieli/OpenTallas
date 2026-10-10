@@ -699,11 +699,57 @@ def _hazard(a, b):
     return bool(wa & (rb | wb)) or bool(ra & wb)
 
 
-def improve_order(recs, pos, cost_fn=cost, rounds=6, **kw):
-    """improve_order_once repeated on its own output until a round gains < 1 cycle (the list schedules restart from
-    the improved order, so a later round can escape the previous round's local optimum)."""
+def asap_seed(recs):
+    """A restart point: each record (in program order) placed directly after the last earlier record it has a hazard
+    with (CTL barriers stay), so every producer -> consumer chain starts at its earliest legal slot."""
+    out = []
+    for r in recs:
+        p = len(out)
+        while p > 0 and not _hazard(out[p - 1], r):
+            p -= 1
+        out.insert(p, r)
+    return out
+
+
+def improve_order(recs, pos, cost_fn=cost, rounds=6, seeds=("given", "asap"), ils=True, **kw):
+    """The compiler's CP-aware order: improve_order_seed from each seed (the given order; the ASAP re-seed), the
+    cheaper kept; then one iterated-local-search sweep (each record relocated to its ASAP slot, a short re-search,
+    kept when the objective drops) to leave the local optimum."""
     for i, r in enumerate(recs):                 # ids of the INPUT order (the caller maps the permutation by them)
         r._cid = i
+    best = None
+    for sd in seeds:
+        start = list(recs) if sd == "given" else asap_seed(list(recs))
+        o, info = improve_order_seed(start, pos, cost_fn=cost_fn, rounds=rounds, **kw)
+        info = dict(info, seed=sd)
+        if best is None or info["output_cycles"] < best[1]["output_cycles"] - 0.5:
+            best = (o, info)
+    order, info = best
+    if ils:
+        bt, moved = info["output_cycles"], 0
+        cf = info.pop("_cf")
+        idx = 0
+        while idx < len(order):
+            r = order[idx]
+            p = idx
+            if not (r.unit == "CTL" and r.op != "NOP"):
+                while p > 0 and not _hazard(order[p - 1], r):
+                    p -= 1
+            if p < idx:
+                o = order[:p] + [r] + order[p:idx] + order[idx + 1:]
+                o2, i2 = improve_order_once(o, pos, cost_fn=cf, passes=2, alphas=(), **kw)
+                if i2["output_cycles"] < bt - 0.5:
+                    order, bt, moved = [x for x in o2], i2["output_cycles"], moved + 1
+            idx += 1
+        info = dict(info, ils_moves=moved, output_cycles=bt)
+        order = rebuild_waits(order)
+    info.pop("_cf", None)
+    return order, info
+
+
+def improve_order_seed(recs, pos, cost_fn=cost, rounds=6, **kw):
+    """improve_order_once repeated on its own output until a round gains < 1 cycle (the list schedules restart from
+    the improved order, so a later round can escape the previous round's local optimum)."""
     out, info = improve_order_once(recs, pos, cost_fn=cost_fn, **kw)
     first = info["input_cycles"]
     hist = [info["output_cycles"]]
@@ -713,7 +759,7 @@ def improve_order(recs, pos, cost_fn=cost, rounds=6, **kw):
             break
         out, info = o2, i2
         hist.append(i2["output_cycles"])
-    info = dict(info, input_cycles=first, rounds=hist)
+    info = dict(info, input_cycles=first, rounds=hist, _cf=info.get("_cf"))
     return out, info
 
 
@@ -786,4 +832,4 @@ def improve_order_once(recs, pos, cost_fn=cost, passes=16, alphas=(0.05, 0.2, 1.
         if not improved:
             break
     return rebuild_waits(order), dict(input_cycles=round(t_in, 1), list_alpha=ba, moves=moves,
-                                      output_cycles=round(bt, 1))
+                                      output_cycles=round(bt, 1), _cf=cf)

@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 29,
-   "merged": 29,
+   "closed": 33,
+   "merged": 33,
    "record_only": 6
   },
   "jobs": {
@@ -1564,7 +1564,11 @@
    "hgi_adp_su_b-fc5794beb-tc-cl": "ADOPTED (TT +34.50 / FF +4.02; su_a +19.34 / +1.69 recorded); source fc5794beb on main; record 61db68f36",
    "hgi_adp_su_a-fc5794beb-tc-cl": "record only (su_b adopted); 8018dbd43",
    "hgi_adp_sfu_a-fc5794beb-tc-cl": "ADOPTED (TT +48.08 / FF +15.57; sfu_b +47.63 / +15.56 recorded); source on main; record 297393ccd",
-   "hgi_adp_sfu_b-fc5794beb-tc-cl": "record only (sfu_a adopted); a6707b7f0"
+   "hgi_adp_sfu_b-fc5794beb-tc-cl": "record only (sfu_a adopted); a6707b7f0",
+   "hbm_loader_ldiv_A_v3-d74d0faa7-cl": "ADOPTED: HBM loader (hfd_loader, L-DIV v3) TT +58.93 / FF +18.15 (hold ECO after the drive-0849 check fix); ot_hfd_loader_div.sv + hfd_loader_div_v3.sdc from d74d0faa7 only (rest of struct-close branch not taken); record 565b23365; local LDM_DIV PASS + both negatives detected",
+   "hgi_adp_fused_a-fc5794beb-tc-cl": "FUSED adapter TT +3.62 / FF +4.68; source on main; record 1631cbb11",
+   "hing_rp2_a-d1704967f-tc-rd": "host ingest rp2 (redesign-ds) TT +19.29 / FF +8.76; source on main; record 4a5c3fa98",
+   "hgi_seq-79af6ba23-tc-hm0-cl": "record only (hm10 already adopted); c72a918e0"
   }
  }
 }
