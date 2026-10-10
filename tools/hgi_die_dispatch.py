@@ -213,9 +213,11 @@ def install(m, buses, paths, units):
             # the svc DMA stream (hgi-takeover.log "SPEC for hbm-forks", 2026-10-10; svc side: hbm-forks): per stack a
             # request chain loader -> svc and 8 data lanes svc -> loader with per-lane credits.  Declared only when the
             # variant sets hgi_svc_dma (the svc segment binds its end; until then the loader runs DMA_FRONT 0)
-            if (m.get('variant') or {}).get('hgi_svc_dma'):
+            # (hgi_svc_dma: True = the svc_{st} instance, or a map st -> hub key of the svc segment that terminates it)
+            sd = (m.get('variant') or {}).get('hgi_svc_dma')
+            if sd:
                 for st in SVC_DMA_STACKS:
-                    svc = hub[f'svc_{st}'].name
+                    svc = hub[sd[st] if isinstance(sd, dict) else f'svc_{st}'].name
                     for name, bits, eps in ((f'hgi_dsq_{st}', DSQ_BITS, [(dma_blk, f't_hgi_dsq{st}'), (svc, 'f_hgi_dsq')]),
                                             (f'hgi_dsr_{st}', 1, [(svc, 't_hgi_dsr'), (dma_blk, f'f_hgi_dsr{st}')]),
                                             (f'hgi_dsd_{st}', DSD_LANES * DSD_BITS, [(svc, 't_hgi_dsd'), (dma_blk, f'f_hgi_dsd{st}')]),
