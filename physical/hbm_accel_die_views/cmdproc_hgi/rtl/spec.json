@@ -28,7 +28,7 @@
     "ux_rdy": "cfg",
     "ux_done": "cfg",
     "ux_fault": "cfg",
-    "wr_quiet": "cfg",
+    "wr_quiet": "const:1",
     "idx_rec": "die:t_hgi_idx[0:1819]",
     "idx_ret": "die:f_hgi_idx[0:3]",
     "am_rec": "fold",
@@ -53,10 +53,7 @@
  ],
  "kept_out_regs": true,
  "face_stages": 5,
- "open_items": [
-  "ux_* (12 units) wait for the hgi-adapters record adapters",
-  "wr_quiet needs the DMA / svc write-visibility signal"
- ],
+ "open_items": [],
  "replaced_when_hgi": "argmax",
  "ties": {
   "cpd.am_rec": {
@@ -114,6 +111,74 @@
   "cpd.hc_ret": {
    "class": "by_design",
    "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.wr_quiet": {
+   "class": "by_design",
+   "reason": "no DMA unit on this die variant (dma_ret const 0): no posted HBM writer, so every posted write is trivially visible (wr_quiet = 1)"
+  },
+  "cpd.ux_v": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_rdy": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_done": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_fault": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "die:cSW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cSE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cNW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cNE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:t_su_SW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_SE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_NW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_NE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:f_barrier": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)"
+  },
+  "die:t_barrier": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)"
+  },
+  "die:f_coll": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)"
+  },
+  "die:t_coll": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)"
   }
  }
 }

@@ -525,9 +525,11 @@ module ot_hgi_seq #(
             cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
+            // a record retires on done OR fault (hgi-1010: a faulted record no longer holds its unit; busy drops)
             for (k = 0; k < 16; k = k + 1)                     // +1 / -1 precomputed from flops: u_rdy only selects
-                if (u_acc_q[k] && !u_done_r[k]) outst[k] <= outst[k] + 8'd1;
-                else if (!u_acc_q[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
+                if (u_acc_q[k] && !(u_done_r[k] | u_fault_r[k])) outst[k] <= outst[k] + 8'd1;
+                else if (!u_acc_q[k] && (u_done_r[k] | u_fault_r[k]) && outst[k] != 8'd0) outst[k] <= outst[k] - 8'd1;
+                // (saturating: a unit that also pulses done for its faulted record cannot underflow the count)
             if (st != S_IDLE && st != S_CPL) {cc_c, cc_lo} <= {1'b0, cc_lo} + 17'd1; else cc_c <= 1'b0;
             if (cc_c) cc_hi <= cc_hi + 16'd1;
             inflight <= fl_after;

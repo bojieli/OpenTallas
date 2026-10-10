@@ -361,3 +361,51 @@ module hgi_e2e_fused_slot #(
     end
 endmodule
 `endif
+
+// hgi-1010/g: the ATT unit's HBM read lane on the HBM model: a sector request {sector address, tag} a cycle (always
+// ready), answered IN ORDER LAT cycles later with {tag, 256 b} (the memory is read at acceptance).
+module hgi_e2e_att_hbm #(parameter integer LAT = 40) (
+    input wire clk, input wire rst_n, input wire req_v, output wire req_rdy, input wire [34:0] req_sec,
+    input wire [7:0] req_tag, output reg rsp_v, output reg [7:0] rsp_tag, output reg [255:0] rsp_d);
+    import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
+                                                input bit [31:0] strb, output bit [255:0] rd);
+    reg [263:0] qd [0:1023]; longint qt [0:1023]; integer qh = 0, qn = 0; longint tn = 0;
+    assign req_rdy = rst_n && qn < 1000;
+    always @(posedge clk) begin
+        tn <= tn + 1;
+        rsp_v <= 1'b0;
+        if (qn > 0 && qt[qh % 1024] <= tn) begin rsp_v <= 1'b1; {rsp_tag, rsp_d} <= qd[qh % 1024]; qh = qh + 1; qn = qn - 1; end
+        if (rst_n && req_v && req_rdy) begin : acc
+            bit [255:0] rd;
+            e2e_hbm_sector({24'd0, req_sec, 5'd0}, 1'b0, 256'd0, 32'd0, rd);
+            qd[(qh + qn) % 1024] = {req_tag, rd}; qt[(qh + qn) % 1024] = tn + LAT - 1; qn = qn + 1;
+        end
+    end
+endmodule
+
+// hgi-1010/g: the HC unit's HBM lane on the HC weight-set map (hcw.bin): a burst request {sector, len 1..4, tag} a
+// cycle (always ready), its beats returned IN ORDER from LAT cycles after the request, one beat a cycle.
+module hgi_e2e_hc_hbm #(parameter integer LAT = 40, parameter integer TG = 11) (
+    input wire clk, input wire rst_n, input wire req_v, output wire req_rdy, input wire [34:0] req_sec,
+    input wire [2:0] req_len, input wire [TG-1:0] req_tag, output reg rsp_v, output reg [TG-1:0] rsp_tag,
+    output reg [1:0] rsp_beat, output reg [255:0] rsp_d);
+    import "DPI-C" function void e2e_hcw_sector(input longint sec, output bit [255:0] rd);
+    reg [34:0] qa [0:1023]; reg [2:0] ql [0:1023]; reg [TG-1:0] qg [0:1023]; longint qt [0:1023];
+    integer qh = 0, qn = 0, bi = 0; longint tn = 0;
+    assign req_rdy = rst_n && qn < 1000;
+    always @(posedge clk) begin : srv
+        bit [255:0] rd;
+        tn <= tn + 1;
+        rsp_v <= 1'b0;
+        if (qn > 0 && qt[qh % 1024] <= tn) begin
+            e2e_hcw_sector({29'd0, qa[qh % 1024]} + bi, rd);
+            rsp_v <= 1'b1; rsp_tag <= qg[qh % 1024]; rsp_beat <= bi[1:0]; rsp_d <= rd;
+            bi = bi + 1;
+            if (bi == ql[qh % 1024]) begin bi = 0; qh = qh + 1; qn = qn - 1; end
+        end
+        if (rst_n && req_v && req_rdy) begin
+            qa[(qh + qn) % 1024] = req_sec; ql[(qh + qn) % 1024] = req_len; qg[(qh + qn) % 1024] = req_tag;
+            qt[(qh + qn) % 1024] = tn + LAT - 1; qn = qn + 1;
+        end
+    end
+endmodule

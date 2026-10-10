@@ -10,7 +10,11 @@
 //   ot_link_credit_rx : link -> landing FIFO (DEPTH) -> core valid/ready (internal); a credit pulse per core pop.
 //                       A beat that lands with the FIFO full is a protocol fault (sticky; the beat is dropped).
 // Full throughput needs DEPTH >= the credit round trip (2 x link latency + 4 cycles of pin/landing flops).
-module ot_link_credit_tx #(parameter integer W=8, CRED=8)(
+// DFREE=1 (ds-1010 2026-10-10, opt-in): l_data loads i_data every cycle (no load enable).  The receiver samples l_data
+// only with l_valid, so a non-send cycle's data is a don't-care; send (i_valid && credit, possibly a deep producer
+// decision) then reaches only the 1-bit l_valid flop, never a W-bit enable (TU iqs5-a TT -175.9 = retry base ->
+// ack/replay classification -> tx_valid -> 568-bit l_data enables).
+module ot_link_credit_tx #(parameter integer W=8, CRED=8, DFREE=0)(
     input wire clk, rst_n,
     input wire i_valid, output wire i_ready, input wire [W-1:0] i_data,
     output reg l_valid, output reg [W-1:0] l_data, input wire l_credit
@@ -27,8 +31,15 @@ module ot_link_credit_tx #(parameter integer W=8, CRED=8)(
             cnt <= cnt + CW'(cr_q) - CW'(send);
             l_valid <= send;
         end
-    always @(posedge clk) if (send) l_data <= i_data;
+`ifdef OT_LINK_DFREE_MUT
+    // bench mutant: with DFREE the data stage lags its valid by one cycle (must be caught by the TU bench)
+    reg [W-1:0] mut_q; always @(posedge clk) mut_q <= i_data;
+    always @(posedge clk) if (DFREE) l_data <= mut_q; else if (send) l_data <= i_data;
 endmodule
+`else
+    always @(posedge clk) if (DFREE || send) l_data <= i_data;
+endmodule
+`endif
 
 // OREG=1: the landing FIFO drains into a two-entry output skid, so o_valid / o_data leave flops (no FIFO read
 // mux in front of the consumer's logic: HC join -lk TT -107 = rp -> 8:1 landing mux -> SECDED encode -> wd_q).  The
