@@ -5900,7 +5900,7 @@ def apply_options(a):
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
-    DIE = (up(33000.0 + 2 * max(TIER_COLS8) * BF_FRAME_EXTRA, GX) if BF_HIER else 33000.0, 26000.0)
+    DIE = (up(33000.0 + 2 * max(TIER_COLS8) * BF_FRAME_EXTRA, GX) if BF_HIER and BF_FRAME_EXTRA > 0 else 33000.0, 26000.0)
     if BF_HIER:
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
             '--bf-hier: the BF frame (--elem-h) must hold the 190.08 um routed BF blocks + halos'
