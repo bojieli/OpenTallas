@@ -55,7 +55,7 @@
     "x_cmd_seq": "const:0",
     "x_cpl_ready": "const:0",
     "x_ext_fault": "const:0",
-    "x_noise": "const:128799",
+    "x_noise": "const:0",
     "x_cmd_ready": "open",
     "x_cpl_v": "open",
     "x_cpl_job": "open",
@@ -277,7 +277,7 @@
   },
   "cpd.x_noise": {
    "class": "by_design",
-   "reason": "the DS DSpark noise token id (dspark_noise_token_id mod vocab = 128,799): a model constant the translator puts on DSTAGE's demb launches"
+   "reason": "unused port (hgi-1010/h): the translator's noise / mask token id is MD word 53 mtp_noise (programmed per model through the CFG window); x_noise is kept only for the MTP=1 bench form"
   },
   "cpd.mh_f_host": {
    "class": "by_design",

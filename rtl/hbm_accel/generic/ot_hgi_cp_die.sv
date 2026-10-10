@@ -42,7 +42,7 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    coll_ret,      // {fault, done, ready}
     output reg  [682:0]  quant_rec,     // unit 4
     input  wire [2:0]    quant_ret,
-    output reg  [1818:0] idx_rec,       // unit 9 {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
+    output reg  [2074:0] idx_rec,       // unit 9 {I, die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid} (I: hgi-1010/g)
     input  wire [2:0]    idx_ret,
     output reg  [690:0]  am_rec,        // unit 7 ARGMAX {die_id 8, n_O, n_A, O, A, header, valid} (mtp-lead (1): 683 -> 691)
     input  wire [2:0]    am_ret,
@@ -84,7 +84,7 @@ module ot_hgi_cp_die #(
     output wire [16:0]   x_am_idx,
     output wire          x_drained_ready,
     input  wire          x_ext_fault,
-    input  wire [16:0]   x_noise,
+    input  wire [16:0]   x_noise,           // unused (hgi-1010/h): the noise / mask id is MD word 53 (mtp_noise)
     // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar) and the collar's host / provider sides
     input  wire [516:0]  f_mtp,
     output wire [196:0]  t_mtp,
@@ -114,7 +114,7 @@ module ot_hgi_cp_die #(
     reg  db_hold; reg [79:0] db_q;                       // one doorbell station
     reg  [3:0] db_k; reg [31:0] db_lo; reg db_x;         // its kernel / G26 offset / translator-owned flag
     reg  x_run;                                          // the running job is the translator's
-    wire [11*32-1:0] md_kent; wire [31:0] md_kstride;
+    wire [11*32-1:0] md_kent; wire [31:0] md_kstride; wire [17:0] md_noise;
     wire xdb_v, xdb_rdy; wire [17:0] xdb_tok; wire [19:0] xdb_pos; wire [31:0] xdb_job, xdb_off, xdb_loff;
     wire [3:0] xdb_gen, xdb_kind; wire [1:0] xdb_ent;
     reg  [4:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
@@ -130,7 +130,7 @@ module ot_hgi_cp_die #(
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
         .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(db_k), .db_loff(MUT == 2 ? 32'd0 : db_lo),
-        .md_kent(md_kent), .md_kstride(md_kstride),
+        .md_kent(md_kent), .md_kstride(md_kstride), .md_noise(md_noise),
         .f_req_v(f_req_v), .f_req_rdy(fq_cr != 5'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
@@ -167,7 +167,7 @@ module ot_hgi_cp_die #(
     end endgenerate
     generate if (MTP) begin : g_mtp
         ot_hgi_mtp_xlate u_xlate (.clk(clk), .rst_n(rst_n), .external_fault(xi_ext_fault), .backend_quiescent(!units_busy),
-            .kent(md_kent), .kstride(md_kstride), .noise_token(x_noise),
+            .kent(md_kent), .kstride(md_kstride), .noise_token(md_noise),
             .cmd_v(xi_cmd_v), .cmd_ready(xi_cmd_ready), .cmd(xi_cmd), .cmd_job(xi_cmd_job), .cmd_generation(xi_cmd_gen),
             .cmd_sequence(xi_cmd_seq), .cpl_v(xi_cpl_v), .cpl_ready(xi_cpl_ready), .cpl_job(xi_cpl_job),
             .cpl_generation(xi_cpl_gen), .cpl_sequence(xi_cpl_seq), .cpl_fault(xi_cpl_fault), .am_v(xi_am_v), .am_idx(xi_am_idx),
@@ -208,7 +208,7 @@ module ot_hgi_cp_die #(
                 nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
+            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
             db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
@@ -221,7 +221,7 @@ module ot_hgi_cp_die #(
             if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
             else if (quant_ret[1] || quant_ret[2]) credit[1] <= 1'b1;
             if (u_v[9] && u_rdy[9]) begin
-                idx_rec <= {rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
+                idx_rec <= {dI, rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
             end
             else if (idx_ret[1] || idx_ret[2]) credit[2] <= 1'b1;
             if (u_v[7] && u_rdy[7]) begin am_rec <= {rank, nO, nA, dO, dA, d_hdr, 1'b1}; credit[3] <= 1'b0; end

@@ -160,6 +160,10 @@ module ot_hgi_dma_mover_serial #(
                              {248'd0, 8'hFF}) << {e_doff, 3'd0};
     wire last_elem = (o == mm - 20'd1) && (i == nn - 21'd1);
     reg q_mis, q_smiss, q_dfl, q_last, q_rend;
+    // element steps in bytes, registered from the command fields (route f628d5015: u_ser.sf / dsp -> sa / da 20-21 levels =
+    // the istride x element-size multiply in the address add); the first element step is >= 2 edges after mv_go
+    reg [41:0] s_stp, d_stp;
+    always @(posedge clk) begin s_stp <= {26'd0, sis} * s_es; d_stp <= {26'd0, dis} * ((dsp == 2'd1) ? 3'd4 : d_es); end
     // ---- VM / kport response capture
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg kv_r, kwe_r; reg [255:0] kd_r; reg kf_r;
@@ -223,8 +227,8 @@ module ot_hgi_dma_mover_serial #(
                             da   <= drow + ((dsp == 2'd1) ? {8'd0, dst, 2'b00} : {10'd0, dst});
                         end else begin
                             i <= i + 21'd1;
-                            sa <= sa + ({26'd0, sis} * s_es);
-                            da <= da + ({26'd0, dis} * ((dsp == 2'd1) ? 3'd4 : d_es));
+                            sa <= sa + s_stp;
+                            da <= da + d_stp;
                         end
                     end
                 end
