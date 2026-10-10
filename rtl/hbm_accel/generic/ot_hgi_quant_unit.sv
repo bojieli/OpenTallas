@@ -6,6 +6,7 @@
 // them), in-order responses; the request needs no ready (the VM station queues 4) and the response no back-pressure.
 // Return = {fault, done, ready}.
 module ot_hgi_quant_unit #(
+    parameter integer SERIAL_SHAPE = 0,
     parameter integer MUT = 0          // bench: transport MUTANT (4 = responses paired with the newest request)
 ) (
     input  wire          clk,
@@ -21,7 +22,7 @@ module ot_hgi_quant_unit #(
     ot_hgi_quant_record u_rec (.clk(clk), .rst_n(rst_n), .rec(rec), .cmd(cmd), .nfault(nfault));
     // the die station queues the request: every staged request is taken the next cycle
     wire take = req_v;
-    ot_hgi_quant_vm_transport #(.ENABLE(1), .MUTANT(MUT)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
+    ot_hgi_quant_vm_transport #(.ENABLE(1), .MUTANT(MUT), .SERIAL_SHAPE(SERIAL_SHAPE)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
         .fault(fault), .drained(drained), .req_v(req_v), .req_r(take), .req(req), .rsp_v(vmr[273]), .rsp_r(rsp_r),
         .rsp(vmr[272:0]), .provider_fault(1'b0));
     always @(posedge clk or negedge rst_n)
