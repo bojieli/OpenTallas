@@ -14,7 +14,7 @@ F = R.F
 
 def main():
     name, extra = sys.argv[1], sys.argv[2:]
-    opts = R.recipes()[name]['opts'] + extra
+    opts = (R._layer1_opts() + ['--die', 'layer1'] if name == 'layer1' else R.recipes()[name]['opts']) + extra
     t0 = time.time()
     out = dict(recipe=name, extra=extra)
     try:
