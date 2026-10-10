@@ -376,12 +376,23 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
            f'    always @(posedge {ck(band_y)}) rst_q <= {{rst_q[0], rst[0]}};',
            '    // face chains: input stage 0 at the pin, a stage per <= 480 um to its band (per-port depth dp)']
     R('rst_q', 2, ck(band_y))
+    cg_source = 'cg_en[0]'
+    cg_face = getattr(P, 'cg_input_stages', 0)
+    if cg and cg_face:
+        py = P.pin_y.get('cg_en', band_y)
+        for si in range(cg_face):
+            sc = ck(py + si / cg_face * (band_y - py))
+            src = cg_source if si == 0 else X(f'cg_en_i{si - 1}', sc)
+            nm = f'cg_en_i{si}'
+            L_.append(f'    (* keep *) reg {nm}; always @(posedge {sc}) {nm} <= {src};')
+            R(nm, 1, sc)
+        cg_source = X(f'cg_en_i{cg_face - 1}', ck(band_y))
     gk = {}
     gkt = {}
     if cg and not P.tiled:                       # per-group gated clocks gk_<k>_<g> and the wake chain (see docstring)
         bc_ = ck(band_y)
         L_ += ['    // cg: wake pin flop at the band, one wake register per group outward along each chain',
-               f'    (* keep *) reg cg_q;  always @(posedge {bc_}) cg_q <= cg_en[0];']
+               f'    (* keep *) reg cg_q;  always @(posedge {bc_}) cg_q <= {cg_source};']
         for k in range(P.K):
             pn, pc = 'cg_q', bc_
             rn = 'rst_q[1]'
@@ -401,7 +412,7 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                 pn, pc, rn = f'cgw_{k}_{g}', c_, f'crr_{k}_{g}'
     if cg and P.tiled:
         bc_ = ck(band_y)
-        L_.append(f'    (* keep *) reg cg_q; always @(posedge {bc_}) cg_q <= cg_en[0];')
+        L_.append(f'    (* keep *) reg cg_q; always @(posedge {bc_}) cg_q <= {cg_source};')
         for chain in range(P.KC):
             k, side = divmod(chain, 2)
             pn, rn, pc = 'cg_q', 'rst_q[1]', bc_
@@ -787,8 +798,8 @@ module tb;
         bad = 0; lat = 0;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < {nvec}; v = v + 1) begin
-{'''            // cg: a fully gated gap (inputs held, wake low) before every vector, wake raised 3 edges before the data
-            cg_en = 0; repeat (200) @(posedge clk); #0.1 cg_en = 1; repeat (3) @(posedge clk); #0.1;
+{f'''            // cg: a fully gated gap before each vector; wake uses the model-priced input lead
+            cg_en = 0; repeat (200) @(posedge clk); #0.1 cg_en = 1; repeat ({3 + getattr(P, 'cg_input_stages', 0)}) @(posedge clk); #0.1;
 ''' if cg else ''}            din = vin[v]; first = -1;
             for (c = 0; c < {hold}; c = c + 1) begin
                 @(posedge clk); #0.1;
@@ -883,12 +894,15 @@ def main():
     ap.add_argument('--tiled', action='store_true', help='su: one hfd_su_tile hard macro per lane (lane + its boundary '
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
+    ap.add_argument('--cg-input-stages', type=int, default=0, help='real face wake registers before band cg_q; adds same number of external wake lead edges')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
     P.tiled = a.tiled
+    P.cg_input_stages = a.cg_input_stages
+    assert a.cg_input_stages >= 0
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     m = q['master']
@@ -942,13 +956,14 @@ def main():
         tiled_info = dict(tiles=P.N, chains=P.KC, tiles_per_chain=P.NT, acc_bits_per_chain=P.WCT,
                           flops_in_tiles=P.N * (P.LB + 1 + P.LO + P.WCT + ((P.LB + 1 + P.WCT) if xr else 0)),
                           lockup_bits=P.N * (P.LB + 1 + P.WCT) if xr else 0,
-                          clock_gates=P.N if a.cg else 0, wake_lead_cycles=3 if a.cg else 0,
+                          clock_gates=P.N if a.cg else 0, wake_lead_cycles=(3 + a.cg_input_stages) if a.cg else 0,
                           flops_in_top=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2))
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
                                                                      lane_output_stage=P.N * P.LO))
+    info['flops']['wake_face'] = a.cg_input_stages if a.cg else 0
     if q.get('inj_gate'):
         strap_depth = P.dp[q['inj_gate']['strap']] if q['inj_gate']['strap'] in P.pin_y else 1
         info['flops']['ownership_strap'] = 2 * strap_depth
@@ -965,6 +980,9 @@ def main():
     if q.get('inj_gate') and q['inj_gate']['strap'] in P.pin_y:
         with (out / 'face_stages.tcl').open('a') as sf:
             sf.write(f"set fc_psi({q['inj_gate']['strap']}) {P.dp[q['inj_gate']['strap']]}\n")
+    if a.cg and a.cg_input_stages:
+        with (out / 'face_stages.tcl').open('a') as sf:
+            sf.write(f"set fc_psi(cg_en) {a.cg_input_stages}\n")
     if a.lane_size:
         (out / 'macro_place.tcl').write_text(tcl)
         (out / 'floorplan.json').write_text(json.dumps({k: v for k, v in fp.items() if k != 'lanes'}, indent=1) + '\n')

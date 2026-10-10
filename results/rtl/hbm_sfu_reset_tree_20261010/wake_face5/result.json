@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-10-10T05:58:58.874034-07:00",
+  "status": "mechanism_gate_only",
+  "command": "TILED_RTL_DIR=physical/hbm_accel_die_views/su/rtl_tile_xl_r25gpht4 WCT=456 WAKE_FACE=2 bash tests/rtl/hub_reset/run_su_tile_cg.sh OUT",
+  "source_sha256": {
+    "tests/rtl/hub_reset/tb_su_tile_cg.sv": "029b57acd5a25ce557da700645af56a782e7fa739705c9ca6c5785a1a8c69c49",
+    "tests/rtl/hub_reset/run_su_tile_cg.sh": "a00861f263ba28337a4b80e305d4906617f6f6b3a4d5f066248e805f11788134",
+    "tools/hbm_hub_quarter_gen.py": "7a3d5a0bf6c3dad78bbc88e69bf8170be1c57cefbeeb173922ac76937d6d7af7"
+  },
+  "wake_face_registers": 2,
+  "external_wake_lead_edges": 5,
+  "hold_after_wake_edges": 64,
+  "positive": "PASS336checks_each_at_plusminus100ps",
+  "latewake_mutant": "FAIL24mismatches",
+  "limitations": [
+    "Actual free edge pin and scheduler producer absent",
+    "Face placement, pin/register clock reference, mapped TT/FF/DRC0 and power unqualified",
+    "No tie-active or fake gated-quarter closure"
+  ]
+}

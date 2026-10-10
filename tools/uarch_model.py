@@ -15335,3 +15335,20 @@ def hbm_su_r25gpht4_tile_sizing():
                 channel_capacity_status='actual macro abstractions and M7/channel route pending',
                 slot_fit_status='same tile outline; full actual placement/corner gate pending',
                 single_user_latency_status='transport envelope; controller schedule remains separately unqualified')
+
+
+def hbm_su_wake_face_sizing():
+    """Two raw-clock face relays before the band wake capture; edge proposal."""
+    r = hbm_su_r25gpht4_tile_sizing()
+    r.update(candidate='r25gpht4_face_wake', additional_wake_input_registers=2,
+             additional_wake_bits_per_hop=1, macs_per_cycle_added=0,
+             additional_memory_port_bytes_per_cycle=0,
+             wake_lead_cycles=5, whole_data_cycles_added=0,
+             extra_root_lockup_bits='0 for proposed pin on band root; count actual pin root before route',
+             proposed_wake_distance_um=703.068,
+             raw_hop_count_to_band=3, maximum_raw_hop_um=353.0,
+             area_note='two scalar FFs plus clock loads; measure mapping in quarter, no macro outline change',
+             boundary_track_bits_added=1, replica_fanout='face0 -> face1 -> band cg_q ->12 first-tile wakes',
+             scheduler_wake_binding='actual producer and free edge pin remain absent; no tie-active qualification',
+             qualification='five-edge lead and64-edge drain bench gate, then actual pin/relay placement and TT/FF route')
+    return r

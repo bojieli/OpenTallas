@@ -6,7 +6,7 @@ srcs=(tests/rtl/hub_reset/tb_su_tile_cg.sv "$tile/hfd_su_tile_xl.sv" "$tile/ot_s
 for sign in pos neg mutant; do
  args=();[ "$sign" != neg ] || args+=(-Ptb_su_tile_cg.SKEW=-0.1)
  [ "$sign" != mutant ] || args+=(-DOT_HUB_CG_MUT_LATE)
- iverilog -g2012 -Ptb_su_tile_cg.W=${WCT:-448} "${args[@]}" -o "$out/$sign.sim" "${srcs[@]}"
+ iverilog -g2012 -Ptb_su_tile_cg.WAKE_FACE=${WAKE_FACE:-0} -Ptb_su_tile_cg.W=${WCT:-448} "${args[@]}" -o "$out/$sign.sim" "${srcs[@]}"
  vvp -n "$out/$sign.sim" > "$out/$sign.log"
  if [ "$sign" = mutant ];then grep -q 'TILE_CG FAIL mismatches=' "$out/$sign.log";else grep -q 'TILE_CG PASS checks=336' "$out/$sign.log";fi
  rm "$out/$sign.sim"

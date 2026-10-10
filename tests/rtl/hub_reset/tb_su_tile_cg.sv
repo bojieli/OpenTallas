@@ -2,11 +2,18 @@
 module tb_su_tile_cg;
 parameter real SKEW=0.1;
 parameter integer W=448;
+parameter integer WAKE_FACE=0;
 reg clk=0; always #0.5 clk=~clk;
 reg cb=0; initial begin #(0.5+SKEW);cb=1;forever #0.5 cb=~cb;end
 reg rn=0,wake=1;
 wire g0,g1,w0,w1;
-ot_cg_tile #(.HOLD(64),.RSTEN(0),.MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) c0(clk,rn,wake,w0,g0);
+wire face_wake;
+generate if(WAKE_FACE==0)begin assign face_wake=wake;end else begin
+ reg[WAKE_FACE-1:0]fq;integer f;
+ always @(posedge clk)begin fq[0]<=wake;for(f=1;f<WAKE_FACE;f=f+1)fq[f]<=fq[f-1];end
+ assign face_wake=fq[WAKE_FACE-1];
+end endgenerate
+ot_cg_tile #(.HOLD(64),.RSTEN(0),.MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) c0(clk,rn,face_wake,w0,g0);
 // Wake crossing has the same real falling-edge lockup as the quarter.
 reg wx;always @(negedge clk)wx<=w0;
 ot_cg_tile #(.HOLD(64),.RSTEN(0),.MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) c1(cb,rn,wx,w1,g1);
@@ -26,7 +33,7 @@ initial begin
  repeat(20)@(posedge clk);
  for(window=0;window<3;window=window+1)begin
   wake=0;repeat(200)@(posedge clk);#0.2;wake=1;
-  repeat(3)@(posedge clk);#0.2;
+  repeat(3+WAKE_FACE)@(posedge clk);#0.2;
   for(c=0;c<100;c=c+1)begin
    sample;
    #0.02;
