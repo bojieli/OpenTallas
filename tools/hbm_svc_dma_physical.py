@@ -109,7 +109,10 @@ def plan(root=ROOT, credits=64):
                     for p in [svc/'split_psfc/split.json',svc/'svc_geometry.json',root/'tools/hbm_accel_die_fp.py']},
                 hop_um=HOP, pitch_um=PITCH, layers=['M4','M6'], lane_bits=2160,
                 request_bits=51, credit_bits=8, ready_bits=1, edge_traffic_bits=2220,
-                initial_credits=credits, loader=dict(name=loader.name,x_um=loader.x,y_um=loader.y,
+                initial_credits=credits,
+                credit_scope='provisional end-to-end credits; independent local credits may decouple front RTT',
+                qualification='relay ledger for proposed geometry, not measured hardware latency or achieved bandwidth',
+                loader=dict(name=loader.name,x_um=loader.x,y_um=loader.y,
                     w_um=loader.w,h_um=loader.h), families={}, stacks={}, route_admission=False,
                 gates=['new tile RTL pins and relay instances match these records',
                        'measured cell area fits at <=60% utilization',
@@ -176,11 +179,12 @@ def plan(root=ROOT, credits=64):
         # Closest-side orthogonal front corridor is proposed explicitly. It
         # still needs track ownership, pin allocation and placement qualification.
         front=relay_path([launch,(target[0],launch[1]),target])
-        internal=max(p['cycles'] for p in f['lane_to_front'])+max(p['cycles'] for p in f['pc_to_lane'])
+        internal=max(p['cycles']+f['lane_to_front'][pc//4]['cycles']
+                     for pc,p in enumerate(f['pc_to_lane']))
         rtt=2*(front['cycles']+internal)+2
         result['stacks'][stack]=dict(reservations=reservations,front_leg=front,
-            internal_one_way_cycles_bound=internal,composed_credit_rtt_cycles_bound=rtt,
-            credit_utilization_upper_bound=min(1,credits/rtt),
+            internal_one_way_cycles_planned=internal,composed_credit_rtt_cycles_planned=rtt,
+            credit_utilization_at_planned_worst_path=min(1,credits/rtt),
             minimum_credits_for_90pct=math.ceil(.9*rtt),
             next_power_of_two_credit_depth=2**math.ceil(math.log2(rtt)),
             placement_fit=all(not r['conflicting_instances'] for r in reservations),
