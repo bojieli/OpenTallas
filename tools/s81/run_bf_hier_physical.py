@@ -38,6 +38,12 @@ def command(a):
         pins = ['--pin-region', r'^c0_.*=left', '--pin-region', r'^(c1_|c_qy_bkf_in).*=right',
                 '--pin-region', r'^xb_d.*=top', '--pin-region',
                 r'^(clk|rst_n|cfg_|go|go_bf|xs_|xb_v|xb_b|xb_sv|xb_u|xb_pos|busy|fault|hph).*=bottom']
+    if a.local_clock_pin:
+        # A single root enters the middle of the long interface face. Keep
+        # data/control pin regions identical, excluding clk from their group.
+        pins = [p.replace('^(clk|rst_n_pin|', '^(rst_n_pin|').replace('^(clk|rst_n|', '^(rst_n|') for p in pins]
+        mid = a.die_h/2
+        pins += ['--pin-region', f'^clk$=right:{mid-.288:g}-{mid+.288:g}']
     ss = a.ins_ss
     io = lambda v: str(round(v / 1000.0, 4))
     W, H = a.die_w, a.die_h
@@ -72,6 +78,7 @@ def main():
     p.add_argument('--tag', required=True); p.add_argument('--period', default='.730'); p.add_argument('--ins-ss', type=float, default=841.0)
     p.add_argument('--die-w', type=float, default=0.0); p.add_argument('--hm', default='0.000')
     p.add_argument('--die-h', type=float, default=190.08)
+    p.add_argument('--local-clock-pin', action='store_true', help='root at middle of long right face; compact hierarchy model, default off')
     p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
     a = p.parse_args()
