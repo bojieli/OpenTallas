@@ -323,7 +323,6 @@ def _band(T, side, Wk):
 
 
 def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False):
-    kv_wq_head = kv_wq_head or kv_wq_mirror
     kv_wq_wide = kv_wq_wide or kv_wq_mirror
     kv_wq_leaf_s = kv_wq_leaf_s or kv_wq_head or kv_wq_wide
     kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
@@ -1008,9 +1007,8 @@ def main(argv=None):
     ap.add_argument('--kv-wq-binary', action='store_true', help='plan-only binary ctl candidate; needs its own routed closure')
     ap.add_argument('--kv-wq-head', action='store_true', help='candidate 216x648 binary ctl with one head capture edge')
     ap.add_argument('--kv-wq-wide', action='store_true', help='candidate 129.6um south-face leaf')
-    ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf, existing head ctl')
+    ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf; head capture remains opt-in')
     a = ap.parse_args(argv)
-    a.kv_wq_head = a.kv_wq_head or a.kv_wq_mirror
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
