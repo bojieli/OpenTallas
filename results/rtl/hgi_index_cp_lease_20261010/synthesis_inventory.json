@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hgi.index_cp_lease.synthesis_inventory.v1",
+  "source_commit": "75e910e72c12c8dbe424fa5403cb47f4a51a13ec",
+  "flow": "Yosys read_verilog-sv/chparam/hierarchy/proc/opt/stat/write_json; generic cells, not technology mapping",
+  "physical_qualified": false,
+  "mapped_area_um2": null,
+  "ENABLE0": {
+    "generic_cells": 0,
+    "FF_bits": 0,
+    "cells_by_type": {}
+  },
+  "ENABLE1": {
+    "generic_cells": 293,
+    "FF_bits": 4125,
+    "cells_by_type": {
+      "$add": 6,
+      "$eq": 19,
+      "$logic_not": 15,
+      "$ge": 3,
+      "$gt": 5,
+      "$le": 8,
+      "$logic_and": 49,
+      "$logic_or": 39,
+      "$lt": 4,
+      "$mul": 2,
+      "$reduce_bool": 3,
+      "$ne": 12,
+      "$not": 12,
+      "$or": 2,
+      "$adff": 13,
+      "$mux": 87,
+      "$pmux": 6,
+      "$reduce_and": 1,
+      "$shiftx": 2,
+      "$sub": 5
+    }
+  }
+}
