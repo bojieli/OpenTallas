@@ -1,0 +1,9 @@
+pos_rtt104 rc=0 FETCH_RATE sectors=256 cycles=1911 rate=4.287 B/cycle RTT=102 cycles (NO 8 NQ 4 RB 16 CH 12, extra PHY latency 39000 ps; gate >= 1.734)
+pos_rtt160 rc=0 FETCH_RATE sectors=256 cycles=2837 rate=2.888 B/cycle RTT=161 cycles (NO 8 NQ 4 RB 16 CH 12, extra PHY latency 76000 ps; gate >= 1.734)
+pos_rb32 rc=0 FETCH_RATE sectors=256 cycles=1268 rate=6.461 B/cycle RTT=139 cycles (NO 8 NQ 4 RB 32 CH 12, extra PHY latency 76000 ps; gate >= 1.734)
+pos_no1 rc=0 FETCH_RATE sectors=256 cycles=6148 rate=1.332 B/cycle RTT=82 cycles (NO 1 NQ 4 RB 16 CH 12, extra PHY latency 0 ps; gate >= 0.000)
+neg_lane0 rc=1 (must be nonzero) [16527264000] %Fatal: tb_hfd_loader_kport.sv:126: Assertion failed in tb_hfd_loader_kport: FATAL: lane 0 response mismatch j=0 tag=0400
+neg_stack rc=1 (must be nonzero) FATAL: stack 0 received a write for stack 2
+neg_row rc=1 (must be nonzero) FATAL: stack 1 PC 11 got sector 700 of PC 10
+neg_credit rc=1 (must be nonzero) [37664224000] %Fatal: tb_hfd_loader_kport.sv:175: Assertion failed in tb_hfd_loader_kport: FATAL: liveness (burst phase 2)
+KPORT_GATE rc=0

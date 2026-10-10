@@ -1,0 +1,8 @@
+BURSTS lanes=2 bursts=400 sectors=1788 (lengths 1..8, up to 1 outstanding a lane): exact
+PASS HFD-LOADER-KPORT lanes=2 stacks=4 transactions=512 (384 writes / 128 reads) + 400 bursts + fetch stream cycles=95344
+BURSTS lanes=2 bursts=400 sectors=1788 (lengths 1..8, up to 8 outstanding a lane): exact
+PASS HFD-LOADER-KPORT lanes=2 stacks=4 transactions=512 (384 writes / 128 reads) + 400 bursts + fetch stream cycles=61776
+BURSTS lanes=2 bursts=400 sectors=1788 (lengths 1..8, up to 8 outstanding a lane): exact
+PASS HFD-LOADER-KPORT lanes=2 stacks=4 transactions=512 (384 writes / 128 reads) + 400 bursts + fetch stream cycles=52399
+BURSTS lanes=2 bursts=400 sectors=1788 (lengths 1..8, up to 8 outstanding a lane): exact
+PASS HFD-LOADER-KPORT lanes=2 stacks=4 transactions=512 (384 writes / 128 reads) + 400 bursts + fetch stream cycles=66744

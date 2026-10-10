@@ -1,0 +1,9 @@
+pos_rtt104 rc=0 FETCH_RATE sectors=256 cycles=1868 rate=4.385 B/cycle RTT=102 cycles (NO 8 NQ 4 RB 16 CH 12, extra PHY latency 39000 ps; gate >= 1.734)
+pos_rtt160 rc=0 FETCH_RATE sectors=256 cycles=2762 rate=2.966 B/cycle RTT=158 cycles (NO 8 NQ 4 RB 16 CH 12, extra PHY latency 76000 ps; gate >= 1.734)
+pos_rb32 rc=0 FETCH_RATE sectors=256 cycles=1286 rate=6.370 B/cycle RTT=158 cycles (NO 8 NQ 4 RB 32 CH 12, extra PHY latency 76000 ps; gate >= 1.734)
+pos_no1 rc=0 FETCH_RATE sectors=256 cycles=6175 rate=1.327 B/cycle RTT=82 cycles (NO 1 NQ 4 RB 16 CH 12, extra PHY latency 0 ps; gate >= 0.000)
+neg_lane0 rc=1 (must be nonzero) FATAL: rtl/hbm_accel/loader/service_native/tb_hfd_loader_kport.sv:126: FATAL: lane 0 response mismatch j=0 tag=0400
+neg_stack rc=1 (must be nonzero) FATAL: stack 0 received a write for stack 2
+neg_row rc=1 (must be nonzero) FATAL: stack 1 PC 19 got sector 732 of PC 18
+neg_credit rc=1 (must be nonzero) FATAL: rtl/hbm_accel/loader/service_native/tb_hfd_loader_kport.sv:175: FATAL: liveness (burst phase 2)
+KPORT_GATE rc=0
