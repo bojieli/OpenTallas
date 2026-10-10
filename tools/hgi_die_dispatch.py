@@ -156,7 +156,7 @@ def variant(base, units):
         v['spine_slot_split'] = dict(base['spine_slot_split'], mtp=parts)
     if 'idx' in units:
         v['spine_slots_low'] = dict(v.get('spine_slots_low') or base.get('spine_slots_low') or {}, hgi_idx=HGI_IDX_SLOT)
-        v['spine_slot_masters'] = dict(v.get('spine_slot_masters') or base.get('spine_slot_masters') or {}, hgi_idx='hfd_hgi_idx')
+        v['spine_slot_masters'] = dict(v.get('spine_slot_masters') or base.get('spine_slot_masters') or {}, hgi_idx=('hfd_hgi_idx_native' if base.get('indexer_hgi_native') else 'hfd_hgi_idx'))
         v['spine_slot_domains'] = dict(v.get('spine_slot_domains') or base.get('spine_slot_domains') or {}, hgi_idx='stream_1p2')
     return v
 

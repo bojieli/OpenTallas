@@ -16,7 +16,7 @@
         ]
       },
       "implementation": {
-        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins."
+        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins. Optional R25GPHT4 uses actual hfd_hgi_idx_native controller endpoints with all native functional ports bound; actual controller dependencies elaborate."
       },
       "model": {
         "status": "Prebuild sized, no rate credit",
@@ -69,9 +69,9 @@
             "scope": "New full128-credit atomic join route, isolated contextual component only"
           },
           {
-            "job": "codex_idx_qend_clocksliver_8bbd0820a-tc-cl",
+            "job": "codex_idx_qend_clocksliver_319fcfba8-tc-cl",
             "element": "hfd_idx_sel_native_qend",
-            "scope": "Selector physical root fixes by structural_idle; native_clock32 successor contract"
+            "scope": "Selector physical root fixes by structural_idle; native_clock32 successor contract; prior8bb sync failure preserved, corrected scalar Tcl mapping319 successor"
           },
           {
             "job": "hgi_idx_score_tap_lane4-83a41eefb-tc-cl",
@@ -96,7 +96,8 @@
         "Full T4 arithmetic exact/negative gate still required; minimum join gate covers only join mechanism",
         "Clock-root lockups and actual two-stage query hops must be implemented and physically qualified",
         "Native producer fs90/qb1048/qbr1/kin345 and consumer to612/toc1/co72/coc1/ev2/4xst4/co_quarter_last joins remain unresolved",
-        "R25G4T4 abstract geometry has0 overlaps/outside/pin clashes and0 reach violations; actual hub layer GRT capacity and real ETM assembly remain unqualified"
+        "R25G4T4 abstract geometry has0 overlaps/outside/pin clashes and0 reach violations; actual hub layer GRT capacity and real ETM assembly remain unqualified",
+        "HGI native adapter boundary exact stream runtime gate, physical job and INDEX layer/key-prefetch start/drain service producer remain OPEN; no full interface claim"
       ],
       "integration": {
         "status": "No silent binding to selector-only or L4-only closure. Aggregate remains open and owned until real complete successor geometry, clocking and join are qualified."

@@ -116,3 +116,8 @@ def qwen_ctlm_deep_queue_model():
     """Full-shape registered control-tile wider-slot/relay alternatives."""
     from uarch_model_qwen_ctlm_queue import model
     return model()
+
+
+def hbm_native_hgi_index_join_model():
+    from hbm_indexer_r25i_model import hbm_native_hgi_index_join_model as impl
+    return impl()

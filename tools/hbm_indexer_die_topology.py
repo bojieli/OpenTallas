@@ -53,6 +53,29 @@ def install(m, fp):
         fixed[mn]=pins
         m.setdefault('master_notes',{})[mn]='Full-shape native indexer; exact and physical verdicts tracked separately'
         return it
+    if m['variant'].get('indexer_hgi_native'):
+        if 'hgi_idx' not in m['hub'] or m['hub']['hgi_idx'].master!='hfd_hgi_idx_native':
+            raise ValueError('Native HGI index join requires the actual hfd_hgi_idx_native view')
+        hgi_record=json.loads((root/'hfd_hgi_idx_native'/'ports.json').read_text())
+        def hgi_pins(mst,k=1):
+            spec={}
+            order=list(hgi_record['ports'])
+            for pn,row in hgi_record['ports'].items():
+                ps=row['pins'];first,last=ps[0],ps[-1]
+                if k==1:
+                    spec[pn]=('rects',[(p[0],p[1],tuple(p[2:])) for p in ps])
+                elif pn in ('ck','rst'):
+                    spec[pn]=('area','M7',(first[2]+first[4])/2,(first[3]+first[5])/2,.032,.288)
+                else:
+                    face=row['face']
+                    a0=(first[3]+first[5])/2 if face in 'WE' else (first[2]+first[4])/2
+                    a1=(last[3]+last[5])/2 if face in 'WE' else (last[2]+last[4])/2
+                    pitch=round((a1-a0)/(len(ps)-1)/.048) if len(ps)>1 else 2
+                    spec[pn]=('face',len(ps),face,row['layer'],a0+len(ps)*pitch*.048/2,pitch)
+            if k>1:
+                fp._bundle_pack(mst,spec,order,k)
+            mst.ports,mst.order=spec,order
+        fixed['hfd_hgi_idx_native']=hgi_pins
     h=json.loads(record_path(master).read_text())['h_um']
     g=m['geo']
     # hbm-forks 2026-10-09 (coordinator, hbm-generic PLAN finding 2): the anchors below are r25-absolute.  indexer_rebase
@@ -160,8 +183,21 @@ def networks(m, fp, buses, paths, chain):
         a=point(sel,'sc',q,1);b=point(score,'sc')
         route(f'idx_score_credit_{st}',1,(sel.name,f'sc@{q}:{q}'),
               (score.name,'sc'),[a,(lane,a[1]-80),(lane,exit_y),(b[0],exit_y),b])
+    if m['variant'].get('indexer_hgi_native'):
+        hgi=m['hub']['hgi_idx']
+        for hp,sp,bits in [('t_sel_fs','fs',90),('t_sel_qb','qb',1048),('t_sel_kin','kin',345),('t_sel_toc','toc',1),('t_sel_coc','coc',1)]:
+            a,b=point(hgi,hp),point(sel,sp)
+            route('idx_hgi_'+sp,bits,(hgi.name,hp),(sel.name,sp),[a,(a[0]+100,a[1]),(a[0]+100,b[1]),b])
+        for sp,hp,bits in [('qbr','f_sel_qbr',1),('to','f_sel_to',612),('co','f_sel_co',72),('ev','f_sel_ev',2)]:
+            a,b=point(sel,sp),point(hgi,hp)
+            route('idx_hgi_'+sp,bits,(sel.name,sp),(hgi.name,hp),[a,(b[0],a[1]),b])
+        native['hgi_join']=dict(master='hfd_hgi_idx_native',outgoing_bits=1485,incoming_bits=687,
+          physical_qualified=False,exact_qualified=False,extra_capture_and_launch_edges_per_crossing=6)
     native['unbound_producer_ports']=['fs90','qb1048','qbr1','kin345']
     native['unbound_consumer_ports']=['to612','toc1','co72','coc1','ev2','4xst4']
     if m['variant'].get('indexer_quarter_end'):
         native['unbound_consumer_ports'].append('co_quarter_last1')
-    native['qualification']='NATIVE_BOUNDARY_TOPOLOGY; source wrapper joins and exact pin routes remain unqualified'
+    if m['variant'].get('indexer_hgi_native'):
+        native['unbound_producer_ports']=[]
+        native['unbound_consumer_ports']=['4xst4','co_quarter_last1']
+    native['qualification']='NATIVE_BOUNDARY_TOPOLOGY; actual timing, native component exact gates, status joins and exact pin routes remain unqualified' 
