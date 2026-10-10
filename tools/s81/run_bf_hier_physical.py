@@ -40,7 +40,7 @@ def command(a):
                 r'^(clk|rst_n|cfg_|go|go_bf|xs_|xb_v|xb_b|xb_sv|xb_u|xb_pos|busy|fault|hph).*=bottom']
     ss = a.ins_ss
     io = lambda v: str(round(v / 1000.0, 4))
-    W, H = a.die_w, 190.08
+    W, H = a.die_w, a.die_h
     cmd += ['--clock-period-ns', a.period, '--core-input-delay-min-ns', io(ss), '--core-input-delay-max-ns', io(ss + 250),
             '--output-delay-min-ns', io(-(ss + 50)), '--output-delay-max-ns', io(100 - (ss - 150)), '--false-path-from',
             'rst_n' if a.block == 'front' else 'rst_n_pin',
@@ -48,6 +48,8 @@ def command(a):
             '--hold-corners', 'WC', '--slew-margin-percent', '20', '--hold-margin-ns', a.hm, '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
             '--step-tcl', 'PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl',
             '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl'] + pins
+    if a.block == 'front' and a.pinlat:
+        cmd += ['--param', f'PINLAT={a.pinlat}']
     cmd += ['--clock-uncertainty-ns', '.060', '--clock-uncertainty-hold-ns', '.025', '--orfs-corner', 'WC',
             '--stages', 'pnr', '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--core-utilization', '45', '--place-density', '.60', '--max-transition-ns', '.25',
@@ -69,6 +71,8 @@ def main():
     p.add_argument('--work', type=Path, required=True); p.add_argument('--output', type=Path, required=True)
     p.add_argument('--tag', required=True); p.add_argument('--period', default='.730'); p.add_argument('--ins-ss', type=float, default=841.0)
     p.add_argument('--die-w', type=float, default=0.0); p.add_argument('--hm', default='0.000')
+    p.add_argument('--die-h', type=float, default=190.08)
+    p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
     a = p.parse_args()
     if not a.die_w:
