@@ -1531,9 +1531,9 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 57,
-   "merged": 52,
-   "record_only": 11
+   "closed": 62,
+   "merged": 55,
+   "record_only": 13
   },
   "jobs": {
    "hcreader-plain300-lk-b678636a2-tc-cl": "ADOPTED (credit-relay version); source on main; record 961fd8c83",
@@ -1592,7 +1592,15 @@
    "hgi_adp_hc_a-804a35913-tc-cl": "ADOPTED (source on main); record 6bf2f4eef; TT +81.26 / FF +27.40",
    "hgi_adp_hc_b-804a35913-tc-cl": "variant of hc_a; record 4254aae49; TT +100.47 / FF +10.38",
    "qfd_coll_xfifo_a-66fd85cda-tc": "variant of the merged coll_xfifo_b (same source 66fd85cda, on main); record 6ef695b17; TT +18.81 / FF +9.66 DRC 0 after its hold ECO; loop benches coll_native_exact PASS / neg_gate FAIL as expected",
-   "qfd_cdc1024_a-1a9caff1a-tc": "ADOPTED: source 1a9caff1a (RTL on main; cdc1024_bench.sh added); record (see main log); TT +127.06 / FF +1.16 DRC 0; local cdc_pos PASS / cdc_neg DETECTED"
+   "qfd_cdc1024_a-1a9caff1a-tc": "ADOPTED: source 1a9caff1a (RTL on main; cdc1024_bench.sh added); record (see main log); TT +127.06 / FF +1.16 DRC 0; local cdc_pos PASS / cdc_neg DETECTED",
+   "qfd_crom_g_a-ff3637ce7-tc": "ADOPTED: source + record already on main; TT +2.59 / FF +30.62; loop benches crom_g_pos PASS / neg FAIL as expected",
+   "qfd_su_cbuf_g_a-d32ba31e7-tc": "ADOPTED: source + record already on main; TT / FF +13.81; loop benches cbuf_pos PASS / neg FAIL as expected",
+   "qfd_su_cbuf_g_b-d32ba31e7-tc": "variant of cbuf_g_a (same source on main); record d84f05b81; FF +17.73; loop benches PASS / neg FAIL",
+   "qkd_kvwq_leaf_a-5b265f2b7-tc-hm10": "ADOPTED: source on main; record (kvwq_leaf a); FF +5.89; loop benches lint / kvwq_dist_pos PASS, kvwq_dist_neg FAIL as expected",
+   "qkd_kvwq_leaf_b-5b265f2b7-tc-hm10": "variant of kvwq_leaf_a (same source); record cherry-picked; FF +8.86; same benches",
+   "hbm_svc_SE_s6_pspr_ecaae581c_tc_hm10-cl": "HELD (not adopted, record not merged): CLOSED FF +2.00 on ecaae581c (claude/hbm-forks-20261009, not on main), but the svc gate is hbm-forks' transaction-level PS scoreboard bench, still PENDING (sb4 PS + FC running on EPYC1 after the 04:40 REFDUT X fix 7b5f36e22; kv / ik segments need a requeue on the newer commit) -- adopt when the scoreboard is exact",
+   "hbm_svc_SE_s8_pspr_ecaae581c_tc_hm0-cl": "HELD (not adopted, record not merged): CLOSED FF +23.33 on ecaae581c (claude/hbm-forks-20261009, not on main), but the svc gate is hbm-forks' transaction-level PS scoreboard bench, still PENDING (sb4 PS + FC running on EPYC1 after the 04:40 REFDUT X fix 7b5f36e22; kv / ik segments need a requeue on the newer commit) -- adopt when the scoreboard is exact",
+   "hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10-cl": "HELD (not adopted, record not merged): CLOSED FF +7.31 on ecaae581c (claude/hbm-forks-20261009, not on main), but the svc gate is hbm-forks' transaction-level PS scoreboard bench, still PENDING (sb4 PS + FC running on EPYC1 after the 04:40 REFDUT X fix 7b5f36e22; kv / ik segments need a requeue on the newer commit) -- adopt when the scoreboard is exact"
   }
  }
 }
