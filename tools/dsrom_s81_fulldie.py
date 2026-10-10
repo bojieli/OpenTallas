@@ -3708,8 +3708,15 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 #   vm -> mtp        rows-ready f_wv/f_wd/t_wg 12 + draft-head result f_qv/f_qd/t_qg (DW = 10+3+21 = 34) 36 = 48
 #   mtp -> vm        draft-head step t_hv/t_hd/f_hg                                34 + 2 = 36
 # (replaces the 64/128/128/576 aggregates of 2026-10-08, which did not describe the wrapper).
-MTP_SEQ_BUSES = (('capture', 'mtp', 514, 't_mtp', 'f_capture'), ('mtp', 'collective', 650, 't_collective', 'f_mtp'),
-                 ('vm', 'mtp', 48, 't_mtp', 'f_vm'), ('mtp', 'vm', 36, 't_vm', 'f_mtp'))
+# The grant pins travel in the reverse direction from their data/valid pins.
+# Counting grants in a forward aggregate preserves total bits but omits the
+# physical return paths. Separate each ordered slab pair (native binding 2026-10-10).
+MTP_SEQ_BUSES = (('capture', 'mtp', 513, 't_mtp', 'f_capture'),
+                 ('mtp', 'capture', 1, 't_capture', 'f_mtp'),
+                 ('mtp', 'collective', 648, 't_collective', 'f_mtp'),
+                 ('collective', 'mtp', 2, 't_mtp', 'f_collective'),
+                 ('vm', 'mtp', 47, 't_mtp', 'f_vm'),
+                 ('mtp', 'vm', 37, 't_vm', 'f_mtp'))
 # MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
 # r3 / r4 dies stay reproducible).
 CTRL_SLAB = False

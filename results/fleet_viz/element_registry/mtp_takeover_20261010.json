@@ -63,7 +63,7 @@
       "target": "DeepSeek ROM",
       "owner": "Codex:mtp-takeover-20261010",
       "recorded_at": "2026-10-10T11:59:08.952941+00:00",
-      "description": "NW21 actual wrapper-port buses elaborate to514/650/48/36 bits and match generated head631 chains (1248 bits). Closed dsfd_mtp_seq is component evidence only; seed/draft/verify/rollback identity-bound native composition remains pending.",
+      "description": "Actual NW21 ports now bind directed buses513/1/648/2/47/37 bits (1248 total). Historical head631 incorrectly includes reverse grants in forward chains and must regenerate. Closed sequencer component does not qualify native identity composition.",
       "source": {
         "commit": "8ab941dbd",
         "paths": [
@@ -73,7 +73,7 @@
         ]
       },
       "implementation": {
-        "status": "wrapper and die bus widths bound; native identity join pending",
+        "status": "directed bus model corrected; historical die chains stale",
         "evidence": [
           "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
           "tools/dsrom_s81_fulldie.py",
@@ -102,15 +102,16 @@
         "evidence": []
       },
       "dependencies": [
+        "regenerated head die with separate reverse grant chains",
         "seed/draft native endpoints",
         "verify causal path",
         "rollback committed-state join",
         "full production head inventory and routed timing"
       ],
       "integration": {
-        "status": "bus-width binding passed; transaction identity composition pending",
+        "status": "directed port contract passed; historical floorplan binding fails until regenerated; native identity composition pending",
         "evidence": [
-          "results/rtl/mtp_takeover_20261010/native_bus_binding_8ab.json"
+          "results/rtl/mtp_takeover_20261010/native_directed_bus_binding.json"
         ]
       }
     }
