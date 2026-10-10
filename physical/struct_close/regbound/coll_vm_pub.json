@@ -1,6 +1,39 @@
-{"src": "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_vm_publication.sv", "module": "ot_hbm_collective_vm_publication",
- "core": "ot_hbm_collective_vm_publication_core", "clk": "clk", "reset": "rst_n",
+{
+ "src": "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_vm_publication.sv",
+ "module": "ot_hbm_collective_vm_publication",
+ "core": "ot_hbm_collective_vm_publication_core",
+ "clk": "clk",
+ "reset": "rst_n",
  "why": "pi-collvmpub-ci10h6 (drive-0212 0443): macro gaps fixed, the misses are IO only: service_fault -> inj_valid in->out -693, rsp -> encoder in->reg -524, ep -> inj_data reg->out -385. Registered boundary: start / 4 req / 4 rsp lanes through pin FIFOs, every other input and output flopped (+1 / +1; the indexed read inj_rd -> inj_valid/inj_data is 4 -> 6 edges).",
- "in_hs": [{"v": "start_valid", "r": "start_ready", "data": ["owner", "operation", "pc", "query_slot", "base_word", "session"]}],
- "in_vec": [{"v": "rsp_valid", "r": "rsp_ready", "data": "rsp", "n": 4}],
- "out_vec": [{"v": "req_valid", "r": "req_ready", "data": "req", "n": 4}]}
+ "in_hs": [
+  {
+   "v": "start_valid",
+   "r": "start_ready",
+   "data": [
+    "owner",
+    "operation",
+    "pc",
+    "query_slot",
+    "base_word",
+    "session"
+   ]
+  }
+ ],
+ "in_vec": [
+  {
+   "v": "rsp_valid",
+   "r": "rsp_ready",
+   "data": "rsp",
+   "n": 4,
+   "pinreg": "PUBFIX>=3"
+  }
+ ],
+ "out_vec": [
+  {
+   "v": "req_valid",
+   "r": "req_ready",
+   "data": "req",
+   "n": 4
+  }
+ ]
+}

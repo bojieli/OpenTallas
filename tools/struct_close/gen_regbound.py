@@ -114,7 +114,11 @@ for i, g in enumerate(spec.get("in_vec", [])):
     N = g["n"]; DW = pw(g["data"]) // N
     L.append(f" wire [{N-1}:0] iv{i}_v, iv{i}_r; wire [{N*DW-1}:0] iv{i}_d;")
     for k in range(N):
-        L.append(f" ot_sc_pfifo #(.W({DW}), .S(2), .G(64)) u_iv{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}[{k}]), .in_ready({g['r']}[{k}]),")
+        # "pinreg": a Verilog expression (e.g. "PUBFIX>=3"): when true the lane's pin FIFO takes a bare pin flop first
+        # (ot_sc_pfifo PINREG, 3 entries) -- sys-takeover 2026-10-10
+        pr = g.get("pinreg")
+        fp = f".S(({pr})?3:2), .G(64), .PINREG(({pr})?1:0)" if pr else ".S(2), .G(64)"
+        L.append(f" ot_sc_pfifo #(.W({DW}), {fp}) u_iv{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}[{k}]), .in_ready({g['r']}[{k}]),")
         L.append(f"   .in_data({g['data']}[{k*DW} +: {DW}]), .out_valid(iv{i}_v[{k}]), .out_ready(iv{i}_r[{k}]), .out_data(iv{i}_d[{k*DW} +: {DW}]));")
     conn[g["v"]] = f"iv{i}_v"; conn[g["r"]] = f"iv{i}_r"; conn[g["data"]] = f"iv{i}_d"
 for i, g in enumerate(spec.get("out_vec", [])):

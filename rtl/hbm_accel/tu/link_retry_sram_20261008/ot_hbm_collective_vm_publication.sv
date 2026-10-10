@@ -14,6 +14,12 @@
 // of qid (qid only changes >= 2 edges before the next accepted response), only valid / sector are gated by write_sector;
 // (f) [WITHDRAWN 2026-10-09: NOEPOCH is not approved; the stores keep the session / sequence check]  0 cycles on
 // the sector stream; the header-change fault is reported one edge later.
+// PUBFIX=3 (sys-takeover 2026-10-10, on top of 2; collvmpub_fix4_lvt TT -33.8 / -40.5): (g) the request word is
+// precomputed in registers (byte address stepped +32 a sector, tag {qid, tagseq[qid]} and the lane one-hot of the NEXT
+// sector loaded on the edge that accepts the response), so sector -> address add / tag mux -> 4 out pin FIFOs is gone;
+// (h) the replay stores' SECDED decoder registers its column match (ot_hbm_replay_sram DECPIPE): indexed read +1 edge;
+// (i) the wrapper's rsp lanes take a bare pin flop before their pin FIFO (ot_sc_pfifo PINREG, generated): +1 edge on a
+// response.  Sector stream: +1 edge a sector (the response pin flop); the stored session / sequence check stays.
 module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(
  input wire clk,rst_n,warm_abort,service_fault,service_quiet,
  input wire start_valid,output wire start_ready,
@@ -41,8 +47,18 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
 `else
  wire[1:0] qid=sector[8:7];
 `endif
- wire[31:0] address=(bound_base+{20'b0,sector,3'b0})<<2;
- wire[15:0] tag={qid,tagseq[qid]};
+ wire[31:0] address_c=(bound_base+{20'b0,sector,3'b0})<<2;
+ wire[15:0] tag_c={qid,tagseq[qid]};
+ // PUBFIX>=3: the request word of the current sector, precomputed (loaded at start and with each accepted response)
+ reg[31:0] addr_q;reg[15:0] tag_q;reg[3:0] rq_oh;
+ wire[31:0] address=(PUBFIX>=3)?addr_q:address_c;
+ wire[15:0] tag=(PUBFIX>=3)?tag_q:tag_c;
+ wire[8:0] sector_n=sector+1'b1;
+`ifdef OT_HBM_PUBLICATION_MUT_QID
+ wire[1:0] qid_n=0;
+`else
+ wire[1:0] qid_n=sector_n[8:7];
+`endif
  wire[272:0] response=rsp[273*qid+:273];
  wire matched=response[272:257]==expected && !response[256];
  wire take_rsp=pending && rsp_valid[qid] && rsp_ready[qid];
@@ -54,12 +70,12 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  assign quiet=state==IDLE && !pending;
  assign fault=bad || service_fault;
  for(genvar q=0;q<4;q=q+1)begin:g_service
- assign req_valid[q]=state==REQUEST && qid==q && !bad && !service_fault && !warm_abort;
+ assign req_valid[q]=state==REQUEST && ((PUBFIX>=3)?rq_oh[q]:(qid==q)) && !bad && !service_fault && !warm_abort;
  assign req[337*q+:337]={1'b0,address,256'b0,32'hffffffff,tag};
  assign rsp_ready[q]=pending && qid==q;
  end
  wire[1:0] read_bad;
- reg[5:0] read_pipe;
+ reg[6:0] read_pipe;
  reg wq_v;reg[255:0] wq_d;reg[8:0] wq_s;reg hdr_bad_q;
  always@(posedge clk or negedge rst_n)if(!rst_n)begin wq_v<=0;hdr_bad_q<=0;end else begin
   wq_v<=write_sector;hdr_bad_q<=state!=IDLE && state!=ABORT && !header_same && !warm_abort;end
@@ -80,13 +96,13 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
   if(write_sector)wq_s<=sector;
  end
  wire st_wv=PUBFIX?wq_v:write_sector;wire[255:0] st_wd=PUBFIX?wq_d:response[255:0];wire[8:0] st_ws=PUBFIX?wq_s:sector;
- wire read_busy=(PUBFIX ? |read_pipe : |read_pipe[4:0]) || (published && |inj_rd);
+ wire read_busy=((PUBFIX>=3) ? |read_pipe : PUBFIX ? |read_pipe[5:0] : |read_pipe[4:0]) || (published && |inj_rd);
  for(genvar i=0;i<2;i=i+1)begin:g_injector
  wire[15:0] idx=inj_idx[16*i+:16];wire fetch=published && inj_rd[i] && idx<256;
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),
@@ -102,7 +118,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  read_pipe<=0;bound_owner<=0;bound_op<=0;bound_base<=0;bound_pc<=0;bound_query<=0;bound_session<=0;
  for(integer q=0;q<4;q=q+1)tagseq[q]<=0;
  end else begin
- read_pipe<={read_pipe[4:0],published && |inj_rd};
+ read_pipe<={read_pipe[5:0],published && |inj_rd};
  if(service_fault || |read_bad)bad<=1;
  if(PUBFIX>=2 ? (|hf_q) : PUBFIX ? hdr_bad_q : (state!=IDLE && state!=ABORT && !header_same && !warm_abort))bad<=1;
  for(integer q=0;q<4;q=q+1)
@@ -113,6 +129,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  IDLE:if(start_valid && start_ready)begin
  bound_owner<=owner;bound_op<=operation;bound_pc<=pc;bound_query<=query_slot;
  bound_base<=base_word;bound_session<=session;sector<=0;state<=REQUEST;
+ addr_q<=base_word<<2;tag_q<={2'd0,tagseq[0]};rq_oh<=4'b0001;
  // Base+4096 words must fit the actual32-bit byte-address ABI.
  if(base_word>32'h3ffff000 || base_word[2:0]!=0)bad<=1;
  end
@@ -122,7 +139,13 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  pending<=0;
  if(!matched)bad<=1;
  else if(sector==511)begin settle<=0;state<=SETTLE;end
- else begin sector<=sector+1'b1;state<=REQUEST;end
+ else begin sector<=sector+1'b1;state<=REQUEST;
+  addr_q<=addr_q+32'd32;rq_oh<=4'b1<<qid_n;
+`ifdef OT_HBM_PUBLICATION_MUT_TAGQ
+  tag_q<={qid,tagseq[qid]};end                          // mutant: the precomputed tag keeps the current sector's lane
+`else
+  tag_q<={qid_n,(qid_n==qid)?(tagseq[qid]):tagseq[qid_n]};end
+`endif
  end
  SETTLE:if(settle==(PUBFIX?2:1))state<=PUBLISHED;else settle<=settle+1'b1;
  PUBLISHED:if(release_lease)begin if(read_busy)bad<=1;else state<=IDLE;end

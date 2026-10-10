@@ -189,6 +189,17 @@ def cvp_fix2_tb():
 CASES["coll_vm_pub_fix2"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb)
 CASES["coll_vm_pub_fix2_qoh"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_QOH"],
      neg_ok="published FP32 order")
+def cvp_fix3_tb():
+    """sys-takeover PUBFIX=3: indexed read 8 edges on the wrapper (+1 replay decoder DECPIPE); responses take a pin flop"""
+    t = cvp_fix2_tb()
+    for a, b in (("ot_hbm_collective_vm_publication #(.PUBFIX(2),", "ot_hbm_collective_vm_publication #(.PUBFIX(3),"),
+                 ("if(cycles-expected_cycle[seen]!=7)", "if(cycles-expected_cycle[seen]!=8)")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix3"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb)
+CASES["coll_vm_pub_fix3_tagq"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_TAGQ"],
+     neg_ok="actual VM read ABI")
 def artok(mode, w):
     """tools/hbm_native_ar_token_join_gate.py (4 positive vectors, MUT and owner-17 truncation mutants) on the wrapper"""
     import os, json as _j
