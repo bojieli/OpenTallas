@@ -7,7 +7,11 @@ R. System bench tb_hbm_native_mtp_mx1_regb_system: the physical top (AR + regist
    mutant (as in the hgi_mtp_native / MX1 gates).
 D. Directed pin bench tb_hfd_cmdproc_s_mtp_native_mx1_regb (REGB=1): AM pulses during an in-flight command on the
    identity lines, 10 tokens with the host stalled + native done right after, owned ACK, drained reset, wrong job.
-   Positive must PASS; MUT=1 (native done not held behind the emit FIFO) and MUT=2 must FAIL.  (The system
+   Also the HGI ARGMAX dispatch relay (4 records, busy model unit).  Positive must PASS; MUT=1 (native done not held
+   behind the emit FIFO), MUT=2 and MUT=3 (dispatch relay pops without the unit's ready) must FAIL.
+S. The R25G MTP-slot ARGMAX unit ot_hgi_argmax_slot (closed ot_hgi_argmax_record + ot_hgi_argmax18_m behind the 683 / 3
+   dispatch bus) on the hgi-adapters argmax vectors, real engine + real HGI VM (Verilator; rtl/hbm_accel/generic/tb/
+   run_argmax_slot.sh): HGI_ARGMAX PASS; MUT_RANK (die rank not bound) must FAIL.  (The system
    scenario never backs the emit FIFO up, so MUT 1 is only exercised here.)
 L. The original cycle-exact top bench (tb_hfd_cmdproc_s_mtp_native_mx1, 6adb6c001) on REGB=0: the unregistered
    wiring is unchanged by the refactor (the MTP side moved into hfd_cmdproc_s_mtp_native_mx1_mtp).
@@ -53,6 +57,18 @@ def run(work, name, top, srcs, params=()):
     return dict(case=name, returncode=r.returncode, output=r.stdout[-3000:])
 
 
+def slot(work, name, mut):
+    # Verilator bench of the slot unit; a case passes on 'HGI_ARGMAX PASS', a mutant must print 'HGI_ARGMAX FAIL'
+    r = subprocess.run(['bash', str(ROOT / 'rtl/hbm_accel/generic/tb/run_argmax_slot.sh'), str(work / 'slot'), *([mut] if mut else [])],
+                       capture_output=True, text=True)
+    out = r.stdout[-3000:] + r.stderr[-1000:]
+    ok_pass = 'HGI_ARGMAX PASS' in r.stdout
+    if mut:
+        rc = 1 if 'HGI_ARGMAX FAIL' in r.stdout else 0      # functional failure only (a build error is not a kill)
+        return dict(case=name, returncode=rc, output=out, **({} if 'HGI_ARGMAX' in r.stdout else dict(phase='compile')))
+    return dict(case=name, returncode=0 if ok_pass else 1, output=out)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', type=Path, required=True)
@@ -69,7 +85,8 @@ def main():
                              'R_mutant_prl2': ('tb_hbm_native_mtp_mx1_regb_system', sysb, ('PRL=2',)),
                              'D_pins_positive': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ()),
                              'D_mutant_done_not_held': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=1',)),
-                             'D_mutant_hostdone_not_held': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=2',))}[a.single]
+                             'D_mutant_hostdone_not_held': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=2',)),
+                             'D_mutant_dispatch_relay': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=3',))}[a.single]
         c = run(a.work, a.single, top, srcs, params)
         a.out.write_text(json.dumps(c, indent=2) + '\n')
         print(c['output'][-1500:])
@@ -99,12 +116,17 @@ def main():
              run(a.work, 'D_pins_positive', dtop, dirb),
              run(a.work, 'D_mutant_done_not_held', dtop, dirb, ('MUT=1',)),
              run(a.work, 'D_mutant_hostdone_not_held', dtop, dirb, ('MUT=2',)),
+             run(a.work, 'D_mutant_dispatch_relay', dtop, dirb, ('MUT=3',)),
+             slot(a.work, 'S_argmax_slot_positive', ''),
+             slot(a.work, 'S_mutant_argmax_slot_rank', 'MUT_RANK'),
              run(a.work, 'R_mutant_wrong_job', top, base + [be_mut, ROOT / TB_R]),
              run(a.work, 'L_legacy_regb0_positive', 'tb_hfd_cmdproc_s_mtp_native_mx1', [ROOT / s for s in TOP] + [tb_l])]
     want = {c['case']: (c['returncode'] != 0 and c.get('phase') != 'compile') if 'mutant' in c['case']
             else (c['returncode'] == 0) for c in cases}
     ok = all(want.values())
-    srcs = NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R, TB_L, TB_D]
+    srcs = NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R, TB_L, TB_D, 'rtl/hbm_accel/generic/ot_hgi_argmax_slot.sv',
+                                     'rtl/hbm_accel/generic/adapters/ot_hgi_argmax_record.sv',
+                                     'rtl/hbm_accel/generic/tb/tb_hgi_argmax_slot.sv', 'rtl/hbm_accel/generic/tb/run_argmax_slot.sh']
     rec = dict(schema='opentallas.hbm.mx1_regb.gate.v1', verdict='PASS' if ok else 'FAIL', expectations=want, cases=cases,
                source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in srcs},
                scope='MX1 registered MTP boundary in the connected native closed control (real controller hgi_mtp_native PRL 4 '

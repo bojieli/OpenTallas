@@ -513,6 +513,9 @@ def _hgi_mtp(v):
     return dict(v, mtp_master='hgi_native', split_extra_ports=ex,
                 split_masters=dict(v.get('split_masters', {}), hfd_cmdproc=MX1_SPLIT),
                 cp_band_alias={'hfd_cmdproc_s': MX1_BAND},
+                # MX1 r3 pins (collar_mx1 ports.json): t_hgi_argmax 764.928-895.896 um, f_hgi_argmax 900.096-900.504 um
+                # (S face, 0.192-um pitch = 4 tracks); centres / 1399.656
+                cp_pin_override={'t_hgi_argmax': (0.593297, 4), 'f_hgi_argmax': (0.643229, 4)},
                 hgi_dispatch=sorted(set(v.get('hgi_dispatch') or []) | {'argmax'}),
                 spine_slot_masters=dict(v.get('spine_slot_masters', {}), mtp=GENERIC_MASTER),
                 # two-instance MD-7 slot (466.56 x 200.88): the controller's closed view (mtp_hgi, 286.56 x 200.88) and
@@ -539,6 +542,15 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
         from hgi_die_dispatch import variant as hgi_dispatch_variant
         variant = dict(hgi_dispatch_variant(variant, variant['hgi_dispatch']), hgi_dispatch_pins_done=True)
+        # mtp-lead 2026-10-09: a CP band with its own pin record (MX1) overrides a planned dispatch pin's (fraction, pitch)
+        # -- the plan's argmax span (0.50 x 1399.656, 2 tracks = 667-733 um) lies on MX1's f_loader pins
+        ov_ = variant.get('cp_pin_override') or {}
+        if ov_:
+            ex_ = {k: dict(x) for k, x in variant['split_extra_ports'].items()}
+            for pn_, (frac_, pitch_) in ov_.items():
+                t_ = ex_['hfd_cmdproc'][pn_]
+                ex_['hfd_cmdproc'][pn_] = t_[:4] + (frac_, pitch_)
+            variant['split_extra_ports'] = ex_
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
