@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hgi_dma_front_wide;
     parameter integer MUT = 0;
-    parameter integer LDEPTH=256, DATA_HOPS=96, CREDIT_HOPS=96, RESPONSE_LATENCY=208, SERVICE_SLOTS=64;
+    parameter integer LDEPTH=256, DATA_HOPS=96, CREDIT_HOPS=96, RESPONSE_LATENCY=217, SERVICE_SLOTS=64;
     localparam integer NS = 4, NL = 32, NIN = 128;
     localparam integer SBIT = 21; localparam longint SB = 2097152;   // 1 MiB stacks in the bench
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
@@ -46,7 +46,7 @@ module tb_hgi_dma_front_wide;
          integer sec,address;sec=wl[p*283+264+:18];
          if(sec%512!=p)$fatal(1,"wrong logical bank");
          cool[p*2+((sec>>9)&1)]<=1;ack_pipe[0][p]<=1;
-         if(firstVM<0)firstVM=cyc;lastVM=cyc;VMwrites=VMwrites+1;
+
          for(integer w=0;w<8;w=w+1)if(wl[p*283+w])begin
            address=sec*8+w;
            if(address>=VM_WORDS||vm_written[address])$fatal(1,"VM duplicate or bounds %0d",address);
@@ -68,7 +68,7 @@ module tb_hgi_dma_front_wide;
         for (integer s = 0; s < NS; s = s + 1) begin
 
             if (dq[s*53 + 52] && dq_rdy[s]) begin
-                if(firstReq<0)firstReq=cyc;
+
                 if(service_used[s]>=SERVICE_SLOTS)$fatal(1,"service descriptor window exceeded");
                 if(service_left[s][dq[s*53+46+:6]]!=0)$fatal(1,"service tag reused before completion");
                 service_used[s]=service_used[s]+1;service_left[s][dq[s*53+46+:6]]=dq[s*53+37+:9];
@@ -93,10 +93,23 @@ module tb_hgi_dma_front_wide;
                     service_left[stack][tag]=service_left[stack][tag]-1;
                     if(service_left[stack][tag]==0)service_used[stack]=service_used[stack]-1;
                 end
-                if(firstSource<0)firstSource=cyc;lastSource=cyc;sourceBytes=sourceBytes+32;
+
                 lh[i] = lh[i] + 1; cr[i] = cr[i] - 1; end
         end
         for(integer s=0;s<NS;s=s+1)dq_rdy[s]<=(service_used[s]<SERVICE_SLOTS)&&(full||($urandom%4)!=0);
+    end
+    // One procedural owner avoids task-coroutine localization of timing counters.
+    always @(posedge clk) if(rst_n)begin
+      if(dut.cv_q)begin firstVM=-1;lastVM=-1;VMwrites=0;firstSource=-1;lastSource=-1;sourceBytes=0;firstReq=-1;end
+      else if(dut.busy)begin
+       for(integer st=0;st<NS;st=st+1)if(dq[st*53+52]&&dq_rdy[st]&&firstReq<0)firstReq=cyc;
+       for(integer lane=0;lane<NIN;lane=lane+1)if(dd_src[lane*272+271])begin
+        if(firstSource<0)firstSource=cyc;lastSource=cyc;sourceBytes=sourceBytes+32;
+       end
+       for(integer bank=0;bank<512;bank=bank+1)if(wl[bank*283+282]&&wl_ready[bank])begin
+        if(firstVM<0)firstVM=cyc;lastVM=cyc;VMwrites=VMwrites+1;
+       end
+      end
     end
     // ---- reference decode
     // binary32 bits of an exactly representable normal / zero double (Verilator's $shortrealtobits is not reliable)
@@ -128,7 +141,7 @@ module tb_hgi_dma_front_wide;
                         input integer m, input integer n);
         integer es, t0, o, i, e0; longint a; reg [31:0] want;
         begin
-            firstVM=-1;lastVM=-1;VMwrites=0;firstSource=-1;lastSource=-1;sourceBytes=0;firstReq=-1;
+            
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
             if(dbase<0||dbase+(m-1)*dstr+n>VM_WORDS)$fatal(1,"bench move exceeds actual18bit VM sector ABI");
             for (i = 0; i < VM_WORDS; i = i + 1)begin vm[i] = 32'hA5A5_0000 + i;vm_written[i]=0;end

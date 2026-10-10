@@ -1,0 +1,4 @@
+WIDE_TIMING format=0 request=8 source=216 VM=318 lastsource=-1 lastVM=-1 rawbytes=8388608 decodedbytes=8388608 payload_raw_Bpc=-26379.270 cold_raw_Bpc=2801.806
+[6002000] %Fatal: tb_hgi_dma_front_wide.sv:143: Assertion failed in tb_hgi_dma_front_wide.load: wide raw payload BW below3000
+%Error: tb_hgi_dma_front_wide.sv:143: Verilog $stop
+Aborting...
