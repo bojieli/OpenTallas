@@ -38,6 +38,7 @@ QSHIFT = V1.QSHIFT
 CH = V1.CH
 DIM = {('sn', 544): (105.84, 11.88), ('ew', 544): (11.88, 105.84), ('sn', 136): (28.08, 11.88), ('ew', 136): (11.88, 28.08)}
 PARAMS = V1.PARAMS
+PIN_GAP = 0.0
 grid = V1.grid
 trk = T.trk
 
@@ -74,6 +75,20 @@ class APlan:
     def put(self, name, kind, bits, orient, x, y, force=False, pin=False):
         """pin: a face pin bank (its outer face is the die edge): only the real box is checked"""
         w, h = DIM[(kind, bits)]
+        if pin and PIN_GAP > 0:
+            # hbm-phys-1010 [att] (half_v2 c6c90ac08 GRT: hi 6,424 s 'finished with congestion', 8.5 k congestion
+            # entries, the top four net classes xp / cf / i / o = the PORT nets of the face pin banks, in the gcells
+            # where a port pin overlaps its bank's M1-M6 OBS; lo's first global_route > 3.5 h): the pin bank stands
+            # PIN_GAP off its face, so every port -> bank wire is a straight stub in free gcells.  The pins stay on the
+            # bank's pin tracks (x for S / N, y for E / W), so the seam / face plan is unchanged.
+            if y < 1.0:
+                y = T.trk(y + PIN_GAP, 0.024)
+            elif y + h > self.ch - 1.0:
+                y = T.trk(y - PIN_GAP, 0.024, True)
+            if x < 1.0:
+                x = T.trk(x + PIN_GAP)
+            elif x + w > self.cw - 1.0:
+                x = T.trk(x - PIN_GAP, 0.0, True)
         b = (x, y, x + w, y + h)
         if not force and not self.free(kind, b, zones=not pin):
             raise SystemExit(f'{name}: ({x:.3f}, {y:.3f}) {w} x {h} not free')
@@ -332,9 +347,12 @@ def main():
     ap.add_argument('--out', default='physical/hbm_attn_tile_r/half_v2')
     ap.add_argument('--max-hop', type=float, default=450.0)
     ap.add_argument('--acc', type=float, default=20.0)
+    ap.add_argument('--pin-gap', type=float, default=0.0, help='face pin banks this far off their face (um)')
     for k, v in PARAMS.items():
         ap.add_argument(f'--{k}', type=int, default=v)
     a = ap.parse_args()
+    global PIN_GAP
+    PIN_GAP = a.pin_gap
     P, hops, pins, quads, geo = place_lo(a)
     V1.check_pins(P, pins)
     rl = write(a.out, 'hfd_attn_half_lo', a, P, hops, pins, quads, 'lo',
