@@ -6,7 +6,7 @@
 module tb_hgi_hc_unit;
     `include "hu_sizes.svh"
     reg clk = 0; always #1 clk = ~clk;
-    reg [1131:0] casem [0:NCASE-1]; reg [63:0] vmim [0:NVMI-1]; reg [295:0] hbmm [0:NHBM-1]; reg [63:0] expm [0:NEXP-1];
+    reg [1163:0] casem [0:NCASE-1]; reg [63:0] vmim [0:NVMI-1]; reg [295:0] hbmm [0:NHBM-1]; reg [63:0] expm [0:NEXP-1];
     reg [8*256-1:0] dir;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
@@ -56,35 +56,35 @@ module tb_hgi_hc_unit;
     endtask
     integer nd, nf;
     always @(posedge clk) begin if (rst_n && done) nd = nd + 1; if (rst_n && fault) nf = nf + 1; end
-    integer c, j, t, v0, nv, h0, nh, e0, t0, words = 0; reg [31:0] qd;
+    integer c, j, t, v0, nv, h0, nh, e0, ne, t0, words = 0; reg [31:0] qd;
     initial begin
         repeat (3) @(posedge clk);
         for (c = 0; c < NCASE; c = c + 1) begin
-            v0 = casem[c][1099:1068]; nv = casem[c][1067:1036]; h0 = casem[c][1035:1004]; nh = casem[c][1003:972];
-            e0 = casem[c][971:940];
+            v0 = casem[c][1131:1100]; nv = casem[c][1099:1068]; h0 = casem[c][1067:1036]; nh = casem[c][1035:1004];
+            e0 = casem[c][1003:972]; ne = casem[c][971:940];
             rst_n = 0; hbm.delete(); rq.delete(); repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
             for (j = 0; j < nh; j = j + 1) hbm[hbmm[h0 + j][295:256]] = hbmm[h0 + j][255:0];
             for (j = 0; j < nv; j = j + 1) vm_req(1'b1, vmim[v0 + j][63:32], vmim[v0 + j][31:0], qd);
             // guard words around O
-            vm_req(1'b1, expm[e0][63:32] - 1, 32'hA5A5A5A5, qd); vm_req(1'b1, expm[e0][63:32] + 24, 32'hA5A5A5A5, qd);
+            vm_req(1'b1, expm[e0][63:32] - 1, 32'hA5A5A5A5, qd); vm_req(1'b1, expm[e0][63:32] + ne, 32'hA5A5A5A5, qd);
             nd = 0; nf = 0; t0 = cyc;
             @(negedge clk); cur = casem[c][937:0]; rec_v = 1;
             while (!rec_rdy) @(negedge clk);
             @(posedge clk); #0.1 rec_v = 0;
             t = 0; while (nd == 0 && nf == 0 && t < 3000000) begin @(posedge clk); t = t + 1; end
             if (nd != 1 || nf != 0) begin $display("ERR case %0d: done %0d fault %0d (state %0d)", c, nd, nf, u.st); errors = errors + 1; end
-            $display("case %0d: K %0d, record -> retire %0d cycles", c, casem[c][1131:1100], cyc - t0); $fflush;
-            for (j = 0; j < 24; j = j + 1) begin
+            $display("case %0d: op %0d, K %0d, %0d O words, record -> retire %0d cycles", c, cur[123:118], casem[c][1163:1132], ne, cyc - t0); $fflush;
+            for (j = 0; j < ne; j = j + 1) begin
                 vm_req(1'b0, expm[e0 + j][63:32], 0, qd);
                 if (qd !== expm[e0 + j][31:0]) begin
                     if (errors < 40) $display("ERR case %0d O[%0d] = %h expected %h", c, j, qd, expm[e0 + j][31:0]);
                     errors = errors + 1; end
             end
             vm_req(1'b0, expm[e0][63:32] - 1, 0, qd); if (qd !== 32'hA5A5A5A5) begin $display("ERR guard lo"); errors = errors + 1; end
-            vm_req(1'b0, expm[e0][63:32] + 24, 0, qd); if (qd !== 32'hA5A5A5A5) begin $display("ERR guard hi"); errors = errors + 1; end
-            words = words + 24;
+            vm_req(1'b0, expm[e0][63:32] + ne, 0, qd); if (qd !== 32'hA5A5A5A5) begin $display("ERR guard hi"); errors = errors + 1; end
+            words = words + ne;
         end
-        $display("summary: %0d HC_MIX records, %0d O words exact", NCASE, words);
+        $display("summary: %0d HC records (G22 ops 0 / 1 / 2), %0d O words exact", NCASE, words);
         if (errors == 0) $display("HGI_HC_UNIT PASS"); else $display("HGI_HC_UNIT FAIL errors=%0d", errors);
         $finish;
     end

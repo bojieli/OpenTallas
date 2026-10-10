@@ -1,5 +1,14 @@
-case 0: K 256, record -> retire 6244 cycles
-case 1: K 800, record -> retire 9668 cycles
-case 2: K 28672, record -> retire 136333 cycles
-summary: 3 HC_MIX records, 72 O words exact
+case 0: op 0, K 256, 24 O words, record -> retire 6244 cycles
+case 1: op 1, K 256, 1 O words, record -> retire 332 cycles
+case 2: op 1, K 256, 1 O words, record -> retire 344 cycles
+case 3: op 1, K 256, 7 O words, record -> retire 1762 cycles
+case 4: op 2, K 24, 24 O words, record -> retire 539 cycles
+case 5: op 0, K 800, 24 O words, record -> retire 9822 cycles
+case 6: op 1, K 800, 1 O words, record -> retire 640 cycles
+case 7: op 1, K 800, 24 O words, record -> retire 9118 cycles
+case 8: op 2, K 24, 24 O words, record -> retire 540 cycles
+case 9: op 0, K 20480, 24 O words, record -> retire 98372 cycles
+case 10: op 1, K 20480, 1 O words, record -> retire 9603 cycles
+case 11: op 2, K 24, 24 O words, record -> retire 540 cycles
+summary: 12 HC records (G22 ops 0 / 1 / 2), 179 O words exact
 HGI_HC_UNIT PASS
