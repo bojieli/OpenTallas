@@ -32,8 +32,26 @@ import hbm_die_wrap as Wr  # noqa: E402
 
 S, H, L = V.S, V.H, V.L
 PS = '--ps' in sys.argv          # hbm-forks 2026-10-09: per-PC stream successor (ot_hbm_svc_ps_lib.sv); outputs *_ps
-SEGD, SPLD, SDCD, STG = (('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json') if PS else
+# --fc (hbm-forks 2026-10-09, coordinator option (a)): face clock taps -- every one-stage chain portion anchored at a W / E
+# face pin is clocked by its own die clock leaf on that face (ckw / cke).  Measured on routed SW_s6 / SW_s7 / SE_s7 CTS
+# dbs: those face-corner stages arrive +55 .. +273 ps after the segment's mean insertion (the in-block tree from the N-face
+# ck leaf), the face-input hold failures; a die leaf at the face is balanced by the die tree instead.
+FC = '--fc' in sys.argv
+SEGD, SPLD, SDCD, STG = ((('rtl/seg_psfc', 'split_psfc', 'sdc_psfc', 'seg_stages_psfc.json') if FC else
+                          ('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json')) if PS else
                          ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
+
+
+def fc_face(po, x0, x1):
+    """'W' / 'E' when this one-stage portion is anchored at a W / E face pin (FC mode), else None"""
+    if not FC or po['N'] != 1:
+        return None
+    for e in (po['A'], po['B']):
+        if e[0] == 'p' and abs(e[1] - x0) < 1.0:
+            return 'W'
+        if e[0] == 'p' and abs(e[1] - x1) < 1.0:
+            return 'E'
+    return None
 PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
@@ -411,6 +429,7 @@ def build(pl):
     names = [f'hfd_svc_{fam}_s{j}' for j in range(len(segs))]
     port_map = {}                    # band -> {band port: (parent port, lo, hi)}
     recs = {}
+    nmv_ = {}       # (segment, N-face port) -> (old centre, new centre, new x0, new x1), global um (PS compaction)
     for j, (x0, x1) in enumerate(segs):
         w = round(x1 - x0, 4)
         ports, fc, pm = {}, {}, {}
@@ -488,6 +507,52 @@ def build(pl):
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',
                               dir_segments=[[0, f['bits'], d_]], direction='output' if d_ == 'out' else 'input')
+        if PS:
+            # hbm-forks 2026-10-09 (R25G die build: 'no free N-face span' for the loader port ki7 on SE_s7): a band whose
+            # N face keeps < NRES um of free M5 span after the PS ks port is compacted -- its 0.192-pitch N-face buses
+            # re-pitched to 0.096 in place and the N-face ports after them packed behind, leaving the E end free for the die
+            # variant's new ports (ki / kc: 1,099 + 1 b)
+            NRES = 115.0
+            nf = [n_ for n_, v in ports.items() if v['face'] == 'N' and v['layer'] == 'M5']
+            occ = sorted((min(q[2] for q in ports[n_]['pins']) - 2, max(q[4] for q in ports[n_]['pins']) + 2) for n_ in nf)
+            gaps, xe = [], 0.0
+            for a, b in occ:
+                gaps.append(a - xe); xe = max(xe, b)
+            gaps.append(w - xe)
+            if max(gaps) < NRES:
+                order = sorted((n_ for n_ in nf if n_ not in ('ck', 'rst')), key=lambda n_: min(q[2] for q in ports[n_]['pins']))
+                # from the first 0.192-pitch bus on, in place: it keeps its W end (its unit side stays close), the ports
+                # after it follow; ports before it (ks, the die clock leaf, reset) do not move
+                pit_ = {n_: (max(q[2] for q in ports[n_]['pins']) - min(q[2] for q in ports[n_]['pins'])) / max(1, len(ports[n_]['pins']) - 1)
+                        for n_ in order}
+                k0_ = next(i_ for i_, n_ in enumerate(order) if pit_[n_] > 0.15)
+                order = order[k0_:]
+                xc_ = min(q[2] for q in ports[order[0]]['pins'])
+                for n_ in order:
+                    if n_ not in ports:
+                        continue
+                    pins_ = sorted(ports[n_]['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+                    old_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    for k_, q in enumerate(pins_):
+                        wq = q[4] - q[2]
+                        q[2] = round(round((xc_ + k_ * 0.096) / 0.048) * 0.048, 4); q[4] = round(q[2] + wq, 4)
+                    new_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    nmv_[(j, n_)] = (old_c + x0, new_c + x0, min(q[2] for q in pins_) + x0, max(q[4] for q in pins_) + x0)
+                    xc_ = max(q[4] for q in pins_) + 2.5
+                print(f'{names[j]}: N face compacted (max free span {max(gaps):.1f} < {NRES}): free E end from {xc_:.1f} of {w}')
+        if FC:
+            fcs = {fc_face(po, x0, x1) for cc in C for po in cc['portions'] if po['seg'] == j} - {None}
+            for fce in sorted(fcs):
+                occ = sorted((q[3], q[5]) for v in ports.values() for q in v['pins'] if v['face'] == fce)
+                bus_ = lambda y_: any(a - 0.5 < y_ < b + 0.5 for a, b in occ)  # noqa: E731
+                yc = next(pl['H'] / 2 + sg * d_ * 0.048 for d_ in range(0, int(pl['H'] / 0.048)) for sg in (1, -1)
+                          if 2.0 < pl['H'] / 2 + sg * d_ * 0.048 < pl['H'] - 2.0 and not bus_(pl['H'] / 2 + sg * d_ * 0.048))
+                yc = round(round(yc / 0.048) * 0.048, 4)
+                xa_, xb_ = (0.0, 0.192) if fce == 'W' else (w - 0.192, w)
+                nm_ = 'ckw' if fce == 'W' else 'cke'
+                ports[nm_] = dict(bits=1, layer='M4', pins=[[f'{nm_}[0]', 'M4', round(xa_, 4), yc, round(xb_, 4), round(yc + 0.024, 4)]],
+                                  face=fce, dir_segments=[[0, 1, 'in']], direction='input')
+                pm[nm_] = ('<new>', 0, 0)
         r = dict(master=names[j], kind='svc', w_um=w, h_um=pl['H'], obs_top=rec['obs_top'],
                  note=f"derived master: band x {x0} .. {x1} um of {FAM[fam]} (svc/gen_svc_seg.py)",
                  instances=len(FAM[fam]), orients=['R0', 'MX'], inst_names=[f'{FAM[fam][0]}_s{j}', f'{FAM[fam][1]}_s{j}'],
@@ -507,6 +572,10 @@ def build(pl):
               f'module {names[j]} (', V.svh(r).rstrip(), ');']
         A = Lx.append
         A('  wire c = ck[0]; wire rn, rdy_q, rdy_q2;')
+        if 'ckw' in r['ports']:
+            A('  wire cw = ckw[0];                // W-face die clock leaf: one-stage W-face chain portions (--fc)')
+        if 'cke' in r['ports']:
+            A('  wire ce = cke[0];                // E-face die clock leaf: one-stage E-face chain portions (--fc)')
         A('  ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));')
         A('  ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));')
         units = sorted(u for u, s in unit_seg.items() if s == j)
@@ -661,7 +730,9 @@ def build(pl):
                     vin, din = f'{pn}[{o}]', f'{pn}[{o + n_ - 1}:{o + 1}]'
                 nm = f"{cc['name']}_{k_}"
                 decl.append(f'  wire {nm}_v; wire [{wb - 1}:0] {nm}_d;')
-                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck(c), .rst_n(rn), .v({vin}), .d({din}), "
+                fce_ = fc_face(po, segs[j][0], segs[j][1])
+                ckn_ = 'cw' if fce_ == 'W' else 'ce' if fce_ == 'E' else 'c'
+                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck({ckn_}), .rst_n(rn), .v({vin}), .d({din}), "
                             f".qv({nm}_v), .q({nm}_d));")
                 if po['B'][0] == 'u':
                     body.append(f"  assign {cc['dv']} = {nm}_v;")
@@ -741,6 +812,14 @@ def build(pl):
                 if po['seg'] != j:
                     continue
                 A_, B_ = po['A'], po['B']
+                def mv_(e_):     # a pin endpoint on a compacted N-face port follows the port's centre shift
+                    if e_[0] != 'p' or abs(e_[2] - pl['H']) > 3.0:
+                        return e_
+                    for (jj, pn_), (oc, nc, a_, b_) in nmv_.items():
+                        if jj == j and abs(e_[1] - oc) < 60.0:
+                            return (e_[0], e_[1] + nc - oc, e_[2])
+                    return e_
+                A_, B_ = mv_(A_), mv_(B_)
                 ws.append(f"set ws_ab({cc['name']}_{k_}) {{{A_[1] - x0:.3f} {A_[2]:.3f} {B_[1] - x0:.3f} {B_[2]:.3f} "
                           f"{int(A_[0] == 'p')} {int(B_[0] == 'p')}}}")
         d_ = HERE / SPLD / names[j]
@@ -767,7 +846,7 @@ def build(pl):
             con = []
             for bn, (pn, lo_, hi_) in port_map[names[j]].items():
                 if pn == '<new>':
-                    con.append(f'.{bn}({bn})')
+                    con.append(f'.{bn}(ck)' if bn in ('ckw', 'cke') else f'.{bn}({bn})')   # face leaves: the same die clock
                 elif bn == 'phy':
                     con.append(f'.phy(phy[{hi_}:{lo_}])')
                 elif pn.startswith(('lsm', 'qsm')):

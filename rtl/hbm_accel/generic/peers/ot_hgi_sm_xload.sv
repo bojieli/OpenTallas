@@ -58,17 +58,19 @@ module ot_hgi_sm_xload #(
             else begin r = x + 32'h7FFF + {31'd0, x[16]}; bf16 = r[31:16]; end
         end
     endfunction
-    // fragment beat b of address (g, t): built from the tile
-    reg [2047:0] beat;
-    integer q, p, jj;
+    // the fragment of address (g, t), wired statically from the tile (t selects one of 8 per lane), then beat b is one
+    // 2,048-b slice of it: no data-dependent shift
+    localparam integer FW = ((PMAX * XC + 2047) / 2048) * 2048;
+    wire [3:0] tt = MUT_T ? (4'd7 - t) : t;
+    reg  [FW-1:0] frag;
+    integer p, jj;
     always @* begin
-        beat = 2048'd0;
+        frag = {FW{1'b0}};
         for (p = 0; p < PMAX; p = p + 1)
-            for (jj = 0; jj < 64; jj = jj + 1) begin
-                q = p * XC + XOFF + 16 * jj - b * 2048;
-                if (p < pp && q >= 0 && q < 2048) beat[q +: 16] = tile[p * 512 + jj * 8 + (MUT_T ? 7 - t : t)];
-            end
+            for (jj = 0; jj < 64; jj = jj + 1)
+                frag[p * XC + XOFF + 16 * jj +: 16] = (p < pp) ? tile[p * 512 + jj * 8 + tt[2:0]] : 16'd0;
     end
+    wire [2047:0] beat = frag[b * 2048 +: 2048];
     integer w;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0; end
