@@ -15601,3 +15601,22 @@ def hbm_sfu_reset_tree_wide_sizing():
              routing_assumptions='two vertical layers at64nm pitch,50% usable; real cuts still must pass lint',
              qualification='full widened lane then unchanged-height quarter, real reset arcs and channel lint')
     return r
+
+
+def hbm_su_lane_dualface_sizing():
+    """Pin density successor to the failed single-M4 83.16um lane."""
+    return dict(candidate='su_lane_dualface', lane_um=[85.32,162.0],
+                lane_core_um=[83.16,160.92], lane_count_per_quarter=192,
+                prior_lane_um=[83.16,162.0], tile_um=[187.056,164.16],
+                prior_tile_um=[184.896,164.16],
+                quarter_lane_area_delta_um2=192*2.16*162,
+                signal_pin_layers=['M4','M6'], signal_route_top='M6',
+                pin_min_distance_tracks=2, measured_prior_pin_bits_per_um=20.8,
+                expected_pin_bits_per_um_layer=20.8/2,
+                expected_pin_bits_per_um_face=2251/(2*162),
+                quarter_channel_um=84.7-2*2.16,
+                reset_admission_cycles_change=0, data_cycles_added=0,
+                macs_per_cycle_change=0, memory_bytes_per_cycle_change=0,
+                boundary_bits_per_cycle_change=0,
+                routing_obligation='M6 used inside lane; quarter M7 over-lane capacity and real tile channel cuts must pass before adoption',
+                physical_qualified=False)
