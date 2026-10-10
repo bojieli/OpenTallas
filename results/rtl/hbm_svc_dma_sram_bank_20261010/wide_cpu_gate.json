@@ -1,0 +1,44 @@
+{
+  "scope": "one bank, two real 256x256 macro models; CPU, no full-array simulation",
+  "macro_initialization": "disabled; absent rows never publish uninitialized data",
+  "physical_signoff": "not established by this bench",
+  "source_sha256": {
+    "tests/rtl/tb_hbm_svc_dma_sram_bank_wide.sv": "1ffebc57e3ce0e163e65ff7e56c21ade70d5e6136bbe3856c2a8aa9b8f5f97b6",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm/hbm_svc_dma_sram_bank_wide.sv": "6899a83091b52ec3bac7e4d16615a45f64f1e91b862550655a2398da76e6f3e2",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_svc_dma_sram_bank_wide_model.py": "7858e1a693e540627ef41ebd0939d09569b70f281ceaafdd021071f8a5e12230",
+    "tools/run_hbm_svc_dma_sram_bank_wide_bench.py": "5299f544b3266fef76349a498bdf8141b29620dfeae665e302ec9d2bcfd8b70c"
+  },
+  "records": [
+    {
+      "mutant": 0,
+      "bank_mutant": 0,
+      "returncode": 0,
+      "stdout": "MEASURE read_visible_cycles=5 read_transfer_cycles=6 read_II=2 write_II=2\nPASS transactions=1256 payload_single=512 parity_single=64 double=4 metadata=20 no_init=256 concurrent_ports=128\n",
+      "stderr": "",
+      "expected_outcome": "PASS",
+      "gate_pass": true
+    },
+    {
+      "mutant": 1,
+      "bank_mutant": 0,
+      "returncode": 1,
+      "stdout": "FATAL: tests/rtl/tb_hbm_svc_dma_sram_bank_wide.sv:44: record 256 mismatch expected=00123456789abcdeffedcba987654321055aa55aa3cc3c33c55aa00ff01010101 actual=10000000000000000000000000000000000000000000000000000000000000000\n       Time: 871947000 Scope: tb_hbm_svc_dma_sram_bank_wide\n",
+      "stderr": "",
+      "expected_outcome": "FAIL_wrong_ECC_column",
+      "gate_pass": true
+    },
+    {
+      "mutant": 0,
+      "bank_mutant": 1,
+      "returncode": 1,
+      "stdout": "FATAL: tests/rtl/tb_hbm_svc_dma_sram_bank_wide.sv:44: record 256 mismatch expected=00123456789abcdeffedcba987654321055aa55aa3cc3c33c55aa00ff01010101 actual=10000000000000000000000000000000000000000000000000000000000000000\n       Time: 871947000 Scope: tb_hbm_svc_dma_sram_bank_wide\n",
+      "stderr": "",
+      "expected_outcome": "FAIL_bank_selection",
+      "gate_pass": true
+    }
+  ],
+  "verdict": "PASS"
+}
