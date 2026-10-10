@@ -146,7 +146,7 @@ module ot_qfd_tt_ctl #(
     wire [15:0] land_q;
     ot_hdc_delay #(.W(IBW + NPE*CW + 16), .D(IS)) u_id (.clk(clk), .rst_n(rst_n), .d({ib, p_am, land_cnt}),
         .q({ib_q, pam_q, land_q}));
-    ot_hdc_delay #(.W(3 + W + NPE), .D(IS), .RESET(1)) u_is (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(3 + W + NPE), .D(IS), .RESET(1)) u_is (.clk(clk), .rst_n(rs),
         .d({go, fab_fault, x_rdy, tr_fault, p_fault}), .q({go_q, fab_q, xr_q, trf_q, pf_q}));
     wire [NW-1:0] q_nout, q_tiles, q_k;
     wire q_wsrc, q_round, q_mmode, q_oen, q_amax, q_rmax;

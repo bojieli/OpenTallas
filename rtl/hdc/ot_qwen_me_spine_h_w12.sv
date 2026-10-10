@@ -753,7 +753,7 @@ end endgenerate
     //: pre = s3 + (SD - 2 + OD + XDD) in ot_qwen_w12_matvec_part; here s3 + (SD - 3 + OD + XDD); the port element
     //: registers scale_q once before its multiplier, so the multiplier sees the same word on the same edge
     localparam integer PD = SD - 3 + OD + XDD + RX;
-    localparam integer PDX = (SPRE != 0) ? PD - 1 : PD;     // SPRE: the request is registered one edge before use
+    localparam integer PDX = (SPRE >= 2) ? PD - 2 : (SPRE != 0) ? PD - 1 : PD;   // SPRE: request registered 1 (2) edges before use
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
     ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
@@ -812,7 +812,40 @@ end endgenerate
     wire [2:0]      sq_j;
     wire [NW:0]     sq_nbs;
     wire [NPG*32-1:0] sq_pgi;
-    generate if (SPRE != 0) begin : g_spre
+    wire [NPG*AW-1:0] bq_sbase;     // SPRE 2: per-group copies
+    wire [NPG*NW-1:0] bq_t;
+    wire [NPG*3-1:0]  bq_j;
+    wire [NPG*(NW+1)-1:0] bq_nbs;
+    generate if (SPRE >= 2) begin : g_spre2
+        //: SPRE 2 (redesign-qwen): a shared registered stage A, then one registered copy PER SCALE GROUP (B, kept: placed by
+        //: the group's scale_addr / scale_gre outputs), then the per-group add -- the 24-b base no longer fans out to 48
+        //: adders across the tile in the add's own cycle.
+        reg [GOUT-1:0] a_act;
+        reg [AW-1:0]   a_sbase;
+        reg [NW-1:0]   a_t;
+        reg [2:0]      a_j;
+        reg [NW:0]     a_nbs;
+        reg [NPG*32-1:0] a_pgi;
+        always @(posedge clk or negedge rst_n) if (!rst_n) a_act <= 0; else a_act <= pre_scale_active;
+        always @(posedge clk) begin a_sbase <= pre_sbase; a_t <= pre_t; a_j <= pre_j; a_nbs <= pre_nb >> LW; a_pgi <= pgi; end
+        genvar sgb;
+        for (sgb = 0; sgb < NPG; sgb = sgb + 1) begin : g_b
+            (* keep *) reg          b_act;
+            (* keep *) reg [AW-1:0] b_sbase;
+            (* keep *) reg [NW-1:0] b_t;
+            (* keep *) reg [2:0]    b_j;
+            (* keep *) reg [NW:0]   b_nbs;
+            (* keep *) reg [31:0]   b_pgi;
+            always @(posedge clk or negedge rst_n) if (!rst_n) b_act <= 1'b0; else b_act <= a_act[sgb];
+            always @(posedge clk) begin b_sbase <= a_sbase; b_t <= a_t; b_j <= a_j; b_nbs <= a_nbs; b_pgi <= a_pgi[sgb*32 +: 32]; end
+            assign sq_act[sgb] = b_act;
+            assign sq_pgi[sgb*32 +: 32] = b_pgi;
+            assign bq_sbase[sgb*AW +: AW] = b_sbase; assign bq_t[sgb*NW +: NW] = b_t; assign bq_j[sgb*3 +: 3] = b_j;
+            assign bq_nbs[sgb*(NW+1) +: NW+1] = b_nbs;
+        end
+        assign sq_sbase = bq_sbase[AW-1:0]; assign sq_t = bq_t[NW-1:0]; assign sq_j = bq_j[2:0]; assign sq_nbs = bq_nbs[NW:0];
+    end else if (SPRE != 0) begin : g_spre
+        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0;
         reg [GOUT-1:0] r_act;
         reg [AW-1:0]   r_sbase;
         reg [NW-1:0]   r_t;
@@ -824,6 +857,7 @@ end endgenerate
         assign sq_act = r_act; assign sq_sbase = r_sbase; assign sq_t = r_t; assign sq_j = r_j; assign sq_nbs = r_nbs;
         assign sq_pgi = r_pgi;
     end else begin : g_nospre
+        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0;
         assign sq_act = pre_scale_active; assign sq_sbase = pre_sbase; assign sq_t = pre_t; assign sq_j = pre_j;
         assign sq_nbs = pre_nb >> LW; assign sq_pgi = pgi;
     end endgenerate
@@ -831,12 +865,22 @@ end endgenerate
         if (!rst_n) begin scale_re <= 1'b0; scale_gre <= 0; end
         else begin scale_re <= |sq_act; scale_gre <= sq_act; end
     end
+    generate if (SPRE < 2) begin : g_sadd1
     always @(posedge clk) begin
         for (sg = 0; sg < NPG; sg = sg + 1)
             scale_addr[sg*AW +: AW] <= !sq_act[sg] ? sq_sbase :
                 (SCALE_LOCAL != 0) ? sq_sbase + sq_t * IL + sq_j :
                                      sq_sbase + sq_nbs + sq_pgi[sg*32 +: 32] * IL;
     end
+    end else begin : g_sadd
+        genvar sga;
+        for (sga = 0; sga < NPG; sga = sga + 1) begin : g_a
+            always @(posedge clk)
+                scale_addr[sga*AW +: AW] <= !sq_act[sga] ? bq_sbase[sga*AW +: AW] :
+                    (SCALE_LOCAL != 0) ? bq_sbase[sga*AW +: AW] + bq_t[sga*NW +: NW] * IL + bq_j[sga*3 +: 3] :
+                    bq_sbase[sga*AW +: AW] + bq_nbs[sga*(NW+1) +: NW+1] + sq_pgi[sga*32 +: 32] * IL;
+        end
+    end endgenerate
 
     // -- result tag (a_tag + SCALE_LAT, the post-scale multiply) and the result valid ---------------------------------
     wire [TW-1:0] result_tag;
