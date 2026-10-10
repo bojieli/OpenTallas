@@ -27,6 +27,7 @@ function automatic [31:0] hgi_used(input [5:0] w);   // used bits of a word (res
         6'd40: hgi_used = 32'h0003FFFF;
         6'd41: hgi_used = 32'h001FFFFF;
         6'd46: hgi_used = 32'h000000FF;
+        6'd49: hgi_used = 32'hFFFFFFFF;
         6'd56: hgi_used = 32'hFFFFFFFF;
         6'd57: hgi_used = 32'hFFFFFFFF;
         6'd58: hgi_used = 32'hFFFFFFFF;

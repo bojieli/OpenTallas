@@ -45,13 +45,13 @@ module tb_hgi_mtp_xlate;
     reg [351:0] kent; integer kk;
     initial for (kk = 0; kk < 11; kk = kk + 1) kent[kk*32 +: 32] = 100000 * (kk + 1);
     reg xcv = 0; reg [200:0] xc = 0; wire xcr, xcpl_v, xcpl_f, xam_v; wire [16:0] xam;
-    wire dbv; reg dbr = 0; wire [17:0] dbt; wire [19:0] dbp; wire [31:0] dbj, dbo, xj, xs; wire [3:0] dbg, xg; wire [1:0] dbe;
+    wire dbv; reg dbr = 0; wire [17:0] dbt; wire [19:0] dbp; wire [31:0] dbj, dbo, xj, xs; wire [3:0] dbg, xg, dbk; wire [1:0] dbe; wire [31:0] dbl;
     reg cv = 0; reg [17:0] ct = 0; reg [19:0] cp = 0; reg [31:0] cj = 0; reg [3:0] cg = 0, cs = 0; reg ctx = 0;
     ot_hgi_mtp_xlate #(.MUT(MUT)) xt (.clk(clk), .rst_n(rst_n), .external_fault(1'b0), .backend_quiescent(1'b1),
         .kent(kent), .kstride(32'(KS)), .noise_token(17'd129279), .cmd_v(xcv), .cmd_ready(xcr), .cmd(xc), .cmd_job(32'h12345678),
         .cmd_generation(4'hb), .cmd_sequence(32'd5), .cpl_v(xcpl_v), .cpl_ready(1'b1), .cpl_job(xj), .cpl_generation(xg),
         .cpl_sequence(xs), .cpl_fault(xcpl_f), .am_v(xam_v), .am_idx(xam), .drained_ready(),
-        .db_v(dbv), .db_rdy(dbr), .db_token(dbt), .db_pos(dbp), .db_job(dbj), .db_gen(dbg), .db_entry(dbe), .db_off(dbo),
+        .db_v(dbv), .db_rdy(dbr), .db_token(dbt), .db_pos(dbp), .db_job(dbj), .db_gen(dbg), .db_entry(dbe), .db_off(dbo), .db_kind(dbk), .db_loff(dbl),
         .c_v(cv), .c_rdy(), .c_token(ct), .c_pos(cp), .c_job(cj), .c_gen(cg), .c_status(cs), .c_tokx(ctx));
     integer sdel = -1; reg [19:0] sp; reg [31:0] soff;
     always @(posedge clk) begin                       // sequencer model: random doorbell accept, completion 3..10 later
@@ -77,6 +77,7 @@ module tb_hgi_mtp_xlate;
                     if (errs < 5) $display("FAIL G26 kind %0d offset %0d expected L'=%0d x %0d", dbo / 100000 - 1, dbo % 100000, last_l, KS);
                     errs = errs + 1; end
             end
+            if (kent[dbk*32 +: 32] + dbl != dbo) begin $display("FAIL kind/loff %0d %0d vs off %0d", dbk, dbl, dbo); errs = errs + 1; end
             if (dbe != 2'd3 || dbj != 32'h12345678 || dbg != 4'hb) begin $display("FAIL doorbell identity / entry"); errs = errs + 1; end
         end
         if (lam_v) nlam = nlam + 1;

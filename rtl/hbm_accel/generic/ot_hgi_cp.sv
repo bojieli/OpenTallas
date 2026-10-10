@@ -35,6 +35,9 @@ module ot_hgi_cp #(
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,
     input  wire [3:0]    db_kernel,     // G23 KERNEL entry index (entry 3)
+    input  wire [31:0]   db_loff,       // G26: per-layer offset L' x kstride (kinds 3 / 7 / 8; the MTP translator)
+    output wire [11*32-1:0] md_kent,    // G23 / G26: committed MD words 16 .. 26 and 49 (to the MTP translator)
+    output wire [31:0]   md_kstride,
     // record fetch, VM read, dispatch, retire (ot_hgi_seq)
     output wire          f_req_v,
     input  wire          f_req_rdy,
@@ -80,10 +83,11 @@ module ot_hgi_cp #(
     wire c_commit = we_q && win && (a_q[4:0] == 5'h1F);
     wire c_wr = we_q && win;           // F1 (hgi_e2e 2026-10-09): the commit write stages MD words 62 / 63 too
     wire hold, seq_busy;
-    wire [5*32-1:0] md_d; wire [11*32-1:0] md_k;
+    wire [5*32-1:0] md_d; wire [11*32-1:0] md_k; wire [31:0] md_ks;
+    assign md_kent = md_k; assign md_kstride = md_ks;
     ot_hgi_cfg_master #(.SETTLE(SETTLE)) u_cfg (.clk(clk), .rst_n(rst_n), .w_en(c_wr), .w_pair(a_q[4:0]),
         .w_data(wd_q), .commit(c_commit), .busy(ub_q || seq_busy), .bus(cfg_bus),
-        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d), .md_k(md_k));
+        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d), .md_k(md_k), .md_ks(md_ks));
     wire [2*32-1:0] cp_act;
     ot_hgi_cfg_rx #(.W0(40), .NW(2), .RST({HGI_RST_W41, HGI_RST_W40})) u_rx (.clk(clk), .rst_n(rst_n), .bus(cfg_bus),
         .act(cp_act));
@@ -125,7 +129,7 @@ module ot_hgi_cp #(
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),
-        .db_entry(db_entry), .db_ncol(db_ncol), .db_kernel(db_kernel), .md_k(md_k), .f_req_v(sf_v), .f_req_rdy(sf_rdy), .f_req_addr(sf_addr), .f_rsp_v(f_rsp_v),
+        .db_entry(db_entry), .db_ncol(db_ncol), .db_kernel(db_kernel), .db_loff(db_loff), .md_k(md_k), .f_req_v(sf_v), .f_req_rdy(sf_rdy), .f_req_addr(sf_addr), .f_rsp_v(f_rsp_v),
         .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),

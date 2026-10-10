@@ -58,6 +58,7 @@ module ot_hgi_seq #(
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,       // verify columns: bounds the TOKX count k
     input  wire [3:0]    db_kernel,     // G23: entry 3 = KERNEL, offset = MD word 16 + db_kernel
+    input  wire [31:0]   db_loff,       // G26: + L' x kstride for kernels 3 / 7 / 8 (the MTP translator; 0 otherwise)
     input  wire [11*32-1:0] md_k,       // G23: MD words 16 .. 26 (cfg master)
     // record fetch: 32 B sectors, in-order responses
     output wire          f_req_v,
@@ -344,14 +345,14 @@ module ot_hgi_seq #(
     assign db_rdy = db_rdy_q;
     // timing pass 4: the doorbell is captured at the port (db_v -> the FSM's job-start enables was -239 ps); the FSM
     // starts from the captured copy one edge later
-    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry;
+    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry; reg [31:0] dbq_loff;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
         else if (db_v && db_rdy_q) db_pend <= 1'b1;
         else if (st == S_IDLE) db_pend <= 1'b0;
     // the fields follow the port while ready is high (enable = the ready flop alone; db_v -> 70 enables was -65 ps)
     always @(posedge clk) if (db_rdy_q) begin
-        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel;
+        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel; dbq_loff <= db_loff;
     end
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
@@ -388,7 +389,11 @@ module ot_hgi_seq #(
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
     reg [3:0] kern_q;
-    wire [31:0] kern_off = (kern_q > 4'd10) ? 32'd0 : md_k_r[kern_q*32 +: 32];
+    // G26: the kernel offset is registered at job start (S_IDLE) from the captured doorbell: md word 16 + kernel, plus
+    // L' x kstride for the per-layer kinds 3 / 7 / 8; an absent entry (0) stays 0 (E: completes with status 3)
+    reg [31:0] kern_off;
+    wire [31:0] kern_base = (dbq_kernel > 4'd10) ? 32'd0 : md_k_r[dbq_kernel*32 +: 32];
+    wire kern_pl = dbq_kernel == 4'd3 || dbq_kernel == 4'd7 || dbq_kernel == 4'd8;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] :
                              (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
@@ -536,6 +541,7 @@ module ot_hgi_seq #(
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
                     db_entry_q <= dbq_entry; kern_q <= dbq_kernel;
+                    kern_off <= (kern_base == 32'd0) ? 32'd0 : kern_pl ? kern_base + dbq_loff : kern_base;
 `ifdef OT_HGI_SEQ_CC_PRESET
                     cc_lo <= 16'hFF00; cc_hi <= 16'd0; cc_c <= 1'b0;   // bench: start near the low half's wrap
 `else
