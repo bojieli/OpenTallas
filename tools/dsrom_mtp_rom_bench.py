@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 M = "rtl/dsrom_sys/mtp"
 TRACES = "results/rtl/dshbm_dspark_rtl_20261003/traces"
 COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/ot_dsrom_mtp_seq.sv", f"{M}/ot_dsrom_wfc_tok.sv", f"{M}/ot_dsrom_wfc_lnk.sv",
-          f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
+          f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", f"{M}/ot_dsrom_mtp_link_rtt.sv", f"{M}/dsfd_mtp_seq_rtt.sv", f"{M}/tb_mtp_link_rtt.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
           "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
           "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
@@ -86,6 +86,17 @@ def cases():
     c["prd_s0_neg_predoff"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_stg_neg_predoff"] = dict(c["stg_r1"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_s0_neg_predoff_nochk"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF", "OT_WFCVMX_MUT_NOPCHK"], expect="fail")
+    # Claude mtp-wfc 2026-10-10: native binding of dsfd_mtp_seq on head631 (relay stations on every link).
+    # rtt_rly_*: dsfd_mtp_seq_rtt behind the actual relay counts (exact); rtt_norly_*: the successor with no relays;
+    # negatives: the pinned dsfd_mtp_seq behind the relays (3-cycle grant history overflows) and the successor with
+    # its grant history cut to three (OT_MTP_NEG_SHORT_RTT).
+    for k in ("s0_tr_forced", "s0_tr_dspark", "s0_hash_u3", "s0_hash_u4_ar1", "s0_hash_u1_fast"):
+        d = dict(c[k]); d["params"] = dict(d["params"], SEQ_RTT=1, RLY=1); c["rtt_rly_" + k] = d
+    d = dict(c["s0_tr_forced"]); d["params"] = dict(d["params"], SEQ_RTT=1); c["rtt_norly_s0_tr_forced"] = d
+    d = dict(c["s0_hash_u3"]); d["params"] = dict(d["params"], SEQ_RTT=0, RLY=1); d["expect"] = "fail"
+    c["rtt_neg_legacy_rly_s0_hash_u3"] = d
+    d = dict(c["s0_hash_u3"]); d["params"] = dict(d["params"], SEQ_RTT=1, RLY=1); d["expect"] = "fail"
+    d["defines"] = ["OT_MTP_NEG_SHORT_RTT"]; c["rtt_neg_short_s0_hash_u3"] = d
     for k in c:
         c[k].setdefault("expect", "pass")
     return c
@@ -111,6 +122,8 @@ def run_case(name, spec, out: Path):
     tag = {"tb_mtp_rom_s0": "MTP_S0", "tb_mtp_rom_stg": "MTP_STG", "tb_mtp_rom_tok": "MTP_TOK",
            "tb_mtp_rom_fan": "MTP_FAN"}[spec["tb"]]
     m = re.search(rf"^{tag} (PASS|FAIL).*$", r.stdout, re.M)
+    if not m:   # a receiver's own overflow assertion (ot_dsrom_mtp_lrx*) ends the run before the bench verdict
+        m = re.search(r"^LINK_REG (FAIL).*$", r.stdout, re.M)
     got = m.group(1).lower() if m else "nolog"
     rec.update(result=m.group(0) if m else r.stdout[-400:], got=got,
                verdict="OK" if got == spec["expect"] else "UNEXPECTED")

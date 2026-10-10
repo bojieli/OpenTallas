@@ -39,6 +39,11 @@ module tb_mtp_rom_s0;
     parameter integer T_DRAFT = 700;
     parameter integer T_HEAD  = 30;
     parameter integer MAXC    = 3000000;
+    // Claude mtp-wfc 2026-10-10 (default off): SEQ_RTT 1 = dsfd_mtp_seq_rtt; RLY 1 = registered relay stations on
+    // the six sequencer links at the regenerated head631 chain counts (capture->mtp 5 / grant 6, mtp->collective 6 /
+    // grant 7, vm->mtp 9 / mtp->vm 10), bench-side receivers sized for their own round trip (ot_dsrom_mtp_lrx_rtt).
+    parameter integer SEQ_RTT = 0;
+    parameter integer RLY     = 0;
     localparam integer FLIT = 512, NW = 21, USER_W = 10, VWA = 15, XW = 41, G = 5, V = 129280;
     localparam integer HDR_TYPE = 16, HDR_LEN = 24, HDR_USER = 32, HDR_POS = 40, HDR_IDX = 61, HDR_VAL = 82,
                        HDR_TOK = 114, HDR_ADDR = 135, HDR_USER_HI = 151;
@@ -124,26 +129,59 @@ module tb_mtp_rom_s0;
     wire s_rv, s_rg, s_tv, s_tg, s_sv, s_sg, s_wv, s_wg, s_hv, s_hg, s_qv, s_qg;
     wire [FLIT-1:0] s_rd, s_td; wire [SW-1:0] s_sd; wire [USER_W-1:0] s_wd; wire [DW-1:0] s_hd, s_qd;
     wire [2*NW+USER_W+4:0] s_acc;
-    dsfd_mtp_seq #(.MAXU(SEQ_MAXU)) u_seq (.ck(fclk), .rst(rst_n), .f_cfg({cfg_glen, cfg_plen}),
-        .f_rv(s_rv), .f_rd(s_rd), .t_rg(s_rg), .t_tv(s_tv), .t_td(s_td), .f_tg(s_tg),
-        .t_sv(s_sv), .t_sd(s_sd), .f_sg(s_sg), .f_wv(s_wv), .f_wd(s_wd), .t_wg(s_wg),
-        .t_hv(s_hv), .t_hd(s_hd), .f_hg(s_hg), .f_qv(s_qv), .f_qd(s_qd), .t_qg(s_qg), .t_acc(s_acc));
+    // sequencer pins (n_*) and bench-side link pins (s_*), joined directly (RLY 0) or through relay stations
+    wire n_rv, n_rg, n_tv, n_tg, n_sv, n_sg, n_wv, n_wg, n_hv, n_hg, n_qv, n_qg;
+    wire [FLIT-1:0] n_rd, n_td; wire [SW-1:0] n_sd; wire [USER_W-1:0] n_wd; wire [DW-1:0] n_hd, n_qd;
+    localparam integer CF = RLY ? 5 : 0, CR = RLY ? 6 : 0, OF = RLY ? 6 : 0, OR = RLY ? 7 : 0,
+                       VF = RLY ? 9 : 0, VR = RLY ? 10 : 0;
+    mtp_test_relay #(.W(FLIT+1), .HOPS(CF)) y_rf (.clk(fclk), .rst_n(rst_n), .in_data({s_rv, s_rd}), .out_data({n_rv, n_rd}));
+    mtp_test_relay #(.W(1), .HOPS(CR)) y_rr (.clk(fclk), .rst_n(rst_n), .in_data(n_rg), .out_data(s_rg));
+    mtp_test_relay #(.W(FLIT+1), .HOPS(OF)) y_tf (.clk(fclk), .rst_n(rst_n), .in_data({n_tv, n_td}), .out_data({s_tv, s_td}));
+    mtp_test_relay #(.W(1), .HOPS(OR)) y_tr (.clk(fclk), .rst_n(rst_n), .in_data(s_tg), .out_data(n_tg));
+    mtp_test_relay #(.W(SW+1), .HOPS(OF)) y_sf (.clk(fclk), .rst_n(rst_n), .in_data({n_sv, n_sd}), .out_data({s_sv, s_sd}));
+    mtp_test_relay #(.W(1), .HOPS(OR)) y_sr (.clk(fclk), .rst_n(rst_n), .in_data(s_sg), .out_data(n_sg));
+    mtp_test_relay #(.W(USER_W+1), .HOPS(VF)) y_wf (.clk(fclk), .rst_n(rst_n), .in_data({s_wv, s_wd}), .out_data({n_wv, n_wd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_wr (.clk(fclk), .rst_n(rst_n), .in_data(n_wg), .out_data(s_wg));
+    mtp_test_relay #(.W(DW+1), .HOPS(VR)) y_hf (.clk(fclk), .rst_n(rst_n), .in_data({n_hv, n_hd}), .out_data({s_hv, s_hd}));
+    mtp_test_relay #(.W(1), .HOPS(VF)) y_hr (.clk(fclk), .rst_n(rst_n), .in_data(s_hg), .out_data(n_hg));
+    mtp_test_relay #(.W(DW+1), .HOPS(VF)) y_qf (.clk(fclk), .rst_n(rst_n), .in_data({s_qv, s_qd}), .out_data({n_qv, n_qd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_qr (.clk(fclk), .rst_n(rst_n), .in_data(n_qg), .out_data(s_qg));
+    generate if (SEQ_RTT) begin : g_seq_rtt
+        dsfd_mtp_seq_rtt #(.MAXU(SEQ_MAXU)) u_seq (.ck(fclk), .rst(rst_n), .f_cfg({cfg_glen, cfg_plen}),
+            .f_rv(n_rv), .f_rd(n_rd), .t_rg(n_rg), .t_tv(n_tv), .t_td(n_td), .f_tg(n_tg),
+            .t_sv(n_sv), .t_sd(n_sd), .f_sg(n_sg), .f_wv(n_wv), .f_wd(n_wd), .t_wg(n_wg),
+            .t_hv(n_hv), .t_hd(n_hd), .f_hg(n_hg), .f_qv(n_qv), .f_qd(n_qd), .t_qg(n_qg), .t_acc(s_acc));
+    end else begin : g_seq
+        dsfd_mtp_seq #(.MAXU(SEQ_MAXU)) u_seq (.ck(fclk), .rst(rst_n), .f_cfg({cfg_glen, cfg_plen}),
+            .f_rv(n_rv), .f_rd(n_rd), .t_rg(n_rg), .t_tv(n_tv), .t_td(n_td), .f_tg(n_tg),
+            .t_sv(n_sv), .t_sd(n_sd), .f_sg(n_sg), .f_wv(n_wv), .f_wd(n_wd), .t_wg(n_wg),
+            .t_hv(n_hv), .t_hd(n_hd), .f_hg(n_hg), .f_qv(n_qv), .f_qd(n_qd), .t_qg(n_qg), .t_acc(s_acc));
+    end endgenerate
     // bench-side grant adapters (the same pair the blocks use)
     reg br_v = 0; reg [FLIT-1:0] br_d = 0; wire br_r;                 // RESULT -> seq
     ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT)) a_r (.clk(fclk), .rst_n(rst_n), .c_valid(br_v), .c_ready(br_r), .c_data(br_d),
         .l_valid(s_rv), .l_ready(s_rg), .l_data(s_rd));
     wire bt_v; wire [FLIT-1:0] bt_d; reg bt_r = 0;                      // seq -> token-return link
-    ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT)) a_t (.clk(fclk), .rst_n(rst_n), .l_valid(s_tv), .l_ready(s_tg), .l_data(s_td),
-        .c_valid(bt_v), .c_ready(bt_r), .c_data(bt_d));
     wire bs_v; wire [SW-1:0] bs_d;                                      // seeds
-    ot_rom_pkg_ctrl_wfc_lrx #(.W(SW)) a_s (.clk(fclk), .rst_n(rst_n), .l_valid(s_sv), .l_ready(s_sg), .l_data(s_sd),
-        .c_valid(bs_v), .c_ready(1'b1), .c_data(bs_d));
+    wire bh_v; wire [DW-1:0] bh_d;                                      // draft-head steps
+    generate if (RLY) begin : g_rx_rtt
+        ot_dsrom_mtp_lrx_rtt #(.W(FLIT), .D(OF+OR+4), .ENABLE_RTT(1), .FORWARD_HOPS(OF), .RETURN_HOPS(OR)) a_t (
+            .clk(fclk), .rst_n(rst_n), .l_valid(s_tv), .l_ready(s_tg), .l_data(s_td), .c_valid(bt_v), .c_ready(bt_r), .c_data(bt_d));
+        ot_dsrom_mtp_lrx_rtt #(.W(SW), .D(OF+OR+4), .ENABLE_RTT(1), .FORWARD_HOPS(OF), .RETURN_HOPS(OR)) a_s (
+            .clk(fclk), .rst_n(rst_n), .l_valid(s_sv), .l_ready(s_sg), .l_data(s_sd), .c_valid(bs_v), .c_ready(1'b1), .c_data(bs_d));
+        ot_dsrom_mtp_lrx_rtt #(.W(DW), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VR), .RETURN_HOPS(VF)) a_h (
+            .clk(fclk), .rst_n(rst_n), .l_valid(s_hv), .l_ready(s_hg), .l_data(s_hd), .c_valid(bh_v), .c_ready(1'b1), .c_data(bh_d));
+    end else begin : g_rx
+        ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT)) a_t (.clk(fclk), .rst_n(rst_n), .l_valid(s_tv), .l_ready(s_tg), .l_data(s_td),
+            .c_valid(bt_v), .c_ready(bt_r), .c_data(bt_d));
+        ot_rom_pkg_ctrl_wfc_lrx #(.W(SW)) a_s (.clk(fclk), .rst_n(rst_n), .l_valid(s_sv), .l_ready(s_sg), .l_data(s_sd),
+            .c_valid(bs_v), .c_ready(1'b1), .c_data(bs_d));
+        ot_rom_pkg_ctrl_wfc_lrx #(.W(DW)) a_h (.clk(fclk), .rst_n(rst_n), .l_valid(s_hv), .l_ready(s_hg), .l_data(s_hd),
+            .c_valid(bh_v), .c_ready(1'b1), .c_data(bh_d));
+    end endgenerate
     reg bw_v = 0; reg [USER_W-1:0] bw_d = 0; wire bw_r;                 // rows ready
     ot_rom_pkg_ctrl_wfc_ltx #(.W(USER_W)) a_w (.clk(fclk), .rst_n(rst_n), .c_valid(bw_v), .c_ready(bw_r), .c_data(bw_d),
         .l_valid(s_wv), .l_ready(s_wg), .l_data(s_wd));
-    wire bh_v; wire [DW-1:0] bh_d;                                      // draft-head steps
-    ot_rom_pkg_ctrl_wfc_lrx #(.W(DW)) a_h (.clk(fclk), .rst_n(rst_n), .l_valid(s_hv), .l_ready(s_hg), .l_data(s_hd),
-        .c_valid(bh_v), .c_ready(1'b1), .c_data(bh_d));
     reg bq_v = 0; reg [DW-1:0] bq_d = 0; wire bq_r;                     // draft-head results
     ot_rom_pkg_ctrl_wfc_ltx #(.W(DW)) a_q (.clk(fclk), .rst_n(rst_n), .c_valid(bq_v), .c_ready(bq_r), .c_data(bq_d),
         .l_valid(s_qv), .l_ready(s_qg), .l_data(s_qd));
