@@ -2318,6 +2318,9 @@ ENG_BUSES = (
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
+CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
+COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
+COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -3029,7 +3032,14 @@ def build_r8(variant=None):
         # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
         # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
         centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
-    ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
+    if COLL_SPLIT3:   # s81-gen (redesign-ds 19:54): the collective slab takes the split3 composition outline
+        cs_ = json.loads((ROOT / COLL_SPLIT3_COMP).read_text())['slab_um']
+        assert cs_[0] <= cw + 1e-6, ('collective split3 slab wider than the hub column', cs_, cw)
+        slab_w = {'collective': up(cs_[0], GX)}
+        centre_area['collective'] = slab_w['collective'] * up(cs_[1], GY) / 1e6
+    else:
+        slab_w = {}
+    ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
@@ -3067,9 +3077,9 @@ def build_r8(variant=None):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
-            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2',
+            slab(n, centre_area[n], x_sp, yy, slab_w.get(n, cw), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
                  master='dsfd_host' if n == 'host' else None)
-        yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
+        yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + SPINE_GAP
     slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
     corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
@@ -3153,7 +3163,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -5117,10 +5127,49 @@ def masters_r8(m, k=1):
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst == 'ot_s81_cfg7_seq' else 7, f'r8 {it.kind}')
         M[mst] = Mx
         _faces_r8(m, Mx, it, ports)
+        if CK_RULE:
+            _ck_rule(Mx)
     if k > 1:
         for name, ports in real_ports_r8().items():
             M[name] = _spread_ports(_real_master_bundled(REAL_FILES[name], k, ports), k)
     return M
+
+
+def _ck_rule(Mx, min_l=300.0):
+    """--ck-rule (s81-gen 2026-10-09, redesign-ds proposal; checker tools/s81_ph/ck_pin_rule.py): a generated master
+    whose longer side L >= min_l takes its clock pin(s) on a LONG face within the middle third (|pos - L/2| <= L/6), at
+    the free spot nearest the middle (ck at a corner / short face of a long tile cost 600-1,150 ps of insertion)."""
+    w, h = Mx.w, Mx.h
+    L = max(w, h)
+    if L < min_l:
+        return
+    longf = ('S', 'N') if w >= h else ('W', 'E')
+    K = _LAY_K[0]
+    span = lambda b: max(1, math.ceil(b / K)) * K * 0.048 + 0.432
+    for ckp in [p_ for p_ in Mx.order if p_ in ('ck', 'clk', 'cks', 'ckh')]:
+        sp_ = Mx.ports[ckp]
+        if sp_[0] != 'face':
+            continue
+        _, bits, f0, ly0, c0, pt0 = sp_
+        if f0 in longf and abs(c0 - L / 2) <= L / 6:
+            continue
+        best = None
+        for f in ((f0,) if f0 in longf else ()) + longf:
+            occ = [(v[4] - span(v[1]) / 2, v[4] + span(v[1]) / 2) for q_, v in Mx.ports.items()
+                   if q_ != ckp and v[0] == 'face' and v[2] == f]
+            ly = 'M5' if f in 'NS' else 'M4'
+            for j in range(0, int(L / 6 / 0.432)):
+                for c in (L / 2 + j * 0.432, L / 2 - j * 0.432):
+                    lo, hi = c - span(bits) / 2, c + span(bits) / 2
+                    if all(hi <= a_ or lo >= b_ for a_, b_ in occ):
+                        best = (f, ly, c)
+                        break
+                if best:
+                    break
+            if best:
+                break
+        assert best, (Mx.name, ckp, 'no free spot in the middle third of a long face')
+        Mx.ports[ckp] = ('face', bits, best[0], best[1], best[2], 1)
 
 
 def _spread_ports(Mx, k):
@@ -5693,6 +5742,10 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--ck-rule', action='store_true', help='s81-gen 2026-10-09 (redesign-ds clock-pin rule): every generated '
+                    'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
+    ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
+                    'physical/s81_ph_views/collective/composition_split3.json (three-tile core column); default off')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
@@ -5782,6 +5835,9 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
+    global COLL_SPLIT3, CK_RULE
+    CK_RULE = bool(getattr(a, 'ck_rule', False))
+    COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False))
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
