@@ -1,0 +1,5 @@
+# ds-1010 lat-audit (2026-10-10): stationed request/response latency on the DS-ROM S81 dies
+
+- head631 (`head631.opts`, generator src 6aac16222 = main for the head die): `tools/s81/hub_stage_count.py --check-mtp-rtt` gives the pin-to-pin stages capture->mtp 6, mtp->capture 7, vm->mtp 11, mtp->vm 11, mtp<->collective 8/8. These are the chain stations plus the hop-fix / pin-relay `g_hb_*` stations. The earlier chain-only count was 5/6/9/10, so dsfd_mtp_seq_rtt is now 6/7/11/11 (`head631_stages.json`, verdict PASS).
+- `mtp_rtt_link_gate.log`: the real-chain receivers PASS. The legacy receiver, the short-RTT mutant and the stale 5/6 and 9/10 receivers on the real chains all FAIL, as required. A receiver one hop over-sized PASSes, as it should for a credit receiver.
+- `mtp_rom_bench_rtt.log`: the system rtt_s0 cases PASS at the new chains, and neg_off1 FAILs as expected. The stale-RTT case was dropped: its traffic never stalls a receiver with flits in flight, so it passed. The receiver-depth negatives therefore live in the link gate.
