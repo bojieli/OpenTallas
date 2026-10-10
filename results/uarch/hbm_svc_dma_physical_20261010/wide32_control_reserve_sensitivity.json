@@ -1,0 +1,1991 @@
+{
+  "schema": 1,
+  "status": "CURRENT_CONTROL_RESERVATION_SENSITIVITY_NOT_HARDENED_TOTAL",
+  "sources": {
+    "results/uarch/hbm_svc_dma_physical_20261010/native32_reference_mappedshape.json": "12bb605e3d89218943ef05455353928c99fa89aa3116f5efb2bd6417404ef101",
+    "tools/hbm_svc_dma_wide_control_sweep.py": "3b456d7f93fec5d1a1636415e18ec175d83d6e2c177f0b02195daeaeef46183a",
+    "tools/hbm_svc_dma_wide_plan.py": "0e42f7ff594b0281a770f3fa184746cbbb652850889708b7e9ae4b394ad6e82b",
+    "results/uarch/hbm_svc_dma_physical_20261010/bank_wide_mappedshape.json": "bc69c264e71fcabb562e769f22f6fc1abf7897fce425fe614f95d213026a3671",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+  },
+  "supersedes_current_fit_claim": {
+    "historical_commit": "86cb03748",
+    "historical_evidence": "results/uarch/hbm_svc_dma_physical_20261010/wide32_height480_sizing.json",
+    "historical_combined_reserve_um2_per_pc": 2000,
+    "reason": "paired protected metadata reset FF floor exceeds combined reserve even before context payload and native CAM",
+    "historical_record_preserved": true,
+    "current_adopted_total_fit": false
+  },
+  "protected_cache_minimum": {
+    "metadata_records": 1024,
+    "metadata_flags_per_record": 3,
+    "paired": true,
+    "metadata_ff_count": 6144,
+    "metadata_ff_cell": "DFFASRHQNx1_ASAP7_75t_R",
+    "metadata_cell_area_um2": 0.37908,
+    "metadata_ff_area_floor_um2": 2329.0675199999996,
+    "context_payload_ff_count": 4096,
+    "context_ff_cell": "DFFHQNx1_ASAP7_75t_R",
+    "context_cell_area_um2": 0.2916,
+    "context_ff_area_floor_um2": 1194.3936,
+    "combined_cache_ff_area_floor_um2": 3523.46112,
+    "excludes": [
+      "cache address/selection logic",
+      "native CAM",
+      "CTS and hold repair",
+      "cell routing"
+    ],
+    "qualification": "minimum proposed protected cache inventory, not mapped cache RTL area"
+  },
+  "native_control": {
+    "reserve_um2_per_pc": 1000,
+    "reference_mapped_area_um2_per_pc": 495.18054000000006,
+    "reference_mapping_commit": "12f583320",
+    "reference_metadata_ff_count": 832,
+    "reference_metadata_protected": false,
+    "reference_RTL_sha256": {
+      "rtl/ot_hbm_svc_dma_pc_tile_wide.sv": "017bcd13d628ad7803d1ddf40cc695768615e610fcb16bebded3a2d7968e27b3"
+    },
+    "protected_uplift_um2_per_pc": null,
+    "protected_uplift_allowance_um2_per_pc": 504.81945999999994,
+    "status": "unprotected native32 reference mapped; protected uplift UNKNOWN, separate1000 reservation provisional; no timing claim"
+  },
+  "die": {
+    "original_outline_um": [
+      31734.288,
+      25282.8
+    ],
+    "proposed_outline_um": [
+      31734.288,
+      25999.92
+    ],
+    "original_area_mm2": 802.3316566464,
+    "proposed_area_mm2": 825.08894925696,
+    "added_area_mm2": 22.75729261056,
+    "insertion_per_band_um": 358.56,
+    "insertion_grid_um": 2.16,
+    "insertion_cut_y_um": [
+      1466.616,
+      23816.16
+    ],
+    "reticle_fit": true,
+    "naive_360um_band_insertion_height_um": 26002.8,
+    "newly_introduced_existing_block_overlaps": [],
+    "outline_failures": [],
+    "baseline_existing_overlap_count": 0
+  },
+  "geometry_fit": true,
+  "planning_policy": "60/65/70/75% are sensitivity points; owner permits added area and closure cost, not arbitrary hard utilization caps",
+  "current_total_area_qualification": "UNKNOWN: actual full cache/native mapping and physical obligations pending",
+  "points": [
+    {
+      "cache_control_reserve_um2_per_pc": 5000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5923545470993118,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": 3732.20428799995,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 28140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 52548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 76956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 25000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 360802.14384000003,
+          "prospective_utilization": 0.5755909532954748,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 376102.656,
+              "remaining_um2": 15300.512159999984,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_um2": 46642.40015999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 438786.432,
+              "remaining_um2": 77984.28815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_um2": 109326.17615999997,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5699467299410399,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 304411.39199999993,
+              "remaining_um2": 15247.596287999884,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_um2": 40615.21228799992,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 355146.62399999995,
+              "remaining_um2": 65982.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.24,
+              "remaining_um2": 91350.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5614562357870878,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 309014.784,
+              "remaining_um2": 19850.988287999935,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_um2": 45602.22028799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 360517.24799999996,
+              "remaining_um2": 71353.45228799991,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_um2": 97104.68428799993,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 15000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 220135.850784,
+          "prospective_utilization": 0.5834991854713122,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 226361.088,
+              "remaining_um2": 6225.2372159999795,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_um2": 25088.66121599998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_um2": 43952.08521599998,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_um2": 62815.50921599998,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5667296726949795,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 306139.39199999993,
+              "remaining_um2": 16975.596287999884,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_um2": 42487.21228799992,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 357162.62399999995,
+              "remaining_um2": 67998.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.24,
+              "remaining_um2": 93510.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5672675977611548,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305849.088,
+              "remaining_um2": 16685.29228799994,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_um2": 42172.716287999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_um2": 67660.14028799994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36000000004,
+              "remaining_um2": 93147.564288,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.530273447974762,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 327186.43200000003,
+              "remaining_um2": 38022.63628799998,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_um2": 65288.172288,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.504,
+              "remaining_um2": 92553.70828799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.04000000004,
+              "remaining_um2": 119819.24428799999,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5923545470993118,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": 3732.20428799995,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 28140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 52548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 76956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 25000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 360802.14384000003,
+          "prospective_utilization": 0.5777783412043955,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 374678.784,
+              "remaining_um2": 13876.640159999952,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_um2": 45099.87215999997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 437125.24799999996,
+              "remaining_um2": 76323.10415999993,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_um2": 107546.33615999995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5672932387129824,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305835.264,
+              "remaining_um2": 16671.468287999975,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331321.536,
+              "remaining_um2": 42157.74028799997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_um2": 67644.01228799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_um2": 93130.28428800002,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 25000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 360802.14384000003,
+          "prospective_utilization": 0.5439041130484114,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 398013.696,
+              "remaining_um2": 37211.55215999996,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 431181.504,
+              "remaining_um2": 70379.36015999998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 464349.312,
+              "remaining_um2": 103547.16815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_um2": 136714.97615999996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.5970605821301429,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 290587.392,
+              "remaining_um2": 1423.5962879999424,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_um2": 25639.21228799998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_um2": 49854.82828799996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_um2": 74070.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 20000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 289163.79571200005,
+          "prospective_utilization": 0.550183546310706,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 315346.176,
+              "remaining_um2": 26182.380287999928,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_um2": 52461.228287999926,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_um2": 78740.07628799992,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_um2": 105018.92428799992,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 15000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 220135.850784,
+          "prospective_utilization": 0.6002894739735495,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 220029.69599999997,
+              "remaining_um2": -106.15478400004213,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_um2": 18229.653215999977,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 256701.31199999998,
+              "remaining_um2": 36565.46121599997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 275037.12,
+              "remaining_um2": 54901.269215999986,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 15000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 220135.850784,
+          "prospective_utilization": 0.5271161542811431,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 250573.82399999996,
+              "remaining_um2": 30437.973215999955,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 271454.976,
+              "remaining_um2": 51319.125216000015,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_um2": 72200.27721599996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.27999999997,
+              "remaining_um2": 93081.42921599996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        }
+      ],
+      "maximum_prospective_utilization": 0.6002894739735495,
+      "fits_all_tiles_at_percent": {
+        "60": false,
+        "65": true,
+        "70": true,
+        "75": true
+      },
+      "failures_by_percent": {
+        "60": [
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "65": [],
+        "70": [],
+        "75": []
+      }
+    },
+    {
+      "cache_control_reserve_um2_per_pc": 7000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.6087426165847264,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": -4267.79571200005,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 20140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 44548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 68956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 35000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 370802.14384000003,
+          "prospective_utilization": 0.5915440445706398,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 376102.656,
+              "remaining_um2": 5300.512159999984,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_um2": 36642.40015999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 438786.432,
+              "remaining_um2": 67984.28815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_um2": 99326.17615999997,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.585714865188751,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 304411.39199999993,
+              "remaining_um2": 7247.596287999884,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_um2": 32615.212287999922,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 355146.62399999995,
+              "remaining_um2": 57982.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.24,
+              "remaining_um2": 83350.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.576989473187147,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 309014.784,
+              "remaining_um2": 11850.988287999935,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_um2": 37602.22028799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 360517.24799999996,
+              "remaining_um2": 63353.45228799991,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_um2": 89104.68428799993,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 21000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 226135.850784,
+          "prospective_utilization": 0.5994029789713682,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 226361.088,
+              "remaining_um2": 225.23721599997953,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_um2": 19088.66121599998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_um2": 37952.08521599998,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_um2": 56815.50921599998,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.5824088048989137,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 306139.39199999993,
+              "remaining_um2": 8975.596287999884,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_um2": 34487.21228799992,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 357162.62399999995,
+              "remaining_um2": 59998.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.24,
+              "remaining_um2": 85510.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.5829616121896039,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305849.088,
+              "remaining_um2": 8685.292287999939,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_um2": 34172.716287999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_um2": 59660.14028799994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36000000004,
+              "remaining_um2": 85147.564288,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.5449439829680957,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 327186.43200000003,
+              "remaining_um2": 30022.63628799998,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_um2": 57288.172288,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.504,
+              "remaining_um2": 84553.70828799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.04000000004,
+              "remaining_um2": 111819.24428799999,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.6087426165847264,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": -4267.79571200005,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 20140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 44548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 68956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 35000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 370802.14384000003,
+          "prospective_utilization": 0.5937920581700191,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 374678.784,
+              "remaining_um2": 3876.6401599999517,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_um2": 35099.87215999997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 437125.24799999996,
+              "remaining_um2": 66323.10415999993,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_um2": 97546.33615999995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.5829879625235107,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305835.264,
+              "remaining_um2": 8671.468287999975,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 331321.536,
+              "remaining_um2": 34157.74028799997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_um2": 59644.01228799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_um2": 85130.28428800002,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 35000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 370802.14384000003,
+          "prospective_utilization": 0.5589789711759064,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 398013.696,
+              "remaining_um2": 27211.552159999963,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 431181.504,
+              "remaining_um2": 60379.36015999998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 464349.312,
+              "remaining_um2": 93547.16815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_um2": 126714.97615999996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.6135788486900355,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 290587.392,
+              "remaining_um2": -6576.403712000058,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_um2": 17639.21228799998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_um2": 41854.82828799996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_um2": 66070.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 28000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 297163.79571200005,
+          "prospective_utilization": 0.5654049137009356,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 315346.176,
+              "remaining_um2": 18182.380287999928,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_um2": 44461.228287999926,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_um2": 70740.07628799992,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_um2": 97018.92428799992,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 21000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 226135.850784,
+          "prospective_utilization": 0.6166509018419042,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 220029.69599999997,
+              "remaining_um2": -6106.154784000042,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_um2": 12229.653215999977,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 256701.31199999998,
+              "remaining_um2": 30565.461215999967,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 275037.12,
+              "remaining_um2": 48901.269215999986,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 21000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 226135.850784,
+          "prospective_utilization": 0.5414831777097356,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 250573.82399999996,
+              "remaining_um2": 24437.973215999955,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 271454.976,
+              "remaining_um2": 45319.125216000015,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_um2": 66200.27721599996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.27999999997,
+              "remaining_um2": 87081.42921599996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        }
+      ],
+      "maximum_prospective_utilization": 0.6166509018419042,
+      "fits_all_tiles_at_percent": {
+        "60": false,
+        "65": true,
+        "70": true,
+        "75": true
+      },
+      "failures_by_percent": {
+        "60": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "65": [],
+        "70": [],
+        "75": []
+      }
+    },
+    {
+      "cache_control_reserve_um2_per_pc": 10000,
+      "native_control_reserve_um2_per_pc": 1000,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6333247208128483,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": -16267.79571200005,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 8140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 32548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 56956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 50000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 385802.14384000003,
+          "prospective_utilization": 0.6154736814833874,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 376102.656,
+              "remaining_um2": -9699.487840000016,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 407444.544,
+              "remaining_um2": 21642.40015999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 438786.432,
+              "remaining_um2": 52984.28815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 470128.32,
+              "remaining_um2": 84326.17615999997,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6093670680603177,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 304411.39199999993,
+              "remaining_um2": -4752.403712000116,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 329779.008,
+              "remaining_um2": 20615.212287999922,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 355146.62399999995,
+              "remaining_um2": 45982.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 380514.24,
+              "remaining_um2": 71350.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6002893292872358,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 309014.784,
+              "remaining_um2": -149.01171200006502,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 334766.016,
+              "remaining_um2": 25602.220287999953,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 360517.24799999996,
+              "remaining_um2": 51353.45228799991,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 386268.48,
+              "remaining_um2": 77104.68428799993,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 30000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 235135.850784,
+          "prospective_utilization": 0.6232586692214521,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 226361.088,
+              "remaining_um2": -8774.76278400002,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 245224.512,
+              "remaining_um2": 10088.661215999979,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 264087.936,
+              "remaining_um2": 28952.085215999978,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 282951.36,
+              "remaining_um2": 47815.50921599998,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6059275032048148,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 306139.39199999993,
+              "remaining_um2": -3024.403712000116,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 331651.008,
+              "remaining_um2": 22487.212287999922,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 357162.62399999995,
+              "remaining_um2": 47998.8282879999,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382674.24,
+              "remaining_um2": 73510.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6065026338322775,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305849.088,
+              "remaining_um2": -3314.7077120000613,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 331336.51200000005,
+              "remaining_um2": 22172.716287999996,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356823.936,
+              "remaining_um2": 47660.14028799994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382311.36000000004,
+              "remaining_um2": 73147.564288,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.5669497854580963,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 327186.43200000003,
+              "remaining_um2": 18022.63628799998,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 354451.96800000005,
+              "remaining_um2": 45288.172288,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 381717.504,
+              "remaining_um2": 72553.70828799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 408983.04000000004,
+              "remaining_um2": 99819.24428799999,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6333247208128483,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 292896.0,
+              "remaining_um2": -16267.79571200005,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 317304.0,
+              "remaining_um2": 8140.20428799995,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 341712.0,
+              "remaining_um2": 32548.20428799995,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 366120.0,
+              "remaining_um2": 56956.20428799995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 50000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 385802.14384000003,
+          "prospective_utilization": 0.6178126336184544,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 374678.784,
+              "remaining_um2": -11123.359840000048,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 405902.016,
+              "remaining_um2": 20099.87215999997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 437125.24799999996,
+              "remaining_um2": 51323.10415999993,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 468348.48,
+              "remaining_um2": 82546.33615999995,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6065300482393031,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 305835.264,
+              "remaining_um2": -3328.5317120000254,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 331321.536,
+              "remaining_um2": 22157.74028799997,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 356807.808,
+              "remaining_um2": 47644.01228799997,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 382294.0800000001,
+              "remaining_um2": 73130.28428800002,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 330802.14384000003,
+          "cache_control_reservation_um2": 50000,
+          "native_control_reservation_um2": 5000,
+          "prospective_total_area_um2": 385802.14384000003,
+          "prospective_utilization": 0.5815912583671493,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 398013.696,
+              "remaining_um2": 12211.552159999963,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 431181.504,
+              "remaining_um2": 45379.36015999998,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 464349.312,
+              "remaining_um2": 78547.16815999994,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 497517.12,
+              "remaining_um2": 111714.97615999996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.6383562485298744,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 290587.392,
+              "remaining_um2": -18576.403712000058,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 314803.00800000003,
+              "remaining_um2": 5639.212287999981,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 339018.624,
+              "remaining_um2": 29854.82828799996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 363234.24,
+              "remaining_um2": 54070.44428799994,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 265163.79571200005,
+          "cache_control_reservation_um2": 40000,
+          "native_control_reservation_um2": 4000,
+          "prospective_total_area_um2": 309163.79571200005,
+          "prospective_utilization": 0.58823696478628,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 315346.176,
+              "remaining_um2": 6182.3802879999275,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 341625.024,
+              "remaining_um2": 32461.228287999926,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 367903.872,
+              "remaining_um2": 58740.076287999924,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 394182.72,
+              "remaining_um2": 85018.92428799992,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 30000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 235135.850784,
+          "prospective_utilization": 0.6411930436444362,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 220029.69599999997,
+              "remaining_um2": -15106.154784000042,
+              "reservation_fit": false
+            },
+            "65": {
+              "capacity_um2": 238365.504,
+              "remaining_um2": 3229.653215999977,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 256701.31199999998,
+              "remaining_um2": 21565.461215999967,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 275037.12,
+              "remaining_um2": 39901.269215999986,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "actual_mapped_bank_and_macro_plus_relay_floor_um2": 202135.850784,
+          "cache_control_reservation_um2": 30000,
+          "native_control_reservation_um2": 3000,
+          "prospective_total_area_um2": 235135.850784,
+          "prospective_utilization": 0.5630337128526243,
+          "planning_thresholds": {
+            "60": {
+              "capacity_um2": 250573.82399999996,
+              "remaining_um2": 15437.973215999955,
+              "reservation_fit": true
+            },
+            "65": {
+              "capacity_um2": 271454.976,
+              "remaining_um2": 36319.125216000015,
+              "reservation_fit": true
+            },
+            "70": {
+              "capacity_um2": 292336.12799999997,
+              "remaining_um2": 57200.27721599996,
+              "reservation_fit": true
+            },
+            "75": {
+              "capacity_um2": 313217.27999999997,
+              "remaining_um2": 78081.42921599996,
+              "reservation_fit": true
+            }
+          },
+          "area_status": "RESERVATION ONLY: actual cache/native mapping, CTS, hold, wires pending"
+        }
+      ],
+      "maximum_prospective_utilization": 0.6411930436444362,
+      "fits_all_tiles_at_percent": {
+        "60": false,
+        "65": true,
+        "70": true,
+        "75": true
+      },
+      "failures_by_percent": {
+        "60": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "65": [],
+        "70": [],
+        "75": []
+      }
+    }
+  ],
+  "route_admission": false,
+  "required_gates": [
+    "actual full cache and protected native-control mapping",
+    "real pin/corridor and hierarchy binding",
+    "measured resource admission",
+    "transaction exactness and actual>=90% HBM bandwidth",
+    "in-context SS setup/FF hold and DRC closure"
+  ]
+}
