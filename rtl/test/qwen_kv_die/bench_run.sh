@@ -13,13 +13,17 @@ for spec in 8192:normal 8192:peaky 8191:mixed 4097:flat 2048:wide 129:tiny 1:nor
   [ -f $OUT/v/${c}_$k/gold.hex ] || python3 tools/qwen_nearhbm_attn_ref.py vectors --ctx $c --seed $((c*7+${#k})) --kind $k --out $OUT/v/${c}_$k > $OUT/log/vec_${c}_$k.log 2>&1 &
 done
 # builds: base + mutants
-ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6 7 8"
+ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6 7 8 9"   # 9 (qwen-1010/b): landing merge queue PD = DQ / 2 (must be caught)
 # qwen-1010/b 2026-10-10: env HBMT=1 -> rows timed by the timed HBM3E stacks (HBMT_SLOT reorder slots, HBMT_PULLIN), the
 # runs pass hbmt=1 to the harness; PHASES="o1 o2 .." adds 8192_normal runs started o cycles later (refresh phase)
 HB="${DQ:+-GDQ=$DQ}"; RA="";  # env DQ: the engines' outstanding-row credit
  [ "${HBMT:-0}" = 1 ] && HB="$HB -GHBMT=1 -GHBMT_SLOT=${HBMT_SLOT:-64} -GHBMT_PULLIN=${HBMT_PULLIN:-0} -GRQ_FAR=${RQ_FAR:-0} -GRS_FAR=${RS_FAR:-0}" && RA="16 750 400000 1"
 for m in $ML; do
-  STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 ] && echo 0 || echo $m ) $HB > $OUT/log/build$m.log 2>&1 &
+  STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 -o $m = 9 ] && echo 0 || echo $m ) $( [ $m = 9 ] && echo -GMERGE_PD=$(( ${DQ:-32} / 2 )) ) $HB > $OUT/log/build$m.log 2>&1 &
+done
+# env DQX="96 128" (qwen-1010/b): extra base builds at deeper credits (the landing merge queue follows DQ)
+for q in ${DQX:-}; do
+  STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/bq$q -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL -GMUT=0 $(echo $HB | sed "s/-GDQ=[0-9]*//") -GDQ=$q > $OUT/log/buildq$q.log 2>&1 &
 done
 wait
 echo "built $(date)" >> $OUT/STATUS
@@ -32,6 +36,10 @@ for d in $OUT/v/*/; do
   done
 done
 V=$OUT/v/8192_normal
+for q in ${DQX:-}; do for vv in 8192_normal 8191_mixed; do
+  r=$($OUT/bq$q/Vtb $OUT/v/$vv 0 $RA 2>$OUT/log/dq${q}_$vv.err); rc=$?
+  echo "{\"run\": \"dq$q\", \"vec\": \"$vv\", \"rc\": $rc, \"res\": ${r:-null}}" >> $res
+done; done
 for o in ${PHASES:-}; do
   r=$($OUT/b0/Vtb $V 0 ${RA:-16 750 400000 0} $o 2>$OUT/log/base_ph$o.err); rc=$?
   echo "{\"run\": \"phase\", \"vec\": \"8192_normal\", \"ofs\": $o, \"rc\": $rc, \"res\": ${r:-null}}" >> $res

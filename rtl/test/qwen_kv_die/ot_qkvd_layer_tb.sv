@@ -29,6 +29,7 @@ module ot_qkvd_layer_tb #(
     parameter [31:0]  SCALE  = 32'h3DB504F3,
     parameter integer W      = 528,
     parameter integer DQ     = 32,     // qwen-1010/b: row-engine outstanding-row credit (row / e FIFO depth)
+    parameter integer MERGE_PD = DQ,   //   the landing merge's per-engine queue depth (mutant: < DQ must be caught)
     parameter integer HBMT   = 0,      // qwen-1010/b: 1 = rows timed by ot_qkvd_hbm_timed_stack (timed HBM3E, REFpb) per stack
     parameter integer HBMT_SLOT = 64,  //   reorder slots per engine
     parameter integer HBMT_PULLIN = 0, //   REFpb pull-in (model PULLIN)
@@ -183,7 +184,7 @@ module ot_qkvd_layer_tb #(
                                                                    .q({kl_vg, kl_t, kl_l, kl_d}));
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_land
-        ot_qkvd_kv_merge #(.HD(HD), .E(R), .MUT(MUT == 2 ? 1 : (MUT == 7 ? 2 : 0))) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
+        ot_qkvd_kv_merge #(.HD(HD), .E(R), .DQ(DQ), .PD(MERGE_PD), .MUT(MUT == 2 ? 1 : (MUT == 7 ? 2 : 0))) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
             .kvw_vg(kl_vg), .kvw_t(kl_t), .kvw_layer(kl_l), .kvw_d(kl_d), .lay_start(x_start), .lay_T(x_T), .lay_idx(x_L),
             .e_req_valid(m_rq_v[R*s +: R]), .e_req_v(m_rq_vv[R*s +: R]), .e_req_g(m_rq_g[R*s +: R]),
             .e_req_t(m_rq_t[13*R*s +: 13*R]), .h_req_valid(req_valid[R*s +: R]), .h_req_v(req_v[R*s +: R]),
