@@ -26,7 +26,8 @@ if [ "${PINANCHOR:-0}" = 1 ]; then
  # Interior paths retain full-cycle budgets; no clock or uncertainty changes.
  TOP_PINS='^(head_bits.*|head_valid|head_fault|rst_n)$'
  CLK_MID=$((SLOT_W/2))
- anchor_args=(--pin-region "^clk$=top:$CLK_MID-$CLK_MID"
+ CLK_LO=$((CLK_MID-1)); CLK_HI=$((CLK_MID+1))
+ anchor_args=(--pin-region "^clk$=top:$CLK_LO-$CLK_HI"
   --orfs-var PRE_GLOBAL_PLACE_TCL=/src/physical/qwen_die_masters/io_flop_at_pins.tcl
   --orfs-var PRE_DETAIL_PLACE_TCL=/src/physical/qwen_die_masters/out_flop_release.tcl)
 fi
