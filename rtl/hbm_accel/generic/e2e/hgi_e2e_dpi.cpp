@@ -41,6 +41,9 @@ static std::vector<uint8_t> hbmw;        // golden HBM writes {u64 addr, u64 len
 static int ndisp = 0, nerr_disp = 0, unloaded_hbm = 0, n_ret = 0;
 static std::unordered_map<int, std::unordered_set<uint32_t>> wrote;   // unit -> VM words written since its dispatch
 static std::unordered_set<int> skip_final;                            // VM words excluded from the final compare
+static std::vector<std::pair<int, int>> ignore_rng;                   // compiler-reserved unit scratch (FUSED)
+static bool ignored(int a) { for (auto& r : ignore_rng) if (a >= r.first && a < r.second) return true; return false; }
+extern "C" void e2e_ignore(int lo, int hi) { ignore_rng.push_back({lo, hi}); }
 
 static std::vector<uint8_t>& sector(uint64_t s) {
     auto it = hbm.find(s);
@@ -215,7 +218,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
         o += n;
     }
     int stray = 0;
-    for (uint32_t a : wrote[r.unit]) if (!gold.count(a) && vm[a] != vm_final[a]) stray++;
+    for (uint32_t a : wrote[r.unit]) if (!gold.count(a) && !ignored((int)a) && vm[a] != vm_final[a]) stray++;
     r.mism = bad; r.stray = stray; r.checked = (int)(r.vm_n);
     return bad + stray;
 }
@@ -263,7 +266,7 @@ extern "C" void e2e_coll_res(int obase, int gi, int bf16, svBitVecVal* out) {
 
 extern "C" int e2e_finish(long long cyc, int token, int status) {
     int vbad = 0;
-    for (int a = 0; a < VMW; a++) if (!skip_final.count(a) && vm[a] != vm_final[a]) {
+    for (int a = 0; a < VMW; a++) if (!skip_final.count(a) && !ignored(a) && vm[a] != vm_final[a]) {
         if (vbad < 8) fprintf(stderr, "E2E FINAL VM[%d] = %08x golden %08x\n", a, vm[a], vm_final[a]);
         vbad++;
     }

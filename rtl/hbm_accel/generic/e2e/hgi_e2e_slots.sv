@@ -258,3 +258,93 @@ module hgi_e2e_coll_slot #(
     end
 endmodule
 `endif
+
+// hgi_e2e_fused_slot: FUSED (unit 4 front) = ot_hgi_fused_record with its peers: one DMA row mover (gain loads; kport
+// lane on the HBM model, VM packet client), a FUSED stream unit = the reference ot_hdc_v41x_vec on the VM model's
+// synchronous ports (ROW_NORM / HC_PRE_NORM / HC_POST micro-sequences), and the quant record bus out (QDQ_*: the
+// harness routes it to the real quant unit or its stub).  The DS norm-engine job port is tied (no peer, unused by the
+// micro-sequence form).  cfg_scratch = SCRATCH: the compiler-reserved FUSED scratch region (excluded from the checks).
+`ifdef E2E_FUSED
+module hgi_e2e_fused_slot #(
+    parameter integer N = 64, parameter integer M = 16, parameter integer LV = 7,
+    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          rec_v,
+    output wire          rec_rdy,
+    input  wire [127:0]  rec_hdr,
+    input  wire [1791:0] rec_desc,
+    input  wire [146:0]  rec_n,
+    output wire          rec_done,
+    output wire          rec_fault,
+    output wire [682:0]  q_rec,
+    input  wire          q_done,
+    input  wire          q_fault
+);
+    import "DPI-C" function int e2e_vm_rd(input int a);
+    import "DPI-C" function void e2e_vm_wr(input int unit, input int a, input int v);
+    localparam integer AW = 24, NR = N / 8, WB = 670;
+    wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
+    wire op_v, op_rdy, su_idle, su_fault; wire [WB-1:0] w;
+    ot_hgi_fused_record u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'(SCRATCH)), .rec_v(rec_v), .rec_rdy(rec_rdy),
+        .rec_hdr(rec_hdr), .rec_a(rec_desc[0 +: 256]), .rec_b(rec_desc[256 +: 256]), .rec_c(rec_desc[512 +: 256]),
+        .rec_o(rec_desc[1024 +: 256]), .rec_n_a(rec_n[0 +: 21]), .rec_n_b(rec_n[21 +: 21]), .rec_n_o(rec_n[84 +: 21]),
+        .rec_done(rec_done), .rec_fault(rec_fault), .halted(),
+        .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
+        .op_v(op_v), .op_rdy(op_rdy), .op_w(w), .su_idle(su_idle), .su_fault(su_fault),
+        .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_done), .q_fault(q_fault));
+    wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
+    wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
+    ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
+        .mv_fault(mv_fault), .fence_v(1'b0), .fence_rdy(), .fence_done(),
+        .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
+        .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
+        .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(vq), .vmr(vr));
+    hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
+        .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
+    hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+    wire [N-1:0] vi_re; wire [N*AW-1:0] vi_addr; reg [N*32-1:0] vi_q;
+    wire [4*N*AW-1:0] rd_addr; wire [4*N-1:0] rd_re; wire [8*N-1:0] rd_src; reg [4*N*32-1:0] rd_q;
+    wire [N-1:0] vm_we, kv_we; wire [N*AW-1:0] vm_waddr, kv_waddr; wire [N*32-1:0] vm_wdata, kv_wdata;
+    wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
+    wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire order_fault, retire_o;
+    wire dbg_emit, dbg_ret, dbg_res; wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV)) u_vec (
+        .clk(clk), .rst_n(rst_n), .go(op_v), .ready(op_rdy), .idle(su_idle),
+        .i_nout(w[0 +: 16]), .i_nin(w[16 +: 16]), .i_asrc(w[32 +: 2]), .i_bsrc(w[34 +: 2]), .i_csrc(w[36 +: 2]),
+        .i_dsrc(w[38 +: 2]), .i_abase(w[40 +: 24]), .i_aso(w[64 +: 24]), .i_asi(w[88 +: 24]),
+        .i_aibase(w[112 +: 24]), .i_aind(w[136 +: 2]), .i_bbase(w[138 +: 24]), .i_bso(w[162 +: 24]),
+        .i_bsi(w[186 +: 24]), .i_bhalf(w[210]), .i_cbase(w[211 +: 24]), .i_cso(w[235 +: 24]),
+        .i_csi(w[259 +: 24]), .i_cpair(w[283]), .i_dbase(w[284 +: 24]), .i_dso(w[308 +: 24]),
+        .i_dsi(w[332 +: 24]), .i_arnd(w[356]), .i_arelu(w[357]), .i_amin(w[358]), .i_cclip(w[359]),
+        .i_m1(w[360 +: 3]), .i_m2(w[363 +: 2]), .i_qm(w[365 +: 3]), .i_ad(w[368 +: 3]), .i_sfu(w[371 +: 3]),
+        .i_e1(w[374 +: 3]), .i_e2(w[377 +: 2]), .i_rnd(w[379]), .i_dst(w[380 +: 2]), .i_obase(w[382 +: 24]),
+        .i_oso(w[406 +: 24]), .i_osi(w[430 +: 24]), .i_orow(w[454 +: 24]), .i_red(w[478 +: 2]),
+        .i_redsq(w[480]), .i_redwhole(w[481]), .i_redtree(w[482]), .i_redrnd(w[483]), .i_rbase(w[484 +: 24]),
+        .i_rso(w[508 +: 24]), .i_imm1(w[532 +: 32]), .i_imm2(w[564 +: 32]), .i_imm3(w[596 +: 32]),
+        .i_ch_src(w[628 +: 2]), .i_ch_seq(w[630 +: 8]), .i_ch_lead(w[638 +: 16]), .i_ch_mul(w[654 +: 16]),
+        .x_seq(8'd0), .x_dseq(8'hFF), .x_cnt(16'd0),
+        .cr_seq(cr_seq), .cr_dseq(cr_dseq), .cr_rseq(cr_rseq), .cr_cnt(cr_cnt),
+        .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re), .rd_src(rd_src),
+        .rd_q(rd_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we),
+        .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .res_we(res_we), .res_addr(res_addr),
+        .res_data(res_data), .fault(su_fault), .order_fault(order_fault), .emitted(emitted),
+        .retire_o(retire_o), .dbg_emit(dbg_emit), .dbg_eseq(dbg_eseq), .dbg_ret(dbg_ret), .dbg_rseq(dbg_rseq),
+        .dbg_res(dbg_res), .dbg_sseq(dbg_sseq));
+    integer l, s;
+    always @(posedge clk) begin
+        for (l = 0; l < N; l = l + 1) begin
+            if (vi_re[l]) vi_q[32*l +: 32] <= e2e_vm_rd(int'(vi_addr[l*AW +: 18]));
+            for (s = 0; s < 4; s = s + 1)
+                if (rd_re[4*l + s]) rd_q[(4*l + s)*32 +: 32] <= e2e_vm_rd(int'(rd_addr[(4*l + s)*AW +: 18]));
+        end
+        if (rst_n) begin
+            for (l = 0; l < N; l = l + 1)
+                if (vm_we[l]) e2e_vm_wr(4, int'(vm_waddr[l*AW +: 18]), int'(vm_wdata[32*l +: 32]));
+            for (l = 0; l < NR; l = l + 1)
+                if (res_we[l]) e2e_vm_wr(4, int'(res_addr[l*AW +: 18]), int'(res_data[32*l +: 32]));
+        end
+    end
+endmodule
+`endif

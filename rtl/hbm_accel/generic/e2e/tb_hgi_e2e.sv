@@ -20,7 +20,8 @@
 // DIE GAP used by the harness: the ux_* ports of ot_hgi_cp_die carry valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
+    parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 64, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
@@ -36,6 +37,7 @@ module tb_hgi_e2e;
     import "DPI-C" function void e2e_stub_retire(input int k, input longint cyc);
     import "DPI-C" function int e2e_real_retire(input int k, input longint cyc);
     import "DPI-C" function int e2e_finish(input longint cyc, input int token, input int status);
+    import "DPI-C" function void e2e_ignore(input int lo, input int hi);
 
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
@@ -142,12 +144,27 @@ module tb_hgi_e2e;
     end else begin : g_dma_stub
         assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0;
     end endgenerate
-    // QUANT (unit 4, QDQ ops) behind the harness's unit-4 split
+    // QUANT (unit 4, QDQ ops) behind the harness's unit-4 split (or behind the FUSED front when REAL_FUSED)
     reg  [682:0] q_rec;                 // to the real quant unit
     wire [2:0]   q_ret;
+    // FUSED (unit 4 front, hgi_e2e_slots.sv): the record payload latched at the dispatch (die gap: the unit-4 record
+    // bus carries A / O only; FUSED needs A, B, C, O)
+    reg  [127:0] f_hdr; reg [1791:0] f_desc; reg [146:0] f_n; reg f_v;
+    wire f_rdy, f_done, f_fault; wire [682:0] fq_rec; reg q_done_s;
+`ifdef E2E_FUSED
+    generate if (REAL_FUSED) begin : g_fused
+        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
+            .rec_rdy(f_rdy), .rec_hdr(f_hdr), .rec_desc(f_desc), .rec_n(f_n), .rec_done(f_done), .rec_fault(f_fault),
+            .q_rec(fq_rec), .q_done(REAL_QUANT ? q_ret[1] : q_done_s), .q_fault(REAL_QUANT ? q_ret[2] : 1'b0));
+    end else begin : g_fused_stub
+        assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign fq_rec = 683'd0;
+    end endgenerate
+`else
+    assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign fq_rec = 683'd0;
+`endif
     generate if (REAL_QUANT) begin : g_quant
         wire [337:0] vq; wire [273:0] vr;
-        ot_hgi_quant_unit u_q (.clk(clk), .rst_n(rst_n), .rec(q_rec), .ret(q_ret), .vmq(vq), .vmr(vr));
+        ot_hgi_quant_unit u_q (.clk(clk), .rst_n(rst_n), .rec(REAL_FUSED ? fq_rec : q_rec), .ret(q_ret), .vmq(vq), .vmr(vr));
         hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
     end else begin : g_quant_stub
         assign q_ret = 3'b001;
@@ -181,7 +198,7 @@ module tb_hgi_e2e;
     reg [15:0] s_done;                  // stub done pulses (ux units)
     reg s4_done, s6_done, s9_done;      // stub done pulses on the record-bus units
     reg q_inflight;                     // unit-4 record went to the real quant unit
-    integer errs = 0, real_recs = 0, real_bad = 0, faults = 0;
+    integer errs = 0, real_recs = 0, real_bad = 0, faults = 0, qs_busy = 0, qs_cnt = 0, qs_k = -1;
     function automatic integer is_real(input integer u, input integer quant_now);
         is_real = (u == 8 && REAL_DMA != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
     endfunction
@@ -194,7 +211,7 @@ module tb_hgi_e2e;
         for (integer u = 1; u < 16; u = u + 1) ux_rdy[u] = REAL_UX[u] ? r_rdy[u] : (sbusy[u] == 0);
         ux_done = (s_done & ~REAL_UX) | (r_done & REAL_UX); ux_fault = r_fault & REAL_UX;
         coll_ret = REAL_COLL ? c_ret : {1'b0, s6_done, 1'b1};
-        quant_ret = {q_ret[2], q_ret[1] | s4_done, 1'b1};
+        quant_ret = REAL_FUSED ? {f_fault, f_done, 1'b1} : {q_ret[2], q_ret[1] | s4_done, 1'b1};
         idx_ret = REAL_IDX ? i_ret : {1'b0, s9_done, 1'b1};
     end
     integer u, k, m;
@@ -214,8 +231,18 @@ module tb_hgi_e2e;
         if (!rst_n) begin
             for (u = 0; u < 16; u = u + 1) begin kh[u] = 0; kt[u] = 0; sbusy[u] = 0; scnt[u] = 0; sk[u] = -1; end
             s_done <= 16'd0; s4_done <= 1'b0; s6_done <= 1'b0; s9_done <= 1'b0; q_rec <= 683'd0; q_inflight = 0;
+            f_v <= 1'b0; q_done_s <= 1'b0; qs_busy = 0;
         end else begin
-            s_done <= 16'd0; s4_done <= 1'b0; s6_done <= 1'b0; s9_done <= 1'b0; q_rec[0] <= 1'b0;
+            s_done <= 16'd0; s4_done <= 1'b0; s6_done <= 1'b0; s9_done <= 1'b0; q_rec[0] <= 1'b0; f_v <= 1'b0; q_done_s <= 1'b0;
+            // FUSED real: the QDQ it forwards goes to a quant stub when the quant unit is not real
+            if (REAL_FUSED && !REAL_QUANT) begin
+                if (fq_rec[0]) begin qs_busy = 1; qs_k = kq[4][kh[4] % 8]; qs_cnt = e2e_cost(qs_k); end
+                else if (qs_busy != 0) begin qs_cnt = qs_cnt - 1; if (qs_cnt <= 0) begin e2e_stub_retire(qs_k, cyc); q_done_s <= 1'b1; qs_busy = 0; end end
+            end
+            if (REAL_FUSED && (f_done || f_fault)) begin
+                k = kpop(4); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
+                if (m != 0 || f_fault) begin real_bad = real_bad + 1; $display("E2E REAL FUSED record %0d: %0d mismatches fault %0d", k, m, f_fault); end
+            end
             // stubs count down and retire (golden writes applied at retire)
             for (u = 1; u < 16; u = u + 1) if (sbusy[u] != 0) begin
                 scnt[u] = scnt[u] - 1;
@@ -234,7 +261,7 @@ module tb_hgi_e2e;
                 k = kpop(9); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
                 if (m != 0 || i_ret[2]) begin real_bad = real_bad + 1; $display("E2E REAL IDX record %0d: %0d mismatches fault %0d", k, m, i_ret[2]); end
             end
-            if (REAL_QUANT && (q_ret[1] || q_ret[2])) begin
+            if (REAL_QUANT && !REAL_FUSED && (q_ret[1] || q_ret[2])) begin
                 k = kpop(4); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1; q_inflight = 0;
                 if (m != 0 || q_ret[2]) begin real_bad = real_bad + 1; $display("E2E REAL QUANT record %0d: %0d mismatches fault %0d", k, m, q_ret[2]); end
             end
@@ -247,7 +274,8 @@ module tb_hgi_e2e;
             if (coll_rec[0] && REAL_COLL) begin c_kv <= 1'b1; c_k <= kq[6][kh[6] % 8]; end
             else if (coll_rec[0]) begin k = kpop(6); sbusy[6] = 1; sk[6] = k; scnt[6] = e2e_cost(k); end
             if (idx_rec[0] && !REAL_IDX) begin k = kpop(9); sbusy[9] = 1; sk[9] = k; scnt[9] = e2e_cost(k); end
-            if (quant_rec[0]) begin
+            if (quant_rec[0] && REAL_FUSED) f_v <= 1'b1;
+            else if (quant_rec[0]) begin
                 if (REAL_QUANT && quant_rec[1 + 118 +: 6] >= 6'd4) begin q_rec <= quant_rec; q_inflight = 1; end
                 else begin k = kpop(4); sbusy[4] = 1; sk[4] = k; scnt[4] = e2e_cost(k); end
             end
@@ -255,6 +283,7 @@ module tb_hgi_e2e;
             if (|(s_uv & s_ur)) begin
                 u = 0; for (integer j = 0; j < 16; j = j + 1) if (s_uv[j] & s_ur[j]) u = j;
                 k = e2e_dispatch(u, d_hdr, d_desc, d_n, cyc);
+                if (u == 4) begin f_hdr <= d_hdr; f_desc <= d_desc; f_n <= d_n; end
                 if (u == 4 || u == 6 || u == 9 || (REALM[u])) kpush(u, k);
                 else begin sbusy[u] = 1; sk[u] = k; scnt[u] = e2e_cost(k); end
             end
@@ -280,6 +309,7 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
+        if (REAL_FUSED) e2e_ignore(FUSED_SCRATCH, FUSED_SCRATCH + 8192);
         t_cpl = 0;
         repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
         axw(12'hC14, host[67]);
