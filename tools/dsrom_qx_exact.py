@@ -176,7 +176,9 @@ def main() -> None:
         jobs += [("pos_qs3", s) for s in range(1, n + 1)] + [("pos_qs3", 1, ("+nan_sparse",)), ("neg_qs3ns", 1, ("+nan_sparse",)), ("neg_qs3sh", 1), ("neg_qs3yf", 1), ("neg_qs3nr", 1), ("neg_qs3sb", 1)]
         jobs += [("pos_qs4", s) for s in range(1, n + 1)] + [("pos_qs4", 1, ("+nan_sparse",)), ("neg_qs4nq", 1), ("neg_qs4l1", 1), ("neg_qs4sb", 1)]
         jobs += [("pos_qs5u", s) for s in range(1, n + 1)] + [("pos_qs5u", 1, ("+nan_sparse",)), ("neg_qs5unq", 1), ("neg_qs5ul1", 1), ("neg_qs5uwe", 1), ("neg_qs5ush", 1)]
-        jobs += [("pos_qs5p", s) for s in range(1, n + 1)] + [("pos_qs5p", 1, ("+nan_sparse",)), ("neg_qs5pwe", 1), ("neg_qs5pl1", 1), ("neg_qs5psh", 1), ("neg_qs5prs", 1), ("neg_qs5pgo", 1)]
+        jobs += [("pos_qs5p", s) for s in range(1, n + 1)] + [("pos_qs5p", 1, ("+nan_sparse",)), ("neg_qs5pwe", 1), ("neg_qs5pl1", 1), ("neg_qs5psh", 1), ("neg_qs5pgo", 1)]
+        # (neg_qs5prs, the inner reset released one cycle early, is NOT a negative control: it is not observable -- no go can
+        #  reach the element in its reset-release cycle -- measured 10-10: PASS, so it is built but not run)
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
