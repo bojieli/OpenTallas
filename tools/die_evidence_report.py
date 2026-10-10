@@ -29,6 +29,9 @@ import time
 from pathlib import Path
 
 SCR = '/srv/opentallas-scratch/claude'
+# owner 2026-10-10: die timing on GRT-estimated parasitics is the accepted die-level basis (RCX-0134: no RCX extraction
+# after a global route in this OpenROAD build).  Every die row carries this label.
+PARASITIC_BASIS = 'estimate_parasitics -global_routing, owner-approved 10-10'
 DIES = {
     'qwen': dict(
         name='Qwen3-8B ROM die r21b', host='ot-epyc3',
@@ -82,6 +85,15 @@ DIES = {
     's81_l1e': dict(
         name='DeepSeek-V4.1 ROM S81 layer1e (Engram home die)', host='ot-epyc3',
         note=f'chain {SCR}/die-evidence-2/s81_l1e (layer1 full recipe + --die layer1e; same src)'),
+    # ds-1010 2026-10-10: the current S81 layer die with the column-clocked cfifo (cont-takeover r4f) and KV11
+    's81_r4f': dict(
+        name='DeepSeek-V4.1 ROM S81 layer die r4f (cfifo column clock, colck)', host='ot-epyc3',
+        note=f'cont-takeover chain {SCR}/cont-takeover/s81-r4d/r4f (gen -> clock plan -> kit with the colck cfifo views '
+             '-> place -> full-die GRT -> STA TT / FF / SS on the GRT SPEF). Pre-x1b q element (qs5f) and 14 pairs/frame'),
+    'qwen_kv11': dict(
+        name='Qwen3-8B KV die (die_kv11, src f8a6d7c30)', host='ot-epyc1tb',
+        note=f'kv-die chain {SCR}/kv-die/die_kv11: real case -> PDN (VSS PSM-0069 FAIL) -> full-die GRT -> STA on the '
+             'GRT SPEF rebuilt from the checkpoint (spef_from_ckpt.tcl; the chain\'s write_spef failed RCX-0134)'),
 }
 STATIC = {
     # evidence that lives only in a log / committed record (no live probe); cited, never recomputed
@@ -646,7 +658,7 @@ def probe_qwen_run(R, C, G, sta_dirs, libs_dir, ir_dir, clock_dir, regions_glob)
             if not (w and _exists(ends)):
                 continue
             rc = 'GRT-0008' not in log and 'read_spef' in _read(f'{D}/grt_{c}.tcl')
-            res = dict(status='done', check=chk, dir=D, wire_rc=('GRT SPEF' if rc else 'NONE (read_guides: GRT-0008)'),
+            res = dict(status='done', check=chk, dir=D, wire_rc=(PARASITIC_BASIS if rc else 'NONE (read_guides: GRT-0008)'),
                        all=dict(wns_ps=float(w[-1]), tns_ps=float(t[-1]) if t else None))
             res['split'] = split_end_paths(ends, paths, inst2m, cls) if _exists(paths) else None
             sta[c] = res
@@ -671,7 +683,8 @@ def probe_qwen_r22k():
 
 def probe_qwen_r22k4():
     R, E = f'{SCR}/kv-die/die_r22k4', f'{SCR}/die-evidence-2/qwen_r22k4'   # E: ETM-bound libs + STA on R's SPEF
-    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{E}/sta_r22k_{c}', f'{R}/sta_r22k_{c}'], f'{E}/libs',
+    E3 = f'{SCR}/die-evidence-2/qwen_r22k4_e3'   # ds-1010 10-10: SPEF from the retained checkpoint + STA, run on EPYC3
+    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{E3}/sta_r22k_{c}', f'{E}/sta_r22k_{c}', f'{R}/sta_r22k_{c}'], f'{E}/libs',
                           f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
 
 
@@ -734,13 +747,25 @@ def probe_s81_l1full():
     return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1full')
 
 
+def probe_s81_r4f():
+    return probe_s81_run(f'{SCR}/cont-takeover/s81-r4d/r4f')
+
+
+def probe_qwen_kv11():
+    K = f'{SCR}/kv-die/die_kv11'
+    E3 = f'{SCR}/die-evidence-2/qwen_kv11_e3'
+    return probe_qwen_run(K, f'{K}/case_kv', f'{K}/grt_kv', lambda c: [f'{E3}/sta_kv_{c}', f'{K}/sta_kv_{c}'], f'{K}/libs',
+                          f'{K}/ir', f'{K}/clock', f'{K}/regions/gwkv_*')
+
+
 def probe_s81_l1e():
     return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1e')
 
 
 PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head,
               qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g,
-              qwen_r22k4=probe_qwen_r22k4, hbm_r25gp=probe_hbm_r25gp, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e)
+              qwen_r22k4=probe_qwen_r22k4, hbm_r25gp=probe_hbm_r25gp, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e,
+              s81_r4f=probe_s81_r4f, qwen_kv11=probe_qwen_kv11)
 
 
 # ----------------------------------------------------------------------------------------------- local driver
@@ -753,6 +778,7 @@ def run_probe(die):
         return dict(status='probe failed', stderr=p.stderr[-1500:])
     d = json.loads(p.stdout)
     d['probe_s'] = round(time.time() - t0, 1)
+    d['parasitic_basis'] = PARASITIC_BASIS
     return d
 
 
@@ -791,6 +817,7 @@ def readme(rep):
          'placeholder, interim or assumed-constant views and die ports). The real-only WNS is the evidence; the gap to the',
          'all-paths WNS is the placeholder error bar. A range `[a, b]` means the endpoint report bounds the real-only WNS',
          'from below (a) and the top-N path report gives a listed real-only path (b). Slacks in ps.', '',
+         f'Parasitic basis for every die row: {PARASITIC_BASIS} (RCX-0134: no RCX extraction after a global route).', '',
          '| Die | GRT overflow | TT setup WNS real / real+relay / all | FF hold WNS real / real+relay / all | Clock plan (CTS) | IR | Real-view share (inst / area) |',
          '|---|---|---|---|---|---|---|']
     for k, d in rep['dies'].items():

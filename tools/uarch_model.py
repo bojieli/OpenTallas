@@ -15514,7 +15514,7 @@ def hbm_smh_result_valid_model(columns=8, row_bits=12):
         added_boundary_bits_per_cycle=0, added_data_registers=0,
         qualification_and_gates=columns,
         reduction_gate_upper_bound=4*columns, replicas=1,
-        mux_demux_cost=0, control_fanout_max=2,
+        mux_demux_cost=0, control_fanout_max=3,
         local_routing_tracks_upper_bound=3*columns,
         floorplan_slot_fit="existing south-front result landing; <=5*columns small gates, physical route required",
         added_cycles=0, token_latency_added_ns=0.0,
