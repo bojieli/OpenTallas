@@ -14,7 +14,7 @@ module tb_hgi_vm_core;
  reg inj_v = 0; reg [4:0] inj_bank = 0; reg [2:0] inj_word = 0; reg [38:0] inj_mask = 0;
  ot_hgi_vm_core #(.NC(NC), .MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .req_v(req_v), .req_r(req_r), .req(req), .rsp_v(rsp_v),
   .rsp_r(rsp_r), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault), .inj_v(inj_v), .inj_bank(inj_bank), .inj_word(inj_word),
-  .inj_mask(inj_mask));
+  .inj_mask(inj_mask), .wl_v(1'b0), .wl_sec(15'd0), .wl_d(256'd0), .wl_m(8'd0), .wl_done(), .wl_conflict());
  reg [31:0] ref_m [0:32767];               // window: sectors 0..4095 (32,768 words)
  integer i, c, n, w, nrd = 0, nwr = 0, cycles = 0, seed = 7;
  reg [NC-1:0] acc_c = 0; reg [14:0] psec [0:NC-1]; reg pwe [0:NC-1]; reg [15:0] ptag [0:NC-1];

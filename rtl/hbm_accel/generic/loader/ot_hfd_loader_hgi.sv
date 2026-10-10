@@ -37,6 +37,15 @@ module ot_hfd_loader_hgi #(
     output wire [2:0]   dma_ret,        // {fault, done, ready}
     output wire [337:0] dma_vmq,
     input  wire [273:0] dma_vmr,
+    // hgi-takeover 2026-10-10 (DMA streaming, coordinator): ot_hgi_dma_engines = the DMA front (every unit-stride
+    // HBM -> VM LOAD: per-stack requests to the svc DMA stream (hbm-forks) and its 4 x 8 data lanes, spec in
+    // hgi-takeover.log "SPEC for hbm-forks", out on the 32 VM wide write lanes) + the mover (the rest)
+    output wire [4*51-1:0]   dma_dq,     // per stack {v, tag 4, nsec 9, addr 37}
+    input  wire [3:0]        dma_dq_rdy,
+    input  wire [32*270-1:0] dma_dd,     // per stack x lane {v, fault, tag 4, idx 8, data 256}
+    output wire [31:0]       dma_dd_cr,
+    output wire [32*280-1:0] dma_vmw,    // the VM wide write port (hfd_hgi_vm wq), 32 x {v, sector, data, word mask}
+    input  wire [31:0]       dma_vmw_done,
     output wire irq,
     output wire fault
 );
@@ -55,11 +64,12 @@ module ot_hfd_loader_hgi #(
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
-    ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done),
-        .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
+    ot_hgi_dma_engines #(.STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
+        .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
         .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
-        .k_rsp_data(k_rsp_data[767:512]), .k_fault(1'b0), .vmq(dma_vmq), .vmr(dma_vmr));
+        .k_rsp_data(k_rsp_data[767:512]), .vmq(dma_vmq), .vmr(dma_vmr), .dq(dma_dq), .dq_rdy(dma_dq_rdy), .dd(dma_dd),
+        .dd_cr(dma_dd_cr), .wl(dma_vmw), .wl_done(dma_vmw_done));
     assign dma_ret = {d_fault, d_done, d_rdy};
     ot_hgi_loader_cp u_cpw (.clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),

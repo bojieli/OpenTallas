@@ -120,7 +120,7 @@ def main():
         vs_r21c_die_mm2=round(rom['die_mm2'] + kvp - rom['r21c_die_mm2'], 1),
         package='2 ROM dies (N-N facing) + 2 KV dies (one off each ROM die S edge) + 8 HBM3E stacks beside the KV dies',
         interposer_mm=[29.0, 114.0], interposer_reticles=round(29.0 * 114.0 / 858.0, 1),
-        status=kv.get('frame_status', 'row engines sized from synthesis (re-cut D); stack aggregators / landings / '
+        status=kv.get('frame_status', 'row engines = re-cut H tiles (head 648 x 453.6 from its placed cells, control 648 x 129.6 from synthesis; routes in flight); stack aggregators / landings / '
                'centre blocks: see frames.json (review-0528 item 4)'))
     out['split_structure'] = dict(
         source=[SPLIT_BASE, SPLIT_CUR, SPLIT_RELAYS], l0_delta=split_l0 + relay_l0, layer_delta=split_lk + relay_lk,

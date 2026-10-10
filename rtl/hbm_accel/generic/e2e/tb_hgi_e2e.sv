@@ -25,6 +25,7 @@ module tb_hgi_e2e;
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
@@ -144,11 +145,15 @@ module tb_hgi_e2e;
             .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
         wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
-        ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
-            .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+        // the VM wide write port (32 lanes) + the svc DMA stream (hgi-takeover 2026-10-10); DMA_FRONT 0 = mover only
+        wire [32*280-1:0] wl; wire [31:0] wl_done; wire [4*51-1:0] dq; wire [3:0] dq_rdy; wire [32*270-1:0] dd; wire [31:0] dd_cr;
+        ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+            .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-            .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(vq), .vmr(vr));
+            .k_rsp_data(k_rd), .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+        hgi_e2e_vmw #(.UNIT(8), .NW(32)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
+        hgi_e2e_svc #(.LAT(KLAT)) u_svc (.clk(clk), .rst_n(rst_n), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr));
         hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
             .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
         hgi_e2e_vmc #(.UNIT(8), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
@@ -377,6 +382,68 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
             rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = c + LAT; t = t + 1;
         end
         if (h < t && due[h % 16] <= c) begin r <= {1'b1, rq[h % 16]}; h = h + 1; end
+    end
+endmodule
+
+// VM wide write port model (hgi-takeover 2026-10-10): NW lanes {v, sector 15, wdata 256, word mask 8}, never
+// back-pressured; the write lands on the VM model at once, done 3 edges later (the VM unit's pin flop + 2)
+module hgi_e2e_vmw #(parameter integer UNIT = 8, parameter integer NW = 1) (input wire clk, input wire rst_n,
+                                                                          input wire [NW*280-1:0] wl, output reg [NW-1:0] done);
+    import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
+                                               input bit [31:0] mask, output bit [255:0] rd);
+    reg [NW-1:0] dl0 = 0, dl1 = 0, dl2 = 0;
+    always @(posedge clk) begin
+        for (integer p = 0; p < NW; p = p + 1) dl0[p] <= rst_n && wl[p*280 + 279];
+        dl1 <= dl0; dl2 <= dl1; done <= dl2;
+        for (integer p = 0; p < NW; p = p + 1) if (rst_n && wl[p*280 + 279]) begin : w
+            bit [255:0] rd; bit [31:0] m;
+            for (integer t = 0; t < 8; t = t + 1) m[4*t +: 4] = {4{wl[p*280 + t]}};
+            e2e_vm_sector(UNIT, int'(wl[p*280 + 264 +: 15]), 1'b1, wl[p*280 + 8 +: 256], m, rd);
+        end
+    end
+endmodule
+
+// svc DMA stream model (hgi-takeover 2026-10-10; the interface hbm-forks builds, hgi-takeover.log "SPEC for hbm-forks"):
+// per stack a request queue {tag, nsec, addr} (ready unless 16 queued); the head request's sectors are read from the HBM
+// model RATE a cycle (default 8) and become visible LAT cycles later on lane idx % 8 (in order), each lane sending a
+// beat a cycle on a credit (4 initially, one back per dd_cr pulse).
+module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
+    input wire clk, input wire rst_n, input wire [4*51-1:0] dq, output reg [3:0] dq_rdy, output reg [32*270-1:0] dd,
+    input wire [31:0] dd_cr);
+    import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
+                                                input bit [31:0] strb, output bit [255:0] rd);
+    reg [49:0] rq [0:3][0:15]; integer rh [0:3], rn [0:3], nx [0:3];
+    reg [269:0] lb [0:31][0:1023]; longint lt_due [0:31][0:1023]; integer lh [0:31], lt [0:31], cr [0:31];
+    longint tn = 0;
+    initial begin
+        for (integer s = 0; s < 4; s = s + 1) begin rh[s] = 0; rn[s] = 0; nx[s] = 0; end
+        for (integer i = 0; i < 32; i = i + 1) begin lh[i] = 0; lt[i] = 0; cr[i] = 4; end
+        dq_rdy = 4'd0; dd = '0;
+    end
+    always @(posedge clk) begin
+        tn <= tn + 1;
+        dd <= '0;
+        if (rst_n) begin
+            for (integer s = 0; s < 4; s = s + 1) begin
+                if (dq[s*51 + 50] && dq_rdy[s]) begin rq[s][(rh[s] + rn[s]) % 16] = dq[s*51 +: 50]; rn[s] = rn[s] + 1; end
+                for (integer k = 0; k < RATE && rn[s] > 0; k = k + 1) begin : rd
+                    reg [49:0] r; bit [255:0] d; integer l;
+                    r = rq[s][rh[s] % 16];
+                    e2e_hbm_sector({27'd0, r[36:0]} + 32 * nx[s], 1'b0, 256'd0, 32'd0, d);
+                    l = s * 8 + nx[s] % 8;
+                    lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nx[s]), d}; lt_due[l][lt[l] % 1024] = tn + LAT; lt[l] = lt[l] + 1;
+                    nx[s] = nx[s] + 1;
+                    if (nx[s] == int'(r[45:37])) begin nx[s] = 0; rh[s] = rh[s] + 1; rn[s] = rn[s] - 1; end
+                end
+                dq_rdy[s] <= rn[s] < 14;
+            end
+            for (integer i = 0; i < 32; i = i + 1) begin
+                if (dd_cr[i]) cr[i] = cr[i] + 1;
+                if (lt[i] > lh[i] && cr[i] > 0 && lt_due[i][lh[i] % 1024] <= tn) begin
+                    dd[i*270 +: 270] <= lb[i][lh[i] % 1024]; lh[i] = lh[i] + 1; cr[i] = cr[i] - 1;
+                end
+            end
+        end
     end
 endmodule
 

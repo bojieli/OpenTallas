@@ -91,7 +91,9 @@
     "dma_rec": "cfg",
     "dma_ret": "fold",
     "dma_vmq": "fold",
-    "dma_vmr": "cfg"
+    "dma_vmr": "cfg",
+    "dma_vmw": "fold",
+    "dma_vmw_done": "cfg"
    }
   }
  ],
@@ -112,6 +114,14 @@
    "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
   },
   "ld.dma_vmr": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_vmw": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_vmw_done": {
    "class": "by_design",
    "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
   }
