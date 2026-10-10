@@ -86,6 +86,7 @@ module hgi_e2e_su_slot #(
             for (l = 0; l < NR; l = l + 1)
                 if (res_we[l]) e2e_vm_wr(UNIT, int'(res_addr[l*AW +: 18]), int'(res_data[32*l +: 32]));
             if (kv_we != 0) $display("E2E SU%0d wrote the KV port (no KV SRAM on the HBM die)", UNIT);
+`ifdef E2E_SU_DEBUG
             if (su_fault && !fseen) begin
                 fseen <= 1'b1;
                 $display("E2E SU%0d FAULT lanes %h side %0d red %0d cfg %0d (promote %0d) red.fsq %0d fch %0d tf %0d sf %0d top_bad %0d tap_multi %0d res_multi %0d",
@@ -93,6 +94,7 @@ module hgi_e2e_su_slot #(
                          |u_vec.u_red.fsq, |u_vec.u_red.fch, |u_vec.u_red.tf, |u_vec.u_red.sf, u_vec.u_red.top_bad,
                          u_vec.u_red.tap_multi, u_vec.u_red.res_multi);
             end
+`endif
         end
     end
 endmodule
