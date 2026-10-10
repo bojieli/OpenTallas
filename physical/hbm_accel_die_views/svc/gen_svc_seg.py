@@ -42,11 +42,19 @@ SEGD, SPLD, SDCD, STG = ((('rtl/seg_psfc', 'split_psfc', 'sdc_psfc', 'seg_stages
                          ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
 
 
-def fc_face(po, x0, x1):
+# svc-fix 2026-10-10 (SW_s6 psfcpr 982804de3 at 4_1_cts, FF: u_pc27.do_d (in-block leaf ~300 ps) -> c_sd28_0 on cke
+# (source latency 494 ps = the segment MEAN, not the leaf it meets) -213 ps; rn -> the tap stage's qv removal -105 ps):
+# in these segments only INBOUND one-stage portions (pin -> unit, the face-input hold class the taps were made for) sit
+# on the face tap; outbound portions stay on the in-block leaf c with their launching unit, and the tap stages take
+# their reset from a synchroniser on their own tap (ot_svs_rsync on cw / ce), so no hop or reset crosses tap <-> leaf.
+FC_INB = {'hfd_svc_SW_s6'}
+
+
+def fc_face(po, x0, x1, name=None):
     """'W' / 'E' when this one-stage portion is anchored at a W / E face pin (FC mode), else None"""
     if not FC or po['N'] != 1:
         return None
-    for e in (po['A'], po['B']):
+    for e in ((po['A'],) if name in FC_INB else (po['A'], po['B'])):
         if e[0] == 'p' and abs(e[1] - x0) < 1.0:
             return 'W'
         if e[0] == 'p' and abs(e[1] - x1) < 1.0:
@@ -544,7 +552,7 @@ def build(pl):
                     xc_ = max(q[4] for q in pins_) + 2.5
                 print(f'{names[j]}: N face compacted (max free span {max(gaps):.1f} < {NRES}): free E end from {xc_:.1f} of {w}')
         if FC:
-            fcs = {fc_face(po, x0, x1) for cc in C for po in cc['portions'] if po['seg'] == j} - {None}
+            fcs = {fc_face(po, x0, x1, names[j]) for cc in C for po in cc['portions'] if po['seg'] == j} - {None}
             for fce in sorted(fcs):
                 occ = sorted((q[3], q[5]) for v in ports.values() for q in v['pins'] if v['face'] == fce)
                 bus_ = lambda y_: any(a - 0.5 < y_ < b + 0.5 for a, b in occ)  # noqa: E731
@@ -580,6 +588,12 @@ def build(pl):
         if 'cke' in r['ports']:
             A('  wire ce = cke[0];                // E-face die clock leaf: one-stage E-face chain portions (--fc)')
         A('  ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));')
+        rnt_ = {}
+        if names[j] in FC_INB:
+            for ck_, p_ in (('cw', 'ckw'), ('ce', 'cke')):
+                if p_ in r['ports']:
+                    rnt_[ck_] = 'rn' + ck_[1]
+                    A(f'  wire {rnt_[ck_]}; ot_svs_rsync u_rs{ck_[1]} (.ck({ck_}), .rst(rst[0]), .rn({rnt_[ck_]}));   // tap-local reset release')
         A('  ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));')
         units = sorted(u for u, s in unit_seg.items() if s == j)
         lib_units[j] = units
@@ -734,9 +748,9 @@ def build(pl):
                     vin, din = f'{pn}[{o}]', f'{pn}[{o + n_ - 1}:{o + 1}]'
                 nm = f"{cc['name']}_{k_}"
                 decl.append(f'  wire {nm}_v; wire [{wb - 1}:0] {nm}_d;')
-                fce_ = fc_face(po, segs[j][0], segs[j][1])
+                fce_ = fc_face(po, segs[j][0], segs[j][1], names[j])
                 ckn_ = 'cw' if fce_ == 'W' else 'ce' if fce_ == 'E' else 'c'
-                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck({ckn_}), .rst_n(rn), .v({vin}), .d({din}), "
+                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck({ckn_}), .rst_n({rnt_.get(ckn_, 'rn')}), .v({vin}), .d({din}), "
                             f".qv({nm}_v), .q({nm}_d));")
                 if po['B'][0] == 'u':
                     body.append(f"  assign {cc['dv']} = {nm}_v;")

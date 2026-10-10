@@ -22,6 +22,8 @@ module hfd_svc_SW_s6 (
   wire cw = ckw[0];                // W-face die clock leaf: one-stage W-face chain portions (--fc)
   wire ce = cke[0];                // E-face die clock leaf: one-stage E-face chain portions (--fc)
   ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));
+  wire rnw; ot_svs_rsync u_rsw (.ck(cw), .rst(rst[0]), .rn(rnw));   // tap-local reset release
+  wire rne; ot_svs_rsync u_rse (.ck(ce), .rst(rst[0]), .rn(rne));   // tap-local reset release
   ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));
   wire ar6_sv, ar6_take, ar6_kcv, ar6_kt, ar6_icv, ar6_it; wire [41:0] ar6_sd; wire [39:0] ar6_kcd, ar6_icd; wire [3:0] ar6_iv; wire [203:0] ar6_id;
   wire dn24_o;
@@ -139,10 +141,10 @@ module hfd_svc_SW_s6 (
   assign eo[334:63] = {c_wl7_5_d, c_wl7_5_v};
   ot_svc_vpipe #(.W(1), .N(4)) c_wd7_1 (.ck(c), .rst_n(rn), .v(ei[2]), .d(ei[3:3]), .qv(c_wd7_1_v), .q(c_wd7_1_d));
   assign wo[5:4] = {c_wd7_1_d, c_wd7_1_v};
-  ot_svc_vpipe #(.W(62), .N(1)) c_sd24_1 (.ck(cw), .rst_n(rn), .v(wi[0]), .d(wi[62:1]), .qv(c_sd24_1_v), .q(c_sd24_1_d));
+  ot_svc_vpipe #(.W(62), .N(1)) c_sd24_1 (.ck(cw), .rst_n(rnw), .v(wi[0]), .d(wi[62:1]), .qv(c_sd24_1_v), .q(c_sd24_1_d));
   assign pc24_div = c_sd24_1_v;
   assign pc24_did = c_sd24_1_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd24_0 (.ck(cw), .rst_n(rn), .v(pc24_dnook), .d(pc24_dnoph), .qv(c_dd24_0_v), .q(c_dd24_0_d));
+  ot_svc_vpipe #(.W(1), .N(1)) c_dd24_0 (.ck(c), .rst_n(rn), .v(pc24_dnook), .d(pc24_dnoph), .qv(c_dd24_0_v), .q(c_dd24_0_d));
   assign wo[1:0] = {c_dd24_0_d, c_dd24_0_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd25_0 (.ck(c), .rst_n(rn), .v(pc24_dov), .d(pc24_dod), .qv(c_sd25_0_v), .q(c_sd25_0_d));
   assign pc25_div = c_sd25_0_v;
@@ -162,9 +164,9 @@ module hfd_svc_SW_s6 (
   ot_svc_vpipe #(.W(1), .N(1)) c_dd27_0 (.ck(c), .rst_n(rn), .v(pc27_dnook), .d(pc27_dnoph), .qv(c_dd27_0_v), .q(c_dd27_0_d));
   assign pc26_dniok = c_dd27_0_v;
   assign pc26_dniph = c_dd27_0_d;
-  ot_svc_vpipe #(.W(62), .N(1)) c_sd28_0 (.ck(ce), .rst_n(rn), .v(pc27_dov), .d(pc27_dod), .qv(c_sd28_0_v), .q(c_sd28_0_d));
+  ot_svc_vpipe #(.W(62), .N(1)) c_sd28_0 (.ck(c), .rst_n(rn), .v(pc27_dov), .d(pc27_dod), .qv(c_sd28_0_v), .q(c_sd28_0_d));
   assign eo[62:0] = {c_sd28_0_d, c_sd28_0_v};
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd28_1 (.ck(ce), .rst_n(rn), .v(ei[0]), .d(ei[1:1]), .qv(c_dd28_1_v), .q(c_dd28_1_d));
+  ot_svc_vpipe #(.W(1), .N(1)) c_dd28_1 (.ck(ce), .rst_n(rne), .v(ei[0]), .d(ei[1:1]), .qv(c_dd28_1_v), .q(c_dd28_1_d));
   assign pc27_dniok = c_dd28_1_v;
   assign pc27_dniph = c_dd28_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_cr24_0 (.ck(c), .rst_n(rn), .v(gp6_cr[0]), .d(1'b0), .qv(c_cr24_0_v), .q(c_cr24_0_d));
