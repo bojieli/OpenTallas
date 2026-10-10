@@ -277,15 +277,38 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
   set rx0_all [lindex $rows 0 1]; set rx1_all [lindex $rows 0 2]
   foreach i [$ws_blk getInsts] {
     if {![[$i getMaster] isSequential]} continue
+    # input side: D driven straight from one input pin; output side (svc SE_s2 u_gp.od -> ks -73 / -100): Q drives
+    # output pins only (no internal load), the boundary output register -- beside the first of its pins
+    set bn ""
     set dit [$i findITerm D]
-    if {$dit eq "NULL"} continue
-    set dn [$dit getNet]
-    if {$dn eq "NULL"} continue
-    set bts [$dn getBTerms]
-    if {[llength $bts] != 1} continue
-    set bt [lindex $bts 0]
-    if {[$bt getIoType] ne "INPUT"} continue
-    set bn [$bt getName]
+    if {$dit ne "NULL" && [$dit getNet] ne "NULL"} {
+      set bts [[$dit getNet] getBTerms]
+      if {[llength $bts] == 1 && [[lindex $bts 0] getIoType] eq "INPUT"} { set bn [[lindex $bts 0] getName] }
+    }
+    if {$bn eq ""} {
+      set qit [$i findITerm QN]
+      if {$qit eq "NULL"} { set qit [$i findITerm Q] }
+      if {$qit ne "NULL" && [$qit getNet] ne "NULL"} {
+        set qn [$qit getNet]; set bts [$qn getBTerms]
+        # only the pins (and at most one inverter / buffer between: the QN flop's output inverter) load the net
+        set nld [expr {[llength [$qn getITerms]] - 1}]
+        if {[llength $bts] >= 1 && [[lindex $bts 0] getIoType] eq "OUTPUT" && $nld <= 0} { set bn [[lindex $bts 0] getName] }
+        if {$bn eq "" && $nld == 1} {
+          foreach it [$qn getITerms] {
+            set ii [$it getInst]
+            if {$ii ne $i && ![[$ii getMaster] isSequential] && [llength [$ii getITerms]] <= 4} {
+              foreach it2 [$ii getITerms] {
+                if {[$it2 isOutputSignal] && [$it2 getNet] ne "NULL"} {
+                  set b2 [[$it2 getNet] getBTerms]
+                  if {[llength $b2] >= 1 && [[lindex $b2 0] getIoType] eq "OUTPUT" && [llength [[$it2 getNet] getITerms]] == 1} { set bn [[lindex $b2 0] getName] }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if {$bn eq ""} continue
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
@@ -312,5 +335,5 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
     }
     if {$done} { incr npr } else { incr nprf }
   }
-  puts "OT_WS_PINREG: $npr pin registers placed beside their pins, $nprf not placed"
+  puts "OT_WS_PINREG: $npr pin registers (input D / output Q) placed beside their pins, $nprf not placed"
 }
