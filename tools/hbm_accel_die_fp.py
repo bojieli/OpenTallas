@@ -463,16 +463,25 @@ def _vmerge(*vs):
 
 R25SPS = dict(R25S, split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
               attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True)
-R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_exact=True))   # router_exact: hgi-takeover die gap 1e
+# hgi-takeover 2026-10-09 (die-evidence-2: closed hfd_mtp view = hfd_mtp_x_stop, 466.56 x 200.88, raw ports): the MTP
+# slot's die buses are the closed view's real ports grouped by peer (hbm_mtp_native_contract.stop_model: f_cmdproc 179,
+# t_cmdproc 517, f_su_red 523, f_router 59, t_router 58, t_coll 19, f_coll 1); the master hfd_mtp is the pure-wiring
+# wrapper physical/hbm_accel_die_views/mtp_hfd/hfd_mtp.sv around the closed block (no re-route).  The CP-south ECO pair
+# follows: t_mtp 179 (cmdproc -> mtp) / f_mtp 517 (mtp -> cmdproc) -- cmdproc_s side owned by mtp-lead (MX1 stream).
+MTP_X_STOP = dict(mtp_x_stop=True,
+                  split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 179, 'S', 'M5', 0.30, 2),
+                                                     'f_mtp': ('hfd_cmdproc_s', 517, 'S', 'M5', 0.70, 2)}})
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_exact=True), MTP_X_STOP)   # router_exact: hgi-takeover die gap 1e
 # hbm-forks 2026-10-09: R25G on the QUALIFIED 4 x 2 SM grid (no fmt3 wide retile): valid when the INT8 front fits the
 # nominal 432-um front_c strip (route line hgi_smh_front_c_int8_nom).  787.15 mm2, 30.59 x 25.73 mm (H on the 26-mm
 # axis), full network build (not a probe), margin lint PASS, SM path stages = R25S.
-R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True))
+R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True), MTP_X_STOP)
 # die-evidence-2 2026-10-09 18:00 PT: R25GP = R25G on the CLOSING attention / svc views: the PS halves (half_ps: PS entry
 # ks port, attn_entry8) with the hi half widened to 689.04 um (hbm-forks 11c7e95b3 --hi-channel-rows 7), slot
 # 814.32 + 689.04 = 1,503.36 um (+15.12 vs R25S), the hub band grown by the same 2 x 4 x 15.12 um; svc split_ps segments.
-# DOES NOT GENERATE YET (18:05 PT): with split_ps the svc SE_s7 ki7 pin finds no free N-face span (apply_splits_x) on
-# the R25G outline; R25SPS at 1,503.36 fails 'no room for station of ks5_SW' -- the PS entry ks chains need hub room.
+# GENERATES (hgi-takeover 2026-10-09 evening): the SE_s7 ki7 span is fixed (hbm-forks 65d804e91) and the plan record
+# serialises through plan_json (tuple-keyed pin_centre); plan --ds-var r25gp: 31,734.288 x 25,282.8 um, 802.33 mm2,
+# 1,245 instances, 0 overlaps / 0 outside, die lint rc 0.  (R25SPS at 1,503.36 still fails 'no room for station of ks5_SW'.)
 R25GP = dict(R25G, attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True,
              split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
              attn_tile_h_um=1503.36, hub_h=R25G['hub_h'] + 2 * 4 * (1503.36 - 1488.24))
@@ -874,6 +883,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         from hbm_indexer_die_topology import install
         import sys
         install(m, sys.modules[__name__])
+    if variant.get('mtp_x_stop') and variant.get('mtp_master') != 'hgi_native' and not variant.get('native_mtp_wb'):
+        fix_ports_mtp_x_stop(m)
     if variant.get('native_mtp_wb'):
         from hbm_mtp_wb_die_model import model as native_model
         m['mtp_wb_native'] = native_model(ROOT)
@@ -1066,6 +1077,12 @@ def _jsonable(o):
     if isinstance(o, (list, tuple, set)):
         return [_jsonable(v) for v in o]
     return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
+
+
+def plan_json(rec):
+    """floorplan.json text: the record through _jsonable, so a variant's tuple-keyed dicts (pin_centre from the r23 /
+    R25 presets, corner rules) serialise as 'master|port' keys instead of failing json.dumps."""
+    return json.dumps(_jsonable(rec), indent=1)
 
 
 # index_q bands are NOT in the list (r16b a_real, measured + derived): they are placed both R0 and x-mirrored (MY /
@@ -1634,6 +1651,40 @@ def split_attn(m, half_dir):
     m['attn_halves'] = {nm: [d['lo'].name, d['hi'].name] for nm, d in halves.items()}
 
 
+MTP_X_STOP_LEF = 'physical/hbm_accel_die_views/mtp/hfd_mtp.lef'
+
+
+def fix_ports_mtp_x_stop(m):
+    """hgi-takeover 2026-10-09: the R25G MTP slot master hfd_mtp keeps its die bus ports (the stop_model groups f_cmdproc /
+    t_cmdproc / f_su_red / f_router / t_router / t_coll / f_coll, plus ck / rst) but every bit's PIN is the closed view's
+    raw controller pin (name, layer, rectangle from physical/hbm_accel_die_views/mtp/hfd_mtp.lef): group bit i of field
+    F is the pin F[j] (F for 1-bit fields), ck is clk and rst is rst_n.  The view then checks MATCH unchanged (no
+    re-route); the die netlist binds the groups to the raw ports (die_top_lint real block hfd_mtp = hfd_mtp_x_stop)."""
+    from hbm_mtp_native_contract import stop_model
+    r = S.real_lef(MTP_X_STOP_LEF)
+    groups = stop_model(ROOT)['groups']
+    rects, order = {}, []
+    def pin(nm):
+        layer, box = r['pins'][nm]
+        return (nm, layer, tuple(box))
+    for g, gr in groups.items():
+        bits = []
+        for f in gr['fields']:
+            for b in range(f['width']):
+                bits.append(pin(f['port'] if f['width'] == 1 else f"{f['port']}[{b}]"))
+        rects[g] = ('rects', bits)
+        order.append(g)
+    rects['ck'] = ('rects', [pin('clk')]); rects['rst'] = ('rects', [pin('rst_n')])
+    order += ['ck', 'rst']
+    used = {x[0] for v in rects.values() for x in v[1]}
+    if used != set(r['pins']):
+        raise ValueError(f'mtp x_stop pins: {len(set(r["pins"]) - used)} view pins unmapped, {len(used - set(r["pins"]))} unknown')
+
+    def fn(mst, k=1, rects=rects, order=order):
+        mst.ports, mst.order = dict(rects), list(order)
+    m.setdefault('fixed_ports', {})['hfd_mtp'] = fn
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -1826,8 +1877,10 @@ def apply_splits_x(m, rel):
                         extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
                         new_owner[(inst, port)] = bn
                         break
+    fc_taps = {}     # hbm-forks --fc (split_psfc): face clock taps ckw / cke ride the band's ck net (balanced die leaves)
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+        fc_taps[bn] = [p_ for p_ in ('ckw', 'cke') if p_ in rec['ports']]
         spec, order = _xy_or_split_spec(rec['ports'])
         for pn_, t_ in extra_x.get(bn, {}).items():
             # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
@@ -1909,6 +1962,8 @@ def apply_splits_x(m, rel):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(nm, port) for nm in repl[inst].values()]
+                if port == 'ck':
+                    e2 += [(nm, tp) for bn_, nm in repl[inst].items() for tp in fc_taps[bn_]]
             elif (inst, port) in new_owner:
                 e2.append((repl[inst][new_owner[(inst, port)]], port))
             else:
@@ -2598,6 +2653,12 @@ def buses(m):
             from hbm_mtp_native_contract import generic_model
             gm_ = generic_model(ROOT)
             for name, group in gm_['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_') else ('mtp', peer_, group['bits']))
+        elif V.get('mtp_x_stop') and not V.get('native_mtp_wb'):
+            # hgi-takeover: the closed hfd_mtp_x_stop view's real ports, grouped by peer (stop_model)
+            from hbm_mtp_native_contract import stop_model
+            for name, group in stop_model(ROOT)['groups'].items():
                 peer_ = name[2:]
                 hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_') else ('mtp', peer_, group['bits']))
         elif V.get('native_mtp_wb'):
@@ -4501,7 +4562,7 @@ def main(argv=None):
         rec = plan_record_qwen(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg', scale=0.03)
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc_qwen(out / 'domains.sdc')
@@ -4528,12 +4589,13 @@ def main(argv=None):
         print(' '.join(ir_windows(m)))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT
+        # --out: write the plan elsewhere (a variant build must not overwrite the committed default-die record)
+        out = a.out.resolve() if a.out else ROOT / OUT
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg')
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc(out / 'domains.sdc', m)

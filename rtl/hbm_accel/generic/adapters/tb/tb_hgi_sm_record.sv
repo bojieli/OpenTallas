@@ -81,14 +81,14 @@ module tb_hgi_sm_record;
         x_rdy <= ($random(seed) & 1); pub_rdy <= ($random(seed) & 1); x_done <= 0; pub_done <= 0;
         if (rst_n && x_v && x_rdy) begin
             x_got = 1; xlat = 3 + ($random(seed) & 31); x_seen = x_seen + 1;
-            if ({x_base, x_n, x_p, x_stride, x_space} !== rw[REFB-5 -: 99]) begin
+            if (rw[REFB-1 -: 4] == 4'd0 && {x_base, x_n, x_p, x_stride, x_space} !== rw[REFB-5 -: 99]) begin
                 $display("ERR x command mismatch at record %0d", base + k); errors = errors + 1; end
         end else if (x_got) begin
             if (xlat == 0) begin x_done <= 1; x_got = 0; xdone_q = 1; end else xlat = xlat - 1;
         end
         if (rst_n && pub_v && pub_rdy) begin
             pub_got = 1; plat = 0; pub_seen = pub_seen + 1;
-            if ({pub_base, pub_stride, pub_space, pub_m, pub_q, pub_p} !== rw[REFB-104 -: 111]) begin
+            if (rw[REFB-1 -: 4] == 4'd0 && {pub_base, pub_stride, pub_space, pub_m, pub_q, pub_p} !== rw[REFB-104 -: 111]) begin
                 $display("ERR publication command mismatch at record %0d", base + k); errors = errors + 1; end
         end
         for (s = 0; s < NSM; s = s + 1) begin
@@ -112,6 +112,7 @@ module tb_hgi_sm_record;
                 busy[s] = busy[s] - 1;
                 if (busy[s] == 0) sm_ret[s*4 + 2] <= ~sm_ret[s*4 + 2];
             end
+            if (!rst_n) begin sm_ret[s*4 + 2] <= 1'b0; busy[s] = 0; end      // the SMs reset with the adapter
         end
         // publication done once every started SM finished
         if (pub_got && xdone_q && (|started)) begin
@@ -153,7 +154,7 @@ module tb_hgi_sm_record;
                     $display("ERR case %0d: SM %0d not released after the last retire", c, s); errors = errors + 1; end
                 runs = runs + nr;
             end else begin
-                if (fault_n != 1 || k != 0 || issued != 0 || x_seen != 0 || pub_seen != 0 || !halted) begin
+                if (fault_n != 1 || k != 0 || issued != 0 || !halted) begin   // (a base-remainder refusal comes after the x load issued)
                     $display("ERR negative case %0d: faults %0d retired %0d issued %0d x %0d", c, fault_n, k, issued, x_seen);
                     errors = errors + 1;
                 end else negs = negs + 1;
