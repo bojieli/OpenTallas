@@ -286,6 +286,218 @@
    "in_bits": 3,
    "out_bits": 1
   },
+  "su_unit": {
+   "top": "ot_hgi_su_unit",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_hdr": {
+     "dir": "input",
+     "bits": 128
+    },
+    "rec_sut": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_a": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_b": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_c": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_d": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_o": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_r": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_i": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_n_a": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "halted": {
+     "dir": "output",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
+    "s0_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "s0_idx": {
+     "dir": "input",
+     "bits": 20
+    },
+    "s0_data": {
+     "dir": "input",
+     "bits": 32
+    },
+    "am_stream": {
+     "dir": "output",
+     "bits": 523
+    },
+    "am_rdy": {
+     "dir": "input",
+     "bits": 1
+    }
+   },
+   "in_bits": 2528,
+   "out_bits": 865
+  },
+  "hc_unit": {
+   "top": "ot_hgi_hc_unit",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "cfg_norm_eps": {
+     "dir": "input",
+     "bits": 32
+    },
+    "rec_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_hdr": {
+     "dir": "input",
+     "bits": 128
+    },
+    "rec_a": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_b": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_o": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_n_a": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_n_o": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "halted": {
+     "dir": "output",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
+    "hq_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "hq_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "hq_addr": {
+     "dir": "output",
+     "bits": 35
+    },
+    "hq_len": {
+     "dir": "output",
+     "bits": 3
+    },
+    "hq_tag": {
+     "dir": "output",
+     "bits": 11
+    },
+    "hr_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "hr_tag": {
+     "dir": "input",
+     "bits": 11
+    },
+    "hr_beat": {
+     "dir": "input",
+     "bits": 2
+    },
+    "hr_data": {
+     "dir": "input",
+     "bits": 256
+    }
+   },
+   "in_bits": 1518,
+   "out_bits": 392
+  },
   "sm": {
    "unit": 1,
    "top": "ot_hgi_sm_record",
@@ -542,6 +754,10 @@
      "dir": "output",
      "bits": 1
     },
+    "op_strm": {
+     "dir": "output",
+     "bits": 2
+    },
     "lg_v": {
      "dir": "input",
      "bits": 1
@@ -576,7 +792,7 @@
     }
    },
    "in_bits": 2875,
-   "out_bits": 677
+   "out_bits": 679
   },
   "sfu": {
    "unit": 3,
@@ -801,6 +1017,10 @@
      "dir": "input",
      "bits": 523
     },
+    "am_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
     "e_in_v": {
      "dir": "output",
      "bits": 1
@@ -859,7 +1079,7 @@
     }
    },
    "in_bits": 1544,
-   "out_bits": 890
+   "out_bits": 891
   },
   "dma": {
    "unit": 8,
@@ -1102,6 +1322,14 @@
      "dir": "input",
      "bits": 1
     },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
     "ne_v": {
      "dir": "output",
      "bits": 1
@@ -1135,8 +1363,8 @@
      "bits": 1
     }
    },
-   "in_bits": 1247,
-   "out_bits": 1736
+   "in_bits": 1521,
+   "out_bits": 2074
   },
   "hc": {
    "unit": 10,

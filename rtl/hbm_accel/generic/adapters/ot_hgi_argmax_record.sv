@@ -31,6 +31,7 @@ module ot_hgi_argmax_record #(
     input  wire [273:0]  vmr,
     // logit STREAM from su_red (used when A.space = STREAM)
     input  wire [522:0]  am_stream,
+    output reg           am_rdy,           // a STREAM record is open: the producer (SU unit) may send its beats
     // the engine (ot_hgi_argmax18_m GENERIC18 = 1, LP = 8)
     output reg           e_in_v, e_in_last, e_bias_en,
     output reg  [7:0]    e_mask,
@@ -71,6 +72,7 @@ module ot_hgi_argmax_record #(
     // engine / VM inputs land in flops (registered boundary): the response and the result are used one edge later
     reg [522:0] as_q; reg sl_pend;
     always @(posedge clk) as_q <= am_stream;
+    always @(posedge clk or negedge rst_n) if (!rst_n) am_rdy <= 1'b0; else am_rdy <= busy && stream_m && !rd_done_all;
     reg [273:0] vr; reg eo_v, eo_nan, eo_f, eo_rf; reg [17:0] eo_idx; reg [31:0] eo_val;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin vr <= 274'd0; eo_v <= 1'b0; end

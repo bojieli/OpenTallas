@@ -25,7 +25,10 @@
 //   contiguous, segment not dividing A, B.n != d, d or nseg >= 2^16.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_fused_record #(
-    parameter integer MUT_SEG = 0          // mutant: one segment of the whole row (seg ignored)
+    parameter integer MUT_SEG = 0,         // mutant: one segment of the whole row (seg ignored)
+    parameter integer UNIT = 0,            // 1: the D1 die body: the micro-ops run on an internal ot_hgi_su_unit (stage /
+                                           //    vec / drain through the vmq / vmr VM client); 0: the vec op port (op_*)
+    parameter integer UN = 32, UM = 8, ULV = 7
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -50,6 +53,9 @@ module ot_hgi_fused_record #(
     output wire [669:0]  op_w,
     input  wire          su_idle,
     input  wire          su_fault,
+    // VM packet client of the D1 die body (UNIT = 1)
+    output wire [337:0]  vmq,
+    input  wire [273:0]  vmr,
     // DS norm engine / hc-post job: {op 2, eps 32, n 21, O base 18, C base 18, B base 40, A base 18} = 149 b
     output reg           ne_v,
     input  wire          ne_rdy,
@@ -108,11 +114,20 @@ module ot_hgi_fused_record #(
     // ---- the internal SU path
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
-    ot_hgi_su_record #(.LEGACY(0)) u_su (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(s_v), .rec_rdy(s_rdy),
-        .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o), .rec_r(s_r),
-        .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt), .drained(s_drained),
-        .lg_v(1'b0), .lg_rdy(), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy), .op_w(op_w), .su_idle(su_idle),
-        .su_fault(su_fault));
+    generate if (UNIT) begin : g_unit
+        ot_hgi_su_unit #(.N(UN), .M(UM), .LV(ULV)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
+            .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
+            .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
+            .vmq(vmq), .vmr(vmr));
+        assign s_drained = 1'b1; assign op_v = 1'b0; assign op_w = 670'd0;
+    end else begin : g_port
+        ot_hgi_su_record #(.LEGACY(0)) u_su (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(s_v), .rec_rdy(s_rdy),
+            .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o), .rec_r(s_r),
+            .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt), .drained(s_drained),
+            .lg_v(1'b0), .lg_rdy(), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy), .op_w(op_w), .su_idle(su_idle),
+            .su_fault(su_fault));
+        assign vmq = 338'd0;
+    end endgenerate
     function automatic [255:0] vmd(input [17:0] base, input [19:0] n, input [19:0] m, input [31:0] stride, input ib);
         vmd = {120'd0, 16'd0, stride, m, n, 22'd0, base, 2'b00, ib, 3'd0, 2'd1};   // space VM, fmt FP32, istride 0 (=1)
     endfunction
