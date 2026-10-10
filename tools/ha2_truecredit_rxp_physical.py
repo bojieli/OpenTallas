@@ -72,6 +72,9 @@ set_load 4 [all_outputs]
     if os.environ.get('HA2_RX_CAPTURE')=='1':
         cmd+=['--step-tcl','PRE_GLOBAL_PLACE=physical/ha2_truecredit_20261007/rx_capture_at_macros.tcl',
               '--step-tcl','PRE_DETAIL_PLACE=physical/ha2_truecredit_20261007/rx_capture_release.tcl']
+    if os.environ.get('HA2_RX_RETURN_PINS')=='1':
+        cmd+=['--step-tcl','PRE_GLOBAL_PLACE=physical/ha2_truecredit_20261007/rx_capture_pin_plan.tcl',
+              '--step-tcl','PRE_DETAIL_PLACE=physical/ha2_truecredit_20261007/rx_capture_pin_release.tcl']
     record=dict(part=a.part,command=cmd,source_manifest=manifest,model=model,
                 route_virtual_clock_insertion_ps=insertion,parent_qualified=False,adopted=False)
     (run/'launch.json').write_text(json.dumps(record,indent=2)+'\n')

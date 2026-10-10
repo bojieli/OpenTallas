@@ -19,3 +19,14 @@ def model():
         credit_roundtrip_extra_cycles=1, full_rate_credit_depth=8,
         latency_composition="Each traversed HA2 receiver +1 edge vs RREG; no aggregate token credit before measured parent schedule",
         physical_obligations=["TT setup >=0, FF hold >=0, DRC0", "Macro capture flops beside their own rd_out pins", "Credit/deadlock/identity/reset full-shape gate", "No IO or macro timing relaxation"])
+
+
+def return_pin_model():
+    r=model()
+    r.update(schema="opentallas.uarch.ha2_capture_return_pins.v1",
+        mechanism=r["mechanism"]+"; separate registered return tag/valid edge and pin-owned input/output flops",
+        return_register_bits=34, extra_flop_area_um2=r["extra_flop_area_um2"]+34*.2916,
+        added_return_latency_cycles_vs_CAPTURE=1, credit_roundtrip_extra_cycles=2,
+        added_send_latency_cycles_vs_RREG=1,
+        latency_composition="Send-data path +1 edge vs RREG; return/retirement credit +2 edges vs RREG. Full-shape measured credit depth8 qualification required.")
+    return r
