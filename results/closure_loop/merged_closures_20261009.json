@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 55,
-   "merged": 50,
+   "closed": 56,
+   "merged": 51,
    "record_only": 11
   },
   "jobs": {
@@ -1590,7 +1590,8 @@
    "hgi_seq-fde1a8677-tc-hm10-cl": "source on main; record ceddc1931; TT +18.60 / FF +0.44; loop benches PASS",
    "mtprb-dskvwb_spec_p2a-5ce6c3c62-tc": "source + record already on main; TT +8.69 / FF +0.69",
    "hgi_adp_hc_a-804a35913-tc-cl": "ADOPTED (source on main); record 6bf2f4eef; TT +81.26 / FF +27.40",
-   "hgi_adp_hc_b-804a35913-tc-cl": "variant of hc_a; record 4254aae49; TT +100.47 / FF +10.38"
+   "hgi_adp_hc_b-804a35913-tc-cl": "variant of hc_a; record 4254aae49; TT +100.47 / FF +10.38",
+   "qfd_coll_xfifo_a-66fd85cda-tc": "variant of the merged coll_xfifo_b (same source 66fd85cda, on main); record 6ef695b17; TT +18.81 / FF +9.66 DRC 0 after its hold ECO; loop benches coll_native_exact PASS / neg_gate FAIL as expected"
   }
  }
 }
