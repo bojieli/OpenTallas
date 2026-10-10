@@ -12,10 +12,18 @@
 // 8 x op_xb beats.  to_bf16 = RNE (hdc_golden; the golden of SM.MATVEC fmt 0 / 3 rounds x to BF16).
 // Refusals (x_fault): fmt 1 / 2 (the DS block-dot x is quant_fp8 codes + block exponents: the activation quantiser,
 // not this loader), A not VM (STREAM x enters from the SU stream, not here), A.base / A.stride not 8-word aligned.
+// STORAGE (FILL-9 2026-10-10, root cause of the 64-Kb flop tile: yosys OOM / 71,877 failing endpoints at TT -695 ps):
+// 32 ot_sram_1r1w_128x256_m1 macros m[t][q] (t < 8 fragment row, q < 4 lane quarter): word p (slot) of m[t][q] holds
+// lanes 16q .. 16q + 15 of slot p, t-value t, as 16 x BF16.  A landing sector (p, j) is ONE masked word write in each of
+// the 8 macros m[t][j >> 4] (data replicated over the 16 lane slices, 16-b mask at slice j & 15); a beat reads the 4
+// macros m[t][*] at word p (1,024 b).  Write and read requests are registered at the macro pins; the read pipeline is
+// pins -> macro edge -> registered 8:1 t-select (rw) -> beat (xw_data): +2 edges a beat against the flop tile, same
+// x-store write sequence (tb_hgi_xload_lock vs ot_hgi_sm_xload_old).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_xload #(
     parameter integer NXC = 4,            // VM packet clients (reads in flight)
     parameter integer PMAX = 8,
+    parameter integer MUT_M = 0,          // mutant (FILL-9): a landing sector's write mask on lane slice (j ^ 1) of its quarter
     parameter integer MUT_T = 0           // mutant: lane j takes t from the wrong half (k = (g 64 + j) 8 + (7 - t))
 ) (
     input  wire               clk,
@@ -40,11 +48,22 @@ module ot_hgi_sm_xload #(
     localparam integer XC = 3152, XOFF = 2128;
     reg busy; reg [17:0] base; reg [20:0] kk; reg [3:0] pp; reg [17:0] st;
     reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [9:0] outst; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
-    // STORAGE (register file, synthesis-friendly): 8 t-banks, each PMAX words of 1,024 b = one slot's 64 lanes x BF16;
-    // a landing sector (slot p, lane j) writes the 16-b lane-j slice of word p in all 8 banks (one write port a bank),
-    // one sector an edge (client responses are held until taken); emission reads ONE word of bank t a beat
-    reg [1023:0] bk0 [0:PMAX-1], bk1 [0:PMAX-1], bk2 [0:PMAX-1], bk3 [0:PMAX-1],
-                 bk4 [0:PMAX-1], bk5 [0:PMAX-1], bk6 [0:PMAX-1], bk7 [0:PMAX-1];
+    // write request at the macro pins (registered; per-quarter data copies bound the fanout to 16 slices)
+    reg wq_v; reg [1:0] wq_q; reg [3:0] wq_a; reg [3:0] wq_l; reg [127:0] wq_d [0:3];
+    // read request at the macro pins (registered): s1 = address at the pins, s2 = macro output valid, s3 = rw valid
+    reg s1_v, s2_v, s3_v; reg [2:0] s1_t, s2_t; reg [3:0] s1_sp; reg [6:0] s1_addr, s2_addr, s3_addr;
+    reg [6:0] s1_b, s2_b, s3_b; reg s1_ok, s2_ok, s3_ok;
+    wire [255:0] rd [0:31];                // m[t][q] at index t * 4 + q
+    genvar gt, gq;
+    generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
+        for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
+            wire [255:0] wmask = {240'd0, 16'hFFFF} << {wq_l ^ ((MUT_M != 0) ? 4'd1 : 4'd0), 4'd0};
+            ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
+                .r_ce_in(s1_v && s1_t == gt), .r_addr_in({3'd0, s1_sp}), .rd_out(rd[gt * 4 + gq]),
+                .w_ce_in(wq_v && wq_q == gq), .w_addr_in({3'd0, wq_a}), .wd_in({16{wq_d[gq][16 * gt +: 16]}}),
+                .w_mask_in(wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+    end endgenerate
     reg [NXC-1:0] hv;                      // a client's response held, not yet landed
     reg [273:0] hdat [0:NXC-1];
     reg [10:0] got;                        // sectors landed for this group
@@ -78,7 +97,7 @@ module ot_hgi_sm_xload #(
             if (pp2 * XC + XOFF < bb * 2048 + 2048 && pp2 * XC + XOFF + 1024 > bb * 2048) bslot = pp2;
     endfunction
     wire [3:0] tt = MUT_T ? (4'd7 - t) : t;
-    reg [6:0] b_q; reg [1023:0] rw;        // registered bank read (the beat's slot word)
+    reg [1023:0] rw;                       // registered t-select of the macro read (the beat's slot word)
     wire [2047:0] beat;
     wire [2047:0] beats [0:NBMAX-1];
     genvar gb;
@@ -95,7 +114,7 @@ module ot_hgi_sm_xload #(
             assign beats[gb] = {1024'd0, sh};
         end
     end endgenerate
-    assign beat = beats[b_q];
+    assign beat = beats[s3_b];
     function automatic [3:0] slot_of(input [6:0] bb);
         integer x; slot_of = 4'd0;
         for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0) slot_of = bslot(x);
@@ -104,15 +123,19 @@ module ot_hgi_sm_xload #(
         integer x; in_slot = 1'b0;
         for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0 && bslot(x) < np) in_slot = 1'b1;
     endfunction
-    reg e_v; reg [6:0] e_addr; reg e_ok;
     integer w;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0;
-                          hv <= 0; e_v <= 1'b0; end
+                          hv <= 0; wq_v <= 1'b0; s1_v <= 1'b0; s2_v <= 1'b0; s3_v <= 1'b0; end
         else begin
-            x_done <= 1'b0; xw_en <= 1'b0; e_v <= 1'b0;
-            // emission stage 2: the registered slot word -> the beat
-            if (e_v) begin xw_en <= 1'b1; xw_addr <= e_addr; xw_grp <= b_q; xw_data <= e_ok ? beat : 2048'd0; end
+            x_done <= 1'b0; xw_en <= 1'b0; wq_v <= 1'b0; s1_v <= 1'b0;
+            // read pipeline: s1 (pins) -> s2 (macro edge) -> s3 (rw: t-select) -> the beat
+            s2_v <= s1_v; s2_t <= s1_t; s2_addr <= s1_addr; s2_b <= s1_b; s2_ok <= s1_ok;
+            s3_v <= s2_v; s3_addr <= s2_addr; s3_b <= s2_b; s3_ok <= s2_ok;
+            if (s2_v) begin : tsel
+                integer qq; for (qq = 0; qq < 4; qq = qq + 1) rw[256 * qq +: 256] <= rd[{s2_t, 2'(qq)}];
+            end
+            if (s3_v) begin xw_en <= 1'b1; xw_addr <= s3_addr; xw_grp <= s3_b; xw_data <= s3_ok ? beat : 2048'd0; end
             for (c = 0; c < NXC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             if (x_v && x_rdy) begin
                 if (x_fmt == 2'd1 || x_fmt == 2'd2 || x_space != 2'd1 || |x_base[2:0] || |x_stride[2:0] || x_p > PMAX ||
@@ -143,23 +166,16 @@ module ot_hgi_sm_xload #(
                     lp = hdat[lsel][267:264]; lj = hdat[lsel][263:257];      // tag [272:257] = {p 4, j 7} low bits
                     for (w = 0; w < 8; w = w + 1)
                         v[w] = (({13'd0, g, 9'd0} + {lj, 3'd0} + w) < kk) ? bf16(hdat[lsel][32*w +: 32]) : 16'd0;
-                    bk0[lp][16*lj +: 16] <= v[0]; bk1[lp][16*lj +: 16] <= v[1]; bk2[lp][16*lj +: 16] <= v[2];
-                    bk3[lp][16*lj +: 16] <= v[3]; bk4[lp][16*lj +: 16] <= v[4]; bk5[lp][16*lj +: 16] <= v[5];
-                    bk6[lp][16*lj +: 16] <= v[6]; bk7[lp][16*lj +: 16] <= v[7];
+                    wq_v <= 1'b1; wq_q <= lj[5:4]; wq_a <= lp; wq_l <= lj[3:0];
+                    for (w = 0; w < 4; w = w + 1) wq_d[w] <= {v[7], v[6], v[5], v[4], v[3], v[2], v[1], v[0]};
                     hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0;
                 end
                 if (got_n == {pp, 6'd0}) begin ph <= 2'd1; t <= 4'd0; b <= 7'd0; end
             end
             if (busy && ph == 2'd0) got <= got + {7'd0, nland};
             if (busy && ph == 2'd1) begin                                     // emission stage 1: read bank t
-                begin : rd
-                    reg [3:0] sp; sp = slot_of(b);
-                    case (tt[2:0])
-                        3'd0: rw <= bk0[sp]; 3'd1: rw <= bk1[sp]; 3'd2: rw <= bk2[sp]; 3'd3: rw <= bk3[sp];
-                        3'd4: rw <= bk4[sp]; 3'd5: rw <= bk5[sp]; 3'd6: rw <= bk6[sp]; default: rw <= bk7[sp];
-                    endcase
-                end
-                e_v <= 1'b1; e_addr <= {g[3:0], t[2:0]}; b_q <= b; e_ok <= in_slot(b, pp);
+                s1_v <= 1'b1; s1_t <= tt[2:0]; s1_sp <= slot_of(b);
+                s1_addr <= {g[3:0], t[2:0]}; s1_b <= b; s1_ok <= in_slot(b, pp);
                 if (b == nb - 7'd1) begin
                     b <= 7'd0;
                     if (t == 4'd7) begin
@@ -169,7 +185,7 @@ module ot_hgi_sm_xload #(
                     t <= t + 4'd1;
                 end else b <= b + 7'd1;
             end
-            if (busy && ph == 2'd2 && !e_v) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end   // last beat out
+            if (busy && ph == 2'd2 && !s1_v && !s2_v && !s3_v) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end   // last beat out
         end
     end
 endmodule
