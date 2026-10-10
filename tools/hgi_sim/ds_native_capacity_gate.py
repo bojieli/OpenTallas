@@ -31,6 +31,7 @@ def run():
         ids = ((np.arange(k,dtype=np.uint32)//8)*768+np.arange(k,dtype=np.uint32)%8)
         ids = ids[np.random.default_rng(20261010+k).permutation(k)]
         expected_local = (ids//768)*8+ids%8
+        assert int(expected_local.max()) < 2048
         checked = 0
         for rank in range(96):
             die = M.Die(rank,M.Hbm()); die.vm=np.full(8*1024*1024//4,0xdeadbeef,dtype=np.uint32)
@@ -55,6 +56,8 @@ def run():
                     raise AssertionError('Old On64 must refuse the real worst-owner shape')
                 owned.desc['O'].n=k
         receipts.append(dict(selected_rows=k,max_owned=k,rounds=k//2,owner_capacity=k,
+            source_rows_per_rank=2048,source_max_global_id=int(ids.max()),
+            source_vehicle='Adversarial generic source extent, not a released DS1M selected-list distribution',
             counts_words=k//64,checked_words=checked,descriptor_hex=owned.encode().hex(),
             program_sha256=hashlib.sha256(encode_program(b.recs)).hexdigest(),
             selected_sha256=hashlib.sha256(ids.tobytes()).hexdigest(),
