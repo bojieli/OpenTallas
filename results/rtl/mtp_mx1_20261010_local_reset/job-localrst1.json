@@ -1,0 +1,87 @@
+{
+  "name": "hfd_cmdproc_s_mtp_native_mx1_rb-lrst1-hm10-f670f540e-tc",
+  "block": "hfd_cmdproc_s_mtp_native_mx1",
+  "owner": "Codex:mtp_closure/mx1_root",
+  "purpose": "Opt-in LOCALRST=1 full-shape structural reset ownership, 11 kept independent deassert trees, zero added cycles; retain fc8 running. Clock-accounting diagnosis remains open; candidate not eligible for adoption until rooted tap/I/O timing consistent.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3"
+  ],
+  "threads": 32,
+  "peak_ram_gb": 64,
+  "source": {
+    "branch": "codex/mtp-mx1-root-20261010",
+    "commit": "f670f540e3b22eb46b512401b49106b5f4055774",
+    "extra_paths": [
+      "compiler/models/qwen3-8b",
+      "results/arch/hgi_sim_20261009/conformance",
+      "results/rtl/hbm_token_fifo_reservation_20261009"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "mx1_regb_gate",
+        "cmd": "python3 tools/hbm_mx1_regb_gate.py --local-reset --work {RUN}/bench/work --out {RUN}/bench/gate.json",
+        "expect": "pass",
+        "pass_regex": "^PASS",
+        "threads": 2,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "mx1_regb_done_overtake_mutant",
+        "cmd": "python3 tools/hbm_mx1_regb_gate.py --local-reset --single D_mutant_done_not_held --work {RUN}/bench/mut1 --out {RUN}/bench/mut1.json",
+        "expect": "fail",
+        "fail_regex": "MX1_REGB_CASE D_mutant_done_not_held rc=[1-9]",
+        "threads": 1,
+        "peak_ram_gb": 4
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; L_=physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc; printf \"%s\\n\" \"if {[llength [get_libs -quiet *_FF_*]]} { set ot_fcl ${CK_FF_MEAN:-740} } else { set ot_fcl ${CK_TT_MEAN:-880} }\" \"set_clock_latency -source \\$ot_fcl [get_ports -quiet {cks[0] ckn[0] cke[0] ckw[0]}]\" > $L_; export OT_MM_FF_SDC='physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc'; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=32 PD=0.55 HM=0.01 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} hfd_cmdproc_s_mtp_native_mx1 --clock-port 'ck*' --param ENABLE_MTP=1 --param REGB=1 --param LOCALRST=1 --die-area 0 0 1399.656 701.976 --core-area 0 0.54 1399.656 701.436 --routing-layers M2 M7 --macro-view ot_sram_2rw_512x64_m4_r2c2=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2 --macro-place-halo 5 5 --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/cmdproc/pdn_cmdproc.tcl --sdc-append physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc --orfs-var IO_CONSTRAINTS=/src/physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/io_place.tcl --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_cp_mtp_native/macro_place.tcl --orfs-var 'SYNTH_KEEP_MODULES=ot_mx1_reset_leaf ot_hfd_oreg1_fc ot_hfd_oreg2_fc ot_hfd_oreg3_fc ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1' --orfs-var 'CTS_ARGS=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none' --step-tcl POST_SYNTH=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl --source physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv --source rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv --source rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv --source physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv --source physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv --source physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv --source rtl/common/ot_fwd_link_stage.sv --source rtl/common/ot_sc_pfifo.sv --source physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_fc.sv --source physical/hbm_cp_mtp_native/rtl/ot_hfd_oreg_fc.sv --step-tcl PRE_CTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 32,
+      "peak_ram_gb": 64
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; L_=physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc; printf \"%s\\n\" \"if {[llength [get_libs -quiet *_FF_*]]} { set ot_fcl ${CK_FF_MEAN:-740} } else { set ot_fcl ${CK_TT_MEAN:-880} }\" \"set_clock_latency -source \\$ot_fcl [get_ports -quiet {cks[0] ckn[0] cke[0] ckw[0]}]\" > $L_; export OT_MM_FF_SDC='physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc'; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=32 PD=0.55 HM=0.01 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} hfd_cmdproc_s_mtp_native_mx1 --clock-port 'ck*' --param ENABLE_MTP=1 --param REGB=1 --param LOCALRST=1 --die-area 0 0 1399.656 701.976 --core-area 0 0.54 1399.656 701.436 --routing-layers M2 M7 --macro-view ot_sram_2rw_512x64_m4_r2c2=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2 --macro-place-halo 5 5 --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/cmdproc/pdn_cmdproc.tcl --sdc-append physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc --orfs-var IO_CONSTRAINTS=/src/physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/io_place.tcl --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_cp_mtp_native/macro_place.tcl --orfs-var 'SYNTH_KEEP_MODULES=ot_mx1_reset_leaf ot_hfd_oreg1_fc ot_hfd_oreg2_fc ot_hfd_oreg3_fc ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1' --orfs-var 'CTS_ARGS=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none' --step-tcl POST_SYNTH=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl --source physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv --source rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv --source rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv --source physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv --source physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv --source physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv --source rtl/common/ot_fwd_link_stage.sv --source rtl/common/ot_sc_pfifo.sv --source physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_fc.sv --source physical/hbm_cp_mtp_native/rtl/ot_hfd_oreg_fc.sv --step-tcl PRE_CTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_cp_mtp_native/collar_mx1/fclat.sdc",
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/hbm_cp_mtp_native/collar_mx1/io_min_hfd_cmdproc_s_mtp_native_mx1.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/mtp_mx1_20261010_local_reset/routes/hfd_cmdproc_s_mtp_native_mx1_rb-lrst1-hm10-f670f540e-tc"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": "+1 per MTP crossing (pin FIFO / pin flop), +2 per round trip; provider read loop +2 (controller PRL 2 -> 4); argmax dispatch relay +4 record / +3 retire"
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.mx1.fc8_root_diagnosis.v1",
+  "source": "96ee08233ccdf4ef73b957aa2f05f7a300d90731",
+  "candidate_source": "f670f540e3b22eb46b512401b49106b5f4055774",
+  "scope": "read-only TT CTS calibration database with placement parasitics, not routed signoff",
+  "base": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc/routes/hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm10_96ee08233_tc_cal/work/orfs/results/asap7/opentallas_hfd_cmdproc_s_mtp_native_mx1_asap7_mtp_hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm10_96ee08233_tc_cal/base",
+  "findings": [
+    {
+      "kind": "mixed_root_io_reference",
+      "evidence": "post_cts_vclk reports core_clk 692.36..2428.42ps and assigns vclk1560ps; interior MTP reset arrival752.99ps; f_loader capture943ps includes740ps source plus203ps local tree",
+      "consequence": "global midpoint is not the interior clock insertion demanded by the face-tap source-latency model; needs root-specific die-clock budget and consistent calibration/route/STA/ECO treatment"
+    },
+    {
+      "kind": "reset_distribution",
+      "evidence": "rs1->t_host[0] runs through twelve-plus distribution buffers; data network752.99..1513.70ps including clk-to-Q and output logic",
+      "candidate": "11 independent unit-owned reset leaves preserving identical async assertion and two-edge deassertion; no added cycles"
+    },
+    {
+      "kind": "pin_handshake_distribution",
+      "evidence": "f_backend[0] -> bf.g_g[3].g_s[0].u_rs/q at -1361.05ps includes long distributed control chain; invalid all-root I/O reference contributes to failure",
+      "next": "register or credit-isolate late handshake at owned pin controller after rooted budgets; measure full shape"
+    },
+    {
+      "kind": "face_tap_extent",
+      "evidence": "four face roots drive whole1399.656x701.976um outline; no per250um bounded tiles or reset/pin locality constraints in fc8 job",
+      "next": "tile face stations with local tap and pin-flop ownership; compose lockup/wire timing and die leaf offsets before adoption"
+    }
+  ],
+  "live_jobs_preserved": [
+    "fc8-hm10",
+    "fc8-hm25"
+  ],
+  "no_adoption_claim": true,
+  "files_sha256": {
+    "fc8_cal_tt_core.txt": "ffdd5b6ed07a7b0fcbb2b90619cd4bd7a9b44879a40eb148b7dd92f25a09224a",
+    "fc8_cal_tt_paths.txt": "c01b38cfba189327175386614a67b68056767ecf19e4907b6b30313cddf76c18"
+  }
+}
