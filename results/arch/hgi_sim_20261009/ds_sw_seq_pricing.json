@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hgi_sim.ds_sw_seq_pricing.v1",
- "generated_utc": "2026-10-10T02:54:31Z",
+ "generated_utc": "2026-10-10T04:39:50Z",
  "request": "hgi-takeover 2026-10-09 16:48 PT (coordinator REVIEW ~16:40), spec G20 / G21 main e17bf2e57",
  "program": "ds_rank0_program.json",
  "run": "ds_full.json",
@@ -19,14 +19,14 @@
  "method": "  TOPK_MERGE (G20)  local IDX.TOPK (k = n) + 2 x COLL.ALL_GATHER (values, ids; G = 96) + IDX.MERGE key 0 (96 runs,\n                    k) + SU ids -> -float(id) + IDX.TOPK over -id (k = n = k) + an indexed VM read for the\n                    ascending table.  IDX.MERGE: 7,881 cycles MEASURED at 96 x 512 k 512; other k scaled\n                    linearly in the outputs from that point (head load 1,500 + per output).\n  ROW_GATHER (G21)  IDX.OWNED (K 512: 1,227 cycles MEASURED; K 2,048: 4,510) + per slot j < M: indexed DMA.LOAD of\n                    one 2 KB row, one exact ALL_GATHER (32 flits a rank, 96 ranks: 3,072 flits at 4 lanes / cycle\n                    = 768 cycles + the TU crossing / endpoint latency), and the head dies' DMA.STORE of the 96 rows;\n                    COLL-serial: M gathers back to back, each paying delivery + latency; the \"slots_pipelined\" variant\n                    lets the next slot's gather start while the previous delivers (M x 768 + the latency once).  M per layer is the\n                    bit-exact run's own selection (row_gather stats); the request's 11-12 is reported alongside.\n  ARGMAX_MERGE      an exact gather of 1 flit a rank + a 5-cycle fold.\nToday's pricing: TOPK_MERGE / ARGMAX_MERGE = the composition's measured collective classes (walk), ROW_GATHER = the\nbypass model of ds_native_timing.  Each priced program is scheduled (timing.py S2, CP modelled), so the token delta\nincludes the overlap the dependences allow.",
  "result": {
   "today": {
-   "cycles": 550388.2,
-   "tok_s": 2180.3
+   "cycles": 543456.7,
+   "tok_s": 2208.1
   },
   "software_sequences_M_measured_per_layer": {
-   "cycles": 798768.1,
-   "tok_s": 1502.3,
+   "cycles": 791836.6,
+   "tok_s": 1515.5,
    "delta_cycles": 248380.0,
-   "delta_pct": 45.13,
+   "delta_pct": 45.7,
    "n_races": 0,
    "ops": [
     {
@@ -322,10 +322,10 @@
    "op_sum_sequences": 290152.8
   },
   "software_sequences_M_12": {
-   "cycles": 788960.3,
-   "tok_s": 1521.0,
+   "cycles": 782028.8,
+   "tok_s": 1534.5,
    "delta_cycles": 238572.1,
-   "delta_pct": 43.35,
+   "delta_pct": 43.9,
    "n_races": 0,
    "ops": [
     {
@@ -621,10 +621,10 @@
    "op_sum_sequences": 280345.1
   },
   "software_sequences_slots_pipelined": {
-   "cycles": 738621.7,
-   "tok_s": 1624.6,
+   "cycles": 731690.2,
+   "tok_s": 1640.0,
    "delta_cycles": 188233.6,
-   "delta_pct": 34.2,
+   "delta_pct": 34.64,
    "n_races": 0,
    "ops": [
     {
