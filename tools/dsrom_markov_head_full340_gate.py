@@ -42,7 +42,13 @@ def rtl_key(bits):
     return (~z & 0xffffffff) if z >> 31 else (z ^ 0x80000000)
 
 
+HARD_SRC = ['rtl/hdc/ot_hdc_delay_ring.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_markov_bundle_glue.sv']
+
+
 def main(a):
+    src = SRC + (HARD_SRC if a.hard else [])
+    top = 'ot_dsrom_markov_head_full340_h' if a.hard else 'ot_dsrom_markov_head_full340'
+    hard_params = f',.GLUE_RING({a.glue_ring})' if a.hard else ''
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
     snap, manifest, inp = a.snapshot.resolve(), a.manifest.resolve(), a.input.resolve()
     m = json.loads(manifest.read_text()); die = next(x for x in m['dies'] if x['die'] == a.die)
@@ -105,8 +111,8 @@ module tb;
  reg clk=0;always #0.4165 clk=~clk;reg rst_n=0,start=0;wire start_ready;
  reg[16:0] d_i={token};reg[31:0] transaction=32'h12345;reg[255:0] xa=0,xb=0;
  wire head_go,done,best_valid,fault;wire[16:0] best_row;wire[31:0] best_bits;
- ot_dsrom_markov_head_full340 #(.ENABLE(1),.NB({a.nb}),.ROW_BASE({base}),.DIE_ROWS({die_rows}),.FIRST_BUNDLE({a.first}),
-  .PINREG({a.pinreg}),.CACHE_PINREG(0),.IOREG({a.ioreg}),.RINGDLY({a.ringdly}),.A_INPUT_STAGES(4),.MUTANT({a.mutant}),.MUTANT_BUNDLE({mutant_bundle})) dut(
+ {top} #(.ENABLE(1),.NB({a.nb}),.ROW_BASE({base}),.DIE_ROWS({die_rows}),.FIRST_BUNDLE({a.first}),
+  .PINREG({a.pinreg}),.CACHE_PINREG(0),.IOREG({a.ioreg}),.RINGDLY({a.ringdly}),.A_INPUT_STAGES(4),.MUTANT({a.mutant}),.MUTANT_BUNDLE({mutant_bundle}){hard_params}) dut(
   .clk(clk),.rst_n(rst_n),.start(start),.start_ready(start_ready),.d_i(d_i),.transaction(transaction),
   .ext_embed_valid(1'b0),.ext_embed_data(256'b0),.ext_embed_beat(4'b0),.ext_embed_id(32'b0),.ext_embed_last(1'b0),.ext_embed_fault(1'b0),
   .head_go(head_go),.xa(xa),.xb(xb),.done(done),.best_valid(best_valid),.best_row(best_row),.best_bits(best_bits),.fault(fault));
@@ -138,7 +144,7 @@ endmodule
     (out / 'tb.sv').write_text(tb)
     obj = out / 'obj'
     p = subprocess.run(['verilator', '--binary', '--timing', '-j', str(a.jobs), '-Wno-fatal', *a.vflags.split(), '--top-module', 'tb', '--Mdir', str(obj),
-                        *[str(ROOT / s) for s in SRC], str(macro), str(out / 'tb.sv')], capture_output=True, text=True)
+                        *[str(ROOT / s) for s in src], str(macro), str(out / 'tb.sv')], capture_output=True, text=True)
     (out / 'compile.log').write_text(p.stdout + p.stderr)
     if p.returncode: print(p.stderr[-3000:]); raise SystemExit(2)
     p = subprocess.run([str(obj / 'Vtb'), f'+DIR={out}', f'+OT_ROM_DIR={images}'], capture_output=True, text=True)
@@ -149,7 +155,8 @@ endmodule
                die_rows=die_rows, token=token, pinreg=a.pinreg, mutant=a.mutant, mutant_bundle=mutant_bundle,
                golden=dict(best_row=best_row, best_bits=f'{best_bits:08x}'), passed=passed, exit=p.returncode,
                metrics=metrics, bundles=manifests, manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),
-               checkpoint=str(snap), source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SRC},
+               checkpoint=str(snap), source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in src},
+               hard=a.hard, glue_ring=a.glue_ring if a.hard else None, top=top,
                physical_qualified=False)
     (out / 'verdict.json').write_text(json.dumps(rec, indent=2) + '\n')
     return passed
@@ -161,6 +168,8 @@ if __name__ == '__main__':
     ap.add_argument('--snapshot', type=Path, required=True); ap.add_argument('--input', type=Path, required=True)
     ap.add_argument('--die', type=int, default=0); ap.add_argument('--first', type=int, default=0)
     ap.add_argument('--nb', type=int, default=85); ap.add_argument('--ioreg', type=int, default=1); ap.add_argument('--ringdly', type=int, default=1); ap.add_argument('--pinreg', type=int, default=1)
+    ap.add_argument('--hard', type=int, default=0, help='1: ot_dsrom_markov_head_full340_h (hardened ot_dsrom_markov_bundle_glue element per bundle)')
+    ap.add_argument('--glue-ring', type=int, default=1, help='--hard: glue delay lines as rings (1) or shift lines (0)')
     ap.add_argument('--mutant', type=int, default=0); ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--timeout-ns', type=int, default=60000)
     ap.add_argument('--vflags', default='', help='extra Verilator flags (NB=85: -fno-inline bounds elaboration memory)')
