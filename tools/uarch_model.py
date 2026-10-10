@@ -34,6 +34,32 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
+    """Option-4 boundary successor, sized before RTL; no new rate claim."""
+    start_bits = 1 + 2 * nw + 12
+    snapshot_bits = 24 + 1 + 16 + 16
+    return dict(schema="opentallas.qwen-seq-su-boundary.v1", opt_in_default=False,
+        macs_per_cycle=0, memory_bytes_per_cycle_added=0, replicas=1,
+        start_bits_per_cycle=start_bits, snapshot_bits_per_cycle=snapshot_bits,
+        endpoint_count_input_bits_per_cycle=24,
+        output_bits_per_cycle_added=start_bits+snapshot_bits,
+        register_bits_added=24*is_stages+(start_bits+snapshot_bits)*os_stages,
+        input_pipeline_cycles=is_stages, output_pipeline_cycles=os_stages,
+        snapshot_endpoint_to_ctlm_cycles=is_stages+os_stages+relay_stages,
+        layer_start_to_ctlm_cycles=os_stages+relay_stages,
+        start_source="tp_seq core_start/core_token/core_pos/prog_base, each layer",
+        count_source="SU endpoint go acceptance, cumulative until global reset; never controller issue",
+        snapshot_alignment="raw SU endpoint count/idle/progress/rows sampled at same input edge, same IS and OS",
+        routing_tracks_added=24+start_bits+snapshot_bits,
+        routing_capacity_qualification="new pins and relay corridor require measured placement; not physically qualified",
+        area_qualification="130 sequential bits at IS=OS=1 before existing relay stations; cell area awaits synthesis",
+        mux_demux_cost="none; one point-to-point snapshot and one point-to-point start bundle",
+        fanout="one tree-top ctlm consumer per bundle; pin stations beside their pins",
+        floorplan_slot_fit="existing east-side seq slot, successor physical view pending",
+        latency_composition="add OS+15 hops to each layer-start and IS+OS+15 to cross-SU snapshots; dependency waits compose in split-controller component gate",
+        adoption="requires endpoint accepted counter successor, exact mechanism gate, and option-B physical closure")
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
