@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hfd_su_tile",
+      "target": "HBM accelerator",
+      "owner": "Codex:hub_physical",
+      "recorded_at": "2026-10-10T05:56:04.127851-07:00",
+      "description": "Actual R25GPHT4 transport contract,456-bit accumulation,192 XL tiles and opt-in ICGs; five face-local ownership strap stages (+4 static initialization cycles). Exact east strap centers match routed interface. Quarter remains a transport envelope.",
+      "source": {
+        "commit": "e3c6479c9",
+        "paths": [
+          "tools/hbm_hub_quarter_gen.py",
+          "physical/hbm_accel_die_views/su/rtl_tile_xl_r25gpht4/hfd_su_tile_xl.sv",
+          "physical/hbm_accel_die_views/su/tile/route_tile_xl.sh",
+          "physical/hbm_accel_die_views/su/r25gpht4_contract/ports.json"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "physical/hbm_accel_die_views/su/rtl_tile_xl",
+          "77a990296 per-tile wake/gating opt-in"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "results/uarch/hbm_sfu_reset_tree_20261010/su_r25gpht4_tile_sizing.json",
+          "results/uarch/hbm_sfu_reset_tree_20261010/su_strap_geometry_4450812.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_sfu_reset_tree_20261010/r25gpht4_tile/result.json: qid0-3 PASS8vectors each settle46; two-tile phase PASS300 each +/-100ps; gatingPASS336 eachphase"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "Ownership mutant8 mismatches; routing mutant1; output bypass287; latewake24"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "evidence": [
+          "SU pk2 global placement57% utilization, route remains RUNNING",
+          "Full macro and tile TT/FF/DRC0 unqualified; output pin anchoring explicitly opt-in proposal, not validated by simulation"
+        ]
+      },
+      "dependencies": [
+        "real TT/FF lane macro and all reset/command arcs",
+        "no-falseIO tile full interface route",
+        "192 real tile ICG CTS and physical channel cut",
+        "cg_en pin and actual three-edge-ahead scheduler source still missing; norm_selector owns binding"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "No controller or power qualification; no physical closure adopted; historical448-bit tile does not fit current5463-bit middle output contract"
+        ]
+      },
+      "timestamp_note": "Previous578a6bdad record used estimated05:55 timestamp while posted05:38. This additive successor uses observed wall clock; previous evidence remains historical."
+    },
+    {
+      "element": "hfd_sfu",
+      "target": "HBM accelerator",
+      "owner": "Codex:hub_physical",
+      "recorded_at": "2026-10-10T05:56:04.127851-07:00",
+      "description": "Real RSTPIPE reset fanout tree pin1/banks8/leaves53 with62 protected registers;3 added reset admission cycles, no reset multicycle. Tall and widened physically admitted alternatives preserve progressing routes.",
+      "source": {
+        "commit": "e3c6479c9",
+        "paths": [
+          "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+          "physical/hbm_accel_die_views/su/route_sfu_reset_wide.sh"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "1c6bad500 opt-in reset tree; defaults0"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "results/uarch/hbm_sfu_reset_tree_20261010; widened237.6x330.48 channel301.104um4704 modeled tracks vs2769 required"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_sfu_reset_tree_20261010: fulllane1500 activecycles repeatedreset"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "never-release reset mutant246mismatches; both admitted jobs confirmed expected failure"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "evidence": [
+          "Tall SFU detailed placement48% utilization, reg2reg screening slack+92.3ps before CTS",
+          "Tall and widened lane jobs RUNNING; all reset/command macro interfaces and quarter routes remain unqualified"
+        ]
+      },
+      "dependencies": [
+        "real reset/command macro setup and clock-Q screening",
+        "full quarter corner route and channel tracks",
+        "actual reset cycles composed in scheduled consumer"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "legacy masked reset candidate remains history; quarter successor not adopted"
+        ]
+      },
+      "timestamp_note": "Previous578a6bdad record used estimated05:55 timestamp while posted05:38. This additive successor uses observed wall clock; previous evidence remains historical."
+    }
+  ]
+}
