@@ -19,6 +19,9 @@ module ot_hbm_replay_sram #(
  // (ot_sc_rep_ff, keep_hierarchy): collvmpub_fix5s TT -408 was ONE merged wa register driving the macros of every store
  // across the block (517 ps of wire).  Same edge as wa / wp; values identical.
  parameter ADDRREP=0,
+ // WDREP=1 (ds-1010 2026-10-10, opt-in): every bank gets its own SECDED encoder (its own registered codeword beside its
+ // macros) instead of one encoder register driving the write data of every macro of the store.  0 cycles.
+ parameter WDREP=0,
  parameter AW=$clog2(DEPTH), NB=DEPTH/128,
  parameter BW=NB>1?$clog2(NB):1,
  parameter RW=NOEPOCH?W:W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
@@ -48,6 +51,22 @@ module ot_hbm_replay_sram #(
  for(genvar b=0;b<NB;b=b+1) begin:g_bank
   localparam BANK_INDEX=b;
   wire[NM*256-1:0] raw;
+  wire[NM*256-1:0] bank_d;
+  if(WDREP!=0) begin:g_wenc
+   wire[CW-1:0] enc_b;
+   for(genvar c=0;c<NC;c=c+1) begin:g_enc
+`ifdef OT_REPLAY_MUT_WDREP
+    // mutant: bank 1's own encoder sees data bit 0 inverted (a consistent but wrong codeword: only an exact data compare sees it)
+    wire[255:0] dm=record_in[c*256+:256]^{255'd0,BANK_INDEX==1 && c==0};
+    ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(dm),.q(enc_b[c*266+:266]));
+`else
+    ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(record_in[c*256+:256]),.q(enc_b[c*266+:266]));
+`endif
+   end
+   assign bank_d={{(NM*256-CW){1'b0}},enc_b};
+  end else begin:g_wsh
+   assign bank_d=macro_d;
+  end
   for(genvar m=0;m<NM;m=m+1) begin:g_macro
    wire m_rce,m_wce;wire[6:0] m_ra,m_wa;
    if(ADDRREP!=0) begin:g_rep
@@ -66,7 +85,7 @@ module ot_hbm_replay_sram #(
    end
    ot_sram_1r1w_128x256_m1_r2c2 u_mem(
     .clk(clk),.r_ce_in(m_rce),.r_addr_in(m_ra),.rd_out(raw[m*256+:256]),
-    .w_ce_in(m_wce),.w_addr_in(m_wa),.wd_in(macro_d[m*256+:256]),
+    .w_ce_in(m_wce),.w_addr_in(m_wa),.wd_in(bank_d[m*256+:256]),
     .w_mask_in({256{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
   end
   always @(posedge clk) captured[b]<=raw;

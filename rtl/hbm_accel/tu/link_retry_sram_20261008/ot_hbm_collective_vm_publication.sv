@@ -20,6 +20,14 @@
 // (h) the replay stores' SECDED decoder registers its column match (ot_hbm_replay_sram DECPIPE): indexed read +1 edge;
 // (i) the wrapper's rsp lanes take a bare pin flop before their pin FIFO (ot_sc_pfifo PINREG, generated): +1 edge on a
 // response.  Sector stream: +1 edge a sector (the response pin flop); the stored session / sequence check stays.
+// PUBFIX=4 (sys-takeover 2026-10-10): replay stores ADDRREP (per-macro enable / address flops).
+// PUBFIX=5 (ds-1010 2026-10-10, on top of 4; collvmpub_fix6_lvt_b TT -56.75 / FF -31.77): (j) the registered-boundary
+// wrapper conditions the block reset locally (gen_regbound "reset_sync": ot_reset_sync, async assert, two-edge synchronous
+// release) so no die-pin rst_n path reaches a flop's recovery check (rst_n -> u_core sector[0] RESETN recovery -21 over a
+// 346-ps buffer chain from the pin);
+// (k) the replay stores' write path is replicated per bank (ot_hbm_replay_sram WDREP: one SECDED encoder register set
+// beside each bank's macros instead of one encoder register driving every macro of the store, enc q -> wd_in -46.5 over
+// ~540 ps of wire).  0 cycles on the sector stream and the indexed read; reset release +2 edges.
 module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(
  input wire clk,rst_n,warm_abort,service_fault,service_quiet,
  input wire start_valid,output wire start_ready,
@@ -102,7 +110,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3),.ADDRREP(PUBFIX>=4)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3),.ADDRREP(PUBFIX>=4),.WDREP(PUBFIX>=5)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),

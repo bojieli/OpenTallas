@@ -4,20 +4,23 @@
 // pi-collvmpub-ci10h6 (drive-0212 0443): macro gaps fixed, the misses are IO only: service_fault -> inj_valid in->out -693, rsp -> encoder in->reg -524, ep -> inj_data reg->out -385. Registered boundary: start / 4 req / 4 rsp lanes through pin FIFOs, every other input and output flopped (+1 / +1; the indexed read inj_rd -> inj_valid/inj_data is 4 -> 6 edges).
 module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(input wire clk, input wire rst_n, input wire warm_abort, input wire service_fault, input wire service_quiet, input wire start_valid, output wire start_ready, input wire [OWNER_W-1:0] owner, input wire [31:0] operation, input wire [11:0] pc, input wire [1:0] query_slot, input wire [31:0] base_word, input wire [23:0] session, output wire [3:0] req_valid, input wire [3:0] req_ready, output wire [4*337-1:0] req, input wire [3:0] rsp_valid, output wire [3:0] rsp_ready, input wire [4*273-1:0] rsp, output wire published, output wire quiet, output wire fault, input wire release_lease, input wire [1:0] inj_rd, input wire [31:0] inj_idx, output wire [1:0] inj_valid, output wire [1023:0] inj_data);
  // reset for the boundary FIFOs: synchronous use of the block's reset (held for several edges at POR)
- reg q_warm_abort; always @(posedge clk or negedge rst_n) if (!rst_n) q_warm_abort <= 1'b0; else q_warm_abort <= warm_abort;
- reg q_service_fault; always @(posedge clk or negedge rst_n) if (!rst_n) q_service_fault <= 1'b0; else q_service_fault <= service_fault;
- reg q_service_quiet; always @(posedge clk or negedge rst_n) if (!rst_n) q_service_quiet <= 1'b0; else q_service_quiet <= service_quiet;
+ wire rst_n_l;
+ generate if (PUBFIX>=5) begin : g_rsync ot_reset_sync #(.ASYNC_STAGES(2)) u_rsync (.clk(clk), .async_rst_n(rst_n), .sync_rst_n(rst_n_l)); end else begin : g_rsd assign rst_n_l = rst_n; end endgenerate
+ reg q_warm_abort; always @(posedge clk or negedge rst_n_l) if (!rst_n_l) q_warm_abort <= 1'b0; else q_warm_abort <= warm_abort;
+ reg q_service_fault; always @(posedge clk or negedge rst_n_l) if (!rst_n_l) q_service_fault <= 1'b0; else q_service_fault <= service_fault;
+ reg q_service_quiet; always @(posedge clk or negedge rst_n_l) if (!rst_n_l) q_service_quiet <= 1'b0; else q_service_quiet <= service_quiet;
  wire  c_published; reg  q_published; always @(posedge clk) q_published <= c_published; assign published = q_published;
  wire  c_quiet; reg  q_quiet; always @(posedge clk) q_quiet <= c_quiet; assign quiet = q_quiet;
  wire  c_fault; reg  q_fault; always @(posedge clk) q_fault <= c_fault; assign fault = q_fault;
- reg q_release_lease; always @(posedge clk or negedge rst_n) if (!rst_n) q_release_lease <= 1'b0; else q_release_lease <= release_lease;
+ reg q_release_lease; always @(posedge clk or negedge rst_n_l) if (!rst_n_l) q_release_lease <= 1'b0; else q_release_lease <= release_lease;
  reg [1:0] q_inj_rd; always @(posedge clk) q_inj_rd <= inj_rd;
  reg [31:0] q_inj_idx; always @(posedge clk) q_inj_idx <= inj_idx;
  wire [1:0] c_inj_valid; reg [1:0] q_inj_valid; always @(posedge clk) q_inj_valid <= c_inj_valid; assign inj_valid = q_inj_valid;
  wire [1023:0] c_inj_data; reg [1023:0] q_inj_data; always @(posedge clk) q_inj_data <= c_inj_data; assign inj_data = q_inj_data;
  localparam integer WI0 = ((OWNER_W-1)-(0)+1)+((31)-(0)+1)+((11)-(0)+1)+((1)-(0)+1)+((31)-(0)+1)+((23)-(0)+1);
  wire ci0_v, ci0_r; wire [WI0-1:0] ci0_d;
- ot_sc_pfifo #(.W(WI0), .S(2), .G(64)) u_in0 (.clk(clk), .rst_n(rst_n), .in_valid(start_valid), .in_ready(start_ready),
+ wire ri0_r; assign start_ready = ri0_r & rst_n_l;
+ ot_sc_pfifo #(.W(WI0), .S(2), .G(64)) u_in0 (.clk(clk), .rst_n(rst_n_l), .in_valid(start_valid), .in_ready(ri0_r),
    .in_data({owner, operation, pc, query_slot, base_word, session}), .out_valid(ci0_v), .out_ready(ci0_r), .out_data(ci0_d));
  wire [OWNER_W-1:0] ci0_owner;
  wire [31:0] ci0_operation;
@@ -27,24 +30,28 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  wire [23:0] ci0_session;
  assign {ci0_owner, ci0_operation, ci0_pc, ci0_query_slot, ci0_base_word, ci0_session} = ci0_d;
  wire [3:0] iv0_v, iv0_r; wire [1091:0] iv0_d;
- ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_0 (.clk(clk), .rst_n(rst_n), .in_valid(rsp_valid[0]), .in_ready(rsp_ready[0]),
+ wire riv0_0_r; assign rsp_ready[0] = riv0_0_r & rst_n_l;
+ ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_0 (.clk(clk), .rst_n(rst_n_l), .in_valid(rsp_valid[0]), .in_ready(riv0_0_r),
    .in_data(rsp[0 +: 273]), .out_valid(iv0_v[0]), .out_ready(iv0_r[0]), .out_data(iv0_d[0 +: 273]));
- ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_1 (.clk(clk), .rst_n(rst_n), .in_valid(rsp_valid[1]), .in_ready(rsp_ready[1]),
+ wire riv0_1_r; assign rsp_ready[1] = riv0_1_r & rst_n_l;
+ ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_1 (.clk(clk), .rst_n(rst_n_l), .in_valid(rsp_valid[1]), .in_ready(riv0_1_r),
    .in_data(rsp[273 +: 273]), .out_valid(iv0_v[1]), .out_ready(iv0_r[1]), .out_data(iv0_d[273 +: 273]));
- ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_2 (.clk(clk), .rst_n(rst_n), .in_valid(rsp_valid[2]), .in_ready(rsp_ready[2]),
+ wire riv0_2_r; assign rsp_ready[2] = riv0_2_r & rst_n_l;
+ ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_2 (.clk(clk), .rst_n(rst_n_l), .in_valid(rsp_valid[2]), .in_ready(riv0_2_r),
    .in_data(rsp[546 +: 273]), .out_valid(iv0_v[2]), .out_ready(iv0_r[2]), .out_data(iv0_d[546 +: 273]));
- ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_3 (.clk(clk), .rst_n(rst_n), .in_valid(rsp_valid[3]), .in_ready(rsp_ready[3]),
+ wire riv0_3_r; assign rsp_ready[3] = riv0_3_r & rst_n_l;
+ ot_sc_pfifo #(.W(273), .S((PUBFIX>=3)?3:2), .G(64), .PINREG((PUBFIX>=3)?1:0)) u_iv0_3 (.clk(clk), .rst_n(rst_n_l), .in_valid(rsp_valid[3]), .in_ready(riv0_3_r),
    .in_data(rsp[819 +: 273]), .out_valid(iv0_v[3]), .out_ready(iv0_r[3]), .out_data(iv0_d[819 +: 273]));
  wire [3:0] ov0_v, ov0_r; wire [1347:0] ov0_d;
- ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_0 (.clk(clk), .rst_n(rst_n), .in_valid(ov0_v[0]), .in_ready(ov0_r[0]),
+ ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_0 (.clk(clk), .rst_n(rst_n_l), .in_valid(ov0_v[0]), .in_ready(ov0_r[0]),
    .in_data(ov0_d[0 +: 337]), .out_valid(req_valid[0]), .out_ready(req_ready[0]), .out_data(req[0 +: 337]));
- ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_1 (.clk(clk), .rst_n(rst_n), .in_valid(ov0_v[1]), .in_ready(ov0_r[1]),
+ ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_1 (.clk(clk), .rst_n(rst_n_l), .in_valid(ov0_v[1]), .in_ready(ov0_r[1]),
    .in_data(ov0_d[337 +: 337]), .out_valid(req_valid[1]), .out_ready(req_ready[1]), .out_data(req[337 +: 337]));
- ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_2 (.clk(clk), .rst_n(rst_n), .in_valid(ov0_v[2]), .in_ready(ov0_r[2]),
+ ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_2 (.clk(clk), .rst_n(rst_n_l), .in_valid(ov0_v[2]), .in_ready(ov0_r[2]),
    .in_data(ov0_d[674 +: 337]), .out_valid(req_valid[2]), .out_ready(req_ready[2]), .out_data(req[674 +: 337]));
- ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_3 (.clk(clk), .rst_n(rst_n), .in_valid(ov0_v[3]), .in_ready(ov0_r[3]),
+ ot_sc_pfifo #(.W(337), .S(2), .G(64)) u_ov0_3 (.clk(clk), .rst_n(rst_n_l), .in_valid(ov0_v[3]), .in_ready(ov0_r[3]),
    .in_data(ov0_d[1011 +: 337]), .out_valid(req_valid[3]), .out_ready(req_ready[3]), .out_data(req[1011 +: 337]));
- ot_hbm_collective_vm_publication_core #(.ENABLE(ENABLE), .OWNER_W(OWNER_W), .PUBFIX(PUBFIX)) u_core (.clk(clk), .rst_n(rst_n), .warm_abort(q_warm_abort), .service_fault(q_service_fault), .service_quiet(q_service_quiet), .start_valid(ci0_v), .start_ready(ci0_r), .owner(ci0_owner), .operation(ci0_operation), .pc(ci0_pc), .query_slot(ci0_query_slot), .base_word(ci0_base_word), .session(ci0_session), .req_valid(ov0_v), .req_ready(ov0_r), .req(ov0_d), .rsp_valid(iv0_v), .rsp_ready(iv0_r), .rsp(iv0_d), .published(c_published), .quiet(c_quiet), .fault(c_fault), .release_lease(q_release_lease), .inj_rd(q_inj_rd), .inj_idx(q_inj_idx), .inj_valid(c_inj_valid), .inj_data(c_inj_data));
+ ot_hbm_collective_vm_publication_core #(.ENABLE(ENABLE), .OWNER_W(OWNER_W), .PUBFIX(PUBFIX)) u_core (.clk(clk), .rst_n(rst_n_l), .warm_abort(q_warm_abort), .service_fault(q_service_fault), .service_quiet(q_service_quiet), .start_valid(ci0_v), .start_ready(ci0_r), .owner(ci0_owner), .operation(ci0_operation), .pc(ci0_pc), .query_slot(ci0_query_slot), .base_word(ci0_base_word), .session(ci0_session), .req_valid(ov0_v), .req_ready(ov0_r), .req(ov0_d), .rsp_valid(iv0_v), .rsp_ready(iv0_r), .rsp(iv0_d), .published(c_published), .quiet(c_quiet), .fault(c_fault), .release_lease(q_release_lease), .inj_rd(q_inj_rd), .inj_idx(q_inj_idx), .inj_valid(c_inj_valid), .inj_data(c_inj_data));
 endmodule
 
 module ot_hbm_collective_vm_publication_core #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(
@@ -129,7 +136,7 @@ module ot_hbm_collective_vm_publication_core #(parameter ENABLE=0,OWNER_W=73,PUB
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3),.ADDRREP(PUBFIX>=4)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3),.ADDRREP(PUBFIX>=4),.WDREP(PUBFIX>=5)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),

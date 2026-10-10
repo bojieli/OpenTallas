@@ -48,12 +48,21 @@ L.append(f"module {spec['module']} {params}({plist});")
 ck, rs = spec["clk"], spec["reset"]
 L.append(f" // reset for the boundary FIFOs: synchronous use of the block's reset (held for several edges at POR)")
 conn = {}
+if spec.get("reset_sync"):
+    # "reset_sync": a Verilog expression (ds-1010 2026-10-10, collvmpub PUBFIX>=5).  When true the block reset is conditioned
+    # once at the boundary (ot_reset_sync: asynchronous assert, two-edge synchronous release) and every flop of the wrapper
+    # and the core resets from that local net: no die-pin reset path reaches a recovery / data check inside the block.
+    L.append(f" wire {rs}_l;")
+    L.append(f" generate if ({spec['reset_sync']}) begin : g_rsync ot_reset_sync #(.ASYNC_STAGES(2)) u_rsync (.clk({ck}), "
+             f".async_rst_n({rs}), .sync_rst_n({rs}_l)); end else begin : g_rsd assign {rs}_l = {rs}; end endgenerate")
+    conn[rs] = f"{rs}_l"
+    rs = f"{rs}_l"
 # a completion PULSE input (no ready) that must stay behind an input stream: held until that stream's pin FIFO is empty
 for k, o in enumerate(spec.get("in_after", [])):
     hs_ports |= {o["pulse"], *o.get("data", [])}
 order_after = spec.get("in_after", [])
 for d, w, n in ports:
-    if n in passp: conn[n] = n; continue
+    if n in passp: conn.setdefault(n, n); continue
     if n in hs_ports: continue
     if d == "input":
         if not w:   # 1-bit controls (valids, credits, owner flags) clear with the block's active-low reset
@@ -71,7 +80,12 @@ for i, g in enumerate(spec.get("in_hs", [])):
     W = "+".join(width(n) for n in g["data"]) or "1"
     L.append(f" localparam integer WI{i} = {W};")
     L.append(f" wire ci{i}_v, ci{i}_r; wire [WI{i}-1:0] ci{i}_d;")
-    L.append(f" ot_sc_pfifo #(.W(WI{i}), .S(2), .G(64)) u_in{i} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}), .in_ready({g['r']}),")
+    if spec.get("reset_sync"):   # the conditioned reset releases 2 edges after the pin: refuse beats until then (valid/ready)
+        L.append(f" wire ri{i}_r; assign {g['r']} = ri{i}_r & {rs};")
+        rdy = f"ri{i}_r"
+    else:
+        rdy = g['r']
+    L.append(f" ot_sc_pfifo #(.W(WI{i}), .S(2), .G(64)) u_in{i} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}), .in_ready({rdy}),")
     L.append(f"   .in_data({{{', '.join(g['data'])}}}), .out_valid(ci{i}_v), .out_ready(ci{i}_r), .out_data(ci{i}_d));")
     if "[" not in g["v"]: conn[g["v"]] = f"ci{i}_v"
     conn[g["r"]] = f"ci{i}_r"
@@ -118,7 +132,12 @@ for i, g in enumerate(spec.get("in_vec", [])):
         # (ot_sc_pfifo PINREG, 3 entries) -- sys-takeover 2026-10-10
         pr = g.get("pinreg")
         fp = f".S(({pr})?3:2), .G(64), .PINREG(({pr})?1:0)" if pr else ".S(2), .G(64)"
-        L.append(f" ot_sc_pfifo #(.W({DW}), {fp}) u_iv{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}[{k}]), .in_ready({g['r']}[{k}]),")
+        if spec.get("reset_sync"):
+            L.append(f" wire riv{i}_{k}_r; assign {g['r']}[{k}] = riv{i}_{k}_r & {rs};")
+            rdy = f"riv{i}_{k}_r"
+        else:
+            rdy = f"{g['r']}[{k}]"
+        L.append(f" ot_sc_pfifo #(.W({DW}), {fp}) u_iv{i}_{k} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}[{k}]), .in_ready({rdy}),")
         L.append(f"   .in_data({g['data']}[{k*DW} +: {DW}]), .out_valid(iv{i}_v[{k}]), .out_ready(iv{i}_r[{k}]), .out_data(iv{i}_d[{k*DW} +: {DW}]));")
     conn[g["v"]] = f"iv{i}_v"; conn[g["r"]] = f"iv{i}_r"; conn[g["data"]] = f"iv{i}_d"
 for i, g in enumerate(spec.get("out_vec", [])):

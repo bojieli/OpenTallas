@@ -171,7 +171,7 @@ def cvp_tb():
     return t
 L_ = "rtl/hbm_accel/tu/link_retry_sram_20261008"
 CASES["coll_vm_pub"] = dict(rtl=[f"{D}/ot_hbm_collective_vm_publication_rb.sv", "rtl/common/ot_secded.sv", f"{L_}/ot_hbm_replay_sram.sv",
-     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"], tb=cvp_tb,
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "rtl/lib/ot_reset_sync.sv"], tb=cvp_tb,
      top="tb_hbm_collective_vm_publication", ok="PASS_ALL", neg_defines=["OT_HBM_PUBLICATION_MUT_QID"], neg_ok="quarter read ownership lost")
 def cvp_fix_tb():
     """sys-takeover PUBFIX=1: indexed read 7 edges on the wrapper (+1 MUXREG), everything else unchanged"""
@@ -205,6 +205,18 @@ def cvp_fix4_tb():
     return t.replace(a, "ot_hbm_collective_vm_publication #(.PUBFIX(4),")
 CASES["coll_vm_pub_fix4"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb)
 CASES["coll_vm_pub_fix4_rep"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb, neg_defines=["OT_REPLAY_MUT_ADDRREP"], neg_ok="FATAL")
+def cvp_fix5_tb():
+    """ds-1010 2026-10-10 PUBFIX=5 = 4 + per-bank SECDED encoders (WDREP) + boundary reset conditioner: same cycles"""
+    t = cvp_fix3_tb()
+    # the conditioned reset releases two edges after rst_n (the priced cost): this golden raises start_valid for ONE edge
+    # without looking at start_ready, so it starts two edges later (start_ready is held low until the release)
+    for a, b in (("ot_hbm_collective_vm_publication #(.PUBFIX(3),", "ot_hbm_collective_vm_publication #(.PUBFIX(5),"),
+                 ("repeat(4)tick;@(negedge clk);rst=1;tick;\n", "repeat(4)tick;@(negedge clk);rst=1;tick;tick;tick;\n")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix5"] = dict(CASES["coll_vm_pub"], tb=cvp_fix5_tb)
+CASES["coll_vm_pub_fix5_wdrep"] = dict(CASES["coll_vm_pub"], tb=cvp_fix5_tb, neg_defines=["OT_REPLAY_MUT_WDREP"], neg_ok="")
 CASES["coll_vm_pub_fix3_tagq"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_TAGQ"],
      neg_ok="actual VM read ABI")
 def artok(mode, w):
