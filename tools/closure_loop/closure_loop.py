@@ -2416,6 +2416,109 @@ def defer_record_merge(j, out, sparse, dry=False):
     return True
 
 
+# AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
+# STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
+#   - its source branch is claude/*  (Codex / other branches stay with a human),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
+#   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
+#     record files (verdict + recorded views) come from the record commit on top.
+# Anything else (conflict, push race x4, failed guard) is appended to <takeover>/AUTO_MERGE_PENDING.md for a human /
+# agent, never forced.
+AUTO_MERGE_PENDING = Path(os.environ.get("CL_TAKEOVER", "/home/ubuntu/claude-takeover-20261007")) / "AUTO_MERGE_PENDING.md"
+
+
+def auto_merge_policy():
+    try:
+        return bool(json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_guarded'))
+    except (OSError, ValueError):
+        return False
+
+
+def auto_merge_guard(j):
+    """None when the closure may be auto-merged, else the reason it may not"""
+    spec = j['spec']
+    if not auto_merge_policy():
+        return "auto-merge policy off"
+    if spec.get('auto_merge') is False or spec.get('hold_merge'):
+        return f"spec opts out ({spec.get('hold_merge') or 'auto_merge false'})"
+    try:
+        holds = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_hold_prefixes') or []
+    except (OSError, ValueError):
+        holds = []
+    hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
+    if hit:
+        return f"held by policy prefix {hit} (gate outside the loop benches)"
+    if not str(spec['source'].get('branch', '')).startswith('claude/'):
+        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    benches = j.get('benches') or {}
+    if not benches:
+        return "no loop benches ran"
+    bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
+    if bad:
+        return f"benches not as expected: {', '.join(bad[:4])}"
+    if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
+        return "no positive bench"
+    if not j.get('commit_full'):
+        return "no verified source commit"
+    return None
+
+
+def auto_merge_closure(j, out, record_paths, dry=False):
+    """merge commit_full + the record files into main (clean merges only); returns a status string"""
+    why = auto_merge_guard(j)
+    if why:
+        if why != "auto-merge policy off":
+            append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
+                                              f"record {out.get('record_branch')} {str(out.get('branch_commit'))[:9]}\n")
+        return f"AUTO-MERGE skipped: {why}"
+    mwt = STATE / 'git' / (j['name'] + '-automerge')
+    sparse = ["/" + t.rstrip("/") for t in record_paths] + ["/tools/closure_loop/"]
+    status = None
+    for attempt in range(4):
+        gfetch('main', timeout=600)
+        wt_add(mwt, "origin/main", sparse)
+        if sh(["git", "-C", str(mwt), "merge-base", "--is-ancestor", j['commit_full'], "HEAD"], timeout=120).returncode == 0:
+            pass  # source already on main: only the record goes in
+        else:
+            m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
+                    "merge", "--no-ff", "--no-edit", "-m",
+                    f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    j['commit_full']], timeout=1800)
+            if m.returncode:
+                conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
+                sh(["git", "-C", str(mwt), "merge", "--abort"], timeout=300)
+                status = f"AUTO-MERGE CONFLICT ({len(conf)} files: {', '.join(conf[:6])})"
+                break
+        co = sh(["git", "-C", str(mwt), "checkout", out["branch_commit"], "--", *record_paths], timeout=600)
+        if co.returncode:
+            status = f"AUTO-MERGE record checkout failed: {co.stderr[-200:]}"
+            break
+        sh(["git", "-C", str(mwt), "add", "--sparse", "--", *record_paths], timeout=300)
+        if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
+            git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
+                f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
+                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+        head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
+        if dry:
+            status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
+            break
+        p = sh(["git", "-C", str(mwt), "push", "-q", "origin", "HEAD:refs/heads/main"], timeout=900)
+        if p.returncode == 0:
+            status = f"AUTO-MERGED into main {head[:9]}"
+            break
+        log(f"[{j['name']}] auto-merge push rejected (attempt {attempt}): {p.stderr[-300:]}")
+    else:
+        status = "AUTO-MERGE PUSH-RACE: could not push after 4 attempts"
+    wt_rm(mwt)
+    if not status.startswith("AUTO-MERGED") and not status.startswith("AUTO-MERGE dry-run"):
+        append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec']['block']}): {status}; source "
+                                          f"{j['spec']['source']['branch']} @ {j['commit_full'][:9]}, record {out.get('record_branch')} "
+                                          f"{str(out.get('branch_commit'))[:9]}\n")
+    return status
+
+
 def merge_record(j, out, sparse, dry=False):
     spec = j['spec']
     branch, target = out.get('record_branch', j['spec']['source']['branch']), j['spec'].get('merge_target')
@@ -2555,6 +2658,16 @@ def publish(j, metrics):
     else:
         raise RuntimeError(f"could not push the record to {branch}")
     wt_rm(cwt)
+    if claude_owns_main() and auto_merge_policy():
+        try:
+            out["merge"] = auto_merge_closure(j, out, tos, dry)
+        except Exception as ex:  # noqa: BLE001
+            out["merge"] = f"AUTO-MERGE error: {type(ex).__name__}: {str(ex)[:200]}"
+            append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']}: {out['merge']}\n")
+        if out["merge"].startswith("AUTO-MERGED"):
+            return out
+        notify_claude_record(j["name"], branch, out["branch_commit"])
+        return out
     if target:
         return merge_record(j, out, sparse, dry)
     out["merge"] = "no merge target"

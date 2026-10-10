@@ -40,7 +40,7 @@ All are at 1.2 GHz; the sources are in `table.json` under `targets`.
 
 | # | Row | Target | Margin | tok/s as designed (target) | Owner | What |
 |---:|---|---|---:|---:|---|---|
-| 1 | `dsrom_mtp_draft_hw` | DS ROM MTP | 0 | 1,447.7 (4,238.4) | bf-mtp | The DSpark draft stages and seed run on dies outside the S81 binding (`mtp.*` weights are unowned). The WFC and accept unit are not integrated. The NV5 draft fails its SS screen. The MTP headline therefore has no hardware. |
+| 1 | `dsrom_mtp_draft_hw` | DS ROM MTP | 0 | 1,447.7 (4,238.4) | bf-mtp | The DSpark draft stages and seed run on dies outside the S81 binding (`mtp.*` weights are unowned). The WFC and accept unit are not integrated. (The earlier NV5 citation is struck: the headline uses the closed NV1 head elements; L2 NV5 is a rejected optional lever.) The MTP headline therefore has no hardware. |
 | 2 | `ds_sm_xload_fp8_fp4_no_peer` | HBM DS | 0 | 0 (2,208.1) | hgi-1010 | `ot_hgi_sm_xload` refuses formats 1/2 (`ot_hgi_sm_xload.sv:13-14,139-140`). No HGI peer moves the QDQ output into the SM x store, so the DS SM records have no activation path. |
 | 3 | `ds_att_row_format_over_peak` | HBM DS | 0.0006 | 26.9 (2,208.1) | hgi-1010 | The DS T640 ATT price over FP32 hd512 rows needs 3,866 B/cycle, which is above the die's 3,166.7 HBM peak (`ds_native.py:633-643`). The price itself is infeasible: store or gather the rows as packed FP8. |
 | 4 | `ds_hc_mix_full` / `ds_hc_mix_rows_g22` | HBM DS | 0.008–0.012 | 1,028 on the G22 path (1,747.5) | hgi-1010 | HC stages h (20,480 FP32 words) through one VM packet client. Measured 6,051 cycles a record (`hc_unit_run.log` case 10) against 48 priced. |

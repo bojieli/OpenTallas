@@ -8,7 +8,8 @@
    "module": "ot_hgi_cp_die",
    "file": "rtl/hbm_accel/generic/ot_hgi_cp_die.sv",
    "params": {
-    "USE_MACRO": 1
+    "USE_MACRO": 1,
+    "FQCR": 16
    },
    "bind": {
     "clk": "clk",

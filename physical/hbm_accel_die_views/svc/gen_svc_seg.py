@@ -662,7 +662,7 @@ def build(pl):
                     pp = 4 * k + jj
                     body.append(f"  assign gp{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b11); "
                                 f"assign gp{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
-                body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp{k}_sv), .sq(gp{k}_sq), '
+                body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp{k}_sv), .sq_i(gp{k}_sq), '
                             f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
             elif u.startswith('pc'):
                 p = int(u[2:])
@@ -750,7 +750,12 @@ def build(pl):
             e_ = phy_expr(b, ix)
             if e_ is None:
                 continue
-            if d == 'input':
+            if d == 'input' and PS and e_ == 'rdy_q':
+                # hbm-forks 2026-10-09 (SE_s2 routed rdy_q -> phy[344] / phy[2210] -83 ps: one register fanned out to
+                # PHY pins up to ~1 mm apart): each such PHY pin gets its own ready register (the same reset-release
+                # level, cycle-identical), anchored beside its pin (OT_WS_PINREG output side)
+                body.append(f'  ot_svs_rdyp u_rdyp{i - lo} (.ck(c), .rn(rn), .q(phy[{i - lo}]));')
+            elif d == 'input':
                 body.append(f'  assign phy[{i - lo}] = {e_};')
             else:
                 body.append(f'  assign {e_} = phy[{i - lo}];')

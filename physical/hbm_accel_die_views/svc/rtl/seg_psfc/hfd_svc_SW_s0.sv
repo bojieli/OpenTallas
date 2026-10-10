@@ -135,12 +135,12 @@ module hfd_svc_SW_s0 (
   assign gp0_sv[1] = rs1_v && (rs1_d[276:275] == 2'b11); assign gp0_sq[553:277] = rs1_d;
   assign gp0_sv[2] = rs2_v && (rs2_d[276:275] == 2'b11); assign gp0_sq[830:554] = rs2_d;
   assign gp0_sv[3] = rs3_v && (rs3_d[276:275] == 2'b11); assign gp0_sq[1107:831] = rs3_d;
-  ot_svs_grp #(.K(0)) u_gp0 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp0_sv), .sq(gp0_sq), .kq(kq0), .sg_v(gp0_sgv), .sg_d(gp0_sgd), .cr(gp0_cr), .ks(ks0), .ovf(gp0_ovf));
+  ot_svs_grp #(.K(0)) u_gp0 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp0_sv), .sq_i(gp0_sq), .kq(kq0), .sg_v(gp0_sgv), .sg_d(gp0_sgd), .cr(gp0_cr), .ks(ks0), .ovf(gp0_ovf));
   assign gp1_sv[0] = rs4_v && (rs4_d[276:275] == 2'b11); assign gp1_sq[276:0] = rs4_d;
   assign gp1_sv[1] = rs5_v && (rs5_d[276:275] == 2'b11); assign gp1_sq[553:277] = rs5_d;
   assign gp1_sv[2] = rs6_v && (rs6_d[276:275] == 2'b11); assign gp1_sq[830:554] = rs6_d;
   assign gp1_sv[3] = rs7_v && (rs7_d[276:275] == 2'b11); assign gp1_sq[1107:831] = rs7_d;
-  ot_svs_grp #(.K(1)) u_gp1 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp1_sv), .sq(gp1_sq), .kq(kq1), .sg_v(gp1_sgv), .sg_d(gp1_sgd), .cr(gp1_cr), .ks(ks1), .ovf(gp1_ovf));
+  ot_svs_grp #(.K(1)) u_gp1 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp1_sv), .sq_i(gp1_sq), .kq(kq1), .sg_v(gp1_sgv), .sg_d(gp1_sgd), .cr(gp1_cr), .ks(ks1), .ovf(gp1_ovf));
   ot_svs_lane u_ln0 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln0_wr_v), .wr_tag(ln0_wr_tag), .wr_beat(ln0_wr_beat), .wr_data(ln0_wr_data), .w_room(ln0_w_room), .o_v(ln0_v), .o_d(ln0_d), .room_q(ln0_rq));
   ot_svs_lane u_ln1 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln1_wr_v), .wr_tag(ln1_wr_tag), .wr_beat(ln1_wr_beat), .wr_data(ln1_wr_data), .w_room(ln1_w_room), .o_v(ln1_v), .o_d(ln1_d), .room_q(ln1_rq));
   ot_svs_lane u_ln2 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln2_wr_v), .wr_tag(ln2_wr_tag), .wr_beat(ln2_wr_beat), .wr_data(ln2_wr_data), .w_room(ln2_w_room), .o_v(ln2_v), .o_d(ln2_d), .room_q(ln2_rq));
@@ -650,7 +650,7 @@ module hfd_svc_SW_s0 (
   assign phy[340] = 1'b0;
   assign phy[341] = 1'b0;
   assign pc0_kr_v = phy[343];
-  assign phy[344] = rdy_q;
+  ot_svs_rdyp u_rdyp344 (.ck(c), .rn(rn), .q(phy[344]));
   assign pc0_kr_tag[0] = phy[345];
   assign pc0_kr_tag[1] = phy[346];
   assign pc0_kr_tag[2] = phy[347];
@@ -972,7 +972,7 @@ module hfd_svc_SW_s0 (
   assign phy[663] = w_tag_s[9];
   assign ln0_w_room = phy[664];
   assign ln0_wr_v = phy[665];
-  assign phy[666] = rdy_q;
+  ot_svs_rdyp u_rdyp666 (.ck(c), .rn(rn), .q(phy[666]));
   assign ln0_wr_tag[0] = phy[667];
   assign ln0_wr_tag[1] = phy[668];
   assign ln0_wr_tag[2] = phy[669];
@@ -1587,7 +1587,7 @@ module hfd_svc_SW_s0 (
   assign phy[1278] = 1'b0;
   assign phy[1279] = 1'b0;
   assign pc1_kr_v = phy[1281];
-  assign phy[1282] = rdy_q;
+  ot_svs_rdyp u_rdyp1282 (.ck(c), .rn(rn), .q(phy[1282]));
   assign pc1_kr_tag[0] = phy[1283];
   assign pc1_kr_tag[1] = phy[1284];
   assign pc1_kr_tag[2] = phy[1285];
@@ -1867,7 +1867,7 @@ module hfd_svc_SW_s0 (
   assign pc1_kr_data[255] = phy[1559];
   assign ln1_w_room = phy[1560];
   assign ln1_wr_v = phy[1561];
-  assign phy[1562] = rdy_q;
+  ot_svs_rdyp u_rdyp1562 (.ck(c), .rn(rn), .q(phy[1562]));
   assign ln1_wr_tag[0] = phy[1563];
   assign ln1_wr_tag[1] = phy[1564];
   assign ln1_wr_tag[2] = phy[1565];
@@ -2482,7 +2482,7 @@ module hfd_svc_SW_s0 (
   assign phy[2174] = 1'b0;
   assign phy[2175] = 1'b0;
   assign pc2_kr_v = phy[2177];
-  assign phy[2178] = rdy_q;
+  ot_svs_rdyp u_rdyp2178 (.ck(c), .rn(rn), .q(phy[2178]));
   assign pc2_kr_tag[0] = phy[2179];
   assign pc2_kr_tag[1] = phy[2180];
   assign pc2_kr_tag[2] = phy[2181];
@@ -2762,7 +2762,7 @@ module hfd_svc_SW_s0 (
   assign pc2_kr_data[255] = phy[2455];
   assign ln2_w_room = phy[2456];
   assign ln2_wr_v = phy[2457];
-  assign phy[2458] = rdy_q;
+  ot_svs_rdyp u_rdyp2458 (.ck(c), .rn(rn), .q(phy[2458]));
   assign ln2_wr_tag[0] = phy[2459];
   assign ln2_wr_tag[1] = phy[2460];
   assign ln2_wr_tag[2] = phy[2461];
@@ -3377,7 +3377,7 @@ module hfd_svc_SW_s0 (
   assign phy[3070] = 1'b0;
   assign phy[3071] = 1'b0;
   assign pc3_kr_v = phy[3073];
-  assign phy[3074] = rdy_q;
+  ot_svs_rdyp u_rdyp3074 (.ck(c), .rn(rn), .q(phy[3074]));
   assign pc3_kr_tag[0] = phy[3075];
   assign pc3_kr_tag[1] = phy[3076];
   assign pc3_kr_tag[2] = phy[3077];
@@ -3657,7 +3657,7 @@ module hfd_svc_SW_s0 (
   assign pc3_kr_data[255] = phy[3351];
   assign ln3_w_room = phy[3352];
   assign ln3_wr_v = phy[3353];
-  assign phy[3354] = rdy_q;
+  ot_svs_rdyp u_rdyp3354 (.ck(c), .rn(rn), .q(phy[3354]));
   assign ln3_wr_tag[0] = phy[3355];
   assign ln3_wr_tag[1] = phy[3356];
   assign ln3_wr_tag[2] = phy[3357];

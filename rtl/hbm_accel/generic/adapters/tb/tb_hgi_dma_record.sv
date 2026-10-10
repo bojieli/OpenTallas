@@ -32,19 +32,19 @@ module tb_hgi_dma_record;
     reg rst_n = 0; reg [702:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, fence_v; wire [226:0] mv;
     reg mv_rdy = 0, mv_done = 0, fence_rdy = 0, fence_done = 0;
-    ot_hgi_dma_record #(.MUT_SLOT(MS), .MUT_EARLY(ME)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v),
+    ot_hgi_dma_record #(.MUT_SLOT(MS), .MUT_EARLY(ME), .POSTED(0)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]),
         .rec_n_o(cur[681:661]), .rec_pos1(cur[702:682]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(), .mv_v(mv_v), .mv_rdy(mv_rdy),
-        .mv(mv), .mv_done(mv_done), .mv_fault(1'b0), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+        .mv(mv), .mv_done(mv_done), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
     // legacy identity
     reg [226:0] lmv; reg lv, lf, lr, lfr; integer q, lock_n = 0;
     wire l_mv_v, l_f_v, l_lr, l_lfr, l_rdy, l_done, l_fault; wire [226:0] l_mv;
-    ot_hgi_dma_record #(.MUT_SLOT(MS), .MUT_EARLY(ME)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0), .rec_v(1'b1),
+    ot_hgi_dma_record #(.MUT_SLOT(MS), .MUT_EARLY(ME), .POSTED(0)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0), .rec_v(1'b1),
         .rec_rdy(l_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]),
         .rec_n_o(cur[681:661]), .rec_pos1(cur[702:682]), .rec_done(l_done), .rec_fault(l_fault), .halted(),
         .lg_mv_v(lv), .lg_mv_rdy(l_lr), .lg_mv(lmv), .lg_fence_v(lf), .lg_fence_rdy(l_lfr), .mv_v(l_mv_v), .mv_rdy(lr),
-        .mv(l_mv), .mv_done(1'b0), .mv_fault(1'b0), .fence_v(l_f_v), .fence_rdy(lfr), .fence_done(1'b0));
+        .mv(l_mv), .mv_done(1'b0), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .fence_v(l_f_v), .fence_rdy(lfr), .fence_done(1'b0));
     always @(posedge clk) begin
         for (q = 0; q < 227; q = q + 32) lmv[q +: 32] <= $random(seed);
         {lv, lf, lr, lfr} <= $random(seed);

@@ -25,6 +25,7 @@ module tb_hgi_e2e;
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -136,19 +137,20 @@ module tb_hgi_e2e;
     wire dma_rdy, dma_done, dma_fault;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
-        wire mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done; wire [226:0] mv;
-        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
+        wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done; wire [226:0] mv;
+        ot_hgi_dma_record #(.LEGACY(0), .POSTED(DMA_POSTED)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
             .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
             .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
             .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
-            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+            .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
         wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
         // the VM wide write port (32 lanes) + the svc DMA stream (hgi-takeover 2026-10-10); DMA_FRONT 0 = mover only
         wire [32*280-1:0] wl; wire [31:0] wl_done; wire [4*51-1:0] dq; wire [3:0] dq_rdy; wire [32*270-1:0] dd; wire [31:0] dd_cr;
         ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
-            .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+            .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
+            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
             .k_rsp_data(k_rd), .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
