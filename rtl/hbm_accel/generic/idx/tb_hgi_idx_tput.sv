@@ -8,7 +8,7 @@
 module tb_hgi_idx_tput;
  parameter integer MUT = 0, PREF = 0, MUT_PREF = 0;   // PREF: the opt-in streaming reader (MUT_PREF: early pop, must FAIL)
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
- reg [1818:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr;
+ reg [2074:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr;
  reg [337:0] bq = 0; wire [273:0] br; wire [18:0] status;
  ot_hgi_idx_unit #(.MUT(MUT), .PREF(PREF), .MUT_PREF(MUT_PREF)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr),
   .sel_fs(), .sel_qb(), .sel_qbr(1'b0), .sel_kin(), .sel_to(612'd0), .sel_toc(), .sel_co(72'd0), .sel_coc(), .sel_ev(2'b00));
