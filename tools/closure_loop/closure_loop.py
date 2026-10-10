@@ -5384,6 +5384,15 @@ def cmd_retry(a):
     retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
     j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []
+    # FRESH-RETRY (drive-0849 2026-10-10): a human retry re-runs the stage from scratch (retry_aside moves the old
+    # output aside).  A stale HOLD-STOP "resume" (+ its OT_HOLD_STOP buffer caps) from an earlier attempt survived the
+    # retry: qfd_emb_far92_rxp_b's PINFLOP-REF requeue would have resumed the 10-09 3_place checkpoint under the old IO
+    # reference.  --keep-resume keeps both.
+    if not getattr(a, "keep_resume", False):
+        for k in ("resume", "hold_stop"):
+            if j.get(k):
+                event(j, f"human retry: dropped the previous attempt's {k} ({str(j[k])[:160]})")
+                j.pop(k, None)
     # 2026-10-08: a bench track pinned to an artifact run on another host (bench_location) outlives that run when a
     # purge or move deletes it -- every bench launch then failed 'No such file' until 10 loop errors.  A retry restarts
     # the unfinished benches on the job's own run.
@@ -5757,6 +5766,7 @@ def main():
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
+    r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
