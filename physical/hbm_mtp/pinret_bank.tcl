@@ -80,11 +80,12 @@ foreach bt [$ot_blk getBTerms] {
 
 # The returned handshake is internal but belongs beside its receiving ready pin.
 set returned_count 0
-foreach net [$ot_blk getNets] {
- if {![regexp {g_pinret[./]u_(hw|fn)[./]returned$} [$net getName] _ unit]} continue
- set d [ot_of_drv $net]; if {$d eq ""} continue
- set ff [$d getInst]; if {![ot_of_isff $ff]} continue
- if {[dict exists $ot_seen [$ff getName]]} continue
+foreach ff [$ot_blk getInsts] {
+ # Yosys retains the source-register instance name but canonicalizes its
+ # QN net to an anonymous wire. Match the exact register, never a net alias.
+ if {![regexp {(^|[./])g_pinret[./]u_(hw|fn)[./]returned(\$_[^/ ]+)?$} [$ff getName] _ prefix unit]} continue
+ if {![ot_of_isff $ff]} {error "PINRET return capture is not a mapped flop: [$ff getName]"}
+ if {[dict exists $ot_seen [$ff getName]]} {error "PINRET return capture selected twice"}
  dict set ot_seen [$ff getName] 1
  set port [expr {$unit eq "hw" ? "host_wr_ready" : "fence_ready"}]
  set bt [$ot_blk findBTerm $port]; set bb [$bt getBBox]

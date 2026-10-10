@@ -1,0 +1,32 @@
+{
+  "job": "mtp-fence-pinret-887a929c9-tc-hm0-portable",
+  "source": "887a929c9",
+  "status": "NEEDS_HUMAN",
+  "failure": "PINRET expected two handshake-return capture flops, got 0",
+  "root_cause": "Yosys retained source-register instance names but canonicalized QN nets to anonymous wires, so net-name selection found none.",
+  "actual_mapped_instances": [
+    "g_pinret.u_fn.returned$_SDFF_PN0_",
+    "g_pinret.u_hw.returned$_SDFF_PN0_"
+  ],
+  "mapped_qn_nets": [
+    "_000499_",
+    "_000390_"
+  ],
+  "mapped_master": "DFFHQNx1_ASAP7_75t_R",
+  "fix": "Select the exact two returned source-register instances, require DFF master and expected count2, still anchor beside actual ready pins.",
+  "rtl_changed": false,
+  "clock_constraints_changed": false,
+  "tcl_name_selection_pass": true,
+  "tcl_negative_names_rejected": [
+    "g_pinret.u_hw.returned2$_SDFF_PN0_",
+    "g_pinret.u_old.returned$_SDFF_PN0_",
+    "g_old.u_hw.returned$_SDFF_PN0_"
+  ],
+  "actual_odb_geometry_checked": false,
+  "hook_sha256": "0c729c429027bcd26b64a333c212962f4ca469bb02427829599c51ef8679f66d",
+  "prior_exact_gate": "4seeds PASS186writes/186ACK/37fences",
+  "prior_negative_gates": [
+    "MUTlast FENCE_P FAIL rc1",
+    "MUTreturn PINRET_WRITE_PAYLOAD_MISMATCH rc1"
+  ]
+}
