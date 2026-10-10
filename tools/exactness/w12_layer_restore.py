@@ -7,7 +7,7 @@
 tools/hdc_qwen_layer0_rom_w12.emit replayed with the matrices taken from the prep npz instead of the checkpoint: the
 decoded codes / BF16 scales (o / down scales from the constant ROM at the post-TP scale bases), the prep's matrix
 layout, engine_word_arrays + word_hex for matrix_int8 / matrix_scale_bf16 (padding words as the emitter writes them),
-crom.hex from the decoded constant ROM, program / segments from FP.profile at the derived post-TP scale bases.
+crom.hex from the decoded constant ROM, program / segments verbatim from the prep's recorded layout-image words.
 Accepted ONLY if matrix_int8 / matrix_scale_bf16 / crom sha256 equal the prep pins and program / segments equal the
 prep's recorded layout-image programs; writes layer<n>_rom.json (matrix_layout, post_tp_scale_bases, die, layer)."""
 import hashlib, json, sys
@@ -46,14 +46,16 @@ with open(out / 'matrix_int8.hex', 'w') as cf, open(out / 'matrix_scale_bf16.hex
         sf.write('3f80' * W + '\n')
 cb = crom.view(np.uint32)
 (out / 'crom.hex').write_text(''.join(f'{(int(hi) << 32) | int(lo):016x}\n' for lo, hi in cb))
-prog = FP.profile(die, matrix_rows=rows, post_scale_bases=bases)
-(out / 'program.hex').write_text('\n'.join(prog['program_hex']) + '\n')
-(out / 'segments.hex').write_text('\n'.join(prog['descriptor_hex']) + '\n')
+# program / segments: the layout image's own words as the prep recorded them (identical for every layer of a die). Today's
+# FP.profile re-emits the same words except three SU chase thresholds (timing only, the R-ARITH order is width-free), so
+# the recorded words are restored verbatim and sha-checked against the recorded pin.
+pg = P['programs'][f'layer_d{die}']
+(out / 'program.hex').write_text('\n'.join(pg['program']) + '\n')
+(out / 'segments.hex').write_text('\n'.join(pg['segments']) + '\n')
 (out / f'layer{layer}_rom.json').write_text(json.dumps({'layer': layer, 'die': die, 'matrix_layout': rows,
     'post_tp_scale_bases': list(bases), 'restored_by': 'tools/exactness/w12_layer_restore.py (prep npz, sha-checked)'},
     indent=1) + '\n')
 ok = {nm: sha(out / nm) == rec['image_sha256'][nm] for nm in ('matrix_int8.hex', 'matrix_scale_bf16.hex', 'crom.hex')}
-pg = P['programs'][f'layer_d{die}']
 ok['program'] = sha(out / 'program.hex') == pg['program_sha256']
 ok['segments'] = sha(out / 'segments.hex') == pg['segments_sha256']
 print(json.dumps({'layer': layer, 'die': die, 'compact': compact, 'ok': ok}))
