@@ -15292,3 +15292,8 @@ def hgi_token18_fullcore_model():
 def hbm_indexer_t4_join_model():
     from hbm_indexer_r25i_model import hbm_indexer_t4_join_model as impl
     return impl()
+
+
+def hbm_native_hgi_index_join_model():
+    from hbm_indexer_r25i_model import hbm_native_hgi_index_join_model as impl
+    return impl()
