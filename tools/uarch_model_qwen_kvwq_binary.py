@@ -105,3 +105,18 @@ def leaf_s_wide_model():
     d['routing']['placement']='MX below183.72-square CDC;129.6um S write face aligns CDC S write bundle, height183.6 fits378um pitch'
     d['area_delta_vs_old_leaf_um2']=(129.6-86.4)*183.6
     return d
+
+
+def mirror_legal_pin_model():
+    """Single preferred-direction layer per face avoids incompatible flip residues."""
+    return dict(schema='opentallas.qwen-kv-mirror-pin-plan.v1', model_precedes_pnr=True, adopted=False,
+        macs_per_cycle=0, compute_intensity_macs_per_byte=0, memory_ports_bytes_per_cycle=0,
+        replicas=dict(leaf=128,controller=4), boundary_bits_per_cycle=dict(leaf_S=596,leaf_N=295,leaf_E=5,controller_E=1200,controller_W=1048),
+        routing=dict(horizontal_layer='M4',vertical_layer='M5',pitch_um=.048,
+                     leaf_S_tracks=int(129.6/.048),controller_E_tracks=int(648/.048),
+                     leaf_S_density_bits_per_um=596/129.6,controller_E_density_bits_per_um=1200/648,
+                     removed_pair_reason='M4/M5 flipped origin24 modulo48 conflicts with M6/M7 origin32 modulo64, independent of outline'),
+        area=dict(leaf_slot_um=[129.6,183.6],controller_slot_um=[216,648],die_mm2=210.055,cell_area_change=0),
+        latency=dict(added_edges_vs_wide_leaf=0,controller_head_edges=1,posted_relay_forward_edges=42,posted_relay_return_edges=41),
+        replica_mux_demux_fanout='same exact RTL, registers and logical boundary bus ownership',
+        qualification='own optionB closure; actual LEF on-track origin, mirror access and composed timing required; no existing job/view overwritten')
