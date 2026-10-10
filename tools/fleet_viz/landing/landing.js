@@ -463,14 +463,14 @@ function gPane(frame, stat, rec, it, tl) {
 }
 const D = { recs: {}, kind: 'full' };
 function gLanes(N) {
-  const sys = N.systems || {}, hb = ((sys.hbm || {}).targets || []).find((x) => x.id === 'hbm_ds');
-  const dsm = (sys.ds_rom && sys.ds_rom.per_user && sys.ds_rom.per_user.MTP) || null, hbm = (hb && hb.per_user && hb.per_user.MTP) || null;
+  const sys = N.systems || {}, hb = ((sys.hbm || {}).targets || []).find((x) => x.id === 'hbm_gen_ds');
+  const dsm = (sys.ds_rom && sys.ds_rom.per_user && sys.ds_rom.per_user.MTP) || null, hbm = (hb && hb.per_user && hb.per_user.AR) || null;
   const Dd = Object.fromEntries(N.designs.map((d) => [d.id, d])), G = N.gpu.ds;
-  const dv = dsm ? dsm.value : Dd.ds_rom.per_user_mtp.value, hv = hbm ? hbm.value : Dd.hbm_ds.per_user_mtp.value;
+  const dv = dsm ? dsm.value : Dd.ds_rom.per_user_mtp.value, hv = hbm && hbm.value != null ? hbm.value : Dd.hbm_gen_ds.per_user.value;
   const src = shortSrc(N.generated_from.systems || N.generated_from.token_path);
   return [
     { k: 'Chip', cls: 'chip', short: 'DS ROM', rate: dv, kv: true, lab: `${fmt(dv, 1)} tok/s · analytical, MTP`, label: `${fmt(dv, 1)} tok/s per user · analytical · MTP τ 4.159 · ${src} ds_rom.per_user.MTP` },
-    { k: 'Hbm', cls: 'chip', short: 'HBM', rate: hv, kv: true, lab: `${fmt(hv, 1)} tok/s · analytical, MTP`, label: `${fmt(hv, 1)} tok/s per user · analytical · MTP τ 4.159 · generic die · ${src} hbm.targets[hbm_ds].per_user.MTP` },
+    { k: 'Hbm', cls: 'chip', short: 'HBM', rate: hv, kv: true, lab: `${fmt(hv, 1)} tok/s · simulator table rate, AR (MTP pending)`, label: `${fmt(hv, 1)} tok/s per user · simulator table rate; RTL-calibrated rate pending unit fixes · AR (DS MTP pending: generic-die MTP program not yet compiled) · generic die · ${src} hbm.targets[hbm_gen_ds].per_user.AR` },
     { k: 'Gpu', cls: 'gpu', short: 'Best GPU', rate: G.per_user.value, kv: false, lab: `${fmt(G.per_user.value, 1)} tok/s · 4 × GB300, published`, label: `${fmt(G.per_user.value, 2)} tok/s per user · third-party · ${G.per_user.label}` },
     { k: 'Or', cls: 'or', short: 'OpenRouter', rate: G.served.value, kv: false, lab: `${fmt(G.served.value, 1)} tok/s · median served`, label: `${fmt(G.served.value, 1)} tok/s · ${G.served.label} · snapshot ${G.served.date}` },
   ];
@@ -564,13 +564,13 @@ function numbers(N) {
   const D = Object.fromEntries(N.designs.map((d) => [d.id, d])), G = N.gpu;
   const ref = (o) => o ? `<div class="src">${o.stale ? '' : (o.source === 'results/external/registry.json' ? 'third-party · ' : 'analytical · ')}${esc(shortSrc(o.source))} · ${esc(o.field)}${o.date ? ' · ' + esc(o.date) : ''}</div>` : '';
   const v = (o, d = 1) => o ? `${fmt(o.value, o.value > 10000 ? 0 : d)}${o.stale ? '<span class="stale" title="' + esc(o.note) + '">STALE</span>' : ''}${ref(o)}${o.note ? `<div class="src">${esc(o.note)}</div>` : ''}` : '<span style="color:var(--fg3)">not in the registry</span>';
-  const pair = (a, b) => `${fmt(a.value, 1)} / ${fmt(b.value, 1)}${ref(a)}${ref(b)}`;
+  const pair = (a, b) => `${fmt(a.value, 1)} / ${b.value == null ? (b.pending || 'pending') : fmt(b.value, 1)}${ref(a)}${b.value == null ? '' : ref(b)}${a.rate_label ? `<div class="src">${esc(a.rate_label)}</div>` : ''}`;
   const cap = D.ds_rom.capacity;
   const capCell = `≤ ${fmt(cap.ar_agg_bound, 0)} / ≤ ${fmt(cap.mtp_agg_bound, 0)}<span class="stale" style="color:var(--fg2);border-color:var(--line2)" title="${esc(cap.rule)}">DERIVED</span><div class="src">per instance: 1/II and τ/(6·II), II ${cap.II_us} µs · ${esc(shortSrc(cap.source))} · ${esc(cap.field)} · ${esc(cap.date)}</div><div class="src">full per-user rate up to about ${cap.ar_users} users (AR) or ${cap.mtp_users} (MTP) per instance; an upper bound, not a committed aggregate</div><div style="margin-top:8px">${v(D.ds_rom.aggregate_mtp)}</div>`;
   const rows = [
     ['ours', 'Qwen ROM', 'Qwen3-8B · 8K · AR', v(D.qwen_rom.per_user), v(D.qwen_rom.aggregate, 0), D.qwen_rom.per_user.status],
     ['ours', 'DS ROM array', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.ds_rom.per_user, D.ds_rom.per_user_mtp), capCell, D.ds_rom.per_user_mtp.status],
-    ['ours', 'HBM accelerator', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.hbm_ds.per_user, D.hbm_ds.per_user_mtp), v(D.hbm_ds.aggregate) + '<br>' + v(D.hbm_ds.aggregate_mtp), D.hbm_ds.per_user_mtp.status],
+    ['ours', 'HBM accelerator (generic die)', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.hbm_gen_ds.per_user, D.hbm_gen_ds.per_user_mtp), v(D.hbm_gen_ds.aggregate) + '<br>' + v(D.hbm_gen_ds.aggregate_mtp), D.hbm_gen_ds.per_user.rate_label],
     ['gpu', 'Best GPU · Qwen3-8B', esc(G.qwen.per_user.label), v(G.qwen.per_user, 0) + `<div class="src">no speculation: ${fmt(G.qwen.per_user_ar.value)} tok/s</div>`, v(null), 'published, third-party'],
     ['gpu', 'Best GPU · DeepSeek-V4.1 Flash', esc(G.ds.per_user.label), v(G.ds.per_user, 2) + `<div class="src">B200 TP4, concurrency 1: ${fmt(G.ds.per_user_b200.value, 1)} · V4-Pro on 8 × B300: ${fmt(G.ds.per_user_pro.value, 1)} · V4-Flash on 4 × H200: ${fmt(G.ds.per_user_flash.value)}</div>`, v(G.ds.aggregate, 0) + `<div class="src">${esc(G.ds.aggregate.label)}</div>`, 'published, third-party'],
     ['or', 'OpenRouter · Qwen3-8B', 'served today, one provider', v(G.qwen.served, 0), v(null), 'snapshot 2026-10-09, includes network and load'],
@@ -579,7 +579,7 @@ function numbers(N) {
   $('numsTable').tBodies[0].innerHTML = rows.map(([c, m, mm, pu, ag, st]) => `<tr class="${c}"><td><b>${esc(m)}</b><div style="margin-top:4px">${c === 'ours' ? '<span class="tag-a">analytical</span>' : c === 'gpu' ? '<span class="tag-g">third-party</span>' : '<span class="tag-g">served snapshot</span>'}</div></td><td>${mm}</td><td class="v">${pu}</td><td class="v${/^(<span|≤)/.test(ag) || /STALE/.test(ag.slice(0, 200)) ? ' dim' : ''}">${ag}</td><td style="font-size:13px;color:var(--fg2)">${esc(st)}</td></tr>`).join('');
   $('numsNote').innerHTML = `Read from <span class="mono">${esc(N.generated_from.token_path)}</span> and <span class="mono">${esc(N.generated_from.reprice)}</span> (repriced ${esc(N.generated_from.reprice_date)}), <span class="mono">${esc(D.qwen_rom.aggregate.source)}</span>, and <span class="mono">results/external/registry.json</span>. The DS ROM and HBM aggregates have not been recomputed for the 2026-10-08 design points. The DS ROM bound is derived on this page from the committed pipeline interval. The HBM figures are the newest committed aggregates, from earlier designs, and are marked STALE.`;
   const hs = (id, ours, gpu) => { $(id).innerHTML = `${fmt(ours.value, 0)}<small>tok/s</small>`; $(id + '-s').innerHTML = `${(ours.value / gpu.value).toFixed(1)}× the best published GPU at batch 1 (${fmt(gpu.value, 0)})<br>analytical · ${esc(shortSrc(ours.source))} · ${esc(ours.date)}`; };
-  hs('hs-qwen', D.qwen_rom.per_user, G.qwen.per_user); hs('hs-ds', D.ds_rom.per_user_mtp, G.ds.per_user); hs('hs-hbm', D.hbm_ds.per_user_mtp, G.ds.per_user);
+  hs('hs-qwen', D.qwen_rom.per_user, G.qwen.per_user); hs('hs-ds', D.ds_rom.per_user_mtp, G.ds.per_user); hs('hs-hbm', D.hbm_gen_ds.per_user, G.ds.per_user); $('hs-hbm-s').innerHTML += '<br>' + esc(D.hbm_gen_ds.per_user.rate_label) + ' · AR; MTP ' + esc(D.hbm_gen_ds.per_user_mtp.pending);
   chart(N, 'ds');
   $('chTabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; $('chTabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); chart(N, b.dataset.m); });
 }
