@@ -75,3 +75,32 @@ def leaf_s_model():
                        area_delta='actual die width times259.2um, recorded by generator'),
         fit='same full183.6-high leaf RTL; route measures cell area and utilization',
         qualification='own optionB TT>=0 FF>=0 DRC0; exact unchanged component; real LEF pin-to-pin reach and mirror legality')
+
+
+def head_pipeline_model():
+    """Capture selected queue row before the four pin-feed banks."""
+    d=model()
+    d['schema']='opentallas.qwen-kv-write-binary-head-pipeline.v1'
+    d['area'].update(controller_slot_um=[216.0,648.0], extra_head_state_bits=1024+22+2+1,
+                     extra_analytical_DFF_area_um2=(1024+22+2+1)*.2916,
+                     reserved_controller_area_delta_mm2=4*(216*648-172.8*518.4)/1e6)
+    d['latency'].update(added_controller_edges=1, stage='queue read mux -> selected-row register -> output pin flops',
+                        single_user_token_added_edges=0, posted_write_cost='one extra core edge a launched row; full component measures phase/credit effects')
+    d['routing'].update(controller_two_layer_face_capacity=int(2*648/.096),
+                        selected_row_internal_bits_per_cycle=1049,
+                        controller_feed_density_estimate=(4*298+8)/(2*648))
+    d['replica_cost']['head_capture_fanout']='one selected-row register per bit, feeds one quarter bank'
+    d['qualification']['exact']='full32PC HEAD_PIPE1 component and mutants, same physical296/293-bit feed contract'
+    return d
+
+
+def leaf_s_wide_model():
+    """Spend50% more leaf area and write-face length; height fits actual CDC gap."""
+    d=leaf_s_model()
+    d['schema']='opentallas.qwen-kv-write-leaf-s-wide.v1'
+    d['slot_um']=[129.6,183.6]
+    d['slot_area_mm2']=128*129.6*183.6/1e6
+    d['routing'].update(S_two_layer_capacity=int(2*129.6/.096), S_density_estimate=596/(2*129.6))
+    d['routing']['placement']='MX below183.72-square CDC;129.6um S write face aligns CDC S write bundle, height183.6 fits378um pitch'
+    d['area_delta_vs_old_leaf_um2']=(129.6-86.4)*183.6
+    return d
