@@ -141,7 +141,7 @@ module hfd_svc_SE_s3 (
   assign gp4_sv[1] = rs17_v && (rs17_d[276:275] == 2'b11); assign gp4_sq[553:277] = rs17_d;
   assign gp4_sv[2] = rs18_v && (rs18_d[276:275] == 2'b11); assign gp4_sq[830:554] = rs18_d;
   assign gp4_sv[3] = rs19_v && (rs19_d[276:275] == 2'b11); assign gp4_sq[1107:831] = rs19_d;
-  ot_svs_grp #(.K(4)) u_gp4 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp4_sv), .sq_i(gp4_sq), .kq(kq4), .sg_v(gp4_sgv), .sg_d(gp4_sgd), .cr(gp4_cr), .ks(ks4), .ovf(gp4_ovf));
+  ot_svs_grp #(.K(4), .OPR(1)) u_gp4 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp4_sv), .sq_i(gp4_sq), .kq(kq4), .sg_v(gp4_sgv), .sg_d(gp4_sgd), .cr(gp4_cr), .ks(ks4), .ovf(gp4_ovf));
   ot_svs_kvasm #(.KV(0)) u_ik (.ck(c), .rn(rn), .sv(ik_sv), .sq(ik_sq), .dn(ik_dn), .kv(ik_kvo), .ik(ik_iko));
   wire fck_ik; ot_svc_fclk_buf u_fc_ik (.a(c), .y(fck_ik));
   assign ik = {fck_ik, fck_ik, ik_iko};

@@ -63,7 +63,7 @@ def fc_face(po, x0, x1, name=None):
 PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
 # svc-fix 2026-10-10: segments whose ks face needs the group unit's plain port register (ot_svs_grp OPR = 1, +1 row
 # cycle): routed SE_s4 pspr TT -67.35 / -71.17 ps on u_gp5.od -> ks5 (enabled od not pin-anchorable, ~250 ps of wire)
-GRP_OPR = {'hfd_svc_SE_s4'}
+GRP_OPR = {'hfd_svc_SE_s4', 'hfd_svc_SE_s3'}   # SE_s3: routed u_gp4.ot -> ks4[8] -55.4 ps once phy[2488] is a clock
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -812,6 +812,15 @@ def build(pl):
                 fo += ['kd[1]']
         if fo:
             sdc.append('set_false_path -to [get_ports -quiet {' + ' '.join(fo) + '}]')
+        # svc-fix 2026-10-10 (lead decision): the PHY clock output (ot_svc_fclk_buf u_phy_ck: phy[k] = phy_clk = c) is a
+        # CLOCK, defined as one: a generated clock at the segment clock root (divide 1, not inverted).  A generated
+        # clock's source port leaves the data budgets (link_budget_consistent.sdc skips clock-source outputs); the PHY
+        # data outputs stay under their die-link budget.  routed SE_s3 pspr 982804de3: TT -230.6 ps on ck -> phy[2488]
+        # timed as a data output against the 518.5 ps link budget (fall edge, unsatisfiable as data).
+        for ln_ in Lx:
+            m_ = re.match(r'\s*assign phy\[(\d+)\] = phy_clk;', ln_)
+            if m_:
+                sdc.append(f'create_generated_clock -name fphy -source [get_ports {{ck[0]}}] -divide_by 1 [get_ports {{phy[{m_.group(1)}]}}]')
         if PS:      # PS row / done outputs: the consistent die-link split (S = R = 254.7 ps) until the rebudget covers them
             for bn in port_map[names[j]]:
                 if bn.startswith('ks'):

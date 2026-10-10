@@ -6,6 +6,7 @@ for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe 166.6 [get_ports [
 create_clock -name fkq4 -period 833 [get_ports {kq4[1]}]
 set_input_delay -clock fkq4 166.6 [get_ports {kq4[0]}]
 set_false_path -to [get_ports -quiet {l4[1099] l4[1100] l4[1101] ks4[1099] ks4[1100] ks4[1101] kd[1]}]
+create_generated_clock -name fphy -source [get_ports {ck[0]}] -divide_by 1 [get_ports {phy[2488]}]
 set_output_delay -clock vclk 254.7 [get_ports -quiet {ks4[*]}]
 set_false_path -to [get_ports -quiet {ks4[1099] ks4[1100] ks4[1101]}]
 set_output_delay -clock vclk 254.7 [get_ports -quiet {kd[0]}]
