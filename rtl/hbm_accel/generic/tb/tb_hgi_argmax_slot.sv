@@ -26,9 +26,13 @@ module tb_hgi_argmax_slot;
     wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr0, vmr1; reg [337:0] tq = 0;
     // mtp-lead: the DUT is the R25G MTP-slot unit ot_hgi_argmax_slot (adapter + engine behind the 683 / 3 dispatch bus);
     // the engine and adapter are inside it, die_id = the case's rank, the su_red stream idle
+    // A = STREAM records (the current compiler's ARGMAX.LOCAL: SU -> ARGMAX stream 1): the row is driven on the slot's
+    // su_red pins in_* as 8-lane beats (word order = A order, last beat masked), bias off
+    reg s_v = 0, s_last = 0; reg [7:0] s_mask = 0; reg [255:0] s_vals = 0;
+    integer sb, sw, sn, nstream = 0;
     wire o_v, o_nan, o_f, o_rf; wire [17:0] o_idx; wire [31:0] o_val;
     ot_hgi_argmax_slot #(.MUT(MS)) u (.clk(clk), .rst_n(rst_n), .f_hgi_cmdproc(rec), .t_hgi_cmdproc(ret), .die_id(rank),
-        .vmq(vmq), .vmr(vmr0), .in_v(1'b0), .in_last(1'b0), .in_bias_en(1'b0), .in_mask(8'd0), .in_vals(256'd0),
+        .vmq(vmq), .vmr(vmr0), .in_v(s_v), .in_last(s_last), .in_bias_en(1'b0), .in_mask(s_mask), .in_vals(s_vals),
         .in_bias(256'd0), .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     wire nan_flag = u.nan_flag;
     ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status());
@@ -56,6 +60,17 @@ module tb_hgi_argmax_slot;
             wr_seen = 0;
             @(negedge clk); rec = casem[c][682:0];
             @(negedge clk); rec[0] = 1'b0;
+            if (casem[c][130:129] == 2'd2) begin                      // STREAM: beats on the slot's in_* pins
+                sn = casem[c][661:641]; nstream = nstream + 1;
+                repeat (4) @(negedge clk);
+                for (sb = 0; sb * 8 < sn; sb = sb + 1) begin
+                    s_v = 1'b1; s_last = ((sb + 1) * 8 >= sn); s_mask = 8'd0; s_vals = 256'd0;
+                    for (sw = 0; sw < 8; sw = sw + 1)
+                        if (sb * 8 + sw < sn) begin s_mask[sw] = 1'b1; s_vals[32 * sw +: 32] = vmm[f0 + sb * 8 + sw][31:0]; end
+                    @(negedge clk);
+                end
+                s_v = 1'b0; s_last = 1'b0;
+            end
             t = 0; while (!(ret[1] || ret[2]) && t < 200000) begin @(negedge clk); t = t + 1; end
             if (c < 3 || c % 10 == 0) $display("case %0d kind %0d: %0d VM words, retire after %0d cycles", c, kind, nw, t);
             if (kind == 0) begin
@@ -75,7 +90,7 @@ module tb_hgi_argmax_slot;
                 else negs = negs + 1;
             end
         end
-        $display("summary: %0d argmax records run, %0d negatives refused", runs, negs);
+        $display("summary: %0d argmax records run (%0d over the su_red STREAM pins), %0d negatives refused", runs, nstream, negs);
         if (errors == 0) $display("HGI_ARGMAX PASS"); else $display("HGI_ARGMAX FAIL errors=%0d", errors);
         $finish;
     end
