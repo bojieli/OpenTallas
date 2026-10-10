@@ -189,8 +189,8 @@ def place_lo(a):
         nm = f'g_y0.g_x\\[{x}\\].u_res'
         xs, o, qe = (15.0, 'MY', QL_X) if x == 0 else (TW - 35.112, 'R0', QR_X + T.QW)
         y1 = sy + 140.0                                     # e1 above e0, toward the seam (pin banks are below)
-        e0 = P.put(T.bname(nm, 0, 0, True), o, xs, sy - EWH / 2, EWW, EWH)
-        e1 = P.put(T.bname(nm, 1, 0, True), o, xs, y1 - EWH / 2, EWW, EWH)
+        e0 = P.put(T.bname(nm, 0, 0, True), o, xs, grid(sy - EWH / 2), EWW, EWH)      # M4 pins on track (DRT-0418)
+        e1 = P.put(T.bname(nm, 1, 0, True), o, xs, grid(y1 - EWH / 2), EWW, EWH)
         hops.append((f'res0{x} quad->bank', round(abs(qe - (xs + EWW / 2)), 1)))
         hops.append((f'res0{x} 0->1', round(abs(e1[1] - e0[1]), 1)))
         path = []
@@ -256,8 +256,8 @@ def place_hi(a, lo_geo):
         nm = f'g_y1.g_x\\[{x}\\].u_res'
         xs, o, qe = (15.0, 'MY', QL_X) if x == 0 else (TW - 35.112, 'R0', QR_X + T.QW)
         y1 = (sy + 55.0) / 2
-        e0 = P.put(T.bname(nm, 0, 0, True), o, xs, sy - EWH / 2, EWW, EWH)
-        e1 = P.put(T.bname(nm, 1, 0, True), o, xs, y1 - EWH / 2, EWW, EWH)
+        e0 = P.put(T.bname(nm, 0, 0, True), o, xs, grid(sy - EWH / 2), EWW, EWH)      # M4 pins on track (DRT-0418)
+        e1 = P.put(T.bname(nm, 1, 0, True), o, xs, grid(y1 - EWH / 2), EWW, EWH)
         hops.append((f'res1{x} quad->bank', round(abs(qe - (xs + EWW / 2)), 1)))
         hops.append((f'res1{x} 0->1', round(abs(e1[1] - e0[1]), 1)))
         pipe(nm, [e1], a.NL - 2, 1, 2, [(xs + EWW / 2 + (40 if x == 0 else -40), 70.0)], merge, f'res1{x}')

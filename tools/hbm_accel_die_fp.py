@@ -551,9 +551,221 @@ R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full netwo
 if _mtp_generic_closed():
     R25G, R25G4 = R25GM, R25G4M
 ADOPTED = R25
+# hbm-phys-1010 [fp] 2026-10-10: R25GQ = the owner's Option A re-floorplan (REVIEW_20261009 'OWNER DECISION 2026-10-10'),
+# the R25GP successor on the SAME outline (31,734.288 x 25,282.8 um).  Opt-in only (build_r25gq): every other variant is
+# untouched.  A PLACEMENT plan: the instances are the R25GPH instances (exact measured outlines, names, masters) re-placed
+# and right-sized; the die nets are NOT rebuilt here (geometry_only) -- tools/hbm_r25gq_plan.py carries the R25GPH logical
+# nets over (+ the Option A additions) for the channel / stage / power model until the dependent blocks are re-routed.
+#   SM 32 (3 x 3 grid, 8 per stack) | attention 32 tiles (4 x 2 per quadrant, PS halves) | SU 512 lanes (128-lane tiled
+#   quarter, 128 hfd_su_tile_xl in 8 columns, slot from tools/hbm_hub_quarter_gen.py --tiled --lanes 128 --groups 4
+#   --wct 456 @ dc737578e: 116.64 um column channels) | SFU half (on the SU column) | HC 4 quarters (over the index
+#   stack) | index score grids 36/64 | VM8 vertical halves | spine reorder: quant | HGI VM | CP abut (shared lane group)
+#   Freed height -> svc-to-SM gap (129.6 -> 345.6 um), SM row channels (520 -> 1,209.6 um, 259 -> 561.6 um) and the
+#   SM-to-hub edge channel (551 -> 648 um); the inner SM column channels 259.2 -> 432 um (the outer SM column stays);
+#   spine side channels 1,244.16 -> 1,546.56 um.
+R25GQ = dict(r25gq=True, r25gq_base='r25gph',
+             svc_gap_add=216.0, sm_colch_add=172.8, sm_ch01=1209.6, sm_ch12=561.6, hub_edge_ch=648.0, eq_ch=518.4,
+             su_slot=(2016.144, 2808.0), sfu_frac=0.5, hc_mm2=550.8 * 5529.6 / 1e6, idx_score_frac=36 / 64,
+             attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
+             idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
+             idx_score_dx=432.0, spine_over=432.0, spch_q=1546.56,
+             spine_order=('hgi_idx', 'mtp', 'loader', 'router', 'quant', 'hgi_vm', 'cmdproc', 'barrier', 'coll', 'vm8',
+                          'su_red', 'su_full', 'idx_sel'),
+             spine_abut=(('quant', 'hgi_vm'), ('hgi_vm', 'cmdproc'), ('cmdproc', 'barrier'), ('barrier', 'coll')),
+             spine_cross=(('router', 'quant'), ('vm8', 'su_red')), spine_cross_um=302.4)
+
+
+def build_r25gq(variant):
+    """R25GQ placement (see R25GQ above).  Returns a geometry-only model (buses / paths empty) with m['base'] = the
+    R25GPH network-probe model the instances were taken from, and m['r25gq_map'] = base instance -> R25GQ instance (None
+    when the instance is gone: the merged attention tiles map onto their surviving row)."""
+    V = dict(variant)
+    base = build(variant_arg(V['r25gq_base']), network_probe=True)
+    g0 = base['geo']
+    W, H = g0['W'], g0['H']
+    B = {it.name: it for it in base['insts']}
+    cx = g0['cx']
+    insts, regions, notes, rmap = [], [], [], {}
+
+    def add(name, src, x, y, w=None, h=None, master=None, orient=None, kind=None, region=None):
+        s = B[src]
+        it = Inst(name, master or s.master, round(x, 6), round(y, 6), round(w if w is not None else s.w, 6),
+                  round(h if h is not None else s.h, 6), orient or s.orient, kind=kind or s.kind, region=region or s.region,
+                  domain=s.domain)
+        insts.append(it)
+        return it
+
+    def mx(x, w):          # mirror about the spine centre (E half)
+        return round(2 * cx - x - w, 6)
+
+    def my(y, h):          # mirror about the die centre (N half)
+        return round(H - y - h, 6)
+    # ---- side bands: PHY / svc / SerDes / host unchanged; SM rows re-pitched (S side; N mirrored)
+    for it in base['insts']:
+        if it.kind in ('phy', 'svc', 'link', 'serdes_slab', 'host_slab'):
+            add(it.name, it.name, it.x, it.y)
+            rmap[it.name] = it.name
+    sms = [it for it in base['insts'] if it.kind == 'sm']
+    smh = sms[0].h
+    ys = sorted({round(it.y, 3) for it in sms if it.y < H / 2})
+    assert len(ys) == 3, ys
+    row_y = [up(ys[0] + V.get('svc_gap_add', 0.0), GY)]
+    row_y.append(up(row_y[0] + smh + V['sm_ch01'], GY))
+    row_y.append(up(row_y[1] + smh + V['sm_ch12'], GY))
+    colx = {}
+    for st in ('SW', 'SE', 'NW', 'NE'):       # inner SM column channels widened: the outer column stays, the inner
+        xs_ = sorted({round(i.x, 3) for i in sms if i.region == f'grp_{st}'}, reverse=st[1] == 'E')   # ones move spineward
+        for k, x_ in enumerate(xs_):
+            colx[(st, x_)] = x_ + (k * V.get('sm_colch_add', 0.0) * (1 if st[1] == 'W' else -1))
+    for it in sms:
+        s_ = it.y < H / 2
+        yr_ = it.y if s_ else H - it.y - it.h      # the N groups sit 2.16 um off the exact mirror (GY snap)
+        r_ = min(range(3), key=lambda k: abs(ys[k] - yr_))
+        add(it.name, it.name, colx[(it.region[4:], round(it.x, 3))], row_y[r_] if s_ else my(row_y[r_], it.h), region=it.region)
+        rmap[it.name] = it.name
+    hb0 = up(row_y[2] + smh + V['hub_edge_ch'], GY)     # first hub block row (S); N mirrored
+    hb1 = my(hb0, 0.0)
+    hmid = (hb0 + hb1) / 2
+    qh = dn((hb1 - hb0 - V['eq_ch']) / 2, GY)
+    geo = dict(W=W, H=H, x0=g0['x0'], cx=cx, hub_blocks_y=(hb0, hb1), quadrant_h=qh, sm_row_y=row_y,
+               side_h=dn(hb0 - V['hub_edge_ch'], GY))
+    # ---- index score grids: 36/64 height, shifted outward (the SM group east strip 264 -> ~950 um)
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        s = B[f'idx_score_{q}']
+        h_ = up(s.h * V['idx_score_frac'], GY)
+        x_ = s.x + V['idx_score_dx'] if q[1] == 'W' else s.x - V['idx_score_dx']
+        add(s.name, s.name, x_, s.y if q[0] == 'S' else s.y + s.h - h_, h=h_)
+        rmap[s.name] = s.name
+    # ---- spine column: re-stacked (quant | HGI VM | CP abutting), VM8 halves, centred on the hub band
+    sx0 = B['hb_cmdproc'].x
+    sw = B['hb_cmdproc'].w
+    vm8 = []
+    for q in ('sw', 'se', 'nw', 'ne'):
+        s = B[f'hb_vm_{q}']
+        hw = dn(s.w / 2, GX)
+        for k, h_ in enumerate('we'):
+            vm8.append((f'hb_vm_{q}{h_}', s.name, s.x + k * hw, hw, f'hfd_vm_{q}{h_}'))
+    stack = dict(hgi_idx=['hb_hgi_idx'], mtp=['hb_mtp', 'hb_mtp_am'], loader=['hb_loader'], router=['hb_router'],
+                 quant=['hb_quant'], hgi_vm=['hb_hgi_vm'], cmdproc=['hb_cmdproc'], barrier=['hb_barrier'], coll=['hb_coll'],
+                 vm8=['hb_vm_sw', 'hb_vm_nw'], su_red=['hb_su_red'], su_full=['hb_su_full'], idx_sel=['idx_selector'])
+    hgt = {k: (B[v[0]].h if k != 'vm8' else B['hb_vm_sw'].h + B['hb_vm_nw'].h) for k, v in stack.items()}
+    order = V['spine_order']
+    pairs = list(zip(order, order[1:]))
+    gap = {p: 43.2 for p in pairs if p in V['spine_abut']}
+    gap.update({p: V['spine_cross_um'] for p in pairs if p in V['spine_cross']})
+    y_lo, y_hi = hb0 - V['spine_over'], hb1 + V['spine_over']
+    free = (y_hi - y_lo) - sum(hgt.values()) - sum(gap.values())
+    rest = [p for p in pairs if p not in gap]
+    g_ = dn(free / len(rest), GY)
+    assert g_ >= 43.2, ('spine column too short', g_)
+    gap.update({p: g_ for p in rest})
+    yy = up(y_lo, GY)
+    spine_y = {}
+    for k in order:
+        spine_y[k] = yy
+        if k == 'vm8':
+            for nm, src, x_, w_, mst in vm8:
+                lo = src.endswith(('sw', 'se'))
+                add(nm, src, x_, yy if lo else yy + B['hb_vm_sw'].h, w=w_, master=mst)
+                rmap.setdefault(src, nm)
+        else:
+            for nm in stack[k]:
+                s = B[nm]
+                add(nm, nm, s.x, yy)
+                rmap[nm] = nm
+        yy = up(yy + hgt[k] + (gap[(k, order[order.index(k) + 1])] if k != order[-1] else 0.0), GY)
+    assert yy <= y_hi + GY, ('spine overflows', yy, y_hi)
+    regions.append(dict(name='spine', kind='hub', rect=[sx0, y_lo, sx0 + sw, y_hi]))
+    # ---- hub quadrants (S built, N mirrored in y; E mirrored about the spine centre)
+    spch = V.get('spch_q', base['geo']['spch'])
+    geo['spch'] = spch
+    su_w, su_h = V['su_slot']
+    su_x = dn(sx0 - spch - su_w, GX)
+    ix_w = 2 * B['hb_index_SW_b0'].w + V['idx_col_gap']
+    ix_x = dn(su_x - V['hub_col_gap'] - ix_w, GX)
+    tw = B['at_SW_00_lo'].w
+    at_w = V['attn_cols'] * tw + (V['attn_cols'] - 1) * V['attn_col_gap']
+    at_x = dn(ix_x - V['hub_col_gap'] - at_w, GX)
+    assert at_x >= g0['x0'] + HCH / 2, ('W hub quadrant overflows', at_x)
+    th_lo, th_hi = B['at_SW_00_lo'].h, B['at_SW_00_hi'].h
+    tp = th_lo + th_hi
+    at_h = V['attn_rows'] * tp + (V['attn_rows'] - 1) * V['attn_row_gap']
+    assert at_h <= qh, ('attention rows do not fit the quadrant', at_h, qh)
+    sfu_h = up(B['hb_sfu_SW'].w * B['hb_sfu_SW'].h * V['sfu_frac'] / su_w, GY)
+    hc_h = up(V['hc_mm2'] * 1e6 / ix_w, GY)
+    assert su_h + V['sfu_gap'] + sfu_h <= qh, ('SU + SFU column overflows', su_h + V['sfu_gap'] + sfu_h, qh)
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        S_, E_ = q[0] == 'S', q[1] == 'E'
+
+        def put(name, src, x, y, w, h, master=None, kind=None):
+            xx = mx(x, w) if E_ else x
+            yy_ = y if S_ else my(y, h)
+            o = B[src.replace('SW', q)].orient if src.replace('SW', q) in B else B[src].orient
+            return add(name, src.replace('SW', q) if src.replace('SW', q) in B else src, xx, yy_, w=w, h=h, master=master,
+                       orient=o, kind=kind, region='hub')
+        qy = hb0
+        put(f'hb_su_{q}', 'hb_su_SW', su_x, qy, su_w, su_h)
+        put(f'hb_sfu_{q}', 'hb_sfu_SW', su_x, up(qy + su_h + V['sfu_gap'], GY), su_w, sfu_h)
+        rmap[f'hb_su_{q}'], rmap[f'hb_sfu_{q}'] = f'hb_su_{q}', f'hb_sfu_{q}'
+        ytop = qy
+        for c_, col in enumerate(V['idx_cols']):
+            y_ = qy
+            for b_ in col:
+                s = B[f'hb_index_SW_b{b_}']
+                put(f'hb_index_{q}_b{b_}', f'hb_index_SW_b{b_}', ix_x + c_ * (s.w + V['idx_col_gap']), y_, s.w, s.h)
+                rmap[f'hb_index_{q}_b{b_}'] = f'hb_index_{q}_b{b_}'
+                y_ = up(y_ + s.h + V['idx_gap'], GY)
+            ytop = max(ytop, y_ - V['idx_gap'])
+        hc_y = up(ytop + V['hc_gap'], GY)
+        assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
+        put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, ix_w, hc_h)
+        rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
+        ty0 = up(qy + (qh - at_h) / 2, GY)
+        for r in range(V['attn_rows']):
+            for c in range(V['attn_cols']):
+                # S: row 0 at the hub edge; N (mirrored): row 0 at the equator, as the R25GP grid (MX copies)
+                rr = r if S_ else V['attn_rows'] - 1 - r
+                y_ = ty0 + rr * (tp + V['attn_row_gap'])
+                # W: column 0 outermost; E mirrored (the base grid's column 0 is the outermost on both halves)
+                x_ = at_x + c * (tw + V['attn_col_gap'])
+                lo_y, hi_y = y_, y_ + th_lo      # N: mirrored below, hi under lo as the R25GP MX copies
+                for half, yh, hh_ in (('lo', lo_y, th_lo), ('hi', hi_y, th_hi)):
+                    nm = f'at_{q}_{r}{c}_{half}'
+                    xx = mx(x_, tw) if E_ else x_
+                    yy_ = yh if S_ else my(yh, hh_)
+                    add(nm, f'at_{q}_00_{half}', xx, yy_, kind='attn_tile', region='hub')
+    # attention: base rows r (0..3) and columns c map onto R25GQ row r // 2 (the merged pair's work runs on one tile)
+    for nm in B:
+        m_ = re.fullmatch(r'at_([NS][EW])_(\d)(\d)_(lo|hi)', nm)
+        if m_:
+            q, r, c, h_ = m_.groups()
+            rmap[nm] = f'at_{q}_{int(r) * V["attn_rows"] // 4}{c}_{h_}'
+    for q in ('SW', 'SE', 'NW', 'NE'):     # quadrant regions: attention outer edge .. spine face
+        xa, xb = (at_x, sx0) if q[1] == 'W' else (sx0 + sw, 2 * cx - at_x)
+        y0_, y1_ = (hb0, hb0 + qh) if q[0] == 'S' else (hb1 - qh, hb1)
+        regions.append(dict(name=f'quad_{q}', kind='hub', rect=[round(xa, 3), round(y0_, 3), round(xb, 3), round(y1_, 3)]))
+    for st, grp in base['groups'].items():
+        S_ = st[0] == 'S'
+        y0_ = row_y[0] if S_ else my(row_y[2], smh)
+        y1_ = row_y[2] + smh if S_ else my(row_y[0], smh) + smh
+        ga_ = 2 * V.get('sm_colch_add', 0.0)
+        xa_, xb_ = (grp['x'], grp['x'] + g0['grp_w'] + ga_) if st[1] == 'W' else (grp['x'] - ga_, grp['x'] + g0['grp_w'])
+        regions.append(dict(name=f'grp_{st}', kind='field', rect=[xa_, y0_, xb_, y1_]))
+    regions.append(dict(name='hub', kind='hub', rect=[g0['x0'], hb0, g0['x0'] + g0['core_w'], hb1]))
+    notes.append(f'R25GQ: SM rows at {row_y} (S), hub blocks {hb0:.2f}-{hb1:.2f} um, quadrant {qh:.2f} um; spine gap '
+                 f'{g_:.2f} um (+ abut 43.2 / cross {V["spine_cross_um"]})')
+    V.update(W=W, H=H)
+    m = dict(geo=geo, insts=insts, regions=regions, groups={}, hub={}, tiles=[i for i in insts if i.kind == 'attn_tile'],
+             scan={}, links=[i for i in insts if i.kind == 'link'], host=next(i for i in insts if i.name == 'lk_host'),
+             notes=notes, variant=V, stn_faces={}, buses=[], paths={}, geometry_only=True, base=base, r25gq_map=rmap)
+    m['notes'].append('Placement plan only: die nets are the R25GPH logical nets carried over by tools/hbm_r25gq_plan.py '
+                      '(model); the dependent blocks are re-routed after the plan is on main.')
+    return m
 
 
 def build(variant=None, *, geometry_only=False, network_probe=False):
+    if variant is not None and variant.get('r25gq'):
+        return build_r25gq(variant)
     variant = dict(variant if variant is not None else ADOPTED)
     if variant.get('hgi_dispatch') and not variant.get('hgi_dispatch_pins_done'):
         # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
@@ -3981,7 +4193,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gq=R25GQ, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

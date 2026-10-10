@@ -17,7 +17,11 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     parameter integer HALF = 0;
     // redesign-hbm 2026-10-09 (HALF = 2): CG 1 gates every quad (ot_attn_tile_m6h1q CG); IDLE > 0 alternates ACT busy
     // cycles with IDLE fully idle cycles (no ld_v / ld_w2v / iv) so the gates close; MUTCG 1 = wake 2 edges late (must FAIL)
-    parameter integer CG = 0, IDLE = 0, ACT = 200, MUTCG = 0, HOLDQ = 256;            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
+    parameter integer CG = 0, IDLE = 0, ACT = 200, MUTCG = 0, HOLDQ = 256;
+    // hbm-phys-1010 [att]: MUTQ >= 0 makes MUTCG hit ONE quad (one quad's wake late); GUARD (-1 = CG) selects the die's
+    // result-word guard (ot_attn_res_guard).  'stale' counts cycles where the consumer would ADMIT a wrong word: valid
+    // set, the word differs from the reference, and it is not the guard's fault word {oy 0, every oflt set}.
+    parameter integer MUTQ = -1, GUARD = -1, MUTDLY = -1;   // MUTDLY: one quad's result word one cycle late            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
     localparam integer RIN = (HALF == 3) ? 3 + PMID : (HALF == 2) ? 1 : HALF ? 2 : 3 + RV + RMID, XD = 2 + ((HALF == 3) ? POUT : HALF ? 0 : ROC);
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
@@ -47,7 +51,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF == 2) begin : g_quad
-        ot_attn_tile_m6h1x #(.CG(CG), .HOLD(HOLDQ), .MUT_CG(MUTCG)) u_s (
+        ot_attn_tile_m6h1x #(.CG(CG), .HOLD(HOLDQ), .MUT_CG(MUTCG), .MUT_Q(MUTQ), .GUARD(GUARD < 0 ? CG : GUARD), .MUT_DLY(MUTDLY)) u_s (
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF != 0) begin : g_half
@@ -60,7 +64,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end endgenerate
     assign oy_c = (NEG != 0) ? {oy_s[H*32-1:64], oy_s[31:0], oy_s[63:32]} : oy_s;
-    integer cyc = 0, mism = 0, nov = 0, i, ngated = 0;
+    integer cyc = 0, mism = 0, nov = 0, i, ngated = 0, nstale = 0, nfault = 0;
     wire idle_w = (IDLE > 0) && (cyc > 50) && ((cyc % (ACT + IDLE)) >= ACT);
     generate if (CG != 0 && HALF == 2) begin : g_cgmon
         always @(posedge clk) if (!g_quad.u_s.g_q[0].u_q.g_cg.u_cgt.en) ngated <= ngated + 1;
@@ -109,9 +113,16 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
                 if (mism < 5) $display("MISMATCH cyc=%0d ov %b/%b oy %h / %h of %h / %h", cyc, ov_l, ov_s, oy_l, oy_s,
                                        of_l, of_s);
             end
+            // the guard's fault word is {valid, oy 0, every oflt set}; anything else under valid that differs from the
+            // reference is a stale admission (a held head's value handed on as a result)
+            if (cyc > RIN + XD + 8 && ov_s === 1'b1 && (ov_l !== 1'b1 || oy_l !== oy_c || of_l !== of_s)) begin
+                if (of_s === 16'hffff && oy_s === {H*32{1'b0}}) nfault <= nfault + 1;
+                else nstale <= nstale + 1;
+            end
         end
         if (cyc == NCYC) begin
-            $display("TILERLOCK cycles=%0d mismatches=%0d ov=%0d gated_quad0=%0d", cyc, mism, nov, ngated);
+            $display("TILERLOCK cycles=%0d mismatches=%0d ov=%0d gated_quad0=%0d stale=%0d guard_faults=%0d", cyc, mism, nov,
+                     ngated, nstale, nfault);
             // nonzero exit on any mismatch, or if no output was ever compared (rule 2026-10-05)
             if (mism != 0 || nov == 0) $fatal(1, "TILERLOCK FAIL mismatches=%0d ov=%0d", mism, nov);
             $finish;
