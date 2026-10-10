@@ -125,8 +125,14 @@ module ot_qwen_nearhbm_head_h #(
             always @(posedge clk) row3[128*gg +: 128] <= row2[128*gg +: 128];
             ot_hdc_delay #(.W(3), .D(PLAT), .RESET(1)) u_ctl (.clk(clk), .rst_n(rgrp[gg]), .d(c3[4*gg+1 +: 3]),
                                                              .q(kvz_d[3*gg +: 3]));
+`ifdef KVD_HMUT
+            // bench mutant (must FAIL): the decision word one edge late -- the lanes read the next slot's loop value
+            ot_hdc_delay #(.W(LTW), .D(PLAT + 1), .RESET(1)) u_ltd (.clk(clk), .rst_n(rgrp[gg]), .d(lt3[LTW*gg +: LTW]),
+                                                               .q(lt_d[LTW*gg +: LTW]));
+`else
             ot_hdc_delay #(.W(LTW), .D(PLAT), .RESET(1)) u_ltd (.clk(clk), .rst_n(rgrp[gg]), .d(lt3[LTW*gg +: LTW]),
                                                                .q(lt_d[LTW*gg +: LTW]));
+`endif
             assign kl_g[LV*gg] = kvz_d[3*gg + 2];
             for (l = 2; l <= LV; l = l + 1) begin : g_kl
                 ot_hdc_delay #(.W(1), .D(ADD_LAT), .RESET(1)) u_kl (.clk(clk), .rst_n(rgrp[gg]), .d(kl_g[LV*gg + l - 2]),
