@@ -570,6 +570,30 @@ def hbm_loader_kport_address_contract_model():
 
 # ---------------------------------------------------------------------------------------------------------
 
+def hgi_generic_topk_model(n=49152, k=2048, rows=1):
+    """HGI IDX.TOPK: score-descending sorted insertion, existing A3 method.
+
+    Required generic operation; original DS selector/router paths remain unchanged.
+    One FP32/U32 stream word per cycle; sorted results are already in rank order.
+    Full K2048 shape has 2048 local compare/shift cells, not a reduced K8 vehicle.
+    Area estimates are admission bounds, never a physical closure claim.
+    """
+    assert 1 <= k <= 2048 and 1 <= n <= 1048576 and rows >= 1
+    return dict(macs_per_cycle=0, candidates_per_cycle=1, input_bytes_per_cycle=4,
+                output_bytes_per_cycle=8, boundary_bits_per_cycle=128,
+                replicas=1, max_k=2048, key_bits=53, storage_bits=2048*85,
+                compare_cells=2048, local_mux_bits=2048*85,
+                control_fanout=2048, estimated_slot_um=[640,640], alternate_slot_um=[600,600],
+                boundary_tracks=128, boundary_capacity_tracks=600,
+                area_mm2_upper_bound=0.4096, measured_stdcell_area_um2=175534.483, measured_cells=1227516, measured_source="e442d85c4", core_cycles_per_row=n+k+3, cycles_per_row=n+k+6,
+                token_latency_cycles=rows*(n+k+6), boundary_capture_edges=3,
+                boundary_register_bits_upper_bound=256,
+                boundary_stdcell_area_um2_upper_bound=300,
+                fit_basis="measured e442 core + modeled registered wrapper; full current netlist measurement pending",
+                ds_legacy_latency_change_cycles=0,
+                adoption='required generic op only; unchanged DS SELECT/router retained')
+
+
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
     from hbm_index_service_model import model

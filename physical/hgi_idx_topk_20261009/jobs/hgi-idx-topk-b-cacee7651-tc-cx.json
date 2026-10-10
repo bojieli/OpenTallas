@@ -1,0 +1,106 @@
+{
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "routed_ioref": true,
+  "bench_first": true,
+  "merge_target": null,
+  "name": "hgi-idx-topk-b-cacee7651-tc-cx",
+  "block": "hgi_idx_topk_full",
+  "owner": "Codex:generic_index_decode",
+  "purpose": "OWNER APPROVAL HGI-1 generic TOPK fullK2048; exact multirow k1/2/6/8/512/2048 and runtime tie mutant. Variant b unchangedRTL alternate two-layer exhaustive pin spread. DS legacy SELECT/router preserved. No simulator CF vector or die adoption claim.",
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "source": {
+    "branch": "codex/hgi-index-decode-20261009",
+    "commit": "cacee7651",
+    "required_files": [
+      "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
+      "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv",
+      "tools/hgi_topk_gate.py",
+      "physical/qwen_die_masters/cfg/hgi_idx_topk_b.env",
+      "physical/qwen_die_masters/signoff/hgi_idx_topk_b.sdc"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "fullK2048_exact",
+        "cmd": "python3 tools/hgi_topk_gate.py --out {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "^PASS HGI TOPK",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "fullK2048_tie_mutant",
+        "cmd": "python3 tools/hgi_topk_gate.py --out {RUN}/bench/mutant --mutant",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*topk case",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current master flow measures real boundary clock in-run at each corner, no borrowed insertion."
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_idx_topk_b.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_idx_topk_b {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 64
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_idx_topk_b.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "Current MM ECO after TT setup eligibility.",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Actual measured boundary reference with unchanged die-context770-route/833.333 TTsignoff60/25/150ps inter-region."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_topk_20261009/routes/hgi-idx-topk-b-cacee7651-tc-cx"
+    }
+  ],
+  "cycles_added": "Generic operation m*(n+k+3); required generic op, no replacement of DS legacy path.",
+  "notes": "Initial64GiB physical admission claim is an inventory estimate for full174080-bit flop storage+2048 comparators, NOT measured route peak. Existing fullshape synthesis on EPYC3 is progressing; sampled whole-PG ~4GiB, incomplete. Preserve it. Confirm synth fit to1200x1000 before release; replace admission estimate with real phase peak when available.",
+  "admission_hold": "Pending fullshape synthesis area fit and phase-memory review by fleet; benchmarks passed pinned current RTL."
+}

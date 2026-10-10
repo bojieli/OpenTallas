@@ -1,0 +1,58 @@
+
+10. Printing statistics.
+
+=== ot_hgi_idx_topk_full ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+  1227667        - wires
+  1227667        - wire bits
+      243        - public wires
+      243        - public wire bits
+      243        - ports
+      243        - port bits
+  1227516 1.76E+05 cells
+    52193 4.57E+03   AND2x2_ASAP7_75t_R
+     4242   371.09   AND3x1_ASAP7_75t_R
+     5973  609.604   AND4x1_ASAP7_75t_R
+     2228  259.874   AND5x1_ASAP7_75t_R
+       42    9.798   AO211x2_ASAP7_75t_R
+   305482 2.67E+04   AO21x1_ASAP7_75t_R
+     9494 1.38E+03   AO221x1_ASAP7_75t_R
+     2564  448.597   AO222x2_ASAP7_75t_R
+    34486 4.53E+03   AO22x1_ASAP7_75t_R
+       31    7.232   AO31x2_ASAP7_75t_R
+     3872   451.63   AO32x1_ASAP7_75t_R
+       44    6.415   AO33x2_ASAP7_75t_R
+     2130  372.665   AOI211x1_ASAP7_75t_R
+   129505 1.51E+04   AOI21x1_ASAP7_75t_R
+      772  157.581   AOI221x1_ASAP7_75t_R
+    14773 2.15E+03   AOI22x1_ASAP7_75t_R
+       20    1.458   BUFx2_ASAP7_75t_R
+   174260 6.61E+04   DFFASRHQNx1_ASAP7_75t_R
+    29443 1.29E+03   INVx1_ASAP7_75t_R
+     1530  200.767   MAJx2_ASAP7_75t_R
+    14625 1.28E+03   NAND2x1_ASAP7_75t_R
+      829  132.955   NAND3x1_ASAP7_75t_R
+    94070 8.23E+03   NOR2x1_ASAP7_75t_R
+      516   82.756   NOR3x1_ASAP7_75t_R
+   113275 1.32E+04   OA211x2_ASAP7_75t_R
+    85201  8.7E+03   OA21x2_ASAP7_75t_R
+       34    7.932   OA221x2_ASAP7_75t_R
+     9465 1.66E+03   OA222x2_ASAP7_75t_R
+    12657 1.85E+03   OA22x2_ASAP7_75t_R
+      112   24.494   OA31x2_ASAP7_75t_R
+       30    4.374   OA33x2_ASAP7_75t_R
+    29181  3.4E+03   OAI21x1_ASAP7_75t_R
+    58408 8.52E+03   OAI22x1_ASAP7_75t_R
+    15208 1.33E+03   OR2x2_ASAP7_75t_R
+     6515  569.932   OR3x1_ASAP7_75t_R
+     6177  630.425   OR4x1_ASAP7_75t_R
+     2488    290.2   OR5x1_ASAP7_75t_R
+     4752  762.126   XNOR2x2_ASAP7_75t_R
+      889  142.578   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_idx_topk_full': 175517.043480
+     of which used for sequential elements: 66058.480800 (37.64%)
+

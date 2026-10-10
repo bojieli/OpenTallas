@@ -1,0 +1,16 @@
+{
+  "source": "669daaaf6",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch/codex/hgi-ds-dispatch-669daaaf6",
+  "positive_rc": 0,
+  "compile_rc": 0,
+  "mutant_compile_rc": 0,
+  "mutant_rc": 1,
+  "vectors": 12,
+  "N": 384,
+  "P": 16,
+  "K": 6,
+  "scope": "IDX.SELECT op3 wrapper cycle-lockstep vs unchanged ot_gpu_router_topk; generic TOPK op2 does not replace this path; DS native index512 bypass outside this module, simulator CF-TOPK pending; invalid op completes with error/done, no data results",
+  "mutant": "drop last produces cycle73 valid mismatch; real runtime FATAL",
+  "prior_failure": "d2086a9af harness delay syntax compile rc2 preserved, corrected leading zero"
+}
