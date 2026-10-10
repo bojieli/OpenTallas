@@ -1858,8 +1858,10 @@ def apply_splits_x(m, rel):
                         extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
                         new_owner[(inst, port)] = bn
                         break
+    fc_taps = {}     # hbm-forks --fc (split_psfc): face clock taps ckw / cke ride the band's ck net (balanced die leaves)
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+        fc_taps[bn] = [p_ for p_ in ('ckw', 'cke') if p_ in rec['ports']]
         spec, order = _xy_or_split_spec(rec['ports'])
         for pn_, t_ in extra_x.get(bn, {}).items():
             # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
@@ -1941,6 +1943,8 @@ def apply_splits_x(m, rel):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(nm, port) for nm in repl[inst].values()]
+                if port == 'ck':
+                    e2 += [(nm, tp) for bn_, nm in repl[inst].items() for tp in fc_taps[bn_]]
             elif (inst, port) in new_owner:
                 e2.append((repl[inst][new_owner[(inst, port)]], port))
             else:
