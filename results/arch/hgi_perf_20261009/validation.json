@@ -1,40 +1,40 @@
 {
  "schema": "opentallas.hgi_perf.validation.v1",
- "generated_utc": "2026-10-09T14:40:54Z",
+ "generated_utc": "2026-10-09T23:03:38Z",
  "rows": [
   {
    "vehicle": "Qwen3-8B token, P8191, TP4",
    "reference": "hgi_sim.qwen_timing S2 on the bit-exact qwen_compiler program (qwen_timing_P8191_v10.json)",
-   "reference_cycles": 1261770.1,
+   "reference_cycles": 1258136.1,
    "collective_model": "calibration",
-   "perf_cycles": 1260039.4,
+   "perf_cycles": 1256405.4,
    "error_pct": -0.14,
-   "perf_wall_s": 0.05
+   "perf_wall_s": 0.11
   },
   {
    "vehicle": "Qwen3-8B token, P8191, TP4",
    "reference": "hgi_sim.qwen_timing S2 on the bit-exact qwen_compiler program (qwen_timing_P8191_v10.json)",
-   "reference_cycles": 1261770.1,
+   "reference_cycles": 1258136.1,
    "collective_model": "measured",
-   "perf_cycles": 1313261.8,
-   "error_pct": 4.08,
-   "perf_wall_s": 0.03
+   "perf_cycles": 1309627.8,
+   "error_pct": 4.09,
+   "perf_wall_s": 0.1
   },
   {
    "vehicle": "Gated DeltaNet layer (Qwen3-Next dims), TP4",
    "reference": "hgi_sim.gdn S2 (gdn_layer_v10.json; BF16 projections in both)",
    "reference_cycles": 14795.0,
    "collective_model": "calibration",
-   "perf_cycles": 14795.0,
-   "error_pct": 0.0
+   "perf_cycles": 14883.0,
+   "error_pct": 0.59
   },
   {
    "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (generic MLA front end)",
    "reference": "hgi_sim.ds_native_timing S2 on the bit-exact native record stream (ds_native_timing_1M.json)",
-   "reference_cycles": 723731.1,
+   "reference_cycles": 550388.2,
    "collective_model": "measured",
-   "perf_cycles": 684140.3,
-   "error_pct": -5.47,
+   "perf_cycles": 680944.1,
+   "error_pct": 23.72,
    "notes": [
     "DS-V4 hybrid mapped to MLA-style shared latent (window + indexer-selected compressed rows); HC, Engram, compressor and MTP not modelled"
    ]
@@ -42,30 +42,30 @@
   {
    "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (native-template path)",
    "reference": "hgi_sim.ds_native_timing S2 (whole native stream scheduled at once)",
-   "reference_cycles": 723731.1,
+   "reference_cycles": 550388.2,
    "collective_model": "walk (measured)",
-   "perf_cycles": 714186.8,
-   "error_pct": -1.32,
-   "perf_wall_s": 1.9
+   "perf_cycles": 533524.0,
+   "error_pct": -3.06,
+   "perf_wall_s": 4.4
   },
   {
    "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (generic MLA front end)",
    "reference": "published RTL-measured composition (dshbm_1m_allmeasured walk, 460.05 us)",
    "reference_cycles": 552060.0,
    "collective_model": "measured",
-   "perf_cycles": 684140.3,
-   "error_pct": 23.92
+   "perf_cycles": 680944.1,
+   "error_pct": 23.35
   }
  ],
  "reading": [
   "Qwen3-8B, calibration collectives: the same cost tables as the timed bit-exact program, so the error is the generic lowering + layer composition only",
   "Qwen3-8B, measured collectives: the in-package all-reduce of 16 KB pays the endpoint serialisation the 1 KB calibration entry lacks",
-  "GDN: hgi_perf reuses the bit-exact gdn lowering, so 0 % is by construction (composition of one layer)",
-  "DS-V4.1: the generic MLA front end lands within 6 % of the native stream's S2; the native-template path (the bit-exact records per layer type) within 1.4 %; the published walk is a fused-chain composition without a command processor, not a record stream"
+  "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition of one layer and the SU HBM first-access charge the reference predates",
+  "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~24 % above the native stream (fused SU chains, CP-aware order); the native-template path (the bit-exact records per layer type, steady increments) is within ~3 %; the published walk is a fused-chain composition without a command processor, not a record stream"
  ],
  "sources": {
-  "hgi_sim/perf.py": "d6568fea10f3d9dfefe61aae1d5e5b0c845b12ab96fb37d4ebf2ffb1a73bcf45",
-  "hgi_sim/timing.py": "ce31fe48cc6acbc26fb929e8124fe41ec19be761c257dbaece23f577df7d983b",
-  "hgi_sim/ds_native_timing.py": "b4a40cd4c0c26838cd02d463187a381c867008d619bdb0ec69ca42c1c6bb5e35"
+  "hgi_sim/perf.py": "e91b65689d7ff4f34bdc44d469dbf7ff55c93418acfcf97de76fe5fe338d69c8",
+  "hgi_sim/timing.py": "11f385cb75b1b1aaad37ce762bcb9da8c9981cd97d3cb37ab3d9b0ac8c98c4c3",
+  "hgi_sim/ds_native_timing.py": "c83812cbceb633f1135d316a482833d996638fb69f2985f91d6b96f06ba99788"
  }
 }

@@ -45,6 +45,12 @@ CLOCKING = 'results/uarch/rom_die_clocking_decision_20261003.json @ d99237f66'
 FIFO_MM2_PER_BIT = 2.53 / 3332608
 TAP_FIFO_BITS = 509 * 4            # one per tile tap (1,536)
 BW_FIFO_BITS = 512 * 4             # one per block word (96)
+# sys-takeover 2026-10-09 (registry qfd_native_collective_binding, opt-in --native-coll): the sequencer <-> collective
+# path at the production engine widths through io_xfifo NCOLL (rtl/physical/ot_qwen_die_io_xfifo.sv): forward
+# {tag32, mode, last, data512} 546 b + valid + credit = 548 b (seq_coll), return {err, rank2, last, data512} 516 b +
+# valid + credit = 518 b (coll_seq).  Default off: the 64 + 2 descriptor word of r18-r21.
+NATIVE_COLL = False
+SEQ_COLL_BITS = (64 + 2, 546 + 2, 516 + 2)        # (r18-r21 descriptor, native forward, native return)
 STRIP_FIFO_BITS = 544 * 4          # one per strip return (4)
 # F2 station storage: 388 corridor flops + 379 assembly + one extra 190-bit beat entry, against 637 before
 F2_STATION_EXTRA_BITS = 388 + 379 + 190 - 637
@@ -751,6 +757,14 @@ def _io_south(v):
 # area estimates of the in-frame additions (flops x 0.32 um2 ASAP7 DFF / 0.55 util x 1.6 logic) -- the review sizes them
 EMB_STRIP_FLOPS = 32 * 4 * 258 + 4 * 523 + 4 * 523 + 516 + 400 + 32 * 4 + 200     # rx FIFOs, in/tx queues, packer, credits
 EMB_PCPORT_FLOPS = 32 + 4 * 288 + 288 + 32 + 288 + 258 + 64                         # class FIFO, write FIFO, decode pipe
+# sys-takeover 2026-10-09 (coordinator: adopt the HBM ECC side-band on KV writes, registry qfd_hbm_ecc_provider): the
+# per-PC port runs KVW = 2 -- the KV write data is the per-PC STREAM4 CDC's completion entry (h_cv / h_cdata, already on
+# the cdho_<st>_<p> hbm_cdc bus into the controller element, CDC_HO), encoded into the side-band; every WR's PHY write
+# data leaves two HCLK edges after its column.  No new die bus (kw_v / kw_d = h_cv / h_cdata inside qfd_ctrl);
+# +2 x 288 + 2 flops a PC.  (KVW = 1, the closed view views/qfd_emb_pcport_kvw, expects the data before the column and
+# faults at this timing: physical/sys_takeover/kvw2_path_bench.sh neg 'kvw1'.)
+EMB_PCPORT_KVW = 2
+EMB_PCPORT_FLOPS += 2 * 288 + 2 if EMB_PCPORT_KVW == 2 else 0
 EMB_GW_FLOPS = 32 * 25 + 4 * 523 + 512 + 26 + 512 + 160 + 4 * 8 * 11                 # request FIFO, slots, eq, pins, tags
 
 
@@ -790,7 +804,7 @@ def _emb_hbm(v, m):
                   'emb_cr (1 b) hub_el.ecr -> sp_su64_sfu.ecr'],
         rtl={'qfd_hub': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv ot_qwen_die_hub_emb_top (+ ot_qfd_emb_gw)',
              'qfd_ctrl (per PC)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv (ot_hbm_r14_stream_pc_srow SROW 1) '
-                                  '+ ot_qfd_emb_pcport.sv',
+                                  '+ ot_qfd_emb_pcport.sv (KVW 2: KV write side-band from the CDC completion h_cv / h_cdata)',
              'qfd_kvc (strip end)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv + ot_qfd_link_far.sv (class split)'},
         in_frame_mm2=dict(gateway_in_hub=round(gw_mm2, 4),
                           strip_engine_per_stack=round(EMB_STRIP_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 4),
@@ -2000,7 +2014,11 @@ def _spine_buses(v, m, gm):
     B.append(('seq_su', 'sequencer', total - me_bits + 2, [(seq, 'su'), ('sp_su64_sfu', 'si')]))
     B.append(('seq_done', 'sequencer', 2, [('sp_tree_top', 'md'), (seq, 'md')]))
     B.append(('seq_sud', 'sequencer', 2, [('sp_su64_sfu', 'sd'), (seq, 'sd')]))
-    B.append(('seq_coll', 'sequencer', 64 + 2, [(seq, 'cd'), ('io_collective', 'sd')]))
+    if NATIVE_COLL:
+        B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[1], [(seq, 'cd'), ('io_collective', 'sd')]))
+        B.append(('coll_seq', 'sequencer', SEQ_COLL_BITS[2], [('io_collective', 'cs'), (seq, 'cc')]))
+    else:
+        B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[0], [(seq, 'cd'), ('io_collective', 'sd')]))
     B.append(('crom_a', 'crom', CROM_IN, [('sp_su64_sfu', 'ca'), (seq, 'ca')]))
     B.append(('crom_q', 'crom', CROM_OUT, [(seq, 'cq'), ('sp_su64_sfu', 'cq')]))
     m['buses'] = B
@@ -3085,6 +3103,8 @@ def main(argv=None):
                     'at the near edge, spread over the slab width')
     ap.add_argument('--bw-edge-inner', action='store_true', help='b3r12: edge-entry words climb inside the slab')
     ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
+    ap.add_argument('--native-coll', action='store_true', help='sys-takeover: full-width sequencer <-> collective '
+                    '(548-b forward, 518-b return through io_xfifo NCOLL); default the 66-b descriptor word')
     ap.add_argument('--bw-sp', type=float, default=100.0, help='b3r13: root-row block-word pin spacing in a slab (um)')
     ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
     ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
@@ -3137,6 +3157,8 @@ def main(argv=None):
     ap.add_argument('--recipe', default=None, help='die_top_lint Qwen recipe (e.g. r21b): selects the die from the '
                     'recipe dict (incl. vm_me / tt_h / bl_h, which have no flag) instead of the per-feature flags')
     a = ap.parse_args(argv)
+    global NATIVE_COLL
+    NATIVE_COLL = bool(a.native_coll)
     if a.mode == 'summary':
         print(json.dumps(summarize(a.work), indent=1))
         return 0

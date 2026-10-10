@@ -5,22 +5,23 @@
 // The host reaches the die over the loader's AXI-lite slave (s_*, 12-bit byte address).  This block claims the window
 // 0xC00-0xDFF in front of the loader core (every other address passes through unchanged):
 //   0xC00 W  doorbell token [17:0]          0xC04 W  doorbell pos [19:0]       0xC08 W  doorbell job [31:0]
-//   0xC0C W  {entry [5:4], gen [3:0]}       0xC10 W  RING: the staged doorbell goes to the CP (refused while one is
+//   0xC0C W  {ncol [11:8], entry [5:4], gen [3:0]}       0xC10 W  RING: the staged doorbell goes to the CP (refused while one is
 //                                                     pending: read 0xC20 bit 0)
 //   0xC14 W  die id (rank) [7:0]
 //   0xC20 R  {cpl_count [10:8], db_pending [0]}   0xC24 R {cfg_err [3:1], cfg_loaded [0]}   0xC28 / 0xC2C R cfg_cp_act lo / hi
-//   0xC40 R  cpl token  0xC44 R cpl pos  0xC48 R cpl job  0xC4C R {ntok [12:8], status [7:4], gen [3:0]}
+//   0xC40 R  cpl token  0xC44 R cpl pos  0xC48 R cpl job  0xC4C R {tokx [8], status [7:4], gen [3:0]}
+//            (tokx = 1: a CTL.TOKX committed-token beat {token, pos + i - 1, status 0}; END's completion follows)
 //   0xC50 R  cpl cycles; READING 0xC50 POPS the completion (read the other fields first)
 //   0xD00 + 8a / +4  W  CFG window pair a (0..31): low word, then high word; the high-word write sends
 //                      {window, a, {hi, lo}} to the CP host port (a = 31: CFG_COMMIT)
-//   0xCC0 + 4i R  TOKX token i (i < 16) of the head completion
 // Command-processor link (die buses, relay-tolerant: pulses + one-entry stations on both sides):
-//   lcp (loader -> CP, 407 b, bit 0 first) = cfg_we [0], cfg_addr [6:1], cfg_wdata [70:7], db_v [71], db_token [89:72],
+//   lcp (loader -> CP, 419 b, bit 0 first) = cfg_we [0], cfg_addr [6:1], cfg_wdata [70:7], db_v [71], db_token [89:72],
 //       db_pos [109:90], db_job [141:110], db_gen [145:142], db_entry [147:146], cpl_ack [148], f_rsp_v [149],
-//       f_rsp_data [405:150], f_req_ack [406], rank [414:407] (die id, host-written at 0xC14)
-//   cpl (CP -> loader, 446 b) = db_taken [0], cpl_v [1], cpl_token [19:2], cpl_pos [39:20], cpl_job [71:40], cpl_gen [75:72],
-//       cpl_status [79:76], cpl_cycles [111:80], cpl_ntok [116:112], cpl_toks [404:117], f_req_v [405], f_req_addr [445:406],
-//       cfg_loaded [446], cfg_err [449:447], cfg_cp_act [513:450] (CF-0 read-back)
+//       f_rsp_data [405:150], f_req_ack [406], rank [414:407] (die id, host-written at 0xC14),
+//       db_ncol [418:415]
+//   cpl (CP -> loader, 222 b) = db_taken [0], cpl_v [1], cpl_token [19:2], cpl_pos [39:20], cpl_job [71:40], cpl_gen [75:72],
+//       cpl_status [79:76], cpl_cycles [111:80], cpl_tokx [112], f_req_v [113], f_req_addr [153:114],
+//       cfg_loaded [154], cfg_err [157:155], cfg_cp_act [221:158] (CF-0 read-back)
 // The record-ring fetch (f_req / f_rsp) rides the loader's memory lane 1 (ot_hfd_loader_kport), read only.
 module ot_hgi_loader_cp #(
     parameter integer CPL_DEPTH = 4
@@ -40,8 +41,8 @@ module ot_hgi_loader_cp #(
     output wire          c_arvalid, input  wire c_arready, output wire [11:0] c_araddr,
     input  wire          c_rvalid,  output wire c_rready,  input  wire [31:0] c_rdata,
     // command-processor link
-    output reg  [414:0]  lcp,
-    input  wire [513:0]  cpl,
+    output reg  [418:0]  lcp,
+    input  wire [221:0]  cpl,
     // record-ring fetch on memory lane 1 (to ot_hfd_loader_kport)
     output reg           m_req_v, input wire m_req_rdy, output reg [36:0] m_req_addr,
     input  wire          m_rsp_v, input wire [255:0] m_rsp_data,
@@ -65,26 +66,26 @@ module ot_hgi_loader_cp #(
     assign s_rdata   = lr_v ? lr_d : c_rdata;
     assign c_rready  = s_rready && !lr_v;
     // ---------------------------------------------------------------- doorbell / CFG staging, completion FIFO
-    reg [17:0] d_tok; reg [19:0] d_pos; reg [31:0] d_job; reg [3:0] d_gen; reg [1:0] d_ent; reg db_pend;
+    reg [17:0] d_tok; reg [19:0] d_pos; reg [31:0] d_job; reg [3:0] d_gen; reg [1:0] d_ent; reg [3:0] d_ncol; reg db_pend;
     reg [31:0] cfg_lo [0:31];
-    localparam integer CW = 18 + 20 + 32 + 4 + 4 + 32 + 5 + 288;   // 403
+    localparam integer CW = 18 + 20 + 32 + 4 + 4 + 32 + 1;   // 111
     reg [CW-1:0] cq [0:CPL_DEPTH-1];
     reg [2:0] cq_n; reg [1:0] cq_h, cq_t;
     wire [CW-1:0] head = cq[cq_h];
-    // completion fields of the head entry: {toks 288, ntok 5, cycles 32, status 4, gen 4, job 32, pos 20, token 18}
+    // completion fields of the head entry: {tokx 1, cycles 32, status 4, gen 4, job 32, pos 20, token 18}
     wire [17:0] h_tok = head[17:0];    wire [19:0] h_pos = head[37:18]; wire [31:0] h_job = head[69:38];
     wire [3:0] h_gen = head[73:70];    wire [3:0] h_st = head[77:74];   wire [31:0] h_cyc = head[109:78];
-    wire [4:0] h_ntok = head[114:110]; wire [287:0] h_toks = head[402:115];
+    wire h_tokx = head[110];
     // CP link fields
     wire c_db_taken = cpl[0], c_cpl_v = cpl[1];
-    wire c_freq_v = cpl[405]; wire [39:0] c_freq_a = cpl[445:406];
+    wire c_freq_v = cpl[113]; wire [39:0] c_freq_a = cpl[153:114];
     reg pend_fetch; reg [36:0] fetch_a;
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp <= 415'd0;
+            lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp <= 419'd0;
             m_req_v <= 1'b0; pend_fetch <= 1'b0; fault <= 1'b0;
-            d_tok <= 18'd0; d_pos <= 20'd0; d_job <= 32'd0; d_gen <= 4'd0; d_ent <= 2'd0;
+            d_tok <= 18'd0; d_pos <= 20'd0; d_job <= 32'd0; d_gen <= 4'd0; d_ent <= 2'd0; d_ncol <= 4'd0;
         end else begin
             lcp[0] <= 1'b0; lcp[71] <= 1'b0; lcp[148] <= 1'b0; lcp[406] <= 1'b0;   // pulses
             // local write
@@ -95,11 +96,11 @@ module ot_hgi_loader_cp #(
                     9'h000: d_tok <= s_wdata[17:0];
                     9'h004: d_pos <= s_wdata[19:0];
                     9'h008: d_job <= s_wdata;
-                    9'h00C: begin d_gen <= s_wdata[3:0]; d_ent <= s_wdata[5:4]; end
+                    9'h00C: begin d_gen <= s_wdata[3:0]; d_ent <= s_wdata[5:4]; d_ncol <= s_wdata[11:8]; end
                     9'h014: lcp[414:407] <= s_wdata[7:0];
                     9'h010: if (!db_pend) begin
                         db_pend <= 1'b1;
-                        lcp[147:71] <= {d_ent, d_gen, d_job, d_pos, d_tok, 1'b1};
+                        lcp[147:71] <= {d_ent, d_gen, d_job, d_pos, d_tok, 1'b1}; lcp[418:415] <= d_ncol;
                     end
                     default: if (s_awaddr[8]) begin                      // 0xD00-0xDFF CFG window
                         if (!s_awaddr[2]) cfg_lo[s_awaddr[7:3]] <= s_wdata;
@@ -111,23 +112,22 @@ module ot_hgi_loader_cp #(
             // completions from the CP: always accepted (the CP sends the next only after cpl_ack)
             if (c_cpl_v) begin
                 if (cq_n == CPL_DEPTH) fault <= 1'b1;
-                else begin cq[cq_t] <= cpl[404:2]; cq_t <= cq_t + 2'd1; end
+                else begin cq[cq_t] <= cpl[112:2]; cq_t <= cq_t + 2'd1; end
             end
             // local read
             if (lr_v && s_rready) lr_v <= 1'b0;
             if (lr_take) begin
                 lr_v <= 1'b1;
-                if (!s_araddr[8] && s_araddr[7:6] == 2'b11) lr_d <= (cq_n != 0) ? {14'd0, h_toks[s_araddr[5:2]*18 +: 18]} : 32'd0;
-                else if (s_araddr[8]) lr_d <= 32'd0;
+                if (s_araddr[8]) lr_d <= 32'd0;
                 else case (s_araddr[7:0])
                     8'h20: lr_d <= {21'd0, cq_n, 7'd0, db_pend};
-                    8'h24: lr_d <= {28'd0, cpl[449:446]};
-                    8'h28: lr_d <= cpl[481:450];
-                    8'h2C: lr_d <= cpl[513:482];
+                    8'h24: lr_d <= {28'd0, cpl[157:154]};
+                    8'h28: lr_d <= cpl[189:158];
+                    8'h2C: lr_d <= cpl[221:190];
                     8'h40: lr_d <= {14'd0, h_tok};
                     8'h44: lr_d <= {12'd0, h_pos};
                     8'h48: lr_d <= h_job;
-                    8'h4C: lr_d <= {19'd0, h_ntok, h_st, h_gen};
+                    8'h4C: lr_d <= {23'd0, h_tokx, h_st, h_gen};
                     8'h50: lr_d <= h_cyc;
                     default: lr_d <= 32'd0;
                 endcase

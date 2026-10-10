@@ -82,10 +82,11 @@ def END():
 class Case:
     """Die inputs: per rank, VM words {addr: uint32 array} and HBM regions {base: uint8 array}."""
 
-    def __init__(self, ranks, cfg, pos=0, token=0):
-        self.ranks, self.cfg, self.pos, self.token = ranks, dict(cfg), pos, token
+    def __init__(self, ranks, cfg, pos=0, token=0, rank0=0):
+        self.ranks, self.cfg, self.pos, self.token, self.rank0 = ranks, dict(cfg), pos, token, rank0
         self.vm = [dict() for _ in range(ranks)]
         self.hbm = [dict() for _ in range(ranks)]
+        self.idx_keys = [dict() for _ in range(ranks)]     # engine state: layer -> (global ids, FP4-grid key rows)
 
     def vm_f32(self, r, addr, vals):
         self.vm[r][addr] = np.asarray(vals, dtype=F).reshape(-1).view(np.uint32).copy()
@@ -102,7 +103,7 @@ class Case:
             hb = MC.Hbm()
             for b, raw in self.hbm[r].items():
                 hb.add(b, raw.copy(), f"in{b:#x}")
-            d = MC.Die(r, hb)
+            d = MC.Die(self.rank0 + r, hb)
             for a, w in self.vm[r].items():
                 d.vm[a:a + w.size] = w
             dies.append(d)
@@ -119,6 +120,14 @@ def execute(case: Case, recs, mutate=None):
     dies = case.build()
     M = MC.Machine(dies, MC.UNITS)
     M.cfg.update(case.cfg)
+
+    def keys(die, layer, ids):
+        gi, kv = case.idx_keys[die.rank - case.rank0][layer]
+        pos = {int(g): j for j, g in enumerate(gi)}
+        if any(int(i) not in pos for i in ids):
+            raise MC.Fault(1, "IDX.INDEX: a key below n is not in the key store")
+        return kv[[pos[int(i)] for i in ids]]
+    M.index_keys = keys
     if mutate:
         mutate(M, dec, dies)
     try:
@@ -192,9 +201,13 @@ def vector(row, mode, name, what, case, recs, mutants=(), expect_status=None):
         id=name, row=row, mode=mode, what=what, cfg=case.cfg, doorbell=dict(token=case.token, pos=case.pos),
         records_hex=image.hex(), record_hex=[r.encode().hex() for r in decode_program(image)],
         records=[rec_json(r) for r in dec], tags=[r.tag for r in recs_full],
-        dies=dedupe([dict(rank=r, vm_in=[[int(a), hx(w)] for a, w in sorted(case.vm[r].items())],
+        dies=dedupe([dict(rank=case.rank0 + r, vm_in=[[int(a), hx(w)] for a, w in sorted(case.vm[r].items())],
                           hbm_in=[[int(b), None, int(raw.size)] if not raw.any() else [int(b), raw.tobytes().hex()]
-                                  for b, raw in sorted(case.hbm[r].items())]) for r in range(case.ranks)]),
+                                  for b, raw in sorted(case.hbm[r].items())],
+                          **({"engine_state": dict(index_keys=[dict(layer=int(L_), ids=[int(x) for x in gi],
+                                                                    keys_f32_hex=hx(kv))
+                                                               for L_, (gi, kv) in sorted(case.idx_keys[r].items())])}
+                             if case.idx_keys[r] else {})) for r in range(case.ranks)]),
         expect=dict(status=st, dies=dedupe(exp), outputs_sha256=sha), mutants=mus))
     return st
 
@@ -301,6 +314,112 @@ def cf_coll(rng):
         A=H(1 << 33, 16, stride=64), O=H(1 << 35, 16, stride=64), I=V(0, 2, fmt="U32")), tag="row_gather")]
     vector("CF-COLL", "DS", "coll_row_gather_unwritten_faults", "ROW_GATHER of a never-written row (id 9 on rank 1) "
            "faults: completion status 1", c, recs, expect_status=1)
+    # ALL_REDUCE_SUM over G = 96 is rejected (GX11): DS reduces as 12 x 8 with GROUP_REDUCE_MCAST s = 8
+    rng = np.random.default_rng(2026100918)    # (own stream: the vectors added 10-09 leave the earlier inputs unchanged)
+    c = Case(96, DS_CFG)
+    for r in range(96):
+        c.vm_f32(r, 0, rng.standard_normal(16).astype(F))
+    recs = [Rec("COLL", "ALL_REDUCE_SUM", desc=dict(A=V(0, 16), O=V(1024, 16)), tag="ar96")]
+
+    def ar96_accepted(M, d, dies):
+        def u(M_, r, L):
+            tot = MC.A.pairwise([M_.read(r.desc["A"], dd, L) for dd in M_.dies])
+            for dd in M_.dies:
+                M_.vm_write(r.desc["O"], dd, L, tot)
+        M.units = {**M.units, ("COLL", "ALL_REDUCE_SUM"): u}
+    vector("CF-COLL", "DS", "coll_all_reduce_g96_rejected", "ALL_REDUCE_SUM with G = 96 FAULTS with E_RANGE (status "
+           "3): legal groups 1, 2, 4, 8 (GX11)", c, recs, expect_status=3,
+           mutants=[("g96_accepted", "a 96-input reduction performed (status 0)", ar96_accepted)])
+    # TOPK_MERGE from VM (G18): 96 ranks x 8 (value, id) pairs, ties across ranks; O = ids ascending, R values
+    c = Case(96, DS_CFG)
+    vals = rng.standard_normal((96, 8)).astype(F)
+    vals[3, 0] = vals[50, 2] = vals[77, 5] = np.max(vals) + 1.0           # a three-way tie at the top
+    vals[10, :] = -np.inf                                                  # a masked contributor
+    flat = np.argsort(-vals.reshape(-1).astype(np.float64), kind="stable")
+    vals.reshape(-1)[flat[32]] = vals.reshape(-1)[flat[31]]               # a tie straddling the cut at 32
+    for r in range(96):
+        c.vm_f32(r, 0, vals[r])
+        c.vm_u32(r, 64, r * 1000 + np.arange(8) * 7)
+    recs = [Rec("COLL", "TOPK_MERGE", imm_a=32, desc=dict(A=V(0, 8), B=V(64, 8, fmt="U32"), O=V(256, 32, fmt="U32"),
+                                                          R=V(512, 32)), tag="topk_merge")]
+
+    def merge_variant(highest=False, desc=False):
+        def mut(M, d, dies):
+            def u(M_, r, L):
+                v_ = np.concatenate([M_.read(r.desc["A"], dd, L) for dd in M_.dies]).astype(np.float64)
+                i_ = np.concatenate([dd.vm[64:72].astype(np.int64) for dd in M_.dies])
+                top = np.lexsort((-i_ if highest else i_, -v_))[:32]
+                if not desc:
+                    top = top[np.argsort(i_[top], kind="stable")]
+                for dd in M_.dies:
+                    dd.vm[256:288] = i_[top].astype(np.uint32)
+                    dd.vm[512:544] = v_[top].astype(F).view(np.uint32)
+            M.units = {**M.units, ("COLL", "TOPK_MERGE"): u}
+        return mut
+    vector("CF-COLL", "DS", "coll_topk_merge_vm_g96", "COLL.TOPK_MERGE from VM (G18): A = 8 local values, B = their ids "
+           "on each of 96 ranks; the top 32 by descending value, ties to the lowest id (a 3-way tie, a -inf rank); O = "
+           "ids ascending, R = their values", c, recs,
+           mutants=[("ties_high_id", "ties resolved to the highest id", merge_variant(highest=True)),
+                    ("score_order", "O in descending value order instead of ascending id", merge_variant(desc=True))])
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# CF-INDEX: the DS indexer frame (G18)
+# ----------------------------------------------------------------------------------------------------------------
+def cf_index(rng):
+    import hdc_golden_v41 as GV
+    rng = np.random.default_rng(2026100919)
+    IH, IHD, n, layer = 32, 128, 4613, 20
+    A_Q, A_W, A_C, A_O, A_R, A_D = 0, 4096, 4160, 8192, 8704, 9216
+    for name, rank, k, cand, keep, what in (
+            ("index_frame_l20_cand", 0, 16, 4, False, "the layer-20 frame on rank 0 (owns the newest, partial block "
+             "576: pinned +inf): local top-16 + the 4 best candidate blocks"),
+            ("index_frame_keep", 37, 16, 0, True, "a layer-24 frame on rank 37 with the keep table (blocks 37, 229 "
+             "kept; 421 listed with -inf: not kept; 999 not owned): masked scores, local top-16"),
+            ("index_frame_all", 37, 64, 0, False, "k = 64 above the 48 owned keys: O = all 48 ids ascending")):
+        c = Case(1, DS_CFG, rank0=rank)
+        idx, blocks = MC.index_owned(rank, n, 96)
+        keys = np.stack([GV.qdq_fp4_e8m0(rng.standard_normal(IHD).astype(F)) for _ in idx]).astype(F)
+        c.idx_keys[0][layer] = (idx, keys)
+        q = (rng.standard_normal(IH * IHD) * 0.5).astype(F)
+        w = MC.A.to_bf16(rng.standard_normal(IH).astype(F) * F(0.1))
+        c.vm_f32(0, A_Q, q)
+        c.vm_f32(0, A_W, w)
+        desc = dict(A=V(A_Q, IH * IHD), B=V(A_W, IH), O=V(A_O, min(k, len(idx)), fmt="U32"),
+                    R=V(A_R, min(k, len(idx))))
+        param = k
+        if cand:
+            desc["D"] = V(A_D, cand, m=2, stride=64, fmt="U32")
+            param |= 1 << 12
+        if keep:
+            tab_i = np.array([37, 229, 421, 999], dtype=np.uint32)
+            tab_v = np.array([1.0, 1.0, -np.inf, 1.0], dtype=F)
+            c.vm_u32(0, A_C, tab_i)
+            c.vm_f32(0, A_C + 64, tab_v)
+            desc["C"] = V(A_C, 4, m=2, stride=64, fmt="U32")
+            param |= 1 << 13
+        recs = [Rec("IDX", "INDEX", param=param, imm_a=n, imm_b=layer, desc=desc, tag="index_frame")]
+
+        def score_order(M, d, dies, k=k):
+            def u(M_, r, L):
+                MC.u_idx_index(M_, r, L)
+                for dd in M_.dies:
+                    on = r.desc["O"].n
+                    ids, vv = dd.vm[A_O:A_O + on].copy(), dd.vm[A_R:A_R + on].view(F).copy()
+                    o = np.lexsort((ids, -vv.astype(np.float64)))
+                    dd.vm[A_O:A_O + on], dd.vm[A_R:A_R + on] = ids[o], vv[o].view(np.uint32)
+            M.units = {**M.units, ("IDX", "INDEX"): u}
+        muts = [("score_order", "O / R in descending score order instead of ascending id", score_order)]
+        if keep:
+            muts.append(("keep_ignored", "the keep table not applied (keep_en dropped)",
+                         lambda M, d, dies: setattr(d[0], "param", d[0].param & ~(1 << 13))))
+            muts.append(("ninf_kept", "a listed block with value -inf kept",
+                         lambda M, d, dies: dies[0].vm.__setitem__(A_C + 66, np.float32(1.0).view(np.uint32))))
+        if cand:
+            muts.append(("n_decoded_high", "imm_a (n) decoded 3 high: the frame scores keys the store does not hold",
+                         lambda M, d, dies: setattr(d[0], "imm_a", n + 3)))
+        vector("CF-INDEX", "DS", name, "IDX.INDEX (G18), n = 4,613 keys, 32 heads x 128: " + what, c, recs,
+               mutants=muts)
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -309,18 +428,34 @@ def cf_coll(rng):
 def cf_topk(rng):
     for k, n, m, mode, asc in ((6, 384, 1, "DS", True), (512, 4096, 1, "DS", True), (1, 64, 3, "GENERIC", False),
                                (2, 64, 2, "GENERIC", False), (8, 128, 2, "GENERIC", False),
-                               (512, 2048, 2, "GENERIC", False)):
+                               (512, 2048, 2, "GENERIC", False), (8, 128, 1, "GENERIC", True),
+                               (9, 128, 1, "GENERIC", True)):
         c = Case(1, DS_CFG)
-        v = rng.standard_normal((m, n)).astype(F)
+        rr = rng if not (asc and n == 128) else np.random.default_rng(2026100918 + k)   # (10-09 additions)
+        v = rr.standard_normal((m, n)).astype(F)
         v[:, 5] = v[:, 9] = np.max(v, axis=1) + 1.0                 # a tie at the top: id 5 before id 9
         c.vm_f32(0, 0, v)
         param = k | (MC.TOPK_ASC if asc else 0)
         recs = [Rec("IDX", "TOPK", param=param, desc=dict(A=V(0, n, m=m, stride=n), O=V(65536, k, m=m, stride=k,
                                                                                             fmt="U32"),
                                                           R=V(131072, k, m=m, stride=k)), tag="topk")]
+        if asc and k > 8:                         # G15: order = 1 is legal for k <= 8 only -> E_RANGE (status 3)
+            def unchecked(M, d, dies, k=k, n=n, m=m):
+                def u(M_, r, L):
+                    for die in M_.dies:
+                        v_ = M_.read(r.desc["A"], die, L).reshape(m, n)
+                        for row in range(m):
+                            die.vm[65536 + row * k:65536 + (row + 1) * k] = MC.topk_ids(v_[row], k, True)
+                M.units = {**M.units, ("IDX", "TOPK"): u}
+            vector("CF-TOPK", mode, f"topk_k{k}_n{n}_m{m}_asc",
+                   f"IDX.TOPK k = {k} with order = 1 (ascending id) FAULTS with E_RANGE (status 3): order 1 is legal "
+                   "for k <= 8 only (G15, spec c80ed5d7c); the DS index top-512 is IDX.INDEX", c, recs,
+                   expect_status=3, mutants=[("order_unchecked", "order = 1 accepted for k > 8 (ascending ids "
+                                              "written, status 0)", unchecked)])
+            continue
         vector("CF-TOPK", mode, f"topk_k{k}_n{n}_m{m}{'_asc' if asc else ''}",
                f"IDX.TOPK k = {k} over {m} row(s) of {n}; ties to the lowest index; ids "
-               + ("in ASCENDING ID order (param[12], open gap G15: the DS router / index order)" if asc
+               + ("in ASCENDING ID order (param[12] order = 1, legal for k <= 8: the DS router top-6, G15)" if asc
                   else "by descending score"), c, recs,
                mutants=[("tie_high", "ties resolved to the higher index",
                          lambda M, d, dies: [dd.vm.__setitem__(slice(0, n * m), np.asarray(
@@ -693,6 +828,7 @@ def main():
     cf_blocks(rng)
     cf_coll(rng)
     cf_topk(rng)
+    cf_index(rng)
     cf_arg(rng)
     cf_qdq(rng)
     cf_att(rng)
@@ -715,7 +851,10 @@ def main():
                  "D_MDESC_FIELDS / D_SUT_LAYOUT / D_OPS)",
         modes=dict(DS="the DS reset / DS per-operation values (CF-1 equivalence side)",
                    QWEN="Qwen3-8B per-operation values", GENERIC="other models (generic interface)"),
-        provisional=["IDX.TOPK param[12] = 1: ids in ascending id order (open gap G15; DS router / index order)"],
+        provisional=["IDX.INDEX keep_en C / cand_en D as [ids | values] tables (open gap G18a; the spec text says a "
+                     "keep bitmap)"],
+        engine_state="a die entry's engine_state.index_keys = the indexer key store (layer, global ids, FP4-grid key "
+                     "rows as FP32) that IDX.INDEX scores (spec 6.7: the die's index keys)",
         not_covered=["CF-SFX (FUSED.SOFTMAX is not bound yet; the SU fallback is)", "CF-SM format 3 (hbm-forks owns "
                      "the fmt3 adapter; SM.MATVEC fmt 3 vectors: CF-IDXD and the Qwen token)",
                      "CF-SVC / CF-GDN / CF-PROG as timing or whole-program checks: see qwen / ds / gdn evidence"],

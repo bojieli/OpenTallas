@@ -11,18 +11,17 @@ module hfd_cmdproc (
     input wire [32:0] f_coll,
     input wire [2:0] f_hgi_coll,
     input wire [2:0] f_hgi_idx,
-    input wire [414:0] f_hgi_loader,
+    input wire [418:0] f_hgi_loader,
     input wire [2:0] f_hgi_quant,
     input wire [273:0] f_hgi_vmr,
     input wire [18:0] f_hgi_vmstat,
-    input wire [63:0] f_router,
     input wire [0:0] rst,
     output wire [63:0] t_barrier,
     output wire [24:0] t_coll,
     output wire [39:0] t_hgi_cfg_coll,
     output wire [967:0] t_hgi_coll,
-    output wire [1236:0] t_hgi_idx,
-    output wire [513:0] t_hgi_loader,
+    output wire [1818:0] t_hgi_idx,
+    output wire [221:0] t_hgi_loader,
     output wire [682:0] t_hgi_quant,
     output wire [337:0] t_hgi_vmq,
     output wire [63:0] t_su_NE,
@@ -73,11 +72,11 @@ module hfd_cmdproc (
     reg [2:0] i2_f_hgi_idx; always @(posedge clk) i2_f_hgi_idx <= i1_f_hgi_idx;
     reg [2:0] i3_f_hgi_idx; always @(posedge clk) i3_f_hgi_idx <= i2_f_hgi_idx;
     reg [2:0] i_f_hgi_idx; always @(posedge clk) i_f_hgi_idx <= i3_f_hgi_idx;
-    reg [414:0] i0_f_hgi_loader; always @(posedge clk) i0_f_hgi_loader <= f_hgi_loader;
-    reg [414:0] i1_f_hgi_loader; always @(posedge clk) i1_f_hgi_loader <= i0_f_hgi_loader;
-    reg [414:0] i2_f_hgi_loader; always @(posedge clk) i2_f_hgi_loader <= i1_f_hgi_loader;
-    reg [414:0] i3_f_hgi_loader; always @(posedge clk) i3_f_hgi_loader <= i2_f_hgi_loader;
-    reg [414:0] i_f_hgi_loader; always @(posedge clk) i_f_hgi_loader <= i3_f_hgi_loader;
+    reg [418:0] i0_f_hgi_loader; always @(posedge clk) i0_f_hgi_loader <= f_hgi_loader;
+    reg [418:0] i1_f_hgi_loader; always @(posedge clk) i1_f_hgi_loader <= i0_f_hgi_loader;
+    reg [418:0] i2_f_hgi_loader; always @(posedge clk) i2_f_hgi_loader <= i1_f_hgi_loader;
+    reg [418:0] i3_f_hgi_loader; always @(posedge clk) i3_f_hgi_loader <= i2_f_hgi_loader;
+    reg [418:0] i_f_hgi_loader; always @(posedge clk) i_f_hgi_loader <= i3_f_hgi_loader;
     reg [2:0] i0_f_hgi_quant; always @(posedge clk) i0_f_hgi_quant <= f_hgi_quant;
     reg [2:0] i1_f_hgi_quant; always @(posedge clk) i1_f_hgi_quant <= i0_f_hgi_quant;
     reg [2:0] i2_f_hgi_quant; always @(posedge clk) i2_f_hgi_quant <= i1_f_hgi_quant;
@@ -93,15 +92,10 @@ module hfd_cmdproc (
     reg [18:0] i2_f_hgi_vmstat; always @(posedge clk) i2_f_hgi_vmstat <= i1_f_hgi_vmstat;
     reg [18:0] i3_f_hgi_vmstat; always @(posedge clk) i3_f_hgi_vmstat <= i2_f_hgi_vmstat;
     reg [18:0] i_f_hgi_vmstat; always @(posedge clk) i_f_hgi_vmstat <= i3_f_hgi_vmstat;
-    reg [63:0] i0_f_router; always @(posedge clk) i0_f_router <= f_router;
-    reg [63:0] i1_f_router; always @(posedge clk) i1_f_router <= i0_f_router;
-    reg [63:0] i2_f_router; always @(posedge clk) i2_f_router <= i1_f_router;
-    reg [63:0] i3_f_router; always @(posedge clk) i3_f_router <= i2_f_router;
-    reg [63:0] i_f_router; always @(posedge clk) i_f_router <= i3_f_router;
     wire [0:0] w_cpd_clk;
     wire [0:0] w_cpd_rst_n;
-    wire [414:0] w_cpd_lcp;
-    wire [513:0] w_cpd_cpl;
+    wire [418:0] w_cpd_lcp;
+    wire [221:0] w_cpd_cpl;
     wire [337:0] w_cpd_vmq;
     wire [273:0] w_cpd_vmr;
     wire [18:0] w_cpd_vmstat;
@@ -109,7 +103,7 @@ module hfd_cmdproc (
     wire [2:0] w_cpd_coll_ret;
     wire [682:0] w_cpd_quant_rec;
     wire [2:0] w_cpd_quant_ret;
-    wire [1236:0] w_cpd_idx_rec;
+    wire [1818:0] w_cpd_idx_rec;
     wire [2:0] w_cpd_idx_ret;
     wire [39:0] w_cpd_cfg_bus;
     wire [15:0] w_cpd_ux_v;
@@ -121,7 +115,7 @@ module hfd_cmdproc (
     reg [48:0] cfg; always @(posedge clk) cfg <= {cfg[47:0], i_cNE[42]};
     assign w_cpd_clk = {1{clk}};
     assign w_cpd_rst_n = {1{rst_n}};
-    assign w_cpd_lcp = {i_f_hgi_loader[414:0]};
+    assign w_cpd_lcp = {i_f_hgi_loader[418:0]};
     assign w_cpd_vmr = {i_f_hgi_vmr[273:0]};
     assign w_cpd_vmstat = {i_f_hgi_vmstat[18:0]};
     assign w_cpd_coll_ret = {i_f_hgi_coll[2:0]};
@@ -259,18 +253,18 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_coll[k]), .q(o_t_hgi_coll[k]));
     end
     assign t_hgi_coll[967:0] = o_t_hgi_coll[967:0];
-    wire [1236:0] od_t_hgi_idx = {w_cpd_idx_rec[1236:0]};
-    wire [1236:0] o_t_hgi_idx;
-    for (genvar k = 0; k < 1237; k = k + 1) begin : g_o_t_hgi_idx
+    wire [1818:0] od_t_hgi_idx = {w_cpd_idx_rec[1818:0]};
+    wire [1818:0] o_t_hgi_idx;
+    for (genvar k = 0; k < 1819; k = k + 1) begin : g_o_t_hgi_idx
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_idx[k]), .q(o_t_hgi_idx[k]));
     end
-    assign t_hgi_idx[1236:0] = o_t_hgi_idx[1236:0];
-    wire [513:0] od_t_hgi_loader = {w_cpd_cpl[513:0]};
-    wire [513:0] o_t_hgi_loader;
-    for (genvar k = 0; k < 514; k = k + 1) begin : g_o_t_hgi_loader
+    assign t_hgi_idx[1818:0] = o_t_hgi_idx[1818:0];
+    wire [221:0] od_t_hgi_loader = {w_cpd_cpl[221:0]};
+    wire [221:0] o_t_hgi_loader;
+    for (genvar k = 0; k < 222; k = k + 1) begin : g_o_t_hgi_loader
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_loader[k]), .q(o_t_hgi_loader[k]));
     end
-    assign t_hgi_loader[513:0] = o_t_hgi_loader[513:0];
+    assign t_hgi_loader[221:0] = o_t_hgi_loader[221:0];
     wire [682:0] od_t_hgi_quant = {w_cpd_quant_rec[682:0]};
     wire [682:0] o_t_hgi_quant;
     for (genvar k = 0; k < 683; k = k + 1) begin : g_o_t_hgi_quant

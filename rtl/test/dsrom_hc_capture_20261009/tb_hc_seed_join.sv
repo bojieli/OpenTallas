@@ -1,4 +1,17 @@
 `timescale 1ns/1ps
+`ifdef HC_LINK
+`define HC_JOIN ot_dsrom_hc_seed_join_lk
+`define HC_MEAN ot_dsrom_hc_mean_capture_lk
+`define HC_READER ot_dsrom_hc_input_reader_lk
+`define HC_LKP .MUT_CRED(LKM),
+`define HC_LKR
+`else
+`define HC_JOIN ot_dsrom_hc_seed_join
+`define HC_MEAN ot_dsrom_hc_mean_capture
+`define HC_READER ot_dsrom_hc_input_reader
+`define HC_LKP
+`define HC_LKR .REG_IO(IS),
+`endif
 module tb_hc_seed_join;
 `ifdef HC_ECC_PIPE
     localparam integer EP=1;
@@ -9,6 +22,17 @@ module tb_hc_seed_join;
     localparam integer MC=1;
 `else
     localparam integer MC=0;
+`endif
+`ifdef HC_LINK
+    localparam integer LK=1;
+`ifdef HC_LINK_MUT
+    localparam integer LKM=1;
+`else
+    localparam integer LKM=0;
+`endif
+`else
+    localparam integer LK=0;
+    localparam integer LKM=0;
 `endif
 `ifdef HC_IN_SKID
     localparam integer IS=1;
@@ -35,7 +59,7 @@ module tb_hc_seed_join;
 `else
     localparam [71:0] INJ=72'd0;
 `endif
-    ot_dsrom_hc_seed_join #(.ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.OUT_SKID(IS),.READ_INJECT(INJ)) u(.*);
+    `HC_JOIN #(`HC_LKP .ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.OUT_SKID(IS),.READ_INJECT(INJ)) u(.*);
     reg [511:0] expected[0:119];string idir;
     integer bad=0,reset_test=0,reset_done=0,phase,cap,f,nout=0,cycles=0,corrected=0;
     reg stalled=0;reg [511:0] held;
@@ -59,7 +83,7 @@ module tb_hc_seed_join;
                 @(negedge clk);in_valid=0;
                 if((bad==1||bad==2||bad==5||bad==7) ||
                    (bad==6&&f==39)||((bad==3||bad==4)&&phase==1)) begin
-                    repeat(3) @(negedge clk);
+                    repeat(LK?60:3) @(negedge clk);
                     if(!fault||out_valid||(phase==1&&!busy)) $fatal(1,"invalid joined frame escaped");
                     $display("PASS join negative %0d",bad);$finish;
                 end

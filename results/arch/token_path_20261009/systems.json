@@ -21,12 +21,12 @@
   "graph": "qwen_rom.json",
   "per_user": {
    "AR": {
-    "value": 5474.5,
+    "value": 5304.2,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "219,200 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 141329.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [5455.6, 5476.4] (PHY latency best/worst)",
-    "vs_tp4_single_die": -0.0033
+    "note": "226,237 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 148366.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [5286.4, 5306.0] (PHY latency best/worst)",
+    "vs_tp4_single_die": -0.0032
    },
    "MTP": {
     "value": null,
@@ -113,7 +113,7 @@
     "note": "uarch model; UCIe crossing energy (~0.3 MB a token at sub-pJ/bit) is below its resolution"
    },
    "batch1_w": {
-    "value": 626.9,
+    "value": 613.9,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x per-user rate"
@@ -134,7 +134,7 @@
   },
   "efficiency": {
    "per_user_tok_s_per_kw": {
-    "value": 8732.1,
+    "value": 8640.2,
     "unit": "tok/s per kW (batch 1)",
     "grade": "modelled",
     "source": "per-user / batch1_w"
@@ -146,7 +146,7 @@
     "source": "aggregate / saturated_w"
    },
    "j_per_token_batch1": {
-    "value": 0.1145,
+    "value": 0.1157,
     "unit": "J/token",
     "grade": "modelled",
     "source": "batch1_w / per-user"
@@ -165,8 +165,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     10.23,
-     20.09
+     10.56,
+     20.74
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -463,15 +463,25 @@
     },
     "sequencer_retiming": {
      "grade": "modelled",
-     "source": "results/arch/hgi_sim_20261009/ds_timing_1M.json result (HGI-1 sequencer on 96 simulated dies; DS unit costs from the composition, CP entries ESTIMATES)",
+     "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json result (the bit-exact native HGI-1 program, rank 0, CP modelled; unit costs walk-priced, CP entries ESTIMATES)",
      "rule": "delta = simulated program time - its own in-order dataflow (S0), added to the token path; not in the headline until the sequencer (C2) costs are measured (simulator spec section 4: published numbers use measured entries only)",
+     "native_stream": {
+      "cycles": 550388.2,
+      "tok_s": 2180.3,
+      "note": "the native HGI-1 program alone, as compiled (fused SU chains, CP-aware order)"
+     },
+     "mtp_as_emitted": {
+      "delta_cycles": 25823.0,
+      "MTP": 3630.4,
+      "note": "the same delta once per verify pass (records issue once a pass; the columns ride in each record); no native verify program is compiled yet"
+     },
      "as_emitted": {
-      "delta_cycles": 51347.5,
-      "AR": 1598.9
+      "delta_cycles": 25823.0,
+      "AR": 1655.2
      },
      "compiler_list_scheduled": {
-      "delta_cycles": -31654.2,
-      "AR": 1797.7
+      "delta_cycles": 84067.5,
+      "AR": 1532.1
      }
     },
     "aggregate": {
@@ -640,11 +650,11 @@
       "one_beat_int8": 1300.6
      },
      "MTP": {
-      "value": 1793.5,
+      "value": 1791.8,
       "unit": "tok/s",
       "grade": "modelled",
       "source": "results/arch/hgi_sim_20261009/dflash/dflash_timing.json table[B=16, sm_mode=spec, one_beat_int8=False, tau_kind=published]",
-      "note": "DFlash b16 step (draft + 2-pass verify + accept) compiled to HGI-1 and run bit-exact in hgi_sim (results/arch/hgi_sim_20261009/dflash/dflash_proof.json); step 5,359,384 cycles at 8K; tau 8.01 = DFlash arXiv:2602.06036v2 Table 3 (B200, MATH-500; largest published Qwen3-8B tau); sensitivity: our measured tau 3.656 -> 818.6; block 8 (1 weight pass) 2500.3 at tau 5.584 (published-anchored) / 1475.7 at measured 3.2956; one-beat INT8 (NO_FIT) 2126.7; assumes the SM shares one issued line over <= 8 slots (SPEC_GAP G18: if every slot re-issues, block 16 falls to 462.8)",
+      "note": "DFlash b16 step (draft + 2-pass verify + accept) compiled to HGI-1 and run bit-exact in hgi_sim (results/arch/hgi_sim_20261009/dflash/dflash_proof.json); step 5,364,526 cycles at 8K; tau 8.01 = DFlash arXiv:2602.06036v2 Table 3 (B200, MATH-500; largest published Qwen3-8B tau); sensitivity: our measured tau 3.656 -> 817.8; block 8 (1 weight pass) 2497.9 at tau 5.584 (published-anchored) / 1474.2 at measured 3.2956; one-beat INT8 (NO_FIT) 2124.3; assumes the SM shares one issued line over <= 8 slots (SPEC_GAP G18: if every slot re-issues, block 16 falls to 462.7)",
       "table": [
        {
         "B": 8,
@@ -652,9 +662,9 @@
         "one_beat_int8": false,
         "tau_kind": "published",
         "tau": 5.584,
-        "step_cycles": 2679955.5,
-        "tok_s": 2500.3,
-        "vs_ar": 2.629
+        "step_cycles": 2682537.9,
+        "tok_s": 2497.9,
+        "vs_ar": 2.619
        },
        {
         "B": 8,
@@ -662,9 +672,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured",
         "tau": 3.2956,
-        "step_cycles": 2679955.5,
-        "tok_s": 1475.7,
-        "vs_ar": 1.552
+        "step_cycles": 2682537.9,
+        "tok_s": 1474.2,
+        "vs_ar": 1.546
        },
        {
         "B": 8,
@@ -672,9 +682,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured_eq",
         "tau": 3.7478,
-        "step_cycles": 2679955.5,
-        "tok_s": 1678.1,
-        "vs_ar": 1.765
+        "step_cycles": 2682537.9,
+        "tok_s": 1676.5,
+        "vs_ar": 1.758
        },
        {
         "B": 8,
@@ -682,9 +692,9 @@
         "one_beat_int8": true,
         "tau_kind": "published",
         "tau": 5.584,
-        "step_cycles": 2260054.9,
-        "tok_s": 2964.9,
-        "vs_ar": 2.28
+        "step_cycles": 2262637.4,
+        "tok_s": 2961.5,
+        "vs_ar": 2.268
        },
        {
         "B": 8,
@@ -692,9 +702,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured",
         "tau": 3.2956,
-        "step_cycles": 2260054.9,
-        "tok_s": 1749.8,
-        "vs_ar": 1.345
+        "step_cycles": 2262637.4,
+        "tok_s": 1747.8,
+        "vs_ar": 1.339
        },
        {
         "B": 8,
@@ -702,9 +712,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured_eq",
         "tau": 3.7478,
-        "step_cycles": 2260054.9,
-        "tok_s": 1989.9,
-        "vs_ar": 1.53
+        "step_cycles": 2262637.4,
+        "tok_s": 1987.7,
+        "vs_ar": 1.522
        },
        {
         "B": 8,
@@ -712,9 +722,9 @@
         "one_beat_int8": false,
         "tau_kind": "published",
         "tau": 5.584,
-        "step_cycles": 10346122.1,
-        "tok_s": 647.7,
-        "vs_ar": 0.681
+        "step_cycles": 10348704.5,
+        "tok_s": 647.5,
+        "vs_ar": 0.679
        },
        {
         "B": 8,
@@ -722,9 +732,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured",
         "tau": 3.2956,
-        "step_cycles": 10346122.1,
-        "tok_s": 382.2,
-        "vs_ar": 0.402
+        "step_cycles": 10348704.5,
+        "tok_s": 382.1,
+        "vs_ar": 0.401
        },
        {
         "B": 8,
@@ -732,9 +742,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured_eq",
         "tau": 3.7478,
-        "step_cycles": 10346122.1,
-        "tok_s": 434.7,
-        "vs_ar": 0.457
+        "step_cycles": 10348704.5,
+        "tok_s": 434.6,
+        "vs_ar": 0.456
        },
        {
         "B": 8,
@@ -742,9 +752,9 @@
         "one_beat_int8": true,
         "tau_kind": "published",
         "tau": 5.584,
-        "step_cycles": 6384874.1,
-        "tok_s": 1049.5,
-        "vs_ar": 0.807
+        "step_cycles": 6387456.5,
+        "tok_s": 1049.1,
+        "vs_ar": 0.803
        },
        {
         "B": 8,
@@ -752,9 +762,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured",
         "tau": 3.2956,
-        "step_cycles": 6384874.1,
-        "tok_s": 619.4,
-        "vs_ar": 0.476
+        "step_cycles": 6387456.5,
+        "tok_s": 619.1,
+        "vs_ar": 0.474
        },
        {
         "B": 8,
@@ -762,9 +772,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured_eq",
         "tau": 3.7478,
-        "step_cycles": 6384874.1,
-        "tok_s": 704.4,
-        "vs_ar": 0.542
+        "step_cycles": 6387456.5,
+        "tok_s": 704.1,
+        "vs_ar": 0.539
        },
        {
         "B": 16,
@@ -772,9 +782,9 @@
         "one_beat_int8": false,
         "tau_kind": "published",
         "tau": 8.01,
-        "step_cycles": 5359384.1,
-        "tok_s": 1793.5,
-        "vs_ar": 1.886
+        "step_cycles": 5364526.1,
+        "tok_s": 1791.8,
+        "vs_ar": 1.879
        },
        {
         "B": 16,
@@ -782,9 +792,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured",
         "tau": 3.656,
-        "step_cycles": 5359384.1,
-        "tok_s": 818.6,
-        "vs_ar": 0.861
+        "step_cycles": 5364526.1,
+        "tok_s": 817.8,
+        "vs_ar": 0.857
        },
        {
         "B": 16,
@@ -792,9 +802,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured_eq",
         "tau": 4.662,
-        "step_cycles": 5359384.1,
-        "tok_s": 1043.9,
-        "vs_ar": 1.098
+        "step_cycles": 5364526.1,
+        "tok_s": 1042.9,
+        "vs_ar": 1.093
        },
        {
         "B": 16,
@@ -802,9 +812,9 @@
         "one_beat_int8": true,
         "tau_kind": "published",
         "tau": 8.01,
-        "step_cycles": 4519583.0,
-        "tok_s": 2126.7,
-        "vs_ar": 1.635
+        "step_cycles": 4524724.9,
+        "tok_s": 2124.3,
+        "vs_ar": 1.627
        },
        {
         "B": 16,
@@ -812,9 +822,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured",
         "tau": 3.656,
-        "step_cycles": 4519583.0,
-        "tok_s": 970.7,
-        "vs_ar": 0.746
+        "step_cycles": 4524724.9,
+        "tok_s": 969.6,
+        "vs_ar": 0.743
        },
        {
         "B": 16,
@@ -822,9 +832,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured_eq",
         "tau": 4.662,
-        "step_cycles": 4519583.0,
-        "tok_s": 1237.8,
-        "vs_ar": 0.952
+        "step_cycles": 4524724.9,
+        "tok_s": 1236.4,
+        "vs_ar": 0.947
        },
        {
         "B": 16,
@@ -832,9 +842,9 @@
         "one_beat_int8": false,
         "tau_kind": "published",
         "tau": 8.01,
-        "step_cycles": 20767685.3,
-        "tok_s": 462.8,
-        "vs_ar": 0.487
+        "step_cycles": 20772827.3,
+        "tok_s": 462.7,
+        "vs_ar": 0.485
        },
        {
         "B": 16,
@@ -842,9 +852,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured",
         "tau": 3.656,
-        "step_cycles": 20767685.3,
-        "tok_s": 211.3,
-        "vs_ar": 0.222
+        "step_cycles": 20772827.3,
+        "tok_s": 211.2,
+        "vs_ar": 0.221
        },
        {
         "B": 16,
@@ -852,9 +862,9 @@
         "one_beat_int8": false,
         "tau_kind": "measured_eq",
         "tau": 4.662,
-        "step_cycles": 20767685.3,
-        "tok_s": 269.4,
-        "vs_ar": 0.283
+        "step_cycles": 20772827.3,
+        "tok_s": 269.3,
+        "vs_ar": 0.282
        },
        {
         "B": 16,
@@ -862,9 +872,9 @@
         "one_beat_int8": true,
         "tau_kind": "published",
         "tau": 8.01,
-        "step_cycles": 12807205.3,
-        "tok_s": 750.5,
-        "vs_ar": 0.577
+        "step_cycles": 12812347.3,
+        "tok_s": 750.2,
+        "vs_ar": 0.575
        },
        {
         "B": 16,
@@ -872,9 +882,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured",
         "tau": 3.656,
-        "step_cycles": 12807205.3,
-        "tok_s": 342.6,
-        "vs_ar": 0.263
+        "step_cycles": 12812347.3,
+        "tok_s": 342.4,
+        "vs_ar": 0.262
        },
        {
         "B": 16,
@@ -882,9 +892,9 @@
         "one_beat_int8": true,
         "tau_kind": "measured_eq",
         "tau": 4.662,
-        "step_cycles": 12807205.3,
-        "tok_s": 436.8,
-        "vs_ar": 0.336
+        "step_cycles": 12812347.3,
+        "tok_s": 436.6,
+        "vs_ar": 0.334
        }
       ]
      }
@@ -1073,22 +1083,22 @@
    "target": "Qwen ROM (ROM + KV die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 5474.5,
+   "per_user": 5304.2,
    "aggregate": 25362,
    "dies": 8,
    "stacks": 16,
    "power_w": 2150.1,
-   "tok_s_per_kw_b1": 8732.1,
+   "tok_s_per_kw_b1": 8640.2,
    "capex": [
     56000,
     110000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 4.66,
-   "vs_served_median": 99.5,
+   "vs_gpu_batch1": 4.51,
+   "vs_served_median": 96.4,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 23.8
+   "vs_gpu_same_mode": 23.06
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -1202,28 +1212,28 @@
    "target": "HBM accelerator (generic die)",
    "model": "Qwen3-8B 8K",
    "mode": "MTP",
-   "per_user": 1793.5,
+   "per_user": 1791.8,
    "aggregate": null,
    "dies": 4,
    "stacks": 16,
-   "power_w": 1437.1,
-   "tok_s_per_kw_b1": 1248.04,
+   "power_w": 1435.9,
+   "tok_s_per_kw_b1": 1247.85,
    "capex": [
     50000,
     50000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 1.53,
+   "vs_gpu_batch1": 1.52,
    "vs_served_median": 32.6,
    "gpu_same_mode": 1175,
-   "vs_gpu_same_mode": 1.53
+   "vs_gpu_same_mode": 1.52
   }
  ],
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 5,474.5 tok/s (-0.33 %); pair 962.4 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 5,304.2 tok/s (-0.32 %); pair 962.4 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -1243,11 +1253,11 @@
    "item": "HBM generic die",
    "effect": "Qwen3-8B on r25 TP4 INT8: 951.0 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS unchanged (default mode, fork cost 0 measured so far); DS sequencer re-timing kept as a sensitivity",
    "grade": "modelled",
-   "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json; results/arch/hgi_sim_20261009/ds_timing_1M.json"
+   "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json; results/arch/hgi_sim_20261009/ds_native_timing_1M.json"
   },
   {
    "item": "Qwen3-8B DFlash on the generic die",
-   "effect": "block 16 1793.5 tok/s at the published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; open: SM multi-slot issue G18, CTL.TOKX)",
+   "effect": "block 16 1791.8 tok/s at the published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; open: SM multi-slot issue G18, CTL.TOKX)",
    "grade": "modelled",
    "source": "results/arch/hgi_sim_20261009/dflash/dflash_timing.json"
   },
@@ -1288,12 +1298,12 @@
   "configs/hardware/architectures.json": "fd3b286eebe534f5",
   "results/arch/energy_silicon_measured/energy_silicon.json": "64277a21714921ee",
   "results/arch/engram_20261008/design.json": "3fcba3d9efed464c",
-  "results/arch/hgi_sim_20261009/dflash/dflash_timing.json": "4222c46427c89b85",
-  "results/arch/hgi_sim_20261009/ds_timing_1M.json": "a976b16354106e93",
+  "results/arch/hgi_sim_20261009/dflash/dflash_timing.json": "6dcf28d7dad75f95",
+  "results/arch/hgi_sim_20261009/ds_native_timing_1M.json": "db9e40f6e25ec661",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
   "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c53ea9d94285f136",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "f8d499fe74a4eccf",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "a68576b64cf19f65",
   "results/arch/qwen_kv_die_20261009/rom_r22k.json": "1f7d306ec9136948",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",

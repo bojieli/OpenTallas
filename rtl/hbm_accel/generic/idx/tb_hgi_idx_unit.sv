@@ -7,8 +7,13 @@
 module tb_hgi_idx_unit;
  parameter integer MUT = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
- reg [1236:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; reg [273:0] vmr = 0;
- ot_hgi_idx_unit #(.MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr));
+ reg [1818:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; reg [273:0] vmr = 0;
+ ot_hgi_idx_unit #(.MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr),
+  .sel_fs(), .sel_qb(), .sel_qbr(1'b0), .sel_kin(), .sel_to(612'd0), .sel_toc(), .sel_co(72'd0), .sel_coc(), .sel_ev(2'b00));
+ // the vectors carry the v1 ABOR record; the unit takes {die, pos, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, hdr, v}
+ function automatic [1818:0] widen(input [1236:0] o);
+  widen = {8'd0, 20'd0, o[1236:1195], 42'd0, o[1194:1153], o[1152:641], 512'd0, o[640:0]};
+ endfunction
  reg [31:0] vm [0:262143]; reg wr_mark [0:262143];
  reg [1236:0] rmem [0:0]; reg [52:0] lin [0:300000]; reg [52:0] lout [0:300000];
  integer nv, v, st, i, j, q, fails = 0, cyc, del = 0; reg pend = 0; reg [337:0] held;
@@ -42,7 +47,7 @@ module tb_hgi_idx_unit;
    $readmemh($sformatf("%s/vec_%0d.vmin.mem", dir, v), lin);
    $readmemh($sformatf("%s/vec_%0d.vmout.mem", dir, v), lout);
    for (i = 0; lin[i] !== 53'h1fffffffffffff && lin[i] !== 53'hfffffffffffff; i = i + 1) vm[lin[i][49:32]] = lin[i][31:0];
-   @(negedge clk); rec = rmem[0]; @(negedge clk); rec[0] = 1'b0;
+   @(negedge clk); rec = widen(rmem[0]); @(negedge clk); rec[0] = 1'b0;
    cyc = 0; while (!ret[1] && !ret[2] && cyc < 400000) begin @(negedge clk); cyc = cyc + 1; end
    if (st != 0) begin
     if (!ret[2]) begin $display("FATAL: %s expected a fault", idn); fails = fails + 1; end

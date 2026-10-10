@@ -417,6 +417,11 @@ def build(pl):
         for n, p in P.items():
             if n == 'phy' or seg_of(p['pins'][0][2]) != j:
                 continue
+            if PS and n in ('ck', 'rst'):
+                # hbm-forks 2026-10-09: the parent's clock pin sat at x 0.6 of the 1,017-um SE_s0 (clock insertion
+                # 830-970 ps; both PS route variants stalled in CTS hold repair at -66.9 ps): every PS segment takes
+                # its own die clock leaf near its middle (below), the parent pin is not inherited
+                continue
             if n in ('ck', 'rst'):
                 bn = n
             elif n.startswith(('lsm', 'qsm')):
@@ -448,9 +453,14 @@ def build(pl):
         pm['phy'] = ('phy', lo, hi)
         if 'ck' not in ports:          # new die clock leaf / reset pins on the N face at a free spot near the middle
             occ = sorted((q[2], q[4]) for v in ports.values() for q in v['pins'] if v['face'] == 'N')
-            xc = w / 2
-            while any(a - 1.0 < xc < b + 1.0 or a - 1.0 < xc + 0.384 < b + 1.0 for a, b in occ):
-                xc += 1.0
+            busy_ = lambda x_: any(a - 1.0 < x_ < b + 1.0 or a - 1.0 < x_ + 0.384 < b + 1.0 for a, b in occ)  # noqa: E731
+            if PS:       # the free spot NEAREST the middle (searching right only slid SE_s0 / SW_s7 leaves to 0.87-1.0 w)
+                xc = next(w / 2 + sg * d_ for d_ in range(0, int(w)) for sg in (1, -1)
+                          if 1.0 < w / 2 + sg * d_ < w - 2.0 and not busy_(w / 2 + sg * d_))
+            else:
+                xc = w / 2
+                while busy_(xc):
+                    xc += 1.0
             xc = round(round(xc / 0.048) * 0.048, 4)
             for nm_, xx in (('ck', xc), ('rst', xc + 0.384)):
                 ports[nm_] = dict(bits=1, layer='M5', pins=[[f'{nm_}[0]', 'M5', round(xx, 4), round(pl['H'] - 0.192, 4),
@@ -463,8 +473,18 @@ def build(pl):
             east = cut == j
             nm_ = ('eo' if dirn == 'r' else 'ei') if east else ('wi' if dirn == 'r' else 'wo')
             xa_, xb_ = (w - 0.192, w) if east else (0.0, 0.192)
-            pins_ = [[f'{nm_}[{k}]', 'M4', round(xa_, 4), round(f['y0'] + k * PITCH, 4), round(xb_, 4),
-                      round(f['y0'] + k * PITCH + 0.024, 4)] for k in range(f['bits'])]
+            # PS (hbm-forks 2026-10-09): the widened cross buses DRC-failed at 0.096 um on M4 alone (SE_s6: 579 LEF /
+            # 197 short / 124 spacing at the W-face pins): alternate M4 / M6 per bit (0.192 um a layer, the submit lint's
+            # pin_balance rule); both faces of a cut come from this one plan, so the abutment still matches
+            lay_ = (lambda k: 'M4' if k % 2 == 0 else 'M6') if PS else (lambda k: 'M4')
+
+            def pin_(k):     # M4: 0.024-um pins on the 0.048 grid; M6: 0.032-um (min width) pins on its 0.064 track grid
+                y_ = f['y0'] + k * PITCH
+                if lay_(k) == 'M6':
+                    y_ = round(y_ / 0.064) * 0.064
+                    return [f'{nm_}[{k}]', 'M6', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.032, 4)]
+                return [f'{nm_}[{k}]', 'M4', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.024, 4)]
+            pins_ = [pin_(k) for k in range(f['bits'])]
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',
                               dir_segments=[[0, f['bits'], d_]], direction='output' if d_ == 'out' else 'input')

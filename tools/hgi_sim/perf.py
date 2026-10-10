@@ -421,14 +421,14 @@ class Em:
             ix = m["idx"]
             self.mv_split("QAN" if m["q_lora"] else "H", m["q_lora"] or H, ix["heads"] * ix["dim"], "IQ", "index_q")
             nkeys = -(-ctx // tp)
-            self.add(Rec("IDX", "INDEX_SCORES", imm_a=nkeys, desc=dict(
+            k = min(ix["topk"], ctx)
+            kl = min(k, nkeys, 2048)
+            # G18: one IDX.INDEX frame (query quantiser, scores over the die's keys, local top-k); the key store is
+            # the engine's (timing: B describes the keys streamed), O / R the local selection in VM
+            self.add(Rec("IDX", "INDEX", param=kl, imm_a=nkeys, desc=dict(
                 A=self.V("IQ", ix["heads"] * ix["dim"]), B=MDesc(space="HBM", fmt="FP8E4M3", base=1 << 31,
                                                                   n=ix["dim"], m=nkeys, stride=ix["dim"]),
-                O=self.V("IS", nkeys))), ["IQ", "KV"], ["IS"], "index_scores")
-            k = min(ix["topk"], ctx)
-            self.add(Rec("IDX", "TOPK", param=min(k, 2048), desc=dict(A=self.V("IS", nkeys),
-                                                                      O=self.V("IDS", min(k, nkeys), fmt="U32"))),
-                     ["IS"], ["IDS"], "index_topk")
+                O=self.V("IDS", kl, fmt="U32"), R=self.V("ISV", kl))), ["IQ", "KV"], ["IDS", "ISV"], "index_frame")
             self.coll("TOPK_MERGE", 2 * k, "IDS", "SEL", "index_merge")
             P = k + (m.get("window") or 0)
         else:
@@ -505,10 +505,15 @@ class Em:
         H, tp = self.H, self.tp
         hr = -(-V // tp)
         self.norm("X", H, "H", "prenorm.final")
-        self.mv("H", H, hr, "LRAW", "head")
-        self.su("LRAW", hr, "LOG", "head_scale", m1=I.M1_AB)
-        self.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=self.V("LOG", hr), O=self.V("AMX", 2))), ["LOG"],
-                 ["AMX"], "argmax")
+        # the logits stream: head matvec -> STREAM 0 -> row scale (SU) -> STREAM 1 -> ARGMAX (no VM round trip)
+        code, fmt = SMFMT[self.wfmt]
+        S0 = MDesc(space="STREAM", fmt="FP32", base=0, n=hr)
+        S1 = MDesc(space="STREAM", fmt="FP32", base=1, n=hr)
+        self.add(Rec("SM", "MATVEC", param=code | ((min(self.batch, 8) - 1) << 2), desc=dict(
+            A=self.V("H", H), B=self.W(H, max(hr, 1), fmt), O=S0)), ["H"], [], "head")
+        self.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(A=S0, B=self.V("LSCL", hr), O=S1)),
+                 ["LSCL"], [], "head_scale")
+        self.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=S1, O=self.V("AMX", 2))), [], ["AMX"], "argmax")
         if tp > 1:
             self.add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=self.V("AMX", 2), O=self.V("TOK", 1, fmt="U32"))),
                      ["AMX"], ["TOK"], "argmax_merge")
@@ -573,8 +578,15 @@ def sm_table():
 
 
 class PerfCost:
-    def __init__(self, tp, batch=1, coll_model="measured", ctx=8192):
+    """knobs (SM-binding study only; defaults = the surveyed hardware): sm_fixed scales the per-record SM fixed
+    cost (first access + overhead + drain), sm_lines the lane issue (lines), sm_share = slots one weight line serves
+    in the MAC array (1 = the lane array issues every slot)."""
+
+    def __init__(self, tp, batch=1, coll_model="measured", ctx=8192, sm_fixed=1.0, sm_lines=1.0, sm_share=1):
         self.tp, self.batch, self.coll_model, self.ctx = tp, batch, coll_model, ctx
+        self.sm_fixed, self.sm_lines, self.sm_share = sm_fixed, sm_lines, sm_share
+        self.knobs = (sm_fixed, sm_lines, sm_share) != (1.0, 1.0, 1)
+        self.sm_parts = Counter()                     # fixed / lines / stream / busy, accumulated per call
 
     def __call__(self, r, dyn, L):
         u, op, b = r.unit, r.op, self.batch
@@ -586,12 +598,13 @@ class PerfCost:
                 return c, gr, how
             return coll_cycles(op, n * es * b, self.tp)
         if u == "IDX":
-            if op == "INDEX_SCORES":
+            if op == "INDEX":
                 d = r.desc["B"]
                 nb = d.n * d.m
                 rate = 16 * 4                         # keys a cycle a die: ot_hbm_accel_index_stack 16 / stack x 4
                 c = T.first_access() + max(nb / T.cv("hbm", "bytes_per_cycle"), d.m / rate)
-                return c * b, "measured_rate", f"index scores over {d.m} keys"
+                c += 20 + d.m / 16                    # the frame's local top-k over the scores
+                return c * b, "measured_rate", f"index frame over {d.m} keys"
             if op == "TOPK":
                 n = r.desc["A"].n
                 return (20 + n / 16) * b, "estimate", f"top-k over {n}"
@@ -609,11 +622,17 @@ class PerfCost:
             lines, drain, hw = sm_table().op("fp8" if (r.param & 3) == 1 else "fp4", n, -(-m // 32))
             stream = n * m * (1.0 if (r.param & 3) == 1 else 0.5) / T.cv("hbm", "bytes_per_cycle")
             per = 1 if bd.indexed else 8          # routed experts: each user its own experts (no shared weight pass)
-            c = sum(max(lines * min(per, b - p_), stream) + drain + 78 for p_ in range(0, b, per))
+            c = 0.0
+            for p_ in range(0, b, per):
+                ln = lines * self.sm_lines * math.ceil(min(per, b - p_) / self.sm_share)
+                fx = (drain + 78) * self.sm_fixed
+                c += max(ln, stream) + fx
+                self.sm_parts.update(fixed=fx, lines=ln, stream=stream, busy=max(ln, stream) + fx)
             return c, "measured", (f"SM {m}x{n} {bd.fmt}: {lines} lines + {drain} drain ({hw}) vs HBM stream "
                                    f"{stream:.0f}")
-        if u == "SM" and b > 1 and "SM.bf16_lines_per_row_k" in T.MEAS:
-            # one weight pass serves up to 8 slots (param[4:2]); the lane array issues every slot's MACs
+        if u == "SM" and "SM.bf16_lines_per_row_k" in T.MEAS:
+            # BF16 / fmt3 lanes (== timing.cost at batch 1); one weight pass serves up to 8 slots (param[4:2]); the
+            # lane array issues every slot's MACs
             bd = r.desc["B"]
             _, n, m, _, _ = T.eff(bd, dyn, L)
             tr = T.TRANSPORT if (r.param & 3) == 3 else 1.0
@@ -624,7 +643,10 @@ class PerfCost:
             per = 1 if bd.indexed else 8          # routed experts: each user its own experts
             for p_ in range(0, b, per):
                 slots = min(per, b - p_)
-                c += fa + max(lines * slots + T.MEAS["SM.drain"]["value"], stream)
+                ln = lines * self.sm_lines * math.ceil(slots / self.sm_share)
+                fx, dr = fa * self.sm_fixed, T.MEAS["SM.drain"]["value"] * self.sm_fixed
+                c += fx + max(ln + dr, stream)
+                self.sm_parts.update(fixed=fx + dr, lines=ln, stream=stream, busy=fx + max(ln + dr, stream))
             return c, "measured", f"SM {m}x{n}: {math.ceil(b / 8)} weight passes, {b} slots"
         c, gr, how = T.cost(r, dyn, L)
         if u in ("ATT", "SU", "FUSED", "ARGMAX", "DMA"):
@@ -650,13 +672,13 @@ def sched(recs, ctx, cost, mode="S2"):
     return s
 
 
-def simulate(arch, ctx=8192, tp=None, batch=1, coll_model="measured", detail=True):
+def simulate(arch, ctx=8192, tp=None, batch=1, coll_model="measured", detail=True, **knobs):
     t0 = time.time()
     if tp is None:
         tp, gb = choose_tp(arch, ctx, batch)
         if tp is None:
             return dict(error="does not fit 96 dies at 8-bit", arch=arch["name"])
-    cost = PerfCost(tp, batch, coll_model, ctx)
+    cost = PerfCost(tp, batch, coll_model, ctx, **knobs)
     kinds = {}
     for i, ly in enumerate(arch["layers"]):
         kinds.setdefault(layer_key(ly), []).append(i)
@@ -724,10 +746,100 @@ def simulate(arch, ctx=8192, tp=None, batch=1, coll_model="measured", detail=Tru
 DS41_TEMPLATE = ROOT / "results/arch/hgi_perf_20261009/ds41_native_template.json"
 
 
+# ----------------------------------------------------------------------------------------------------------------
+# SM-binding study: why the SM units bind, and what the hardware levers buy per model class
+# ----------------------------------------------------------------------------------------------------------------
+STUDY_MODELS = [  # (class, config file)
+    ("dense small", "Qwen_Qwen3-8B.json"), ("dense mid", "ByteDance-Seed_Seed-OSS-36B-Instruct.json"),
+    ("dense large", "mistralai_Devstral-2-123B-Instruct-2512.json"), ("GDN hybrid dense", "Qwen_Qwen3.5-27B.json"),
+    ("MoE small (GQA)", "Qwen_Qwen3.6-35B-A3B.json"), ("MoE small (SWA)", "openai_gpt-oss-120b.json"),
+    ("MoE large (GQA)", "MiniMaxAI_MiniMax-M2.5.json"), ("MoE large (GDN hybrid)", "Qwen_Qwen3.5-397B-A17B.json"),
+    ("MoE MLA", "moonshotai_Kimi-K2.5.json"), ("MoE MLA", "zai-org_GLM-5.json"), ("MoE MLA+DSA", "deepseek-ai_DeepSeek-V3.2.json")]
+
+
+def sm_parts(arch, ctx, tp, batch, **knobs):
+    """Weighted SM component cycles of one token (embedding + layers + head, layer types x their counts)."""
+    cost = PerfCost(tp, batch, "measured", ctx, **knobs)
+    kinds = {}
+    for i, ly in enumerate(arch["layers"]):
+        kinds.setdefault(layer_key(ly), []).append(i)
+    sched(build(arch, tp, ctx, batch, []), ctx, cost)
+    base = Counter(cost.sm_parts)
+    tot = Counter(base)
+    for ids in kinds.values():
+        cost.sm_parts = Counter()
+        sched(build(arch, tp, ctx, batch, [arch["layers"][ids[0]]]), ctx, cost)
+        for k, v in cost.sm_parts.items():
+            tot[k] += (v - base.get(k, 0)) * len(ids)
+    return {k: round(v, 1) for k, v in tot.items()}
+
+
+def sm_study(cfg_dir, ctx=8192, models=STUDY_MODELS):
+    rows = []
+    for cls, fn in models:
+        cfg = json.loads((Path(cfg_dir) / fn).read_text())
+        arch0, _ = arch_from_config(cfg, fn[:-5].split("_", 1)[-1])
+        row = dict(model=arch0["name"], cls=cls, ctx=ctx)
+        for wf in ("fp8", "int8"):
+            arch = dict(arch0, wfmt=wf)
+            tp, _ = choose_tp(arch, ctx, 1)
+            row["tp_fit"] = tp
+            r = {}
+            base = simulate(arch, ctx, tp, 1, detail=True)
+            parts = sm_parts(arch, ctx, tp, 1)
+            r["base"] = dict(tok_s=base["tok_s_per_user"], step=base["step_cycles"],
+                             sm_busy_share=round(base["unit_busy_cycles"].get("SM", 0) / base["step_cycles"], 3),
+                             sm_parts=parts,
+                             sm_split=dict(fixed=round(parts["fixed"] / parts["busy"], 3),
+                                           lane_excess=round(max(0.0, parts["busy"] - parts["fixed"] - parts["stream"])
+                                                             / parts["busy"], 3),
+                                           stream=round(min(parts["stream"], parts["busy"] - parts["fixed"])
+                                                        / parts["busy"], 3)))
+            for nm, kn in (("no_fixed", dict(sm_fixed=0.0)), ("lanes_x2", dict(sm_lines=0.5)),
+                           ("lanes_inf", dict(sm_lines=0.0)), ("no_fixed_lanes_inf", dict(sm_fixed=0.0, sm_lines=0.0))):
+                x = simulate(arch, ctx, tp, 1, detail=False, **kn)
+                r[nm] = dict(tok_s=x["tok_s_per_user"], gain_pct=round(100 * (x["tok_s_per_user"] / base["tok_s_per_user"] - 1), 1))
+            b8 = {}
+            for k in (1, 2, 4, 8):
+                x = simulate(arch, ctx, tp, 8, detail=False, sm_share=k)
+                b8[f"share{k}"] = dict(tok_s_user=x["tok_s_per_user"], tok_s_agg=x["tok_s_aggregate"])
+            r["batch8"] = b8
+            row[wf] = r
+            print(arch0["name"], wf, tp, r["base"]["tok_s"], r["base"]["sm_split"],
+                  {k: v["gain_pct"] for k, v in r.items() if "gain_pct" in v},
+                  {k: v["tok_s_agg"] for k, v in b8.items()}, flush=True)
+        rows.append(row)
+    return rows
+
+
 def is_ds41(cfg):
     c = cfg.get("text_config") or cfg
     return cfg.get("model_type") == "deepseek_v41" or c.get("model_type", "").startswith("deepseek_v41") or \
         (g(c, "hidden_size", "dim") == 5120 and g(c, "num_hidden_layers", "n_layers") == 40 and "compress_ratios" in c)
+
+
+def ds41_template(dump_path, out=DS41_TEMPLATE):
+    """Layer-type templates from a ds_native --program-out dump: layers whose (unit.op, tag) sequence is identical
+    share one template (the first such layer's records)."""
+    from hgi_sim.records import decode_one
+    raw = Path(dump_path).read_bytes()
+    d = json.loads(raw)
+    types, layers = {}, []
+    for lay in d["layers"]:
+        sig = []
+        for x in lay["records"]:
+            r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
+            sig.append(f"{r.unit}.{r.op}:{x['tag']}")
+        k = hashlib.sha256("|".join(sig).encode()).hexdigest()[:12]
+        if k not in types:
+            types[k] = dict(first_layer=lay["layer"], n_records=len(lay["records"]), records=lay["records"])
+        layers.append([lay["layer"], k])
+    rec = dict(schema="opentallas.hgi_perf.ds41_template.v1",
+               source="hgi_sim.ds_native --program-out (rank 0, a head die) of the bit-exact DS-V4.1-Flash 1M token "
+                      "on the approved HGI-1 encoding",
+               dump_sha256=hashlib.sha256(raw).hexdigest(), layer_types=types, layers=layers, ops=d["ops"])
+    Path(out).write_text(json.dumps(rec, default=int) + "\n")
+    return rec
 
 
 def ds41_simulate(detail=True):
@@ -746,6 +858,7 @@ def ds41_simulate(detail=True):
                 r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
                 r.tag, r.family, r.reads, r.writes = x["tag"], x["family"], x["reads"], x["writes"]
                 r.src_key = None if not x["src"] else f"{x['src'][0]}:{x['src'][1]}"
+                r.src_extra = [f"{x['src'][0]}:{e}" for e in x["src"][2]] if x["src"] and len(x["src"]) > 2 else []
                 one.append(r)
             sh = Counter((r.src_key, r.unit) for r in one if r.src_key)
             for r in one:                    # an op's price splits over its records within ONE layer instance
@@ -939,7 +1052,7 @@ def table(rows):
                           "tok_s_per_user" in b8 else "") + f" | {busiest if ctx == ctxs[0] else ''} |")
             if tpl:
                 out.append(f"| {r['model']} (native bit-exact records) | | | {ctx:,} | | | {tpl['tp']} | "
-                           f"{tpl['tok_s_per_user']:,.0f} | | template path (validation -1.3 %) |")
+                           f"{tpl['tok_s_per_user']:,.0f} | | template path (error vs the full stream: validation.json) |")
     return "\n".join(out) + "\n"
 
 
@@ -951,6 +1064,8 @@ def main():
     ap.add_argument("--batch", type=int, default=1)
     ap.add_argument("--validate", action="store_true")
     ap.add_argument("--survey", type=Path)
+    ap.add_argument("--sm-study", type=Path, help="config dir: SM-binding study (sm_binding.json)")
+    ap.add_argument("--ds41-template", type=Path, help="ds_native --program-out dump -> ds41_native_template.json")
     ap.add_argument("--shard", default="0/1", help="i/n: this process runs configs i, i + n, ... (survey)")
     ap.add_argument("--merge", nargs="*", type=Path, help="survey shard JSONs to merge into --out")
     ap.add_argument("--out", type=Path)
@@ -961,6 +1076,26 @@ def main():
         r["notes"] = notes
         print(json.dumps(r, indent=1))
         rec = r
+    elif a.ds41_template:
+        t = ds41_template(a.ds41_template)
+        rec = ds41_simulate()
+        rec["template_types"] = len(t["layer_types"])
+    elif a.sm_study:
+        rec = dict(schema="opentallas.hgi_perf.sm_binding.v1",
+                   generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                   configs=str(a.sm_study), ctx=a.ctx, rows=sm_study(a.sm_study, a.ctx),
+                   method=["fit TP (8-bit weights + FP8 KV + state in 140 GB / die), batch 1 unless stated",
+                           "fp8 = the survey's weight path (FP8 block-dot, measured DS SM table: lines / 32 rows / K "
+                           "0.0125 vs HBM stream 0.0101 -> lanes 1.24x the stream); int8 = fmt3 on the BF16 lanes "
+                           "(the approved two-beat front: 128-code line in two 64-code beats, 1.25 B transport / code "
+                           "-> lanes 1.24x the stream)",
+                           "sm_split: of the SM busy time, fixed = per-record first access + overhead + drain; "
+                           "stream = HBM streaming time; lane_excess = lane issue beyond the stream (MAC throughput)",
+                           "no_fixed: per-record SM fixed cost 0 (bound on record batching / prefetch); lanes_x2: "
+                           "lines halved (= one-beat INT8 for int8; 2x lanes for fp8); lanes_inf: lines 0 (SM = HBM "
+                           "stream + fixed: the most any MAC-rate lever can buy)",
+                           "batch8 shareK: 8 users, dense weight passes shared by 8 slots (routed experts per user); "
+                           "K slots' MACs issue per weight line (share1 = today's lane array: every slot re-issues)"])
     elif a.validate:
         rec = dict(schema="opentallas.hgi_perf.validation.v1",
                    generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -969,11 +1104,12 @@ def main():
                             "the error is the generic lowering + layer composition only",
                             "Qwen3-8B, measured collectives: the in-package all-reduce of 16 KB pays the endpoint "
                             "serialisation the 1 KB calibration entry lacks",
-                            "GDN: hgi_perf reuses the bit-exact gdn lowering, so 0 % is by construction (composition "
-                            "of one layer)",
-                            "DS-V4.1: the generic MLA front end lands within 6 % of the native stream's S2; the "
-                            "native-template path (the bit-exact records per layer type) within 1.4 %; the published "
-                            "walk is a fused-chain composition without a command processor, not a record stream"],
+                            "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition "
+                            "of one layer and the SU HBM first-access charge the reference predates",
+                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~24 % "
+                            "above the native stream (fused SU chains, CP-aware order); the native-template path (the "
+                            "bit-exact records per layer type, steady increments) is within ~3 %; the published walk "
+                            "is a fused-chain composition without a command processor, not a record stream"],
                    sources={p: hashlib.sha256((TOOLS / p).read_bytes()).hexdigest() for p in (
                        "hgi_sim/perf.py", "hgi_sim/timing.py", "hgi_sim/ds_native_timing.py")})
         print(json.dumps(rec, indent=1))

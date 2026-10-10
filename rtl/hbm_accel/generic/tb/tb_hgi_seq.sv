@@ -16,7 +16,10 @@
 module tb_hgi_seq;
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
-`ifdef SEQ_CONF
+`include "hgi_seq_sizes_ds.svh"
+`ifdef SEQ_DS
+    localparam integer NCASE = DS_NCASE, NEXP = DS_NEXP, NW = DS_NW;
+`elsif SEQ_CONF
     localparam integer NCASE = CONF_NCASE, NEXP = CONF_NEXP, NW = CONF_NW;
 `elsif SEQ_STALE
     localparam integer NCASE = SEQ_NCASE_STALE, NEXP = SEQ_NEXP_STALE, NW = SEQ_NW;
@@ -27,6 +30,7 @@ module tb_hgi_seq;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     reg [159:0] md_d; reg [17:0] vocab; reg [20:0] ctxmax; reg [7:0] rank;
+    integer cyc = 0, cyc0 = 0, cdiff = -1; always @(posedge clk) cyc <= cyc + 1;
     reg db_v = 0; reg [17:0] db_token; reg [19:0] db_pos; wire db_rdy;
     wire f_req_v; reg f_req_rdy = 0; wire [39:0] f_req_addr; reg f_rsp_v = 0; reg [255:0] f_rsp_data;
     wire vr_v; reg vr_rdy = 0; wire [17:0] vr_addr; reg vr_rsp_v = 0; reg [31:0] vr_rsp_data;
@@ -34,8 +38,8 @@ module tb_hgi_seq;
     wire [146:0] d_n; wire [20:0] d_pos1, d_pslot1; wire [15:0] d_L, d_L1;
     reg [15:0] u_done = 0, u_fault = 0; reg wr_quiet = 1;
     wire cpl_v; reg cpl_rdy = 0; wire [17:0] cpl_token; wire [19:0] cpl_pos; wire [31:0] cpl_job, cpl_cycles;
-    wire [3:0] cpl_gen, cpl_status; wire busy; wire [4:0] cpl_ntok; wire [287:0] cpl_toks;
-    reg [31:0] tks [0:NCASE*16-1];
+    wire [3:0] cpl_gen, cpl_status; wire busy; wire cpl_tokx; reg [3:0] db_ncol = 1;
+    reg [63:0] tks [0:NCASE*16-1]; integer nbeat = 0;
 `ifdef SEQ_CP
     // the die command processor (config path + sequencer): the case's cp_vocab / cp_ctx_max / image words go in through
     // the CFG window and CFG_COMMIT (busy / range checked, broadcast, settled) instead of being forced
@@ -45,19 +49,21 @@ module tb_hgi_seq;
         .cmd_addr(cmd_addr), .cmd_wdata(cmd_wdata), .units_busy(1'b0), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded),
         .cfg_err(cfg_err), .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(32'h1234),
-        .db_gen(4'h5), .db_entry(2'd0), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
+        .db_gen(4'h5), .db_entry(2'd0), .db_ncol(db_ncol), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
         .f_rsp_v(f_rsp_v), .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
         .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
         .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles),
-        .cpl_ntok(cpl_ntok), .cpl_toks(cpl_toks));
+        .cpl_tokx(cpl_tokx));
     assign busy = dut.u_seq.busy;
     task automatic cfg_pair(input [4:0] pr, input [31:0] lo, input [31:0] hi);
         begin @(negedge clk); cmd_we = 1; cmd_addr = {1'b1, pr}; cmd_wdata = {hi, lo}; @(negedge clk); cmd_we = 0; end
     endtask
     reg [31:0] mdw [0:NCASE*64-1];
-`ifdef SEQ_CONF
+`ifdef SEQ_DS
+    initial $readmemh("hgi_seq_md_ds.mem", mdw);
+`elsif SEQ_CONF
     initial $readmemh("hgi_seq_md_conf.mem", mdw);
 `elsif SEQ_STALE
     initial $readmemh("hgi_seq_md_stale.mem", mdw);
@@ -77,23 +83,28 @@ module tb_hgi_seq;
 `else
     ot_hgi_seq #(.USE_MACRO(`ifdef SEQ_MACRO 1 `else 0 `endif)) dut (.clk(clk), .rst_n(rst_n), .md_d(md_d), .cfg_vocab(vocab), .cfg_ctx_max(ctxmax), .rank(rank),
         .hold(1'b0), .busy(busy), .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(32'h1234),
-        .db_gen(4'h5), .db_entry(2'd0), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
+        .db_gen(4'h5), .db_entry(2'd0), .db_ncol(db_ncol), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr),
         .f_rsp_v(f_rsp_v), .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
         .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
         .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles),
-        .cpl_ntok(cpl_ntok), .cpl_toks(cpl_toks));
+        .cpl_tokx(cpl_tokx));
 `endif
     reg [127:0] img [0:NW-1];
-    reg [95:0] vmi [0:CONF_NVMI-1];
+    reg [95:0] vmi [0:((CONF_NVMI > DS_NVMI) ? CONF_NVMI : DS_NVMI)-1];
     reg [255:0] ex [0:NEXP-1];
     reg [31:0] cfg [0:NCASE*12-1];
     reg [95:0] vmw [0:4095];
     reg [63:0] vm0 [0:SEQ_NVM0-1];
     integer nvmw = 0;
     initial begin
-`ifdef SEQ_CONF
+`ifdef SEQ_DS
+        $readmemh("hgi_seq_image_ds.mem", img);
+        $readmemh("hgi_seq_expect_ds.mem", ex); $readmemh("hgi_seq_cfg_ds.mem", cfg); $readmemh("hgi_seq_toks_ds.mem", tks);
+        for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
+        $readmemh("hgi_seq_vmi_ds.mem", vmi);
+`elsif SEQ_CONF
         $readmemh("hgi_seq_image_conf.mem", img);
         $readmemh("hgi_seq_expect_conf.mem", ex); $readmemh("hgi_seq_cfg_conf.mem", cfg);
         for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
@@ -194,10 +205,7 @@ module tb_hgi_seq;
         end
     end
     integer c, n0, t, a;
-    function automatic toks_ok(input integer cc);
-        integer q; begin toks_ok = 1;
-            for (q = 0; q < 16; q = q + 1) if (cpl_toks[q*18 +: 18] !== tks[cc*16 + q][17:0]) toks_ok = 0; end
-    endfunction
+
     initial begin
         for (k = 0; k < 16; k = k + 1) begin outst[k] = 0; pn[k] = 0; end
         for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
@@ -212,6 +220,10 @@ module tb_hgi_seq;
             for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
             for (a = 0; a < CONF_NVMI; a = a + 1) if (vmi[a][95:64] == c) vm[vmi[a][49:32]] = vmi[a][31:0];
 `endif
+`ifdef SEQ_DS
+            for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
+            for (a = 0; a < DS_NVMI; a = a + 1) if (vmi[a][95:64] == c) vm[vmi[a][49:32]] = vmi[a][31:0];
+`endif
             md_d = {32'd1, PAGE, 32'd0, 32'd0, cfg[c*12 + 0]};
             vocab = cfg[c*12 + 4]; ctxmax = cfg[c*12 + 5]; rank = cfg[c*12 + 3];
 `ifdef SEQ_CP
@@ -222,16 +234,32 @@ module tb_hgi_seq;
             if (nd != cfg[c*12 + 10]) begin $display("FAIL case %0d starts at dispatch %0d, expected %0d", c, nd, cfg[c*12 + 10]);
                 fails = fails + 1; nd = cfg[c*12 + 10]; n0 = nd; end
             @(negedge clk); while (!db_rdy) @(negedge clk);
+            db_ncol = cfg[c*12 + 11][11:8];
             db_token = cfg[c*12 + 1]; db_pos = cfg[c*12 + 2]; db_v = 1; @(negedge clk); db_v = 0;
-            t = 0; while (!cpl_v && t < 400000) begin @(negedge clk); t = t + 1; end
+            cyc0 = cyc;
+            nbeat = 0;
+            t = 0; while ((!cpl_v || cpl_tokx) && t < 400000) begin
+                if (cpl_v && cpl_tokx) begin       // a CTL.TOKX beat: {token, pos + i - 1, status 0}
+                    if (nbeat >= 16 || cpl_token !== tks[c*16 + nbeat][49:32] || cpl_pos !== tks[c*16 + nbeat][19:0] || cpl_status !== 0) begin
+                        $display("FAIL case %0d TOKX beat %0d: token %0d pos %0d", c, nbeat, cpl_token, cpl_pos); fails = fails + 1; end
+                    nbeat = nbeat + 1; cpl_rdy = 1; @(negedge clk); cpl_rdy = 0;
+                end else @(negedge clk);
+                t = t + 1;
+            end
             if (!cpl_v) begin $display("FAIL case %0d: no completion (dispatches %0d)", c, nd - n0); fails = fails + 1; end
             else if (cpl_token !== cfg[c*12 + 7][17:0] || cpl_status !== cfg[c*12 + 8][3:0] || nd - n0 !== cfg[c*12 + 6]) begin
                 $display("FAIL case %0d: token %0d/%0d status %0d/%0d dispatches %0d/%0d", c, cpl_token, cfg[c*12 + 7],
                          cpl_status, cfg[c*12 + 8], nd - n0, cfg[c*12 + 6]); fails = fails + 1;
-            end else if (cpl_ntok !== cfg[c*12 + 11][4:0] || (cpl_status == 0 && !toks_ok(c))) begin
-                $display("FAIL case %0d: TOKX ntok %0d/%0d or tokens", c, cpl_ntok, cfg[c*12 + 11]); fails = fails + 1;
-            end else $display("SEQ case %0d: %0d dispatches, token %0d status %0d, %0d cycles", c, nd - n0, cpl_token,
+            end else if (nbeat !== cfg[c*12 + 11][4:0]) begin
+                $display("FAIL case %0d: TOKX beats %0d/%0d", c, nbeat, cfg[c*12 + 11][4:0]); fails = fails + 1;
+            end else if (cdiff >= 0 && (cyc - cyc0) - cpl_cycles !== cdiff) begin   // cpl_cycles: a constant offset from the bench's count
+                $display("FAIL case %0d: cpl_cycles %0d vs %0d bench cycles (offset %0d)", c, cpl_cycles, cyc - cyc0, cdiff);
+                fails = fails + 1;
+            end else begin
+                if (cdiff < 0) cdiff = (cyc - cyc0) - cpl_cycles;
+                $display("SEQ case %0d: %0d dispatches, token %0d status %0d, %0d cycles", c, nd - n0, cpl_token,
                               cpl_status, cpl_cycles);
+            end
             repeat ($urandom % 3) @(negedge clk);
             cpl_rdy = 1; @(negedge clk); cpl_rdy = 0;
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end

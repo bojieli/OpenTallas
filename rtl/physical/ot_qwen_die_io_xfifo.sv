@@ -10,7 +10,20 @@
 module ot_qwen_die_io_xfifo #(
     parameter integer WIO = 1024,
     parameter integer WSQ = 66,
-    parameter integer PIPE = 0          // ot_qwen_die_cdc_ch PIPE (qwen-blocks 2026-10-07; 2 = safe-qwen S-A2)
+    parameter integer PIPE = 0,         // ot_qwen_die_cdc_ch PIPE (qwen-blocks 2026-10-07; 2 = safe-qwen S-A2)
+    // NCOLL = 1 (sys-takeover 2026-10-09, opt-in; registry qfd_native_collective_binding): the production collective
+    // local port.  sq carries the full engine input word (instantiate WSQ = 546: {tag32, mode, last, data512}, mode at
+    // bit MB) and a new return channel cq (ck -> ckd, WCQ = 516: {err, rank2, last, data512}) carries the engine's push
+    // output back to the sequencer.  The engine output has no back-pressure, so the ckd-side credit gate hands a
+    // forward credit to the sequencer only while the return path (cq receive buffer + async FIFO, RRES words) can hold
+    // every result that word can produce (N for an all-gather word, 1 for an all-reduce word: N - 1 refunded when the
+    // accepted word is a reduce).  The sequencer keeps its 4 initial forward credits (pre-reserved at reset) and
+    // returns one o_coll_seq_cr per returned word it consumes.  No ready crosses a block face.
+    parameter integer NCOLL = 0,
+    parameter integer WCQ = 516,
+    parameter integer N = 4,
+    parameter integer MB = 513,
+    parameter integer CQ_AD = 64
 ) (
     input  wire ck, input wire cku, input wire cks, input wire ckd, input wire rst_n,
     input  wire i_ucie_tx_v,   input  wire [WIO-1:0] i_ucie_tx,   output wire i_ucie_tx_cr,
@@ -23,6 +36,9 @@ module ot_qwen_die_io_xfifo #(
     output wire o_serdes_rx_v, output wire [WIO-1:0] o_serdes_rx, input  wire o_serdes_rx_cr,
     input  wire i_seq_coll_v,  input  wire [WSQ-1:0] i_seq_coll,  output wire i_seq_coll_cr,
     output wire o_seq_coll_v,  output wire [WSQ-1:0] o_seq_coll,  input  wire o_seq_coll_cr,
+    // NCOLL return channel (unused when NCOLL = 0)
+    input  wire i_coll_seq_v,  input  wire [WCQ-1:0] i_coll_seq,
+    output wire o_coll_seq_v,  output wire [WCQ-1:0] o_coll_seq,  input  wire o_coll_seq_cr,
     output wire fault_ck, output wire fault_cku, output wire fault_cks, output wire fault_ckd
 );
     wire wf_ut, rf_ut, wf_ur, rf_ur, wf_st, rf_st, wf_sr, rf_sr, wf_sq, rf_sq;
@@ -34,12 +50,27 @@ module ot_qwen_die_io_xfifo #(
         .w_fault(wf_st), .rclk(cks), .rrst_n(rst_n), .o_v(o_serdes_tx_v), .o_d(o_serdes_tx), .o_cr(o_serdes_tx_cr), .r_fault(rf_st));
     ot_qwen_die_cdc_ch #(.W(WIO), .PIPE(PIPE)) u_sr (.wclk(cks), .wrst_n(rst_n), .i_v(i_serdes_rx_v), .i_d(i_serdes_rx), .i_cr(i_serdes_rx_cr),
         .w_fault(wf_sr), .rclk(ck), .rrst_n(rst_n), .o_v(o_serdes_rx_v), .o_d(o_serdes_rx), .o_cr(o_serdes_rx_cr), .r_fault(rf_sr));
-    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(i_seq_coll_v), .i_d(i_seq_coll), .i_cr(i_seq_coll_cr),
-        .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(o_seq_coll_v), .o_d(o_seq_coll), .o_cr(o_seq_coll_cr), .r_fault(rf_sq));
+    wire wf_cq, rf_cq, gf_cq;   // NCOLL: the coll_xfifo's per-domain sticky faults (wf_cq: ck, rf_cq: ckd)
+    generate if (NCOLL != 0) begin : g_coll
+        ot_qwen_die_coll_xfifo #(.WSQ(WSQ), .WCQ(WCQ), .N(N), .MB(MB), .CQ_AD(CQ_AD), .PIPE(PIPE)) u_coll (
+            .ck(ck), .ckd(ckd), .rst_n(rst_n),
+            .i_seq_coll_v(i_seq_coll_v), .i_seq_coll(i_seq_coll), .i_seq_coll_cr(i_seq_coll_cr),
+            .o_seq_coll_v(o_seq_coll_v), .o_seq_coll(o_seq_coll), .o_seq_coll_cr(o_seq_coll_cr),
+            .i_coll_seq_v(i_coll_seq_v), .i_coll_seq(i_coll_seq),
+            .o_coll_seq_v(o_coll_seq_v), .o_coll_seq(o_coll_seq), .o_coll_seq_cr(o_coll_seq_cr),
+            .fault_ck(wf_cq), .fault_ckd(rf_cq));
+        assign wf_sq = 1'b0; assign rf_sq = 1'b0; assign gf_cq = 1'b0;
+    end else begin : g_nocoll
+        ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(i_seq_coll_v), .i_d(i_seq_coll),
+            .i_cr(i_seq_coll_cr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(o_seq_coll_v), .o_d(o_seq_coll),
+            .o_cr(o_seq_coll_cr), .r_fault(rf_sq));
+        assign o_coll_seq_v = 1'b0; assign o_coll_seq = {WCQ{1'b0}};
+        assign wf_cq = 1'b0; assign rf_cq = 1'b0; assign gf_cq = 1'b0;
+    end endgenerate
     reg f_ck, f_cku, f_cks, f_ckd;   // per-domain OR of flop-launched sticky faults, registered at the pin
-    always @(posedge ck)  f_ck  <= wf_ut | wf_st | rf_ur | rf_sr | rf_sq;
+    always @(posedge ck)  f_ck  <= wf_ut | wf_st | rf_ur | rf_sr | rf_sq | wf_cq;
     always @(posedge cku) f_cku <= rf_ut | wf_ur;
     always @(posedge cks) f_cks <= rf_st | wf_sr;
-    always @(posedge ckd) f_ckd <= wf_sq;
+    always @(posedge ckd) f_ckd <= wf_sq | rf_cq | gf_cq;
     assign fault_ck = f_ck; assign fault_cku = f_cku; assign fault_cks = f_cks; assign fault_ckd = f_ckd;
 endmodule

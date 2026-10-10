@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_sfu_lane_ring3_aa5dd28d5",
+ "block": "ot_su12_sfu",
+ "owner": "Claude:hbm-blocks",
+ "source_branch": "claude/hbm-blocks-sfu-20261007",
+ "record_branch": "codex/closure-record-hbm_sfu_lane_ring3_aa5dd28d5",
+ "source_commit": "aa5dd28d5ec2946ae9fc9d8a378481c3705f0ae7",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3_aa5dd28d5",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 251.73,
+  "ff_ps": 18.47,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 16.58,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3_aa5dd28d5/routes/hbm_sfu_lane_ring3_aa5dd28d5/corner_sta_833.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/su/signoff833_clk.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3_aa5dd28d5/routes/hbm_sfu_lane_ring3_aa5dd28d5/corner_sta_833.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_ring3_aa5dd28d5/routes/hbm_sfu_lane_ring3_aa5dd28d5/work/orfs/logs/asap7/opentallas_ot_su12_sfu_asap7_hub_hbm_sfu_lane_ring3_aa5dd28d5/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_c12_campaign_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "  random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604\n  random N=16 seed=1 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1783\n  random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1101\n  random N=64 seed=101 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1651\n  random N=64 seed=102 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1787\nSFU_EXACT_PASS\n",
+   "track": "parallel"
+  },
+  "bench_c12_neg_ring3_read_late": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "  random N=16 seed=2 ops=38 pass=False vm_bad=688 kv_bad=30 faults=0 order=0 cycles=1101\n  random N=16 seed=3 ops=37 pass=False vm_bad=807 kv_bad=6 faults=0 order=0 cycles=1604\n  random N=16 seed=1 ops=36 pass=False vm_bad=640 kv_bad=7 faults=0 order=0 cycles=1783\n  random N=64 seed=101 ops=39 pass=False vm_bad=1725 kv_bad=709 faults=0 order=0 cycles=1651\n  random N=64 seed=102 ops=36 pass=False vm_bad=2426 kv_bad=0 faults=0 order=0 cycles=1787\nSFU_NEG_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_ins_ring3_vs_ring2_ring0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS RING3==RING2==RING0 W=120 K=3 DMAX=122 cycles=40000 vo=22964 coll=6866\nrtl/test/tb_v41x_ins_ring3.sv:40: $finish called at 80006100 (1ps)\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "register_direct_io": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T13:21:24-07:00",
+ "job_spec": {
+  "name": "hbm_sfu_lane_ring3_aa5dd28d5",
+  "block": "ot_su12_sfu",
+  "owner": "Claude:hbm-blocks",
+  "purpose": "SFU lane (DENR valid-align fix 4c1216b21 + DRING=3): ot_hdc_v41x_ins RING 3 = RING 2 timing wheel as generate wiring; RING 2 jobs sat >10 h in the yosys AST frontend (ot_hdc_v41x_ins derive). 0 cycles vs DRING=2.",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/hbm-blocks-sfu-20261007",
+   "commit": "aa5dd28d5ec2946ae9fc9d8a378481c3705f0ae7"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "c12_campaign_exact",
+     "cmd": "python3 tools/hbm_su_c12.py campaign --gsh 1 --kimm 1 --denr 1 --dring 3 --quick --only random --no-1024 --scratch {RUN}/bw --out {RUN}/bench_pos.json > {RUN}/bench_pos.log 2>&1; grep -E 'random N=' {RUN}/bench_pos.log; n=$(grep -c 'pass=True' {RUN}/bench_pos.log); ! grep -q 'pass=False' {RUN}/bench_pos.log && [ $n -ge 5 ] && echo SFU_EXACT_PASS",
+     "expect": "pass",
+     "threads": 5,
+     "peak_ram_gb": 16,
+     "pass_regex": "SFU_EXACT_PASS",
+     "note": "random N16 x3 + N64 x2 vs golden; the vehicle stage needs python tokenizers (absent on the fleet), as in the GSH/KIMM bench"
+    },
+    {
+     "name": "c12_neg_ring3_read_late",
+     "cmd": "mkdir -p {RUN}/negative_src && cp -a rtl tools {RUN}/negative_src/ && cd {RUN}/negative_src && sed -i 's/localparam integer JR = (j - 1 + N) % N;/localparam integer JR = (j - 2 + N) % N;/' rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && grep -q 'JR = (j - 2 + N)' rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && python3 tools/hbm_su_c12.py campaign --gsh 1 --kimm 1 --denr 1 --dring 3 --quick --only random --no-1024 --scratch {RUN}/bwn --out {RUN}/bench_neg.json > {RUN}/bench_neg.log 2>&1; grep -E 'random N=' {RUN}/bench_neg.log; grep -q 'pass=False' {RUN}/bench_neg.log && echo SFU_NEG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "SFU_NEG_DETECTED",
+     "threads": 5,
+     "peak_ram_gb": 16,
+     "note": "Negative source isolated explicitly; its mutation never touches the route source."
+    },
+    {
+     "name": "ins_ring3_vs_ring2_ring0",
+     "cmd": "iverilog -g2012 -o {RUN}/ring3.vvp -s tb_v41x_ins_ring3 -P tb_v41x_ins_ring3.CYC=40000 rtl/test/tb_v41x_ins_ring3.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && vvp -n {RUN}/ring3.vvp",
+     "expect": "pass",
+     "pass_regex": "^PASS RING3==RING2==RING0",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "lane element: IO false-pathed and register-direct (route_lane.sh --false-path-io + outcheck), no IO SDC to calibrate; the quarter carries the lane clock"
+   },
+   "route": {
+    "cmd": "R={RUN} SRC=src SRCS=\"rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv\" KEEP=\"ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x ot_dsrom_fdiv_f12 ot_hdc_fsqrt_c12\" CORES=12 NEED=24 CP=0.77 HM=0.035 bash physical/hbm_accel_die_views/su/route_lane.sh {LABEL} ot_su12_sfu 159.84 330.48 --param GSH=1 --param KIMM=1 --param DENR=1 --param DRING=3",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/ot_su12_sfu.lef {RUN}/routes/{LABEL}/view/ot_su12_sfu_ss.lib {RUN}/routes/{LABEL}/view/ot_su12_sfu_ff.lib {RUN}/routes/{LABEL}/corner_sta_833.json {RUN}/routes/{LABEL}/outcheck.txt {RUN}/record/ && cp {RUN}/routes/{LABEL}/args {RUN}/record/route_args.txt"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta_833.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "register_direct_io",
+     "cmd": "grep -q 'not_register_direct 0' {RUN}/routes/{LABEL}/outcheck.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/su/signoff833_clk.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/su/lane/ot_su12_sfu_ring3"
+   }
+  ],
+  "cycles_added": 1,
+  "cycles_note": "+1 cycle per lane sigmoid / SiLU (D_SIG 121 -> 122); DRING 0",
+  "merge_target": null,
+  "hold_eco": {
+   "reexport": true
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

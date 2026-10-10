@@ -42,6 +42,10 @@ module ot_dshbm_dspark_ctl_stop #(
     parameter integer NST    = 3,
     parameter integer MAXPOS = 1048576,
     parameter integer MUT    = 0,
+    parameter integer NREG   = 1,          // mtp-lead 2026-10-09 (hfd-mtp x-stop hm0 TT -76.8, SS -506: spec-state n ->
+                                           //   q/room/g_new -> S_STEP issue enables, 23-24 levels): q, g_new and the
+                                           //   stop-room (maxpos - n) come from registers; S_STEP waits one cycle after an
+                                           //   n_set (+1 cycle per MTP step). 0 = the original combinational form.
     parameter integer ACCEPT_LEAF = 0,     // 0: ot_hdc_accept, 1: Codex's protected DS MTP accept leaf
     parameter integer FAST   = 0           // 1: 1.2 GHz SS successor: keep-prefix observation counters and an
                                            //    incrementally kept forced-draft address (same values, same cycles)
@@ -158,6 +162,21 @@ module ot_dshbm_dspark_ctl_stop #(
     wire [31:0] context_limit = (STOP_EN && MUT!=2) ? {{(31-PW){1'b0}},cfg_maxpos} : MAXPOS;
     wire [31:0] room = (context_limit >= 2 && context_limit - 2 > q) ? context_limit - 2 - q : 0;
     wire [3:0]  g_new = (room < cfg_gamma) ? room[3:0] : cfg_gamma;
+    // NREG: n-derived values from registers. n changes only on the edge that ends an n_set cycle, so a value
+    // registered from n is current in cycle X iff n_set was low in X-1 (nd_ok).
+    wire [31:0] mp32 = {{(31-PW){1'b0}},cfg_maxpos};
+    reg  [31:0] q_r, rem_r;
+    reg  [3:0]  g_new_r;
+    reg         n_set_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin q_r <= 0; rem_r <= 0; g_new_r <= 0; n_set_d <= 1'b0; end
+        else begin
+            q_r <= q; g_new_r <= g_new; n_set_d <= n_set;
+            rem_r <= (n >= mp32) ? 32'd0 : mp32 - n;
+        end
+    wire        nd_ok   = !n_set_d;
+    wire [31:0] q_u     = (NREG != 0) ? q_r : q;
+    wire [3:0]  g_new_u = (NREG != 0) ? g_new_r : g_new;
     task issue(input [3:0] op, input [7:0] idx, input [3:0] ncol, input [31:0] pos, input [TW-1:0] t1,
                input [3:0] need);
         begin
@@ -183,6 +202,11 @@ module ot_dshbm_dspark_ctl_stop #(
         else if((s==S_PF_TOK || s==S_FLOAD) && !rd_ok) rw<=rw+1'b1;
         else rw<=0;
     integer k;
+`ifndef SYNTHESIS
+    // NREG contract: the registered n-derived values are only consumed when current
+    always @(posedge clk) if (rst_n && NREG != 0 && s == S_EMIT_ACK && e_v && e_ready && !nd_ok)
+        $error("ot_dshbm_dspark_ctl_stop: NREG rem_r consumed one cycle after n_set");
+`endif
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             effective_n <= 0; effective_bonus <= 0; stop_latched <= 0; stop_status <= 0;
@@ -251,12 +275,12 @@ module ot_dshbm_dspark_ctl_stop #(
                     e_v <= 1'b1; e_tok <= t_last; e_idx <= 0; emitted <= 1;
                     s <= STOP_EN ? S_PF_ACK : ((cfg_ngen <= 1) ? S_DONE : S_STEP);
                 end
-                S_STEP: begin
-                    g <= g_new; j <= 0;
+                S_STEP: if (NREG == 0 || nd_ok) begin
+                    g <= g_new_u; j <= 0;
                     acc_start <= 1'b1;
-                    if (g_new == 0) s <= S_VTOK;
+                    if (g_new_u == 0) s <= S_VTOK;
                     else if (cfg_force) s <= S_FLOAD;
-                    else issue(C_DSTAGE, 0, B, q, y, 0);
+                    else issue(C_DSTAGE, 0, B, q_u, y, 0);
                 end
                 S_FLOAD: if(rd_ok) begin                       // host drafts (bench drafter)
                     d[j] <= f_tok;
@@ -292,7 +316,8 @@ module ot_dshbm_dspark_ctl_stop #(
                 S_EMIT_ACK: if(e_v && e_ready) begin
                     e_v<=0; emitted<=emitted+1;
                     effective_n<=j+1; effective_bonus<=e_tok;
-                    if((cfg_eos_en && e_tok==cfg_eos) || emitted+1>=cfg_ngen || n+j+1>=cfg_maxpos) begin
+                    if((cfg_eos_en && e_tok==cfg_eos) || emitted+1>=cfg_ngen ||
+                       ((NREG != 0) ? ({{28{1'b0}}, j} + 32'd1 >= rem_r) : (n+j+1>=cfg_maxpos))) begin
                         stop_latched<=1;
                         stop_status <= (cfg_eos_en && e_tok==cfg_eos)?3'd1:(emitted+1>=cfg_ngen?3'd2:3'd3);
                         s<=S_COMMIT;

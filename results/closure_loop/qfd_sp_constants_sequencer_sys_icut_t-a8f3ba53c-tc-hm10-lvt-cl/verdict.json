@@ -1,0 +1,179 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+ "block": "qfd_sp_constants_sequencer_sys",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/drive-0849-icut-20261009",
+ "record_branch": "codex/closure-record-qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+ "source_commit": "a8f3ba53c5920c32988961d33f2bb76af8647489",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 12.32,
+  "ff_ps": 4.69,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -343.38,
+  "ss_sensitivity_tns_ps": -232148.3,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl/routes/qfd_sp_constants_sequencer_sys_icut_t_a8f3ba53c_tc_hm10_lvt_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl/routes/qfd_sp_constants_sequencer_sys_icut_t_a8f3ba53c_tc_hm10_lvt_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl/routes/qfd_sp_constants_sequencer_sys_icut_t_a8f3ba53c_tc_hm10_lvt_cl/work/orfs/logs/asap7/opentallas_ot_qfd_sp_constants_sequencer_sys_asap7_qdm_qfd_sp_constants_sequencer_sys_icut_t_a8f3ba53c_tc_hm10_lvt_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_seqsys_icut_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "ycles=43612 bad=0\nSYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=43612 bad=0\nSEQUENCER_SYS_RESULT pass=1 cases=2 stages=76 me=440 su=1448 coll=146 bad=0\nrtl/test/qwen_system/run_sequencer_sys.sh: line 7: 443681 Aborted                    (core dumped) \"$wd/obj$mut/Vtb_qfd_sequencer_sys\" +GOLDEN_DIR=\"$wd/reference\" > \"$wd/run$mut.log\" 2>&1\nSYS_CASE pos=0 starts=38 me=220 su=724 coll=73 cycles=43612 bad=144\nSYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=43612 bad=288\nSEQUENCER_SYS_RESULT pass=0 cases=2 stages=76 me=440 su=1448 coll=146 bad=288\nSEQUENCER_SYS_CAMPAIGN_PASS\n",
+   "track": "parallel"
+  },
+  "bench_seqsys_icut_nopred_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "rtl/test/qwen_system/run_sequencer_sys.sh: line 7: 450886 Aborted                    (core dumped) \"$wd/obj$mut/Vtb_qfd_sequencer_sys\" +GOLDEN_DIR=\"$wd/reference\" > \"$wd/run$mut.log\" 2>&1\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": "Pure physical source change: actual_sys RTL byte-identical to08ef6a8a8, all4rank committed command/descriptor/bounds fixture rank4_7fbcfce1b PASS304stages/1760ME/5792SU/584collectives/0bad; basefoldmutant576bad. Sourcehashes and boundsfaultreceipt committed. No numerical releasedpayload adoptionclaim.",
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T12:27:24-07:00",
+ "job_spec": {
+  "name": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+  "block": "qfd_sp_constants_sequencer_sys",
+  "owner": "Claude:struct-close",
+  "purpose": "drive-0849: ICUT sys in a compact outline (259.2x333.36) + io_flop_at_pins + LVT; slot outline at ~1 % util failed on distance (2aa057033 -851 reg->reg)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "claude/drive-0849-icut-20261009",
+   "commit": "a8f3ba53c",
+   "extra_paths": [
+    "results/rtl/qwen_system_20261009/physical"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "seqsys_icut_exact",
+     "cmd": "SYS_DEFS=-DSYS_ICUT bash rtl/test/qwen_system/run_sequencer_sys.sh {RUN}/bench_icut",
+     "expect": "pass",
+     "pass_regex": "SEQUENCER_SYS_CAMPAIGN_PASS",
+     "threads": 4,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "seqsys_icut_nopred_mutant",
+     "cmd": "SYS_DEFS='-DSYS_ICUT -DOT_ICUT_MUT_NOPRED' bash rtl/test/qwen_system/run_sequencer_sys.sh {RUN}/bench_icutm",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "export OT_MULTI_VT=lvt; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_sys_icut.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_constants_sequencer_sys_icut_t {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_constants_sequencer_sys --post-sdc physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_sys.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_sp_constants_sequencer_sys > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_sys.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "Physical model sequencer_sys_model.json: outline777.6x1000.08/slot1.3824mm2;39ISAwords/5descriptors constantROM,38x56 table; two24-bitweightadders beforeexistingOS. OriginalFQ_HEAD1/MSTN1 A6 priced+2/layer; realstagehandoff trace committed; unchanged833.333/60/25."
+  },
+  "cycles_added": 1,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "Original08 real floorplan failure preserved. New balancedpin helper copied byte-identically from committed a66978536; prior FQS propagation verified remotely by that owner. Originalface mappings unchanged. Explicit pending native payload relocation/AR256 numericalgate; route is timingpathfinding only.",
+  "no_bench_reason": "Pure physical source change: actual_sys RTL byte-identical to08ef6a8a8, all4rank committed command/descriptor/bounds fixture rank4_7fbcfce1b PASS304stages/1760ME/5792SU/584collectives/0bad; basefoldmutant576bad. Sourcehashes and boundsfaultreceipt committed. No numerical releasedpayload adoptionclaim.",
+  "merge_target": null,
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T11:22:30-07:00",
+   "est_as_configured": {
+    "W": 13.01,
+    "E": 15.63,
+    "N": 0.03
+   },
+   "est_fix": {
+    "W": 1.95,
+    "E": 3.46,
+    "N": 0.01
+   },
+   "why": "pin density > 12.0 b/um/layer as configured (W/M4+M6 13.01 b/um (group ^(pi_|d_start|d_token|d_pos|d_gen|kv_|me_mem|vm_rq|c_ready|r_).* 1301 pins); E/M4+M6 15.63 b/um (group ^(?!(c_ready|vm_rq|po_me_clk))(po_|s_|seq_|core_|coll_|su_|kvd_|me_clk_en|vm_|c_|rom_|d_done|d_drained|d_fault|d_next|d_cycles|stage|st_).* 2305 pins)); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

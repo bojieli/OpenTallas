@@ -1,7 +1,7 @@
 {
  "master": "hfd_hgi_idx",
  "hgi_unit": "idx",
- "note": "HGI-1 IDX unit v1 (hgi-takeover 2026-10-09): ot_hgi_idx_unit = record decode + Codex full-K TOPK engine + VM stream reader / writer (hfd_hgi_vm client 2). INDEX_Q / INDEX_SCORES / SELECT / EHASH fault until the G18 frame record is confirmed. Bench rtl/hbm_accel/generic/idx/tb_hgi_idx_unit.sv: all CF-TOPK vectors exact.",
+ "note": "HGI-1 IDX unit (hgi-takeover 2026-10-09): ot_hgi_idx_unit = record decode + Codex full-K TOPK engine (op 2) + the IDX.INDEX frame adapter ot_hgi_idx_index (op 0, spec G18) + VM stream reader / writer (hfd_hgi_vm client 2). The sel_* ports go to the DS native selector hfd_idx_sel_native_qend, which is NOT in the r25 die (hbm-indexer R25I pending): they stay open (TIED_OFF, visible in the ledger) until that block lands. Benches: tb_hgi_idx_unit (CF-TOPK), tb_hgi_idx_index (IDX.INDEX frames F0-F3 through the selector + 4 scorers).",
  "instances": [
   {
    "name": "ix",
@@ -11,10 +11,19 @@
    "bind": {
     "clk": "clk",
     "rst_n": "rst_n",
-    "rec": "die:f_hgi_cmdproc[0:1237]",
+    "rec": "die:f_hgi_cmdproc[0:1819]",
     "ret": "die:t_hgi_cmdproc[0:3]",
     "vmq": "die:t_hgi_vmq[0:338]",
-    "vmr": "die:f_hgi_vmr[0:274]"
+    "vmr": "die:f_hgi_vmr[0:274]",
+    "sel_fs": "fold",
+    "sel_qb": "fold",
+    "sel_kin": "fold",
+    "sel_toc": "fold",
+    "sel_coc": "fold",
+    "sel_qbr": "const:0",
+    "sel_to": "const:0",
+    "sel_co": "const:0",
+    "sel_ev": "const:0"
    }
   }
  ],
