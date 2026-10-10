@@ -21,7 +21,7 @@
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0;
-    parameter integer SU_N = 64, SU_M = 16, SU_LV = 7;   // N x 2^LV >= 8,192: the Qwen P8191 softmax rows in one reduced segment
+    parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
