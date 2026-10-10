@@ -19,6 +19,14 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  integer pending_command=-1;
  integer cyc=0,phase=0,next_command=0,completed=0,start_cycle=0,raw_count=0,bulk_raw_start=0;
  integer i,j,t,p,pc,entry,chosen,idx,ln,b,free_entry,position,budget,proposals,accepted;
+ integer diag_eligible_pc_now,diag_eligible_leases_now,diag_bankblocked_now;
+ integer diag_eligible_pc=0,diag_eligible_leases=0,diag_bankblocked=0,diag_calendar=0,diag_raw_accepted=0;
+ integer diag_req_stalls=0,diag_full_lease_pc=0,diag_read_busy_conflicts=0,diag_read_same_cycle_conflicts=0;
+ integer diag_missing_present=0,diag_credit_stalls=0,diag_read_candidates=0;
+ integer diag_first_native=-1,diag_last_native=-1,diag_first_output=-1,diag_last_output=-1;
+ integer diag_output_idle=0,diag_output_busy=0,diag_output_sectors=0,diag_output_now;
+ integer diag_pc,diag_bank,diag_sector,diag_idx,diag_pos;
+ integer diag_taken[0:31][0:3];
  integer rate_bytes,rate_cycles;reg[36:0]absolute;reg[271:0]beat;
  function automatic[36:0]addr(input integer tag);addr=(37'(ID)<<35)+37'h001234000+37'(tag*8192)+(tag==1&&generation[tag]==1?37'(32):37'(0));endfunction
  function automatic integer channel(input reg[36:0]a);reg[29:0]s;begin s=a[34:5];channel=s[6:2]^s[11:7]^s[16:12];end endfunction
@@ -42,18 +50,21 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  end
  always @(negedge clk)if(!rst&&!done)begin
  if(!dq[52]&&pending_command>=0&&(count[pending_command%TAGS]==0||received[pending_command%TAGS]==count[pending_command%TAGS]))begin command(pending_command,256);pending_command=-1;end
+ diag_eligible_pc_now=0;diag_eligible_leases_now=0;diag_bankblocked_now=0;
  pc_req_ready=0;pc_rsp_v=0;pc_rsp_fault=0;pc_rsp_data=0;pc_rsp_tag=0;pc_rsp_beat=0;dd_cr=0;
  for(p=0;p<32;p=p+1)begin
  selected[p]=-1;pc_req_ready[p]=active[p]<DEPTH&&cyc+1>last_req[p]&&((phase==2)||(cyc%11!=p%11));
  // Rotate among eligible leases: tags complete out of issue order, while beats of a lease are exact.
- for(j=0;j<DEPTH;j=j+1)begin entry=(j+cyc*7+p*3)%DEPTH;if(selected[p]<0&&valid[p][entry]&&due[p][entry]<=cyc)selected[p]=entry;end
- if(selected[p]>=0)begin entry=selected[p];idx=sector[p][entry]+beatnum[p][entry];t=desc[p][entry];
+ for(j=0;j<DEPTH;j=j+1)begin entry=(j+cyc*7+p*3)%DEPTH;
+ if(valid[p][entry]&&due[p][entry]<=cyc)begin diag_eligible_leases_now=diag_eligible_leases_now+1;if(selected[p]<0)selected[p]=entry;end end
+ if(selected[p]>=0)begin diag_eligible_pc_now=diag_eligible_pc_now+1;entry=selected[p];idx=sector[p][entry]+beatnum[p][entry];t=desc[p][entry];
  pc_rsp_tag[p*17+:17]=wiretag[p][entry]^(MUT==7?17'(1):17'(0));pc_rsp_beat[p*4+:4]=beatnum[p][entry]^(MUT==8?4'(1):4'(0));
  pc_rsp_data[p*256+:256]=payload(idx,t);pc_rsp_fault[p]=fault(idx,t);
  end end
  // Tags drive ready independently of valid. Publish only selected ready PC responses;
  // the CPU model retains each lease until its beat handshakes.
  #1;budget=raw_budget(cyc+1);proposals=0;
+ for(p=0;p<32;p=p+1)if(selected[p]>=0&&!pc_rsp_ready[p])diag_bankblocked_now=diag_bankblocked_now+1;
  for(p=0;p<32;p=p+1)begin pc=(p+cyc)%32;if(selected[pc]>=0&&proposals<budget&&(pc_rsp_ready[pc]||MUT==7||MUT==8))begin pc_rsp_v[pc]=1;proposals=proposals+1;end end
  if(MUT==9)begin for(p=0;p<32;p=p+1)if(selected[p]>=0)pc_rsp_v[p]=1;end
  for(i=0;i<NL;i=i+1)if(cr_head[i]<cr_tail[i]&&credit_due[i][cr_head[i]]<=cyc+1)dd_cr[i]=1;
@@ -64,6 +75,27 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  if(dq[52]&&dq_rdy)begin dq[52]<=0;if(phase==2&&next_command<RATE_COMMANDS+1)begin next_command=next_command+1;pending_command=next_command;end end
  for(i=0;i<NL;i=i+1)if(dd_cr[i])begin credits[i]=credits[i]+1;cr_head[i]=cr_head[i]+1;end
  accepted=0;
+ if(phase==2)begin
+ diag_eligible_pc=diag_eligible_pc+diag_eligible_pc_now;diag_eligible_leases=diag_eligible_leases+diag_eligible_leases_now;
+ diag_bankblocked=diag_bankblocked+diag_bankblocked_now;diag_calendar=diag_calendar+raw_budget(cyc);
+ for(p=0;p<32;p=p+1)begin
+ if(pc_req_v[p]&&!pc_req_ready[p])diag_req_stalls=diag_req_stalls+1;
+ if(active[p]==DEPTH)diag_full_lease_pc=diag_full_lease_pc+1;
+ for(b=0;b<4;b=b+1)diag_taken[p][b]=0;
+ end
+ for(i=0;i<NL;i=i+1)begin
+ diag_idx=dut.emit_idx[i];diag_pos=dut.emit_slot*256+diag_idx;
+ if(dut.used!=0&&!dut.emit_complete&&diag_idx<dut.count[dut.emit_slot])begin
+ if(!dut.present[diag_pos])diag_missing_present=diag_missing_present+1;
+ else if(dut.credits[i]==0)diag_credit_stalls=diag_credit_stalls+1;
+ else begin
+ diag_read_candidates=diag_read_candidates+1;diag_sector=dut.addr[dut.emit_slot][34:5]+diag_idx;
+ diag_pc=((diag_sector>>2)^(diag_sector>>7)^(diag_sector>>12))&31;diag_bank=diag_sector&3;
+ if(dut.read_busy[diag_pc][diag_bank])diag_read_busy_conflicts=diag_read_busy_conflicts+1;
+ else if(diag_taken[diag_pc][diag_bank])diag_read_same_cycle_conflicts=diag_read_same_cycle_conflicts+1;
+ else diag_taken[diag_pc][diag_bank]=1;
+ end end end
+ end
  for(p=0;p<32;p=p+1)begin
  if(pc_rsp_v[p]&&pc_rsp_ready[p])begin
  accepted=accepted+1;entry=selected[p];if(entry<0)$fatal(1,"response without lease");
@@ -83,6 +115,15 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  end end
  if(accepted>raw_budget(cyc))$fatal(1,"RAW_ROOF exceeded calendar cycle=%0d accepted=%0d allowed=%0d",cyc,accepted,raw_budget(cyc));
  raw_count=raw_count+accepted;
+ if(phase==2)begin
+ diag_raw_accepted=diag_raw_accepted+accepted;
+ if(accepted>0)begin if(diag_first_native<0)diag_first_native=cyc-start_cycle;diag_last_native=cyc-start_cycle;end
+ diag_output_now=0;for(i=0;i<NL;i=i+1)if(dd[i*272+271])diag_output_now=diag_output_now+1;
+ if(diag_output_now==0)diag_output_idle=diag_output_idle+1;else begin
+ diag_output_busy=diag_output_busy+1;if(diag_first_output<0)diag_first_output=cyc-start_cycle;diag_last_output=cyc-start_cycle;
+ end
+ diag_output_sectors=diag_output_sectors+diag_output_now;
+ end
  for(i=0;i<NL;i=i+1)begin beat=dd[i*272+:272];if(beat[271])begin
  idx=beat[263:256];t=beat[269:264];
  if(credits[i]<=0)$fatal(1,"credit overrun");credits[i]=credits[i]-1;credit_due[i][cr_tail[i]]=cyc+CREDIT_RTT;cr_tail[i]=cr_tail[i]+1;
@@ -95,6 +136,7 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  else if(phase==2&&completed==RATE_COMMANDS+2)begin
  rate_bytes=RATE_COMMANDS*256*32;rate_cycles=cyc-start_cycle;
  $display("WIDE_BANDWIDTH stack=%0d bytes=%0d cycles=%0d raw_sectors=%0d nominal_bytes_per_cycle=833.333333 sustained_bytes_per_cycle=791.666667 calendar_bytes_per_cycle=790.666667",ID,rate_bytes,rate_cycles,raw_count-bulk_raw_start);
+ $display("DIAGNOSTIC stack=%0d first_native=%0d last_native=%0d first_output=%0d last_output=%0d raw_accepted=%0d calendar_budget=%0d eligible_PC_cycles=%0d eligible_lease_cycles=%0d selected_bank_blocked_PC_cycles=%0d request_stall_PC_cycles=%0d full_lease_PC_cycles=%0d read_candidates=%0d read_busy_conflicts=%0d read_same_cycle_conflicts=%0d missing_present_lane_cycles=%0d credit_stall_lane_cycles=%0d output_idle_cycles=%0d output_busy_cycles=%0d output_sectors=%0d",ID,diag_first_native,diag_last_native,diag_first_output,diag_last_output,diag_raw_accepted,diag_calendar,diag_eligible_pc,diag_eligible_leases,diag_bankblocked,diag_req_stalls,diag_full_lease_pc,diag_read_candidates,diag_read_busy_conflicts,diag_read_same_cycle_conflicts,diag_missing_present,diag_credit_stalls,diag_output_idle,diag_output_busy,diag_output_sectors);
  done=1;
  end
  end
