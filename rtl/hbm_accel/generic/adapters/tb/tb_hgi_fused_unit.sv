@@ -19,16 +19,29 @@ module tb_hgi_fused_unit;
     reg rst_n = 0; reg [1214:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
     wire [337:0] fq, mq; wire [273:0] fr, mr, tr; reg [337:0] tq = 0;
+    wire [32*16-1:0] rq; wire [31:0] rq_cr, w2_cr, w2_done; wire [32*257-1:0] rr; wire [32*280-1:0] w2q;   // WIDE lanes
     ot_hgi_fused_record #(
 `ifdef NO_PAYLOAD_RST
     .PAYLOAD_RESET(0),
 `endif
-.UNIT(1)) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
+.UNIT(1)
+`ifdef WIDE
+    , .UWIDE(1), .ULWB(18)
+`endif
+`ifdef UN
+    , .UN(`UN), .UM(`UM)
+`endif
+    ) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]),
         .rec_o(cur[1151:896]), .rec_n_a(cur[1172:1152]), .rec_n_b(cur[1193:1173]), .rec_n_o(cur[1214:1194]),
         .rec_done(done), .rec_fault(fault), .halted(halted), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(fq), .vmr(fr),
-        .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0));
+        .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0)
+`ifdef WIDE
+        , .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(w2_done),
+        .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1)
+`endif
+        );
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
@@ -37,7 +50,12 @@ module tb_hgi_fused_unit;
         .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd), .k_req_wstrb(k_ws), .k_req_tag(k_tag),
         .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(1'b0),
         .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
+`ifdef WIDE
+    ot_hgi_vm_unit #(.NC(3), .WP(1), .RP(32), .W2(32)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(),
+        .wq(wl), .wq_done(wl_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
+`else
     ot_hgi_vm_unit #(.NC(3), .WP(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(), .wq(wl), .wq_done(wl_done));
+`endif
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0; reg [36:0] pa;
     always @(posedge clk) begin

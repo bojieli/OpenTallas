@@ -1,0 +1,34 @@
+case 0: 3 records in 11428 cycles
+case 1: 1 records in 8538 cycles
+case 2: 1 records in 1871 cycles
+case 3: 1 records in 999 cycles
+case 4: 1 records in 1083 cycles
+case 5: 1 records in 2437 cycles
+case 6: 1 records in 2805 cycles
+case 7: 1 records in 7757 cycles
+case 8: 1 records in 16495 cycles
+case 9: 1 records in 50317 cycles
+ERR case 10: retired 0 of 1, faults 1
+case 10: 0 records in 14361 cycles
+ERR case 10 VM[30000] = 3f890000 expected 3f0e0000
+ERR case 10 VM[30001] = be960000 expected 3f1c0000
+ERR case 10 VM[30002] = bf8f0000 expected bf000000
+ERR case 10 VM[30003] = 3b650000 expected 3f670000
+ERR case 10 VM[30004] = be7c0000 expected 40300000
+ERR case 10 VM[30005] = 3e410000 expected bf4a0000
+ERR case 10 VM[30006] = be360000 expected bee70000
+ERR case 10 VM[30007] = 3e800000 expected bf3d0000
+ERR case 10 VM[30008] = 3d7b0000 expected 3f940000
+ERR case 10 VM[30009] = 3f380000 expected 3fc10000
+ERR case 10 VM[30010] = 3f640000 expected 3d130000
+ERR case 10 VM[30011] = 3f4a0000 expected 3fc50000
+ERR case 10 VM[30012] = be720000 expected be4d0000
+ERR case 10 VM[30013] = 3f740000 expected bf2f0000
+ERR case 10 VM[30014] = bf010000 expected 3f800000
+ERR case 10 VM[30015] = bd2d0000 expected 3f910000
+ERR case 10 VM[30016] = be8f0000 expected 3f280000
+ERR case 10 VM[30017] = 3fed0000 expected bee30000
+ERR case 10 VM[30018] = bf890000 expected bec10000
+case 11: 1 records in 62477 cycles
+summary: 12 FUSED data cases through the D1 unit, 59712 VM words exact
+HGI_FUSED_UNIT FAIL errors=5119

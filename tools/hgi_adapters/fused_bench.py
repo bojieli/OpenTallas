@@ -121,7 +121,7 @@ def main():
     def rec(op, eff, n, imm=0, unit=4, param=0):
         opnd = sum(1 << j for j, e in enumerate(eff) if e)
         return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm, param=param), eff=eff, n=n)
-    for D in (64, 512, 4096):
+    for D in (64, 512, 4096, 5120):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
         h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         pre = (rng.random(4) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))

@@ -1,6 +1,6 @@
 // hfd_loader: thin registered die wrapper (tools/hbm_die_wrap.py, CLAUDE HBM-ABSTRACTS spine).
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
-// instantiates it except the die view route.  HGI loader (hgi-takeover 2026-10-09; 2026-10-10: 32-lane VM wide port, DMA engines with DMA_FRONT 0 until the svc DMA stream binds): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + the F6 full-rate mover on kport lane 2 + one hfd_hgi_vm client.
+// instantiates it except the die view route.  HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + ot_hgi_dma_engines (the DMA front for the svc DMA stream, DMA_FRONT 0 until the svc side binds; the F6 full-rate mover on kport lane 2) + one hfd_hgi_vm client + the 32-lane VM wide write port.
 module hfd_loader (
     input wire [0:0] ck,
     input wire [703:0] f_hgi_cmdproc,
@@ -8,16 +8,16 @@ module hfd_loader (
     input wire [273:0] f_hgi_vmr,
     input wire [31:0] f_hgi_vmw,
     inout wire [513:0] h,
-    output wire [346:0] qNE,
-    output wire [346:0] qNW,
-    output wire [346:0] qSE,
-    output wire [346:0] qSW,
+    output wire [350:0] qNE,
+    output wire [350:0] qNW,
+    output wire [350:0] qSE,
+    output wire [350:0] qSW,
     input wire [293:0] rNE,
     input wire [293:0] rNW,
     input wire [293:0] rSE,
     input wire [293:0] rSW,
     input wire [0:0] rst,
-    output wire [2:0] t_hgi_cmdproc,
+    output wire [3:0] t_hgi_cmdproc,
     output wire [418:0] t_hgi_cp,
     output wire [337:0] t_hgi_vmq,
     output wire [8959:0] t_hgi_vmw
@@ -145,12 +145,16 @@ module hfd_loader (
     wire [1:0] w_ld_m_bresp;
     wire [418:0] w_ld_lcp;
     wire [221:0] w_ld_cpl;
-    wire [1383:0] w_ld_lq;
+    wire [1399:0] w_ld_lq;
     wire [1171:0] w_ld_lr;
     wire [703:0] w_ld_dma_rec;
-    wire [2:0] w_ld_dma_ret;
+    wire [3:0] w_ld_dma_ret;
     wire [337:0] w_ld_dma_vmq;
     wire [273:0] w_ld_dma_vmr;
+    wire [203:0] w_ld_dma_dq;
+    wire [3:0] w_ld_dma_dq_rdy;
+    wire [8639:0] w_ld_dma_dd;
+    wire [31:0] w_ld_dma_dd_cr;
     wire [8959:0] w_ld_dma_vmw;
     wire [31:0] w_ld_dma_vmw_done;
     wire [0:0] w_ld_irq;
@@ -196,9 +200,10 @@ module hfd_loader (
     assign w_ld_lr = {i_rNE[292:0], i_rNW[292:0], i_rSE[292:0], i_rSW[292:0]};
     assign w_ld_dma_rec = {i_f_hgi_cmdproc[703:0]};
     assign w_ld_dma_vmr = {i_f_hgi_vmr[273:0]};
+    assign w_ld_dma_dq_rdy = 4'd0;
+    assign w_ld_dma_dd = 8640'd0;
     assign w_ld_dma_vmw_done = {i_f_hgi_vmw[31:0]};
-    // DMA_FRONT 0: the svc DMA stream is not bound on this die variant yet (hbm-forks); every move runs on the mover
-    ot_hfd_loader_hgi #(.DMA_FRONT(0)) u_ld (.clk(w_ld_clk), .rst_n(w_ld_rst_n), .s_awvalid(w_ld_s_awvalid), .s_awready(w_ld_s_awready), .s_awaddr(w_ld_s_awaddr), .s_wvalid(w_ld_s_wvalid), .s_wready(w_ld_s_wready), .s_wdata(w_ld_s_wdata), .s_wstrb(w_ld_s_wstrb), .s_bvalid(w_ld_s_bvalid), .s_bready(w_ld_s_bready), .s_arvalid(w_ld_s_arvalid), .s_arready(w_ld_s_arready), .s_araddr(w_ld_s_araddr), .s_rvalid(w_ld_s_rvalid), .s_rready(w_ld_s_rready), .s_rdata(w_ld_s_rdata), .h_awvalid(w_ld_h_awvalid), .h_awready(w_ld_h_awready), .h_awaddr(w_ld_h_awaddr), .h_wvalid(w_ld_h_wvalid), .h_wready(w_ld_h_wready), .h_wdata(w_ld_h_wdata), .h_wstrb(w_ld_h_wstrb), .h_bvalid(w_ld_h_bvalid), .h_bready(w_ld_h_bready), .h_arvalid(w_ld_h_arvalid), .h_arready(w_ld_h_arready), .h_araddr(w_ld_h_araddr), .h_rvalid(w_ld_h_rvalid), .h_rready(w_ld_h_rready), .h_rdata(w_ld_h_rdata), .h_dma_arvalid(w_ld_h_dma_arvalid), .h_dma_arready(w_ld_h_dma_arready), .h_dma_araddr(w_ld_h_dma_araddr), .h_dma_rvalid(w_ld_h_dma_rvalid), .h_dma_rready(w_ld_h_dma_rready), .h_dma_rdata(w_ld_h_dma_rdata), .h_dma_rresp(w_ld_h_dma_rresp), .h_dma_rlast(w_ld_h_dma_rlast), .h_dma_awvalid(w_ld_h_dma_awvalid), .h_dma_awready(w_ld_h_dma_awready), .h_dma_awaddr(w_ld_h_dma_awaddr), .h_dma_wvalid(w_ld_h_dma_wvalid), .h_dma_wready(w_ld_h_dma_wready), .h_dma_wdata(w_ld_h_dma_wdata), .h_dma_wstrb(w_ld_h_dma_wstrb), .h_dma_bvalid(w_ld_h_dma_bvalid), .h_dma_bready(w_ld_h_dma_bready), .h_dma_bresp(w_ld_h_dma_bresp), .m_arvalid(w_ld_m_arvalid), .m_arready(w_ld_m_arready), .m_araddr(w_ld_m_araddr), .m_arlen(w_ld_m_arlen), .m_arsize(w_ld_m_arsize), .m_rvalid(w_ld_m_rvalid), .m_rready(w_ld_m_rready), .m_rdata(w_ld_m_rdata), .m_rresp(w_ld_m_rresp), .m_rlast(w_ld_m_rlast), .m_awvalid(w_ld_m_awvalid), .m_awready(w_ld_m_awready), .m_awaddr(w_ld_m_awaddr), .m_awlen(w_ld_m_awlen), .m_awsize(w_ld_m_awsize), .m_wvalid(w_ld_m_wvalid), .m_wready(w_ld_m_wready), .m_wdata(w_ld_m_wdata), .m_wstrb(w_ld_m_wstrb), .m_wlast(w_ld_m_wlast), .m_bvalid(w_ld_m_bvalid), .m_bready(w_ld_m_bready), .m_bresp(w_ld_m_bresp), .lcp(w_ld_lcp), .cpl(w_ld_cpl), .lq(w_ld_lq), .lr(w_ld_lr), .dma_rec(w_ld_dma_rec), .dma_ret(w_ld_dma_ret), .dma_vmq(w_ld_dma_vmq), .dma_vmr(w_ld_dma_vmr), .dma_vmw(w_ld_dma_vmw), .dma_vmw_done(w_ld_dma_vmw_done), .dma_dq(), .dma_dq_rdy(4'd0), .dma_dd({8640{1'b0}}), .dma_dd_cr(), .irq(w_ld_irq), .fault(w_ld_fault));
+    ot_hfd_loader_hgi #(.DMA_FRONT(0)) u_ld (.clk(w_ld_clk), .rst_n(w_ld_rst_n), .s_awvalid(w_ld_s_awvalid), .s_awready(w_ld_s_awready), .s_awaddr(w_ld_s_awaddr), .s_wvalid(w_ld_s_wvalid), .s_wready(w_ld_s_wready), .s_wdata(w_ld_s_wdata), .s_wstrb(w_ld_s_wstrb), .s_bvalid(w_ld_s_bvalid), .s_bready(w_ld_s_bready), .s_arvalid(w_ld_s_arvalid), .s_arready(w_ld_s_arready), .s_araddr(w_ld_s_araddr), .s_rvalid(w_ld_s_rvalid), .s_rready(w_ld_s_rready), .s_rdata(w_ld_s_rdata), .h_awvalid(w_ld_h_awvalid), .h_awready(w_ld_h_awready), .h_awaddr(w_ld_h_awaddr), .h_wvalid(w_ld_h_wvalid), .h_wready(w_ld_h_wready), .h_wdata(w_ld_h_wdata), .h_wstrb(w_ld_h_wstrb), .h_bvalid(w_ld_h_bvalid), .h_bready(w_ld_h_bready), .h_arvalid(w_ld_h_arvalid), .h_arready(w_ld_h_arready), .h_araddr(w_ld_h_araddr), .h_rvalid(w_ld_h_rvalid), .h_rready(w_ld_h_rready), .h_rdata(w_ld_h_rdata), .h_dma_arvalid(w_ld_h_dma_arvalid), .h_dma_arready(w_ld_h_dma_arready), .h_dma_araddr(w_ld_h_dma_araddr), .h_dma_rvalid(w_ld_h_dma_rvalid), .h_dma_rready(w_ld_h_dma_rready), .h_dma_rdata(w_ld_h_dma_rdata), .h_dma_rresp(w_ld_h_dma_rresp), .h_dma_rlast(w_ld_h_dma_rlast), .h_dma_awvalid(w_ld_h_dma_awvalid), .h_dma_awready(w_ld_h_dma_awready), .h_dma_awaddr(w_ld_h_dma_awaddr), .h_dma_wvalid(w_ld_h_dma_wvalid), .h_dma_wready(w_ld_h_dma_wready), .h_dma_wdata(w_ld_h_dma_wdata), .h_dma_wstrb(w_ld_h_dma_wstrb), .h_dma_bvalid(w_ld_h_dma_bvalid), .h_dma_bready(w_ld_h_dma_bready), .h_dma_bresp(w_ld_h_dma_bresp), .m_arvalid(w_ld_m_arvalid), .m_arready(w_ld_m_arready), .m_araddr(w_ld_m_araddr), .m_arlen(w_ld_m_arlen), .m_arsize(w_ld_m_arsize), .m_rvalid(w_ld_m_rvalid), .m_rready(w_ld_m_rready), .m_rdata(w_ld_m_rdata), .m_rresp(w_ld_m_rresp), .m_rlast(w_ld_m_rlast), .m_awvalid(w_ld_m_awvalid), .m_awready(w_ld_m_awready), .m_awaddr(w_ld_m_awaddr), .m_awlen(w_ld_m_awlen), .m_awsize(w_ld_m_awsize), .m_wvalid(w_ld_m_wvalid), .m_wready(w_ld_m_wready), .m_wdata(w_ld_m_wdata), .m_wstrb(w_ld_m_wstrb), .m_wlast(w_ld_m_wlast), .m_bvalid(w_ld_m_bvalid), .m_bready(w_ld_m_bready), .m_bresp(w_ld_m_bresp), .lcp(w_ld_lcp), .cpl(w_ld_cpl), .lq(w_ld_lq), .lr(w_ld_lr), .dma_rec(w_ld_dma_rec), .dma_ret(w_ld_dma_ret), .dma_vmq(w_ld_dma_vmq), .dma_vmr(w_ld_dma_vmr), .dma_dq(w_ld_dma_dq), .dma_dq_rdy(w_ld_dma_dq_rdy), .dma_dd(w_ld_dma_dd), .dma_dd_cr(w_ld_dma_dd_cr), .dma_vmw(w_ld_dma_vmw), .dma_vmw_done(w_ld_dma_vmw_done), .irq(w_ld_irq), .fault(w_ld_fault));
     for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_ld_m_arvalid
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ld_m_arvalid[k]), .q());
     end
@@ -241,6 +246,12 @@ module hfd_loader (
     for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_ld_m_bready
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ld_m_bready[k]), .q());
     end
+    for (genvar k = 0; k < 204; k = k + 1) begin : g_sink_w_ld_dma_dq
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ld_dma_dq[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_ld_dma_dd_cr
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ld_dma_dd_cr[k]), .q());
+    end
     for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_ld_irq
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ld_irq[k]), .q());
     end
@@ -259,9 +270,9 @@ module hfd_loader (
     end
     assign h[255:0] = o_h[255:0];
     assign h[512] = fclk_0;
-    wire [346:0] od_qNE = {1'd0, w_ld_lq[1383:1038]};
-    wire [346:0] o_qNE;
-    for (genvar k = 0; k < 347; k = k + 1) begin : g_o_qNE
+    wire [350:0] od_qNE = {1'd0, w_ld_lq[1399:1050]};
+    wire [350:0] o_qNE;
+    for (genvar k = 0; k < 351; k = k + 1) begin : g_o_qNE
         ot_hfd_oreg5 u (.clk(clk), .d(od_qNE[k]), .q(o_qNE[k]));
     end
     assign qNE[0] = o_qNE[0];
@@ -610,10 +621,14 @@ module hfd_loader (
     assign qNE[343] = o_qNE[343];
     assign qNE[344] = o_qNE[344];
     assign qNE[345] = o_qNE[345];
-    assign qNE[346] = fclk_1;
-    wire [346:0] od_qNW = {1'd0, w_ld_lq[1037:692]};
-    wire [346:0] o_qNW;
-    for (genvar k = 0; k < 347; k = k + 1) begin : g_o_qNW
+    assign qNE[346] = o_qNE[346];
+    assign qNE[347] = o_qNE[347];
+    assign qNE[348] = o_qNE[348];
+    assign qNE[349] = o_qNE[349];
+    assign qNE[350] = fclk_1;
+    wire [350:0] od_qNW = {1'd0, w_ld_lq[1049:700]};
+    wire [350:0] o_qNW;
+    for (genvar k = 0; k < 351; k = k + 1) begin : g_o_qNW
         ot_hfd_oreg5 u (.clk(clk), .d(od_qNW[k]), .q(o_qNW[k]));
     end
     assign qNW[0] = o_qNW[0];
@@ -962,10 +977,14 @@ module hfd_loader (
     assign qNW[343] = o_qNW[343];
     assign qNW[344] = o_qNW[344];
     assign qNW[345] = o_qNW[345];
-    assign qNW[346] = fclk_2;
-    wire [346:0] od_qSE = {1'd0, w_ld_lq[691:346]};
-    wire [346:0] o_qSE;
-    for (genvar k = 0; k < 347; k = k + 1) begin : g_o_qSE
+    assign qNW[346] = o_qNW[346];
+    assign qNW[347] = o_qNW[347];
+    assign qNW[348] = o_qNW[348];
+    assign qNW[349] = o_qNW[349];
+    assign qNW[350] = fclk_2;
+    wire [350:0] od_qSE = {1'd0, w_ld_lq[699:350]};
+    wire [350:0] o_qSE;
+    for (genvar k = 0; k < 351; k = k + 1) begin : g_o_qSE
         ot_hfd_oreg5 u (.clk(clk), .d(od_qSE[k]), .q(o_qSE[k]));
     end
     assign qSE[0] = o_qSE[0];
@@ -1314,10 +1333,14 @@ module hfd_loader (
     assign qSE[343] = o_qSE[343];
     assign qSE[344] = o_qSE[344];
     assign qSE[345] = o_qSE[345];
-    assign qSE[346] = fclk_3;
-    wire [346:0] od_qSW = {1'd0, w_ld_lq[345:0]};
-    wire [346:0] o_qSW;
-    for (genvar k = 0; k < 347; k = k + 1) begin : g_o_qSW
+    assign qSE[346] = o_qSE[346];
+    assign qSE[347] = o_qSE[347];
+    assign qSE[348] = o_qSE[348];
+    assign qSE[349] = o_qSE[349];
+    assign qSE[350] = fclk_3;
+    wire [350:0] od_qSW = {1'd0, w_ld_lq[349:0]};
+    wire [350:0] o_qSW;
+    for (genvar k = 0; k < 351; k = k + 1) begin : g_o_qSW
         ot_hfd_oreg5 u (.clk(clk), .d(od_qSW[k]), .q(o_qSW[k]));
     end
     assign qSW[0] = o_qSW[0];
@@ -1666,13 +1689,17 @@ module hfd_loader (
     assign qSW[343] = o_qSW[343];
     assign qSW[344] = o_qSW[344];
     assign qSW[345] = o_qSW[345];
-    assign qSW[346] = fclk_4;
-    wire [2:0] od_t_hgi_cmdproc = {w_ld_dma_ret[2:0]};
-    wire [2:0] o_t_hgi_cmdproc;
-    for (genvar k = 0; k < 3; k = k + 1) begin : g_o_t_hgi_cmdproc
+    assign qSW[346] = o_qSW[346];
+    assign qSW[347] = o_qSW[347];
+    assign qSW[348] = o_qSW[348];
+    assign qSW[349] = o_qSW[349];
+    assign qSW[350] = fclk_4;
+    wire [3:0] od_t_hgi_cmdproc = {w_ld_dma_ret[3:0]};
+    wire [3:0] o_t_hgi_cmdproc;
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_o_t_hgi_cmdproc
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_cmdproc[k]), .q(o_t_hgi_cmdproc[k]));
     end
-    assign t_hgi_cmdproc[2:0] = o_t_hgi_cmdproc[2:0];
+    assign t_hgi_cmdproc[3:0] = o_t_hgi_cmdproc[3:0];
     wire [418:0] od_t_hgi_cp = {w_ld_lcp[418:0]};
     wire [418:0] o_t_hgi_cp;
     for (genvar k = 0; k < 419; k = k + 1) begin : g_o_t_hgi_cp

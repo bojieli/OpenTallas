@@ -292,6 +292,12 @@ Q_LINK = dict(rmsnorm1="VM -> SU", qkv="VM -> tile band broadcast (tree)", qknor
 KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
 
 
+EXACTNESS_QWEN_ROM = ("reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference "
+                      "topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the "
+                      "sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed "
+                      "re-proof (claude-takeover qwen-1010.log)")
+
+
 def qwen_kvdie():
     """kv-die 2026-10-09 (owner option 1a): the TP4 token on the ROM die + KV die pair (attention on the KV die)."""
     return qwen(kv=J(KVD))
@@ -449,11 +455,12 @@ def qwen(kv=None):
         headline = dict(tok_s=round(1.2e9 / total, 1), cycles=round(total, 1), mode="AR (DSpark off), position 8,191",
                         basis=f"{KVD} (priced candidate: the TP4 basis with the attention step measured through the link; "
                               f"reprice.json typical {kvc['token_cycles']:,} cycles)",
-                        source=KVD + " cases.typical", status="priced candidate (not a closed rate)",
+                        source=KVD + " cases.typical", status="priced candidate (not a closed rate)", exactness=EXACTNESS_QWEN_ROM,
                         per_user_cost_vs_tp4_pct=kv["per_user_cost"]["vs_tp4_pct"], die_pair_mm2=kv["silicon"]["pair_mm2"],
                         interposer_reticles=kv["silicon"]["interposer_reticles"],
                         measured_cycles=None, priced_cycles=None)
-        notes = [f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
+        notes = ["EXACTNESS: " + EXACTNESS_QWEN_ROM + ".",
+                 f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
                  "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
                  "new K / V and the attention output cross the UCIe link (results/arch/qwen_kv_die_20261009/CONTRACT.md).",
                  "Every other operation keeps the measured TP4 windows and priced adders of the qwen_rom view."]
@@ -464,7 +471,7 @@ def qwen(kv=None):
     headline = dict(tok_s=rp["after"]["AR_tok_s"], cycles=rp["after"]["cycles"], mode="AR (DSpark off), position 8,191",
                     basis=f"{UNI} qwen_rom unified_candidate ({rp['before']['cycles']:,} cycles, {rp['before']['AR_tok_s']} tok/s) "
                           f"+ the 2026-10-08 re-price (serdes PINREG +{pin}, band integrate +{band}) = {rp['after']['cycles']:,} cycles",
-                    source=REPRICE + " qwen_rom.rows['unified_candidate:lower']", status="priced candidate (not a closed rate)",
+                    source=REPRICE + " qwen_rom.rows['unified_candidate:lower']", status="priced candidate (not a closed rate)", exactness=EXACTNESS_QWEN_ROM,
                     measured_cycles=measured_total, priced_cycles=r1(adders_total))
     drill = dict(group="L1", why="a chained layer (L1-L35 are identical: 5,282 measured cycles); L0 carries the cold KV fill")
     notes = [
