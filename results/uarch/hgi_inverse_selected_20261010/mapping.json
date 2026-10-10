@@ -1,0 +1,70 @@
+{
+  "qualification": "Algorithm only, not RTL exactness or rate evidence",
+  "cases": [
+    {
+      "group": 96,
+      "k": 2048,
+      "m": 2048,
+      "empty_slots": 194560,
+      "inverse_records": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "group": 96,
+      "k": 512,
+      "m": 512,
+      "empty_slots": 48640,
+      "inverse_records": 512,
+      "verdict": "PASS"
+    },
+    {
+      "group": 96,
+      "k": 512,
+      "m": 37,
+      "empty_slots": 3040,
+      "inverse_records": 512,
+      "verdict": "PASS"
+    },
+    {
+      "group": 96,
+      "k": 512,
+      "m": 11,
+      "empty_slots": 544,
+      "inverse_records": 512,
+      "verdict": "PASS"
+    },
+    {
+      "group": 1,
+      "k": 2048,
+      "m": 2048,
+      "empty_slots": 0,
+      "inverse_records": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "group": 2,
+      "k": 2048,
+      "m": 1032,
+      "empty_slots": 16,
+      "inverse_records": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "group": 4,
+      "k": 2048,
+      "m": 536,
+      "empty_slots": 96,
+      "inverse_records": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "group": 8,
+      "k": 2048,
+      "m": 277,
+      "empty_slots": 168,
+      "inverse_records": 2048,
+      "verdict": "PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

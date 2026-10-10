@@ -239,6 +239,10 @@ def hgi_native_row_gather_model(**kwargs):
     from uarch_model_hgi_row_gather import model
     return model(**kwargs)
 
+def hgi_inverse_selected_model(**kwargs):
+    from uarch_model_hgi_row_gather import inverse_selected_model
+    return inverse_selected_model(**kwargs)
+
 
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
