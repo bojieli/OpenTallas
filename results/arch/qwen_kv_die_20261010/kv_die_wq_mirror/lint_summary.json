@@ -1,0 +1,30 @@
+{
+ "lint_summary": {
+  "connectivity": [
+   [
+    "width_port_wider_than_net",
+    "qkd_kvwq_ctl_bin.f0 (298 > 293)",
+    4
+   ],
+   [
+    "width_port_wider_than_net",
+    "qkd_kvwq_ctl_bin.f1 (298 > 293)",
+    4
+   ],
+   [
+    "width_port_wider_than_net",
+    "qkd_kvwq_ctl_bin.f2 (298 > 293)",
+    4
+   ],
+   [
+    "width_port_wider_than_net",
+    "qkd_kvwq_ctl_bin.f3 (298 > 293)",
+    4
+   ]
+  ],
+  "reach_violations": 0,
+  "pin_fit_errors": {},
+  "unbound": 0
+ },
+ "note": "die_top_lint --variant kv_wq_mirror (qwen-1010/b): remaining width_port_wider_than_net = ctl_bin f<g> 5 constant-zero lane pins (FLANE_BINARY by design)"
+}
