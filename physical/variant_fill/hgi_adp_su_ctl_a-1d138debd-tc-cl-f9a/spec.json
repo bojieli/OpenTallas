@@ -1,0 +1,108 @@
+{
+ "name": "hgi_adp_su_ctl_a-1d138debd-tc-cl-f9a",
+ "block": "ot_hgi_su_ctl",
+ "owner": "Claude:hgi-1010",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/fill-9-20261010-hgi-su",
+  "commit": "1d138debdc0d02b98a70e4ee3518893d04f389d1",
+  "extra_paths": [
+   "compiler",
+   "results/arch/hgi_sim_20261009/conformance"
+  ]
+ },
+ "purpose": "FILL-9 root cause of su_ctl TT -206/-252: RST_RELAY=1 (rst_n port drives only ot_rst_relay, 3 region copies; was port -> ~3,900 reset flops) + PRE_PIPE=1 (op layout pow2ceil/row width and no*ni over 3 registered S_PRE phases; was w -> 16x16 multiply -> scount compare, +2 cycles/op); PAYLOAD_RESET=1, square 320x320",
+ "stages": {
+  "bench": [
+   {
+    "name": "su_unit_exact",
+    "cmd": "XDEF='-DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_small.sh su_unit {RUN}/bench_su",
+    "expect": "pass",
+    "pass_regex": "HGI_SU_UNIT PASS",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "sfu_unit_exact",
+    "cmd": "XDEF='-DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_small.sh sfu_unit {RUN}/bench_sfu",
+    "expect": "pass",
+    "pass_regex": "HGI_SFU_UNIT PASS",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "su_stream_exact",
+    "cmd": "XDEF='-DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_su_stream.sh {RUN}/bench_st",
+    "expect": "pass",
+    "pass_regex": "HGI_SU_STREAM PASS",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "mut_dirty",
+    "cmd": "XDEF='-DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_small.sh su_unit {RUN}/bench_md MUT_DIRTY",
+    "expect": "fail",
+    "fail_regex": "HGI_SU_UNIT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "mut_lat1",
+    "cmd": "XDEF='-DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_small.sh su_unit {RUN}/bench_ml MUT_LAT=1",
+    "expect": "fail",
+    "fail_regex": "HGI_SU_UNIT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_su_ctl --source rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv --source rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv --source rtl/lib/ot_rst_relay.sv --param PAYLOAD_RESET=1 --param RST_RELAY=1 --param PRE_PIPE=1 --clock-port clk --die-area 0 0 320 320 --core-area 10.8 10.8 309.2 309.2 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk",
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_su_ctl --source rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv --source rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv --source rtl/lib/ot_rst_relay.sv --param PAYLOAD_RESET=1 --param RST_RELAY=1 --param PRE_PIPE=1 --clock-port clk --die-area 0 0 320 320 --core-area 10.8 10.8 309.2 309.2",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "new adapter master; die-link budget via link_budget_hook"
+ },
+ "route_hold_margin_ns": 0.01,
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "cycles_added": 2,
+ "merge_target": null,
+ "latency_notes": "PRE_PIPE +2 cycles per op (S_PRE 1 -> 3 edges); RST_RELAY release +3 edges after reset (rec_rdy held low); no data-path change",
+ "registered_io": true
+}
