@@ -65,7 +65,7 @@
       "recorded_at": "2026-10-10T11:59:08.952941+00:00",
       "description": "Actual NW21 ports now bind directed buses513/1/648/2/47/37 bits (1248 total). Historical head631 incorrectly includes reverse grants in forward chains and must regenerate. Closed sequencer component does not qualify native identity composition.",
       "source": {
-        "commit": "8ab941dbd",
+        "commit": "45b6394cc",
         "paths": [
           "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
           "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
@@ -111,7 +111,7 @@
       "integration": {
         "status": "directed port contract passed; historical floorplan binding fails until regenerated; native identity composition pending",
         "evidence": [
-          "results/rtl/mtp_takeover_20261010/native_directed_bus_binding.json"
+          "results/rtl/mtp_takeover_20261010/native_directed_bus_binding_verified.json"
         ]
       }
     }
