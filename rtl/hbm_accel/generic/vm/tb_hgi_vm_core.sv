@@ -89,11 +89,11 @@ reg [255:0] last;
      n = $unsigned($random(seed)) % 4096;
      if (($random(seed) & 3) == 0 && qn[c] > 0) n = qs[c][(qh[c] + qn[c] - 1) % 8];   // re-touch the last sector (RAW / WAR)
      for (w = 0; w < 8; w = w + 1) begin wd[w*32 +: 32] = $random(seed); bm[w*4 +: 4] = ($random(seed) & 1) ? 4'hf : 4'h0; end
-     issue(c, ($random(seed) & 1), n[14:0], wd, bm, 16'(c*4096 + (nrd + nwr + c) % 4096));
+     issue(c, (($random(seed) >>> 12) & 1), n[14:0], wd, bm, 16'(c*4096 + (nrd + nwr + c) % 4096));
     end
    end
   end
-  @(negedge clk); wl_v = 0;
+  wl_v = 0;     // (the loop exits right after the negedge that set the lanes: drop them before the edge)
   // drain
   while (qn[0] + qn[1] + qn[2] != 0 || req_v != 0) begin
    @(posedge clk);
