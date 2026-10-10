@@ -42,23 +42,23 @@ module dsfd_coll_cb #(parameter integer OD = 16) (
     input  wire [2:0]     ts,
     output reg  [2099:0]  t_vm,
     // W face: lane 0 (W0) tile;  E face: lane 4 (E0) tile
-    output wire           wlo_v,  input  wire wlo_r, output wire [552:0] wlo_d,
-    input  wire           wli_v,  output wire wli_r, input  wire [552:0] wli_d,
+    output wire [0:0] wlo_v,  input wire [0:0] wlo_r, output wire [552:0] wlo_d,
+    input wire [0:0] wli_v,  output wire [0:0] wli_r, input  wire [552:0] wli_d,
     input  wire [2:0]     wflt,
-    output wire           elo_v,  input  wire elo_r, output wire [552:0] elo_d,
-    input  wire           eli_v,  output wire eli_r, input  wire [552:0] eli_d,
+    output wire [0:0] elo_v,  input wire [0:0] elo_r, output wire [552:0] elo_d,
+    input wire [0:0] eli_v,  output wire [0:0] eli_r, input  wire [552:0] eli_d,
     input  wire [2:0]     eflt,
     // N face: seam to dsfd_coll_ce
     output reg  [591:0]   fvm_u,
     output reg  [5:0]     flt_u,        // {lane 4 flt, lane 0 flt}
-    input  wire           lo0_v,  output wire lo0_r, input  wire [552:0] lo0_d,
-    output wire           li0_v,  input  wire li0_r, output wire [552:0] li0_d,
-    input  wire           lo4_v,  output wire lo4_r, input  wire [552:0] lo4_d,
-    output wire           li4_v,  input  wire li4_r, output wire [552:0] li4_d,
-    input  wire           bw_v,
+    input wire [0:0] lo0_v,  output wire [0:0] lo0_r, input  wire [552:0] lo0_d,
+    output wire [0:0] li0_v,  input wire [0:0] li0_r, output wire [552:0] li0_d,
+    input wire [0:0] lo4_v,  output wire [0:0] lo4_r, input  wire [552:0] lo4_d,
+    output wire [0:0] li4_v,  input wire [0:0] li4_r, output wire [552:0] li4_d,
+    input wire [0:0] bw_v,
     input  wire [2099:1]  bw_d,
-    output reg            bw_cr,
-    output reg            bw_flt
+    output reg [0:0] bw_cr,
+    output reg [0:0] bw_flt
 );
     wire clk = ck[0];
     reg [1:0] rst_s;
@@ -128,19 +128,19 @@ module dsfd_coll_ce #(
     // S face: seam to dsfd_coll_cb
     input  wire [591:0]     fvm_u,
     input  wire [5:0]       flt_u,
-    output wire             lo0_v,  input  wire lo0_r, output wire [552:0] lo0_d,
-    input  wire             li0_v,  output wire li0_r, input  wire [552:0] li0_d,
-    output wire             lo4_v,  input  wire lo4_r, output wire [552:0] lo4_d,
-    input  wire             li4_v,  output wire li4_r, input  wire [552:0] li4_d,
-    output reg              bw_v,
+    output wire [0:0] lo0_v,  input wire [0:0] lo0_r, output wire [552:0] lo0_d,
+    input wire [0:0] li0_v,  output wire [0:0] li0_r, input  wire [552:0] li0_d,
+    output wire [0:0] lo4_v,  input wire [0:0] lo4_r, output wire [552:0] lo4_d,
+    input wire [0:0] li4_v,  output wire [0:0] li4_r, input  wire [552:0] li4_d,
+    output reg [0:0] bw_v,
     output reg  [2099:1]    bw_d,
-    input  wire             bw_cr,
-    input  wire             bw_flt,
+    input wire [0:0] bw_cr,
+    input wire [0:0] bw_flt,
     // N face: seam to dsfd_coll_ct
-    output wire             lo3_v,  input  wire lo3_r, output wire [552:0] lo3_d,
-    input  wire             li3_v,  output wire li3_r, input  wire [552:0] li3_d,
-    output wire             lo7_v,  input  wire lo7_r, output wire [552:0] lo7_d,
-    input  wire             li7_v,  output wire li7_r, input  wire [552:0] li7_d,
+    output wire [0:0] lo3_v,  input wire [0:0] lo3_r, output wire [552:0] lo3_d,
+    input wire [0:0] li3_v,  output wire [0:0] li3_r, input  wire [552:0] li3_d,
+    output wire [0:0] lo7_v,  input wire [0:0] lo7_r, output wire [552:0] lo7_d,
+    input wire [0:0] li7_v,  output wire [0:0] li7_r, input  wire [552:0] li7_d,
     input  wire [5:0]       flt_d          // {lane 7 flt, lane 3 flt}
 );
     wire clk = ck[0];
@@ -198,17 +198,17 @@ endmodule
 module dsfd_coll_ct (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
-    output wire           wlo_v,  input  wire wlo_r, output wire [552:0] wlo_d,
-    input  wire           wli_v,  output wire wli_r, input  wire [552:0] wli_d,
+    output wire [0:0] wlo_v,  input wire [0:0] wlo_r, output wire [552:0] wlo_d,
+    input wire [0:0] wli_v,  output wire [0:0] wli_r, input  wire [552:0] wli_d,
     input  wire [2:0]     wflt,
-    output wire           elo_v,  input  wire elo_r, output wire [552:0] elo_d,
-    input  wire           eli_v,  output wire eli_r, input  wire [552:0] eli_d,
+    output wire [0:0] elo_v,  input wire [0:0] elo_r, output wire [552:0] elo_d,
+    input wire [0:0] eli_v,  output wire [0:0] eli_r, input  wire [552:0] eli_d,
     input  wire [2:0]     eflt,
     // S face: seam to dsfd_coll_ce
-    input  wire           lo3_v,  output wire lo3_r, input  wire [552:0] lo3_d,
-    output wire           li3_v,  input  wire li3_r, output wire [552:0] li3_d,
-    input  wire           lo7_v,  output wire lo7_r, input  wire [552:0] lo7_d,
-    output wire           li7_v,  input  wire li7_r, output wire [552:0] li7_d,
+    input wire [0:0] lo3_v,  output wire [0:0] lo3_r, input  wire [552:0] lo3_d,
+    output wire [0:0] li3_v,  input wire [0:0] li3_r, output wire [552:0] li3_d,
+    input wire [0:0] lo7_v,  output wire [0:0] lo7_r, input  wire [552:0] lo7_d,
+    output wire [0:0] li7_v,  input wire [0:0] li7_r, output wire [552:0] li7_d,
     output reg  [5:0]     flt_d
 );
     wire clk = ck[0];
