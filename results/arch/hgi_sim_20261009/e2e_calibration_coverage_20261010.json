@@ -298,6 +298,15 @@
    "token": "SM/ATT/HC remain replay stubs; this is not a full-production-unit token timing measurement"
   }
  },
- "scope": "Coverage annotation of existing cad18afa7 service-ratio replay on the prior runs_fuse5 exact program; not the pending G24 compiler successor.",
- "source_program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef"
+ "scope": "Historical coverage replay on pending source snapshot: source hashes recorded; not a committed production source and not a headline basis. Use e2e_calibration_coverage_clean_20261010.json for the committed-source replay.",
+ "source_program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "source_snapshot_sha256": {
+  "tools/hgi_sim/ds_native.py": "95a5124f662821f98035c14367cd4a6297d186b6e613ce232f2a38b0058c5eac",
+  "tools/hgi_sim/machine.py": "9a69c8741d7db70548456c197360b0be6428b75334a85c61475ce018d879dd6d",
+  "tools/hgi_sim/timing.py": "4344d85940bdfb90f50d72a49c2dd4ab277bc41690e15e4d52ac54838a49ea3b",
+  "tools/hgi_sim/ds_native_timing.py": "b6e87d87184d769448eaea06854de178d738e6fe432834833abd3b4548d7ba15",
+  "tools/hgi_sim/perf.py": "9f1b064095ec5c773d3c158d714153ba9c43c19016ec4991f61f747930bd2487",
+  "tools/hgi_sim/e2e_calibration.py": "17e0077f54eff101000b65bc5d672dd2056174b468a659e0b88f2b79d4821c30",
+  "tools/hgi_sim/calibration.json": "a27422681d7939a7f606039f750c617fb361e5003523e745f1fcea9493e28dd0"
+ }
 }
