@@ -17,7 +17,7 @@ D=""; [ -n "$MUT" ] && D="-D$MUT"
 # NPAR > 1: NPAR processes, case c on process c mod NPAR (the engine simulates slowly); logs run.<k>.log, merged run.log
 NPAR=${NPAR:-1}
 for k in $(seq 0 $((NPAR - 1))); do
-  "$OUT/obj/Vtb_hgi_att_unit" +DIR="$OUT/vec" +FIRST=$k +STEP=$NPAR > "$OUT/run.$k.log" &
+  "$OUT/obj/Vtb_hgi_att_unit" +DIR="$OUT/vec" +FIRST=$((k + ${FIRSTCASE:-0})) +LAST=${LASTCASE:-2147483647} +STEP=$NPAR > "$OUT/run.$k.log" &
 done
 wait
 cat "$OUT"/run.*.log > "$OUT/run.log"
