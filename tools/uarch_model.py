@@ -15204,3 +15204,26 @@ def hgi_quant_decode_model():
         tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
         new_numerical_format=False, performance_gain_claim=None,
         adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')
+
+
+def hbm_sfu_reset_tree_sizing():
+    """Physical SFU successor: registered reset fanout, inset PG and taller lane.
+
+    Three reset admission clocks are real RTL stages. No datapath cycle changes
+    and no reset multicycle exception. Closure remains a measurement obligation.
+    """
+    return dict(candidate='sfu_rstpipe3', lane_count_per_quarter=32,
+                lane_um=[159.84, 450.36], lane_core_um=[157.68,449.28],
+                prior_lane_um=[159.84,330.48],
+                lane_area_um2=159.84*450.36,
+                quarter_lane_area_delta_um2=32*159.84*(450.36-330.48),
+                measured_prior_std_area_um2=34909, estimated_reset_registers=62,
+                estimated_util=34909/(157.68*449.28),
+                reset_admission_cycles=3, data_cycles_added=0,
+                reset_pin_fanout=1, reset_bank_fanout_max=8,
+                reset_leaf_consumers=53, reset_bits_per_cycle=1,
+                macs_per_cycle_change=0, memory_bytes_per_cycle_change=0,
+                boundary_bits_per_cycle_change=0,
+                pin_bits_per_um=2251/450.36,
+                physical_qualified=False,
+                qualification='route full lane with normal one-cycle reset arcs; then grow quarter for 32 taller lanes')

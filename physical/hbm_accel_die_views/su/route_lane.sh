@@ -22,7 +22,7 @@ S=""; for s in $SRCS; do S="$S --source $s"; done
 /srv/opentallas-scratch/admit.sh ${NEED:-12} -- python3 tools/run_abi3_physical.py --view asap7 --top $top $S "$@" \
   --clock-period-ns ${CP:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
-  --die-area 0 0 $W_ $H_ --core-area 0 0.54 $W_ $(python3 -c "print(round($H_-0.54,3))") --orfs-var IO_CONSTRAINTS=/src/physical/hbm_accel_die_views/su/${IOC:-io_left.tcl} --routing-layers M2 ${MAXL:-M5} --orfs-var "IO_PLACER_H=${PINL:-M4}" \
+  --die-area 0 0 $W_ $H_ --core-area ${CORE_INSET_X:-0} 0.54 $(python3 -c "print(round($W_-${CORE_INSET_X:-0},3))") $(python3 -c "print(round($H_-0.54,3))") --orfs-var IO_CONSTRAINTS=/src/physical/hbm_accel_die_views/su/${IOC:-io_left.tcl} --routing-layers M2 ${MAXL:-M5} --orfs-var "IO_PLACER_H=${PINL:-M4}" \
   --orfs-var "PLACE_PINS_ARGS=${PPA:--min_distance 1 -min_distance_in_tracks}" \
   --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/${PDN:-su/pdn_lane_m6.tcl} \
   --place-density ${PD:-0.65} --hold-margin-ns ${HM:-0.01} --orfs-var ADDER_MAP_FILE= \
