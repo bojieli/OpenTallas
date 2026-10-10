@@ -580,9 +580,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              idx_score_dx=432.0, spine_over=432.0, spch_q=1546.56,
              # hgi-1010/b lane groups (ot_hgi_vm_lanearb ace618cd8): VM | CP | quant abut, the W group leaves the VM's W face
              # for the SW quarter (SU -> SFU -> HC), the E group its E face up the E spine channel past CP and quant
-             spine_order=('hgi_idx', 'mtp', 'loader', 'router', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'coll', 'vm8',
-                          'su_red', 'su_full', 'idx_sel'),
-             spine_abut=(('hgi_vm', 'cmdproc'), ('cmdproc', 'quant')),
+             # lead 10-10 (IDX.INDEX selector path): the native selector abuts hgi_idx (its t_sel / f_sel ports: fs, qb,
+             # kin, toc, coc down, qbr, to, co, ev back), so no ready crosses a relay chain; the score grids stay N / S
+             spine_order=('hgi_idx', 'idx_sel', 'mtp', 'loader', 'router', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'coll',
+                          'vm8', 'su_red', 'su_full'),
+             spine_abut=(('hgi_idx', 'idx_sel'), ('hgi_vm', 'cmdproc'), ('cmdproc', 'quant')),
              spine_cross=(('router', 'hgi_vm'), ('vm8', 'su_red')), spine_cross_um=302.4,
              lane_groups=dict(W=('hb_hgi_vm', 'hb_su_SW', 'hb_sfu_SW', 'hb_hc_SW'), E=('hb_hgi_vm', 'hb_cmdproc', 'hb_quant')),
              lane_rd_bits=8800, lane_wr_bits=9000,
@@ -970,12 +972,15 @@ def build_r25gq_net(variant):
     # ---- Option A nets (staged on their router path: a relay every LINK_STAGE_UM)
     names = {i.name for i in insts}
     lw = V['lane_rd_bits'] + V['lane_wr_bits']
-    extra = [('cp_mtp_f_mtp', 'control', 517, ('hb_mtp', 'f_mtp_q'), ('hb_cmdproc', 'f_mtp_q')),
-             ('cp_mtp_t_mtp', 'control', 197, ('hb_cmdproc', 't_mtp_q'), ('hb_mtp', 't_mtp_q')),
-             ('cp_mtp_ports', 'control', 120, ('hb_cmdproc', 't_mtpk'), ('hb_mtp', 'f_mtpk'))] + \
-            [(f'att_rec_{q}', 'control', 1250, ('hb_cmdproc', f'att_rec_{q}'),
-              (f'hb_index_{q}_b0', 'att_rec') if not V.get('att_su_relays') else (f'hb_hc_{q}', 'att_rec'))
-             for q in ('SW', 'SE', 'NW', 'NE')] + \
+    # lead 10-10 net fixes: (1) one class per net type, one direction each (no 'control' SM word pattern on these);
+    # (2) f_mtp_q / t_mtp_q dropped: the transplanted hb_mtp_cmdproc (f_mtp 517) / hb_cmdproc_mtp (t_mtp 197) carry them;
+    # (3) att_rec stays INSIDE the CP block while the ATT record adapter lives there (hgi_die_dispatch INTERNAL_UNITS,
+    # until D4): no die net; (4) the IDX.INDEX selector path hgi_idx <-> idx_selector (abutted in the spine)
+    extra = [('cp_mtp_ports', 'cp_mtp', 120, ('hb_cmdproc', 't_mtpk'), ('hb_mtp', 'f_mtpk'))] + \
+            [(f'hgi_sel_{p_}', 'idx_sel', w_, ('hb_hgi_idx', f't_sel_{p_}'), ('idx_selector', p_))
+             for p_, w_ in (('fs', 90), ('qb', 1048), ('kin', 345), ('toc', 1), ('coc', 1))] + \
+            [(f'hgi_sel_{p_}', 'idx_sel', w_, ('idx_selector', p_), ('hb_hgi_idx', f'f_sel_{p_}'))
+             for p_, w_ in (('qbr', 1), ('to', 612), ('co', 72), ('ev', 2))] + \
             [(f'hgi_iks_{q}', 'expert_req', 128 + 1, ('hb_hgi_idx', f't_hgi_iks{q}'), (f'svc_{q}_s3', 'e'))   # [svc] IKS issuer
              for q in ('SW', 'SE', 'NW', 'NE')]     # -> the free svc e pins (ef_<st> skipped on HGI dies); 128 b + fclk
     by = {i.name: i for i in insts}
