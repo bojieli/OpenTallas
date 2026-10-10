@@ -649,14 +649,18 @@ if __name__ == '__main__':
     # macro placement (hbm_vm8v_sww 71b59c2c2 FLOORPLAN_MARGIN: auto placement left a 7.49 um macro gap holding rows): the
     # slice's 2 banks x NM macros (94.824 x 41.04) as two columns 14.04 um apart, rows 14.04 um apart, R0, on the site
     # (0.054) / row (0.27, core y0 0.54) grid; centred in x, low in y (clear of the centre ck pin and the face lockups).
+    # [vm8] 2026-10-10: gaps 14.04 -> 28.08 um (columns) and rows 55.08 -> 69.12 um pitch: hbm_vm8bfp_sew (both VTs)
+    # and vm8vt_sew rvt failed GRT-0116 with every marker on the macro block (x 50-200 / y 200-400 um, 111 of 153
+    # horizontal): the E-W cross-face and seam bundles cross the half through the 14-um macro channels.
+    MGX, MPY = 28.08, 69.12
     for m, nm in (('hfd_vm_sw_w', 3), ('hfd_vm_nw_e', 3), ('hfd_vm_se_w', 3), ('hfd_vm_ne_w', 2)):
         w = WID[m[-1]]
-        x0 = round(round((w / 2 - (2 * 94.824 + 14.04) / 2) / 0.054) * 0.054, 3)
+        x0 = round(round((w / 2 - (2 * 94.824 + MGX) / 2) / 0.054) * 0.054, 3)
         L = [f'# {m}: slice macros (make_vm_vcut8.py)']
         for b in range(2):
             for k in range(nm):
-                y = round(0.54 + round((200.0 + k * 55.08) / 0.27) * 0.27, 3)
-                L.append(f'place_macro -macro_name {{u_slice.banks\\[{b}\\].macros\\[{k}\\].u_sram}} -location {{{round(x0 + b * 108.864, 3)} {y}}} -orientation R0')
+                y = round(0.54 + round((200.0 + k * MPY) / 0.27) * 0.27, 3)
+                L.append(f'place_macro -macro_name {{u_slice.banks\\[{b}\\].macros\\[{k}\\].u_sram}} -location {{{round(x0 + b * (94.824 + MGX), 3)} {y}}} -orientation R0')
         (D / f'{m}_macro_place.tcl').write_text('\n'.join(L) + '\n')
     rows = [dict(master=a, face=f, bits=n, span_um=sp, bits_per_um=d, pair_pitch_um=P, used_um=nd) for a, f, n, sp, d, P, nd in dens]
     (D / 'pin_density.json').write_text(json.dumps(rows, indent=1) + '\n')
