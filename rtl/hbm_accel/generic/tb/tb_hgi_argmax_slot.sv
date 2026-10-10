@@ -31,10 +31,21 @@ module tb_hgi_argmax_slot;
     reg s_v = 0, s_last = 0; reg [7:0] s_mask = 0; reg [255:0] s_vals = 0;
     integer sb, sw, sn, nstream = 0;
     wire o_v, o_nan, o_f, o_rf; wire [17:0] o_idx; wire [31:0] o_val;
+`ifdef DIE691
+    // hgi-takeover: the single-CP die master hfd_hgi_am, die_id carried IN the 691-bit record (rk: 0 until the case's
+    // record is driven, as the sequencer's am_rec after reset), not on a separate strap
+    reg [7:0] rk = 0;
+    hfd_hgi_am #(.MUT(MS)) u (.clk(clk), .rst_n(rst_n), .f_hgi_cmdproc({rk, rec}), .t_hgi_cmdproc(ret),
+        .t_hgi_vmq(vmq), .f_hgi_vmr(vmr0), .in_v(s_v), .in_last(s_last), .in_bias_en(1'b0), .in_mask(s_mask), .in_vals(s_vals),
+        .in_bias(256'd0), .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
+    wire nan_flag = u.u_slot.nan_flag;
+    always @* if (rec[0]) rk = rank; else if (!rst_n) rk = 8'd0;
+`else
     ot_hgi_argmax_slot #(.MUT(MS)) u (.clk(clk), .rst_n(rst_n), .f_hgi_cmdproc(rec), .t_hgi_cmdproc(ret), .die_id(rank),
         .vmq(vmq), .vmr(vmr0), .in_v(s_v), .in_last(s_last), .in_bias_en(1'b0), .in_mask(s_mask), .in_vals(s_vals),
         .in_bias(256'd0), .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     wire nan_flag = u.nan_flag;
+`endif
     ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status());
     integer tw;
     task automatic vm_req(input we, input [31:0] word, input [31:0] data, output [31:0] q);
