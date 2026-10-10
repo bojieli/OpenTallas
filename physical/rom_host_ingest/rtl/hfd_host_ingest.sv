@@ -13,12 +13,18 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif,
     // sys-takeover 2026-10-09: engine options (ot_rom_host_ingest ENG_TRIM / APIPE), opt-in
     parameter integer ENG_TRIM = `ifdef OT_HING_ETRIM 1 `else 0 `endif,
-    parameter integer APIPE = `ifdef OT_HING_APIPE2 2 `elsif OT_HING_APIPE 1 `else 0 `endif,
+    parameter integer APIPE = `ifdef OT_HING_APIPE3 3 `elsif OT_HING_APIPE2 2 `elsif OT_HING_APIPE 1 `else 0 `endif,
     // RPIPE (sys-takeover 2026-10-09, with HCUT; hing_pipe_a TT -290: hk_d -> acked >= hk_d compare -> rel -> u_ca read
     // pointer / u_cb write / hk_d reload, 36-37 levels): the release condition of the held head is a REGISTER (hr_q),
     // recomputed every edge and cleared whenever the head is consumed or reloaded (acked only grows: never early).
     // +1 ck edge per completion word.
-    parameter integer RPIPE = `ifdef OT_HING_RPIPE 1 `else 0 `endif) (
+    // RPIPE = 2 (sys-takeover 2026-10-10, hing_pipec_a TT -114: acked >= hk_d compare -> hr_q 28 lv, acked + ack_n 24 lv):
+    // ack_n is registered, the ACK count is a split counter (low 16 + a registered carry into the high 16: the count can
+    // only read LOW while a carry is pending), the fence compare is a register (ge_q) and hr_q waits one edge after any
+    // head reload (pq) so ge_q always belongs to the held head.  Never early; +2..3 ck edges per fenced release.
+    // XPIPE (u_x ot_hbm_ingest_xlat): see the translator.
+    parameter integer XPIPE = `ifdef OT_HING_XPIPE 1 `else 0 `endif,
+    parameter integer RPIPE = `ifdef OT_HING_RPIPE2 2 `elsif OT_HING_RPIPE 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -56,7 +62,7 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
         .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(u_tv), .t_d(u_td),
         .t_cr(u_tcr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .i_rv(1'b0), .i_rd(256'd0), .fault(f_hi));
-    ot_hbm_ingest_xlat #(.IQ(IQ)) u_x (
+    ot_hbm_ingest_xlat #(.IQ(IQ), .XPIPE(XPIPE)) u_x (
         .ck(ck), .rst_n(rn_c), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .wq_v(wq_v), .wq_stack(wq_stack), .wq_pc(wq_pc), .wq_bank(wq_bank), .wq_row(wq_row), .wq_col(wq_col),
         .wq_data(wq_data), .wq_r(wq_r), .eop_v(eop_v), .eop_d(eop_d), .fault(f_x));
@@ -103,8 +109,24 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
 `ifdef OT_HING_MUT_RPSTALE
         else hr_q <= hk_v && (!is_done || FENCE == 0 || acked >= hk_d[31:0]);                    // mutant: not cleared
 `else
+        else if (RPIPE >= 2) hr_q <= hk_v && !rel && !a_pop && !pq && (!is_done || FENCE == 0 || ge_q);
         else hr_q <= hk_v && !rel && !a_pop && (!is_done || FENCE == 0 || acked >= hk_d[31:0]);
 `endif
+    // RPIPE 2: registered ack_n, split ACK counter, registered compare
+    reg  [5:0]  an_q; reg [15:0] ack_lo, ack_hi; reg ack_c; reg ge_q, pq;
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) begin an_q <= 0; ack_lo <= 0; ack_hi <= 0; ack_c <= 1'b0; ge_q <= 1'b0; pq <= 1'b0; end
+        else begin
+            an_q <= ack_n;
+            {ack_c, ack_lo} <= {1'b0, ack_lo} + {11'd0, an_q};
+            ack_hi <= ack_hi + {15'd0, ack_c};
+            ge_q <= {ack_hi, ack_lo} >= hk_d[31:0];
+`ifdef OT_HING_MUT_GESTALE
+            pq <= 1'b0;                                                   // mutant: the post-reload wait is skipped
+`else
+            pq <= a_pop;
+`endif
+        end
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin acked <= 0; slot_done_v <= 1'b0; slot_done_tag <= 0; end
         else begin

@@ -23,7 +23,11 @@
 module ot_hbm_ingest_xlat #(
     parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
     parameter integer SLOT_ROWS = 2,
-    parameter integer IQ = 4
+    parameter integer IQ = 4,
+    // XPIPE = 1 (sys-takeover 2026-10-10, hing_pipec_a TT -114: qr -> head mux -> S * 3856 -> w1 24 lv, w1 -> w17 ->
+    // t -> row -> w2 28 lv): four register stages (latch; divide; window offset / j; row) and an 8-entry output FIFO so
+    // the admission rule still sustains a word an edge.  +2 ck edges per word latency, same order / values.
+    parameter integer XPIPE = 0
 ) (
     input  wire          ck, rst_n,
     input  wire          o_v, input wire o_we, input wire [31:0] o_addr, input wire [255:0] o_d,
@@ -48,12 +52,15 @@ module ot_hbm_ingest_xlat #(
     reg         v1, v2;
     reg  [1:0]  k1;  reg [5:0] sl1; reg [23:0] S1; reg [11:0] w1; reg [255:0] d1;
     reg  [291:0] w2;
-    reg  [291:0] oq [0:3];
-    reg  [2:0]  ow, orp;
-    wire [2:0]  on = ow - orp;
+    localparam integer OQN = (XPIPE != 0) ? 8 : 4;
+    localparam integer LO = (XPIPE != 0) ? 3 : 2;
+    reg  [291:0] oq [0:OQN-1];
+    reg  [3:0]  ow, orp;
+    wire [3:0]  on = ow - orp;
     wire        pop = wq_v && wq_r;
-    wire        adv = q_ne && ({1'b0, on} + v1 + v2 < 4'd4);
-    wire [23:0] wdiv_p = {12'd0, ha[11:0]} * 24'd3856;
+    reg         va, vb;                                          // XPIPE stages
+    wire        adv = q_ne && ((XPIPE != 0) ? ({1'b0, on} + v1 + va + vb + v2 < 5'd8) : ({1'b0, on} + v1 + v2 < 5'd4));
+    wire [23:0] wdiv_p = {12'd0, (XPIPE != 0) ? S1[11:0] : ha[11:0]} * 24'd3856;
     wire [11:0] wdiv = wdiv_p[23:16];
     wire [11:0] w17 = (w1 << 4) + w1;
     wire [11:0] tw = S1[11:0] - w17;
@@ -61,6 +68,25 @@ module ot_hbm_ingest_xlat #(
     wire [13:0] j   = (k1 == 2'd0) ? {2'd0, tw} : S1[20:7];
     wire [18:0] rb  = (k1 == 2'd0) ? WIN_ROW0 : (k1 == 2'd1) ? CKV_ROW0 : KEY_ROW0;
     wire [18:0] row = rb + sl1 * SLOT_ROWS + (j >> 10);
+    // XPIPE datapath: stage a (divide), stage b (window offset / j / pc), stage 2 (row)
+    reg  [1:0]  ka, kb; reg [5:0] sla, slb; reg [23:0] Sa; reg [11:0] wa; reg [255:0] da, db; reg [6:0] pcb; reg [13:0] jb;
+    wire [11:0] wa17 = (wa << 4) + wa;
+`ifdef OT_XLAT_MUT_XSTAGE
+    wire [11:0] twa  = S1[11:0] - wa17;                          // mutant: stage b takes S from the wrong stage
+`else
+    wire [11:0] twa  = Sa[11:0] - wa17;
+`endif
+    wire [6:0]  pca  = (ka == 2'd0) ? wa[6:0] : Sa[6:0];
+    wire [13:0] ja   = (ka == 2'd0) ? {2'd0, twa} : Sa[20:7];
+    wire [18:0] rbb  = (kb == 2'd0) ? WIN_ROW0 : (kb == 2'd1) ? CKV_ROW0 : KEY_ROW0;
+    wire [18:0] rowb = rbb + slb * SLOT_ROWS + (jb >> 10);
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin va <= 1'b0; vb <= 1'b0; end
+        else begin va <= (XPIPE != 0) && v1; vb <= va; end
+    always @(posedge ck) begin
+        if (v1) begin ka <= k1; sla <= sl1; Sa <= S1; wa <= wdiv; da <= d1; end
+        if (va) begin kb <= ka; slb <= sla; pcb <= pca; jb <= ja; db <= da; end
+    end
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             qw <= 0; qr <= 0; v1 <= 0; v2 <= 0; o_cr <= 0; ow <= 0; orp <= 0; fault <= 0; eop_v <= 0; eop_d <= 0;
@@ -71,16 +97,17 @@ module ot_hbm_ingest_xlat #(
                 qr <= qr + 1'b1; o_cr <= 1'b1;
                 if (ha == 32'hFFFFFFFF) begin eop_v <= 1'b1; eop_d <= hd[63:0]; end
                 else if (!hwe || ha[31:30] == 2'd3 || (ha[31:30] == 2'd0 && ha[23:12] != 12'd0)) fault <= 1'b1;
-                else begin v1 <= 1'b1; k1 <= ha[31:30]; sl1 <= ha[29:24]; S1 <= ha[23:0]; w1 <= wdiv; d1 <= hd; end
+                else begin v1 <= 1'b1; k1 <= ha[31:30]; sl1 <= ha[29:24]; S1 <= ha[23:0]; w1 <= (XPIPE != 0) ? 12'd0 : wdiv; d1 <= hd; end
             end
-            v2 <= v1;
-            if (v1) w2 <= {pcg[6:5], pcg[4:0], j[9:7], j[1:0], row, j[6:2], d1};
-            if (v2) begin oq[ow[1:0]] <= w2; ow <= ow + 1'b1; end
+            v2 <= (XPIPE != 0) ? vb : v1;
+            if (XPIPE != 0) begin if (vb) w2 <= {pcb[6:5], pcb[4:0], jb[9:7], jb[1:0], rowb, jb[6:2], db}; end
+            else if (v1) w2 <= {pcg[6:5], pcg[4:0], j[9:7], j[1:0], row, j[6:2], d1};
+            if (v2) begin oq[ow[LO-1:0]] <= w2; ow <= ow + 1'b1; end
             if (pop) orp <= orp + 1'b1;
         end
     end
-    wire [291:0] oh = oq[orp[1:0]];
-    assign wq_v = on != 3'd0;
+    wire [291:0] oh = oq[orp[LO-1:0]];
+    assign wq_v = on != 4'd0;
     assign {wq_stack, wq_pc, wq_bank, wq_row, wq_col} = oh[291:256];
     assign wq_data = oh[255:0];
 endmodule
