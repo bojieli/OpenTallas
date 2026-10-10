@@ -21,7 +21,14 @@ module ot_hbm_link_retry_sram #(
  // the read request, instead of read_epoch == session.  Equal to the compares under this module's own contract:
  // "session must change on coordinated reset/train and not wrap with old traffic".
  parameter SESREG=0,
- parameter MUXREG=0      // redesign-ds: ot_hbm_replay_sram MUXREG (+1 read edge; reads are reserved / latency insensitive)
+ parameter MUXREG=0,     // redesign-ds: ot_hbm_replay_sram MUXREG (+1 read edge; reads are reserved / latency insensitive)
+ // RREADY (hardcore-1010 grp B fallback, default 0): in_ready is a function of REGISTERED state only (fault, replaying,
+ // debt, tx_ready); the same-cycle feedback classification (advance / debt compares -> rewind) no longer gates it, and
+ // the fresh-send term of tx_valid no longer waits out a rewind cycle.  A flit accepted in the rewind cycle is launched
+ // and written at next_seq as usual; the go-back-N replay that the rewind starts covers [cursor, next_seq) and resends
+ // it (write_guard holds the replay read until the write lands); the receiver drops the out-of-order / duplicate copy
+ // exactly as for any in-flight flit after a NAK.  Fault-free streams are cycle-identical (rewind never fires).
+ parameter RREADY=0
 )(
  input wire clk, rst_n, input wire [EW-1:0] session,
  input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
@@ -74,9 +81,16 @@ module ot_hbm_link_retry_sram #(
  wire [SW-1:0] replay_seq=cursor;
  wire replay_empty=ack_progress && fb_seq==next_seq;
  assign retained=ENABLE ? debt:0;
- assign in_ready=!ENABLE ? tx_ready:!fault && !replaying && !rewind && debt<DEPTH && tx_ready;
- assign tx_valid=!ENABLE ? in_valid:!fault && !rewind && ((replaying && head_valid && head_seq==cursor && !replay_empty) || (!replaying && in_valid && debt<DEPTH));
- assign tx_data=ENABLE && replaying ? replay_head:in_data;
+`ifdef OT_TU_RREADY_MUT
+ wire rr_mut=1'b1;   // negative control: new flits are accepted during a replay (order must break)
+`else
+ wire rr_mut=1'b0;
+`endif
+ assign in_ready=!ENABLE ? tx_ready:(RREADY ? (!fault && (!replaying || rr_mut) && debt<DEPTH && tx_ready)
+                                            : (!fault && !replaying && !rewind && debt<DEPTH && tx_ready));
+ assign tx_valid=!ENABLE ? in_valid:!fault && ((!rewind && replaying && head_valid && head_seq==cursor && !replay_empty) ||
+                                            ((!replaying || (RREADY && rr_mut)) && in_valid && debt<DEPTH && (RREADY || !rewind)));
+ assign tx_data=ENABLE && replaying && !(RREADY && rr_mut) ? replay_head:in_data;
  assign tx_seq=ENABLE ? (replaying ? replay_seq:next_seq):0;
  assign tx_session=session;
  wire accepted=in_valid && in_ready;
@@ -105,6 +119,11 @@ module ot_hbm_link_retry_sram #(
    if(request_read) rflag<=sflag[replay_seq[AW-1:0]];
   end
  wire epoch_ok=NOEPOCH || (SESREG ? rflag : read_epoch==session);
+`ifdef OT_TU_FB_COVER
+ // bench-only coverage: RREADY's new case (a fresh flit accepted and launched in a rewind cycle)
+ integer rr_cov=0; always @(posedge clk) if(RREADY && ENABLE && rst_n && accepted && rewind) begin rr_cov=rr_cov+1;
+  $display("RREADY_COVER accept-in-rewind #%0d seq %0d", rr_cov, next_seq); end
+`endif
 `ifdef OT_TU_SESREG_CHECK
  // bench-only equivalence check: the registered per-slot flag equals the live stored-epoch compare on every replay read
  always @(posedge clk) if(SESREG && ENABLE && rst_n && read_response && !read_ue && rflag!==(read_epoch==session))
