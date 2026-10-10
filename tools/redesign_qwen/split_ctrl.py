@@ -529,7 +529,7 @@ def emit_tt_ctlm() -> str:
           f"    ot_hdc_delay #(.W({NW} + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rs), .d({{m_fidx, m_fval}}), .q({{m_fidx_o, m_fval_o}}));"]
     ttp = ", ".join(f".{k}({v})" for k, v in tp.items() if k not in ("IS", "OS")) + ", .IS(0), .OS(OS)"
     L += [f"    ot_qfd_tt_ctl #({ttp}) u_tt (",
-          "        .clk(c_me_clk), .rst_n(rst_n), .up_fault(up_fault), .land_cnt(land_cnt), .go(u_me_go), .ready(u_me_ready),",
+          "        .clk(c_me_clk), .rst_n(rs), .up_fault(up_fault), .land_cnt(land_cnt), .go(u_me_go), .ready(u_me_ready),",   # registered reset (ctlm PREROUTE: rst_n port -> 32k flops)
           "        .idle(u_me_idle), " + ", ".join(f".{p}(u_me_{p})" for p, _ in fields if p.startswith("i_")) + ",",
           "        .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),",
           "        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),",
