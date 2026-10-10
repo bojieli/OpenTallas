@@ -1,0 +1,171 @@
+{
+ "schema": "opentallas.s81_ph.composition.v1",
+ "slab": "dsfd_sp_collective",
+ "slab_um": [
+  1371.792,
+  1369.416
+ ],
+ "core_um": [
+  680.4,
+  1360.8
+ ],
+ "variant": "split3cr",
+ "vm_pin_step": 4,
+ "core_rtl_defines": [
+  "OT_S81PH_COLL_SPLIT",
+  "OT_S81PH_COLL_QPIPE",
+  "OT_S81PH_COLL_CR"
+ ],
+ "lane_rtl_defines": [
+  "OT_S81PH_GBX_FMT1",
+  "OT_S81PH_EP_PIPE2",
+  "OT_S81PH_LANE_CR"
+ ],
+ "reuse_east_w_my": true,
+ "source": "rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv with core_rtl_defines and lane_rtl_defines; rtl/common/ot_link_credit.sv WFREE credit landing",
+ "instances": [
+  {
+   "inst": "g_lane[0].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    0.0
+   ],
+   "orient": "R0",
+   "lane": "W0",
+   "ch_b": 0
+  },
+  {
+   "inst": "g_lane[1].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    340.2
+   ],
+   "orient": "R0",
+   "lane": "W1",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[2].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    680.4
+   ],
+   "orient": "R0",
+   "lane": "W2",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[3].g_w.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    0.0,
+    1020.6
+   ],
+   "orient": "R0",
+   "lane": "W3",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[4].g_e.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    1026.192,
+    0.0
+   ],
+   "orient": "MY",
+   "lane": "E0",
+   "ch_b": 0
+  },
+  {
+   "inst": "g_lane[5].g_e.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    1026.192,
+    340.2
+   ],
+   "orient": "MY",
+   "lane": "E1",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[6].g_e.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    1026.192,
+    680.4
+   ],
+   "orient": "MY",
+   "lane": "E2",
+   "ch_b": 1
+  },
+  {
+   "inst": "g_lane[7].g_e.u_l",
+   "master": "dsfd_coll_lane_w",
+   "xy": [
+    1026.192,
+    1020.6
+   ],
+   "orient": "MY",
+   "lane": "E3",
+   "ch_b": 1
+  },
+  {
+   "inst": "u_cb",
+   "master": "dsfd_coll_cb",
+   "xy": [
+    345.6,
+    0.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_ce",
+   "master": "dsfd_coll_ce",
+   "xy": [
+    345.6,
+    340.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_ct",
+   "master": "dsfd_coll_ct",
+   "xy": [
+    345.6,
+    1020.5999999999999
+   ],
+   "orient": "R0"
+  }
+ ],
+ "nets": {
+  "seams": "u_cb N <-> u_ce S and u_ce N <-> u_ct S: same-named pins at the same x (abutting, 0-um gap)",
+  "lanes": "lane k core-face pins <-> the core tile holding lane k (0 / 4: u_cb, 1 2 5 6: u_ce, 3 / 7: u_ct) at slab y = (k % 4) * LH + Y_CORE",
+  "clocks": "pll_stream -> ck of every lane tile and of u_cb / u_ce / u_ct (die clock tree; core tiles take ck on the W face near mid-height)"
+ },
+ "cost": "full rate; +2..3 cycles per lane/seam crossing each way; full-shape collective bench 3013 cycles vs current 3015, not a token-rate claim",
+ "port_contract": "contract_split3",
+ "boundary_protocol": "lo_r / li_r are credit pulses, not combinational ready; every lane and seam uses an 8-deep credit landing FIFO",
+ "required_parameters": {
+  "dsfd_coll_cb": {
+   "CR": 1
+  },
+  "dsfd_coll_ce": {
+   "CR": 1
+  },
+  "dsfd_coll_ct": {
+   "CR": 1,
+   "LR": 0
+  },
+  "dsfd_coll_lane_w": {
+   "LCR": 1
+  }
+ },
+ "physical_adoption": "UNQUALIFIED: cb, ce, ct and lane LCR must all close with exactness and negative-control gates before binding",
+ "source_commits": {
+  "core": "a17b27437",
+  "lane": "851328e6c"
+ }
+}

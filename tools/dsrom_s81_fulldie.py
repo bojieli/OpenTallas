@@ -2325,9 +2325,11 @@ ENG_BUSES = (
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
+Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face east end, own bank; right lane MY)
 CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
+COLL_SPLIT3_CR = False         # explicit planning candidate, never a closure claim
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -2922,7 +2924,7 @@ def build_r8(variant=None):
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
             else:
                 assert rq['h'] <= (Q_ELEM_FRAME_H or ELEM_FRAME_H), (rq['h'], Q_ELEM_FRAME_H or ELEM_FRAME_H)
-                it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], kind='q', region=f'frame_{r}')
+                it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], 'MY' if (Q_X1B and ln == 'R') else 'R0', kind='q', region=f'frame_{r}')
             insts.append(it)
             slot_of[p] = (r, s, ln)
             # L lane / BF: ROMs (mirrored, pins east) then the sequencer, east of them, toward the slot station;
@@ -2953,7 +2955,7 @@ def build_r8(variant=None):
             for p, kind, s, ln in elems:
                 if kind == 'q':
                     insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + offsets[s] + ELEM_DY, rq,
-                                      f'frame_{r}')
+                                      f'frame_{r}', mirror=Q_X1B and ln == 'R')
         nodes, root = return_tree(2 * len(pairs))
         frames[r]['tree'] = (nodes, root)
         rank = _inorder_rank(nodes, root)
@@ -3170,7 +3172,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(q_x1b=Q_X1B, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -3867,17 +3869,33 @@ def _q_port_xc(rq, port):
     return sum(xs) / len(xs)
 
 
-def _q_banks(p, ex, ey, rq, region):
+def _q_banks(p, ex, ey, rq, region, mirror=False):
+    """one bank per element face (S below, N above), at the centre of its ports' pins.  --q-x1b (option B, s81-gen
+    2026-10-10): x1 is its own S-face bank 'bx' at the x1 pins' centre (element x 400.08-505.44: over the slot station,
+    not the packed cfg ROM row), and a mirrored (MY, right-lane) element mirrors the bank x."""
     out = []
+    groups = []
+    if Q_X1B:
+        # A default/legacy q LEF must never silently stand in for the selected
+        # split x1 face plan.  A stub is allowed for integration, not closure.
+        assert _q_port_face(rq, 'x1') == 'S', '--q-x1b requires x1 on the S face'
+        x1c = _q_port_xc(rq, 'x1')
+        assert 400.08 <= x1c <= 505.44, ('--q-x1b requires the east-end x1 view', x1c)
     for face in 'SN':
         ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
-        if not ports:
-            continue
+        if Q_X1B and face == 'S' and 'x1' in ports:
+            ports.remove('x1')
+            groups.append(('S', 'bx', ['x1']))
+        if ports:
+            groups.append((face, f'b{face.lower()}', ports))
+    for face, tag, ports in groups:
         xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        if mirror:
+            xc = rq['w'] - xc
         w = 60.48
         x = dn(ex + xc - w / 2, GX)
         y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
-        out.append(Inst(f'b{face.lower()}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
@@ -5766,10 +5784,14 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--q-x1b', action='store_true', help='s81-gen 2026-10-10 (coordinator option B): the q element x1 '
+                    'port on its S-face east end with its own bank, right-lane elements mirrored MY; needs the x1b q view '
+                    '(OT_S81_Q_LEF; stub physical/s81_die_views/q_elem_qs5f_x1b_stub); default off')
     ap.add_argument('--ck-rule', action='store_true', help='s81-gen 2026-10-09 (redesign-ds clock-pin rule): every generated '
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
                     'physical/s81_ph_views/collective/composition_split3.json (three-tile core column); default off')
+    ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
@@ -5859,9 +5881,12 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global COLL_SPLIT3, CK_RULE
+    global COLL_SPLIT3, COLL_SPLIT3_CR, COLL_SPLIT3_COMP, CK_RULE, Q_X1B
+    Q_X1B = bool(getattr(a, 'q_x1b', False))
     CK_RULE = bool(getattr(a, 'ck_rule', False))
-    COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False))
+    COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
+    COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR
+    COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr.json' if COLL_SPLIT3_CR else 'physical/s81_ph_views/collective/composition_split3.json'
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
