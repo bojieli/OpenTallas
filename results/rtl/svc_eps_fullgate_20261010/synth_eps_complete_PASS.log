@@ -1,0 +1,315 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv; hierarchy -check -top ot_svs_eps; proc; flatten; opt_clean; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/service/ot_hbm_kport_map.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/service/ot_hbm_kport_map.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_kport_map'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv
+Parsing SystemVerilog input from `physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv' to AST representation.
+Generating RTLIL representation for module `\ot_svc_fclk_buf'.
+Generating RTLIL representation for module `\ot_svc_pipe'.
+Generating RTLIL representation for module `\ot_svc_vpipe'.
+Generating RTLIL representation for module `\ot_svc_fifo'.
+Generating RTLIL representation for module `\ot_svc_asm'.
+Generating RTLIL representation for module `\ot_hbm_svc_core'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv
+Parsing SystemVerilog input from `physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv' to AST representation.
+Generating RTLIL representation for module `\ot_svs_rsync'.
+Generating RTLIL representation for module `\ot_svs_rdyp'.
+Generating RTLIL representation for module `\ot_svs_rdy'.
+Generating RTLIL representation for module `\ot_svs_smport'.
+Generating RTLIL representation for module `\ot_svs_arb'.
+Warning: Replacing memory \id_r with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv:111
+Generating RTLIL representation for module `\ot_svs_pc'.
+Generating RTLIL representation for module `\ot_svs_asm'.
+Generating RTLIL representation for module `\ot_svs_kvasm'.
+Generating RTLIL representation for module `\ot_svs_e'.
+Generating RTLIL representation for module `\ot_svs_w'.
+Generating RTLIL representation for module `\ot_svs_lane'.
+Generating RTLIL representation for module `\ot_svs_asm_r'.
+Warning: Replacing memory \b with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv:415
+Warning: Replacing memory \we_q with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv:420
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv
+Parsing SystemVerilog input from `physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv' to AST representation.
+Generating RTLIL representation for module `\ot_svs_eps'.
+Generating RTLIL representation for module `\ot_svs_pcs'.
+Generating RTLIL representation for module `\ot_svs_grp'.
+Warning: Replacing memory \sm with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:225
+Warning: Replacing memory \cnt with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:225
+Warning: Replacing memory \rs with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:229, physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \ws with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:232, physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \full with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \we1h with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:194
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_svs_eps
+Used module:     \ot_svc_fclk_buf
+Used module:     \ot_hbm_accel_cdc_fifo
+Parameter \W = 127
+Parameter \AW = 2
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 127
+Parameter \AW = 2
+Generating RTLIL representation for module `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32
+
+6.3. Analyzing design hierarchy..
+Top module:  \ot_svs_eps
+Used module:     \ot_svc_fclk_buf
+Used module:     $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo
+
+6.4. Analyzing design hierarchy..
+Top module:  \ot_svs_eps
+Used module:     \ot_svc_fclk_buf
+Used module:     $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo
+Removing unused module `\ot_svs_grp'.
+Removing unused module `\ot_svs_pcs'.
+Removing unused module `\ot_svs_asm_r'.
+Removing unused module `\ot_svs_lane'.
+Removing unused module `\ot_svs_w'.
+Removing unused module `\ot_svs_e'.
+Removing unused module `\ot_svs_kvasm'.
+Removing unused module `\ot_svs_asm'.
+Removing unused module `\ot_svs_pc'.
+Removing unused module `\ot_svs_arb'.
+Removing unused module `\ot_svs_smport'.
+Removing unused module `\ot_svs_rdy'.
+Removing unused module `\ot_svs_rdyp'.
+Removing unused module `\ot_svs_rsync'.
+Removing unused module `\ot_hbm_svc_core'.
+Removing unused module `\ot_svc_asm'.
+Removing unused module `\ot_svc_fifo'.
+Removing unused module `\ot_svc_vpipe'.
+Removing unused module `\ot_svc_pipe'.
+Removing unused module `\ot_hbm_kport_map'.
+Removing unused module `\ot_hbm_accel_cdc_fifo'.
+Removed 21 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 7 switch rules as full_case in process $proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975 in module ot_svs_eps.
+Marked 1 switch rules as full_case in process $proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:40$2929 in module ot_svs_eps.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030 in module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030 in module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019 in module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+Marked 3 switch rules as full_case in process $proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007 in module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+Removed a total of 1 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 13 redundant assignments.
+Promoted 10 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+Found async reset \rst in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:40$2929'.
+Found async reset \rrst_n in `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+Found async reset \wrst_n in `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~17 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:87$2984'.
+     1/1: $0\sd_d[61:0]
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:86$2983'.
+     1/1: $0\sg_d[12:0]
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:85$2982'.
+     1/1: $0\spq_d[126:0]
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+     1/10: $0\pend[2:0] [2]
+     2/10: $0\pend[2:0] [1]
+     3/10: $0\pend[2:0] [0]
+     4/10: $0\sg_v[0:0]
+     5/10: $0\sd_v[0:0]
+     6/10: $0\hold[3:0]
+     7/10: $0\spq_v[0:0]
+     8/10: $0\ph[0:0]
+     9/10: $0\spend[0:0]
+    10/10: $0\kdv[0:0]
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:41$2931'.
+Creating decoders for process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:40$2929'.
+     1/1: $0\e_f[0:0]
+Creating decoders for process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030'.
+     1/1: $1$mem2reg_rd$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:25$3993_DATA[126:0]$4032
+Creating decoders for process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+Creating decoders for process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+     1/4: $0\wg_r2[2:0]
+     2/4: $0\wg_r1[2:0]
+     3/4: $0\rgray[2:0]
+     4/4: $0\rbin[2:0]
+Creating decoders for process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+     1/13: $2$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_ADDR[1:0]$4015
+     2/13: $2$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_DATA[126:0]$4016
+     3/13: $0\rsync_bin_q[2:0]
+     4/13: $0\rg_w2[2:0]
+     5/13: $0\rg_w1[2:0]
+     6/13: $0\wgray[2:0]
+     7/13: $0\wbin[2:0]
+     8/13: $1$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_DATA[126:0]$4012
+     9/13: $1$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_ADDR[1:0]$4011
+    10/13: $0\mem[3][126:0]
+    11/13: $0\mem[2][126:0]
+    12/13: $0\mem[1][126:0]
+    13/13: $0\mem[0][126:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$mem2reg_rd$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:25$3993_DATA' from process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030'.
+No latch inferred for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\g2b$func$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:27$3991.$result' from process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+No latch inferred for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\g2b$func$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:27$3992.$result' from process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+No latch inferred for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\g2b$func$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:27$3992.g' from process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+No latch inferred for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\g2b$func$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:27$3992.$fordecl_block$1.i' from process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_svs_eps.\sd_d' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:87$2984'.
+  created $dff cell `$procdff$4121' with positive edge clock.
+Creating register for signal `\ot_svs_eps.\sg_d' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:86$2983'.
+  created $dff cell `$procdff$4122' with positive edge clock.
+Creating register for signal `\ot_svs_eps.\spq_d' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:85$2982'.
+  created $dff cell `$procdff$4123' with positive edge clock.
+Creating register for signal `\ot_svs_eps.\pend' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4128' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\sd_v' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4133' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\sg_v' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4138' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\spend' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4143' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\ph' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4148' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\kdv' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4153' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\spq_v' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4158' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\hold' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+  created $adff cell `$procdff$4163' with positive edge clock and positive level reset.
+Creating register for signal `\ot_svs_eps.\e_f [127:1]' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:41$2931'.
+  created $dff cell `$procdff$4164' with positive edge clock.
+Creating register for signal `\ot_svs_eps.\e_f [0]' using process `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:40$2929'.
+  created $adff cell `$procdff$4169' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\rbin' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+  created $adff cell `$procdff$4174' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\rgray' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+  created $adff cell `$procdff$4179' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\wg_r1' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+  created $adff cell `$procdff$4184' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\wg_r2' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+  created $adff cell `$procdff$4189' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\wbin' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4194' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\wgray' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4199' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\rg_w1' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4204' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\rg_w2' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4209' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\rsync_bin_q' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4214' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\mem[0]' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $dff cell `$procdff$4221' with positive edge clock.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\mem[1]' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $dff cell `$procdff$4228' with positive edge clock.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\mem[2]' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $dff cell `$procdff$4235' with positive edge clock.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.\mem[3]' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $dff cell `$procdff$4242' with positive edge clock.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_ADDR' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4247' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32$3994_DATA' using process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+  created $adff cell `$procdff$4252' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:87$2984'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:87$2984'.
+Found and cleaned up 1 empty switch in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:86$2983'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:86$2983'.
+Found and cleaned up 1 empty switch in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:85$2982'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:85$2982'.
+Found and cleaned up 11 empty switches in `\ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:73$2975'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:41$2931'.
+Removing empty process `ot_svs_eps.$proc$physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:40$2929'.
+Found and cleaned up 1 empty switch in `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030'.
+Removing empty process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4030'.
+Removing empty process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:0$4023'.
+Removing empty process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:36$4019'.
+Found and cleaned up 2 empty switches in `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+Removing empty process `$paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.$proc$rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:29$4007'.
+Cleaned up 17 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_svc_fclk_buf.
+Optimizing module ot_svs_eps.
+<suppressed ~25 debug messages>
+Optimizing module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+<suppressed ~34 debug messages>
+
+8. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_svc_fclk_buf.
+Deleting now unused module $paramod$541639ecf626a887fa18f3bd9add5d9cc5f340a4\ot_hbm_accel_cdc_fifo.
+<suppressed ~2 debug messages>
+
+9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_svs_eps..
+Removed 36 unused cells and 154 unused wires.
+<suppressed ~38 debug messages>
+
+10. Executing CHECK pass (checking for obvious problems).
+Checking module ot_svs_eps...
+Found and reported 0 problems.
+
+11. Printing statistics.
+
+=== ot_svs_eps ===
+
+   Number of wires:                160
+   Number of wire bits:           3537
+   Number of public wires:          75
+   Number of public wire bits:    1621
+   Number of ports:                 21
+   Number of port bits:            261
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                132
+     $add                            3
+     $adff                          17
+     $dff                            8
+     $eq                            16
+     $logic_and                     20
+     $logic_not                     14
+     $logic_or                       3
+     $mul                            1
+     $mux                           38
+     $not                            4
+     $pmux                           1
+     $reduce_bool                    1
+     $scopeinfo                      2
+     $shiftx                         1
+     $sub                            1
+     $xor                            2
+

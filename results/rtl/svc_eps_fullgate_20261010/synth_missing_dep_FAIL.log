@@ -1,0 +1,26 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv; hierarchy -check -top ot_svs_eps; proc; flatten; opt_clean; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv
+Parsing SystemVerilog input from `physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv' to AST representation.
+Generating RTLIL representation for module `\ot_svs_eps'.
+Generating RTLIL representation for module `\ot_svs_pcs'.
+Generating RTLIL representation for module `\ot_svs_grp'.
+Warning: Replacing memory \sm with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:225
+Warning: Replacing memory \cnt with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:225
+Warning: Replacing memory \rs with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:229, physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \ws with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:232, physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \full with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:224
+Warning: Replacing memory \we1h with list of registers. See physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv:194
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+ERROR: Module `\ot_svc_fclk_buf' referenced in module `\ot_svs_eps' in cell `\u_fk' is not part of the design.

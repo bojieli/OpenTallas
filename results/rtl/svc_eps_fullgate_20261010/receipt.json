@@ -25,6 +25,11 @@
     "neg_pc.log": "6a1baf70a0d4ac14073ae74a497f16098c86fe20681efc8ee019cfa6e3c73511",
     "ps_compiled.log": "f6e1e911fb6526375633bdbebbb7b3755c69e157890b057164c20f94fe401ed2",
     "neg_done.log": "d122d0d959d8f741274b4cf814dd06f3e477522a474d2d8253ff75950dac48da",
-    "eps_fourstate_mutants.log": "b10548b871a7ba2271ab17b4cd9ef74b6491c6582e9d05a4c1d3e4cc0d799678"
-  }
+    "eps_fourstate_mutants.log": "b10548b871a7ba2271ab17b4cd9ef74b6491c6582e9d05a4c1d3e4cc0d799678",
+    "synth_local_yosys09_FAIL.log": "b5511166d72994b1e1f865dd35b4e1a2d68b6abe4d4f66b607b3540c52b8995b",
+    "synth_missing_dep_FAIL.log": "e75efb175e2af148f9d861a958726c7a9397d72907e7491459cc71129ece079c",
+    "synth_eps_complete_PASS.log": "60d59f42af52c7c63ef7187962ed3096de541380b0f80e1b44c6a4881ad4040b"
+  },
+  "synthesis": "Yosys0.52 hierarchy/proc/flatten/check-assert PASS no memories/processes;132generic vector cells,not mapped area",
+  "synthesis_failure_history": "LocalYosys0.9 parserunsupported;initialremoteLIBomittedfclk_buf;both logs preserved"
 }
