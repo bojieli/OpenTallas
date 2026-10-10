@@ -1,0 +1,99 @@
+{
+  "actual_source": "f4babd572",
+  "raw_analysis": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 0,
+    "reg_to_out_max": 0,
+    "reg_to_out_example": "ttok[9]",
+    "cells": 3979,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ],
+    "top": "hgi_mtp_accept18_route",
+    "levels": 16,
+    "strict": true,
+    "verdict": "PASS",
+    "message": "rtl_boundary hgi_mtp_accept18_route: registered boundary (in->reg 0, reg->out 0 levels)"
+  },
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "yosys_path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+  "recipe": {
+    "top": "hgi_mtp_accept18_route",
+    "sources": [
+      "rtl/hbm_accel/generic/hgi_mtp18_route_tops.sv",
+      "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv",
+      "rtl/hdc/ot_hdc_accept.sv"
+    ],
+    "params": {},
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "cache_path": "/srv/opentallas-scratch2/scratch/codex/hgi-accept-seat-4bff/proofcache/rtl_boundary_cache.json",
+  "source_sha256": {
+    "tools/closure_loop/rtl_boundary.py": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "physical/qwen_die_masters/cfg/hgi_mtp_accept18.env": "a4fb54419bfb26eef051017d446d8951edd57decd57c359d36d4d19078bd9055",
+    "physical/qwen_die_masters/cfg/hgi_mtp_accept18_pd48.env": "0c76f60dd17bf636de3bec120b99fc791586a7de0792f301183c7f37a58c3890",
+    "rtl/hbm_accel/generic/hgi_mtp18_route_tops.sv": "3e0b8bd1c6d55534fd54671a7d425b49e4efd7f56aaafbe3518b132e22f0e5ef",
+    "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv": "c88038c86f4958541437a93043661c77412b021e04b9a5ee7902b3d654a2244c",
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+  },
+  "cache_entries": {
+    "8883d9f3c982c2bef284bed4": {
+      "in_to_out_bits": 0,
+      "in_to_out_max": -1,
+      "in_to_out_example": [],
+      "in_to_reg_max": 0,
+      "reg_to_out_max": 0,
+      "reg_to_out_example": "ttok[9]",
+      "cells": 3979,
+      "ctrl_ports": [
+        "clk",
+        "rst_n"
+      ]
+    }
+  },
+  "central_git_exact_source_validation": {
+    "tools/closure_loop/rtl_boundary.py": {
+      "git_source": "f4babd572",
+      "expected_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+      "remote_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+      "match": true
+    },
+    "physical/qwen_die_masters/cfg/hgi_mtp_accept18.env": {
+      "git_source": "f4babd572",
+      "expected_sha256": "a4fb54419bfb26eef051017d446d8951edd57decd57c359d36d4d19078bd9055",
+      "remote_sha256": "a4fb54419bfb26eef051017d446d8951edd57decd57c359d36d4d19078bd9055",
+      "match": true
+    },
+    "physical/qwen_die_masters/cfg/hgi_mtp_accept18_pd48.env": {
+      "git_source": "f4babd572",
+      "expected_sha256": "0c76f60dd17bf636de3bec120b99fc791586a7de0792f301183c7f37a58c3890",
+      "remote_sha256": "0c76f60dd17bf636de3bec120b99fc791586a7de0792f301183c7f37a58c3890",
+      "match": true
+    },
+    "rtl/hbm_accel/generic/hgi_mtp18_route_tops.sv": {
+      "git_source": "f4babd572",
+      "expected_sha256": "3e0b8bd1c6d55534fd54671a7d425b49e4efd7f56aaafbe3518b132e22f0e5ef",
+      "remote_sha256": "3e0b8bd1c6d55534fd54671a7d425b49e4efd7f56aaafbe3518b132e22f0e5ef",
+      "match": true
+    },
+    "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv": {
+      "git_source": "f4babd572",
+      "expected_sha256": "c88038c86f4958541437a93043661c77412b021e04b9a5ee7902b3d654a2244c",
+      "remote_sha256": "c88038c86f4958541437a93043661c77412b021e04b9a5ee7902b3d654a2244c",
+      "match": true
+    },
+    "rtl/hdc/ot_hdc_accept.sv": {
+      "git_source": "f4babd572",
+      "expected_sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+      "remote_sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+      "match": true
+    }
+  }
+}

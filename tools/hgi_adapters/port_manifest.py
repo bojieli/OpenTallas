@@ -53,6 +53,9 @@ PEERS = {
     'sm_xload': ('ot_hgi_sm_xload', 'rtl/hbm_accel/generic/peers'),
     'sm_pub': ('ot_hgi_sm_pub', 'rtl/hbm_accel/generic/peers'),
     'ds_mux': ('ot_hgi_ds_mux', 'rtl/hbm_accel/generic/peers'),
+    # D1 die bodies (adapter + local memory + the r25 engine + stage / drain through one VM packet client)
+    'su_unit': ('ot_hgi_su_unit', 'rtl/hbm_accel/generic/peers'),       # GLU = 1: the SFU unit
+    'hc_unit': ('ot_hgi_hc_unit', 'rtl/hbm_accel/generic/peers'),
 }
 
 

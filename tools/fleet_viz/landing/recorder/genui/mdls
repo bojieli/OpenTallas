@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""mdls FILE... - image metadata (size, capture date, camera, GPS) like macOS mdls / exiftool"""
+import sys, os
+from PIL import Image
+def dd(v): return float(v[0]) + float(v[1]) / 60 + float(v[2]) / 3600
+for p in sys.argv[1:]:
+    try:
+        im = Image.open(p); ex = im.getexif(); g = ex.get_ifd(0x8825)
+        gps = f'{dd(g[2]) * (1 if g[1] == "N" else -1):.5f}, {dd(g[4]) * (1 if g[3] == "E" else -1):.5f}' if g else '-'
+        print(f'{p}\t{im.width}x{im.height}\t{ex.get(0x0132, "-")}\t{ex.get(0x010F, "")} {ex.get(0x0110, "")}\tGPS {gps}\t{os.path.getsize(p)} bytes')
+    except Exception as e: print(f'{p}\terror: {e}')

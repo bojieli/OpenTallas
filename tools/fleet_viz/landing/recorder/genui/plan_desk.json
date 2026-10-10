@@ -1,0 +1,16 @@
+[
+ {"type":"full","say":"Open my home folder."},
+ {"type":"full","click":"documents","else":"Open Documents."},
+ {"type":"patch","say":"Sort by size, largest first."},
+ {"type":"patch","click":"housing|lease","else":"Select the Housing folder and show what is inside it in a side panel."},
+ {"type":"patch","say":"When is my lease up, and what is the renewal offer? Show it in the side panel."},
+ {"type":"full","say":"Open Pictures."},
+ {"type":"patch","click":"lisbon","else":"Show only the Lisbon trip."},
+ {"type":"patch","say":"Show the camera and capture time under each photo."},
+ {"type":"patch","say":"Group the photos by day."},
+ {"type":"full","click":"downloads","else":"Open Downloads."},
+ {"type":"patch","say":"What can I safely delete? Mark duplicates and old installers."},
+ {"type":"patch","say":"Show only files over 100 MB."},
+ {"type":"full","say":"Search my home for anything about the offsite."},
+ {"type":"patch","click":"agenda|offsite","else":"Preview the offsite agenda in a side panel."}
+]

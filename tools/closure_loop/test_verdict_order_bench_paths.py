@@ -63,6 +63,12 @@ class BenchPaths(unittest.TestCase):
     def test_missing_dirs(self):
         self.assertEqual(cl.bench_missing_paths(spec(bench=self.BENCH), self.git()), ["results/rtl/tr", "tests/rtl"])
 
+    def test_calibrate_cmd_src_path(self):
+        s = spec(bench=[])
+        s["stages"]["calibrate"] = {"cmd": "python3 tools/x.py --geom {SRC}/results/uarch/h/geom.json --pd 0.6"}
+        g = FakeGit({"results/uarch/h/geom.json": "", "tools/x.py": "open('results/rtl/never/x.json')"})
+        self.assertEqual(cl.bench_missing_paths(s, g), ["results/uarch/h"])
+
     def test_already_synced(self):
         s = spec(bench=self.BENCH)
         s["source"]["extra_paths"] = ["tests", "results/rtl/tr"]
