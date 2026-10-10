@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "R25IQG native indexer topology",
+      "target": "HBM accelerator",
+      "owner": "Codex:hbm-native-t4",
+      "recorded_at": "2026-10-10T12:02:15.339282+00:00",
+      "description": "Full native four-stack indexer reservation; T4 hardened-tap composite successor in progress, no die closure claim",
+      "source": {
+        "commit": "a508bbb901046f6a3c079776380e19cfeb2fb782",
+        "paths": [
+          "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native_t4.sv",
+          "physical/hbm_accel_die_views/index/rtl/hfd_idx_t4_join.sv",
+          "tools/hbm_indexer_r25i_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged."
+      },
+      "model": {
+        "status": "Prebuild sized, no rate credit",
+        "evidence": [
+          "results/uarch/hbm_indexer_t4_20261010/prebuild.json"
+        ],
+        "grid_slot_um": [
+          2800,
+          2500
+        ],
+        "join_slot_um": [
+          420,
+          360
+        ],
+        "extra_query_cycles_last_tap": 9,
+        "join_min_cycles": 2
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS342 atomic lane beats under skew and500cycle downstream credit stall; arithmetic and full composition remain unqualified",
+          "evidence": [
+            "results/rtl/hbm_native_t4_join_20261010/gate.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS swapped tap lanes and dropped downstream credits rejected",
+          "evidence": [
+            "results/rtl/hbm_native_t4_join_20261010/gate.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "No composite physical job until tap/selector/join hardened views and real joins exist. Explicit component jobs are not a topology closure binding.",
+        "component_jobs": [
+          {
+            "job": "hgi_idx_score_tap_b-95d226061-tc-cl-bt12r",
+            "element": "hfd_idx_score",
+            "scope": "Live existing L4 FA6 CRED128 LANE0=0 tap; does not implement entire native L16 grid; full T4 arithmetic bench belongs to this job"
+          },
+          {
+            "job": "hgi_idx_t4_join-a508bbb90-tc-cl",
+            "element": "hfd_idx_t4_join",
+            "scope": "New full128-credit atomic join route, isolated contextual component only"
+          },
+          {
+            "job": "codex_idx_qend_clocksliver_8bbd0820a-tc-cl",
+            "element": "hfd_idx_sel_native_qend",
+            "scope": "Selector physical root fixes by structural_idle; native_clock32 successor contract"
+          }
+        ],
+        "corners": {}
+      },
+      "dependencies": [
+        "Qualify four LANE0 variants or prove/prior-size a shared runtime lane identity implementation; one LANE0=0 tap is insufficient physical evidence",
+        "Full T4 arithmetic exact/negative gate still required; minimum join gate covers only join mechanism",
+        "Clock-root lockups and actual two-stage query hops must be implemented and physically qualified",
+        "Native score-grid slot must grow from2000.16x3000.264 to at least2800x2500 plus420x360 join; actual die overlap/reticle/routing gate required",
+        "Native producer fs90/qb1048/qbr1/kin345 and consumer to612/toc1/co72/coc1/ev2/4xst4/co_quarter_last joins remain unresolved"
+      ],
+      "integration": {
+        "status": "No silent binding to selector-only or L4-only closure. Aggregate remains open and owned until real complete successor geometry, clocking and join are qualified."
+      }
+    }
+  ]
+}
