@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+// hbm-phys-1010 [att]: the quad's CG parameter selects the gated RTL in simulation; in synthesis the quad is the hard
+// macro whose view IS the gated (CG 1: quad_b_tc/c891a57cf_cg_hm10) or ungated quad (route_half_cl.sh pairs them), and a
+// hard-macro cell has no parameters.
+`ifndef OT_ATTN_QCG
+`ifdef SYNTHESIS
+`define OT_ATTN_QCG
+`else
+`define OT_ATTN_QCG #(.CG(CG))
+`endif
+`endif
 // ---------------------------------------------------------------------------
 // HBM attention DIE TILE, margin + option-B version (Claude HBM SU/attn, 2026-10-06): the die master hfd_attn_tile
 // (exact r16h ports, faces and pin positions; the HBM-ABSTRACTS interim view physical/hbm_accel_die_views/attn_tile/rtl
@@ -141,7 +151,7 @@ module hfd_attn_tile_b #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0, qv, qf;
             wire [127:0] qy0, qy;
-            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the quad's results -> NL banks (every quad the same depth: one result word)

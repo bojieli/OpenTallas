@@ -305,7 +305,9 @@ module ot_attn_tile_m6h1x #(
     parameter integer CG = 0, parameter integer HOLD = 256, parameter integer MUT_CG = 0,  // redesign-hbm: quad gating (bench)
     // hbm-phys-1010 [att]: MUT_Q >= 0 applies MUT_CG to that ONE quad only (one quad wakes late, the others on time);
     // GUARD: the result word through the die's ot_attn_res_guard (default = CG, as hfd_attn_tile_b / hfd_attn_half_hi)
-    parameter integer MUT_Q = -1, parameter integer GUARD = CG
+    parameter integer MUT_Q = -1, parameter integer GUARD = CG,
+    // MUT_DLY >= 0: that ONE quad's result word {gov, oflt, oy} arrives one cycle late (a late quad at the merge)
+    parameter integer MUT_DLY = -1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -332,9 +334,18 @@ module ot_attn_tile_m6h1x #(
         ot_attn_tile_m6h1q #(.CG(CG), .HOLD(HOLD), .MUT_CG((MUT_Q < 0 || MUT_Q == q) ? MUT_CG : 0)) u_q (.clk(clk),
             .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
             .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
+        wire [3:0]   dv, df;
+        wire [127:0] dy;
+        if (MUT_DLY == q) begin : g_dly
+            reg [135:0] r = 136'd0;
+            always @(posedge clk) r <= {qv, qf, qy};
+            assign {dv, df, dy} = r;
+        end else begin : g_nd
+            assign {dv, df, dy} = {qv, qf, qy};
+        end
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer G = GB + 4 * (l / 2) + (l % 2);
-            assign {gov[G], gof[G], goy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
+            assign {gov[G], gof[G], goy[G*32 +: 32]} = {dv[l], df[l], dy[l*32 +: 32]};
         end
     end endgenerate
     ot_attn_res_guard #(.CG(GUARD)) u_guard (.gov(gov), .oy(goy), .oflt(gof), .w({ov, oy, oflt}));

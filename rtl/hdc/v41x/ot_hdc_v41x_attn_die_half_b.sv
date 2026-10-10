@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+// hbm-phys-1010 [att]: the quad's CG parameter selects the gated RTL in simulation; in synthesis the quad is the hard
+// macro whose view IS the gated (CG 1: quad_b_tc/c891a57cf_cg_hm10) or ungated quad (route_half_cl.sh pairs them), and a
+// hard-macro cell has no parameters.
+`ifndef OT_ATTN_QCG
+`ifdef SYNTHESIS
+`define OT_ATTN_QCG
+`else
+`define OT_ATTN_QCG #(.CG(CG))
+`endif
+`endif
 // ---------------------------------------------------------------------------
 // HBM attention die tile SPLIT into two half-tile die blocks (OWNER 2026-10-08 18:10 PT, stream attn-split): the
 // bank-built tile hfd_attn_tile_b (rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv; ot_attn_bpipe / ot_attn_fpipe come
@@ -87,7 +97,7 @@ module hfd_attn_half_lo #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0;
             wire [127:0] qy0;
-            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the first NLL of the NL result banks: 2 side-channel EW, then SN up to the N-face pin bank
@@ -138,7 +148,7 @@ module hfd_attn_half_hi #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0, qv, qf;
             wire [127:0] qy0, qy;
-            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             ot_attn_bpipe #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));

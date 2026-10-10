@@ -21,7 +21,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     // hbm-phys-1010 [att]: MUTQ >= 0 makes MUTCG hit ONE quad (one quad's wake late); GUARD (-1 = CG) selects the die's
     // result-word guard (ot_attn_res_guard).  'stale' counts cycles where the consumer would ADMIT a wrong word: valid
     // set, the word differs from the reference, and it is not the guard's fault word {oy 0, every oflt set}.
-    parameter integer MUTQ = -1, GUARD = -1;            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
+    parameter integer MUTQ = -1, GUARD = -1, MUTDLY = -1;   // MUTDLY: one quad's result word one cycle late            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1); 3: the quad parent ot_attn_tile_m6h1p (RIN 3)
     localparam integer RIN = (HALF == 3) ? 3 + PMID : (HALF == 2) ? 1 : HALF ? 2 : 3 + RV + RMID, XD = 2 + ((HALF == 3) ? POUT : HALF ? 0 : ROC);
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
@@ -51,7 +51,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF == 2) begin : g_quad
-        ot_attn_tile_m6h1x #(.CG(CG), .HOLD(HOLDQ), .MUT_CG(MUTCG), .MUT_Q(MUTQ), .GUARD(GUARD < 0 ? CG : GUARD)) u_s (
+        ot_attn_tile_m6h1x #(.CG(CG), .HOLD(HOLDQ), .MUT_CG(MUTCG), .MUT_Q(MUTQ), .GUARD(GUARD < 0 ? CG : GUARD), .MUT_DLY(MUTDLY)) u_s (
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     end else if (HALF != 0) begin : g_half
