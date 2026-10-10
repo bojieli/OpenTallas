@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-10-10T05:49:18.633830-07:00",
+  "status": "bench_qualified_physical_unqualified",
+  "source_sha256": {
+    "tools/hbm_hub_quarter_gen.py": "a6b1e4315f2284c7fa32ee6054fe51ef605f26743484c1075b3e5d19c72e9c0c",
+    "tools/hbm_su_tile_xl_gen.py": "46007bb9cde6540993c96c5953782ad0f05750cac9f4beddfc6dfc692f238c8f",
+    "tests/rtl/hub_reset/tb_su_tile_xl.sv": "40a249e21134405a9d1814c164c44b73da5ddd24fec3bfbcaaaffbab87eb5801",
+    "tests/rtl/hub_reset/tb_su_tile_cg.sv": "2d710401894cebda16fad416fda4192034ad4936f86bfad2eb76f8bf895cd73d",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl_r25gpht4/hfd_su_tile_xl.sv": "fdfdf7990333432de7a5b376c9b085db21823303bb6121506fc4f0522e85f47c",
+    "physical/hbm_accel_die_views/su/r25gpht4_contract/ports.json": "21ad4c7885116bcc431652b93af0b4969aef7ff7ae07a1e863909018c1371799"
+  },
+  "generated_sha256": {
+    "hfd_su.sv": "a73ecb16a3c36ad14b41ad049bc59ed39ebc3dcc21bda175dc82a9f33af0f2bf",
+    "hfd_su_neg.sv": "0390b005344e7c361f5f9874697f299cbc88da387c6c38db2ef74d6740cded3d",
+    "hfd_su_tile_xl.sv": "fdfdf7990333432de7a5b376c9b085db21823303bb6121506fc4f0522e85f47c",
+    "tb_hfd_su.sv": "07e4e673f1b179186e5f49cad773d29a604ee66171647d2299da3bdca5351fd1"
+  },
+  "contract": {
+    "input_bits": 11539,
+    "output_bits": 6487,
+    "middle_output_bits": 5463,
+    "accumulator_bits": 456,
+    "tiles": 192,
+    "real_output_lockup_bits": 422208,
+    "qid_capture_stages": 5,
+    "qid_added_initialization_cycles": 4
+  },
+  "result": {
+    "qid0_3": "PASS8vectors_each_settle46",
+    "ownership_mutant": "FAIL8mismatches",
+    "routing_mutant": "FAIL1mismatch",
+    "two_tile_phase": "PASS300each_at_plusminus100ps",
+    "bypass_mutant": "FAIL287mismatches",
+    "gating": "PASS336checks_each_phase",
+    "latewake_mutant": "FAIL24mismatches"
+  },
+  "scope": "Connectivity/phase/gating with same registered lane stand-in; arithmetic qualification remains separate.",
+  "adoption_gates": [
+    "Real lane macro TT/FF reset and command arcs, tile TT/FF/context/DRC0",
+    "Actual cg_en pin and three-edge-ahead scheduler wake absent from current29port die contract",
+    "Physical192ICG CTS and real M7/channel routes",
+    "This quarter remains a transport envelope, not controller RTL"
+  ]
+}

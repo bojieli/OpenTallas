@@ -15679,3 +15679,28 @@ def qwen_kvwq_binary_feed_model():
     """Posted KV control tile binary-feed successor; removes off-tile encoders."""
     from uarch_model_qwen_kvwq_binary import model
     return model()
+
+
+def hbm_su_r25gpht4_tile_sizing():
+    """Current full pin contract changes transport width, not lane arithmetic."""
+    return dict(status='proposal_unqualified', source_ports='R25GPHT4 norm_selector3fd1fdc91 plus exact E/M4 qid endpoint4450.812',
+                macs_per_cycle_added=0, memory_port_bytes_per_cycle_added=0,
+                face_input_bits=11539, face_output_bits=6487,
+                middle_input_bits=8350, middle_output_bits=5463,
+                static_qid_capture_cycles=5, static_qid_relay_bits=10,
+                static_qid_added_init_cycles_vs_old=4,
+                broadcast_bits_per_hop=1743, accumulate_bits_per_hop=456,
+                broadcast_bytes_per_cycle=1743 / 8, accumulate_bytes_per_cycle=456 / 8,
+                tile_registered_bits=1743 + 315 + 456,
+                tile_lockup_bits=1743 + 456, tiles=192,
+                extra_bits_vs_448_tile=192 * 16,
+                replica_fanout='one predecessor and successor per transport direction',
+                tile_um=[187.056, 164.16], quarter_um=[1406.136, 5529.576],
+                per_chain_tiles=16, whole_data_cycles_added=0,
+                added_half_cycle_visibility=1, wake_lead_cycles=3, hold_cycles=64,
+                clock_gates=192, adopted_power_savings_w=0,
+                scheduler_wake_binding='cg_en pin and actual three-edge-ahead schedule missing from current29-port contract',
+                track_requirement_bits_per_boundary=1743 + 456,
+                channel_capacity_status='actual macro abstractions and M7/channel route pending',
+                slot_fit_status='same tile outline; full actual placement/corner gate pending',
+                single_user_latency_status='transport envelope; controller schedule remains separately unqualified')

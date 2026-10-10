@@ -89,7 +89,7 @@ class Plan:
     def __init__(self, q, ports):
         self.q = q
         self.din = [(p, v['bits']) for p, v in sorted(ports['ports'].items())
-                    if v['direction'] == 'input' and p not in ('ck', 'rst') and not re.fullmatch(r'ck\d+', p)]
+                    if v['direction'] == 'input' and p not in ('ck', 'rst', 'cg_en', q.get('inj_gate', {}).get('strap')) and not re.fullmatch(r'ck\d+', p)]
         self.dout = [(p, v['bits']) for p, v in sorted(ports['ports'].items()) if v['direction'] == 'output']
         assert all(v['direction'] in ('input', 'output') for v in ports['ports'].values())
         self.WI = sum(w for _, w in self.din)                 # every die input bit (the bench vector)
@@ -582,9 +582,20 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
         cq = X(f"{ig['ctl']}_i{P.dp[ig['ctl']] - 1}", ck(band_y))   # the control port at the band (its last input stage)
         hw = dict(P.dout)[ig['out']] // ig['lanes']
         NR = hw // 32                                         # owner-flag replicas: fanout 32 each (no 512-wide net)
-        L_ += ['    // coll inject ownership gate (see the generator\'s QUARTERS su inj_gate): quarter qid drives t_coll half h',
-               '    // only when it owns inject flit inj_idx_h (inj_idx_h mod 4 == qid and inj_rd[h]); every other quarter drives 0',
-               f"    (* keep *) reg [1:0] qid_q;  always @(posedge {ck(band_y)}) qid_q <= {ig['strap']};"]
+        L_ += ['    // coll inject ownership gate: static die strap captured at the real face, relayed to the band']
+        sp = ig['strap']
+        if sp in P.pin_y:
+            D = P.dp[sp]
+            py = P.pin_y[sp]
+            for si in range(D):
+                sc = ck(py + si / D * (band_y - py))
+                src = sp if si == 0 else X(f'{sp}_i{si - 1}', sc)
+                nm = f'{sp}_i{si}'
+                L_.append(f'    (* keep *) reg [1:0] {nm}; always @(posedge {sc}) {nm} <= {src};')
+                R(nm, 2, sc)
+            L_.append(f'    wire [1:0] qid_q = {X(f"{sp}_i{D - 1}", ck(band_y))};')
+        else:
+            L_.append(f"    (* keep *) reg [1:0] qid_q; always @(posedge {ck(band_y)}) qid_q <= {sp};")
         for h in range(ig['lanes']):
             own = f"{cq}[{ig['rd'] + h}] & ({cq}[{ig['idx'] + 16 * h + 1}:{ig['idx'] + 16 * h}] == qid_q)"
             L_.append('`ifdef OT_HFD_SU_MUT_NOGATE')
@@ -938,6 +949,10 @@ def main():
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
                                                                      lane_output_stage=P.N * P.LO))
+    if q.get('inj_gate'):
+        strap_depth = P.dp[q['inj_gate']['strap']] if q['inj_gate']['strap'] in P.pin_y else 1
+        info['flops']['ownership_strap'] = 2 * strap_depth
+        info['ownership_capture_init_cycles'] = strap_depth
     if q.get('inj_gate'):            # the strap pins (not die-view ports yet): appended to the route's io_place.tcl
         (out / 'strap_pins.tcl').write_text('# tools/hbm_hub_quarter_gen.py: inject-ownership strap pins (qid, tied per quarter by the die top)\n' +
             ''.join(f'place_pin -pin_name {{{n}}} -layer M4 -location {{{x:.4f} {y:.4f}}} -pin_size {{0.1920 0.0240}}\n'
@@ -947,6 +962,9 @@ def main():
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
         ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))
+    if q.get('inj_gate') and q['inj_gate']['strap'] in P.pin_y:
+        with (out / 'face_stages.tcl').open('a') as sf:
+            sf.write(f"set fc_psi({q['inj_gate']['strap']}) {P.dp[q['inj_gate']['strap']]}\n")
     if a.lane_size:
         (out / 'macro_place.tcl').write_text(tcl)
         (out / 'floorplan.json').write_text(json.dumps({k: v for k, v in fp.items() if k != 'lanes'}, indent=1) + '\n')

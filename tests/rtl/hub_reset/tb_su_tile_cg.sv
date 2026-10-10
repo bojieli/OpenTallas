@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_su_tile_cg;
 parameter real SKEW=0.1;
+parameter integer W=448;
 reg clk=0; always #0.5 clk=~clk;
 reg cb=0; initial begin #(0.5+SKEW);cb=1;forever #0.5 cb=~cb;end
 reg rn=0,wake=1;
@@ -9,8 +10,8 @@ ot_cg_tile #(.HOLD(64),.RSTEN(0),.MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `
 // Wake crossing has the same real falling-edge lockup as the quarter.
 reg wx;always @(negedge clk)wx<=w0;
 ot_cg_tile #(.HOLD(64),.RSTEN(0),.MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) c1(cb,rn,wx,w1,g1);
-reg[1742:0]head=0;reg[447:0]tail=0;
-wire[1742:0]rb0,rb1,xb0,xb1;wire[447:0]ra0,ra1,xa0,xa1;
+reg[1742:0]head=0;reg[W-1:0]tail=0;
+wire[1742:0]rb0,rb1,xb0,xb1;wire[W-1:0]ra0,ra1,xa0,xa1;
 hfd_su_tile_xl r0(clk,head,rb0,ra1,ra0),r1(cb,rb0,rb1,tail,ra1);
 hfd_su_tile_xl x0(g0,head,xb0,xa1,xa0),x1(g1,xb0,xb1,tail,xa1);
 integer c,b,window,s=27,bad=0,checks=0;
@@ -30,7 +31,7 @@ initial begin
    sample;
    #0.02;
    for(b=0;b<1743;b=b+1)head[b]=$random(s);
-   for(b=0;b<448;b=b+1)tail[b]=$random(s);
+   for(b=0;b<W;b=b+1)tail[b]=$random(s);
   end
   repeat(12)sample;
  end
