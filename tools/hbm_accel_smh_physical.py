@@ -449,7 +449,13 @@ def config_mk(name, nick, die, macros, extra):
     lib_ff = " ".join(f"/src/{m}/{Path(m).name}_ff.lib" for m in macros)
     # OPTION B (2026-10-07): OT_SMH_CORNER=TC routes with setup repair at TT (macro _tt.lib), hold corner BC unchanged
     _SC = os.environ.get("OT_SMH_CORNER", "WC").strip().upper() or "WC"
-    lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)
+    # LOOP-CORNER (2026-10-10): the closure loop's option-B route env (OT_ORFS_CORNER=TC, or a recipe's
+    # OT_ORFS_CORNER_OVERRIDE=TC) is honoured as well: corner WC keeps its NAME (the loop's mm hold session builds scene
+    # WC) and reads the TT std-cell + macro liberties.  Before this, a recipe that set only the override routed at SS.
+    _OC = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper()
+    _TT = _SC != "WC" or _OC in ("TC", "TT")
+    lib_su = " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros) if _TT else lib_ss
+    _SL = "TC" if (_TT and _SC == "WC") else _SC
     lefs = " ".join(f"/src/{m}/{Path(m).name}.lef" for m in macros)
     lines = [f"export DESIGN_NICKNAME = {nick}", f"export DESIGN_NAME = {name}", "export PLATFORM = asap7",
              "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in RTL),
@@ -459,7 +465,7 @@ def config_mk(name, nick, die, macros, extra):
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
              "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
              f"export CORNER = {_SC}", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
-             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}",
+             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SL}_NLDM_LIB_FILES) {lib_su}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
              "export IO_CONSTRAINTS = /work/pins.tcl", "export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)"]
     if macros:

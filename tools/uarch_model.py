@@ -319,6 +319,39 @@ def hbm_attention_result_valid_model():
                 qualification="analytical sizing only; no physical adoption credit")
 
 
+def hgi_row_gather_hw_model(K=512, F=32, G=96, M=18, DEL=4, gathers_per_token=8, sw_cycles_per_gather=126353 / 8,
+                            lat=110, tail_per_flit=0.003):
+    """G25 hardware COLL.ROW_GATHER (hgi-1010/a, ot_hgi_coll_rgx_src / _sink + the PSG endpoint RGX mode).
+
+    Every destination receives exactly the K selected rows (K F 64-byte flits) on its DEL delivery lanes, so the
+    destination delivery rate is the bound; a rank's own injection (its owned rows only, one flit a cycle) and its HBM
+    reads (2 sectors a cycle) run under it unless one rank owns more than K / DEL of the rows.  Measured fit (one real
+    rank of 96 against the switch model, DEL 4): 167 / 4,242 / 16,690 cycles at K F = 224 / 16,384 / 65,536.
+    The software form (G21 / G24) moves 96 M padded rows in ceil(M / c) gathers, then re-reads K rows into list order.
+    """
+    deliver = K * F / DEL
+    inject = M * F                         # the busiest owner, one flit a cycle
+    cycles = lat + max(deliver, inject) + tail_per_flit * K * F
+    flit_b = 64
+    return dict(schema="opentallas.hgi_row_gather_hw.v1", macs_per_cycle=0, compute_intensity="data movement",
+                cost_formula="110 + max(K*F/DEL, Mmax*F) + 0.003*K*F cycles (DEL 4: ~110 + 0.253 K F)",
+                cycles=round(cycles), K=K, F=F, G=G, M=M, DEL=DEL,
+                rows_moved=K, rows_moved_software_form=G * M,
+                hbm_read_bytes_per_cycle_peak=2 * 32, delivery_bytes_per_cycle=DEL * flit_b,
+                sink_write_bytes_per_cycle=DEL * flit_b,
+                added_boundary_bits=dict(list_read=1 + 32 + 1 + 512, hbm_read_lanes=2 * (1 + 35 + 8) + 2 * (1 + 8 + 256),
+                                         sink_write_lanes=DEL * (1 + 40 + 512 + 1)),
+                macros=dict(source_ring="2 x ot_sram_1r1w_128x256 (256 sectors)",
+                            sink_fifo=f"{DEL} lanes x 3 x ot_sram_1r1w_128x256 (64 x 568 b)"),
+                replicas=dict(source=1, sink_lane=DEL),
+                latency_contribution_cycles=round(cycles),
+                token_cycles=round(gathers_per_token * cycles),
+                token_cycles_software_form=round(gathers_per_token * sw_cycles_per_gather),
+                token_cycles_saved=round(gathers_per_token * (sw_cycles_per_gather - cycles)),
+                del8_option="DEL 8 (8 sink lanes, 512 B/cycle): K 512 2,173, K 2048 8,502 cycles measured",
+                qualification="RTL bench (tb_hgi_coll_rgx, full G 96 shape against the switch model); physical closure pending")
+
+
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
     return row_formatter_model(**kwargs)
