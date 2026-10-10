@@ -1049,6 +1049,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         self.probe_cache.pop(host, None)
         return token
 
+    def reserve_launch(self, host, threads, ram, job=None):
+        with FLEET_LOCK:
+            return self._launched(host, threads, ram, job, actual=True)
+
     def launch_complete(self, host, token):
         # The pre-launch invalidation can be refreshed while SSH starts a child; refresh again after it.
         with FLEET_LOCK:
@@ -2772,8 +2776,11 @@ def summarize_failure(j, fleet, metrics):
     cmd = (f"python3 {j['run']}/cl/path_summary.py {basearg} --src {j['run']}/src{extra} --corners "
            f"{','.join(fail_corners)} --output {j['run']}/cl/path_summary.json")
     st = dict(key="summary", kind="summary", threads=2, ram=16)
-    launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 2, 16, actual=True)
+    launch_token = fleet.reserve_launch(j["host"], 2, 16)
+    try:
+        launch_stage(j, st, cmd)
+    finally:
+        fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "SUMMARY", "summary"
     return True
 
@@ -4105,8 +4112,11 @@ def start_vtswap_eco(j, fleet, m):
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=tt, ff_ps=m["ff_ps"]),
                     started=now_iso(), target_ps=target, lvt_cap_pct=cap, auto=True)
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=16)
-    launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 8, 16, actual=True)
+    launch_token = fleet.reserve_launch(j["host"], 8, 16)
+    try:
+        launch_stage(j, st, cmd)
+    finally:
+        fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"thin TT setup miss ({setup_corner_label(m)} {tt:+.2f} / FF {m['ff_ps']:+.2f} / DRC 0): post-route VT-swap setup ECO "
              f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
@@ -4154,8 +4164,11 @@ def start_combo_hold_retry(j, fleet, m, prev):
                     out=out, post_sdc=post, sdc_name=prev.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(prev.get("setup_post_sdc") or []), pre=prev.get("pre"), started=now_iso(),
                     hold_retry=True, auto=True)
-    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
-    fleet.launched(j["host"], 8, 16, actual=True)
+    launch_token = fleet.reserve_launch(j["host"], 8, 16)
+    try:
+        launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    finally:
+        fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"combo ECO result {prev.get('result', {}).get('ss_ps')} / FF {prev.get('result', {}).get('ff_ps')} misses hold by "
              f"< {-COMBO_HOLD_RETRY_FF:g} ps: one stacked hold pass (HM 0, ALLOW 4) on the combo db; out {out}")
@@ -4217,8 +4230,11 @@ def start_combo_eco(j, fleet, m):
     j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
                     sdc_name=m.get("sdc_name") or "6_final.sdc", setup_post_sdc=list(m.get("setup_post_sdc") or []),
                     pre=dict(ss_ps=tt, ff_ps=ff), started=now_iso(), lvt_cap_pct=cap, auto=True)
-    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
-    fleet.launched(j["host"], 8, 16, actual=True)
+    launch_token = fleet.reserve_launch(j["host"], 8, 16)
+    try:
+        launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    finally:
+        fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"thin TT AND FF miss ({setup_corner_label(m)} {tt:+.2f} / FF {ff:+.2f} / DRC 0): post-route COMBO ECO "
              f"(VT-swap <= {cap:g} % LVT, then hold ECO HM 12 stacked on it, no re-route) on {rb}/6_final.odb; out {out}")
@@ -4323,8 +4339,11 @@ def start_hold_eco(j, fleet, m):
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
-    launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 8, 32, actual=True)
+    launch_token = fleet.reserve_launch(j["host"], 8, 32)
+    try:
+        launch_stage(j, st, cmd)
+    finally:
+        fleet.launch_complete(j["host"], launch_token)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"hold-only miss ({setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f}, DRC 0): post-route hold ECO launched on "
              f"{rb}/5_2_route.odb")

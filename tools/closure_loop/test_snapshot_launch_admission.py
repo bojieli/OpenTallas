@@ -45,6 +45,16 @@ class SnapshotLaunchAdmission(unittest.TestCase):
         self.fleet.launched('remote', 16, 40, 'actual', actual=True)
         self.assertFalse(self.fleet._fits('remote', 16, 40)[0])
 
+    def test_failed_stage_launch_releases_inflight_after_fresh_measurement(self):
+        token = self.fleet.reserve_launch('remote', 16, 40, 'actual')
+        stage = dict(cmd='launch', key='route', admission_launch_token=token)
+        with patch.object(cl, 'launch_stage', side_effect=RuntimeError('ssh failed')):
+            with self.assertRaisesRegex(RuntimeError, 'ssh failed'):
+                cl.launch_now(dict(host='remote'), self.fleet, stage)
+        self.assertIsNotNone(self.fleet.inflight_launches['remote'][0][3])
+        self.info['admission_measured_at'] = token + 100
+        self.assertTrue(self.fleet._fits('remote', 16, 40)[0])
+
     def test_launch_invalidates_cache_before_and_after(self):
         self.fleet.probe_cache['remote'] = (100, self.info)
         token = self.fleet._launched('remote', 16, 40, actual=True)
