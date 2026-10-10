@@ -125,10 +125,19 @@ def plan(root=ROOT, credits=64):
         bands=split['parents']['hfd_svc_'+family]['bands']
         family_tiles=[]
         cuts=[]
-        for j,band in enumerate(bands):
+        # DMA-only final SE companions are merged; released PS segments
+        # and their pin maps remain byte-identical.
+        dma_bands=bands[:-1] if family=='SE' else bands
+        for j,band in enumerate(dma_bands):
             b=split['bands'][band]
             old=json.loads((svc/'split_psfc'/band/'ports.json').read_text())
             width=old['w_um']
+            legacy_bands=[band]
+            if family=='SE' and j==len(dma_bands)-1:
+                last=bands[-1]
+                tail=json.loads((svc/'split_psfc'/last/'ports.json').read_text())
+                width=round(split['bands'][last]['x0_um']+tail['w_um']-b['x0_um'],4)
+                legacy_bands.append(last)
             ports=edge_ports(width, reverse=family == 'SE')
             count=validate_pins(ports,width)
             old_counts={}
@@ -139,7 +148,7 @@ def plan(root=ROOT, credits=64):
             pcids=[p for p,x in enumerate(geometry['hfd_svc_'+family]['pc_x'])
                    if b['x0_um'] <= x <= b['x0_um']+width]
             family_tiles.append(dict(master=f'hfd_svc_dma_{family}_s{j}',kind='svc_dma',
-                x0_um=b['x0_um'],w_um=width,h_um=HEIGHT,ports=ports,
+                x0_um=b['x0_um'],w_um=width,h_um=HEIGHT,ports=ports,legacy_service_bands=legacy_bands,
                 face_pin_counts=count,existing_service_face_pin_counts=old_counts,pc_ids=pcids,
                 storage_bits=8192*len(pcids),
                 storage_implementation='distributed per-PC SRAM reservation; macro selection/area not measured',
@@ -162,6 +171,7 @@ def plan(root=ROOT, credits=64):
         front_x=sum(x for x,y in e_pins)/len(e_pins)
         lanes=[sum(pcs[4*k:4*k+4])/4 for k in range(8)]
         result['families'][family]=dict(tiles=family_tiles,cut_x_um=cuts,
+            legacy_cut_x_um=[split['bands'][band]['x0_um'] for band in bands[1:]],
             front_anchor='actual released e descriptor port x; new DMA pins still required',
             front_local_xy_um=[front_x,HEIGHT/2],lane_tile_local_xy_um=[[x,HEIGHT/2] for x in lanes],
             pc_to_lane=[relay_path([(x,HEIGHT/2),(lanes[p//4],HEIGHT/2)],cuts) for p,x in enumerate(pcs)],

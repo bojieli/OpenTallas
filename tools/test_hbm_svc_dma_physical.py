@@ -24,7 +24,7 @@ class PhysicalPlanTests(unittest.TestCase):
     def test_all_four_companions_fit_actual_r25gph_inner_gaps(self):
         p = plan()
         self.assertEqual(len(p['families']['SW']['tiles']), 8)
-        self.assertEqual(len(p['families']['SE']['tiles']), 9)
+        self.assertEqual(len(p['families']['SE']['tiles']), 8)
         self.assertLess(p['traffic_pins_per_um_per_layer'], 12)
         for stack in p['stacks'].values():
             self.assertTrue(stack['placement_fit'])

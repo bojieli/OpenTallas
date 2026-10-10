@@ -58,10 +58,12 @@ def plan():
                         boxhalo=[round(mx-halo,4),round(my-halo,4),round(mx+width+halo,4),round(my+height+halo,4)]
                         m=dict(instance=f'pc{pc}_sector{bank}_sram',master=MACRO,pc=pc,sector_bank=bank,
                             orient='R0',bbox_um=bbox,halo_bbox_um=boxhalo,
-                            clock_region=f'{tile["master"]}_local',clk_pin_xy_um=[mx,my+.780],
+                            clock_region=f'{tile["master"]}_pc{pc}_local',clk_pin_xy_um=[mx,my+.780],
                             pin_flops='required at each macro clock/enable/address/data boundary; not yet RTL')
                         macros.append(m);group.append(m['instance'])
                 groups.append(dict(pc=pc,pc_pin_x_local_um=pcx,group_x_um=x,
+                    clock_root_local_xy_um=[round(x+group_width/2,4),60.0],
+                    source_latency_ps=None,clock_root_qualification='actual die-balanced arrival/lockups pending',
                     local_pin_to_group_center_um=round(abs(pcx-x-group_width/2),4),instances=group))
             conflicts=[]
             for j,a in enumerate(macros):
@@ -84,6 +86,9 @@ def plan():
             records.append(dict(master=tile['master'],w_um=tile['w_um'],h_um=P.HEIGHT,
                 pc_ids=tile['pc_ids'],macros=macros,groups=groups,
                 geometry_fit=not conflicts,geometry_conflicts=conflicts,
+                legacy_service_seam_local_taps_um=[round(c-tile['x0_um'],4) for c in f['legacy_cut_x_um']
+                    if tile['x0_um']<c<tile['x0_um']+tile['w_um']],
+                seam_tap_qualification='existing PS request/return joins need registered local taps; RTL timing pending',
                 macro_count=len(macros),macro_area_um2=round(macro_area,4),
                 macro_outline_fraction=macro_area/(tile['w_um']*P.HEIGHT),
                 total_60pct_area_capacity_um2=round(capacity,4),
