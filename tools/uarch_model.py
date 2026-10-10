@@ -15287,3 +15287,9 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hbm_visibility_fence_pin_return_model():
+    """Default-off output registers with registered accepted-beat credit return."""
+    from tools.hbm_fence_pin_return_model import model
+    return model()
