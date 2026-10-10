@@ -234,7 +234,14 @@ def main():
     elif a.cmd == "script":
         a.out.write_text(script(a))
         a.out.chmod(0o755)
-        a.out.with_suffix(".src").write_text("\n".join(LAST_SRC + TB) + "\n")
+        inc = set()
+        for f in LAST_SRC + TB:
+            for i in re.findall(r'`include\s+"([^"]+)"', (ROOT / f).read_text(errors="replace")):
+                for dd in (Path(f).parent, Path("rtl/hbm_accel/generic"), Path("rtl/hbm_accel/generic/tb")):
+                    if (ROOT / dd / i).exists():
+                        inc.add(str(dd / i))
+                        break
+        a.out.with_suffix(".src").write_text("\n".join(LAST_SRC + TB + sorted(inc)) + "\n")
     else:
         res = report(a.run, None)
         txt = json.dumps(res, indent=1, default=int) + "\n"
