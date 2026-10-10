@@ -87,16 +87,14 @@ def cases():
     c["prd_stg_neg_predoff"] = dict(c["stg_r1"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_s0_neg_predoff_nochk"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF", "OT_WFCVMX_MUT_NOPCHK"], expect="fail")
     # mtp-head-1010 2026-10-10: native binding at the head die's actual relay chains (tb_mtp_rom_s0_rtt): the RTT-aware
-    # sequencer dsfd_mtp_seq_rtt passes; the closed dsfd_mtp_seq (3-cycle grant history) on the same chains, a
-    # shortened RTT history and the sequencer's own mutant must fail
+    # sequencer dsfd_mtp_seq_rtt passes and the sequencer's own mutant fails
     rtt = dict(tb="tb_mtp_rom_s0_rtt", extra=[f"{M}/ot_dsrom_mtp_link_rtt.sv", f"{M}/dsfd_mtp_seq_rtt.sv"])
     for tr in ("tr_dspark", "tr_forced"):
         c[f"rtt_s0_{tr}"] = dict(rtt, trace=tr, params=dict(MODE=0, NUSR=2))
     c["rtt_s0_hash_u3"] = dict(rtt, params=dict(MODE=1, NUSR=3, NGEN_H=48, RHO=70, SEED=3))
     c["rtt_s0_hash_u1_fast"] = dict(rtt, params=dict(MODE=1, NUSR=1, NGEN_H=60, RHO=95, SEED=5, T_DRAFT=120, T_HEAD=8))
-    rneg = dict(rtt, params=dict(MODE=1, NUSR=3, NGEN_H=48, RHO=70, SEED=3), expect="fail")
-    c["rtt_s0_neg_legacy"] = dict(rneg, defines=["OT_MTP_SEQ_LEGACY"])
-    c["rtt_s0_neg_shortrtt"] = dict(rneg, defines=["OT_MTP_NEG_SHORT_RTT"])
+    # (the receiver stress negatives -- legacy history / short RTT overflow -- are tools/mtp_seq_rtt_link_gate.py: this
+    #  system traffic never stalls a receiver with flits in flight, so a short history passes here; measured 2026-10-10)
     c["rtt_s0_neg_off1"] = dict(rtt, trace="tr_forced", params=dict(MODE=0, NUSR=1), defines=["OT_MTPSEQ_MUT_OFF1"], expect="fail")
     for k in c:
         c[k].setdefault("expect", "pass")

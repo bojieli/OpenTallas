@@ -126,8 +126,9 @@ module tb_mtp_rom_s0_rtt;
     wire [2*NW+USER_W+4:0] s_acc;
     // mtp-head-1010: the head die's registered relay stations between the sequencer pins and its partners
     // (actual head631 chains: capture->mtp 5 / mtp->capture 6, mtp->collective 6 / collective->mtp 7,
-    //  vm->mtp 9 / mtp->vm 10). Partner receivers are RTT-sized (ot_dsrom_mtp_lrx_rtt); OT_MTP_SEQ_LEGACY puts the
-    //  closed dsfd_mtp_seq (3-cycle grant history) on the same chains: expected FAIL (receive overflow).
+    //  vm->mtp 9 / mtp->vm 10). Partner receivers are RTT-sized (ot_dsrom_mtp_lrx_rtt). OT_MTP_SEQ_LEGACY puts the
+    //  closed dsfd_mtp_seq on the same chains (diagnostic only: this traffic never stalls a receiver with flits in
+    //  flight, so it PASSES here; the overflow negatives are tools/mtp_seq_rtt_link_gate.py).
     localparam integer FC = 5, RC = 6, FL = 6, RL = 7, FV = 9, RV = 10;
     wire p_rv, p_rg, p_tv, p_tg, p_sv, p_sg, p_wv, p_wg, p_hv, p_hg, p_qv, p_qg;
     wire [FLIT-1:0] p_rd, p_td; wire [SW-1:0] p_sd; wire [USER_W-1:0] p_wd; wire [DW-1:0] p_hd, p_qd;
