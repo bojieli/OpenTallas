@@ -9,7 +9,8 @@
 //    start_identity / start_ids, the inner start fires one cycle later; each input lane and the output go through an
 //    ot_sc_pfifo pin FIFO (registered in_r / out_v, no pin bit on a data enable);
 //  * transport -> arithmetic channel through an ot_sc_pfifo (cuts read pointer -> 8:1 queue mux -> SECDED syndrome);
-//  * transport SB_REG / ACC_REG / PRE_DEC (per-lane registered target + identity/expert decode), arithmetic and publisher BREG (registered duplicate-state gating, registered accept);
+//  * transport SB_REG / ACC_REG / PRE_DEC (per-lane register-output skid with the decoded target + identity/expert
+//    match), arithmetic BREG + DSTAGE (registered SECDED verdict and adder error), publisher BREG (registered duplicate-state gating, registered accept);
 //  * fault / corrected outputs registered.
 // Context ownership is unchanged: start_r stays low from the accepted start through the last external out handshake.
 // REGB=0 is the original wiring.
@@ -108,7 +109,7 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  .in_valid(tr_v),.in_ready(tr_r),
  .in_data({tr_id,tr_expert,tr_shared,tr_last,tr_tlast,tr_word,tr_code}),
  .out_valid(xa_v),.out_ready(xa_r),.out_data(xa_d));
- ot_mtp_p2_prefix #(.ENABLE(1),.BREG(1),.MUT_COPY_FIRST(MUT_COPY_FIRST)) arithmetic(.clk(clk),.rst_n(rst_n),
+ ot_mtp_p2_prefix #(.ENABLE(1),.BREG(1),.DSTAGE(1),.MUT_COPY_FIRST(MUT_COPY_FIRST)) arithmetic(.clk(clk),.rst_n(rst_n),
  .start_v(fire),.start_r(ar_sr),.start_identity(sid_q),.start_ids(sids_q),
  .in_v(xa_v),.in_r(xa_r),.in_identity(xa_d[668:595]),.in_expert(xa_d[594:586]),
  .in_shared(xa_d[585]),.in_row_last(xa_d[584]),.in_transaction_last(xa_d[583]),

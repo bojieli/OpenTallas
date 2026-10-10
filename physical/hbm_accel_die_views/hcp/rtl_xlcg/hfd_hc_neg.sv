@@ -30,56 +30,85 @@ module hfd_hc (
     // cg: wake pin flop at the band, one wake register per group outward along each chain
     (* keep *) reg cg_q;  always @(posedge clk4) cg_q <= cg_en[0];
     (* keep *) reg cgx_0_0;  always @(negedge clk4) cgx_0_0 <= cg_q;   // cg wake lockup (clk4 -> clk3)
+    (* keep *) reg crx_0_0;  always @(negedge clk4) crx_0_0 <= rst_q[1];   // cg reset relay lockup
+    (* keep *) reg crr_0_0;  always @(posedge clk3) crr_0_0 <= crx_0_0;
     wire cgw_0_0, gk_0_0;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_0 (.clk(clk3), .rst_n(~rst_q[1]), .cgi(cgx_0_0), .cgo(cgw_0_0), .gclk(gk_0_0));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_0 (.clk(clk3), .rst_n(~crr_0_0), .cgi(cgx_0_0), .cgo(cgw_0_0), .gclk(gk_0_0));
+    (* keep *) reg crr_0_1;  always @(posedge clk3) crr_0_1 <= crr_0_0;
     wire cgw_0_1, gk_0_1;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_1 (.clk(clk3), .rst_n(~rst_q[1]), .cgi(cgw_0_0), .cgo(cgw_0_1), .gclk(gk_0_1));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_1 (.clk(clk3), .rst_n(~crr_0_1), .cgi(cgw_0_0), .cgo(cgw_0_1), .gclk(gk_0_1));
     (* keep *) reg cgx_0_2;  always @(negedge clk3) cgx_0_2 <= cgw_0_1;   // cg wake lockup (clk3 -> clk2)
+    (* keep *) reg crx_0_2;  always @(negedge clk3) crx_0_2 <= crr_0_1;   // cg reset relay lockup
+    (* keep *) reg crr_0_2;  always @(posedge clk2) crr_0_2 <= crx_0_2;
     wire cgw_0_2, gk_0_2;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_2 (.clk(clk2), .rst_n(~rst_q[1]), .cgi(cgx_0_2), .cgo(cgw_0_2), .gclk(gk_0_2));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_2 (.clk(clk2), .rst_n(~crr_0_2), .cgi(cgx_0_2), .cgo(cgw_0_2), .gclk(gk_0_2));
+    (* keep *) reg crr_0_3;  always @(posedge clk2) crr_0_3 <= crr_0_2;
     wire cgw_0_3, gk_0_3;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_3 (.clk(clk2), .rst_n(~rst_q[1]), .cgi(cgw_0_2), .cgo(cgw_0_3), .gclk(gk_0_3));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_3 (.clk(clk2), .rst_n(~crr_0_3), .cgi(cgw_0_2), .cgo(cgw_0_3), .gclk(gk_0_3));
+    (* keep *) reg crr_0_4;  always @(posedge clk2) crr_0_4 <= crr_0_3;
     wire cgw_0_4, gk_0_4;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_4 (.clk(clk2), .rst_n(~rst_q[1]), .cgi(cgw_0_3), .cgo(cgw_0_4), .gclk(gk_0_4));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_4 (.clk(clk2), .rst_n(~crr_0_4), .cgi(cgw_0_3), .cgo(cgw_0_4), .gclk(gk_0_4));
     (* keep *) reg cgx_0_5;  always @(negedge clk2) cgx_0_5 <= cgw_0_4;   // cg wake lockup (clk2 -> clk1)
+    (* keep *) reg crx_0_5;  always @(negedge clk2) crx_0_5 <= crr_0_4;   // cg reset relay lockup
+    (* keep *) reg crr_0_5;  always @(posedge clk1) crr_0_5 <= crx_0_5;
     wire cgw_0_5, gk_0_5;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_5 (.clk(clk1), .rst_n(~rst_q[1]), .cgi(cgx_0_5), .cgo(cgw_0_5), .gclk(gk_0_5));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_5 (.clk(clk1), .rst_n(~crr_0_5), .cgi(cgx_0_5), .cgo(cgw_0_5), .gclk(gk_0_5));
+    (* keep *) reg crr_0_6;  always @(posedge clk1) crr_0_6 <= crr_0_5;
     wire cgw_0_6, gk_0_6;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_6 (.clk(clk1), .rst_n(~rst_q[1]), .cgi(cgw_0_5), .cgo(cgw_0_6), .gclk(gk_0_6));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_6 (.clk(clk1), .rst_n(~crr_0_6), .cgi(cgw_0_5), .cgo(cgw_0_6), .gclk(gk_0_6));
+    (* keep *) reg crr_0_7;  always @(posedge clk1) crr_0_7 <= crr_0_6;
     wire cgw_0_7, gk_0_7;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_7 (.clk(clk1), .rst_n(~rst_q[1]), .cgi(cgw_0_6), .cgo(cgw_0_7), .gclk(gk_0_7));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_7 (.clk(clk1), .rst_n(~crr_0_7), .cgi(cgw_0_6), .cgo(cgw_0_7), .gclk(gk_0_7));
     (* keep *) reg cgx_0_8;  always @(negedge clk1) cgx_0_8 <= cgw_0_7;   // cg wake lockup (clk1 -> clk0)
+    (* keep *) reg crx_0_8;  always @(negedge clk1) crx_0_8 <= crr_0_7;   // cg reset relay lockup
+    (* keep *) reg crr_0_8;  always @(posedge clk0) crr_0_8 <= crx_0_8;
     wire cgw_0_8, gk_0_8;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_8 (.clk(clk0), .rst_n(~rst_q[1]), .cgi(cgx_0_8), .cgo(cgw_0_8), .gclk(gk_0_8));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_8 (.clk(clk0), .rst_n(~crr_0_8), .cgi(cgx_0_8), .cgo(cgw_0_8), .gclk(gk_0_8));
+    (* keep *) reg crr_0_9;  always @(posedge clk0) crr_0_9 <= crr_0_8;
     wire cgw_0_9, gk_0_9;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_9 (.clk(clk0), .rst_n(~rst_q[1]), .cgi(cgw_0_8), .cgo(cgw_0_9), .gclk(gk_0_9));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_9 (.clk(clk0), .rst_n(~crr_0_9), .cgi(cgw_0_8), .cgo(cgw_0_9), .gclk(gk_0_9));
+    (* keep *) reg crr_0_10;  always @(posedge clk0) crr_0_10 <= crr_0_9;
     wire cgw_0_10, gk_0_10;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_10 (.clk(clk0), .rst_n(~rst_q[1]), .cgi(cgw_0_9), .cgo(cgw_0_10), .gclk(gk_0_10));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_0_10 (.clk(clk0), .rst_n(~crr_0_10), .cgi(cgw_0_9), .cgo(cgw_0_10), .gclk(gk_0_10));
+    (* keep *) reg crr_1_0;  always @(posedge clk4) crr_1_0 <= rst_q[1];
     wire cgw_1_0, gk_1_0;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_0 (.clk(clk4), .rst_n(~rst_q[1]), .cgi(cg_q), .cgo(cgw_1_0), .gclk(gk_1_0));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_0 (.clk(clk4), .rst_n(~crr_1_0), .cgi(cg_q), .cgo(cgw_1_0), .gclk(gk_1_0));
+    (* keep *) reg crr_1_1;  always @(posedge clk4) crr_1_1 <= crr_1_0;
     wire cgw_1_1, gk_1_1;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_1 (.clk(clk4), .rst_n(~rst_q[1]), .cgi(cgw_1_0), .cgo(cgw_1_1), .gclk(gk_1_1));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_1 (.clk(clk4), .rst_n(~crr_1_1), .cgi(cgw_1_0), .cgo(cgw_1_1), .gclk(gk_1_1));
     (* keep *) reg cgx_1_2;  always @(negedge clk4) cgx_1_2 <= cgw_1_1;   // cg wake lockup (clk4 -> clk5)
+    (* keep *) reg crx_1_2;  always @(negedge clk4) crx_1_2 <= crr_1_1;   // cg reset relay lockup
+    (* keep *) reg crr_1_2;  always @(posedge clk5) crr_1_2 <= crx_1_2;
     wire cgw_1_2, gk_1_2;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_2 (.clk(clk5), .rst_n(~rst_q[1]), .cgi(cgx_1_2), .cgo(cgw_1_2), .gclk(gk_1_2));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_2 (.clk(clk5), .rst_n(~crr_1_2), .cgi(cgx_1_2), .cgo(cgw_1_2), .gclk(gk_1_2));
+    (* keep *) reg crr_1_3;  always @(posedge clk5) crr_1_3 <= crr_1_2;
     wire cgw_1_3, gk_1_3;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_3 (.clk(clk5), .rst_n(~rst_q[1]), .cgi(cgw_1_2), .cgo(cgw_1_3), .gclk(gk_1_3));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_3 (.clk(clk5), .rst_n(~crr_1_3), .cgi(cgw_1_2), .cgo(cgw_1_3), .gclk(gk_1_3));
+    (* keep *) reg crr_1_4;  always @(posedge clk5) crr_1_4 <= crr_1_3;
     wire cgw_1_4, gk_1_4;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_4 (.clk(clk5), .rst_n(~rst_q[1]), .cgi(cgw_1_3), .cgo(cgw_1_4), .gclk(gk_1_4));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_4 (.clk(clk5), .rst_n(~crr_1_4), .cgi(cgw_1_3), .cgo(cgw_1_4), .gclk(gk_1_4));
     (* keep *) reg cgx_1_5;  always @(negedge clk5) cgx_1_5 <= cgw_1_4;   // cg wake lockup (clk5 -> clk6)
+    (* keep *) reg crx_1_5;  always @(negedge clk5) crx_1_5 <= crr_1_4;   // cg reset relay lockup
+    (* keep *) reg crr_1_5;  always @(posedge clk6) crr_1_5 <= crx_1_5;
     wire cgw_1_5, gk_1_5;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_5 (.clk(clk6), .rst_n(~rst_q[1]), .cgi(cgx_1_5), .cgo(cgw_1_5), .gclk(gk_1_5));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_5 (.clk(clk6), .rst_n(~crr_1_5), .cgi(cgx_1_5), .cgo(cgw_1_5), .gclk(gk_1_5));
+    (* keep *) reg crr_1_6;  always @(posedge clk6) crr_1_6 <= crr_1_5;
     wire cgw_1_6, gk_1_6;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_6 (.clk(clk6), .rst_n(~rst_q[1]), .cgi(cgw_1_5), .cgo(cgw_1_6), .gclk(gk_1_6));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_6 (.clk(clk6), .rst_n(~crr_1_6), .cgi(cgw_1_5), .cgo(cgw_1_6), .gclk(gk_1_6));
+    (* keep *) reg crr_1_7;  always @(posedge clk6) crr_1_7 <= crr_1_6;
     wire cgw_1_7, gk_1_7;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_7 (.clk(clk6), .rst_n(~rst_q[1]), .cgi(cgw_1_6), .cgo(cgw_1_7), .gclk(gk_1_7));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_7 (.clk(clk6), .rst_n(~crr_1_7), .cgi(cgw_1_6), .cgo(cgw_1_7), .gclk(gk_1_7));
     (* keep *) reg cgx_1_8;  always @(negedge clk6) cgx_1_8 <= cgw_1_7;   // cg wake lockup (clk6 -> clk7)
+    (* keep *) reg crx_1_8;  always @(negedge clk6) crx_1_8 <= crr_1_7;   // cg reset relay lockup
+    (* keep *) reg crr_1_8;  always @(posedge clk7) crr_1_8 <= crx_1_8;
     wire cgw_1_8, gk_1_8;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_8 (.clk(clk7), .rst_n(~rst_q[1]), .cgi(cgx_1_8), .cgo(cgw_1_8), .gclk(gk_1_8));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_8 (.clk(clk7), .rst_n(~crr_1_8), .cgi(cgx_1_8), .cgo(cgw_1_8), .gclk(gk_1_8));
+    (* keep *) reg crr_1_9;  always @(posedge clk7) crr_1_9 <= crr_1_8;
     wire cgw_1_9, gk_1_9;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_9 (.clk(clk7), .rst_n(~rst_q[1]), .cgi(cgw_1_8), .cgo(cgw_1_9), .gclk(gk_1_9));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_9 (.clk(clk7), .rst_n(~crr_1_9), .cgi(cgw_1_8), .cgo(cgw_1_9), .gclk(gk_1_9));
+    (* keep *) reg crr_1_10;  always @(posedge clk7) crr_1_10 <= crr_1_9;
     wire cgw_1_10, gk_1_10;
-    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_10 (.clk(clk7), .rst_n(~rst_q[1]), .cgi(cgw_1_9), .cgo(cgw_1_10), .gclk(gk_1_10));
+    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_1_10 (.clk(clk7), .rst_n(~crr_1_10), .cgi(cgw_1_9), .cgo(cgw_1_10), .gclk(gk_1_10));
     (* keep *) reg [1023:0] f_sfu_i0;  always @(posedge clk4) f_sfu_i0 <= f_sfu;
     wire [1023:0] din_q_clk3 = {f_sfu_i0_xk};
     wire [161:0] bsrc_clk3;

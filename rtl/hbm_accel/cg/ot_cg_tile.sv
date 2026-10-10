@@ -18,7 +18,10 @@
 // ---------------------------------------------------------------------------
 module ot_cg_tile #(
     parameter integer HOLD = 64,
-    parameter integer MUT_LATE = 0
+    parameter integer MUT_LATE = 0,
+    // RSTEN 0 (redesign-hbm 2026-10-10): no !rst_n term in the enable (the async reset already forces wq = 1); for gates whose
+    // reset comes from far away (hub quarter: rst -> every group ICG ENA was a 1.3-3.6 ns gating-check path)
+    parameter integer RSTEN = 1
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -41,7 +44,7 @@ module ot_cg_tile #(
             cnt <= w_eff ? HOLD[CW-1:0] : ((cnt != 0) ? cnt - 1'b1 : cnt);
         end
     assign w_eff = (MUT_LATE == 0) ? wq : wl[MUT_LATE];
-    wire en = w_eff | (cnt != 0) | !rst_n;
+    wire en = w_eff | (cnt != 0) | ((RSTEN != 0) ? !rst_n : 1'b0);
     assign cgo = wq;
     ot_hdc_cg u_cg (.clk(clk), .en(en), .gclk(gclk));
 endmodule
