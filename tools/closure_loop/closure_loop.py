@@ -96,7 +96,7 @@ def bench_crashed(st, rc, tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
-DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
@@ -1656,7 +1656,19 @@ def sync_source(j):
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
-    paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
+    # SYNC-PATHS (drive-1010 2026-10-10): an extra path missing at the pinned commit made every sync fail 10 times with
+    # an empty message (hbm_hc_quarter_hcq_r25gq-7eea45363: results/uarch/hbm_hc_group_root_icg_20261010/model.json) ->
+    # fail once, terminally, naming the path.
+    missing = [x for x in src.get("extra_paths", [])
+               if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode]
+    if missing:
+        raise ValueError(f"source.extra_paths not in commit {full[:12]}: {', '.join(missing[:6])} -- fix the spec "
+                         f"(the file must be committed at the pinned commit) and re-drop")
+    base_paths = list(src.get("paths", DEFAULT_SRC_PATHS))
+    if "paths" not in src:   # defaults absent at an old commit (configs/, src/) are skipped, never a pathspec error
+        base_paths = [x for x in base_paths
+                      if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode == 0]
+    paths = base_paths + list(src.get("extra_paths", []))
     paths += implied_src_paths(spec, paths, full)
     run = j["run"]
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):

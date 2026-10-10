@@ -72,7 +72,7 @@ module tb_hgi_e2e;
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
-    wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
+    wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
     wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE

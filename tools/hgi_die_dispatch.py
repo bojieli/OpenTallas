@@ -19,7 +19,9 @@ UNITS = {
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', (('die_id', 8),)),    # ARGMAX.LOCAL (imm_a in the header; global id = local + RANK * imm_a)
                                                       #   -> ot_hgi_argmax_slot (record adapter + ot_hgi_argmax18_m)
-    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8), ('desc_I', 256))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    #   desc_I (hgi-1010/g, lead 10-10): IDX.INDEX operand I = the layer's index-key region (HBM, row-aligned base) ->
+    #   the IKS issuer's ik_base; appended at the MSB so every older field keeps its bit position
     # hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): every record unit has a die record bus (the payload is a die port, not
     # an internal tap); field sets = hgi-adapters' rec_* ports; one credit per unit; placement per hgi-adapters 22:40
     'sm':     (1, 'cmdproc', 'ABO', ()),                  # ot_hgi_sm_record IN the CP block (drives the SM launch tree)

@@ -20,7 +20,8 @@ module ot_hbm_tu_retry_phy_port_core #(
  // u_tx.l_data): the feedback bundle is registered once more with a 1-bit match (+1 pclk on ACK / NAK / pop returns),
  // and the replay read's epoch check reads a per-slot session flag (0 cycles).  See ot_hbm_link_retry_sram SESREG.
  parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif,
- parameter RDPIPE=0       // redesign-ds: replay SRAM MUXREG (see the wrapper)
+ parameter RDPIPE=0,      // redesign-ds: replay SRAM MUXREG (see the wrapper)
+ parameter FB=0           // hardcore-1010 B fallback (see the wrapper)
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -57,8 +58,13 @@ module ot_hbm_tu_retry_phy_port_core #(
   always@(posedge pclk or negedge phy_run) if(!phy_run)v0<=0; else if(pq_ready||!v0)v0<=iq_valid;
   always@(posedge pclk) if(pq_ready||!v0)d0<=iq_data;
 `else
+  if(FB)begin:g_pi
+  ot_hbm_tu_skid_pi #(.W(W)) u_iqs(.clk(pclk),.rst_n(phy_run),.i_valid(iq_valid),.i_ready(iq_ready),.i_data(iq_data),
+   .o_valid(pq_valid),.o_ready(pq_ready),.o_data(pq_data));
+  end else begin:g_sk
   ot_hbm_tu_skid #(.W(W)) u_iqs(.clk(pclk),.rst_n(phy_run),.i_valid(iq_valid),.i_ready(iq_ready),.i_data(iq_data),
    .o_valid(pq_valid),.o_ready(pq_ready),.o_data(pq_data));
+  end
 `endif
  end else begin:g_iqd
   assign pq_valid=iq_valid;assign iq_ready=pq_ready;assign pq_data=iq_data;
@@ -85,7 +91,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  assign fec_tx_v=raw_tx_v && !fault;
  assign ph_rx_v=raw_rx_v && !fault;
  assign fec_rx_ready=raw_rx_ready && !fault;
- ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG),.MUXREG(RDPIPE)) u_port(
+ ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG),.MUXREG(RDPIPE),.RREADY(FB)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
  .in_valid(pq_valid),.in_ready(pq_ready),.in_data(pq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
@@ -144,6 +150,42 @@ module ot_hbm_tu_skid #(parameter integer W=8)(input wire clk,rst_n,input wire i
  if(pop)begin if(v1)d0<=d1;else if(push)d0<=i_data;end
  else if(push)begin if(!v0)d0<=i_data;else d1<=i_data;end
 endmodule
+// hardcore-1010 grp B (FB=1): pointer-indexed two-entry skid.  The W-bit storage loads only on push (i_valid && !full,
+// both registered-state terms) into the slot named by a 1-bit write pointer; o_ready (the retry port's in_ready, a
+// deep control cone) reaches only the read pointer and the count, never a W-bit load enable (iqs6-b: u_retry.base ->
+// classification -> in_ready -> pop -> 2 x 545-b skid enables, 25-28 levels).  Same 2-entry capacity / 1-cycle latency
+// as ot_hbm_tu_skid; o_data is a 2:1 mux on the registered read pointer.
+module ot_hbm_tu_skid_pi #(parameter integer W=8)(input wire clk,rst_n,input wire i_valid,output wire i_ready,
+ input wire[W-1:0]i_data,output wire o_valid,input wire o_ready,output wire[W-1:0]o_data);
+ reg[1:0]n;reg wp,rp;reg[W-1:0]m0,m1;
+ assign i_ready=!n[1];assign o_valid=n!=0;
+`ifdef OT_TU_SKIDPI_MUT
+ assign o_data=wp ? m1:m0;   // negative control: reads the slot named by the WRITE pointer
+`else
+ assign o_data=rp ? m1:m0;
+`endif
+ wire push=i_valid&&!n[1],pop=(n!=0)&&o_ready;
+ always@(posedge clk or negedge rst_n)
+ if(!rst_n)begin n<=0;wp<=0;rp<=0;end
+ else begin n<=n+(push?2'd1:2'd0)-(pop?2'd1:2'd0);if(push)wp<=!wp;if(pop)rp<=!rp;end
+ always@(posedge clk)if(push)begin if(wp)m1<=i_data;else m0<=i_data;end
+endmodule
+// hardcore-1010 grp B (FB=1): ot_link_credit_tx with DFREE=1 and every l_data pin flop kept as its own cell (iqs6-b:
+// u_ingress.u_memory.ep -> fec_tx_session = the session field's pin flops merged by synthesis with internal flops of the
+// same D, so the pin was driven from an internal register far from the pin).  Behaviour = ot_link_credit_tx DFREE=1.
+module ot_hbm_tu_link_tx_k #(parameter integer W=8, CRED=8)(
+    input wire clk, rst_n,
+    input wire i_valid, output wire i_ready, input wire [W-1:0] i_data,
+    output wire l_valid, output wire [W-1:0] l_data, input wire l_credit);
+    localparam integer CW = $clog2(CRED + 1);
+    (* keep *) reg cr_q; reg [CW-1:0] cnt; (* keep *) reg lv_q; (* keep *) reg [W-1:0] ld_q;
+    assign i_ready = cnt != 0; assign l_valid = lv_q; assign l_data = ld_q;
+    wire send = i_valid && cnt != 0;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cr_q <= 1'b0; cnt <= CW'(CRED); lv_q <= 1'b0; end
+        else begin cr_q <= l_credit; cnt <= cnt + CW'(cr_q) - CW'(send); lv_q <= send; end
+    always @(posedge clk) ld_q <= i_data;
+endmodule
 module ot_hbm_tu_retry_phy_port #(
  parameter ENABLE=0,W=545,SW=12,EW=24,CW=10,CAPACITY=256,
  parameter TIMEOUT=2048,parameter REG_IO=`OT_TU_REG_IO_DEF,
@@ -160,7 +202,15 @@ module ot_hbm_tu_retry_phy_port #(
  // output registers.  RDPIPE turns on the replay SRAMs' MUXREG (registered bank select before the syndrome, +1 read
  // edge, retry storage and PHY ingress) and resets the wrapper's own pin / output registers from the synchronised run
  // gates the core already uses (async assert from the flops, sync release).
- parameter RDPIPE=`ifdef OT_TU_RDPIPE3 3 `elsif OT_TU_RDPIPE2 2 `elsif OT_TU_RDPIPE 1 `else 0 `endif  // 2 (ds-1010): + replay SRAM OREG; 3: + FEC tx DFREE
+ parameter RDPIPE=`ifdef OT_TU_RDPIPE3 3 `elsif OT_TU_RDPIPE2 2 `elsif OT_TU_RDPIPE 1 `else 0 `endif, // 2 (ds-1010): + replay SRAM OREG; 3: + FEC tx DFREE
+ // FB (hardcore-1010 grp B, 2026-10-10, default 0; the guaranteed-closure fallback line, needs REG_IO + LINK_CREDIT +
+ // IQ_SKID + RDPIPE>=1): (1) RREADY: the retry port's in_ready is registered-state only (no feedback classification in
+ // it, see ot_hbm_link_retry_sram); (2) the ingress skid is pointer-indexed (no W-bit enable from in_ready); (3) the FEC
+ // tx pin flops are kept as their own cells (ot_hbm_tu_link_tx_k); (4) one registered run gate per domain (run_r =
+ // prs[1] && pup_q, async assert from prst_n) is the core's only reset/link-up source, so no AND gate sits in the
+ // recovery cone of the ~3k async-reset flops (iqs6-b pup_q -> sflag RESETN class).  0 cycles on any fault-free flit;
+ // +1 pclk on link-down assertion only.
+ parameter FB=`ifdef OT_TU_FB 1 `else 0 `endif
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -182,7 +232,8 @@ module ot_hbm_tu_retry_phy_port #(
  ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE)) u(.*);
  end else begin:g_reg
  reg[1:0]prs;reg[1:0]crs;reg pup_q,cup_q;
- wire phy_run=RDPIPE ? (prs[1]&&pup_q) : (prst_n&&phy_link_up), core_run=RDPIPE ? (crs[1]&&cup_q) : (rst_n&&core_link_up);
+ reg prun_r,crun_r;  // FB: registered run gates (see the parameter)
+ wire phy_run=FB ? prun_r : RDPIPE ? (prs[1]&&pup_q) : (prst_n&&phy_link_up), core_run=FB ? crun_r : RDPIPE ? (crs[1]&&cup_q) : (rst_n&&core_link_up);
  // pclk input flops
  reg tx_v_q,fb_v_q,fb_g_q,fb_n_q;reg[W-1:0]tx_f_q;reg[SW-1:0]fb_s_q;reg[EW-1:0]fb_e_q,ses_q;reg[CW-1:0]fb_p_q;
  always@(posedge pclk or negedge phy_run)if(!phy_run)begin tx_v_q<=0;fb_v_q<=0;fb_g_q<=0;fb_n_q<=0;end
@@ -196,12 +247,14 @@ module ot_hbm_tu_retry_phy_port #(
  always@(posedge clk or negedge rst_n)if(!rst_n)cup_q<=0;else cup_q<=core_link_up;
  // clk input flop
  reg cred_q;always@(posedge clk or negedge core_run)if(!core_run)cred_q<=0;else cred_q<=rx_credit;
+ always@(posedge pclk or negedge prst_n)if(!prst_n)prun_r<=0;else prun_r<=prs[1]&&pup_q;
+ always@(posedge clk or negedge rst_n)if(!rst_n)crun_r<=0;else crun_r<=crs[1]&&cup_q;
  // core
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE),.PIPE_FIX(LINK_CREDIT)) u(
- .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE),.PIPE_FIX(LINK_CREDIT),.FB(FB)) u(
+ .pclk(pclk),.prst_n(FB ? prun_r:prs[1]),.phy_link_up(FB ? 1'b1:pup_q),.phy_session(ses_q),.clk(clk),.rst_n(FB ? crun_r:crs[1]),.core_link_up(FB ? 1'b1:cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),
  .fec_rx_v(r_v),.fec_rx_ready(c_rxin_r),.fec_rx_ue(r_ue),.fec_rx_data(r_d),.fec_rx_seq(r_s),.fec_rx_session(r_e),
@@ -211,8 +264,13 @@ module ot_hbm_tu_retry_phy_port #(
  // FEC channels through skids
  wire lk_fault;
  if(LINK_CREDIT)begin:g_flink
+ if(FB)begin:g_txk
+ ot_hbm_tu_link_tx_k #(.W(W+SW+EW),.CRED(LINK_DEPTH)) u_tx(.clk(pclk),.rst_n(phy_run),.i_valid(c_tx_v),.i_ready(c_tx_r),.i_data({c_tx_d,c_tx_s,c_tx_e}),
+  .l_valid(fec_tx_v),.l_data({fec_tx_data,fec_tx_seq,fec_tx_session}),.l_credit(fec_tx_ready));
+ end else begin:g_txd
  ot_link_credit_tx #(.W(W+SW+EW),.CRED(LINK_DEPTH),.DFREE(RDPIPE>=3 ? 1 : 0)) u_tx(.clk(pclk),.rst_n(phy_run),.i_valid(c_tx_v),.i_ready(c_tx_r),.i_data({c_tx_d,c_tx_s,c_tx_e}),
   .l_valid(fec_tx_v),.l_data({fec_tx_data,fec_tx_seq,fec_tx_session}),.l_credit(fec_tx_ready));
+ end
  // redesign-ds: with IQ_SKID the FEC rx landing FIFO also drains through its output skid (OREG: iqs-b post-CTS -425 =
  // u_rx.rp -> 8:1 landing mux -> port rx logic -> o_ready -> pop -> landing write enable, one pclk cycle)
  ot_link_credit_rx #(.W(1+W+SW+EW),.DEPTH(LINK_DEPTH),.OREG(IQ_SKID ? 1 : 0)) u_rx(.clk(pclk),.rst_n(phy_run),.l_valid(fec_rx_v),
