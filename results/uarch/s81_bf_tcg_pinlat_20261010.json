@@ -50,7 +50,9 @@
     "producer_consumer_flow_control": "unchanged finite x FIFO and original issue schedule"
   },
   "replicas": {
-    "elements_per_layer_die": 1792,
+    "mixed_pairs_per_layer_die": 1792,
+    "BF_elements_per_layer_die": 256,
+    "Q_elements_per_layer_die": 1536,
     "columns_per_element": 2,
     "BF_lanes_per_column": 16,
     "tile_ICGs_per_element": 37,
@@ -82,7 +84,8 @@
     "added_latch_area_DFF_body_proxy_um2": 470.64240000000007,
     "utilization_estimate_pct": 50.75650883240471,
     "headroom_at_55pct_um2": 6167.584742400007,
-    "added_die_latch_area_proxy_mm2": 0.8433911808000001,
+    "added_selected_mixed_die_latch_area_proxy_mm2": 0.12048445440000001,
+    "hypothetical_all_BF_1792_pair_latch_area_proxy_mm2": 0.8433911808000001,
     "actual_latch_CTS_and_hold_inventory_pending": true,
     "outline_and_die_count_delta": 0
   },

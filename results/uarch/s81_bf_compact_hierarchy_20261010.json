@@ -83,7 +83,10 @@
   "replicas": {
     "columns_per_pair": 2,
     "fronts_per_pair": 1,
-    "pairs_per_die": 1792
+    "mixed_pairs_per_die": 1792,
+    "BF_pairs_per_die": 256,
+    "columns_per_die": 512,
+    "fronts_per_die": 256
   },
   "routing": {
     "interface_tracks_per_column": 776,
