@@ -205,6 +205,7 @@ module ot_v41_rom_elem_qx_w10 #(
     // BF lane latency, transaction-level exact).
     parameter integer TCG = 0,
     parameter integer BXST = 0,
+    parameter integer FXST = 0,         // TCG only: pipelined FP8/FP4 lane input stages (+FXST cycles; see g_l3)
     parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = ""
 ) (
@@ -1660,10 +1661,35 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
     if (FAST != 0 && QPIPE != 0) begin : g_l3
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
-            .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
-            .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
+        // FXST (TCG only, bf-arch): FXST pipelined stages on every lane input {valids, tag, word, exponents, x slices}
+        // (the capture word leaves the ROM column through registered relays; +FXST cycles, transaction-level exact)
+        localparam integer FLW = 2 + TW + 256 + 10 + 256 + 10 + 256 + 10 + 256 + 10;
+        wire [FLW-1:0] fl_i = {l_v0, l_v1, l_t, l_xq0, l_xe0, w0q, we0, l_xq1, l_xe1, w1q, we1};
+        wire [FLW-1:0] fl_o;
+        if (TCG != 0 && FXST != 0) begin : g_fx
+            reg [FLW-3:0] fs [0:FXST-1];
+            reg [1:0]     fv [0:FXST-1];
+            always @(posedge gclk_c or negedge rst_m)
+                if (!rst_m) for (int k = 0; k < FXST; k++) fv[k] <= 2'b00;
+                else begin fv[0] <= fl_i[FLW-1 -: 2]; for (int k = 1; k < FXST; k++) fv[k] <= fv[k-1]; end
+            always @(posedge gclk_c) begin
+                fs[0] <= fl_i[FLW-3:0]; for (int k = 1; k < FXST; k++) fs[k] <= fs[k-1];
+            end
+`ifdef FXST_MUTANT_TAG
+            assign fl_o = {fv[FXST-1], (FXST > 1 ? fs[FXST-2] : fl_i[FLW-3:0])};   // negative control: operands one stage early
+`else
+            assign fl_o = {fv[FXST-1], fs[FXST-1]};
+`endif
+        end else begin : g_nfx
+            assign fl_o = fl_i;
+        end
+        wire f_v0, f_v1; wire [TW-1:0] f_t; wire [255:0] f_xq0, f_w0q, f_xq1, f_w1q; wire [9:0] f_xe0, f_xe1;
+        wire signed [9:0] f_we0, f_we1;
+        assign {f_v0, f_v1, f_t, f_xq0, f_xe0, f_w0q, f_we0, f_xq1, f_xe1, f_w1q, f_we1} = fl_o;
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(f_v0), .fp4(f_t[0]),
+            .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_m), .v(f_v1), .fp4(1'b1),
+            .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
             .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(mi2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
