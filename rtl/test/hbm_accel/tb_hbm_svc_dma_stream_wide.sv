@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RTT=192,RATE_COMMANDS=512)(output reg done=0);
+module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RTT=192,RATE_COMMANDS=512,INGRESS_DEPTH=0)(output reg done=0);
  localparam NL=32,TAGS=64,DEPTH=32;
  reg clk=0;always #5 clk=~clk;
  reg rst=1;reg[52:0]dq=0;wire dq_rdy;
@@ -7,7 +7,7 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  wire[31:0]pc_req_v,pc_rsp_ready;reg[31:0]pc_req_ready=0,pc_rsp_v=0,pc_rsp_fault=0;
  wire[1183:0]pc_req_addr;wire[127:0]pc_req_len;wire[543:0]pc_req_tag;
  reg[543:0]pc_rsp_tag=0;reg[127:0]pc_rsp_beat=0;reg[8191:0]pc_rsp_data=0;
- ot_hbm_svc_dma_stream_wide #(.ENABLE(1),.NC(32),.LANES(32),.TAGW(6),.WINDOW(16384),.INITIAL_CREDITS(256),.WRITE_COMMIT(3),.READ_PUBLICATION(5),.MUT_PC_MAP(MUT==4),.MUT_DROP(MUT==5),.MUT_DATA(MUT==6))dut(.dd(dd_raw),.*);
+ ot_hbm_svc_dma_stream_wide #(.ENABLE(1),.NC(32),.LANES(32),.TAGW(6),.WINDOW(16384),.INITIAL_CREDITS(256),.WRITE_COMMIT(3),.READ_PUBLICATION(5),.INGRESS_DEPTH(INGRESS_DEPTH),.MUT_PC_MAP(MUT==4),.MUT_DROP(MUT==5),.MUT_DATA(MUT==6))dut(.dd(dd_raw),.*);
  generate for(genvar l=0;l<NL;l=l+1)begin
  wire[271:0]raw=dd_raw[l*272+:272];
  assign dd[l*272+:272]=raw^((raw[271]&&MUT==1)?272'(1):((raw[271]&&MUT==2)?(272'(1)<<256):((raw[271]&&MUT==3)?(272'(1)<<270):272'(0))));
@@ -65,7 +65,7 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  // the CPU model retains each lease until its beat handshakes.
  #1;budget=raw_budget(cyc+1);proposals=0;
  for(p=0;p<32;p=p+1)if(selected[p]>=0&&!pc_rsp_ready[p])diag_bankblocked_now=diag_bankblocked_now+1;
- for(p=0;p<32;p=p+1)begin pc=(p+cyc)%32;if(selected[pc]>=0&&proposals<budget&&(pc_rsp_ready[pc]||MUT==7||MUT==8))begin pc_rsp_v[pc]=1;proposals=proposals+1;end end
+ for(p=0;p<32;p=p+1)begin pc=(p+cyc)%32;if(selected[pc]>=0&&proposals<budget&&(INGRESS_DEPTH>0||pc_rsp_ready[pc]||MUT==7||MUT==8))begin pc_rsp_v[pc]=1;proposals=proposals+1;end end
  if(MUT==9)begin for(p=0;p<32;p=p+1)if(selected[p]>=0)pc_rsp_v[p]=1;end
  for(i=0;i<NL;i=i+1)if(cr_head[i]<cr_tail[i]&&credit_due[i][cr_head[i]]<=cyc+1)dd_cr[i]=1;
  end
@@ -97,6 +97,7 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  end end end
  end
  for(p=0;p<32;p=p+1)begin
+ if(INGRESS_DEPTH>0&&pc_rsp_v[p]&&!pc_rsp_ready[p])$fatal(1,"UNBACKPRESSURED_NATIVE_RETURN violated PC=%0d",p);
  if(pc_rsp_v[p]&&pc_rsp_ready[p])begin
  accepted=accepted+1;entry=selected[p];if(entry<0)$fatal(1,"response without lease");
  beatnum[p][entry]=beatnum[p][entry]+1;
@@ -141,8 +142,8 @@ module svc_stream_wide_checker #(parameter ID=0,MUT=0,READ_LATENCY=104,CREDIT_RT
  end
  end
 endmodule
-module tb_hbm_svc_dma_stream_wide #(parameter MUT=0,READ_LATENCY=104,CREDIT_RTT=192,RATE_COMMANDS=512);
+module tb_hbm_svc_dma_stream_wide #(parameter MUT=0,READ_LATENCY=104,CREDIT_RTT=192,RATE_COMMANDS=512,INGRESS_DEPTH=0);
  wire[3:0]done;
- generate for(genvar s=0;s<4;s=s+1)begin svc_stream_wide_checker #(.ID(s),.MUT(MUT),.READ_LATENCY(READ_LATENCY),.CREDIT_RTT(CREDIT_RTT),.RATE_COMMANDS(RATE_COMMANDS))u(.done(done[s]));end endgenerate
+ generate for(genvar s=0;s<4;s=s+1)begin svc_stream_wide_checker #(.ID(s),.MUT(MUT),.READ_LATENCY(READ_LATENCY),.CREDIT_RTT(CREDIT_RTT),.RATE_COMMANDS(RATE_COMMANDS),.INGRESS_DEPTH(INGRESS_DEPTH))u(.done(done[s]));end endgenerate
  initial begin wait(&done);$display("PASS wide_four_stacks_32lanes_64slots_CPU_scoreboard_finite32leases_OOO_tags_raw_roof_calendar_bank_commit3_publication5");$finish;end
 endmodule

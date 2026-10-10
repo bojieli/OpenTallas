@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm_svc.dma_pc_ingress.v1",
+  "verdict": "PASS",
+  "sources_unchanged": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "returncode": 0,
+      "output": "PASS minimum_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain\n"
+    },
+    {
+      "case": "overreservation",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_ingress.sv:57: DMA native ingress reservation/overflow fault\n       Time: 375000 Scope: tb_hbm_svc_dma_pc_ingress.dut\n"
+    },
+    {
+      "case": "unreserved_return",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_ingress.sv:57: DMA native ingress reservation/overflow fault\n       Time: 45000 Scope: tb_hbm_svc_dma_pc_ingress.dut\n"
+    },
+    {
+      "case": "invalid_zero_burst",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_ingress.sv:57: DMA native ingress reservation/overflow fault\n       Time: 45000 Scope: tb_hbm_svc_dma_pc_ingress.dut\n"
+    },
+    {
+      "case": "overflow_return",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_ingress.sv:57: DMA native ingress reservation/overflow fault\n       Time: 1665000 Scope: tb_hbm_svc_dma_pc_ingress.dut\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_pc_ingress.sv": "e216e5ad0aec7e0bf7dabb370ad2e19bfd9524eb3af08a2b89c074d1c3ce63f0",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress.sv": "57eca093f42317ba1c982dd7e4af628b3e10c7a7f95de0027683127e0d9e1d87",
+    "tools/hbm_svc_dma_pc_ingress_bench.py": "39f60a91bb1805daab62effaefe59e32f9708eb5c91d8c2dfc380795af499412"
+  },
+  "scope": "One actual RTL ingress with four32deep CPU-reference bank FIFOs; full-burst reservations precede128unbackpressured returns; stalled write drain retains payload/fault/slot/index identity. Physical binding and mutable queue protection remain unqualified."
+}

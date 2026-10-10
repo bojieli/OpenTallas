@@ -1,0 +1,223 @@
+{
+  "schema": "opentallas.hbm_svc.dma_stream_wide.v1",
+  "verdict": "PASS",
+  "correctness": "PASS",
+  "bandwidth": "PASS",
+  "raw_roof": "PASS",
+  "sources_unchanged": true,
+  "read_latency_cycles": 104,
+  "credit_rtt_cycles": 192,
+  "initial_credits": 256,
+  "ingress_depth_per_bank": 32,
+  "unbackpressured_native_return": true,
+  "lanes": 32,
+  "tag_bits": 6,
+  "window_sectors": 16384,
+  "native_leases_per_pc": 32,
+  "write_commit_cycles": 3,
+  "read_publication_cycles": 5,
+  "rate_commands": 512,
+  "backend_calendar_sectors_per_24_cycles_per_stack": 593,
+  "aggregate_bytes_per_cycle": 3023.466570553253,
+  "nominal_bytes_per_cycle": 3333.3333333333335,
+  "sustained_bytes_per_cycle": 3166.6666666666665,
+  "gate_bytes_per_cycle": 3000,
+  "stack_rates": [
+    {
+      "stack": 0,
+      "bytes": 4194304,
+      "cycles": 5549,
+      "raw_sectors": 131072,
+      "bytes_per_cycle": 755.8666426383132,
+      "nominal_utilization": 0.9070399711659758,
+      "sustained_utilization": 0.9547789170168167
+    },
+    {
+      "stack": 1,
+      "bytes": 4194304,
+      "cycles": 5549,
+      "raw_sectors": 131072,
+      "bytes_per_cycle": 755.8666426383132,
+      "nominal_utilization": 0.9070399711659758,
+      "sustained_utilization": 0.9547789170168167
+    },
+    {
+      "stack": 2,
+      "bytes": 4194304,
+      "cycles": 5549,
+      "raw_sectors": 131072,
+      "bytes_per_cycle": 755.8666426383132,
+      "nominal_utilization": 0.9070399711659758,
+      "sustained_utilization": 0.9547789170168167
+    },
+    {
+      "stack": 3,
+      "bytes": 4194304,
+      "cycles": 5549,
+      "raw_sectors": 131072,
+      "bytes_per_cycle": 755.8666426383132,
+      "nominal_utilization": 0.9070399711659758,
+      "sustained_utilization": 0.9547789170168167
+    }
+  ],
+  "diagnostics": [
+    {
+      "stack": 0,
+      "first_native": 107,
+      "last_native": 5521,
+      "first_output": 118,
+      "last_output": 5549,
+      "raw_accepted": 131072,
+      "calendar_budget": 137106,
+      "eligible_PC_cycles": 166658,
+      "eligible_lease_cycles": 826061,
+      "selected_bank_blocked_PC_cycles": 0,
+      "request_stall_PC_cycles": 0,
+      "full_lease_PC_cycles": 9595,
+      "read_candidates": 131086,
+      "read_busy_conflicts": 11,
+      "read_same_cycle_conflicts": 3,
+      "missing_present_lane_cycles": 6377,
+      "credit_stall_lane_cycles": 0,
+      "output_idle_cycles": 756,
+      "output_busy_cycles": 4793,
+      "output_sectors": 131072
+    },
+    {
+      "stack": 1,
+      "first_native": 107,
+      "last_native": 5521,
+      "first_output": 118,
+      "last_output": 5549,
+      "raw_accepted": 131072,
+      "calendar_budget": 137106,
+      "eligible_PC_cycles": 166658,
+      "eligible_lease_cycles": 826061,
+      "selected_bank_blocked_PC_cycles": 0,
+      "request_stall_PC_cycles": 0,
+      "full_lease_PC_cycles": 9595,
+      "read_candidates": 131086,
+      "read_busy_conflicts": 11,
+      "read_same_cycle_conflicts": 3,
+      "missing_present_lane_cycles": 6377,
+      "credit_stall_lane_cycles": 0,
+      "output_idle_cycles": 756,
+      "output_busy_cycles": 4793,
+      "output_sectors": 131072
+    },
+    {
+      "stack": 2,
+      "first_native": 107,
+      "last_native": 5521,
+      "first_output": 118,
+      "last_output": 5549,
+      "raw_accepted": 131072,
+      "calendar_budget": 137106,
+      "eligible_PC_cycles": 166658,
+      "eligible_lease_cycles": 826061,
+      "selected_bank_blocked_PC_cycles": 0,
+      "request_stall_PC_cycles": 0,
+      "full_lease_PC_cycles": 9595,
+      "read_candidates": 131086,
+      "read_busy_conflicts": 11,
+      "read_same_cycle_conflicts": 3,
+      "missing_present_lane_cycles": 6377,
+      "credit_stall_lane_cycles": 0,
+      "output_idle_cycles": 756,
+      "output_busy_cycles": 4793,
+      "output_sectors": 131072
+    },
+    {
+      "stack": 3,
+      "first_native": 107,
+      "last_native": 5521,
+      "first_output": 118,
+      "last_output": 5549,
+      "raw_accepted": 131072,
+      "calendar_budget": 137106,
+      "eligible_PC_cycles": 166658,
+      "eligible_lease_cycles": 826061,
+      "selected_bank_blocked_PC_cycles": 0,
+      "request_stall_PC_cycles": 0,
+      "full_lease_PC_cycles": 9595,
+      "read_candidates": 131086,
+      "read_busy_conflicts": 11,
+      "read_same_cycle_conflicts": 3,
+      "missing_present_lane_cycles": 6377,
+      "credit_stall_lane_cycles": 0,
+      "output_idle_cycles": 756,
+      "output_busy_cycles": 4793,
+      "output_sectors": 131072
+    }
+  ],
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "returncode": 0,
+      "output": "WIDE_BANDWIDTH stack=0 bytes=4194304 cycles=5549 raw_sectors=131072 nominal_bytes_per_cycle=833.333333 sustained_bytes_per_cycle=791.666667 calendar_bytes_per_cycle=790.666667\nDIAGNOSTIC stack=0 first_native=107 last_native=5521 first_output=118 last_output=5549 raw_accepted=131072 calendar_budget=137106 eligible_PC_cycles=166658 eligible_lease_cycles=826061 selected_bank_blocked_PC_cycles=0 request_stall_PC_cycles=0 full_lease_PC_cycles=9595 read_candidates=131086 read_busy_conflicts=11 read_same_cycle_conflicts=3 missing_present_lane_cycles=6377 credit_stall_lane_cycles=0 output_idle_cycles=756 output_busy_cycles=4793 output_sectors=131072\nWIDE_BANDWIDTH stack=1 bytes=4194304 cycles=5549 raw_sectors=131072 nominal_bytes_per_cycle=833.333333 sustained_bytes_per_cycle=791.666667 calendar_bytes_per_cycle=790.666667\nDIAGNOSTIC stack=1 first_native=107 last_native=5521 first_output=118 last_output=5549 raw_accepted=131072 calendar_budget=137106 eligible_PC_cycles=166658 eligible_lease_cycles=826061 selected_bank_blocked_PC_cycles=0 request_stall_PC_cycles=0 full_lease_PC_cycles=9595 read_candidates=131086 read_busy_conflicts=11 read_same_cycle_conflicts=3 missing_present_lane_cycles=6377 credit_stall_lane_cycles=0 output_idle_cycles=756 output_busy_cycles=4793 output_sectors=131072\nWIDE_BANDWIDTH stack=2 bytes=4194304 cycles=5549 raw_sectors=131072 nominal_bytes_per_cycle=833.333333 sustained_bytes_per_cycle=791.666667 calendar_bytes_per_cycle=790.666667\nDIAGNOSTIC stack=2 first_native=107 last_native=5521 first_output=118 last_output=5549 raw_accepted=131072 calendar_budget=137106 eligible_PC_cycles=166658 eligible_lease_cycles=826061 selected_bank_blocked_PC_cycles=0 request_stall_PC_cycles=0 full_lease_PC_cycles=9595 read_candidates=131086 read_busy_conflicts=11 read_same_cycle_conflicts=3 missing_present_lane_cycles=6377 credit_stall_lane_cycles=0 output_idle_cycles=756 output_busy_cycles=4793 output_sectors=131072\nWIDE_BANDWIDTH stack=3 bytes=4194304 cycles=5549 raw_sectors=131072 nominal_bytes_per_cycle=833.333333 sustained_bytes_per_cycle=791.666667 calendar_bytes_per_cycle=790.666667\nDIAGNOSTIC stack=3 first_native=107 last_native=5521 first_output=118 last_output=5549 raw_accepted=131072 calendar_budget=137106 eligible_PC_cycles=166658 eligible_lease_cycles=826061 selected_bank_blocked_PC_cycles=0 request_stall_PC_cycles=0 full_lease_PC_cycles=9595 read_candidates=131086 read_busy_conflicts=11 read_same_cycle_conflicts=3 missing_present_lane_cycles=6377 credit_stall_lane_cycles=0 output_idle_cycles=756 output_busy_cycles=4793 output_sectors=131072\nPASS wide_four_stacks_32lanes_64slots_CPU_scoreboard_finite32leases_OOO_tags_raw_roof_calendar_bank_commit3_publication5\n"
+    },
+    {
+      "case": "data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "index_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=9 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "fault_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_pc_map_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:109: bad request map/burst stack=0 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:109: bad request map/burst stack=1 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:109: bad request map/burst stack=2 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:109: bad request map/burst stack=3 PC=0 tag=0 idx=0 len=4\n       Time: 55000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_drop_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3025000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3025000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3025000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=0 tag=0 generation=0 idx=32 expected=0\n       Time: 3025000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "rtl_data_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=8 tag=0 generation=0 idx=8 expected=8\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "response_tag_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:100: UNBACKPRESSURED_NATIVE_RETURN violated PC=7\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:100: UNBACKPRESSURED_NATIVE_RETURN violated PC=7\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:100: UNBACKPRESSURED_NATIVE_RETURN violated PC=7\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile_wide.sv:39: DMA native unknown/retired tag\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u.dut.pc_tiles[7].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:100: UNBACKPRESSURED_NATIVE_RETURN violated PC=7\n       Time: 1115000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "response_beat_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=0 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=1 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=2 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:131: wide scoreboard stack=3 lane=9 tag=0 generation=0 idx=9 expected=9\n       Time: 1225000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    },
+    {
+      "case": "raw_roof_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:117: RAW_ROOF exceeded calendar cycle=557 accepted=32 allowed=25\n       Time: 5605000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[0].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:117: RAW_ROOF exceeded calendar cycle=557 accepted=32 allowed=25\n       Time: 5605000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[1].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:117: RAW_ROOF exceeded calendar cycle=557 accepted=32 allowed=25\n       Time: 5605000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[2].u\nFATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv:117: RAW_ROOF exceeded calendar cycle=557 accepted=32 allowed=25\n       Time: 5605000 Scope: tb_hbm_svc_dma_stream_wide.genblk1[3].u\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_pc_ingress.sv": "e216e5ad0aec7e0bf7dabb370ad2e19bfd9524eb3af08a2b89c074d1c3ce63f0",
+    "rtl/ot_hbm_svc_dma_pc_tile_wide.sv": "017bcd13d628ad7803d1ddf40cc695768615e610fcb16bebded3a2d7968e27b3",
+    "rtl/ot_hbm_svc_dma_stream_wide.sv": "3721c1302aaa28070c105faf16f73245f8a57665281d2a3ad49b812f4aea7af0",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_stream_wide.sv": "cf6630e76ca4c266d0e74b5375964d0dd7833ea3f8e03b72640ea16b1a8580e1",
+    "tools/hbm_svc_dma_stream_wide_bench.py": "69c499394f5563285d27ca9a12b2f8ddb452ea9e0aacc35a13aed7fb8da2e49a"
+  },
+  "scope": "Wide central CPU data-array baseline with actual RTL write-commit/read-publication pipelines, finite32nativeCAM leases, out-of-order tagged returns and conservative raw backend calendar. Actual SRAM/cache integration and physical closure remain separate; no zero-latency bank claim."
+}

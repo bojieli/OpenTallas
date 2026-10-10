@@ -5,7 +5,7 @@
 // relays must replace the reference data store before adoption.
 module ot_hbm_svc_dma_stream_wide #(
  parameter integer ENABLE=0, INITIAL_CREDITS=256, WINDOW=16384,
- parameter integer NC=32, LANES=32, TAGW=6, WRITE_COMMIT=3, READ_PUBLICATION=5,
+ parameter integer NC=32, LANES=32, TAGW=6, WRITE_COMMIT=3, READ_PUBLICATION=5, INGRESS_DEPTH=0,
  parameter integer MUT_DROP=0,MUT_DATA=0,MUT_PC_MAP=0
 )(
  input wire clk,rst,
@@ -25,7 +25,9 @@ module ot_hbm_svc_dma_stream_wide #(
  reg[SLOTW:0] pending_issue;
  reg[8:0] issue_idx;
  reg[8:0] emit_idx[0:LANES-1];reg[$clog2(INITIAL_CREDITS+1)-1:0] credits[0:LANES-1];
- wire[31:0] lease_ready,lease_capacity,return_valid;wire[32*SLOTW-1:0] return_slot;wire[255:0] return_idx;
+ wire[31:0] lease_ready,lease_capacity,cam_capacity,return_valid;wire[32*SLOTW-1:0] return_slot;wire[255:0] return_idx;
+ wire[31:0] write_valid;wire[32*SLOTW-1:0] write_slot;wire[255:0] write_idx;
+ wire[8191:0] write_data;wire[31:0] write_fault;wire[63:0] write_bank;
  wire[31:0] bank_ready;
  reg write_busy[0:31][0:3];
  reg read_busy[0:31][0:3];reg read_taken[0:31][0:3];
@@ -36,13 +38,35 @@ module ot_hbm_svc_dma_stream_wide #(
  reg[8191:0] commit_data[0:WRITE_COMMIT-1];
  reg[31:0] commit_fault[0:WRITE_COMMIT-1];
  reg[LANES*DDB-1:0] publication[0:READ_PUBLICATION-1];
- generate for(genvar ready_pc=0;ready_pc<32;ready_pc=ready_pc+1)begin
+ generate for(genvar ready_pc=0;ready_pc<32;ready_pc=ready_pc+1)begin:ingress
    wire[1:0] bank=pc_rsp_tag[ready_pc*17+14+:2]+pc_rsp_beat[ready_pc*4+:2];
-   assign bank_ready[ready_pc]=!write_busy[ready_pc][bank];
+   if(INGRESS_DEPTH==0)begin
+     assign bank_ready[ready_pc]=!write_busy[ready_pc][bank];
+     assign lease_capacity[ready_pc]=cam_capacity[ready_pc];
+     assign write_valid[ready_pc]=return_valid[ready_pc];
+     assign write_slot[ready_pc*SLOTW+:SLOTW]=return_slot[ready_pc*SLOTW+:SLOTW];
+     assign write_idx[ready_pc*8+:8]=return_idx[ready_pc*8+:8];
+     assign write_data[ready_pc*256+:256]=pc_rsp_data[ready_pc*256+:256];
+     assign write_fault[ready_pc]=pc_rsp_fault[ready_pc];assign write_bank[ready_pc*2+:2]=bank;
+   end else begin
+     wire reservation_ready,control_fault;
+     wire[3:0] wr_ready={ !write_busy[ready_pc][3],!write_busy[ready_pc][2],!write_busy[ready_pc][1],!write_busy[ready_pc][0] };
+     assign bank_ready[ready_pc]=1'b1;
+     assign lease_capacity[ready_pc]=cam_capacity[ready_pc] && reservation_ready;
+     ot_hbm_svc_dma_pc_ingress #(.DEPTH(INGRESS_DEPTH),.SLOT_BITS(SLOTW)) q(
+       .clk(clk),.rst(rst),.reserve_ready(reservation_ready),
+       .reserve_take(pc_req_v[ready_pc] && lease_ready[ready_pc]),
+       .reserve_bank(pc_req_tag[ready_pc*17+14+:2]),.reserve_len(pc_req_len[ready_pc*4+:4]),
+       .in_v(return_valid[ready_pc]),.in_bank(bank),.in_slot(return_slot[ready_pc*SLOTW+:SLOTW]),
+       .in_idx(return_idx[ready_pc*8+:8]),.in_data(pc_rsp_data[ready_pc*256+:256]),.in_fault(pc_rsp_fault[ready_pc]),
+       .write_ready(wr_ready),.out_v(write_valid[ready_pc]),.out_bank(write_bank[ready_pc*2+:2]),
+       .out_slot(write_slot[ready_pc*SLOTW+:SLOTW]),.out_idx(write_idx[ready_pc*8+:8]),
+       .out_data(write_data[ready_pc*256+:256]),.out_fault(write_fault[ready_pc]),.control_fault(control_fault));
+   end
  end endgenerate
  genvar tile;generate for(tile=0;tile<32;tile=tile+1)begin:pc_tiles
  ot_hbm_svc_dma_pc_tile_wide #(.DEPTH(32),.SLOT_BITS(SLOTW)) u(.clk(clk),.rst(rst),
-  .capacity(lease_capacity[tile]),.rq_v(pc_req_v[tile]),.rq_rdy(lease_ready[tile]),.rq_tag(pc_req_tag[tile*17+:17]),.rq_len(pc_req_len[tile*4+:4]),
+  .capacity(cam_capacity[tile]),.rq_v(pc_req_v[tile]),.rq_rdy(lease_ready[tile]),.rq_tag(pc_req_tag[tile*17+:17]),.rq_len(pc_req_len[tile*4+:4]),
   .consumer_ready(bank_ready[tile]),.phy_ready(pc_req_ready[tile]),.phy_v(),.rs_v(pc_rsp_v[tile]),.rs_rdy(pc_rsp_ready[tile]),
   .rs_tag(pc_rsp_tag[tile*17+:17]),.rs_beat(pc_rsp_beat[tile*4+:4]),
   .out_v(return_valid[tile]),.out_slot(return_slot[tile*SLOTW+:SLOTW]),.out_idx(return_idx[tile*8+:8]));
@@ -126,11 +150,11 @@ module ot_hbm_svc_dma_stream_wide #(
        commit_v[delaystage]<=commit_v[delaystage-1];commit_slot[delaystage]<=commit_slot[delaystage-1];
        commit_idx[delaystage]<=commit_idx[delaystage-1];commit_data[delaystage]<=commit_data[delaystage-1];commit_fault[delaystage]<=commit_fault[delaystage-1];
      end
-     commit_v[0]<=return_valid;commit_slot[0]<=return_slot;commit_idx[0]<=return_idx;
-     commit_data[0]<=pc_rsp_data;commit_fault[0]<=pc_rsp_fault;
+     commit_v[0]<=write_valid;commit_slot[0]<=write_slot;commit_idx[0]<=write_idx;
+     commit_data[0]<=write_data;commit_fault[0]<=write_fault;
      for(p=0;p<32;p=p+1)begin
        for(bk=0;bk<4;bk=bk+1)write_busy[p][bk]<=0;
-       if(return_valid[p])write_busy[p][(pc_rsp_tag[p*17+14+:2]+pc_rsp_beat[p*4+:2])&3]<=1;
+       if(write_valid[p])write_busy[p][write_bank[p*2+:2]]<=1;
        if(commit_v[WRITE_COMMIT-1][p])begin
          pos=commit_slot[WRITE_COMMIT-1][p*SLOTW+:SLOTW]*256+commit_idx[WRITE_COMMIT-1][p*8+:8];
          data[pos]<=commit_data[WRITE_COMMIT-1][p*256+:256];fault[pos]<=commit_fault[WRITE_COMMIT-1][p];present[pos]<=1;
