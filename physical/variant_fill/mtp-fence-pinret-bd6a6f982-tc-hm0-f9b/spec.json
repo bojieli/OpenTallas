@@ -1,0 +1,96 @@
+{
+ "name": "mtp-fence-pinret-bd6a6f982-tc-hm0-f9b",
+ "block": "ot_gpu_rf_visibility_fence_p",
+ "owner": "Claude:hgi-1010",
+ "purpose": "FILL-9 2026-10-10 floorplan knob vs f9a: 480x300 frame (same core area class) so the 4.1k-bit top (host_w*) and bottom (cap_data) buses get 468 um faces: 4.4 b/um/layer instead of 5.9, half the bank depth, shorter pin->bank->logic wires on the in->reg paths that limited p2r2/p2r3 (TT -56 in->reg). Same RTL/benches/tapcell-aware bank as f9a. | FILL-9 2026-10-10 root cause of f8 NEEDS_HUMAN (calibrate died 3_5_place_dp DPL-0033): pinret_bank.tcl put 97 FIRM pin flops on top of TAP_TAPCELL_ROW_* (it only tracked its own used sites). Fix: reserve every row site under a fixed instance before assigning the bank. Same RTL/benches/floorplan as f8 (bus-tolerant exhaustive pin regions). | was: FILL-8 2026-10-10 root cause of f7 FLOORPLAN_MARGIN (S/M5 12.96 b/um @120, 1296 pins/100 um): the top pin-region regex '^(host_wr_.*|host_dst|host_wdata)$' is matched by Tcl regexp on bit names ('host_wdata[5]'), so host_wdata[4096]+host_dst[9] were UNCONSTRAINED and spread over all four faces (N 1252, S 1300 on top of cap_data 4096, E 818, W 726; N M7 empty) -> long pin->flop wires across the die. Fix: bus-index-tolerant regex + --pin-regions-exhaustive (every port in exactly one region); top face then carries 4107 pins balanced M5/M7 = 5.9 b/um/layer, bottom 4116 = 5.9. Same RTL/benches as f7 (10a658adf). | FILL-7 2026-10-10 (drive-1010 IDLE round 1): pin-flop anchoring hook fix: pinret_bank.tcl matched the returned-credit capture flops by Q-net name (renamed after mapping -> 'got 0' at 3_3_place_gp); now matches the flop instance; RTL un",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/fill-9-20261010-fs",
+  "commit": "bd6a6f982eafd5c64d4ea1c8984574c0050293d5",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "src",
+   "Makefile"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "pinret_exact",
+    "cmd": "bash physical/hbm_mtp/run_fence_pinret_bench.sh {RUN}/bench 0 7 3 11 29",
+    "expect": "pass",
+    "pass_regex": "FENCE_P PASS",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "pinret_mut_last",
+    "cmd": "bash physical/hbm_mtp/run_fence_pinret_bench.sh {RUN}/bench_neg 1 7",
+    "expect": "fail",
+    "fail_regex": "FENCE_P FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "pinret_mut_return",
+    "cmd": "bash physical/hbm_mtp/run_fence_pinret_bench.sh {RUN}/bench_neg_return 2 7",
+    "expect": "fail",
+    "fail_regex": "PINRET_WRITE_PAYLOAD_MISMATCH|PINRET_DUPLICATE_OR_REORDERED_WRITE",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.000 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_gpu_rf_visibility_fence_p --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source rtl/common/ot_sc_pfifo.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_p2.sv --source physical/hbm_mtp/rtl/ot_fence_pin_return.sv --param PINRET=1   --die-area 0 0 480 300 --core-area 6 6 474 294 --pin-region '^(host_wr_.*|host_dst(\\[.*)?|host_wdata(\\[.*)?)$=top:6-474' --pin-regions-exhaustive --pin-region '^(cap_.*)$=bottom:6-474' --pin-region '^(op_.*|clk|rst_n|producer_.*|ack_retire_enable|host_ack_.*)$=left:6-294' --pin-region '^(vector_ACK_.*|writes_visible|fence_.*|pending_write|fault)$=right:6-294' --step-tcl PRE_GLOBAL_PLACE=physical/hbm_mtp/pinret_bank.tcl --step-tcl POST_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl  $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.000 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_gpu_rf_visibility_fence_p --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source rtl/common/ot_sc_pfifo.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_p2.sv --source physical/hbm_mtp/rtl/ot_fence_pin_return.sv --param PINRET=1   --die-area 0 0 480 300 --core-area 6 6 474 294 --pin-region '^(host_wr_.*|host_dst(\\[.*)?|host_wdata(\\[.*)?)$=top:6-474' --pin-regions-exhaustive --pin-region '^(cap_.*)$=bottom:6-474' --pin-region '^(op_.*|clk|rst_n|producer_.*|ack_retire_enable|host_ack_.*)$=left:6-294' --pin-region '^(vector_ACK_.*|writes_visible|fence_.*|pending_write|fault)$=right:6-294' --step-tcl PRE_GLOBAL_PLACE=physical/hbm_mtp/pinret_bank.tcl --step-tcl POST_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.0,
+ "route_corner": "TC",
+ "cycles_added": 2,
+ "notes": "Per-output added cycles; actual script total cost recorded in pinret_bench_record_20261010.json; physical adopted=False until closure and integration repricing.",
+ "merge_target": null,
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/variant_fill/mtp-fence-pinret-10a658adf-tc-hm0-f8/hbm_fence_pinret_20261010"
+  }
+ ]
+}
