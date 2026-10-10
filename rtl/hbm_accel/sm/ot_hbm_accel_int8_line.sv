@@ -173,3 +173,41 @@ module ot_hbm_accel_int8_credit #(parameter integer RW = 8) (
             assign intake_credit=!count_state[CWID];
 `endif
 endmodule
+
+// hbm-phys-1010 [att] (front_c INT8 CTS -1076 ps: u_issue.si -> issue w_ready / line_end -> the adapter's 1,024-b data
+// enables across the 570-um strip): a 2-entry pointer FIFO between the adapter and the issue.  The issue's ready only
+// moves the read pointer and the count (a handful of flops); the entries are written from registered state (the
+// adapter's m_valid and this FIFO's registered not-full), and the issue reads through a mux on the registered read
+// pointer.  s_ready is a register (not-full), so the adapter's enables never see the issue's combinational ready.
+// Same order and contents (transaction-exact); +1 cycle of latency on the fmt3 path only.
+module ot_hbm_accel_int8_ofifo #(parameter integer W = 1088) (
+    input  wire         clk, rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         m_valid,
+    input  wire         m_ready,
+    output wire [W-1:0] m_data,
+    output wire         busy
+);
+    reg [1:0] cnt;
+    reg       wp, rp;
+    reg [W-1:0] e0, e1;
+    assign s_ready = (cnt != 2'd2);
+    assign m_valid = (cnt != 2'd0);
+    assign busy    = (cnt != 2'd0);
+    assign m_data  = rp ? e1 : e0;
+    wire push = s_valid && s_ready;
+    wire pop  = m_valid && m_ready;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cnt <= 2'd0; wp <= 1'b0; rp <= 1'b0; end
+        else begin
+            cnt <= cnt + {1'b0, push} - {1'b0, pop};
+            if (push) wp <= ~wp;
+            if (pop)  rp <= ~rp;
+        end
+    always @(posedge clk) begin
+        if (push && !wp) e0 <= s_data;
+        if (push &&  wp) e1 <= s_data;
+    end
+endmodule

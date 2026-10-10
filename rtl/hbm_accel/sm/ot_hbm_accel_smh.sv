@@ -1156,11 +1156,14 @@ module ot_hbm_accel_smh_front_c #(
         end else begin : g_credit_legacy
             assign intake_credit=1'b1;
         end
-        wire demand = input_open && !issue_line_end && intake_credit;
+        // hbm-phys-1010 [att]: with the exact beat credit (PIPE_INT8) the intake stops on the credit alone; the issue's
+        // combinational line end no longer reaches the adapter (input_open stays for the PIPE_INT8 = 0 adapter).
+        wire demand = PIPE_INT8 ? intake_credit : (input_open && !issue_line_end && intake_credit);
         // hbm-forks 2026-10-09 (HGI-1 CF-SM / CF-1): formats 0-2 BYPASS the adapter (zero added cycles: the DS formats
         // are cycle-identical to ENABLE_INT8 = 0); fmt3 lines go through it.  A DS op behind a fmt3 op waits for the
         // adapter to drain (order kept).
         wire a_busy, a_v; wire [1087:0] a_d;
+        wire u_busy, u_v, u_ready; wire [1087:0] u_d;
         wire fmt3 = (fmt_q == 2'd3);
 `ifdef OT_SMH_MUT_NOBYP
         wire byp = 1'b0;                                      // NEGATIVE CONTROL: every format through the adapter
@@ -1168,9 +1171,22 @@ module ot_hbm_accel_smh_front_c #(
         wire byp = !fmt3 && !a_busy;
 `endif
         assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
-        ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
-            .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
-            .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+        if (PIPE_INT8) begin : g_ofifo
+            // hbm-phys-1010 [att]: the adapter hands its beats to a 2-entry pointer FIFO (registered ready); the issue's
+            // ready moves only the FIFO's read pointer, never the adapter's 1,024-b data enables (CTS -1076 ps class).
+            wire f_busy;
+            ot_hbm_accel_int8_line #(.PIPE(1)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(u_busy),
+                .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
+                .m_valid(u_v), .m_ready(u_ready), .m_data(u_d));
+            ot_hbm_accel_int8_ofifo #(.W(1088)) u_ofifo (.clk(clk), .rst_n(rst_n), .s_valid(u_v), .s_ready(u_ready),
+                .s_data(u_d), .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d), .busy(f_busy));
+            assign a_busy = u_busy || f_busy;
+        end else begin : g_odirect
+            ot_hbm_accel_int8_line #(.PIPE(0)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
+                .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
+                .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+            assign {u_busy, u_v, u_ready, u_d} = {1091{1'b0}};
+        end
         assign issue_w_valid = byp ? w_valid : a_v;
         assign issue_w_data  = byp ? w_data : a_d;
     end else begin : g_no_int8

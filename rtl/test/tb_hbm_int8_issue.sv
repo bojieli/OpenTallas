@@ -10,15 +10,17 @@ module tb_hbm_int8_issue #(parameter integer PIPE = 0);
  always @(posedge clk) if(!rst_n) input_open<=0;
  else if(launch) input_open<=1;else if(line_end) input_open<=0;
 `ifdef OT_INT8_MUT_PREFETCH
- wire demand=input_open; // removes last-real-beat gate: must prefetch the wrong format
+ wire credit=1'b1; // removes last-real-beat gate: must prefetch the wrong format
 `else
  wire credit;
  generate if(PIPE) begin
   ot_hbm_accel_int8_credit #(.RW(12)) counter(.clk(clk),.rst_n(rst_n),.launch(launch),
    .take(source_ready),.int8_mode(mode),.op_rows(op_rows),.op_g(8'd1),.op_c(op_c),.intake_credit(credit));
  end else assign credit=1'b1;endgenerate
- wire demand=input_open&&!line_end&&credit;
 `endif
+ // hbm-phys-1010 [att]: the element's wiring (ot_hbm_accel_smh g_int8): PIPE 1 stops the intake on the credit alone
+ // (the issue's line end does not reach the adapter) and the adapter feeds the issue through the 2-entry ofifo.
+ wire demand=PIPE ? credit : (input_open&&!line_end&&credit);
  integer line_no=0,seen=0,k,code,cycles=0;
  reg [15:0] golden[0:255];
  initial $readmemh("golden.hex",golden);
@@ -27,9 +29,18 @@ module tb_hbm_int8_issue #(parameter integer PIPE = 0);
   for(integer i=0;i<136;i=i+1) data[8*i+:8]=(line_no*128+i)%256;
  end
  assign source_ready=raw_ready&&demand;
- ot_hbm_accel_int8_line #(.PIPE(PIPE)) unpack(.clk(clk),.rst_n(rst_n),.int8_mode(mode),
-  .s_valid(demand),.s_ready(raw_ready),.s_data(data),
-  .m_valid(w_valid),.m_ready(w_ready),.m_data(out_data));
+ wire u_v,u_ready;wire [1087:0] u_d;
+ generate if(PIPE) begin : g_f
+  ot_hbm_accel_int8_line #(.PIPE(1)) unpack(.clk(clk),.rst_n(rst_n),.int8_mode(mode),
+   .s_valid(demand),.s_ready(raw_ready),.s_data(data),
+   .m_valid(u_v),.m_ready(u_ready),.m_data(u_d));
+  ot_hbm_accel_int8_ofifo #(.W(1088)) ofifo(.clk(clk),.rst_n(rst_n),.s_valid(u_v),.s_ready(u_ready),.s_data(u_d),
+   .m_valid(w_valid),.m_ready(w_ready),.m_data(out_data),.busy());
+ end else begin : g_d
+  ot_hbm_accel_int8_line #(.PIPE(0)) unpack(.clk(clk),.rst_n(rst_n),.int8_mode(mode),
+   .s_valid(demand),.s_ready(raw_ready),.s_data(data),
+   .m_valid(w_valid),.m_ready(w_ready),.m_data(out_data));
+ end endgenerate
  ot_hbm_accel_issue_pq #(.IL(8),.RMAX(4096),.XDEPTH(128),.HAZ(1)) issue(
   .clk(clk),.rst_n(rst_n),.start_v(start_v),.launch(launch),.op_rows(op_rows),
   .op_c(op_c),.op_g(8'd1),.op_gs(1'b0),.op_bf(op_bf),.w_valid(w_valid),
