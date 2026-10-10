@@ -42,5 +42,7 @@ step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }
 # SPEF from ckpt_grt.odb: write_db keeps the global routes (grt::have_routes = 1 after read_db) and the reloaded
 # estimate is identical to the in-session one (checked net by net, 2026-10-10).
 step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
+# empty *PORTS (no top ports) breaks OpenSTA read_spef (STA-1670): drop it
+step ports { exec sed -i {1,40{/^\*PORTS$/{N;/^\*PORTS\n$/d}}} /work/die_grt.spef }
 if {![file exists /work/die_grt.spef] || [file size /work/die_grt.spef] == 0} { puts "OT_STEP_FAIL spef not written"; exit 3 }
 puts OT_GRT_DONE
