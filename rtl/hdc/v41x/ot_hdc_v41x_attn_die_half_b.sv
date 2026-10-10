@@ -101,7 +101,7 @@ module hfd_attn_half_lo #(
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the first NLL of the NL result banks: 2 side-channel EW, then SN up to the N-face pin bank
-            ot_attn_bpipe #(.W(136), .N(NLL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q(xr[x*136 +: 136]));
+            ot_attn_bpipe136 #(.W(136), .N(NLL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q(xr[x*136 +: 136]));
         end
     end endgenerate
 endmodule
@@ -151,7 +151,7 @@ module hfd_attn_half_hi #(
             ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
-            ot_attn_bpipe #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
+            ot_attn_bpipe136 #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
             for (l = 0; l < 4; l = l + 1) begin : g_l
                 localparam integer G = GB + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
@@ -160,7 +160,7 @@ module hfd_attn_half_hi #(
             localparam integer GL = 2 * x;
             wire [3:0]   lv, lf;
             wire [127:0] ly;
-            ot_attn_bpipe #(.W(136), .N(NL - NLL)) u_xr (.clk(clk), .d(xr[x*136 +: 136]), .q({lv, lf, ly}));
+            ot_attn_bpipe136 #(.W(136), .N(NL - NLL)) u_xr (.clk(clk), .d(xr[x*136 +: 136]), .q({lv, lf, ly}));
             for (l = 0; l < 4; l = l + 1) begin : g_ll
                 localparam integer G = GL + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {lv[l], lf[l], ly[l*32 +: 32]};

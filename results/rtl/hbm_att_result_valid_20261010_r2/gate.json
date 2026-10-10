@@ -1,10 +1,10 @@
 {
   "schema": "opentallas.hbm_att_result_valid.v1",
-  "parent_commit": "2a3355286cd439ec60aaa37e00c4358b0b4071fc",
+  "parent_commit": "298724fecc465824ab2bf52e8c20ee6b87354dbf",
   "source_sha256": {
     "rtl/test/tb_hbm_att_result_valid.sv": "c5f13c5c729a6b722b0972e837d60603d50bb5499c40422baa26b6e56293c2a1",
-    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv": "03c4cf4dc8e28c58793ee4bd2ca4de2d365455286407f41487aeb348e1bfb98b",
-    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv": "caa94a1263f3372b45b504908c56553951e5b9801c315673a3974190cfee0cbe",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv": "ab9a5f2541772708c8e2b52504c0841dc065bf900aa4220a88b886455c7de85f",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv": "7f3677a0e16fe78000b32baedb7e56b0efeda12a1637a28b5700885e5902a445",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv": "9defbfad53ae5b50be20aba873fdde00c7308d5daa24051cf704dd8f41a1dab4"
   },
   "consumer_mechanism": "real die tile/hi merge and output bank",

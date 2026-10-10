@@ -36,28 +36,10 @@ module ot_attn_bpipe #(
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );
-    // hbm-phys-1010 [att]: a pipe of <= 136 bits (the quad-result words) uses the right-sized 136-bit banks
-    // (ot_attn_bank_{sn,ew}136): in a 544 bank it routed 408 dead spare wires every hop (the hi half's SE merge corner:
-    // 42.8 k of its 103 k GRT-overflow net mentions were those spares).  Wider pipes keep the 544 banks.
-    localparam integer CW = (W <= 136) ? 136 : 544;
-    localparam integer NB = (W + CW - 1) / CW;
+    localparam integer NB = (W + 543) / 544;
     genvar s, c;
-    // (both branches name the banks gn.g_s[s].g_c[c].g_{sn,ew}.u_b, so every floorplan keeps its macro names)
     generate if (N == 0) begin : g0
         assign q = d;
-    end else if (CW == 136) begin : gn
-        wire [CW-1:0] st [0:N];
-        assign st[0] = {{(CW-W){1'b0}}, d};
-        for (s = 0; s < N; s = s + 1) begin : g_s
-            for (c = 0; c < 1; c = c + 1) begin : g_c
-                if ((s == 0 && EW0 != 0) || (s == N - 1 && EWN != 0) || ((EWM >> s) & 1)) begin : g_ew
-                    ot_attn_bank_ew136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
-                end else begin : g_sn
-                    ot_attn_bank_sn136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
-                end
-            end
-        end
-        assign q = st[N][W-1:0];
     end else begin : gn
         wire [NB*544-1:0] st [0:N];
         assign st[0] = {{(NB*544-W){1'b0}}, d};
@@ -67,6 +49,40 @@ module ot_attn_bpipe #(
                     ot_attn_bank_ew544 u_b (.clk(clk), .d(st[s][c*544 +: 544]), .q(st[s+1][c*544 +: 544]));
                 end else begin : g_sn
                     ot_attn_bank_sn544 u_b (.clk(clk), .d(st[s][c*544 +: 544]), .q(st[s+1][c*544 +: 544]));
+                end
+            end
+        end
+        assign q = st[N][W-1:0];
+    end endgenerate
+endmodule
+
+// hbm-phys-1010 [att]: the quad-result pipe (<= 136 bits) on the right-sized ot_attn_bank_{sn,ew}136 banks.  In a 544
+// bank it routed 408 dead spare wires every hop (the hi half's SE merge corner: 42.8 k of its 103 k GRT-overflow net
+// mentions).  Same parameters and bank instance names (gn.g_s[s].g_c[0].g_{sn,ew}.u_b) as ot_attn_bpipe.
+module ot_attn_bpipe136 #(
+    parameter integer W = 136,
+    parameter integer N = 1,
+    parameter integer EW0 = 0,
+    parameter integer EWN = 0,
+    parameter integer EWM = 0
+) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    initial if (W > 136) $fatal(1, "ot_attn_bpipe136: W <= 136");
+    genvar s, c;
+    generate if (N == 0) begin : g0
+        assign q = d;
+    end else begin : gn
+        wire [135:0] st [0:N];
+        assign st[0] = {{(136-W){1'b0}}, d};
+        for (s = 0; s < N; s = s + 1) begin : g_s
+            for (c = 0; c < 1; c = c + 1) begin : g_c
+                if ((s == 0 && EW0 != 0) || (s == N - 1 && EWN != 0) || ((EWM >> s) & 1)) begin : g_ew
+                    ot_attn_bank_ew136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
+                end else begin : g_sn
+                    ot_attn_bank_sn136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
                 end
             end
         end
@@ -155,7 +171,7 @@ module hfd_attn_tile_b #(
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the quad's results -> NL banks (every quad the same depth: one result word)
-            ot_attn_bpipe #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
+            ot_attn_bpipe136 #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
             for (l = 0; l < 4; l = l + 1) begin : g_l
                 localparam integer G = GB + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
