@@ -180,6 +180,17 @@
    "legal": null
   },
   {
+   "name": "mtp_kstride",
+   "word": 49,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G26 MTP per-layer kernel stride for kinds 3 / 7 / 8 (16 B units; 0 = one body a kind)",
+   "reset": null,
+   "legal": null
+  },
+  {
    "name": "manifest_sha256",
    "word": 32,
    "lsb": 0,
