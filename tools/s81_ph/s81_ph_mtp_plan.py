@@ -45,6 +45,9 @@ SPECS = [
                 ['t_qg', 1, 'output', 'N', 'M5', 1, 0.90],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.05], ['rst', 1, 'input', 'S', 'M5', 1, 0.08],
                 ['f_cfg', 2 * NW, 'input', 'S', 'M5', 4, 0.3], ['t_acc', 2 * NW + UW + 5, 'output', 'S', 'M5', 4, 0.72]]),
+    # Claude mtp-wfc 2026-10-10: native-binding successor (dsfd_mtp_seq ports; RTT-sized receivers: the 512 b RESULT
+    # receiver D15 adds ~8.2k flops) -> grown outline, same pin plan fractions.
+    dict(master='dsfd_mtp_seq_rtt', w_um=216.0, h_um=216.0, domain='stream_1p2', note='', ports=None),
     dict(master='dsfd_wfc_tok', w_um=108.0, h_um=108.0, domain='stream_1p2',
          note='S0 cfg / prompt / draft store: W = DRAFT flits from dsfd_wfc_lnk, E = the WFC (prompt port in, '
               'response + cfg out; abutting, fixed one-edge read), S = config port / clock',
@@ -99,6 +102,11 @@ SPECS = [
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.015], ['rst', 1, 'input', 'S', 'M5', 1, 0.03],
                 ['t_ft', 1, 'output', 'S', 'M5', 1, 0.985]]),
 ]
+
+_SEQ = next(sp for sp in SPECS if sp['master'] == 'dsfd_mtp_seq')
+for _sp in SPECS:
+    if _sp['ports'] is None:        # dsfd_mtp_seq_rtt: identical port list and face fractions on the grown outline
+        _sp.update(ports=_SEQ['ports'], note=_SEQ['note'] + ' (RTT-sized grant receivers)')
 
 
 def child_ports(spec):
