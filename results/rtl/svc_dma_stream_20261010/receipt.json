@@ -1,0 +1,11 @@
+{
+  "source": "d8fc11d34 (claude/hbmphys-svc-20261010)",
+  "bench": "physical/hbm_accel_die_views/svc/run_bench_dma.sh (tb/tb_svd_stack.sv): one stack, mid-strip hub ot_svd_hub DH 16 DP 256 NQ 8, 4 group units a side (CH 1, DG 4, slot ownership), 32 PC units, in-order PHY models honouring kr_rdy, HOPS 3 between groups, 2 PC<->group",
+  "verilator": "PASS (gate_verilator_summary.txt)",
+  "four_state_iverilog": "PASS (gate_fourstate_summary.txt): no X on dd in every positive",
+  "exactness": "3 random runs x 400 requests (nsec 1..256, any address, PHY latency 20-60 / 5-125, credits 8 / 4): every lane exactly idx % 8 == l of every request in order, data exact, no beat without a credit",
+  "bandwidth_gate": "steady (10-90 % of beats) >= 90 % of 8 sectors/cycle/stack with 64 front credits a lane returned 60 cycles after the beat: PHY latency 44-64 95.8-95.9 %, 90-120 95.4 % (6 seeds 95.0-96.0 %)",
+  "sizing_evidence": "DP 128 -> 76 % (window-bound); DG 8 without slot ownership -> 82 % (groups next to the hub starved); slot taken at K issue (WIP) -> 63 %",
+  "mutants": "neg_gq (request may share the previous request's last row slot) FAIL, neg_rdy (no PHY backpressure) FAIL (group overflow), neg_half (ROB side select) FAIL",
+  "physical": "NOT integrated: the strip's cut wiring cannot carry a side's inward + command chain (~1,137 b) at 259 um (SW cuts 0-3 need 3.0-3.6 k b, capacity ~2.67 k); ROB = 16 x ot_sram_1r1w_256x256 (113.6 k um2). Decision pending (hbm-phys-1010.log [svc])."
+}
