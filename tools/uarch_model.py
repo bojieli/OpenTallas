@@ -15316,3 +15316,9 @@ def hbm_svc_dma_stream_model(initial_credits=256, window=2048):
     """Source-derived full-shape service stream model, qualified independently of its RTL."""
     from hbm_svc_dma_model import svc_dma_model
     return svc_dma_model(initial_credits=initial_credits, window=window)
+
+
+def hbm_svc_dma_wide_admission_model(**kwargs):
+    """Actual four-stack HBM bandwidth/window/corridor/SRAM admission sizing."""
+    from hbm_svc_dma_wide_model import wide_model
+    return wide_model(**kwargs)
