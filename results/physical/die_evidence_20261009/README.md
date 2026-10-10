@@ -55,7 +55,7 @@ View share: placeholder 3,171 inst (24.6%), 593.5 mm2 (97.2%); real 1 inst (0.0%
 
 **Missing for complete die evidence:**
 
-1. NO SPEF-BASED STA YET. Two r22k cases are at full-die GRT: kv-die die_r22k4 (EPYC1, r22k-channel-paths, 12,902 inst; PDN + PG VDD/VSS PASS 15:43, GRT running since 15:43) and die-evidence-2 qwen_r22k (EPYC3, 12,869 inst; real case legal + PA DONE, PDN + PG PASS 17:45, GRT running). Both GRTs write die_grt.spef; STA TT/FF follows. No r22k slack is quotable until then.
+1. NO SPEF-BASED STA YET. kv-die die_r22k4 GRT (EPYC1) is at congestion extra iteration 23/30 (22:00 PT); the ETM-bound re-STA waits on it. The EPYC3 qwen_r22k GRT was KILLED externally (exit 137 at 18:54 PT, 117 of 240 GB used, not an OOM of the container): not relaunched, die_r22k4 is the same recipe and nearly done.
 2. kv-die's die_r22k4 chain times ASSUMED element constants only (libs qfd_elements_*, no ETM binding). die-evidence-2 bound the closed-element ETMs to the r22k4 LEF (149 bound / 15 assumed, die-evidence-2/qwen_r22k4/libs) and re-times the routed die on its GRT SPEF when the GRT lands (qwen_r22k4_sta.sh armed). Quote that STA, not kv-die's.
 3. Element views: 147 masters ETM-bound (slab_m8, cst, chead, relays by direction), 15 ASSUMED constants, including qfd_tile_nk (the no-KV tile, ~88% of the die area, no closed view) and the new r22k masters qfd_d2d_rom / qfd_clkrx / qfd_ckbump. The real-only slack covers the spine and slab paths only.
 4. Die STA uses ideal clock roots at clk_rx (60 ps setup / 25 ps hold uncertainty); no measured per-region insertion / rule-H1 hold pads yet. Own clock plan DONE (clock-only CTS, 211 regions, 8,624 synchronous pairs): max intra 61.7 ps, max inter 61.5 ps, 0 violations -> the Qwen die clock-context step (plan insertion -> STA) is still to be written.
@@ -80,13 +80,14 @@ View share: placeholder 179 inst (18.1%), 85.4 mm2 (65.1%); real 6 inst (0.6%), 
 
 **Missing for complete die evidence:**
 
-1. Real case pin access still FAILS on every attempt (DRT-0073; die_kv5 16:33 with the PHY PDN fix, 988 inst). die_kv / die_kv4: PDN PG check VDD + VSS FAIL (PSM-0069); die_kv5 carries the PHY PDN grid fix. kv-die owns both.
-2. Strict tie-off: ot_hbm3e_phy rsp_data has 8 of 8,192 bits unbound on each of the 4 PHYs. That is an unbound functional real-macro output, a build-every-path gap.
-3. Assumed frames: qkd_astk (777.6 um x 4 engines), qkd_land (172.8 um) and the centre blocks are not measured. The 172.3 mm2 is not quotable until they are (review KV3).
-4. NO SPEF-BASED STA YET: die_kv5 GRT running (congestion extra iteration 9/30 at 17:50); die_kv (old) GRT at extra iteration 11/30 after ~9.5 h. die-evidence-2 re-STA + regions armed on die_kv5 (EPYC1 die-evidence-2/qwen_kv5).
-5. IR: there is no IR window generator for the KV die. qwen_rom_fulldie ir does not know the qwen_kv recipe.
-6. Clock plan: extract_die --die qwen_kv is attempted, but the mesochronous forwarded clock to the ROM die is outside the plan. The cross-die skew is assumed absorbed by the UCIe macro (CONTRACT K5).
-7. KV-die landing HBM write queue (posted KVN rows -> CDC w_v / w_sec / w_data) for KVW=2 is still owed by kv-die (sys-takeover 11:24).
+1. die_kv5 has NO route: its 'PDN PASS' is false -- run_pdn.log aborts on the DRT-0073 pin-access errors before write_db floorplan_pdn.odb, so the GRT died at ORD-0007 (exit 1) and STA ran on nothing (posted to kv-die). The KV die needs the pin-access fix before any route; clock plan stands (40 regions, 0 violations).
+2. Real case pin access still FAILS on every attempt (DRT-0073; die_kv5 16:33 with the PHY PDN fix, 988 inst). die_kv / die_kv4: PDN PG check VDD + VSS FAIL (PSM-0069); die_kv5 carries the PHY PDN grid fix. kv-die owns both.
+3. Strict tie-off: ot_hbm3e_phy rsp_data has 8 of 8,192 bits unbound on each of the 4 PHYs. That is an unbound functional real-macro output, a build-every-path gap.
+4. Assumed frames: qkd_astk (777.6 um x 4 engines), qkd_land (172.8 um) and the centre blocks are not measured. The 172.3 mm2 is not quotable until they are (review KV3).
+5. NO SPEF-BASED STA YET: die_kv5 GRT running (congestion extra iteration 9/30 at 17:50); die_kv (old) GRT at extra iteration 11/30 after ~9.5 h. die-evidence-2 re-STA + regions armed on die_kv5 (EPYC1 die-evidence-2/qwen_kv5).
+6. IR: there is no IR window generator for the KV die. qwen_rom_fulldie ir does not know the qwen_kv recipe.
+7. Clock plan: extract_die --die qwen_kv is attempted, but the mesochronous forwarded clock to the ROM die is outside the plan. The cross-die skew is assumed absorbed by the UCIe macro (CONTRACT K5).
+8. KV-die landing HBM write queue (posted KVN rows -> CDC w_v / w_sec / w_data) for KVW=2 is still owed by kv-die (sys-takeover 11:24).
 
 ### HBM generic die R25G (network probe)
 
