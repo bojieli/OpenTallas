@@ -1,0 +1,70 @@
+{
+  "time_utc": "2026-10-10T13:11:03Z",
+  "script": "/home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh",
+  "sha256": "bc16d6ca7c4de3cdd03654f4a5d7508338c86eaf0040f237b5296ec08d40a05d",
+  "reason": "No live/.keep/source guards; git in other worktrees; force removal and rm-rf fallback. Descendants are only same cleanup shells and readonly git diff, no engineering compute.",
+  "processes": [
+    {
+      "pid": 319057,
+      "start": "380548680",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 319060,
+      "start": "380548680",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 321131,
+      "start": "380552434",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 321132,
+      "start": "380552434",
+      "cmd": "git -C /home/ubuntu/wt/codex-mtp-shared-producer diff HEAD ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 2357805,
+      "start": "376068731",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 2357807,
+      "start": "376068731",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 2365586,
+      "start": "376077290",
+      "cmd": "/bin/bash /home/ubuntu/.claude/jobs/724d7460/tmp/wt_clean.sh ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    },
+    {
+      "pid": 2365587,
+      "start": "376077290",
+      "cmd": "git -C /home/ubuntu/wt-codex-dsrom-mean-capture-20261009 diff HEAD ",
+      "action": "RETIRED_EXACT_OBSOLETE_CLEANUP"
+    }
+  ],
+  "script_text": "#!/bin/bash\n# Remove planned worktrees; preserve unpushed commits (push branch) and tracked diffs (patch).\nBK=/home/ubuntu/wt-cleanup-20261009\ncd /home/ubuntu/OpenTallas\ngrep -E '^(DEL_OLD|DEL_CODEX|PRUNE) ' /home/ubuntu/.claude/jobs/724d7460/tmp/wt_plan2.txt | while read tag age p; do\n  if [ -d \"$p\" ]; then\n    n=$(basename \"$p\")\n    br=$(git -C \"$p\" symbolic-ref -q --short HEAD)\n    if [ -n \"$br\" ] && [ -n \"$(git -C \"$p\" log --oneline -1 HEAD --not --remotes 2>/dev/null)\" ]; then\n      git -C \"$p\" push -q origin \"$br\" 2>/dev/null && echo \"pushed $br\" || { git -C \"$p\" bundle create \"$BK/$n.bundle\" HEAD --not --remotes 2>/dev/null; echo \"bundled $n\"; }\n    fi\n    d=$(git -C \"$p\" diff HEAD 2>/dev/null); [ -n \"$d\" ] && git -C \"$p\" diff HEAD > \"$BK/$n.patch\" && echo \"patch $n\"\n    git worktree remove --force --force \"$p\" 2>/dev/null || rm -rf \"$p\"\n    echo \"removed $tag $p\"\n  fi\ndone\ngit worktree prune\necho DONE\n",
+  "log_receipts": [
+    {
+      "path": "/home/ubuntu/wt-cleanup-20261009/clean.log",
+      "bytes": 1678,
+      "sha256": "1d7100f2abdf8f1c73ee7030274c16f7faf9552c62fa3aae16ba6f96ab51ddc7"
+    },
+    {
+      "path": "/home/ubuntu/wt-cleanup-20261009/clean3.log",
+      "bytes": 2594,
+      "sha256": "a887c548a86375c5a22b800a1fff637b0f3077f77793789faae5b8dd1aa23c7c"
+    }
+  ],
+  "retired_utc": "2026-10-10T13:12:07Z"
+}
