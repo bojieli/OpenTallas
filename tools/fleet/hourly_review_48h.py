@@ -17,10 +17,18 @@ r=subprocess.run(['git','-C',str(REPO),'grep','-ohIE',pattern,'HEAD','--','physi
 protected.update(r.stdout.splitlines())
 protected.update((str(REPO),str(OUT.parent),'/tmp/claude-1000/bfarch','/tmp/bfpinclk'))
 hosts=json.loads((REPO/'tools/closure_loop/hosts.json').read_text())['hosts']
-for name in ('ot-pve2','ot-pve3'):
-    hosts.append({'name':name,'base':'/srv/opentallas-scratch'})
 source=(HERE/'host_review_48h.py').read_text()
 scratch=['/srv/opentallas-scratch/claude','/srv/opentallas-scratch2/scratch/claude','/srv/opentallas-scratch2/claude','/srv/opentallas-data/claude','/srv/opentallas/scratch-overflow/claude','/srv/opentallas-scratch/codex','/srv/opentallas-scratch2/codex']
+# A named fleet base is a container, not a promise to retain every old unit.
+# Keep individual source/run/receipt references; do not turn generic base names
+# in host tables and logs into an indefinite blanket exemption.
+generic={'/tmp/claude-1000',*scratch}
+for h in hosts:
+    generic.add(h['base'])
+    generic.update(h.get('disk_roots',{}))
+    for d in scratch:
+        generic.add(str(Path(d).parent))
+protected.difference_update(generic)
 def review(h):
     name=h['name']; roots=scratch if name!='localhost' else ['/tmp/claude-1000']
     cfg={'apply':'--apply' in sys.argv,'uid':1000,'protected':sorted(protected),'roots':roots,'disk_roots':sorted({'/',h['base'],*h.get('disk_roots',{})})}
