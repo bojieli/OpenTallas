@@ -180,7 +180,9 @@ module ot_hbm_tu_retry_phy_port #(
  if(LINK_CREDIT)begin:g_flink
  ot_link_credit_tx #(.W(W+SW+EW),.CRED(LINK_DEPTH)) u_tx(.clk(pclk),.rst_n(phy_run),.i_valid(c_tx_v),.i_ready(c_tx_r),.i_data({c_tx_d,c_tx_s,c_tx_e}),
   .l_valid(fec_tx_v),.l_data({fec_tx_data,fec_tx_seq,fec_tx_session}),.l_credit(fec_tx_ready));
- ot_link_credit_rx #(.W(1+W+SW+EW),.DEPTH(LINK_DEPTH)) u_rx(.clk(pclk),.rst_n(phy_run),.l_valid(fec_rx_v),
+ // redesign-ds: with IQ_SKID the FEC rx landing FIFO also drains through its output skid (OREG: iqs-b post-CTS -425 =
+ // u_rx.rp -> 8:1 landing mux -> port rx logic -> o_ready -> pop -> landing write enable, one pclk cycle)
+ ot_link_credit_rx #(.W(1+W+SW+EW),.DEPTH(LINK_DEPTH),.OREG(IQ_SKID ? 1 : 0)) u_rx(.clk(pclk),.rst_n(phy_run),.l_valid(fec_rx_v),
   .l_data({fec_rx_ue,fec_rx_data,fec_rx_seq,fec_rx_session}),.l_credit(fec_rx_ready),.o_valid(r_v),.o_ready(c_rxin_r),
   .o_data({r_ue,r_d,r_s,r_e}),.fault(lk_fault));
  end else begin:g_fskid
