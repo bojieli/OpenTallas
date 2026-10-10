@@ -25,9 +25,19 @@ proc ot_fcl_sinks {port} {
   }
   return $out
 }
+# 82e04b206 fix: measure ONLY on a clock-tree-synthesised db (an OpenDB block holding CTS buffers).  Synthesis /
+# floorplan / placement reads of this SDC (1_2_yosys.sdc at do-1_synth) have no timing graph worth querying: the pin
+# arrival query segfaulted there (sta::Properties::pinArrival from sourceTclFile).  Those reads keep plain ot_fcl.
+proc ot_fcl_post_cts {} {
+  if {[catch {set b [ord::get_db_block]}] || $b eq "NULL" || $b eq ""} { return 0 }
+  foreach i [$b getInsts] { if {[string match clkbuf_* [$i getName]]} { return 1 } }
+  return 0
+}
+set ot_fcl_cts [ot_fcl_post_cts]
 foreach ot_fp {ckw[0] cke[0]} {
   if {![llength [get_ports -quiet $ot_fp]]} continue
   set_clock_latency -source $ot_fcl [get_ports $ot_fp]
+  if {!$ot_fcl_cts} continue
   set ot_s 0.0; set ot_n 0
   if {[catch {
     foreach p [ot_fcl_sinks $ot_fp] {
