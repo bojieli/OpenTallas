@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""Model-first 256-group protected DMA bank; two real SRAMs per bank."""
+import json
+from pathlib import Path
+
+def model():
+    root = Path(__file__).resolve().parents[1]
+    macro = 'ot_sram_1r1w_256x256_m2_r2c2'
+    inventory = root / 'physical/asap7_memory_macros_v2' / macro / (macro + '.json')
+    geo = json.loads(inventory.read_text())['alignment_v2']['v2']
+    return {
+        'scope': 'HBM service final wide SRAM bank, pre-RTL analytical sizing',
+        'macro': macro, 'inventory': str(inventory.relative_to(root)),
+        'macro_geometry_um': geo, 'macros_per_bank': 2,
+        'groups_per_bank': 256, 'sector_bytes': 32, 'banks_per_pc': 4,
+        'capacity_per_pc_bytes': 32768,
+        'native_windows': 64, 'native_group_slots_per_window': 3,
+        'conservative_groups_required': 192, 'group_headroom': 64,
+        'mapping': 'group[7] selects macro; payload logical row {0,group[6:0]}, sidecar {1,group[6:0]}',
+        'sidecar': '4x8 SECDED, fault/complement, valid/complement, full8-bit group/complement',
+        'macs_per_cycle': 0, 'compute_intensity_macs_per_byte': 0,
+        'communication_intensity_macro_bytes_per_payload_byte': 2,
+        'macro_ports': 'one independent read and write per macro, selected one at a time per bank',
+        'macro_port_bits_per_cycle_peak': {'read': 256, 'write': 256},
+        'payload_bytes_per_cycle_per_bank': {'read': 16, 'write': 16},
+        'issue_interval_cycles': {'read': 2, 'write': 2},
+        'first_read_publication_visible_cycles': 5,
+        'first_read_publication_transfer_cycles': 6,
+        'write_accept_to_sidecar_commit_cycles': 3,
+        'latency_parts': 'registered macro launch, payload/parity consecutive edges, 2-cycle SECDED, registered publication; mux2 macro return adds no cycle',
+        'per_pc_sector_rate': 2, 'per_pc_required_sector_rate': 1,
+        'per_pc_payload_GBps_at_1p2GHz': 76.8,
+        'stacks': 4, 'pcs_per_stack': 32,
+        'total_macros': 1024,
+        'boundary_bits_per_cycle_peak': {'write': 267, 'read_request': 10, 'publication': 259},
+        'boundary_tracks_required': 536,
+        'routing_budget': {'pitch_um': 0.064, 'channel_width_um': 265,
+                           'signal_layers': 2, 'tracks_available': 8281,
+                           'qualification': 'budget; final routed access required'},
+        'pc_floorplan_slot_um': [265,480],
+        'macro_stack_height_um': 8*geo['height_um'] + 7*8.5,
+        'macro_stack_width_um': geo['width_um'],
+        'macro_area_per_pc_um2': 8*geo['area_um2'],
+        'controller_ECC_budget_per_bank_um2': 2500,
+        'pc_slot_utilization_budget': (8*geo['area_um2']+4*2500)/(265*480),
+        'replica_cost': {'ECC_encoders_per_bank': 4, 'ECC_decoders_per_bank': 4,
+                         'output_queue_slots_per_bank': 4, 'publication_bits_per_bank': 1028,
+                         'read_mux': '2:1 x256 macro return then 4:1 x257 queue publication',
+                         'write_demux': 'payload/parity data shared to2macros, macro-select enables local',
+                         'reset': '256valid bits and local controls only; no payload/macro reset',
+                         'fanout': 'local per-bank pin enable/address flops, 2macros only'},
+        'single_user_token_latency': '5+2*(N-1) visible cycles per bank for Nsectors without stalls;4banks parallel',
+        'qualification': 'area budget and model only; actual mapped cell area, pin fit and physical closure remain required',
+    }
+
+if __name__ == '__main__':
+    print(json.dumps(model(),indent=2,sort_keys=True))
