@@ -13,10 +13,14 @@
 // Retire = the HC unit's done (mix written to O); fault -> rec_fault + halt.  Refusals: unit != 10, op != 0, A / B / O
 // absent, A or O not VM, B not HBM, K = 0 or K % 8 != 0, O.n != 24, B.base not 32-byte aligned.
 // Latency: accept E0, decode E1, job_v E2.  LEGACY = 1 adds the static legacy pass-through.
+// MULTI-POSITION (hgi-1010/d, 2026-10-10; the MTP verify): A.m = P > 1 positions (rows of A at A.stride; op 2: rows of
+// the 24 gathered mixes) give P results (rows of O at O.stride, O.m = P), each exactly the single-position record's;
+// the weights are fetched once a row for all P positions.  Refused: P > PMAX, O.m != A.m (when P > 1).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_hc_record #(
     parameter integer MUT_NF = 0,         // mutant: nf = K / 8 (the chunk count) instead of K
-    parameter integer LEGACY = 1
+    parameter integer LEGACY = 1,
+    parameter integer PMAX = 8            // positions a record (A.m)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -39,7 +43,11 @@ module ot_hgi_hc_record #(
     input  wire          job_rdy,
     output wire [228:0]  job,
     input  wire          job_done,
-    input  wire          job_fault
+    input  wire          job_fault,
+    // multi-position: positions, A row stride, O row stride (words), with job
+    output reg  [3:0]    job_npos,
+    output reg  [17:0]   job_astr,
+    output reg  [17:0]   job_ostr
 );
     wire hen = LEGACY ? hgi_en : 1'b1;
     reg raw_v, busy, iss, halt_q, in_done, in_fault;
@@ -60,7 +68,9 @@ module ot_hgi_hc_record #(
     wire bad_n = (hop == 6'd0) ? (no_q != 21'd24) :
                  (hop == 6'd1) ? (no_q == 21'd0 || no_q > 21'd24 || r0 > 32'd23 || r0 + {11'd0, no_q} > 32'd24) :
                                  (no_q != 21'd24 || na_q != 21'd24);
-    wire bad = (hdr_q[127:124] != 4'd10) || (hop > 6'd2) || !opq[0] || !opq[1] || !opq[4] ||
+    wire [19:0] am = a_q[87:68], om = o_q[87:68];
+    wire bad_p = (am == 20'd0) || (am > PMAX) || (am > 20'd1 && om != am);
+    wire bad = bad_p || (hdr_q[127:124] != 4'd10) || (hop > 6'd2) || !opq[0] || !opq[1] || !opq[4] ||
                (a_q[1:0] != 2'd1) || (o_q[1:0] != 2'd1) || (b_q[1:0] != 2'd0) || (na_q == 21'd0) || (|na_q[2:0]) ||
                (|na_q[20:18]) || bad_n || (|b_q[12:8]);
     // binary32 of K (exact, K < 2^24): exponent 127 + msb, mantissa = K << (23 - msb)
@@ -85,6 +95,7 @@ module ot_hgi_hc_record #(
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; iss <= 1'b1;
+                    job_npos <= am[3:0]; job_astr <= a_q[105:88]; job_ostr <= o_q[105:88];
                     // pad bits: {op 2 [201:200], row0 5 [206:202], nrows 5 [211:207]}
                     job_q <= {17'd0, no_q[4:0], (hop == 6'd1) ? r0[4:0] : 5'd0, hop[1:0], o_q[25:8], nwords, b_q[47:13] /* w_hbm: B.base >> 5 */, a_q[25:8], 16'd0, eps_q, nf,
                               1'b1, nchunk, 5'd24, 1'b1};

@@ -1,0 +1,151 @@
+{
+ "master": "hfd_hgi_su",
+ "cfg_bits": 0,
+ "cfg_inputs": [],
+ "folded_output_bits": 526,
+ "folded_outputs": [
+  "w_su_halted",
+  "w_sfu_halted",
+  "w_sfu_am_stream",
+  "w_hc_halted"
+ ],
+ "forwarded_clock_outputs": 0,
+ "forwarded_clock_inputs": 0,
+ "die_input_bits": 5393,
+ "die_input_bits_used": 5391,
+ "die_output_bits": 1584,
+ "die_output_bits_driven": 1584,
+ "ties": [
+  {
+   "where": "su.halted",
+   "kind": "fold",
+   "bits": 1,
+   "cls": "debug",
+   "reason": "sticky halt mirror of rec_fault (the fault rides t_hgi_cmdproc_su[2]); observation only",
+   "gap": null
+  },
+  {
+   "where": "su.s0_v",
+   "kind": "const",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "su.s0_idx",
+   "kind": "const",
+   "bits": 20,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "su.s0_data",
+   "kind": "const",
+   "bits": 32,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "sfu.rec_sut",
+   "kind": "const",
+   "bits": 256,
+   "cls": "by_design",
+   "reason": "the SFU.GLU record carries no SU template (unit 3 field set ABCO, hgi_die_dispatch)",
+   "gap": null
+  },
+  {
+   "where": "sfu.rec_d",
+   "kind": "const",
+   "bits": 256,
+   "cls": "by_design",
+   "reason": "SFU.GLU reads A, B, C and writes O only (no D operand)",
+   "gap": null
+  },
+  {
+   "where": "sfu.rec_r",
+   "kind": "const",
+   "bits": 256,
+   "cls": "by_design",
+   "reason": "SFU.GLU has no reduction sink R",
+   "gap": null
+  },
+  {
+   "where": "sfu.rec_i",
+   "kind": "const",
+   "bits": 256,
+   "cls": "by_design",
+   "reason": "SFU.GLU has no index operand I",
+   "gap": null
+  },
+  {
+   "where": "sfu.halted",
+   "kind": "fold",
+   "bits": 1,
+   "cls": "debug",
+   "reason": "sticky halt mirror of rec_fault (t_hgi_cmdproc_sfu[2])",
+   "gap": null
+  },
+  {
+   "where": "sfu.s0_v",
+   "kind": "const",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "the GLU unit never takes STREAM (ot_hgi_su_record STREAM_OK = !GLU; NOSTR memory)",
+   "gap": null
+  },
+  {
+   "where": "sfu.s0_idx",
+   "kind": "const",
+   "bits": 20,
+   "cls": "by_design",
+   "reason": "as sfu.s0_v",
+   "gap": null
+  },
+  {
+   "where": "sfu.s0_data",
+   "kind": "const",
+   "bits": 32,
+   "cls": "by_design",
+   "reason": "as sfu.s0_v",
+   "gap": null
+  },
+  {
+   "where": "sfu.am_stream",
+   "kind": "fold",
+   "bits": 523,
+   "cls": "by_design",
+   "reason": "the GLU unit never streams to ARGMAX (O = STREAM refused)",
+   "gap": null
+  },
+  {
+   "where": "sfu.am_rdy",
+   "kind": "const",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "as sfu.am_stream",
+   "gap": null
+  },
+  {
+   "where": "hc.halted",
+   "kind": "fold",
+   "bits": 1,
+   "cls": "debug",
+   "reason": "sticky halt mirror of rec_fault (t_hgi_cmdproc_hc[2])",
+   "gap": null
+  }
+ ],
+ "tied_off_bits": 53,
+ "classed_tie_bits": {
+  "debug": 3,
+  "test": 0,
+  "by_design": 1601
+ },
+ "errors": [
+  "su.s0_v: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "su.s0_idx: const bind (20 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "su.s0_data: const bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+ ]
+}

@@ -9,7 +9,8 @@
 //     own cycle value, so the first record of a job already carries the rank: global id = local + RANK * imm_a);
 //   t_hgi_cmdproc 3 = {fault, done, ready};
 //   t_hgi_vmq 338 / f_hgi_vmr 274: the unit is a VM packet client of hfd_hgi_vm (A = VM reads, O {value, id} writes);
-//   in_* 523: the su_red logit STREAM (A = STREAM); out_* 54: the flopped engine result (legacy hb_am_vm bus).
+//   in_* 523: the logit STREAM (A = STREAM): from su_red, or (hgi_unit_slots) from the HGI SU unit's am_stream, which
+//   waits for am_rdy; out_* 54: the flopped engine result (legacy hb_am_vm bus).
 module hfd_hgi_am #(parameter integer MUT = 0) (
     input  wire          clk,
     input  wire          rst_n,
@@ -23,12 +24,13 @@ module hfd_hgi_am #(parameter integer MUT = 0) (
     output wire          out_v,
     output wire [17:0]   out_idx,
     output wire          out_nan, fault, out_range_fault,
-    output wire [31:0]   out_value
+    output wire [31:0]   out_value,
+    output wire          am_rdy        // hgi-1010/d: to the HGI SU unit (O = STREAM producer): a STREAM record is open
 );
     ot_hgi_argmax_slot #(.MUT(MUT)) u_slot (.clk(clk), .rst_n(rst_n), .f_hgi_cmdproc(f_hgi_cmdproc[682:0]),
         .t_hgi_cmdproc(t_hgi_cmdproc), .die_id(f_hgi_cmdproc[690:683]), .vmq(t_hgi_vmq), .vmr(f_hgi_vmr),
         .in_v(in_v), .in_last(in_last), .in_bias_en(in_bias_en), .in_mask(in_mask), .in_vals(in_vals), .in_bias(in_bias),
         .out_v(out_v), .out_idx(out_idx), .out_nan(out_nan), .fault(fault), .out_range_fault(out_range_fault),
-        .out_value(out_value));
+        .out_value(out_value), .am_rdy(am_rdy));
 endmodule
 `default_nettype wire

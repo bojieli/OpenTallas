@@ -1,0 +1,377 @@
+{
+ "master": "hfd_loader",
+ "cfg_bits": 138,
+ "cfg_inputs": [
+  [
+   "ld",
+   "h_dma_wdata",
+   64
+  ],
+  [
+   "ld",
+   "m_arready",
+   1
+  ],
+  [
+   "ld",
+   "m_rvalid",
+   1
+  ],
+  [
+   "ld",
+   "m_rdata",
+   64
+  ],
+  [
+   "ld",
+   "m_rresp",
+   2
+  ],
+  [
+   "ld",
+   "m_rlast",
+   1
+  ],
+  [
+   "ld",
+   "m_awready",
+   1
+  ],
+  [
+   "ld",
+   "m_wready",
+   1
+  ],
+  [
+   "ld",
+   "m_bvalid",
+   1
+  ],
+  [
+   "ld",
+   "m_bresp",
+   2
+  ]
+ ],
+ "folded_output_bits": 466,
+ "folded_outputs": [
+  "w_ld_m_arvalid",
+  "w_ld_m_araddr",
+  "w_ld_m_arlen",
+  "w_ld_m_arsize",
+  "w_ld_m_rready",
+  "w_ld_m_awvalid",
+  "w_ld_m_awaddr",
+  "w_ld_m_awlen",
+  "w_ld_m_awsize",
+  "w_ld_m_wvalid",
+  "w_ld_m_wdata",
+  "w_ld_m_wstrb",
+  "w_ld_m_wlast",
+  "w_ld_m_bready",
+  "w_ld_dma_dq",
+  "w_ld_dma_dd_cr",
+  "w_ld_irq",
+  "w_ld_fault"
+ ],
+ "forwarded_clock_outputs": 5,
+ "forwarded_clock_inputs": 5,
+ "die_input_bits": 2705,
+ "die_input_bits_used": 2685,
+ "die_output_bits": 11622,
+ "die_output_bits_driven": 11542,
+ "ties": [
+  {
+   "where": "ld.h_dma_wdata",
+   "kind": "cfg",
+   "bits": 64,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_arvalid",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_arready",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_araddr",
+   "kind": "fold",
+   "bits": 64,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_arlen",
+   "kind": "fold",
+   "bits": 8,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_arsize",
+   "kind": "fold",
+   "bits": 3,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_rvalid",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_rready",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_rdata",
+   "kind": "cfg",
+   "bits": 64,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_rresp",
+   "kind": "cfg",
+   "bits": 2,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_rlast",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_awvalid",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_awready",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_awaddr",
+   "kind": "fold",
+   "bits": 64,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_awlen",
+   "kind": "fold",
+   "bits": 8,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_awsize",
+   "kind": "fold",
+   "bits": 3,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_wvalid",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_wready",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_wdata",
+   "kind": "fold",
+   "bits": 64,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_wstrb",
+   "kind": "fold",
+   "bits": 8,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_wlast",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_bvalid",
+   "kind": "cfg",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_bready",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.m_bresp",
+   "kind": "cfg",
+   "bits": 2,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.dma_dq",
+   "kind": "fold",
+   "bits": 204,
+   "cls": "by_design",
+   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover",
+   "gap": null
+  },
+  {
+   "where": "ld.dma_dq_rdy",
+   "kind": "const",
+   "bits": 4,
+   "cls": "by_design",
+   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover",
+   "gap": null
+  },
+  {
+   "where": "ld.dma_dd",
+   "kind": "const",
+   "bits": 8640,
+   "cls": "by_design",
+   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover",
+   "gap": null
+  },
+  {
+   "where": "ld.dma_dd_cr",
+   "kind": "fold",
+   "bits": 32,
+   "cls": "by_design",
+   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover",
+   "gap": null
+  },
+  {
+   "where": "ld.irq",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "ld.fault",
+   "kind": "fold",
+   "bits": 1,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "die:h[499:512]",
+   "kind": "spare_die_input_dropped",
+   "bits": 13,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  },
+  {
+   "where": "die:h[176:256]",
+   "kind": "spare_die_output_const0",
+   "bits": 80,
+   "cls": null,
+   "reason": null,
+   "gap": "TIED_OFF"
+  }
+ ],
+ "tied_off_bits": 461,
+ "classed_tie_bits": {
+  "debug": 0,
+  "test": 0,
+  "by_design": 8880
+ },
+ "errors": [
+  "ld.h_dma_wdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_arvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_arready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_araddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_arlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_arsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_rvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_rready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_rdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_rresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_rlast: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_awvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_awready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_awaddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_awlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_awsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_wvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_wready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_wdata: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_wstrb: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_wlast: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_bvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_bready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.m_bresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.irq: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "ld.fault: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "die:h[499:512]: spare_die_input_dropped (13 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+  "die:h[176:256]: spare_die_output_const0 (80 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+ ]
+}

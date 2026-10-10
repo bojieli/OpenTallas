@@ -56,6 +56,19 @@ SVC_DMA_STACKS = ('SW', 'SE', 'NW', 'NE')   # stack index (address bits 36:35) 0
 DSQ_BITS, DSD_LANES, DSD_BITS = 51, 8, 270   # svc DMA stream: request {v, tag 4, nsec 9, addr 37}; lane {v, fault, tag 4, idx 8, data 256}
 HGI_VM_SLOT = (1399.656, 1080.0)       # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
+# hgi-1010/d (coordinator-approved 2026-10-10): the record units SU / SFU / HC get their OWN spine slot on the HGI die
+# (variant 'hgi_unit_slots') in the free top end of the spine column above su_full, instead of riding the legacy
+# quarter masters (hfd_su / hfd_sfu / hfd_hc are shared by four quarters: only the SW instance carried the record pins).
+# The three units share ONE slot block hfd_hgi_su (three slots plus their spine gaps overflow the free 1.68 mm by
+# 343 um; one block with one gap fits).  Its view (physical/hbm_accel_die_views/hgi_su/rtl) holds the three unit bodies
+# with every record / VM bit bound; a block hosting several units names its ports per unit (f_hgi_cmdproc_su, ...).
+# Height budget at the 1,400 um spine width: SU = ot_hgi_su_unit N 16 + its banked local memory (48 x 1024x256 +
+# 16 x 256x256 + 16 x 128x256 macros) + the vec ~760 um; SFU = the GLU unit at 2^14 words a group (64 x 128x256)
+# ~346 um; HC = ot_hgi_hc_die (ot_hgi_hc_unit W 32 / RMAX 128, weight windows in 32 x 128x256 macros) the rest.
+# The reservation is the whole free top end; the element route sizes it (open).
+HGI_UNIT_SLOTS = {'hgi_su': (1399.656, 1455.84)}   # the whole free top end (hub top 18,960.48 - slot y 17,502.48)
+HCM_Q_BITS, HCM_R_BITS = 38, 257          # the HC unit's remote HBM read lane (ot_hgi_hbm_lane.sv)
+HGI_UNIT_SLOT_BLOCK = {'su': 'hgi_su', 'sfu': 'hgi_su', 'hc': 'hgi_su'}
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
 LCP_BITS, CPL_BITS = 419, 222
 QID = dict(SW=0, NW=1, SE=2, NE=3)       # hfd_su inject-ownership strap values           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
@@ -158,6 +171,13 @@ def variant(base, units):
         v['spine_slots_low'] = dict(v.get('spine_slots_low') or base.get('spine_slots_low') or {}, hgi_idx=HGI_IDX_SLOT)
         v['spine_slot_masters'] = dict(v.get('spine_slot_masters') or base.get('spine_slot_masters') or {}, hgi_idx=('hfd_hgi_idx_native' if base.get('indexer_hgi_native') else 'hfd_hgi_idx'))
         v['spine_slot_domains'] = dict(v.get('spine_slot_domains') or base.get('spine_slot_domains') or {}, hgi_idx='stream_1p2')
+    if base.get('hgi_unit_slots'):
+        # stream domain: the record bus (CP) and the VM packet port are stream_1p2 (no crossing); the unit bodies close
+        # at 833 ps (su_ctl / hc_unit routes)
+        mine = {u: b for u, b in HGI_UNIT_SLOT_BLOCK.items() if u in units}
+        v['spine_slots'] = dict(v.get('spine_slots') or {}, **{b: HGI_UNIT_SLOTS[b] for b in set(mine.values())})
+        v['spine_slot_domains'] = dict(v.get('spine_slot_domains') or {}, **{b: 'stream_1p2' for b in mine.values()})
+        v['hgi_unit_block'] = dict(v.get('hgi_unit_block') or {}, **mine)
     return v
 
 
@@ -166,12 +186,21 @@ def install(m, buses, paths, units):
     rec = model(hub, units, unit_block=(m.get('variant') or {}).get('hgi_unit_block'))
     names = {b[0] for b in buses}
     cp = hub['cmdproc'].name
+    ublk0 = (m.get('variant') or {}).get('hgi_unit_block') or {}
+    host = {}
+    for u in units:
+        if u in UNITS and u not in INTERNAL_UNITS:
+            host.setdefault(ublk0.get(u, UNITS[u][1]), []).append(u)
+
+    def sfx(u):          # a block hosting several units names its record / VM ports per unit
+        return f'_{u}' if len(host.get(ublk0.get(u, UNITS[u][1]), [])) > 1 else ''
     for r in rec['units']:
         if r['unit'] in INTERNAL_UNITS:          # the adapter is inside the CP block: a CP-die port, no die net
             continue
         peer = hub[r['block']].name
-        for name, bits, eps in ((f"hgi_{r['unit']}_cmd", r['command_bits'], [(cp, f"t_hgi_{r['unit']}"), (peer, 'f_hgi_cmdproc')]),
-                                (f"hgi_{r['unit']}_ret", r['return_bits'], [(peer, 't_hgi_cmdproc'), (cp, f"f_hgi_{r['unit']}")])):
+        s_ = sfx(r['unit'])
+        for name, bits, eps in ((f"hgi_{r['unit']}_cmd", r['command_bits'], [(cp, f"t_hgi_{r['unit']}"), (peer, f'f_hgi_cmdproc{s_}')]),
+                                (f"hgi_{r['unit']}_ret", r['return_bits'], [(peer, f't_hgi_cmdproc{s_}'), (cp, f"f_hgi_{r['unit']}")])):
             if name in names:
                 raise ValueError(f'duplicate hgi dispatch bus {name}')
             buses.append((name, 'hub', bits, eps))
@@ -200,8 +229,9 @@ def install(m, buses, paths, units):
         vm = hub['hgi_vm'].name
         for u in vm_cl:
             peer = hub['cmdproc'].name if u == 'cp' else hub[ublk.get(u, UNITS[u][1])].name
-            for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, 't_hgi_vmq'), (vm, f'f_hgi_{u}')]),
-                                    (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
+            s_ = '' if u == 'cp' else sfx(u)
+            for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, f't_hgi_vmq{s_}'), (vm, f'f_hgi_{u}')]),
+                                    (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, f'f_hgi_vmr{s_}')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
         if 'dma' in vm_cl:
             # the VM wide write port of the DMA unit (coordinator 2026-10-10): VMW_LANES x 280 b loader -> VM (lane b
@@ -226,6 +256,13 @@ def install(m, buses, paths, units):
         buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
         paths['hgi_vmstat'] = ['hgi_vmstat']
         rec['vm_clients'] = vm_cl
+    if 'hc' in units and 'loader' in hub and (m.get('variant') or {}).get('hgi_unit_slots'):
+        # hgi-1010/d: the HC unit's HBM weight lane (ot_hgi_hbm_rd_client in the unit slot -> ot_hgi_hbm_rd_server on
+        # kport lane 3 of the loader, XLANE 1): xq {addr 37, v} 38 b, xr {data 256, v} 257 b, one sector in flight
+        hcb, ld = hub[ublk.get('hc', UNITS['hc'][1])].name, hub['loader'].name
+        for name, bits, eps in (('hgi_hcm_q', HCM_Q_BITS, [(hcb, 't_hgi_hcmq'), (ld, 'f_hgi_hcmq')]),
+                                ('hgi_hcm_r', HCM_R_BITS, [(ld, 't_hgi_hcmr'), (hcb, 'f_hgi_hcmr')])):
+            buses.append((name, 'hub', bits, eps)); paths[name] = [name]
     if 'cp' in units and 'loader' in hub:
         ld = hub['loader'].name
         buses.append(('hgi_lcp', 'hub', LCP_BITS, [(ld, 't_hgi_cp'), (cp, 'f_hgi_loader')])); paths['hgi_lcp'] = ['hgi_lcp']

@@ -22,7 +22,11 @@ module ot_hdc_v41x_weight_window #(
     parameter integer SGW = (SEGMENTS > 1) ? $clog2(SEGMENTS) : 0,
     parameter integer RTW = TW + SGW,
     parameter integer BW = (BURST_MAX > 1) ? $clog2(BURST_MAX) : 1,
-    parameter integer IQW = $clog2(WORDS * SEGMENTS + 1)
+    parameter integer IQW = $clog2(WORDS * SEGMENTS + 1),
+    // hgi-1010/d: 1 = the window words in SRAM macros (one ot_sram_1r1w_128x256 per 256-bit sector position of a word,
+    // row = the word slot; needs WORDS = 128, SB = 256, NPC = 1: one sector lands an edge), 0 = flops (as before).
+    // Same contract: a word lands sector by sector, rom_q is the read word one edge after rom_re.
+    parameter integer MACRO = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -46,7 +50,7 @@ module ot_hdc_v41x_weight_window #(
     input  wire [NPC*SB-1:0]      hr_data,
     input  wire                   rom_re,
     input  wire [AW-1:0]          rom_addr,
-    output reg  [WB-1:0]          rom_q,
+    output wire [WB-1:0]          rom_q,
     output reg                    fault,
     output reg  [3:0]             fault_why, // descriptor, response, duplicate, ROM read
     output wire [CW-1:0]          fetched_words,
@@ -60,7 +64,10 @@ module ot_hdc_v41x_weight_window #(
     reg [SGW:0] issue_seg;
     reg [IQW-1:0] issued_reqs;
     reg [VB-1:0] valid;
+    localparam integer USE_M = MACRO && WORDS == 128 && SB == 256 && NPC == 1;
     reg [WB-1:0] data [0:WORDS-1];
+    reg [WB-1:0] rom_q_r;
+    reg m_re; reg [6:0] m_ra; reg m_we; reg [6:0] m_wa; reg [SW-1:0] m_ws; reg [SB-1:0] m_wd;
     reg [VB-1:0] seen;
     reg [31:0] inc;
     reg response_bad, duplicate_bad;
@@ -125,7 +132,7 @@ module ot_hdc_v41x_weight_window #(
             issued_reqs <= '0;
             valid <= '0;
             received_sectors <= 0;
-            rom_q <= '0;
+            rom_q_r <= '0;
             fault <= 1'b0;
             fault_why <= '0;
         end else begin
@@ -183,7 +190,7 @@ module ot_hdc_v41x_weight_window #(
                         if (hr_v[p] && hr_rdy[p] && slot < count_r &&
                             segment < SEGMENTS && request_index < issued_reqs &&
                             beat < segment_len)
-                            data[slot][(segment*BURST_MAX+beat)*SB +: SB] <= hr_data[p*SB +: SB];
+                            if (!USE_M) data[slot][(segment*BURST_MAX+beat)*SB +: SB] <= hr_data[p*SB +: SB];
                     end
                 end
                 if (rom_re) begin
@@ -191,10 +198,32 @@ module ot_hdc_v41x_weight_window #(
                         fault <= 1'b1;
                         fault_why[3] <= 1'b1;
                     end else begin
-                        rom_q <= data[rom_offset[TW-1:0]];
+                        if (!USE_M) rom_q_r <= data[rom_offset[TW-1:0]];
                     end
                 end
             end
         end
     end
+    // ---- the macro form: the same write (one sector an edge) and read (the word one edge after rom_re)
+    integer m_s, m_g, m_b;
+    always @* begin
+        m_we = 1'b0; m_wa = 7'd0; m_ws = '0; m_wd = hr_data[SB-1:0];
+        m_s = hr_tag[RTW-1:0] >> SGW; m_g = hr_tag[RTW-1:0] & ((1 << SGW) - 1); m_b = hr_beat[BW-1:0];
+        if (USE_M && active && !start && !release_window && inc != 0 && hr_v[0] && hr_rdy[0] &&
+            m_s < count_r && m_g < SEGMENTS && (m_s * SEGMENTS + m_g) < issued_reqs) begin
+            m_we = 1'b1; m_wa = m_s[6:0]; m_ws = {{(SW-1){1'b0}}, 1'b1} << (m_g * BURST_MAX + m_b);
+        end
+        m_re = USE_M && active && !start && !release_window && rom_re && ready && rom_offset < count_r;
+        m_ra = rom_offset[6:0];
+    end
+    genvar gm;
+    generate if (USE_M) begin : g_mac
+        for (gm = 0; gm < SW; gm = gm + 1) begin : g_s
+            ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(m_re), .r_addr_in(m_ra), .rd_out(rom_q[gm*SB +: SB]),
+                .w_ce_in(m_we && m_ws[gm]), .w_addr_in(m_wa), .wd_in(m_wd), .w_mask_in({SB{1'b1}}), .rr_en(2'b00),
+                .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+    end else begin : g_ff
+        assign rom_q = rom_q_r;
+    end endgenerate
 endmodule

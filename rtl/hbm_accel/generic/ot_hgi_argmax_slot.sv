@@ -24,7 +24,8 @@ module ot_hgi_argmax_slot #(parameter integer MUT = 0) (
     output reg           out_v,
     output reg  [17:0]   out_idx,
     output reg           out_nan, fault, out_range_fault,
-    output reg  [31:0]   out_value
+    output reg  [31:0]   out_value,
+    output wire          am_rdy             // hgi-1010/d: a STREAM record is open (the SU unit's am_rdy)
 );
     reg [7:0] rank_q;
     always @(posedge clk) rank_q <= (MUT == 1) ? 8'd0 : die_id;          // static strap per die, one pin flop
@@ -32,7 +33,7 @@ module ot_hgi_argmax_slot #(parameter integer MUT = 0) (
     wire [7:0] e_mask; wire [255:0] e_vals, e_bias; wire [6:0] e_rank; wire [17:0] e_imm, e_idx; wire [31:0] e_val;
     wire nan_flag;
     ot_hgi_argmax_record u_rec (.clk(clk), .rst_n(rst_n), .cfg_rank(rank_q), .rec(f_hgi_cmdproc), .ret(t_hgi_cmdproc),
-        .nan_flag(nan_flag), .vmq(vmq), .vmr(vmr),
+        .nan_flag(nan_flag), .vmq(vmq), .vmr(vmr), .am_rdy(am_rdy),
         .am_stream({in_bias_en, in_bias, in_vals, in_mask, in_last, in_v}),
         .e_in_v(e_in_v), .e_in_last(e_in_last), .e_bias_en(e_bias_en), .e_mask(e_mask), .e_vals(e_vals), .e_bias(e_bias),
         .e_rank(e_rank), .e_imm(e_imm), .e_out_v(e_out_v), .e_out_idx(e_idx), .e_out_nan(e_out_nan), .e_fault(e_fault),

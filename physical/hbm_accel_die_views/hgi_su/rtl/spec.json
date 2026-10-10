@@ -1,0 +1,178 @@
+{
+ "master": "hfd_hgi_su",
+ "hgi_unit": "su",
+ "note": "HGI-1 serial-unit slot (hgi-1010/d, 2026-10-10; coordinator-approved own spine slot): the three record units that were declared on the legacy shared quarter masters (hfd_su / hfd_sfu / hfd_hc: only their SW instance carried the record pins) as one block in the free top end of the spine column.  su = ot_hgi_su_unit (N 16, record adapter + stage / drain controller + ot_hdc_v41x_vec + the banked local memory: G0 A 2^17, G1 B+O 2^16, G2 C+R 2^15, G3 D 2^14, GS STREAM 2^16 words, ot_sram_1r1w_{1024,256,128}x256 macros); sfu = the same unit GLU 1 (SFU.GLU) at 2^14 words a group, no STREAM region; hc = HC.HC_MIX / ROWS / POST (below).  Every record bit and VM packet bit is bound; The SU STREAM output drives hfd_hgi_am's logit stream (hgi_am_s_*, gated by its am_rdy: hgi_am_rdy).  OPEN: the SU STREAM input s0 waits for the SM x-load / pub peers in the VM block; hc = ot_hgi_hc_die: the unit + its HBM weight lane client (ot_hgi_hbm_rd_client -> die nets hgi_hcm_q / hgi_hcm_r -> ot_hgi_hbm_rd_server on kport lane 3 of the loader, XLANE 1), weight windows in macros (WMACRO 1).",
+ "instances": [
+  {
+   "name": "su",
+   "module": "ot_hgi_su_unit",
+   "file": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "params": {
+    "N": 16,
+    "M": 8,
+    "LV": 6,
+    "LWB": 17,
+    "LG1": 16,
+    "LG2": 15,
+    "LG3": 14,
+    "SLB": 16,
+    "GLU": 0,
+    "MACRO": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec_v": "die:f_hgi_cmdproc_su[0:1]",
+    "rec_hdr": "die:f_hgi_cmdproc_su[1:129]",
+    "rec_sut": "die:f_hgi_cmdproc_su[129:385]",
+    "rec_a": "die:f_hgi_cmdproc_su[385:641]",
+    "rec_b": "die:f_hgi_cmdproc_su[641:897]",
+    "rec_c": "die:f_hgi_cmdproc_su[897:1153]",
+    "rec_d": "die:f_hgi_cmdproc_su[1153:1409]",
+    "rec_o": "die:f_hgi_cmdproc_su[1409:1665]",
+    "rec_r": "die:f_hgi_cmdproc_su[1665:1921]",
+    "rec_i": "die:f_hgi_cmdproc_su[1921:2177]",
+    "rec_n_a": "die:f_hgi_cmdproc_su[2177:2198]",
+    "rec_rdy": "die:t_hgi_cmdproc_su[0:1]",
+    "rec_done": "die:t_hgi_cmdproc_su[1:2]",
+    "rec_fault": "die:t_hgi_cmdproc_su[2:3]",
+    "halted": "fold",
+    "vmq": "die:t_hgi_vmq_su[0:338]",
+    "vmr": "die:f_hgi_vmr_su[0:274]",
+    "s0_v": "const:0",
+    "s0_idx": "const:0",
+    "s0_data": "const:0",
+    "am_stream": "die:t_am_in_v[0:1]+t_am_in_last[0:1]+t_am_in_mask[0:8]+t_am_in_vals[0:256]+t_am_in_bias[0:256]+t_am_in_bias_en[0:1]",
+    "am_rdy": "die:f_am_rdy[0:1]"
+   }
+  },
+  {
+   "name": "sfu",
+   "module": "ot_hgi_su_unit",
+   "file": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "params": {
+    "N": 16,
+    "M": 8,
+    "LV": 6,
+    "LWB": 14,
+    "LG1": 14,
+    "LG2": 14,
+    "LG3": 14,
+    "SLB": 4,
+    "GLU": 1,
+    "MACRO": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec_v": "die:f_hgi_cmdproc_sfu[0:1]",
+    "rec_hdr": "die:f_hgi_cmdproc_sfu[1:129]",
+    "rec_sut": "const:0",
+    "rec_a": "die:f_hgi_cmdproc_sfu[129:385]",
+    "rec_b": "die:f_hgi_cmdproc_sfu[385:641]",
+    "rec_c": "die:f_hgi_cmdproc_sfu[641:897]",
+    "rec_o": "die:f_hgi_cmdproc_sfu[897:1153]",
+    "rec_d": "const:0",
+    "rec_r": "const:0",
+    "rec_i": "const:0",
+    "rec_n_a": "die:f_hgi_cmdproc_sfu[1153:1174]",
+    "rec_rdy": "die:t_hgi_cmdproc_sfu[0:1]",
+    "rec_done": "die:t_hgi_cmdproc_sfu[1:2]",
+    "rec_fault": "die:t_hgi_cmdproc_sfu[2:3]",
+    "halted": "fold",
+    "vmq": "die:t_hgi_vmq_sfu[0:338]",
+    "vmr": "die:f_hgi_vmr_sfu[0:274]",
+    "s0_v": "const:0",
+    "s0_idx": "const:0",
+    "s0_data": "const:0",
+    "am_stream": "fold",
+    "am_rdy": "const:0"
+   }
+  },
+  {
+   "name": "hc",
+   "module": "ot_hgi_hc_die",
+   "file": "rtl/hbm_accel/generic/peers/ot_hgi_hbm_lane.sv",
+   "params": {
+    "W": 32,
+    "RMAX": 128,
+    "WMACRO": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec_v": "die:f_hgi_cmdproc_hc[0:1]",
+    "rec_hdr": "die:f_hgi_cmdproc_hc[1:129]",
+    "rec_a": "die:f_hgi_cmdproc_hc[129:385]",
+    "rec_b": "die:f_hgi_cmdproc_hc[385:641]",
+    "rec_o": "die:f_hgi_cmdproc_hc[641:897]",
+    "rec_n_a": "die:f_hgi_cmdproc_hc[897:918]",
+    "rec_n_o": "die:f_hgi_cmdproc_hc[918:939]",
+    "rec_rdy": "die:t_hgi_cmdproc_hc[0:1]",
+    "rec_done": "die:t_hgi_cmdproc_hc[1:2]",
+    "rec_fault": "die:t_hgi_cmdproc_hc[2:3]",
+    "halted": "fold",
+    "vmq": "die:t_hgi_vmq_hc[0:338]",
+    "vmr": "die:f_hgi_vmr_hc[0:274]",
+    "xq": "die:t_hgi_hcmq[0:38]",
+    "xr": "die:f_hgi_hcmr[0:257]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3,
+ "ties": {
+  "su.halted": {
+   "class": "debug",
+   "reason": "sticky halt mirror of rec_fault (the fault rides t_hgi_cmdproc_su[2]); observation only"
+  },
+  "sfu.halted": {
+   "class": "debug",
+   "reason": "sticky halt mirror of rec_fault (t_hgi_cmdproc_sfu[2])"
+  },
+  "hc.halted": {
+   "class": "debug",
+   "reason": "sticky halt mirror of rec_fault (t_hgi_cmdproc_hc[2])"
+  },
+  "sfu.rec_sut": {
+   "class": "by_design",
+   "reason": "the SFU.GLU record carries no SU template (unit 3 field set ABCO, hgi_die_dispatch)"
+  },
+  "sfu.rec_d": {
+   "class": "by_design",
+   "reason": "SFU.GLU reads A, B, C and writes O only (no D operand)"
+  },
+  "sfu.rec_r": {
+   "class": "by_design",
+   "reason": "SFU.GLU has no reduction sink R"
+  },
+  "sfu.rec_i": {
+   "class": "by_design",
+   "reason": "SFU.GLU has no index operand I"
+  },
+  "sfu.s0_v": {
+   "class": "by_design",
+   "reason": "the GLU unit never takes STREAM (ot_hgi_su_record STREAM_OK = !GLU; NOSTR memory)"
+  },
+  "sfu.s0_idx": {
+   "class": "by_design",
+   "reason": "as sfu.s0_v"
+  },
+  "sfu.s0_data": {
+   "class": "by_design",
+   "reason": "as sfu.s0_v"
+  },
+  "sfu.am_stream": {
+   "class": "by_design",
+   "reason": "the GLU unit never streams to ARGMAX (O = STREAM refused)"
+  },
+  "sfu.am_rdy": {
+   "class": "by_design",
+   "reason": "as sfu.am_stream"
+  }
+ },
+ "open_items": [
+  "hc eps is the DS hc_eps parameter (HC_EPS, the only model with hyper-connections): move it into the HC weight-set header (sector S0 word 3) with hbm-sim",
+  "su STREAM input s0_* (die net from the SM publication peer, lands with the SM x-load / pub peers in the VM block)"
+ ]
+}

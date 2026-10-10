@@ -39,6 +39,14 @@ def u32(a):
     return np.asarray(a, dtype=F).reshape(-1).view(np.uint32)
 
 
+def mrec(K, op, imm_a, n_o, A_base, B_base, O_base, P, ast, ost):
+    """HC record with P positions (A.m = O.m = P at A.stride / O.stride); P = 1 is the single-position record."""
+    A = C.SV.mdesc(space=1, base=A_base, n=K, m=P, stride=ast)
+    B = C.SV.mdesc(space=0, fmt=1, base=B_base, n=1)
+    O = C.SV.mdesc(space=1, base=O_base, n=n_o, m=P, stride=ost)
+    return dict(hdr=C.SV.header(10, op, opnd=0b10011, imm_a=imm_a), eff=[A, B, 0, 0, O, 0, 0], n=[K, 0, 0, 0, n_o, 0, 0])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='/tmp/hgi_hcu_tb')
@@ -47,18 +55,26 @@ def main():
     G.set_arith('chunk8')
     rng = np.random.default_rng(1009)
     cases, vmi, hbm, exp = [], [], [], []
-    for D, abase, obase, bsec, ops in ((64, 0, 5000, 0x100000, ((0, 0, 24), (1, 0, 1), (1, 23, 1), (1, 5, 7), (2, 0, 24))),
-                                       (200, 13, 9001, 0x200000, ((0, 0, 24), (1, 3, 1), (1, 0, 24), (2, 0, 24))),
-                                       (5120, 40, 60003, 0x300000, ((0, 0, 24), (1, 7, 1), (2, 0, 24)))):
+    # (D, A base, O base, weight set sector, ops (op, row0, nrows, P positions)): P > 1 = the multi-position record
+    # (hgi-1010/d: A.m = O.m = P, rows at A.stride / O.stride), each position against its own golden
+    for D, abase, obase, bsec, ops in ((64, 0, 5000, 0x100000, ((0, 0, 24, 1), (1, 0, 1, 1), (1, 23, 1, 1), (1, 5, 7, 1),
+                                                               (2, 0, 24, 1), (0, 0, 24, 3), (1, 2, 5, 2), (2, 0, 24, 4))),
+                                       (200, 13, 9001, 0x200000, ((0, 0, 24, 1), (1, 3, 1, 1), (1, 0, 24, 1), (2, 0, 24, 1),
+                                                                 (0, 0, 24, 2))),
+                                       (5120, 40, 60003, 0x300000, ((0, 0, 24, 1), (1, 7, 1, 1), (2, 0, 24, 1), (0, 0, 24, 6),
+                                                                   (1, 0, 24, 6)))):
         K = 4 * D
         fn = rng.normal(0, .03, (24, K)).astype(F)
-        x = G.to_bf16(rng.normal(0, 1, (4, D)).astype(F))
         scale = rng.uniform(.5, 2, 3).astype(F)
         base = rng.normal(0, .5, 24).astype(F)
-        with HC.recording() as rc:
-            pre, post, comb = G.Model.hc_mixes(Stand(fn, scale, base), x, 0, 'attn')
-        mixes = np.asarray(G.mul(rc['raw'], rc['r']), F)
-        o = np.concatenate([np.asarray(pre, F), np.asarray(post, F), np.asarray(comb, F).reshape(-1)])
+        XS, MIX, OS = [], [], []                  # up to 8 positions, each its own residual and golden
+        for p_ in range(8):
+            x = G.to_bf16(rng.normal(0, 1, (4, D)).astype(F))
+            with HC.recording() as rc:
+                pre, post, comb = G.Model.hc_mixes(Stand(fn, scale, base), x, 0, 'attn')
+            XS.append(x)
+            MIX.append(np.asarray(G.mul(rc['raw'], rc['r']), F))
+            OS.append(np.concatenate([np.asarray(pre, F), np.asarray(post, F), np.asarray(comb, F).reshape(-1)]))
         nchunk = K // 8
         R = -(-nchunk // W)
         SPW = W // 8
@@ -83,20 +99,25 @@ def main():
         for s in range(4):
             hbm.append((bsec + s, sum(int(pw[8 * s + q]) << (32 * q) for q in range(8))))
         nh = len(hbm) - h0
-        for op, r0, nr in ops:
+        for op, r0, nr, P in ops:
             v0 = len(vmi)
-            if op == 2:
-                vmi.extend((abase + i, int(u32(mixes)[i])) for i in range(24))
-                d = H.rec(24, op=2, A_base=abase, B_base=bsec << 5, O_base=obase)
-                ex = u32(o)
-            else:
-                xf = u32(x)
-                vmi.extend((abase + i, int(xf[i])) for i in range(K))
-                d = H.rec(K, op=op, imm_a=r0, n_o=nr, A_base=abase, B_base=bsec << 5, O_base=obase)
-                ex = u32(o) if op == 0 else u32(mixes)[r0:r0 + nr]
+            ast = (24 if op == 2 else K) + 8 * int(rng.integers(0, 3)) + int(rng.integers(0, 8))   # A row stride
+            ost = (nr if op == 1 else 24) + int(rng.integers(0, 9))                                 # O row stride
+            ex_all = []
+            for p_ in range(P):
+                if op == 2:
+                    vmi.extend((abase + p_ * ast + i, int(u32(MIX[p_])[i])) for i in range(24))
+                    ex = u32(OS[p_])
+                else:
+                    xf = u32(XS[p_])
+                    vmi.extend((abase + p_ * ast + i, int(xf[i])) for i in range(K))
+                    ex = u32(OS[p_]) if op == 0 else u32(MIX[p_])[r0:r0 + nr]
+                ex_all.extend((obase + p_ * ost + i, int(ex[i])) for i in range(len(ex)))
+            d = mrec(24 if op == 2 else K, op=op, imm_a=r0 if op == 1 else 0, n_o=24 if op != 1 else nr, A_base=abase,
+                     B_base=bsec << 5, O_base=obase, P=P, ast=ast, ost=ost)
             e0 = len(exp)
-            exp.extend((obase + i, int(ex[i])) for i in range(len(ex)))
-            cases.append((K if op != 2 else 24, v0, len(vmi) - v0, h0, nh, e0, len(ex), H.pack(d)))
+            exp.extend(ex_all)
+            cases.append((K if op != 2 else 24, v0, len(vmi) - v0, h0, nh, e0, len(ex_all), H.pack(d)))
     (out / 'hu_case.mem').write_text(''.join(''.join(f'{x:08X}' for x in c[:7]) + C.hexw(c[7], 938) + '\n' for c in cases))
     (out / 'hu_vmi.mem').write_text(''.join(f'{a:08X}{w:08X}\n' for a, w in vmi))
     (out / 'hu_hbm.mem').write_text(''.join(f'{a:010X}{d:064X}\n' for a, d in hbm))

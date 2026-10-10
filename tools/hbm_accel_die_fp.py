@@ -545,7 +545,7 @@ R25GM = _hgi_mtp(R25G)
 # su / sfu / hc at the SW quarter, dma beside the loader, coll, quant, idx, argmax in the MTP slot), the HGI VM with 8
 # packet clients, and the MTP slot (hgi_mtp_native + the dispatched ARGMAX unit hfd_hgi_am)
 HGI_FULL = ['argmax', 'cp', 'coll', 'quant', 'idx', 'sm', 'su', 'sfu', 'att', 'dma', 'hc']
-R25GPH = dict(_hgi_mtp(R25GP), hgi_dispatch=HGI_FULL, router_exact=True)
+R25GPH = dict(_hgi_mtp(R25GP), hgi_dispatch=HGI_FULL, router_exact=True, hgi_unit_slots=True)   # hgi-1010/d: SU / SFU / HC unit slots
 R25GPHT4 = dict(R25GPH,indexer_t4_native=True,indexer_hgi_native=True)  # native join reservation, no closure claim
 R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full network build)
 if _mtp_generic_closed():
@@ -2784,7 +2784,19 @@ def buses(m):
         # the dispatch adapter is an hgi-takeover obligation (die check lists it).  The merged id reaches MX1 f_am
         # from the CP sequencer's CTL.AMAX step (reads VM A[0] per verify row, cp_vocab check).
         am_ = hub.get('mtp_am', hub['mtp'])
-        for port_, bits_ in ARGMAX_HGI_IN:
+        su_slot_ = (V.get('hgi_unit_slots') and 'su' in (V.get('hgi_dispatch') or [])
+                    and (V.get('hgi_unit_block') or {}).get('su') in hub)
+        if su_slot_:
+            # hgi-1010/d: on the HGI die the logit STREAM comes from the HGI SU unit (SU.VOP O = STREAM, the Qwen head
+            # head_scale -> ARGMAX.LOCAL path), not from the legacy su_red (no record drives the legacy quarters); the
+            # SU unit sends only while the ARGMAX record holds the stream open (am_rdy, one bit back)
+            su_ = hub[V['hgi_unit_block']['su']]
+            for port_, bits_ in ARGMAX_HGI_IN:
+                B.append((f'hgi_am_s_{port_}', 'hub', bits_, [(su_.name, f't_am_{port_}'), (am_.name, port_)]))
+                P[f'hgi_am_s_{port_}'] = [f'hgi_am_s_{port_}']
+            B.append(('hgi_am_rdy', 'hub', 1, [(am_.name, 'am_rdy'), (su_.name, 'f_am_rdy')]))
+            P['hgi_am_rdy'] = ['hgi_am_rdy']
+        for port_, bits_ in (() if su_slot_ else ARGMAX_HGI_IN):
             B.append((f'hb_su_red_am_{port_}', 'hub', bits_, [(hub['su_red'].name, f't_am_{port_}'), (am_.name, port_)]))
             P[f'hub_su_red_am_{port_}'] = [f'hb_su_red_am_{port_}']
         for port_, bits_ in ARGMAX_HGI_OUT:
@@ -2796,7 +2808,7 @@ def buses(m):
             slot_content={k_: (hub[k_].master, hub[k_].w, hub[k_].h, round(hub[k_].x, 3), round(hub[k_].y, 3))
                           for k_ in ('mtp', 'mtp_am') if k_ in hub},
             buses=[b_[0] for b_ in B if b_[0].startswith(('hb_mtp_', 'hb_cmdproc_mtp', 'hb_router_mtp', 'hb_coll_mtp',
-                                                            'hb_su_red_am_', 'hb_am_vm_', 'hgi_argmax_'))],
+                                                            'hb_su_red_am_', 'hb_am_vm_', 'hgi_argmax_', 'hgi_am_'))],
             unbound={k: v for k, v in ob_['required_endpoints'].items() if k not in bound_},
             unbound_owner=dict(f_am='ot_hgi_seq CTL.AMAX (VM A[0] per verify row, cp_vocab-checked) -> MX1 f_am',
                                backend='generic backend translator: t_backend eng_cmd 201 -> ot_hgi_seq doorbell '

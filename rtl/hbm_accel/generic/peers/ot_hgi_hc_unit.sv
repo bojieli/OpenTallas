@@ -22,6 +22,12 @@
 // scale / base sectors read.
 // HBM client: one request channel {sector addr, len (sectors), tag {src 4, slot}}, responses {tag, beat, data} in
 // any order (src 0..7 = weight bank, 8 = the scale / base fetch); always ready (registered).
+// MULTI-POSITION (hgi-1010/d, 2026-10-10): A.m = P positions (rows of A at A.stride; op 2: rows of 24 mixes) are staged
+// into the x memory at word p R; each row's weights are fetched ONCE and the HCP runs it for all P positions (npos P:
+// the HCP's own per-position ss / r); the post / drain then runs per position into O + p O.stride.  Each position's
+// result is the single-position record's bit for bit (positions are independent; the HCP is exact per position).
+// X MEMORY: bank k (the HCP's term-k bank) holds RMAX x PMAX words of W BF16 lanes; XMACRO 1 builds it from
+// ot_sram_1r1w_1024x256 macros (W / 16 a bank, 16-b lane write mask; RMAX x PMAX <= 1,024), else flops.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_hc_unit #(
     parameter integer W = 32,               // HCP lanes per group (8W MAC lanes)
@@ -31,6 +37,10 @@ module ot_hgi_hc_unit #(
     parameter [31:0]  HC_EPS = 32'h358637BD, // hc_eps (1e-6)
     parameter integer HAW = 35,
     parameter integer MUT_POST = 0,         // mutant: pre without + hc_eps
+    parameter integer WMACRO = 0,           // hgi-1010/d: 1 = weight windows in ot_sram_1r1w_128x256 macros (RMAX 128)
+    parameter integer PMAX = 8,             // hgi-1010/d: positions a record (A.m; the MTP verify), a power of two
+    parameter integer XMACRO = 0,           // hgi-1010/d: 1 = the x memory in ot_sram_1r1w_1024x256 macros
+    parameter integer MUT_MP = 0,           // mutant: every position lands on position 0's x words
     parameter integer TW = $clog2(RMAX),
     parameter integer TG = 4 + TW
 ) (
@@ -59,21 +69,23 @@ module ot_hgi_hc_unit #(
 );
     localparam integer SPW = W / 8, LW = $clog2(W), LS = $clog2(SPW), AW = 16, CWW = $clog2(RMAX + 1);
     // ---- the record adapter
-    wire job_v; reg job_rdy, job_done, job_fault; wire [228:0] job;
-    ot_hgi_hc_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .cfg_hc_eps(cfg_norm_eps),
+    wire job_v; reg job_rdy, job_done, job_fault; wire [228:0] job; wire [3:0] j_np; wire [17:0] j_as, j_os;
+    ot_hgi_hc_record #(.LEGACY(0), .PMAX(PMAX)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .cfg_hc_eps(cfg_norm_eps),
         .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_a(rec_a), .rec_b(rec_b), .rec_o(rec_o),
         .rec_n_a(rec_n_a), .rec_n_o(rec_n_o), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted),
         .lg_v(1'b0), .lg_rdy(), .lg_job(229'd0), .job_v(job_v), .job_rdy(job_rdy), .job(job), .job_done(job_done),
-        .job_fault(job_fault));
+        .job_fault(job_fault), .job_npos(j_np), .job_astr(j_as), .job_ostr(j_os));
     // job: {obase 18, nwords 24, w_hbm 35, xbase 18, wbase 16, eps 32, nf 32, scale 1, nchunk 18, nout 5, npos 1}
     reg [17:0] nchunk, xbase, obase; reg [31:0] nf, eps; reg [34:0] wsec; reg [1:0] op; reg [4:0] row0, nrows, rend;
     reg [17:0] rr;                               // R
+    reg [3:0] npos, pc; reg [17:0] astr, ostr, xrow, orow; reg [AW-1:0] xwo;   // positions; per-position cursors
+    reg [31:0] TP [0:PMAX*24-1];                 // the raw mixes of every position (p 24 + row)
     reg [HAW-1:0] rs, rowstride, rowbase, pbase; reg [HAW-1:0] boff [0:7];
 
     localparam [4:0] S_IDLE = 0, S_PAR = 1, S_STAGE = 2, S_ROW = 3, S_RW = 4, S_RC = 5, S_REL = 6, S_P1 = 7,
                      S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
                      S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
-                     S_LDA = 23;
+                     S_LDA = 23, S_PL = 24;
     reg wpre, wst;   // wpre: start the first row's windows next edge (boff settled); wst: they are started
     reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
@@ -85,26 +97,45 @@ module ot_hgi_hc_unit #(
     wire [7:0] x_re, w_re; wire [8*AW-1:0] x_addr, w_addr; reg [8*W*16-1:0] xq1, xd; wire [8*W*32-1:0] wq;
     reg [8*W*32-1:0] wd;
     genvar g;
+    localparam integer XD = RMAX * PMAX, XAW = $clog2(XD);
+    localparam integer USE_XM = XMACRO && ((W * 16) % 256 == 0) && XD <= 1024;
     generate for (g = 0; g < 8; g = g + 1) begin : g_xr
-        wire [2:0] qk = g[2:0] + xbase[2:0];                    // the sector word whose element lands in bank g
-        wire [29:0] ek = {rsec, qk} - {12'd0, xbase};
+        wire [2:0] qk = g[2:0] + xrow[2:0];                     // the sector word whose element lands in bank g
+        wire [29:0] ek = {rsec, qk} - {12'd0, xrow};
         wire ok = x_land && ek < {9'd0, nchunk, 3'b000};
-        genvar gl;
-        for (gl = 0; gl < W; gl = gl + 1) begin : g_l
-            reg [15:0] m [0:RMAX-1];
-            always @(posedge clk) begin
-                if (ok && ((ek >> 3) & (W - 1)) == gl) m[(ek >> 3) >> LW] <= vr[32*qk + 16 +: 16];
-                if (x_re[g]) xq1[g*W*16 + gl*16 +: 16] <= m[x_addr[g*AW +: AW] & (RMAX - 1)];
+        wire [XAW-1:0] wa = xwo + ((ek >> 3) >> LW);           // position p's word p R + chunk / W
+        wire [LW-1:0] wl = (ek >> 3) & (W - 1);
+        if (USE_XM) begin : g_m
+            // W / 16 macros, 16 lanes a 256-b row; one lane written an edge (16-b mask), a whole word read an edge
+            genvar gm;
+            for (gm = 0; gm < W / 16; gm = gm + 1) begin : g_mm
+                wire [255:0] ro;
+                wire we = ok && (wl >> 4) == gm;
+                ot_sram_1r1w_1024x256_m2_r2c2 u_x (.clk(clk), .r_ce_in(x_re[g]), .r_addr_in(10'(x_addr[g*AW +: AW])),
+                    .rd_out(ro), .w_ce_in(we), .w_addr_in(10'(wa)), .wd_in({16{vr[32*qk + 16 +: 16]}}),
+                    .w_mask_in({240'd0, 16'hFFFF} << {wl[3:0], 4'd0}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00),
+                    .cr_sel(16'd0));
+                always @* xq1[g*W*16 + gm*256 +: 256] = ro;
+            end
+        end else begin : g_f
+            genvar gl;
+            for (gl = 0; gl < W; gl = gl + 1) begin : g_l
+                reg [15:0] m [0:XD-1];
+                always @(posedge clk) begin
+                    if (ok && wl == gl) m[wa] <= vr[32*qk + 16 +: 16];
+                    if (x_re[g]) xq1[g*W*16 + gl*16 +: 16] <= m[x_addr[g*AW +: AW] & (XD - 1)];
+                end
             end
         end
     end endgenerate
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
-    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(1), .OMAX(2), .AW(AW), .CW(16), .ML(2)) u_hcp (.clk(clk), .rst_n(rst_n),
-        .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(2'd1), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
+    wire [$clog2(PMAX)-1:0] h_opos;
+    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2)) u_hcp (.clk(clk), .rst_n(rst_n),
+        .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(npos[$clog2(PMAX):0]), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
         .cmd_scale(1'b1), .cmd_nf(nf), .cmd_eps(eps), .cmd_wbase(16'd0), .cmd_xbase(16'd0),
         .w_re(w_re), .w_addr(w_addr), .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd),
-        .o_valid(h_ov), .o_ready(1'b1), .o_pos(), .o_idx(), .o_data(h_od), .o_last(h_last), .fault(h_fault),
+        .o_valid(h_ov), .o_ready(1'b1), .o_pos(h_opos), .o_idx(), .o_data(h_od), .o_last(h_last), .fault(h_fault),
         .idle(h_idle));
 
     // ---- the weight windows (8 banks) and the HBM channel
@@ -115,7 +146,7 @@ module ot_hgi_hc_unit #(
     always @(posedge clk or negedge rst_n) if (!rst_n) hr_vq <= 1'b0; else hr_vq <= hr_v;
     generate for (g = 0; g < 8; g = g + 1) begin : g_win
         wire [3:0] why; wire [CWW-1:0] fetched; wire [31:0] rcv;
-        ot_hdc_v41x_weight_window #(.WB(W*32), .SB(256), .WORDS(RMAX), .AW(AW), .HAW(HAW), .NPC(1), .LENW(3)) u_w (
+        ot_hdc_v41x_weight_window #(.WB(W*32), .SB(256), .WORDS(RMAX), .AW(AW), .HAW(HAW), .NPC(1), .LENW(3), .MACRO(WMACRO)) u_w (
             .clk(clk), .rst_n(rst_n), .start(w_start), .release_window(w_rel), .rom_base(16'd0),
             .hbm_base(rowbase + boff[g]), .nwords(rr[CWW-1:0]), .ready(w_rdy[g]), .hq_v(wq_v[g]), .hq_rdy(wq_ack[g]),
             .hq_addr(wq_addr[g*HAW +: HAW]), .hq_len(wq_len[g*3 +: 3]), .hq_tag(wq_tag[g*TW +: TW]),
@@ -169,6 +200,9 @@ module ot_hgi_hc_unit #(
     reg [5:0] outst;
 
     assign x_land = (st == S_STAGE) && vr[273] && !vr[256];
+`ifdef HC_DBG
+    reg flt_q; always @(posedge clk) begin flt_q <= flt; if (flt && !flt_q) $display("HC_DBG flt rises st %0d pc %0d row %0d", st, pc, row); end
+`endif
     // ---- control
     wire [31:0] F_ONE = 32'h3F800000, F_TWO = 32'h40000000;
     function automatic fgt(input [31:0] a, input [31:0] b);    // a > b for non-NaN binary32
@@ -204,6 +238,11 @@ module ot_hgi_hc_unit #(
             wb_n = {3'd0, mu_o} + {3'd0, ad_o} + {3'd0, ex_o} + {3'd0, dv_o};
             outst <= outst - {2'd0, wb_n} + ((!flt && !iss_done && (st == S_P1 || st == S_P2 || st == S_P3 ||
                      st == S_P4 || st == S_P5 || st == S_P6 || st == S_P7)) ? 6'd1 : 6'd0);
+`ifdef HC_DBG
+            if (!flt && (ex_f || dv_f || |w_flt || h_fault || sk_fault || (mu_o && mu_e != 0) || (ad_o && ad_e != 0)))
+                $display("HC_DBG fault st %0d pc %0d row %0d ex %0d dv %0d w %h h %0d sk %0d mu %0d ad %0d", st, pc, row, ex_f,
+                         dv_f, w_flt, h_fault, sk_fault, mu_o && mu_e != 0, ad_o && ad_e != 0);
+`endif
             if (flt && st != S_FAULT && st != S_IDLE) st <= S_FAULT;
             else case (st)
                 S_IDLE: if (job_v && job_rdy) begin
@@ -211,6 +250,8 @@ module ot_hgi_hc_unit #(
                     nchunk <= job[23:6]; nf <= job[56:25]; eps <= job[88:57]; xbase <= job[122:105];
                     wsec <= job[157:123]; obase <= job[199:182]; op <= job[201:200]; row0 <= job[206:202];
                     nrows <= job[211:207];
+                    npos <= j_np; astr <= j_as; ostr <= j_os; pc <= 4'd0; xrow <= job[122:105]; orow <= job[199:182];
+                    xwo <= 0;
                     st <= S_GEO;
                 end
                 S_GEO: begin                                         // R, RS, row stride, parameter base
@@ -230,7 +271,8 @@ module ot_hgi_hc_unit #(
                     for (q = 0; q < 8; q = q + 1) boff[q] <= rs * q;
                     wpre <= (op != 2'd2);                            // the first row's weights stream during x staging
                     p_req <= (op != 2'd1); p_got <= 4'd0;
-                    sec <= xbase >> 3; rsec <= xbase >> 3; sec_end <= ({9'd0, xbase} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
+                    sec <= xrow >> 3; rsec <= xrow >> 3;
+                    sec_end <= (op == 2'd2) ? ({9'd0, xrow} + 27'd23) >> 3 : ({9'd0, xrow} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
                     vo_n <= 3'd0; st <= (op == 2'd2) ? S_LDA : S_STAGE;
                 end
                 S_LDA: begin                                         // op 2: the 24 gathered mixes -> T
@@ -240,7 +282,7 @@ module ot_hgi_hc_unit #(
                     end
                     if (vr[273] && !vr[256]) begin
                         for (q = 0; q < 8; q = q + 1) begin
-                            e2 = {rsec, q[2:0]} - xbase;
+                            e2 = {rsec, q[2:0]} - xrow;
                             if (e2 >= 0 && e2 < 24) T[e2] <= vr[32*q +: 32];
                         end
                         rsec <= rsec + 27'd1;
@@ -255,28 +297,40 @@ module ot_hgi_hc_unit #(
                     end
                     if (vr[273] && !vr[256]) begin
                         for (q = 0; q < 8; q = q + 1) begin
-                            e2 = {rsec, q[2:0]} - xbase;             // element index of word q
+                            e2 = {rsec, q[2:0]} - xrow;              // element index of word q
                             if (e2 >= 0 && e2 < {nchunk, 3'b000} && vr[32*q +: 16] != 16'd0) flt <= 1'b1;   // BF16
                         end
                         rsec <= rsec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
-                    if (rsec > sec_end && vo_n == 3'd0) begin row <= row0; st <= S_ROW; end   // lanes past K / 8: HCP-masked
+                    if (rsec > sec_end && vo_n == 3'd0) begin                 // lanes past K / 8: HCP-masked
+                        if (pc + 4'd1 < npos) begin                            // the next position's row of A
+                            pc <= pc + 4'd1; xrow <= xrow + astr; xwo <= MUT_MP ? xwo : xwo + rr[AW-1:0];
+                            sec <= (xrow + astr) >> 3; rsec <= (xrow + astr) >> 3;
+                            sec_end <= ({9'd0, xrow + astr} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
+                        end else begin pc <= 4'd0; row <= row0; st <= S_ROW; end
+                    end
                 end
                 S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= !wst; wst <= 1'b0; st <= S_RW; end
                 S_RW: if (&w_rdy && h_cr) begin h_cv <= 1'b1; st <= S_RC; end
                 S_RC: begin
                     if (h_cv && h_cr) h_cv <= 1'b0;
-                    if (h_ov) begin T[row - row0] <= h_od; w_rel <= 1'b1; st <= S_REL; end
+                    if (h_ov) begin                                    // one result a position, positions in order
+                        TP[{1'b0, h_opos} * 24 + (row - row0)] <= h_od;
+                        if (h_last) begin w_rel <= 1'b1; st <= S_REL; end
+                    end
                 end
                 S_REL: begin
                     rowbase <= rowbase + rowstride;
-                    if (row == rend) begin
-                        if (op == 2'd1) begin
-                            sec <= obase >> 3; sec_end <= ({9'd0, obase} + {22'd0, nrows} - 27'd1) >> 3; vo_n <= 3'd0;
-                            st <= S_DRAIN;
-                        end else begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
-                    end else begin row <= row + 5'd1; st <= S_ROW; end
+                    if (row == rend) begin pc <= 4'd0; st <= S_PL; end
+                    else begin row <= row + 5'd1; st <= S_ROW; end
+                end
+                S_PL: begin                                          // position pc's raw mixes -> T, then post / drain
+                    for (q = 0; q < 24; q = q + 1) T[q] <= TP[{1'b0, pc} * 24 + q];
+                    if (op == 2'd1) begin
+                        sec <= orow >> 3; sec_end <= ({9'd0, orow} + {22'd0, nrows} - 27'd1) >> 3; vo_n <= 3'd0;
+                        st <= S_DRAIN;
+                    end else begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
                 end
                 // ---- post phases: issue one element per edge, then wait for every write-back
                 S_P1, S_P2, S_P3, S_P4, S_P5, S_P6, S_P7: begin
@@ -331,7 +385,7 @@ module ot_hgi_hc_unit #(
                     if (sk_busy) sk_req <= 1'b0;
                     if (sk_done) begin
                         for (q = 0; q < 16; q = q + 1) T[8 + q] <= sk_y[32*q +: 32];
-                        sec <= obase >> 3; sec_end <= ({9'd0, obase} + 27'd23) >> 3; vo_n <= 3'd0; st <= S_DRAIN;
+                        sec <= orow >> 3; sec_end <= ({9'd0, orow} + 27'd23) >> 3; vo_n <= 3'd0; st <= S_DRAIN;
                     end
                 end
                 S_DRAIN: begin                                       // word-masked sector writes of the 24 results
@@ -339,7 +393,7 @@ module ot_hgi_hc_unit #(
                         reg [255:0] dat; reg [31:0] msk; integer j;
                         dat = 256'd0; msk = 32'd0;
                         for (q = 0; q < 8; q = q + 1) begin
-                            j = {sec, q[2:0]} - obase;
+                            j = {sec, q[2:0]} - orow;
                             if (j >= 0 && j < ((op == 2'd1) ? {27'd0, nrows} : 24)) begin
                                 dat[32*q +: 32] = T[j]; msk[4*q +: 4] = 4'hF; end
                         end
@@ -347,7 +401,15 @@ module ot_hgi_hc_unit #(
                         sec <= sec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && vr[256]) ? 3'd1 : 3'd0);
-                    if (sec > sec_end && vo_n == 3'd0) st <= S_DONE;
+                    if (sec > sec_end && vo_n == 3'd0) begin
+                        if (pc + 4'd1 < npos) begin                        // the next position
+                            pc <= pc + 4'd1; orow <= orow + ostr;
+                            if (op == 2'd2) begin                          // op 2: its 24 gathered mixes
+                                xrow <= xrow + astr; sec <= (xrow + astr) >> 3; rsec <= (xrow + astr) >> 3;
+                                sec_end <= ({9'd0, xrow + astr} + 27'd23) >> 3; vo_n <= 3'd0; st <= S_LDA;
+                            end else st <= S_PL;
+                        end else st <= S_DONE;
+                    end
                 end
                 S_DONE: begin job_done <= 1'b1; job_rdy <= 1'b1; st <= S_IDLE; end
                 S_FAULT: begin job_fault <= 1'b1; st <= S_IDLE; job_rdy <= 1'b0; end   // the adapter halts
