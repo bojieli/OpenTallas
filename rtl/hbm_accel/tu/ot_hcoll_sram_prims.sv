@@ -329,7 +329,12 @@ module ot_hcoll_sfifo #(
     wire ce, ue;
     wire [CW-1:0] cw_q; wire [W-1:0] decoded2; wire ce2, ue2;
     wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
-    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
+    // hgi-1010/c (route 503c8f284: qp_din -> 8 XNOR levels of the SECDED ENCODER -> din_p, an unregistered input):
+    // with PAYLOAD_ECC the raw payload and push land in pin flops first and the encoder runs flop to flop (+1 edge).
+    reg [W-1:0] din_r; reg push_r;
+    always @(posedge clk) din_r <= din;
+    always @(posedge clk or negedge rst_n) if (!rst_n) push_r <= 1'b0; else push_r <= push;
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(PAYLOAD_ECC ? din_r : din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
     // hgi-takeover (drive-0849 -616 ps rawb -> SECDED decode -> head FIFO write): with PAYLOAD_ECC the decoded word and
     // its ce / ue are registered (v3) before the head FIFO; the credit loop grows to 5 edges, so the head holds 8 and
     // KC = 5 credits keep full rate.  PAYLOAD_ECC = 0 is unchanged (no stage, K = 4, head 4).
@@ -361,7 +366,7 @@ module ot_hcoll_sfifo #(
         if (!rst_n) begin
             push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(KC); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; hpush_q <= '0; ovf <= 1'b0;
         end else begin
-            push_p <= push;
+            push_p <= PAYLOAD_ECC ? push_r : push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
@@ -429,7 +434,12 @@ module ot_hcoll_sfifo_x #(
     wire [W-1:0] decoded;
     wire ce, ue;
     wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
-    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
+    // hgi-1010/c (route 503c8f284: qp_din -> 8 XNOR levels of the SECDED ENCODER -> din_p, an unregistered input):
+    // with PAYLOAD_ECC the raw payload and push land in pin flops first and the encoder runs flop to flop (+1 edge).
+    reg [W-1:0] din_r; reg push_r;
+    always @(posedge clk) din_r <= din;
+    always @(posedge clk or negedge rst_n) if (!rst_n) push_r <= 1'b0; else push_r <= push;
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(PAYLOAD_ECC ? din_r : din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
     // hgi-takeover (route hgi-coll-port-secded-577d24ba1 TT -222 on bs2 -> decode -> ue -> ocr): the decode lands in a
     // register stage (v3) before it drives out_v / out_d and the credit counter (+1 edge on the export; the credit loop
     // is 9 edges against K = 8 head slots: a full stream runs at 8 / 9, above the core's 4 delivery lanes per 8 ports)
@@ -458,7 +468,7 @@ module ot_hcoll_sfifo_x #(
         if (!rst_n) begin
             push_p <= 1'b0; scnt <= '0; avail <= '0; put_q <= 1'b0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
         end else begin
-            push_p <= push;
+            push_p <= PAYLOAD_ECC ? push_r : push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             avail <= avail + (AW+1)'(put_q) - (AW+1)'(fetch);
             put_q <= put;

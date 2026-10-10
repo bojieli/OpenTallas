@@ -26,7 +26,7 @@ module tb_fifo;
  integer c,u,seen;
  begin
  @(negedge clk);rst_n=0;push=0;pop=0;repeat(2)@(negedge clk);rst_n=1;push=1;din={17'h175ab,{16{32'h12345678}},16'hffff};
- @(negedge clk);push=0;@(negedge clk);flip(a);if(b>=0)flip(b);c=0;u=0;seen=0;
+ @(negedge clk);push=0;@(negedge clk);while(dut.scnt==0)@(negedge clk);flip(a);if(b>=0)flip(b);c=0;u=0;seen=0;   // hgi-1010/c: flip once the word is in the macro (ECC input pin flops add an edge)
  repeat(15)begin
  c=c+ce;u=u+ue;
  if(!ee)begin if(b>=0)$fatal(1,"FIFO UE publication"); if(ed!==din)$fatal(1,"FIFO corrupt CE");seen=seen+1;pop=1;end else pop=0;
