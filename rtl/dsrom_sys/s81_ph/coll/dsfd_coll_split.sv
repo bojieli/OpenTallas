@@ -34,13 +34,39 @@ module ot_s81ph_relay2 #(parameter integer W = 8) (
 endmodule
 
 // ---- credit relay (redesign-ds 2026-10-10, split3 CR mode): link -> credit rx (pin flops + FIFO + OREG) -> credit tx -> link
-module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8) (
+// PS (fill-9 2026-10-10, opt-in, default 0 = byte-identical): PIN STATIONS.  One extra register stage on every pin of the
+// relay -- {i_v, i_d} and the returned credit o_cr on the way in, {o_v, o_d} and the issued credit i_cr on the way out --
+// so the pin flop (anchored at its pin by io_flop_at_pins) and the FIFO-side flop (rx landing d_q / tx l_data, beside the
+// landing FIFO and its 8:1 read mux) are two different flops: the pin-to-FIFO wire across the 340-um ct tile gets its own
+// cycle instead of sharing one with the 8:1 read mux / FIFO write (ct-split3cra TT -46.7 = tx l_data -> li3_d / elo_d
+// output wire; SS -149 = cnt / rp -> 553-bit l_data).  Exact: each stream is delayed by one cycle each way; credits keep
+// counting the same D landing slots (the credit round trip grows by 2 cycles per link, throughput only).
+module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, parameter integer PS = 0) (
     input  wire clk, input wire rst_n,
     input  wire i_v, output wire i_cr, input wire [W-1:0] i_d,     // upstream link (valid / data in, credit pulse out)
     output wire o_v, input wire o_cr, output wire [W-1:0] o_d      // downstream link (valid / data out, credit pulse in)
 );
     wire m_v, m_r, f; wire [W-1:0] m_d;
-    ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(0), .WFREE(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(i_v), .l_data(i_d), .l_credit(i_cr),
+    wire xi_v, xi_cr, xo_v, xo_cr; wire [W-1:0] xi_d, xo_d;
+    generate if (PS != 0) begin : g_ps
+        reg iv_q, icr_q, ov_q, ocr_q; reg [W-1:0] id_q, od_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin iv_q <= 1'b0; icr_q <= 1'b0; ov_q <= 1'b0; ocr_q <= 1'b0; end
+            else begin iv_q <= i_v; icr_q <= xi_cr; ov_q <= xo_v; ocr_q <= o_cr; end
+`ifdef OT_S81PH_MUT_CTPS
+        // negative control: the output data station lags its valid by one more cycle (must be caught by the bench)
+        reg [W-1:0] od_m;
+        always @(posedge clk) begin id_q <= i_d; od_m <= xo_d; od_q <= od_m; end
+`else
+        always @(posedge clk) begin id_q <= i_d; od_q <= xo_d; end
+`endif
+        assign xi_v = iv_q; assign xi_d = id_q; assign i_cr = icr_q;
+        assign o_v = ov_q; assign o_d = od_q; assign xo_cr = ocr_q;
+    end else begin : g_np
+        assign xi_v = i_v; assign xi_d = i_d; assign i_cr = xi_cr;
+        assign o_v = xo_v; assign o_d = xo_d; assign xo_cr = o_cr;
+    end endgenerate
+    ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(0), .WFREE(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(xi_v), .l_data(xi_d), .l_credit(xi_cr),
         .o_valid(m_v), .o_ready(m_r), .o_data(m_d), .fault(f));
 `ifdef OT_S81PH_MUT_CR_CRED
     localparam integer CX = D + 8;   // negative control: the sender believes in 8 more landing slots than exist
@@ -48,7 +74,7 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8) (
     localparam integer CX = D;
 `endif
     ot_link_credit_tx #(.W(W), .CRED(CX)) u_tx (.clk(clk), .rst_n(rst_n), .i_valid(m_v), .i_ready(m_r), .i_data(m_d),
-        .l_valid(o_v), .l_data(o_d), .l_credit(o_cr));
+        .l_valid(xo_v), .l_data(xo_d), .l_credit(xo_cr));
 endmodule
 
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
@@ -320,7 +346,9 @@ module dsfd_coll_ct #(
     // every 2 cycles toward the lane) and ot_s81ph_land_rx (landing register + FIFO from the lane, full rate), so no lane
     // pin drives a 553-bit enable; 0 = the 2-skid relays of ct-split3a.
     parameter integer LR = 0,
-    parameter integer CR = 0   // redesign-ds: 1 = credit relays on both faces (needs the lane tile LCR and ce CR)
+    parameter integer CR = 0,  // redesign-ds: 1 = credit relays on both faces (needs the lane tile LCR and ce CR)
+    // PS (fill-9 2026-10-10, CR mode only): pin stations on every relay pin (ot_s81ph_cr_relay PS), +1 cycle each way
+    parameter integer PS = `ifdef OT_S81PH_COLL_CTPS 1 `else 0 `endif
 ) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
@@ -346,10 +374,10 @@ module dsfd_coll_ct #(
         if (!rst_n) begin flt_r <= 0; flt_d <= 0; end
         else begin flt_r <= {eflt, wflt}; flt_d <= flt_r; end
     generate if (CR != 0) begin : g_cr
-        ot_s81ph_cr_relay #(.W(553)) u_lo3 (.clk(clk), .rst_n(rst_n), .i_v(lo3_v), .i_cr(lo3_r), .i_d(lo3_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
-        ot_s81ph_cr_relay #(.W(553)) u_li3 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li3_v), .o_cr(li3_r), .o_d(li3_d));
-        ot_s81ph_cr_relay #(.W(553)) u_lo7 (.clk(clk), .rst_n(rst_n), .i_v(lo7_v), .i_cr(lo7_r), .i_d(lo7_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
-        ot_s81ph_cr_relay #(.W(553)) u_li7 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li7_v), .o_cr(li7_r), .o_d(li7_d));
+        ot_s81ph_cr_relay #(.W(553), .PS(PS)) u_lo3 (.clk(clk), .rst_n(rst_n), .i_v(lo3_v), .i_cr(lo3_r), .i_d(lo3_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
+        ot_s81ph_cr_relay #(.W(553), .PS(PS)) u_li3 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li3_v), .o_cr(li3_r), .o_d(li3_d));
+        ot_s81ph_cr_relay #(.W(553), .PS(PS)) u_lo7 (.clk(clk), .rst_n(rst_n), .i_v(lo7_v), .i_cr(lo7_r), .i_d(lo7_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
+        ot_s81ph_cr_relay #(.W(553), .PS(PS)) u_li7 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li7_v), .o_cr(li7_r), .o_d(li7_d));
     end else if (LR != 0) begin : g_lr
         // seam-side skid (u_a) + lane-facing sender / receiver
         wire a3v, a3r, a7v, a7r, b3v, b3r, b7v, b7r; wire [552:0] a3d, a7d, b3d, b7d;
