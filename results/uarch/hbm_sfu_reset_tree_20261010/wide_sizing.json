@@ -1,0 +1,42 @@
+{
+  "candidate": "sfu_rstpipe3_wide",
+  "lane_count_per_quarter": 32,
+  "lane_um": [
+    237.6,
+    330.48
+  ],
+  "lane_core_um": [
+    235.44,
+    329.4
+  ],
+  "prior_lane_um": [
+    159.84,
+    330.48
+  ],
+  "lane_area_um2": 78522.048,
+  "quarter_lane_area_delta_um2": 822339.9935999999,
+  "measured_prior_std_area_um2": 34909,
+  "estimated_reset_registers": 62,
+  "estimated_util": 0.4501254455995632,
+  "reset_admission_cycles": 3,
+  "data_cycles_added": 0,
+  "reset_pin_fanout": 1,
+  "reset_bank_fanout_max": 8,
+  "reset_leaf_consumers": 53,
+  "reset_bits_per_cycle": 1,
+  "macs_per_cycle_change": 0,
+  "memory_bytes_per_cycle_change": 0,
+  "boundary_bits_per_cycle_change": 0,
+  "pin_bits_per_um": 4.998223643307576,
+  "physical_qualified": false,
+  "qualification": "full widened lane then unchanged-height quarter, real reset arcs and channel lint",
+  "quarter_um": [
+    797.448,
+    5529.576
+  ],
+  "quarter_channel_um": 301.10400000000004,
+  "pin_min_distance_tracks": 3,
+  "channel_capacity_tracks": 4704.750000000001,
+  "channel_required_tracks": 2769,
+  "routing_assumptions": "two vertical layers at64nm pitch,50% usable; real cuts still must pass lint"
+}
