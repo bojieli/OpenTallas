@@ -104,6 +104,21 @@ proc ot_fcl_apply {tag} {
   if {![dict size $f]} { puts "OT_FCL $tag: no measurable tap sinks -> calibrated tap latencies kept"; return }
   set ref -1e9; set lo 1e9
   dict for {n v} $f { if {$v > $ref} { set ref $v }; if {$v < $lo} { set lo $v } }
+  # design standard (balanced face taps): source latency = INTERIOR insertion - tap insertion.  The interior (core)
+  # tree's posedge registers set the floor of REF: with REF = max tap mean alone the core -> face negedge lockup
+  # hand-off lost the core-vs-tap skew (vm8bfp_new lvt TT -96.3: lockup on ck at 418 ps vs pin register on cks18 at
+  # 142 ps).  OT_FCL_TAPS_ONLY=1 restores the old rule.
+  set fcore ""
+  if {![info exists ::env(OT_FCL_TAPS_ONLY)]} {
+    set cb [[ord::get_db_block] findBTerm ck]
+    if {$cb eq "NULL"} { set cb [[ord::get_db_block] findBTerm {ck[0]}] }
+    if {$cb ne "NULL" && [$cb getNet] ne "NULL"} {
+      lassign [ot_fcl_sinks [$cb getNet]] cpins ctree
+      set cs 0.0; set ck_n 0
+      foreach p $cpins { set v [ot_fcl_arr $p $sc]; if {$v eq ""} continue; set cs [expr {$cs + $v}]; incr ck_n }
+      if {$ck_n} { set fcore [expr {$cs / $ck_n}]; if {$fcore > $ref} { set ref $fcore } }
+    }
+  }
   set od [expr {[info exists ::env(RESULTS_DIR)] && [file isdirectory $::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : ([file isdirectory /work] && [file writable /work] ? "/work" : "")}]
   set fh ""
   if {$od ne ""} { catch {set fh [open $od/fclat_${tag}_[expr {$sc eq "" ? "single" : $sc}].txt w]} }
@@ -112,6 +127,6 @@ proc ot_fcl_apply {tag} {
     if {$fh ne ""} { lassign [dict get $st $n] k tlo thi; puts $fh [format "%s %.1f %.1f %d %.1f %.1f" $n $v [expr {$ref - $v}] $k $tlo $thi] }
   }
   if {$fh ne ""} { close $fh }
-  puts [format "OT_FCL %s scene %s: %d taps %d sinks, tap mean %.1f .. %.1f ps -> REF %.1f (source latency 0 .. %.1f); worst in-tap spread %.1f ps" \
-    $tag [expr {$sc eq "" ? "single" : $sc}] [dict size $f] $nsink $lo $ref $ref [expr {$ref - $lo}] $spread]
+  puts [format "OT_FCL %s scene %s: %d taps %d sinks, tap mean %.1f .. %.1f ps, core mean %s -> REF %.1f (source latency 0 .. %.1f); worst in-tap spread %.1f ps" \
+    $tag [expr {$sc eq "" ? "single" : $sc}] [dict size $f] $nsink $lo [lindex [lsort -real [dict values $f]] end] [expr {$fcore eq "" ? "n/a" : [format %.1f $fcore]}] $ref [expr {$ref - $lo}] $spread]
 }
