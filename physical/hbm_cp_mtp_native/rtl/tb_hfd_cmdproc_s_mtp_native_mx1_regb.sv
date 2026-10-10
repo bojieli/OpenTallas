@@ -11,6 +11,10 @@
 //      every cycle, so an empty completion FIFO's head equals the identity lines one cycle late, like the flops.)
 //   C. owned completion ACK (t_mtp[83] one pulse), drained after done, wrong-job completion after a drained reset
 //      raises identity fault + sticky abort.
+//   R. HGI ARGMAX dispatch relay (x_hgi_argmax_rec -> t_hgi_argmax, f_hgi_argmax -> x_hgi_argmax_ret): a model
+//      sequencer (valid held until ready) sends 4 records back to back to a model unit (ready = idle, busy 7 cycles,
+//      then a done pulse): the unit must take all 4 in order exactly once and the sequencer see 4 done pulses
+//      (MUT 3, the relay popping without the unit's ready, loses records).
 module tb_hfd_cmdproc_s_mtp_native_mx1_regb #(parameter integer MUT=0, parameter integer N=12);
  reg clk=0;always #5 clk=~clk;
  reg rst=1;reg[516:0] mtp=0;wire[196:0] to_mtp;
@@ -26,7 +30,20 @@ module tb_hfd_cmdproc_s_mtp_native_mx1_regb #(parameter integer MUT=0, parameter
  .t_emit(emitted),.t_provider(addresses),.f_emit_host(emit_accept),.t_emit_host(emit_host),
  .t_abort(abort),.t_drained(drained),
  .f_am(am),
- .f_backend(backend),.t_backend(request));
+ .f_backend(backend),.t_backend(request),
+ .x_hgi_argmax_rec(xrec),.x_hgi_argmax_ret(xret),.t_hgi_argmax(trec),.f_hgi_argmax(fret));
+ // ---- R: model sequencer / model ARGMAX unit around the dispatch relay
+ reg [682:0] xrec=0;wire [2:0] xret;wire [682:0] trec;
+ reg u_rdy=1;reg u_done=0;integer u_busy=0,u_got=0,s_done=0;reg [2:0] fret_r=3'b001;wire [2:0] fret={1'b0,u_done,u_rdy};
+ always @(posedge clk) if(rst) begin u_rdy<=1;u_done<=0;u_busy=0; end else begin
+  u_done<=0;
+  if(trec[0]&&u_rdy)begin
+   if(trec[682:1]!=={681'(1000+u_got),1'b1})fail("argmax record order/content through the relay");
+   u_got=u_got+1;u_rdy<=0;u_busy=7;
+  end else if(u_busy>0)begin u_busy=u_busy-1;if(u_busy==0)begin u_done<=1;u_rdy<=1;end end
+  if(xret[1])s_done=s_done+1;
+  if(xret[2])fail("argmax relay fault");
+ end
  task fail(input[511:0] msg);begin $display("FAIL %0s",msg);$fatal(1);end endtask
  integer i,n,guard,owned_am=0,acks=0,recs=0,emit_beats=0;reg seen_done=0;
  // monitors sample at the posedge (pre-edge values: pins are flops / AND-OR of flops; bench drives at negedges)
@@ -60,6 +77,15 @@ module tb_hfd_cmdproc_s_mtp_native_mx1_regb #(parameter integer MUT=0, parameter
  initial begin
   repeat(3)@(negedge clk);if(status[0])fail("ready during reset");
   @(negedge clk);rst=0;
+  // ---- R: 4 dispatch records through the relay (valid held until the registered ready is seen at a posedge)
+  for(i=0;i<4;i=i+1)begin
+   xrec={681'(1000+i),1'b1,1'b1};
+   guard=0;while(!xret[0])begin @(negedge clk);guard=guard+1;if(guard>200)fail("dispatch ready timeout");end
+   @(negedge clk);
+  end
+  xrec=0;
+  guard=0;while(s_done<4)begin @(negedge clk);guard=guard+1;if(guard>400)fail("dispatch done pulses missing");end
+  if(u_got!=4)fail("unit records != 4");
   // ---- job 1 admission
   backend[71]=1;backend[0]=1;
   host[0]=1;host[1+:32]=32'h12345678;host[33+:4]=4'hf;
@@ -113,7 +139,7 @@ module tb_hfd_cmdproc_s_mtp_native_mx1_regb #(parameter integer MUT=0, parameter
   wait_cycles(4);
   if(!status[3]||!status[4])fail("wrong job completion accepted");
   if(!abort||status[0])fail("cross abort not sticky");
-  $display("PASS MX1 REGB pins owned AM 6/6, %0d tokens + done ordered behind both pin FIFOs, owned ACK, drained reset, wrong-job rejection",N);
+  $display("PASS MX1 REGB pins argmax dispatch relay 4/4, owned AM 6/6, %0d tokens + done ordered behind both pin FIFOs, owned ACK, drained reset, wrong-job rejection",N);
   $finish;
  end
 endmodule

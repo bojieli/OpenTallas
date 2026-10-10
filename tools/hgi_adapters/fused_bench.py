@@ -51,7 +51,7 @@ def kind_of(d):
     if op >= 4:
         A, O = d['eff'][0], d['eff'][4]
         return 2, 1 | h << 1 | A << 129 | O << 385 | (d['n'][0] & 0x1FFFFF) << 641 | (d['n'][4] & 0x1FFFFF) << 662
-    if op in (0, 2):
+    if op in (0, 2) and False:
         A, B, Cd, O = d['eff'][0], d['eff'][1], d['eff'][2], d['eff'][4]
         w = (C.fld(A, 'base') & 0x3FFFF) | C.fld(B, 'base') << 18 | (C.fld(Cd, 'base') & 0x3FFFF) << 58 \
             | (C.fld(O, 'base') & 0x3FFFF) << 76 | (d['n'][0] & 0x1FFFFF) << 94 | C.fld(h, 'imm_a', C.UOP) << 115 \
@@ -111,19 +111,47 @@ def main():
         for i in range(0, dd, 2):
             hb[(bb >> 2) + i // 2] = int(gb[i]) | (int(gb[i + 1]) << 16 if i + 1 < dd else 0)
         add([d], {ab + i: int(w) for i, w in enumerate(f32w(x))}, {ob + i: int(w) for i, w in enumerate(y)}, hb)
-    # FIELDS: HC_PRE_NORM / HC_POST jobs, QDQ forwarding
+    # DATA: DS HC_PRE_NORM / HC_POST on the stream unit vs hdc_golden_v41 (chunk8): Model.hc_pre + rmsnorm_bf16,
+    # Model.hc_post (seqsum over the 4 copies, BF16 out)
+    import hdc_golden_v41 as GV
+    GV.set_arith("chunk8")
     def md(**kw):
         return C.SV.mdesc(**kw)
 
     def rec(op, eff, n, imm=0, unit=4, param=0):
         opnd = sum(1 << j for j, e in enumerate(eff) if e)
         return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm, param=param), eff=eff, n=n)
-    hcp = rec(0, [md(space=1, base=0, n=16384), md(space=0, fmt=1, base=0x4000, n=4096), md(space=1, base=20000, n=4),
-                  0, md(space=1, base=30000, fmt=1, n=4096), 0, 0], [16384, 4096, 4, 0, 4096, 0, 0], imm=0x3727C5AC)
-    hpo = rec(2, [md(space=1, base=100, n=4096), md(space=1, base=4196, n=16384), md(space=1, base=20004, n=20),
-                  0, md(space=1, base=40000, n=16384), 0, 0], [4096, 16384, 20, 0, 16384, 0, 0])
+    for D in (64, 512, 4096):
+        h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
+        pre = (rng.random(4) * 1.5).astype(np.float32)
+        w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
+        eps = np.float32(1e-6)
+        x = GV.to_bf16(GV.seqsum([GV.mul(pre[j], h[j]) for j in range(4)]))
+        y = GV.rmsnorm_bf16(x, w, eps)
+        ab, cb, ob, bb = 0, 20000, 30000, 0x4_0000_0000
+        vin = {ab + i: int(v) for i, v in enumerate(f32w(h.reshape(-1)))}
+        vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
+        gb = (f32w(w) >> 16).astype(np.uint32)
+        hb = {(bb >> 2) + i // 2: int(gb[i]) | (int(gb[i + 1]) << 16 if i + 1 < D else 0) for i in range(0, D, 2)}
+        dd = rec(0, [md(space=1, base=ab, n=4 * D), md(space=0, fmt=1, base=bb, n=D), md(space=1, base=cb, n=4), 0,
+                     md(space=1, fmt=1, base=ob, n=D), 0, 0], [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32)))
+        add([dd], vin, {ob + i: int(v) for i, v in enumerate(f32w(y))}, hb)
+        yv = (rng.standard_normal(D) * 2).astype(np.float32)
+        res = (rng.standard_normal((4, D)) * 2).astype(np.float32)
+        post = (rng.random(4) * 2).astype(np.float32)
+        comb = (rng.random((4, 4)) * 0.5).astype(np.float32)
+        mix = [GV.seqsum([GV.mul(comb[j, k], res[j]) for j in range(4)]) for k in range(4)]
+        hout = GV.to_bf16(np.stack([GV.add(GV.mul(post[k], yv), mix[k]) for k in range(4)]))
+        yb, rb, mb, ob2 = 0, 8192, 40000, 50000
+        vin = {yb + i: int(v) for i, v in enumerate(f32w(yv))}
+        vin.update({rb + i: int(v) for i, v in enumerate(f32w(res.reshape(-1)))})
+        mixv = np.concatenate([post, comb.reshape(-1)])
+        vin.update({mb + i: int(v) for i, v in enumerate(f32w(mixv))})
+        dd = rec(2, [md(space=1, base=yb, n=D), md(space=1, base=rb, n=4 * D), md(space=1, base=mb, n=20), 0,
+                     md(space=1, fmt=1, base=ob2, n=4 * D), 0, 0], [D, 4 * D, 20, 0, 4 * D, 0, 0])
+        add([dd], vin, {ob2 + i: int(v) for i, v in enumerate(f32w(hout.reshape(-1)))})
     qd = [d for v, tr2, c2, vm2 in C.conformance(lambda v: v['row'] == 'CF-QDQ') for d in tr2 if C.unit_of(d) == 4]
-    for d in [hcp, hpo] + qd:
+    for d in qd:
         add([d])
     A = md(space=1, base=0, n=128, m=1)
     Bg = md(space=0, fmt=1, base=0x1000, n=128)

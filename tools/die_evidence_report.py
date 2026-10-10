@@ -70,6 +70,11 @@ DIES = {
              'generator builds it only as a NETWORK PROBE (retiled SM network unqualified). Case built 07:45 PT, BEFORE '
              'the hi attention half widening (slot 1,503.36 um), the router kneg_orph2 swap, the svc PS leaf moves and '
              'the hfd_mtp closure'),
+    'hbm_r25gp': dict(
+        name='HBM generic die R25GP (802.33 mm2, 1,245 inst)', host='ot-epyc4',
+        note=f'chain {SCR}/die-evidence-2/hbm_r25gp/STATUS.log (hbm_r25g_chain.sh V=r25gp, src main 26ef27f19): R25G on '
+             'the closing PS attention halves (slot 1,503.36 um) + svc split_ps; lint, own clock plan, IR, case, full-die GRT '
+             '(congestion loop bounded at 10 iterations), raw STA -> rule-H1 pads -> padded STA, 4 regions'),
     's81_l1full': dict(
         name='DeepSeek-V4.1 ROM S81 layer1 die (full recipe: --host, --wfc-hard, --path-pick)', host='ot-epyc3',
         note=f'chain {SCR}/die-evidence-2/s81_l1full (s81-gen handoff 11:24; src s81-gen/src_7bb71184d, which carries '
@@ -720,6 +725,11 @@ def probe_hbm_r25g():
     return probe_hbm_run(B, f'{B}/case', 'r25g')
 
 
+def probe_hbm_r25gp():
+    B = f'{SCR}/die-evidence-2/hbm_r25gp'
+    return probe_hbm_run(B, f'{B}/case', 'r25gp')
+
+
 def probe_s81_l1full():
     return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1full')
 
@@ -730,7 +740,7 @@ def probe_s81_l1e():
 
 PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head,
               qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g,
-              qwen_r22k4=probe_qwen_r22k4, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e)
+              qwen_r22k4=probe_qwen_r22k4, hbm_r25gp=probe_hbm_r25gp, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e)
 
 
 # ----------------------------------------------------------------------------------------------- local driver

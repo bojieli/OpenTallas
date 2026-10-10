@@ -16,7 +16,9 @@
 // tag = {row slot, q}.  Write-done: every wd tag of a PC is checked against an outstanding sector of that PC; when all
 // 4 sectors of a row are done the row leaves the queue and rw_v pulses with its {layer, vg, t} (the write is durable
 // in HBM from here; the read fence of KV4 does not need it -- the merge serves the row until then).
-// Every input is captured at the pin, every output is a flop.
+// Every input is captured at the pin, every output is a flop.  The head row is a registered stage (qkd_kvwq_a
+// route: reg2reg -988 ps from the queue pointer through the head mux, the PC map and the 32-way room select): the
+// decisions start at flops (head, its one-hot PC lane, the per-quarter room bits), +1 cycle a row, posted.
 // Faults (sticky): a row pushed into a full queue (credit violation), a write-done tag with no outstanding sector.
 // MUT (bench mutants, must FAIL): 1 = sectors 1 and 2 swap PCs; 2 = sector data taken from the wrong quarter (q ^ 1);
 //   3 = quarter 0 never pushed (the row never becomes durable: the bench times out).
@@ -51,12 +53,9 @@ module ot_qkvd_kv_wq #(
     output reg                   fault
 );
     localparam integer QA = (QD > 1) ? $clog2(QD) : 1;
-    function automatic [4:0] pc_of(input [1:0] q, input [13:0] t);
-        reg [1:0] qq;
-        begin
-            qq = (MUT == 1 && q == 2'd1) ? 2'd2 : (MUT == 1 && q == 2'd2) ? 2'd1 : q;
-            pc_of = {qq, t[2:0]};
-        end
+    // sector q of a row goes to the PCs of quarter group swq(q) (MUT 1 swaps groups 1 and 2), lane t[2:0] in the group
+    function automatic [1:0] swq(input [1:0] q);
+        swq = (MUT == 1 && q == 2'd1) ? 2'd2 : (MUT == 1 && q == 2'd2) ? 2'd1 : q;
     endfunction
     function automatic [23:0] sec_of(input [5:0] layer, input [1:0] vg, input [13:0] t);
         sec_of = {7'd0, layer, vg[0], vg[1], t[13:9], t[6:3]};      // {layer, g, v, t-hi, t-lo}
@@ -73,74 +72,92 @@ module ot_qkvd_kv_wq #(
         if (!rst_n) begin iv <= 1'b0; room_r <= 0; wdv_r <= 0; end
         else begin iv <= kvw_v; room_r <= w_room; wdv_r <= wd_v; end
     always @(posedge clk) begin ivg <= kvw_vg; it <= kvw_t; il <= kvw_layer; id <= kvw_d; wdt_r <= wd_tag; end
-    // ---- row queue ----
+    // ---- row queue (rows waiting behind the head) ----
     reg  [HD*8-1:0]  qd  [0:QD-1];
     reg  [21:0]      qid [0:QD-1];
     reg  [QA:0]      qw, qr;
-    reg  [3:0]       sent [0:QD-1];          // sectors pushed, per row slot
-    reg  [3:0]       done [0:QD-1];          // sectors written, per row slot
     wire             q_empty = (qw == qr);
     wire             q_full = (qw[QA-1:0] == qr[QA-1:0]) && (qw[QA] != qr[QA]);
-    wire [QA-1:0]    hs = qr[QA-1:0];
-    wire [21:0]      hid = qid[hs];
-    wire [13:0]      ht = hid[13:0];
-    wire [1:0]       hvg = hid[15:14];
-    wire [5:0]       hl = hid[21:16];
-    // the head row's sector -> PC map, as signals (a function call in an NBA LHS index trips Verilator: "Multiple Write
-    // refs on LHS of NBA")
-    wire [4:0]       pcq [0:3];
-    genvar gq;
-    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_pcq
-        assign pcq[gq] = pc_of(gq[1:0], ht);
-    end endgenerate
-    wire [23:0]      hsec = sec_of(hl, hvg, ht);
-    integer q_, p_, s_;
-    reg [NPC-1:0]    push;
-    reg [3:0]        push_q;
+    // ---- the head row, registered (timing successor: every decision below starts at a flop) ----
+    reg              hv;
+    reg  [HD*8-1:0]  hrow;
+    reg  [21:0]      hid;
+    reg  [QA-1:0]    hslot;            // tag slot of the head (its queue slot, as before)
+    reg  [7:0]       hsel;             // one-hot t[2:0]: the PC lane of every quarter group
+    reg  [23:0]      hsec;
+    reg  [3:0]       sent, done;
+    reg  [3:0]       room_q;           // registered: room of the PC of each quarter
+    wire             retire = hv && (done == 4'hF);
+    wire             hload = (!hv || retire) && !q_empty;
+    integer q_, p_;
+    reg  [3:0]       push_q;
     always @* begin
-        push = 0; push_q = 0;
-        if (!q_empty)
+        for (q_ = 0; q_ < 4; q_ = q_ + 1)
+            push_q[q_] = hv && !sent[q_] && room_q[q_] && !(MUT == 3 && q_ == 0);
+    end
+    // a PC pushes when its quarter group's sector is pushed and it is the head's lane
+    reg  [NPC-1:0]   push;
+    reg  [1:0]       gq;
+    always @* begin
+        push = 0;
+        for (p_ = 0; p_ < NPC; p_ = p_ + 1) begin
+            gq = p_ >> 3;
             for (q_ = 0; q_ < 4; q_ = q_ + 1)
-                if (!sent[hs][q_] && room_r[pcq[q_]] && !(MUT == 3 && q_ == 0)) begin
-                    push[pcq[q_]] = 1'b1; push_q[q_] = 1'b1;
-                end
+                if (swq(q_[1:0]) == gq && push_q[q_] && hsel[p_ & 7]) push[p_] = 1'b1;
+        end
+    end
+    // write-done: every PC of quarter group g reports for the sector swq^-1(g) of the head (one row in flight)
+    reg  [3:0]       wd_q;
+    reg              wd_bad;
+    always @* begin
+        wd_q = 0; wd_bad = 1'b0;
+        for (p_ = 0; p_ < NPC; p_ = p_ + 1)
+            if (wdv_r[p_])
+                for (q_ = 0; q_ < 4; q_ = q_ + 1)
+                    if (swq(q_[1:0]) == (p_ >> 3)) begin
+                        wd_q[q_] = 1'b1;
+                        if (wdt_r[TAGW*p_ +: 2] != q_[1:0] || wdt_r[TAGW*p_ + 2 +: QA] != hslot) wd_bad = 1'b1;
+                    end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            qw <= 0; qr <= 0; kvw_cr <= 1'b0; w_v <= 0; rw_v <= 1'b0; fault <= 1'b0;
-            for (s_ = 0; s_ < QD; s_ = s_ + 1) begin sent[s_] <= 4'd0; done[s_] <= 4'd0; end
+            qw <= 0; qr <= 0; kvw_cr <= 1'b0; w_v <= 0; rw_v <= 1'b0; fault <= 1'b0; hv <= 1'b0; sent <= 4'd0;
+            done <= 4'd0; room_q <= 4'd0;
         end else begin
             kvw_cr <= 1'b0; rw_v <= 1'b0;
-            // accept a row
             if (iv) begin
                 if (q_full) fault <= 1'b1;
                 qw <= qw + 1'b1;
-                sent[qw[QA-1:0]] <= 4'd0; done[qw[QA-1:0]] <= 4'd0;
             end
-            // push the head row's sectors
             w_v <= push;
-            if (!q_empty) sent[hs] <= sent[hs] | push_q;
-            // write-done: tag = {slot, q}
-            for (p_ = 0; p_ < NPC; p_ = p_ + 1)
-                if (wdv_r[p_]) begin
-                    if (done[wdt_r[TAGW*p_ + 2 +: QA]][wdt_r[TAGW*p_ +: 2]] ||
-                        !sent[wdt_r[TAGW*p_ + 2 +: QA]][wdt_r[TAGW*p_ +: 2]]) fault <= 1'b1;
-                    done[wdt_r[TAGW*p_ + 2 +: QA]][wdt_r[TAGW*p_ +: 2]] <= 1'b1;
-                end
-            // retire the head row when its 4 sectors are durable (the credit returns here)
-            if (!q_empty && done[hs] == 4'hF) begin
-                qr <= qr + 1'b1; kvw_cr <= 1'b1; rw_v <= 1'b1; rw_id <= hid;
-                sent[hs] <= 4'd0; done[hs] <= 4'd0;
+            sent <= sent | push_q;
+            if (wd_bad || (|(wd_q & done)) || (|(wd_q & ~sent))) fault <= 1'b1;
+            done <= done | wd_q;
+            for (q_ = 0; q_ < 4; q_ = q_ + 1) room_q[q_] <= room_r[{swq(q_[1:0]), hid[2:0]}] && !push_q[q_];
+            if (retire) begin
+                hv <= 1'b0; kvw_cr <= 1'b1; rw_v <= 1'b1; rw_id <= hid;
+            end
+            if (hload) begin
+                hv <= 1'b1; qr <= qr + 1'b1; sent <= 4'd0; done <= 4'd0; room_q <= 4'd0;
             end
         end
     end
     always @(posedge clk) begin
         if (iv) begin qd[qw[QA-1:0]] <= id; qid[qw[QA-1:0]] <= {il, ivg, it}; end
-        for (q_ = 0; q_ < 4; q_ = q_ + 1)
-            if (push_q[q_]) begin
-                w_sec[24*pcq[q_] +: 24] <= hsec;
-                w_data[256*pcq[q_] +: 256] <= qd[hs][256*((MUT == 2) ? (q_ ^ 1) : q_) +: 256];
-                w_tag[TAGW*pcq[q_] +: TAGW] <= TAGW'({hs, q_[1:0]});
+        if (hload) begin
+            hrow <= qd[qr[QA-1:0]]; hid <= qid[qr[QA-1:0]]; hslot <= qr[QA-1:0];
+            hsel <= 8'd1 << qid[qr[QA-1:0]][2:0];
+            hsec <= sec_of(qid[qr[QA-1:0]][21:16], qid[qr[QA-1:0]][15:14], qid[qr[QA-1:0]][13:0]);
+        end
+        for (p_ = 0; p_ < NPC; p_ = p_ + 1)
+            if (push[p_]) begin
+                w_sec[24*p_ +: 24] <= hsec;
+                // the PC of quarter group g carries sector swq^-1(g) (MUT 2: the next quarter's bytes)
+                for (q_ = 0; q_ < 4; q_ = q_ + 1)
+                    if (swq(q_[1:0]) == (p_ >> 3)) begin
+                        w_data[256*p_ +: 256] <= hrow[256*((MUT == 2) ? (q_ ^ 1) : q_) +: 256];
+                        w_tag[TAGW*p_ +: TAGW] <= TAGW'({hslot, q_[1:0]});
+                    end
             end
     end
 endmodule

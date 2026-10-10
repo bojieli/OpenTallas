@@ -48,6 +48,10 @@ CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
 SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+SQ_TI_EAST = False                         # relay fix F1: the r21c-frame sequencer's ti / ts on its E face (the channel of the tree-top pins)
+TT_ISSUE_BOTTOM = False                    # relay fix F1: the tree top's issue / status pins at its BOTTOM (toward the VM / SU)
+SEQ_COMPACT_ANCHOR = 'top'                 # 'top': the compact frame at the top of the old slot (toward the SU / VM / tree top)
+SEQ_COMPACT = None                         # (w, h): the closed compact ICUT sequencer (icut_t-a8f3ba53c 259.2 x 333.36)
 SPINE_RELAY_CH_WM = 129.6                   # KV2: extra relay channel width between spine columns W and M
 
 
@@ -149,9 +153,35 @@ def surgery(v, m, compact_seq=False):
     g['r22k_dx_um'] = dx
     m['insts'] = insts
     m['buses'] = nb
+    if SEQ_COMPACT:
+        # the compact ICUT constants sequencer (struct-close / drive-0849, CLOSED TT +12.32 / FF +4.69): the frame shrinks
+        # in place, anchored at the old frame's bottom-left (its d2d words leave from its S face, toward d2d_rom)
+        sq = next(i for i in insts if i.name == 'sp_constants_sequencer')
+        rec['seq_compact'] = dict(old=[round(sq.w, 3), round(sq.h, 3)], new=list(SEQ_COMPACT))
+        top = sq.y + sq.h
+        sq.w, sq.h = SEQ_COMPACT[0] - v.SHAVE, SEQ_COMPACT[1] - v.SHAVE
+        if SEQ_COMPACT_ANCHOR == 'top':
+            sq.y = round(v.dn(top - sq.h - v.SHAVE, v.GY), 4)
+        elif str(SEQ_COMPACT_ANCHOR).startswith('chanE:'):
+            # in the M | E spine relay channel (inserted below, SPINE_RELAY_CH wide), right of the sequencer's column
+            yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
+            sq.y = round(v.dn(yc - sq.h / 2, v.GY), 4)
+            rec['seq_compact']['chanE'] = True          # x set after the M | E channel is inserted (below)
+        elif str(SEQ_COMPACT_ANCHOR).startswith('chan:'):
+            # in the W | M spine channel (between the W column's right edge and the sequencer's column), centred at y
+            yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
+            wcol = max(i.x + i.w for i in insts if i.kind == 'spine_block' and i.x + i.w <= sq.x + 1.0 and i.name != sq.name)
+            sq.x = round(v.up((wcol + sq.x - sq.w) / 2, v.GX), 4)
+            sq.y = round(v.dn(yc - sq.h / 2, v.GY), 4)
+        elif SEQ_COMPACT_ANCHOR == 'mid':
+            sq.y = round(v.dn(top - (rec['seq_compact']['old'][1] + sq.h) / 2, v.GY), 4)
+        rec['seq_compact']['anchor'] = SEQ_COMPACT_ANCHOR
     if SPINE_RELAY_CH:
         W = _spine_relay_channel(v, m, g, round(xc + g['cw'], 4), SPINE_RELAY_CH, W)
         rec['spine_relay_channel_um'] = SPINE_RELAY_CH
+        if rec.get('seq_compact', {}).get('chanE'):
+            sqc = next(i for i in insts if i.name == 'sp_constants_sequencer')
+            sqc.x = round(v.up(xc + g['cw'] + 4.32, v.GX), 4)   # inside the M | E channel, left of the shifted E column
     if SPINE_RELAY_CH_WM:
         W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
         rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
@@ -199,6 +229,64 @@ def _spine_relay_channel(v, m, g, xs, ch, W):
     return round(W + ch, 4)
 
 
+def _compact_seq_master(v, model, old, sqi):
+    """The compact ICUT sequencer frame: every die port of the r21c master on the E / W face nearest its peer (the routed
+    element's pin plan is left / right / top), balanced by face capacity (2-track pitch, two layers a face); the r22k
+    words dc / dh / dflt and the reset rsi as before (S face / area)."""
+    Master = type(old)
+    mm = Master(old.name, sqi.w, sqi.h, old.obs_top, 'compact ICUT constants sequencer (icut_t-a8f3ba53c 259.2 x 333.36)')
+    by = {i.name: i for i in model['insts']}
+    bits, peer = {}, {}
+    for bid, cl, b, eps in model['buses']:
+        for j, (inst, port) in enumerate(eps):
+            if inst == sqi.name:
+                p = port.lstrip('*')
+                bits[p] = max(bits.get(p, 0), b)
+                others = [by[x] for x, _ in eps if x != inst and x in by]
+                if others:
+                    peer[p] = others[0]
+    cx, cy = sqi.x + sqi.w / 2, sqi.y + sqi.h / 2
+    L = {'E': sqi.h, 'W': sqi.h, 'N': sqi.w, 'S': sqi.w}
+    cap = {f: (2 if f in 'EW' else 1) * (L[f] - 4.0) / 0.048 for f in 'NSEW'}   # E / W: M4 + M6, N / S: M5
+    cap['S'] -= 2 * 530 + 9 + 40                                  # dc / dh / dflt (added below) on the S face
+    load = {f: 0 for f in 'NSEW'}
+    faces = {}
+    for p in sorted(bits, key=lambda q: -bits[q]):
+        if p in ('dc', 'dh', 'dflt', 'rsi'):
+            continue
+        if bits[p] == 1 and p in old.ports and old.ports[p][0] == 'area':
+            faces[p] = 'area'
+            continue
+        pe = peer.get(p)
+        if pe is None:
+            order = ['E', 'W', 'N', 'S']
+        else:
+            dx, dy = pe.x + pe.w / 2 - cx, pe.y + pe.h / 2 - cy
+            fx, fy = ('E' if dx >= 0 else 'W'), ('N' if dy >= 0 else 'S')
+            order = [fy, fx] if abs(dy) >= abs(dx) else [fx, fy]
+            order += [f for f in 'NSEW' if f not in order]
+        f = next((f for f in order if load[f] + bits[p] <= cap[f]), order[0])
+        faces[p] = f
+        load[f] += bits[p]
+    for f in 'NSEW':
+        fl = [p for p in faces if faces[p] == f]
+        tot = sum(bits[p] for p in fl) or 1
+        span_all = L[f] - 4.0 if f != 'S' else (L[f] - 4.0) * 0.5
+        pos = 2.0 if f != 'S' else 2.0 + (L[f] - 4.0) * 0.5
+        lay = ('M4', 'M6') if f in 'EW' else ('M5', 'M5')
+        for n, p in enumerate(fl):
+            span = span_all * bits[p] / tot
+            mm.face(p, bits[p], f, lay[n % 2], pos + span / 2, 1)
+            pos += span
+    j = 0
+    for p, fc in faces.items():
+        if fc == 'area':
+            mm.area(p, 1, mm.w / 2 + ((j % 8) - 4) * 1.6, mm.h / 2 + (j // 8 - 4) * 1.6, 1)
+            j += 1
+    mm.load = load
+    return mm
+
+
 def _wrap_masters(v, m):
     inner = v.masters
 
@@ -206,11 +294,30 @@ def _wrap_masters(v, m):
         tiles = [i for i in model['insts'] if i.master == 'qfd_tile_nk']
         for i in tiles:
             i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= 32 else 'qfd_tile'
+        sqi = next((i for i in model['insts'] if i.name == 'sp_constants_sequencer'), None)
+        sq_wh = (sqi.w, sqi.h) if sqi is not None else None
+        if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
+            ow, oh = m['r22k']['seq_compact']['old']       # the base generator lays the r21c faces out on the old frame
+            sqi.w, sqi.h = ow, oh
         try:
             M = inner(model, k, port_bits)
         finally:
             for i in tiles:
                 i.master = 'qfd_tile_nk'
+            if sq_wh is not None:
+                sqi.w, sqi.h = sq_wh
+        if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
+            M['qfd_sp_constants_sequencer'] = _compact_seq_master(v, model, M['qfd_sp_constants_sequencer'], sqi)
+        if SQ_TI_EAST and not (SEQ_COMPACT and m.get('r22k', {}).get('seq_compact')):
+            sqm = M['qfd_sp_constants_sequencer']
+            for pn in ('ti', 'ts'):
+                if pn in sqm.ports:
+                    sqm.ports[pn] = sqm.ports[pn][:2] + ('E',) + sqm.ports[pn][3:]
+        if TT_ISSUE_BOTTOM:
+            tt = M['qfd_sp_tree_top']
+            for pn, c in (('si', 150.0), ('so', 60.0)):
+                if pn in tt.ports:
+                    tt.ports[pn] = tt.ports[pn][:4] + (c,) + tt.ports[pn][5:]
         t = M.pop('qfd_tile')
         M.pop('qfd_tile_e', None)
         t = copy.deepcopy(t)
@@ -265,10 +372,11 @@ def _wrap_masters(v, m):
         cbm.area('rs', 1, 21.0, 18.0, 1)
         M['qfd_ckbump'] = cbm
         sq = M['qfd_sp_constants_sequencer']
-        sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * 0.3, 1)
-        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * 0.7, 1)
+        cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face
+        sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * (0.1 if cmp_ else 0.3), 1)
+        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * (0.35 if cmp_ else 0.7), 1)
         sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
-        sq.face('dflt', 9, 'S', 'M5', sq.w * 0.5, 1)
+        sq.face('dflt', 9, 'S', 'M5', sq.w * (0.22 if cmp_ else 0.5), 1)
         # collective: its clock pin (was the PLL output pll_stream) stays at the same place, now an input
         return M
     v.masters = masters

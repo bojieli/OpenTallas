@@ -1,0 +1,12 @@
+    input wire [0:0] ck,
+    input wire [591:0] f_vm,
+    input wire [23:0] flt,
+    input wire [4423:0] li_d,
+    output wire [7:0] li_r,
+    input wire [7:0] li_v,
+    output wire [4423:0] lo_d,
+    input wire [7:0] lo_r,
+    output wire [7:0] lo_v,
+    input wire [0:0] rs,
+    output wire [2099:0] t_vm,
+    input wire [2:0] ts
