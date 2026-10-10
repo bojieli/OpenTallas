@@ -1,0 +1,155 @@
+{
+  "schema": "opentallas.qwen.option4-integration-sizing.v1",
+  "scope": "candidate sizing from rounded committed rectangles and interface audit; not a routed closure or complete electrical die",
+  "sources": {
+    "results/arch/qwen_kv_die_20261009/rom_r22k_insts.json": "965eba98a0ce63233874bb621539befbf188c4779457de2979297d47d2899c5d",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su.sv": "f0e9b33b11dd880a5ca3452c18335856a22b9de5321d1c291e9c2175eb6f408b",
+    "physical/qwen_die_masters/cfg/qfd_tt_up4_b.env": "9ec769ab07e78d1f4f688a848ae806a7ed748b91097e81233073c04650d0cd74",
+    "physical/qwen_die_masters/cfg/qfd_tt_ctlm_a.env": "c24f2c208af25870d593d9f9e948b54460799d5a91a0b18a6086b12968356c4a",
+    "physical/qwen_die_masters/cfg/qfd_su_cbuf_g_a.env": "6a4c72733395e06589c9b776873643a2c4994bd6b5ec9815c1ca059b62200a05"
+  },
+  "die_um": [
+    23484.384,
+    32801.76
+  ],
+  "old_tree_slot": {
+    "name": "sp_tree_top",
+    "master": "qfd_sp_tree_top",
+    "kind": "spine_block",
+    "x": 11418.62,
+    "y": 18344.88,
+    "w": 777.58,
+    "h": 3732.46
+  },
+  "removed": [
+    "sp_tree_top",
+    "sp_constants_sequencer"
+  ],
+  "candidates": [
+    {
+      "name": "tt_ctlm",
+      "master": "qfd_tt_ctlm_a",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 18344.88,
+      "w": 777.6,
+      "h": 1814.4
+    },
+    {
+      "name": "tt_up4_0",
+      "master": "qfd_tt_up4_b",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 20161.440000000002,
+      "w": 345.6,
+      "h": 388.8
+    },
+    {
+      "name": "tt_up4_1",
+      "master": "qfd_tt_up4_b",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 20552.4,
+      "w": 345.6,
+      "h": 388.8
+    },
+    {
+      "name": "tt_up4_2",
+      "master": "qfd_tt_up4_b",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 20943.36,
+      "w": 345.6,
+      "h": 388.8
+    },
+    {
+      "name": "tt_up4_3",
+      "master": "qfd_tt_up4_b",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 21334.320000000003,
+      "w": 345.6,
+      "h": 388.8
+    },
+    {
+      "name": "seq_su",
+      "master": "qfd_seq_su_boundary",
+      "kind": "candidate",
+      "x": 12455.42,
+      "y": 11594.88,
+      "w": 518.4,
+      "h": 518.4
+    },
+    {
+      "name": "sp_crom",
+      "master": "qfd_crom_g_a",
+      "kind": "candidate",
+      "x": 11418.62,
+      "y": 6287.76,
+      "w": 777.6,
+      "h": 1000.0
+    }
+  ],
+  "geometry_overlaps": [],
+  "geometry_ok": true,
+  "model": {
+    "clock_hz": 1200000000,
+    "macs_per_cycle_delta": 0,
+    "replicas": {
+      "ctlm": 1,
+      "up4": 4,
+      "seq_su": 1,
+      "cbuf_g": 8
+    },
+    "added_seq_output_bits": 106,
+    "required_endpoint_accepted_count_bits": 24,
+    "output_pipeline_cycles": 1,
+    "output_pipeline_flops": 106,
+    "snapshot_bits_per_cycle": {
+      "su_to_me": 57,
+      "me_to_su": 92
+    },
+    "snapshot_pin_distance_lower_bound_um": 7138.8,
+    "snapshot_relay_cycles_lower_bound": 16,
+    "assumption": "Lower bound is not a priced token gain; actual relay chains and exact component latency are required."
+  },
+  "old_to_new_ports": {
+    "si": "removed; ME controller inside ctlm",
+    "so": "removed; ME snapshot92bits to seq_su",
+    "md": "removed; END carried by ME snapshot",
+    "c": "ctlm t_sel/t_tv, port issue and per-band scale slices",
+    "f": "ctlm per-band p_am/p_fault/tr_fault slices",
+    "lc": "ctlm selects",
+    "bw": "four tiles: lane4u+j -> pw[32*(4*b+j)+:32]; same band valid to all four",
+    "lf": "all six band faults to every upper tile",
+    "ty": "tile u, word k,j -> lane4u+j; valid/use from tile0",
+    "mx": "ctlm -> VM",
+    "xd": "ctlm -> VM",
+    "xr": "VM -> ctlm",
+    "ld": "VM -> ctlm"
+  },
+  "missing_seq_outputs": {
+    "su_snapshot": [
+      "x_sacc",
+      "x_sidle",
+      "x_sprog",
+      "x_srows"
+    ],
+    "me_layer_start": [
+      "me_start",
+      "me_token",
+      "me_pos",
+      "me_prog_base"
+    ]
+  },
+  "blockers": [
+    "Released seq_su omits the SU snapshot and per-layer ME start outputs. Successor is required.",
+    "SU acceptance counter must be captured at actual endpoint acceptance and align with idle/progress; controller issue count is insufficient.",
+    "up4 closed view has LNK=0/CR=1/DLY=1; die band-word relays must be discovered before matching DLY=CLNK+2+LNK-CR.",
+    "ctlm module does not expose die LNK/CLNK parameters; successor must match composed band-control latency.",
+    "Eight 194.4-um cbuf groups span 1555.2 um, exceeding the 777.58-um SU width; VM abuts the SU N face. New constant-store geometry and SU pin plan required.",
+    "seq_su east slot is adjusted below the port slab to avoid a 7-um overlap in the handoff coordinates.",
+    "Master abstractions must bind real RTL slices and pass hub routing-layer and pin-access checks before adoption."
+  ],
+  "ready_to_build_die": false
+}
