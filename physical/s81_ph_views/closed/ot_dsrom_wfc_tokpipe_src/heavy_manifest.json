@@ -1,0 +1,20 @@
+{
+ "note": "mtp-lead 2026-10-09: files over the 100 MB GitHub limit moved out of the record (push was rejected); kept unchanged on the run host",
+ "files": {
+  "6_final.def": {
+   "sha256": "851b73753d444da66feea08526d98f552c31efc248403252ca36179ec16c877e",
+   "bytes": 218243451,
+   "kept_at": "ot-epyc2:/srv/opentallas-data/claude/closure-loop/mtp-wfc-src-hard-mxb-910e67c7b-tc-cx/record_heavy/6_final.def"
+  },
+  "6_final.odb": {
+   "sha256": "bbbc52a2d35450f0cf67c17c94528f4e93f2208b6a7cb8904762f1709c82540a",
+   "bytes": 675185317,
+   "kept_at": "ot-epyc2:/srv/opentallas-data/claude/closure-loop/mtp-wfc-src-hard-mxb-910e67c7b-tc-cx/record_heavy/6_final.odb"
+  },
+  "6_final.spef": {
+   "sha256": "47c542e9e3e1b67359ab20f4168bbad3b36a22252b4df5b9775fda2a56368cf8",
+   "bytes": 289070549,
+   "kept_at": "ot-epyc2:/srv/opentallas-data/claude/closure-loop/mtp-wfc-src-hard-mxb-910e67c7b-tc-cx/record_heavy/6_final.spef"
+  }
+ }
+}
