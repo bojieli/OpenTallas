@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 18,
-   "merged": 18,
+   "closed": 22,
+   "merged": 22,
    "record_only": 6
   },
   "jobs": {
@@ -1553,7 +1553,11 @@
    "collvmpub_fix2_a-f11374855-tc-hm10-f6-lvt": "HBM collective VM publication: element sources already on main (byte-identical: _rb wrapper, pfifo, secded, replay sram); record 30df13e36; closed via drive-0849 combo ECO",
    "hgi_adp_su_a-dfe4ac2c5-tc-cl": "ot_hgi_su_record.sv on main byte-identical; record 4ffc1428e",
    "hgi_adp_dma_b-dfe4ac2c5-tc-cl": "ot_hgi_dma_record.sv merged with dma_a (331227e92); record 36dc84138",
-   "hostnative_pipec_a-18f1b50d4-tc": "DS host ingest rev c: merge 18f1b50d4 (sys-takeover 25ce04993 / bacb74ab4 / 18f1b50d4 + struct-close HCUT 96b16b623; all opt-in, defaults unchanged); record 1ab54de47. Local: host_native_pipe_bench pos / pos2 PASS, apstale2 + fencevis2 (strengthened multi-fence visibility bench, bacb74ab4) NEG DETECTED; rtl_hbm_host_ingest_bench (hfd default) PASS with window/no-fence mutants detected"
+   "hostnative_pipec_a-18f1b50d4-tc": "DS host ingest rev c: merge 18f1b50d4 (sys-takeover 25ce04993 / bacb74ab4 / 18f1b50d4 + struct-close HCUT 96b16b623; all opt-in, defaults unchanged); record 1ab54de47. Local: host_native_pipe_bench pos / pos2 PASS, apstale2 + fencevis2 (strengthened multi-fence visibility bench, bacb74ab4) NEG DETECTED; rtl_hbm_host_ingest_bench (hfd default) PASS with window/no-fence mutants detected",
+   "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc": "ADOPTED (HBM die MTP master hfd_mtp, TT +17.39 / FF +8.65); source on main; record 867da6c5f (corner_sta/physical/args; no LEF/lib in the record -> view export owed)",
+   "hfd-mtp-x-stop-nreg-hm0-7bebe74b7-tc": "record only (TT +10.04 / FF +5.23; hm10 adopted); 7027a09fa",
+   "hcjoin-mc420-lk-d4211f538-tc-cl": "ADOPTED (DS HC seed join on the credit relay, TT +19.31 / FF +21.50); source on main; record 91fefaacb",
+   "hcjoin-mc500-lk-d4211f538-tc-cl": "record only (TT +17.36 / FF +23.52; mc420 adopted); e8de73fef"
   }
  }
 }
