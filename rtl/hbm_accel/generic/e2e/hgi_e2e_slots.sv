@@ -166,7 +166,7 @@ module hgi_e2e_coll_slot #(
     reg [PWT-1:0] eqf [0:NPT*QD-1]; longint eqt [0:NPT*QD-1]; integer eh [0:NPT-1]; integer et [0:NPT-1];
     longint cin [0:NPT*QD-1]; integer ch [0:NPT-1]; integer ct [0:NPT-1];
     longint ceg [0:NPT*QD-1]; integer gh [0:NPT-1]; integer gt [0:NPT-1]; integer eg_cred [0:NPT-1];
-    longint cyc = 0;
+    longint cyc = 0; integer cfseen = 0;
     initial for (integer p = 0; p < NPT; p = p + 1) begin eg_cred[p] = 256; eh[p] = 0; et[p] = 0; ch[p] = 0; ct[p] = 0; gh[p] = 0; gt[p] = 0; end
     task automatic sched(input integer p, input longint t, input [PWT-1:0] f);
         begin
@@ -212,6 +212,12 @@ module hgi_e2e_coll_slot #(
                 if (rxc[p]) begin ceg[p*QD + gt[p] % QD] = cyc + CRED; gt[p] = gt[p] + 1; end
                 crr[p] <= 1'b0;
                 if (ct[p] > ch[p] && cin[p*QD + ch[p] % QD] <= cyc) begin ch[p] = ch[p] + 1; crr[p] <= 1'b1; end
+            end
+            if (ret[2] && !cfseen) begin
+                cfseen = 1;
+                $display("E2E COLL FAULT k %0d: dec_err %0d pf_bad %0d pfg_bad %0d ep_fault %0d multi %0d gsz %0d pf %0d byp %0d mall %0d rank %0d g %0d st %0d",
+                         k, u_ce.u_rec.dc_ev, u_ce.u_rec.pf_bad, u_ce.u_rec.pfg_bad, u_ce.u_ep.fault, u_ce.multi_err,
+                         u_ce.r_gsz, u_ce.r_pf, u_ce.r_byp, u_ce.r_mall, u_ce.r_rank, u_ce.cfg_w46[7:0], u_ce.u_rec.st);
             end
             // ---- SU deliver model
             for (integer l = 0; l < DEL; l = l + 1) if (dv[l]) begin : del
