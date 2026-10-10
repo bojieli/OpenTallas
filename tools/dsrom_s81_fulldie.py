@@ -2333,6 +2333,7 @@ Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face 
 # station-area relay -> beyond the ROM row is 538 um > the 504 um SS reach.  The gap is a real reserved relay site in
 # the row (the R row has 126 um of slack to the node strip); default 0 = off (byte-identical).
 CFG_RGAP = 0.0
+LANE_EQUAL = False             # --lane-equal (ds-1010 lat-audit): equal column-relay counts on xa / xb / cc of a slot segment
 CFG_RGAP_AT = 4
 RSV_RECTS = []                 # --cfg-rgap: the reserved relay sites (die coordinates), for return-tree relays only
 RSV_ALLOW = False              # set while a return-tree (rt_*) relay / station is placed
@@ -3196,7 +3197,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -3646,6 +3647,8 @@ def buses_r8(m):
             bus(f'pqrq_{j}', 'rom_q', 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
+    if LANE_EQUAL:
+        _go_retap(m)
     # ---------------- clocks, resets, top ports
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
@@ -4347,6 +4350,53 @@ def _hop_fix(m, P):
                         tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
 
 
+def _go_retap(m):
+    """--lane-equal (ds-1010 lat-audit 2026-10-10): a pair whose sequencer -> element go path (go_<p>, through
+    ot_s81_cfg7_seq's combinational go_e) carries k column / hop relays would see go k cycles after its x0 (x0 and the
+    cc lane leave the slot station together).  The sequencer's lc then taps the cc chain k registers EARLIER (the net
+    into the slot station's cci, or into the relay before it), so go reaches the element with x0; cfg / go_tag leave
+    the same sequencer and keep their order to go.  Records m['go_retap'] = {pair: k}."""
+    kind = {it.name: it.kind for it in m['insts']}
+    B = m['buses']
+    drv_of = {}
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        for e in eps[1:]:
+            drv_of[tuple(e)] = i
+    out_of = {}
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        out_of.setdefault(tuple(eps[0]), []).append(i)
+    rec = {}
+    for it in m['insts']:
+        if it.kind != 'seq':
+            continue
+        k, ep = 0, (it.name, 'go_e')
+        while True:
+            nxt = [e for i in out_of.get(ep, []) for e in B[i][3][1:]]
+            if len(nxt) != 1 or kind.get(nxt[0][0]) != 'rly':
+                break
+            k += 1
+            ep = (nxt[0][0], 'o')
+        if not k:
+            continue
+        i = drv_of[(it.name, 'lc')]
+        src = B[i][3][0]
+        for _ in range(k):          # one register back along the cc chain per go relay
+            if kind.get(src[0]) == 'sstn' and src[1] == 'cc':
+                src = B[drv_of[(src[0], 'cci')]][3][0]
+            elif kind.get(src[0]) == 'rly':
+                src = B[drv_of[(src[0], 'i')]][3][0]
+            else:
+                raise AssertionError(('--lane-equal: no register to retap before', it.name, src))
+        bid, cls, bits, eps = B[i]
+        B[i] = (bid, cls, bits, [e for e in eps if tuple(e) != (it.name, 'lc')])
+        j = next(j for j in out_of[tuple(src)] if B[j][1] in ('x_ctl',))
+        bj = B[j]
+        B[j] = (bj[0], bj[1], bj[2], bj[3] + [(it.name, 'lc')])
+        rec[it.name[1:]] = k
+    B[:] = [b for b in B if len(b[3]) > 1]      # a top-slot cc net whose every sequencer moved down
+    m['go_retap'] = dict(pairs=len(rec), by_k={str(v): sum(1 for x in rec.values() if x == v) for v in set(rec.values())})
+
+
 def _col_relays(m, P):
     """common-clock column nets whose driver -> load centre distance exceeds BANK_RULE_UM get relay registers
     (one cycle each) at equal spacing on an L path, inside the frame.  Records per frame the relays on the worst x
@@ -4359,6 +4409,30 @@ def _col_relays(m, P):
     ck_add = defaultdict(list)
     tt_col = []                             # --relay-tt-reach: pass-1 relays placed in the TT-reach tier
     global RSV_ALLOW
+
+    def _need(bid, cls, eps):
+        """(frame, L, n, far) of a column net, or None when it takes no relays"""
+        if cls not in RCLS or bid.endswith('_eb'):
+            return None
+        d0 = by.get(eps[0][0])
+        if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
+            return None
+        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+        if far is None:
+            return None
+        L = _mh(cen(d0), cen(far))
+        return math.ceil(L / BANK_RULE_UM - 1e-9) - 1
+    # --lane-equal (ds-1010 lat-audit 2026-10-10): the x0 / x1 / cc lanes of one slot segment carry ONE transaction
+    # (the element takes x0 and x1 in the same cycle; go rides cc through the pair sequencer), so each of them takes
+    # the largest relay count of the three; a lane padded beyond its own reach need gets extra relays on its own path.
+    lane_n = {}
+    if LANE_EQUAL:
+        for bid, cls, bits, eps in B:
+            mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid)
+            if mm:
+                n_ = _need(bid, cls, eps)
+                k_ = (mm.group(2), mm.group(3))
+                lane_n[k_] = max(lane_n.get(k_, 0), n_ or 0)
     for bid, cls, bits, eps in list(B):
         RSV_ALLOW = bid.startswith('rt_')      # --cfg-rgap: reserved relay sites serve the return tree only
         if cls not in RCLS or bid.endswith('_eb'):
@@ -4377,6 +4451,9 @@ def _col_relays(m, P):
             continue
         L = _mh(cen(d0), cen(far))
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
+        mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid) if LANE_EQUAL else None
+        if mm:
+            n = max(n, lane_n.get((mm.group(2), mm.group(3)), 0))
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
@@ -5726,7 +5803,7 @@ def plan_record_r8(m):
                                            '+ return-tree root stages + return trunk stations + hub meso 2 (the tree '
                                            'levels and the element pipeline excluded)'),
         bus_classes=dict(cls), chains=ch, scan_die_power=scan_die_power(), rev=REV,
-        column_relays=m.get('col_relays', {}),
+        column_relays=m.get('col_relays', {}), go_retap=m.get('go_retap'),
         hub_stations=m.get('hub_stations', {}),
         power_model={k: dict(w=round(v[0], 6), basis=v[1]) for k, v in POWER8.items()})
 
@@ -5827,6 +5904,10 @@ def die_options(ap):
                     'in every right-lane cfg ROM row between ROM --cfg-rgap-at - 1 and --cfg-rgap-at (x1b residual '
                     'rt_<f>_8b return-leaf SS reach class); default 0 = off')
     ap.add_argument('--cfg-rgap-at', type=int, default=4, help='ROM index the --cfg-rgap gap precedes (default 4)')
+    ap.add_argument('--lane-equal', action='store_true', help='ds-1010 lat-audit 2026-10-10: column relays on the x0 / x1 / '
+                    'cc lanes of one slot segment (xa_/xb_/cc_<f>_<k>) take the MAX relay count of the three, so the three '
+                    'lanes of a transaction stay the same age (tools/s81/field_alignment.py: x1b+rgap had 256 x0/x1 and '
+                    '128 go-early mismatches); default off')
     ap.add_argument('--ck-rule', action='store_true', help='s81-gen 2026-10-09 (redesign-ds clock-pin rule): every generated '
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
@@ -5928,6 +6009,8 @@ def apply_options(a):
     global CFG_RGAP, CFG_RGAP_AT
     CFG_RGAP = float(getattr(a, 'cfg_rgap', 0.0) or 0.0)
     CFG_RGAP_AT = int(getattr(a, 'cfg_rgap_at', 4) or 4)
+    global LANE_EQUAL
+    LANE_EQUAL = bool(getattr(a, 'lane_equal', False))
     if CFG_RGAP:
         assert CFG_RGAP > 0 and abs(CFG_RGAP / GX - round(CFG_RGAP / GX)) < 1e-6, ('--cfg-rgap off the x lattice', CFG_RGAP, GX)
     CK_RULE = bool(getattr(a, 'ck_rule', False))
