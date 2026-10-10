@@ -84,6 +84,7 @@ module ot_hgi_dma_mover #(
     // clears it)
     reg cv_q; reg [226:0] cm_q;
     reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
+    reg wld_q; always @(posedge clk) wld_q <= wl_done;     // wide-port done pin flop (hgi-1010/c: wl_done -> wr_in was 17 levels)
     always @(posedge clk or negedge rn)
         if (!rn) begin kr_v <= 1'b0; vr_q <= 274'd0; end
         else begin kr_v <= k_rsp_v; vr_q <= vmr; end
@@ -388,7 +389,7 @@ module ot_hgi_dma_mover #(
                     v_kind <= t;
                 end
                 rd_in <= rd_in + {8'd0, iss_kr | iss_vr} - {8'd0, k_rd_land | v_rd_land};
-                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wl_done & busy_f & !dst_hbm)};
+                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wld_q & busy_f & !dst_hbm)};
             end
             if (k_fault && busy_f) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
             // ---- landing
