@@ -20,11 +20,11 @@ SRC = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/ot_hdc_prefix
        ROOT / "rtl/test/tb_rom_oneshot_allreduce.sv"]
 
 
-def build(scratch: Path, depth: int, margin: int, mutant: bool) -> Path:
-    obj = scratch / f"obj_m{margin}_d{depth}{'_mut' if mutant else ''}"
+def build(scratch: Path, depth: int, margin: int, mutant: bool, mutant_define: str = "OT_ONESHOT_M_MUTANT") -> Path:
+    obj = scratch / f"obj_m{margin}_d{depth}{('_' + mutant_define) if mutant else ''}"
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-TIMESCALEMOD",
            "--top-module", "tb_rom_oneshot_allreduce", f"-GDEPTH={depth}", "-GLAT=12", "-GBPC=3600",
-           f"-GMARGIN={margin}", "-Mdir", str(obj)] + (["+define+OT_ONESHOT_M_MUTANT"] if mutant else []) + \
+           f"-GMARGIN={margin}", "-Mdir", str(obj)] + ([f"+define+{mutant_define}"] if mutant else []) + \
           [str(s) for s in SRC] + [str(C.unit_harness(scratch)), "-CFLAGS", "-O1", "-j", "8"]
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -37,9 +37,11 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--margin", type=int, default=1)
     ap.add_argument("--mutant", action="store_true")
+    ap.add_argument("--mutant-define", default="OT_ONESHOT_M_MUTANT",
+                    help="negative-control define (OT_ONESHOT_M_OPQ_MUTANT: MARGIN 4 operand queue read one word ahead)")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    exes = {d: build(a.out, d, a.margin, a.mutant) for d in sorted({c[1] for c in C.UNIT_CASES})}
+    exes = {d: build(a.out, d, a.margin, a.mutant, a.mutant_define) for d in sorted({c[1] for c in C.UNIT_CASES})}
     bad = []
     for i, (name, depth, nmsg, words, gap, skew, mk, inj, ival, big) in enumerate(C.UNIT_CASES):
         rng = np.random.default_rng(100 + i)

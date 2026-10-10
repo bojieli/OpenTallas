@@ -351,7 +351,8 @@ module ot_rom_oneshot_allreduce #(
     parameter integer RB         = (N > 1) ? $clog2(N) : 1,
     // MARGIN (default 0): the dies are ot_rom_oneshot_die_m (rtl/rom/ot_rom_oneshot_die_m.sv: pin registers, registered
     // FIFO heads, ADD_LAT 7 adders, credit-based local port); the package models each sequencer's credit counter
-    // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.
+    // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.  MARGIN 3 = PR 2; MARGIN 4 =
+    // PR 2 + OPQ 1 (operand queues in place of the fold's shift-register skew lines, fill-9 2026-10-10).
     parameter integer MARGIN     = 0
 ) (
     input  wire              clk,
@@ -400,7 +401,7 @@ module ot_rom_oneshot_allreduce #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) lcred <= 3'd4;
                 else lcred <= lcred - ((in_valid[s] && in_ready[s]) ? 3'd1 : 3'd0) + (icr ? 3'd1 : 3'd0);
-            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0)) u_die (
+            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0), .OPQ((MARGIN >= 4) ? 1 : 0)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[s] && in_ready[s]), .in_cr(icr), .in_data(in_data[s*FW +: FW]),
                 .in_last(in_last[s]), .in_mode(in_mode[s]), .in_tag(in_tag[s*TAGW +: TAGW]),

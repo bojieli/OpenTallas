@@ -40,7 +40,16 @@ module ot_rom_oneshot_die_m #(
     // edge (+1 cycle per collective word).  The head's mode / last bits stay at control timing (hb_c).  rst_n reaches
     // only per-region reset synchronisers (control, one per source, one per adder stage; 2-edge release).
     // Transactions, fold order, values and faults unchanged.
-    parameter integer PR      = 0
+    parameter integer PR      = 0,
+    // OPQ = 1 (fill-9 2026-10-10, qfd_io_collective root cause): the rank-order fold's operand skew lines (stage g waits
+    // (g-1)*ADD_LAT cycles for the running sum) are free-running FW*D-bit SHIFT registers (10,752 flops at N 4 that
+    // shift every cycle: back-to-back Q->D hops with no logic, the FF-hold class g_stage.g_d.dl -> dl of every route,
+    // and the CTS hold-repair floods).  OPQ = 1 replaces each with a per-128-bit-slice operand QUEUE (keep_hierarchy
+    // leaf, QD = 2^ceil(log2(D+1)) entries): written only on red_in, read in order when the stage's adder takes its
+    // valid (sv[g-1] = red_in delayed exactly D: the adders are fixed-latency), local per-slice write / read pointers
+    // reset by the stage's own reset leaf.  Same operand at the same adder edge: values, fold order, faults, cycles
+    // unchanged.
+    parameter integer OPQ     = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -240,6 +249,16 @@ module ot_rom_oneshot_die_m #(
             wire [FW-1:0] pg;
             if (g == 1) begin : g_nd
                 assign pg = fsrc[1];
+            end else if (OPQ != 0) begin : g_q
+                localparam integer D  = (g - 1) * ADD_LAT;
+                localparam integer QA = $clog2(D + 1);
+                localparam integer SW = (FW >= 128) ? 128 : FW;
+                genvar k;
+                for (k = 0; k < FW / SW; k = k + 1) begin : g_s
+                    (* keep_hierarchy *) ot_coll_opq_slice #(.W(SW), .QA(QA)) u_q (
+                        .clk(clk), .arst_n(rst_a[g]), .push(red_in), .d(fsrc[g][SW*k +: SW]),
+                        .pop(sv[g-1]), .q(pg[SW*k +: SW]));
+                end
             end else begin : g_d
                 localparam integer D = (g - 1) * ADD_LAT;
                 reg [FW*D-1:0] dl;
@@ -454,6 +473,23 @@ endmodule
 
 // PR = 2 leaves: fixed widths and no parameters (Yosys 0.68 asserts re-elaborating a parameterised keep_hierarchy
 // module), instantiated with keep_hierarchy so synthesis keeps every copy.
+// OPQ operand queue slice (see OPQ above): in-order, written on push, read combinationally at the read pointer and
+// advanced on pop; 2^QA entries > the stage's D outstanding operands, so the write never meets the unread head.
+module ot_coll_opq_slice #(parameter integer W = 128, parameter integer QA = 3) (
+    input wire clk, input wire arst_n, input wire push, input wire [W-1:0] d, input wire pop, output wire [W-1:0] q);
+    reg [QA-1:0] wp, rp;
+    reg [W-1:0]  mem [0:(1 << QA) - 1];
+    always @(posedge clk or negedge arst_n)
+        if (!arst_n) begin wp <= 0; rp <= 0; end
+        else begin if (push) wp <= wp + 1'b1; if (pop) rp <= rp + 1'b1; end
+    always @(posedge clk) if (push) mem[wp] <= d;
+`ifdef OT_ONESHOT_M_OPQ_MUTANT
+    wire [QA-1:0] rq = rp + 1'b1;          // negative control only: reads the operand one word ahead
+    assign q = mem[rq];
+`else
+    assign q = mem[rp];
+`endif
+endmodule
 module ot_coll_rst_leaf (input wire clk, input wire arst_n, output wire q);
     (* async_reg = "true" *) reg [1:0] s;
     always @(posedge clk or negedge arst_n) if (!arst_n) s <= 2'b00; else s <= {s[0], 1'b1};
