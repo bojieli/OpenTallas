@@ -38,9 +38,13 @@ module tb_dsrom_qx_exact;
  parameter integer QX = 10;                                         // 2, 1: earlier QX levels, 0: the qy circuit
  localparam integer FL = QY != 0 ? 2 : 0;                          // fault reporting delay
  localparam integer QK = QP != 0 ? CAP + P1 : 0;
- localparam integer L = QP != 0 ? XS + QK : 0;
+`ifndef QX_PREG
+`define QX_PREG 0
+`endif
+ localparam integer PR = `QX_PREG;                                  // ds-1010: wrapper input register stage (+1 everywhere)
+ localparam integer L = (QP != 0 ? XS + QK : 0) + PR;
  localparam integer SEQ = QX >= 9 ? 1 : 0;
- localparam integer FS = QP != 0 ? XS : 0;    // front-end state shift
+ localparam integer FS = (QP != 0 ? XS : 0) + PR;    // front-end state shift
  reg clk=0, rst_n=0, cfg_v=0, go=0, xs_v=0;
  reg [4:0] cfg_a=0; reg [47:0] cfg_d=0;
  reg [7:0] xs_p=0; reg [2:0] xs_b=0, xs_pos=0; reg [1:0] xs_sv=2'b11;
@@ -73,7 +77,7 @@ module tb_dsrom_qx_exact;
 `ifndef QX_QM
 `define QX_QM 0
 `endif
- ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QW(`QX_QW), .QM(`QX_QM), .QS(`QX_QS), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+ ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QW(`QX_QW), .QM(`QX_QM), .QS(`QX_QS), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS), .PREG(PR),
 `else
  ot_v41_rom_elem_q_qx_w10 #(.QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
 `endif
