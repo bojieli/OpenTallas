@@ -20,13 +20,13 @@
   "t_lgW": 4,
   "f_hc": 4,
   "t_hc": 5,
-  "f_hgi_vmr": 4,
-  "t_hgi_vmq": 4,
-  "f_hgi_cmdproc": 4,
-  "t_hgi_cmdproc": 4
+  "f_hgi_vmr": 3,
+  "t_hgi_vmq": 3,
+  "f_hgi_cmdproc": 3,
+  "t_hgi_cmdproc": 3
  },
  "flops": {
-  "boundary": 20634,
+  "boundary": 18845,
   "broadcast": 27888,
   "accumulate": 16384,
   "lane_output_stage": 5040
@@ -68,7 +68,7 @@
   "clock_gates": 0,
   "wake_lead_cycles": 0,
   "flops_in_top": {
-   "boundary": 20634
+   "boundary": 18845
   }
  }
 }
