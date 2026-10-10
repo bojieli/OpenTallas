@@ -315,17 +315,21 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                f'    (* keep *) reg cg_q;  always @(posedge {bc_}) cg_q <= cg_en[0];']
         for k in range(P.K):
             pn, pc = 'cg_q', bc_
+            rn = 'rst_q[1]'
             for g in range(P.G):
                 c_ = ck(gy[(k, g)])
-                src = pn
+                src, rsrc = pn, rn
                 if pc != c_:
                     L_.append(f'    (* keep *) reg cgx_{k}_{g};  always @(negedge {pc}) cgx_{k}_{g} <= {pn};   // cg wake lockup ({pc} -> {c_})')
-                    src = f'cgx_{k}_{g}'
-                L_ += [f'    wire cgw_{k}_{g}, gk_{k}_{g};',
-                       f'    ot_cg_tile #(.HOLD(64), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_{k}_{g} (.clk({c_}), '
-                       f'.rst_n(~rst_q[1]), .cgi({src}), .cgo(cgw_{k}_{g}), .gclk(gk_{k}_{g}));']
+                    L_.append(f'    (* keep *) reg crx_{k}_{g};  always @(negedge {pc}) crx_{k}_{g} <= {rn};   // cg reset relay lockup')
+                    src, rsrc = f'cgx_{k}_{g}', f'crx_{k}_{g}'
+                # root-local reset relay (one register a group, beside the gate): the gate's async reset never crosses the quarter
+                L_ += [f'    (* keep *) reg crr_{k}_{g};  always @(posedge {c_}) crr_{k}_{g} <= {rsrc};',
+                       f'    wire cgw_{k}_{g}, gk_{k}_{g};',
+                       f'    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_{k}_{g} (.clk({c_}), '
+                       f'.rst_n(~crr_{k}_{g}), .cgi({src}), .cgo(cgw_{k}_{g}), .gclk(gk_{k}_{g}));']
                 gk[(k, g)] = f'gk_{k}_{g}'
-                pn, pc = f'cgw_{k}_{g}', c_
+                pn, pc, rn = f'cgw_{k}_{g}', c_, f'crr_{k}_{g}'
     for p_, w in P.din:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
