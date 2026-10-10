@@ -19,7 +19,8 @@ module ot_hbm_tu_retry_phy_port_core #(
  // compare out of the feedback -> rewind -> tx_valid -> send cone (iqs2-a -452: ses_q -> fb_session == session ->
  // u_tx.l_data): the feedback bundle is registered once more with a 1-bit match (+1 pclk on ACK / NAK / pop returns),
  // and the replay read's epoch check reads a per-slot session flag (0 cycles).  See ot_hbm_link_retry_sram SESREG.
- parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif
+ parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif,
+ parameter RDPIPE=0       // redesign-ds: replay SRAM MUXREG (see the wrapper)
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -44,7 +45,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW),.OBS_REG(PIPE_FIX)) u_rx_pop_cdc(
  .s_clk(clk),.s_rst_n(core_run),.s_pop(rx_credit),.d_clk(pclk),.d_rst_n(phy_run),.d_pop(local_pop),.fault(local_cdc_fault),.pending());
  wire iq_valid,iq_ready,iq_fault;wire[W-1:0]iq_data;
- ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH)) u_ingress(
+ ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH),.MUXREG(RDPIPE)) u_ingress(
  .clk(pclk),.rst_n(phy_run),.session(phy_session),.in_valid(ph_tx_v && phy_run),.in_data(ph_tx_flit),.in_ready(),
  .out_valid(iq_valid),.out_ready(iq_ready),.out_data(iq_data),.fault(iq_fault),.debt(ingress_debt));
  wire pq_valid,pq_ready;wire[W-1:0]pq_data;
@@ -84,7 +85,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  assign fec_tx_v=raw_tx_v && !fault;
  assign ph_rx_v=raw_rx_v && !fault;
  assign fec_rx_ready=raw_rx_ready && !fault;
- ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG)) u_port(
+ ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG),.MUXREG(RDPIPE)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
  .in_valid(pq_valid),.in_ready(pq_ready),.in_data(pq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
@@ -153,7 +154,13 @@ module ot_hbm_tu_retry_phy_port #(
  // redesign-ds: NOEPOCH reaches the wrapper (sys-takeover's review S4/S5 option in the core): iqs2-a post-place -452 =
  // ses_q -> 24-bit read_epoch == session compare -> replay accept -> 545-b tx select -> u_tx.l_data
  parameter NOEPOCH=`ifdef OT_TU_NOEPOCH 1 `else 0 `endif,
- parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif      // redesign-ds: keep the session checks, registered (see the core)
+ parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif,     // redesign-ds: keep the session checks, registered (see the core)
+ // RDPIPE (redesign-ds 2026-10-10, default 0): iqs3-c TT -188 = replay SRAM bank select (b2, merged with seqp[2]) ->
+ // captured[b2] mux -> 266-b SECDED syndrome -> u_dec.s1, and -61 = phy_link_up pin -> async recovery of the wrapper's
+ // output registers.  RDPIPE turns on the replay SRAMs' MUXREG (registered bank select before the syndrome, +1 read
+ // edge, retry storage and PHY ingress) and resets the wrapper's own pin / output registers from the synchronised run
+ // gates the core already uses (async assert from the flops, sync release).
+ parameter RDPIPE=`ifdef OT_TU_RDPIPE 1 `else 0 `endif
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -172,9 +179,10 @@ module ot_hbm_tu_retry_phy_port #(
  output wire[SW-1:0]ingress_debt,output wire[CW-1:0]rx_debt
 );
  generate if(!(REG_IO&&ENABLE))begin:g_core
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG)) u(.*);
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE)) u(.*);
  end else begin:g_reg
- wire phy_run=prst_n&&phy_link_up,core_run=rst_n&&core_link_up;
+ reg[1:0]prs;reg[1:0]crs;reg pup_q,cup_q;
+ wire phy_run=RDPIPE ? (prs[1]&&pup_q) : (prst_n&&phy_link_up), core_run=RDPIPE ? (crs[1]&&cup_q) : (rst_n&&core_link_up);
  // pclk input flops
  reg tx_v_q,fb_v_q,fb_g_q,fb_n_q;reg[W-1:0]tx_f_q;reg[SW-1:0]fb_s_q;reg[EW-1:0]fb_e_q,ses_q;reg[CW-1:0]fb_p_q;
  always@(posedge pclk or negedge phy_run)if(!phy_run)begin tx_v_q<=0;fb_v_q<=0;fb_g_q<=0;fb_n_q<=0;end
@@ -182,7 +190,6 @@ module ot_hbm_tu_retry_phy_port #(
  always@(posedge pclk)begin tx_f_q<=ph_tx_flit;fb_s_q<=fb_seq;fb_e_q<=fb_session;fb_p_q<=fb_pop;ses_q<=phy_session;end
  // reset / link-up into the core from flops (the core uses its run gates as data): async-assert, sync-release
  // reset synchronisers and registered link-up per domain (+2 cycles on reset release, +1 on link-up)
- reg[1:0]prs;reg[1:0]crs;reg pup_q,cup_q;
  always@(posedge pclk or negedge prst_n)if(!prst_n)prs<=0;else prs<={prs[0],1'b1};
  always@(posedge clk or negedge rst_n)if(!rst_n)crs<=0;else crs<={crs[0],1'b1};
  always@(posedge pclk or negedge prst_n)if(!prst_n)pup_q<=0;else pup_q<=phy_link_up;
@@ -193,7 +200,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.PIPE_FIX(LINK_CREDIT)) u(
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE),.PIPE_FIX(LINK_CREDIT)) u(
  .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),

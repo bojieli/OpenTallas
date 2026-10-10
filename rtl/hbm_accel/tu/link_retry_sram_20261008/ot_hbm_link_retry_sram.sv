@@ -20,7 +20,8 @@ module ot_hbm_link_retry_sram #(
  // epoch check reads a per-slot flag (set when the slot is written, all cleared when the session changes) captured at
  // the read request, instead of read_epoch == session.  Equal to the compares under this module's own contract:
  // "session must change on coordinated reset/train and not wrap with old traffic".
- parameter SESREG=0
+ parameter SESREG=0,
+ parameter MUXREG=0      // redesign-ds: ot_hbm_replay_sram MUXREG (+1 read edge; reads are reserved / latency insensitive)
 )(
  input wire clk, rst_n, input wire [EW-1:0] session,
  input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
@@ -50,7 +51,7 @@ module ot_hbm_link_retry_sram #(
  wire [EW-1:0] read_epoch;
  wire request_read=ENABLE && replaying && !read_pending && !head_valid &&
                    write_guard==0 && !rewind && !fault && !replay_empty;
- ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH)) u_storage(
+ ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH),.MUXREG(MUXREG)) u_storage(
   .clk(clk),.rst_n(rst_n),.w_valid(ENABLE && accepted),.w_data(in_data),
   .w_seq(next_seq),.w_session(session),.r_valid(request_read),
   .r_seq(replay_seq),.r_session(session),.o_valid(read_response),
