@@ -64,4 +64,44 @@ class RegistryTest(unittest.TestCase):
             self.assertIn('exact +PASS / -PASS', model.md_path.read_text())
 
 
+    def test_override_variants_and_owners(self):
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td); model.log = print
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
+            model.registry = lambda: ({}, [])
+            model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
+            def job(name, block, status, owner='Codex:t4'):
+                return Elements.reduce(dict(name=name, status=status, spec=dict(block=block, owner=owner),
+                                            metrics=dict(setup_corner='tt', ss_ps=1, ff_ps=1, drc=0)))
+            jobs = [job('p', 'ot_hbm_x', 'CLOSED'), job('a', 'ot_hbm_x_wide1036', 'RUNNING'),
+                    job('l0', 'hfd_tap', 'CLOSED'), job('l4', 'hfd_tap_lane4', 'RUNNING'),
+                    job('k', 'qfd_k', 'NEEDS_RTL', owner='Codex:qwen-deep-queue routine')]
+            model.jobs = lambda: jobs
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(len(rows), 5)   # no overrides: every block is its own element
+            model.overrides_path.write_text(json.dumps(dict(
+                variants={'ot_hbm_x_wide1036': dict(of='ot_hbm_x'), 'hfd_tap_lane4': dict(of='hfd_tap', kind='instance')},
+                owner_map={'Codex:qwen-deep-queue': 'Claude:qwen-1010', 'Codex:qwen': 'Claude:wrong'},
+                owners={'hfd_tap': 'Claude:hgi-1010'})))
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(sorted(rows), ['hfd_tap', 'ot_hbm_x', 'qfd_k'])
+            self.assertEqual(rows['ot_hbm_x']['variants'], ['ot_hbm_x_wide1036'])
+            self.assertTrue(rows['ot_hbm_x']['category'].startswith('closed'))   # alternative: any closure closes
+            self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')  # instance lane4 still open
+            self.assertIn('hfd_tap_lane4', rows['hfd_tap']['via'])
+            self.assertEqual(rows['hfd_tap']['owner'], 'Claude:hgi-1010')
+            self.assertEqual(rows['hfd_tap']['owner_orig'], 'Codex:t4')
+            self.assertEqual(rows['qfd_k']['owner'], 'Claude:qwen-1010')   # longest prefix, word boundary
+            self.assertEqual(Elements.remap_owner('Codex:qwen-elements', dict(owner_map={'Codex:qwen': 'X'})),
+                             'Codex:qwen-elements')
+            jobs[2] = job('l0', 'hfd_tap', 'RUNNING'); jobs[3] = job('l4', 'hfd_tap_lane4', 'CLOSED')
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')   # the master instance is required too
+            jobs[2] = job('l0', 'hfd_tap', 'CLOSED')
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
+
+
 if __name__ == '__main__': unittest.main()
