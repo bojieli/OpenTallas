@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hgi_sfu_d1_credit_census.v1",
+  "source_commit": "4682ff603",
+  "functional_unit_source": "199dc0b71",
+  "verdict": "PASS",
+  "checked_words": 5376,
+  "record_cycles": [
+    3929,
+    3017
+  ],
+  "measured": [
+    {
+      "case": 0,
+      "read_sectors": 769,
+      "read_responses": 769,
+      "write_sectors": 384,
+      "write_acknowledgements": 384,
+      "stage_full_credit_cycles": 950,
+      "drain_full_reserved_credit_cycles": 760
+    },
+    {
+      "case": 1,
+      "read_sectors": 577,
+      "read_responses": 577,
+      "write_sectors": 288,
+      "write_acknowledgements": 288,
+      "stage_full_credit_cycles": 710,
+      "drain_full_reserved_credit_cycles": 568
+    }
+  ],
+  "mechanism": "Stage issues up to4reads outstanding, in-order4slotmetadata; drain reserves credits for both outstanding writes and three local-memory return stages",
+  "source_sha256": "2832ea07ab0978b8db674b33dc72154bd00eb3296d1bcbe035e73d11cf893814",
+  "limits": [
+    "Passive reducedN32/M8 realVM controller census; no production tokenrate or newOUT8 gain measured",
+    "Nominal32B/cycle port is not attained simply by counting bytes: endpoint roundtrip and reserved credits limit service",
+    "Previous6e diagnostic drain counter measured bare outst==4, excluding pending return slots;468 fixes full reservation count"
+  ],
+  "build_command": "--binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN --top-module tb_hgi_su_unit -I/home/ubuntu/claude-takeover-20261007/codex-sfu-d1-credit-reservation-census/vec -DUNIT_SFU -Mdir /home/ubuntu/claude-takeover-20261007/codex-sfu-d1-credit-reservation-census/obj rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv rtl/hdc/v41x/ot_hdc_v41x_vec.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_unit.sv -j 4"
+}
