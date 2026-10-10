@@ -1384,6 +1384,7 @@ module ot_hbm_accel_smh_front_c #(
 endmodule
 
 module ot_hbm_accel_smh_front_s #(
+    parameter integer RESULT_VALID = `ifdef OT_SMH_RESULT_VALID 1 `else 0 `endif,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -1501,23 +1502,28 @@ module ot_hbm_accel_smh_front_s #(
         end
     end endgenerate
     wire [NC-1:0]    cf_a;
+    wire [NC-1:0]    cv_a;
+    wire result_v, result_fault;
     wire [NC*32-1:0] cy_a;
     genvar cc;
     generate for (cc = 0; cc < NC; cc = cc + 1) begin : g_al
         assign cf_a[cc] = al[cc*QLW + QLW - 2];
+        assign cv_a[cc] = al[cc*QLW + QLW - 1];
         assign cy_a[32*cc +: 32] = al[cc*QLW + RW +: 32];
     end endgenerate
+    ot_hbm_accel_smh_result_valid #(.NC(NC), .ENABLE(RESULT_VALID)) u_result_valid (
+        .valids(cv_a), .faults(cf_a), .row_valid(result_v), .fault_event(result_fault));
     // retire: stage 1 of m2's three, at the north face (front_c lands it and adds the third beside the issue)
-    ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(fsv));
+    ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(result_v), .q(fsv));
     reg fault_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0;
-        else fault_q <= fault_q | (|cf_a)
+        else fault_q <= fault_q | result_fault
 `ifdef OT_SMH_RCH_NONEMPTY
             | rch_state_fault
 `endif
             ;
-    ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(rv));
+    ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d(result_v), .q(rv));
     ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_pfo (.clk(clk), .rst_n(rst_n), .d(fault_q), .q(fault));
     ot_hbm_accel_smv_chain #(.W(RW + NC*32), .D(PIO), .RST(0)) u_prd_o (.clk(clk), .rst_n(rst_n),
         .d({al[RW-1:0], cy_a}), .q({rrow, rdata}));
@@ -2162,4 +2168,22 @@ module ot_hbm_accel_smh_be_wg (
     output wire [183:0] qout
 );
     ot_hbm_accel_smh_be_g u (.*);
+endmodule
+
+// Optional gated-result consumer qualification, sized before RTL in
+// results/uarch/smh_result_valid_20261010/model.json. No arithmetic or latency changes.
+// ENABLE=0 preserves the released south-front valid/fault contract exactly.
+module ot_hbm_accel_smh_result_valid #(
+    parameter integer NC = 8,
+    parameter integer ENABLE = 0
+) (
+    input wire [NC-1:0] valids,
+    input wire [NC-1:0] faults,
+    output wire row_valid,
+    output wire fault_event
+);
+    wire all_valid = &valids;
+    wire partial_valid = (|valids) && !all_valid;
+    assign row_valid = ENABLE ? all_valid : valids[0];
+    assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
 endmodule
