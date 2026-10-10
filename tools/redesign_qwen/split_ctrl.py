@@ -768,6 +768,28 @@ def emit_seq_su(boundary: bool = False) -> str:
     return text
 
 
+TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
+
+
+def tp_seq_vrl() -> str:
+    """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
+    the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
+    master the read leaves through the output station and the word returns through the input station, so the base
+    queued the word of an earlier read (every all-reduce partial wrong).  The read queue grows to 8 words when VRL > 1
+    so the reads in flight keep the stream rate.  VRL 1 is the base."""
+    t = TP_SEQ.read_text()
+    t = one(t, "module ot_qwen_tp_seq_w12 #(", "module ot_qwen_tp_seq_w12_vrl #(\n    parameter integer VRL = 1,     // vre -> vrq edges")
+    t = one(t, "    localparam integer QD = 4;", "    localparam integer QD = (VRL > 1) ? 8 : 4;")
+    t = one(t, "    reg [1:0]    q_w, q_r;", "    reg [((VRL > 1) ? 3 : 2)-1:0] q_w, q_r;")
+    t = one(t, "    reg [2:0]    q_n;", "    reg [((VRL > 1) ? 4 : 3)-1:0] q_n;")
+    t = one(t, "    reg          rd_v;", "    reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1\n    wire          rd_v = rd_p[VRL-1];\n"
+               "    integer       rd_i, rd_n;\n    always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end")
+    t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
+    t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
+    t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    return t
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -778,7 +800,9 @@ def emit_seq_su_bi() -> str:
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
-    return t
+    # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
+    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
+    return t + "\n" + tp_seq_vrl()
 
 
 def emit_tt_ctlm_i() -> str:
