@@ -515,6 +515,10 @@ def masters(m, k=1, port_bits=None):
             face = ('E' if dxp > 0 else 'W') if abs(dxp) >= abs(dyp) else ('N' if dyp > 0 else 'S')
             if mst == 'qkd_reng' and p in ('si', 'so'):
                 face = 'E'                       # the long face that abuts the aggregator (MY engines mirror it)
+            if mst == 'qkd_land' and face in 'NS':
+                # the landing is a 172.8 um x 12 mm column: its short faces cannot hold its words (die_kv7: 3,186
+                # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
+                face = 'E' if dxp > 0 else 'W'
             if mst == 'qkd_astk' and p.startswith('e'):
                 face = 'W' if int(p[1:-1]) < 4 else 'E'
             layer = 'M4' if face in ('E', 'W') else 'M5'
