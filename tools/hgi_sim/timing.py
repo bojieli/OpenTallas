@@ -90,6 +90,11 @@ def cv(sec, key):
     return CAL[sec][key]["value"]
 
 
+def fp(key, default):
+    """re-floorplan unit counts (calibration.json "floorplan"; absent -> the pre-10-10 die)"""
+    return CAL.get("floorplan", {}).get(key, {}).get("value", default)
+
+
 # ----------------------------------------------------------------------------------------------------------------
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
@@ -247,7 +252,7 @@ def su_cost(r, dyn, L):
         strides(k, s)
     if "R" in r.desc:
         f["rso"] = max(1, r.desc["R"].stride)
-    lay = VC.layout(f, 1024, 256)
+    lay = VC.layout(f, int(fp("su_lanes", 1024)), int(fp("su_sfu_lanes", 256)))
     depth = lay["dR"] if t["red"] else lay["dP"]
     hbm = any(d.space == "HBM" for d in r.desc.values())       # an HBM source pays the first access before row 0
     fa = first_access() if hbm else 0.0
@@ -292,7 +297,8 @@ def cost(r, dyn, L, cfg=None):
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
-        return cv("units", "SFU.GLU"), "estimate", "GLU fast path"
+        w = fp("sfu_width", 1.0)
+        return cv("units", "SFU.GLU") / w, "estimate", "GLU fast path" + (f" (width {w})" if w != 1.0 else "")
     if u == "ATT":
         b = r.desc["B"]
         _, P, _, st, _ = eff(b, dyn, L)
