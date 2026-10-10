@@ -1,0 +1,35 @@
+{
+  "scope": "onePC, four real wide banks/eight macro models; CPU, initialization disabled",
+  "verdict": "PASS",
+  "records": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "stdout": "MEASURE cache_visible_cycles=7 cache_transfer_cycles=8 max_group_transfer_gap=2 sectors_per_cycle_min=2.000000\nPASS bundles=263 rejected=7 fetch_before_alloc epoch debt backpressure protected_metadata\n",
+      "stderr": "",
+      "expected": "PASS",
+      "gate_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "stdout": "DEBUG seen=0 sent=1 g=x b=-1 af=0 rf=1 ff=1 mf=0 head=0 tail=1 st0=1dd req0=1fc8 meta200=3 brv=0 bov=0\nFATAL: tests/rtl/tb_hbm_svc_dma_pc_cache_wide.sv:104: deadlock\n       Time: 25019583000 Scope: tb_hbm_svc_dma_pc_cache_wide\n",
+      "stderr": "",
+      "expected": "FAIL_stale_epoch",
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": {
+    "tests/rtl/tb_hbm_svc_dma_pc_cache_wide.sv": "c77e5bb2f565391e135def8829bc60a44c956145230157e72bed8a11de9ab2c7",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm/hbm_svc_dma_sram_bank_wide.sv": "6899a83091b52ec3bac7e4d16615a45f64f1e91b862550655a2398da76e6f3e2",
+    "rtl/hbm/ot_hbm_svc_dma_pc_cache_wide.sv": "6d46af3705629db1b39de8db0f46373be5e2da2fc802012bfea0c52476ca8044",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_svc_dma_pc_cache_wide_model.py": "451c0cc7b5f13cfb1bfb62cfedaf5b1ab8eed215f16285a3f079385d9f7002c5",
+    "tools/run_hbm_svc_dma_pc_cache_wide_bench.py": "1239ca7eba8c3346befd60a3058e03219874eb426eb046acfb57666cbb9bc2ff"
+  },
+  "sources_unchanged_during_gate": true,
+  "epoch_scope": "onebit no-wrap; allocation blocked by native/write/issued-read debt; upstream cannot replay drained sameepoch generation",
+  "physical_scope": "exactness only; no routed closure claim"
+}
