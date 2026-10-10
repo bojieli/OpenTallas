@@ -59,6 +59,127 @@
    "legal": null
   },
   {
+   "name": "mtp_kernel_0",
+   "word": 16,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 0 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_1",
+   "word": 17,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 1 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_2",
+   "word": 18,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 2 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_3",
+   "word": 19,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 3 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_4",
+   "word": 20,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 4 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_5",
+   "word": 21,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 5 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_6",
+   "word": 22,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 6 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_7",
+   "word": 23,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 7 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_8",
+   "word": 24,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 8 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_9",
+   "word": 25,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 9 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kernel_10",
+   "word": 26,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "G23 MTP backend kernel 10 entry (16 B units; 0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
    "name": "manifest_sha256",
    "word": 32,
    "lsb": 0,

@@ -417,7 +417,9 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 |---|---|---|
 | 0 | magic `0x31494748` ("HGI1") | CP |
 | 1 | version 1.0 (minor in bits 7:0, major in 15:8), length 64 (bits 23:16) | CP |
-| 2–31 | reserved | — |
+| 2–15 | reserved | — |
+| 16–26 | MTP backend kernel entries 0 … 10 (G23): record offsets in the image, 16-byte units; 0 = absent | CP |
+| 27–31 | reserved | — |
 | 32–39 | sha256 of the model manifest | software |
 | 40 | `cp_vocab` (bits 17:0) | CP |
 | 41 | `cp_ctx_max` (bits 20:0) | CP |
@@ -691,10 +693,12 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 
 | Record | Fields (width in bits) |
 |---|---|
-| Doorbell | `token` 18, `pos` 20, `job` 32, `gen` 4, `entry` 2, `ncol` 4 |
+| Doorbell | `token` 18, `pos` 20, `job` 32, `gen` 4, `entry` 2, `ncol` 4, `kernel` 4 |
 | Completion | `token` 18, `pos` 20, `job`, `gen`, `status` 4, `cycles` |
 
 Completion status: 0 OK, 1 unit fault, 2 no result, 3 bad command or range.
+
+**Entry 3 = KERNEL (G23).** A doorbell with `entry` 3 starts the program at MD word 16 + `kernel` (a kernel entry of 0, or `kernel` > 10, completes at once with status 3). The generic die's native DSpark MTP controller uses it: its operations (the DS draft, verify and head steps) are expanded by the CP's backend translator into one KERNEL doorbell per launch, in the order of the shipped DS-V4.1 DSpark expansion, each with that launch's `token` and `pos`. The completion of a head kernel (the verify-row and draft heads) carries the merged argmax id read by its `CTL.END`; the translator hands it to the controller. The host never needs entry 3; the translator owns the doorbell while a native MTP job runs.
 
 ### 6.12 Model manifest schema
 
