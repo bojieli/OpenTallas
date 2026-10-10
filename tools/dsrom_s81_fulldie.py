@@ -2305,6 +2305,7 @@ ENG_BUSES = (
 )
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
+FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
 HOST_MM2 = 0.10
 FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
@@ -3128,7 +3129,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -3545,12 +3546,12 @@ def buses_r8(m):
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
             bus(f'wd_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'wd'), (cl_, 'wd')])
-    if 'eng' in hub:  # layer1e Engram service (ENG_BUSES) + the SW-home share through svc_SW
+    if 'eng' in hub and not FWD_IFACE:  # layer1e Engram service (ENG_BUSES) + the SW-home share through svc_SW
         for a_, pa, b_, pb, bits, _ in ENG_BUSES:
             bus(f'eng_{a_}_{b_}_{pa}', 'eng', bits, [(hub[a_].name, pa), (hub[b_].name, pb)])
         bus('eng_sw_q', 'eng', 35, [(hub['eng'].name, 'teq'), (m['svcs']['SW'].name, 'feq')])   # hq_v + atom 31 + tag 3
         bus('eng_sw_r', 'eng', 265, [(m['svcs']['SW'].name, 'ter'), (hub['eng'].name, 'fer')])  # hq_cred + hr 264
-    if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
+    if HOST_SLAB and not (FWD_IFACE and CTRL_RQ):     # host sector writes -> each stack controller's host write port (decode first), completions back
         for st, ct in m['ctrls'].items():
             # s81-gen 2026-10-09: with --ctrl-rq the stack client owns the controller's real request port (rq), so the
             # host writes land in the client (svc / layer1e Engram service), which muxes them into rq (ingest 2f179fc18:
@@ -4665,6 +4666,93 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                [(bx, by_), (bx, yo), (vch_x(m, name), yo), (vch_x(m, name), he.y + he.h / 2),
                 (he.x + he.w / 2, he.y + he.h / 2)], he)
         CH8.bus(f'h{name}_o', 'local', 515, [(he.name, 'o'), (vm.name, name)])
+    if FWD_IFACE:
+        _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, vmy)
+
+
+def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, vmy):
+    """--fwd-iface (s81-gen 2026-10-09): the die-crossing host-write and layer1e Engram interfaces as FORWARDED lanes
+    (source-synchronous stations + an end block at the sink: m2l meso into a stream block, r2l ratio CDC into the serial
+    VM; an l2r start block when the VM is the source), the way the svc <-> VM / selector / collector chains are built.
+    The common-clock hop-fix chains they replace ran 20 mm through 6-8 clock regions: die-evidence-2 s81_l1full clock
+    plan, 8 inter-region pairs up to 322 ps (budget 150) on hw_SW / hc_SW."""
+    hub = m['hub']
+    vm = hub['vm']
+    band = lambda it: it.kind == 'svc'
+    offs = {}
+
+    def nxt_off(it):
+        """next face offset (from the east end) on a band block: svc_SW from 1,900 um west of the existing svc chain
+        taps (400-1,500) in 150 um steps; eng_SE (1,188 um) from its east end in 80 um steps"""
+        wide = it.w > 3000
+        o_ = offs.get(it.name, 1900.0 if wide else 40.0)
+        offs[it.name] = o_ + (150.0 if wide else 80.0)
+        assert o_ < it.w - 20.0, (it.name, o_)
+        return o_
+
+    def sink_end(tag, payload, dst, side):
+        kind = 'r2l' if dst.domain == 'serial_0p9' else 'm2l'
+        nm, w, h = end_spec(kind, [payload], 'vr')
+        if band(dst):
+            x, y = face_pt(dst, nxt_off(dst))
+            if dst is hub.get('eng'):          # layer1e: end blocks in the free SE slot, on eng_SE's top face
+                pl = P.near(x, y + h / 2 + 6.0, w, h, [cor['engS']], horiz=True, span=1200.0, rows=20)
+                assert pl, tag
+                return P.add(Inst(f'he_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
+            return beside_svc(f'he_{tag}', nm, w, h, dst, dst.x + dst.w - x)
+        y = dst.y + dst.h / 2 + (len(m.setdefault('_fwd_end', {}).setdefault(dst.name, [])) - 2) * 60.0
+        m['_fwd_end'][dst.name].append(tag)
+        return P.add(_hub_at(P, f'he_{tag}', nm, w, h, dst, side, y, cor))
+
+    def pin(it, side, tag):
+        if band(it):
+            return face_pt(it, nxt_off(it))
+        k_ = len(m.setdefault('_fwd_src', {}).setdefault(it.name, []))
+        m['_fwd_src'][it.name].append(tag)
+        return (it.x if side == 'W' else it.x + it.w, it.y + it.h / 2 + (k_ - 2) * 40.0)
+
+    def lane(tag, payload, src, sport, dst, dport, side):
+        """src.sport -> dst.dport (payload bits + valid/ready framing), forwarded on `side` of the spine"""
+        start = src
+        if src.domain == 'serial_0p9':          # serial VM: an l2r start block beside it
+            nm, w, h = end_spec('l2r', [payload], 'vr')
+            start = P.add(_hub_at(P, f'hs_{tag}', nm, w, h, src, side, vmy + 1150.0 + 60.0 * len(m.get('_fwd_l2r', [])), cor))
+            m.setdefault('_fwd_l2r', []).append(tag)
+            CH8.bus(f'hs_{tag}_i', 'local', payload + 1, [(src.name, sport), (start.name, 'i')])
+            CH8.bus(f'hs_{tag}_s', 'local', 3, [(start.name, 'st'), (src.name, sport + 's')])
+            a = (start.x + start.w / 2, start.y + start.h / 2)
+            srcp = (start.name, 'fo', 'od')
+        else:
+            a = pin(src, side, tag)
+            srcp = (src.name, sport + 'f', sport + 'd')
+        he = sink_end(tag, payload, dst, side)
+        b = (he.x + he.w / 2, he.y + he.h / 2)
+        sx = spine_x(side)
+        if band(src) and band(dst):             # band -> band along the strip
+            sy = strip_y(src, tag)
+            path = [a, (a[0], sy), (b[0], sy), b]
+        elif band(src):
+            sy = strip_y(src, tag)
+            path = [a, (a[0], sy), (sx, sy), (sx, b[1]), b]
+        elif band(dst):
+            sy = strip_y(dst, tag)
+            path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
+        else:
+            path = [a, (sx, a[1]), (sx, b[1]), b]
+        single(tag, payload, 'vr', srcp, a, path, he)
+        CH8.bus(f'he_{tag}_o', 'local', payload + 3, [(he.name, 'o'), (dst.name, dport)])
+
+    if HOST_SLAB and CTRL_RQ:
+        for st in m['ctrls']:
+            cl = m['svcs'][st] if st in m['svcs'] else hub['eng']
+            side = 'W' if st[1] == 'W' else 'E'
+            lane(f'hw{st}', 512 + 64 + 2, hub['host'], f'tw{st}', cl, 'hw', side)
+            lane(f'hc{st}', 18, cl, 'hc', hub['host'], f'fc{st}', side)
+    if 'eng' in hub:
+        for a_, pa, b_, pb, bits, _ in ENG_BUSES:
+            lane(f'e_{a_}_{pa}', bits, hub[a_], pa, hub[b_], pb, 'E')
+        lane('e_swq', 35, hub['eng'], 'teq', m['svcs']['SW'], 'feq', 'W')
+        lane('e_swr', 265, m['svcs']['SW'], 'ter', hub['eng'], 'fer', 'W')
 
 
 def _hub_at(P, name, master, w, h, slab, side, y, cor):
@@ -5534,6 +5622,9 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
+                    'Engram interfaces as forwarded lanes with meso / ratio-CDC end blocks (the common-clock hop-fix '
+                    'chains crossed 6-8 clock regions: 322 ps inter-region skew); default off')
     ap.add_argument('--path-pick', action='store_true', help='s81-gen 2026-10-09: a die-level hop runs on the L or '
                     'corridor Z path with the largest corridor share (station count from that path); = OT_S81_PATH_PICK=1')
     ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
@@ -5616,7 +5707,8 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global CTRL_RQ
+    global CTRL_RQ, FWD_IFACE
+    FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
     if a.die == 'layer1e':
         assert a.gen == 'r8' and a.rev == 'r9' and HOST_SLAB, \
