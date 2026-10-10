@@ -1628,6 +1628,421 @@ def qwen_mtp_note():
                        "(the DS ROM and the HBM accelerator).")
 
 
+# ======================================================================================== generic HBM die (HGI-1 programs)
+# The token path of the generic HBM die IS its compiled HGI-1 program: one node per executed record (program order, loops
+# unrolled), start / end / cycles from the hgi_sim transaction-level schedule (timing.schedule S2: the command processor
+# modelled -- fetch, decode, wait-mask drains, in-order dispatch, head-of-line blocking -- on the simulator's unit cost
+# tables), edges = the wait-mask dependences (record i waits for the last earlier record of every unit in its mask) plus
+# the STREAM credit pairs.  Grade 'measured' where the die-level RTL bench (hgi-e2e, e2e_calibration.json per_unit)
+# measured the unit.op on that model's vehicle, 'priced' otherwise.  Clicking a node shows the decoded record
+# (tools/hgi_sim/listing.py) from data/<design>_program.json.
+HGI_OUT = "results/arch/hgi_programs_20261010"
+HGI_GEOM = HGI_OUT + "/r25gph_geometry.json"
+HGI_DS_PROGRAM = HGI_OUT + "/inputs/ds_rank0_program.json"
+HGI_DS_RUN = HGI_OUT + "/inputs/ds_native_1M_run.json"
+HGI_E2E = "results/arch/hgi_sim_20261009/e2e_calibration.json"
+HGI_DIE = "hbm_r25gph"
+# HGI unit -> R25GP die blocks (tools/hgi_die_dispatch.py UNITS: sm / att adapters in the CP block driving the SM launch
+# tree and the attention tiles; su / sfu / hc at the SW hub quarter; dma beside the loader; FUSED on the quant block;
+# coll; idx; argmax in the MTP slot).  HBM traffic is drawn on the svc / PHY of the operand's stacks.
+HGI_CLASSES = [
+    dict(id="SM", label="SM.MATVEC (32 SMs, weights streamed from HBM)", elements=["hfd_sm", "hfd_cmdproc"],
+         instances=["sm*", "svc_*", "phy_*"]),
+    dict(id="ATT", label="ATT.QK / PV (attention tiles, KV from HBM)", elements=["hfd_attn_half_lo", "hfd_attn_half_hi"],
+         instances=["at_*", "svc_*", "phy_*"]),
+    dict(id="SU", label="SU.VOP (stream unit, SW hub quarter)", elements=["hfd_su", "hfd_hgi_vm"],
+         instances=["hb_su_SW", "hb_hgi_vm"]),
+    dict(id="COLL", label="COLL (collective engine + SerDes)", elements=["hfd_coll", "hfd_serdes_slab", "ot_pdie_serdes"],
+         instances=["hb_coll", "sd_*", "lk_S*", "lk_N*"]),
+    dict(id="DMA", label="DMA (record mover beside the loader)", elements=["hfd_loader", "hfd_hgi_vm"],
+         instances=["hb_loader", "hb_hgi_vm", "svc_*", "phy_*"]),
+    dict(id="FUSED", label="FUSED (norms, softmax, QDQ: quant block)", elements=["hfd_quant"], instances=["hb_quant"]),
+    dict(id="HC", label="HC (hyper-connection mixes, SW hub quarter)", elements=["hfd_hc"], instances=["hb_hc_SW", "svc_*"]),
+    dict(id="IDX", label="IDX (indexer / top-k)", elements=["hfd_hgi_idx", "hfd_idx_score_native_grid", "hfd_idx_sel_native_qend"],
+         instances=["hb_hgi_idx", "idx_score_*", "idx_selector", "hb_index_*"]),
+    dict(id="SFU", label="SFU.GLU (SW hub quarter)", elements=["hfd_sfu"], instances=["hb_sfu_SW"]),
+    dict(id="ARGMAX", label="ARGMAX.LOCAL (MTP slot)", elements=["hfd_hgi_am"], instances=["hb_mtp_am"]),
+    dict(id="CTL", label="CTL (command processor)", elements=["hfd_cmdproc", "hgi_mtp_native"], instances=["hb_cmdproc", "hb_mtp"]),
+]
+HGI_LINK = dict(SM="HBM svc -> SM (weights) | VM -> SM (x)", ATT="HBM svc -> tiles (KV rows)", SU="VM -> SU -> VM",
+                COLL="VM -> coll -> SerDes -> peers", DMA="HBM svc <-> loader <-> VM", FUSED="VM -> quant -> VM",
+                HC="HBM / VM -> HC", IDX="VM -> IDX", SFU="VM -> SFU -> VM", ARGMAX="STREAM / VM -> argmax", CTL="CP")
+
+
+def _hgi_crit(s, recs):
+    """the critical chain, by executed index: walk back from the last end through what bound each record -- its STREAM
+    producer (end bound by the producer's tail), the unit's previous record (unit busy), or what held its dispatch
+    (timing.schedule S2 `why`: the waited unit's last record, the unit's queue, or the previous record in dispatch
+    order when the command processor itself -- fetch, decode, in-order issue -- was the bound)"""
+    import numpy as np
+    from hgi_sim import timing as T
+    ex, st, en, why = s["ex"], s["start"], s["end"], s["why"]
+    n = len(ex)
+    unit = [recs[k].unit for k, *_ in ex]
+    prev_u, lastu, last = [None] * n, [None] * n, {}
+    for i in range(n):
+        prev_u[i] = last.get(unit[i])
+        lastu[i] = dict(last)
+        last[unit[i]] = i
+    sprod, lp = [None] * n, {}
+    for i, (k, *_) in enumerate(ex):
+        r = recs[k]
+        for kk in ("A", "B", "C", "D"):
+            d = r.desc.get(kk)
+            if d is not None and d.space == "STREAM" and d.base in lp:
+                sprod[i] = lp[d.base]
+        for kk in ("O", "R"):
+            d = r.desc.get(kk)
+            if d is not None and d.space == "STREAM":
+                lp[d.base] = i
+    i = int(np.argmax(en))
+    path, seen = [], set()
+    eps = 1e-6
+    while i is not None and i not in seen:
+        seen.add(i)
+        path.append(i)
+        j = sprod[i]
+        if j is not None and en[i] <= en[j] + 200 and st[i] <= st[j] + eps:
+            i = j
+            continue
+        pu = prev_u[i]
+        ready, wt, qt, cpn, wun = why[i]
+        d_t = max(ready, wt, qt, cpn)
+        if pu is not None and unit[i] not in T.PIPELINED and en[pu] >= st[i] - eps and en[pu] > d_t:
+            i = pu
+            continue
+        if i == 0:
+            break
+        if wt >= d_t - eps and wun is not None and lastu[i].get(wun) is not None:
+            i = lastu[i][wun]
+        elif qt >= d_t - eps and pu is not None:
+            i = pu
+        else:
+            i = i - 1
+    assert n
+    return list(reversed(path))
+
+
+def _hgi_e2e(vehicle):
+    per = J(HGI_E2E)["result"]["per_unit"]
+    return {k: v[vehicle] for k, v in per.items() if vehicle in v}
+
+
+def hgi_program_file(key, recs, meta):
+    """data/<key>_program.json: the decoded listing of every image record (listing.py text block + fields)"""
+    from hgi_sim import listing as LS
+    from hgi_sim.records import encode_program
+    img = encode_program(recs)
+    ents = LS.listing(img, [r.tag for r in recs])
+    LS.check_roundtrip(img, ents)
+    return dict(schema="opentallas.hgi_program_listing.v1", design=key, tool="tools/hgi_sim/listing.py",
+                image_bytes=len(img), image_sha256=hashlib.sha256(img).hexdigest(), records=len(ents),
+                roundtrip="image -> listing -> records -> encode_program == image", **meta,
+                listing=[dict(index=e["index"], unit=e["unit"], op=e["op"], tag=e["tag"], text=LS.text([e]))
+                         for e in ents])
+
+
+def hgi_design(key, title, recs, pos, cost_fn, vehicle, group_of, headline_extra, notes, prog_meta, tau=None,
+               phase_of=None, hw_of=None):
+    from hgi_sim import timing as T
+    import hbm_generic_iface as HGI
+    s = T.schedule(recs, pos, "S2", cost_fn=cost_fn)
+    assert not s["races"], s["races"][:3]
+    ex, st, en, costs = s["ex"], s["start"], s["end"], s["costs"]
+    # the chain may overlap (an in-order dispatch link binds to the previous record's issue, not its end): keep the
+    # records that advance the chain's frontier, and credit each with its exclusive (non-overlapped) cycles
+    excl, front = {}, 0.0
+    for i in sorted(_hgi_crit(s, recs), key=lambda j: (st[j], en[j])):
+        x = en[i] - max(st[i], front)
+        if x > 1e-9 or (en[i] - st[i] <= 1e-9 and st[i] >= front):
+            excl[i] = max(0.0, x)
+            front = max(front, en[i])
+    crit = set(excl)
+    e2e = _hgi_e2e(vehicle)
+    d = Design(key, title, "cycles")
+    gdef = collections.OrderedDict()
+    ids = []
+    unit_ops = {}
+    for i, (k, L, L1) in enumerate(ex):
+        r = recs[k]
+        uo = f"{r.unit}.{r.op}"
+        gid, glab, gkind = group_of(i, k, L, r)
+        gdef.setdefault(gid, dict(label=glab, kind=gkind))
+        meas = e2e.get(uo)
+        grade = "measured" if meas else "priced"
+        c, cg, how = costs[i]
+        note = f"{how} [{cg}]" + (f"; RTL bench ratio {meas['ratio']}" if meas else "")
+        unit_ops.setdefault(uo, dict(grade=grade, cost_grade=cg, bench=meas, records=0))["records"] += 1
+        nid = f"r{i:05d}"
+        lab = r.tag or uo
+        n = d.add(nid, f"{lab} · {uo}", gid, r.unit, en[i] - st[i],
+                  src(grade, "hgi_sim S2", f"record {k}" + (f", L={L}" if L else ""), note=note),
+                  op=uo, deps=[], start=st[i], critical=i in crit, link_in=HGI_LINK.get(r.unit),
+                  kind="op" if i in crit else "parallel")
+        n["rec"] = k
+        if L:
+            n["iter"] = L
+        if phase_of:
+            mark(n, phase_of(i, k, L, r), hw_of(i, k, L, r) if hw_of else None)
+        ids.append(nid)
+    # edges: wait-mask dependences (the last earlier record of every waited unit), STREAM credit pairs
+    last = {}
+    seen = set()
+    for i, (k, L, L1) in enumerate(ex):
+        r = recs[k]
+        for b in range(16):
+            if r.wait >> b & 1 and HGI.UNITS[b] in last:
+                j = last[HGI.UNITS[b]]
+                if (j, i) not in seen:
+                    seen.add((j, i))
+                    d.edges.append(dict(src=ids[j], dst=ids[i], bytes=None, link=f"wait {HGI.UNITS[b]}", cycles=0))
+        for key_ in ("A", "B", "C", "D"):
+            dd = r.desc.get(key_)
+            if dd is not None and dd.space == "STREAM":
+                for j in range(i - 1, -1, -1):
+                    rj = recs[ex[j][0]]
+                    if any(x.space == "STREAM" and x.base == dd.base for kk, x in rj.desc.items() if kk in ("O", "R")):
+                        if (j, i) not in seen:
+                            seen.add((j, i))
+                            d.edges.append(dict(src=ids[j], dst=ids[i], bytes=None, link=f"STREAM {dd.base}", cycles=0))
+                        break
+        last[r.unit] = i
+    # consecutive critical nodes bound by a true dependence or unit order (not a wait bit) get their own edge
+    cp = [ids[i] for i in sorted(crit)]
+    for a, b in zip(cp, cp[1:]):
+        if (int(a[1:]), int(b[1:])) not in seen:
+            d.edges.append(dict(src=a, dst=b, bytes=None, link="data / unit order", cycles=0))
+    total = max(en)
+    tok = (tau or 1.0) * CLK / total
+    headline = dict(tok_s=round(tok, 1), us=round(total / CLK * 1e6, 3), cycles=r1(total), **headline_extra)
+    worst = max((g for g in gdef), key=lambda g: sum(d.nodes[x]["cycles"] for x in d.order if d.nodes[x]["group"] == g))
+    drill = dict(group=worst, why="the longest group on the token path")
+    rec = finish(d, headline, gdef, HGI_CLASSES, drill, notes, tau=tau,
+                 extra=dict(geometry=dict(source=HGI_GEOM, key=HGI_DIE, die="generic HBM die R25GP (HGI-1 machine, "
+                                          "variant r25gph; one of the group)"),
+                            unit_ops=unit_ops, unit_ops_rule=(f"grade 'measured': the unit.op was measured on the "
+                                f"die-level RTL bench ({HGI_E2E} per_unit, vehicle {vehicle}; bench = its RTL / simulator "
+                                "service); 'priced': simulator price (tools/hgi_sim/calibration.json). Node src 'hgi_sim S2' "
+                                "= tools/hgi_sim/timing.py schedule S2."),
+                            program=dict(file=f"{key}{'_mtp' if tau else ''}_program.json", records=len(recs), executed=len(ex),
+                                         schedule="S2 (CP modelled)", position=pos, **prog_meta)))
+    # exclusive critical cycles (the chain's frontier): shares, class / grade totals and group widths sum to the token
+    ex_of = {ids[i]: excl[i] for i in excl}
+    cls_tot, grade_tot, grp = collections.Counter(), collections.Counter(), collections.Counter()
+    gcl = collections.defaultdict(collections.Counter)
+    for n in rec["nodes"]:
+        if n["critical"]:
+            x = ex_of[n["id"]]
+            n["critical_cycles"] = r1(x)
+            n["share"] = round(x / total, 6)
+            cls_tot[n["cls"]] += x
+            grade_tot[n["src"]["grade"]] += x
+            grp[n["group"]] += x
+            gcl[n["group"]][n["cls"]] += x
+    t = rec["totals"]
+    t["by_grade"] = {k: r1(v) for k, v in grade_tot.most_common()}
+    t["by_class"] = [dict(cls=k, cycles=r1(v), share=round(v / total, 6)) for k, v in cls_tot.most_common()]
+    t["critical_rule"] = ("critical chain from timing.schedule S2 (what bound each record), each record credited with the "
+                          "cycles it advances the chain (overlap with the previous critical record removed)")
+    for g in rec["groups"]:
+        if g["critical"]:
+            g["cycles"] = r1(grp[g["id"]])
+            g["share"] = round(grp[g["id"]] / total, 6)
+            g["cls_cycles"] = {k: r1(v) for k, v in gcl[g["id"]].most_common()}
+    rec["_program"] = hgi_program_file(key, recs, prog_meta)
+    return rec
+
+
+def _qcfg():
+    return json.loads((ROOT / "compiler/models/qwen3-8b/config.json").read_text())
+
+
+def hbm_gen_qwen():
+    from hgi_sim import qwen_compiler as QC
+    from hgi_sim import timing as T
+    cfg = _qcfg()
+    recs = QC.program(QC.Geometry(cfg, 8192), QC.qwen_params(cfg), cfg["num_hidden_layers"])
+    lo = next(k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "LOOP")
+    hi = next(k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "ENDLOOP")
+    ffn0 = next(k for k, r in enumerate(recs) if r.tag == "prenorm.ffn")
+
+    def group_of(i, k, L, r):
+        if k < lo:
+            return "pro", "Prologue (embedding, RoPE row)", "embed"
+        if k > hi:
+            return "epi", "Epilogue (final norm, LM head, argmax)", "head"
+        part = "ffn" if k >= ffn0 else "attn"
+        return f"L{L:02d}.{part}", f"Layer {L} · {'FFN' if part == 'ffn' else 'attention'}", "layer"
+    notes = [
+        "Every node is one executed record of the compiled Qwen3-8B TP4 token program (tools/hgi_sim/qwen_compiler.py: "
+        f"{len(recs)} image records, the 36-layer body as one CTL.LOOP), in program order; clicking a node shows the decoded "
+        "record (tools/hgi_sim/listing.py, spec Appendix C).",
+        "start / end / cycles: tools/hgi_sim/timing.py schedule S2 at position 8,191 (command processor modelled: fetch, "
+        "decode, wait-mask drains, in-order dispatch, head-of-line blocking) on the simulator's unit cost tables "
+        "(calibration.json; SM / HBM first access from RTL measurements). Pathfinding grade, not a closed rate.",
+        f"Grade 'measured' = the unit.op was measured on the die-level RTL bench (hgi-e2e, {HGI_E2E} per_unit, vehicle "
+        "qwen_L0); 'priced' = simulator price only. The node note carries the bench's RTL / simulator service ratio.",
+        "Edges are the wait-mask dependences (a record waits for every unit in its 16-bit mask to drain: edge from that "
+        "unit's last earlier record) plus the STREAM credit pairs of the LM head.",
+        "Every die of the TP4 group runs the same image; the COLL records cross the SerDes to the 3 peers.",
+    ]
+    hx = dict(mode="AR, position 8,191 (8K context), TP4", status="simulated (hgi_sim S2), pathfinding",
+              basis="compiled HGI-1 program, tools/hgi_sim/timing.py S2 on the simulator cost tables",
+              source="tools/hgi_sim/qwen_compiler.py + tools/hgi_sim/timing.py (results/arch/hgi_sim_20261009/"
+                     "qwen_timing_P8191_v10.json is the committed timing record)")
+    return hgi_design("hbm_gen_qwen", "Generic HBM die (R25GP), Qwen3-8B TP4, 8K, AR: the compiled HGI-1 program",
+                      recs, 8191, T.cost, "qwen_L0", group_of, hx, notes,
+                      dict(model="Qwen3-8B", tp=4, compiler="tools/hgi_sim/qwen_compiler.py program()"))
+
+
+def hbm_gen_qwen_mtp(ar=None):
+    from hgi_sim import dflash as DF
+    from hgi_sim import dflash_timing as DFT
+    from hgi_sim import qwen_compiler as QC
+    cfg = _qcfg()
+    dcfg = json.loads(DFT.DCFG.read_text())
+    B = 16
+    pos = 8192 - B
+    recs = DF.step_program(DF.DGeom(cfg, dcfg, 8192, B), QC.qwen_params(cfg), timing_pos=pos)
+    tau, tau_src = DFT.TAU[B]["published"]
+    loops, cur = {}, None
+    for k, r in enumerate(recs):
+        if r.unit == "CTL" and r.op == "LOOP":
+            cur = r.tag
+        loops[k] = cur
+        if r.unit == "CTL" and r.op == "ENDLOOP":
+            cur = None
+
+    def phase(r):
+        f = r.family or r.tag
+        return "draft" if f.startswith("draft") else "verify" if f.startswith("verify") else "accept" if (
+            f.startswith("accept") or r.tag in ("tokx", "end")) else "draft"
+
+    def group_of(i, k, L, r):
+        ph = phase(r)
+        lp = loops.get(k)
+        if lp and lp.startswith("verify.layers"):
+            lay = int(lp[len("verify.layers"):]) + L
+            return f"V.L{lay:02d}", f"Verify · layer {lay} (16 positions)", "layer"
+        if lp == "draft.layers":
+            return f"D.L{L}", f"Draft · drafter layer {L}", "layer"
+        if lp == "draft_ctx.layers":
+            return "D.ctx", "Draft · context K/V rebuild", "stage"
+        if ph == "verify":
+            return ("V.head", "Verify · LM head + argmax", "head") if any(x in r.tag for x in ("head", "argmax")) else (
+                "V.pre", "Verify · embedding", "embed")
+        if ph == "accept":
+            return "acc", "Accept / commit (TOKX)", "stage"
+        if "head" in r.tag or "argmax" in r.tag:
+            return "D.head", "Draft · LM head + argmax", "head"
+        return "D.pre", "Draft · setup (counts, features, fc)", "stage"
+    hwd = hw("built", "AR-path units, P-slot operands")
+    tokx = hw("partial", "CTL.TOKX proposed (spec 7.4, Q-MTP-1), simulated only")
+    notes = [
+        f"One DFlash step (z-lab/Qwen3-8B-DFlash-b16, block {B}) compiled by tools/hgi_sim/dflash.py step_program: "
+        f"{len(recs)} image records (draft, verify over 16 positions, accept), one doorbell at entry_verify; every node is "
+        "one executed record; clicking a node shows the decoded record.",
+        "Timing: tools/hgi_sim/dflash_timing.py make_cost('spec') (one weight read shared by up to 8 slots; G18 open: if "
+        "every slot re-issues the line the step is ~3.9x longer) under timing.schedule S2.",
+        f"tau {tau} accepted tokens a step: {tau_src}.",
+        "Edges are the wait-mask dependences plus STREAM credit pairs.",
+    ]
+    hx = dict(mode=f"DFlash block {B}, position {pos}, TP4", status="simulated (hgi_sim S2), pathfinding",
+              basis="compiled HGI-1 DFlash step program, tools/hgi_sim/dflash_timing.py cost on timing.schedule S2",
+              source="tools/hgi_sim/dflash.py + dflash_timing.py (results/arch/hgi_sim_20261009/dflash/dflash_timing.json)",
+              tau=tau)
+    rec = hgi_design("hbm_gen_qwen", f"Generic HBM die (R25GP), Qwen3-8B TP4, 8K, DFlash b{B}: the compiled HGI-1 step",
+                     recs, pos, DFT.make_cost("spec", False), "qwen_L0", group_of, hx, notes,
+                     dict(model="Qwen3-8B + DFlash b16", tp=4, block=B, compiler="tools/hgi_sim/dflash.py step_program()"),
+                     tau=tau, phase_of=lambda i, k, L, r: phase(r),
+                     hw_of=lambda i, k, L, r: tokx if r.op == "TOKX" else hwd)
+    total = rec["totals"]["cycles"]
+    ar = ar or {}
+    ar_cyc = (ar.get("totals") or {}).get("cycles") or total
+    rec["phases"] = [dict(id=p, label=lab, **{k: v for k, v in x.items()}) for p, lab in
+                     (("draft", "Draft (DFlash block)"), ("verify", f"Verify ({B} positions)"), ("accept", "Accept / commit"))
+                     for x in [_phase_span(rec, p, total)] if x]
+    rec["hw_summary"] = _hw_sum(rec)
+    rec["accounting"] = dict(tau=tau, tau_source=tau_src, drafted_tokens=B - 1, verified_positions=B,
+                             accepted_tokens_per_step=tau, step_cycles=r1(total), per_accepted_cycles=r1(total / tau),
+                             per_accepted_us=round(total / tau / CLK * 1e6, 3), ar_token_cycles=r1(ar_cyc),
+                             speedup_over_ar=round(ar_cyc * tau / total, 4),
+                             per_accepted_by_phase={p["id"]: r1(p["cycles"] / tau) for p in rec["phases"]},
+                             rule="one step emits tau tokens on average; per-accepted-token cost = step / tau")
+    return rec
+
+
+def _phase_span(rec, pid, total):
+    ns = [n for n in rec["nodes"] if n.get("phase") == pid and n["critical"]]
+    if not ns:
+        return None
+    cyc = sum(n.get("critical_cycles", n["cycles"]) for n in ns)
+    return dict(start=r1(min(n["start"] for n in ns)), end=r1(max(n["end"] for n in ns)), cycles=r1(cyc),
+                share=round(cyc / total, 6))
+
+
+def _hw_sum(rec):
+    s = collections.defaultdict(lambda: dict(nodes=0, cycles=0.0))
+    for n in rec["nodes"]:
+        if n["critical"] and n.get("hw"):
+            s[n["hw"]["status"]]["nodes"] += 1
+            s[n["hw"]["status"]]["cycles"] += n.get("critical_cycles", n["cycles"])
+    return {k: dict(nodes=v["nodes"], cycles=r1(v["cycles"])) for k, v in s.items()}
+
+
+def hbm_gen_ds():
+    from hgi_sim import ds_native_timing as DT
+    from hgi_sim import timing as T
+    d, recs = DT.load(ROOT / HGI_DS_PROGRAM)
+    recs = T.rebuild_waits(recs)
+    rg = {}
+    for x in J(HGI_DS_RUN)["results"]:
+        for s_ in x.get("row_gather") or []:
+            rg[x["layer"]] = s_
+    cf = DT.NativeCost(d["ops"], recs, row_gather=rg)
+    ffn_from = {}
+    for k, r in enumerate(recs):
+        if r.tag == "ffn_norm" and r.layer not in ffn_from:
+            ffn_from[r.layer] = k
+
+    def group_of(i, k, L, r):
+        if not isinstance(r.layer, int) or r.layer >= 40:
+            return "head", "Head (final HC + norm, LM head, argmax)", "head"
+        part = "ffn" if k >= ffn_from.get(r.layer, 1 << 30) else "attn"
+        return (f"L{r.layer:02d}.{part}", f"Layer {r.layer} · {'MoE FFN' if part == 'ffn' else 'attention'}", "layer")
+    notes = [
+        f"Every node is one executed record of the compiled DeepSeek-V4.1-Flash TP96 token program of rank 0 (a head die; "
+        f"tools/hgi_sim/ds_native.py --program-out, {len(recs)} records, all 40 layers + the head, bit-exact against the "
+        f"released-checkpoint golden at position 1,048,575: {HGI_DS_RUN} status pass). The 96 per-die images have identical "
+        "structure (results/arch/hgi_sim_20261009/programs/); clicking a node shows the decoded record.",
+        "start / end / cycles: tools/hgi_sim/ds_native_timing.py NativeCost (walk-priced engine records from measured "
+        "adapters, SU by the measured-depth model, ROW_GATHER bypass pricing from the run's selection) under timing.schedule "
+        "S2 with the wait masks rebuilt over the whole token (as ds_native_timing does). Pathfinding grade.",
+        f"Grade 'measured' = the unit.op was measured on the die-level RTL bench (hgi-e2e, {HGI_E2E} per_unit, vehicle "
+        "ds_L0); 'priced' = simulator price only. The node note carries the bench's RTL / simulator service ratio.",
+        "Edges are the wait-mask dependences (edge from the last earlier record of every unit in the record's mask) plus "
+        "STREAM credit pairs.",
+        "MTP: the compiler emits no DS DSpark program yet (the generic die's backend operation translator, spec 6.11 "
+        "KERNEL entries, is open), so this design shows AR only.",
+    ]
+    hx = dict(mode="AR, position 1,048,575 (1M context), TP96", status="simulated (hgi_sim S2), pathfinding",
+              basis="compiled HGI-1 program (rank 0), tools/hgi_sim/ds_native_timing.py costs on timing.schedule S2",
+              source="tools/hgi_sim/ds_native.py + ds_native_timing.py (results/arch/hgi_sim_20261009/"
+                     "ds_native_timing_1M.json is the committed timing record of the same program)")
+    rec = hgi_design("hbm_gen_ds", "Generic HBM die (R25GP), DeepSeek-V4.1-Flash TP96, 1M, AR: the compiled HGI-1 program",
+                     recs, DT.POS, cf, "ds_L0", group_of, hx, notes,
+                     dict(model="DeepSeek-V4.1-Flash", tp=96, rank=0, compiler="tools/hgi_sim/ds_native.py --program-out",
+                          program_source=HGI_DS_PROGRAM, program_sha256=sha(HGI_DS_PROGRAM)))
+    rec["mtp"] = dict(available=False, reason="AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the "
+                      "generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend "
+                      "operation translator, which is still open, so there is no compiled MTP record stream to show.")
+    return rec
+
+
+def hgi_geo_snapshot():
+    return J(HGI_GEOM)
+
+
 # ======================================================================================== geometry snapshots (views)
 def geo_snapshot(key):
     """neutral geometry for the views' harness: {w, h, instances: [[name, kind, x, y, w, h, master]]} (y up)"""
@@ -1640,9 +2055,16 @@ def geo_snapshot(key):
 OPTIONAL_TARGETS = ("qwen_hbm", "qwen_kvdie")
 
 
+# hbm_ds (the r25 matched-reference composition) is not a token-path view any more (owner 2026-10-10: the HBM views are
+# the generic die's compiled programs only).  It stays callable by name for tools/token_path_systems.py, whose
+# systems.json still composes it, and is never written to --viz-dir.
+SYSTEMS_ONLY_TARGETS = ("hbm_ds",)
+
+
 def target_functions(namespace):
-    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_ds=namespace["hbm"])
-    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_ds=namespace["hbm_mtp"])
+    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_gen_qwen=namespace["hbm_gen_qwen"],
+               hbm_gen_ds=namespace["hbm_gen_ds"])
+    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_gen_qwen=namespace["hbm_gen_qwen_mtp"])
     for name in OPTIONAL_TARGETS:
         if callable(namespace.get(name)):
             fns[name] = namespace[name]
@@ -1667,7 +2089,16 @@ def main():
     index = []
 
     def write(name, rec):
-        rec["inputs"] = {p: sha(p) for p in sorted({REPRICE, UNI, GEO})}
+        prog = rec.pop("_program", None)
+        if prog is not None:
+            pp = a.out / f"{name}_program.json"
+            pp.write_text(json.dumps(prog, separators=(",", ":")) + "\n")
+            if a.viz_dir:
+                (a.viz_dir / "data").mkdir(parents=True, exist_ok=True)
+                shutil.copy(pp, a.viz_dir / "data" / pp.name)
+            rec["inputs"] = {p: sha(p) for p in sorted({HGI_E2E, HGI_GEOM, "tools/hgi_sim/calibration.json"})}
+        else:
+            rec["inputs"] = {p: sha(p) for p in sorted({REPRICE, UNI, GEO})}
         p = a.out / f"{name}.json"
         p.write_text(json.dumps(rec, separators=(",", ":")) + "\n")
         if a.viz_dir:
@@ -1676,7 +2107,12 @@ def main():
             shutil.copy(p, dd / p.name)
         return p
 
-    for k in (a.only.split(",") if a.only else fns):
+    targets = a.only.split(",") if a.only else list(fns)
+    if any(k in SYSTEMS_ONLY_TARGETS for k in targets):
+        assert not a.viz_dir, "systems-only targets are not token-path views"
+        fns.update(hbm_ds=globals()["hbm"])
+        mtps.update(hbm_ds=globals()["hbm_mtp"])
+    for k in targets:
         rec = fns[k]()
         mrec = mtps[k](rec) if k in mtps else None
         if mrec and k in OPTIONAL_TARGETS and not optional_mtp_qualified(mrec):
@@ -1705,7 +2141,14 @@ def main():
                           mtp=dict(rec["mtp"], reason=None) if mrec else rec["mtp"]))
         if a.viz_dir:
             gk = rec["geometry"]["key"]
-            (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo_snapshot(gk), separators=(",", ":")) + "\n")
+            geo = hgi_geo_snapshot() if gk == HGI_DIE else geo_snapshot(gk)
+            (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo, separators=(",", ":")) + "\n")
+    if a.only and (a.out / "index.json").is_file():
+        # a partial run keeps the other view designs' entries (and drops designs that are no longer views)
+        done = {x["design"] for x in index}
+        old = json.loads((a.out / "index.json").read_text())["designs"]
+        keep = [x for x in old if x["design"] not in done and x["design"] in fns]
+        index = keep + index
     (a.out / "index.json").write_text(json.dumps(dict(schema="opentallas.token_path.index.v1", designs=index), indent=1) + "\n")
     if a.viz_dir:
         shutil.copy(a.out / "index.json", a.viz_dir / "data" / "index.json")

@@ -31,19 +31,30 @@
    }
   },
   {
-   "design": "hbm_ds",
-   "title": "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, AR",
-   "file": "hbm_ds.json",
-   "tok_s": 1716.3,
-   "cycles": 699175.7,
+   "design": "hbm_gen_qwen",
+   "title": "Generic HBM die (R25GP), Qwen3-8B TP4, 8K, AR: the compiled HGI-1 program",
+   "file": "hbm_gen_qwen.json",
+   "tok_s": 951.1,
+   "cycles": 1261736.1,
    "mtp": {
     "available": true,
-    "file": "hbm_ds_mtp.json",
-    "tok_s": 3700.3,
-    "tau": 4.159,
-    "step_cycles": 1348759.6,
-    "per_accepted_cycles": 324299.0,
+    "file": "hbm_gen_qwen_mtp.json",
+    "tok_s": 1785.8,
+    "tau": 8.01,
+    "step_cycles": 5382584.1,
+    "per_accepted_cycles": 671983.0,
     "reason": null
+   }
+  },
+  {
+   "design": "hbm_gen_ds",
+   "title": "Generic HBM die (R25GP), DeepSeek-V4.1-Flash TP96, 1M, AR: the compiled HGI-1 program",
+   "file": "hbm_gen_ds.json",
+   "tok_s": 2185.3,
+   "cycles": 549130.8,
+   "mtp": {
+    "available": false,
+    "reason": "AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend operation translator, which is still open, so there is no compiled MTP record stream to show."
    }
   }
  ]
