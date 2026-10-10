@@ -8,6 +8,7 @@
 // module for the spec-generated wrapper (coll_hgi/rtl/spec.json).
 module ot_hgi_coll_ep #(
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
+    parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
     parameter integer RXAW = 8,
     parameter integer QAW = 7,
     parameter integer TXAW = 3,
@@ -17,7 +18,8 @@ module ot_hgi_coll_ep #(
     parameter integer LANES = 16,
     parameter integer FW = 32 * LANES,
     parameter integer PWT = FW + 33,
-    parameter integer MUT_MULTI = 0    // bench mutant: the multi-driver flag never sets
+    parameter integer MUT_MULTI = 0,   // bench mutant: the multi-driver flag never sets
+    parameter integer MUT_TIE = 0      // bench mutant: ARGMAX_MERGE ties to the higher id
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -46,10 +48,12 @@ module ot_hgi_coll_ep #(
     input  wire [2:0]         hgi_rowfmt_i,  // {fault, done_v, start_r}
     output wire [79:0]        hgi_vmaddr     // {O base 40, A base 40}
 );
-    wire [7:0] r_rank, r_mg; wire r_mall, r_byp; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
+    wire [7:0] r_rank, r_mg; wire r_mall, r_byp, r_amx, r_bf16; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
     wire [39:0] r_abase, r_obase; wire rec_rdy, rec_done, rec_fault;
     wire rf_sv, rf_dr; wire [7:0] rf_g, rf_b, rf_d; wire [20:0] rf_rows; wire [15:0] rf_words; wire [31:0] rf_ctx;
-    wire start_ready, done_valid, done_ready;
+    wire start_ready, done_valid, done_ready, m_done, m_done0;
+    wire g_slice, gs_we; wire [7:0] g_base; wire [6:0] gs_wa; wire [15:0] gs_wd;
+    wire [DEL-1:0] a_dv; wire [DEL*PWT-1:0] a_df; wire [DEL-1:0] e_dv; wire [DEL*PWT-1:0] e_df;
     // SU-quarter inject OR (ownership contract: flit i is quarter i mod 4's, the other three drive 0) and the review-1149
     // multi-driver flag: two or more non-zero quarters on one inject lane in a cycle sets a sticky fault (cleared by rst_n only).  The
     // data path is the plain OR (zero cycles); the flag is a parallel OR-reduce per quarter into one flop.
@@ -73,9 +77,10 @@ module ot_hgi_coll_ep #(
         .rec_v(hgi_rec[0]), .rec_rdy(rec_rdy), .rec_hdr(hgi_rec[128:1]), .rec_a(hgi_rec[384:129]),
         .rec_o(hgi_rec[640:385]), .rec_i(hgi_rec[896:641]), .rec_n_a(hgi_rec[917:897]), .rec_n_o(hgi_rec[938:918]),
         .rec_n_i(hgi_rec[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),
-        .ep_rank(r_rank), .ep_mcast_group_size(r_mg), .ep_mcast_all(r_mall), .ep_gsz(r_gsz), .ep_byp(r_byp), .ep_pf(r_pf), .ep_go(r_go),
-        .ep_start_ready(start_ready), .ep_done_valid(done_valid), .ep_done_ready(r_done_ready),
+        .ep_rank(r_rank), .ep_mcast_group_size(r_mg), .ep_mcast_all(r_mall), .ep_gsz(r_gsz), .ep_byp(r_byp), .ep_amx(r_amx), .ep_bf16(r_bf16), .ep_pf(r_pf), .ep_go(r_go),
+        .ep_start_ready(start_ready), .ep_done_valid(m_done), .ep_done_ready(r_done_ready),
         .ep_fault(fault), .ep_a_base(r_abase), .ep_o_base(r_obase),
+        .ep_gslice(g_slice), .ep_gbase(g_base), .gs_we(gs_we), .gs_wa(gs_wa), .gs_wd(gs_wd),
         .rf_start_v(rf_sv), .rf_start_r(hgi_rowfmt_i[0]), .rf_group_size(rf_g), .rf_owner_block(rf_b),
         .rf_destinations(rf_d), .rf_row_count(rf_rows), .rf_row_words(rf_words), .rf_context_rows(rf_ctx),
         .rf_done_v(hgi_rowfmt_i[1]), .rf_done_r(rf_dr), .rf_fault(hgi_rowfmt_i[2]));
@@ -83,14 +88,45 @@ module ot_hgi_coll_ep #(
         else if (r_go) own_hgi <= 1'b1; else if (go) own_hgi <= 1'b0;
     wire sel = r_go | (own_hgi & ~go);
     assign done_ready = own_hgi ? r_done_ready : done_valid;   // the legacy path has no completion handshake
-    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
+    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
         .DEL(DEL), .LANES(LANES)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
-        .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
+        .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
         .done_valid(done_valid), .done_ready(done_ready), .fault_ack(1'b0),
         .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_data(inj_data), .ph_tx_v(ph_tx_v), .ph_tx_flit(ph_tx_flit),
         .sw_cr_ret(sw_cr_ret), .ph_rx_v(ph_rx_v), .ph_rx_flit(ph_rx_flit), .rx_credit(rx_credit),
-        .del_valid(del_valid), .del_flit(del_flit), .fault(ep_fault), .stat_credit_stall(stat_credit_stall));
+        .del_valid(e_dv), .del_flit(e_df), .fault(ep_fault), .stat_credit_stall(stat_credit_stall));
+    // ARGMAX_MERGE fold on the delivery lanes (pass-through otherwise)
+    reg amx_run; always @(posedge clk or negedge rst_n) if (!rst_n) amx_run <= 1'b0;
+        else if (r_go) amx_run <= r_amx; else if (go) amx_run <= 1'b0;
+    ot_hgi_coll_amerge #(.DEL(DEL), .FW(FW), .PWT(PWT), .MUT_TIE(MUT_TIE)) u_amx (.clk(clk), .rst_n(rst_n),
+        .en(amx_run | (r_go & r_amx)), .start(r_go), .rank(r_rank), .d_v(e_dv), .d_f(e_df), .ep_done(done_valid),
+        .o_v(a_dv), .o_f(a_df), .done_out(m_done0));
+    // F3 delivery formatter (one registered stage on every delivery lane; completion delayed with it): on a sliced
+    // gather the delivered flit {1, FF, src q, gi, data} becomes {1, lanes, src, w, data}: w = s_q + 16 (gi - q pf) the
+    // O word offset, lanes = min(16, s_{q+1} - w) the valid words (the SU deliver writes words w .. w + lanes - 1)
+    reg [15:0] gs_t [0:96];
+    always @(posedge clk) if (gs_we) gs_t[gs_wa] <= gs_wd;
+    reg [DEL-1:0] f_dv; reg [DEL*PWT-1:0] f_df; reg f_done;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin f_dv <= {DEL{1'b0}}; f_done <= 1'b0; end
+        else begin
+            f_dv <= a_dv; f_done <= m_done0;
+            for (integer l = 0; l < DEL; l = l + 1) begin : fmt
+                reg [PWT-1:0] x; reg [7:0] q; reg [15:0] m, w, e; reg [16:0] lim;
+                x = a_df[l*PWT +: PWT];
+                q = x[FW+16 +: 8] - g_base;
+                m = x[FW +: 16] - 16'(q * r_pf);
+                w = gs_t[q] + {m[11:0], 4'd0};
+                lim = {1'b0, gs_t[q + 8'd1]} - {1'b0, w};
+                if (g_slice && x[PWT-1]) begin
+                    x[FW +: 16] = w;
+                    x[FW+24 +: 8] = (lim >= 17'd16) ? 8'd16 : 8'(lim);
+                end
+                f_df[l*PWT +: PWT] <= x;
+            end
+        end
+    assign del_valid = f_dv; assign del_flit = f_df; assign m_done = f_done;
     assign fault = ep_fault | multi_err;
     assign hgi_ret = {rec_fault, rec_done, rec_rdy};
     assign hgi_rowfmt_o = {rf_ctx, rf_words, rf_rows, rf_d, rf_b, rf_g, rf_dr, rf_sv};

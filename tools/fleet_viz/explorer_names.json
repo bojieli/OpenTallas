@@ -1,0 +1,472 @@
+{
+ "_comment": "Chip Explorer name decoder (explorer.py decode()). 'prefixes' (first match wins) name the family; the rest of the name is split on '_' and each token decoded by 'tokens' (exact, then lower-case), then 'token_patterns' (full-match regex; {0}.. = groups). 'roles' (first regex match) give an element's role in the decode-token path. Extend freely: the server reloads this file on change.",
+ "prefixes": [
+  {
+   "re": "^hfd_",
+   "name": "HBM die"
+  },
+  {
+   "re": "^qfd_",
+   "name": "Qwen die"
+  },
+  {
+   "re": "^dsfd_",
+   "name": "DeepSeek ROM die"
+  },
+  {
+   "re": "^ot_qwen_rom_core_",
+   "name": "Qwen ROM core"
+  },
+  {
+   "re": "^ot_qwen_",
+   "name": "Qwen RTL"
+  },
+  {
+   "re": "^ot_hbm_accel_",
+   "name": "HBM accelerator RTL"
+  },
+  {
+   "re": "^ot_hbm_",
+   "name": "HBM RTL"
+  },
+  {
+   "re": "^ot_ha2_",
+   "name": "HBM collective (HA2)"
+  },
+  {
+   "re": "^ot_hcoll_",
+   "name": "HBM collective"
+  },
+  {
+   "re": "^ot_su12_",
+   "name": "HBM SU lane (c12)"
+  },
+  {
+   "re": "^ot_su64_",
+   "name": "SU64"
+  },
+  {
+   "re": "^ot_attn_",
+   "name": "attention"
+  },
+  {
+   "re": "^ot_hdc_v41x_",
+   "name": "V4.1 (HBM) RTL"
+  },
+  {
+   "re": "^ot_hdc_v41_",
+   "name": "V4.1 RTL"
+  },
+  {
+   "re": "^ot_hdc_",
+   "name": "HDC RTL"
+  },
+  {
+   "re": "^ot_dsrom_su_",
+   "name": "DeepSeek ROM SU"
+  },
+  {
+   "re": "^ot_dsrom_",
+   "name": "DeepSeek ROM RTL"
+  },
+  {
+   "re": "^ot_s81ph_",
+   "name": "S81 physical"
+  },
+  {
+   "re": "^ot_s81_",
+   "name": "S81 RTL"
+  },
+  {
+   "re": "^ot_v41_",
+   "name": "V4.1 ROM field"
+  },
+  {
+   "re": "^ot_meso_fifo_",
+   "name": "meso FIFO"
+  },
+  {
+   "re": "^ot_a3_",
+   "name": "arithmetic"
+  },
+  {
+   "re": "^ot_rom_",
+   "name": "ROM macro"
+  },
+  {
+   "re": "^ot_hbm3e_phy",
+   "name": "HBM3E PHY (hard macro)"
+  },
+  {
+   "re": "^ot_pdie_",
+   "name": "package-die IO (hard macro)"
+  },
+  {
+   "re": "^ot_",
+   "name": "RTL block"
+  }
+ ],
+ "tokens": {
+  "svc": "service column",
+  "svcio": "service IO",
+  "SW": "south-west",
+  "SE": "south-east",
+  "NW": "north-west",
+  "NE": "north-east",
+  "sw": "south-west",
+  "se": "south-east",
+  "nw": "north-west",
+  "ne": "north-east",
+  "N": "north",
+  "S": "south",
+  "E": "east",
+  "W": "west",
+  "n": "north",
+  "s": "south",
+  "e": "east",
+  "w": "west",
+  "stn": "relay station",
+  "stnh": "horizontal relay station",
+  "stnv": "vertical relay station",
+  "sstn": "slot station",
+  "meso": "meso-FIFO station",
+  "gath": "gather station",
+  "mcast": "multicast station",
+  "cdist": "distribution station",
+  "rly": "relay register",
+  "relay": "relay",
+  "relay64": "64-lane relay",
+  "wstg": "wire stage",
+  "coll": "collective",
+  "cmdproc": "command processor",
+  "vm": "vector memory",
+  "su": "SU (vector unit)",
+  "sfu": "special-function unit",
+  "hc": "hyper-connection (mHC / Sinkhorn)",
+  "quant": "quantiser",
+  "loader": "weight loader",
+  "router": "router",
+  "barrier": "barrier",
+  "index": "indexer",
+  "q": "query",
+  "attn": "attention",
+  "tile": "tile",
+  "half": "half",
+  "lo": "lower",
+  "hi": "upper",
+  "host": "host",
+  "slab": "slab",
+  "serdes": "SerDes",
+  "ucie": "UCIe",
+  "phy": "PHY",
+  "sm": "SM (streaming multiprocessor tile)",
+  "result": "result",
+  "credit": "credit",
+  "prod": "producer",
+  "idle": "idle",
+  "tx": "transmit",
+  "rx": "receive",
+  "pkt": "packet",
+  "fifo": "FIFO",
+  "ingress": "ingress",
+  "full": "full lane",
+  "red": "reduction",
+  "ctl": "control",
+  "ctrl": "controller",
+  "pc": "pseudo-channel",
+  "protected": "protected",
+  "ready": "ready",
+  "shift": "shift",
+  "embed": "embedding",
+  "emb": "embedding",
+  "code": "code",
+  "scale": "scale",
+  "bank": "bank",
+  "io": "IO",
+  "root": "root",
+  "tap": "tap",
+  "kvc": "KV cache",
+  "decode": "decode",
+  "map": "map",
+  "lst": "landing station",
+  "c": "column",
+  "h": "horizontal",
+  "v": "vertical",
+  "sp": "spine",
+  "band": "band",
+  "lanes": "lanes",
+  "tree": "tree",
+  "top": "top",
+  "b": "variant b",
+  "t": "tall variant",
+  "hub": "hub",
+  "collective": "collective",
+  "xfifo": "cross FIFO",
+  "link": "link",
+  "rx128": "128-bit receive",
+  "constants": "constants",
+  "sequencer": "sequencer",
+  "res": "result",
+  "ser": "serialiser",
+  "su64": "SU64",
+  "vector": "vector",
+  "memory": "memory",
+  "checked": "checked",
+  "cst": "column station",
+  "chead": "column head",
+  "capt": "capture",
+  "grp": "group",
+  "x": "x broadcast",
+  "ck": "clock",
+  "core": "core",
+  "colt": "collector tile",
+  "mrg": "merge",
+  "selt": "selector tile",
+  "bg": "bank group",
+  "bgh": "bank group (half)",
+  "bgq": "bank group (quarter)",
+  "cfifo": "column FIFO",
+  "capture": "capture",
+  "bk": "bank",
+  "collector": "collector",
+  "selector": "selector",
+  "m2l": "meso-to-lane end (lane to local stream)",
+  "r2l": "ratio-CDC end (lane to serial)",
+  "l2r": "serial-to-lane start",
+  "vr": "valid/ready",
+  "raw": "raw",
+  "hl": "hub link",
+  "hq": "hub query",
+  "hx": "hub x start",
+  "hco": "hub collective",
+  "hix": "hub index",
+  "hqe": "hub query (E)",
+  "ha": "hub attention",
+  "hcol": "hub column",
+  "hsel": "hub selector",
+  "hr": "hub return",
+  "head": "head",
+  "elem": "element",
+  "bundle": "bundle",
+  "glue": "glue",
+  "softmax": "softmax",
+  "exp": "exponential",
+  "fdiv": "FP divide",
+  "div": "divide",
+  "swiglu": "SwiGLU",
+  "window": "window",
+  "column": "column",
+  "halfwrite": "half write",
+  "fh": "full head",
+  "sram": "SRAM",
+  "lane": "lane",
+  "hardened": "hardened",
+  "hquad": "half quad",
+  "quad": "quad",
+  "ep": "endpoint",
+  "view": "view",
+  "delay8x32": "8 x 32 delay line",
+  "pq": "PQ",
+  "ret": "return",
+  "cam": "CAM",
+  "p": "pipelined",
+  "native": "native",
+  "bf": "BF16 pair",
+  "rom": "ROM",
+  "pqc": "PQ compressed",
+  "spine": "spine",
+  "screen": "screen",
+  "smh": "SM half",
+  "front": "front",
+  "frame": "frame",
+  "station": "station",
+  "rb": "row buffer",
+  "norm": "norm",
+  "engine": "engine",
+  "port": "port",
+  "vred": "vector reduction",
+  "slice64": "64-wide slice",
+  "top1024": "1,024-wide top",
+  "ctl16h": "16-lane control",
+  "full31": "31-lane full",
+  "full64": "64-lane full",
+  "truecredit": "true-credit",
+  "owner": "owner",
+  "banked": "banked",
+  "internal": "internal",
+  "fwd": "forwarded-clock",
+  "cx": "crossing",
+  "forwarded": "forwarded",
+  "tmr": "TMR",
+  "pair": "pair",
+  "kv": "KV",
+  "pu": "processing unit",
+  "meif": "ME interface",
+  "stream4": "STREAM4",
+  "cdc": "clock-domain crossing",
+  "die": "die",
+  "group": "group",
+  "margin": "margin",
+  "hbm": "HBM",
+  "source": "source",
+  "od": "out-data",
+  "ad": "address",
+  "fr": "flow/ready",
+  "e8p5": "e8p5",
+  "v41x": "V4.1x",
+  "aw30": "AW30",
+  "kreg": "kept register",
+  "prefix": "prefix adder",
+  "sl12": "slice 12",
+  "nxt": "next",
+  "ph": "phase"
+ },
+ "token_patterns": [
+  {
+   "re": "w(\\d+)d(\\d+)(?:g(\\d+))?",
+   "name": "width {0} depth {1}"
+  },
+  {
+   "re": "d(\\d+)g(\\d+)",
+   "name": "depth {0} gap {1}"
+  },
+  {
+   "re": "m(\\d+)h(\\d+)q",
+   "name": "m{0}h{1}q"
+  },
+  {
+   "re": "(\\d+)x(\\d+)",
+   "name": "{0} x {1}"
+  },
+  {
+   "re": "ew(\\d+)",
+   "name": "east-west {0}"
+  },
+  {
+   "re": "sn(\\d+)",
+   "name": "south-north {0}"
+  },
+  {
+   "re": "ii(\\d+)",
+   "name": "II={0}"
+  },
+  {
+   "re": "NO(\\d+)",
+   "name": "north output {0}"
+  },
+  {
+   "re": "([EW])(\\d+)",
+   "name": "{0}{1}"
+  },
+  {
+   "re": "s(\\d+)",
+   "name": "segment {0}"
+  },
+  {
+   "re": "r(\\d+)([a-z]?)",
+   "name": "role {0}{1}"
+  },
+  {
+   "re": "b(\\d+)",
+   "name": "band {0}"
+  },
+  {
+   "re": "w(\\d+)",
+   "name": "width {0}"
+  },
+  {
+   "re": "d(\\d+)",
+   "name": "depth {0}"
+  },
+  {
+   "re": "c(\\d+)",
+   "name": "c{0}"
+  },
+  {
+   "re": "(\\d+)",
+   "name": "#{0}"
+  }
+ ],
+ "roles": [
+  {
+   "re": "(^hfd_|^ot_hbm3e|^dsfd_).*phy|ot_hbm3e_phy",
+   "role": "HBM3E PHY: weight / KV bytes enter the die here every token"
+  },
+  {
+   "re": "hfd_svc|dsfd_svc|svc_stn",
+   "role": "service column: per-stack HBM stream service, feeds the field / attention tiles from the PHY"
+  },
+  {
+   "re": "hfd_sm\\b|hfd_sm$|smh_|ot_hbm_accel_smh",
+   "role": "SM tile: the matrix engines that run the token's dense layers"
+  },
+  {
+   "re": "hfd_su|ot_su12|ot_su64|qfd_sp_su64|dsrom_su",
+   "role": "SU: vector / scalar unit at the hub; norms, residuals and per-token elementwise ops"
+  },
+  {
+   "re": "sfu|softmax|fdiv|exp",
+   "role": "special functions: exponentials, divides and softmax on the token path"
+  },
+  {
+   "re": "hfd_hc|sinkhorn|hquad|v41_fh",
+   "role": "hyper-connection mixer (mHC / Sinkhorn) between layers"
+  },
+  {
+   "re": "attn",
+   "role": "attention: scores and weighted sum over the KV of every user"
+  },
+  {
+   "re": "index_q|indexer",
+   "role": "sparse-attention indexer: selects the KV positions each token attends to"
+  },
+  {
+   "re": "hfd_vm|qfd_sp_vector_memory|qfd_vm|dsfd_vm|vector_memory",
+   "role": "vector memory: the token's activations between operators"
+  },
+  {
+   "re": "coll|tp_seq|collective|ha2_|hcoll",
+   "role": "collective: all-reduce / all-gather between dies each layer"
+  },
+  {
+   "re": "cmdproc|sequencer|ctrl|ctl",
+   "role": "control: issues the per-layer instruction stream"
+  },
+  {
+   "re": "loader|router|quant",
+   "role": "hub service: loads, routes and quantises operands for the engines"
+  },
+  {
+   "re": "stn|station|meso|gath|mcast|cdist|rly|relay|lst|cst|chead|wstg|delay|m2l|r2l|l2r|_hl_|_hr_",
+   "role": "die interconnect: register stations / clock-crossing FIFOs that carry token data across the die within one clock"
+  },
+  {
+   "re": "serdes|ucie|io_|link|pdie",
+   "role": "die IO: carries the token to the next die / stage"
+  },
+  {
+   "re": "qfd_tile|rom_elem|bf_native|dsfd_bf|dsfd_q|rom_core",
+   "role": "ROM field: weights stored in ROM, multiplied with the token's activations in place"
+  },
+  {
+   "re": "tree|retn|spine|band|slab|port_group",
+   "role": "field reduction / return tree: sums field partials back to the hub"
+  },
+  {
+   "re": "embed|emb",
+   "role": "embedding: token id to vector at the start of the decode step"
+  },
+  {
+   "re": "kvc|kv|stream4|ctrl_pc|ctrl_shift|cdc_pc",
+   "role": "KV path: streams past-position KV from HBM to attention"
+  },
+  {
+   "re": "capt|capture|colt|selt|collector|selector|cfifo|window|pq",
+   "role": "DeepSeek ROM hub: capture / select / collect field results per stage"
+  },
+  {
+   "re": "host",
+   "role": "host interface"
+  }
+ ]
+}

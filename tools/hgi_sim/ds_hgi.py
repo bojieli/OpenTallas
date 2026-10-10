@@ -45,11 +45,11 @@ PROGRAM = ROOT / "results/rtl/dshbm_baseline_measured_20261004/program.json"
 FMT = {"fp8": (1, "FP8E4M3", 1.0), "fp4": (2, "FP4E2M1", 0.5), "bf16": (0, "BF16", 2.0)}
 LOCAL_UNIT = {"hc_mixes": ("HC", "HC_MIX"), "hc_pre_norm": ("FUSED", "HC_PRE_NORM"),
               "final_norm": ("FUSED", "HC_PRE_NORM"), "hc_post": ("FUSED", "HC_POST"),
-              "index_q": ("IDX", "INDEX_Q"), "index_scores": ("IDX", "INDEX_SCORES"),
-              "topk_local": ("IDX", "TOPK"), "route": ("IDX", "TOPK"), "cand_local": ("IDX", "SELECT"),
-              "cand_apply": ("IDX", "SELECT"), "cand_mask": ("IDX", "SELECT"), "swiglu": ("SFU", "GLU"),
+              "index_q": ("SU", "VOP"), "index_scores": ("IDX", "INDEX"),     # G18: RoPE + scale on the SU, one frame
+              "route": ("IDX", "TOPK"), "swiglu": ("SFU", "GLU"),
               "argmax_local": ("ARGMAX", "LOCAL"), "engram_fetch": ("DMA", "LOAD")}
-SUB = {"route": 6, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
+SUB = {"route": 6 | (1 << 12)}
+FRAME_OPS = ("topk_local", "cand_local", "cand_apply", "cand_mask")   # G18: part of the IDX.INDEX frame record
 TP = 96
 C3B = [False]
 
@@ -95,6 +95,7 @@ def lower(prog, die=0):
     b.add = add
     for lay in prog["layers"]:
         L = lay["layer"]
+        frame = None
         for op in lay["ops"]:
             k = op["kind"]
             src = dict(layer=L, op=op)
@@ -115,6 +116,9 @@ def lower(prog, die=0):
                         tag=op["tag"], family="mv." + op["fn"])
                 r.src = src
                 b.add(r, [xin] + (["expert_w"] if slot else []), [op["out"]])
+            elif k == "local" and op["fn"] in FRAME_OPS and frame is not None:
+                frame.src.setdefault("extra", []).append(op)      # priced inside the IDX.INDEX frame (G18)
+                continue
             elif k == "local":
                 fn = op["fn"]
                 _, rd, wr = io[fn]
@@ -138,6 +142,8 @@ def lower(prog, die=0):
                         tag=op["tag"], family=fn)
                 r.src = src
                 b.add(r, rd, wr)
+                if fn == "index_scores":
+                    frame = r
             elif k in ("all_gather", "all_reduce", "topk_merge", "kv_gather"):
                 uop = {"all_gather": "ALL_GATHER", "kv_gather": "ALL_GATHER", "all_reduce": "ALL_REDUCE_SUM",
                        "topk_merge": "ARGMAX_MERGE" if op.get("what") == "argmax" else "TOPK_MERGE"}[k]
@@ -196,6 +202,17 @@ class WalkCost:
     def __call__(self, r, dyn, L):
         if r.src is None:
             return 1.0, "estimate", "END"
+        ex = r.src.get("extra")
+        if ex:                                 # a record that runs several w19 ops (the G18 indexer frame)
+            import copy as _c
+            base = _c.copy(r)
+            base.src = {k: v for k, v in r.src.items() if k != "extra"}
+            c, g, how = self(base, dyn, L)
+            for op in ex:
+                x = _c.copy(r)
+                x.src = dict(base.src, op=op)
+                c += self(x, dyn, L)[0]
+            return c, g, how + f" (+ {len(ex)} ops of the frame)"
         op, Lsrc = r.src["op"], r.src["layer"]
         if op.get("fn") == "hc_mixes":
             return self.mix_us * 1200, "measured", self.mix_how

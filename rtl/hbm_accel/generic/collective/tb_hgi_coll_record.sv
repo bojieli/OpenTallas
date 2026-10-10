@@ -8,7 +8,7 @@ module tb_hgi_coll_record;
     reg rec_v = 0; wire rec_rdy;
     reg [127:0] hdr; reg [255:0] a, o, i; reg [20:0] na, no, ni;
     wire rec_done, rec_fault;
-    wire [7:0] ep_rank, ep_mg; wire ep_mall, ep_byp; wire [3:0] ep_gsz; wire [15:0] ep_pf; wire ep_go; wire ep_done_ready;
+    wire [7:0] ep_rank, ep_mg; wire ep_mall, ep_byp, ep_amx; wire [3:0] ep_gsz; wire [15:0] ep_pf; wire ep_go; wire ep_done_ready;
     wire [39:0] ep_ab, ep_ob;
     reg ep_ready = 1, ep_done = 0, ep_fault = 0;
     wire rf_sv; reg rf_sr = 1; wire [7:0] rf_g, rf_b, rf_d; wire [20:0] rf_rows; wire [15:0] rf_words; wire [31:0] rf_ctx;
@@ -17,7 +17,7 @@ module tb_hgi_coll_record;
         .clk(clk), .rst_n(rst_n), .cfg_coll_group_size(g), .cfg_die_id(die),
         .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(hdr), .rec_a(a), .rec_o(o), .rec_i(i),
         .rec_n_a(na), .rec_n_o(no), .rec_n_i(ni), .rec_done(rec_done), .rec_fault(rec_fault),
-        .ep_rank(ep_rank), .ep_mcast_group_size(ep_mg), .ep_mcast_all(ep_mall), .ep_gsz(ep_gsz), .ep_byp(ep_byp), .ep_pf(ep_pf),
+        .ep_rank(ep_rank), .ep_mcast_group_size(ep_mg), .ep_mcast_all(ep_mall), .ep_gsz(ep_gsz), .ep_byp(ep_byp), .ep_amx(ep_amx), .ep_pf(ep_pf),
         .ep_go(ep_go), .ep_start_ready(ep_ready), .ep_done_valid(ep_done), .ep_done_ready(ep_done_ready),
         .ep_fault(ep_fault), .ep_a_base(ep_ab), .ep_o_base(ep_ob),
         .rf_start_v(rf_sv), .rf_start_r(rf_sr), .rf_group_size(rf_g), .rf_owner_block(rf_b), .rf_destinations(rf_d),
@@ -84,7 +84,18 @@ module tb_hgi_coll_record;
         for (gi = 0; gi < 5; gi = gi + 1) for (di = 0; di < 200; di = di + 37) ep_case(gl[gi], di, 6'd1, 0, 20'd512);
         // ALL_GATHER with a row that is not whole flits faults (FP32 n = 250 -> 8,000 bits)
         g = 8; die = 3; a = md(0, 0, 250, 1, 0); na = 250; reset; send(6'd1, 0, 0, 0, 7'b0010001); expect_fault;
-        // ops 2-3 (merge stage not installed) fault
+        // ARGMAX_MERGE (op 3): A = {value, id} (n = 2) -> bypass + fold, pf 1; G 4 and 96
+        for (k = 0; k < 2; k = k + 1) begin
+            g = k ? 96 : 4; die = k ? 150 : 6; a = md(0, 40'h40, 2, 1, 0); o = md(6, 40'h50, 1, 1, 0); na = 2; reset; gi = gos;
+            send(6'd3, 0, 0, 0, 7'b0010001);
+            t = 0; while (gos == gi && t < 100) begin @(negedge clk); t = t + 1; end
+            if (gos != gi + 1 || !ep_byp || !ep_amx || ep_pf != 1 || ep_rank != die % 96 || ep_mall != (g == 96) || ep_mg != g)
+                $fatal(1, "FATAL: ARGMAX_MERGE endpoint control g=%0d", g);
+            repeat (lat) @(negedge clk); ep_done = 1; t = 0; while (!ep_done_ready && t < 20) begin @(negedge clk); t = t + 1; end
+            if (!rec_done || rec_fault) $fatal(1, "FATAL: ARGMAX_MERGE did not retire"); @(negedge clk); ep_done = 0;
+            cases = cases + 1;
+        end
+        // ops 2-3 with a wrong operand (op 2: merge stage not installed; op 3: A.n != 2) fault
         for (k = 2; k <= 3; k = k + 1) begin g = 4; die = 1; a = md(0, 0, 256, 1, 0); na = 256; reset; send(k, 0, 0, 0, 7'b0010001); expect_fault; end
         // A.n not a whole number of flits faults
         g = 4; die = 2; a = md(0, 0, 250, 1, 0); na = 250; reset; send(6'd0, 0, 0, 0, 7'b0010001); expect_fault;

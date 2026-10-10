@@ -31,6 +31,14 @@ module ot_hfd_loader_hgi #(
     input  wire [221:0] cpl,
     output wire [4*346-1:0] lq,
     input  wire [4*293-1:0] lr,
+    // hgi-takeover (hgi-e2e DIE GAP / F6): the DMA unit (unit 8) beside the loader: record adapter ot_hgi_dma_record +
+    // the full-rate mover ot_hgi_dma_mover on kport lane 2 (HBM) and one hfd_hgi_vm packet client
+    input  wire [703:0] dma_rec,        // {pos1, n_O, n_A, O, A, header, valid}
+    output wire [2:0]   dma_ret,        // {fault, done, ready}
+    output wire [337:0] dma_vmq,
+    input  wire [273:0] dma_vmr,
+    output wire [279:0] dma_vmw,        // the VM wide write port lane (hfd_hgi_vm wq), {v, sector, data, word mask}
+    input  wire         dma_vmw_done,
     output wire irq,
     output wire fault
 );
@@ -39,7 +47,22 @@ module ot_hfd_loader_hgi #(
     wire f_v, f_rdy; wire [36:0] f_a; wire lc_fault, ld_fault, kp_fault;
     wire l_req_v, l_req_rdy, l_req_we, l_rsp_v, l_rsp_rdy, l_rsp_we; wire [36:0] l_req_addr; wire [255:0] l_req_wdata, l_rsp_data;
     wire [31:0] l_req_wstrb; wire [15:0] l_req_tag, l_rsp_tag;
-    wire [1:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [31:0] k_rsp_tag; wire [511:0] k_rsp_data;
+    wire [2:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [47:0] k_rsp_tag; wire [767:0] k_rsp_data;
+    // ---- DMA unit
+    wire d_mv_v, d_mv_rdy, d_mv_done, d_mv_fault, d_fv, d_frdy, d_fdone, d_rdy, d_done, d_fault, dm_fault;
+    wire [226:0] d_mv; wire d_kv, d_kwe, d_krr; wire [36:0] d_ka; wire [255:0] d_kd; wire [31:0] d_ks; wire [15:0] d_kt;
+    ot_hgi_dma_record #(.LEGACY(0)) u_dma (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(d_rdy),
+        .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
+        .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(d_done), .rec_fault(d_fault), .halted(),
+        .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
+        .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
+        .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
+    ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done),
+        .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
+        .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
+        .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
+        .k_rsp_data(k_rsp_data[767:512]), .k_fault(1'b0), .vmq(dma_vmq), .vmr(dma_vmr), .wl(dma_vmw), .wl_done(dma_vmw_done));
+    assign dma_ret = {d_fault, d_done, d_rdy};
     ot_hgi_loader_cp u_cpw (.clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),
         .s_wdata(s_wdata), .s_wstrb(s_wstrb), .s_bvalid(s_bvalid), .s_bready(s_bready), .s_arvalid(s_arvalid),
@@ -70,12 +93,12 @@ module ot_hfd_loader_hgi #(
         .req_v(l_req_v), .req_rdy(k_req_rdy[0]), .req_we(l_req_we), .req_addr(l_req_addr), .req_wdata(l_req_wdata),
         .req_wstrb(l_req_wstrb), .req_tag(l_req_tag), .rsp_v(k_rsp_v[0]), .rsp_rdy(l_rsp_rdy), .rsp_we(k_rsp_we[0]),
         .rsp_tag(k_rsp_tag[15:0]), .rsp_data(k_rsp_data[255:0]), .irq(irq), .fault(ld_fault));
-    ot_hfd_loader_kport #(.ENABLE(1), .ND(2), .STACK_BYTES(STACK_BYTES)) u_kp (.clk(clk), .rst_n(rst_n),
-        .req_v({f_v, l_req_v}), .req_rdy(k_req_rdy), .req_we({1'b0, l_req_we}), .req_addr({f_a, l_req_addr}),
-        .req_wdata({256'd0, l_req_wdata}), .req_wstrb({32'd0, l_req_wstrb}), .req_tag({16'hf000, l_req_tag}),
-        .rsp_v(k_rsp_v), .rsp_rdy({1'b1, l_rsp_rdy}), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data),
+    ot_hfd_loader_kport #(.ENABLE(1), .ND(3), .STACK_BYTES(STACK_BYTES)) u_kp (.clk(clk), .rst_n(rst_n),
+        .req_v({d_kv, f_v, l_req_v}), .req_rdy(k_req_rdy), .req_we({d_kwe, 1'b0, l_req_we}), .req_addr({d_ka, f_a, l_req_addr}),
+        .req_wdata({d_kd, 256'd0, l_req_wdata}), .req_wstrb({d_ks, 32'd0, l_req_wstrb}), .req_tag({d_kt, 16'hf000, l_req_tag}),
+        .rsp_v(k_rsp_v), .rsp_rdy({d_krr, 1'b1, l_rsp_rdy}), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data),
         .lq(lq), .lr(lr), .fault(kp_fault));
     assign f_rdy = k_req_rdy[1];
-    assign fault = lc_fault | ld_fault | kp_fault;
+    assign fault = lc_fault | ld_fault | kp_fault;   // the DMA unit's faults retire through its record (dma_ret)
 endmodule
 `default_nettype wire

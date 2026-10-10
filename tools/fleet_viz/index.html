@@ -25,6 +25,7 @@ h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-we
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
 @keyframes pulse{50%{opacity:.35}}
+.dot,.flame,.host.pending .offline{will-change:opacity}
 .cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;align-items:start}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .coltitle{font:700 11px var(--mono);letter-spacing:.14em;color:var(--faint);text-transform:uppercase;margin:2px 2px -4px}
@@ -49,7 +50,8 @@ canvas.chart{width:100%;display:block}
 .ticker li .sl span.neg{background:#ff5d731f;color:var(--hot)}
 .ticker li .tag{grid-row:1/3}
 .ticker li.hot{background:linear-gradient(90deg,#ff5d7326,#ffb44d14 50%,transparent);box-shadow:inset 3px 0 0 #ffb44d}
-.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out,glow 2.4s ease-in-out infinite}
+.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out;position:relative}
+.ticker li.fresh::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355;opacity:0;animation:glowo 2.4s ease-in-out infinite;will-change:opacity}
 .ticker li.new{animation:flash 1.8s ease-out 2}
 @keyframes glow{50%{box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355}}
 @keyframes flash{0%{background:#ffd23f88;transform:scale(1.02)}100%{}}
@@ -78,12 +80,13 @@ canvas.chart{width:100%;display:block}
 #vfeed li.k-closed{border-left-color:#4ade80}#vfeed li.k-closed .vs{background:#4ade80}
 #vfeed li.k-timing{border-left-color:#ff8a4d;background:linear-gradient(90deg,#ff5d7312,transparent 60%)}#vfeed li.k-timing .vs{background:linear-gradient(135deg,#ff5d73,#ffb44d)}
 #vfeed li.k-flow{border-left-color:#9b8cc9}#vfeed li.k-flow .vs{background:#9b8cc9}#vfeed li.k-flow .bk{color:#c9c2e6}
-#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out,glowg 2.4s ease-in-out infinite}
+#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out;position:relative}
+#vfeed li.k-closed.fresh::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 28px #4ade8055;opacity:0;animation:glowo 2.4s ease-in-out infinite;will-change:opacity}
 #vfeed li.k-closed.hot{background:linear-gradient(90deg,#4ade801c,transparent 60%)}
 #vfeed li.k-check{border-left-color:#f472b6}#vfeed li.k-check .vs{background:#f472b6}
 #vfeed .ck{grid-column:2;font:800 12px var(--mono);color:#f9a8d4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed li.new{animation:flash 1.8s ease-out 2}
-@keyframes glowg{50%{box-shadow:0 0 28px #4ade8055}}
+@keyframes glowo{50%{opacity:1}}
 #toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}#toast.check{background:linear-gradient(90deg,#f472b6,#f9a8d4)}
 #toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast.on{transform:translate(-50%,0)}
@@ -99,13 +102,13 @@ canvas.chart{width:100%;display:block}
 .ctl input[type=search]{min-width:200px}
 .chip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;line-height:1.35;border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
 .chip.on{color:#05070d;font-weight:700}
-.tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.tblwrap{max-height:70vh;overflow:auto;contain:content;content-visibility:auto;contain-intrinsic-size:auto 600px;border:1px solid var(--line);border-radius:10px}
 table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
 .jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:0;box-shadow:inset 0 -1px 0 var(--line);cursor:pointer;white-space:nowrap;z-index:2}
 .jt th.s::after{content:' \25B4'}.jt th.s.d::after{content:' \25BE'}
 .jt td{padding:3px 7px;border-bottom:1px solid #121a30;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
 .jt td.ev{max-width:none;white-space:normal;color:var(--dim);min-width:280px}
-.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
+.jt tr.grp td{white-space:normal;background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
 .jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
 .jt tr:hover td{background:#16203b}
 .st{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
@@ -123,9 +126,16 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 #elTable td.pu{max-width:420px;white-space:normal;color:var(--dim);min-width:220px}
 #elTable td.pu div,#elTable td.ev div{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #elTable td.en{text-align:right}
+#elTable td.enm{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#elTable td.est{max-width:none;white-space:nowrap}#elTable td.est .st{max-width:none;overflow:visible}
+#elTable td.en{width:1%;padding:3px 5px}#elTable th.nu{white-space:normal;width:1%;min-width:0;padding:5px 5px;line-height:1.15}
+#elTable td.pu{min-width:160px;max-width:300px}#elTable td.qu{min-width:0;max-width:220px}
 #elTable td.eneg{color:var(--hot)}#elTable td.epos{color:var(--ok)}
-#elTable td.ev{min-width:320px}
+#elTable td.ev{min-width:320px;max-width:560px;width:560px}#elTable td.ev div{max-width:560px}   /* a clamped -webkit-box reports its full text as min-content */
 #elTable tr.el td:first-child{border-left:3px solid var(--c)}
+#elTable a.xl{color:inherit;text-decoration:none;border-bottom:1px dotted #5ee7ff88}
+#elTable a.xl:hover{color:#5ee7ff}
+.xnav{font:600 12px ui-monospace,monospace;text-decoration:none;color:#5ee7ff;border:1px solid #1b2540;border-radius:999px;padding:5px 11px;white-space:nowrap;margin-left:auto;margin-right:10px}
 #elTable small{color:var(--faint)}
 @keyframes slidein{from{opacity:0;transform:translateY(-8px)}}
 .tag{font:700 10px var(--mono);padding:3px 7px;border-radius:6px;color:#05070d;letter-spacing:.03em;white-space:nowrap}
@@ -156,6 +166,7 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 .hm b{color:var(--ink);font-weight:600}
 .offline{height:84px;display:grid;place-items:center;color:var(--faint);font:600 12px var(--mono);border:1px dashed var(--line);border-radius:8px;margin:10px 0 8px;letter-spacing:.1em}
 .host.pending .offline{color:var(--accent);border-color:#5ee7ff55;animation:pulse 2.2s infinite}
+.hn .sdot{width:6px;height:6px;border-radius:50%;background:#fbbf24;display:inline-block;cursor:help}
 .gpu{margin-top:6px;font:12px var(--mono);color:var(--dim)}
 .gpu b{color:var(--ink)}
 footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--faint);font:11px var(--mono);margin-top:14px}
@@ -175,6 +186,8 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <h1><span class="g">OpenTallas</span> compute fleet</h1>
       <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
     </div>
+    <a class="xnav" id="xnav" href="/explorer">Chip Explorer &rarr;</a>
+    <a class="xnav" id="covnav" href="/explorer/coverage/" style="margin-left:0">Coverage &rarr;</a>
     <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
   </header>
   <div id="rbar" hidden><button id="rPlay">pause</button><span id="rFrom"></span><input type="range" id="rScrub" min="0" max="1" step="1" value="0"><span id="rTo"></span><span class="sp" id="rSpeed"></span><span id="rMsg"></span></div>
@@ -183,7 +196,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
   <div class="cols">
     <div class="col">
       <div class="coltitle">CPU</div>
-      <section class="panel">
+      <section class="panel" id="cpuPanel">
         <div class="ptitle"><span>Threads busy · last 60 min</span><b id="cpu-now"></b></div>
         <div class="stats" id="cpu-stats"></div>
         <canvas class="chart" id="cpuSpark" style="height:46px"></canvas>
@@ -191,7 +204,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <section class="hosts big" id="hostsBig"></section>
       <section class="hosts small" id="hostsSmall"></section>
       <div class="coltitle">Memory</div>
-      <section class="panel">
+      <section class="panel" id="ramPanel">
         <div class="ptitle"><span>RAM in use across the fleet · last 60 min</span><b id="ram-now"></b></div>
         <canvas class="chart" id="ramArea"></canvas>
         <div class="legend2" id="ramLegend"></div>
@@ -207,13 +220,13 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
         <ul class="ticker" id="ticker"></ul>
         <ul id="vfeed" hidden></ul>
       </section>
-      <section class="panel">
+      <section class="panel" id="loopPanel">
         <div class="ptitle"><span>Closure loop</span></div>
         <div class="stats" id="loop-stats"></div>
         <div class="ptitle" style="margin-top:6px"><span>Routes running by target</span></div>
         <div class="runbars" id="runbars"></div>
       </section>
-      <section class="panel">
+      <section class="panel" id="c24Panel">
         <div class="ptitle"><span>Closures per target · last 24 h, hourly</span><b id="close24"></b></div>
         <canvas class="chart" id="closeChart"></canvas>
         <div class="legend2" id="closeLegend"></div>
@@ -231,7 +244,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <label><input type="checkbox" id="fGrp" checked> group by host</label>
     </div>
     <div class="tblwrap"><table class="jt"><thead><tr id="jHead"></tr></thead><tbody id="jBody"></tbody></table></div>
-    <div class="stmd">
+    <div class="stmd" id="stmd">
       <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · fleet admission</span><span id="mdAge"></span></div><pre id="mdFleet"></pre></div>
       <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · recent terminal</span></div><pre id="mdTerm"></pre></div>
     </div>
@@ -254,6 +267,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div id="foot">&nbsp;</div>
   </footer>
 </div>
+<script src="/fv_stale.js"></script>
 <script>
 (() => {
 'use strict';
@@ -264,7 +278,9 @@ const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
 let RT = 0;   // replay clock (recorded epoch seconds)
 const NOW = () => REPLAY ? RT : Date.now() / 1000;
 const SAFE = RD ? !!RD.safe : qs.get('safe') === '1';
+if (SAFE) { const xn = document.getElementById('xnav'); if (xn) xn.href = '/explorer?safe=1'; const cn = document.getElementById('covnav'); if (cn) cn.hidden = true; }
 const Q = SAFE ? '?safe=1' : '';
+const FV = !REPLAY && window.FVStale ? window.FVStale : null;   // staleness guard (fv_stale.js); off in replay
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
 const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
@@ -316,8 +332,14 @@ function reconcile(list, items) {   // items: [[key, outerHTML]] in display orde
   return added;
 }
 const DPR = Math.min(2, window.devicePixelRatio || 1);
+const CSZ = new WeakMap();   // canvas CSS sizes, kept current by a ResizeObserver: reading clientWidth every frame forced a page-wide layout
+const cRO = new ResizeObserver(es => { for (const e of es) { const b = e.contentBoxSize && e.contentBoxSize[0]; CSZ.set(e.target, b ? [b.inlineSize, b.blockSize] : [e.target.clientWidth, e.target.clientHeight]); e.target._dirty = true; } });
+function csize(cv) { let z = CSZ.get(cv); if (!z) { z = [cv.clientWidth, cv.clientHeight]; CSZ.set(cv, z); cRO.observe(cv); } return z; }
+const cVis = new WeakMap();   // on-screen canvases only are animated
+const cIO = new IntersectionObserver(es => { for (const e of es) cVis.set(e.target, e.isIntersecting); });
+function onScreen(cv) { if (!cVis.has(cv)) { cVis.set(cv, true); cIO.observe(cv); } return cVis.get(cv); }
 function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
-  const w = cv.clientWidth, h = cv.clientHeight;
+  const [w, h] = csize(cv);
   if (cv.width !== Math.round(w * DPR) || cv.height !== Math.round(h * DPR)) { cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); }
   const g = cv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, w, h); return [g, w, h];
 }
@@ -331,7 +353,7 @@ function card(h, i) {
   let c = cards.get(h.label);
   if (c) return c;
   const el = document.createElement('div'); el.className = 'host';
-  el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span></div><div class="hk"></div></div><div class="hb"></div></div>
+  el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span><span class="sdot" hidden></span></div><div class="hk"></div></div><div class="hb"></div></div>
     <canvas class="grid"></canvas><div class="offline" hidden></div>
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
     <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>routes <b class="rt"></b></span></div><div class="gpu" hidden></div>`;
@@ -351,10 +373,29 @@ function layoutGrid(c) {
   const w = c.cv.clientWidth || 300, gap = cols > 20 ? 2 : 3, cell = (w - gap * (cols - 1)) / cols;
   c.geo = {cols, rows, cell, gap};
   c.cv.style.height = (rows * cell + (rows - 1) * gap) + 'px';
-  c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
+  c.drawn = false; c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
+}
+const SPR = new Map();   // glow sprites: one blurred cell per (fill, glow, size), drawn with drawImage instead of a per-cell shadowBlur
+function sprite(fi, si, cell, r) {
+  const k = fi + '|' + si + '|' + cell.toFixed(2);
+  let s = SPR.get(k);
+  if (!s) {
+    if (SPR.size > 4000) SPR.clear();
+    const pad = Math.ceil(cell * .6) + 2, sz = cell + 2 * pad;
+    s = document.createElement('canvas'); s.width = Math.ceil(sz * DPR); s.height = s.width; s.pad = pad;
+    const g = s.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.fillStyle = col(fi); if (si >= 0) { g.shadowColor = col(si); g.shadowBlur = cell * .5; }
+    g.beginPath(); g.roundRect ? g.roundRect(pad, pad, cell, cell, r) : g.rect(pad, pad, cell, cell); g.fill();
+    SPR.set(k, s);
+  }
+  return s;
 }
 function drawGrid(c, t) {
-  if (!c.geo || !c.n || c.cv.hidden) return;
+  if (!c.geo || !c.n || c.cv.hidden || !onScreen(c.cv)) return;
+  let moving = c.cv._dirty || !c.drawn, hot = false;
+  for (let i = 0; i < c.n; i++) { const d = c.tgt[i] - c.cur[i]; if (d > .05 || d < -.05) moving = true; if (c.cur[i] > 85) hot = true; }
+  if (!moving && !hot) return;   // settled and nothing shimmering: the last frame is still correct
+  c.cv._dirty = false; c.drawn = true;
   const g = c.cv.getContext('2d'), {cols, cell, gap} = c.geo;
   g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, c.cv.width, c.cv.height);
   const r = Math.min(3, cell * .22);
@@ -362,15 +403,16 @@ function drawGrid(c, t) {
     c.cur[i] += (c.tgt[i] - c.cur[i]) * 0.06;
     const v = c.cur[i], x = (i % cols) * (cell + gap), y = Math.floor(i / cols) * (cell + gap);
     const shimmer = v > 85 ? 6 * Math.sin(t / 300 + i * 1.7) : 0;
-    g.fillStyle = col(v + shimmer);
-    if (v > 70) { g.shadowColor = col(v); g.shadowBlur = cell * .5; } else g.shadowBlur = 0;
-    g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill();
+    const fi = Math.max(0, Math.min(100, Math.round(v + shimmer)));
+    if (v > 70) { const s = sprite(fi, Math.max(0, Math.min(100, Math.round(v))), cell, r); g.drawImage(s, x - s.pad, y - s.pad, s.width / DPR, s.height / DPR); }
+    else { g.fillStyle = col(fi); g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill(); }
   }
-  g.shadowBlur = 0;
 }
 function updateHosts(d) {
   d.hosts.forEach((h, i) => {
     const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
+    const sd = el.querySelector('.sdot'); sd.hidden = !h._held;   // numbers held from the last good sample: a small marker only
+    if (h._held) sd.title = 'no fresh sample' + (h._t ? ' · last good ' + FV.hms(FV.toClient(h._t)) : '') + (h.error ? ' · ' + h.error : '');
     el.className = 'host ' + (/EPYC/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
     setText(el.querySelector('.hk'), h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : ''));
     el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
@@ -401,9 +443,29 @@ function updateHosts(d) {
 
 // ---- RAM: stacked area over 60 min (redrawn on data, with an eased reveal) and per-host tanks (animated)
 let areaT0 = 0, areaFirst = true;
+let areaC = null, areaKey = '', areaHead = null;
 function drawRamArea(t) {
-  if (!D || !HIST.length) return false;
-  const [g, w, h] = fit($('ramArea'));
+  if (!D || !HIST.length || !onScreen($('ramArea'))) return false;
+  const [g0, w, h] = fit($('ramArea'));
+  if (!areaFirst) {   // after the reveal the chart only changes with new data; redraw the cache then, else blit it
+    const key = HIST.length + '|' + HIST[HIST.length - 1][0] + '|' + w + '|' + h + '|' + D.totals.mem_total + '|' + HH.length;
+    if (key !== areaKey || !areaC) {
+      areaKey = key; areaC = areaC || document.createElement('canvas');
+      areaC.width = Math.round(w * DPR); areaC.height = Math.round(h * DPR);
+      const gc = areaC.getContext('2d'); gc.setTransform(DPR, 0, 0, DPR, 0, 0); gc.clearRect(0, 0, w, h);
+      areaHead = rampArea(gc, w, h, t, false);
+    }
+    g0.drawImage(areaC, 0, 0, w, h);
+    if (areaHead) { const {xl, yl} = areaHead, ph = (t / 1600) % 1;
+      g0.fillStyle = '#e8eefc'; g0.shadowColor = '#5ee7ff'; g0.shadowBlur = 10; g0.beginPath(); g0.arc(xl, yl, 3, 0, 7); g0.fill(); g0.shadowBlur = 0;
+      g0.strokeStyle = rgba('#5ee7ff', 1 - ph); g0.beginPath(); g0.arc(xl, yl, 3 + 9 * ph, 0, 7); g0.stroke(); }
+    return true;
+  }
+  const hd = rampArea(g0, w, h, t, true);
+  if (hd && !areaFirst) { areaKey = ''; }
+  return true;
+}
+function rampArea(g, w, h, t, live) {
   const padL = 44, padB = 18, padT = 8, W = w - padL - 6, H = h - padB - padT;
   const capTB = D.totals.mem_total / 1024 || 1;
   const yMax = Math.max(1, Math.ceil(capTB));
@@ -441,17 +503,18 @@ function drawRamArea(t) {
   // capacity line + fleet edge glow
   g.setLineDash([4, 4]); g.strokeStyle = '#ff5d7399'; g.beginPath(); g.moveTo(padL, Y(capTB)); g.lineTo(padL + W, Y(capTB)); g.stroke(); g.setLineDash([]);
   g.fillStyle = '#ff5d73cc'; g.textAlign = 'left'; g.fillText(`capacity ${fmt(capTB, 2)} TB`, padL + 4, Y(capTB) - 4);
-  if (!areaFirst || u >= 1) {
-    const yl = Y(base[base.length - 1] || 0), xl = X(now), ph = (t / 1600) % 1;
+  const head = {xl: X(now), yl: Y(base[base.length - 1] || 0)};
+  if (live && u >= 1) {
+    const {xl, yl} = head, ph = (t / 1600) % 1;
     g.fillStyle = '#e8eefc'; g.shadowColor = '#5ee7ff'; g.shadowBlur = 10; g.beginPath(); g.arc(xl, yl, 3, 0, 7); g.fill(); g.shadowBlur = 0;
     g.strokeStyle = rgba('#5ee7ff', 1 - ph); g.beginPath(); g.arc(xl, yl, 3 + 9 * ph, 0, 7); g.stroke();
   }
   if (u >= 1) areaFirst = false;
-  return true;
+  return head;
 }
 const tankLvl = [];
 function drawTanks(t) {
-  if (!D) return;
+  if (!D || !onScreen($('tanks'))) return;
   const [g, w, h] = fit($('tanks'));
   const hs = D.hosts, n = hs.length, gap = Math.min(14, w / n * .18), tw = (w - gap * (n - 1)) / n;
   const labH = 30, TH = h - labH - 4, SEG = 16, sg = 2, segH = (TH - sg * (SEG - 1)) / SEG;
@@ -568,8 +631,24 @@ function updateLoop(d) {
 
 // ---- data
 let lastT = 0;
+let fleetT = null;   // client epoch of the newest fleet sample shown
+const lastHost = {};
+function holdHosts(d) {   // the server sends no numbers for a dead host: keep showing its last good values, untouched
+  let add = null;
+  for (const h of d.hosts) {
+    if (h.cores && h.cores.length) { lastHost[h.label] = h; continue; }
+    const p = lastHost[h.label]; if (!p) continue;
+    for (const f of ['cores', 'mem_total', 'mem_used', 'load', 'docker', 'gpu']) h[f] = p[f];
+    h._held = true; h._t = h.t; h.state = 'up';
+    add = add || {cores: 0, busy: 0, mem_total: 0, mem_used: 0, docker: 0};
+    add.cores += h.cores.length; add.busy += h.cores.reduce((a, b) => a + b, 0) / 100;
+    add.mem_total += h.mem_total || 0; add.mem_used += h.mem_used || 0; add.docker += h.docker || 0;
+  }
+  if (add) { const T = d.totals; for (const k in add) T[k] = Math.round((T[k] + add[k]) * 10) / 10; }
+}
 function onData(d) {
   d = relabel(d);
+  if (FV) { fleetT = FV.payload(d, ['jobs'], 'fleet'); FV.synced(fleetT); FV.ok('feed-conn'); holdHosts(d); }
   if (d.delta) { for (const r of d.history) if (!HIST.length || r[0] > HIST[HIST.length - 1][0]) HIST.push(r); }
   else HIST = d.history.filter(r => r.length >= 6);
   while (HIST.length && HIST[0][0] < d.t - 3700) HIST.shift();
@@ -590,12 +669,21 @@ function onData(d) {
 }
 let es = null;
 function connect() {
-  fetch('/api/fleet' + Q).then(r => r.ok ? r.json() : null).then(d => d && onData(d)).catch(() => {}).finally(() => {
+  const get = FV ? FV.getJSON('/api/fleet' + Q, 8000) : fetch('/api/fleet' + Q).then(r => r.ok ? r.json() : null);
+  get.then(d => d && !d.warming && onData(d)).catch(() => {})   /* counted by the stream's onerror that follows */.finally(() => {
     es = new EventSource('/api/stream' + Q);
     es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
-    es.onerror = () => { es.close(); setTimeout(connect, 4000); };
+    es.onerror = () => { es.close(); if (FV) FV.fail('feed-conn', 'live feed: connection to the fleet server lost (retrying)', fleetT); setTimeout(connect, 4000); };
   });
 }
+function feedCheck() {   // no new sample for more than ~2 poll intervals (the server's own clock, via sent_at)
+  if (!FV) return;
+  const poll = (D && D.poll) || 5, age = fleetT == null ? null : Date.now() / 1000 - fleetT;
+  if (age != null && age > 2 * poll + 2) FV.issue('feed-age', `live feed: no new fleet sample for ${Math.round(age)}s (expected every ${poll}s)`, fleetT);
+  else if (age == null && performance.now() > 20000) FV.issue('feed-age', 'live feed: no data received from the fleet server');
+  else FV.clear('feed-age');
+}
+if (FV) { FV.anchor($('live')); setInterval(feedCheck, 1000); }
 if (!REPLAY) connect();
 
 // ---- verdict feed (internal view): every terminal verdict, newest first
@@ -607,7 +695,10 @@ function loadVerdicts(v) {   // skips the render when the payload is unchanged
   VV = v;
   if (REPLAY) { const d = rpVerdicts(), h = d.length + '|' + (d[0] ? d[0].t : 0) + '|' + (d.length ? d[d.length - 1].t : 0); if (h === vHash) return; vHash = h; VD = d; renderVerdicts(); return; }
   vFetchT = Date.now();
-  fetch('/api/verdicts').then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === vHash) return; vHash = x; VD = relabel(JSON.parse(x).verdicts); renderVerdicts(); }).catch(() => { VV = null; });
+  (FV ? FV.getJSON('/api/verdicts', 10000) : fetch('/api/verdicts').then(r => r.ok ? r.json() : null)).then(d => {
+    if (FV) FV.ok('verdicts');
+    if (d == null) return; const h = d.v + '|' + d.verdicts.length + '|' + (d.verdicts[0] ? d.verdicts[0].t : 0); if (h === vHash) return; vHash = h; VD = relabel(d.verdicts); renderVerdicts();
+  }).catch(e => { VV = null; if (FV) FV.fail('verdicts', 'verdict feed: ' + e.message); });
 }
 function renderVerdicts() {
   lsw('vf', VF);
@@ -710,8 +801,13 @@ function jobAges() {   // age cells and the status-file age, in place
 }
 function pollJobs() {
   if (SAFE) return;
-  fetch('/api/jobs').then(r => r.ok ? r.text() : null).then(x => { if (x == null) return; if (x === jHash) { jobAges(); return; } jHash = x; J = relabel(JSON.parse(x)); if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs(); }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
+  (FV ? FV.getJSON('/api/jobs', 8000) : fetch('/api/jobs').then(r => r.ok ? r.json() : null)).then(d => {
+    if (d == null) return;
+    if (FV) { jobsT = FV.payload(d, ['loop_status'], 'jobs'); FV.ok('jobs-fetch'); }
+    const x = JSON.stringify([d.jobs, d.status]); if (x === jHash) { jobAges(); return; } jHash = x; J = relabel(d); if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs();
+  }).catch(e => { if (FV) FV.fail('jobs-fetch', 'job table: ' + e.message + (jobsT ? ` (last good ${FV.hms(jobsT)})` : ''), jobsT); }).finally(() => setTimeout(pollJobs, 10000));
 }
+let jobsT = null;
 $('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
 $('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
 $('fGrp').onchange = e => { F.grp = e.target.checked; renderJobs(); };
@@ -725,11 +821,11 @@ window.addEventListener('resize', () => { for (const c of cards.values()) layout
 const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
   'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd'};
-const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['qualification', 'qualification'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
-  ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
+const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
+  ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['qualification', 'qualification'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
 let ED = null, eHash = null;
-const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
+const esgn = x => x == null ? "" : Math.abs(x) >= 1e6 ? (x > 0 ? "∞" : "-∞") : (x > 0 ? "+" : "") + x.toFixed(1);   // STA reports ~1e42 when no path is constrained
 const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
 function elementQualification(q) {
   if (!q) return '';
@@ -769,7 +865,8 @@ function renderElements() {
   const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
   const v = x => x == null ? -Infinity : x;
   vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
-  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const NUMC = new Set(['tt', 'ff', 'ss', 'drc', 'die', 'util', 'live', 'failed', 'jobs']);
+  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${(NUMC.has(c) ? 'nu ' : '') + (EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : '')}">${t}</th>`).join(''));
   const items = []; let g = null;
   const tf = t => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '';
   for (const r of vis) {
@@ -779,20 +876,25 @@ function renderElements() {
     }
     const b = r.best, lt = r.latest;
     const tip = `best job ${b.job || '-'} (${b.corner || '-'} line), source ${b.source_commit || 'unrecorded'}` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
-    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
-      `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
-      `<td class="pu" title="${esc(JSON.stringify(r.evidence_history || []))}"><div>${esc(r.qualification)}</div></td>` +
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td class="enm" title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+      `<td class="est"><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
       `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
-      `<td>${tf(r.closed_t)}</td><td class="ev" title="${esc(lt ? lt.job + ': ' + lt.text : '')}">${lt ? `<div><span class="age" data-t="${lt.t}"></span> <b>${esc(lt.status)}</b> <small>${esc(lt.job)}</small> ${esc(lt.text)}</div>` : ''}</td></tr>`]);
+      `<td>${tf(r.closed_t)}</td><td class="pu qu" title="${esc(JSON.stringify(r.evidence_history || []))}"><div>${esc(r.qualification)}</div></td><td class="ev" title="${esc(lt ? lt.job + ': ' + lt.text : '')}">${lt ? `<div><span class="age" data-t="${lt.t}"></span> <b>${esc(lt.status)}</b> <small>${esc(lt.job)}</small> ${esc(lt.text)}</div>` : ''}</td></tr>`]);
   }
   if (!items.length) items.push(['__none', `<tr><td colspan="${ECOLS.length}">no matching elements</td></tr>`]);
   reconcile($('eBody'), items); tickAges();
 }
 function pollElements() {
-  fetch('/api/elements' + Q).then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === eHash) return; const d = JSON.parse(x); if (d && d.t) { eHash = x; ED = relabel(d); renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
+  (FV ? FV.getJSON('/api/elements' + Q, 15000) : fetch('/api/elements' + Q).then(r => r.ok ? r.json() : null)).then(d => {
+    if (d == null) return;
+    if (FV) { FV.payload(d, ['elements'], 'el'); FV.ok('el-fetch'); elFetchT = Date.now() / 1000; }
+    if (!d.t) return;
+    const h = d.v + '|' + d.t; if (h === eHash) return; eHash = h; ED = relabel(d); renderElements();
+  }).catch(e => { elBad = true; if (FV) FV.fail('el-fetch', 'element table: ' + e.message + (elFetchT ? ` (last good ${FV.hms(elFetchT)})` : ''), elFetchT); }).finally(() => { setTimeout(pollElements, elBad ? 15000 : 60000); elBad = false; });   // retry sooner after a failure
 }
+let elFetchT = null, elBad = false;
 $('eTgt').onchange = e => { EF.tgt = e.target.value; renderElements(); };
 $('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
 $('eTxt').oninput = e => { EF.txt = e.target.value; renderElements(); };

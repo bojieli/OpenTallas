@@ -61,7 +61,7 @@ def s81_clock_family(inst):
         return "SELECT"
     if inst == "bk_collector" or inst.startswith(("xsco_", "hco_")):
         return "COLLECT"
-    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_")):
+    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_", "hr_")):
         return "GATHER"
     return None
 

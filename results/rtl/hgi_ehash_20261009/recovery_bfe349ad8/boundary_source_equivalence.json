@@ -1,0 +1,29 @@
+{
+  "old_source": "27186ef4916226efb73a2bc2ce30a6c74685f3cb",
+  "new_source": "bfe349ad88e3b50efb3a12be545284d81a0ca657",
+  "sources": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": {
+      "old_sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+      "new_sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+      "identical": true
+    },
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": {
+      "old_sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+      "new_sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+      "identical": true
+    },
+    "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv": {
+      "old_sha256": "f940c1051ce72d9d10a480f756a0542eef15a6158ea8c49f90a736955844ed9a",
+      "new_sha256": "f940c1051ce72d9d10a480f756a0542eef15a6158ea8c49f90a736955844ed9a",
+      "identical": true
+    }
+  },
+  "parameters": {
+    "ENABLE_GENERIC": "1",
+    "NSLOT": "8",
+    "MUTANT": "0"
+  },
+  "levels": 16,
+  "recipe_equivalent": true,
+  "changes": " .../qwen_die_masters/cfg/hgi_ehash_ds_a_cx.env     |  5 +-\n .../qwen_die_masters/cfg/hgi_ehash_ds_b_cx.env     |  5 +-\n .../hgi_ehash_20261009/source27186ef49/build.0.log | 23 ++++++\n .../hgi_ehash_20261009/source27186ef49/build.1.log | 23 ++++++\n .../hgi_ehash_20261009/source27186ef49/build.2.log | 23 ++++++\n .../hgi_ehash_20261009/source27186ef49/build.3.log | 23 ++++++\n .../hgi_ehash_20261009/source27186ef49/build.4.log | 23 ++++++\n .../source27186ef49/campaign.log                   |  5 ++\n .../hgi_ehash_20261009/source27186ef49/run.0.log   | 24 ++++++\n .../hgi_ehash_20261009/source27186ef49/run.1.log   | 26 +++++++\n .../hgi_ehash_20261009/source27186ef49/run.2.log   | 26 +++++++\n .../hgi_ehash_20261009/source27186ef49/run.3.log   | 26 +++++++\n .../hgi_ehash_20261009/source27186ef49/run.4.log   | 26 +++++++\n .../jobs/hgi-ehash-ds-a-27186ef49-tc-cx.json       | 87 ++++++++++++++++++++++\n .../jobs/hgi-ehash-ds-b-27186ef49-tc-cx.json       | 87 ++++++++++++++++++++++\n 15 files changed, 430 insertions(+), 2 deletions(-)\n"
+}

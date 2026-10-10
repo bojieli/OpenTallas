@@ -28,8 +28,22 @@
     "ux_done": "cfg",
     "ux_fault": "cfg",
     "wr_quiet": "cfg",
-    "idx_rec": "die:t_hgi_idx[0:1237]",
-    "idx_ret": "die:f_hgi_idx[0:3]"
+    "idx_rec": "die:t_hgi_idx[0:1819]",
+    "idx_ret": "die:f_hgi_idx[0:3]",
+    "am_rec": "fold",
+    "am_ret": "const:0",
+    "sm_rec": "fold",
+    "sm_ret": "const:0",
+    "su_rec": "fold",
+    "su_ret": "const:0",
+    "sfu_rec": "fold",
+    "sfu_ret": "const:0",
+    "att_rec": "fold",
+    "att_ret": "const:0",
+    "dma_rec": "fold",
+    "dma_ret": "const:0",
+    "hc_rec": "fold",
+    "hc_ret": "const:0"
    }
   }
  ],
@@ -41,5 +55,64 @@
  "open_items": [
   "ux_* (12 units) wait for the hgi-adapters record adapters",
   "wr_quiet needs the DMA / svc write-visibility signal"
- ]
+ ],
+ "replaced_when_hgi": "argmax",
+ "ties": {
+  "cpd.am_rec": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  },
+  "cpd.am_ret": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  },
+  "cpd.sm_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sm_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.su_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.su_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sfu_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sfu_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.att_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.att_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.dma_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.dma_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.hc_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.hc_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  }
+ }
 }

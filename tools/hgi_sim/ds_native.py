@@ -99,7 +99,8 @@ class Layout:
                  TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=32, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
-                 LR=512, IK=128, CK=512, ROPE2=64, logits=1352)
+                 LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
+                 IWS=32, SELT=1024, CANDM=4096)   # G18: frame outputs / merge tables (rows: ids | values)
 
     def __init__(self):
         self.vm, cur = {}, 0
@@ -113,6 +114,9 @@ class Layout:
             cur += n
         assert cur <= MC.VM_WORDS, cur
         self.end = cur
+        # the layer-20 candidate table [ids | values] (2 x 2,048) lives in zpart: zpart is dead between the indexer
+        # frame and wo_a; its hazards use the region name zpart (ordered against every zpart use)
+        self.vm["CANDT"] = self.vm["zpart"]
 
     def V(self, name, n, off=0, m=1, stride=0, istride=0, fmt="FP32", ibcast=0):
         return MDesc(space="VM", fmt=fmt, base=self.vm[name] + off, n=n, m=m, stride=stride, istride=istride,
@@ -158,11 +162,18 @@ class Manifest:
 # the lowering
 # ----------------------------------------------------------------------------------------------------------------
 class Lower:
-    def __init__(self, m, pos, lay: Layout, man: Manifest):
+    def __init__(self, m, pos, lay: Layout, man: Manifest, fuse=True):
         self.m, self.pos, self.lay, self.man = m, pos, lay, man
+        self.fuse = fuse                  # SU chain fusion (see FUSION below); False = the one-template-a-record stream
         self.ent = {}
         self.cur_op = None
         self.bufn = dict(qa=1280, kvraw=512, gsc=384, y=D, yf=D, iq=4096, iwr=32, eg_rows=6144, eg_kv=25600)
+
+    @staticmethod
+    def owned_keys(rank, n):
+        """Keys < n owned by `rank` (blocks of KEY_BLOCK round robin over TP ranks): count, owned blocks."""
+        blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
+        return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
 
     def W(self, key, rows, cols, fmt, n_experts=1):
         if key not in self.ent:
@@ -184,7 +195,19 @@ class Lower:
             rec.src = (L, self.cur_op.get("id")) if self.cur_op else None     # timing: the w19 op it lowers
             b.add(rec, rd if run else [], wr if run else [])
 
+        loaded = set()
+
         def su(tag, fam, desc, rd, wr, run=True, **t):
+            if self.fuse and set(desc) == {"A", "O"} and desc["A"].space == "HBM" and \
+                    all(v == 0 for k_, v in sut(**t).items() if k_ not in ("dst", "a_src", "b_src", "c_src", "d_src")):
+                # FUSION 1: a table copy (HBM -> VM, no arithmetic) is a DMA.LOAD (pipelined, off the in-order SU);
+                # a table already loaded into the same VM buffer in this layer is not loaded again
+                key = (desc["A"].base, desc["O"].base, desc["O"].n)
+                if key in loaded:             # (same decision on every rank: the image structure stays identical)
+                    return
+                loaded.add(key)
+                add(Rec("DMA", "LOAD", desc=dict(A=desc["A"], O=desc["O"]), tag=tag, family=fam), rd, wr, run)
+                return
             add(Rec("SU", "VOP", sut=sut(**t), desc=desc, tag=tag, family=fam), rd, wr, run)
 
         def tab(name):
@@ -203,13 +226,18 @@ class Lower:
                 bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"] + int(col0 * ESZ[fmt]),
                            n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
             fp = {"bf16": 0, "fp8": 1, "fp4": 2}[fmt]
+            if self.fuse and out == "q":
+                out = "q_own"                 # FUSION 3: the RoPE head is the matvec's own output (tail in place)
             self.bufn[out] = n
-            ooff = 0 if out in ("q", "logits", "KIN") else r0          # die-local outputs
+            ooff = 0 if out in ("q", "q_own", "logits", "KIN") else r0          # die-local outputs
             desc = dict(A=x_desc, B=bd, O=V(out, max(r1 - r0, 1), off=ooff, fmt=out_fmt))
+            if self.fuse and out == "logits":         # the LM head streams into the argmax unit (STREAM 2)
+                desc["O"] = MDesc(space="STREAM", fmt=out_fmt, base=2, n=max(r1 - r0, 1))
             if expert_slot is not None:
                 desc["I"] = U32V(lay.vm["rid"] + expert_slot, 1)
             add(Rec("SM", "MATVEC", param=fp, desc=desc,
-                    tag=tag or op["tag"], family="mv." + op["fn"]), rd or [], [out], run and r1 > r0)
+                    tag=tag or op["tag"], family="mv." + op["fn"]), rd or [],
+                [] if desc["O"].space == "STREAM" else [out], run and r1 > r0)
 
         for op in ops:
             self.cur_op = op
@@ -230,7 +258,7 @@ class Lower:
                     pre = V("PRE", 4) if w in ("attn", None) else V("MIXa", 4)
                     add(Rec("FUSED", "HC_PRE_NORM", imm_a=f32u(m.eps), desc=dict(
                         A=V("h", HC * D), B=tab(gname), C=pre, O=V("x", D, fmt="BF16")),
-                        tag=op["tag"], family="hc_pre_norm"), ["h", "PRE", "MIXa"], ["x"])
+                        tag=op["tag"], family="hc_pre_norm"), ["h", "PRE" if w in ("attn", None) else "MIXa"], ["x"])
                 elif fn == "hc_post":
                     mix = "MIXa" if w == "attn" else "MIXf"
                     yv = "y" if w == "attn" else "yf"
@@ -242,15 +270,16 @@ class Lower:
                            dst=I.DST_VM)
                 elif fn == "q_norm_kv_row":
                     self.rmsnorm(su, "q_norm", "qa", 1280, "GQN", "qr", f"{P}attn.q_norm.weight")
-                    self.rmsnorm(su, "kv_norm", "kvraw", 512, "GKV", "kvn", f"{P}attn.kv_norm.weight")
-                    self.rope_tail(su, "kv_rope", "kvn", 512, "kvr", inverse=False, run=True)
+                    kvn = "kvr" if self.fuse else "kvn"
+                    self.rmsnorm(su, "kv_norm", "kvraw", 512, "GKV", kvn, f"{P}attn.kv_norm.weight")
+                    self.rope_tail(su, "kv_rope", kvn, 512, "kvr", inverse=False, run=True)
                     add(Rec("FUSED", "QDQ_FP8", desc=dict(A=V("kvr", 512), O=V("win_new", 512)), tag="kv_row_qdq",
                             family="q_norm_kv_row"), ["kvr"], ["win_new"])
                     add(Rec("DMA", "KVWB_DS", desc=dict(A=V("win_new", 512), O=MDesc(
                         space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["WIN"], n=512, m=128, stride=2048)),
                         tag="window_row_append", family="q_norm_kv_row"), ["win_new"], ["WIN"])
                 elif fn == "q_rope":
-                    self.rope_tail(su, "q_rope", "q", 512, "q_own", inverse=False, run=head)
+                    self.rope_tail(su, "q_rope", "q_own" if self.fuse else "q", 512, "q_own", inverse=False, run=head)
                 elif fn == "attend":
                     self.attend(add, su, L, head, op.get("yarn"))
                 elif fn == "router_act":
@@ -259,6 +288,24 @@ class Lower:
                        ["gsc"], ["gsc"], sfu=I.SFU_SPSQRT, dst=I.DST_VM)
                 elif fn == "route":
                     self.route(add, su)
+                elif fn == "swiglu" and self.fuse:
+                    # FUSION 4: every slot in one record (rows = slots); the shared slot's route weight is 1.0
+                    # (route_w[k] loaded from the ONE table: t * 1.0 == t exactly), emitted at the last slot
+                    e = op["slot"]
+                    if e == m.k_exp:
+                        r0, r1 = W.even(2304)[rank]
+                        ns = m.k_exp + 1
+                        sg = lay.vm["e1.g"] - lay.vm["e0.g"]
+                        assert all(lay.vm[f"e{i}.g"] - lay.vm["e0.g"] == i * sg and
+                                   lay.vm[f"e{i}.u"] - lay.vm["e0.u"] == i * sg for i in range(ns))
+                        t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, e2=I.E2_MULB,
+                                 rnd=1, dst=I.DST_VM)
+                        desc = dict(A=V("e0.g", r1 - r0, off=r0, m=ns, stride=sg),
+                                    B=V("route_w", r1 - r0, m=ns, stride=1, ibcast=1),
+                                    C=V("e0.u", r1 - r0, off=r0, m=ns, stride=sg),
+                                    O=V("ea", r1 - r0, off=r0, m=ns, stride=2304))
+                        su("swiglu", "swiglu", desc, [f"e{i}.{x}" for i in range(ns) for x in "gu"] + ["route_w"],
+                           [f"ea.s{i}" for i in range(ns)], **t)
                 elif fn == "swiglu":
                     e = op["slot"]
                     r0, r1 = W.even(2304)[rank]
@@ -268,7 +315,28 @@ class Lower:
                     if e < m.k_exp:
                         t["e2"] = I.E2_MULB
                         desc["B"] = V("route_w", r1 - r0, off=e, ibcast=1)
-                    su(f"swiglu.s{e}", "swiglu", desc, [f"e{e}.g", f"e{e}.u", "route_w"], ["ea"], **t)
+                    su(f"swiglu.s{e}", "swiglu", desc, [f"e{e}.g", f"e{e}.u", "route_w"], [f"ea.s{e}"], **t)
+                elif fn == "moe_sum" and self.fuse:
+                    # FUSION 5: two ordered adds a record ((y + D) + C: AD = +D, E1 = +C), same summation order
+                    r0, r1 = W.even(D)[rank]
+                    n = r1 - r0
+                    ns = m.k_exp + 1
+                    su("moe_sum.0", "moe_sum", dict(A=V("e0.d", n, off=r0), C=V("e1.d", n, off=r0),
+                                                    O=V("yf", n, off=r0)), ["e0.d", "e1.d"], ["yf"],
+                       ad=I.AD_IMM, imm2=0, e1=I.E1_ADDC, rnd=int(ns == 2), dst=I.DST_VM)
+                    e = 2
+                    while e < ns:
+                        if e + 1 < ns:
+                            su(f"moe_sum.{e}", "moe_sum", dict(A=V("yf", n, off=r0), D=V(f"e{e}.d", n, off=r0),
+                                                               C=V(f"e{e + 1}.d", n, off=r0), O=V("yf", n, off=r0)),
+                               ["yf", f"e{e}.d", f"e{e + 1}.d"], ["yf"], ad=I.AD_D, e1=I.E1_ADDC,
+                               rnd=int(e + 2 == ns), dst=I.DST_VM)
+                            e += 2
+                        else:
+                            su(f"moe_sum.{e}", "moe_sum", dict(A=V("yf", n, off=r0), C=V(f"e{e}.d", n, off=r0),
+                                                               O=V("yf", n, off=r0)), ["yf", f"e{e}.d"], ["yf"],
+                               ad=I.AD_C, rnd=1, dst=I.DST_VM)
+                            e += 1
                 elif fn == "moe_sum":
                     r0, r1 = W.even(D)[rank]
                     n = r1 - r0
@@ -280,8 +348,9 @@ class Lower:
                            ad=I.AD_C, rnd=int(e == m.k_exp), dst=I.DST_VM)
                 elif fn == "argmax_local":
                     r0, r1 = head_rows(rank)
-                    add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=V("logits", r1 - r0), O=V("TOK", 2)),
-                            tag="argmax_local", family="argmax"), ["logits"], ["TOK"])
+                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if self.fuse else V("logits", r1 - r0)
+                    add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=src_, O=V("TOK", 2)),
+                            tag="argmax_local", family="argmax"), [] if self.fuse else ["logits"], ["TOK"])
                 elif fn == "engram_fetch":
                     self.engram_fetch(add, su, L)
                 elif fn == "engram_mix":
@@ -289,18 +358,53 @@ class Lower:
                 elif fn == "compressor":
                     self.compressor(add, su, L, op, run=rank in op["ranks"])
                 elif fn == "index_q":
-                    add(Rec("IDX", "INDEX_Q", imm_b=L, desc=dict(A=V("iq", 4096), B=V("iwr", 32)), tag=op["tag"],
-                            family="indexer"), ["iq", "iwr"], ["IDXQ"])
+                    # G18: RoPE (yarn table at POS, adjacent pairs, in place on each of the ih head rows) and the
+                    # head-weight scale are SU records; the indexer frame reads the results
+                    assert m.ratio[L] > 0
+                    ih, ihd = m.ih, m.ihd
+                    su("index_q.rope", "indexer", dict(
+                        A=V("iq", 64, off=ihd - 64, m=ih, stride=ihd), B=V("ROPE", 64, m=ih, stride=0),
+                        D=V("ROPE", 64, off=32, m=ih, stride=0), O=V("iq", 64, off=ihd - 64, m=ih, stride=ihd)),
+                        ["iq", "ROPE"], ["iq"], c_pair=1, b_half=1, m1=I.M1_AB, qm=I.QM_ALT_NP, ad=I.AD_Q, rnd=1,
+                        dst=I.DST_VM)
+                    self.iq_op = self.cur_op.get("id")
+                    su("index_q.w_scale", "indexer", dict(A=V("iwr", ih), O=V("IWS", ih)), ["iwr"], ["IWS"],
+                       m1=I.M1_AIMM, imm1=f32u(m.index_w_scale), rnd=1, dst=I.DST_VM)
                 elif fn == "index_scores":
-                    add(Rec("IDX", "INDEX_SCORES", param=op["src"], imm_a=op["n"], imm_b=L, tag=op["tag"],
-                            family="indexer"), ["IDXQ", "kvstore"], ["IDXS"])
-                elif fn == "topk_local":                # the DS indexer engine's own buffers (G16)
-                    add(Rec("IDX", "TOPK", param=op["k"], imm_b=L, tag=op["tag"], family="indexer"),
-                        ["IDXS"], ["IDXT"])
-                elif fn in ("cand_local", "cand_apply", "cand_mask"):
-                    sub = {"cand_local": 1, "cand_apply": 2, "cand_mask": 3}[fn]
-                    add(Rec("IDX", "SELECT", param=sub, imm_a=op.get("n", 0), imm_b=L, tag=op["tag"],
-                            family="candidates"), ["IDXS", "CAND"], ["IDXS", "CAND"])
+                    # G18: ONE IDX.INDEX frame = query quantiser + scores + (layer-20 candidate pass) + (keep mask)
+                    # + local top-k; the w19 ops cand_local / cand_mask / topk_local are part of it
+                    n = op["n"]
+                    assert op["src"] == m.kv_of[L]
+                    nr, nbr = self.owned_keys(rank, n)
+                    assert nr > 0
+                    kk = min(m.topk, n)
+                    kr = min(kk, nr)
+                    cand_en, keep_en = int(L == m.cand_src), int(0 <= m.cand_src < L)
+                    desc = dict(A=V("iq", m.ih * m.ihd), B=V("IWS", m.ih), O=U32V(lay.vm["SELT"], kr),
+                                R=V("SELT", kr, off=512))
+                    rd, wr = ["iq", "IWS", "kvstore"], ["SELT"]
+                    if cand_en:
+                        nb = -(-n // m.cand_b)
+                        kc = min(m.cand_k, nb, nbr)
+                        assert kc <= 2048
+                        desc["D"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDT"], n=kc, m=2, stride=2048)
+                        wr.append("zpart")
+                    if keep_en:
+                        nb20 = -(-((self.pos + 1) // m.ratio[m.cand_src]) // m.cand_b)
+                        desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
+                                          stride=2048)
+                        rd.append("CANDM")
+                    add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
+                            desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
+                    self.frame_rec, self.frame_n = b.recs[-1], n
+                    if self.frame_rec.src is not None:     # timing: the frame also runs the query quantiser of index_q
+                        self.frame_rec.src = (self.frame_rec.src[0], self.frame_rec.src[1], [self.iq_op])
+                elif fn in ("topk_local", "cand_local", "cand_apply", "cand_mask"):
+                    # part of the IDX.INDEX frame (timing: priced with it)
+                    fr = getattr(self, "frame_rec", None)
+                    if fr is not None and fr.src is not None:
+                        fr.src = (fr.src[0], fr.src[1], list(fr.src[2] if len(fr.src) > 2 else []) +
+                                  [self.cur_op.get("id")])
                 else:
                     raise NotImplementedError(f"DS native lowering of {fn}")
             elif k == "mv":
@@ -316,7 +420,7 @@ class Lower:
                 x = op["x"]
                 if isinstance(w, (list, tuple)) and len(w) == 2 and isinstance(w[0], int):
                     slot, mat = w
-                    xin = "ea" if mat == "w2" else x
+                    xin = f"ea.s{slot}" if mat == "w2" else x          # per-slot region names
                     xd = V("ea", 2304, off=slot * 2304) if mat == "w2" else V(x, op["k"])
                     if slot < m.k_exp:          # routed: weight base through the router's id word (C3b)
                         mv(op, xd, (r0, r1), op["out"], op["n"], f"{P}ffn.experts.{mat}", fmt, out_fmt,
@@ -340,7 +444,7 @@ class Lower:
                         for e in range(m.k_exp + 1):
                             add(Rec("COLL", "ALL_GATHER", desc=dict(A=V("ea", 2304, off=e * 2304),
                                                                      O=V("ea", 2304, off=e * 2304)),
-                                    tag=f"{op['tag']}.s{e}", family="all_gather"), ["ea"], ["ea"])
+                                    tag=f"{op['tag']}.s{e}", family="all_gather"), [f"ea.s{e}"], [f"ea.s{e}"])
                     else:
                         n = self.bufn[buf]
                         add(Rec("COLL", "ALL_GATHER", desc=dict(A=V(buf, n), O=V(buf, n)), tag=f"{op['tag']}.{buf}",
@@ -356,11 +460,18 @@ class Lower:
                     add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=V("TOK", 2), O=MDesc(space="VM", fmt="U32",
                                                                                      base=lay.vm["TOK"] + 4, n=1)),
                             tag=op["tag"], family="argmax"), ["TOK"], ["TOK"])
-                else:
-                    desc = dict(O=U32V(lay.vm["SELIDX"], op["k"])) if what == "sel" else {}
-                    add(Rec("COLL", "TOPK_MERGE", param=0 if what == "sel" else 1, imm_a=op["k"], tag=op["tag"],
-                            desc=desc, family="indexer" if what == "sel" else "candidates"), ["IDXT", "CAND"],
-                        ["SELIDX", "CAND"])
+                elif what == "sel":           # G18: from VM (A = local values, B = local ids), O ascending ids
+                    n = self.frame_n
+                    kr = min(min(m.topk, n), self.owned_keys(rank, n)[0])
+                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="indexer", desc=dict(
+                        A=V("SELT", kr, off=512), B=U32V(lay.vm["SELT"], kr), O=U32V(lay.vm["SELIDX"], op["k"]))),
+                        ["SELT"], ["SELIDX"])
+                else:                         # the layer-20 candidate merge: O = block ids ascending, R = values
+                    n = self.frame_n
+                    kc = min(m.cand_k, -(-n // m.cand_b), self.owned_keys(rank, n)[1])
+                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
+                        A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
+                        R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
             elif k == "kv_gather":
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
                 add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK, imm_a=kk, imm_b=HEADS, desc=dict(
@@ -471,8 +582,9 @@ class Lower:
                                                                              n=512, m=128, stride=e["rowbytes"]),
                                                     O=V("KIN", 128, fmt="BF16")), tag="cmp.indexer_wk",
                 family="compressor"), ["LAT"], ["KIN"], run)
-        self.rmsnorm(su, "cmp.k_norm", "KIN", 128, "GKN", "KN", f"{P}attn.indexer.k_norm.weight", run=run)
-        self.rope_tail(su, "cmp.k_rope", "KN", 128, "KR", inverse=False, run=run, table="ROPE2")
+        kn = "KR" if self.fuse else "KN"
+        self.rmsnorm(su, "cmp.k_norm", "KIN", 128, "GKN", kn, f"{P}attn.indexer.k_norm.weight", run=run)
+        self.rope_tail(su, "cmp.k_rope", kn, 128, "KR", inverse=False, run=run, table="ROPE2")
         self.rope_tail(su, "cmp.lat_rope", "LAT", 512, "LR", inverse=False, run=run, table="ROPE2")
         add(Rec("FUSED", "QDQ_FP4_E8M0", desc=dict(A=V("KR", 128), O=V("IK", 128)), tag="cmp.ik_qdq",
                 family="compressor"), ["KR"], ["IK"], run)
@@ -510,8 +622,9 @@ class Lower:
         rd = 64
         su(f"{tag}.table", tag, dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF[table], n=64),
                                      O=V(table, 64)), [], [table], run=run, dst=I.DST_VM)
-        su(f"{tag}.head", tag, dict(A=V(x, n - rd, off=src_off), O=V(out, n - rd)), [x], [out], run=run,
-           dst=I.DST_VM)
+        if not (x == out and src_off == 0):           # FUSION 3: in place, the head is already in `out`
+            su(f"{tag}.head", tag, dict(A=V(x, n - rd, off=src_off), O=V(out, n - rd)), [x], [out], run=run,
+               dst=I.DST_VM)
         su(f"{tag}.tail", tag, dict(A=V(x, rd, off=src_off + n - rd), B=V(table, rd), D=V(table, rd, off=32),
                                     O=V(out, rd, off=n - rd)), [x, table], [out], run=run, c_pair=1, b_half=1,
            m1=I.M1_AB, qm=I.QM_ALT_PN if inverse else I.QM_ALT_NP, ad=I.AD_Q, rnd=1, dst=I.DST_VM)
@@ -543,17 +656,25 @@ class Lower:
                 tag="attend.pv", family="attend"), ["EB"] + rd[1:], ["PV"], head)
         su("attend.sink_table", "attend", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["SINK"], n=1),
                                                O=V("SINK", 1)), [], ["SINK"], run=head, dst=I.DST_VM)
-        su("attend.sink_exp", "attend", dict(A=V("SINK", 1), B=V("MB", 1), O=V("ES", 1)), ["SINK", "MB"], ["ES"],
-           run=head, ad=I.AD_NEGB, sfu=I.SFU_EXP, dst=I.DST_VM)
-        su("attend.den", "attend", dict(A=V("SE", 1), C=V("ES", 1), O=V("DEN", 1)), ["SE", "ES"], ["DEN"], run=head,
-           ad=I.AD_C, dst=I.DST_VM)
-        su("attend.norm", "attend", dict(A=V("PV", 512), B=V("DEN", 512, ibcast=1), O=V("O", 512)),
-           ["PV", "DEN"], ["O"], run=head, m1=I.M1_DIVB, rnd=1, dst=I.DST_VM)
-        self.rope_tail(su, "attend.inv_rope", "O", 512, "o_own", inverse=True, run=head)
+        if self.fuse:                 # FUSION 2: den = exp(sink - max) + sum in one record (E1 = +C; a + b == b + a)
+            su("attend.den", "attend", dict(A=V("SINK", 1), B=V("MB", 1), C=V("SE", 1), O=V("DEN", 1)),
+               ["SINK", "MB", "SE"], ["DEN"], run=head, ad=I.AD_NEGB, sfu=I.SFU_EXP, e1=I.E1_ADDC, dst=I.DST_VM)
+        else:
+            su("attend.sink_exp", "attend", dict(A=V("SINK", 1), B=V("MB", 1), O=V("ES", 1)), ["SINK", "MB"], ["ES"],
+               run=head, ad=I.AD_NEGB, sfu=I.SFU_EXP, dst=I.DST_VM)
+            su("attend.den", "attend", dict(A=V("SE", 1), C=V("ES", 1), O=V("DEN", 1)), ["SE", "ES"], ["DEN"],
+               run=head, ad=I.AD_C, dst=I.DST_VM)
+        on = "o_own" if self.fuse else "O"
+        su("attend.norm", "attend", dict(A=V("PV", 512), B=V("DEN", 512, ibcast=1), O=V(on, 512)),
+           ["PV", "DEN"], [on], run=head, m1=I.M1_DIVB, rnd=1, dst=I.DST_VM)
+        self.rope_tail(su, "attend.inv_rope", on, 512, "o_own", inverse=True, run=head)
 
     def route(self, add, su):
         V = self.lay.V
         m = self.m
+        if self.fuse:                 # the shared slot's route weight (FUSION 4)
+            su("route.one", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["ONE"], n=1),
+                                          O=V("route_w", 1, off=m.k_exp)), [], ["route_w"], dst=I.DST_VM)
         su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=384),
                                        O=V("BIAS", 384)), [], ["BIAS"], dst=I.DST_VM)
         su("route.scores_bias", "route", dict(A=V("gsc", 384), C=V("BIAS", 384), O=V("router", 384)),
@@ -591,7 +712,7 @@ def build_tables(m, st, L, pos, rank):
              ("ROPE", np.concatenate([cos, sin])), ("BIAS", m.lw(L, "ffn.gate.bias")),
              ("SINK", m.lw(L, "attn.attn_sink")[rank:rank + 1] if rank < HEADS else np.zeros(1)),
              ("WIN", np.concatenate([np.asarray(st.win[L], F).reshape(-1), np.zeros(512, F)])),
-             ("norm.weight", m.w["norm.weight"])]
+             ("norm.weight", m.w["norm.weight"]), ("ONE", np.ones(1, F))]
     if L in m.engram.layer_ids:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(hist_of[0], li).reshape(-1)             # host-provided per token (G13)
@@ -689,44 +810,26 @@ def ds_units(m, man, golib):
     def vm_to_rk(M, die, desc, name):
         rk_of(die).put(name, M.read(desc, die, 0))
 
-    def index_q(M, r, L):
+    def index_frame(M, r, L):
+        """IDX.INDEX (G18) = the generic unit (machine.u_idx_index) on the golden key store"""
+        M.index_keys = lambda die, layer, ids: np.asarray(golib.st.ik[m.kv_of[layer]][ids], dtype=F)
+        MC.u_idx_index(M, r, L)
         for die in M.dies:
-            vm_to_rk(M, die, r.desc["A"], "iq")
-            vm_to_rk(M, die, r.desc["B"], "iwr")
-            golib.f_index_q(rk_of(die), dict(layer=r.imm_b, fn="index_q"))
-
-    def index_scores(M, r, L):
-        for die in M.dies:
-            golib.f_index_scores(rk_of(die), dict(layer=r.imm_b, fn="index_scores", n=r.imm_a, src=r.param))
-
-    def topk(M, r, L):
-        if "A" in r.desc:                                 # generic IDX.TOPK (the router top-6)
-            return MC.u_idx_topk(M, r, L)
-        for die in M.dies:                                # the DS index top-k on the indexer engine's buffers (G16)
-            golib.f_topk_local(rk_of(die), dict(layer=r.imm_b, fn="topk_local", k=r.param & 0xFFF))
-
-    def select_any(M, r, L):
-        sub = r.param & 0xFF
-        fn = {1: golib.f_cand_local, 2: golib.f_cand_apply, 3: golib.f_cand_mask}[sub]
-        for die in M.dies:
-            fn(rk_of(die), dict(layer=r.imm_b, n=r.imm_a))
+            idx, v = die.index_last
+            rk_of(die).put("is_i", idx.astype(np.int64), n=len(idx))
+            rk_of(die).put("is_v", v, n=len(v))
 
     def topk_merge(M, r, L):
-        what = "sel" if r.param == 0 else "cand"
-        rks = [rk_of(d) for d in M.dies]
-        v = np.concatenate([rk.get(f"{what}_v") for rk in rks])
-        i = np.concatenate([rk.get(f"{what}_i") for rk in rks]).astype(np.int64)
-        order = np.lexsort((i, -v.astype(np.float64)))[:r.imm_a]
-        for rk in rks:
-            rk.put(f"{what}_mv", v[order].astype(np.float64), n=len(order))
-            rk.put(f"{what}_mi", i[order], n=len(order))
-            if what == "sel":
-                ss = np.sort(i[order])
-                rk.put("sel", ss, n=len(ss))
-        if what == "sel" and "O" in r.desc:               # the selection as a U32 id table in VM (ROW_GATHER's I)
-            ss = np.sort(i[order]).astype(np.uint32)
+        """COLL.TOPK_MERGE (G18) = the generic unit (machine.u_coll_topk_merge), reading VM"""
+        MC.u_coll_topk_merge(M, r, L)
+        if "R" not in r.desc:                                  # (the checker's view of the index selection)
             for d in M.dies:
-                d.vm[M.vm_addrs(r.desc["O"], d, L)] = ss
+                rd = M.rec_of(d, r)
+                ob, on, _, _, _ = M.eff(rd.desc["O"], d, L)
+                rk_of(d).put("sel", d.vm[ob:ob + on].astype(np.int64), n=on)
+
+    def topk(M, r, L):
+        return MC.u_idx_topk(M, r, L)
 
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
@@ -765,15 +868,76 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX_Q"): index_q, ("IDX", "INDEX_SCORES"): index_scores, ("IDX", "TOPK"): topk,
+    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
-              ("FUSED", "HC_POST"): hc_post, ("IDX", "SELECT"): select_any})
+              ("FUSED", "HC_POST"): hc_post})
     return U
 
 
-def run_per_die(Mach, progs, units, pos, token, hook=None):
-    """Execute per-die programs of identical structure: record k of die d on die d; collectives on all dies."""
+def _eff_trace(Mach, die, r):
+    """The effective operands the dispatcher hands the unit (spec 3.3; indexed ids read from VM before the record runs)."""
+    cur, Mach.cur = Mach.cur, r
+    dies, Mach.dies = Mach.dies, [die]
+    try:
+        return {k: list(Mach.eff(d, die, 0)) + [d.space, d.fmt] for k, d in r.desc.items()}
+    finally:
+        Mach.cur, Mach.dies = cur, dies
+
+
+def schedule_layer(rank_recs, ops, L):
+    """Compiler pass: CP-aware order of one layer (timing.improve_order on rank 0: best list schedule + hazard-free
+    hoists), applied as the same permutation to every rank (identical structure), waits recomputed per rank.
+    Returns (rank_recs, search info)."""
+    import copy as _c
+    from hgi_sim import timing as T
+    from hgi_sim.ds_native_timing import NativeCost
+    r0 = []
+    for i, r in enumerate(rank_recs[0]):
+        x = _c.copy(r)
+        x.src_key = None if not r.src else f"{r.src[0]}:{r.src[1]}"
+        x.src_extra = [f"{r.src[0]}:{e}" for e in r.src[2]] if r.src and len(r.src) > 2 else []
+        # hazards = the union over ranks (a record that is CTL.NOP here may run on another rank)
+        x.hz_reads = sorted({n for rr in rank_recs for n in getattr(rr[i], "reads", ())})     # legality
+        x.hz_writes = sorted({n for rr in rank_recs for n in getattr(rr[i], "writes", ())})
+        x.reads, x.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))   # rank 0's own
+        r0.append(x)
+    opd = {f"{L}:{o.get('id')}": o for o in ops}
+    # layers of identical structure (same records, names and descriptor shapes) share one search (7 DS layer types)
+    sig = hashlib.sha256(json.dumps([[x.unit, x.op, x.tag, x.hz_reads, x.hz_writes, x.reads, x.writes,
+                                      {k: [d.space, d.n, d.m] for k, d in x.desc.items()}] for x in r0],
+                                    default=str).encode()).hexdigest()
+    if sig in SCHED_CACHE:
+        perm, info0 = SCHED_CACHE[sig]
+        info = dict(info0, reused_from_layer=info0.get("layer"))
+    else:
+        cf = NativeCost(opd, r0)
+        out, info = T.improve_order(r0, POS_DEFAULT[0], cost_fn=cf)
+        perm = [x._cid for x in out]
+        info = dict(info, layer=L)
+        SCHED_CACHE[sig] = (perm, info)
+    assert sorted(perm) == list(range(len(r0)))
+    res = []
+    for recs in rank_recs:
+        new = [recs[i] for i in perm]
+        w = T.rebuild_waits(new)
+        for x, y in zip(w, new):
+            x.tag, x.family, x.src = y.tag, y.family, getattr(y, "src", None)
+            for at in ("implicit",):
+                if hasattr(y, at):
+                    setattr(x, at, getattr(y, at))
+        res.append(w)
+    return res, info
+
+
+POS_DEFAULT = [0]
+SCHED_CACHE = {}
+
+
+def run_per_die(Mach, progs, units, pos, token, hook=None, trace=None):
+    """Execute per-die programs of identical structure: record k of die d on die d; collectives on all dies.
+    trace: a per-die list that receives [k, unit.op, {operand: [base, n, m, stride, istride, space, fmt]}] for every
+    dispatched (non-CTL) record."""
     nrec = len(progs[0])
     assert all(len(p) == nrec for p in progs)
     dies = Mach.dies
@@ -782,6 +946,11 @@ def run_per_die(Mach, progs, units, pos, token, hook=None):
         r0 = progs[0][k]
         if any((p[k].unit, p[k].op) != (r0.unit, r0.op) and p[k].unit != "CTL" and r0.unit != "CTL" for p in progs):
             raise MC.Fault(3, f"per-die images differ in structure at record {k}")
+        if trace is not None:
+            for i, die in enumerate(dies):
+                r = progs[i][k]
+                if r.unit != "CTL":
+                    trace[i].append([k, f"{r.unit}.{r.op}", _eff_trace(Mach, die, r)])
         if r0.unit == "COLL":                       # one collective across the group, each die with its own record
             Mach.die_recs = {d.rank: progs[i][k] for i, d in enumerate(dies)}
             Mach.cur = r0
@@ -811,6 +980,12 @@ def main():
     ap.add_argument("--refs", type=Path, default=W.REF_SHARDS)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--program-out", type=Path, help="write rank 0's record stream (for hgi_sim.ds_native_timing)")
+    ap.add_argument("--export-layers", default="0", help="layers (and 'head') whose images --export-images writes")
+    ap.add_argument("--no-fuse", action="store_true", help="one SU template a record (the pre-fusion stream)")
+    ap.add_argument("--schedule", choices=("opt", "none"), default="opt",
+                    help="opt: per-layer CP-aware order (schedule_layer); none: lowering order")
+    ap.add_argument("--export-images", type=Path,
+                    help="DIR: per layer, every rank's HGI-1 image + its dispatch trace (RTL sequencer check, CF-PROG DS)")
     a = ap.parse_args()
     prog_dump = dict(rank=0, layers=[], ops={})
     feats = getattr(np, "_core", np.core)._multiarray_umath.__cpu_features__
@@ -841,7 +1016,7 @@ def main():
         for r_ in range(TP):
             mk = own == r_
             ck_regs[r_].reshape(len(SOURCES), cap_rows, 512)[SOURCES.index(s_), loc[mk]] = rows_[mk]
-    low = Lower(m, pos, lay, man)
+    low = Lower(m, pos, lay, man, fuse=not a.no_fuse)
     units = ds_units(m, man, golib)
     dies = [MC.Die(r, MC.Hbm()) for r in range(TP)]
     for d in dies:
@@ -860,17 +1035,28 @@ def main():
                     g = st.n[s_]
                     st.ckv[s_][g], st.ik[s_][g] = z[f"ckv{s_}"], z[f"ik{s_}"]
                     st.n[s_] = g + 1
+                    own_, loc_ = ck_local(g)              # and into its owner die's row store
+                    ck_regs[own_].reshape(len(SOURCES), -1, 512)[SOURCES.index(s_), loc_] = z[f"ckv{s_}"]
                     st.slots[s_] = {}
         if "sel" in carry:
             for d in dies:
                 d.rk.put("sel", np.array(carry["sel"], dtype=np.int64))
                 ss = np.array(carry["sel"], dtype=np.uint32)
                 d.vm[lay.vm["SELIDX"]:lay.vm["SELIDX"] + len(ss)] = ss
-        if "cand_file" in carry:
+        if "cand_file" in carry:                    # the layer-20 keep table into VM (G18: C of later frames)
             cand = np.load(a.refs / carry["cand_file"])["cand"]
             nb = -(-len(cand) // W.KEY_BLOCK)
+            kept = np.array([b_ for b_ in range(nb) if cand[b_ * W.KEY_BLOCK]], dtype=np.uint32)
+            nb20 = -(-((pos + 1) // m.ratio[m.cand_src]) // m.cand_b)
+            cnt = min(m.cand_k, nb20)
+            ids_ = np.zeros(cnt, np.uint32)
+            vals_ = np.full(cnt, -np.inf, F)
+            ids_[:min(cnt, len(kept))] = kept[:cnt]
+            vals_[:min(cnt, len(kept))] = 0.0
             for d in dies:
-                d.rk.cand = {int(b_): bool(cand[b_ * W.KEY_BLOCK]) for b_ in range(d.rank, nb, TP)}
+                b0 = lay.vm["CANDM"]
+                d.vm[b0:b0 + cnt] = ids_
+                d.vm[b0 + 2048:b0 + 2048 + cnt] = vals_.view(np.uint32)
     for d in dies:
         d.vm[lay.vm["h"]:lay.vm["h"] + HC * D] = np.asarray(h0, F).reshape(-1).view(np.uint32)
         d.vm[lay.vm["PRE"]:lay.vm["PRE"] + 4] = np.asarray(pre0, F).view(np.uint32)
@@ -883,8 +1069,14 @@ def main():
                else W.Compiler(m, pos, VARIANT).compile_layer(L, first=(L == first)))
         tabs = [build_tables(m, st, min(Lc, m.L - 1), pos, r) for r in range(TP)]
         progs, nbytes = [], 0
+        rank_recs = [low.layer(Lc, ops, r) for r in range(TP)]
+        sched_info = None
+        if a.schedule == "opt":
+            POS_DEFAULT[0] = pos
+            rank_recs, sched_info = schedule_layer(rank_recs, ops, Lc)
+            print(f"  schedule {L}: {sched_info}", flush=True)
         for r in range(TP):
-            recs = low.layer(Lc, ops, r)
+            recs = rank_recs[r]
             b_ = encode_program(recs)
             dec = decode_program(b_)
             assert encode_program(dec) == b_
@@ -907,6 +1099,7 @@ def main():
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
         Mach = MC.Machine(dies, units)
+        Mach.row_gather_stats = []
         snaps = {}
         watch = {"attn_norm": ("x", D), "kv_row_qdq": ("win_new", 512), "attn_out_gather.y": ("y", D),
                  "ffn_norm": ("x", D), "route.scores_bias": ("router", 384), "ffn_out_gather.yf": ("yf", D),
@@ -917,17 +1110,38 @@ def main():
                 nm, n = watch[r0.tag]
                 snaps[r0.tag] = [d.vm[lay.vm[nm]:lay.vm[nm] + n].copy() for d in dies]
         fault = None
+        exp_now = a.export_images and str(L) in a.export_layers.split(",")
+        trace = [[] for _ in range(TP)] if exp_now else None
         try:
-            run_per_die(Mach, progs, units, pos, hist[-1], hook)
+            run_per_die(Mach, progs, units, pos, hist[-1], hook, trace)
         except Exception as e:                      # noqa: BLE001
             import traceback
             fault = f"{type(e).__name__}: {e} @ {traceback.format_exc().splitlines()[-3].strip()}"
+        if exp_now:
+            a.export_images.mkdir(parents=True, exist_ok=True)
+            imgs = [encode_program(p_).hex() for p_ in progs]
+            (a.export_images / f"ds_v41_1M_{'head' if L == 'head' else f'L{L:02d}'}_per_die.json").write_text(json.dumps(dict(
+                schema="opentallas.hgi_sim.ds_per_die_images.v1", model="DeepSeek-V4.1-Flash", layer=L, tp=TP,
+                position=pos, token_in=int(hist[-1]),
+                encoding=f"HGI-1 {MC.HGI.D_VERSION[0]}.{MC.HGI.D_VERSION[1]} owner-approved (tools/hgi_sim/records.py "
+                         "encode_program; decoded from hbm_generic_iface D_* tables)",
+                note="one image per rank, identical structure (record k has the same unit/op on every rank; ops a rank "
+                     "does not run are CTL.NOP); entry = byte 0; no LOOP records; DYN at doorbell = [0, pos, pos+1, "
+                     "token, 0, rank, 0, pos]; trace = the effective operands the dispatcher hands the unit, from the "
+                     "bit-exact simulator run (indexed ids read from VM as in spec 3.3); the image is position-specific "
+                     "(compressor append address, selection count) as the w19 compiler emits it",
+                fault=fault, records_per_die=len(progs[0]),
+                record_tags=[x.tag for x in progs[0]],
+                ranks=[dict(rank=r_, dyn=[0, pos, pos + 1, int(hist[-1]), 0, r_, 0, pos], image_hex=imgs[r_],
+                            image_sha256=hashlib.sha256(bytes.fromhex(imgs[r_])).hexdigest(), trace=trace[r_])
+                       for r_ in range(TP)]), default=int) + "\n")
         regs = []
         if L == "head":
             lg = np.zeros(129280, dtype=F)
             for d in dies:
                 r0, r1 = head_rows(d.rank)
-                lg[r0:r1] = d.vm[lay.vm["logits"]:lay.vm["logits"] + (r1 - r0)].view(F)
+                lg[r0:r1] = (d.stream_seen[2] if 2 in d.stream_seen else
+                             d.vm[lay.vm["logits"]:lay.vm["logits"] + (r1 - r0)].view(F))
             tok = int(dies[0].vm[lay.vm["TOK"] + 4]) if fault is None else -1
             ok = fault is None and tok == ref["next_token"] and W.LC.digest(lg) == ref["logits_sha256"]
             results.append(dict(layer="head", verdict="pass" if ok else "fail", fault=fault, next_token=tok,
@@ -981,6 +1195,7 @@ def main():
             fams[f"{r_.unit}.{r_.op}"] = fams.get(f"{r_.unit}.{r_.op}", 0) + 1
         results.append(dict(layer=L, kind=js["kind"], verdict="pass" if ok else "fail", fault=fault, regions=regs,
                             records_per_die=len(progs[0]), image_bytes_all_dies=nbytes, unit_ops=fams,
+                            schedule=sched_info, row_gather=Mach.row_gather_stats,
                             wall_s=round(time.time() - tl, 1)))
         print(f"L{L:02d} {js['kind']:28s} {'PASS' if ok else 'FAIL'} records {len(progs[0])} "
               f"{time.time() - tl:.0f} s fault {fault} bad {[x['region'] for x in regs if not x['bit_exact']]}",

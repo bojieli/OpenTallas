@@ -136,6 +136,8 @@ select -set ot_wake_proc {w:*u_elem.g_wake.g_leaf*.wake} %ci {t:$adff} %i
 select -assert-count 8 @ot_wake_proc
 setattr -set keep 1 @ot_wake_proc
 select -clear
+} elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
+puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
 } else {
 select -assert-min 1 {w:g_rc.u_elem.*}
 select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}
@@ -229,6 +231,8 @@ select -set ot_wake_techmap {w:*u_elem.g_wake.g_leaf*.wake} %ci {t:$_DFF_*} %i
 select -assert-count 8 @ot_wake_techmap
 setattr -set keep 1 @ot_wake_techmap
 select -clear
+} elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
+puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
 } else {
 select -assert-min 1 {w:g_rc.u_elem.*}
 select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}

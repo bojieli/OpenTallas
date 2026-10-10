@@ -1,7 +1,11 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Exact +0,E0,E1,E2 prefix; systematic Hsiao code matches ordered transport.
-module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
+// mtp-lead 2026-10-09: BREG=1 gates healthy with a registered duplicate-state compare (bad_q; fault still sees bad
+// directly). DSTAGE=1 (rb2 SS -383..-419: SECDED d -> native/UE verdict -> contribution / accum enables; adder err ->
+// sum_q enables) adds IDEC2 (decoded beat + UE / native / CE flags registered, consumed next cycle) and ADDS2 (sum
+// captured on add_v, err judged next cycle): +2 cycles per beat. Default 0: the original logic.
+module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0)(
  input wire clk,rst_n,start_v, output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire in_v,output wire in_r,input wire [73:0] in_identity,
@@ -17,14 +21,15 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  assign done=0;assign fault=0;assign corrected=0;
  end else begin: enabled
  localparam [3:0] IDLE=0,RECEIVE=1,IDEC=2,AREQ=3,AWAIT=4,ADEC=5,
- ARESULT=6,ISSUE=7,ADDS=8,ENC1=9,ENC2=10,WRITE=11,ADVANCE=12,HOLD=13;
+ ARESULT=6,ISSUE=7,ADDS=8,ENC1=9,ENC2=10,WRITE=11,ADVANCE=12,HOLD=13,IDEC2=14,ADDS2=15;
  reg [3:0] state,state_copy;reg [1:0] expert_index,expert_copy;
  reg [6:0] word_index,word_copy;reg [73:0] identity,identity_copy;
  reg [26:0] ids,ids_copy;reg draining,draining_copy,fault_q,done_q,corrected_q;
- reg [511:0] contribution,accum,sum_q;
+ reg [511:0] contribution,accum,sum_q,di_q;reg ue_q,nb_q,ce_q,err_q;
  wire bad=(state!=state_copy)||(expert_index!=expert_copy)||(word_index!=word_copy)||
  (identity!=identity_copy)||(ids!=ids_copy)||(draining!=draining_copy);
- wire healthy=!fault_q&&!bad&&!abort;
+ reg bad_q;
+ wire healthy=!fault_q&&!(BREG?bad_q:bad)&&!abort;
  assign start_r=healthy&&state==IDLE;assign in_r=healthy&&state==RECEIVE;
  assign out_v=healthy&&state==HOLD;assign out_identity=identity;
  assign out_word=word_index;assign out_last=word_index==79;
@@ -64,8 +69,8 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  if(!rst_n)begin state<=IDLE;state_copy<=IDLE;expert_index<=0;expert_copy<=0;
  word_index<=0;word_copy<=0;identity<=0;identity_copy<=0;ids<=0;ids_copy<=0;
  draining<=0;draining_copy<=0;fault_q<=0;done_q<=0;corrected_q<=0;
- contribution<=0;accum<=0;sum_q<=0;end
- else begin done_q<=0;if(bad||abort)fault_q<=1;
+ contribution<=0;accum<=0;sum_q<=0;bad_q<=0;end
+ else begin done_q<=0;bad_q<=bad;if(bad||abort)fault_q<=1;
  if(healthy)case(state)
  IDLE:if(start_v&&start_r)begin
  if(!(start_ids[8:0]<start_ids[17:9]&&start_ids[17:9]<start_ids[26:18]&&start_ids[26:18]<384))fault_q<=1;
@@ -75,7 +80,8 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  if(in_identity!=identity||in_expert!=ids[9*expert_index+:9]||in_shared||in_word!=word_index||
  in_row_last!=(word_index==79)||in_transaction_last!=((expert_index==2)&&(word_index==79)))fault_q<=1;
  ns(IDEC);end
- IDEC:if(&iov)begin if((|iue)||input_native_bad)fault_q<=1;
+ IDEC:if(&iov&&DSTAGE)begin di_q<=input_data;ue_q<=|iue;nb_q<=input_native_bad;ce_q<=|ice;ns(IDEC2);end
+ else if(&iov)begin if((|iue)||input_native_bad)fault_q<=1;
  else begin contribution<=input_data;if(|ice)corrected_q<=1;
  if(expert_index==0)begin accum<=0;if(MUT_COPY_FIRST)begin sum_q<=input_data;ns(ENC1);end else ns(ISSUE);end
  else ns(AREQ);end end
@@ -84,7 +90,13 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  else begin if(|ace)corrected_q<=1;if(draining)begin sum_q<=acc_data;ns(ENC1);end
  else begin accum<=acc_data;ns(ISSUE);end end end
  ISSUE:ns(ADDS);
- ADDS:if(&add_v)begin if(|add_err)fault_q<=1;else begin sum_q<=add_data;ns(ENC1);end end
+ ADDS:if(&add_v&&DSTAGE)begin sum_q<=add_data;err_q<=|add_err;ns(ADDS2);end
+ else if(&add_v)begin if(|add_err)fault_q<=1;else begin sum_q<=add_data;ns(ENC1);end end
+ ADDS2:if(err_q)fault_q<=1;else ns(ENC1);
+ IDEC2:if(ue_q||nb_q)fault_q<=1;
+ else begin contribution<=di_q;if(ce_q)corrected_q<=1;
+ if(expert_index==0)begin accum<=0;if(MUT_COPY_FIRST)begin sum_q<=di_q;ns(ENC1);end else ns(ISSUE);end
+ else ns(AREQ);end
  ENC1:ns(ENC2);ENC2:if(draining)ns(HOLD);else ns(WRITE);
  WRITE:ns(ADVANCE);
  ADVANCE:if(word_index==79)begin sw(0);

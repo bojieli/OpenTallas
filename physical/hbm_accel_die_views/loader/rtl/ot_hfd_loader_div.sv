@@ -50,8 +50,14 @@ module ot_hfd_loader_div #(parameter integer ENABLE=0, ND=2, SHARED=0, AW=3)(
  input wire [ND*16-1:0] rsp_tag, input wire [ND*256-1:0] rsp_data,
  output wire irq, output wire fault);
     // ---- divided core clock (no gating) and the core reset
-    reg ckd;
-    always @(posedge clk_host or negedge rst_host_n) if (!rst_host_n) ckd <= 1'b0; else ckd <= ~ckd;
+    // struct-close 2026-10-09: the core clock is the divider flop's INVERTED state (ckd = ~ckd_q), so on the QN-only ASAP7
+    // flops the clock root is the flop's QN pin itself (toggle D = QN too): no inverter in the clock path.  With
+    // ckd <= ~ckd the mapped root was an inverter after QN (_522265_/Y); CTS skipped it ("CTS-0040 Net was not found for
+    // ckd"), the 50k ckd sinks hung on one unbuffered net and the route reported FF hold -18,672 / SS setup -133,668 ps
+    // (hbm_loader_ldiv_B_v2sdc).  The domains are asynchronous (Gray FIFOs), so the inverted phase changes nothing else.
+    reg ckd_q;
+    always @(posedge clk_host or negedge rst_host_n) if (!rst_host_n) ckd_q <= 1'b0; else ckd_q <= ~ckd_q;
+    wire ckd = ~ckd_q;
     wire rn_d;
     ot_reset_sync u_rsd (.clk(ckd), .async_rst_n(rst_host_n & rst_mem_n), .sync_rst_n(rn_d));
     // ---- core-side nets

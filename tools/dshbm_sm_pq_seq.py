@@ -138,11 +138,16 @@ def cmd_run(a):
         params["PIPE_INT8"] = a.int8_pipe
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
-                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else ""))
+                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
+                              + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else ""))
+    cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else [])
+    if a.cg and not a.smh:
+        raise SystemExit("--cg needs --smh")
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly,
-                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []))
+                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []) + cgdefs,
+                             cg=a.cg)
     with (d / "runtime.log").open("w") as log:
-        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
+        subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}", f"+GAP={a.cg_gap}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
                        stderr=subprocess.STDOUT)
     res, meta, total, timeout = {}, {}, None, None
@@ -205,8 +210,8 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False, mutbf=False, extra_defs=()):
-    src = SRC + (SMH_SRC if smh else [])
+def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False, mutbf=False, extra_defs=(), cg=False):
+    src = SRC + (SMH_SRC if smh else []) + (["rtl/hdc/ot_hdc_cg.sv", "rtl/hbm_accel/cg/ot_cg_tile.sv"] if cg else [])
     defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else []) + (["-DOT_SMH_MUT_S1W"] if mut else []) + (["-DOT_SMH_MUT_BFDLY"] if mutbf else []) + list(extra_defs)
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -254,6 +259,11 @@ def main(argv=None):
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")
+    ap.add_argument("--cg", action="store_true", help="--smh: COARSE CLOCK-GATING LOCKSTEP (redesign-hbm 2026-10-09): a second element with "
+                    "gated tiles / back ends on the adapter wake contract, every output compared every cycle (CG_LOCKSTEP line)")
+    ap.add_argument("--cg-mut-late", action="store_true", help="--cg negative control: the tiles' wake reaches their gate 32 edges late")
+    ap.add_argument("--cg-mut-hold0", action="store_true", help="--cg negative control: no drain hold after the wake drops")
+    ap.add_argument("--cg-gap", type=int, default=0, help="--cg: fully idle cycles before every op (the gates close; +GAP)")
     ap.add_argument("--build-jobs", type=int, default=8)
     ap.add_argument("--workdir", default=None)
     ap.add_argument("--out", required=True)

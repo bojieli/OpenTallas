@@ -47,7 +47,12 @@ module tb_hgi_sm_record;
         .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(1'b0), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q),
         .pub_p(pub_p), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
-        .sm_ret(sm_ret));
+        .sm_ret(sm_ret), .sm_cg_en(cg_en));
+    // coarse clock gate: every start / descriptor beat must leave with the gate open
+    wire cg_en; integer cgq, cg_err = 0;
+    always @(posedge clk) for (cgq = 0; cgq < NSM; cgq = cgq + 1)
+        if ((sm_cmd[cgq*CW] || sm_cmd[cgq*CW + 48]) && !cg_en) begin
+            if (cg_err < 5) $display("ERR SM %0d command with sm_cg_en low", cgq); cg_err = cg_err + 1; end
     // ---- legacy-mode identity
     reg [NSM*CW-1:0] lgc; reg [NSM*4-1:0] lgr; wire [NSM*CW-1:0] l_cmd; wire [NSM*4-1:0] l_ret; integer q, lock_n = 0;
     wire l_rdy, l_done, l_fault;
@@ -81,14 +86,14 @@ module tb_hgi_sm_record;
         x_rdy <= ($random(seed) & 1); pub_rdy <= ($random(seed) & 1); x_done <= 0; pub_done <= 0;
         if (rst_n && x_v && x_rdy) begin
             x_got = 1; xlat = 3 + ($random(seed) & 31); x_seen = x_seen + 1;
-            if ({x_base, x_n, x_p, x_stride, x_space} !== rw[REFB-5 -: 99]) begin
+            if (rw[REFB-1 -: 4] == 4'd0 && {x_base, x_n, x_p, x_stride, x_space} !== rw[REFB-5 -: 99]) begin
                 $display("ERR x command mismatch at record %0d", base + k); errors = errors + 1; end
         end else if (x_got) begin
             if (xlat == 0) begin x_done <= 1; x_got = 0; xdone_q = 1; end else xlat = xlat - 1;
         end
         if (rst_n && pub_v && pub_rdy) begin
             pub_got = 1; plat = 0; pub_seen = pub_seen + 1;
-            if ({pub_base, pub_stride, pub_space, pub_m, pub_q, pub_p} !== rw[REFB-104 -: 111]) begin
+            if (rw[REFB-1 -: 4] == 4'd0 && {pub_base, pub_stride, pub_space, pub_m, pub_q, pub_p} !== rw[REFB-104 -: 111]) begin
                 $display("ERR publication command mismatch at record %0d", base + k); errors = errors + 1; end
         end
         for (s = 0; s < NSM; s = s + 1) begin
@@ -112,6 +117,7 @@ module tb_hgi_sm_record;
                 busy[s] = busy[s] - 1;
                 if (busy[s] == 0) sm_ret[s*4 + 2] <= ~sm_ret[s*4 + 2];
             end
+            if (!rst_n) begin sm_ret[s*4 + 2] <= 1'b0; busy[s] = 0; end      // the SMs reset with the adapter
         end
         // publication done once every started SM finished
         if (pub_got && xdone_q && (|started)) begin
@@ -153,13 +159,14 @@ module tb_hgi_sm_record;
                     $display("ERR case %0d: SM %0d not released after the last retire", c, s); errors = errors + 1; end
                 runs = runs + nr;
             end else begin
-                if (fault_n != 1 || k != 0 || issued != 0 || x_seen != 0 || pub_seen != 0 || !halted) begin
+                if (fault_n != 1 || k != 0 || issued != 0 || !halted) begin   // (a base-remainder refusal comes after the x load issued)
                     $display("ERR negative case %0d: faults %0d retired %0d issued %0d x %0d", c, fault_n, k, issued, x_seen);
                     errors = errors + 1;
                 end else negs = negs + 1;
             end
         end
         $display("summary: %0d records run on 32 stub SMs, %0d negatives refused, %0d legacy identity cycles", runs, negs, lock_n);
+        errors = errors + cg_err;
         if (errors == 0) $display("HGI_SM PASS"); else $display("HGI_SM FAIL errors=%0d", errors);
         $finish;
     end

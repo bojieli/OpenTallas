@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hgi_sim.ds_native.v1",
  "status": "pass",
- "generated_utc": "2026-10-09T14:05:59Z",
- "host": "ot-epyc1tb",
+ "generated_utc": "2026-10-10T04:13:36Z",
+ "host": "known-grouse",
  "context": 1048576,
  "position": 1048575,
  "layers": "0-39",
@@ -68,24 +68,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1205760,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1019392,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 6.8
+   "schedule": {
+    "input_cycles": 26934.0,
+    "list_alpha": 1.0,
+    "moves": 11,
+    "output_cycles": 23578.9,
+    "rounds": [
+     23988.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 0
+   },
+   "row_gather": [],
+   "wall_s": 516.3
   },
   {
    "layer": 1,
@@ -153,25 +167,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 168,
-   "image_bytes_all_dies": 1895424,
+   "records_per_die": 154,
+   "image_bytes_all_dies": 1705984,
    "unit_ops": {
-    "DMA.LOAD": 49,
-    "SU.VOP": 64,
+    "DMA.LOAD": 56,
+    "SU.VOP": 43,
     "COLL.ALL_GATHER": 14,
     "SM.MATVEC": 28,
-    "HC.HC_MIX": 2,
     "FUSED.HC_PRE_NORM": 2,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.0
+   "schedule": {
+    "input_cycles": 31633.4,
+    "list_alpha": 1.0,
+    "moves": 11,
+    "output_cycles": 27563.3,
+    "rounds": [
+     27972.8
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 1
+   },
+   "row_gather": [],
+   "wall_s": 2643.3
   },
   {
    "layer": 2,
@@ -256,29 +283,50 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 146,
-   "image_bytes_all_dies": 1334304,
+   "records_per_die": 130,
+   "image_bytes_all_dies": 1181376,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 29,
-    "CTL.NOP": 31,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 29,
     "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.TOPK": 2,
-    "COLL.TOPK_MERGE": 1,
+    "HC.HC_MIX": 2,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.7
+   "schedule": {
+    "input_cycles": 40595.3,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 35422.8,
+    "rounds": [
+     35488.4
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 2
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 13,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1283.1
   },
   {
    "layer": 3,
@@ -340,24 +388,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.7
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 530.1
   },
   {
    "layer": 4,
@@ -419,24 +481,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 16.7
   },
   {
    "layer": 5,
@@ -498,24 +575,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.1
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.5
   },
   {
    "layer": 6,
@@ -577,24 +669,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 6.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.6
   },
   {
    "layer": 7,
@@ -656,24 +763,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.8
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 8,
@@ -758,29 +880,50 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 146,
-   "image_bytes_all_dies": 1334304,
+   "records_per_die": 130,
+   "image_bytes_all_dies": 1181376,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 29,
-    "CTL.NOP": 31,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 29,
     "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.TOPK": 2,
-    "COLL.TOPK_MERGE": 1,
+    "HC.HC_MIX": 2,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 11.6
+   "schedule": {
+    "input_cycles": 40595.3,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 35422.8,
+    "rounds": [
+     35488.4
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 8
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 13,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1331.0
   },
   {
    "layer": 9,
@@ -842,24 +985,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.6
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 551.3
   },
   {
    "layer": 10,
@@ -921,24 +1078,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.7
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.3
   },
   {
    "layer": 11,
@@ -1000,24 +1172,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.6
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 12,
@@ -1079,24 +1266,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.2
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.3
   },
   {
    "layer": 13,
@@ -1158,24 +1360,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.4
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.8
   },
   {
    "layer": 14,
@@ -1266,30 +1483,50 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 209,
-   "image_bytes_all_dies": 2023968,
+   "records_per_die": 193,
+   "image_bytes_all_dies": 1867968,
    "unit_ops": {
-    "DMA.LOAD": 49,
-    "SU.VOP": 64,
+    "CTL.NOP": 29,
+    "DMA.LOAD": 56,
+    "SU.VOP": 45,
     "COLL.ALL_GATHER": 17,
     "SM.MATVEC": 30,
-    "HC.HC_MIX": 2,
     "FUSED.HC_PRE_NORM": 2,
-    "CTL.NOP": 31,
+    "HC.HC_MIX": 2,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.TOPK": 2,
+    "IDX.INDEX": 1,
     "COLL.TOPK_MERGE": 1,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 13.1
+   "schedule": {
+    "input_cycles": 45304.7,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 39497.6,
+    "rounds": [
+     39643.6
+    ],
+    "seed": "given",
+    "ils_moves": 2,
+    "layer": 14
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 9,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 5196.2
   },
   {
    "layer": 15,
@@ -1351,24 +1588,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.4
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 494.7
   },
   {
    "layer": 16,
@@ -1430,24 +1681,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.7
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.8
   },
   {
    "layer": 17,
@@ -1509,24 +1775,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.8
   },
   {
    "layer": 18,
@@ -1588,24 +1869,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.4
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 12.3
   },
   {
    "layer": 19,
@@ -1667,24 +1963,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.0
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.3
   },
   {
    "layer": 20,
@@ -1769,30 +2080,50 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 138,
-   "image_bytes_all_dies": 1320864,
+   "records_per_die": 120,
+   "image_bytes_all_dies": 1180288,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 29,
-    "CTL.NOP": 20,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 18,
     "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.SELECT": 2,
     "COLL.TOPK_MERGE": 2,
-    "IDX.TOPK": 2,
+    "HC.HC_MIX": 2,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 13.5
+   "schedule": {
+    "input_cycles": 41536.8,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 36439.4,
+    "rounds": [
+     36505.0
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 20
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1341.7
   },
   {
    "layer": 21,
@@ -1854,24 +2185,38 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.6
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 544.5
   },
   {
    "layer": 22,
@@ -1933,24 +2278,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.2
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 23,
@@ -2012,24 +2372,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.5
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 11.0
   },
   {
    "layer": 24,
@@ -2102,30 +2477,50 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 115,
-   "image_bytes_all_dies": 1268224,
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 28,
+    "DMA.LOAD": 6,
     "CTL.NOP": 1,
     "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.SELECT": 1,
-    "IDX.TOPK": 2,
     "COLL.TOPK_MERGE": 1,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 13.6
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 883.6
   },
   {
    "layer": 25,
@@ -2187,24 +2582,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.3
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.6
   },
   {
    "layer": 26,
@@ -2266,24 +2676,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.8
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.2
   },
   {
    "layer": 27,
@@ -2345,24 +2770,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.8
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.8
   },
   {
    "layer": 28,
@@ -2435,30 +2875,51 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 115,
-   "image_bytes_all_dies": 1268224,
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 28,
+    "DMA.LOAD": 6,
     "CTL.NOP": 1,
     "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.SELECT": 1,
-    "IDX.TOPK": 2,
     "COLL.TOPK_MERGE": 1,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 15.2
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 18,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 47.0
   },
   {
    "layer": 29,
@@ -2520,24 +2981,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.5
   },
   {
    "layer": 30,
@@ -2599,24 +3075,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.6
   },
   {
    "layer": 31,
@@ -2678,24 +3169,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 7.4
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.8
   },
   {
    "layer": 32,
@@ -2768,30 +3274,51 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 115,
-   "image_bytes_all_dies": 1268224,
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 28,
+    "DMA.LOAD": 6,
     "CTL.NOP": 1,
     "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.SELECT": 1,
-    "IDX.TOPK": 2,
     "COLL.TOPK_MERGE": 1,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 18.4
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 66.2
   },
   {
    "layer": 33,
@@ -2853,24 +3380,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 34,
@@ -2932,24 +3474,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.7
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 35,
@@ -3011,24 +3568,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 9.3
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
   },
   {
    "layer": 36,
@@ -3101,30 +3673,51 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 115,
-   "image_bytes_all_dies": 1268224,
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
-    "SM.MATVEC": 28,
+    "DMA.LOAD": 6,
     "CTL.NOP": 1,
     "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
-    "IDX.INDEX_Q": 1,
-    "IDX.INDEX_SCORES": 1,
-    "IDX.SELECT": 1,
-    "IDX.TOPK": 2,
     "COLL.TOPK_MERGE": 1,
     "COLL.ROW_GATHER": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
     "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 25.9
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 14,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 49.8
   },
   {
    "layer": 37,
@@ -3186,24 +3779,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 8.9
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
   },
   {
    "layer": 38,
@@ -3265,24 +3873,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 10.2
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
   },
   {
    "layer": 39,
@@ -3344,24 +3967,39 @@
      "ranks_checked": 96
     }
    ],
-   "records_per_die": 105,
-   "image_bytes_all_dies": 1209856,
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
    "unit_ops": {
-    "HC.HC_MIX": 2,
-    "SU.VOP": 53,
     "FUSED.HC_PRE_NORM": 2,
     "SM.MATVEC": 27,
     "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
     "FUSED.QDQ_FP8": 1,
     "DMA.KVWB_DS": 1,
     "ATT.QK": 1,
     "ATT.PV": 1,
     "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
     "FUSED.HC_POST": 2,
     "IDX.TOPK": 1,
     "DMA.FENCE": 1
    },
-   "wall_s": 10.7
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
   },
   {
    "layer": "head",
@@ -3373,7 +4011,7 @@
    "reference_logits_sha256": "241c577cb0e19ef9ffa7efb0e08c6d6004ef21827101ebfe21276582acf49ec2",
    "tokens_agree_all_dies": true,
    "records_per_die": 4,
-   "wall_s": 8.2
+   "wall_s": 8.4
   }
  ],
  "spec": "HGI-1 1.0 (owner-approved encoding; records.py decodes from hbm_generic_iface D_* tables)",
@@ -3385,12 +4023,12 @@
   "program images compiled for the token's position (compressor append address, selection count), as the w19 compiler emits them",
   "compressed KV rows stored as FP32 values on the FP4 grid (the shipped 9-channel FP4 layout is the gather readers' concern, spec 6.10)"
  ],
- "wall_s": 530.2,
+ "wall_s": 15933.4,
  "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
  "source_sha256": {
-  "hgi_sim/ds_native.py": "dc26f697dce54334ba41d9cc9caf99ea18979e5ce9f695df7598fe8e07d257b5",
-  "hgi_sim/machine.py": "7cc8d8514d07c35d4e2049a7a4c388d3e116bf9f812c3fe4a83cf43d9d083619",
-  "hgi_sim/records.py": "b19a0301076521589a2d60bb2fce9e97ccf3fd4028c80a7d4be0c44fc9a49a73",
+  "hgi_sim/ds_native.py": "7fcc4725f1cc01c0641b28d8528c5b8ae99ce9438d120c55480428bfda6f6ebe",
+  "hgi_sim/machine.py": "043dca7cfbd0a9f7a23f05c5575ba5c475f5e1db2cf4682e2a0fb576cab7eed2",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
   "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
   "w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
   "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"

@@ -1,0 +1,1225 @@
+{
+ "schema": "opentallas.hgi_perf.sm_binding.v1",
+ "generated_utc": "2026-10-09T19:35:36Z",
+ "configs": "../compiler/models/survey_20261009",
+ "ctx": 8192,
+ "rows": [
+  {
+   "model": "Qwen3-8B",
+   "cls": "dense small",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 343.3,
+     "step": 3495799.7,
+     "sm_busy_share": 0.852,
+     "sm_parts": {
+      "fixed": 21025.0,
+      "lines": 2956346.0,
+      "stream": 2389900.3,
+      "busy": 2977371.0
+     },
+     "sm_split": {
+      "fixed": 0.007,
+      "lane_excess": 0.19,
+      "stream": 0.803
+     }
+    },
+    "no_fixed": {
+     "tok_s": 345.3,
+     "gain_pct": 0.6
+    },
+    "lanes_x2": {
+     "tok_s": 409.6,
+     "gain_pct": 19.3
+    },
+    "lanes_inf": {
+     "tok_s": 409.6,
+     "gain_pct": 19.3
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 412.6,
+     "gain_pct": 20.2
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 43.3,
+      "tok_s_agg": 346.5
+     },
+     "share2": {
+      "tok_s_user": 75.5,
+      "tok_s_agg": 604.4
+     },
+     "share4": {
+      "tok_s_user": 120.3,
+      "tok_s_agg": 962.8
+     },
+     "share8": {
+      "tok_s_user": 171.1,
+      "tok_s_agg": 1368.5
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 281.4,
+     "step": 4264103.7,
+     "sm_busy_share": 0.878,
+     "sm_parts": {
+      "fixed": 50315.0,
+      "lines": 3695360.0,
+      "stream": 2987375.4,
+      "busy": 3745675.0
+     },
+     "sm_split": {
+      "fixed": 0.013,
+      "lane_excess": 0.189,
+      "stream": 0.798
+     }
+    },
+    "no_fixed": {
+     "tok_s": 284.8,
+     "gain_pct": 1.2
+    },
+    "lanes_x2": {
+     "tok_s": 338.7,
+     "gain_pct": 20.4
+    },
+    "lanes_inf": {
+     "tok_s": 338.7,
+     "gain_pct": 20.4
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 342.3,
+     "gain_pct": 21.6
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 35.7,
+      "tok_s_agg": 285.3
+     },
+     "share2": {
+      "tok_s_user": 63.6,
+      "tok_s_agg": 508.8
+     },
+     "share4": {
+      "tok_s_user": 104.5,
+      "tok_s_agg": 836.3
+     },
+     "share8": {
+      "tok_s_user": 154.2,
+      "tok_s_agg": 1233.4
+     }
+    }
+   }
+  },
+  {
+   "model": "Seed-OSS-36B-Instruct",
+   "cls": "dense mid",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 80.4,
+     "step": 14921463.4,
+     "sm_busy_share": 0.928,
+     "sm_parts": {
+      "fixed": 37265.0,
+      "lines": 13810752.0,
+      "stream": 11164733.4,
+      "busy": 13848017.0
+     },
+     "sm_split": {
+      "fixed": 0.003,
+      "lane_excess": 0.191,
+      "stream": 0.806
+     }
+    },
+    "no_fixed": {
+     "tok_s": 80.6,
+     "gain_pct": 0.2
+    },
+    "lanes_x2": {
+     "tok_s": 97.8,
+     "gain_pct": 21.6
+    },
+    "lanes_inf": {
+     "tok_s": 97.8,
+     "gain_pct": 21.6
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 98.1,
+     "gain_pct": 22.0
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 10.1,
+      "tok_s_agg": 80.7
+     },
+     "share2": {
+      "tok_s_user": 18.8,
+      "tok_s_agg": 150.7
+     },
+     "share4": {
+      "tok_s_user": 33.3,
+      "tok_s_agg": 266.1
+     },
+     "share8": {
+      "tok_s_user": 53.9,
+      "tok_s_agg": 431.2
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 65.1,
+     "step": 18425985.4,
+     "sm_busy_share": 0.942,
+     "sm_parts": {
+      "fixed": 89179.0,
+      "lines": 17263360.0,
+      "stream": 13955916.8,
+      "busy": 17352539.0
+     },
+     "sm_split": {
+      "fixed": 0.005,
+      "lane_excess": 0.191,
+      "stream": 0.804
+     }
+    },
+    "no_fixed": {
+     "tok_s": 65.4,
+     "gain_pct": 0.5
+    },
+    "lanes_x2": {
+     "tok_s": 79.5,
+     "gain_pct": 22.1
+    },
+    "lanes_inf": {
+     "tok_s": 79.5,
+     "gain_pct": 22.1
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 79.8,
+     "gain_pct": 22.6
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 8.2,
+      "tok_s_agg": 65.5
+     },
+     "share2": {
+      "tok_s_user": 15.5,
+      "tok_s_agg": 123.8
+     },
+     "share4": {
+      "tok_s_user": 27.9,
+      "tok_s_agg": 223.1
+     },
+     "share8": {
+      "tok_s_user": 46.6,
+      "tok_s_agg": 372.6
+     }
+    }
+   }
+  },
+  {
+   "model": "Devstral-2-123B-Instruct-2512",
+   "cls": "dense large",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 24.1,
+     "step": 49807371.0,
+     "sm_busy_share": 0.969,
+     "sm_parts": {
+      "fixed": 51185.0,
+      "lines": 48208458.0,
+      "stream": 38972179.5,
+      "busy": 48259643.0
+     },
+     "sm_split": {
+      "fixed": 0.001,
+      "lane_excess": 0.191,
+      "stream": 0.808
+     }
+    },
+    "no_fixed": {
+     "tok_s": 24.1,
+     "gain_pct": 0.0
+    },
+    "lanes_x2": {
+     "tok_s": 29.6,
+     "gain_pct": 22.8
+    },
+    "lanes_inf": {
+     "tok_s": 29.6,
+     "gain_pct": 22.8
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 29.6,
+     "gain_pct": 22.8
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 3.0,
+      "tok_s_agg": 24.1
+     },
+     "share2": {
+      "tok_s_user": 5.9,
+      "tok_s_agg": 46.8
+     },
+     "share4": {
+      "tok_s_user": 11.0,
+      "tok_s_agg": 88.4
+     },
+     "share8": {
+      "tok_s_user": 19.9,
+      "tok_s_agg": 158.9
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 19.4,
+     "step": 61930571.0,
+     "sm_busy_share": 0.975,
+     "sm_parts": {
+      "fixed": 122491.0,
+      "lines": 60260352.0,
+      "stream": 48715224.4,
+      "busy": 60382843.0
+     },
+     "sm_split": {
+      "fixed": 0.002,
+      "lane_excess": 0.191,
+      "stream": 0.807
+     }
+    },
+    "no_fixed": {
+     "tok_s": 19.4,
+     "gain_pct": 0.0
+    },
+    "lanes_x2": {
+     "tok_s": 23.8,
+     "gain_pct": 22.7
+    },
+    "lanes_inf": {
+     "tok_s": 23.8,
+     "gain_pct": 22.7
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 23.9,
+     "gain_pct": 23.2
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 2.4,
+      "tok_s_agg": 19.4
+     },
+     "share2": {
+      "tok_s_user": 4.7,
+      "tok_s_agg": 37.9
+     },
+     "share4": {
+      "tok_s_user": 9.0,
+      "tok_s_agg": 72.3
+     },
+     "share8": {
+      "tok_s_user": 16.5,
+      "tok_s_agg": 132.4
+     }
+    }
+   }
+  },
+  {
+   "model": "Qwen3.5-27B",
+   "cls": "GDN hybrid dense",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 104.2,
+     "step": 11517176.8,
+     "sm_busy_share": 0.873,
+     "sm_parts": {
+      "fixed": 44225.0,
+      "lines": 10008640.0,
+      "stream": 8091058.4,
+      "busy": 10052865.0
+     },
+     "sm_split": {
+      "fixed": 0.004,
+      "lane_excess": 0.191,
+      "stream": 0.805
+     }
+    },
+    "no_fixed": {
+     "tok_s": 104.6,
+     "gain_pct": 0.4
+    },
+    "lanes_x2": {
+     "tok_s": 125.0,
+     "gain_pct": 20.0
+    },
+    "lanes_inf": {
+     "tok_s": 125.0,
+     "gain_pct": 20.0
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 125.6,
+     "gain_pct": 20.5
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 13.1,
+      "tok_s_agg": 104.7
+     },
+     "share2": {
+      "tok_s_user": 23.2,
+      "tok_s_agg": 186.0
+     },
+     "share4": {
+      "tok_s_user": 38.0,
+      "tok_s_agg": 303.8
+     },
+     "share8": {
+      "tok_s_user": 55.6,
+      "tok_s_agg": 444.7
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 85.2,
+     "step": 14080866.8,
+     "sm_busy_share": 0.896,
+     "sm_parts": {
+      "fixed": 105835.0,
+      "lines": 12510720.0,
+      "stream": 10113823.0,
+      "busy": 12616555.0
+     },
+     "sm_split": {
+      "fixed": 0.008,
+      "lane_excess": 0.19,
+      "stream": 0.802
+     }
+    },
+    "no_fixed": {
+     "tok_s": 85.9,
+     "gain_pct": 0.8
+    },
+    "lanes_x2": {
+     "tok_s": 102.9,
+     "gain_pct": 20.8
+    },
+    "lanes_inf": {
+     "tok_s": 102.9,
+     "gain_pct": 20.8
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 103.6,
+     "gain_pct": 21.6
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 10.7,
+      "tok_s_agg": 85.9
+     },
+     "share2": {
+      "tok_s_user": 19.5,
+      "tok_s_agg": 155.6
+     },
+     "share4": {
+      "tok_s_user": 32.7,
+      "tok_s_agg": 261.8
+     },
+     "share8": {
+      "tok_s_user": 49.7,
+      "tok_s_agg": 397.5
+     }
+    }
+   }
+  },
+  {
+   "model": "Qwen3.6-35B-A3B",
+   "cls": "MoE small (GQA)",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 614.6,
+     "step": 1952517.2,
+     "sm_busy_share": 0.654,
+     "sm_parts": {
+      "fixed": 126295.0,
+      "lines": 1150956.0,
+      "stream": 930049.5,
+      "busy": 1277251.0
+     },
+     "sm_split": {
+      "fixed": 0.099,
+      "lane_excess": 0.173,
+      "stream": 0.728
+     }
+    },
+    "no_fixed": {
+     "tok_s": 655.0,
+     "gain_pct": 6.6
+    },
+    "lanes_x2": {
+     "tok_s": 691.7,
+     "gain_pct": 12.5
+    },
+    "lanes_inf": {
+     "tok_s": 691.7,
+     "gain_pct": 12.5
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 743.4,
+     "gain_pct": 21.0
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 79.0,
+      "tok_s_agg": 632.1
+     },
+     "share2": {
+      "tok_s_user": 98.2,
+      "tok_s_agg": 785.3
+     },
+     "share4": {
+      "tok_s_user": 111.7,
+      "tok_s_agg": 893.6
+     },
+     "share8": {
+      "tok_s_user": 120.0,
+      "tok_s_agg": 959.8
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 550.5,
+     "step": 2179663.2,
+     "sm_busy_share": 0.694,
+     "sm_parts": {
+      "fixed": 172957.0,
+      "lines": 1340160.0,
+      "stream": 1083091.7,
+      "busy": 1513117.0
+     },
+     "sm_split": {
+      "fixed": 0.114,
+      "lane_excess": 0.17,
+      "stream": 0.716
+     }
+    },
+    "no_fixed": {
+     "tok_s": 594.9,
+     "gain_pct": 8.1
+    },
+    "lanes_x2": {
+     "tok_s": 628.7,
+     "gain_pct": 14.2
+    },
+    "lanes_inf": {
+     "tok_s": 629.1,
+     "gain_pct": 14.3
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 680.3,
+     "gain_pct": 23.6
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 71.8,
+      "tok_s_agg": 574.6
+     },
+     "share2": {
+      "tok_s_user": 92.3,
+      "tok_s_agg": 738.2
+     },
+     "share4": {
+      "tok_s_user": 107.6,
+      "tok_s_agg": 860.9
+     },
+     "share8": {
+      "tok_s_user": 117.4,
+      "tok_s_agg": 938.8
+     }
+    }
+   }
+  },
+  {
+   "model": "gpt-oss-120b",
+   "cls": "MoE small (SWA)",
+   "ctx": 8192,
+   "tp_fit": 1,
+   "fp8": {
+    "base": {
+     "tok_s": 643.0,
+     "step": 1866139.2,
+     "sm_busy_share": 0.77,
+     "sm_parts": {
+      "fixed": 55549.0,
+      "lines": 1382257.0,
+      "stream": 1054570.9,
+      "busy": 1437806.0
+     },
+     "sm_split": {
+      "fixed": 0.039,
+      "lane_excess": 0.228,
+      "stream": 0.733
+     }
+    },
+    "no_fixed": {
+     "tok_s": 662.8,
+     "gain_pct": 3.1
+    },
+    "lanes_x2": {
+     "tok_s": 780.0,
+     "gain_pct": 21.3
+    },
+    "lanes_inf": {
+     "tok_s": 780.0,
+     "gain_pct": 21.3
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 809.2,
+     "gain_pct": 25.8
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 81.8,
+      "tok_s_agg": 654.7
+     },
+     "share2": {
+      "tok_s_user": 98.0,
+      "tok_s_agg": 784.1
+     },
+     "share4": {
+      "tok_s_user": 108.7,
+      "tok_s_agg": 870.0
+     },
+     "share8": {
+      "tok_s_user": 115.1,
+      "tok_s_agg": 920.4
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 588.4,
+     "step": 2039320.2,
+     "sm_busy_share": 0.79,
+     "sm_parts": {
+      "fixed": 77567.0,
+      "lines": 1533420.0,
+      "stream": 1176773.8,
+      "busy": 1610987.0
+     },
+     "sm_split": {
+      "fixed": 0.048,
+      "lane_excess": 0.221,
+      "stream": 0.73
+     }
+    },
+    "no_fixed": {
+     "tok_s": 611.7,
+     "gain_pct": 4.0
+    },
+    "lanes_x2": {
+     "tok_s": 716.7,
+     "gain_pct": 21.8
+    },
+    "lanes_inf": {
+     "tok_s": 717.2,
+     "gain_pct": 21.9
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 747.6,
+     "gain_pct": 27.1
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 75.5,
+      "tok_s_agg": 604.0
+     },
+     "share2": {
+      "tok_s_user": 93.2,
+      "tok_s_agg": 745.9
+     },
+     "share4": {
+      "tok_s_user": 105.6,
+      "tok_s_agg": 845.1
+     },
+     "share8": {
+      "tok_s_user": 113.2,
+      "tok_s_agg": 905.4
+     }
+    }
+   }
+  },
+  {
+   "model": "MiniMax-M2.5",
+   "cls": "MoE large (GQA)",
+   "ctx": 8192,
+   "tp_fit": 2,
+   "fp8": {
+    "base": {
+     "tok_s": 382.4,
+     "step": 3137833.4,
+     "sm_busy_share": 0.703,
+     "sm_parts": {
+      "fixed": 170955.0,
+      "lines": 2034909.0,
+      "stream": 1644474.1,
+      "busy": 2205864.0
+     },
+     "sm_split": {
+      "fixed": 0.078,
+      "lane_excess": 0.177,
+      "stream": 0.746
+     }
+    },
+    "no_fixed": {
+     "tok_s": 404.5,
+     "gain_pct": 5.8
+    },
+    "lanes_x2": {
+     "tok_s": 436.8,
+     "gain_pct": 14.2
+    },
+    "lanes_inf": {
+     "tok_s": 436.8,
+     "gain_pct": 14.2
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 465.8,
+     "gain_pct": 21.8
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 51.5,
+      "tok_s_agg": 412.1
+     },
+     "share2": {
+      "tok_s_user": 58.1,
+      "tok_s_agg": 465.1
+     },
+     "share4": {
+      "tok_s_user": 62.1,
+      "tok_s_agg": 497.0
+     },
+     "share8": {
+      "tok_s_user": 64.3,
+      "tok_s_agg": 514.7
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 359.2,
+     "step": 3341210.4,
+     "sm_busy_share": 0.721,
+     "sm_parts": {
+      "fixed": 208729.0,
+      "lines": 2200512.0,
+      "stream": 1778440.3,
+      "busy": 2409241.0
+     },
+     "sm_split": {
+      "fixed": 0.087,
+      "lane_excess": 0.175,
+      "stream": 0.738
+     }
+    },
+    "no_fixed": {
+     "tok_s": 383.1,
+     "gain_pct": 6.7
+    },
+    "lanes_x2": {
+     "tok_s": 413.2,
+     "gain_pct": 15.0
+    },
+    "lanes_inf": {
+     "tok_s": 413.4,
+     "gain_pct": 15.1
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 442.7,
+     "gain_pct": 23.2
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 48.7,
+      "tok_s_agg": 389.4
+     },
+     "share2": {
+      "tok_s_user": 56.2,
+      "tok_s_agg": 449.8
+     },
+     "share4": {
+      "tok_s_user": 61.0,
+      "tok_s_agg": 487.7
+     },
+     "share8": {
+      "tok_s_user": 63.6,
+      "tok_s_agg": 509.1
+     }
+    }
+   }
+  },
+  {
+   "model": "Qwen3.5-397B-A17B",
+   "cls": "MoE large (GDN hybrid)",
+   "ctx": 8192,
+   "tp_fit": 4,
+   "fp8": {
+    "base": {
+     "tok_s": 430.1,
+     "step": 2789904.7,
+     "sm_busy_share": 0.654,
+     "sm_parts": {
+      "fixed": 224170.0,
+      "lines": 1601623.0,
+      "stream": 1294080.9,
+      "busy": 1825793.0
+     },
+     "sm_split": {
+      "fixed": 0.123,
+      "lane_excess": 0.168,
+      "stream": 0.709
+     }
+    },
+    "no_fixed": {
+     "tok_s": 466.1,
+     "gain_pct": 8.4
+    },
+    "lanes_x2": {
+     "tok_s": 482.5,
+     "gain_pct": 12.2
+    },
+    "lanes_inf": {
+     "tok_s": 482.5,
+     "gain_pct": 12.2
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 528.3,
+     "gain_pct": 22.8
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 59.0,
+      "tok_s_agg": 471.9
+     },
+     "share2": {
+      "tok_s_user": 70.6,
+      "tok_s_agg": 565.2
+     },
+     "share4": {
+      "tok_s_user": 78.4,
+      "tok_s_agg": 627.1
+     },
+     "share8": {
+      "tok_s_user": 82.9,
+      "tok_s_agg": 663.5
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 392.5,
+     "step": 3057293.7,
+     "sm_busy_share": 0.691,
+     "sm_parts": {
+      "fixed": 294062.0,
+      "lines": 1817360.0,
+      "stream": 1468594.6,
+      "busy": 2111422.0
+     },
+     "sm_split": {
+      "fixed": 0.139,
+      "lane_excess": 0.165,
+      "stream": 0.696
+     }
+    },
+    "no_fixed": {
+     "tok_s": 431.0,
+     "gain_pct": 9.8
+    },
+    "lanes_x2": {
+     "tok_s": 445.6,
+     "gain_pct": 13.5
+    },
+    "lanes_inf": {
+     "tok_s": 446.0,
+     "gain_pct": 13.6
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 491.6,
+     "gain_pct": 25.2
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 54.4,
+      "tok_s_agg": 434.8
+     },
+     "share2": {
+      "tok_s_user": 67.1,
+      "tok_s_agg": 536.9
+     },
+     "share4": {
+      "tok_s_user": 76.0,
+      "tok_s_agg": 608.2
+     },
+     "share8": {
+      "tok_s_user": 81.4,
+      "tok_s_agg": 651.5
+     }
+    }
+   }
+  },
+  {
+   "model": "Kimi-K2.5",
+   "cls": "MoE MLA",
+   "ctx": 8192,
+   "tp_fit": 8,
+   "fp8": {
+    "base": {
+     "tok_s": 499.0,
+     "step": 2404726.4,
+     "sm_busy_share": 0.737,
+     "sm_parts": {
+      "fixed": 218805.0,
+      "lines": 1554466.0,
+      "stream": 1250752.6,
+      "busy": 1773271.0
+     },
+     "sm_split": {
+      "fixed": 0.123,
+      "lane_excess": 0.171,
+      "stream": 0.705
+     }
+    },
+    "no_fixed": {
+     "tok_s": 546.8,
+     "gain_pct": 9.6
+    },
+    "lanes_x2": {
+     "tok_s": 568.9,
+     "gain_pct": 14.0
+    },
+    "lanes_inf": {
+     "tok_s": 568.9,
+     "gain_pct": 14.0
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 631.0,
+     "gain_pct": 26.5
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 72.6,
+      "tok_s_agg": 580.9
+     },
+     "share2": {
+      "tok_s_user": 82.0,
+      "tok_s_agg": 656.4
+     },
+     "share4": {
+      "tok_s_user": 87.6,
+      "tok_s_agg": 701.1
+     },
+     "share8": {
+      "tok_s_user": 90.7,
+      "tok_s_agg": 725.8
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 457.5,
+     "step": 2622986.4,
+     "sm_busy_share": 0.768,
+     "sm_parts": {
+      "fixed": 329703.0,
+      "lines": 1684688.0,
+      "stream": 1354831.5,
+      "busy": 2014391.0
+     },
+     "sm_split": {
+      "fixed": 0.164,
+      "lane_excess": 0.164,
+      "stream": 0.673
+     }
+    },
+    "no_fixed": {
+     "tok_s": 518.6,
+     "gain_pct": 13.4
+    },
+    "lanes_x2": {
+     "tok_s": 529.0,
+     "gain_pct": 15.6
+    },
+    "lanes_inf": {
+     "tok_s": 530.9,
+     "gain_pct": 16.0
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 601.6,
+     "gain_pct": 31.5
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 68.3,
+      "tok_s_agg": 546.0
+     },
+     "share2": {
+      "tok_s_user": 79.0,
+      "tok_s_agg": 632.1
+     },
+     "share4": {
+      "tok_s_user": 85.6,
+      "tok_s_agg": 685.1
+     },
+     "share8": {
+      "tok_s_user": 89.4,
+      "tok_s_agg": 714.8
+     }
+    }
+   }
+  },
+  {
+   "model": "GLM-5",
+   "cls": "MoE MLA",
+   "ctx": 8192,
+   "tp_fit": 8,
+   "fp8": {
+    "base": {
+     "tok_s": 387.5,
+     "step": 3096990.7,
+     "sm_busy_share": 0.737,
+     "sm_parts": {
+      "fixed": 286810.0,
+      "lines": 1995381.0,
+      "stream": 1608743.5,
+      "busy": 2282191.0
+     },
+     "sm_split": {
+      "fixed": 0.126,
+      "lane_excess": 0.169,
+      "stream": 0.705
+     }
+    },
+    "no_fixed": {
+     "tok_s": 425.4,
+     "gain_pct": 9.8
+    },
+    "lanes_x2": {
+     "tok_s": 441.3,
+     "gain_pct": 13.9
+    },
+    "lanes_inf": {
+     "tok_s": 441.3,
+     "gain_pct": 13.9
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 491.1,
+     "gain_pct": 26.7
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 57.4,
+      "tok_s_agg": 459.1
+     },
+     "share2": {
+      "tok_s_user": 68.4,
+      "tok_s_agg": 547.3
+     },
+     "share4": {
+      "tok_s_user": 75.6,
+      "tok_s_agg": 604.8
+     },
+     "share8": {
+      "tok_s_user": 79.7,
+      "tok_s_agg": 637.7
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 347.9,
+     "step": 3449260.7,
+     "sm_busy_share": 0.771,
+     "sm_parts": {
+      "fixed": 443966.0,
+      "lines": 2217120.0,
+      "stream": 1787419.5,
+      "busy": 2661086.0
+     },
+     "sm_split": {
+      "fixed": 0.167,
+      "lane_excess": 0.161,
+      "stream": 0.672
+     }
+    },
+    "no_fixed": {
+     "tok_s": 395.9,
+     "gain_pct": 13.8
+    },
+    "lanes_x2": {
+     "tok_s": 403.0,
+     "gain_pct": 15.8
+    },
+    "lanes_inf": {
+     "tok_s": 404.1,
+     "gain_pct": 16.2
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 459.3,
+     "gain_pct": 32.0
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 52.8,
+      "tok_s_agg": 422.2
+     },
+     "share2": {
+      "tok_s_user": 64.8,
+      "tok_s_agg": 518.3
+     },
+     "share4": {
+      "tok_s_user": 73.1,
+      "tok_s_agg": 584.8
+     },
+     "share8": {
+      "tok_s_user": 78.0,
+      "tok_s_agg": 624.0
+     }
+    }
+   }
+  },
+  {
+   "model": "DeepSeek-V3.2",
+   "cls": "MoE MLA+DSA",
+   "ctx": 8192,
+   "tp_fit": 8,
+   "fp8": {
+    "base": {
+     "tok_s": 433.9,
+     "step": 2765600.6,
+     "sm_busy_share": 0.742,
+     "sm_parts": {
+      "fixed": 222720.0,
+      "lines": 1830436.0,
+      "stream": 1475990.6,
+      "busy": 2053156.0
+     },
+     "sm_split": {
+      "fixed": 0.108,
+      "lane_excess": 0.173,
+      "stream": 0.719
+     }
+    },
+    "no_fixed": {
+     "tok_s": 470.4,
+     "gain_pct": 8.4
+    },
+    "lanes_x2": {
+     "tok_s": 496.0,
+     "gain_pct": 14.3
+    },
+    "lanes_inf": {
+     "tok_s": 496.0,
+     "gain_pct": 14.3
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 544.3,
+     "gain_pct": 25.4
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 62.8,
+      "tok_s_agg": 502.5
+     },
+     "share2": {
+      "tok_s_user": 75.3,
+      "tok_s_agg": 602.2
+     },
+     "share4": {
+      "tok_s_user": 83.6,
+      "tok_s_agg": 668.4
+     },
+     "share8": {
+      "tok_s_user": 88.3,
+      "tok_s_agg": 706.1
+     }
+    }
+   },
+   "int8": {
+    "base": {
+     "tok_s": 390.4,
+     "step": 3074074.6,
+     "sm_busy_share": 0.775,
+     "sm_parts": {
+      "fixed": 345536.0,
+      "lines": 2038192.0,
+      "stream": 1643332.6,
+      "busy": 2383728.0
+     },
+     "sm_split": {
+      "fixed": 0.145,
+      "lane_excess": 0.166,
+      "stream": 0.689
+     }
+    },
+    "no_fixed": {
+     "tok_s": 436.6,
+     "gain_pct": 11.8
+    },
+    "lanes_x2": {
+     "tok_s": 453.3,
+     "gain_pct": 16.1
+    },
+    "lanes_inf": {
+     "tok_s": 454.4,
+     "gain_pct": 16.4
+    },
+    "no_fixed_lanes_inf": {
+     "tok_s": 507.7,
+     "gain_pct": 30.0
+    },
+    "batch8": {
+     "share1": {
+      "tok_s_user": 57.7,
+      "tok_s_agg": 461.6
+     },
+     "share2": {
+      "tok_s_user": 71.2,
+      "tok_s_agg": 570.0
+     },
+     "share4": {
+      "tok_s_user": 80.7,
+      "tok_s_agg": 645.7
+     },
+     "share8": {
+      "tok_s_user": 86.4,
+      "tok_s_agg": 691.3
+     }
+    }
+   }
+  }
+ ],
+ "method": [
+  "fit TP (8-bit weights + FP8 KV + state in 140 GB / die), batch 1 unless stated",
+  "fp8 = the survey's weight path (FP8 block-dot, measured DS SM table: lines / 32 rows / K 0.0125 vs HBM stream 0.0101 -> lanes 1.24x the stream); int8 = fmt3 on the BF16 lanes (the approved two-beat front: 128-code line in two 64-code beats, 1.25 B transport / code -> lanes 1.24x the stream)",
+  "sm_split: of the SM busy time, fixed = per-record first access + overhead + drain; stream = HBM streaming time; lane_excess = lane issue beyond the stream (MAC throughput)",
+  "no_fixed: per-record SM fixed cost 0 (bound on record batching / prefetch); lanes_x2: lines halved (= one-beat INT8 for int8; 2x lanes for fp8); lanes_inf: lines 0 (SM = HBM stream + fixed: the most any MAC-rate lever can buy)",
+  "batch8 shareK: 8 users, dense weight passes shared by 8 slots (routed experts per user); K slots' MACs issue per weight line (share1 = today's lane array: every slot re-issues)"
+ ]
+}

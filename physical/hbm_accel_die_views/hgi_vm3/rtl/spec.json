@@ -15,10 +15,23 @@
     "rst_n": "rst_n",
     "cq": "die:f_hgi_cp[0:338]+f_hgi_quant[0:338]+f_hgi_idx[0:338]",
     "cr": "die:t_hgi_cp[0:274]+t_hgi_quant[0:274]+t_hgi_idx[0:274]",
-    "status": "die:t_hgi_vmstat[0:19]"
+    "status": "die:t_hgi_vmstat[0:19]",
+    "wq": "const:0",
+    "wq_done": "fold"
    }
   }
  ],
  "kept_out_regs": true,
- "face_stages": 3
+ "face_stages": 3,
+ "replaced_when_hgi": "argmax",
+ "ties": {
+  "vmu.wq": {
+   "class": "by_design",
+   "reason": "no DMA unit on this die variant: the wide write port idles"
+  },
+  "vmu.wq_done": {
+   "class": "by_design",
+   "reason": "no DMA unit on this die variant: the wide write port idles"
+  }
+ }
 }

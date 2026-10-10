@@ -47,11 +47,11 @@ def part_core(text: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=("build", "run"))
+    ap.add_argument("phase", choices=("build", "relink", "run"))
     ap.add_argument("--variant", choices=("part", "base"), default="part")
     ap.add_argument("--build", type=Path, required=True)
     ap.add_argument("--work", type=Path)
-    ap.add_argument("--stages", choices=("L0", "L3", "full"), default="L0")
+    ap.add_argument("--stages", choices=("L0", "L3", "head", "full"), default="L0")
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--dcu", type=int, default=0, help="ctrl -> unit pin stations (sequencer OS + unit IS)")
@@ -72,6 +72,11 @@ def main():
     bld = a.build.resolve()
     if a.phase == "run":
         sys.exit(F.run(bld, a.work.resolve(), a.stages, a.threads))
+    if a.phase == "relink":      # host-only change on an existing build (the die / coll / tile archives are reused)
+        st = []
+        F.link(bld, st)
+        print("relinked", st)
+        return
     if a.variant == "part":
         F.EMIT.emit = part_core
         orig = F.die_sources

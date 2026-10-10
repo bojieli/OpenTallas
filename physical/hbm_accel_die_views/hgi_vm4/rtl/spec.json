@@ -1,0 +1,27 @@
+{
+ "master": "hfd_hgi_vm",
+ "hgi_unit": "argmax",
+ "note": "HGI-1 vector memory (hgi-takeover 2026-10-09, GH-d): ot_hgi_vm_unit = ot_hgi_vm_core (262,144 FP32 words, 32 banks x 2 x ot_sram_1r1w_1024x256, per-word (39,32) SECDED) + one die station per packet client (client 0 = the CP VM reads, client 1 = quant, client 2 = IDX). Status {proto_fault, mask_fault, ue, ce} to the cmdproc. NC 8 (single-CP die, full HGI unit set): cp, quant, idx, argmax, su, sfu, hc, dma. Wide write port WP 1 (the DMA unit, 32 B a cycle, never back-pressured; coordinator 2026-10-10).",
+ "instances": [
+  {
+   "name": "vmu",
+   "module": "ot_hgi_vm_unit",
+   "file": "rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv",
+   "params": {
+    "NC": 8,
+    "WP": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cq": "die:f_hgi_cp[0:338]+f_hgi_quant[0:338]+f_hgi_idx[0:338]+f_hgi_argmax[0:338]+f_hgi_su[0:338]+f_hgi_sfu[0:338]+f_hgi_hc[0:338]+f_hgi_dma[0:338]",
+    "cr": "die:t_hgi_cp[0:274]+t_hgi_quant[0:274]+t_hgi_idx[0:274]+t_hgi_argmax[0:274]+t_hgi_su[0:274]+t_hgi_sfu[0:274]+t_hgi_hc[0:274]+t_hgi_dma[0:274]",
+    "status": "die:t_hgi_vmstat[0:19]",
+    "wq": "die:f_hgi_vmw_dma[0:280]",
+    "wq_done": "die:t_hgi_vmw_dma[0:1]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}

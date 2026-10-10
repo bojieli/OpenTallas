@@ -2,7 +2,8 @@
 `default_nettype none
 // Converts the actual protected accumulator code into the native FP32 stream.
 // One-flight decoder; duplicate held data/control detect mutable-state faults.
-module ot_mtp_p2_prefix_native #(parameter integer ENABLE=0)(
+// mtp-lead 2026-10-09: BREG=1 gates healthy with a registered duplicate-state compare (default 0: original).
+module ot_mtp_p2_prefix_native #(parameter integer ENABLE=0, BREG=0)(
  input wire clk,rst_n,abort,input wire in_v,output wire in_r,
  input wire [575:0] in_secded,input wire [73:0] in_identity,
  input wire [6:0] in_word,input wire in_last,
@@ -20,7 +21,8 @@ module ot_mtp_p2_prefix_native #(parameter integer ENABLE=0)(
  reg [6:0] word,word_copy;reg last,last_copy,fault_q,corrected_q;
  wire bad=(state!=state_copy)||(held!=held_copy)||(identity!=identity_copy)||
  (word!=word_copy)||(last!=last_copy);
- wire healthy=!fault_q&&!bad&&!abort;
+ reg bad_q;
+ wire healthy=!fault_q&&!(BREG?bad_q:bad)&&!abort;
  wire [511:0] decoded;wire [7:0] dv,ce,ue;
  assign in_r=healthy&&state==0;assign out_v=healthy&&state==2;
  assign out_data=held;assign out_identity=identity;assign out_word=word;
@@ -33,8 +35,8 @@ module ot_mtp_p2_prefix_native #(parameter integer ENABLE=0)(
  always @(posedge clk or negedge rst_n)begin
  if(!rst_n)begin state<=0;state_copy<=0;held<=0;held_copy<=0;
  identity<=0;identity_copy<=0;word<=0;word_copy<=0;last<=0;last_copy<=0;
- fault_q<=0;corrected_q<=0;end
- else begin
+ fault_q<=0;corrected_q<=0;bad_q<=0;end
+ else begin bad_q<=bad;
  if(bad||abort)fault_q<=1;
  if(healthy)case(state)
  0:if(in_v&&in_r)begin identity<=in_identity;identity_copy<=in_identity;

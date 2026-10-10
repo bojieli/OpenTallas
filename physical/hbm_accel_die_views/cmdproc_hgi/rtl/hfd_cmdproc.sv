@@ -15,15 +15,17 @@ module hfd_cmdproc (
     input wire [2:0] f_hgi_quant,
     input wire [273:0] f_hgi_vmr,
     input wire [18:0] f_hgi_vmstat,
+    input wire [516:0] f_mtp,
     input wire [0:0] rst,
     output wire [63:0] t_barrier,
     output wire [24:0] t_coll,
     output wire [39:0] t_hgi_cfg_coll,
     output wire [967:0] t_hgi_coll,
-    output wire [1236:0] t_hgi_idx,
+    output wire [1818:0] t_hgi_idx,
     output wire [221:0] t_hgi_loader,
     output wire [682:0] t_hgi_quant,
     output wire [337:0] t_hgi_vmq,
+    output wire [178:0] t_mtp,
     output wire [63:0] t_su_NE,
     output wire [63:0] t_su_NW,
     output wire [63:0] t_su_SE,
@@ -92,6 +94,11 @@ module hfd_cmdproc (
     reg [18:0] i2_f_hgi_vmstat; always @(posedge clk) i2_f_hgi_vmstat <= i1_f_hgi_vmstat;
     reg [18:0] i3_f_hgi_vmstat; always @(posedge clk) i3_f_hgi_vmstat <= i2_f_hgi_vmstat;
     reg [18:0] i_f_hgi_vmstat; always @(posedge clk) i_f_hgi_vmstat <= i3_f_hgi_vmstat;
+    reg [516:0] i0_f_mtp; always @(posedge clk) i0_f_mtp <= f_mtp;
+    reg [516:0] i1_f_mtp; always @(posedge clk) i1_f_mtp <= i0_f_mtp;
+    reg [516:0] i2_f_mtp; always @(posedge clk) i2_f_mtp <= i1_f_mtp;
+    reg [516:0] i3_f_mtp; always @(posedge clk) i3_f_mtp <= i2_f_mtp;
+    reg [516:0] i_f_mtp; always @(posedge clk) i_f_mtp <= i3_f_mtp;
     wire [0:0] w_cpd_clk;
     wire [0:0] w_cpd_rst_n;
     wire [418:0] w_cpd_lcp;
@@ -103,8 +110,22 @@ module hfd_cmdproc (
     wire [2:0] w_cpd_coll_ret;
     wire [682:0] w_cpd_quant_rec;
     wire [2:0] w_cpd_quant_ret;
-    wire [1236:0] w_cpd_idx_rec;
+    wire [1818:0] w_cpd_idx_rec;
     wire [2:0] w_cpd_idx_ret;
+    wire [690:0] w_cpd_am_rec;
+    wire [2:0] w_cpd_am_ret;
+    wire [938:0] w_cpd_sm_rec;
+    wire [2:0] w_cpd_sm_ret;
+    wire [2197:0] w_cpd_su_rec;
+    wire [2:0] w_cpd_su_ret;
+    wire [1173:0] w_cpd_sfu_rec;
+    wire [2:0] w_cpd_sfu_ret;
+    wire [1471:0] w_cpd_att_rec;
+    wire [2:0] w_cpd_att_ret;
+    wire [703:0] w_cpd_dma_rec;
+    wire [2:0] w_cpd_dma_ret;
+    wire [938:0] w_cpd_hc_rec;
+    wire [2:0] w_cpd_hc_ret;
     wire [39:0] w_cpd_cfg_bus;
     wire [15:0] w_cpd_ux_v;
     wire [15:0] w_cpd_ux_rdy;
@@ -121,11 +142,39 @@ module hfd_cmdproc (
     assign w_cpd_coll_ret = {i_f_hgi_coll[2:0]};
     assign w_cpd_quant_ret = {i_f_hgi_quant[2:0]};
     assign w_cpd_idx_ret = {i_f_hgi_idx[2:0]};
+    assign w_cpd_am_ret = 3'd0;
+    assign w_cpd_sm_ret = 3'd0;
+    assign w_cpd_su_ret = 3'd0;
+    assign w_cpd_sfu_ret = 3'd0;
+    assign w_cpd_att_ret = 3'd0;
+    assign w_cpd_dma_ret = 3'd0;
+    assign w_cpd_hc_ret = 3'd0;
     assign w_cpd_ux_rdy = cfg[15:0];
     assign w_cpd_ux_done = cfg[31:16];
     assign w_cpd_ux_fault = cfg[47:32];
     assign w_cpd_wr_quiet = cfg[48:48];
-    ot_hgi_cp_die #(.USE_MACRO(1)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet));
+    ot_hgi_cp_die #(.USE_MACRO(1)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .am_rec(w_cpd_am_rec), .am_ret(w_cpd_am_ret), .sm_rec(w_cpd_sm_rec), .sm_ret(w_cpd_sm_ret), .su_rec(w_cpd_su_rec), .su_ret(w_cpd_su_ret), .sfu_rec(w_cpd_sfu_rec), .sfu_ret(w_cpd_sfu_ret), .att_rec(w_cpd_att_rec), .att_ret(w_cpd_att_ret), .dma_rec(w_cpd_dma_rec), .dma_ret(w_cpd_dma_ret), .hc_rec(w_cpd_hc_rec), .hc_ret(w_cpd_hc_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet));
+    for (genvar k = 0; k < 691; k = k + 1) begin : g_sink_w_cpd_am_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_am_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 939; k = k + 1) begin : g_sink_w_cpd_sm_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_sm_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 2198; k = k + 1) begin : g_sink_w_cpd_su_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_su_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 1174; k = k + 1) begin : g_sink_w_cpd_sfu_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_sfu_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 1472; k = k + 1) begin : g_sink_w_cpd_att_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_att_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 704; k = k + 1) begin : g_sink_w_cpd_dma_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_dma_rec[k]), .q());
+    end
+    for (genvar k = 0; k < 939; k = k + 1) begin : g_sink_w_cpd_hc_rec
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_hc_rec[k]), .q());
+    end
     for (genvar k = 0; k < 16; k = k + 1) begin : g_sink_w_cpd_ux_v
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_ux_v[k]), .q());
     end
@@ -253,12 +302,12 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_coll[k]), .q(o_t_hgi_coll[k]));
     end
     assign t_hgi_coll[967:0] = o_t_hgi_coll[967:0];
-    wire [1236:0] od_t_hgi_idx = {w_cpd_idx_rec[1236:0]};
-    wire [1236:0] o_t_hgi_idx;
-    for (genvar k = 0; k < 1237; k = k + 1) begin : g_o_t_hgi_idx
+    wire [1818:0] od_t_hgi_idx = {w_cpd_idx_rec[1818:0]};
+    wire [1818:0] o_t_hgi_idx;
+    for (genvar k = 0; k < 1819; k = k + 1) begin : g_o_t_hgi_idx
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_idx[k]), .q(o_t_hgi_idx[k]));
     end
-    assign t_hgi_idx[1236:0] = o_t_hgi_idx[1236:0];
+    assign t_hgi_idx[1818:0] = o_t_hgi_idx[1818:0];
     wire [221:0] od_t_hgi_loader = {w_cpd_cpl[221:0]};
     wire [221:0] o_t_hgi_loader;
     for (genvar k = 0; k < 222; k = k + 1) begin : g_o_t_hgi_loader
@@ -277,6 +326,12 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_vmq[k]), .q(o_t_hgi_vmq[k]));
     end
     assign t_hgi_vmq[337:0] = o_t_hgi_vmq[337:0];
+    wire [178:0] od_t_mtp = {179'd0};
+    wire [178:0] o_t_mtp;
+    for (genvar k = 0; k < 179; k = k + 1) begin : g_o_t_mtp
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_mtp[k]), .q(o_t_mtp[k]));
+    end
+    assign t_mtp[178:0] = o_t_mtp[178:0];
     wire [63:0] od_t_su_NE = {64'd0};
     wire [63:0] o_t_su_NE;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE

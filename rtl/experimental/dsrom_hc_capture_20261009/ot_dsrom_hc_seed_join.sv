@@ -21,6 +21,7 @@ module ot_dsrom_hc_seed_join #(
     // OUT_SKID.  LINK_DEPTH = landing depth = sender credits (>= the link round trip for full rate).  Landing overflow
     // is a fault.
     parameter integer LINK_CREDIT=0, LINK_DEPTH=8,
+    parameter integer LINK_OREG=1, // landing receivers drive the core from flops (ot_link_credit_rx OREG)
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -54,7 +55,7 @@ module ot_dsrom_hc_seed_join #(
     wire x_in_valid,x_in_ready,x_in_last;wire [511:0] x_in_data;wire [USER_W-1:0] x_in_user;
     wire [POS_W-1:0] x_in_position;wire [EPOCH_W-1:0] x_in_epoch;wire [1:0] x_in_capture;wire [5:0] x_in_frame;
     generate if(LINK_CREDIT) begin:g_skid_link
-        ot_link_credit_rx #(.W(512+USER_W+POS_W+EPOCH_W+2+6+1),.DEPTH(LINK_DEPTH)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_data,in_user,in_position,in_epoch,in_capture,in_frame,in_last}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_data,x_in_user,x_in_position,x_in_epoch,x_in_capture,x_in_frame,x_in_last}),.fault(lf[0]));
+        ot_link_credit_rx #(.W(512+USER_W+POS_W+EPOCH_W+2+6+1),.DEPTH(LINK_DEPTH),.OREG(LINK_OREG)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_data,in_user,in_position,in_epoch,in_capture,in_frame,in_last}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_data,x_in_user,x_in_position,x_in_epoch,x_in_capture,x_in_frame,x_in_last}),.fault(lf[0]));
     end else if(IN_SKID) begin:g_skid
         assign lf=1'b0;
         ot_dsrom_hc_skid #(.W(512+USER_W+POS_W+EPOCH_W+2+6+1)) u_in(.clk(clk),.rst_n(rst_n),.i_valid(in_valid),.i_ready(in_ready),
@@ -117,13 +118,19 @@ module ot_dsrom_hc_seed_join #(
     assign y_out_capture=rcapture;assign y_out_frame=rframe;
     assign y_out_last=rcapture==2&&rframe==39;assign y_out_corrected=y_out_valid&&(|ce);
     assign busy=owned;
+    // cont-takeover: the two wide data registers carry no reset (validity is the state machine's): no 1,100-flop
+    // async-reset recovery tree (join -lk input->reg -13 ps was rst_n -> held_code RESETN).  Same write conditions.
+    always @(posedge clk) begin
+        if(state==ARRIVE && fire && !bad && !fault && !link_fault) wd_q<=encoded;
+        if(state==RCAP && !fault && !link_fault) held_code<=memory_q[575:0];
+    end
     integer k;
     always @(posedge clk or negedge rst_n)
         if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RCAP && !fault;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=ARRIVE;owned<=0;fault<=0;complete<=0;
-            user_q<=0;position_q<=0;epoch_q<=0;wa_q<=0;wd_q<=0;held_code<=0;
+            user_q<=0;position_q<=0;epoch_q<=0;wa_q<=0;  // wd_q / held_code: data, written before use (no reset: cont-takeover)
             rcapture<=0;rframe<=0;for(k=0;k<3;k=k+1) next_frame[k]<=0;
         end else if(link_fault) fault<=1;
         else if(!fault) begin
@@ -132,7 +139,7 @@ module ot_dsrom_hc_seed_join #(
                     if(bad) fault<=1;
                     else begin
                         owned<=1;user_q<=x_in_user;position_q<=x_in_position;epoch_q<=x_in_epoch;
-                        wa_q<={6'd0,x_in_capture}*8'd40+{2'd0,x_in_frame};wd_q<=encoded;
+                        wa_q<={6'd0,x_in_capture}*8'd40+{2'd0,x_in_frame};
                         next_frame[x_in_capture]<=x_in_frame+1'b1;
                         if(x_in_frame==39) complete[x_in_capture]<=1;
                         state<=COMMIT;
@@ -142,7 +149,7 @@ module ot_dsrom_hc_seed_join #(
                         else state<=ARRIVE;
                 READ: state<=RWAIT;
                 RWAIT: state<=RCAP;
-                RCAP: begin held_code<=memory_q[575:0];state<=ECC_PIPE?RECC:HOLD;end
+                RCAP: state<=ECC_PIPE?RECC:HOLD;
                 RECC: if(&decode_valid) state<=HOLD;
                 HOLD: if(|ue) fault<=1;
                     else if(y_out_ready) begin

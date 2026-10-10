@@ -27,11 +27,16 @@ module tb_hgi_cp_die_seq;
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
-    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1236:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
+    wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
+    reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
     ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
-        .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .am_rec(am_rec), .am_ret(am_ret),
+        .sm_rec(sm_rec), .sm_ret(sm_ret), .su_rec(su_rec), .su_ret(su_ret), .sfu_rec(sfu_rec), .sfu_ret(sfu_ret),
+        .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec), .dma_ret(dma_ret), .hc_rec(hc_rec), .hc_ret(hc_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
     // the sequencer-side view the vector checks use
     wire [15:0] u_v = cpd.u_cp.u_v; wire [15:0] u_rdy = cpd.u_rdy; wire [127:0] d_hdr = cpd.u_cp.d_hdr;
     wire [255:0] d_sut = cpd.u_cp.d_sut; wire [1791:0] d_desc = cpd.u_cp.d_desc; wire [146:0] d_n = cpd.u_cp.d_n;
@@ -39,7 +44,10 @@ module tb_hgi_cp_die_seq;
     wire busy = cpd.u_cp.u_seq.busy;
     reg [15:0] u_done = 0, u_fault = 0;
     always @* begin
-        ux_done = u_done & ~16'h0250; ux_fault = u_fault & ~16'h0250;
+        ux_done = u_done & ~16'h07FE; ux_fault = u_fault & ~16'h07FE;
+        am_ret = {u_fault[7], u_done[7], 1'b1};
+        sm_ret = {u_fault[1], u_done[1], 1'b1}; su_ret = {u_fault[2], u_done[2], 1'b1}; sfu_ret = {u_fault[3], u_done[3], 1'b1};
+        att_ret = {u_fault[5], u_done[5], 1'b1}; dma_ret = {u_fault[8], u_done[8], 1'b1}; hc_ret = {u_fault[10], u_done[10], 1'b1};
         coll_ret = {u_fault[6], u_done[6], 1'b1}; quant_ret = {u_fault[4], u_done[4], 1'b1}; idx_ret = {u_fault[9], u_done[9], 1'b1};
     end
     reg [63:0] tks [0:NCASE*16-1];
@@ -100,13 +108,22 @@ module tb_hgi_cp_die_seq;
         reg signed [41:0] w; begin w = ($signed({2'b0, a}) - $signed({2'b0, IMG})) / 16;
             word_at = (w >= 0 && w < NW) ? img[w] : 128'hDEAD; end
     endfunction
-    integer fdel = 0; reg fpend = 0; reg [36:0] fa;
+    // F5: the memory lane accepts back-to-back requests and answers IN ORDER after FLAT cycles (+0..3 jitter, never
+    // before its predecessor); a request accepted while 48 are in flight is a violation
+    integer FLAT = 40; integer mq_t [0:255]; reg [36:0] mq_a [0:255]; integer mq_h = 0, mq_n = 0, tnow = 0, tlast = 0, maxf = 0;
+    initial if (!$value$plusargs("FLAT=%d", FLAT)) FLAT = 40;
     always @(posedge clk) begin
-        m_req_rdy <= ($urandom % 3) != 0; m_rsp_v <= 1'b0;
-        if (m_req_v && m_req_rdy && !fpend) begin fpend = 1; fa = m_req_addr; fdel = 2 + $urandom % 6; end
-        else if (fpend) begin
-            if (fdel > 0) fdel = fdel - 1;
-            else begin m_rsp_v <= 1'b1; m_rsp_data <= {word_at({3'd0, fa} + 16), word_at({3'd0, fa})}; fpend = 0; end
+        tnow = tnow + 1;
+        m_req_rdy <= ($urandom % 4) != 0; m_rsp_v <= 1'b0;
+        if (mq_n > 0 && mq_t[mq_h % 256] <= tnow) begin
+            m_rsp_v <= 1'b1; m_rsp_data <= {word_at({3'd0, mq_a[mq_h % 256]} + 16), word_at({3'd0, mq_a[mq_h % 256]})};
+            mq_h = mq_h + 1; mq_n = mq_n - 1;
+        end
+        if (m_req_v && m_req_rdy) begin
+            if (mq_n >= 48) $fatal(1, "more than 48 ring sectors in flight");
+            tlast = (tnow + FLAT + ($urandom % 4) > tlast + 1) ? tnow + FLAT + ($urandom % 4) : tlast + 1;
+            mq_a[(mq_h + mq_n) % 256] = m_req_addr; mq_t[(mq_h + mq_n) % 256] = tlast; mq_n = mq_n + 1;
+            if (mq_n > maxf) maxf = mq_n;
         end
     end
     // ---- VM: the bench's memory; a unit's writes land at its RETIRE (vmw: dispatch index -> addr, value)
@@ -167,6 +184,20 @@ module tb_hgi_cp_die_seq;
                 end
             end
             if (cu == 6) begin exp_coll = {rank, d_n[6*21 +: 21], d_n[4*21 +: 21], d_n[0 +: 21], d_desc[6*256 +: 256], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_coll = 1; end
+            begin : xr
+                reg [20:0] nA_, nB_, nC_, nO_; reg [255:0] A_, B_, C_, D_, O_, R_, I_;
+                nA_ = d_n[0 +: 21]; nB_ = d_n[21 +: 21]; nC_ = d_n[42 +: 21]; nO_ = d_n[4*21 +: 21];
+                A_ = d_desc[0 +: 256]; B_ = d_desc[256 +: 256]; C_ = d_desc[512 +: 256]; D_ = d_desc[768 +: 256];
+                O_ = d_desc[1024 +: 256]; R_ = d_desc[1280 +: 256]; I_ = d_desc[1536 +: 256];
+                if (cu == 1) exp_x = {nB_, nA_, O_, B_, A_, d_hdr, 1'b1};
+                if (cu == 2) exp_x = {nA_, I_, R_, O_, D_, C_, B_, A_, d_sut, d_hdr, 1'b1};
+                if (cu == 3) exp_x = {nA_, O_, C_, B_, A_, d_hdr, 1'b1};
+                if (cu == 5) exp_x = {d_pos1, nC_, nB_, O_, C_, B_, A_, d_sut, d_hdr, 1'b1};
+                if (cu == 8) exp_x = {d_pos1, nO_, nA_, O_, A_, d_hdr, 1'b1};
+                if (cu == 10) exp_x = {nO_, nA_, O_, B_, A_, d_hdr, 1'b1};
+                if (cu == 1 || cu == 2 || cu == 3 || cu == 5 || cu == 8 || cu == 10) begin chk_u = cu; check_x = 1; end
+            end
+            if (cu == 7) begin exp_am = {rank, d_n[4*21 +: 21], d_n[0 +: 21], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_am = 1; end
             if (cu == 4) begin exp_quant = {d_n[4*21 +: 21], d_n[0 +: 21], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_quant = 1; end
             ei = ei + 11;
             outst[cu] = outst[cu] + 1;
@@ -176,9 +207,23 @@ module tb_hgi_cp_die_seq;
             nd = nd + 1;
         end
     end
-    reg check_coll = 0, check_quant = 0; reg [967:0] exp_coll; reg [682:0] exp_quant;
+    reg check_coll = 0, check_quant = 0, check_am = 0; reg [967:0] exp_coll; reg [682:0] exp_quant; reg [690:0] exp_am;
+    integer n_am = 0, n_x = 0; reg check_x = 0; reg [3:0] chk_u; reg [2197:0] exp_x;
+    reg [2197:0] got_x; reg got_v; reg [3:0] got_u;
     always @(negedge clk) begin
         if (coll_rec[0]) begin if (!check_coll || coll_rec !== exp_coll) begin $display("FAIL coll record bus"); fails = fails + 1; end check_coll = 0; end
+        got_v = 1'b0; got_x = 0;
+        if (sm_rec[0]) begin got_v = 1; got_u = 1; got_x = sm_rec; end
+        if (su_rec[0]) begin got_v = 1; got_u = 2; got_x = su_rec; end
+        if (sfu_rec[0]) begin got_v = 1; got_u = 3; got_x = sfu_rec; end
+        if (att_rec[0]) begin got_v = 1; got_u = 5; got_x = att_rec; end
+        if (dma_rec[0]) begin got_v = 1; got_u = 8; got_x = dma_rec; end
+        if (hc_rec[0]) begin got_v = 1; got_u = 10; got_x = hc_rec; end
+        if (got_v) begin
+            if (!check_x || got_u != chk_u || got_x !== exp_x) begin $display("FAIL unit %0d record bus", got_u); fails = fails + 1; end
+            check_x = 0; n_x = n_x + 1;
+        end
+        if (am_rec[0]) begin if (!check_am || am_rec !== exp_am) begin $display("FAIL argmax record bus"); fails = fails + 1; end check_am = 0; n_am = n_am + 1; end
         if (quant_rec[0]) begin if (!check_quant || quant_rec !== exp_quant) begin $display("FAIL quant record bus"); fails = fails + 1; end check_quant = 0; end
     end
     integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
@@ -228,7 +273,7 @@ module tb_hgi_cp_die_seq;
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
             nd = cfg[c*12 + 10] + cfg[c*12 + 6];
         end
-        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d", NCASE, nd);
+        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d argmax_records=%0d other_unit_records=%0d max_fetch_inflight=%0d", NCASE, nd, n_am, n_x, maxf);
         else $display("HGI_SEQ_DIE FAIL %0d", fails);
         $finish;
     end

@@ -33,15 +33,36 @@ def stage_cmd(m, hm):
             f'SDCA="{V}/common/budget_route.sdc" POSTSDC="{V}/common/budget_signoff.sdc {V}/common/budget_ff_guarded.sdc" '
             f'PRECTS="{V}/common/pre_cts_fclk_root_buf.tcl" WSF="0.12" WSFILE="{V}/svc/split_ps/{m}/ws.tcl" SRCS="{srcs}" '
             f'{V}/common/route_view.sh {{LABEL}}${{CL_LABEL_SUFFIX}} {m} {V}/svc/rtl/seg_ps/{m}.sv '
-            '--orfs-var GPL_ROUTABILITY_DRIVEN=0' + (f' --sdc-append {V}/svc/sdc_ps/{m}_fwd.sdc'
+            '--orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var SYNTH_CANONICALIZE_TCL=/src/' + V + '/svc/keep_vpipe_dff.tcl' + (f' --sdc-append {V}/svc/sdc_ps/{m}_fwd.sdc'
                                                      if (ROOT / f'{V}/svc/sdc_ps/{m}_fwd.sdc').exists() else '')
             + ' $CL_STOP_AFTER')
 
 
-def spec(m, commit, hm, tag):
-    name = f'hbm_svc_{m[8:]}_ps_{commit[:9]}_tc_{tag}-cl'
+def fc_cmd(c):
+    """the --fc face-clock variant (gen_svc_seg.py --ps --fc): its own split / RTL / SDC dirs and the ck* clock ports"""
+    c = (c.replace('OT_SVC_SPLIT=split_ps', 'OT_SVC_SPLIT=split_psfc').replace('/svc/split_ps/', '/svc/split_psfc/')
+          .replace('/svc/rtl/seg_ps/', '/svc/rtl/seg_psfc/').replace('/svc/sdc_ps/', '/svc/sdc_psfc/'))
+    # coordinator 2026-10-09 (option 1): the face leaves carry the segment's calibrated interior insertion as SOURCE
+    # latency (the die tree delays ckw / cke by the same amount; the ETM's per-pin insertion carries it), so the face
+    # registers sit in the main skew group: TT for setup / route, FF in the FF hold scenes (calib.env, sourced before
+    # the route; the CTS-only calibrate uses the defaults)
+    lat = ('L_=physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc; '
+           'printf "%s\\n" "if {[llength [get_libs -quiet *_FF_*]]} { set ot_fcl ${CK_FF_MEAN:-400} } else { set ot_fcl ${CK_TT_MEAN:-480} }" '
+           '"set_clock_latency -source \\$ot_fcl [get_ports -quiet {ckw[0] cke[0]}]" > $L_; ')
+    c = c.replace("export OT_MM_FF_SDC='", lat + "export OT_MM_FF_SDC='physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ")
+    c = c.replace('POSTSDC="', 'POSTSDC="physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ')
+    c = c.replace("--orfs-var GPL_ROUTABILITY_DRIVEN=0", "--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc")
+    return c.replace('SRC="{SRC}" OUT=', "CKP='ck*' SRC=\"{SRC}\" OUT=")
+
+
+def spec(m, commit, hm, tag, fc=False, pinreg=False):
+    name = f'hbm_svc_{m[8:]}_ps{"fc" if fc else ""}{"pr" if pinreg else ""}_{commit[:9]}_tc_{tag}-cl'
     cmd = stage_cmd(m, hm)
-    return name, dict(
+    if pinreg:      # setup-failing faces: every pin-fed register beside its own pin (common/wire_stage_fence.tcl OT_WS_PINREG)
+        cmd = cmd.replace('--orfs-var GPL_ROUTABILITY_DRIVEN=0', '--orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_PINREG=1')
+    if fc:
+        cmd = fc_cmd(cmd)
+    d_ = dict(
         name=name, block=m, owner='Claude:hbm-forks',
         purpose=(f'hbm-forks RQ-HF-1: {m} PER-PC STREAM successor (HGI-1 svc striping, all 32 PCs; DS mode first: the '
                  f'legacy paths are lockstep-identical). TC route, option B, rule H1 budget + link_budget_consistent, mm '
@@ -74,13 +95,21 @@ def spec(m, commit, hm, tag):
                          'segments PASS, slot / done / PC-collapse mutants FAIL)'),
         cycles_note='legacy SM / W / KV / IK paths cycle-identical (lockstep); streams: +2 row cycles over the core lanes',
         route_hold_corners='mm', route_hold_margin_ns=float(hm), route_corner='TC')
+    if fc:      # every split / RTL / SDC path of the spec (record, checks, verdict) follows the --fc outputs
+        d_ = json.loads(json.dumps(d_).replace('split_ps/', 'split_psfc/').replace('OT_SVC_SPLIT=split_ps ', 'OT_SVC_SPLIT=split_psfc ')
+                        .replace('seg_ps/', 'seg_psfc/').replace('sdc_ps/', 'sdc_psfc/').replace('split_psfcfc', 'split_psfc')
+                        .replace('seg_psfcfc', 'seg_psfc').replace('sdc_psfcfc', 'sdc_psfc'))
+        d_['purpose'] = d_['purpose'] + ' | FC: W / E face one-stage chains on face die clock leaves ckw / cke (gen_svc_seg.py --fc)'
+    if pinreg:
+        d_['purpose'] = d_['purpose'] + ' | PINREG: every input-pin-fed register placed beside its own pin (OT_WS_PINREG)'
+    return name, d_
 
 
 def main():
     commit = sys.argv[1]
     out = []
     for m in MASTERS:
-        for hm, tag in (('0.010', 'hm10'), ('0.025', 'hm25')):
+        for hm, tag in (('0.010', 'hm10'), ('0.000', 'hm0')):   # coordinator 2026-10-09: hm0 + post-route hold ECO, not hm25
             n, s = spec(m, commit, hm, tag)
             out.append(n)
             if '--write' in sys.argv:

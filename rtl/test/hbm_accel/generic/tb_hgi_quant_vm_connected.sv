@@ -5,11 +5,11 @@
 // words {bf16, 16'b0}), waits for the record's done, reads O back through client 1 and compares every word with the
 // released golden outputs.  MUT 1: the bench record header drops the A operand bit -> the unit must fault, no done.
 module tb_hgi_quant_vm_connected;
- parameter integer MUT = 0;
+ parameter integer MUT = 0, TMUT = 0;   // TMUT: transport mutant (4 = responses paired with the newest request)
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr0;
  reg [337:0] bq = 0; wire [273:0] br; wire [18:0] status;
- ot_hgi_quant_unit dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr0));
+ ot_hgi_quant_unit #(.MUT(TMUT)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr0));
  ot_hgi_vm_unit #(.NC(2)) vm (.clk(clk), .rst_n(rst_n), .cq({bq, vmq}), .cr({br, vmr0}), .status(status));
  reg [1023:0] gin [0:127]; reg [511:0] gout [0:127];
  string vectors, tag, fin, fout; integer nb, b, k, s, m, mode, cycles = 0, words = 0;

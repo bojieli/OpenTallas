@@ -48,7 +48,11 @@ module ot_rom_host_ingest #(
     parameter integer OCRED  = 8,      // die-fabric credits at reset
     parameter integer TCRED  = 4,      // host completion credits at reset
     parameter integer PCAP   = 16,     // pacer burst (sectors)
-    parameter integer MUT    = 0
+    parameter integer MUT    = 0,
+    // sys-takeover 2026-10-09 (opt-in): ENG_TRIM = 1 with QKV_EN = 0 builds the engine without its QKV path (unreachable:
+    // a QKV descriptor is failed closed above); APIPE = 1 registers the engine's stream address terms (ot_hdc_kv_ingest).
+    parameter integer ENG_TRIM = 0,
+    parameter integer APIPE  = 0
 ) (
     input  wire              rst_n,
     // host link face
@@ -123,7 +127,7 @@ module ot_rom_host_ingest #(
     wire         hv_i = !hx_empty;
     wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
-    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX)) u_eng (
+    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE)) u_eng (
         .clk(clk_i), .rst_n(rn_i),
         .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
         .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),

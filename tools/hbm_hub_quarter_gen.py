@@ -239,7 +239,19 @@ def vec(bits):
     return ''.join(str(b) for b in reversed(bits))
 
 
-def emit_rtl(P, neg=False):
+def emit_rtl(P, neg=False, xroot=False, cg=False):
+    """xroot (redesign-hbm 2026-10-09, opt-in): every register-to-register hop between two segment clock roots
+    (multi-ck wrappers) is launched from a LOCKUP register: a negedge copy of the source register on the SOURCE root.
+    The source -> lockup hop is root-local (half a cycle), the lockup -> destination hop gets half a cycle plus the
+    inter-root skew on the setup side and T/2 of hold margin, so an inter-root skew of up to ~T/2 - clk-to-Q is
+    absorbed without hold buffers.  Cycle-exact (the destination still samples the source's value of the previous
+    edge): 0 added cycles; cost = one flop per crossing bit (scan-chain lockup-latch practice).
+    cg (redesign-hbm 2026-10-09, opt-in; coordinator: die 613.5 W vs 474.56 W, coarse per-unit gating REQUIRED): one ICG per
+    lane GROUP (ot_cg_tile on the group's segment root): the group's broadcast bank, its lanes' clock pins, their output
+    captures and the group's accumulator run on the gated clock; the face stages, the reset synchroniser and the output
+    stages stay on the raw roots.  New pin cg_en (the unit's busy, from its record adapter): a band pin flop, then a wake
+    register per group stepping outward along each chain one group an edge (as fast as the broadcast), across roots
+    through a negedge lockup; HOLD 64 edges after the wake drops.  Contract: cg_en rises >= 2 edges before new input."""
     q = P.q
     m = q['master']
     nck = len(P.cks)
@@ -250,6 +262,22 @@ def emit_rtl(P, neg=False):
         if not nck:
             return 'clk'
         return f'clk{min(nck - 1, max(0, int(y // seg_h)))}'
+
+    cw, xk = {}, []                  # xroot: register -> (clock, width); emitted lockup registers
+
+    def R(name, w, c, e=None):
+        cw[name] = (c, w, e or c)
+
+    def X(name, d):
+        """the operand a register on clock d reads for register `name` (its lockup copy when the roots differ)"""
+        if not xroot or not nck or name not in cw or cw[name][0] == d:
+            return name
+        s, w, e = cw[name]
+        nm = f'{name}_xk'
+        if nm not in cw:
+            cw[nm] = (f'~{s}', w, e)
+            xk.append(f'    (* keep *) reg [{w - 1}:0] {nm};  always @(negedge {e}) {nm} <= {name};   // xroot lockup ({s} root)')
+        return nm
 
     band_y = P.H / 2
     gy = {}
@@ -265,7 +293,8 @@ def emit_rtl(P, neg=False):
     decl = []
     cports = [(c, 1) for c in P.cks] if nck else [('ck', 1)]
     ig = q.get('inj_gate')
-    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)] + ([(ig['strap'], 2)] if ig else [])):
+    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)] + ([(ig['strap'], 2)] if ig else [])
+                        + ([('cg_en', 1)] if cg else [])):
         decl.append(f'    input  wire [{w - 1}:0] {p_}')
     for p_, w in P.dout:
         decl.append(f'    output wire [{w - 1}:0] {p_}')
@@ -278,27 +307,61 @@ def emit_rtl(P, neg=False):
            '    (* keep *) reg [1:0] rst_q;',
            f'    always @(posedge {ck(band_y)}) rst_q <= {{rst_q[0], rst[0]}};',
            '    // face chains: input stage 0 at the pin, a stage per <= 480 um to its band (per-port depth dp)']
+    R('rst_q', 2, ck(band_y))
+    gk = {}
+    if cg:                                       # per-group gated clocks gk_<k>_<g> and the wake chain (see docstring)
+        bc_ = ck(band_y)
+        L_ += ['    // cg: wake pin flop at the band, one wake register per group outward along each chain',
+               f'    (* keep *) reg cg_q;  always @(posedge {bc_}) cg_q <= cg_en[0];']
+        for k in range(P.K):
+            pn, pc = 'cg_q', bc_
+            rn = 'rst_q[1]'
+            for g in range(P.G):
+                c_ = ck(gy[(k, g)])
+                src, rsrc = pn, rn
+                if pc != c_:
+                    L_.append(f'    (* keep *) reg cgx_{k}_{g};  always @(negedge {pc}) cgx_{k}_{g} <= {pn};   // cg wake lockup ({pc} -> {c_})')
+                    L_.append(f'    (* keep *) reg crx_{k}_{g};  always @(negedge {pc}) crx_{k}_{g} <= {rn};   // cg reset relay lockup')
+                    src, rsrc = f'cgx_{k}_{g}', f'crx_{k}_{g}'
+                # root-local reset relay (one register a group, beside the gate): the gate's async reset never crosses the quarter
+                L_ += [f'    (* keep *) reg crr_{k}_{g};  always @(posedge {c_}) crr_{k}_{g} <= {rsrc};',
+                       f'    wire cgw_{k}_{g}, gk_{k}_{g};',
+                       f'    ot_cg_tile #(.HOLD(64), .RSTEN(0), .MUT_LATE(`ifdef OT_HUB_CG_MUT_LATE 4 `else 0 `endif)) u_cg_{k}_{g} (.clk({c_}), '
+                       f'.rst_n(~crr_{k}_{g}), .cgi({src}), .cgo(cgw_{k}_{g}), .gclk(gk_{k}_{g}));']
+                gk[(k, g)] = f'gk_{k}_{g}'
+                pn, pc, rn = f'cgw_{k}_{g}', c_, f'crr_{k}_{g}'
     for p_, w in P.din:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
         for s_ in range(D):
-            src = p_ if s_ == 0 else f'{p_}_i{s_ - 1}'
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {ck(py + s_ / D * (ty - py))}) {p_}_i{s_} <= {src};')
-    L_.append(f'    wire [{P.WIm - 1}:0] din_q = {{' + ', '.join(f'{p_}_i{P.dp[p_] - 1}' for p_, _ in reversed(P.din_m)) + '};')
-    L_ += [f'    wire [{P.LB}:0] bsrc;']
-    fold = {}
-    for u in range(P.WIm):
-        fold.setdefault(u % P.LB, []).append(f'din_q[{u}]')
-    L_.append(f'    assign bsrc[{P.LB}] = rst_q[1];')
-    for t in range(P.LB):
-        L_.append(f'    assign bsrc[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
+            c_ = ck(py + s_ / D * (ty - py))
+            src = p_ if s_ == 0 else X(f'{p_}_i{s_ - 1}', c_)
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {c_}) {p_}_i{s_} <= {src};')
+            R(f'{p_}_i{s_}', w, c_)
+    # xroot: one broadcast source per destination root (each operand through its lockup copy when the roots differ)
+    bdst = sorted({ck(gy[(k, 0)]) for k in range(P.K)}) if xroot and nck else [None]
+    for d in bdst:
+        sfx = f'_{d}' if d else ''
+        L_.append(f'    wire [{P.WIm - 1}:0] din_q{sfx} = {{' + ', '.join(X(f'{p_}_i{P.dp[p_] - 1}', d) for p_, _ in reversed(P.din_m)) + '};')
+        L_ += [f'    wire [{P.LB}:0] bsrc{sfx};']
+        fold = {}
+        for u in range(P.WIm):
+            fold.setdefault(u % P.LB, []).append(f'din_q{sfx}[{u}]')
+        L_.append(f'    assign bsrc{sfx}[{P.LB}] = {X("rst_q", d)}[1];')
+        for t in range(P.LB):
+            L_.append(f'    assign bsrc{sfx}[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
     for k in range(P.K):
         for g in range(P.G):
-            src = 'bsrc' if g == 0 else f'bc_{k}_{g - 1}'
-            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) bc_{k}_{g} <= {src};')
+            c_ = ck(gy[(k, g)])
+            src = ('bsrc' + (f'_{c_}' if bdst != [None] else '')) if g == 0 else X(f'bc_{k}_{g - 1}', c_)
+            e_ = gk.get((k, g), c_)
+            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {e_}) bc_{k}_{g} <= {src};')
+            R(f'bc_{k}_{g}', P.LB + 1, c_, e_)
     for j, k, g, s_, i in P.lanes():
         b = f'bc_{k}_{g}'
-        lc = ck(gy[(k, g)]) if q.get('lane_ck_bank') else ck(P.lane_y.get(j, band_y))
+        lc = ck(gy[(k, g)]) if (q.get('lane_ck_bank') or cg) else ck(P.lane_y.get(j, band_y))
+        b = X(b, lc)
+        lroot, lc = lc, gk.get((k, g), lc)          # cg: the lane and its capture on the group's gated clock
         conns = [f'.clk({lc})', f'.rst_n(~{b}[{P.LB}])']
         bi = 0
         pi = 0
@@ -321,6 +384,7 @@ def emit_rtl(P, neg=False):
             prm = '#(' + ', '.join(f'.{a}({v})' for a, v in q['params'].items()) + ') '
         L_.append(f'    {q["lane"]} {prm}u_lane_{j} (' + ', '.join(conns) + ');')
         L_.append(f'    (* keep *) reg [{P.LO - 1}:0] lq_{j};  always @(posedge {lc}) lq_{j} <= {lo};')
+        R(f'lq_{j}', P.LO, lroot, lc)
     # end-band inputs: XORed into the far-end accumulator of their side's chains
     einj = {}
     for side in ('S', 'N'):
@@ -328,11 +392,12 @@ def emit_rtl(P, neg=False):
         u = 0
         for p_, w in P.end_bits(side, P.din):
             for b in range(w):
-                einj.setdefault((ks[u % len(ks)], (u // len(ks)) % P.WC), []).append(f'{p_}_i{P.dp[p_] - 1}[{b}]')
+                einj.setdefault((ks[u % len(ks)], (u // len(ks)) % P.WC), []).append((f'{p_}_i{P.dp[p_] - 1}', b))
                 u += 1
     # accumulators: group G-1 is the far end; head g = 0 at the boundary
     for k in range(P.K):
         for g in reversed(range(P.G)):
+            c_ = ck(gy[(k, g)])
             terms = {}
             for j, kk, gg, s_, i in P.lanes():
                 if kk != k or gg != g:
@@ -341,32 +406,44 @@ def emit_rtl(P, neg=False):
                     x = P.slot(j, t)
                     if neg and j == 1 and t < 8:
                         x = (x + 1) % P.WC          # negative control: lane 1's first 8 result bits one slot off
-                    terms.setdefault(x, []).append(f'lq_{j}[{t}]')
+                    terms.setdefault(x, []).append(f'{X(f"lq_{j}", c_)}[{t}]')
             if g == P.G - 1:
                 for x in range(P.WC):
-                    terms.setdefault(x, []).extend(einj.get((k, x), []))
-            prev = f'acc_{k}_{g + 1}' if g + 1 < P.G else None
+                    terms.setdefault(x, []).extend(f'{X(n_, c_)}[{b_}]' for n_, b_ in einj.get((k, x), []))
+            prev = X(f'acc_{k}_{g + 1}', c_) if g + 1 < P.G else None
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
                 parts = ([f'{prev}[{x}]'] if prev else []) + terms.get(x, [])
                 L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' ^ '.join(parts) if parts else "1'b0") + ';')
-            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) acc_{k}_{g} <= nx_{k}_{g};')
+            e_ = gk.get((k, g), c_)
+            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge {e_}) acc_{k}_{g} <= nx_{k}_{g};')
+            R(f'acc_{k}_{g}', P.WC, c_, e_)
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
+    hd = {}
+
+    def heads(d):
+        """the chain heads as read by a register on clock d (xroot: through the heads' lockup copies)"""
+        if not xroot or not nck or all(cw[f'acc_{k}_0'][0] == d for k in range(P.K)):
+            return 'heads'
+        if d not in hd:
+            hd[d] = f'heads_{d}'
+            L_.append(f'    wire [{P.K * P.WC - 1}:0] heads_{d} = {{' + ', '.join(X(f'acc_{k}_0', d) for k in reversed(range(P.K))) + '};')
+        return hd[d]
     # face chains: the last output stage at the pin (per-port depth dp)
     ob = 0
     srcs = {}
     for p_, w in P.dout_m:
-        srcs[p_] = f'heads[{ob + w - 1}:{ob}]'
+        srcs[p_] = (lambda d, hi=ob + w - 1, lo=ob: f'{heads(d)}[{hi}:{lo}]')
         ob += w
     for side in ('S', 'N'):                      # end-band outputs: the far-end broadcast bank of their side
         ks = P.end_chains(side)
         t = 0
         for p_, w in P.end_bits(side, P.dout):
-            srcs[p_] = '{' + ', '.join(f'bc_{ks[tt % len(ks)]}_{P.G - 1}[{(tt // len(ks)) % P.LB}]'
-                                       for tt in reversed(range(t, t + w))) + '}'
+            srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'{X(f"bc_{ks[tt % len(ks)]}_{P.G - 1}", d)}[{(tt // len(ks)) % P.LB}]'
+                                                                for tt in reversed(range(t, t + w))) + '}')
             t += w
     if ig:
-        cq = f"{ig['ctl']}_i{P.dp[ig['ctl']] - 1}"            # the control port at the band (its last input stage)
+        cq = X(f"{ig['ctl']}_i{P.dp[ig['ctl']] - 1}", ck(band_y))   # the control port at the band (its last input stage)
         hw = dict(P.dout)[ig['out']] // ig['lanes']
         NR = hw // 32                                         # owner-flag replicas: fanout 32 each (no 512-wide net)
         L_ += ['    // coll inject ownership gate (see the generator\'s QUARTERS su inj_gate): quarter qid drives t_coll half h',
@@ -380,16 +457,31 @@ def emit_rtl(P, neg=False):
             L_.append(f'    wire own_{h} = {own};')
             L_.append('`endif')
             L_.append(f'    (* keep *) reg [{NR - 1}:0] own_r{h};  always @(posedge {ck(band_y)}) own_r{h} <= {{{NR}{{own_{h}}}}};')
-        msk = ', '.join(f'{{32{{own_r{h}[{r}]}}}}' for h in reversed(range(ig['lanes'])) for r in reversed(range(NR)))
-        L_.append(f"    wire [{dict(P.dout)[ig['out']] - 1}:0] {ig['out']}_own = {{{msk}}};")
-        srcs[ig['out']] = f"({srcs[ig['out']]} & {ig['out']}_own)"
+            R(f'own_r{h}', NR, ck(band_y))
+        ownw = {}
+
+        def own(d, NR=NR):
+            nm = f"{ig['out']}_own" + (f'_{d}' if xroot and nck and cw[f'own_r0'][0] != d else '')
+            if nm not in ownw:
+                ownw[nm] = 1
+                msk = ', '.join(f'{{32{{{X(f"own_r{h}", d)}[{r}]}}}}' for h in reversed(range(ig['lanes'])) for r in reversed(range(NR)))
+                L_.append(f"    wire [{dict(P.dout)[ig['out']] - 1}:0] {nm} = {{{msk}}};")
+            return nm
+        if not xroot:
+            own(None)
+        srcs[ig['out']] = (lambda d, f=srcs[ig['out']]: f"({f(d)} & {own(d)})")
     for p_, w in P.dout:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
         for s_ in range(D):
-            src = srcs[p_] if s_ == 0 else f'{p_}_o{s_ - 1}'
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_o{s_};  always @(posedge {ck(ty + (s_ + 1) / D * (py - ty))}) {p_}_o{s_} <= {src};')
+            c_ = ck(ty + (s_ + 1) / D * (py - ty))
+            src = srcs[p_](c_) if s_ == 0 else X(f'{p_}_o{s_ - 1}', c_)
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_o{s_};  always @(posedge {c_}) {p_}_o{s_} <= {src};')
+            R(f'{p_}_o{s_}', w, c_)
         L_.append(f'    assign {p_} = {p_}_o{D - 1};')
+    if xk:
+        L_.append(f'    // xroot: {len(xk)} lockup registers, {sum(cw[n][1] for n in cw if n.endswith("_xk"))} bits')
+        L_ += xk
     L_.append('endmodule\n')
     return '\n'.join(L_)
 
@@ -418,7 +510,7 @@ def emit_stub(P):
     return '\n'.join(L_)
 
 
-def emit_tb(P, nvec, seed, out):
+def emit_tb(P, nvec, seed, out, cg=False):
     rnd = random.Random(seed)
     vin, vout = [], []
     ig = P.q.get('inj_gate')
@@ -459,13 +551,16 @@ module tb;
     reg [{P.WO - 1}:0] vout [0:{nvec - 1}];
     integer v, c, bad, lat, first;
     parameter integer QID = 0;
-    {m} dut({cks}, .rst(rst), {ports}{(", ." + ig['strap'] + "(QID[1:0])") if ig else ''});
+    reg cg_en = 1;
+    {m} dut({cks}, .rst(rst), {ports}{(", ." + ig['strap'] + "(QID[1:0])") if ig else ''}{", .cg_en(cg_en)" if cg else ''});
     initial begin
         $readmemh("tb_in.mem", vin); {'$readmemh($sformatf("tb_out_q%0d.mem", QID), vout);' if ig else '$readmemh("tb_out.mem", vout);'}
         bad = 0; lat = 0;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < {nvec}; v = v + 1) begin
-            din = vin[v]; first = -1;
+{'''            // cg: a fully gated gap (inputs held, wake low) before every vector, wake raised 3 edges before the data
+            cg_en = 0; repeat (200) @(posedge clk); #0.1 cg_en = 1; repeat (3) @(posedge clk); #0.1;
+''' if cg else ''}            din = vin[v]; first = -1;
             for (c = 0; c < {hold}; c = c + 1) begin
                 @(posedge clk); #0.1;
                 if (first < 0 && dout === vout[v]) first = c;
@@ -554,6 +649,9 @@ def main():
     ap.add_argument('--lane-size', nargs=2, type=float, metavar=('W', 'H'),
                     help='also write macro_place.tcl / floorplan.json for lanes of this footprint')
     ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
+    ap.add_argument('--cg', action='store_true', help='coarse per-group clock gating (ot_cg_tile) with pin cg_en (redesign-hbm)')
+    ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
+                    help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
@@ -585,10 +683,11 @@ def main():
         info_hop = max(hops)
         print(f'bc relay max hop {info_hop:.1f} um (limit {HOP})', file=sys.stderr)
         assert info_hop <= HOP, f'broadcast relay hop {info_hop:.1f} um > {HOP} um'
-    (out / f'{m}.sv').write_text(emit_rtl(P))
-    (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True))
+    xr = a.xroot == 'lockup'
+    (out / f'{m}.sv').write_text(emit_rtl(P, xroot=xr, cg=a.cg))
+    (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True, xroot=xr, cg=a.cg))
     (out / f'{q["lane"]}_simstub.sv').write_text(emit_stub(P))
-    (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out))
+    (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out, cg=a.cg))
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,

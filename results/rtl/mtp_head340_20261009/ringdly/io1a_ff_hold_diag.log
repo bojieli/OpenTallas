@@ -1,0 +1,361 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER ff
+OT_WS -9.694345326494158e-11
+OT_TNS -9.461039951474959e-9
+Startpoint: best_row[6]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: best_row[6] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  34.50   34.50 ^ wire17402/Y (BUFx12f_ASAP7_75t_R)
+  35.45   69.95 ^ wire17401/Y (BUFx16f_ASAP7_75t_R)
+  50.71  120.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  18.63  139.29 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.84  161.13 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.66  182.79 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.68  204.47 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.23  225.71 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.36  247.06 ^ clkbuf_2_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.05  270.12 ^ clkbuf_2_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.83  292.95 ^ clkbuf_2_3_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.88  315.83 ^ clkbuf_3_7_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.84  339.68 ^ clkbuf_4_15_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.30  360.98 ^ clkbuf_4_15_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.70  384.68 ^ clkbuf_5_30_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.57  408.25 ^ clkbuf_6_61_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.55  431.80 ^ clkbuf_7_122_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  32.04  463.84 ^ clkbuf_10_980_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  19.43  483.26 ^ clkbuf_leaf_1955_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.31  483.57 ^ best_row[6]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  40.84  524.41 ^ best_row[6]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  15.09  539.49 ^ hold24050/Y (BUFx2_ASAP7_75t_R)
+  11.63  551.13 ^ hold18385/Y (BUFx2_ASAP7_75t_R)
+   7.73  558.86 v _121224_/Y (INVx1_ASAP7_75t_R)
+  15.99  574.85 v hold18386/Y (BUFx2_ASAP7_75t_R)
+  13.58  588.43 v output2246/Y (BUFx2_ASAP7_75t_R)
+  17.71  606.15 v hold18387/Y (BUFx2_ASAP7_75t_R)
+   0.91  607.06 v best_row[6] (out)
+         607.06   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 679.00  704.00   output external delay
+         704.00   data required time
+---------------------------------------------------------
+         704.00   data required time
+        -607.06   data arrival time
+---------------------------------------------------------
+         -96.94   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 1597
+OT_WS_REG_D -5.488776
+OT_WS_OUT -96.943451
+OT_WS_R2R -5.488776
+OT_WS_I2R 89.216858
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 483 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 531.1 min 502.9 max 559.2 n 483 boundary
+OT_WS_AFTER_IOREF -9.694345326494158e-11
+OT_CLK n=49826 min=479.228210 p10=489.833832 median=499.093109 p90=509.118317 max=559.245056 mean=499.8606676845271
+OT_EARLY 479.228210 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[27]$_DFF_P_/CLK}
+OT_EARLY 479.236664 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[28]$_DFF_P_/CLK}
+OT_EARLY 479.239868 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[26]$_DFF_P_/CLK}
+OT_EARLY 479.339569 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[23]$_DFF_P_/CLK}
+OT_EARLY 479.434662 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[29]$_DFF_P_/CLK}
+OT_EARLY 479.510040 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[22]$_DFF_P_/CLK}
+OT_EARLY 479.510498 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[21]$_DFF_P_/CLK}
+OT_EARLY 479.541809 {dot.g_chunk[1].g_add[6].u_add.u_c6.g_r.r[20]$_DFF_P_/CLK}
+OT_EARLY 480.544891 weights.m0/clk
+OT_EARLY 480.696991 weights.m1/clk
+OT_OUT best_bits[0] slack=-76.595955 start=best_bits[0]$_DFFE_PN0P_/QN start_clk=506.998627
+OT_OUT best_bits[10] slack=-71.851250 start=best_bits[10]$_DFFE_PN0P_/QN start_clk=510.741577
+OT_OUT best_bits[11] slack=-69.025063 start=best_bits[11]$_DFFE_PN0P_/QN start_clk=510.685333
+OT_OUT best_bits[12] slack=-74.455002 start=best_bits[12]$_DFFE_PN0P_/QN start_clk=510.567749
+OT_OUT best_bits[13] slack=-69.136475 start=best_bits[13]$_DFFE_PN0P_/QN start_clk=511.175262
+OT_OUT best_bits[14] slack=-73.583588 start=best_bits[14]$_DFFE_PN0P_/QN start_clk=510.812622
+OT_OUT best_bits[15] slack=-71.556931 start=best_bits[15]$_DFFE_PN0P_/QN start_clk=510.841431
+OT_OUT best_bits[16] slack=-77.007286 start=best_bits[16]$_DFFE_PN0P_/QN start_clk=507.007385
+OT_OUT best_bits[17] slack=-68.272667 start=best_bits[17]$_DFFE_PN0P_/QN start_clk=511.563782
+OT_OUT best_bits[18] slack=-67.981674 start=best_bits[18]$_DFFE_PN0P_/QN start_clk=511.194641
+OT_OUT best_bits[19] slack=-68.525131 start=best_bits[19]$_DFFE_PN0P_/QN start_clk=511.480469
+OT_OUT best_bits[1] slack=-77.455040 start=best_bits[1]$_DFFE_PN0P_/QN start_clk=507.203400
+OT_OUT best_bits[20] slack=-70.405518 start=best_bits[20]$_DFFE_PN0P_/QN start_clk=510.540771
+OT_OUT best_bits[21] slack=-75.923325 start=best_bits[21]$_DFFE_PN0P_/QN start_clk=507.208008
+OT_OUT best_bits[22] slack=-67.260971 start=best_bits[22]$_DFFE_PN0P_/QN start_clk=511.189911
+OT_OUT best_bits[23] slack=-70.537743 start=best_bits[23]$_DFFE_PN0P_/QN start_clk=510.871399
+OT_OUT best_bits[24] slack=-73.351326 start=best_bits[24]$_DFFE_PN0P_/QN start_clk=506.111816
+OT_OUT best_bits[25] slack=-73.148819 start=best_bits[25]$_DFFE_PN0P_/QN start_clk=507.065765
+OT_OUT best_bits[26] slack=-69.989456 start=best_bits[26]$_DFFE_PN0P_/QN start_clk=511.561310
+OT_OUT best_bits[27] slack=-70.633224 start=best_bits[27]$_DFFE_PN0P_/QN start_clk=511.246002
+OT_OUT best_bits[28] slack=-70.566223 start=best_bits[28]$_DFFE_PN0P_/QN start_clk=511.277344
+OT_OUT best_bits[29] slack=-70.786430 start=best_bits[29]$_DFFE_PN0P_/QN start_clk=510.894562
+OT_OUT best_bits[2] slack=-75.948357 start=best_bits[2]$_DFFE_PN0P_/QN start_clk=507.571198
+OT_OUT best_bits[30] slack=-71.535500 start=best_bits[30]$_DFFE_PN0P_/QN start_clk=507.210999
+OT_OUT best_bits[31] slack=-70.908554 start=best_bits[31]$_DFFE_PN0P_/QN start_clk=507.009949
+OT_OUT best_bits[3] slack=-77.513329 start=best_bits[3]$_DFFE_PN0P_/QN start_clk=507.381683
+OT_OUT best_bits[4] slack=-76.388115 start=best_bits[4]$_DFFE_PN0P_/QN start_clk=507.674805
+OT_OUT best_bits[5] slack=-77.388542 start=best_bits[5]$_DFFE_PN0P_/QN start_clk=507.651367
+OT_OUT best_bits[6] slack=-77.741310 start=best_bits[6]$_DFFE_PN0P_/QN start_clk=506.486237
+OT_OUT best_bits[7] slack=-77.175270 start=best_bits[7]$_DFFE_PN0P_/QN start_clk=507.559875
+OT_OUT best_bits[8] slack=-78.644424 start=best_bits[8]$_DFFE_PN0P_/QN start_clk=507.172638
+OT_OUT best_bits[9] slack=-77.367836 start=best_bits[9]$_DFFE_PN0P_/QN start_clk=507.260071
+OT_OUT best_row[0] slack=-75.113579 start=best_row[0]$_DFFE_PN0P_/QN start_clk=505.144043
+OT_OUT best_row[10] slack=-71.220917 start=best_row[10]$_DFFE_PN0P_/QN start_clk=507.074219
+OT_OUT best_row[11] slack=-75.396187 start=best_row[11]$_DFFE_PN0P_/QN start_clk=507.158142
+OT_OUT best_row[12] slack=-79.359627 start=best_row[12]$_DFFE_PN0P_/QN start_clk=505.745239
+OT_OUT best_row[13] slack=-75.845055 start=best_row[13]$_DFFE_PN0P_/QN start_clk=506.982849
+OT_OUT best_row[14] slack=-80.181358 start=best_row[14]$_DFFE_PN0P_/QN start_clk=506.295563
+OT_OUT best_row[15] slack=-77.590431 start=best_row[15]$_DFFE_PN0P_/QN start_clk=506.748688
+OT_OUT best_row[16] slack=-73.729134 start=best_row[16]$_DFFE_PN0P_/QN start_clk=506.105499
+OT_OUT best_row[1] slack=-75.791321 start=best_row[1]$_DFFE_PN0P_/QN start_clk=505.982697
+OT_OUT best_row[2] slack=-71.724297 start=best_row[2]$_DFFE_PN0P_/QN start_clk=506.725708
+OT_OUT best_row[3] slack=-73.788864 start=best_row[3]$_DFFE_PN0P_/QN start_clk=505.082489
+OT_OUT best_row[4] slack=-69.596329 start=best_row[4]$_DFFE_PN0P_/QN start_clk=505.822388
+OT_OUT best_row[5] slack=-72.124969 start=best_row[5]$_DFFE_PN0P_/QN start_clk=506.676544
+OT_OUT best_row[6] slack=-96.943451 start=best_row[6]$_DFFE_PN0P_/QN start_clk=505.820709
+OT_OUT best_row[7] slack=-78.627548 start=best_row[7]$_DFFE_PN0P_/QN start_clk=507.187469
+OT_OUT best_row[8] slack=-74.450058 start=best_row[8]$_DFFE_PN0P_/QN start_clk=506.852936
+OT_OUT best_row[9] slack=-73.120285 start=best_row[9]$_DFFE_PN0P_/QN start_clk=505.813568
+OT_OUT best_valid slack=-73.572037 start=best_valid$_DFF_PN0_/QN start_clk=508.832520
+OT_OUT done slack=-74.674210 start=done$_DFFE_PN0P_/QN start_clk=502.879669
+OT_OUT embed_ready slack=-94.655838 start=embed_ready$_DFF_PN0_/QN start_clk=503.393158
+OT_OUT fault slack=-67.057861 start=fault$_DFF_PN0_/QN start_clk=503.783020
+OT_OUT head_go slack=-82.389153 start=head_go$_DFF_PN0_/QN start_clk=506.839569
+OT_OUT joined_bits[0] slack=-67.263084 start=joined_bits[0]$_DFFE_PN0P_/QN start_clk=510.316345
+OT_OUT joined_bits[10] slack=-64.858788 start=joined_bits[10]$_DFFE_PN0P_/QN start_clk=510.438751
+OT_OUT joined_bits[11] slack=-78.601845 start=joined_bits[11]$_DFFE_PN0P_/QN start_clk=511.321533
+OT_OUT joined_bits[12] slack=-64.789619 start=joined_bits[12]$_DFFE_PN0P_/QN start_clk=510.395111
+OT_OUT joined_bits[13] slack=-77.629013 start=joined_bits[13]$_DFFE_PN0P_/QN start_clk=510.592804
+OT_OUT joined_bits[14] slack=-76.624817 start=joined_bits[14]$_DFFE_PN0P_/QN start_clk=511.306671
+OT_OUT joined_bits[15] slack=-78.041183 start=joined_bits[15]$_DFFE_PN0P_/QN start_clk=510.649811
+OT_OUT joined_bits[16] slack=-77.411522 start=joined_bits[16]$_DFFE_PN0P_/QN start_clk=511.569336
+OT_OUT joined_bits[17] slack=-76.879669 start=joined_bits[17]$_DFFE_PN0P_/QN start_clk=511.298950
+OT_OUT joined_bits[18] slack=-76.144150 start=joined_bits[18]$_DFFE_PN0P_/QN start_clk=511.288116
+OT_OUT joined_bits[19] slack=-76.750107 start=joined_bits[19]$_DFFE_PN0P_/QN start_clk=511.348236
+OT_OUT joined_bits[1] slack=-64.471207 start=joined_bits[1]$_DFFE_PN0P_/QN start_clk=510.236511
+OT_OUT joined_bits[20] slack=-77.004402 start=joined_bits[20]$_DFFE_PN0P_/QN start_clk=511.329102
+OT_OUT joined_bits[21] slack=-78.636765 start=joined_bits[21]$_DFFE_PN0P_/QN start_clk=511.330322
+OT_OUT joined_bits[22] slack=-76.284370 start=joined_bits[22]$_DFFE_PN0P_/QN start_clk=511.223389
+OT_OUT joined_bits[23] slack=-77.651993 start=joined_bits[23]$_DFFE_PN0P_/QN start_clk=511.082458
+OT_OUT joined_bits[24] slack=-75.445206 start=joined_bits[24]$_DFFE_PN0P_/QN start_clk=511.301239
+OT_OUT joined_bits[25] slack=-79.324768 start=joined_bits[25]$_DFFE_PN0P_/QN start_clk=510.690643
+OT_OUT joined_bits[26] slack=-76.841423 start=joined_bits[26]$_DFFE_PN0P_/QN start_clk=511.368561
+OT_OUT joined_bits[27] slack=-76.998016 start=joined_bits[27]$_DFFE_PN0P_/QN start_clk=511.393250
+OT_OUT joined_bits[28] slack=-77.295670 start=joined_bits[28]$_DFFE_PN0P_/QN start_clk=510.931366
+OT_OUT joined_bits[29] slack=-79.223404 start=joined_bits[29]$_DFFE_PN0P_/QN start_clk=510.629150
+OT_OUT joined_bits[2] slack=-67.206238 start=joined_bits[2]$_DFFE_PN0P_/QN start_clk=510.068817
+OT_OUT joined_bits[30] slack=-77.658661 start=joined_bits[30]$_DFFE_PN0P_/QN start_clk=511.196320
+OT_OUT joined_bits[31] slack=-74.892929 start=joined_bits[31]$_DFFE_PN0P_/QN start_clk=511.619690
+OT_OUT joined_bits[3] slack=-75.749077 start=joined_bits[3]$_DFFE_PN0P_/QN start_clk=510.479065
+OT_OUT joined_bits[4] slack=-64.729774 start=joined_bits[4]$_DFFE_PN0P_/QN start_clk=510.229980
+OT_OUT joined_bits[5] slack=-64.426849 start=joined_bits[5]$_DFFE_PN0P_/QN start_clk=510.501648
+OT_OUT joined_bits[6] slack=-65.921211 start=joined_bits[6]$_DFFE_PN0P_/QN start_clk=510.368958
+OT_OUT joined_bits[7] slack=-68.961617 start=joined_bits[7]$_DFFE_PN0P_/QN start_clk=510.319458
+OT_OUT joined_bits[8] slack=-78.688164 start=joined_bits[8]$_DFFE_PN0P_/QN start_clk=511.446320
+OT_OUT joined_bits[9] slack=-78.457687 start=joined_bits[9]$_DFFE_PN0P_/QN start_clk=510.381470
+OT_OUT joined_row[0] slack=-78.565323 start=joined_row[0]$_DFFE_PN0P_/QN start_clk=506.119812
+OT_OUT joined_row[10] slack=-70.613403 start=joined_row[10]$_DFFE_PN0P_/QN start_clk=507.475494
+OT_OUT joined_row[11] slack=-79.192039 start=joined_row[11]$_DFFE_PN0P_/QN start_clk=507.266663
+OT_OUT joined_row[12] slack=-81.235794 start=joined_row[12]$_DFFE_PN0P_/QN start_clk=506.764862
+OT_OUT joined_row[13] slack=-72.251259 start=joined_row[13]$_DFFE_PN0P_/QN start_clk=507.484558
+OT_OUT joined_row[14] slack=-81.113838 start=joined_row[14]$_DFFE_PN0P_/QN start_clk=506.717285
+OT_OUT joined_row[15] slack=-77.275795 start=joined_row[15]$_DFFE_PN0P_/QN start_clk=506.829407
+OT_OUT joined_row[16] slack=-68.510422 start=joined_row[16]$_DFFE_PN0P_/QN start_clk=506.807220
+OT_OUT joined_row[1] slack=-76.307297 start=joined_row[1]$_DFFE_PN0P_/QN start_clk=510.166290
+OT_OUT joined_row[2] slack=-63.546223 start=joined_row[2]$_DFFE_PN0P_/QN start_clk=507.613129
+OT_OUT joined_row[3] slack=-78.463402 start=joined_row[3]$_DFFE_PN0P_/QN start_clk=506.109772
+OT_OUT joined_row[4] slack=-76.810333 start=joined_row[4]$_DFFE_PN0P_/QN start_clk=507.168640
+OT_OUT joined_row[5] slack=-70.143723 start=joined_row[5]$_DFFE_PN0P_/QN start_clk=507.148041
+OT_OUT joined_row[6] slack=-76.522453 start=joined_row[6]$_DFFE_PN0P_/QN start_clk=507.288544
+OT_OUT joined_row[7] slack=-78.326126 start=joined_row[7]$_DFFE_PN0P_/QN start_clk=507.478241
+OT_OUT joined_row[8] slack=-82.082672 start=joined_row[8]$_DFFE_PN0P_/QN start_clk=507.499603
+OT_OUT joined_row[9] slack=-79.450111 start=joined_row[9]$_DFFE_PN0P_/QN start_clk=507.212830
+OT_OUT joined_valid slack=-68.665077 start=joined_valid$_DFF_PN0_/QN start_clk=511.620148
+OT_OUT start_ready slack=-74.673653 start=start_ready$_DFF_PN0_/QN start_clk=505.728729
+OT_R2R slack=-5.488776 start=dot.g_chunk[1].g_add[7].g_delay.q[3][235]$_DFF_P_/QN end=dot.g_chunk[1].g_add[7].g_delay.q[3][267]$_DFF_P_/D
+OT_R2R slack=-5.371315 start=dot.g_chunk[0].g_add[5].g_delay.q[1][486]$_DFF_P_/QN end=dot.g_chunk[0].g_add[5].g_delay.q[1][518]$_DFF_P_/D
+OT_R2R slack=-5.231593 start=dot.g_chunk[0].g_add[3].u_add.u_c1.g_r.r[27]$_DFF_P_/QN end=dot.g_chunk[0].g_add[3].u_add.u_c2.g_r.r[34]$_DFF_P_/D
+OT_R2R slack=-4.970191 start=dot.g_chunk[0].g_add[4].g_delay.q[3][23]$_DFF_P_/QN end=dot.g_chunk[0].g_add[4].g_delay.q[4][23]$_DFF_P_/D
+OT_R2R slack=-4.800882 start=dot.g_chunk[1].g_add[4].g_delay.q[1][264]$_DFF_P_/QN end=dot.g_chunk[1].g_add[4].g_delay.q[1][296]$_DFF_P_/D
+OT_R2R slack=-4.716283 start=dot.g_chunk[1].g_add[3].g_delay.q[0][893]$_DFF_P_/QN end=dot.g_chunk[1].g_add[3].g_delay.q[0][925]$_DFF_P_/D
+OT_R2R slack=-4.697964 start=dot.g_chunk[1].g_add[4].g_delay.q[1][276]$_DFF_P_/QN end=dot.g_chunk[1].g_add[4].g_delay.q[1][308]$_DFF_P_/D
+OT_R2R slack=-4.666822 start=dot.g_chunk[1].g_add[7].g_delay.q[0][123]$_DFF_P_/QN end=dot.g_chunk[1].g_add[7].g_delay.q[0][155]$_DFF_P_/D
+OT_R2R slack=-4.567569 start=dot.g_chunk[1].g_add[7].g_delay.q[0][398]$_DFF_P_/QN end=dot.g_chunk[1].g_add[7].g_delay.q[0][430]$_DFF_P_/D
+OT_R2R slack=-4.559186 start=dot.g_mul[11].u_mul.s1_e[2]$_DFF_P_/QN end=dot.g_mul[11].u_mul.s2a_e[2]$_DFF_P_/D
+OT_R2R slack=-4.536260 start=dot.g_chunk[1].g_add[3].g_delay.q[0][151]$_DFF_P_/QN end=dot.g_chunk[1].g_add[3].g_delay.q[0][183]$_DFF_P_/D
+OT_R2R slack=-4.462097 start=dot.g_chunk[1].g_add[4].g_delay.q[1][343]$_DFF_P_/QN end=dot.g_chunk[1].g_add[4].g_delay.q[1][375]$_DFF_P_/D
+OT_R2R slack=-4.415690 start=dot.g_chunk[1].g_add[7].g_delay.q[2][29]$_DFF_P_/QN end=dot.g_chunk[1].g_add[7].g_delay.q[2][61]$_DFF_P_/D
+OT_R2R slack=-4.303724 start=dot.g_chunk[0].g_add[2].g_delay.q[13][24]$_DFF_P_/QN end=dot.g_chunk[0].g_add[2].g_delay.q[14][24]$_DFF_P_/D
+OT_R2R slack=-4.301948 start=dot.g_chunk[0].g_add[7].g_delay.q[0][215]$_DFF_P_/QN end=dot.g_chunk[0].g_add[7].g_delay.q[0][247]$_DFF_P_/D
+OT_R2R slack=-4.171774 start=dot.g_mul[11].u_mul.s1_e[1]$_DFF_P_/QN end=dot.g_mul[11].u_mul.s2a_e[1]$_DFF_P_/D
+OT_R2R slack=-4.145462 start=dot.g_chunk[1].g_add[7].u_add.u_c3.g_r.r[90]$_DFF_P_/QN end=dot.g_chunk[1].g_add[7].u_add.u_c4.g_r.r[90]$_DFF_P_/D
+OT_R2R slack=-4.129641 start=dot.g_mul[11].u_mul.s1_z$_DFF_P_/QN end=dot.g_mul[11].u_mul.s2a_z$_DFF_P_/D
+OT_R2R slack=-4.054757 start=dot.g_mul[13].u_mul.s2a_p[0][1]$_DFF_P_/QN end=dot.g_mul[13].u_mul.s2_lo[1]$_DFF_P_/D
+OT_R2R slack=-4.046208 start=dot.g_mul[13].u_mul.s4_y[5]$_SDFF_PP0_/QN end=dot.g_mul[13].u_mul.y[5]$_DFF_PN0_/D
+OT_R2R slack=-3.953837 start=dot.g_mul[3].u_mul.s2_s$_DFF_P_/QN end=dot.g_mul[3].u_mul.s3_s$_DFF_P_/D
+OT_R2R slack=-3.893663 start=dot.g_chunk[1].g_add[3].g_delay.q[0][258]$_DFF_P_/QN end=dot.g_chunk[1].g_add[3].g_delay.q[0][290]$_DFF_P_/D
+OT_R2R slack=-3.858136 start=dot.g_tree[3].u_add.u_c2.g_r.r[72]$_DFF_P_/QN end=dot.g_tree[3].u_add.u_c3.g_r.r[70]$_DFF_P_/D
+OT_R2R slack=-3.807066 start=dot.g_mul[9].u_mul.y[5]$_DFF_PN0_/QN end=dot.g_chunk[1].g_add[1].g_delay.q[0][5]$_DFF_P_/D
+OT_R2R slack=-3.796685 start=dot.g_chunk[0].g_add[6].g_delay.q[14][1]$_DFF_P_/QN end=dot.g_chunk[0].g_add[6].g_delay.q[15][1]$_DFF_P_/D
+OT_I2R slack=89.216858 start=embed_data[218] end=g_io.r_ed[218]$_DFF_P_/D
+OT_I2R slack=90.312370 start=embed_data[167] end=g_io.r_ed[167]$_DFF_P_/D
+OT_I2R slack=90.521538 start=embed_data[190] end=g_io.r_ed[190]$_DFF_P_/D
+OT_I2R slack=91.152527 start=embed_data[178] end=g_io.r_ed[178]$_DFF_P_/D
+OT_I2R slack=91.491982 start=embed_data[176] end=g_io.r_ed[176]$_DFF_P_/D
+OT_I2R slack=91.647858 start=embed_data[173] end=g_io.r_ed[173]$_DFF_P_/D
+OT_I2R slack=91.806564 start=embed_data[175] end=g_io.r_ed[175]$_DFF_P_/D
+OT_I2R slack=92.081902 start=embed_data[151] end=g_io.r_ed[151]$_DFF_P_/D
+OT_I2R slack=92.494843 start=embed_data[45] end=g_io.r_ed[45]$_DFF_P_/D
+OT_I2R slack=92.861771 start=embed_data[166] end=g_io.r_ed[166]$_DFF_P_/D
+Startpoint: best_row[6]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: best_row[6] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  34.50   34.50 ^ wire17402/Y (BUFx12f_ASAP7_75t_R)
+  35.45   69.95 ^ wire17401/Y (BUFx16f_ASAP7_75t_R)
+  50.71  120.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  18.63  139.29 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.84  161.13 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.66  182.79 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.68  204.47 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.23  225.71 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.36  247.06 ^ clkbuf_2_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.05  270.12 ^ clkbuf_2_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.83  292.95 ^ clkbuf_2_3_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.88  315.83 ^ clkbuf_3_7_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.84  339.68 ^ clkbuf_4_15_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.30  360.98 ^ clkbuf_4_15_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.70  384.68 ^ clkbuf_5_30_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.57  408.25 ^ clkbuf_6_61_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.55  431.80 ^ clkbuf_7_122_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  32.04  463.84 ^ clkbuf_10_980_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  19.43  483.26 ^ clkbuf_leaf_1955_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.31  483.57 ^ best_row[6]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  40.84  524.41 ^ best_row[6]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  15.09  539.49 ^ hold24050/Y (BUFx2_ASAP7_75t_R)
+  11.63  551.13 ^ hold18385/Y (BUFx2_ASAP7_75t_R)
+   7.73  558.86 v _121224_/Y (INVx1_ASAP7_75t_R)
+  15.99  574.85 v hold18386/Y (BUFx2_ASAP7_75t_R)
+  13.58  588.43 v output2246/Y (BUFx2_ASAP7_75t_R)
+  17.71  606.15 v hold18387/Y (BUFx2_ASAP7_75t_R)
+   0.91  607.06 v best_row[6] (out)
+         607.06   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 679.00  704.00   output external delay
+         704.00   data required time
+---------------------------------------------------------
+         704.00   data required time
+        -607.06   data arrival time
+---------------------------------------------------------
+         -96.94   slack (VIOLATED)
+
+
+Startpoint: dot.g_chunk[1].g_add[7].g_delay.q[3][235]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: dot.g_chunk[1].g_add[7].g_delay.q[3][267]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  34.50   34.50 ^ wire17402/Y (BUFx12f_ASAP7_75t_R)
+  35.45   69.95 ^ wire17401/Y (BUFx16f_ASAP7_75t_R)
+  50.71  120.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  18.63  139.29 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.84  161.13 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.66  182.79 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.68  204.47 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  20.25  224.73 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.38  246.11 ^ clkbuf_2_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.32  267.42 ^ clkbuf_2_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.96  289.39 ^ clkbuf_2_2_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.86  311.25 ^ clkbuf_3_5_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.98  335.23 ^ clkbuf_4_11_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.31  356.54 ^ clkbuf_4_11_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.30  379.84 ^ clkbuf_5_22_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.52  403.35 ^ clkbuf_6_45_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.46  424.81 ^ clkbuf_7_91_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  26.94  451.76 ^ clkbuf_10_733_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  18.63  470.39 ^ clkbuf_leaf_1351_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.59  470.98 ^ dot.g_chunk[1].g_add[7].g_delay.q[3][235]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  36.52  507.50 ^ dot.g_chunk[1].g_add[7].g_delay.q[3][235]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   7.26  514.76 v _134251_/Y (INVx1_ASAP7_75t_R)
+   0.09  514.86 v dot.g_chunk[1].g_add[7].g_delay.q[3][267]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         514.86   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  35.90   35.90 ^ wire17402/Y (BUFx12f_ASAP7_75t_R)
+  37.35   73.25 ^ wire17401/Y (BUFx16f_ASAP7_75t_R)
+  52.55  125.81 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  18.92  144.73 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.51  167.24 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.33  189.56 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.40  211.97 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  20.94  232.91 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.04  254.95 ^ clkbuf_2_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.97  276.92 ^ clkbuf_2_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.71  299.64 ^ clkbuf_2_2_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.91  322.55 ^ clkbuf_3_5_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  25.42  347.97 ^ clkbuf_4_11_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.09  370.05 ^ clkbuf_4_11_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  24.40  394.45 ^ clkbuf_5_22_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  24.72  419.17 ^ clkbuf_6_45_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.26  440.43 ^ clkbuf_7_90_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  37.07  477.50 ^ clkbuf_10_723_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  20.47  497.97 ^ clkbuf_leaf_1420_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   1.95  499.92 ^ dot.g_chunk[1].g_add[7].g_delay.q[3][267]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  524.92   clock uncertainty
+ -15.81  509.11   clock reconvergence pessimism
+  11.24  520.34   library hold time
+         520.34   data required time
+---------------------------------------------------------
+         520.34   data required time
+        -514.86   data arrival time
+---------------------------------------------------------
+          -5.49   slack (VIOLATED)
+
+

@@ -71,7 +71,8 @@ module ot_hgi_cfg_master #(
     output reg         st_loaded,   // a load completed and settled (0 before any load: reset values = DS active)
     output reg  [2:0]  st_err,      // last commit's code: 0 OK, 4 E_BUSY, 5 E_RANGE
     output wire        st_hold,     // a commit is being checked / broadcast / settling: refuse doorbells
-    output reg  [5*32-1:0] md_d     // section D as committed: {image_pages(61), image_base(60), draft(58), verify(57), ar(56)}
+    output reg  [5*32-1:0] md_d,    // section D as committed: {image_pages(61), image_base(60), draft(58), verify(57), ar(56)}
+    output reg  [11*32-1:0] md_k    // G23 (hgi-takeover): MTP backend kernel entries, words 16 .. 26 as committed
 );
 `include "ot_hgi_cfg_consts.svh"
     // HGI-1 v1.0 (owner-approved normative, section 5.7): the CFG_COMMIT check is tools/hbm_generic_iface.d_hw_check case
@@ -108,7 +109,7 @@ module ot_hgi_cfg_master #(
         if (!rst_n) begin
             st <= S_IDLE; i <= 6'd0; crc <= 32'hFFFFFFFF; f_magic <= 1'b0; f_ver <= 1'b0; f_res <= 1'b0; f_rng <= 1'b0;
             cnt <= 10'd0; bv <= 1'b0; bc <= 1'b0; ba <= 6'd0; bd <= 32'd0; st_loaded <= 1'b0; st_err <= 3'd0;
-            md_d <= {5*32{1'b0}}; wi_v <= 1'b0;
+            md_d <= {5*32{1'b0}}; md_k <= {11*32{1'b0}}; wi_v <= 1'b0;
         end else begin
             bv <= 1'b0; bc <= 1'b0;
             case (st)
@@ -152,6 +153,7 @@ module ot_hgi_cfg_master #(
                 S_COMMIT: begin
                     bc <= 1'b1; st_err <= 3'd0; cnt <= 10'd0; st <= S_SETTLE;
                     md_d <= {buf_[61], buf_[60], buf_[58], buf_[57], buf_[56]};
+                    md_k <= {buf_[26], buf_[25], buf_[24], buf_[23], buf_[22], buf_[21], buf_[20], buf_[19], buf_[18], buf_[17], buf_[16]};
                 end
                 S_SETTLE: begin
 `ifdef OT_HGI_MUT_SETTLE

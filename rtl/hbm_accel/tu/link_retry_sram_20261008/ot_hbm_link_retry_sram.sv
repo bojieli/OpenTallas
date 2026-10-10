@@ -9,7 +9,19 @@ module ot_hbm_link_retry_sram #(
  parameter TIMEOUT=2048, MAX_RETRY=8,
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
- parameter NOEPOCH=0
+ parameter NOEPOCH=0,
+ // HEAD_FREE (cont-takeover 2026-10-09, default 0): replay_head / head_seq load on every read response (no reset);
+ // head_valid alone carries the acceptance condition.  A read is requested only with head_valid low, so the overwrite
+ // never replaces a valid head.  Removes the 551-bit enable from the feedback -> rewind cone (TU -lkv pclk -499).
+ parameter HEAD_FREE=0,
+ // SESREG (redesign-ds 2026-10-09, default 0; keeps every session check, NOEPOCH=0): (1) the feedback session match
+ // arrives as a registered 1-bit fb_m (computed by the caller one edge earlier) instead of a live 24-bit fb_session ==
+ // session compare in the feedback -> rewind -> tx_valid -> send cone (TU iqs2-a -452); (2) the replay read's stored-
+ // epoch check reads a per-slot flag (set when the slot is written, all cleared when the session changes) captured at
+ // the read request, instead of read_epoch == session.  Equal to the compares under this module's own contract:
+ // "session must change on coordinated reset/train and not wrap with old traffic".
+ parameter SESREG=0,
+ parameter MUXREG=0      // redesign-ds: ot_hbm_replay_sram MUXREG (+1 read edge; reads are reserved / latency insensitive)
 )(
  input wire clk, rst_n, input wire [EW-1:0] session,
  input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
@@ -24,6 +36,7 @@ module ot_hbm_link_retry_sram #(
  output wire [EW-1:0] ack_session,
  input wire fb_valid, fb_good, fb_nak,
  input wire [SW-1:0] fb_seq, input wire [EW-1:0] fb_session,
+ input wire fb_m,
  output reg fault, output wire [SW-1:0] retained,
  output reg [31:0] replay_count
 );
@@ -38,7 +51,7 @@ module ot_hbm_link_retry_sram #(
  wire [EW-1:0] read_epoch;
  wire request_read=ENABLE && replaying && !read_pending && !head_valid &&
                    write_guard==0 && !rewind && !fault && !replay_empty;
- ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH)) u_storage(
+ ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH),.MUXREG(MUXREG)) u_storage(
   .clk(clk),.rst_n(rst_n),.w_valid(ENABLE && accepted),.w_data(in_data),
   .w_seq(next_seq),.w_session(session),.r_valid(request_read),
   .r_seq(replay_seq),.r_session(session),.o_valid(read_response),
@@ -50,7 +63,7 @@ module ot_hbm_link_retry_sram #(
  integer timer, attempts;
  wire [SW-1:0] debt=next_seq-base;
  wire [SW-1:0] advance=fb_seq-base;
- wire feedback=fb_valid && fb_good && (NOEPOCH || fb_session==session);
+ wire feedback=fb_valid && fb_good && (NOEPOCH || (SESREG ? fb_m : fb_session==session));
  wire ack_progress=feedback && advance!=0 && advance<=debt;
  wire stale=advance[SW-1];
  wire invalid_ack=feedback && advance>debt && !stale;
@@ -77,10 +90,31 @@ module ot_hbm_link_retry_sram #(
  assign ack_seq=expected;
  assign ack_nak=nak_pending;
  assign ack_session=session;
+ // SESREG: per-slot "written in the current session" flags
+ reg [DEPTH-1:0] sflag; reg [EW-1:0] ses_prev; reg rflag;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin sflag<=0; ses_prev<=0; rflag<=1'b0; end
+  else if(SESREG) begin
+   ses_prev<=session;
+`ifdef OT_TU_SESREG_MUT_SLOT
+   if(accepted) sflag[next_seq[AW-1:0]]<=1'b1;                       // mutant: flags never cleared on a session change
+`else
+   if(session!=ses_prev) sflag<=0;
+   else if(accepted) sflag[next_seq[AW-1:0]]<=1'b1;
+`endif
+   if(request_read) rflag<=sflag[replay_seq[AW-1:0]];
+  end
+ wire epoch_ok=NOEPOCH || (SESREG ? rflag : read_epoch==session);
+`ifdef OT_TU_SESREG_CHECK
+ // bench-only equivalence check: the registered per-slot flag equals the live stored-epoch compare on every replay read
+ always @(posedge clk) if(SESREG && ENABLE && rst_n && read_response && !read_ue && rflag!==(read_epoch==session))
+  $fatal(1,"SESREG slot flag differs from the stored-epoch compare (seq %0d)", read_seq);
+`endif
  initial begin
   if(DEPTH<2 || (DEPTH & (DEPTH-1))!=0 || DEPTH>=(1<<(SW-1))) $fatal(1,"ambiguous replay window");
   if(TIMEOUT<1 || MAX_RETRY<1) $fatal(1,"invalid retry bound");
  end
+ always @(posedge clk) if(HEAD_FREE && ENABLE && read_response) begin replay_head<=read_data;head_seq<=read_seq; end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    base<=0; next_seq<=0; cursor<=0; expected<=0;
@@ -93,8 +127,9 @@ module ot_hbm_link_retry_sram #(
    if(read_response) begin
     read_pending<=0;
     if(read_ue) fault<=1;
-    else if(read_seq==cursor && (NOEPOCH || read_epoch==session) && !rewind) begin
-     replay_head<=read_data;head_seq<=read_seq;head_valid<=1;
+    else if(read_seq==cursor && epoch_ok && !rewind) begin
+     if(!HEAD_FREE) begin replay_head<=read_data;head_seq<=read_seq; end
+     head_valid<=1;
     end
    end
    if(launched && replaying) head_valid<=0;

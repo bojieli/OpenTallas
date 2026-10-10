@@ -56,14 +56,17 @@ def specs(commit):
     c9 = commit[:9]
     M256 = 'physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2'
     M2RW = 'physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2'
-    for hm, tag in (('0.010', 'hm10'), ('0.025', 'hm25')):
+    for hm_x, tag_x in (('0.010', 'hm10'), ('0.025', 'hm25')):
+        # coordinator 2026-10-09: the sequencer / CP pair is hm10 + hm0 with the automatic post-route hold ECO (hm25
+        # cannot be met on input-pin registers under the budgeted input minimum); the other blocks keep hm10 / hm25
+        hm, tag = (('0.000', 'hm0') if tag_x == 'hm25' else (hm_x, tag_x))
         # ---- sequencer
         args = (f"--source {G}/ot_hgi_seq.sv --param USE_MACRO=1 --clock-port clk "
                 f"--macro-view ot_sram_1r1w_256x256_m2_r2c2={M256} --macro-place-halo 6 6 "
                 "--die-area 0 0 360 360 --core-area 10.8 10.8 349.2 349.2")
         out.append(dict(name=f'hgi_seq-{c9}-tc-{tag}-cl', block='ot_hgi_seq', **common(commit),
                         purpose='hbm-forks item 4: HGI-1 v1.0 record sequencer (C2), indexed descriptors (C3b), 18-bit END '
-                                'token; ring = ot_sram_1r1w_256x256 macro. TC route option B, HM ' + tag,
+                                'token; ring = ot_sram_1r1w_256x256 macro. TC route option B, HM ' + tag + (' + post-route hold ECO' if tag == 'hm0' else ''),
                         stages=dict(bench=seq_bench(), **mtp_route('ot_hgi_seq', hm, args, M256)),
                         route_hold_margin_ns=float(hm)))
         # ---- cmdproc (config path + TOKEN18 core)
@@ -77,7 +80,7 @@ def specs(commit):
                       expect='fail', fail_regex='HGI_CMDPROC FAIL', threads=1, peak_ram_gb=4)]
         out.append(dict(name=f'hgi_cmdproc-{c9}-tc-{tag}-cl', block='ot_hgi_cmdproc', **common(commit),
                         purpose='hbm-forks item 4: cmdproc config path (busy/settle interlock + range checks, F-2) + '
-                                'TOKEN18 core with cp_vocab / cp_ctx_max. TC route option B, HM ' + tag,
+                                'TOKEN18 core with cp_vocab / cp_ctx_max. TC route option B, HM ' + tag + (' + post-route hold ECO' if tag == 'hm0' else ''),
                         stages=dict(bench=bench, **mtp_route('ot_hgi_cmdproc', hm, args, M2RW)),
                         route_hold_margin_ns=float(hm)))
         # ---- the die command processor ot_hgi_cp (config path + sequencer): replaces ot_hgi_cmdproc on the die
@@ -95,9 +98,10 @@ def specs(commit):
         out.append(dict(name=f'hgi_cp-{c9}-tc-{tag}-cl', block='ot_hgi_cp', **common(commit),
                         purpose='hbm-forks item 4: the die command processor ot_hgi_cp = config path (busy/settle + range) '
                                 '+ v1.0 sequencer (indexed descriptors, TOKX, 18-bit token); replaces the LAUNCH-list '
-                                'ot_hgi_cmdproc. TC route option B, HM ' + tag,
+                                'ot_hgi_cmdproc. TC route option B, HM ' + tag + (' + post-route hold ECO' if tag == 'hm0' else ''),
                         stages=dict(bench=bench, **mtp_route('ot_hgi_cp', hm, args, M256)),
                         route_hold_margin_ns=float(hm)))
+        hm, tag = hm_x, tag_x
         # ---- attention half_lo with the PS entry port + ldk strap
         hm_a = '0.030' if tag == 'hm25' else '0.010'
         rcmd = ("bash $(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh "
@@ -132,6 +136,29 @@ def specs(commit):
                                              'physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544',
                                              'physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544']),
                         route_hold_margin_ns=float(hm_a)))
+        # ---- attention half_hi (review-1149 e): unchanged RTL, its own outline / parameters (attn-split's sl20p line)
+        rcmd_hi = (rcmd.replace('TOP=hfd_attn_half_lo', 'TOP=hfd_attn_half_hi').replace('DH=814.32', 'DH=689.04')
+                   .replace('PARAMS="NK=4 NC=2 NR=3 PMID=2 NFR=3 NLL=3" SLIVER=12', 'PARAMS="PMID=2 NFC=2 NL=8 NLL=3 NI=6" SLIVER=20 HALO=2 PADG=4 PADD=2'))
+        out.append(dict(name=f'hgi_attn_half_hi_ps-{c9}-tc-{tag}-cl', block='hfd_attn_half_hi', **common(commit, ram=96, threads=16),
+                        purpose='hbm-forks item 3 (review-1149 e): closure pair of hfd_attn_half_hi on the half_ps pin plan (the hi '
+                                'half has no PS port: hi outline DH 689.04 (strip widened 7 rows for the floorplan lint), hi parameters, attn-split sl20p sliver / halo / pads). TC, HM ' + hm_a,
+                        stages=dict(bench=[], calibrate=dict(enabled=False, reason='tile IO false-pathed: every face pin is '
+                                                             'a pin-bank register (as the half-tile lines)'),
+                                    route=dict(cmd=rcmd_hi, ok="grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+                                               logs=['{RUN}/routes/{LABEL}/run.log']),
+                                    collect=dict(cmd='mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json '
+                                                     '{RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/')),
+                        budget=dict(enabled=False, reason='tile IO false-pathed: every face pin is a pin-bank register '
+                                    '(the half-tile line convention, signoff_833_int.sdc); the die stations carry the budget'),
+                        no_bench_reason='ldk lockstep bench (physical/hbm_forks/run_attn_ldk.sh: CF-1 roles 0-4 at ldk 0, '
+                                        'ldk 1, mutant FAIL) PASS at 43dbec73e on the same RTL; re-run in parallel',
+                        verdict=dict(corner_sta='{RUN}/routes/{LABEL}/corner_sta.json',
+                                     drc_metrics='{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json',
+                                     checks=CHK, post_sdc=['physical/hbm_attn_tile_r/signoff_833_int.sdc'],
+                                     macros=['physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q',
+                                             'physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544',
+                                             'physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544']),
+                        route_hold_margin_ns=float(hm_a)))
         # ---- SM INT8 front (front_c, wide fmt3 strip)
         geom = 'results/arch/qwen_on_r25_20261008/fmt3_physical_candidate/wide_geometry.json'
         fc = lambda cal: (TT + "python3 tools/hbm_accel_smh_physical.py block --piece front_c --variant one "  # noqa: E731
@@ -146,7 +173,7 @@ def specs(commit):
                         **common(commit, ram=64, threads=16),
                         purpose='hbm-forks item 1: SM INT8 front (two-beat; one-beat re-layout NO_FIT per owner rule): '
                                 'front_c ENABLE_INT8 = 1 PIPE_INT8 = 1, formats 0-2 bypass the adapter (CF-1 cycle-'
-                                'identical), fmt3 wide strip 570.24 um. TC route option B, HM ' + tag,
+                                'identical), fmt3 wide strip 570.24 um. TC route option B, HM ' + tag + (' + post-route hold ECO' if tag == 'hm0' else ''),
                         stages=dict(bench=[],
                                     calibrate=dict(cmd=fc(True), base='{RUN}/routes/{LABEL}_cal/results/asap7/*/base',
                                                    clock='core_clk', threads=16, peak_ram_gb=64),

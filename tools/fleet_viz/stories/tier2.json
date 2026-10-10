@@ -1,0 +1,4546 @@
+{
+ "schema": "opentallas.explorer.stories.v1",
+ "tier": 2,
+ "built": "2026-10-08T21:29-07:00",
+ "source": "build_tier2 (stream explorer-stories): closure-loop jobs, takeover logs, MISS_DOSSIER.md, REVIEW_20261008.md, MTP_AUDIT.md, EMB_HBM_FEASIBILITY.md",
+ "cards": [
+  {
+   "id": "ds-pqcam-r2",
+   "target": "ds",
+   "element": "ot_s81_pq_ret_root_cam_p (PQ root, 128 a layer die)",
+   "title": "The PQ root CAM, redesigned twice",
+   "summary": "The PQ root pairs out-of-order partial sums with their siblings in a 128-entry CAM. The staged design missed by about 1.1 ns, the first rewrite by 556 ps, and only a second rewrite that removed every serial chain from the per-cycle loop closed it: TT +82 ps at the same latency as round 1.",
+   "status": "closed",
+   "status_basis": "round 2 a0 CLOSED TT +82.06 / FF +4.42 / DRC 0 on the option-B line (TT setup >= 0, FF hold >= 0), merged to main 803962f5a; the PQ rate (2,121.3 tok/s) still has to be re-priced for the root latency",
+   "facts": [
+    {
+     "k": "b_place",
+     "label": "staged design B, TT at placement",
+     "v": -1143,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 11:05 (s81b-pq-rootcam-B-tc-50bf09d54)"
+    },
+    {
+     "k": "cp_tt",
+     "label": "designs C / CP (A<->B recurrence), TT",
+     "v": -798,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 11:05"
+    },
+    {
+     "k": "util0",
+     "label": "utilisation of the 132.192 x 133.92 slot",
+     "v": 85.8,
+     "unit": "%",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 11:05"
+    },
+    {
+     "k": "r1_tt",
+     "label": "round 1 (08f27dc4f) TT, h212 HM 10",
+     "v": -555.85,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rcp-h212-hm10-08f27dc4f"
+    },
+    {
+     "k": "r1_par1",
+     "label": "round 1 PAR 1 (h242) TT",
+     "v": -682.12,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rcpp-h242-hm10-08f27dc4f"
+    },
+    {
+     "k": "norm_lv",
+     "label": "round 1 worst path: serial norm() logic levels",
+     "v": 44,
+     "unit": "levels",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 15:40 (path_summary of 2,000 endpoints)"
+    },
+    {
+     "k": "r2_tt",
+     "label": "round 2 a0 (b761ac1c6) TT setup",
+     "v": 82.06,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rc2-a0-h212-hm10-b761ac1c6"
+    },
+    {
+     "k": "r2_ff",
+     "label": "round 2 a0 FF hold",
+     "v": 4.42,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rc2-a0-h212-hm10-b761ac1c6"
+    },
+    {
+     "k": "r2_a7",
+     "label": "round 2 a7 (deep adder split) TT",
+     "v": 79.46,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rc2-a7-h212-hm10-b761ac1c6"
+    },
+    {
+     "k": "r2_area",
+     "label": "round 2 a0 standard-cell area",
+     "v": 13204.1,
+     "unit": "um2",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/merge-pq.log 16:02"
+    },
+    {
+     "k": "r2_util",
+     "label": "round 2 a0 utilisation (132.192 x 211.68 slot)",
+     "v": 49.8,
+     "unit": "%",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/merge-pq.log 16:02"
+    },
+    {
+     "k": "lat8",
+     "label": "latency for an eight-leaf root (native complete / 2-leaf / 8-leaf = 2 / 4 / 8)",
+     "v": 8,
+     "unit": "cycles",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/merge-pq.log 16:02 (bench pq_root_cam_p_gate)"
+    },
+    {
+     "k": "reserve",
+     "label": "die reservation added for 128 roots (taller slot)",
+     "v": 1.83,
+     "unit": "mm2",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 11:05 (PAR 1 241.92 um; PAR 0 adopted at 211.68)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Staged B / C / CP (50bf09d54)",
+     "result": "TT -1,143 / -798 ps",
+     "why": "match_vec -> binary hit index -> 128:1 bt[hit] read -> norm -> tag_in in one cycle; 85.8 % utilisation, DPL-0033 after hold padding",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 11:05"
+    },
+    {
+     "name": "Round 1, ot_s81_pq_ret_root_cam_p (08f27dc4f)",
+     "result": "TT -555.9 (PAR 0), -682.1 (PAR 1)",
+     "why": "pin stations and one-hot first-one removed the bt[hit] read, but norm() stayed a 5-step serial chain (44 levels), the FP32 adder re-rippled (35 levels) and the remove loop still fed the next match vector",
+     "src": "~/claude-takeover-20261007/pq-rootcam.log 15:40"
+    },
+    {
+     "name": "Round 2 a7 (ASPLIT 7)",
+     "result": "CLOSED TT +79.46, not adopted",
+     "why": "closes too, but at 2 / 7 / 18 cycles instead of 2 / 4 / 8",
+     "src": "~/claude-takeover-20261007/merge-pq.log 16:02"
+    }
+   ],
+   "records": [
+    "main 803962f5a (merge of claude/pq-rootcam-20261008 08f27dc4f + b761ac1c6)",
+    "main 264d0e848 (die reservation PAR 0 132.192 x 211.68)",
+    "results/closure_loop/merged_closures_20261008.json (76945ab45)",
+    "MISS_DOSSIER.md section E"
+   ],
+   "blocks": [
+    {
+     "block": "ot_s81_pq_ret_root_cam_p",
+     "closed": {
+      "ss": 82.06,
+      "ff": 4.42,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81b-pq-rc2-a0-h212-hm10-b761ac1c6"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "ot_s81_pq_ret_root_cam",
+     "closed": null,
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "Each of the 128 roots on a layer die keeps up to 128 partial sums waiting for their siblings. Every cycle one partial arrives: it is compared with all 128 stored tags, the hit is priority-encoded, the pair leaves and is added in golden order, and the next arrival is compared against the updated buffer. The update and the next compare form a loop that must close in one 833 ps period.",
+   "naive": {
+    "title": "Compare, encode, read, normalise in one cycle",
+    "text": "The staged root still read the hit entry by binary index (128:1 mux), normalised its tag with a five-step serial norm() and fed the result back into the next match vector. Round 1 removed the indexed read but kept the serial norm, a re-rippled adder and a remove loop: 44 logic levels on the worst path."
+   },
+   "trick": {
+    "title": "Nothing serial inside the loop",
+    "text": "Round 2 computes norm in closed form (five conditions in parallel and a leading-run count, checked against the package norm on all 16,384 tags). The buffer stores sibling keys, so each entry needs one 32-bit compare. A registers the match vector against the current buffer; B applies the previous removal as a registered mask, so the loop is register -> first-one / OR -> masks -> register. Entry writes land one cycle after the decision, from registers, and the adder is the deep Kogge-Stone pipe."
+   },
+   "evidence": "Exact against the native root (gate pq_root_cam_p_gate, PAR 0 / PAR 1, A0 / A7): six mutants (no insert forward, wrong sibling, no free on remove, wrong parent bit, stale entry read, no pending-write forward) all caught. a0 routed at TT on the option-B flow: +82.06 ps setup, +4.42 ps hold, DRC 0, 49.8 % utilisation.",
+   "price": "Latency 2 / 4 / 8 cycles for a native-complete / 2-leaf / 8-leaf root, against 1 / 2 / 4 in the design the PQ rate was priced with: +1 input station and +1 per add level on the serial return path. That re-pricing is still open. The slot grew from 133.92 to 211.68 um tall (128 roots a die).",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "in",
+       "c": 0,
+       "r": 0,
+       "label": "partial arrives",
+       "k": "field"
+      },
+      {
+       "id": "mv",
+       "c": 1,
+       "r": 0,
+       "label": "128 tag compares",
+       "k": "bad"
+      },
+      {
+       "id": "rd",
+       "c": 2,
+       "r": 0,
+       "label": "128:1 read by hit index",
+       "k": "bad"
+      },
+      {
+       "id": "nm",
+       "c": 3,
+       "r": 0,
+       "label": "norm(): 5 serial steps",
+       "k": "bad"
+      },
+      {
+       "id": "nx",
+       "c": 1,
+       "r": 1,
+       "label": "next match vector",
+       "k": "bad"
+      },
+      {
+       "id": "add",
+       "c": 3,
+       "r": 1,
+       "label": "FP32 add",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "in",
+       "b": "mv"
+      },
+      {
+       "a": "mv",
+       "b": "rd"
+      },
+      {
+       "a": "rd",
+       "b": "nm"
+      },
+      {
+       "a": "nm",
+       "b": "add"
+      },
+      {
+       "a": "nm",
+       "b": "nx",
+       "l": "loop",
+       "bad": true
+      },
+      {
+       "a": "nx",
+       "b": "mv",
+       "l": "same cycle",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "in",
+        "mv"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "Compare the arriving tag with all 128 entries..."
+      },
+      {
+       "hot": [
+        "rd",
+        "nm"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "note": "...read the hit entry and normalise its tag in five serial steps..."
+      },
+      {
+       "hot": [
+        "nx"
+       ],
+       "pk": [
+        4,
+        5
+       ],
+       "bad": true,
+       "note": "...and feed the result into the next compare: 44 logic levels, TT -556 ps after round 1."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "in",
+       "c": 0,
+       "r": 0,
+       "label": "partial (pin station)",
+       "k": "field"
+      },
+      {
+       "id": "A",
+       "c": 1,
+       "r": 0,
+       "label": "A: match vs stored sibling keys (reg)",
+       "k": "good"
+      },
+      {
+       "id": "B",
+       "c": 2,
+       "r": 0,
+       "label": "B: first-one + masks (reg)",
+       "k": "good"
+      },
+      {
+       "id": "nf",
+       "c": 1,
+       "r": 1,
+       "label": "closed-form norm",
+       "k": "good"
+      },
+      {
+       "id": "w",
+       "c": 2,
+       "r": 1,
+       "label": "entry write 1 cycle later",
+       "k": "good"
+      },
+      {
+       "id": "add",
+       "c": 3,
+       "r": 0,
+       "label": "deep KS FP32 add",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "in",
+       "b": "A"
+      },
+      {
+       "a": "A",
+       "b": "B"
+      },
+      {
+       "a": "B",
+       "b": "A",
+       "l": "registered mask"
+      },
+      {
+       "a": "B",
+       "b": "add"
+      },
+      {
+       "a": "nf",
+       "b": "A"
+      },
+      {
+       "a": "B",
+       "b": "w"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "in",
+        "A"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "A compares against stored sibling keys: one 32-bit equality per entry, registered."
+      },
+      {
+       "hot": [
+        "B"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "note": "B picks the first match and applies the previous removal as a registered mask: the loop is register to register."
+      },
+      {
+       "hot": [
+        "w",
+        "add"
+       ],
+       "pk": [
+        3,
+        5
+       ],
+       "note": "Writes land a cycle later from registers; the add uses the deep adder. TT +82 ps."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_s81_pq_ret_root_cam_p",
+    "ot_s81_pq_ret_root_cam",
+    "dsfd_pq_root"
+   ]
+  },
+  {
+   "id": "qwen-tile-caps",
+   "target": "qwen",
+   "element": "qfd_tile / qfd_tile_e (W12 ROM tile, 1,536 a die)",
+   "title": "Put the capture flop where the ROM pin is",
+   "summary": "After the ROM read was pipelined, the tile still missed by about 290 ps. The logic was fine: the placer had put the 2,560 capture flops 400-600 um from the ROM pins they capture. A placement hook now pins each capture flop beside its pin before global placement.",
+   "status": "in progress",
+   "status_basis": "rp1p / rp2np routes (1ee48d600) and the rp1pc follow-up are running in the closure loop; no tile view is closed, the die STA uses a qfd_tile placeholder",
+   "facts": [
+    {
+     "k": "l80",
+     "label": "pre-pipeline route load80, TT setup",
+     "v": -566.95,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_tile-load80-e721e27b5"
+    },
+    {
+     "k": "clkq_ss",
+     "label": "ROM macro clock-to-output, SS",
+     "v": 788.8,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER A1 (setup-triage, load80 route)"
+    },
+    {
+     "k": "clkq_tt",
+     "label": "ROM macro clock-to-output, TT",
+     "v": 593.5,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15 (rp1 3_detailed_place.rpt)"
+    },
+    {
+     "k": "rp1_cts",
+     "label": "ROM_PIPE rp1, post-CTS TT (tile_e / tile)",
+     "v": -294,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "rp1_wire",
+     "label": "wire from ROM pin to its capture flop (3 BUFx16f)",
+     "v": 460,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "caps",
+     "label": "capture flops a tile",
+     "v": 2560,
+     "unit": "flops",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "cap_dist",
+     "label": "distance of the caps from their pins (logic band)",
+     "v": 600,
+     "unit": "um (400-600)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "ideal",
+     "label": "same path at floorplan (ideal placement)",
+     "v": 106,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "lvt",
+     "label": "LVT re-STA of load80 (SS -787.7 ->)",
+     "v": -732.8,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER A1 [multivt.log]"
+    },
+    {
+     "k": "stuck",
+     "label": "FF endpoints in old-flow CTS hold repair (12 cancelled routes)",
+     "v": 89000,
+     "unit": "endpoints (83-89k)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "tiles",
+     "label": "tiles a Qwen die",
+     "v": 1536,
+     "unit": "tiles",
+     "status": "measured",
+     "src": "tools/qwen_rom_fulldie.py (r21b recipe)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "load80 (e721e27b5)",
+     "result": "TT -567",
+     "why": "ROM clock-to-output plus an AO21 enable mux in one cycle: no pipeline stage after the macro",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_tile-load80-e721e27b5"
+    },
+    {
+     "name": "ROM_PIPE rp1 / rp2n",
+     "result": "post-CTS TT -284 / -294 and -438 / -451",
+     "why": "the pipeline stage existed, but the stage flops were placed far from the macro pins",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "name": "Half-depth ROM h (BAW 11)",
+     "result": "post-CTS TT -508..-548",
+     "why": "a faster 2,048-row macro (604 ps SS) at +4 cycles and +7,268 um2 a tile; still short, cancelled",
+     "src": "MISS_DOSSIER A1"
+    },
+    {
+     "name": "ROM clock landed early (250 / 330 ps)",
+     "result": "cancelled after 9-16 h in CTS hold repair",
+     "why": "skewing the macro clock moved the miss into hold: 83-89k FF endpoints on the old flow",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "name": "LVT",
+     "result": "-787.7 -> -732.8 (SS)",
+     "why": "Vt does not fix a wire-dominated path",
+     "src": "MISS_DOSSIER A1"
+    }
+   ],
+   "records": [
+    "claude/qwen-tile-20261008 1ee48d600 (physical/qwen_die_masters/rom_cap_at_pins.tcl, rom_cap_release.tcl)",
+    "~/claude-takeover-20261007/qwen-tile.log",
+    "MISS_DOSSIER.md A1",
+    "REVIEW_20261008.md A1"
+   ],
+   "blocks": [
+    {
+     "block": "qfd_tile",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -787.67,
+      "ff_ps": -90.8,
+      "corner": "SS",
+      "status": "failed, re-running",
+      "job": "qfd_tile-load80-e721e27b5"
+     },
+     "live": 4,
+     "live_jobs": [
+      "qfd_tile_rp1p-1ee48d600tc",
+      "qfd_tile_rp1p-1ee48d600tc-f3-lvt",
+      "qfd_tile_rp1pc-1d3c576bbtc",
+      "qfd_tile_rp2np-1ee48d600tc"
+     ]
+    },
+    {
+     "block": "qfd_tile_e",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -786.38,
+      "ff_ps": -140.19,
+      "corner": "SS",
+      "status": "failed, re-running",
+      "job": "qfd_tile_e-load80-e721e27b5"
+     },
+     "live": 3,
+     "live_jobs": [
+      "qfd_tile_e_rp1p-1ee48d600tc",
+      "qfd_tile_e_rp1p-1ee48d600tc-f3-lvt",
+      "qfd_tile_e_rp1pc-1d3c576bbtc"
+     ]
+    }
+   ],
+   "problem": "A W12 tile reads ten 4,096 x 266 ROM macros every cycle. The macro alone takes 593 ps (TT) from clock to data, so the read must be captured right at the pin: any wire after the macro comes out of the same 833 ps period.",
+   "naive": {
+    "title": "Let the placer place the capture stage",
+    "text": "With ROM_PIPE the logic is one flop after the macro, but the placer clustered the 2,560 capture flops in the logic band, 400-600 um from the pins. The path became 593 ps of macro plus ~460 ps of buffered wire: -369 ps at placement and about -290 ps after CTS. At ideal placement the same path has +106 ps."
+   },
+   "trick": {
+    "title": "Pin the capture flop to its pin, then let go",
+    "text": "rom_cap_at_pins.tcl runs before global placement: every rd_out pin has exactly one D sink, and that flop is placed FIRM beside the pin (on the channel side when the pin edge is on the core boundary). rom_cap_release.tcl returns them to PLACED before detailed placement, so legalisation can still move them a few sites."
+   },
+   "evidence": "Tested on the rp1 3_2_place_iop.odb: all 2,560 caps placed at their pins (1,280 on the channel side). Four routes queued at TC with the HM guard (rp1p / rp2np for tile and tile_e); the review (A1) approved it and asked for one more register between the cap and the BF16 / group-OR stage, the predicted next limiter.",
+   "price": "Placement only, 0 added cycles. The ROM pipeline it rides on already costs +3 cycles per matvec fill (rp1, KV write +1) or +4 (rp2n). The reviewer-approved extra register would add +1 cycle per fill.",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "rom",
+       "c": 0,
+       "r": 0,
+       "label": "ROM macro (593 ps)",
+       "k": "field"
+      },
+      {
+       "id": "w",
+       "c": 1,
+       "r": 0,
+       "label": "400-600 um wire, 3 buffers",
+       "k": "bad"
+      },
+      {
+       "id": "cap",
+       "c": 2,
+       "r": 0,
+       "label": "capture flop in the logic band",
+       "k": "bad"
+      },
+      {
+       "id": "bf",
+       "c": 3,
+       "r": 0,
+       "label": "BF16 / group-OR",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "rom",
+       "b": "w"
+      },
+      {
+       "a": "w",
+       "b": "cap",
+       "l": "~460 ps",
+       "bad": true
+      },
+      {
+       "a": "cap",
+       "b": "bf"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "rom"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "The macro output arrives 593 ps after the clock (TT)."
+      },
+      {
+       "hot": [
+        "w",
+        "cap"
+       ],
+       "pk": [
+        1
+       ],
+       "bad": true,
+       "note": "The capture flop sits 400-600 um away: -290 ps after CTS."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "rom",
+       "c": 0,
+       "r": 0,
+       "label": "ROM macro (593 ps)",
+       "k": "field"
+      },
+      {
+       "id": "cap",
+       "c": 1,
+       "r": 0,
+       "label": "capture flop FIRM at the pin",
+       "k": "good"
+      },
+      {
+       "id": "w",
+       "c": 2,
+       "r": 0,
+       "label": "wire in the next cycle",
+       "k": "good"
+      },
+      {
+       "id": "bf",
+       "c": 3,
+       "r": 0,
+       "label": "BF16 / group-OR",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "rom",
+       "b": "cap",
+       "l": "a few um"
+      },
+      {
+       "a": "cap",
+       "b": "w"
+      },
+      {
+       "a": "w",
+       "b": "bf"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "rom",
+        "cap"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "The flop is placed beside the pin before global placement..."
+      },
+      {
+       "hot": [
+        "w",
+        "bf"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "note": "...so the long wire starts after the register, in a cycle of its own."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "qfd_tile",
+    "qfd_tile_e"
+   ]
+  },
+  {
+   "id": "hbm-coll-sram",
+   "target": "hbm",
+   "element": "hfd_coll (HBM collective endpoint)",
+   "title": "A collective engine too big to place",
+   "summary": "The HBM collective endpoint kept every FIFO and delay line in flops: 4.8 M cells, and repair_design froze. Moving the storage into SRAM cut it to about 1 M gates, and cutting that into per-port slices is the current line. No variant has closed yet.",
+   "status": "in progress",
+   "status_basis": "SR v3 (sr3 / srcdc3 / srpd453), per-port rows, port2 rows at HM 10 and the hybrid are running; the port2 rows / tall routes failed post-CTS TT at -559 / -505 ps",
+   "facts": [
+    {
+     "k": "cells",
+     "label": "flop-based endpoint, cells",
+     "v": 4.8,
+     "unit": "M cells",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22"
+    },
+    {
+     "k": "flops",
+     "label": "flop-based endpoint, flops",
+     "v": 686,
+     "unit": "k flops",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22"
+    },
+    {
+     "k": "mux",
+     "label": "delay-line read mux width",
+     "v": 545,
+     "unit": "bits x 35-way",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22"
+    },
+    {
+     "k": "sr_macros",
+     "label": "SR endpoint SRAM macros",
+     "v": 165,
+     "unit": "macros (0.64 of 1.97 mm2)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22 (branch claude/hbm-coll-rtl-20261008 72105e08f)"
+    },
+    {
+     "k": "sr_gates",
+     "label": "SR endpoint pre-ABC generic gates",
+     "v": 1.02,
+     "unit": "M gates (270k flops)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22"
+    },
+    {
+     "k": "sr_ar",
+     "label": "SR cost per all-reduce",
+     "v": 17,
+     "unit": "cycles (+15..+17)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22 (bench_cost_20261008.json, 184 runs)"
+    },
+    {
+     "k": "p2_rows",
+     "label": "port2 rows (4-slice, 36 SRAMs) post-CTS TT",
+     "v": -558.9,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_coll_port2_rows-1e2cc4ed6-tc"
+    },
+    {
+     "k": "p2_tall",
+     "label": "port2 tall post-CTS TT",
+     "v": -505.4,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_coll_port2_tall-1e2cc4ed6-tc"
+    },
+    {
+     "k": "hy_cells",
+     "label": "hybrid (SRAM rx buffers only) pre-ABC cells",
+     "v": 1.149,
+     "unit": "M cells (~463k flops)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 18:30"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Flop endpoint (d51dc71a2)",
+     "result": "repair_design froze",
+     "why": "4.80 M cells, 686k flops, one high-fanout net stalled repair; superseded",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 09:22"
+    },
+    {
+     "name": "SR v1-v3 first jobs (92f17970a / 088d3df3e / 72105e08f)",
+     "result": "calibrate failed before placement",
+     "why": "ODB-0359 / MPL-0008 flow errors; requeued as sr3 / srcdc3 / srpd453 (acdfa3ab1)",
+     "src": "MISS_DOSSIER C5; closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "Per-port 8-slice ot_hcoll_port (acdfa3ab1)",
+     "result": "GRT-0116 congestion",
+     "why": "edge-ringed macros overflowed M6 horizontally; port_big 420^2 congestion not decreasing",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 jobs hbm_coll_port-acdfa3ab1-tc, hbm_coll_port_big-42f6deeef-tc"
+    },
+    {
+     "name": "4-slice ot_hcoll_port2 (6f2cc51ae -> 1e2cc4ed6)",
+     "result": "post-CTS TT -559 / -505",
+     "why": "first run died on double-escaped macro names (fixed via ODB placement); the routed slices miss setup (IO pin -> flop wire, mostly hold-buffer delay per review R-b)",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00; REVIEW_20261008 R-b / R-Q4"
+    },
+    {
+     "name": "Hybrid (SRAM only for the 256-entry rx buffers)",
+     "result": "over the ~1 M size target",
+     "why": "the 236k delay-line bits dominate and cannot shrink without changing the wire-stage latency model",
+     "src": "~/claude-takeover-20261007/hbm-coll-rtl.log 18:30"
+    }
+   ],
+   "records": [
+    "claude/hbm-coll-rtl-20261008 72105e08f (ot_hbm_accel_tu_endpoint_sr)",
+    "claude/coll-fallback-20261008 1e2cc4ed6 (ot_hcoll_port2)",
+    "~/claude-takeover-20261007/hbm-coll-rtl.log",
+    "MISS_DOSSIER.md C5"
+   ],
+   "blocks": [
+    {
+     "block": "hfd_coll",
+     "closed": null,
+     "best_fail": null,
+     "live": 4,
+     "live_jobs": [
+      "hbm_coll_hy-6f2cc51ae-tc",
+      "hbm_coll_sr3-acdfa3ab1-tc",
+      "hbm_coll_srcdc3-acdfa3ab1-tc",
+      "hbm_coll_srpd453-acdfa3ab1-tc"
+     ]
+    },
+    {
+     "block": "ot_hcoll_port",
+     "closed": null,
+     "best_fail": null,
+     "live": 3,
+     "live_jobs": [
+      "hbm_coll_port_big-42f6deeef-tc-hm10-d2056",
+      "hbm_coll_port_rows-42f6deeef-tc-f3-lvt",
+      "hbm_coll_port_rows-42f6deeef-tc-f3-pd45"
+     ]
+    },
+    {
+     "block": "ot_hcoll_port2",
+     "closed": null,
+     "best_fail": null,
+     "live": 1,
+     "live_jobs": [
+      "hbm_coll_port2_rows-1e2cc4ed6-tc-hm10-d2056"
+     ]
+    },
+    {
+     "block": "hfd_coll_pkt_fifo_ii1",
+     "closed": {
+      "ss": 12.05,
+      "ff": 17.31,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1rw-8a9a669df-tc"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "The collective endpoint queues partial and result packets for four links, delays them through fixed-latency lines and feeds an 8-write-port operand memory. Written with flop FIFOs and 35-way x 545-bit read muxes it is 4.8 M cells, beyond what one hardened block can place and repair.",
+   "naive": {
+    "title": "Everything in flops",
+    "text": "Every FIFO and delay line is a register array with wide read muxes. repair_design froze on one high-fanout net before any timing was measured."
+   },
+   "trick": {
+    "title": "Storage in SRAM, then one slice per port",
+    "text": "The SR endpoint puts FIFOs and fixed-offset delay lines into 165 SRAM macros with pin-flopped writes, credit-gated reads and captured macro outputs (1.02 M gates). The fallbacks cut it per port: 8 slices of 18 SRAMs, or 4 slices of 36 SRAMs in rows of three with channels for the pins."
+   },
+   "evidence": "SR bench: 28 runs exact, mutants m1-m6 fail. port2 bench 35/35 pass, m7 / m8 fail. Hybrid 35/35, m1-m7 fail. No variant has a closed route yet; the review (C5) judged that enough lines are in flight.",
+   "price": "SR: +15..+17 cycles an all-reduce, +7..+14 a gather (184 bench runs). The 4-slice split adds 0 cycles over the 8-slice split; the hybrid would save 4-10 AR cycles but misses the size target.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "M cells",
+     "bars": [
+      {
+       "label": "flop endpoint",
+       "v": 4.8,
+       "k": "bad"
+      },
+      {
+       "label": "hybrid (estimate 1.4-1.6)",
+       "v": 1.5,
+       "k": "idle"
+      },
+      {
+       "label": "SR endpoint (generic gates)",
+       "v": 1.02,
+       "k": "good"
+      }
+     ],
+     "steps": [
+      {
+       "show": 1,
+       "note": "All FIFOs in flops: 4.8 M cells, repair_design froze."
+      },
+      {
+       "show": 3,
+       "note": "Moving storage into SRAM brings the endpoint near the ~1 M target."
+      }
+     ],
+     "limit": {
+      "v": 1.0,
+      "label": "~1 M place target"
+     }
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "ep",
+       "c": 0,
+       "r": 0,
+       "label": "SR endpoint: 165 SRAMs",
+       "k": "good"
+      },
+      {
+       "id": "p8",
+       "c": 1,
+       "r": 0,
+       "label": "8 slices x 18 SRAM",
+       "k": "bad"
+      },
+      {
+       "id": "p4",
+       "c": 1,
+       "r": 1,
+       "label": "4 slices x 36 SRAM in rows",
+       "k": "su"
+      },
+      {
+       "id": "die",
+       "c": 2,
+       "r": 0,
+       "label": "hfd_coll on the die",
+       "k": "field"
+      }
+     ],
+     "edges": [
+      {
+       "a": "ep",
+       "b": "p8",
+       "l": "GRT-0116",
+       "bad": true
+      },
+      {
+       "a": "ep",
+       "b": "p4"
+      },
+      {
+       "a": "p4",
+       "b": "die",
+       "l": "TT -505..-559"
+      },
+      {
+       "a": "p8",
+       "b": "die"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "ep"
+       ],
+       "note": "The SRAM endpoint is small enough to synthesise; it is cut per port to place."
+      },
+      {
+       "hot": [
+        "p8"
+       ],
+       "pk": [
+        0
+       ],
+       "bad": true,
+       "note": "Eight 340 um slices congest at the macro edges."
+      },
+      {
+       "hot": [
+        "p4",
+        "die"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "note": "Four taller slices place; their routed IO paths still miss setup."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "hfd_coll",
+    "ot_hcoll_port",
+    "ot_hcoll_port2"
+   ]
+  },
+  {
+   "id": "hbm-attn-split",
+   "target": "hbm",
+   "element": "hfd_attn_tile -> hfd_attn_half_lo / _hi",
+   "title": "The attention tile cut in two",
+   "summary": "The HBM attention tile never routed: its 124 um middle channel carried about twice the bits it had tracks for. Widening the channel moved the failure into 1.5-3.6 um slivers between pin banks; blocking the slivers fixed placement. In parallel the owner had the tile cut into two half tiles that abut with a 1,891-bit registered seam and add no cycle.",
+   "status": "in progress",
+   "status_basis": "r23h / r23hq with sliver blockages and the half_lo / half_hi routes are running; half_hi_sl12 died PDN-0179, three f3 variants were stopped by the floorplan-margin lint; r25 keeps the r23-based adoption",
+   "facts": [
+    {
+     "k": "r23_ovf",
+     "label": "r23 global-route overflow (124 um middle channel, hung 22 h)",
+     "v": 8.2,
+     "unit": "M",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:46"
+    },
+    {
+     "k": "tracks",
+     "label": "middle-channel tracks vs bits (r23)",
+     "v": 1800,
+     "unit": "tracks for ~3,300 bits",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:48"
+    },
+    {
+     "k": "r23h_area",
+     "label": "r23h middle channel +250.56 um: tile slot",
+     "v": 18.6,
+     "unit": "% larger",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:46"
+    },
+    {
+     "k": "r23h_buf",
+     "label": "r23h first attempt: repair buffers (pin banks 215-260 um off their pins)",
+     "v": 503259,
+     "unit": "buffers",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:46"
+    },
+    {
+     "k": "r23h_buf2",
+     "label": "r23h after the pin-bank fix: repair buffers",
+     "v": 7072,
+     "unit": "buffers",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 10:22"
+    },
+    {
+     "k": "sliver",
+     "label": "pin-bank gaps where DPL-0033 piled up",
+     "v": 3.6,
+     "unit": "um (1.5-3.6)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 10:22"
+    },
+    {
+     "k": "sl_block",
+     "label": "SLIVER=12 blockages (offline test: DPL converges at iteration 19)",
+     "v": 131,
+     "unit": "blockages",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/attn-tile.log 10:22 (0b66c6dd2)"
+    },
+    {
+     "k": "seam",
+     "label": "half-tile seam, one direction lo -> hi",
+     "v": 1891,
+     "unit": "bits",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/attn-tile.log 18:35 (021f55db2)"
+    },
+    {
+     "k": "split_slot",
+     "label": "split tile slot vs r25",
+     "v": 10.2,
+     "unit": "% larger",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/attn-tile.log 18:35"
+    },
+    {
+     "k": "die_h",
+     "label": "r25s die (hub band +1,110.4 um)",
+     "v": 30.59,
+     "unit": "mm x 25.73 mm",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/attn-tile.log 18:35"
+    },
+    {
+     "k": "hi_chan",
+     "label": "half_hi f3 lint: worst cut-line demand vs free tracks",
+     "v": 991,
+     "unit": "tracks needed (940 free)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_attn_half_hi_sl20p_021f55db2-tt-f3-hm10"
+    }
+   ],
+   "tried": [
+    {
+     "name": "r23 outline (1778.52 x 1349.976)",
+     "result": "GRT non-convergent, 8.2 M overflow",
+     "why": "124 um middle channel holds ~1.8k tracks for ~3.3k bank-to-bank bits; hung 22 h",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:46"
+    },
+    {
+     "name": "r23h (+250 um channel, PMID 3)",
+     "result": "DPL-0033",
+     "why": "placement script used the r16 pin-bank defaults: banks 215-260 um off their pins, 503k repair buffers; regenerated (1de617469)",
+     "src": "~/claude-takeover-20261007/attn-tile.log 06:46"
+    },
+    {
+     "name": "r23h / r23hq after the pin fix",
+     "result": "DPL-0033 again",
+     "why": "repair buffers piled into 1.5-3.6 um slivers between stacked pin banks (~95 gaps)",
+     "src": "~/claude-takeover-20261007/attn-tile.log 10:22"
+    },
+    {
+     "name": "half_hi SLIVER 12",
+     "result": "PDN-0179",
+     "why": "0.4-0.5 um M2/M6 channels left that PDN cannot strap; sl20p sibling continues",
+     "src": "~/claude-takeover-20261007/crash-1945.log"
+    }
+   ],
+   "records": [
+    "claude/attn-tile-20261008 1de617469, 8a648b6ab",
+    "claude/attn-tile-2-20261008 0b66c6dd2 (sliver_block.tcl)",
+    "claude/attn-split-20261008 021f55db2 (ot_hdc_v41x_attn_die_half_b.sv, r25s die variant)",
+    "~/claude-takeover-20261007/attn-tile.log",
+    "MISS_DOSSIER.md C6"
+   ],
+   "blocks": [
+    {
+     "block": "hfd_attn_tile_b",
+     "closed": null,
+     "best_fail": null,
+     "live": 3,
+     "live_jobs": [
+      "hbm_attn_tile_r23h_sl12_0b66c6dd2-tt",
+      "hbm_attn_tile_r23h_sl20p_0b66c6dd2-tt",
+      "hbm_attn_tile_r23hq_sl12_0b66c6dd2-tt"
+     ]
+    },
+    {
+     "block": "hfd_attn_half_lo",
+     "closed": null,
+     "best_fail": null,
+     "live": 3,
+     "live_jobs": [
+      "hbm_attn_half_lo_sl12_021f55db2-tt",
+      "hbm_attn_half_lo_sl12_021f55db2-tt-f3-lvt",
+      "hbm_attn_half_lo_sl20p_021f55db2-tt"
+     ]
+    },
+    {
+     "block": "hfd_attn_half_hi",
+     "closed": null,
+     "best_fail": null,
+     "live": 4,
+     "live_jobs": [
+      "hbm_attn_half_hi_sl12_rowfrag_79315a431-tt",
+      "hbm_attn_half_hi_sl20p_021f55db2-tt",
+      "hbm_attn_half_hi_sl20p_021f55db2-tt-f3-hm10",
+      "hbm_attn_half_hi_sl20p_021f55db2-tt-f3-lvt"
+     ]
+    }
+   ],
+   "problem": "One HBM attention tile holds four closed quads and 130 pipeline banks. The banks carry ~3.3k bits east-west through the middle of the tile, above and below the quads, and the root broadcast reaches every quad row through the same channel.",
+   "naive": {
+    "title": "One tile, one narrow middle channel",
+    "text": "The r23 tile left 124 um for the bank buses: about 1.8k usable tracks for about 3.3k bits. Global routing never converged (8.2 M overflow after 22 h)."
+   },
+   "trick": {
+    "title": "Block the slivers; cut the tile at the quad rows",
+    "text": "A hard placement blockage over every macro-to-macro gap under 12 um stops buffers piling into unlegal strips. The owner-directed split cuts between the two quad rows: lo carries the sources, root and quad row 0; hi carries quad row 1 and the merge. Only 1,891 bits cross the seam, all one way, from a lo flop to a hi flop at abutting pins, so no relay and no credit is needed."
+   },
+   "evidence": "Split pair lock-stepped against hfd_attn_tile_b (full quad RTL, every output bit every cycle, roles 0-4); five mutants (xp bit flip, xr +1 cycle, quads swapped, NLL+1, xp +1 cycle) must fail. Sliver blockages tested offline on the failed r23h placement: legalisation converges. No half-tile route has finished yet.",
+   "price": "Split: 0 cycles (every port latency equals the r25 tile, dropping r23h's PMID 3 +1), tile slot +10.2 %, die height +1.1 mm (30.59 x 25.73 mm). r23h: +1 cycle and +18.6 % slot.",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "src",
+       "c": 0,
+       "r": 0,
+       "label": "sources k / ci / q",
+       "k": "field"
+      },
+      {
+       "id": "mid",
+       "c": 1,
+       "r": 0,
+       "label": "middle channel 124 um: ~3.3k bits on ~1.8k tracks",
+       "k": "bad"
+      },
+      {
+       "id": "q0",
+       "c": 2,
+       "r": 0,
+       "label": "quad row 0",
+       "k": "su"
+      },
+      {
+       "id": "q1",
+       "c": 2,
+       "r": 1,
+       "label": "quad row 1",
+       "k": "su"
+      },
+      {
+       "id": "m",
+       "c": 0,
+       "r": 1,
+       "label": "merge",
+       "k": "field"
+      }
+     ],
+     "edges": [
+      {
+       "a": "src",
+       "b": "mid"
+      },
+      {
+       "a": "mid",
+       "b": "q0",
+       "l": "overflow",
+       "bad": true
+      },
+      {
+       "a": "mid",
+       "b": "q1",
+       "l": "overflow",
+       "bad": true
+      },
+      {
+       "a": "q1",
+       "b": "m"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "mid"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "bad": true,
+       "note": "All bank buses squeeze through one channel: 8.2 M global-route overflow."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "lo",
+       "c": 0,
+       "r": 0,
+       "label": "half_lo: sources, root, quad row 0",
+       "k": "good"
+      },
+      {
+       "id": "seam",
+       "c": 1,
+       "r": 0,
+       "label": "seam: 1,891 bits, flop to flop",
+       "k": "good"
+      },
+      {
+       "id": "hi",
+       "c": 2,
+       "r": 0,
+       "label": "half_hi: quad row 1, merge",
+       "k": "good"
+      },
+      {
+       "id": "sl",
+       "c": 1,
+       "r": 1,
+       "label": "sliver blockages < 12 um",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "lo",
+       "b": "seam"
+      },
+      {
+       "a": "seam",
+       "b": "hi"
+      },
+      {
+       "a": "sl",
+       "b": "lo"
+      },
+      {
+       "a": "sl",
+       "b": "hi"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "lo",
+        "seam",
+        "hi"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "Two half tiles abut; only one registered bundle crosses, one way."
+      },
+      {
+       "hot": [
+        "sl"
+       ],
+       "pk": [
+        2,
+        3
+       ],
+       "note": "Blockages keep repair buffers out of the gaps between pin banks."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "hfd_attn_tile",
+    "hfd_attn_tile_b",
+    "hfd_attn_half_lo",
+    "hfd_attn_half_hi",
+    "ot_attn_tile_m6h1q"
+   ]
+  },
+  {
+   "id": "ds-bf-icg",
+   "target": "ds",
+   "element": "ot_s81_bf_native (BF pair, 512 a layer die)",
+   "title": "The clock-gate enable that arrived late",
+   "summary": "At full rate the BF element misses by only 16 ps, on one path: the clock-gate enable is launched from a flop on a late leaf of the very clock it gates. Driving the enable from a register right at the root (QZE) removes it at zero cycles; dropping the gate (CG=0) also works but would add 162 W a die when idle. Half rate stays the accepted fallback.",
+   "status": "in progress",
+   "status_basis": "QZE, CG=0, LVT recut, cg_local and HALF_PHL routes are running at TC with HM 0; no BF route has closed; full-rate window to 2026-10-09 21:30 PT",
+   "facts": [
+    {
+     "k": "recut_tt",
+     "label": "plain RECUT=2, TT re-STA (one path)",
+     "v": -16.0,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05 (multivt/bf_recut_5e31c66a7-tt)"
+    },
+    {
+     "k": "uz_leaf",
+     "label": "enable flop u_z clock arrival (ungated leaf)",
+     "v": 760,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05"
+    },
+    {
+     "k": "icg_clk",
+     "label": "root ICG clock-pin arrival",
+     "v": 241,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05"
+    },
+    {
+     "k": "reg_d",
+     "label": "every register-to-D path on the same route",
+     "v": 72,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER B1"
+    },
+    {
+     "k": "lvt4",
+     "label": "LVT on 4 cells of that path (re-STA)",
+     "v": 31,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05"
+    },
+    {
+     "k": "half",
+     "label": "HALF route (61c1cf230), TT re-STA",
+     "v": -101.1,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER B1"
+    },
+    {
+     "k": "phl_clone",
+     "label": "HALF_PHL calibrate, post-CTS TT on a cg_pushdown ICG clone",
+     "v": -797.7,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER B1 (bfh_halfphl_a730_tt_hm10_639afaedc)"
+    },
+    {
+     "k": "cg0_bf",
+     "label": "CG=0: free-running clock power of an idle BF",
+     "v": 0.316,
+     "unit": "W",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05 (routed report_power)"
+    },
+    {
+     "k": "cg0_die",
+     "label": "CG=0: added idle power a layer die",
+     "v": 162,
+     "unit": "W",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05"
+    },
+    {
+     "k": "cg0_rack",
+     "label": "CG=0: added rack power (324 layer dies)",
+     "v": 52.5,
+     "unit": "kW (~2.7x rack)",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/bf-icg.log 19:05"
+    },
+    {
+     "k": "jobs",
+     "label": "BF closure-loop jobs / failed",
+     "v": 60,
+     "unit": "jobs (21 failed)",
+     "status": "measured",
+     "src": "MISS_DOSSIER B1 [API]"
+    },
+    {
+     "k": "phl_ar",
+     "label": "HALF_PHL AR cost, like-for-like on the 1,792 basis",
+     "v": -11.7,
+     "unit": "%",
+     "status": "analytical",
+     "src": "REVIEW_20261008 addendum 3 (owner accepted -7.68 % vs the 85-stage total)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "HALF (61c1cf230)",
+     "result": "SS -474.7, TT re-STA -101.1",
+     "why": "the phase flop sits on a leaf at 1,110 ps, the half-rate ICG at 153 ps: a full period of skew on the enable",
+     "src": "MISS_DOSSIER B1"
+    },
+    {
+     "name": "HALF_PHL (0e90389e9, ph_local.tcl)",
+     "result": "post-CTS TT -797.7 on ICG clones",
+     "why": "the phase flop is moved onto the ICG net, but cg_pushdown clones the ICG and the clones are not co-located",
+     "src": "MISS_DOSSIER B1"
+    },
+    {
+     "name": "cg_local u_z on an ancestor net (d629a9d9d / 8db5411e3)",
+     "result": "TT -538.7 at CTS",
+     "why": "rewiring the enable flop made 3,927 endpoints worse",
+     "src": "~/claude-takeover-20261007/bf-relaunch.log"
+    },
+    {
+     "name": "half cgfix (61c1cf230-cgfix)",
+     "result": "TT -232.79 / FF -104.93",
+     "why": "latch cloning fixed the gating check but not the half-rate cone",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job bf_half_61c1cf230-cgfix-tt"
+    },
+    {
+     "name": "Hold-flow stall",
+     "result": "10 h, 47.5k endpoints",
+     "why": "the recipe hard-coded a 20 ps hold margin; relaunched as bfh2_* with HM 0",
+     "src": "MISS_DOSSIER F"
+    }
+   ],
+   "records": [
+    "claude/bf-icg-20261008 e4272b562 (QZE=1), 6e8f0b698 (CG=0)",
+    "~/claude-takeover-20261007/bf-icg.log",
+    "~/claude-takeover-20261007/s81-bf.log",
+    "~/claude-takeover-20261007/bf-insertion.log",
+    "MISS_DOSSIER.md B1",
+    "REVIEW_20261008.md B1"
+   ],
+   "blocks": [
+    {
+     "block": "ot_s81_bf_native",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -474.68,
+      "ff_ps": -63.08,
+      "corner": "SS",
+      "status": "failed, re-running",
+      "job": "bf_half_61c1cf230"
+     },
+     "live": 11,
+     "live_jobs": [
+      "bf_halfphl_0e90389e9_f",
+      "bfh2_deep4_hm0_6cd23db2b",
+      "bfh2_recut_lvt_hm0_a12f3c7e7",
+      "bfh2_recutcgl35_hm0_8db5411e3",
+      "bfh2_recutcgl50_hm0_8db5411e3",
+      "bfh2_recutcgl50_hm10_8db5411e3"
+     ]
+    }
+   ],
+   "problem": "A BF element clock-gates its ~110k flops when idle. The gate enable for cycle t+1 is computed in cycle t and must reach the root ICG before the root clock edge. The ICG sits at the root (241 ps), the enable flop on a leaf of the same tree (760 ps): the enable starts 519 ps late.",
+   "naive": {
+    "title": "Compute the enable deep in the element",
+    "text": "u_z is already a register, but it sits in its own deep D cone, on the ungated leaf, about 100 ps of wire from the ICG. One path misses by 16 ps at TT; every other register path has +72 ps."
+   },
+   "trick": {
+    "title": "An enable register with nothing in front, next to the gate",
+    "text": "QZE=1 drives ENA from u_ze, a kept register whose input is go_pin OR z: a proven superset of the original enable (ze >= z every cycle, asserted). It closes one cycle after z, so the gate stays open for one extra idle edge. CG=0 is the parallel fallback: no gate at all."
+   },
+   "evidence": "Benches gate adoption: QZE positive plus four mutants (QP_MUTANT_DP, W10_MUTANT_RECUT, QZE_MUTANT_GO, QZ_MUTANT_Z); CG=0 positive plus two. bfi_recut_qze_hm0_e4272b562 and bfi_recut_cg0_hm0_6e8f0b698 are routing at TC with HM 0.",
+   "price": "QZE: 0 cycles, one extra gated edge per busy period. CG=0: 0 cycles, but +0.316 W per idle BF, +162 W per layer die, about +52.5 kW per rack (thermally fits: 246 of 474.6 W a die). HALF_PHL fallback: AR -11.7 % / MTP -9.3 % like-for-like, +6 stages / +24 dies.",
+   "diagram": {
+    "naive": {
+     "kind": "timeline",
+     "span": 900,
+     "period": 833,
+     "lanes": [
+      {
+       "label": "ICG clock (root)",
+       "start": 0,
+       "len": 241,
+       "k": "good"
+      },
+      {
+       "label": "u_z clock (leaf)",
+       "start": 0,
+       "len": 760,
+       "k": "bad"
+      },
+      {
+       "label": "u_z -> ENA wire",
+       "start": 760,
+       "len": 100,
+       "k": "bad"
+      }
+     ],
+     "steps": [
+      {
+       "t": 241,
+       "note": "The root ICG clocks at 241 ps."
+      },
+      {
+       "t": 760,
+       "note": "The enable flop on its leaf clocks only at 760 ps..."
+      },
+      {
+       "t": 900,
+       "note": "...and its output needs ~100 ps more to reach ENA: -16 ps at TT."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "go",
+       "c": 0,
+       "r": 0,
+       "label": "go_pin OR z",
+       "k": "field"
+      },
+      {
+       "id": "ze",
+       "c": 1,
+       "r": 0,
+       "label": "u_ze register beside the ICG",
+       "k": "good"
+      },
+      {
+       "id": "icg",
+       "c": 2,
+       "r": 0,
+       "label": "root ICG ENA",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "go",
+       "b": "ze"
+      },
+      {
+       "a": "ze",
+       "b": "icg",
+       "l": "no logic"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "ze",
+        "icg"
+       ],
+       "pk": [
+        1
+       ],
+       "note": "ze is a superset of z: the gate can only stay open longer, never close early."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_s81_bf_native",
+    "dsfd_bf"
+   ]
+  },
+  {
+   "id": "qwen-fwd-station",
+   "target": "qwen",
+   "element": "ot_qwen_link_fwd_cx_station (qfd_rlyf link hops)",
+   "title": "A link station that captures on the other edge",
+   "summary": "The Qwen die links forward their clock hop by hop. The first station captured on the same edge the upstream launched on, so every hop was a zero-cycle hold race, and CTS rewrote the in-tree inverters that forwarded the clock. The successor captures on the falling edge and forwards an inverted clock from a kept cell: data is centred in the window, and the hop got half a cycle shorter.",
+   "status": "closed",
+   "status_basis": "qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt CLOSED TT +6.19 / FF +16.31 / DRC 0, merged to main 81cf5f7ba; thin margin, to be re-checked by die-level link STA (review X3)",
+   "facts": [
+    {
+     "k": "old_tt",
+     "label": "old pair (ot_qwen_link_forwarded_tmr_pair), mm-CTS TT",
+     "v": -452,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER E (qwen_fwd_tmr_pair_1802913da-tt)"
+    },
+    {
+     "k": "old_ff",
+     "label": "old pair, FF hold",
+     "v": -310,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "k": "a_tt",
+     "label": "centre-aligned station a (1c3be936a), TT",
+     "v": -19.6,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_1c3be936a-tt"
+    },
+    {
+     "k": "b_tt",
+     "label": "station b (180 um port geometry), TT",
+     "v": -66.45,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_b_1c3be936a-tt"
+    },
+    {
+     "k": "a_lvt",
+     "label": "station a with LVT, TT",
+     "v": -16.25,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_lvt_97d3a4233-tt"
+    },
+    {
+     "k": "fwd5",
+     "label": "FWD_INV=5 delay-matched forward, TT",
+     "v": -12.58,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_fwd5_f92a58eb4-tt"
+    },
+    {
+     "k": "fwd5l",
+     "label": "FWD_INV=5 + LVT, TT",
+     "v": 0.51,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_fwd5_lvt_f92a58eb4-tt"
+    },
+    {
+     "k": "fwd7",
+     "label": "FWD_INV=7 RVT, TT (adopted)",
+     "v": 6.19,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt"
+    },
+    {
+     "k": "fwd7ff",
+     "label": "FWD_INV=7 RVT, FF hold",
+     "v": 16.31,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt"
+    },
+    {
+     "k": "lw",
+     "label": "link width per direction",
+     "v": 528,
+     "unit": "bits",
+     "status": "measured",
+     "src": "rtl/physical/ot_qwen_link_fwd_cx_tmr.sv (LW parameter)"
+    },
+    {
+     "k": "hops",
+     "label": "forwarded-link hop instances on the r21b die (qfd_rlyf_*)",
+     "v": 173,
+     "unit": "instances",
+     "status": "measured",
+     "src": "Chip Explorer geometry qwen_r21b (masters qfd_rlyf_*)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Full-cycle TMR pair (1802913da)",
+     "result": "mm-CTS TT -452 / FF -310",
+     "why": "rising-edge capture on the forwarding edge; CTS rewrote the two-inverter forward and the generated clocks lost their pins (STA-1062)",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "name": "Centre-aligned station a / b (1c3be936a)",
+     "result": "TT -19.6 / -66.5",
+     "why": "data_q fall -> QN inverter -> output port buffer against the half-cycle forwarded window",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "LVT (97d3a4233)",
+     "result": "TT -16.25 / -68.03",
+     "why": "Vt does not remove the port-buffer delay",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "FWD_INV=5 (f92a58eb4)",
+     "result": "TT -12.58 RVT, +0.51 LVT",
+     "why": "five kept inverters delay the forwarded clock to match the data path; not enough without LVT",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    }
+   ],
+   "records": [
+    "main 81cf5f7ba (merge-cxstn: 37121d6c1 station files, 30663ab9a record)",
+    "rtl/physical/ot_qwen_link_fwd_cx_tmr.sv",
+    "physical/qwen_link_fwd_cx_station/",
+    "~/claude-takeover-20261007/merge-cxstn.log",
+    "MISS_DOSSIER.md E"
+   ],
+   "blocks": [
+    {
+     "block": "ot_qwen_link_fwd_cx_station",
+     "closed": {
+      "ss": 6.19,
+      "ff": 16.31,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "ot_qwen_link_forwarded_tmr_pair",
+     "closed": null,
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "Die links on the Qwen die run 528 bits each way, hop by hop at the 430.56 um relay pitch, each hop clocked by the clock forwarded with the data. A hop must capture data launched by the previous hop on a clock that travelled the same wire.",
+   "naive": {
+    "title": "Capture on the edge that launched",
+    "text": "The full-cycle station captured on the forwarded clock's rising edge, the same edge the upstream launched on: a zero-cycle hold race against the clock insertion at every hop. Its two-inverter clock forward sat inside the clock tree, and CTS rewrote it."
+   },
+   "trick": {
+    "title": "Falling-edge capture, inverted forward, clocks as ports",
+    "text": "Each station captures on the falling edge of its received clock and forwards ~fclk from a kept cell. The upstream launched on its falling edge, which is this station's rising edge, so data sits half a cycle from each capture edge whatever the matched wire delay. The forwarded clocks are ports with generated clocks, which CTS cannot unbind; seven kept inverters delay-match the forward to the data path."
+   },
+   "evidence": "bench.sh BENCH_OK (golden pass, negative and 6 mutants fail). FWD_INV=7 routed at TC: TT +6.19 / FF +16.31 / DRC 0, RVT. The TMR release semantics are unchanged.",
+   "price": "0 cycles added: a hop is half a cycle instead of one, so the link gets shorter. Margin is thin (+6 ps): the review asks for die-level link STA before it is cited as margin.",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "u",
+       "c": 0,
+       "r": 0,
+       "label": "upstream launches on rise",
+       "k": "field"
+      },
+      {
+       "id": "w",
+       "c": 1,
+       "r": 0,
+       "label": "matched wire + forwarded clock",
+       "k": "wire"
+      },
+      {
+       "id": "d",
+       "c": 2,
+       "r": 0,
+       "label": "capture on the same rise",
+       "k": "bad"
+      }
+     ],
+     "edges": [
+      {
+       "a": "u",
+       "b": "w"
+      },
+      {
+       "a": "w",
+       "b": "d",
+       "l": "zero-cycle race",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "d"
+       ],
+       "pk": [
+        1
+       ],
+       "bad": true,
+       "note": "Launch and capture on the same edge: every hop is a hold race (FF -310)."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "u",
+       "c": 0,
+       "r": 0,
+       "label": "upstream launches on its fall",
+       "k": "field"
+      },
+      {
+       "id": "w",
+       "c": 1,
+       "r": 0,
+       "label": "wire + inverted forwarded clock (kept cell)",
+       "k": "wire"
+      },
+      {
+       "id": "d",
+       "c": 2,
+       "r": 0,
+       "label": "capture on our fall = half a cycle each side",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "u",
+       "b": "w"
+      },
+      {
+       "a": "w",
+       "b": "d",
+       "l": "centred"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "d"
+       ],
+       "pk": [
+        1
+       ],
+       "note": "Data is centred: half a cycle of setup and half of hold. TT +6.19 / FF +16.31."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_qwen_link_fwd_cx_station",
+    "ot_qwen_link_forwarded_tmr_pair"
+   ]
+  },
+  {
+   "id": "hbm-pkt-ii1rw",
+   "target": "hbm",
+   "element": "hfd_coll_pkt_fifo_ii1 (collective packet SRAM)",
+   "title": "A packet SRAM that refills every cycle",
+   "summary": "The collective packet queue could only accept a word every third cycle, which cost 31 us an all-reduce. The II=1 refill first failed by 0.9 ns in its error-correction decode. Registering every port, reserving two slots behind a registered ready and capturing the SRAM output closed it at TT +12 ps.",
+   "status": "closed",
+   "status_basis": "hbm_pkt_ii1rw-8a9a669df-tc CLOSED TT +12.05 / FF +17.31 / DRC 0 (record claude/drive-0532-20261008 203f04d42)",
+   "facts": [
+    {
+     "k": "ii3",
+     "label": "II=3 rate cap: added all-reduce time",
+     "v": 30.78,
+     "unit": "us (+172 us MTP)",
+     "status": "analytical",
+     "src": "element purpose hfd_coll_pkt_fifo_ii1 (/api/elements)"
+    },
+    {
+     "k": "shape",
+     "label": "queue shape",
+     "v": 545,
+     "unit": "bits x 256 (3 SRAM macros)",
+     "status": "measured",
+     "src": "element purpose hfd_coll_pkt_fifo_ii1"
+    },
+    {
+     "k": "first",
+     "label": "first screen (de406cb5b), SS",
+     "v": -909.44,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1-de406cb5b"
+    },
+    {
+     "k": "secded",
+     "label": "SECDED decode depth in that path",
+     "v": 27,
+     "unit": "logic levels",
+     "status": "measured",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "k": "tt1",
+     "label": "36399d734 at TT (din -> encode -> SRAM under the input budget)",
+     "v": -359.6,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1-36399d734-tt"
+    },
+    {
+     "k": "ii1r",
+     "label": "ii1r (8a9a669df) TT / FF",
+     "v": -40.24,
+     "unit": "ps (FF -42.89)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1r-8a9a669df-tc"
+    },
+    {
+     "k": "ii1rw",
+     "label": "ii1rw (+WREG) TT setup",
+     "v": 12.05,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1rw-8a9a669df-tc"
+    },
+    {
+     "k": "ii1rw_ff",
+     "label": "ii1rw FF hold",
+     "v": 17.31,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1rw-8a9a669df-tc"
+    },
+    {
+     "k": "ii1sb",
+     "label": "ii1s IREL relay variant, TT (not needed)",
+     "v": -1.5,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1sb-a968f7b40-tc"
+    }
+   ],
+   "tried": [
+    {
+     "name": "II=1 refill, first screen (de406cb5b)",
+     "result": "SS -909",
+     "why": "SECDED decode (27 levels) in the same cycle as the SRAM read",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "name": "36399d734 / ii1b",
+     "result": "TT -359.6 / -403.2",
+     "why": "din -> encode -> SRAM under the 518.67 ps input budget; syndrome -> ready -198; SRAM -> syndrome -> ue -116",
+     "src": "MISS_DOSSIER E; closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "ii1r / ii1rb (8a9a669df)",
+     "result": "TT -40.2 / -63.0, FF -43 / -45",
+     "why": "pin flops and registered ready fixed the logic; the SRAM write path still short by a register",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "ii1s / ii1sb / ii1sw (a968f7b40, input relay +1)",
+     "result": "TT +177 (collect crash) / -1.5 / -16.9",
+     "why": "an extra input relay helps but costs a cycle; not needed once WREG closed",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    }
+   ],
+   "records": [
+    "claude/drive-0532-20261008 203f04d42 (record)",
+    "MISS_DOSSIER.md E"
+   ],
+   "blocks": [
+    {
+     "block": "hfd_coll_pkt_fifo_ii1",
+     "closed": {
+      "ss": 12.05,
+      "ff": 17.31,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_pkt_ii1rw-8a9a669df-tc"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "hfd_coll_pkt_fifo_ii3",
+     "closed": null,
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "Each collective port stores 545-bit packets with SECDED protection in a 256-deep SRAM. To keep the link busy the queue must take and give a word every cycle (II=1); the legacy design refilled every third cycle.",
+   "naive": {
+    "title": "Encode, write, read and correct in the same cycles as the handshake",
+    "text": "The first II=1 queue decoded the SECDED syndrome, raised ready and wrote the SRAM in one period: 27 logic levels, SS -909 ps."
+   },
+   "trick": {
+    "title": "Registered pins, a two-slot reserve, captured SRAM output",
+    "text": "ii1rw puts a flop on every port, makes ready a register backed by a two-slot reserve (so a word already in flight always has room), sends output on credits (OCR 8), captures the SRAM output before decode, and registers the write data (WREG)."
+   },
+   "evidence": "Routed at TC: TT +12.05 / FF +17.31 / DRC 0. The II=3 reference at the same shape was kept for pricing only (never adopted).",
+   "price": "First flit 2 -> 5 edges, write +1, WREG +1. It removes the II=3 rate cap: 30.78 us an all-reduce and 172 us a MTP step.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "ps (miss, magnitude)",
+     "bars": [
+      {
+       "label": "first screen (SS)",
+       "v": 909.4,
+       "k": "bad"
+      },
+      {
+       "label": "36399d734 (TT)",
+       "v": 359.6,
+       "k": "bad"
+      },
+      {
+       "label": "ii1r (TT)",
+       "v": 40.2,
+       "k": "idle"
+      }
+     ],
+     "steps": [
+      {
+       "show": 1,
+       "note": "SECDED decode in the handshake cycle: -909 ps."
+      },
+      {
+       "show": 2,
+       "note": "Pin flops: -360 ps."
+      },
+      {
+       "show": 3,
+       "note": "Registered ready and reserve: -40 ps, one register short."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "pin",
+       "c": 0,
+       "r": 0,
+       "label": "pin flops + WREG",
+       "k": "good"
+      },
+      {
+       "id": "sram",
+       "c": 1,
+       "r": 0,
+       "label": "SRAM 256 x 545",
+       "k": "field"
+      },
+      {
+       "id": "cap",
+       "c": 2,
+       "r": 0,
+       "label": "captured output, then SECDED",
+       "k": "good"
+      },
+      {
+       "id": "out",
+       "c": 3,
+       "r": 0,
+       "label": "credit output (OCR 8)",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "pin",
+       "b": "sram"
+      },
+      {
+       "a": "sram",
+       "b": "cap"
+      },
+      {
+       "a": "cap",
+       "b": "out"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "pin",
+        "sram",
+        "cap",
+        "out"
+       ],
+       "pk": [
+        0,
+        1,
+        2
+       ],
+       "note": "Every stage starts from a register: TT +12.05 / FF +17.31."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "hfd_coll_pkt_fifo_ii1",
+    "hfd_coll_pkt_fifo_ii3",
+    "hfd_coll"
+   ]
+  },
+  {
+   "id": "hbm-vm8-seam",
+   "target": "hbm",
+   "element": "hfd_vm_* (vector memory, eight sub-tiles)",
+   "title": "Spreading 3,166 seam bits off one track",
+   "summary": "The HBM vector memory was split into eight sub-tiles that abut. The generator put the 3,166 bits crossing each seam on one M5 track a bit, 20.8 bits per um, and every half died in global routing there. Spreading the seam over the whole edge on two layers fixed the seam; a second placement bug then laid pass-through chains along the face, and a bow in the chain path fixed that.",
+   "status": "in progress",
+   "status_basis": "seam-spread, LVT, seam2 and bowed-chain (spcb / splb / s2b) routes are running for all eight halves; none has closed; swn misses for a different reason (seat logic) and has its own SEATP variant",
+   "facts": [
+    {
+     "k": "seam_bits",
+     "label": "bits across a seam (s2n + n2s)",
+     "v": 3166,
+     "unit": "bits",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1128.log 11:35"
+    },
+    {
+     "k": "density",
+     "label": "seam pin density before the spread",
+     "v": 20.8,
+     "unit": "bits/um",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1128.log 11:35"
+    },
+    {
+     "k": "gcells",
+     "label": "congested gcells, nws r2p",
+     "v": 7806,
+     "unit": "gcells",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1128.log (hbm_vm8_nws_r2p_1c3be936a-tt)"
+    },
+    {
+     "k": "spread",
+     "label": "seam pin density after the spread (M5 + M7)",
+     "v": 7.8,
+     "unit": "bits/um (2.6-7.8)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1128.log 11:35 (a5b5873d9)"
+    },
+    {
+     "k": "nws_tt",
+     "label": "nws seam-spread route, TT",
+     "v": -41.13,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_vm8_nws_sp_hm10_a5b5873d9-tt"
+    },
+    {
+     "k": "nes_tt",
+     "label": "nes seam-spread route, TT",
+     "v": 18.27,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_vm8_nes_sp_hm10_a5b5873d9-tt"
+    },
+    {
+     "k": "ffpins",
+     "label": "output pin flops failing FF on the min-vs-mean insertion mismatch",
+     "v": 6906,
+     "unit": "flops",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/vm8-timing.log 15:03"
+    },
+    {
+     "k": "chains",
+     "label": "pass-through chains laid along one face (nes spl)",
+     "v": 3974,
+     "unit": "chains",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/crash-1945.log"
+    },
+    {
+     "k": "swn",
+     "label": "swn post-CTS TT (seat logic, separate class)",
+     "v": -1331.2,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm_vm8_swn_sp_hm25_a5b5873d9-tt"
+    }
+   ],
+   "tried": [
+    {
+     "name": "r2p pin plan (1c3be936a)",
+     "result": "GRT-0116 in every half",
+     "why": "the seam bits sat one per M5 track at the cut (20.8 bits/um), plus a 1,094-bit corner in 70 um of a W face",
+     "src": "~/claude-takeover-20261007/drive-1128.log"
+    },
+    {
+     "name": "Seam spread (a5b5873d9)",
+     "result": "nws TT -41.1 / FF -63.9 / DRC 3",
+     "why": "routes now; a 500 um feedthrough to the seam register (-41), FF hold on 6,906 pin flops from a reference mismatch, a 0.064 um clock pin off the M7 width table",
+     "src": "~/claude-takeover-20261007/vm8-timing.log 15:03"
+    },
+    {
+     "name": "LVT + clock pin + routed FF reference (c47843849)",
+     "result": "GRT-0116 on nes / ses / nen",
+     "why": "face_chain_place laid pass-through chains on the straight pin-to-pin line, i.e. along the face, so all stages landed in the 3-12 um stagger band",
+     "src": "~/claude-takeover-20261007/crash-1945.log"
+    }
+   ],
+   "records": [
+    "claude/drive-1128-vm8-20261008 a5b5873d9 (make_vm_split8.py SEAM_SPREAD)",
+    "c47843849 (ck pin, io_ref_routed FF)",
+    "main d1925153f (fleet-wide route FF reference)",
+    "claude/vm8-seam2-20261008 2cf68d516 (seam oreg2 fallback)",
+    "claude/crash-1945-20261008 f6bc7c10b (OT_FC_THRU_BOW)",
+    "~/claude-takeover-20261007/vm8-timing.log"
+   ],
+   "blocks": [
+    {
+     "block": "hfd_vm_nw_s",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -41.19,
+      "ff_ps": -59.26,
+      "corner": "TT",
+      "status": "failed, re-running",
+      "job": "hbm_vm8_nws_sp_hm25_a5b5873d9-tt"
+     },
+     "live": 4,
+     "live_jobs": [
+      "hbm_vm8_nws_s2_hm10_2cf68d516-tt",
+      "hbm_vm8_nws_s2_hm25_2cf68d516-tt",
+      "hbm_vm8_nws_spl_hm10_c47843849-tt",
+      "hbm_vm8_nws_spl_hm25_c47843849-tt"
+     ]
+    },
+    {
+     "block": "hfd_vm_ne_s",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": 18.27,
+      "ff_ps": -51.96,
+      "corner": "TT",
+      "status": "failed, re-running",
+      "job": "hbm_vm8_nes_sp_hm10_a5b5873d9-tt"
+     },
+     "live": 2,
+     "live_jobs": [
+      "hbm_vm8_nes_sp_hm25_a5b5873d9-tt",
+      "hbm_vm8_nes_splb_hm0_f6bc7c10b-tt-d2056"
+     ]
+    },
+    {
+     "block": "hfd_vm_sw_n",
+     "closed": null,
+     "best_fail": null,
+     "live": 1,
+     "live_jobs": [
+      "hbm_vm8_swn_seatp_hm25_79315a431-tt"
+     ]
+    },
+    {
+     "block": "hfd_vm_se_s",
+     "closed": null,
+     "best_fail": null,
+     "live": 3,
+     "live_jobs": [
+      "hbm_vm8_ses_spcb_hm25_f6bc7c10b-tt",
+      "hbm_vm8_ses_spcb_hm25_f6bc7c10b-tt-f3-hm10",
+      "hbm_vm8_ses_spcb_hm25_f6bc7c10b-tt-f3-pd50"
+     ]
+    }
+   ],
+   "problem": "Each quadrant's vector memory is cut into north and south sub-tiles that abut at a seam. 3,166 bits cross each seam (row and write buses both ways), and die-facing buses also enter at the tile faces.",
+   "naive": {
+    "title": "One pin per track, at the cut",
+    "text": "The split generator kept the seam pins packed on one M5 track per bit at the cut: 20.8 bits per um. Global routing overflowed in the seam band (7,806 gcells on nws) in every half."
+   },
+   "trick": {
+    "title": "Spread the seam, then bow the pass-through chains",
+    "text": "SEAM_SPREAD lays the seam pins over the whole cut edge on two layers (even bits M5, odd M7) at the widest pitch that fits, at identical x in both halves so the abutment stays zero-length. Faces with only die-facing runs spread up to 0.512 um a pair. OT_FC_THRU_BOW then bows pass-through chains 80 um into the tile instead of along the face."
+   },
+   "evidence": "After the spread the halves route (nes TT +18.27, nws -41.13); the remaining nws miss is a pure 500 um wire, addressed by LVT or a +1-cycle seam register (seam2). The FF failures were a flow mismatch, fixed fleet-wide (route-time FF repair now targets the routed mean insertion).",
+   "price": "Pins only: 0 cycles, 0 mm2 (vm8 already carries +2 a seam). seam2 fallback: +1 cycle on the NW / NE seam.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "bits / um at the seam",
+     "bars": [
+      {
+       "label": "r2p: one track a bit",
+       "v": 20.8,
+       "k": "bad"
+      },
+      {
+       "label": "spread: M5 + M7, widest pitch",
+       "v": 7.8,
+       "k": "good"
+      }
+     ],
+     "steps": [
+      {
+       "show": 1,
+       "note": "All 3,166 seam bits within ~150 um of edge."
+      },
+      {
+       "show": 2,
+       "note": "Spread over the whole edge on two layers: 2.6-7.8 bits/um."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "f",
+       "c": 0,
+       "r": 0,
+       "label": "face pin",
+       "k": "field"
+      },
+      {
+       "id": "c",
+       "c": 1,
+       "r": 0,
+       "label": "pass-through chain bowed 80 um inward",
+       "k": "good"
+      },
+      {
+       "id": "t",
+       "c": 2,
+       "r": 0,
+       "label": "face pin on the same face",
+       "k": "field"
+      }
+     ],
+     "edges": [
+      {
+       "a": "f",
+       "b": "c"
+      },
+      {
+       "a": "c",
+       "b": "t"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "c"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "Chains between two pins on the same face no longer run inside the 3-12 um stagger band."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "hfd_vm_nw",
+    "hfd_vm_ne",
+    "hfd_vm_se",
+    "hfd_vm_sw",
+    "hfd_vm_nw_s",
+    "hfd_vm_ne_s",
+    "hfd_vm_sw_n",
+    "hfd_vm_se_s"
+   ]
+  },
+  {
+   "id": "qwen-core-kv",
+   "target": "qwen",
+   "element": "ot_qwen_rom_core_core_kv_banked (decode core, KV controller)",
+   "title": "A clock that was timed as data",
+   "summary": "The banked KV controller of the Qwen decode core failed TT by 411 ps on a single endpoint: the gated engine clock leaving the block, timed as a data output. A false path removed it; the hold ECO that followed then reported a fake miss because it was timed with the wrong constraint file. Both were flow fixes, and the block closed with no RTL change.",
+   "status": "closed",
+   "status_basis": "core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt CLOSED TT +69.76 / FF +16.72 / DRC 0 (record claude/drive-0602-20261008 7008b4af1); on the r21b die the monolithic core is not bound to a master (its function is re-cut into the spine masters)",
+   "facts": [
+    {
+     "k": "tt0",
+     "label": "fullwidth route d9d511777, TT",
+     "v": -410.82,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_d9d511777-tt"
+    },
+    {
+     "k": "ff0",
+     "label": "same route, FF hold",
+     "v": -67.8,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_d9d511777-tt"
+    },
+    {
+     "k": "ends",
+     "label": "endpoints behind the -410.8",
+     "v": 1,
+     "unit": "endpoint (clk -> u_me.clk)",
+     "status": "measured",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "k": "clkfp",
+     "label": "after the clock-out false path (77d93ac50), TT / FF",
+     "v": 71.2,
+     "unit": "ps (FF -68.02)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_clkfp-77d93ac50-tt"
+    },
+    {
+     "k": "eco_miss",
+     "label": "hold ECO verdict timed with the 770 ps route SDC",
+     "v": -97.46,
+     "unit": "ps (0 cells added)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/corekv-eco.log 12:58"
+    },
+    {
+     "k": "h1hm25",
+     "label": "H1 SDC (c180b0ed1), HM 25: TT",
+     "v": 69.76,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt"
+    },
+    {
+     "k": "h1hm25ff",
+     "label": "H1 SDC, HM 25: FF hold",
+     "v": 16.72,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt"
+    },
+    {
+     "k": "h1hm80",
+     "label": "H1 SDC, HM 80 (ECO retried): TT / FF",
+     "v": 59.8,
+     "unit": "ps (FF +20.37)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_h1hm80-c180b0ed1-tt"
+    },
+    {
+     "k": "core_p",
+     "label": "sibling ot_qwen_rom_core_core_p, same artefact then closed: TT",
+     "v": 60.44,
+     "unit": "ps (was -387.96)",
+     "status": "measured",
+     "src": "MISS_DOSSIER E (core_p_done_io80_h1hm25-c180b0ed1-tt)"
+    },
+    {
+     "k": "fleet",
+     "label": "other loop jobs with the same ECO-SDC bug",
+     "v": 3,
+     "unit": "jobs",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/corekv-eco.log follow-up"
+    }
+   ],
+   "tried": [
+    {
+     "name": "fullwidth d9d511777",
+     "result": "TT -410.8 / FF -67.8",
+     "why": "one endpoint: the gated engine clock output u_me.clk timed as data against the link-budget virtual clock; FF from 49 gated feedthroughs and 647 reg->out paths",
+     "src": "MISS_DOSSIER E"
+    },
+    {
+     "name": "clkfp (77d93ac50, die_io80.sdc false path)",
+     "result": "TT +71.2 / FF -68.0",
+     "why": "setup fixed; output hold still on the pre-H1 IO hold term",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "h1hm80 hold ECO",
+     "result": "\"MISS TT -97.46\"",
+     "why": "the ECO padded nothing; the verdict was re-timed with the 770 ps route SDC instead of the 833 ps sign-off SDC (spec post-SDC dropped)",
+     "src": "~/claude-takeover-20261007/corekv-eco.log 12:58"
+    }
+   ],
+   "records": [
+    "77d93ac50 (die_io80.sdc u_me.clk false path)",
+    "c180b0ed1 (H1 io_ref_skew)",
+    "main 6ad84e30c + 07fd4d013 (ECO uses the spec sign-off SDC)",
+    "claude/drive-0602-20261008 7008b4af1 / f4a9d1a48 (records)",
+    "~/claude-takeover-20261007/corekv-eco.log",
+    "MISS_DOSSIER.md E / F"
+   ],
+   "blocks": [
+    {
+     "block": "ot_qwen_rom_core_core_kv_banked",
+     "closed": {
+      "ss": 69.76,
+      "ff": 16.72,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "ot_qwen_rom_core_core_p",
+     "closed": {
+      "ss": 60.44,
+      "ff": 14.11,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job core_p_done_io80_h1hm25-c180b0ed1-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "The decode core gates the matrix-engine clock and hands it to the engine as an output port. The block's sign-off SDC also times every output against a die-link virtual clock.",
+   "naive": {
+    "title": "Every output is data",
+    "text": "The gated clock output fell under the generic output constraint: one clock net timed as a data path against the link budget, -410.8 ps at TT. After that was fixed, the hold ECO re-timed its result with the route's 770 ps SDC, so a clean ECO (0 cells) reported TT -97.46."
+   },
+   "trick": {
+    "title": "False-path the clock out; time ECOs with the sign-off SDC",
+    "text": "die_io80.sdc false-paths u_me.clk (it is a clock, checked by the parent's clock tree). The loop now passes the spec's sign-off post-SDC to the hold ECO whenever it is byte-equal to the route's own w18_extra.sdc, with io_ref_routed last."
+   },
+   "evidence": "Closed twice on the same RTL: HM 25 route TT +69.76 / FF +16.72, and HM 80 with the corrected ECO TT +59.80 / FF +20.37. The core_p sibling closed the same way (TT +60.44 / FF +14.11). A fleet scan found 3 jobs hit by the ECO bug.",
+   "price": "0 cycles; constraint and flow changes only.",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "cg",
+       "c": 0,
+       "r": 0,
+       "label": "clock gate",
+       "k": "field"
+      },
+      {
+       "id": "o",
+       "c": 1,
+       "r": 0,
+       "label": "u_me.clk output port",
+       "k": "bad"
+      },
+      {
+       "id": "v",
+       "c": 2,
+       "r": 0,
+       "label": "link-budget virtual clock",
+       "k": "bad"
+      }
+     ],
+     "edges": [
+      {
+       "a": "cg",
+       "b": "o"
+      },
+      {
+       "a": "o",
+       "b": "v",
+       "l": "timed as data",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "o",
+        "v"
+       ],
+       "pk": [
+        1
+       ],
+       "bad": true,
+       "note": "A clock net checked as a data output: -410.8 ps on one endpoint."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "cg",
+       "c": 0,
+       "r": 0,
+       "label": "clock gate",
+       "k": "field"
+      },
+      {
+       "id": "o",
+       "c": 1,
+       "r": 0,
+       "label": "u_me.clk (false path)",
+       "k": "good"
+      },
+      {
+       "id": "e",
+       "c": 2,
+       "r": 0,
+       "label": "engine clock tree (parent STA)",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "cg",
+       "b": "o"
+      },
+      {
+       "a": "o",
+       "b": "e"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "o",
+        "e"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "The clock is checked as a clock by its consumer: TT +69.76."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_qwen_rom_core_core_kv_banked",
+    "ot_qwen_rom_core_core_p"
+   ]
+  },
+  {
+   "id": "ds-hend-m5w",
+   "target": "ds",
+   "element": "S81 hub-end blocks (dsfd_l2r_vr_564x1__hx_E, dsfd_l2r_vr_512x1__hq_SW)",
+   "title": "A power strap 0.1 um from a pin column",
+   "summary": "Two S81 hub-end blocks timed fine but would not finish routing: DRC 4 and 7 stayed for 60 router iterations. The block view had no inset, so the first M5 power strap and its via stacks sat 0.1 um from a full-density M4 pin column. Moving the strap offset by half a pitch cleared the DRC; one block then needed a hold-margin change and a re-derived die-link budget to close.",
+   "status": "closed",
+   "status_basis": "hx_E m5w CLOSED TT +0.78 / FF +22.00 / DRC 0 (c6a4a9470); hq_SW m5w CLOSED TT +57.89 / FF +8.31 / DRC 0 under the re-derived link budget budget_rb1 (24479a5e6)",
+   "facts": [
+    {
+     "k": "hxe_drc",
+     "label": "hx_E pinreg (f1b64667d): DRC after 60 DRT iterations",
+     "v": 4,
+     "unit": "violations",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hx-E-pinreg-f1b64667d-tt"
+    },
+    {
+     "k": "hxe_tt0",
+     "label": "same route: TT setup",
+     "v": 54.43,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hx-E-pinreg-f1b64667d-tt"
+    },
+    {
+     "k": "gap",
+     "label": "M5 strap pair (offset 0.300) to the M4 pin column",
+     "v": 0.1,
+     "unit": "um",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-0702.log 07:06"
+    },
+    {
+     "k": "pitch",
+     "label": "pin column pitch",
+     "v": 0.048,
+     "unit": "um",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-0702.log 07:06"
+    },
+    {
+     "k": "hxw",
+     "label": "hx_W (column on the east face) distance to its last strap",
+     "v": 4.2,
+     "unit": "um (closed DRC 0)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-0702.log 07:06"
+    },
+    {
+     "k": "offset",
+     "label": "new M5 strap offset (pdn_view_m5w.tcl)",
+     "v": 2.7,
+     "unit": "um",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-0702.log 07:06 (9ec0460c9)"
+    },
+    {
+     "k": "hxe_tt",
+     "label": "hx_E m5w: TT setup (DRC 0)",
+     "v": 0.78,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt"
+    },
+    {
+     "k": "hq_drc",
+     "label": "hq_SW pinreg: DRC",
+     "v": 7,
+     "unit": "violations",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hq-SW-pinreg-f1b64667d-tt"
+    },
+    {
+     "k": "hq_m5w",
+     "label": "hq_SW m5w HM 50: TT (output port vs link budget)",
+     "v": -10.11,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1028.log 10:45"
+    },
+    {
+     "k": "hq_lvt",
+     "label": "hq_SW m5w + LVT: TT / FF",
+     "v": 1.66,
+     "unit": "ps (FF +20.05)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt"
+    },
+    {
+     "k": "hq_rb",
+     "label": "hq_SW m5w HM 10 under budget_rb1: TT / FF",
+     "v": 57.89,
+     "unit": "ps (FF +8.31)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Pin-register redesign (f1b64667d, HEND_PINREG)",
+     "result": "hx_E TT +54.43 DRC 4; hq_SW TT +51.22 DRC 7",
+     "why": "timing fixed by the pin registers; the router could not clear shorts and spacing beside the west-face strap",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "More router iterations / retry",
+     "result": "not attempted",
+     "why": "DRC was flat for 60 iterations: a geometric conflict, not a convergence problem",
+     "src": "~/claude-takeover-20261007/drive-0702.log"
+    },
+    {
+     "name": "Strap offset (b) / pin-flop nudge (c) for hq_SW",
+     "result": "skipped",
+     "why": "the remaining hq_SW miss was an output port behind 8-9 hold buffers (~180 ps) against the die-link budget, not the strap",
+     "src": "~/claude-takeover-20261007/drive-1028.log"
+    }
+   ],
+   "records": [
+    "claude/drive-0702-20261008 9ec0460c9 (physical/s81_die_views/common/pdn_view_m5w.tcl)",
+    "claude/drive-0702-20261008 c6a4a9470 (hx_E record)",
+    "main 24479a5e6 / 001396dc0 (hq_SW records)",
+    "main abeaa2059 (rebudget budget_rb1)",
+    "~/claude-takeover-20261007/drive-0702.log",
+    "~/claude-takeover-20261007/drive-1028.log"
+   ],
+   "blocks": [
+    {
+     "block": "dsfd_l2r_vr_564x1__hx_E",
+     "closed": {
+      "ss": 0.78,
+      "ff": 22.0,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "dsfd_l2r_vr_512x1__hq_SW",
+     "closed": {
+      "ss": 57.89,
+      "ff": 8.31,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "dsfd_l2r_vr_564x1__hx_W",
+     "closed": {
+      "ss": 64.93,
+      "ff": 23.78,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "Hub-end blocks are thin wrappers whose west or east face carries a full-density column of M4 pins (one every 0.048 um). The block view's core area has no x inset, so the power grid starts right at the outline.",
+   "naive": {
+    "title": "The standard strap offset",
+    "text": "pdn_view.tcl put the first M5 strap pair at x 0.30-0.61 um with M2-M5 via stacks, about 0.1 um from the west-face M4 pin column: shorts and spacing violations the router could not resolve. hx_W, whose column is on the east face 4.2 um from the last strap, closed with DRC 0."
+   },
+   "trick": {
+    "title": "Move the strap half a pitch",
+    "text": "pdn_view_m5w.tcl is the same PDN with the M5 offset at 2.700 um (half pitch): same strap count and widths, same M7 power contract. It is passed as a route argument, so the RTL and the view pins do not change."
+   },
+   "evidence": "hx_E closed DRC 0 at TT +0.78 / FF +22.00 (the strap moved TT from +54 to +0.78). hq_SW m5w then missed by -10.11 on one output port padded by hold buffers; an LVT variant closed at +1.66 / +20.05, and the re-derived die-link budget (budget_rb1, 19 measured jobs) closed the HM 10 route at +57.89 / +8.31 without a re-route.",
+   "price": "0 cycles (the pin registers of HEND_PINREG already cost +1 cycle in and +1 out).",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "s",
+       "c": 0,
+       "r": 0,
+       "label": "M5 strap + vias at x 0.30",
+       "k": "bad"
+      },
+      {
+       "id": "g",
+       "c": 1,
+       "r": 0,
+       "label": "0.1 um",
+       "k": "bad"
+      },
+      {
+       "id": "p",
+       "c": 2,
+       "r": 0,
+       "label": "M4 pin column, 0.048 pitch",
+       "k": "field"
+      }
+     ],
+     "edges": [
+      {
+       "a": "s",
+       "b": "g"
+      },
+      {
+       "a": "g",
+       "b": "p",
+       "l": "short / spacing",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "s",
+        "g",
+        "p"
+       ],
+       "pk": [
+        1
+       ],
+       "bad": true,
+       "note": "DRC 4 / 7 for 60 router iterations."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "s",
+       "c": 0,
+       "r": 0,
+       "label": "M5 strap at x 2.70",
+       "k": "good"
+      },
+      {
+       "id": "g",
+       "c": 1,
+       "r": 0,
+       "label": "> 2 um",
+       "k": "good"
+      },
+      {
+       "id": "p",
+       "c": 2,
+       "r": 0,
+       "label": "M4 pin column",
+       "k": "field"
+      }
+     ],
+     "edges": [
+      {
+       "a": "s",
+       "b": "g"
+      },
+      {
+       "a": "g",
+       "b": "p"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "s",
+        "g"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "Half a pitch over: DRC 0, same power grid."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "dsfd_l2r_vr_564x1__hx_E",
+    "dsfd_l2r_vr_512x1__hq_SW",
+    "dsfd_l2r_vr_564x1__hx_W"
+   ]
+  },
+  {
+   "id": "hbm-ha2-credit",
+   "target": "hbm",
+   "element": "ot_ha2_truecredit_rx_phys (HA2 true-credit receiver)",
+   "title": "A ready signal turned into a credit",
+   "summary": "The HA2 receiver missed TT by 278 ps: a tag compare decided the write enable of a 72.9k-flop queue in the arrival cycle. Registering the pins and making the write independent of the compare fixed the data side, which exposed a same-cycle ready input. Turning that ready into a registered credit pulse is the second step; its routes were killed by hold repair before setup was measured.",
+   "status": "in progress",
+   "status_basis": "rx_p hm10 measured TT -158.49 / FF +1.79; credit-ready (tccr) reruns at HM 0 / 10 and the rxs variant are running; the TX side is closed",
+   "facts": [
+    {
+     "k": "tt0",
+     "label": "original receiver (tc_9fb461b6d), TT",
+     "v": -278.34,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_truecredit_rx_tc_9fb461b6d"
+    },
+    {
+     "k": "queue",
+     "label": "receive queue",
+     "v": 72.9,
+     "unit": "k flops (64 x 560)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1043.log 10:51"
+    },
+    {
+     "k": "viol",
+     "label": "violating D pins",
+     "v": 72909,
+     "unit": "pins",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1043.log 10:51"
+    },
+    {
+     "k": "tagb",
+     "label": "arrival_tag pin budget",
+     "v": 316,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1043.log 10:51"
+    },
+    {
+     "k": "r2r",
+     "label": "rp -> 64:1 x 560 read mux, reg-to-reg",
+     "v": -219,
+     "unit": "ps",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/drive-1043.log 10:51"
+    },
+    {
+     "k": "rxp_cts",
+     "label": "rx_p LVT HM 50, post-CTS TT (killed)",
+     "v": -455.2,
+     "unit": "ps",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_tcrxp_lvt_hm50_398750b79"
+    },
+    {
+     "k": "rdy",
+     "label": "rx_p worst: receiver_ready input -> expect_retire",
+     "v": -433.5,
+     "unit": "ps",
+     "status": "measured",
+     "src": "MISS_DOSSIER C4"
+    },
+    {
+     "k": "rxp10",
+     "label": "rx_p HM 10, TT / FF",
+     "v": -158.49,
+     "unit": "ps (FF +1.79)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_tcrxp_hm10_398750b79"
+    },
+    {
+     "k": "flood",
+     "label": "credit-ready routes: endpoints in CTS hold repair at kill",
+     "v": 69243,
+     "unit": "endpoints",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_tccr_hm50_d5db55765"
+    },
+    {
+     "k": "pf384",
+     "label": "endpoint PF384 transaction with credit-ready",
+     "v": 531,
+     "unit": "cycles (was 529)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/credit-ready.log"
+    },
+    {
+     "k": "tx",
+     "label": "TX side (tx_reg), TT / FF",
+     "v": 2.17,
+     "unit": "ps (FF +6.77), closed",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_truecredit_tx_reg_tc_9fb461b6d"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Original receiver (9fb461b6d / 90356ef04)",
+     "result": "TT -278.3 / FF +11.0",
+     "why": "tag compare -> push -> write enable of 72.9k flops; 64:1 x 560 read mux; empty -> quiet combinational to the port",
+     "src": "~/claude-takeover-20261007/drive-1043.log 10:51"
+    },
+    {
+     "name": "rx_p (398750b79)",
+     "result": "TT -158.5 (HM 10); LVT HM 50 killed at -455.2",
+     "why": "data side fixed; receiver_ready still drives ~100 control flops in the arrival cycle",
+     "src": "MISS_DOSSIER C4; closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "credit-ready tccr (d5db55765)",
+     "result": "killed in CTS hold repair",
+     "why": "69k endpoints in hold margin on the old flow; setup never measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    }
+   ],
+   "records": [
+    "claude/drive-1043-timing-20261008 398750b79 (ot_ha2_truecredit_receiver_p)",
+    "claude/credit-ready-20261008 d5db55765 (CREDIT=1)",
+    "~/claude-takeover-20261007/credit-ready.log",
+    "MISS_DOSSIER.md C4",
+    "REVIEW_20261008.md C4"
+   ],
+   "blocks": [
+    {
+     "block": "ot_ha2_truecredit_rx_phys",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -158.49,
+      "ff_ps": 1.79,
+      "corner": "TT",
+      "status": "failed, re-running",
+      "job": "ha2_tcrxp_hm50b_398750b79"
+     },
+     "live": 3,
+     "live_jobs": [
+      "ha2_tccr_lvt_hm25_d5db55765-d1956",
+      "ha2_tccr_x1_hm0_79315a431",
+      "ha2_tccr_x1_hm10_79315a431"
+     ]
+    },
+    {
+     "block": "ot_ha2_truecredit_rx_s_phys",
+     "closed": null,
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "ot_ha2_truecredit_tx_phys",
+     "closed": {
+      "ss": 2.17,
+      "ff": 6.77,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job ha2_truecredit_tx_reg_tt_90356ef04"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "The HA2 receiver accepts 560-bit beats tagged in order, queues 64 of them and releases them when the consumer is ready. The tag check, the queue write and the ready handshake all happened in the arrival cycle.",
+   "naive": {
+    "title": "Decide the write from the tag compare",
+    "text": "arrival_tag (316 ps budget) -> 16-bit compare -> push -> write enable of a 72.9k-flop queue; the read side a 64:1 x 560 mux. receiver_ready came in the same cycle and fanned out to about 100 control flops."
+   },
+   "trick": {
+    "title": "Write first, check later; ready becomes a credit",
+    "text": "rx_p lands every pin in a flop and writes the beat into a free slot regardless of the compare (a rejected beat is simply dropped later), with one-hot rings and an AND-OR read. CREDIT=1 then turns receiver_ready into a credit-return pulse into a pin flop and a per-lane counter sized to the consumer buffer (CRD 8), so pop depends only on registers."
+   },
+   "evidence": "Exact gates: ha2_truecredit_rxp_gate and ha2_credit_ready_gate (16 forward / return cases, tag wrap, reset flights; mutants 1-4, credit over-issue, spurious credit, stale credit all caught); endpoint PF384 bit-exact with OWNER_RX_CREDIT=1 on Verilator. The TX side closed at TT +2.17 / FF +6.77.",
+   "price": "rx_p: +1 arrival cycle, +1 on quiet / fault. Credit-ready: credit loop +1; the endpoint transaction goes 529 -> 531 cycles; no rate loss (CRD 8 covers the ~7-cycle round trip).",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "t",
+       "c": 0,
+       "r": 0,
+       "label": "arrival tag",
+       "k": "field"
+      },
+      {
+       "id": "c",
+       "c": 1,
+       "r": 0,
+       "label": "16-bit compare",
+       "k": "bad"
+      },
+      {
+       "id": "we",
+       "c": 2,
+       "r": 0,
+       "label": "write enable, 72.9k flops",
+       "k": "bad"
+      },
+      {
+       "id": "r",
+       "c": 3,
+       "r": 0,
+       "label": "receiver_ready (same cycle)",
+       "k": "bad"
+      }
+     ],
+     "edges": [
+      {
+       "a": "t",
+       "b": "c"
+      },
+      {
+       "a": "c",
+       "b": "we",
+       "l": "one cycle",
+       "bad": true
+      },
+      {
+       "a": "r",
+       "b": "we",
+       "l": "~100 loads",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "c",
+        "we"
+       ],
+       "pk": [
+        1
+       ],
+       "bad": true,
+       "note": "TT -278 ps on the write enable."
+      },
+      {
+       "hot": [
+        "r"
+       ],
+       "pk": [
+        2
+       ],
+       "bad": true,
+       "note": "rx_p fixes the write; the ready input is next (-433 ps)."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "p",
+       "c": 0,
+       "r": 0,
+       "label": "pin flops",
+       "k": "good"
+      },
+      {
+       "id": "w",
+       "c": 1,
+       "r": 0,
+       "label": "write any free slot",
+       "k": "good"
+      },
+      {
+       "id": "cr",
+       "c": 2,
+       "r": 0,
+       "label": "credit pulse -> pin flop -> counter",
+       "k": "good"
+      },
+      {
+       "id": "pop",
+       "c": 3,
+       "r": 0,
+       "label": "pop from registers",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "p",
+       "b": "w"
+      },
+      {
+       "a": "cr",
+       "b": "pop"
+      },
+      {
+       "a": "w",
+       "b": "pop"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "p",
+        "w"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "The compare no longer gates the write."
+      },
+      {
+       "hot": [
+        "cr",
+        "pop"
+       ],
+       "pk": [
+        1,
+        2
+       ],
+       "note": "Ready arrives as a registered credit: +1 on the loop, no rate loss."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_ha2_truecredit_rx_phys",
+    "ot_ha2_truecredit_rx_s_phys",
+    "ot_ha2_truecredit_tx_phys"
+   ]
+  },
+  {
+   "id": "hbm-norm-split",
+   "target": "hbm",
+   "element": "ot_hbm_norm_engine_view (RMSNorm N64 / D5120)",
+   "title": "An RMSNorm engine too big to place flat",
+   "summary": "The HBM accelerator's 64-lane RMSNorm engine is 4.5 M cells flat: synthesis looped for 10 hours and global placement takes 8-12. It was cut into a replicated, pin-registered lane-group macro and a thin top. The split is exact; its routes were killed by hold repair before any setup number came back.",
+   "status": "in progress",
+   "status_basis": "grp8-b / grp16 reruns (d1956, HM 0-10) and the flat keepfp / hier variants are running; no route has a setup verdict",
+   "facts": [
+    {
+     "k": "cells",
+     "label": "flat engine, cells",
+     "v": 4.49,
+     "unit": "M cells",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "k": "std",
+     "label": "flat engine, standard-cell area",
+     "v": 612,
+     "unit": "k um2",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "k": "gp",
+     "label": "global placement time, flat",
+     "v": 12,
+     "unit": "h (8-12)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "k": "synth",
+     "label": "flat synthesis stuck in opt_dff",
+     "v": 10.5,
+     "unit": "h",
+     "status": "measured",
+     "src": "MISS_DOSSIER C7"
+    },
+    {
+     "k": "golden",
+     "label": "split vs flat streams (g8 / g16), y / q / rstd",
+     "v": 320,
+     "unit": "words identical (y 320, q 320, rstd 4)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05 (tb_hbm_norm_split, Verilator 5.032)"
+    },
+    {
+     "k": "goy",
+     "label": "go -> y latency, split vs flat",
+     "v": 346,
+     "unit": "cycles (flat 345)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "k": "area",
+     "label": "split area estimate",
+     "v": 1.6,
+     "unit": "mm2 (flat 1.21)",
+     "status": "analytical",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "k": "flood",
+     "label": "grp routes: endpoints in CTS hold repair at kill",
+     "v": 35286,
+     "unit": "endpoints (33.9-35.3k)",
+     "status": "measured",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00 job hbm-norm-grp16-26f2e4ed2-tc"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Flat engine (07750de1f / 13ea04a58)",
+     "result": "synthesis stuck 9.5 h",
+     "why": "yosys opt_dff re-run loop over 225+ passes inside the FP pipelines",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "MEM1 hier1000 / hier200 / keepfp",
+     "result": "calibrate failures, still running",
+     "why": "hierarchical synthesis is ~3x faster but still hours; placement of 3.75-4.5 M instances 8-12 h",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log; closure-loop job state 2026-10-08T21:29-07:00"
+    },
+    {
+     "name": "Split a11a89fec",
+     "result": "cancelled by its bench",
+     "why": "the exact bench caught a group reset-release bug (gain write 2 cycles after release dropped)",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:05"
+    },
+    {
+     "name": "Split 2f35282d8",
+     "result": "bench rc=1",
+     "why": "the loop snapshot lacked results/, so both DUTs ran on empty golden files; fixed to fail closed (26f2e4ed2)",
+     "src": "~/claude-takeover-20261007/hbm-norm-split.log 09:20"
+    },
+    {
+     "name": "Split 26f2e4ed2 grp8-a / grp8-b / grp16",
+     "result": "killed 19:51 in CTS hold repair",
+     "why": "34-35k endpoints in hold margin on the old flow (no HM guard)",
+     "src": "closure-loop job state 2026-10-08T21:29-07:00"
+    }
+   ],
+   "records": [
+    "26f2e4ed2 (ot_hbm_norm_grp8 / grp16, ot_hbm_norm_split_view_g8 / g16)",
+    "~/claude-takeover-20261007/hbm-norm-split.log",
+    "~/claude-takeover-20261007/credit-ready.log (no handshake to convert)",
+    "MISS_DOSSIER.md C7",
+    "REVIEW_20261008.md C7"
+   ],
+   "blocks": [
+    {
+     "block": "ot_hbm_norm_engine_view",
+     "closed": null,
+     "best_fail": null,
+     "live": 2,
+     "live_jobs": [
+      "hbm-norm-mem1-hier200-68b82e1fd-tt",
+      "hbm-norm-mem1-keepfp-tc-2b5fa0ca2"
+     ]
+    },
+    {
+     "block": "ot_hbm_norm_grp8",
+     "closed": null,
+     "best_fail": null,
+     "live": 3,
+     "live_jobs": [
+      "hbm-norm-grp8-b-26f2e4ed2-tc-d1956",
+      "hbm-norm-grp8-b-26f2e4ed2-tc-d1956-f3-hm10",
+      "hbm-norm-grp8-b-x1hm0-79315a431-tc"
+     ]
+    },
+    {
+     "block": "ot_hbm_norm_grp16",
+     "closed": null,
+     "best_fail": null,
+     "live": 2,
+     "live_jobs": [
+      "hbm-norm-grp16-26f2e4ed2-tc-d1956",
+      "hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt"
+     ]
+    }
+   ],
+   "problem": "RMSNorm over a 5,120-wide row needs a sum of squares, a reciprocal square root and a scale for each of 64 lanes, with exact FP32 rounding. Written flat with its SRAMs (MEM1) it is 4.49 M cells, too large for one placement run.",
+   "naive": {
+    "title": "One flat block",
+    "text": "Synthesis cascaded opt_dff passes for 10.5 h; hierarchical synthesis was 3x faster and still took hours; global placement of 3.75-4.5 M instances takes 8-12 h a run."
+   },
+   "trick": {
+    "title": "A replicated lane-group macro and a thin top",
+    "text": "ot_hbm_norm_grp8/16 holds the mix, square, scale and chunk chains, its SRAMs and an in-group tree, with every input landing in a flop and every output leaving one. The thin top keeps the capture flops, the upper tree levels, divide / eps / rsqrt, broadcast and quantisation. Pin flops on the RMS loop are absorbed into existing pipeline registers. The engine is valid-only (no back-pressure), so nothing needed a credit conversion."
+   },
+   "evidence": "g8 and g16 split streams match the flat engine exactly (y 320 / q 320 / rstd 4); go -> y 346 vs 345 cycles; mutant OT_NSPLIT_MUT fails both. Routes: none measured yet (hold flood). The review (C7) asks for an HM 0-10 rerun and, if the top broadcast fails, one broadcast flop per group.",
+   "price": "r / y +1 cycle, q +2; throughput unchanged; area about 1.6 mm2 vs 1.21 mm2 flat.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "M cells",
+     "bars": [
+      {
+       "label": "flat engine (MEM1)",
+       "v": 4.49,
+       "k": "bad"
+      },
+      {
+       "label": "one grp8 group (estimate)",
+       "v": 0.5,
+       "k": "good"
+      },
+      {
+       "label": "one grp16 group (estimate)",
+       "v": 1.0,
+       "k": "good"
+      }
+     ],
+     "steps": [
+      {
+       "show": 1,
+       "note": "Flat: 4.49 M cells, 8-12 h placement."
+      },
+      {
+       "show": 3,
+       "note": "A group macro is ~0.5-1.0 M cells, replicated."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "top",
+       "c": 0,
+       "r": 0,
+       "label": "thin top: capture, tree, rsqrt, broadcast",
+       "k": "ctrl"
+      },
+      {
+       "id": "g1",
+       "c": 1,
+       "r": 0,
+       "label": "group macro (pin-registered)",
+       "k": "good"
+      },
+      {
+       "id": "g2",
+       "c": 1,
+       "r": 1,
+       "label": "group macro (pin-registered)",
+       "k": "good"
+      },
+      {
+       "id": "y",
+       "c": 2,
+       "r": 0,
+       "label": "y / q out (+1 / +2)",
+       "k": "su"
+      }
+     ],
+     "edges": [
+      {
+       "a": "top",
+       "b": "g1"
+      },
+      {
+       "a": "top",
+       "b": "g2"
+      },
+      {
+       "a": "g1",
+       "b": "y"
+      },
+      {
+       "a": "g2",
+       "b": "y"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "top",
+        "g1",
+        "g2"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "The top fans out to 4-8 identical group macros; every group pin is a flop."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_hbm_norm_engine_view",
+    "ot_hbm_norm_grp8",
+    "ot_hbm_norm_grp16"
+   ]
+  },
+  {
+   "id": "qwen-embed-hbm",
+   "target": "qwen",
+   "element": "qfd_io_embedding_rom (input embedding table)",
+   "title": "Moving the embedding table into HBM",
+   "summary": "The Qwen die reserves 11 mm2 for the input embedding, sized for a quarter vocabulary, while the RTL stores the full 151,936-row table on every die: about 88 mm2. Reading the row from each die's own HBM instead costs about 0.1 % of rate, roughly what an honestly charged ROM path costs, and frees the reservation.",
+   "status": "in progress",
+   "status_basis": "feasibility study recommends option 1 (full copy in each die's HBM); implementation stream emb-hbm started 2026-10-08 20:44 PT; no die or RTL change is merged",
+   "facts": [
+    {
+     "k": "resv",
+     "label": "r21b embedding reservation (never routed)",
+     "v": 11.046,
+     "unit": "mm2 (1.30 % of the die)",
+     "status": "measured",
+     "src": "EMB_HBM_FEASIBILITY.md section 1 (qwen_rom_abstract_list.json)"
+    },
+    {
+     "k": "rtl",
+     "label": "embedding as RTL'd (full replica, routed frames)",
+     "v": 88.1,
+     "unit": "mm2 (~10.4 %)",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 1"
+    },
+    {
+     "k": "macros",
+     "label": "ROM macros for the full table",
+     "v": 4751,
+     "unit": "macros (36.41 mm2 raw)",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 1 (qwen_embedding_bank_closure_model)"
+    },
+    {
+     "k": "bytes",
+     "label": "table size (INT8 codes + BF16 scale per row)",
+     "v": 594,
+     "unit": "MiB",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 1"
+    },
+    {
+     "k": "share",
+     "label": "share of one die's HBM capacity",
+     "v": 0.69,
+     "unit": "%",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 1"
+    },
+    {
+     "k": "bw",
+     "label": "embedding traffic a die (vs 2.77 TB/s headroom)",
+     "v": 22.5,
+     "unit": "MB/s",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 3"
+    },
+    {
+     "k": "hbm_typ",
+     "label": "HBM path, typical",
+     "v": 313,
+     "unit": "cycles",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 2"
+    },
+    {
+     "k": "hbm_worst",
+     "label": "HBM path, worst (refresh on the bank)",
+     "v": 632,
+     "unit": "cycles",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 2"
+    },
+    {
+     "k": "rom_chain",
+     "label": "ROM path, RTL'd tap chain (mean / worst)",
+     "v": 521,
+     "unit": "cycles (worst 819)",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 2"
+    },
+    {
+     "k": "rate",
+     "label": "rate change, HBM typical (basis 5,492.7 tok/s)",
+     "v": -0.11,
+     "unit": "%",
+     "status": "analytical",
+     "src": "EMB_HBM_FEASIBILITY.md section 2 (results/arch/reprice_20261008/reprice.json basis)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Quarter-vocabulary ROM reservation (r21b)",
+     "result": "never routed",
+     "why": "sized for a TP4 quarter table; the RTL root stores the full table on every die",
+     "src": "EMB_HBM_FEASIBILITY.md section 0"
+    },
+    {
+     "name": "Full ROM replica (ot_qfd_io_embedding_rom, r21f tap chain)",
+     "result": "~88 mm2, 29.7 mm column",
+     "why": "does not fit the reservation; a request walks up to 297 taps (mean 521 cycles)",
+     "src": "EMB_HBM_FEASIBILITY.md sections 1-2"
+    },
+    {
+     "name": "Shared embedding die (existing model)",
+     "result": "801 cycles, -0.34 %",
+     "why": "slower than the per-die HBM copy",
+     "src": "EMB_HBM_FEASIBILITY.md section 2"
+    }
+   ],
+   "records": [
+    "EMB_HBM_FEASIBILITY.md (stream emb-hbm, 2026-10-08)",
+    "claude/emb-hbm-20261008 (implementation, from origin/main)",
+    "compiler/models/qwen3-8b/config.json (tie_word_embeddings false)"
+   ],
+   "blocks": [
+    {
+     "block": "qfd_embed_code_bank",
+     "closed": {
+      "ss": 89.4,
+      "ff": 34.7,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_embed_code_bank_parent_flat-e510ca8c2tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "qfd_embed_scale_bank",
+     "closed": {
+      "ss": 138.69,
+      "ff": 45.01,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_embed_scale_bank_parent_flat-e510ca8c2tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "qfd_io_emb_root",
+     "closed": {
+      "ss": 5.21,
+      "ff": 29.25,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_io_emb_root-1e23a4915-lvt-tc"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "qfd_io_emb_tap",
+     "closed": {
+      "ss": 128.11,
+      "ff": 38.54,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job qfd_io_emb_tap-c1e4eba84tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "Each token starts by reading one 4,098-byte row (INT8 codes plus a BF16 scale) of a 151,936 x 4,096 table. The row is the first operand of layer 0, so the read is fully exposed in AR mode.",
+   "naive": {
+    "title": "A ROM copy of the table on every die",
+    "text": "The RTL builds the whole table as 4,751 ROM macros behind a root and a chain of 297 registered taps: about 88 mm2 a die against an 11 mm2 reservation, and 521-819 cycles from request to row."
+   },
+   "trick": {
+    "title": "The table in the die's own HBM, striped over pseudo-channels",
+    "text": "Each die keeps one copy in its HBM (0.69 % of capacity). The SU sends one tagged read through the hub to the four stacks; striping a row's 128 sectors one per pseudo-channel makes the DRAM part a single access. The response rides the existing KV link buses and merges onto the SU's 512-bit port. Dequantisation stays in the SU, so the exactness contract is unchanged."
+   },
+   "evidence": "Composed from existing per-stage constants (graded estimate): typical 313 cycles, 392 with KV-stream starvation, 632 with a per-bank refresh (removable with a second copy). Every row compares with the ~65-cycle behavioural ROM the 5,492.7 tok/s basis carries today.",
+   "price": "About -0.11 % rate typical, -0.26 % worst, against -0.08 % to -0.34 % for the ROM paths. Needs a static readable HBM region on the tagged port, a boot loader and ECC on the stored rows. Frees 11.046 mm2 of the r21b IO band.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "cycles from request to row",
+     "bars": [
+      {
+       "label": "ROM, modelled tree",
+       "v": 233,
+       "k": "idle"
+      },
+      {
+       "label": "HBM typical",
+       "v": 313,
+       "k": "good"
+      },
+      {
+       "label": "HBM + starvation",
+       "v": 392,
+       "k": "good"
+      },
+      {
+       "label": "ROM, RTL tap chain (mean)",
+       "v": 521,
+       "k": "bad"
+      },
+      {
+       "label": "HBM worst (refresh)",
+       "v": 632,
+       "k": "su"
+      },
+      {
+       "label": "ROM, RTL tap chain (worst)",
+       "v": 819,
+       "k": "bad"
+      }
+     ],
+     "steps": [
+      {
+       "show": 1,
+       "note": "The modelled ROM tree is fastest but is not what the RTL builds."
+      },
+      {
+       "show": 4,
+       "note": "The RTL'd ROM chain is slower than the HBM path."
+      },
+      {
+       "show": 6,
+       "note": "Worst cases: HBM 632, ROM 819."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "su",
+       "c": 0,
+       "r": 0,
+       "label": "SU: tagged read (26 b)",
+       "k": "su"
+      },
+      {
+       "id": "hub",
+       "c": 1,
+       "r": 0,
+       "label": "hub -> 4 strips",
+       "k": "wire"
+      },
+      {
+       "id": "hbm",
+       "c": 2,
+       "r": 0,
+       "label": "HBM: one access, 128 sectors striped",
+       "k": "hbm"
+      },
+      {
+       "id": "eq",
+       "c": 3,
+       "r": 0,
+       "label": "row back on the KV links -> SU eq port",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "su",
+       "b": "hub"
+      },
+      {
+       "a": "hub",
+       "b": "hbm"
+      },
+      {
+       "a": "hbm",
+       "b": "eq"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "su",
+        "hub",
+        "hbm",
+        "eq"
+       ],
+       "pk": [
+        0,
+        1,
+        2
+       ],
+       "note": "~313 cycles typical; the 11 mm2 ROM reservation is freed."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "qfd_embed_code_bank",
+    "qfd_embed_scale_bank",
+    "qfd_io_emb_root",
+    "qfd_io_emb_tap",
+    "qfd_embed_ingress_code",
+    "qfd_embed_ingress_scale"
+   ]
+  },
+  {
+   "id": "x-hold-guard",
+   "target": "x",
+   "element": "closure-loop flow (route-time hold repair)",
+   "title": "When hold repair floods: the margin guard",
+   "summary": "Route-time hold repair inserted a 50 ps hold margin on every fast-corner endpoint. On large blocks that meant tens of thousands of endpoints and buffers: routes stalled for 9-16 hours or failed placement, and many redesigns were killed before their setup was ever measured. A guard now lowers the margin for the run when it would flood, and the route-time reference was aligned with the one the verdict uses.",
+   "status": "reference",
+   "status_basis": "flow rule: guard deployed in main ca0869ee3 (closure-loop daemon restarted); fleet FF reference fix d1925153f; acceptance unchanged (FF >= 0, post-route hold ECO)",
+   "facts": [
+    {
+     "k": "killed",
+     "label": "routes killed in hold repair, 19:45-19:49 PT",
+     "v": 14,
+     "unit": "jobs",
+     "status": "measured",
+     "src": "MISS_DOSSIER tally, class H [stuckscan.log]"
+    },
+    {
+     "k": "range",
+     "label": "endpoints in hold margin at those kills",
+     "v": 156,
+     "unit": "k (20-156k)",
+     "status": "measured",
+     "src": "MISS_DOSSIER notes for the review"
+    },
+    {
+     "k": "rx128",
+     "label": "qfd_link_rx128 at HM 50: hold buffers before DPL-0033",
+     "v": 146,
+     "unit": "k buffers",
+     "status": "measured",
+     "src": "MISS_DOSSIER A4"
+    },
+    {
+     "k": "tile",
+     "label": "qfd_tile routes stuck in old-flow CTS hold repair",
+     "v": 16,
+     "unit": "h (9-16)",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/qwen-tile.log 18:15"
+    },
+    {
+     "k": "bf",
+     "label": "BF recipe with a hard-coded 20 ps margin: one serial pass",
+     "v": 47.5,
+     "unit": "k endpoints, 10 h stall",
+     "status": "measured",
+     "src": "MISS_DOSSIER F"
+    },
+    {
+     "k": "ep_max",
+     "label": "guard trigger: endpoints in margin",
+     "v": 10000,
+     "unit": "endpoints",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hm-guard.log (OT_HM_GUARD_MAX_EP)"
+    },
+    {
+     "k": "util_max",
+     "label": "guard trigger: projected utilisation increase",
+     "v": 8,
+     "unit": "points",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hm-guard.log (OT_HM_GUARD_MAX_UTIL_PTS)"
+    },
+    {
+     "k": "buf_model",
+     "label": "buffer model: one buffer per 20 ps of deficit",
+     "v": 0.08,
+     "unit": "um2 a buffer",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hm-guard.log (calibrated on rx128 and the S81 root CAM)"
+    },
+    {
+     "k": "vm8",
+     "label": "vm8 output pin flops failing FF from the min-vs-mean reference",
+     "v": 6906,
+     "unit": "flops",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/vm8-timing.log 15:03"
+    },
+    {
+     "k": "tests",
+     "label": "guard unit tests",
+     "v": 8,
+     "unit": "pass",
+     "status": "measured",
+     "src": "~/claude-takeover-20261007/hm-guard.log (tools/closure_loop/test_hm_guard.py)"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Fixed HM 50 at CTS and GRT",
+     "result": "20-156k endpoints in margin",
+     "why": "every fast-corner endpoint below 50 ps was repaired, real or not: placement filled with buffers (DPL-0033) or repair ran for hours",
+     "src": "MISS_DOSSIER notes"
+    },
+    {
+     "name": "Route-time FF repair against vclk at the MIN insertion",
+     "result": "verdict FF fails of (mean - min) + 50 ps",
+     "why": "the verdict judges output pins at the routed MEAN insertion; 6,906 vm8 pin flops failed at -45..-64",
+     "src": "~/claude-takeover-20261007/vm8-timing.log 15:25"
+    },
+    {
+     "name": "Kill and requeue by hand (stuckscan)",
+     "result": "14 routes lost their setup verdict",
+     "why": "the decisive redesign variants of io_collective, tree_lane, norm, credit-ready and selt_q2 never reported setup",
+     "src": "MISS_DOSSIER notes; REVIEW_20261008 X1"
+    }
+   ],
+   "records": [
+    "main ca0869ee3 (tools/orfs_hold_mm.tcl ot_hm_guard)",
+    "main d1925153f (io_ref_routed.sdc in the route-time FF scene)",
+    "tools/closure_loop/test_hm_guard.py, test_route_ff_ioref.py",
+    "~/claude-takeover-20261007/hm-guard.log",
+    "MISS_DOSSIER.md (class H)",
+    "REVIEW_20261008.md X1"
+   ],
+   "blocks": [
+    {
+     "block": "qfd_link_rx128",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -695.87,
+      "ff_ps": -69.53,
+      "corner": "TT",
+      "status": "failed, re-running",
+      "job": "qfd_link_rx128_o302_hm10-440e36808-tc"
+     },
+     "live": 1,
+     "live_jobs": [
+      "qfd_link_rx128_o302_afw-1d3c576bbtc"
+     ]
+    },
+    {
+     "block": "qfd_sp_tree_lane",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -111.36,
+      "ff_ps": -42.92,
+      "corner": "SS",
+      "status": "failed, re-running",
+      "job": "qfd_sp_tree_lane-orfs-8c5eb4914"
+     },
+     "live": 2,
+     "live_jobs": [
+      "qfd_sp_tree_lane_ostn_pf-1d3c576bbtc",
+      "qfd_sp_tree_lane_ostn_ps-1d3c576bbtc"
+     ]
+    },
+    {
+     "block": "qfd_io_collective",
+     "closed": null,
+     "best_fail": {
+      "ss_ps": -340.69,
+      "ff_ps": -40.1,
+      "corner": "TT",
+      "status": "failed, re-running",
+      "job": "qfd_io_collective_pr-f5c360282"
+     },
+     "live": 1,
+     "live_jobs": [
+      "qfd_io_collective_pr2-1d3c576bbtc"
+     ]
+    }
+   ],
+   "problem": "Hold repair at CTS and global route uses a design margin (HM) on top of FF hold >= 0. On a block with tens of thousands of back-to-back register pairs, a 50 ps margin asks for a buffer on nearly every one of them.",
+   "naive": {
+    "title": "One margin for every block",
+    "text": "HM 50 everywhere: rx128 grew 146k hold buffers and failed legalisation; tile, tree_lane and io_collective routes sat 9-16 h in serial hold repair; 14 routes were killed before setup was measured."
+   },
+   "trick": {
+    "title": "Project the flood, then lower the margin for that run",
+    "text": "Before every route-time hold repair, ot_hm_guard counts fast-corner endpoints below HM and projects the buffers (one per 20 ps of deficit, 0.08 um2 each). If more than 10,000 endpoints or 8 utilisation points would be added, this run uses min(HM, max(10, worst real violation + 10)) ps and logs an OT_HM_AUTO event. A deep real violation keeps the full margin. Separately, route-time FF repair now targets the routed mean insertion that the verdict uses."
+   },
+   "evidence": "Unit tests cover rx128 (-> 10 ps), the S81 root CAM (-> 15 ps), the area trigger, small blocks (keep HM), deep violations (keep HM) and event de-duplication. Acceptance is unchanged: FF hold >= 0 at sign-off and a post-route hold ECO.",
+   "price": "None in cycles or area; a guarded run can finish with less hold margin, which the post-route ECO restores where needed.",
+   "diagram": {
+    "naive": {
+     "kind": "bars",
+     "unit": "k endpoints in hold margin",
+     "bars": [
+      {
+       "label": "io_collective (kill)",
+       "v": 110.5,
+       "k": "bad"
+      },
+      {
+       "label": "tree_lane credit (kill)",
+       "v": 156,
+       "k": "bad"
+      },
+      {
+       "label": "qfd_tile (cancelled)",
+       "v": 89,
+       "k": "bad"
+      },
+      {
+       "label": "norm grp16 (kill)",
+       "v": 35.3,
+       "k": "bad"
+      },
+      {
+       "label": "guard trigger",
+       "v": 10,
+       "k": "good"
+      }
+     ],
+     "steps": [
+      {
+       "show": 4,
+       "note": "Routes killed or stalled in hold repair."
+      },
+      {
+       "show": 5,
+       "note": "Above 10k endpoints the guard lowers HM for the run."
+      }
+     ],
+     "limit": {
+      "v": 10,
+      "label": "guard"
+     }
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 3,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "cnt",
+       "c": 0,
+       "r": 0,
+       "label": "count FF endpoints < HM",
+       "k": "ctrl"
+      },
+      {
+       "id": "proj",
+       "c": 1,
+       "r": 0,
+       "label": "project buffers + utilisation",
+       "k": "ctrl"
+      },
+      {
+       "id": "hm",
+       "c": 2,
+       "r": 0,
+       "label": "HM -> max(10, worst + 10)",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "cnt",
+       "b": "proj"
+      },
+      {
+       "a": "proj",
+       "b": "hm",
+       "l": "> 10k or > 8 pts"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "cnt",
+        "proj",
+        "hm"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "The run keeps going and reports its setup; the ECO handles the real hold."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "qfd_link_rx128",
+    "qfd_sp_tree_lane",
+    "qfd_io_collective",
+    "ot_hbm_norm_grp8",
+    "ot_hbm_norm_grp16"
+   ]
+  },
+  {
+   "id": "x-mtp",
+   "target": "x",
+   "element": "MTP / DSpark speculative decoding (DS ROM and HBM accelerator)",
+   "title": "MTP: what is built, and what is missing",
+   "summary": "Both DeepSeek designs publish an MTP rate: 4,351.6 tok/s on the ROM array (half-rate BF) and 3,700.3 on the HBM accelerator. Each is composed from measured element cycles and a software acceptance rate; the control blocks exist as RTL and some closed standalone, but no MTP block sits in any die recipe yet. Four streams started on 2026-10-08 evening to close that gap.",
+   "status": "gated",
+   "status_basis": "MTP_AUDIT.md: physical_qualified = false, qualified_headline_rate = null; streams mtp-rom / mtp-hbm / mtp-die / mtp-exact started 20:58-21:05 PT",
+   "facts": [
+    {
+     "k": "ds_mtp",
+     "label": "DS ROM MTP rate, HALF_PHL",
+     "v": 4351.6,
+     "unit": "tok/s",
+     "status": "analytical",
+     "src": "commit bca2011b9 (token-path export, DS ROM MTP mode); MTP_AUDIT section 3"
+    },
+    {
+     "k": "ds_full",
+     "label": "DS ROM MTP rate, full-rate BF (shared 98 stages)",
+     "v": 4792.2,
+     "unit": "tok/s",
+     "status": "analytical",
+     "src": "commit bca2011b9; MTP_AUDIT section 3"
+    },
+    {
+     "k": "hbm_mtp",
+     "label": "HBM accelerator MTP rate (upper bound)",
+     "v": 3700.3,
+     "unit": "tok/s",
+     "status": "analytical",
+     "src": "commit bca2011b9; MTP_AUDIT section 3"
+    },
+    {
+     "k": "tau",
+     "label": "acceptance tau (6-class blend, gamma 5, software)",
+     "v": 4.159,
+     "unit": "tokens / step",
+     "status": "measured",
+     "src": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"
+    },
+    {
+     "k": "step",
+     "label": "DS ROM MTP step, HALF_PHL (AR 690.8 us)",
+     "v": 955.7,
+     "unit": "us",
+     "status": "analytical",
+     "src": "MTP_AUDIT section 3"
+    },
+    {
+     "k": "handoff",
+     "label": "wavefront handoff between positions (reduced L20 stage RTL)",
+     "v": 46,
+     "unit": "cycles",
+     "status": "measured",
+     "src": "results/rtl/dsrom_wavefront_verify_20261004/record.json (MTP_AUDIT section 2)"
+    },
+    {
+     "k": "wfc",
+     "label": "WFC controller src route (SS-era), SS / FF",
+     "v": 31.5,
+     "unit": "ps (FF +22.7), integration_qualified false",
+     "status": "measured",
+     "src": "results/rtl/dsrom_wfc_split_20261006/closure.json"
+    },
+    {
+     "k": "draft",
+     "label": "DS draft: 3 DSpark blocks at full shape",
+     "v": 83.99,
+     "unit": "us",
+     "status": "measured",
+     "src": "MTP_AUDIT section 2 (tools/dsrom_1m_draft_blocks.py)"
+    },
+    {
+     "k": "hbm_draft",
+     "label": "HBM draft chain, measured on HBM RTL elements",
+     "v": 45.28,
+     "unit": "us",
+     "status": "measured",
+     "src": "results/rtl/dshbm_dspark_draft_20261004 (MTP_AUDIT section 2)"
+    },
+    {
+     "k": "ctl",
+     "label": "HBM DSpark control-plane RTL, instantiated nowhere",
+     "v": 1071,
+     "unit": "lines",
+     "status": "measured",
+     "src": "rtl/gpu/dshbm/ (MTP_AUDIT section 2)"
+    },
+    {
+     "k": "masters",
+     "label": "HBM r25 die masters carrying MTP",
+     "v": 0,
+     "unit": "of 84",
+     "status": "measured",
+     "src": "MTP_AUDIT section 0"
+    },
+    {
+     "k": "eta",
+     "label": "estimated time to a defensible minimum claim",
+     "v": 4,
+     "unit": "days (3-4)",
+     "status": "estimate",
+     "src": "MTP_AUDIT section 5 ETA"
+    }
+   ],
+   "tried": [
+    {
+     "name": "Multi-step speculative = greedy RTL campaign (ROM)",
+     "result": "never terminal",
+     "why": "logs on EPYC1 are empty or a few bytes; only one speculative step and the ISA multi-step are exact",
+     "src": "MTP_AUDIT G1"
+    },
+    {
+     "name": "spec_state (HBM)",
+     "result": "2 mismatches",
+     "why": "the latest closed variant spec3_s8 fails its bench; TOKEN_EDGE_FIX1 closed SS +28.4 but was not adopted",
+     "src": "MTP_AUDIT section 2"
+    },
+    {
+     "name": "WFC as a die block",
+     "result": "soft reservation only (0.456 mm2)",
+     "why": "closed standalone, but its 4 bindings (VM 3:4 crossing, cfg producer, core endpoints, link) are unverified",
+     "src": "MTP_AUDIT G3"
+    }
+   ],
+   "records": [
+    "~/claude-takeover-20261007/MTP_AUDIT.md",
+    "results/arch/token_path_20261008/ds_rom_mtp.json, hbm_ds_mtp.json (bca2011b9)",
+    "rtl/gpu/dshbm/ot_dshbm_dspark_*.sv",
+    "results/rtl/dsrom_wfc_split_20261006/closure.json",
+    "~/claude-takeover-20261007/mtp-rom.log, mtp-hbm.log, mtp-die.log, mtp-exact.log"
+   ],
+   "blocks": [
+    {
+     "block": "ot_dsrom_head_elem_A",
+     "closed": {
+      "ss": 987.59,
+      "ff": 25.31,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job dshead-elemA-half-4123ff389-mmq-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    },
+    {
+     "block": "ot_dsrom_head_elem_B",
+     "closed": {
+      "ss": 196.56,
+      "ff": 22.08,
+      "corner": "TT",
+      "src": "closure-loop job state 2026-10-08T21:29-07:00 job dshead-elemB-ss-a318fdf47-lbc-tt"
+     },
+     "best_fail": null,
+     "live": 0,
+     "live_jobs": []
+    }
+   ],
+   "problem": "MTP drafts five tokens with DeepSeek's own DSpark head and verifies them in one pass. Hardware must sequence the draft chain, run six positions through the pipeline (a wavefront on the ROM array, six MMA columns on the HBM SMs), compare drafts with targets, broadcast the accept count and squash the rest, and keep KV consistent.",
+   "naive": {
+    "title": "Compose the rate, defer the control",
+    "text": "The published MTP numbers multiply measured AR walks and draft times by a software acceptance rate. The wavefront contention, the accept / squash path and the draft-die topology are modelled, and the ROM head die has no sequencer block at all."
+   },
+   "trick": {
+    "title": "The plan: exactness first, then blocks, then dies",
+    "text": "Phase A runs the speculative = greedy campaigns to terminal on both designs (A1-A3). Phase B builds ot_dsrom_mtp_seq (head-die sequencer, ~0.1 mm2), the WFC integration shims and hfd_mtp (HBM, <= 1 mm), with design review before any route. Phase C routes them at TT; phase D adds them to the die recipes and charges every cycle in the composition."
+   },
+   "evidence": "Exact today: the golden and ISA multi-step (328b5fff), one speculative step on the reduced ROM vehicle, the six-position wavefront on one reduced stage, the HBM control plane against generate_spec (2,159 / 2,159 SM passes). Not yet: any multi-step RTL run to terminal, any MTP master in a die.",
+   "price": "Until phase D the rates stay composed: 4,351.6 (ROM, HALF_PHL) and 3,700.3 (HBM, upper bound), with tau in a 3.43-4.32 sensitivity band. Known charges still to add: the sequencer, shim and spec-state cycles and full FEC on the HBM draft crossings.",
+   "diagram": {
+    "naive": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 2,
+     "nodes": [
+      {
+       "id": "d",
+       "c": 0,
+       "r": 0,
+       "label": "draft: DSpark head x 5",
+       "k": "su"
+      },
+      {
+       "id": "v",
+       "c": 1,
+       "r": 0,
+       "label": "verify: 6-position wavefront",
+       "k": "field"
+      },
+      {
+       "id": "a",
+       "c": 2,
+       "r": 0,
+       "label": "accept / squash (no block on S81)",
+       "k": "bad"
+      },
+      {
+       "id": "c",
+       "c": 3,
+       "r": 0,
+       "label": "commit / seed",
+       "k": "ctrl"
+      },
+      {
+       "id": "t",
+       "c": 1,
+       "r": 1,
+       "label": "tau 4.159 from software",
+       "k": "idle"
+      }
+     ],
+     "edges": [
+      {
+       "a": "d",
+       "b": "v"
+      },
+      {
+       "a": "v",
+       "b": "a"
+      },
+      {
+       "a": "a",
+       "b": "c"
+      },
+      {
+       "a": "c",
+       "b": "d",
+       "l": "next step"
+      },
+      {
+       "a": "t",
+       "b": "a",
+       "l": "composed",
+       "bad": true
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "d",
+        "v"
+       ],
+       "pk": [
+        0
+       ],
+       "note": "Draft and verify are built from measured element cycles."
+      },
+      {
+       "hot": [
+        "a"
+       ],
+       "pk": [
+        1,
+        4
+       ],
+       "bad": true,
+       "note": "Accept and squash have no die block on the ROM head; the rate uses software tau."
+      }
+     ]
+    },
+    "trick": {
+     "kind": "flow",
+     "cols": 4,
+     "rows": 1,
+     "nodes": [
+      {
+       "id": "A",
+       "c": 0,
+       "r": 0,
+       "label": "A: exact runs to terminal",
+       "k": "good"
+      },
+      {
+       "id": "B",
+       "c": 1,
+       "r": 0,
+       "label": "B: mtp_seq, WFC shims, hfd_mtp",
+       "k": "good"
+      },
+      {
+       "id": "C",
+       "c": 2,
+       "r": 0,
+       "label": "C: TT routes",
+       "k": "good"
+      },
+      {
+       "id": "D",
+       "c": 3,
+       "r": 0,
+       "label": "D: die recipes + charged rate",
+       "k": "good"
+      }
+     ],
+     "edges": [
+      {
+       "a": "A",
+       "b": "B"
+      },
+      {
+       "a": "B",
+       "b": "C"
+      },
+      {
+       "a": "C",
+       "b": "D"
+      }
+     ],
+     "steps": [
+      {
+       "hot": [
+        "A"
+       ],
+       "note": "Exactness first (1-1.5 days)."
+      },
+      {
+       "hot": [
+        "B",
+        "C"
+       ],
+       "pk": [
+        0,
+        1
+       ],
+       "note": "Blocks reviewed, then routed (2-4 days)."
+      },
+      {
+       "hot": [
+        "D"
+       ],
+       "pk": [
+        2
+       ],
+       "note": "Then the MTP rate can be published as qualified."
+      }
+     ]
+    }
+   },
+   "attach": [
+    "ot_dsrom_head_elem_A",
+    "ot_dsrom_head_elem_B",
+    "ot_hdc_v41_fh_head_top",
+    "hfd_mtp",
+    "hfd_mtp_x",
+    "ot_dshbm_dspark_ctl",
+    "ot_hdc_accept",
+    "ot_dshbm_argmax_m",
+    "ot_dshbm_expert_union_m",
+    "mtp_topk_f384"
+   ]
+  }
+ ]
+}

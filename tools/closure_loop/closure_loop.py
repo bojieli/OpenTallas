@@ -131,6 +131,13 @@ SETUP_LIB = "TT"
 VTSWAP_TT_FLOOR = -45.0
 VTSWAP_TARGETS = (10.0, 5.0)
 VTSWAP_CAP_PCT = 2.0
+# COMBO ECO (drive-0849 2026-10-09, coordinator-approved): a route that misses BOTH thinly -- TT in [COMBO_TT_FLOOR, 0) AND FF
+# in [COMBO_FF_FLOOR, 0), DRC 0, checks/benches clean -- gets neither the VT-swap ECO (needs FF >= 0) nor the hold ECO (needs
+# TT >= 0).  It runs vtswap_eco.sh (RVT->LVT on TT paths, <= VTSWAP_CAP_PCT % LVT) and then hold_eco.sh stacked on the
+# VT-swap result (ECO_RB_DB=6_final.odb) as ONE ECO stage; the hold-ECO completion path judges / installs / re-verdicts it.
+# (The manual /tmp/sc/combo_eco.py launches, made automatic.)  spec hold_eco.combo: false turns it off.
+COMBO_TT_FLOOR = -45.0
+COMBO_FF_FLOOR = -30.0
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -357,7 +364,7 @@ def stage_list(spec):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
-                        min_count_regex=b.get("min_count_regex"),
+                        min_count_regex=b.get("min_count_regex"), timeout_s=b.get("timeout_s"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     # OWNER 2026-10-08: a recipe that references IO in-run to its own propagated clock (io_ref_skew.sdc) needs no
@@ -679,7 +686,8 @@ def bench_missing_paths(spec, git_=None):
     src = spec.get("source") or {}
     commit = str(src.get("commit", ""))
     benches = ((spec.get("stages") or {}).get("bench") or [])
-    if not commit or not benches:
+    if not commit or not (benches or any(isinstance((spec.get("stages") or {}).get(k), dict)
+                                         for k in ("calibrate", "route"))):
         return []
     git_ = git_ or submit_lint.Git(REPO)
     synced = [str(x).rstrip("/") for x in list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))]
@@ -695,6 +703,14 @@ def bench_missing_paths(spec, git_=None):
             body = git_.show(commit, sc.lstrip("./"))
             if body:
                 texts.append(body)
+    # drive-0849 2026-10-09: the calibrate / route commands too (their own text, not the scripts they call) --
+    # hbm_smh_{tile,be}_{w,e}g_cg-44351241f: --geom {SRC}/results/uarch/.../geom_362p88.json was not synced, the
+    # calibrate died 'No such file' (synth_or_place).  {SRC}/ and $SRC/ prefixes name the snapshot itself.
+    for k in ("calibrate", "route"):
+        st = (spec.get("stages") or {}).get(k) or {}
+        cmd = st.get("cmd") if isinstance(st, dict) else None
+        if cmd:
+            texts.append(re.sub(r"(\{SRC\}|\$\{?SRC\}?)/", " ", cmd))
     need = set()
     for t in texts:
         for path in BENCH_PATH_RE.findall(t):
@@ -841,6 +857,22 @@ def report_stopped_waiters(host, rows):
         pass
 
 
+# DIE-OOM GUARD (drive-0849 2026-10-09, coordinator URGENT): the full-die Qwen r22k GRTs were killed by the HOST
+# (global) OOM killer as the largest process -- EPYC3 18:54:23 PDT openroad 122.5 GB, EPYC1 21:49:01 PDT openroad
+# 123.5 GB (dmesg 'Out of memory: Killed process'), not by stuckscan (its KILL_STAGE / EARLY_FAIL at those minutes hit
+# other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
+# host probe marks die-level containers (names / run mounts below) oom_score_adj -900: the kernel then picks a block
+# route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+DIE_CONTAINER_RE = r"^/?(qfd_dietop_|dieev_|de2_|die_|dsrom_s81|s81_l1|r25gp|hbm_r25gp|qwen_r22k)"
+DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
+DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
+                 f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
+                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
+                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
+                 "for p in $(pgrep -f '/(die-evidence[^/ ]*|kv-die)/' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
+                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}}' $c | grep -qE '{DIE_CONTAINER_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
 
 
@@ -857,6 +889,18 @@ class Fleet:
         c = self.probe_cache.get(host)
         if c and time.time() - c[0] < 45:
             return c[1]
+        # NO SSH UNDER FLEET_LOCK (drive-0849 2026-10-10, fleet STARVED: 91 waiting, EPYC2 520 GB free / load 40): every
+        # launch_ready / cal_track / hold-ECO capacity check ran fleet.fits under FLEET_LOCK, and an expired cache made it
+        # probe the host by ssh INSIDE the lock -- 2-3 s per host per 45 s, and up to ~130 s (40 s timeout x 3 + 7 s of
+        # retry sleeps) when a probe failed -- so every other job thread queued on the lock (py-spy: 19 threads idle at
+        # step/launch_ready, the holder in _probe_once).  Under the lock a probe now answers from the last good probe
+        # (<= PROBE_LAST_GOOD_S old); the refresh happens outside the lock (fits(), step()).
+        if FLEET_LOCK._is_owned():
+            good = self.last_good.get(host)
+            if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                return dict(good[1], stale_s=round(time.time() - good[0])) if time.time() - good[0] >= 45 else good[1]
+            if c:
+                return c[1]
         info = self._probe_once(host)
         for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
             if info is not None:
@@ -897,7 +941,7 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
-{PAUSE_PROBE}; {STOPPED_PROBE}""", timeout=40)
+{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -929,6 +973,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return sum(p[1] for p in other), sum(p[2] for p in other if p[0] >= tr)
 
     def fits(self, host, threads, ram, job=None):
+        if not FLEET_LOCK._is_owned():
+            self.probe(host)                   # refresh (cached 45 s) OUTSIDE the lock
         with FLEET_LOCK:
             return self._fits(host, threads, ram, job)
 
@@ -1628,6 +1674,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
@@ -1687,11 +1734,12 @@ for e in ${PATH//:/ }; do
       # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
-      exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
         -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
+    # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1871,6 +1919,24 @@ def fp_lint_finish(j, tag, text):
            "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
 
 
+# MEM-CAP (drive-0849 2026-10-09, coordinator URGENT "die routes SIGKILLed"): both full-die Qwen r22k GRTs (EPYC3
+# 18:54, EPYC1 21:49 PDT, openroad ~123 GB) were killed by the HOST OOM killer, not by stuckscan: a loop route declaring
+# peak_ram_gb 40 (hbm_svc_SE_s3_ps_79af6ba23_tc_hm0-cl) ran yosys to 154 then 208 GB on EPYC1, and admission had
+# reserved 40.  A global OOM then kills the LARGEST process -- the die run.  Every loop flow container now runs in a
+# memory cgroup of max(MEM_CAP_FACTOR x declared, declared + MEM_CAP_SLACK_GB): an overrun kills only its own stage
+# (the loop sees a flow error / crash retry), never a neighbour.  Spec "mem_cap_gb" overrides (0 = no cap).
+MEM_CAP_FACTOR = 4
+STAGE_OOM_SCORE_ADJ = 500
+MEM_CAP_SLACK_GB = 96
+
+
+def stage_mem_cap(j, st):
+    if "mem_cap_gb" in j["spec"]:
+        return int(j["spec"]["mem_cap_gb"] or 0)
+    ram = int(st.get("ram") or j["spec"].get("peak_ram_gb", 32))
+    return max(MEM_CAP_FACTOR * ram, ram + MEM_CAP_SLACK_GB)
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -1885,8 +1951,15 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
+    # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
+    # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
+    env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
+        cap = stage_mem_cap(j, st)
+        if cap:
+            env += f"export OT_MEM_CAP_GB={cap}\n"
     fpl = st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False
     prg = preroute_gate_on(j, st["kind"])
     if fpl or prg:
@@ -1903,6 +1976,12 @@ def launch_stage(j, st, cmd):
             env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
     if st["kind"] in ("calibrate", "route"):
         install_rebudget(j)
+        if j["spec"].get("pinflop_ref", True) is not False:
+            # PINFLOP-REF (drive-0849 2026-10-10): route-time IO reference = median input pin flop when no / an unmatched
+            # REFGLOB names one (main 6cd79a9f8); overlaid on the snapshot so requeues of older commits get it too
+            ship_helpers(j["host"], j["run"])
+            env += (f"python3 {j['run']}/cl/pinflop_overlay.py {j.get('stage_source', j['run'] + '/src')} "
+                    f"{j['run']}/cl/pinflop_ref.tcl || true\n")
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
@@ -3673,6 +3752,9 @@ def step(j, fleet):
                           f"after {res}")
                 m = j.get("metrics", {})
                 prev = j["eco"]
+                if (prev.get("kind") == "combo" and res and combo_hold_retry_eligible(res)
+                        and start_combo_hold_retry(j, fleet, m, prev)):
+                    return             # drive-0849: one stacked hold pass on the combo result
                 if vt and vtswap_eligible(j, m, j.get("failed_checks") or []) and start_vtswap_eco(j, fleet, m):
                     if j["eco"] is prev:   # no capacity yet: re-judged at the verdict stage next tick, which relaunches
                         j["status"] = "READY"
@@ -3840,6 +3922,10 @@ def do_verdict(j, fleet, stl):
         if "OT_HOLD_STALL" in r.stdout and stall_worst is not None and stall_worst > ff + 2.0:
             event(j, f"hold-stall window worst {stall_worst:+.1f} is shallower than sign-off FF {ff:+.1f}: "
                      f"the miss grew after the stalled repair -> post-route hold ECO, not NEEDS_RTL")
+        elif "OT_HOLD_STALL" in r.stdout and combo_eligible(j, m, failed, benches_ok) and start_combo_eco(j, fleet, m):
+            # drive-0849 2026-10-09: a thin TT AND FF miss behind a stalled route hold repair (hgi_cp-9cfc3b131: TT -44.29 /
+            # FF -0.71, window I2R=20@-7.1) gets the combo ECO before the guard ends it as NEEDS_RTL
+            return
         elif "OT_HOLD_STALL" in r.stdout:
             j["hold_window"] = r.stdout[-6000:]
             cls = " ".join(f"{a}={b}@{c}" for a, b, c in wins)
@@ -3851,6 +3937,8 @@ def do_verdict(j, fleet, stl):
     if hold_only(j, m, failed, benches_ok) and start_hold_eco(j, fleet, m):
         return
     if vtswap_eligible(j, m, failed, benches_ok) and start_vtswap_eco(j, fleet, m):
+        return
+    if combo_eligible(j, m, failed, benches_ok) and start_combo_eco(j, fleet, m):
         return
     if not summarize_failure(j, fleet, m):
         text = failure_text(j)
@@ -3953,7 +4041,7 @@ def start_vtswap_eco(j, fleet, m):
     if e:
         j.setdefault("eco_history", []).append(e)
         j["attempt"] += 1          # a fresh stage tag: hold_eco.a<attempt>.rc of the previous ECO stays as evidence
-    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    post_sdcs = eco_post_sdcs(j, m, "VT-swap ECO")
     tt = m["ss_ps"]
     out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
     env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
@@ -3974,6 +4062,118 @@ def start_vtswap_eco(j, fleet, m):
              f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
     ledger(j, f"VT-SWAP ECO launched (loop): TT {tt:+.2f} / FF {m['ff_ps']:+.2f}, target {target:g}, LVT cap {cap:g} %")
     experiment(j, "running: post-route VT-swap setup ECO")
+    return True
+
+
+COMBO_HOLD_RETRY_FF = -5.0      # drive-0849: a combo result with TT >= 0 and FF in [-5, 0) gets one stacked hold pass
+
+
+def combo_hold_retry_eligible(res):
+    tt, ff = res.get("ss_ps"), res.get("ff_ps")
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    return tt >= SS_MIN and COMBO_HOLD_RETRY_FF <= ff < FF_MIN and res.get("drc") == 0 and not res.get("errors")
+
+
+def start_combo_hold_retry(j, fleet, m, prev):
+    """hold_eco.sh stacked on the combo ECO's own result (ECO_RB_DB=6_final.odb of {combo out}): HM 0 + ALLOW 4 (the
+    manual COMBO_MODE=hold launch of hgi_cp-8a62bf98b, TT +4.89 / FF -0.13).  Once per combo."""
+    if prev.get("hold_retry"):
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"combo hold retry waiting for capacity: {why}")
+        j["status"] = "READY"
+        return True
+    v = j["spec"].get("verdict", {})
+    post = list(prev.get("post_sdc") or [])
+    pq = " ".join(shlex.quote(p) for p in post)
+    sdcn = shlex.quote(prev.get("sdc_name") or "6_final.sdc")
+    mac = shlex.quote(" ".join(v.get("macros", [])))
+    blk = j["spec"]["block"]
+    out = prev["out"] + "-h"
+    henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
+            f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
+    cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"])
+    prev["hold_retry"] = True
+    j.setdefault("eco_history", []).append(prev)
+    j["attempt"] += 1
+    j["eco"] = dict(tried=True, kind="combo_hold", rb=prev["rb"], ob=prev["ob"], combo_vtswap=prev.get("combo_vtswap"),
+                    out=out, post_sdc=post, sdc_name=prev.get("sdc_name") or "6_final.sdc",
+                    setup_post_sdc=list(prev.get("setup_post_sdc") or []), pre=prev.get("pre"), started=now_iso(),
+                    hold_retry=True, auto=True)
+    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"combo ECO result {prev.get('result', {}).get('ss_ps')} / FF {prev.get('result', {}).get('ff_ps')} misses hold by "
+             f"< {-COMBO_HOLD_RETRY_FF:g} ps: one stacked hold pass (HM 0, ALLOW 4) on the combo db; out {out}")
+    return True
+
+
+def combo_eligible(j, m, failed=(), benches_ok=True):
+    """a thin TT AND thin FF miss: TT in [COMBO_TT_FLOOR, 0), FF in [COMBO_FF_FLOOR, 0), DRC 0, no failed check / bench /
+    metric error, no installed ECO, no combo ECO tried yet, not turned off by the spec (hold_eco.enabled / combo false)"""
+    he = j["spec"].get("hold_eco") or {}
+    e = j.get("eco") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if he.get("enabled", True) is False or he.get("combo", True) is False:
+        return False
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    if not (COMBO_TT_FLOOR <= tt < SS_MIN and COMBO_FF_FLOOR <= ff < FF_MIN and m.get("drc") == 0):
+        return False
+    if failed or not benches_ok or m.get("errors") or e.get("installed") or j.get("eco_stack"):
+        return False
+    return not any((x or {}).get("kind") == "combo" for x in [*(j.get("eco_history") or []), e])
+
+
+def start_combo_eco(j, fleet, m):
+    """launch vtswap_eco.sh then hold_eco.sh stacked on its result as the job's ECO stage (tag hold_eco.aN, status ECO);
+    the hold-ECO completion path reads {out}/result.json, installs and re-verdicts it unchanged"""
+    rb, ob = eco_paths(j, m)
+    if not rb:
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"combo ECO waiting for capacity: {why}")
+        return True            # stays at the verdict stage; the next tick retries
+    he, v = j["spec"].get("hold_eco") or {}, j["spec"].get("verdict", {})
+    e = j.get("eco") or {}
+    if e:
+        j.setdefault("eco_history", []).append(e)
+        j["attempt"] += 1
+    post = eco_post_sdcs(j, m, "combo ECO")
+    pq = " ".join(shlex.quote(p) for p in post)
+    n = len(j.get("eco_history") or []) + 1
+    outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
+    sdcn = shlex.quote(m.get("sdc_name") or "6_final.sdc")
+    mac = shlex.quote(" ".join(v.get("macros", [])))
+    cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
+    blk = j["spec"]["block"]
+    venv = (f"TARGET=10 CAP_PCT={cap:g} DRC0=1 ACC_SS={SS_MIN:g} ACC_FF={COMBO_FF_FLOOR:g} SETUP_LIB={SETUP_LIB} SDC_NAME={sdcn} "
+            f"THREADS=8 MACROS={mac} ORFS_W18=")
+    if m.get("setup_post_sdc"):
+        venv += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=12 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
+            f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
+    cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
+           f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
+           f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
+           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"])
+    tt, ff = m["ss_ps"], m["ff_ps"]
+    j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
+                    sdc_name=m.get("sdc_name") or "6_final.sdc", setup_post_sdc=list(m.get("setup_post_sdc") or []),
+                    pre=dict(ss_ps=tt, ff_ps=ff), started=now_iso(), lvt_cap_pct=cap, auto=True)
+    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"thin TT AND FF miss ({setup_corner_label(m)} {tt:+.2f} / FF {ff:+.2f} / DRC 0): post-route COMBO ECO "
+             f"(VT-swap <= {cap:g} % LVT, then hold ECO HM 12 stacked on it, no re-route) on {rb}/6_final.odb; out {out}")
+    ledger(j, f"COMBO ECO launched (loop): TT {tt:+.2f} / FF {ff:+.2f}, LVT cap {cap:g} %")
+    experiment(j, "running: post-route combo (VT-swap + hold) ECO")
     return True
 
 
@@ -4004,6 +4204,31 @@ def baked_post_sdcs(j, m, cands):
     return [p for p in cands if p in hit]
 
 
+def eco_post_sdcs(j, m, what="ECO"):
+    """the post-SDC list an ECO must be timed with = the route verdict's reference.  COREKV-ECO 2026-10-08 (hold ECO): a
+    route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (route_master Qwen-die masters: the block
+    signoff SDC) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and an ECO without it is timed at
+    the 770 ps route SDC with plain IO.  drive-0849 2026-10-09: the VT-swap and COMBO ECOs skipped this (EHASH -11 vs
+    ECO pre -229, core18 -31 vs -94, link_rx128 -29 vs -93: false fails); every launcher now uses this one helper."""
+    v = j["spec"].get("verdict", {})
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
+    if not baked and not any(p for p in post_sdcs if p != IOREF_SDC):
+        # a route whose in-run STA read a w18_extra.sdc that the spec does not name (route_master --extra-sdc from the
+        # cfg, hgi_mtp_core18 specf2: spec post_sdc None): copy it into the job's src and pass that copy
+        orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+        rel = ".cl_eco/w18_extra.sdc"
+        if orfs and j.get("host") and j.get("run"):
+            r = ssh(j["host"], f"test -f {shlex.quote(orfs)}/w18_extra.sdc && mkdir -p {shlex.quote(j['run'])}/src/.cl_eco && "
+                               f"cp {shlex.quote(orfs)}/w18_extra.sdc {shlex.quote(j['run'])}/src/{rel} && echo COPIED; true", timeout=60)
+            if "COPIED" in (r.stdout or ""):
+                baked = [rel]
+    if baked:
+        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
+        event(j, f"{what}: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
+    return post_sdcs
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
@@ -4025,15 +4250,7 @@ def start_hold_eco(j, fleet, m):
         # mtp-lead 2026-10-09: opt-in DRV repair inside the ECO (hold_eco.tcl OT_REPAIR_DRV); default off
         env += f" REPAIR_DRV=1 DRV_SLEW_MARGIN={float(he.get('drv_slew_margin', 30)):g} " \
                f"DRV_CAP_MARGIN={float(he.get('drv_cap_margin', 20)):g} DRV_MAX_WIRE={float(he.get('drv_max_wire_um', 0)):g}"
-    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
-    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
-    if baked:
-        # COREKV-ECO 2026-10-08: a route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (Qwen core
-        # signoff833_skew90.sdc) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and the ECO was
-        # timed at the 770 ps route SDC (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 cells; TT -97 = route
-        # SDC). The verdict read it, so the ECO reads it too, before io_ref_routed (always last).
-        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
-        event(j, f"hold ECO: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
+    post_sdcs = eco_post_sdcs(j, m, "hold ECO")
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
     # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
@@ -4080,6 +4297,15 @@ def eco_install_cmd(j):
         for f in ("6_final.odb", "6_final.spef", "6_final.v"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
+    if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
+        # drive-0849 2026-10-09: a combo db carries LVT masters, but its VT-swap stage alone never scored >= 0, so
+        # vtswap_eco.sh did not add the LVT libraries to the route's w18_sta_{ss,ff}.tcl: the routed-insertion re-STA of
+        # the installed db would leave the swapped cells without liberty (paths through them untimed).  Add them here.
+        W0 = "/".join(rb.split("/")[:-6])
+        lines.append(f"for t in {W0}/work/orfs/w18_sta_ss.tcl {W0}/work/orfs/w18_sta_ff.tcl; do [ -f $t ] || continue; "
+                     f"[ -f $t.pre_vtswap ] || cp $t $t.pre_vtswap; grep -q '_LVT_' $t || "
+                     "sed -i -E 's#^(read_liberty (/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_[A-Za-z0-9]+)_RVT_(SS|FF|TT)_(.*))$#\\1\\nread_liberty \\2_LVT_\\3_\\4#; "
+                     "s#^(read_lef (.*)_28_R_1x(.*))$#\\1\\nread_lef \\2_28_L_1x\\3#' $t; done")
     if isinstance(he.get("reexport"), str) and he["reexport"].strip():   # drive-0849: a spec with reexport: true (bool)
         lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
@@ -4087,7 +4313,10 @@ def eco_install_cmd(j):
         macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
-                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; fi")
+                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "
+                     # drive-0849: the pre-ECO view (w18 export) carried export.json, which collect recipes copy; the
+                     # abstract writes abstract.json -> keep both names (mtp-seedproj a/b collect crashed twice on it)
+                     f"[ -f {W}/view/export.json ] || [ ! -f {W}/view/abstract.json ] || cp {W}/view/abstract.json {W}/view/export.json; fi")
     return "\n".join(lines)
 
 
@@ -4293,7 +4522,7 @@ def kill_own_stage(j):
         return
     run, t = j["run"], j["stage_tag"]
     ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
-for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
+for c in $(docker ps -q); do {DIE_CONTAINER_SKIP}docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
         timeout=300)
 
 
@@ -4683,6 +4912,10 @@ for p in os.listdir("/proc"):
         print("LIVE pid", p); sys.exit(3)
 refs = [r.rstrip("/") for r in a.get("refs") or []]
 hard = [r for r in refs if os.path.basename(r) not in GENERIC and r != R]
+# token-exact 2026-10-09: a .keep marker protects its directory (exactness fixtures) like a hard reference
+hard += [dp.rstrip("/") for dp, dn, fn in os.walk(R) if ".keep" in fn and dp.rstrip("/") != R]
+if os.path.exists(os.path.join(R, ".keep")):
+    print("DEEP_FREED 0 (.keep)"); sys.exit(0)
 soft = [r for r in refs if r not in hard and r != R]
 finals = [x.rstrip("/") for x in a.get("final_dirs") or []]
 prot = lambda p: any(p == r or p.startswith(r + "/") for r in hard)
@@ -5324,7 +5557,7 @@ def cmd_cancel(a):
         run, t = j["run"], j["stage_tag"]
         # only this loop's own stage process group, and only containers that mount this job's own run dir
         ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
-for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
+for c in $(docker ps -q); do {DIE_CONTAINER_SKIP}docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
             timeout=180)
     finish(j, "CANCELLED", j["reason"], "CANCELLED by a human" + (f": {why}" if why else ""))
     save_job(j)
@@ -5437,7 +5670,7 @@ def cmd_kill_stage(a):
     run, t = j["run"], j["stage_tag"]
     pat = shlex.quote((a.orfs.rstrip("/") + ":") if a.orfs else (run + "/"))
     ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
-for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}}:{{{{.Destination}}}} {{{{end}}}}' $c | grep -qF {pat} && docker stop -t 5 $c; done; true""",
+for c in $(docker ps -q); do {DIE_CONTAINER_SKIP}docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}}:{{{{.Destination}}}} {{{{end}}}}' $c | grep -qF {pat} && docker stop -t 5 $c; done; true""",
         timeout=300)
     j["stuck_kill"] = dict(at=now_iso(), why=a.why, tag=t)
     event(j, f"stage {t} killed by stuckscan ({a.why[:300]}); the loop retries it once")
