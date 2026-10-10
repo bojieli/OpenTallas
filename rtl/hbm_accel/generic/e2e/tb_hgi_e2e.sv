@@ -21,7 +21,7 @@
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0;
-    parameter integer COLL_BF16 = 1, LATC = 453, CRED = 137;
+    parameter integer COLL_BF16 = 1, COLL_PFMAX = 64, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -146,7 +146,7 @@ module tb_hgi_e2e;
     // COLL (unit 6): the collective block body + inject / deliver / switch-tier models (hgi_e2e_slots.sv)
     wire [2:0] c_ret; reg c_kv; reg [31:0] c_k;
     generate if (REAL_COLL) begin : g_coll
-        hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec),
+        hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16), .COLL_PFMAX(COLL_PFMAX)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec),
             .cfg(cfg_bus), .ret(c_ret), .k_v(c_kv), .k_in(c_k), .group_size(host[46][7:0]));
     end else begin : g_coll_stub
         assign c_ret = 3'b001;
