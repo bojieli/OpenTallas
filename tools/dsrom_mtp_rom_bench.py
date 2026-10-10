@@ -87,16 +87,14 @@ def cases():
     c["prd_stg_neg_predoff"] = dict(c["stg_r1"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_s0_neg_predoff_nochk"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF", "OT_WFCVMX_MUT_NOPCHK"], expect="fail")
     # Claude mtp-wfc 2026-10-10: native binding of dsfd_mtp_seq on head631 (relay stations on every link).
-    # rtt_rly_*: dsfd_mtp_seq_rtt behind the actual relay counts (exact); rtt_norly_*: the successor with no relays;
-    # negatives: the pinned dsfd_mtp_seq behind the relays (3-cycle grant history overflows) and the successor with
-    # its grant history cut to three (OT_MTP_NEG_SHORT_RTT).
+    # rtt_rly_*: dsfd_mtp_seq_rtt behind the actual relay counts (exact); rtt_norly_*: the successor with no relays.
+    # The s0 system traffic never holds more than three grants in flight on any sequencer link, so the pinned seq
+    # behind the relays and the successor with a 3-cycle history both still PASS here (measured 2026-10-10, EPYC1,
+    # identical 86,437-cycle runs): the discriminating negatives are link-level under saturating stress
+    # (tb_mtp_link_rtt ENABLE 0 D 4 at F5/R6 = the pinned receiver; OT_MTP_NEG_SHORT_RTT at F9/R10).
     for k in ("s0_tr_forced", "s0_tr_dspark", "s0_hash_u3", "s0_hash_u4_ar1", "s0_hash_u1_fast"):
         d = dict(c[k]); d["params"] = dict(d["params"], SEQ_RTT=1, RLY=1); c["rtt_rly_" + k] = d
     d = dict(c["s0_tr_forced"]); d["params"] = dict(d["params"], SEQ_RTT=1); c["rtt_norly_s0_tr_forced"] = d
-    d = dict(c["s0_hash_u3"]); d["params"] = dict(d["params"], SEQ_RTT=0, RLY=1); d["expect"] = "fail"
-    c["rtt_neg_legacy_rly_s0_hash_u3"] = d
-    d = dict(c["s0_hash_u3"]); d["params"] = dict(d["params"], SEQ_RTT=1, RLY=1); d["expect"] = "fail"
-    d["defines"] = ["OT_MTP_NEG_SHORT_RTT"]; c["rtt_neg_short_s0_hash_u3"] = d
     for k in c:
         c[k].setdefault("expect", "pass")
     return c
