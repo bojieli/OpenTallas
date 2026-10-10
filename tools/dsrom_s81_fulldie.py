@@ -2414,7 +2414,9 @@ MKL_WH = (216.0, 172.8)                     # die Markov root
 MK_SB, MK_RB, MK_DB, MK_HB = 327, 87, 55, 33  # stream word, frame result {seen,valid,key,row,bits,4 status}, driver result, A join
 
 
+MK_STN = defaultdict(list)                  # --markov-full340: hop-fix stations per inter-frame Markov bus class (fs3)
 MKD_FRAMES = {}                             # --markov-full340: driver frame -> (bundle frame, bundle)
+MK_STN = defaultdict(list)                  # --markov-full340 (fs3): hop-fix stations per inter-frame Markov bus class
 
 
 def hb_h():
@@ -4193,6 +4195,7 @@ def _hop_fix(m, P):
     """pass 2 of --hop-fix: on every planned hop, stations at equal spacing on the anchor-to-anchor L path.
     Field (column) common-clock buses: column relays (dsfd_rly, column clock / reset); hub common-clock buses: hub
     stations (dsfd_hstn, the driver's domain clock); forwarded lanes: forwarded stations on the lane AND its fclk."""
+    MK_STN.clear()
     by = {it.name: it for it in m['insts']}
     B = m['buses']
     plan = HOP_PLAN
@@ -4226,6 +4229,13 @@ def _hop_fix(m, P):
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if cls in ('mk_bc', 'mk_pick'):
                 reg = None                # --markov-full340 die tree: hub -> frame hops take channel stations
+            elif MARKOV_FULL340 and bid.startswith(('mkq_', 'mkh_', 'mkd_', 'mkx_', 'mkr_')) and d0.region != l0.region:
+                # mtp-head-1010 fs3: bundle frame <-> driver frame buses cross frames (mkq_2_2_0 2,442 um): channel
+                # stations like the die trees (the two-frame box has no free spot at the SS reach); their counts are
+                # recorded per class in m['markov_full340']['stations'] -- the lockstep contract (glue faults when its
+                # 4 drivers raise head_go on different cycles) needs the RTL to pad every bundle's paths to the max
+                reg = None
+                MK_STN[bid.split('_')[0]].append(n)
             if fwd:
                 fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
                 fi_ = fclk_of.get((eps[0][0], e[0], fport)) if fport else None
@@ -4487,6 +4497,10 @@ def _hop_fix(m, P):
                         planned_hops=len(plan), fwd_rt_add=fwd_add.get('r', 0) + fwd_add.get('x', 0),
                         reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD, tt_exception=RELAY_TT_REACH),
                         tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
+    if MARKOV_FULL340 and 'markov_full340' in m:
+        # fs3: inter-frame Markov bus stations (registered hops) per class: max / min over the die; the RTL pads
+        # every bundle to the max so the 4 drivers (and the die AND tree) stay in lockstep
+        m['markov_full340']['stations'] = {k: dict(hops=len(v), max=max(v), min=min(v)) for k, v in sorted(MK_STN.items())}
 
 
 def _markov_die_trees(m, P, cor, bus):
