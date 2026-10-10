@@ -790,15 +790,44 @@ def tp_seq_vrl() -> str:
     return t
 
 
+def ctrl_prl(t: str) -> str:
+    """qwen-1010/a PRL: program read latency a parameter (prog_re -> prog_q edges; the base is 1).  The masters' program
+    store is 64 x 1,024 configuration flops: seq_su_bi_b post-CTS -476 ps on prog_base -> add -> 64:1 x 1,024 read mux
+    -> prog_q.  PRL 2 lets the master register the read address (the fetch runs ahead of issue, so a segment start pays
+    one edge)."""
+    t = re.sub(r"(    parameter integer ICUT = 0,[^\n]*\n)", r"\1    parameter integer PRL = 1,        // qwen-1010/a: program read latency (ctrl_prl)\n", t, count=1)
+    t = one(t, "    reg        pend1;                     // a program read whose word arrives this cycle\n",
+            "    reg        pend1;                     // a program read whose word arrives this cycle\n    reg        pend2;                     // PRL 2: ... the cycle after\n")
+    t = one(t, "    wire push = (st == S_RUN) && pend1;", "    wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);")
+    t = t.replace("pend1 <= 1'b0;", "pend1 <= 1'b0; pend2 <= 1'b0;")
+    t = one(t, "            pend1 <= prog_re && (st != S_IDLE);\n",
+            "            pend1 <= prog_re && (st != S_IDLE);\n            pend2 <= (PRL > 1) && pend1 && (st != S_IDLE);\n")
+    t = one(t, "+ prog_re + pend1 < NFQ)", "+ prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ)")
+    return t
+
+
+def master_prl(t: str, base: str) -> str:
+    """the master's program store read with a registered address (PRL 2)"""
+    t = one(t, f"    wire [11:0] prog_a = {base} + prog_addr;\n",
+            f"    wire [11:0] prog_a = {base} + prog_addr;\n"
+            "    reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered\n"
+            "    always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;\n"
+            "    always @(posedge clk) prog_a_r <= prog_a;\n")
+    t = one(t, "        if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;\n",
+            "        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n")
+    return t
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
     """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
-    t = ctrl_icut(emit_seq_su(boundary=True))
+    t = ctrl_prl(ctrl_icut(emit_seq_su(boundary=True)))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
+    t = master_prl(t, "prog_base")
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
-    t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .W(W)")
+    t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
     # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
     t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
@@ -807,10 +836,11 @@ def emit_seq_su_bi() -> str:
 
 def emit_tt_ctlm_i() -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
-    t = ctrl_icut(emit_tt_ctlm())
+    t = ctrl_prl(ctrl_icut(emit_tt_ctlm()))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
+    t = master_prl(t, "q_prog_base")
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
-    t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .W(16)")
+    t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     return t
 
 
