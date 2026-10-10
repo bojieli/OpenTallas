@@ -476,6 +476,60 @@ R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True)
 R25GP = dict(R25G, attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True,
              split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
              attn_tile_h_um=1503.36, hub_h=R25G['hub_h'] + 2 * 4 * (1503.36 - 1488.24))
+# mtp-lead 2026-10-09: the generic die's MTP master (key mtp_master='hgi_native'; tools/hbm_mtp_native_contract.py
+# generic_model).  Slot 'mtp' (MD-7 466.56 x 200.88) = hgi_mtp_native (checked CP-result DSpark controller, EXTERNAL_AM,
+# no su_red logit bus) + the ARGMAX unit (hgi_dispatch 'argmax' -> block 'mtp').  The CP south band is the MX1 view
+# (hfd_cmdproc_s_mtp_native_mx1: t_mtp 197 / f_mtp 517 / f_am 18 + transaction join + finite-8 emit queue), whose
+# pins are its own ports.json, so the R25M 320/126 ECO pair is dropped.  Buses: cmdproc_s <-> mtp 197 / 517,
+# mtp <-> router 58 / 59 (XSEL selections), mtp <-> coll 19 / 1 (expert union), coll -> cmdproc_s f_am 18 (merged
+# argmax).  The MX1 host / provider / backend endpoints are NOT die buses yet (generic backend translator open):
+# m['mtp_generic']['unbound'] lists them.  Default-on in R25G when the master and MX1 routes are CLOSED.
+MTP_GENERIC_JOBS = ('hgi_mtp_native', 'hfd_cmdproc_s_mtp_native_mx1')
+
+
+def _mtp_generic_closed():
+    """True when a CLOSED closure-loop verdict exists for every MTP_GENERIC_JOBS block (results/closure_loop/*/verdict.json)."""
+    seen = set()
+    for f in (ROOT / 'results/closure_loop').glob('*/verdict.json'):
+        name = f.parent.name
+        # job names: <block>-..., <block>_<suffix>-... (e.g. hfd_cmdproc_s_mtp_native_mx1_rb-arcts-...), or dashed
+        blk = next((b for b in MTP_GENERIC_JOBS if re.match(re.escape(b) + r'[-_]', name)
+                    or name.startswith(b.replace('_', '-') + '-')), None)
+        if blk is None:
+            continue
+        try:
+            if json.loads(f.read_text()).get('status') == 'CLOSED':
+                seen.add(blk)
+        except (ValueError, OSError):
+            pass
+    return seen == set(MTP_GENERIC_JOBS)
+
+
+def _hgi_mtp(v):
+    ex = {k: dict(x) for k, x in (v.get('split_extra_ports') or {}).items()}
+    for p_ in ('t_mtp', 'f_mtp'):
+        ex.get('hfd_cmdproc', {}).pop(p_, None)
+    from hbm_mtp_native_contract import GENERIC_MASTER, MX1_SPLIT, MX1_BAND
+    return dict(v, mtp_master='hgi_native', split_extra_ports=ex,
+                split_masters=dict(v.get('split_masters', {}), hfd_cmdproc=MX1_SPLIT),
+                cp_band_alias={'hfd_cmdproc_s': MX1_BAND},
+                hgi_dispatch=sorted(set(v.get('hgi_dispatch') or []) | {'argmax'}),
+                spine_slot_masters=dict(v.get('spine_slot_masters', {}), mtp=GENERIC_MASTER),
+                # two-instance MD-7 slot (466.56 x 200.88): the controller's closed view (mtp_hgi, 286.56 x 200.88) and
+                # the ARGMAX unit's closed view (argmax_hgi, ot_hgi_argmax18_m 180 x 140) side by side, bottom-aligned
+                spine_slot_split={'mtp': (('mtp', GENERIC_MASTER, MTP_HGI_WH), ('mtp_am', 'ot_hgi_argmax18_m', ARGMAX_HGI_WH))},
+                hgi_unit_block={'argmax': 'mtp_am'})
+
+
+# closed views (physical/hbm_accel_die_views/{mtp_hgi,argmax_hgi}): hgi_mtp_native-nreg-a-lvt-eaea6da41-tc TT +10.43 /
+# FF +1.80; hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl TT +52.2 / FF +11.54 / DRC 0
+MTP_HGI_WH, ARGMAX_HGI_WH = (286.56, 200.88), (180.0, 140.0)
+ARGMAX_HGI_IN = (('in_v', 1), ('in_last', 1), ('in_bias_en', 1), ('in_mask', 8), ('in_vals', 256), ('in_bias', 256))
+ARGMAX_HGI_OUT = (('out_v', 1), ('out_idx', 18), ('out_nan', 1), ('fault', 1), ('out_range_fault', 1), ('out_value', 32))
+R25GM = _hgi_mtp(R25G)
+R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full network build)
+if _mtp_generic_closed():
+    R25G, R25G4 = R25GM, R25G4M
 ADOPTED = R25
 
 
@@ -640,8 +694,21 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         it = Inst(f'hb_{n_}', master_, up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
                   kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'stream_1p2'))
         assert it.y >= hy0 + 43.2, ('low spine slot below the hub band', n_, it.y, hy0)
-        insts.append(it)
-        hub[n_] = it
+        parts_ = variant.get('spine_slot_split', {}).get(n_)
+        if parts_:
+            # mtp-lead 2026-10-09: a multi-instance slot: closed views side by side from the slot's west edge,
+            # bottom-aligned; they must fit the slot outline (the slot keeps its reserved size)
+            xx_ = it.x
+            for key_, mst_, (pw_, ph_) in parts_:
+                assert ph_ <= h_ + 1e-6 and xx_ + pw_ <= it.x + w_ + 1e-6, ('slot split overflows', n_, key_)
+                sub_ = Inst(f'hb_{key_}', mst_, round(xx_, 4), y_, pw_, ph_, kind='spine', region='hub',
+                            domain=it.domain)
+                insts.append(sub_)
+                hub[key_] = sub_
+                xx_ += pw_
+        else:
+            insts.append(it)
+            hub[n_] = it
         yy = it.y
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
@@ -1029,7 +1096,9 @@ VM_TILE_OF = {           # r19: VM port -> quadrant tile (each tile carries the 
     'f_su_SW': 'sw', 't_su_SW': 'sw', 'xSW': 'sw', 'qSW': 'sw', 'iSW': 'sw', 't_router': 'sw',
     'f_su_SE': 'se', 't_su_SE': 'se', 'xSE': 'se', 'qSE': 'se', 'iSE': 'se',
     'f_su_NW': 'nw', 't_su_NW': 'nw', 'xNW': 'nw', 'qNW': 'nw', 'iNW': 'nw', 't_quant': 'nw',
-    'f_su_NE': 'ne', 't_su_NE': 'ne', 'xNE': 'ne', 'qNE': 'ne', 'iNE': 'ne'}
+    'f_su_NE': 'ne', 't_su_NE': 'ne', 'xNE': 'ne', 'qNE': 'ne', 'iNE': 'ne',
+    **{f'f_am_{p_}': 'se' for p_ in ('out_v', 'out_idx', 'out_nan', 'fault', 'out_range_fault', 'out_value')}}
+# mtp-lead: generic-die ARGMAX unit O (south spine slot) lands on the SE VM tile
 VM_X_ROW, VM_X_WR, VM_X_CTL = 2256, 2264, 256     # per directed neighbour edge, registered at both pins
 
 
@@ -1612,6 +1681,8 @@ def apply_splits(m, specs, lattice=None):
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
+        # mtp-lead 2026-10-09: a band's own new ports (e.g. MX1 f_am) can carry a die bus addressed to the parent
+        owner.update({pn_: bn for bn, b in bands for pn_ in b.get('new_ports', {}) if pn_ not in ('ck', 'rst')})
         owner.update({pn_: v_[0] for pn_, v_ in extra.items()})
         new_insts, repl = [], {}
         for it in m['insts']:
@@ -2510,7 +2581,14 @@ def buses(m):
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
-        if V.get('native_mtp_wb'):
+        if V.get('mtp_master') == 'hgi_native':
+            # mtp-lead 2026-10-09 (generic die): hgi_mtp_native groups; cmdproc side = MX1 t_mtp / f_mtp
+            from hbm_mtp_native_contract import generic_model
+            gm_ = generic_model(ROOT)
+            for name, group in gm_['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_') else ('mtp', peer_, group['bits']))
+        elif V.get('native_mtp_wb'):
             from hbm_mtp_native_contract import model, stop_model
             native_contract = stop_model if V.get('native_mtp_stop') else model
             contract = native_contract(ROOT)
@@ -2552,6 +2630,38 @@ def buses(m):
         # hgi-takeover 2026-10-09: normative ot_hgi_seq v1.0 record dispatch to the generic units (opt-in, buses only)
         from hgi_die_dispatch import install as install_hgi_dispatch
         install_hgi_dispatch(m, B, P, V['hgi_dispatch'])
+    if V.get('mtp_master') == 'hgi_native' and 'mtp' in hub:
+        # mtp-lead 2026-10-09: the ARGMAX unit (unit 7) is the slot's second instance hb_mtp_am, master ot_hgi_argmax18_m
+        # (closed view physical/hbm_accel_die_views/argmax_hgi, 604 pins).  Its die buses use the view's own ports:
+        # the logit STREAM from the LM head (su_red) in_* 523, and the result O {value, id, nan, fault, range fault} 54
+        # to VM (HGI 6.6: ARGMAX O in VM; COLL.ARGMAX_MERGE reads it there).  The record dispatch (hgi_argmax_cmd 683 /
+        # ret 3) lands on hb_mtp_am, whose bare view has no record decode (cfg_rank 7 / cfg_imm_a 18 + in_v gating):
+        # the dispatch adapter is an hgi-takeover obligation (die check lists it).  The merged id reaches MX1 f_am
+        # from the CP sequencer's CTL.AMAX step (reads VM A[0] per verify row, cp_vocab check).
+        am_ = hub.get('mtp_am', hub['mtp'])
+        for port_, bits_ in ARGMAX_HGI_IN:
+            B.append((f'hb_su_red_am_{port_}', 'hub', bits_, [(hub['su_red'].name, f't_am_{port_}'), (am_.name, port_)]))
+            P[f'hub_su_red_am_{port_}'] = [f'hb_su_red_am_{port_}']
+        for port_, bits_ in ARGMAX_HGI_OUT:
+            B.append((f'hb_am_vm_{port_}', 'hub', bits_, [(am_.name, port_), (hub['vm'].name, f'f_am_{port_}')]))
+            P[f'hub_am_vm_{port_}'] = [f'hb_am_vm_{port_}']
+        ob_ = json.loads((ROOT / 'physical/hbm_cp_mtp_native/collar_mx1/endpoint_obligations.json').read_text())
+        bound_ = {'t_mtp', 'f_mtp'}
+        m['mtp_generic'] = dict(master='hgi_mtp_native', cp_band='hfd_cmdproc_s_mtp_native_mx1',
+            slot_content={k_: (hub[k_].master, hub[k_].w, hub[k_].h, round(hub[k_].x, 3), round(hub[k_].y, 3))
+                          for k_ in ('mtp', 'mtp_am') if k_ in hub},
+            buses=[b_[0] for b_ in B if b_[0].startswith(('hb_mtp_', 'hb_cmdproc_mtp', 'hb_router_mtp', 'hb_coll_mtp',
+                                                            'hb_su_red_am_', 'hb_am_vm_', 'hgi_argmax_'))],
+            unbound={k: v for k, v in ob_['required_endpoints'].items() if k not in bound_},
+            unbound_owner=dict(f_am='ot_hgi_seq CTL.AMAX (VM A[0] per verify row, cp_vocab-checked) -> MX1 f_am',
+                               backend='generic backend translator: t_backend eng_cmd 201 -> ot_hgi_seq doorbell '
+                                       '{token, pos, job, gen, entry verify/draft, ncol} + per-slot TOKEN DYN; '
+                                       'CTL.END/AMAX completions -> f_backend (job/gen/sequence echo, drained)',
+                               host='host doorbell / emit path (f_host, t_host, t_emit_host, f_emit_host, t_drained, t_abort)',
+                               provider='prompt / forced token reads and spec-state requests (f_provider, t_provider, t_emit)'),
+            default_on=_mtp_generic_closed())
+        m['notes'].append('mtp_master hgi_native: hgi_mtp_native + MX1 CP south band; MX1 host/provider/backend '
+                          'endpoints unbound (m["mtp_generic"]["unbound"]).')
     # ---- collective -> SerDes: 8 TU ports x 546 b each direction striped over the 9 macros (S centre 5, N centre 4):
     #      spine-side channel -> hub edge channel -> the channel east of the macro -> its E-face pins
     coll = hub['coll']
@@ -3725,7 +3835,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

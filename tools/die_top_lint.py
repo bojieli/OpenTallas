@@ -403,6 +403,23 @@ def real_blocks(die, m=None):
             bind={pn:([pn] if n==1 else _bus(pn,n)) for pn,(_,n) in pm['ports'].items()}
             out[mn]=dict(module=mn,file=directory+filename,kind='full-shape native index RTL',
                          params=prm,ports=pm['ports'],binding=bind)
+    if die == 'hbm' and V.get('mtp_master') == 'hgi_native':
+        # mtp-lead 2026-10-09: the generic-die MTP slot (controller + ARGMAX unit, both CLOSED views) and the MX1 CP band
+        for mn, f, prm, kind in (
+                ('hgi_mtp_native', 'rtl/hbm_accel/generic/hgi_mtp_native.sv', {}, 'RTL of the CLOSED view mtp_hgi'),
+                ('ot_hgi_argmax18_m', 'physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv',
+                 dict(LP=8, FLAT=7, FAST=1, GENERIC18=1), 'RTL of the CLOSED view argmax_hgi (pinsep pd55)'),
+                ('hfd_cmdproc_s_mtp_native_mx1', 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', {},
+                 'MX1 CP-south RTL (route open)')):
+            if not (ROOT / f).exists():
+                continue
+            pm = parse_module(f, mn, prm)
+            bind = {pn: ([pn] if n == 1 else _bus(pn, n)) for pn, (_, n) in pm['ports'].items()}
+            if 'clk' in bind and 'rst_n' in bind:
+                # die clock / reset nets are 'ck' / 'rst' (active high); the slot wrapper's 2-flop synchroniser +
+                # inversion (as in every hfd_* wrapper) is a slot-wrapper obligation, bound here by name
+                bind['ck'], bind['rst'] = bind.pop('clk'), bind.pop('rst_n')
+            out[mn] = dict(module=mn, file=f, kind=kind, params=prm, ports=pm['ports'], binding=bind)
     return out
 
 
