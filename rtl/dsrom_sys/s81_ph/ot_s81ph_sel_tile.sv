@@ -437,6 +437,7 @@ endmodule
 // composition reference (bench and die generator): lanes {NE, NW, SE, SW} as dsfd_bk_selector
 module ot_s81ph_sel_t #(
     parameter integer CMP_RETIME = 0,
+    parameter integer SEAM_STAGES = 0, // default-off real quarter/control bundle stations
     parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer SAFE = 0,              // 1: dsfd_selt_q2 quarter tiles
     parameter integer LSTG = 5,              // die stations on each lane from the slab face to its quarter tile
@@ -457,9 +458,55 @@ module ot_s81ph_sel_t #(
         integer h;
         always @(*) st[0] = lanes[515 * g +: 515];
         always @(posedge ck) for (h = 1; h <= LSTG; h = h + 1) st[h] <= st[h-1];
-        dsfd_selt_q #(.DM(DM), .SAFE(SAFE), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
-            .t_s(ts[SB * g +: SB]), .t_o(to[OB * g +: OB]));
+        wire [SB-1:0] qs;
+        wire [OB-1:0] qo;
+        wire [CB-1:0] qc;
+        wire qcr;
+        if (SEAM_STAGES == 0) begin : g_direct
+            assign ts[SB*g +: SB] = qs;
+            assign to[OB*g +: OB] = qo;
+            assign qc = tc[CB*g +: CB];
+            assign qcr = tcr[g];
+        end else begin : g_seam
+            // Full bundles retain all identity, valid and fault bits together.
+            // Finite DM credits are returned once per actual control pop.
+            reg [1:0] reset_local;
+            always @(posedge ck or negedge rst)
+                if (!rst) reset_local <= 2'b00;
+                else reset_local <= {reset_local[0],1'b1};
+            (* keep = 1 *) reg [SB+OB-1:0] fwd [0:SEAM_STAGES-1];
+            (* keep = 1 *) reg [CB:0] rev [0:SEAM_STAGES-1];
+            integer j;
+            always @(posedge ck or negedge rst) begin
+                if (!rst) begin
+                    for (j=0;j<SEAM_STAGES;j=j+1) begin fwd[j]<=0; rev[j]<=0; end
+                end else if (!reset_local[1]) begin
+                    for (j=0;j<SEAM_STAGES;j=j+1) begin fwd[j]<=0; rev[j]<=0; end
+                end else begin
+                    fwd[0] <= {qs,qo};
+                    rev[0] <= {tc[CB*g +: CB],tcr[g]};
+                    for (j=1;j<SEAM_STAGES;j=j+1) begin fwd[j]<=fwd[j-1]; rev[j]<=rev[j-1]; end
+                end
+            end
+            assign ts[SB*g +: SB] = fwd[SEAM_STAGES-1][OB +: SB];
+`ifdef S81PH_MUT_SEAM_PAYLOAD
+            assign to[OB*g +: OB] = fwd[SEAM_STAGES-1][OB-1:0] ^ {{(OB-2){1'b0}},1'b1,1'b0};
+`else
+            assign to[OB*g +: OB] = fwd[SEAM_STAGES-1][OB-1:0];
+`endif
+            assign qc = rev[SEAM_STAGES-1][1 +: CB];
+`ifdef S81PH_MUT_SEAM_CREDIT
+            reg old_credit;
+            always @(posedge ck or negedge rst) if (!rst) old_credit<=0;
+                else old_credit<=rev[SEAM_STAGES-1][0];
+            assign qcr = rev[SEAM_STAGES-1][0] | old_credit;
+`else
+            assign qcr = rev[SEAM_STAGES-1][0];
+`endif
+        end
+        dsfd_selt_q #(.DM(DM), .SAFE(SAFE), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(qc), .f_cr(qcr),
+            .t_s(qs), .t_o(qo));
     end endgenerate
-    dsfd_selt_c #(.SEARCH_PIPE(SEARCH_PIPE), .DM(DM), .PACE(PACE), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .XDX(QIO)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),
+    dsfd_selt_c #(.SEARCH_PIPE(SEARCH_PIPE), .DM(DM), .PACE(PACE), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .XDX(QIO+SEAM_STAGES)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),
         .vf(vf));
 endmodule
