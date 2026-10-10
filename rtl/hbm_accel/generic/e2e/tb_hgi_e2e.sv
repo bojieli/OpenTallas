@@ -212,7 +212,7 @@ module tb_hgi_e2e;
     endtask
     longint t_db, t_cpl;
     always @(posedge clk) if (rst_n && cpd.u_cp.cpl_v && t_cpl == 0) t_cpl = cyc;
-    integer w, n_rec, c_tok, c_st, c_cyc, fin;
+    integer w, n_rec, c_tok, c_st, c_cyc, fin, cfgfix;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = "vec";
         if (!$value$plusargs("OUT=%s", outp)) outp = "e2e_records.txt";
@@ -222,7 +222,15 @@ module tb_hgi_e2e;
         t_cpl = 0;
         repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
         axw(12'hC14, host[67]);
-        for (w = 0; w < 32; w = w + 1) begin axw(12'hD00 + 8 * w, host[2 * w]); axw(12'hD04 + 8 * w, host[2 * w + 1]); end
+        for (w = 0; w < 31; w = w + 1) begin axw(12'hD00 + 8 * w, host[2 * w]); axw(12'hD04 + 8 * w, host[2 * w + 1]); end
+        // DIE FINDING (hgi-e2e F1): the CFG window cannot stage MD words 62-63: pair 31 IS the CFG_COMMIT address
+        // (ot_hgi_cp: c_wr excludes the commit), so the CRC word 63 is never written and every real descriptor fails
+        // E_CRC (the CP then keeps the reset image_base 0 and fetches 4,096 CTL.NOP sectors of empty HBM before reaching
+        // the image).  +CFGFIX=1 (default) deposits words 62-63 into the staging buffer as the commit's data would if
+        // c_wr included the commit (the proposed one-line fix); +CFGFIX=0 measures the RTL as is.
+        if (!$value$plusargs("CFGFIX=%d", cfgfix)) cfgfix = 1;
+        if (cfgfix != 0) begin cpd.u_cp.u_cfg.buf_[62] = host[62]; cpd.u_cp.u_cfg.buf_[63] = host[63]; end
+        axw(12'hD00 + 8 * 31, host[62]); axw(12'hD04 + 8 * 31, host[63]);
         repeat (4) @(negedge clk);
         w = 0; while ((cpd.u_cp.u_cfg.st_hold || !cpd.u_cp.cfg_loaded) && w < 4000) begin @(negedge clk); w = w + 1; end
         repeat (3) @(negedge clk);
