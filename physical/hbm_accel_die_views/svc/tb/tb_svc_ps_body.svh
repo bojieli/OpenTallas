@@ -4,6 +4,8 @@
 // of its kport_map address, exactly once per (PC, rq), sector valid masks, a kd pulse per stream; credits held by the
 // consumer at random (back-pressure).  LOCKSTEP: a legacy segmented DUT shares every input and the PHY bundle (any
 // divergence on a svc -> PHY bit resolves to X) and its lines / kv / ik are compared with the PS DUT every cycle.
+// 2026-10-10 (owner: transaction-level exactness): LOCKSTEP retired; REFDUT runs the legacy segments as the DUT with
+// their own PHY model under the same scoreboard; every output is X-free after reset; budget 1.2M cycles.
 // Original header:
 // CLAUDE HBM-ABSTRACTS (svcidx): stream-service view bench body (included by the generated tb_svc_<st>.sv, which
 // declares the DUT on these uniform nets, in core SM order k = SM ports by x).  One seed; exits nonzero ($fatal) on
@@ -20,6 +22,7 @@
 `endif
   localparam [31:0] W_SALT = 32'h5a5a_0000;
   reg ck = 0, rst = 0, fck = 0;
+  reg bench_ready = 0; // no requests until reset has reached every segment boundary
   always #(TCK/2) ck = ~ck;
   always #(TFW/2) fck = ~fck;
   // uniform DUT-side nets
@@ -47,6 +50,11 @@
       for (j = 0; j < 8; j = j + 1) begin x = x ^ (x << 13); x = x ^ (x >> 17); x = x ^ (x << 5); f[j*32 +: 32] = x ^ a; end
     end
   endfunction
+`ifdef OT_SVC_EARLY_FAIL
+  // A scoreboard error is permanent: stop known-bad mutants after the first proof of failure.
+  always @(negedge ck) if (err != 0) $fatal(1,"SVC_MUTANT_CAUGHT errors=%0d",err);
+`endif
+  integer wait_cycles;
   integer seed = 20261006;
   // per-PC queue of reads: (addr, len, tag, issue time)
   reg [29:0] qa [0:31][0:15]; reg [3:0] ql [0:31][0:15]; reg [16:0] qt [0:31][0:15]; integer qh [0:31], qn [0:31];
@@ -56,6 +64,7 @@
   always @(posedge pclk) begin
     for (pc = 0; pc < 32; pc = pc + 1) begin
       if (k_v[pc] && k_rdy[pc]) begin
+        if ($test$plusargs("SVC_TRACE") && k_tag[pc*17+15 +: 2]==0) $display("KREAD PC=%0d SM=%0d TAG=%0d",pc,k_tag[pc*17+12 +: 3],k_tag[pc*17 +: 10]);
         if (k_we[pc]) begin err = err + 1; $display("ERR write on PC %0d", pc); end
         qa[pc][(qh[pc]+qn[pc]) % 16] = k_addr[pc*30 +: 30]; ql[pc][(qh[pc]+qn[pc]) % 16] = k_len[pc*4 +: 4];
         qt[pc][(qh[pc]+qn[pc]) % 16] = k_tag[pc*17 +: 17]; qn[pc] = qn[pc] + 1;
@@ -63,6 +72,7 @@
       k_rdy[pc] <= ($urandom % 4) != 0 && qn[pc] < 14;
       // response engine: one beat at a time per PC, in order, random gaps; kr_v held until kr_rdy
       if (kr_v[pc] && kr_rdy[pc]) begin
+        if ($test$plusargs("SVC_TRACE") && kr_tag[pc*17+15 +: 2]==0) $display("KBEAT PC=%0d SM=%0d TAG=%0d BEAT=%0d",pc,kr_tag[pc*17+12 +: 3],kr_tag[pc*17 +: 10],bcount[pc]);
         kr_v[pc] <= 1'b0; bcount[pc] = bcount[pc] + 1;
         if (bcount[pc] == ql[pc][qh[pc]]) begin bcount[pc] = 0; qh[pc] = (qh[pc] + 1) % 16; qn[pc] = qn[pc] - 1;
           lat[pc] = 2 + ($urandom % 8); end
@@ -95,6 +105,12 @@
     end
   end
   initial begin k_rdy = 0; kr_v = 0; w_rdy = 0; w_room = 8'hff; wr_v = 0; wbusy = 0; end
+  // ---------------------------------------------------------------- no X on any output after reset (2026-10-10 gate)
+  integer xerr = 0, xk;
+  always @(posedge ck) if (rst && $time > 64 * TCK) begin
+    for (xk = 0; xk < 8; xk = xk + 1) if (^ln[xk] === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on SM %0d line at %0t", xk, $time); end
+    if ((^kvo === 1'bx || ^iko === 1'bx) && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kv %0d / ik %0d at %0t", ^kvo === 1'bx, ^iko === 1'bx, $time); end
+  end
   // ---------------------------------------------------------------- expected responses
   // SM line expectations: tag -> (addr, kind) per SM, unique tags
   reg [31:0] exp_a [0:7][0:1023]; reg exp_w [0:7][0:1023]; reg exp_on [0:7][0:1023];
@@ -107,6 +123,7 @@
   always @(posedge ck) begin
     for (k = 0; k < 8; k = k + 1) if (ln[k][0]) begin : chk
       reg [9:0] t; t = ln[k][10:1];
+      if ($test$plusargs("SVC_TRACE")) $display("LINE SM=%0d TAG=%0d",k,t);
       if (!exp_on[k][t]) begin err = err + 1; $display("ERR SM %0d unexpected line tag %0d", k, t); end
       else begin
         if (ln[k][1098:11] !== (exp_w[k][t] ? lineof(exp_a[k][t] ^ W_SALT) : lineof(exp_a[k][t]))) begin
@@ -122,8 +139,8 @@
     end
   end
   // index keys: ik carries no valid; it is checked when it changes (each command has a distinct address)
-  reg [1023:0] ik_prev = {1024{1'bx}};
-  always @(posedge ck) if (iko !== ik_prev && rst) begin
+  reg [1023:0] ik_prev = 1024'd0; // defined reset payload is the baseline, never a response
+  always @(posedge ck) if (iko !== ik_prev && rst && bench_ready) begin
     ik_prev <= iko;
     if (ik_got >= ik_want) begin err = err + 1; $display("ERR unexpected ik change"); end
     else if (iko !== {f(ik_a[ik_got], 3), f(ik_a[ik_got], 2), f(ik_a[ik_got], 1), f(ik_a[ik_got], 0)}) begin
@@ -132,6 +149,11 @@
   end
   // ---------------------------------------------------------------- PS streams
   wire [1101:0] ks [0:7]; reg [3:0] kq [0:7]; wire [1:0] kd;
+  integer xk2;
+  always @(posedge ck) if (rst && $time > 64 * TCK) begin   // no X on the PS outputs either
+    for (xk2 = 0; xk2 < 8; xk2 = xk2 + 1) if (^ks[xk2] === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on PS stream %0d at %0t", xk2, $time); end
+    if (^kd === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kd at %0t", $time); end
+  end
   function automatic [29:0] kmap(input [4:0] pc, input [4:0] bank, input [18:0] row, input [4:0] col);
     reg [2:0] bhi; reg [1:0] blo; reg [4:0] hi5;
     begin bhi = bank[4:2] ^ row[4:2]; blo = bank[1:0] ^ row[1:0]; hi5 = {row[1:0], bhi};
@@ -187,13 +209,13 @@
   reg [9:0] ntag [0:7];
   integer sent [0:7];
   task automatic expect_line(input integer s, input [9:0] t, input [31:0] a, input w);
-    begin exp_a[s][t] = a; exp_w[s][t] = w; exp_on[s][t] = 1'b1; outst[s] = outst[s] + 1; want_lines = want_lines + 1; end
+    begin if ($test$plusargs("SVC_TRACE")) $display("EXPECT SM=%0d TAG=%0d W=%0d",s,t,w); exp_a[s][t] = a; exp_w[s][t] = w; exp_on[s][t] = 1'b1; outst[s] = outst[s] + 1; want_lines = want_lines + 1; end
   endtask
   // row-0 SMs: valid/ready on ck
   genvar gk;
   generate for (gk = 0; gk < 8; gk = gk + 1) begin : gs
     if (!FWDV[gk]) begin : loc
-      always @(posedge ck) if (rst) begin
+      always @(posedge ck) if (rst && bench_ready) begin
         if (qv[gk] && qrdy[gk]) begin qv[gk] <= 1'b0; end
         else if (!qv[gk] && sent[gk] < NREQ && outst[gk] < 6 && ($urandom % 2)) begin : snd
           reg [31:0] a; a = {$urandom} & 32'h3fff_fff0 | gk;
@@ -204,7 +226,7 @@
     end else begin : fwd   // row-1 SMs: forwarded, no ready: at most 3 outstanding (the SM's ring), one per fck
       always @(posedge fck) begin
         qv[gk] <= 1'b0;
-        if (rst && sent[gk] < NREQ && outst[gk] < 3 && ($urandom % 3 == 0)) begin : snd
+        if (rst && bench_ready && sent[gk] < NREQ && outst[gk] < 3 && ($urandom % 3 == 0)) begin : snd
           reg [31:0] a; a = {$urandom} & 32'h3fff_fff0 | gk;
           qd[gk] <= {ntag[gk], a}; qv[gk] <= 1'b1; expect_line(gk, ntag[gk], a, 1'b0);
           ntag[gk] <= ntag[gk] + 1; sent[gk] <= sent[gk] + 1;
@@ -217,7 +239,7 @@
   always @(posedge fck) begin
     ev <= 1'b0;
 `ifdef PS_STREAMS
-    if (rst && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
+    if (rst && bench_ready && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
@@ -238,7 +260,7 @@
       end
     end else
 `endif
-    if (rst && ne < 48 && ($urandom % 9 == 0)) begin : snd
+    if (rst && bench_ready && ne < 48 && ($urandom % 9 == 0)) begin : snd
       reg [1:0] kind; reg [31:0] a; reg [9:0] t; integer s;
       kind = ne % 3; a = {$urandom} & 32'h00ff_fff0; s = $urandom % 8;
       if (kind == 0 && outst[s] < 6) begin
@@ -268,6 +290,18 @@
     ev = 0;
     for (k = 0; k < 8; k = k + 1) for (j = 0; j < 1024; j = j + 1) exp_on[k][j] = 1'b0;
     repeat (8) @(posedge ck); rst = 1;
+    repeat (64) @(negedge ck);
+    if (iko !== 1024'd0) $fatal(1, "IK reset baseline must be zero before requests");
+    bench_ready = 1;
+`ifdef OT_SVC_VLT
+    // Same bounded completion predicate for compiled simulator (named fork disable unsupported).
+    wait_cycles = 0;
+    while (!(ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want && sent[0] + sent[1] + sent[2] + sent[3] + sent[4] + sent[5] + sent[6] + sent[7] == 8 * NREQ) && wait_cycles < 1200000) begin @(posedge ck); wait_cycles = wait_cycles + 1; end
+    if (wait_cycles == 1200000) begin
+      $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines, want_lines, kv_got, kv_want, ik_got, ik_want, ne);
+      $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows, ps_want, ps_kd, ps_busy); err = err + 1;
+    end else repeat (50) @(posedge ck);
+`else
     fork : wait_done
       begin
         wait (ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want &&
@@ -275,10 +309,13 @@
         repeat (50) @(posedge ck);
         disable wait_done;
       end
-      begin repeat (200000) @(posedge ck); $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines,
+      begin repeat (1200000) @(posedge ck); $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines,
           want_lines, kv_got, kv_want, ik_got, ik_want, ne); $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows,
           ps_want, ps_kd, ps_busy); err = err + 1; disable wait_done; end
     join
+`endif
+    if ($test$plusargs("SVC_TRACE")) for (k=0;k<8;k=k+1) for (j=0;j<1024;j=j+1)
+      if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");

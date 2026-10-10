@@ -15724,4 +15724,17 @@ def hgi_inverse_selected_candidate_model(k=2048, group=96):
 def hgi_att_scaled_model():
     """Original scaled-FP4 provenance into the existing exact attention engine."""
     from hgi_att_scaled_model import model
+
+def hbm_svc_reset_boundary_model():
+    from hbm_svc_reset_boundary_model import model
+    return model()
+
+
+def hgi_dma_credit_model(**kwargs):
+    from hgi_dma_credit_model import model
+    return model(**kwargs)
+
+
+def hbm_svc_eps_queue_model():
+    from hbm_svc_eps_queue_model import model
     return model()
