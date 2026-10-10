@@ -121,6 +121,11 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    pin_root = os.environ.get('OT_VIEW_PORTS_ROOT')
+    if pin_root:    # [svc] 2026-10-10: a committed per-variant pin record (route hosts have no scipy for the r25gqn net)
+        f = ROOT / pin_root / name / 'ports.json'
+        if f.exists():
+            return dict(json.loads(f.read_text()), _alt_split=f'pinned:{pin_root}')
     native_root = Path(os.environ.get('OT_NATIVE_PIN_CONTRACT_ROOT', ROOT / 'physical/hbm_accel_die_views/index/native'))
     native = native_root / name / 'ports.json'
     if native.exists():
@@ -218,7 +223,9 @@ def svh(rec):
 
 def cmd_ports(a):
     native_only = a.master and all((derived_record(n) or {}).get('schema') ==
-                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+                                  'opentallas.hbm_native_indexer_ports.v1' or
+                                  str((derived_record(n) or {}).get('_alt_split', '')).startswith('pinned:')
+                                  for n in a.master)
     if native_only:
         M = {}
     else:

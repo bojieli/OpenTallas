@@ -1,0 +1,348 @@
+{
+ "hfd_loader": {
+  "kind": "loader",
+  "w": 1399.656,
+  "h": 237.576,
+  "instances": 1,
+  "ports": {
+   "qSW": [
+    351,
+    "W",
+    "output"
+   ],
+   "rSW": [
+    294,
+    "W",
+    "input"
+   ],
+   "rNW": [
+    294,
+    "W",
+    "input"
+   ],
+   "qNW": [
+    351,
+    "W",
+    "output"
+   ],
+   "qSE": [
+    351,
+    "E",
+    "output"
+   ],
+   "rSE": [
+    294,
+    "E",
+    "input"
+   ],
+   "h": [
+    789,
+    "E",
+    "inout"
+   ],
+   "rNE": [
+    294,
+    "E",
+    "input"
+   ],
+   "qNE": [
+    351,
+    "E",
+    "output"
+   ],
+   "ck": [
+    1,
+    "N",
+    "input"
+   ],
+   "rst": [
+    1,
+    "N",
+    "input"
+   ],
+   "f_hgi_cmdproc": [
+    704,
+    "N",
+    "input"
+   ],
+   "f_hgi_cp": [
+    222,
+    "N",
+    "input"
+   ],
+   "f_hgi_vmr": [
+    274,
+    "N",
+    "input"
+   ],
+   "f_hgi_vmw": [
+    32,
+    "N",
+    "input"
+   ],
+   "t_hgi_cmdproc": [
+    4,
+    "N",
+    "output"
+   ],
+   "t_hgi_cp": [
+    419,
+    "N",
+    "output"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "N",
+    "output"
+   ],
+   "t_hgi_vmw": [
+    8960,
+    "N",
+    "output"
+   ]
+  }
+ },
+ "hfd_cmdproc": {
+  "kind": "cmdproc",
+  "w": 1399.656,
+  "h": 1403.976,
+  "instances": 1,
+  "ports": {
+   "f_hgi_su": [
+    3,
+    "W",
+    "input"
+   ],
+   "t_hgi_su": [
+    2198,
+    "W",
+    "output"
+   ],
+   "t_su_SW": [
+    64,
+    "W",
+    "output"
+   ],
+   "t_mtpk": [
+    120,
+    "W",
+    "inout"
+   ],
+   "f_mtp_q": [
+    517,
+    "W",
+    "inout"
+   ],
+   "t_mtp_q": [
+    197,
+    "W",
+    "inout"
+   ],
+   "cSW": [
+    827,
+    "W",
+    "inout"
+   ],
+   "att_rec_SW": [
+    1250,
+    "W",
+    "inout"
+   ],
+   "f_hgi_sfu": [
+    3,
+    "W",
+    "input"
+   ],
+   "t_hgi_sfu": [
+    1174,
+    "W",
+    "output"
+   ],
+   "f_hgi_hc": [
+    3,
+    "W",
+    "input"
+   ],
+   "t_hgi_hc": [
+    939,
+    "W",
+    "output"
+   ],
+   "cNW": [
+    827,
+    "W",
+    "inout"
+   ],
+   "att_rec_NW": [
+    1250,
+    "W",
+    "inout"
+   ],
+   "t_su_NW": [
+    64,
+    "W",
+    "output"
+   ],
+   "t_su_SE": [
+    64,
+    "E",
+    "output"
+   ],
+   "cSE": [
+    827,
+    "E",
+    "inout"
+   ],
+   "att_rec_SE": [
+    1250,
+    "E",
+    "inout"
+   ],
+   "cNE": [
+    827,
+    "E",
+    "inout"
+   ],
+   "att_rec_NE": [
+    1250,
+    "E",
+    "inout"
+   ],
+   "t_su_NE": [
+    64,
+    "E",
+    "output"
+   ],
+   "ck": [
+    1,
+    "N",
+    "input"
+   ],
+   "rst": [
+    1,
+    "N",
+    "input"
+   ],
+   "f_barrier": [
+    64,
+    "N",
+    "input"
+   ],
+   "f_coll": [
+    33,
+    "N",
+    "input"
+   ],
+   "f_hgi_coll": [
+    3,
+    "N",
+    "input"
+   ],
+   "f_hgi_quant": [
+    3,
+    "N",
+    "input"
+   ],
+   "t_barrier": [
+    64,
+    "N",
+    "output"
+   ],
+   "t_coll": [
+    25,
+    "N",
+    "output"
+   ],
+   "t_hgi_cfg_coll": [
+    40,
+    "N",
+    "output"
+   ],
+   "t_hgi_coll": [
+    968,
+    "N",
+    "output"
+   ],
+   "t_hgi_quant": [
+    683,
+    "N",
+    "output"
+   ],
+   "t_lgE": [
+    17800,
+    "N",
+    "output"
+   ],
+   "f_mtp": [
+    517,
+    "S",
+    "input"
+   ],
+   "t_mtp": [
+    197,
+    "S",
+    "output"
+   ],
+   "f_hgi_dma": [
+    4,
+    "S",
+    "input"
+   ],
+   "f_hgi_loader": [
+    419,
+    "S",
+    "input"
+   ],
+   "f_hgi_vmr": [
+    274,
+    "S",
+    "input"
+   ],
+   "f_hgi_vmstat": [
+    19,
+    "S",
+    "input"
+   ],
+   "f_lgE": [
+    17800,
+    "S",
+    "input"
+   ],
+   "t_hgi_dma": [
+    704,
+    "S",
+    "output"
+   ],
+   "t_hgi_loader": [
+    222,
+    "S",
+    "output"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "S",
+    "output"
+   ],
+   "f_hgi_idx": [
+    3,
+    "S",
+    "input"
+   ],
+   "t_hgi_idx": [
+    1819,
+    "S",
+    "output"
+   ],
+   "f_hgi_argmax": [
+    3,
+    "S",
+    "input"
+   ],
+   "t_hgi_argmax": [
+    691,
+    "S",
+    "output"
+   ]
+  }
+ }
+}
