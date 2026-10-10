@@ -30,10 +30,11 @@
 // Reset = DS (cp_vocab / cp_ctx_max come from the config path's active registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_seq #(
-    parameter integer RW   = 512,        // ring words (16 B); a power of two
+    parameter integer RW   = 4096,        // ring words (16 B); a power of two
     parameter integer NOS  = 48,         // fetch sectors outstanding (F5 2026-10-09: 48 x 2 words covers ~128 cycles of
                                          // memory latency at the program's peak record rate; the link must keep them in order)
-    parameter integer USE_MACRO = 0,     // 1: the ring is one ot_sram_1r1w_256x256_m2_r2c2 (RW must be 512)
+    parameter integer USE_MACRO = 0,     // 1: the ring is macros: RW 512 = one ot_sram_1r1w_256x256_m2_r2c2 (8 KB); RW 4096 =
+                                         //    two ot_sram_1r1w_1024x256_m2_r2c2 (64 KB: a DFlash verify body of 39.6 KB fits)
     parameter integer DS_TPL = 2,        // DS full-shape DYN: log2 TP (4)
     parameter integer DS_WIN = 128,      //   window
     parameter integer DS_SCAN = 16384,   //   scan cap
@@ -58,6 +59,7 @@ module ot_hgi_seq #(
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,       // verify columns: bounds the TOKX count k
     input  wire [3:0]    db_kernel,     // G23: entry 3 = KERNEL, offset = MD word 16 + db_kernel
+    input  wire [31:0]   db_loff,       // G26: + L' x kstride for kernels 3 / 7 / 8 (the MTP translator; 0 otherwise)
     input  wire [11*32-1:0] md_k,       // G23: MD words 16 .. 26 (cfg master)
     // record fetch: 32 B sectors, in-order responses
     output wire          f_req_v,
@@ -144,12 +146,24 @@ module ot_hgi_seq #(
     wire        ring_we = f_rsp_v_r && (drop == 7'd0);
     always @(posedge clk) rd_hi <= rd_ptr[0];
     generate if (USE_MACRO) begin : g_ring_m
-        initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
-        wire [255:0] q;
-        ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
-            .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
-            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        always @* rd_sec = q;
+        initial if (RW != 512 && RW != 4096) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512 or 4096");
+        if (RW == 512) begin : g_8k
+            wire [255:0] q;
+            ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
+                .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            always @* rd_sec = q;
+        end else begin : g_64k                                  // bank = word pointer bit 11 (sector bit 10)
+            wire [255:0] q0, q1; reg rb_q;
+            always @(posedge clk) rb_q <= rd_ptr[11];
+            ot_sram_1r1w_1024x256_m2_r2c2 u_ring0 (.clk(clk), .r_ce_in(!rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q0),
+                .w_ce_in(ring_we && !wp[11]), .w_addr_in(wp[10:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            ot_sram_1r1w_1024x256_m2_r2c2 u_ring1 (.clk(clk), .r_ce_in(rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q1),
+                .w_ce_in(ring_we && wp[11]), .w_addr_in(wp[10:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            always @* rd_sec = rb_q ? q1 : q0;
+        end
     end else begin : g_ring_r
         reg [255:0] ring [0:RS-1];
         always @(posedge clk) begin
@@ -174,8 +188,9 @@ module ot_hgi_seq #(
     wire [4:0]  rlen = 5'd1 + {3'd0, h_tmpl, 1'b0} + {1'b0, npres, 1'b0};
     // ops per unit (spec.json uop.ops), units 0..10 exist on r25
     function automatic [3:0] nops(input [3:0] u);
+        // = hbm_generic_iface D_OPS (hgi-1010: HC 3 ops since G22 HC_MIX_ROWS / HC_MIX_POST; IDX MERGE / OWNED live)
         case (u) 4'd0: nops = 4'd8; 4'd4: nops = 4'd7; 4'd5: nops = 4'd2; 4'd6: nops = 4'd6; 4'd8: nops = 4'd4;
-                 4'd9: nops = 4'd5; 4'd1, 4'd2, 4'd3, 4'd7, 4'd10: nops = 4'd1; default: nops = 4'd0; endcase
+                 4'd9: nops = 4'd5; 4'd10: nops = 4'd3; 4'd1, 4'd2, 4'd3, 4'd7: nops = 4'd1; default: nops = 4'd0; endcase
     endfunction
     // slot of the m-th present descriptor
     function automatic [2:0] mth(input [6:0] o, input [2:0] m);
@@ -344,14 +359,14 @@ module ot_hgi_seq #(
     assign db_rdy = db_rdy_q;
     // timing pass 4: the doorbell is captured at the port (db_v -> the FSM's job-start enables was -239 ps); the FSM
     // starts from the captured copy one edge later
-    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry;
+    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry; reg [31:0] dbq_loff;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
         else if (db_v && db_rdy_q) db_pend <= 1'b1;
         else if (st == S_IDLE) db_pend <= 1'b0;
     // the fields follow the port while ready is high (enable = the ready flop alone; db_v -> 70 enables was -65 ps)
     always @(posedge clk) if (db_rdy_q) begin
-        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel;
+        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel; dbq_loff <= db_loff;
     end
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
@@ -388,7 +403,11 @@ module ot_hgi_seq #(
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
     reg [3:0] kern_q;
-    wire [31:0] kern_off = (kern_q > 4'd10) ? 32'd0 : md_k_r[kern_q*32 +: 32];
+    // G26: the kernel offset is registered at job start (S_IDLE) from the captured doorbell: md word 16 + kernel, plus
+    // L' x kstride for the per-layer kinds 3 / 7 / 8; an absent entry (0) stays 0 (E: completes with status 3)
+    reg [31:0] kern_off;
+    wire [31:0] kern_base = (dbq_kernel > 4'd10) ? 32'd0 : md_k_r[dbq_kernel*32 +: 32];
+    wire kern_pl = dbq_kernel == 4'd3 || dbq_kernel == 4'd7 || dbq_kernel == 4'd8;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] :
                              (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
@@ -536,6 +555,7 @@ module ot_hgi_seq #(
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
                     db_entry_q <= dbq_entry; kern_q <= dbq_kernel;
+                    kern_off <= (kern_base == 32'd0) ? 32'd0 : kern_pl ? kern_base + dbq_loff : kern_base;
 `ifdef OT_HGI_SEQ_CC_PRESET
                     cc_lo <= 16'hFF00; cc_hi <= 16'd0; cc_c <= 1'b0;   // bench: start near the low half's wrap
 `else
@@ -572,8 +592,7 @@ module ot_hgi_seq #(
                 // the d_desc / dr / d_sut clear enables); h, rp, frp, depth, pos and the loop flags are stable here
                 S_HQ: begin
                     hq_recbad <= (depth != 2'd0 && rec_end > RW - 2);
-                    hq_bad <= (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)} ||
-                               (h_unit == 4'd9 && (h_op == 6'd1 || h_op == 6'd3)));   // IDX ops 1 / 3 reserved (HGI-1 6.7)
+                    hq_bad <= (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)});
                     hq_skip <= !pred_ok;
                     hq_ctl <= is_ctl && h_op != 6'd3 && h_op != 6'd5;
                     hq_noa <= is_ctl && !h_opnd[0];
@@ -774,7 +793,8 @@ module ot_hgi_seq #(
                 S_TOKX: begin
                     if (vr_rsp_v_r) begin
                         if (tk_k) begin
-                            if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {28'd0, ncol}) fault3;
+                            // F11 (hgi-1010): ncol 0 encodes 16 columns (DFlash b16 commits up to k = 16)
+                            if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {27'd0, ncol == 4'd0, ncol}) fault3;
                             else begin
                                 tk_k <= 1'b0; tk_n <= vr_rsp_data_r[4:0]; tk_i <= 5'd1;
                                 vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= tk_base + 18'd1;

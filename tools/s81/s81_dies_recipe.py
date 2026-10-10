@@ -113,6 +113,10 @@ def recipes():
                        role='MD-2 P2 draft die B (20 of the 40)',
                        note='layer1 recipe + draft ROM image B (mtp.1 + mtp.2 experts 64..127); expert outputs to die A '
                             'over the in-package UCIe; no WFC'),
+        'draftP': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5'],
+                       role='DSpark primary die (4 = TP4 group P.k0..k3; mtp-dsbind 2026-10-10)',
+                       note='layer1 recipe + primary image (non-expert mtp.0..2 on the S81 L0 runs + seed main_proj, '
+                            'results/uarch/dsrom_s81_mtp_binding_20261010) + 5 draft fan-out SerDes (one a row package); no WFC'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '

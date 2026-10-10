@@ -10,6 +10,11 @@ module tb_hgi_mover_record;
 `else
     localparam integer VMUT = 0;
 `endif
+`ifdef MUT_DROP
+    localparam integer MD = 2;      // the sector engine drops a row's last partial sector
+`else
+    localparam integer MD = 0;
+`endif
 `ifdef MUT_RNE
     localparam integer MR = 1;
 `else
@@ -41,7 +46,7 @@ module tb_hgi_mover_record;
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [337:0] vmq; wire [273:0] vmr0, vmr1; reg [337:0] tq = 0;
-    ot_hgi_dma_mover #(.MUT_RNE(MR)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+    ot_hgi_dma_mover #(.MUT_RNE(MR), .MUT(MD)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
         .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
