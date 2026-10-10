@@ -313,12 +313,12 @@ module ot_hgi_dma_front #(
                     tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= rn;
                     issued <= issued + ({23'd0, rn} << ks);
-                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst[36:0]; wd <= wd + dst_w; end
+                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + {5'd0, sst}; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
                         wi <= 2'd0; wa <= ra; wd <= rdw; r_off <= r_off + {15'd0, rn};
                     end else begin                                         // next window
-                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst[36:0]; rdw <= wd + dst_w;
-                        wa <= wa + sst[36:0]; wd <= wd + dst_w;
+                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + {5'd0, sst}; rdw <= wd + dst_w;
+                        wa <= wa + {5'd0, sst}; wd <= wd + dst_w;
                         if (r_left == 20'd0) r_done <= 1'b1;
                         else begin
                             wn <= (r_left >= 20'd4) ? 2'd3 : 2'(r_left - 20'd1);
