@@ -40,10 +40,21 @@ module ot_hgi_sm_xload #(
     localparam integer XC = 3152, XOFF = 2128;
     reg busy; reg [17:0] base; reg [20:0] kk; reg [3:0] pp; reg [17:0] st;
     reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [9:0] outst; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
-    reg [15:0] tile [0:PMAX*512-1];        // [p][j][t]
+    // STORAGE (register file, synthesis-friendly): 8 t-banks, each PMAX words of 1,024 b = one slot's 64 lanes x BF16;
+    // a landing sector (slot p, lane j) writes the 16-b lane-j slice of word p in all 8 banks (one write port a bank),
+    // one sector an edge (client responses are held until taken); emission reads ONE word of bank t a beat
+    reg [1023:0] bk0 [0:PMAX-1], bk1 [0:PMAX-1], bk2 [0:PMAX-1], bk3 [0:PMAX-1],
+                 bk4 [0:PMAX-1], bk5 [0:PMAX-1], bk6 [0:PMAX-1], bk7 [0:PMAX-1];
+    reg [NXC-1:0] hv;                      // a client's response held, not yet landed
+    reg [273:0] hdat [0:NXC-1];
     reg [10:0] got;                        // sectors landed for this group
     integer cl; reg [3:0] nland;
-    always @* begin nland = 4'd0; for (cl = 0; cl < NXC; cl = cl + 1) if (cbusy[cl] && vr[cl][273] && !vr[cl][256]) nland = nland + 4'd1; end
+    reg lsel_v; integer lsel;
+    always @* begin
+        lsel_v = 1'b0; lsel = 0;
+        for (cl = NXC - 1; cl >= 0; cl = cl - 1) if (hv[cl]) begin lsel_v = 1'b1; lsel = cl; end
+        nland = {3'd0, lsel_v};
+    end
     wire [10:0] got_n = got;
     reg [1:0] ph;                          // 0 read, 1 emit, 2 done
     assign x_rdy = !busy;
@@ -58,24 +69,50 @@ module ot_hgi_sm_xload #(
             else begin r = x + 32'h7FFF + {31'd0, x[16]}; bf16 = r[31:16]; end
         end
     endfunction
-    // the fragment of address (g, t), wired statically from the tile (t selects one of 8 per lane), then beat b is one
-    // 2,048-b slice of it: no data-dependent shift
-    localparam integer FW = ((PMAX * XC + 2047) / 2048) * 2048;
+    // beat b of fragment (g, t): the fragment holds slot p's lanes at [p XC + XOFF, + 1,024); slot blocks are 3,152
+    // apart with a 2,128-b gap > the 2,048-b beat, so a beat overlaps AT MOST ONE slot: a static (p, offset) per b
+    localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
+    function automatic integer bslot(input integer bb);       // the slot a beat overlaps, -1 none
+        integer pp2; bslot = -1;
+        for (pp2 = 0; pp2 < PMAX; pp2 = pp2 + 1)
+            if (pp2 * XC + XOFF < bb * 2048 + 2048 && pp2 * XC + XOFF + 1024 > bb * 2048) bslot = pp2;
+    endfunction
     wire [3:0] tt = MUT_T ? (4'd7 - t) : t;
-    reg  [FW-1:0] frag;
-    integer p, jj;
-    always @* begin
-        frag = {FW{1'b0}};
-        for (p = 0; p < PMAX; p = p + 1)
-            for (jj = 0; jj < 64; jj = jj + 1)
-                frag[p * XC + XOFF + 16 * jj +: 16] = (p < pp) ? tile[p * 512 + jj * 8 + tt[2:0]] : 16'd0;
-    end
-    wire [2047:0] beat = frag[b * 2048 +: 2048];
+    reg [6:0] b_q; reg [1023:0] rw;        // registered bank read (the beat's slot word)
+    wire [2047:0] beat;
+    wire [2047:0] beats [0:NBMAX-1];
+    genvar gb;
+    generate for (gb = 0; gb < NBMAX; gb = gb + 1) begin : g_beat
+        localparam integer PS = bslot(gb);
+        localparam integer OFF = (PS < 0) ? 0 : PS * XC + XOFF - gb * 2048;   // slot block start rel. to the beat
+        if (PS < 0) begin : g_none
+            assign beats[gb] = 2048'd0;
+        end else if (OFF >= 0) begin : g_pos
+            wire [4095:0] sh = {3072'd0, rw} << OFF;
+            assign beats[gb] = sh[2047:0];
+        end else begin : g_neg
+            wire [1023:0] sh = rw >> (-OFF);
+            assign beats[gb] = {1024'd0, sh};
+        end
+    end endgenerate
+    assign beat = beats[b_q];
+    function automatic [3:0] slot_of(input [6:0] bb);
+        integer x; slot_of = 4'd0;
+        for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0) slot_of = bslot(x);
+    endfunction
+    function automatic in_slot(input [6:0] bb, input [3:0] np);
+        integer x; in_slot = 1'b0;
+        for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0 && bslot(x) < np) in_slot = 1'b1;
+    endfunction
+    reg e_v; reg [6:0] e_addr; reg e_ok;
     integer w;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0; end
+        if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0;
+                          hv <= 0; e_v <= 1'b0; end
         else begin
-            x_done <= 1'b0; xw_en <= 1'b0;
+            x_done <= 1'b0; xw_en <= 1'b0; e_v <= 1'b0;
+            // emission stage 2: the registered slot word -> the beat
+            if (e_v) begin xw_en <= 1'b1; xw_addr <= e_addr; xw_grp <= b_q; xw_data <= e_ok ? beat : 2048'd0; end
             for (c = 0; c < NXC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             if (x_v && x_rdy) begin
                 if (x_fmt == 2'd1 || x_fmt == 2'd2 || x_space != 2'd1 || |x_base[2:0] || |x_stride[2:0] || x_p > PMAX ||
@@ -99,18 +136,30 @@ module ot_hgi_sm_xload #(
                         if (j_rd == 7'd63) begin j_rd <= 7'd0; p_rd <= p_rd + 4'd1; end else j_rd <= j_rd + 7'd1;
                     end
                 end
-                for (c = 0; c < NXC; c = c + 1)
-                    if (cbusy[c] && vr[c][273] && !vr[c][256]) begin            // tag [272:257] = {p 4, j 7} low bits
-                        cbusy[c] <= 1'b0;
-                        for (w = 0; w < 8; w = w + 1)
-                            tile[{vr[c][267:264], 9'd0} + {vr[c][263:257], 3'd0} + w] <=
-                                (({13'd0, g, 9'd0} + {vr[c][263:257], 3'd0} + w) < kk) ? bf16(vr[c][32*w +: 32]) : 16'd0;
-                    end
+                for (c = 0; c < NXC; c = c + 1)                                  // hold every arriving response
+                    if (cbusy[c] && !hv[c] && vr[c][273] && !vr[c][256]) begin hv[c] <= 1'b1; hdat[c] <= vr[c]; end
+                if (lsel_v) begin : land                                        // land one held sector an edge
+                    reg [3:0] lp; reg [6:0] lj; reg [15:0] v [0:7];
+                    lp = hdat[lsel][267:264]; lj = hdat[lsel][263:257];      // tag [272:257] = {p 4, j 7} low bits
+                    for (w = 0; w < 8; w = w + 1)
+                        v[w] = (({13'd0, g, 9'd0} + {lj, 3'd0} + w) < kk) ? bf16(hdat[lsel][32*w +: 32]) : 16'd0;
+                    bk0[lp][16*lj +: 16] <= v[0]; bk1[lp][16*lj +: 16] <= v[1]; bk2[lp][16*lj +: 16] <= v[2];
+                    bk3[lp][16*lj +: 16] <= v[3]; bk4[lp][16*lj +: 16] <= v[4]; bk5[lp][16*lj +: 16] <= v[5];
+                    bk6[lp][16*lj +: 16] <= v[6]; bk7[lp][16*lj +: 16] <= v[7];
+                    hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0;
+                end
                 if (got_n == {pp, 6'd0}) begin ph <= 2'd1; t <= 4'd0; b <= 7'd0; end
             end
             if (busy && ph == 2'd0) got <= got + {7'd0, nland};
-            if (busy && ph == 2'd1) begin
-                xw_en <= 1'b1; xw_addr <= {g[3:0], t[2:0]}; xw_grp <= b; xw_data <= beat;
+            if (busy && ph == 2'd1) begin                                     // emission stage 1: read bank t
+                begin : rd
+                    reg [3:0] sp; sp = slot_of(b);
+                    case (tt[2:0])
+                        3'd0: rw <= bk0[sp]; 3'd1: rw <= bk1[sp]; 3'd2: rw <= bk2[sp]; 3'd3: rw <= bk3[sp];
+                        3'd4: rw <= bk4[sp]; 3'd5: rw <= bk5[sp]; 3'd6: rw <= bk6[sp]; default: rw <= bk7[sp];
+                    endcase
+                end
+                e_v <= 1'b1; e_addr <= {g[3:0], t[2:0]}; b_q <= b; e_ok <= in_slot(b, pp);
                 if (b == nb - 7'd1) begin
                     b <= 7'd0;
                     if (t == 4'd7) begin
@@ -120,7 +169,7 @@ module ot_hgi_sm_xload #(
                     t <= t + 4'd1;
                 end else b <= b + 7'd1;
             end
-            if (busy && ph == 2'd2) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end
+            if (busy && ph == 2'd2 && !e_v) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end   // last beat out
         end
     end
 endmodule

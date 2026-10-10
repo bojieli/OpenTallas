@@ -889,6 +889,18 @@ class Fleet:
         c = self.probe_cache.get(host)
         if c and time.time() - c[0] < 45:
             return c[1]
+        # NO SSH UNDER FLEET_LOCK (drive-0849 2026-10-10, fleet STARVED: 91 waiting, EPYC2 520 GB free / load 40): every
+        # launch_ready / cal_track / hold-ECO capacity check ran fleet.fits under FLEET_LOCK, and an expired cache made it
+        # probe the host by ssh INSIDE the lock -- 2-3 s per host per 45 s, and up to ~130 s (40 s timeout x 3 + 7 s of
+        # retry sleeps) when a probe failed -- so every other job thread queued on the lock (py-spy: 19 threads idle at
+        # step/launch_ready, the holder in _probe_once).  Under the lock a probe now answers from the last good probe
+        # (<= PROBE_LAST_GOOD_S old); the refresh happens outside the lock (fits(), step()).
+        if FLEET_LOCK._is_owned():
+            good = self.last_good.get(host)
+            if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                return dict(good[1], stale_s=round(time.time() - good[0])) if time.time() - good[0] >= 45 else good[1]
+            if c:
+                return c[1]
         info = self._probe_once(host)
         for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
             if info is not None:
@@ -961,6 +973,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return sum(p[1] for p in other), sum(p[2] for p in other if p[0] >= tr)
 
     def fits(self, host, threads, ram, job=None):
+        if not FLEET_LOCK._is_owned():
+            self.probe(host)                   # refresh (cached 45 s) OUTSIDE the lock
         with FLEET_LOCK:
             return self._fits(host, threads, ram, job)
 
@@ -1720,12 +1734,12 @@ for e in ${PATH//:/ }; do
       # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
-      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
         -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1968,6 +1982,10 @@ def launch_stage(j, st, cmd):
             ship_helpers(j["host"], j["run"])
             env += (f"python3 {j['run']}/cl/pinflop_overlay.py {j.get('stage_source', j['run'] + '/src')} "
                     f"{j['run']}/cl/pinflop_ref.tcl || true\n")
+            # PINFLOP-INPUT (drive-0849 2026-10-10): the route-time FF hold scene's io_ref_routed.sdc re-references the
+            # INPUT delays to the input pin flops' mean arrival (route_mtp / hbm_accel_smh / dsrom qs / markov-driver
+            # recipes); the verdict re-STA and ECO sessions never see this variable
+            env += "export OT_IOREF_INPUT_PF=1\n"
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
@@ -5363,9 +5381,23 @@ def cmd_retry(a):
             sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
         j["stage_idx"], j["stage_key"] = idx[0], a.at
     synchronized = bool(j.get("commit_full")) and j.get("source_synced") is not False
+    # FRESH-RETRY (drive-0849 2026-10-10): a released / cleaned-up job (deep release, disk cleanup) has no src/ left but
+    # still reads source_synced; seven PINFLOP-REF requeues then died rc=127 "route_mtp.sh: No such file" twice.  A human
+    # retry re-syncs the snapshot (sync_source re-extracts in place; cheap when it is intact).
+    if not getattr(a, "keep_resume", False):
+        synchronized = False
     retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
     j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []
+    # FRESH-RETRY (drive-0849 2026-10-10): a human retry re-runs the stage from scratch (retry_aside moves the old
+    # output aside).  A stale HOLD-STOP "resume" (+ its OT_HOLD_STOP buffer caps) from an earlier attempt survived the
+    # retry: qfd_emb_far92_rxp_b's PINFLOP-REF requeue would have resumed the 10-09 3_place checkpoint under the old IO
+    # reference.  --keep-resume keeps both.
+    if not getattr(a, "keep_resume", False):
+        for k in ("resume", "hold_stop"):
+            if j.get(k):
+                event(j, f"human retry: dropped the previous attempt's {k} ({str(j[k])[:160]})")
+                j.pop(k, None)
     # 2026-10-08: a bench track pinned to an artifact run on another host (bench_location) outlives that run when a
     # purge or move deletes it -- every bench launch then failed 'No such file' until 10 loop errors.  A retry restarts
     # the unfinished benches on the job's own run.
@@ -5739,6 +5771,7 @@ def main():
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
+    r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")

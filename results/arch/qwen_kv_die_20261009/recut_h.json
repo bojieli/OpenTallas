@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.qwen-kv-die.recut-h.v1",
- "date": "2026-10-09",
+ "date": "2026-10-10",
  "what": "re-cut H: re-cut D with the row engine as hard sub-tiles (4 x ot_qwen_nearhbm_head_h + ot_qwen_nearhbm_ectl_h), rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv (tools/qwen_kv_die/stack_h_gen.py)",
  "why": "every monolithic row-engine route failed: _p a / b PREROUTE -6.0 / -4.4 ns (S3 -> product), E -3.6 ns (sc_addr -> lmax), D floorplan repair at -49 ns (central reset leaf -> local-tree bank)",
- "bench": "rtl/test/qwen_kv_die/bench_run.sh STACK=h (run13_h, ot-epyc1tb), the layer step through the ROM <-> KV link, 7 vectors x VM stall 0 / 1, t = T-1 rows poisoned, typical PHY",
+ "bench": "rtl/test/qwen_kv_die/bench_run.sh STACK=h (run15_h / _p3 / _p9, ot-epyc1tb, source 2c6c4c720), the layer step through the ROM <-> KV link, 7 vectors x VM stall 0 / 1, t = T-1 rows poisoned; PHY 5 / 3 / 9",
  "exact_all": true,
  "runs": 14,
- "step_8192": 1806,
+ "step_8192": 1814,
  "step_8192_d": 1789,
- "delta_vs_d": 17,
+ "delta_vs_d": 25,
  "mutants": {
   "mut1": {
    "rc": 1,
@@ -69,8 +69,48 @@
  },
  "phy_cases": {
   "best": 1804,
-  "typical": 1806,
+  "typical": 1814,
   "worst": 1818
  },
- "adopted": true
+ "adopted": true,
+ "step_8192_before_timing_fix": 1806,
+ "timing_fix": {
+  "commit": "3307ecfbb",
+  "route": "qkd_ectl_a-60db99084 TT -92.6 (T -> n_s / gmax compare -> issue -> row FIFO pointer; exp_done pin -> request generator)",
+  "change": "n_s / gmax registered (T stable from start), exp_done captured at the pin",
+  "cost_cycles_8192": {
+   "typical": 8,
+   "best": 0,
+   "worst": 0
+  }
+ },
+ "die_tiles": {
+  "commit": "f8a6d7c30",
+  "head": {
+   "master": "qkd_rhead",
+   "module": "ot_qwen_nearhbm_head_h",
+   "frame_um": [
+    648.0,
+    453.6
+   ],
+   "cells_um2": 152960,
+   "note": "ONE hard tile for all four heads: the head index is a 2-b die-top strap (hid), q rows captured by beat (HD 16 / 512 beats a row)"
+  },
+  "control": {
+   "master": "qkd_ectl",
+   "module": "ot_qwen_nearhbm_ectl_h",
+   "frame_um": [
+    648.0,
+    129.6
+   ],
+   "cells_um2_synth": 24507,
+   "note": "S1b copy t0 / returns ts0 on the S face (heads 0 / 1), t1 / ts1 on the N face (heads 2 / 3); e copies 32 b"
+  },
+  "engine_column": "head 0, head 1 (MX) | control | head 2, head 3 (R0); col-1 engines MY / R180; far head 458 um from the control tile",
+  "pins": "mirror-legal: head horizontal pins M4 only, vertical M5 only; control horizontal M4 only (8.64-um origin lattice with M6)",
+  "routes": [
+   "qkd_rhead_c-2dc20f7de-tc-hm10-cl",
+   "qkd_ectl_c-f8a6d7c30-tc-hm10-cl"
+  ]
+ }
 }

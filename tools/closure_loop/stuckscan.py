@@ -119,6 +119,9 @@ def rd(p, n=None):
 def mt(p):
     try: return os.stat(p).st_mtime
     except Exception: return None
+ASIDE_RE = re.compile(r"\.attempt\d+(\.\d+)?/")
+
+
 def bases(item):
     if item.get("orfs"):
         return sorted(glob.glob(item["orfs"] + "/logs/asap7/*/base"))
@@ -126,7 +129,10 @@ def bases(item):
     for pat in ("routes/*/work/orfs/logs/asap7/*/base", "routes/*/logs/asap7/*/base", "*/work/orfs/logs/asap7/*/base",
                 "routes/*/*/work/orfs/logs/asap7/*/base", "routes/*/*/logs/asap7/*/base"):
         out |= set(glob.glob(r + "/" + pat))
-    return sorted(out)
+    # ASIDE (drive-0849 2026-10-10): a retry moves the previous attempt to <dir>.attempt<N>[.<ts>] (retry_aside); its
+    # logs are evidence, not the running stage.  Globbing them early-failed the fresh attempt 2 of 9 requeued routes
+    # within 40 s on the OLD attempt's 4_1_cts hold series ("5.1 h in step" -> "7.9 h in step", same numbers).
+    return sorted(b for b in out if not ASIDE_RE.search(b[len(r):]))
 HOLD_ROW = re.compile(r"^\s*(\d+|final)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*([+-]?[\d.]+)%\s*\|\s*([-+\d.e]+)\s*\|\s*([-+\d.e]+)\s*\|", re.M)
 def worst_paths(rpt):
     t = rd(rpt)

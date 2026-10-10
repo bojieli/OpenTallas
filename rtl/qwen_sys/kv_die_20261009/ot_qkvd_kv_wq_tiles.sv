@@ -188,3 +188,78 @@ module ot_qkvd_kv_wq_ctl #(
 endmodule
 
 
+
+
+// redesign-qwen 2026-10-10 (kv-die 04:05: a group's 8 CDCs span ~3 mm of the landing column at a 379-um pitch): the
+// PER-PC LEAF.  One leaf abuts each CDC's c face (pin flops for w_* out, w_room / wd_* in), the 8 leaves of a quarter
+// group are chained down the column by registered hops: the sector (from ot_qkvd_kv_wq_ctl's feed port, relayed) passes
+// every leaf and the leaf whose lane strap matches holds it, pushes it when ITS CDC shows room (local), and on its own
+// write-done (tag checked locally) sends a one-hop-per-leaf registered done / bad report back up the chain.  Posted and
+// latency-tolerant: one row in flight per group, so the chains carry one item at a time; no handshake crosses a relay
+// combinationally.
+module ot_qkvd_kv_wq_leaf #(
+    parameter integer TAGW = 9
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire [2:0]           lane,              // strap: this leaf's PC lane t[2:0] in the group
+    // feed chain (in from the previous leaf / the ctl tile, out to the next leaf)
+    input  wire                 c_v,
+    input  wire [255:0]         c_d,
+    input  wire [23:0]          c_sec,
+    input  wire [TAGW-1:0]      c_tag,
+    input  wire [2:0]           c_lane,
+    output reg                  n_v,
+    output reg  [255:0]         n_d,
+    output reg  [23:0]          n_sec,
+    output reg  [TAGW-1:0]      n_tag,
+    output reg  [2:0]           n_lane,
+    // done chain (in from the next leaf, out toward the ctl tile)
+    input  wire                 dn_v,
+    input  wire                 dn_bad,
+    output reg                  dp_v,
+    output reg                  dp_bad,
+    // this leaf's CDC (c face)
+    output reg                  w_v,
+    output reg  [23:0]          w_sec,
+    output reg  [255:0]         w_data,
+    output reg  [TAGW-1:0]      w_tag,
+    input  wire                 w_room,
+    input  wire                 wd_v,
+    input  wire [TAGW-1:0]      wd_tag
+);
+    // pin flops of the feed / done chains and the CDC returns
+    reg            cv_q;  reg [255:0] cd_q; reg [23:0] cs_q; reg [TAGW-1:0] ct_q; reg [2:0] cl_q;
+    reg            room_r, wdv_r; reg [TAGW-1:0] wdt_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cv_q <= 1'b0; room_r <= 1'b0; wdv_r <= 1'b0; end
+        else begin cv_q <= c_v; room_r <= w_room; wdv_r <= wd_v; end
+    always @(posedge clk) begin cd_q <= c_d; cs_q <= c_sec; ct_q <= c_tag; cl_q <= c_lane; wdt_r <= wd_tag; end
+    // pass the feed on (registered hop)
+    always @(posedge clk or negedge rst_n) if (!rst_n) n_v <= 1'b0; else n_v <= cv_q;
+    always @(posedge clk) begin n_d <= cd_q; n_sec <= cs_q; n_tag <= ct_q; n_lane <= cl_q; end
+    // hold / push / done
+    reg lv, sent;
+    reg [255:0] ld; reg [23:0] ls; reg [TAGW-1:0] lt;
+    wire take = cv_q && (cl_q == lane);
+    wire push = lv && !sent && room_r;
+    wire mine_done = wdv_r && lv && sent && (wdt_r == lt);
+    wire mine_bad  = wdv_r && !mine_done;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin lv <= 1'b0; sent <= 1'b0; w_v <= 1'b0; dp_v <= 1'b0; dp_bad <= 1'b0; end
+        else begin
+            w_v <= push;
+            if (take) begin lv <= 1'b1; sent <= 1'b0; end
+            else begin
+                if (push) sent <= 1'b1;
+                if (mine_done) lv <= 1'b0;
+            end
+            dp_v <= dn_v | mine_done;
+            dp_bad <= dn_bad | mine_bad;
+        end
+    end
+    always @(posedge clk) begin
+        if (take) begin ld <= cd_q; ls <= cs_q; lt <= ct_q; end
+        if (push) begin w_data <= ld; w_sec <= ls; w_tag <= lt; end
+    end
+endmodule

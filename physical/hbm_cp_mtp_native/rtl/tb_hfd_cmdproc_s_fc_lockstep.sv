@@ -18,8 +18,9 @@ module tb_hfd_cmdproc_s_fc_lockstep #(parameter integer CYC = 3000);
     hfd_cmdproc_s_fc b (.cks(clk), .ckn(clk), .cke(clk), .ckw(clk), .cSE(cSE_b), .cSW(cSW_b), .ck(clk), .rst(rst),
         .f_loader(f_loader), .f_router(f_router), .t_su_SE(su_e_b), .t_su_SW(su_w_b), .xb(xb), .xl(xl_b), .xt(xt_b));
     integer i, k, errs = 0, ncmp = 0;
-    function [826:0] r827; input integer dummy; integer j; begin for (j = 0; j < 827; j = j + 32) r827[j +: 32] = $random; end endfunction
-    function [340:0] r341; input integer dummy; integer j; begin for (j = 0; j < 341; j = j + 32) r341[j +: 32] = $random; end endfunction
+    // random fills through a 32-bit-multiple temporary (a part-select past the return vector's top aborts some vvp builds)
+    function [826:0] r827; input integer dummy; integer j; reg [831:0] t; begin for (j = 0; j < 832; j = j + 32) t[j +: 32] = $random; r827 = t[826:0]; end endfunction
+    function [340:0] r341; input integer dummy; integer j; reg [351:0] t; begin for (j = 0; j < 352; j = j + 32) t[j +: 32] = $random; r341 = t[340:0]; end endfunction
     initial begin
         repeat (6) @(negedge clk); rst = 0;
         for (i = 0; i < CYC; i = i + 1) begin

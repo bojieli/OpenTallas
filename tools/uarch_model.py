@@ -15263,6 +15263,9 @@ def hgi_token18_accept_seat_model():
     return d
 
 
+from hgi_su_out8_model import hgi_su_out8_model
+
+
 def hgi_token18_fullcore_model():
     """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
     return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,

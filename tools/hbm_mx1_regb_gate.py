@@ -46,7 +46,9 @@ TB_D = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_mx1_regb.sv'
 TB_F = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_fc_lockstep.sv'
 FC_MUT = ('always @(negedge c_s) lk_f_loader <= i0_f_loader;', 'always @(posedge c_s) lk_f_loader <= i0_f_loader;')
 L_OLD = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1)) dut('
-L_NEW = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(0),.FC(0)) dut('
+L_NEW = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(0)) dut('
+# the legacy bench predates the face clock taps: they ride the die clock (as on the die)
+L_TAPS = ('.ck(clk),', '.ck(clk),.cks(clk),.ckn(clk),.cke(clk),.ckw(clk),')
 MUT_NEEDLE = 'cpl_job=raw[232:201]'
 
 
@@ -57,7 +59,8 @@ def run(work, name, top, srcs, params=()):
     if b.returncode:
         return dict(case=name, phase='compile', returncode=b.returncode, output=b.stderr[-4000:])
     r = subprocess.run(['vvp', '-n', str(exe)], capture_output=True, text=True)
-    return dict(case=name, returncode=r.returncode, output=r.stdout[-3000:])
+    # stderr kept: a simulator abort (e.g. a vvp assertion) must be visible, not an empty FAIL
+    return dict(case=name, returncode=r.returncode, output=r.stdout[-3000:] + r.stderr[-1000:])
 
 
 def fcstep(work, name, mut):
@@ -71,9 +74,15 @@ def fcstep(work, name, mut):
         fc = work / 'ar_fc_mut.sv'; fc.write_text(t.replace(FC_MUT[0], FC_MUT[1]))
     srcs = [ROOT / s for s in TOP if not s.endswith('hfd_cmdproc_s_fc.sv')] + [fc, ROOT / TB_F]
     c = run(work, name, 'tb_hfd_cmdproc_s_fc_lockstep', srcs)
-    ok = 'LOCKSTEP PASS' in c['output']
-    if c.get('phase') != 'compile':
-        c['returncode'] = 0 if ok else 1
+    if c.get('phase') == 'compile':
+        return c
+    if mut:   # a mutant is killed only by a functional verdict, never by a crash or an empty run
+        if 'LOCKSTEP FAIL' in c['output']:
+            c['returncode'] = 1
+        else:
+            c.update(returncode=2, phase='compile')
+    else:
+        c['returncode'] = 0 if 'LOCKSTEP PASS' in c['output'] else 1
     return c
 
 
@@ -124,7 +133,8 @@ def main():
     tl = (ROOT / TB_L).read_text()
     assert L_OLD in tl, 'legacy bench instance changed'
     tb_l = a.work / 'tb_legacy_regb0.sv'
-    tb_l.write_text(tl.replace(L_OLD, L_NEW))
+    assert tl.count(L_TAPS[0]) == 1, 'legacy bench clock hookup changed'
+    tb_l.write_text(tl.replace(L_OLD, L_NEW).replace(*L_TAPS))
     base = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20]]
     sysb = base + [ROOT / BACKEND, ROOT / TB_R]
     top = 'tb_hbm_native_mtp_mx1_regb_system'

@@ -10,6 +10,7 @@
 module ot_hgi_vm_unit #(
     parameter integer NC = 1,
     parameter integer WP = 1,            // wide write lanes (the DMA streaming port, 32 B a lane a cycle)
+    parameter integer WDIRECT = 0,       // lane b -> bank b only (WP 32 with the DMA front)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -40,7 +41,7 @@ module ot_hgi_vm_unit #(
     wire [NC*273-1:0] rsp;
     wire [15:0] ce; wire ue, mask_fault;
     reg proto;
-    ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
+    ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .WDIRECT(WDIRECT), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
         .rsp_v(rsp_v), .rsp_r({NC{1'b1}}), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault),
         .inj_v(1'b0), .inj_bank(5'd0), .inj_word(3'd0), .inj_mask(39'd0),
         .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wq_done), .wl_conflict(wl_conflict));

@@ -59,7 +59,8 @@ module ot_qfd_crom_lbuf #(
     input  wire              tok_start,       // a token starts at position tpos
     input  wire [NW-1:0]     tpos,
     input  wire [AW-1:0]     lane_base,       // global index of lane 0 (a lane-group tile's strap; 0 for the full block)
-    output wire              st_rdy,          // the bank of `stage` is resident (and rope(tpos) for stage 0 starts)
+    output wire              st_rdy,          // the bank of st_rdy_stage is resident (and rope(tpos) for stage 0 starts)
+    output wire [LW-1:0]     st_rdy_stage,    // the stage st_rdy refers to (the consumer compares it: no in -> out path)
     // the far constant ROM (ot_qfd_crom), FL edges strobe -> answer
     output reg  [SW-1:0]     f_re,
     output reg  [SW*AW-1:0]  f_addr,
@@ -74,7 +75,7 @@ module ot_qfd_crom_lbuf #(
     reg  [NW-1:0]  tpos_q, tpos1_q;
     reg            tok_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) tok_q <= 1'b0; else tok_q <= tok_start;
-    always @(posedge clk) begin stage_q <= stage; tpos_q <= tpos; tpos1_q <= tpos + 1'b1; end
+    always @(posedge clk) begin stage_q <= stage; tpos_q <= tpos; tpos1_q <= tpos_q + 1'b1; end
     localparam integer RB = 8;                 // local row bits (>= 148)
     localparam [2:0] K_ZERO = 3'd0, K_QSC = 3'd1, K_WIDE = 3'd2, K_NARROW = 3'd3, K_BAD = 3'd4;
     localparam [LW-1:0] S_HEAD = HEAD;
@@ -98,7 +99,7 @@ module ot_qfd_crom_lbuf #(
     reg [LW-1:0] st_rdy_s;
     always @(posedge clk or negedge rst_n) if (!rst_n) st_rdy_r <= 1'b0; else st_rdy_r <= res_stage && (stage_q != 0 || res_rope);
     always @(posedge clk) st_rdy_s <= stage_q;
-    assign st_rdy = st_rdy_r && (st_rdy_s == stage);
+    assign st_rdy = st_rdy_r; assign st_rdy_stage = st_rdy_s;
 
     // ---- prefetcher: one fill at a time (a stage_q's narrow rows, the HEAD rows, or one rope row) -------------------
     localparam [1:0] F_NONE = 2'd0, F_STAGE = 2'd1, F_HEADB = 2'd2, F_ROPE = 2'd3;
@@ -346,6 +347,7 @@ module ot_qfd_su_cbuf (
     input  wire              tok_start,
     input  wire [17:0]       tpos,
     output wire              st_rdy,
+    output wire [5:0]        st_rdy_stage,
     output wire [63:0]       f_re,
     output wire [64*24-1:0]  f_addr,
     output wire [5:0]        f_stage,
@@ -377,6 +379,7 @@ module ot_qfd_su_cbuf_g (
     input  wire [17:0]       tpos,
     input  wire [2:0]        grp,              // strap: lanes 8 grp .. 8 grp + 7
     output wire              st_rdy,
+    output wire [5:0]        st_rdy_stage,
     output wire [7:0]        f_re,
     output wire [8*24-1:0]   f_addr,
     output wire [5:0]        f_stage,
@@ -387,6 +390,6 @@ module ot_qfd_su_cbuf_g (
 );
     ot_qfd_crom_lbuf #(.SW(8), .SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
-        .lane_base({18'd0, grp, 3'd0}), .st_rdy(st_rdy), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
+        .lane_base({18'd0, grp, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
         .f_fault(f_fault), .fault(fault), .fault_code(fault_code));
 endmodule

@@ -70,13 +70,33 @@ module ot_hgi_hc_unit #(
     reg [17:0] rr;                               // R
     reg [HAW-1:0] rs, rowstride, rowbase, pbase; reg [HAW-1:0] boff [0:7];
 
+    localparam [4:0] S_IDLE = 0, S_PAR = 1, S_STAGE = 2, S_ROW = 3, S_RW = 4, S_RC = 5, S_REL = 6, S_P1 = 7,
+                     S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
+                     S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
+                     S_LDA = 23;
+    reg wpre, wst;   // wpre: start the first row's windows next edge (boff settled); wst: they are started
+    reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
+    reg [273:0] vr; always @(posedge clk) vr <= vmr;
+    reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n; reg flt;
     // ---- local x memory (8 banks) and the HCP
-    reg [W*16-1:0] xm [0:8*RMAX-1];
+    // x memory: bank k (the HCP's term-k bank), lane l: RMAX BF16 words, one array each (a sector lands one element in
+    // every bank; the HCP reads all W lanes of one word of every bank an edge)
+    wire x_land;
     wire [7:0] x_re, w_re; wire [8*AW-1:0] x_addr, w_addr; reg [8*W*16-1:0] xq1, xd; wire [8*W*32-1:0] wq;
     reg [8*W*32-1:0] wd;
     genvar g;
     generate for (g = 0; g < 8; g = g + 1) begin : g_xr
-        always @(posedge clk) if (x_re[g]) xq1[g*W*16 +: W*16] <= xm[g*RMAX + (x_addr[g*AW +: AW] & (RMAX - 1))];
+        wire [2:0] qk = g[2:0] + xbase[2:0];                    // the sector word whose element lands in bank g
+        wire [29:0] ek = {rsec, qk} - {12'd0, xbase};
+        wire ok = x_land && ek < {9'd0, nchunk, 3'b000};
+        genvar gl;
+        for (gl = 0; gl < W; gl = gl + 1) begin : g_l
+            reg [15:0] m [0:RMAX-1];
+            always @(posedge clk) begin
+                if (ok && ((ek >> 3) & (W - 1)) == gl) m[(ek >> 3) >> LW] <= vr[32*qk + 16 +: 16];
+                if (x_re[g]) xq1[g*W*16 + gl*16 +: 16] <= m[x_addr[g*AW +: AW] & (RMAX - 1)];
+            end
+        end
     end endgenerate
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
@@ -148,14 +168,8 @@ module ot_hgi_hc_unit #(
     reg [31:0] T [0:23]; reg [31:0] MX [0:3];
     reg [5:0] outst;
 
+    assign x_land = (st == S_STAGE) && vr[273] && !vr[256];
     // ---- control
-    localparam [4:0] S_IDLE = 0, S_PAR = 1, S_STAGE = 2, S_ROW = 3, S_RW = 4, S_RC = 5, S_REL = 6, S_P1 = 7,
-                     S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
-                     S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
-                     S_LDA = 23;
-    reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
-    reg [273:0] vr; always @(posedge clk) vr <= vmr;
-    reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n; reg flt;
     wire [31:0] F_ONE = 32'h3F800000, F_TWO = 32'h40000000;
     function automatic fgt(input [31:0] a, input [31:0] b);    // a > b for non-NaN binary32
         if (a[31] != b[31]) fgt = !a[31] && (a[30:0] != 0 || b[30:0] != 0);
@@ -170,9 +184,10 @@ module ot_hgi_hc_unit #(
             st <= S_IDLE; job_rdy <= 1'b1; job_done <= 1'b0; job_fault <= 1'b0; vmq <= 338'd0; w_start <= 1'b0;
             w_rel <= 1'b0; h_cv <= 1'b0; p_req <= 1'b0; mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
             sk_req <= 1'b0; mw <= 0; mr <= 0; aw <= 0; ar <= 0; ew <= 0; er <= 0; dw <= 0; drp <= 0; outst <= 0;
-            flt <= 1'b0; vo_n <= 3'd0; p_got <= 4'd0;
+            flt <= 1'b0; vo_n <= 3'd0; p_got <= 4'd0; wpre <= 1'b0; wst <= 1'b0;
         end else begin
             job_done <= 1'b0; job_fault <= 1'b0; vmq[337] <= 1'b0; w_start <= 1'b0; w_rel <= 1'b0;
+            if (wpre) begin wpre <= 1'b0; w_start <= 1'b1; wst <= 1'b1; end
             mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
             if (p_iss) p_req <= 1'b0;
             // parameter sectors
@@ -213,6 +228,7 @@ module ot_hgi_hc_unit #(
                 end
                 S_PAR: begin
                     for (q = 0; q < 8; q = q + 1) boff[q] <= rs * q;
+                    wpre <= (op != 2'd2);                            // the first row's weights stream during x staging
                     p_req <= (op != 2'd1); p_got <= 4'd0;
                     sec <= xbase >> 3; rsec <= xbase >> 3; sec_end <= ({9'd0, xbase} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
                     vo_n <= 3'd0; st <= (op == 2'd2) ? S_LDA : S_STAGE;
@@ -240,17 +256,14 @@ module ot_hgi_hc_unit #(
                     if (vr[273] && !vr[256]) begin
                         for (q = 0; q < 8; q = q + 1) begin
                             e2 = {rsec, q[2:0]} - xbase;             // element index of word q
-                            if (e2 >= 0 && e2 < {nchunk, 3'b000}) begin
-                                xm[(e2 & 7) * RMAX + ((e2 >> 3) >> LW)][16 * ((e2 >> 3) & (W - 1)) +: 16] <= vr[32*q + 16 +: 16];
-                                if (vr[32*q +: 16] != 16'd0) flt <= 1'b1;
-                            end
+                            if (e2 >= 0 && e2 < {nchunk, 3'b000} && vr[32*q +: 16] != 16'd0) flt <= 1'b1;   // BF16
                         end
                         rsec <= rsec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
                     if (rsec > sec_end && vo_n == 3'd0) begin row <= row0; st <= S_ROW; end   // lanes past K / 8: HCP-masked
                 end
-                S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= 1'b1; st <= S_RW; end
+                S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= !wst; wst <= 1'b0; st <= S_RW; end
                 S_RW: if (&w_rdy && h_cr) begin h_cv <= 1'b1; st <= S_RC; end
                 S_RC: begin
                     if (h_cv && h_cr) h_cv <= 1'b0;

@@ -30,6 +30,7 @@ module ot_qwen_rom_core_ctrl_x #(
     parameter integer OWN = 2,        // redesign-qwen: this controller's unit (1 ME, 2 SU)
     parameter integer XW = 24,        // other-unit op counter width
     parameter integer XMUT = 0,       // negative controls (split_ctrl.py MUT)
+    parameter integer XREG = 0,       // 1: the snapshot comparisons registered (o_cnt next vs the snapshot; 1 edge later)
     parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
@@ -531,8 +532,13 @@ localparam integer W_ME_AMC = 1;
     wire own = (d_unit == OWN[1:0]);
     wire oth = (d_unit != 2'd0) && !own;
     wire [XW-1:0] o_dif = x_oacc - o_cnt;
-    wire osync = (o_dif == {XW{1'b0}});        // the other unit accepted exactly its earlier ops
-    wire opast = !osync && !o_dif[XW-1];       // ... and the one at NEXT
+    wire osync_c = (o_dif == {XW{1'b0}});      // the other unit accepted exactly its earlier ops
+    wire opast_c = !osync_c && !o_dif[XW-1];   // ... and the one at NEXT
+    //: XREG: compare the snapshot with the NEXT edge's count, registered (the snapshot only climbs toward the count while
+    //: a dependent instruction waits, so a one-edge-old snapshot is conservative)
+    reg osync_r, opast_r;
+    wire osync = (XREG != 0) ? osync_r : osync_c;
+    wire opast = (XREG != 0) ? opast_r : opast_c;
     wire own_idle = (OWN == 1) ? me_idle : su_idle;
     wire o_drained = osync && x_oidle;
     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
@@ -559,6 +565,10 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) o_cnt <= {XW{1'b0}};
         else if (skip) o_cnt <= o_cnt + 1'b1;
+    wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
+        else begin osync_r <= (o_dif_n == {XW{1'b0}}); opast_r <= (o_dif_n != {XW{1'b0}}) && !o_dif_n[XW-1]; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
     wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
@@ -1190,7 +1200,7 @@ module ot_qfd_seq_su #(
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
     end
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl_x #(.OWN(2), .XW(24), .XMUT(0), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (
+    ot_qwen_rom_core_ctrl_x #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
         .start(core_start),

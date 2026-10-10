@@ -32,7 +32,7 @@ SRC_BASE = [
     "rtl/hbm_accel/generic/ot_hgi_cp_die.sv", "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv"],
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
               "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
               "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],

@@ -51,6 +51,9 @@ SINGLE_CP_ONLY = {'argmax': ('die_id',)}
 def vm_clients(units):
     return [u for u in VM_CLIENTS if u in units and (u != 'argmax' or 'cp' in units)]
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
+VMW_LANES, VMW_BITS = 32, 280            # VM wide write port: lane {v, sector 15, wdata 256, word mask 8}, lane b = bank b
+SVC_DMA_STACKS = ('SW', 'SE', 'NW', 'NE')   # stack index (address bits 36:35) 0..3
+DSQ_BITS, DSD_LANES, DSD_BITS = 51, 8, 270   # svc DMA stream: request {v, tag 4, nsec 9, addr 37}; lane {v, fault, tag 4, idx 8, data 256}
 HGI_VM_SLOT = (1399.656, 1080.0)       # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
@@ -201,10 +204,25 @@ def install(m, buses, paths, units):
                                     (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
         if 'dma' in vm_cl:
-            # the VM wide write port lane of the DMA unit (coordinator 2026-10-10): 280 b loader -> VM, done back
-            for name, bits, eps in (('hgi_vmw_dma', 280, [(hub[UNITS['dma'][1]].name, 't_hgi_vmw'), (vm, 'f_hgi_vmw_dma')]),
-                                    ('hgi_vmw_dma_done', 1, [(vm, 't_hgi_vmw_dma'), (hub[UNITS['dma'][1]].name, 'f_hgi_vmw')])):
+            # the VM wide write port of the DMA unit (coordinator 2026-10-10): VMW_LANES x 280 b loader -> VM (lane b
+            # writes bank b: the DMA front routes by bank), one done a lane back
+            dma_blk = hub[UNITS['dma'][1]].name
+            for name, bits, eps in (('hgi_vmw_dma', VMW_LANES * VMW_BITS, [(dma_blk, 't_hgi_vmw'), (vm, 'f_hgi_vmw_dma')]),
+                                    ('hgi_vmw_dma_done', VMW_LANES, [(vm, 't_hgi_vmw_dma'), (dma_blk, 'f_hgi_vmw')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+            # the svc DMA stream (hgi-takeover.log "SPEC for hbm-forks", 2026-10-10; svc side: hbm-forks): per stack a
+            # request chain loader -> svc and 8 data lanes svc -> loader with per-lane credits.  Declared only when the
+            # variant sets hgi_svc_dma (the svc segment binds its end; until then the loader runs DMA_FRONT 0)
+            # (hgi_svc_dma: True = the svc_{st} instance, or a map st -> hub key of the svc segment that terminates it)
+            sd = (m.get('variant') or {}).get('hgi_svc_dma')
+            if sd:
+                for st in SVC_DMA_STACKS:
+                    svc = hub[sd[st] if isinstance(sd, dict) else f'svc_{st}'].name
+                    for name, bits, eps in ((f'hgi_dsq_{st}', DSQ_BITS, [(dma_blk, f't_hgi_dsq{st}'), (svc, 'f_hgi_dsq')]),
+                                            (f'hgi_dsr_{st}', 1, [(svc, 't_hgi_dsr'), (dma_blk, f'f_hgi_dsr{st}')]),
+                                            (f'hgi_dsd_{st}', DSD_LANES * DSD_BITS, [(svc, 't_hgi_dsd'), (dma_blk, f'f_hgi_dsd{st}')]),
+                                            (f'hgi_dsc_{st}', DSD_LANES, [(dma_blk, f't_hgi_dsc{st}'), (svc, 'f_hgi_dsc')])):
+                        buses.append((name, 'hub', bits, eps)); paths[name] = [name]
         buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
         paths['hgi_vmstat'] = ['hgi_vmstat']
         rec['vm_clients'] = vm_cl
