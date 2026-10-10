@@ -3083,24 +3083,15 @@ def build_r8(variant=None):
             slab(n, centre_area[n], x_sp, yy, cw, master=master)
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
         elif n == 'wfc_hard' and WFC_KIT:
-            # mtp-wfc 2026-10-10 (--wfc-kit): the slab holds the kit's CLOSED elements as their own masters (die tops
-            # place no std-cell rows): tokpipe core (SOURCE on the source die, STG elsewhere), the link bridge, the
-            # VM / core transport and (SOURCE) the token store, side by side W -> E with WFC_HALO gaps, each at its
-            # closed outline; wired by WFC_KIT_BUSES (exact element ports; rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv)
-            src_ = WFC_ROLE == 'source'
-            parts = [('wfc', 'ot_dsrom_wfc_tokpipe_src' if src_ else 'ot_dsrom_wfc_tokpipe_stg',
-                      WFC_SRC_UM if src_ else WFC_STG_UM), ('wfc_vmx', 'dsfd_wfc_vmx', WFC_VMX_UM),
-                     ('wfc_lnk', 'dsfd_wfc_lnk', WFC_LNK_UM)] + ([('wfc_tok', 'dsfd_wfc_tok_hard', WFC_TOK_UM)] if src_ else [])
-            xk = up(x_sp + WFC_HALO, GX)
-            for nm_, ms_, (w_, h_) in parts:
-                it = Inst(f'sp_{nm_}', ms_, xk, up(yy + WFC_HALO, GY), up(w_, GX), up(h_, GY), kind='hub', region='spine',
-                          domain='serial_0p9' if nm_ == 'wfc_vmx' else 'stream_1p2')
-                insts.append(it); hub[nm_] = it
-                xk = up(xk + it.w + WFC_HALO, GX)
-            assert xk <= x_sp + cw + 1e-6, ('WFC kit wider than the hub column', xk - x_sp, cw)
-            notes.append('MTP-WFC --wfc-kit (%s): %s in a %.2f um slab, %.1f um of the %.1f um hub column'
-                         % (WFC_ROLE, ' + '.join(f'{ms_} {w_:.1f}x{h_:.1f}' for _, ms_, (w_, h_) in parts),
-                            WFC_SLAB_H, xk - x_sp, cw))
+            # mtp-wfc 2026-10-10 (--wfc-kit): the slab master is the WFC kit itself (rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv:
+            # the closed tokpipe core + lnk + vmx (+ tok_hard on the source die), wired element to element inside it,
+            # every element boundary registered), on exact die-facing ports (wfc_kit_buses).  First try (sub-instances
+            # in the slab) left the hub chains no station spot inside the partly empty slab region (11:27 PT).
+            ms_ = 'dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg'
+            slab('wfc', centre_area[n], x_sp, yy, cw, master=ms_)
+            notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
+                WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
+                WFC_SLAB_H, centre_area[n]))
         elif n == 'wfc_hard':
             slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
             notes.append('MTP-DIE --wfc-hard: dsfd_wfc = closed SOURCE ot_dsrom_wfc_tokpipe_src %s um (910e67c7b) + closed '
@@ -3626,7 +3617,7 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (wfc_kit_buses(WFC_ROLE, 'host' in hub) if 'wfc_lnk' in hub else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
             (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
             (P2_BUSES if 'p2' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
@@ -3751,23 +3742,14 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 # ready is its own reverse bus).  Die-facing: collective <-> lnk link (valid + {last, data} 514, grant 1 back) both ways,
 # VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
 # (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
-# Intra-kit: core <-> lnk (in/out link 514 + ready 1 each), core <-> vmx (VM write 528, read req 16, read data 512,
-# core start 53, core done 54), vmx -> lnk VM credit 1, lnk -> tok DRAFT 513, core <-> tok prompt read 36 / 22.
+# The element-to-element wiring is inside the kit master (dsfd_wfc_kit.sv), every element boundary registered.
 def wfc_kit_buses(role, host):
-    b = [('collective', 'wfc_lnk', 514, 't_wfc', 'f_li'), ('wfc_lnk', 'collective', 1, 't_lir', 'f_wfcg'),
-         ('wfc_lnk', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc_lnk', 1, 't_wfcg', 'f_lor'),
-         ('wfc_vmx', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc_vmx', 516, 't_wfc', 'f_sw_sr'),
-         ('wfc_vmx', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc_vmx', 54, 't_wfc', 'f_kd'),
-         ('wfc_lnk', 'wfc', 514, 't_wi', 'f_in'), ('wfc', 'wfc_lnk', 1, 't_in_ready', 'f_wig'),
-         ('wfc', 'wfc_lnk', 514, 't_out', 'f_wo'), ('wfc_lnk', 'wfc', 1, 't_wog', 'f_out_ready'),
-         ('wfc', 'wfc_vmx', 529, 't_vm_w', 'f_vw'), ('wfc', 'wfc_vmx', 16, 't_vm_r', 'f_vr'),
-         ('wfc_vmx', 'wfc', 512, 't_vq', 'f_vm_rq'), ('wfc', 'wfc_vmx', 53, 't_core_start', 'f_cs'),
-         ('wfc_vmx', 'wfc', 54, 't_cd', 'f_core_done'), ('wfc_vmx', 'wfc_lnk', 1, 't_vc', 'f_vc')]
-    if role == 'source':
-        b += [('wfc_lnk', 'wfc_tok', 513, 't_dw', 'f_dw'), ('wfc', 'wfc_tok', 36, 't_pr', 'f_pr'),
-              ('wfc_tok', 'wfc', 22, 't_pr', 'f_pr_q'), ('wfc_tok', 'wfc', 52, 't_cfg', 'f_cfg')]
-        if host:
-            b += [('host', 'wfc_tok', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
+    b = [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg'),
+         ('wfc', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc', 1, 't_wfcg', 'f_lor'),
+         ('wfc', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 516, 't_wfc', 'f_sw_sr'),
+         ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
+    if role == 'source' and host:
+        b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
     return tuple(b)
 
 
