@@ -388,6 +388,7 @@ class Elements:
         registry, registry_errors = self.registry()
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
+        vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
         instances = collections.defaultdict(set)
         for b, v in ov['variants'].items():
             if v.get('kind') == 'instance': instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
