@@ -201,6 +201,7 @@ proc ::ot_pin_place_auto {re depth} {
         }
     }
     puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
+    return $placed
 }
 # Only the new front flops own these pins; hold repair remains enabled.
 ot_pin_place_auto {^g_fetch_pin\.(front_addr|front_v)} 14
