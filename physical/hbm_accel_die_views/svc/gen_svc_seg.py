@@ -429,6 +429,7 @@ def build(pl):
     names = [f'hfd_svc_{fam}_s{j}' for j in range(len(segs))]
     port_map = {}                    # band -> {band port: (parent port, lo, hi)}
     recs = {}
+    nmv_ = {}       # (segment, N-face port) -> (old centre, new centre, new x0, new x1), global um (PS compaction)
     for j, (x0, x1) in enumerate(segs):
         w = round(x1 - x0, 4)
         ports, fc, pm = {}, {}, {}
@@ -506,6 +507,39 @@ def build(pl):
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',
                               dir_segments=[[0, f['bits'], d_]], direction='output' if d_ == 'out' else 'input')
+        if PS:
+            # hbm-forks 2026-10-09 (R25G die build: 'no free N-face span' for the loader port ki7 on SE_s7): a band whose
+            # N face keeps < NRES um of free M5 span after the PS ks port is compacted -- its 0.192-pitch N-face buses
+            # re-pitched to 0.096 in place and the N-face ports after them packed behind, leaving the E end free for the die
+            # variant's new ports (ki / kc: 1,099 + 1 b)
+            NRES = 115.0
+            nf = [n_ for n_, v in ports.items() if v['face'] == 'N' and v['layer'] == 'M5']
+            occ = sorted((min(q[2] for q in ports[n_]['pins']) - 2, max(q[4] for q in ports[n_]['pins']) + 2) for n_ in nf)
+            gaps, xe = [], 0.0
+            for a, b in occ:
+                gaps.append(a - xe); xe = max(xe, b)
+            gaps.append(w - xe)
+            if max(gaps) < NRES:
+                order = sorted((n_ for n_ in nf if n_ not in ('ck', 'rst')), key=lambda n_: min(q[2] for q in ports[n_]['pins']))
+                # from the first 0.192-pitch bus on, in place: it keeps its W end (its unit side stays close), the ports
+                # after it follow; ports before it (ks, the die clock leaf, reset) do not move
+                pit_ = {n_: (max(q[2] for q in ports[n_]['pins']) - min(q[2] for q in ports[n_]['pins'])) / max(1, len(ports[n_]['pins']) - 1)
+                        for n_ in order}
+                k0_ = next(i_ for i_, n_ in enumerate(order) if pit_[n_] > 0.15)
+                order = order[k0_:]
+                xc_ = min(q[2] for q in ports[order[0]]['pins'])
+                for n_ in order:
+                    if n_ not in ports:
+                        continue
+                    pins_ = sorted(ports[n_]['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+                    old_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    for k_, q in enumerate(pins_):
+                        wq = q[4] - q[2]
+                        q[2] = round(round((xc_ + k_ * 0.096) / 0.048) * 0.048, 4); q[4] = round(q[2] + wq, 4)
+                    new_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    nmv_[(j, n_)] = (old_c + x0, new_c + x0, min(q[2] for q in pins_) + x0, max(q[4] for q in pins_) + x0)
+                    xc_ = max(q[4] for q in pins_) + 2.5
+                print(f'{names[j]}: N face compacted (max free span {max(gaps):.1f} < {NRES}): free E end from {xc_:.1f} of {w}')
         if FC:
             fcs = {fc_face(po, x0, x1) for cc in C for po in cc['portions'] if po['seg'] == j} - {None}
             for fce in sorted(fcs):
@@ -778,6 +812,14 @@ def build(pl):
                 if po['seg'] != j:
                     continue
                 A_, B_ = po['A'], po['B']
+                def mv_(e_):     # a pin endpoint on a compacted N-face port follows the port's centre shift
+                    if e_[0] != 'p' or abs(e_[2] - pl['H']) > 3.0:
+                        return e_
+                    for (jj, pn_), (oc, nc, a_, b_) in nmv_.items():
+                        if jj == j and abs(e_[1] - oc) < 60.0:
+                            return (e_[0], e_[1] + nc - oc, e_[2])
+                    return e_
+                A_, B_ = mv_(A_), mv_(B_)
                 ws.append(f"set ws_ab({cc['name']}_{k_}) {{{A_[1] - x0:.3f} {A_[2]:.3f} {B_[1] - x0:.3f} {B_[2]:.3f} "
                           f"{int(A_[0] == 'p')} {int(B_[0] == 'p')}}}")
         d_ = HERE / SPLD / names[j]
