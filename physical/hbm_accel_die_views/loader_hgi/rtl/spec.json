@@ -7,7 +7,9 @@
    "name": "ld",
    "module": "ot_hfd_loader_hgi",
    "file": "rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv",
-   "params": {},
+   "params": {
+    "DMA_FRONT": 0
+   },
    "bind": {
     "s_awvalid": "die:h[256:257]",
     "s_awready": "die:h[0:1]",
@@ -93,7 +95,11 @@
     "dma_vmq": "fold",
     "dma_vmr": "cfg",
     "dma_vmw": "fold",
-    "dma_vmw_done": "cfg"
+    "dma_vmw_done": "cfg",
+    "dma_dq": "fold",
+    "dma_dq_rdy": "const:0",
+    "dma_dd": "const:0",
+    "dma_dd_cr": "fold"
    }
   }
  ],
@@ -122,6 +128,22 @@
    "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
   },
   "ld.dma_vmw_done": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_dq": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_dq_rdy": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_dd": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_dd_cr": {
    "class": "by_design",
    "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
   }

@@ -6,7 +6,8 @@
 // the four stacks' stream services (ot_hfd_loader_kport: lane 0 = loader core, lane 1 = CP record-ring fetch, read
 // only).  Host link (s_*, h_*, h_dma_*, m_*) as the legacy loader wrapper; lq / lr = the per-stack loader_mem lanes.
 module ot_hfd_loader_hgi #(
-    parameter [35:0] STACK_BYTES = 36'd22500000000
+    parameter [35:0] STACK_BYTES = 36'd22500000000,
+    parameter integer DMA_FRONT = 1     // 0: every move on the mover (a die without the svc DMA stream bound)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -64,7 +65,7 @@ module ot_hfd_loader_hgi #(
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
-    ot_hgi_dma_engines #(.STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
+    ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
         .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
         .k_req_wstrb(d_ks), .k_req_tag(d_kt), .k_rsp_v(k_rsp_v[2]), .k_rsp_rdy(d_krr), .k_rsp_we(k_rsp_we[2]),
