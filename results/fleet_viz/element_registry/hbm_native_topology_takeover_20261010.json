@@ -16,7 +16,8 @@
         ]
       },
       "implementation": {
-        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins. Optional R25GPHT4 uses actual hfd_hgi_idx_native controller endpoints with all native functional ports bound; actual controller dependencies elaborate. Immutable native unit/adapter successor fixes full8 output FIFO occupancy, with exact FIFO order and ninth-beat fault minimum gate."
+        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins. Optional R25GPHT4 uses actual hfd_hgi_idx_native controller endpoints with all native functional ports bound; actual controller dependencies elaborate. Immutable native unit/adapter successor fixes full8 output FIFO occupancy, with exact FIFO order and ninth-beat fault minimum gate.",
+        "lease_successor": "4ebccc7fa immutable unit_lease/index_lease/hfd_hgi_idx_lease: actual full73 paired record acceptance and framed completion, state complement protected; allocator and service providers OPEN"
       },
       "model": {
         "status": "Prebuild sized, no rate credit",
@@ -47,7 +48,18 @@
           "evidence": [
             "results/rtl/hbm_native_t4_join_20261010/gate.json",
             "results/uarch/hbm_indexer_t4_20261010/hgi_native_output_fifo_gate.json"
-          ]
+          ],
+          "joined_lease_gate": {
+            "source_commit": "3124dfe5e13ddd5690acf9692427e650f32553a5",
+            "owner": "cp_closure",
+            "actual_native_source_commit": "4ebccc7fa6cba44b5a61d22623447b7f9b2f3d8e",
+            "status": "4 modes PASS actual actor+unit+3capture/3launch,16 tagged VM returns, real fs job42/gen5/pos7, stale grant/accept/drain retain; no injected completion; selector finish/providers OPEN",
+            "negative": "Old constant job/gen mutant FAIL",
+            "paths": [
+              "physical/hgi_index_cp_lease/join_bench.sh",
+              "physical/hgi_index_cp_lease/tb_join.sv"
+            ]
+          }
         },
         "negative": {
           "status": "PASS swapped tap lanes and dropped downstream credits rejected",
@@ -101,7 +113,15 @@
         "HGI native adapter boundary exact stream runtime gate, physical job and INDEX layer/key-prefetch start/drain service producer remain OPEN; no full interface claim"
       ],
       "integration": {
-        "status": "No silent binding to selector-only or L4-only closure. Aggregate remains open and owned until real complete successor geometry, clocking and join are qualified."
+        "status": "No silent binding to selector-only or L4-only closure. Aggregate remains open and owned until real complete successor geometry, clocking and join are qualified.",
+        "su_clock_gating": {
+          "pin_evidence": "results/uarch/hbm_indexer_t4_20261010/su_wake_pin_reservation.json",
+          "source_status": "OPEN: actual full-quarter functional scheduler does not exist in current physical XOR envelope",
+          "wake_lead_edges": 5,
+          "input_relay_ff": 2,
+          "tail_hold_edges": 64,
+          "adopted": false
+        }
       }
     }
   ]
