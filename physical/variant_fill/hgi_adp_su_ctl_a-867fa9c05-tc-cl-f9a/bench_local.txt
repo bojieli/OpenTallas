@@ -1,4 +1,4 @@
-local bench matrix, source 1d138debd, ot-epyc2 2026-10-10 (XDEF -DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE except base; su_rnp adds -DNO_PAYLOAD_RST shadow lockstep)
+local bench matrix, source 867fa9c05 (rebased 1d138debd, same RTL), ot-epyc2 2026-10-10 (XDEF -DOT_SU_RST_RELAY -DOT_SU_PRE_PIPE except base; su_rnp adds -DNO_PAYLOAD_RST shadow lockstep)
 su_r: HGI_SU_UNIT PASS
 mut_dirty: HGI_SU_UNIT FAIL errors=11
 base: HGI_SU_UNIT PASS
