@@ -11,7 +11,7 @@ module tb_s81_native_pc_mux;
 `else
  localparam[431:0] INJECT=0;
 `endif
- ot_s81_native_pc_mux_plain #(.ENABLE(1),.QUEUE_INJECT(INJECT),.PICK(`ifdef PCMUX_PICK 1 `else 0 `endif),.PRE(`ifdef PCMUX_PRE 1 `else 0 `endif)) dut(ck,rst_n,live,inq,cr,rq,rk,wd,rv,data,tag,beat,sw,srv,sdone,sd,st,sb,pending,ce,fault);
+ ot_s81_native_pc_mux_plain #(.ENABLE(1),.QUEUE_INJECT(INJECT),.PICK(`ifdef PCMUX_PICK 1 `else 0 `endif),.PRE(`ifdef PCMUX_PRE2 2 `elsif PCMUX_PRE 1 `else 0 `endif)) dut(ck,rst_n,live,inq,cr,rq,rk,wd,rv,data,tag,beat,sw,srv,sdone,sd,st,sb,pending,ce,fault);
  integer credit[0:3],seq[0:3],sent[0:3],retired[0:3];
  integer qtag[0:3][0:8191],qwe[0:3][0:8191],qlen[0:3][0:8191];
  integer w[0:3],r[0:3];integer i,c,n,active_sid=-1,remaining=0,timer=0,credit_delay=0;

@@ -52,7 +52,12 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
   wire launch=ready&&!busy&&credits!=0&&(PICK?pv:(chosen>=0));
   reg pok;   // PICK: the picked word's length is non-zero (registered at pick: pcmux_pick2_b phd -> pop -> rq enable 17 lv)
   wire pop=launch&&(PICK?pok:(head[34:31]!=0));
-  wire pick=PICK&&ready&&!pv&&cho_v&&count[cho_q]!=0;
+  // PRE=2 (sys-takeover 2026-10-10; pcmux_pre_b TT -56.2: credits -> pop -> hd_src read index 17 lv, ctrl_live 13 lv):
+  // hd_src[i] re-reads queue[i][rp[i]] from the REGISTERED read pointer (no pop / credit / ready term); a pop of source
+  // i clears hv[i] for one edge (hd_src[i] still holds the popped word), and a pick needs hv: +1 edge before the same
+  // source can be picked again after its pop (hidden behind the busy transaction).
+  reg[3:0] hv;
+  wire pick=PICK&&ready&&!pv&&cho_v&&count[cho_q]!=0&&(PRE<2||hv[cho_q]);
   // phd is a pure data register outside the reset block: inside it, synthesis folds rst_n into the 340-bit enable
   // (pcmux_pick_b: rst_n pin -> phd enable, -316 ps)
   // phd / pok track the candidate head every edge until a pick sets pv (enable = !pv only, not the pick logic)
@@ -77,10 +82,18 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
 `ifdef PCMUX_MUT_STALEHEAD
     pnr=rp[pj];                                                  // mutant: the pop's advance is not applied (stale head)
 `else
-    pnr=rp[pj]+((pop&&sel==pj)?3'd1:3'd0);
+    pnr=(PRE>=2)?rp[pj]:(rp[pj]+((pop&&sel==pj)?3'd1:3'd0));    // PRE=2: registered pointer only
 `endif
     hd_src[pj]<=queue[pj][pnr];
    end
+  end
+  always @(posedge ck or negedge rst_n) if(!rst_n) hv<=4'hf; else begin
+   for(pj=0;pj<4;pj=pj+1)
+`ifdef PCMUX_MUT_HVKEEP
+    hv[pj]<=1'b1;                                                // mutant: the post-pop reload wait is skipped
+`else
+    hv[pj]<=!(pop&&sel==pj);
+`endif
   end
   // PICK: the read-return data registers load on every rv (their contents are only observed with src_rv); the
   // tag / beat / seen checks gate src_rv alone (pcmux_pick2_b q_r_tag -> check -> 1,024-bit src_rdata enable, 17 lv)

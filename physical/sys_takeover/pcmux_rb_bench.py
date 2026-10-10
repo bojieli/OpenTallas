@@ -3,9 +3,13 @@
 wrapper ot_s81_native_pc_mux_plain_rb.sv.  Every input crosses one pin flop, so the response / completion checks compare
 against the previous cycle's driven rv / wd / data / tag / beat (+1 cycle, the priced boundary cost); every value,
 order, credit and drain check is unchanged.
-    python3 physical/sys_takeover/pcmux_rb_bench.py pos|neg WORKDIR      (neg: Codex's wrong-source mutant in the core)"""
+    python3 physical/sys_takeover/pcmux_rb_bench.py pos|neg|negpre|neghv WORKDIR      (neg: Codex's wrong-source mutant in the core)
+env PCMUX_PICK=1, PCMUX_PRE=1|2 (2: head pre-read from the registered pointer + post-pop wait, neghv = that wait skipped),
+PCMUX_RB2=1: the wrapper with output flops at the pins (physical/sys_takeover/ot_s81_native_pc_mux_plain_rb2.sv): every
+output one more edge late, so the checks compare against the inputs driven two edges earlier."""
 import os, pathlib, subprocess, sys
 mode, w = sys.argv[1], pathlib.Path(sys.argv[2]); w.mkdir(parents=True, exist_ok=True)
+RB2 = os.environ.get("PCMUX_RB2") == "1"
 t = pathlib.Path("rtl/test/s81_native_ingest/tb_s81_native_pc_mux_plain.sv").read_text()
 R = [("if(i!=active_tag[16:15]||!(wd||(rv&&beat==0)))", "if(i!=active_tag[16:15]||!(p_wd||(p_rv&&p_beat==0)))"),
      ("if(sw[i])begin if(!wd||", "if(sw[i])begin if(!p_wd||"),
@@ -15,22 +19,28 @@ R = [("if(i!=active_tag[16:15]||!(wd||(rv&&beat==0)))", "if(i!=active_tag[16:15]
      ("   @(negedge ck);\n  end\n  for(i=0;i<4;i=i+1)if(sent[i]",
       "   p_rv=rv;p_wd=wd;p_data=data;p_tag=tag;p_beat=beat;\n   @(negedge ck);\n  end\n  repeat(4)@(posedge ck);\n  for(i=0;i<4;i=i+1)if(sent[i]"),
      (" reg active_we;", " reg p_rv=0,p_wd=0;reg[255:0] p_data=0;reg[16:0] p_tag=0;reg[3:0] p_beat=0;\n reg active_we;")]
+if RB2:   # outputs one more edge late: the checks use a second delay stage (q_* = p_* one edge later)
+    R = [(a, b.replace("p_rv", "q_rv").replace("p_wd", "q_wd").replace("p_data", "q_data").replace("p_tag", "q_tag")
+                .replace("p_beat", "q_beat")) if "p_rv=rv;" not in b and "reg p_rv" not in b else (a, b) for a, b in R]
+    R = [(a, b.replace("   p_rv=rv;p_wd=wd;", "   q_rv=p_rv;q_wd=p_wd;q_data=p_data;q_tag=p_tag;q_beat=p_beat;\n   p_rv=rv;p_wd=wd;")
+              .replace(" reg p_rv=0,", " reg q_rv=0,q_wd=0;reg[255:0] q_data=0;reg[16:0] q_tag=0;reg[3:0] q_beat=0;\n reg p_rv=0,"))
+         for a, b in R]
 for a, b in R:
     assert t.count(a) == 1, a
     t = t.replace(a, b)
 (w / "tb.sv").write_text(t)
-rb = pathlib.Path("physical/sys_takeover/ot_s81_native_pc_mux_plain_rb.sv").read_text()
+rb = pathlib.Path("physical/sys_takeover/ot_s81_native_pc_mux_plain_rb2.sv" if RB2 else "physical/sys_takeover/ot_s81_native_pc_mux_plain_rb.sv").read_text()
 PICK = os.environ.get("PCMUX_PICK") == "1"     # sys-takeover: the PICK=1 pipelined arbitration
-PRE = os.environ.get("PCMUX_PRE") == "1"       # sys-takeover: PRE=1 head pre-read (with PICK)
-if mode == "negpre":                          # PRE mutant: the head register misses the pop's advance (stale head)
+PRE = os.environ.get("PCMUX_PRE", "0")         # sys-takeover: PRE=1 head pre-read (with PICK); 2 registered-pointer pre-read
+if mode in ("negpre", "neghv"):                          # PRE mutant: the head register misses the pop's advance (stale head)
     pass
 elif mode == "neg":
     a = "if(PICK)next_owner=sel;" if PICK else "next_owner=chosen[1:0]"
     assert rb.count(a) == 1, a
     rb = rb.replace(a, "if(PICK)next_owner=0;" if PICK else "next_owner=0")
 (w / "dut.sv").write_text(rb)
-b = subprocess.run(["iverilog", "-g2012", *(["-DPCMUX_PICK"] if PICK else []), *(["-DPCMUX_PRE"] if PRE else []),
-                    *(["-DPCMUX_MUT_STALEHEAD"] if mode == "negpre" else []), "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
+b = subprocess.run(["iverilog", "-g2012", *(["-DPCMUX_PICK"] if PICK else []), *(["-DPCMUX_PRE"] if PRE == "1" else ["-DPCMUX_PRE2"] if PRE == "2" else []),
+                    *(["-DPCMUX_MUT_STALEHEAD"] if mode == "negpre" else ["-DPCMUX_MUT_HVKEEP"] if mode == "neghv" else []), "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
                    capture_output=True, text=True)
 if b.returncode: print(b.stdout + b.stderr); print("PCMUX_RB_BENCH_ERROR build"); sys.exit(2)
 r = subprocess.run(["vvp", "-n", str(w / "sim")], capture_output=True, text=True)
