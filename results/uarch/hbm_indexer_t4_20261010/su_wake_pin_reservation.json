@@ -1,0 +1,91 @@
+{
+  "scope": "Candidate SU M4 face pin spacing against every existing SU M4 pin, no route or scheduler binding claim",
+  "base_ports_sha256": "21ad4c7885116bcc431652b93af0b4969aef7ff7ae07a1e863909018c1371799",
+  "candidate_ports_sha256": "a80baa8416713eb0f87a6071f5a87d9387b5c80ee84ddd50643ea5a8861abb0e",
+  "pin": [
+    "cg_en[0]",
+    "M4",
+    0.0,
+    2814.432,
+    0.192,
+    2814.456
+  ],
+  "clashes": [],
+  "nearest_pins": [
+    [
+      0.1679999999996653,
+      [
+        "f_sfu[1023]",
+        "M4",
+        0.0,
+        2814.24,
+        0.192,
+        2814.264
+      ]
+    ],
+    [
+      0.1679999999996653,
+      [
+        "t_sfu[0]",
+        "M4",
+        0.0,
+        2814.624,
+        0.192,
+        2814.648
+      ]
+    ],
+    [
+      0.3599999999996726,
+      [
+        "f_sfu[1022]",
+        "M4",
+        0.0,
+        2814.048,
+        0.192,
+        2814.072
+      ]
+    ],
+    [
+      0.3599999999996726,
+      [
+        "t_sfu[1]",
+        "M4",
+        0.0,
+        2814.816,
+        0.192,
+        2814.84
+      ]
+    ]
+  ],
+  "band_xy": [
+    703.068,
+    2764.788
+  ],
+  "manhattan_um": 752.7239999999999,
+  "added_scalar_flops": 2,
+  "wake_lead_edges": 5,
+  "functional_producer": "OPEN",
+  "recorded_at": "2026-10-10T13:04:46.231823+00:00",
+  "base_strap_geometry": "9ca84856a4c50cef6e35d6ed216b7018285d942b1252796c8aeb0137c2c4bd0b",
+  "pin_spec": [
+    "face",
+    1,
+    "W",
+    "M4",
+    2814.492,
+    2
+  ],
+  "relay_source_commit": "a3847335a",
+  "relay_mechanism_gate": "Hub-owner two-tile wake/drain336checks at each +/-100ps PASS; latewake4 mutant fails24. Connectivity envelope only.",
+  "candidate_contract_export": "/tmp/codex-native-join-gate/hfd_su/wake_face/ports.json",
+  "relay_hop_mean_um": 376.36199999999997,
+  "data_latency_cycles": 0,
+  "required_busy_lifetime": "Real functional scheduler must retain busy until actual last lane result and retirement. HOLD64 is additional tail after busy drops.",
+  "qualification": {
+    "pin_spacing": "PASS against all actual SU M4 pins",
+    "physical_route": "OPEN",
+    "functional_producer": "OPEN",
+    "full_quarter_arithmetic": "OPEN",
+    "rate_or_power_credit": 0
+  }
+}
