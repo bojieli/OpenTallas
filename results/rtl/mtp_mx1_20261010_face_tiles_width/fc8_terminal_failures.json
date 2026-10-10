@@ -1,0 +1,231 @@
+{
+  "records": [
+    {
+      "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc",
+      "status": "EARLY_FAIL_SETUP",
+      "reason": "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)",
+      "early_fail": {
+        "verdict": "EARLY_FAIL_SETUP",
+        "why": "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)",
+        "at": "2026-10-10T05:47:52-07:00",
+        "detail": {
+          "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc",
+          "verdict": "EARLY_FAIL_SETUP",
+          "why": [
+            "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)"
+          ],
+          "orfs": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc/routes/hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm10_96ee08233_tc/work/orfs",
+          "corner": "TT",
+          "step": "5_1_grt",
+          "setup": {
+            "stage": "cts",
+            "ws": -934.0060000000001,
+            "raw_ws": -934.339,
+            "period": 833.0,
+            "count": 3377,
+            "tns": -838232
+          },
+          "hold": {
+            "found": [],
+            "guard": false,
+            "hm_auto": [],
+            "sync": [
+              [
+                "-1445.34",
+                "-729.50"
+              ]
+            ],
+            "stall": false,
+            "chunks": []
+          },
+          "congestion": [],
+          "drt": [],
+          "paths": [
+            {
+              "cls": "reg->reg",
+              "slack_ps": -934.34,
+              "group": "core_clk",
+              "dominated": "logic",
+              "wire_ps": 0.1,
+              "cell_ps": 68.2,
+              "max_fanout": 1,
+              "start": "ar.lk_cSW[558]$_DFF_N_",
+              "end": "ar.i1_cSW[558]$_DFF_P_",
+              "check": "rising edge-triggered flip-flop clocked by core_clk"
+            },
+            {
+              "cls": "macro->out",
+              "slack_ps": -772.88,
+              "group": "vclk",
+              "dominated": "logic",
+              "wire_ps": 281.0,
+              "cell_ps": 576.8,
+              "max_fanout": 32,
+              "start": "cke[0]",
+              "end": "cSE[825]",
+              "check": "output port clocked by vclk"
+            },
+            {
+              "cls": "reg->reg",
+              "slack_ps": -165.73,
+              "group": "asynchronous",
+              "dominated": "logic",
+              "wire_ps": 214.8,
+              "cell_ps": 679.7,
+              "max_fanout": 30,
+              "start": "g_regb.rs[1]$_DFF_PP1_",
+              "end": "g_regb.qam$_DFF_PP0_",
+              "check": "recovery check against rising-edge clock core_clk"
+            }
+          ],
+          "block": "hfd_cmdproc_s_mtp_native_mx1",
+          "owner": "Claude:mtp-lead (took over review_hbm_token_path / cmdproc18)",
+          "gates": {
+            "setup_cts_ws_ps": -400.0,
+            "setup_cts_count": 500,
+            "setup_tns_ps": -1000000.0,
+            "setup_place_ws_ps": -900.0,
+            "setup_place_count": 2000,
+            "hold_buf_cap": 100000,
+            "hold_buf_frac": 0.3,
+            "hold_buf_min": 20000,
+            "hold_buf_improve_dwns": 5.0,
+            "hold_buf_improve_frac": 0.6,
+            "hold_buf_improve_min": 60000,
+            "hold_stall_it": 2000,
+            "hold_stall_dwns": 1.0,
+            "hold_stall_tns_pct": 2.0,
+            "hold_real_ws_ps": -150.0,
+            "hold_real_after_s": 3600,
+            "hold_deep_it": 2000,
+            "hold_deep_dwns": 5.0,
+            "hold_nearmiss_ps": -15.0,
+            "grt_min_iter": 20,
+            "grt_markers": 1000,
+            "grt_flat": 0.95,
+            "drt_min_iter": 20,
+            "drt_k": 8,
+            "drt_min_viol": 100,
+            "stall_after_s": 10800
+          }
+        }
+      },
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc"
+    },
+    {
+      "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc",
+      "status": "EARLY_FAIL_SETUP",
+      "reason": "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)",
+      "early_fail": {
+        "verdict": "EARLY_FAIL_SETUP",
+        "why": "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)",
+        "at": "2026-10-10T05:47:52-07:00",
+        "detail": {
+          "name": "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc",
+          "verdict": "EARLY_FAIL_SETUP",
+          "why": [
+            "post-cts TT setup WNS -934.0 ps at 833.333 (route-period -934.3 at 833), 3377 failing endpoints, TNS -838232; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (no IO path moved 987 ps)"
+          ],
+          "orfs": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc/routes/hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm25_96ee08233_tc/work/orfs",
+          "corner": "TT",
+          "step": "5_1_grt",
+          "setup": {
+            "stage": "cts",
+            "ws": -934.0060000000001,
+            "raw_ws": -934.339,
+            "period": 833.0,
+            "count": 3377,
+            "tns": -838232
+          },
+          "hold": {
+            "found": [],
+            "guard": false,
+            "hm_auto": [],
+            "sync": [
+              [
+                "-1445.34",
+                "-729.50"
+              ]
+            ],
+            "stall": false,
+            "chunks": []
+          },
+          "congestion": [],
+          "drt": [],
+          "paths": [
+            {
+              "cls": "reg->reg",
+              "slack_ps": -934.34,
+              "group": "core_clk",
+              "dominated": "logic",
+              "wire_ps": 0.1,
+              "cell_ps": 68.2,
+              "max_fanout": 1,
+              "start": "ar.lk_cSW[558]$_DFF_N_",
+              "end": "ar.i1_cSW[558]$_DFF_P_",
+              "check": "rising edge-triggered flip-flop clocked by core_clk"
+            },
+            {
+              "cls": "macro->out",
+              "slack_ps": -772.88,
+              "group": "vclk",
+              "dominated": "logic",
+              "wire_ps": 281.0,
+              "cell_ps": 576.8,
+              "max_fanout": 32,
+              "start": "cke[0]",
+              "end": "cSE[825]",
+              "check": "output port clocked by vclk"
+            },
+            {
+              "cls": "reg->reg",
+              "slack_ps": -165.73,
+              "group": "asynchronous",
+              "dominated": "logic",
+              "wire_ps": 214.8,
+              "cell_ps": 679.7,
+              "max_fanout": 30,
+              "start": "g_regb.rs[1]$_DFF_PP1_",
+              "end": "g_regb.qam$_DFF_PP0_",
+              "check": "recovery check against rising-edge clock core_clk"
+            }
+          ],
+          "block": "hfd_cmdproc_s_mtp_native_mx1",
+          "owner": "Claude:mtp-lead (took over review_hbm_token_path / cmdproc18)",
+          "gates": {
+            "setup_cts_ws_ps": -400.0,
+            "setup_cts_count": 500,
+            "setup_tns_ps": -1000000.0,
+            "setup_place_ws_ps": -900.0,
+            "setup_place_count": 2000,
+            "hold_buf_cap": 100000,
+            "hold_buf_frac": 0.3,
+            "hold_buf_min": 20000,
+            "hold_buf_improve_dwns": 5.0,
+            "hold_buf_improve_frac": 0.6,
+            "hold_buf_improve_min": 60000,
+            "hold_stall_it": 2000,
+            "hold_stall_dwns": 1.0,
+            "hold_stall_tns_pct": 2.0,
+            "hold_real_ws_ps": -150.0,
+            "hold_real_after_s": 3600,
+            "hold_deep_it": 2000,
+            "hold_deep_dwns": 5.0,
+            "hold_nearmiss_ps": -15.0,
+            "grt_min_iter": 20,
+            "grt_markers": 1000,
+            "grt_flat": 0.95,
+            "drt_min_iter": 20,
+            "drt_k": 8,
+            "drt_min_viol": 100,
+            "stall_after_s": 10800
+          }
+        }
+      },
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc"
+    }
+  ],
+  "interpretation": "Worst falling-lockup to core capture has68.2ps cell+0.1ps wire at -934.34ps; clock-root/network budget dominates despite generic triage logic label. FT6 related roots+bounded side leaves+real pin seats targets this source problem; no timing credits."
+}
