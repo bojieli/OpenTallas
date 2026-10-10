@@ -25,5 +25,11 @@
     "meas_ff.log": "7b75358414c40761d05038c721c4947b7c86735c9305b4199f9780acf387a2f8",
     "meas_ff.tcl": "ddb79d90a69c085fd0ea4bac220e287ed7a75202f1ab86ae8b75d3fdc64f5d37"
   },
-  "pre_CTS_correction": "Nominal ideal real/virtual network latency equal until propagated CTS; zero local source. Old605d job kept as immutable progressing attempt. Final clock/setup/hold budgets unchanged."
+  "pre_CTS_correction": "Nominal ideal real/virtual network latency equal until propagated CTS; zero local source. Old605d job kept as immutable progressing attempt. Final clock/setup/hold budgets unchanged.",
+  "clock_scope": {
+    "local_source_latency_ps": 0,
+    "local_source_provisional": true,
+    "option1_die_source_qualified": false,
+    "final_obligation": "Attach actual balanced die-tree tap source latency and parent clock-root/lockup context before native adoption; re-STA actual corner arrival and boundary budgets. A block-only pass does not establish die option-1 compliance."
+  }
 }

@@ -46,5 +46,11 @@
   },
   "pin_perimeter_raw_capacity": 40000,
   "receiver_signal_pins": 1028,
-  "receiver_latency_added": 0
+  "receiver_latency_added": 0,
+  "clock_scope": {
+    "local_source_latency_ps": 0,
+    "local_source_provisional": true,
+    "option1_die_source_qualified": false,
+    "final_obligation": "Attach actual balanced die-tree tap source latency and parent clock-root/lockup context before native adoption; re-STA actual corner arrival and boundary budgets. A block-only pass does not establish die option-1 compliance."
+  }
 }

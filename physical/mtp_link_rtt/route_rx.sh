@@ -13,6 +13,10 @@ set_clock_uncertainty -hold 25 [get_clocks vclk]
 # equal the virtual reference. AFTER CTS set_propagated_clock ignores this
 # ideal network latency and checks the actual tree; source remains local zero.
 set_clock_latency $L [get_clocks {core_clk vclk}]
+# LOCAL BLOCK CHARACTERIZATION ONLY: clock port is the local time origin.
+# Source0 is provisional, not option-1 die clock qualification. Before native
+# adoption attach the actual balanced die-tree tap source latency and recheck
+# boundary timing/lockups against the parent clock plan and corner budgets.
 set_clock_latency -source 0 [get_clocks core_clk]
 set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock core_clk \$ot_in
