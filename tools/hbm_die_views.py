@@ -121,7 +121,8 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
-    native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
+    native_root = Path(os.environ.get('OT_NATIVE_PIN_CONTRACT_ROOT', ROOT / 'physical/hbm_accel_die_views/index/native'))
+    native = native_root / name / 'ports.json'
     if native.exists():
         return json.loads(native.read_text())
     alt = os.environ.get('OT_SVC_SPLIT')      # hbm-forks 2026-10-09: route a svc successor split (e.g. split_ps)
