@@ -1,5 +1,7 @@
 # hfd_svc_SE_s7: every die pin at the generator's position (svc/gen_svc_seg.py, derived master; generator, r16i)
 place_pin -pin_name {ck[0]} -layer M5 -location {98.0280 259.0800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {cke[0]} -layer M4 -location {469.8960 129.6120} -pin_size {0.1920 0.0240}
+place_pin -pin_name {ckw[0]} -layer M4 -location {0.0960 129.6120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[0]} -layer M4 -location {469.8960 13.2440} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[1]} -layer M6 -location {469.8960 13.3280} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ei[2]} -layer M4 -location {469.8960 13.4360} -pin_size {0.1920 0.0240}

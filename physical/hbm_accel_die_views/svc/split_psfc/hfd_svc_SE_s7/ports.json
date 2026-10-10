@@ -36839,6 +36839,52 @@
 ]
 ],
 "direction": "input"
+},
+"cke": {
+"bits": 1,
+"layer": "M4",
+"pins": [
+[
+"cke[0]",
+"M4",
+469.8,
+129.6,
+469.992,
+129.624
+]
+],
+"face": "E",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
+"ckw": {
+"bits": 1,
+"layer": "M4",
+"pins": [
+[
+"ckw[0]",
+"M4",
+0.0,
+129.6,
+0.192,
+129.624
+]
+],
+"face": "W",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
 }
 },
 "generator": {
