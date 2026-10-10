@@ -13,9 +13,13 @@
 #       dropped from the accumulate).
 #   bench_tiled.sh <outdir>   (run in the source root)   prints SFU_R25GQ_BENCH_PASS when every check holds
 set -u; O=$1; mkdir -p $O; m=hfd_sfu; R=physical/hbm_accel_die_views/sfu/rtl_tiled_r25gq
-python3 tools/hbm_die_views.py --variant r24p ports --master $m --out $O/ports24 > /dev/null || { echo "ports_rc=1"; exit 1; }
-python3 tools/hbm_sfu_r25gq_ports.py --r24p $O/ports24/$m/ports.json --out $O/ports || { echo "ports_rc=1"; exit 1; }
+# 2026-10-10 (fp decision (a)): the R25GQ die-view port list (preset r25gqn, tools/hbm_die_views.py) replaces the
+# proposed r24p plan: f_su / t_su S, f_hc / t_hc + the narrow lgW client tap (f_lgW 273 / t_lgW 280) W, the HGI client
+# ports (f_hgi_vmr / t_hgi_vmq / f_hgi_cmdproc / t_hgi_cmdproc) + ck0-7 E, rst N.  The lgW tap rides chain 0's far end
+# (W edge), the HGI ports chain 1's (E edge) (--end), so the tile (WCT 1024) is byte-identical to the routed one.
+python3 tools/hbm_die_views.py --variant r25gqn ports --master $m --out $O/ports > /dev/null || { echo "ports_rc=1"; exit 1; }
 python3 tools/hbm_hub_quarter_gen.py --quarter sfu --ports $O/ports/$m/ports.json --out $O/gen --tiled --half-width --xroot lockup --fold 3 \
+  --band-y 40 --end f_lgW=S --end t_lgW=S --end f_hgi_vmr=N --end t_hgi_vmq=N --end f_hgi_cmdproc=N --end t_hgi_cmdproc=N \
   --nvec ${NVEC:-6} > $O/plan.log 2> $O/gen.err || { echo "gen_rc=1"; cat $O/gen.err; exit 1; }
 : > $O/result.txt
 ok=1
