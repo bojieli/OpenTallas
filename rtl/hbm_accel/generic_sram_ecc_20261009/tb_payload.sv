@@ -4,7 +4,7 @@ module tb_payload;
  reg rst_n=0,v=0;reg[544:0] din='0;
  wire ev,rv,ce,ue,drop;wire[544:0] ed,rd;
  ot_hcoll_sdelay #(.W(545),.D(6),.PAYLOAD_ECC(1)) dut(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(ev),.d_out(ed),.ecc_ce(ce),.ecc_ue(ue),.ecc_drop(drop));
- ot_hcoll_sdelay #(.W(545),.D(7)) refraw(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(rv),.d_out(rd));
+ ot_hcoll_sdelay #(.W(545),.D(8)) refraw(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(rv),.d_out(rd));
  integer checks=0, cycles=0;
  task flip(input integer bitno,input integer addr);
  begin
@@ -19,7 +19,7 @@ module tb_payload;
  begin
  @(negedge clk);rst_n=0;v=0; repeat(2)@(negedge clk);rst_n=1;
  din={17'h175ab,{16{32'h7facba98}} ,16'h32af};v=1;
- @(negedge clk);v=0;addr=dut.cnt;
+ @(negedge clk);v=0;@(negedge clk);addr=dut.cnt;   // the ECC line registers its input: the write lands one edge later
  @(negedge clk);
  if(a>=0)flip(a,addr);if(b>=0)flip(b,addr);
  seen=0;

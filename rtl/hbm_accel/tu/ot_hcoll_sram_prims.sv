@@ -133,10 +133,17 @@ module ot_hcoll_sdelay #(
     wire [CW-1:0] rd, encoded;
     wire [W-1:0] decoded;
     wire ce, ue;
-    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(d_in),.code(encoded),.sampled(q),.decoded(decoded),.ce(ce),.ue(ue));
+    // with PAYLOAD_ECC the input is registered before the encoder (f380ff981: TT -224 on the sender's head FIFO read ->
+    // arbiter -> SECDED encode -> d_p); the ECC line's latency is D + 2 (input register + decode register)
+    reg vi_q; reg [W-1:0] di_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) vi_q <= 1'b0; else vi_q <= v_in;
+    always @(posedge clk) di_q <= d_in;
+    wire          v_line = (PAYLOAD_ECC != 0) ? vi_q : v_in;
+    wire [W-1:0]  d_line = (PAYLOAD_ECC != 0) ? di_q : d_in;
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(d_line),.code(encoded),.sampled(q),.decoded(decoded),.ce(ce),.ue(ue));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin vs <= '0; cnt <= 7'd0; end
-        else begin vs <= {vs[D-2:0], v_in}; cnt <= cnt + 7'd1; end
+        else begin vs <= {vs[D-2:0], v_line}; cnt <= cnt + 7'd1; end
     always @(posedge clk) begin d_p <= encoded; q <= rd; end
     ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(vs[D-3]), .r_addr(cnt - 7'(D - 3)), .rd(rd),
         .w_ce(vs[0]), .w_addr(cnt), .wd(d_p));
