@@ -14967,6 +14967,32 @@ def hbm_link_replay_response_cut_model(payload_bits=545, seq_bits=12, session_bi
         physical_qualified=False, adoption='OPEN: full-depth exactness, mutants and TT/FF/DRC route')
 
 
+def hbm_link_retry_rx_slot_sampling_model(payload_bits=545, seq_bits=12, session_bits=24, depth=512):
+    """Before-build pricing for free-slot, valid-qualified receive capture.
+
+    Capture raw payload while the landing slot is empty. All session, sequence,
+    UE, fault and reset admission checks continue to control rxv, never data
+    visibility. A occupied slot retains its payload through every stall.
+    """
+    return dict(candidate='HBM_RETRY_RX_SLOT_SAMPLE', payload_bits=payload_bits,
+        depth=depth, seq_bits=seq_bits, session_bits=session_bits,
+        payload_registers=payload_bits, additional_register_bits=0,
+        added_ff_body_um2=0, fault_free_forward_added_edges=0,
+        receive_added_edges=0, receive_min_accept_interval_edges=2,
+        state_transition_delta=0, external_boundary_bits_delta=0,
+        memory_port_bandwidth_delta=0, routing_tracks_delta_external=0,
+        validation_enable_payload_sinks_before=payload_bits,
+        validation_enable_payload_sinks_after=0,
+        capture_enable='one rxv slot-occupancy register; stable through stalls',
+        bytes_per_receive_edge=payload_bits/8,
+        floorplan_um=[690,460], replica_count=1,
+        added_per_user_token_latency_ns=0, added_mac_per_cycle=0,
+        opt_in='RX_SLOT_SAMPLE off by default, exercised with RSTR=1',
+        design_applicability={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+            'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True},
+        physical_qualified=False, adoption='OPEN: exactness + TT/FF/DRC at full W545/EW24/DEPTH512')
+
+
 def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
     """Unified entry for before-build TA15 digital clock/reset boundary sizing."""
     from tools.hbm_ta15_clock_boundary_model import hbm_ta15_clock_boundary_model as model

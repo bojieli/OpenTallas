@@ -1,0 +1,45 @@
+{
+  "candidate": "HBM_RETRY_RX_SLOT_SAMPLE",
+  "payload_bits": 545,
+  "depth": 512,
+  "seq_bits": 12,
+  "session_bits": 24,
+  "payload_registers": 545,
+  "additional_register_bits": 0,
+  "added_ff_body_um2": 0,
+  "fault_free_forward_added_edges": 0,
+  "receive_added_edges": 0,
+  "receive_min_accept_interval_edges": 2,
+  "state_transition_delta": 0,
+  "external_boundary_bits_delta": 0,
+  "memory_port_bandwidth_delta": 0,
+  "routing_tracks_delta_external": 0,
+  "validation_enable_payload_sinks_before": 545,
+  "validation_enable_payload_sinks_after": 0,
+  "capture_enable": "one rxv slot-occupancy register; stable through stalls",
+  "bytes_per_receive_edge": 68.125,
+  "floorplan_um": [
+    690,
+    460
+  ],
+  "replica_count": 1,
+  "added_per_user_token_latency_ns": 0,
+  "added_mac_per_cycle": 0,
+  "opt_in": "RX_SLOT_SAMPLE off by default, exercised with RSTR=1",
+  "design_applicability": {
+    "Qwen3-8B ROM": false,
+    "DeepSeek-V4.1 ROM": false,
+    "Qwen3-8B HBM": true,
+    "DeepSeek-V4.1 HBM": true
+  },
+  "physical_qualified": false,
+  "adoption": "OPEN: exactness + TT/FF/DRC at full W545/EW24/DEPTH512",
+  "measured_trigger": {
+    "job": "hbm_retry545_resp-1e69e7560-tc-rvt-hm10-cl-countfix",
+    "stage": "calibration CTS, placement estimated",
+    "start": "rx_session[12]",
+    "end": "g_on.rxd_u[406]/D",
+    "raw_slack_ps": -507.83,
+    "source_base": "01dd3f8bf2bc9effeeaf8910e6657dd77ffed00f"
+  }
+}

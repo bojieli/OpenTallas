@@ -13,7 +13,8 @@
 // Coordinated reset must change session; old traffic cannot survive its wrap.
 module ot_hbm_link_retry_pipeline #(
  parameter ENABLE=0,W=545,SW=12,EW=24,DEPTH=512,TIMEOUT=8192,MAX_RETRY=8,
- RSTR=`ifdef OT_RETRY_RSTR 1 `else 0 `endif
+ RSTR=`ifdef OT_RETRY_RSTR 1 `else 0 `endif,
+ RX_SLOT_SAMPLE=`ifdef OT_RETRY_RX_SLOT_SAMPLE 1 `else 0 `endif
 )(
  input wire clk,rst_n,input wire [EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire [W-1:0] in_data,
@@ -96,13 +97,20 @@ module ot_hbm_link_retry_pipeline #(
  // RSTR: unreset payload registers, loaded under exactly the conditions of the control block (else branch: !fault_r)
  wire txd_ld_rd = rd_v&&!rd_ue&&read_generation==generation&&rd_seq==read_target&&rd_seq==cursor&&rd_epoch==session_i&&!rewind;
  wire rxd_ld = rx_valid&&rx_ready&&rx_session==session_i&&!rx_ue&&rx_seq==expected;
+ // Free-slot capture: validation still gates rxv. Empty-slot data is invisible;
+ // once occupied, payload must remain stable until out_ready consumes it.
+`ifndef OT_RETRY_MUT_RX_SLOT_HOLD
+ wire rxd_payload_ld = (RX_SLOT_SAMPLE != 0) ? !rxv : rxd_ld;
+`else
+ wire rxd_payload_ld = (RX_SLOT_SAMPLE != 0) ? 1'b1 : rxd_ld;
+`endif
  reg [W-1:0] txd_u, rxd_u;
  always @(posedge clk) if (rst_i && !fault_r) begin
   if (txd_ld_rd) txd_u <= rd_data; else if (accepted) txd_u <= in_data;
 `ifndef OT_RETRY_MUT_RXD_U
-  if (rxd_ld) rxd_u <= rx_data;
+  if (rxd_payload_ld) rxd_u <= rx_data;
 `else
-  if (rxd_ld && rx_seq[0]) rxd_u <= rx_data;   // mutant: odd-sequence payloads only (the shadow load condition broken)
+  if (rxd_payload_ld && rx_seq[0]) rxd_u <= rx_data;   // mutant: odd-sequence payloads only (the shadow load condition broken)
 `endif
  end
  assign tx_valid=txv&&!fault_r;assign tx_data=(RSTR!=0)?txd_u:txd;assign tx_seq=txs;

@@ -8,6 +8,6 @@ F=""; [ "$M" = sel ] && F="-DOT_REPLAY_DP_MUT_SEL"; [ "$M" = enc ] && F="-Ptb_hb
 iverilog -g2012 -Irtl/common -s tb_hbm_replay_sram $F -o $O/unit $S $O/tb_dp.sv && vvp -n $O/unit > $O/unit.log 2>&1; u=$?
 tail -2 $O/unit.log; grep -q PASS_ALL $O/unit.log && [ $u = 0 ] || { echo "REPLAY_DP FAIL (unit)"; exit 1; }
 [ -n "$M" ] && { echo "REPLAY_DP mutant survived the unit bench"; exit 0; }
-OT_RETRY_REPLAY_SRC="rtl/common/ot_secded_dec_dp.sv $D/ot_hbm_replay_sram_dp.sv" OT_RETRY_DEFS=-DOT_RETRY_RSTR python3 tools/hbm_link_retry_pipeline_bench.py --cl --out $O/pipe > $O/pipe.json 2>&1
+OT_RETRY_REPLAY_SRC="rtl/common/ot_secded_dec_dp.sv $D/ot_hbm_replay_sram_dp.sv" OT_RETRY_DEFS="${OT_RETRY_DEFS:--DOT_RETRY_RSTR}" python3 tools/hbm_link_retry_pipeline_bench.py --cl --out $O/pipe > $O/pipe.json 2>&1
 grep -q '"exactness_gate": "PASS"' $O/pipe.json || { echo "REPLAY_DP FAIL (pipeline)"; exit 1; }
 echo "REPLAY_DP PASS (unit: full W545/EW24/DEPTH512, 512 records, correction / poison / tags / back-to-back at latency 8; retry pipeline --cl RSTR PASS_ALL + dup mutant)"
