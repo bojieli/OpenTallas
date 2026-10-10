@@ -1,0 +1,24 @@
+{
+  "scope": "geometry only; no clock-tree closure claim",
+  "legality": {
+    "instances": 148,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 0,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "pin_clashes": 0,
+  "margin": {
+    "mode": "chains",
+    "chains": 0,
+    "reach_um": 504.0,
+    "reach_violations": 0,
+    "far_side_relays": 0,
+    "reach_examples": [],
+    "far_side_examples": [],
+    "verdict": "PASS"
+  }
+}

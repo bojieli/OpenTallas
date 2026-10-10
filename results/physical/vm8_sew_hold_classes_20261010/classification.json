@@ -1,0 +1,35 @@
+{
+  "source_commit": "2a2afc38711028e1c32126e2d67e7f9b8cb6f987",
+  "host": "ot-epyc4",
+  "job": "hbm_vm8vt_sew_2a2afc387-tc-lvt-cl",
+  "scope": "Preserved calibration 4_1_cts.odb replay, placement parasitics, actual candidate fclat and FF post-SDC; NOT current failed-route CTS. Failed route killed during in-memory hold repair and has no 4CTS checkpoint.",
+  "classes": {
+    "port_to_face": {
+      "count": 6687,
+      "worst_ps": -78.090675
+    },
+    "face_to_port": {
+      "count": 9776,
+      "worst_ps": -47.532227
+    },
+    "core_reset_removal": {
+      "count": 3,
+      "worst_ps": -30.249969
+    },
+    "lockup_or_internal_data": {
+      "count": 0
+    }
+  },
+  "balanced_tap_mean_ps": 329.2,
+  "calibrate_boundary_range_ps": [
+    294.5,
+    367.6
+  ],
+  "failed_route_boundary_range_ps": [
+    296.7,
+    471.0
+  ],
+  "failed_route_hold_start_ps": -182.57,
+  "diagnosis": "Clock taps bound span but not sink population: up to2602 positive-edge boundary sinks plus lockups per tap, residual within-tap clock skew. Route CTS differs from calibrated CTS; no lockup/data-path failure in replay. Fanout-bounded bank-clock variant sized before RTL. Zero-minimum IO boundary hold constraints retained.",
+  "candidate_model": "results/uarch/vm8_pin_clock_banks_20261010/proposal.json"
+}
