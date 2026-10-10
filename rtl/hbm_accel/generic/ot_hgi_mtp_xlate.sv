@@ -14,6 +14,11 @@
 //   the RESULT kinds 4 (verify-row head) and 10 (draft head) raise am {valid, token 17} from the completion token
 //   (the END-read merged argmax id, cp_vocab-checked by the sequencer) -- the MX1 collar's f_am (CTL.AMAX is not
 //   needed: the legacy backend took am from the cmdproc20 completion token the same way).
+// G26 (hgi-1010 2026-10-10, per-layer kernels): kinds 3 (layer), 7 (dsa) and 8 (dsb) run per-layer bodies; the image
+// places layer L's body at kent[kind] + L' * kstride (16-byte units, MD word 49; L' = L for kind 3, the draft stage st
+// for kinds 7 / 8), where L is the position field of the column's preceding swapin (kind 0: L for VLAYER, 40 + st for
+// DSTAGE).  The product is registered when the swapin launches.  kstride 0 = one body per kind (G23 as before).
+// MUT 2 (bench): the layer offset ignores L (always body 0).
 // One launch in flight (the legacy backend's order and exactness; the sequencer runs one job at a time anyway).
 // Faults (sticky until the drained reset, as the legacy backend): bad shape, a kernel entry of 0 (absent), a non-zero
 // status, a completion not owned, a TOKX beat, external_fault.  MUT (bench): 1 am from the wrong kind (kind 1).
@@ -24,6 +29,7 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
     input  wire          external_fault,
     input  wire          backend_quiescent,     // the die's units / services quiescent (MX1 f_backend[71])
     input  wire [351:0]  kent,                  // MD words 16 .. 26: kernel entry offsets for kinds 0 .. 10
+    input  wire [31:0]   kstride,               // MD word 49 (G26): per-layer kernel stride, 16-byte units (0 = none)
     input  wire [16:0]   noise_token,           // the DSpark draft noise token (op 3 kind 6, column > 0)
     // native operation (MX1 collar t_backend / f_backend)
     input  wire          cmd_v,
@@ -119,7 +125,12 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
             default: begin kind = 0; token = 0; position = 0; end
         endcase
     end
-    wire [31:0] kofs = kent[kind*32 +: 32];
+    wire [31:0] kbase = kent[kind*32 +: 32];
+    reg  [31:0] loff;                                           // G26: L' x kstride of the column's last swapin
+    wire per_layer = (kind == 4'd3 || kind == 4'd7 || kind == 4'd8);
+    wire [31:0] kofs = (kbase == 32'd0) ? 32'd0 : (per_layer && MUT != 2) ? kbase + loff : kbase;
+    // L' of a swapin: VLAYER L (< 40) as is; DSTAGE 40 + st -> st; the head swapins (63) select nothing
+    wire [5:0] lsel = (position >= 20'd40) ? 6'(position - 20'd40) : position[5:0];
     reg [3:0] kind_q;
     wire result_kind = (MUT == 1) ? (kind_q == 1) : (kind_q == 4 || kind_q == 10);
     wire owned = c_job == cpl_job && c_gen == cpl_generation && c_pos == db_pos;
@@ -127,7 +138,7 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE; cursor <= 0; total <= 0; fault <= 0; am_v <= 0; am_idx <= 0; raw <= 0; db_v <= 0;
-            db_token <= 0; db_pos <= 0; db_off <= 0; kind_q <= 0;
+            db_token <= 0; db_pos <= 0; db_off <= 0; kind_q <= 0; loff <= 0;
         end else begin
             am_v <= 1'b0;
             if (cmd_v && cmd_ready) begin
@@ -142,6 +153,7 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
                 SELECT: if (kofs == 32'd0) begin fault <= 1; state <= CPL; end           // kernel absent from the image
                     else begin
                         db_v <= 1'b1; db_token <= {1'b0, token}; db_pos <= position; db_off <= kofs; kind_q <= kind;
+                        if (kind == 4'd0) loff <= lsel * kstride;
                         state <= DB;
                     end
                 DB: if (db_rdy) begin db_v <= 1'b0; state <= WAIT; end
