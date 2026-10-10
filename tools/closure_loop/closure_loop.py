@@ -44,7 +44,7 @@ import os
 import re
 import shlex
 import math
-from contextlib import contextmanager, ExitStack
+from contextlib import contextmanager, ExitStack, nullcontext
 from functools import wraps
 import shutil
 import threading
@@ -58,6 +58,7 @@ from pathlib import Path
 
 from ssh_transport import command as transport_command, direct_command, session_open_refused
 from source_archive import build_archive, repo_path
+import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 
@@ -1644,8 +1645,11 @@ def sync_source(j):
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
                   f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-        with transport_command(host, bulk=True, wait_s=600) as base:
-            if verified_tar is not None:
+        mirrored = mirror_sync(j, host, run, full, paths, archive_receipt)
+        with nullcontext() if mirrored else transport_command(host, bulk=True, wait_s=600) as base:
+            if mirrored:
+                pass
+            elif verified_tar is not None:
                 # Transfer this exact validated tar, not a second git archive.
                 with verified_tar.open("rb") as stream:
                     put = subprocess.run(base + [f"tar -xf - -C {run}/src"], stdin=stream,
@@ -1685,6 +1689,56 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
     j["source_synced"] = True
+
+def mirror_sync(j, host, run, full, paths, receipt):
+    """GITMIRROR (drive-1010 2026-10-10, tools/closure_loop/git_mirror.py): put the archive of full into {run}/src
+    through the host's bare git mirror, moving only the objects it lacks.  True when done; False (event logged) when
+    the host has no ready mirror or any step failed -- the caller then ships the tar exactly as before (receipt jobs:
+    the same verified tar), re-extracting over anything a failed merge left, so a mirror fault costs time only."""
+    if is_local(host):
+        return False
+    try:
+        mc = git_mirror.config(host_cfg(host))
+    except StopIteration:
+        mc = None
+    if mc is None:
+        return False
+    mirror, upstream = mc
+    t0 = time.time()
+    try:
+        branch = j["spec"]["source"].get("branch")
+        pr = ssh(host, git_mirror.probe_script(mirror, full, branch, upstream), timeout=UPSTREAM_PROBE_S)
+        if pr.returncode or "MIRROR_READY" not in pr.stdout:
+            event(j, f"git-mirror {mirror} not ready (rc={pr.returncode}): tar sync")
+            return False
+        how = "upstream"
+        if "MIRROR_HAVE" not in pr.stdout:
+            with transport_command(host, bulk=True, wait_s=600) as base:
+                argv, env = git_mirror.push_command(REPO, host, mirror, full, base)
+                push = subprocess.run(argv, env={**os.environ, **env}, capture_output=True, text=True,
+                                      timeout=MIRROR_PUSH_S)
+            if push.returncode:
+                raise RuntimeError(f"push rc={push.returncode}: {push.stderr.strip()[-400:]}")
+            how = f"push {git_mirror.pushed_objects(push.stderr)} objects"
+        t1 = time.time()
+        ex = ssh(host, git_mirror.extract_script(mirror, full, paths, run, receipt), timeout=1800)
+        if ex.returncode or "GIT_MIRROR_EXTRACTED" not in ex.stdout:
+            raise RuntimeError(f"extract rc={ex.returncode}: {ex.stderr.strip()[-400:]}")
+    except Exception as e:  # noqa: BLE001 -- any mirror fault falls back to the tar transfer
+        event(j, f"git-mirror sync failed ({type(e).__name__}: {str(e)[:500]}): tar sync")
+        return False
+    event(j, f"git-mirror sync {full[:12]} via {how} in {t1 - t0:.0f}s + extract {time.time() - t1:.0f}s"
+             + (" (receipt archive + required_files sha256 verified on host)" if receipt is not None else ""))
+    try:
+        ssh(host, git_mirror.detached(git_mirror.housekeep_script(mirror)), timeout=60)
+    except Exception as e:  # noqa: BLE001 -- housekeeping is best effort
+        log(f"git-mirror housekeeping {host}: {e}")
+    return True
+
+
+UPSTREAM_PROBE_S = git_mirror.UPSTREAM_FETCH_S + 60
+MIRROR_PUSH_S = 1800
+
 
 # Commits whose route generator passes `corner_sta.py --sdc-name 6_signoff.sdc` but whose own tools/w18/corner_sta.py
 # predates that flag (main 80a11cea9, edd8613d6): the route completes and corner STA dies with "unrecognized arguments:
@@ -5129,6 +5183,90 @@ def deep_release_mode(j, closed, ev, now=None):
     return "fail"
 
 
+# STALE-24H (owner 2026-10-10, drive-1010): nothing waits more than a day.  A route / calibrate / bench stage or a
+# post-route ECO running > 24 h, or a READY / QUEUED job sitting in a HOLD (adoption hold, HELD, admission_hold) for
+# > 24 h, is cancelled through the normal cancel path (own process group + containers mounting the run dir; bulk
+# release then frees the scratch) and listed in STALE24_LOG for the drive to route a structural next action to the
+# owning stream.  A 40-70 h route or a 24 h+ hold ECO does not close by waiting.  Exempt: die-level runs, and a spec
+# carrying "allow_over_24h": "<reason>" (logged at every sweep).
+STALE24_H = 24.0
+STALE24_LOG = Path(os.environ.get("CL_TAKEOVER", "/home/ubuntu/claude-takeover-20261007")) / "stale24.log"
+STALE24_EVERY_S = 600
+STALE24_PER_SWEEP = 8      # the sweep runs in the tick thread; each kill is a bounded ssh, so cap the work per sweep
+_STALE24_LAST = [0.0]
+HOLD_WAIT_RE = re.compile(r"^(HELD|adoption hold)", re.I)
+
+
+def _iso_age_h(s, now):
+    try:
+        return (now - dt.datetime.fromisoformat(s).timestamp()) / 3600
+    except (TypeError, ValueError):
+        return None
+
+
+def stale24_candidates(jobs, now=None):
+    """[(job, why)] of live jobs past the 24 h rule (see STALE-24H)"""
+    now = time.time() if now is None else now
+    out = []
+    for j in jobs:
+        st = j.get("status")
+        if st in TERMINAL or j["spec"].get("allow_over_24h"):
+            continue
+        run = j.get("run") or ""
+        if re.search(DIE_CONTAINER_RE, j["name"]) or re.search(DIE_MOUNT_RE, run):
+            continue
+        if st == "ECO":
+            a = _iso_age_h((j.get("eco") or {}).get("started"), now)
+            if a is not None and a > STALE24_H:
+                out.append((j, f"post-route ECO running {a:.1f} h"))
+        elif st == "RUNNING":
+            a = _iso_age_h(j.get("stage_started"), now)
+            if a is not None and a > STALE24_H:
+                out.append((j, f"{j.get('stage_key') or 'stage'} running {a:.1f} h"))
+        elif st in ("READY", "QUEUED"):
+            held = j.get("admission_hold") or HOLD_WAIT_RE.match(str(j.get("reason") or "")) or \
+                HOLD_WAIT_RE.match(str(j.get("wait") or ""))
+            last = j.get("stage_started") or j.get("created")
+            a = _iso_age_h(last, now)
+            if held and a is not None and a > STALE24_H:
+                out.append((j, f"{st} hold for {a:.1f} h ({str(held)[:80] if not isinstance(held, bool) else 'held'})"))
+    return out
+
+
+def stale24_sweep(jobs, now=None, force=False):
+    """cancel every STALE-24H candidate (at most every STALE24_EVERY_S); returns the cancelled names"""
+    now = time.time() if now is None else now
+    if not force and now - _STALE24_LAST[0] < STALE24_EVERY_S:
+        return []
+    _STALE24_LAST[0] = now
+    done = []
+    for j, why in stale24_candidates(jobs, now)[:STALE24_PER_SWEEP]:
+        try:
+            with job_lock(j["name"]):
+                x = load_job(j["name"])
+                if x["status"] in TERMINAL:
+                    continue
+                reason = f"owner 10-10: >24h stale ({why}); auto-cancelled by the loop (STALE-24H)"
+                event(x, reason)
+                if x["status"] in ("RUNNING", "ECO"):
+                    kill_own_stage(x)
+                x.update(cancelled_at=now_iso())
+                finish(x, "CANCELLED", reason, "CANCELLED (STALE-24H): " + why)
+                save_job(x)
+            try:
+                with open(STALE24_LOG, "a") as f:
+                    f.write(f"{now_iso()} STALE24 {j['name']} owner={j['spec'].get('owner')} block={j['spec'].get('block')} "
+                            f"host={j.get('host')} {why} -> CANCELLED; next: structural action by the owning stream\n")
+            except OSError:
+                pass
+            done.append(j["name"])
+        except Exception:  # noqa: BLE001
+            log(f"stale24 sweep error on {j['name']}:\n" + traceback.format_exc())
+    if done:
+        log(f"STALE-24H: cancelled {len(done)}: {', '.join(done[:20])}")
+    return done
+
+
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
@@ -5204,6 +5342,10 @@ def tick(fleet):
         release_deep(all_jobs())
     except Exception:  # noqa: BLE001
         log("release_deep error:\n" + traceback.format_exc())
+    try:
+        stale24_sweep(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("stale24 sweep error:\n" + traceback.format_exc())
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())

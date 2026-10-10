@@ -1,0 +1,18 @@
+{
+  "job": "hbm_smh_tile_eg_cg-44351241f-tc-cl-r3",
+  "at": "2026-10-10T05:29:45.979881",
+  "first": {
+    "iteration": 93170,
+    "buffers": 188369,
+    "wns_ps": -321.422,
+    "tns_ps": -2555643.5
+  },
+  "last": {
+    "iteration": 96160,
+    "buffers": 197150,
+    "wns_ps": -321.422,
+    "tns_ps": -2555643.5
+  },
+  "reason": "stagnant clock/reference hold repair; no WNS/TNS gain over >2000iterations, rootcg/ref successor live",
+  "preserved_tail": "/home/ubuntu/claude-takeover-20261007/sm_eg_r3_hold_stall_20261010.log"
+}
