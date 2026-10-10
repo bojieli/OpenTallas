@@ -8,8 +8,9 @@
 #   PINKO=1: M3/M5 keepout beside every signal pin through GRT/DRT (removed after DRT) so the abstract leaves the pin
 #   stubs reachable from the quarter (r24 SFU quarter DRT-0073 on lane pins)
 #   route_lane.sh <label> <top> <W> <H> [run_abi3_physical args]   env: R (scratch base), SRC (snapshot dir, default src0), SRCS, KEEP, CORES, NEED, MAXL, PINL, PDN, PPA, IOC, CP (route clock ns; < 0.833 over-constrains, sign-off re-time at 833 in corner_sta_833.json)
-R=${R:?}; lab=$1; top=$2; W_=$3; H_=$4; shift 4
-W=$R/routes/$lab; mkdir -p $W; cd $R/${SRC:-src0}
+lab=$1; top=$2; W_=$3; H_=$4; shift 4
+# hbm-forks 2026-10-10: OUT (routes dir) + SRCDIR (absolute snapshot) for closure-loop jobs; R / SRC as before otherwise
+if [ -n "${OUT:-}" ]; then W=$OUT/$lab; mkdir -p $W; cd ${SRCDIR:?}; else R=${R:?}; W=$R/routes/$lab; mkdir -p $W; cd $R/${SRC:-src0}; fi
 export OT_ORFS_NUM_CORES=${CORES:-8} NUM_CORES=${CORES:-8} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 echo "$top $W_ $H_ $SRCS $*" > $W/args; cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 # The c12 SFU owns the successor ring delay; keep the historically pinned base delay unchanged.
