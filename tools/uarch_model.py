@@ -15297,7 +15297,7 @@ def dsrom_window_source_pin_anchor_model():
         "physical/dsrom_window_source/model_pin_anchor.json").read_text())
 
 
-def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None):
+def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None, output_pipe=False):
     """Reserve every grant until the tx/rx pin stages and actual relays consume it."""
     import math
     if min(forward_hops, return_hops) < 0 or width <= 0:
@@ -15307,7 +15307,7 @@ def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None):
     if depth < 2:
         raise ValueError("one-hot receiver FIFO requires depth>=2")
     count_bits = math.ceil(math.log2(depth + history + 2))
-    rx_ff = width * (depth + 1) + 2 * depth + count_bits + history + 2
+    rx_ff = width * (depth + 1) + 2 * depth + count_bits + history + 2 + (width + 1 if output_pipe else 0)
     tx_ff = width + 3
     relay_ff = forward_hops * (width + 1) + return_hops
     return dict(block="ot_dsrom_mtp_lrx_rtt", default_ENABLE_RTT=0,
@@ -15323,7 +15323,10 @@ def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None):
         receiver_FF=rx_ff, sender_FF=tx_ff, relay_FF=relay_ff,
         FF_area_floor_um2=(rx_ff + tx_ff + relay_ff) * DFF_UM2,
         slot_fit="parent slot not yet bound; no physical adoption",
-        first_payload_latency_cycles=forward_hops + 2,
+        first_payload_latency_cycles=forward_hops + 2 + int(output_pipe),
+        registered_elastic_output=bool(output_pipe), output_capacity_flits=int(output_pipe),
+        receiver_latency_added_cycles=int(output_pipe),
+        grant_history_unchanged_reason="Reservation ends at input-pin/queue admission; elastic output slot adds capacity and does not shorten in-flight grant history",
         initial_grant_return_cycles=return_hops + 2,
         reservation_roundtrip_cycles=history,
         added_wire_latency_cycles=forward_hops,

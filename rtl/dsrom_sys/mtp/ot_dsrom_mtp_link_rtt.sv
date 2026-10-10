@@ -5,7 +5,7 @@
 // relays + rx pin capture; the original no-relay history is exactly three.
 module ot_dsrom_mtp_lrx_rtt #(
     parameter integer W=513, D=4, SEL=0,
-    parameter bit ENABLE_RTT=0,
+    parameter bit ENABLE_RTT=0, OUTPUT_PIPE=0,
     parameter integer FORWARD_HOPS=0, RETURN_HOPS=0
 ) (
     input wire clk, rst_n, l_valid,
@@ -17,7 +17,7 @@ module ot_dsrom_mtp_lrx_rtt #(
 );
     generate if (ENABLE_RTT) begin: g_rtt
         ot_dsrom_mtp_lrx_rtt_core #(.W(W),.D(D),.SEL(SEL),
-            .FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS)) u_rx
+            .FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS),.OUTPUT_PIPE(OUTPUT_PIPE)) u_rx
             (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
              .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data));
     end else begin: g_legacy
@@ -28,7 +28,8 @@ module ot_dsrom_mtp_lrx_rtt #(
 endmodule
 
 module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer D = 4, parameter integer SEL = 0,
-    parameter integer FORWARD_HOPS = 0, RETURN_HOPS = 0) (
+    parameter integer FORWARD_HOPS = 0, RETURN_HOPS = 0,
+    parameter bit OUTPUT_PIPE = 0) (
     input  wire         clk, rst_n,
     input  wire         l_valid,
     output wire         l_ready,
@@ -64,11 +65,29 @@ module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer 
         qh = {W{1'b0}};
         for (j = 0; j < D; j = j + 1) if (rp[j]) qh = qh | q[j];
     end
-    assign c_valid = ne || pvl;
-    assign c_data = ne ? qh : pd;
-    wire pop  = c_valid && c_ready;
+    wire read_valid = ne || pvl;
+    wire [W-1:0] read_data = ne ? qh : pd;
+    wire read_ready;
+    // Optional elastic output stage splits queue-read/select from the boundary.
+    // Pop only when this slot can capture; a stalled output retains its flit.
+    generate if (OUTPUT_PIPE) begin: g_output_pipe
+        reg valid; reg [W-1:0] data;
+        assign c_valid = valid;
+        assign c_data = data;
+        assign read_ready = !valid || c_ready;
+        always @(posedge clk) begin
+            if (!live) valid <= 1'b0;
+            else if (read_ready) valid <= read_valid;
+            if (read_ready && read_valid) data <= read_data;
+        end
+    end else begin: g_output_direct
+        assign c_valid = read_valid;
+        assign c_data = read_data;
+        assign read_ready = c_ready;
+    end endgenerate
+    wire pop  = read_valid && read_ready;
     wire popq = pop && ne;
-    wire push = pvl && (ne || !c_ready);  // the pin flit, unless taken straight from the pin flop
+    wire push = pvl && (ne || !read_ready);  // the pin flit, unless taken straight from the pin flop
     wire [CB-1:0] cnt_n = cnt + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, popq};
     always @(posedge clk)                // the slot write is enabled from registers only
         for (i = 0; i < D; i = i + 1) if (pvl && wp[i]) q[i] <= pd;
@@ -99,10 +118,10 @@ module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer 
             cnt <= 0; grants <= '0;
             wp <= {{(D-1){1'b0}}, 1'b1}; rp <= {{(D-1){1'b0}}, 1'b1};
         end else if (SEL) begin
-            cnt <= c_ready ? cnt_s1 : cnt_s0;
-            grants <= {grants[H-2:0], c_ready ? rdy_s1 : rdy_s0};
-            wp  <= c_ready ? wp_s1 : wp_s0;
-            rp  <= c_ready ? rp_s1 : rp;
+            cnt <= read_ready ? cnt_s1 : cnt_s0;
+            grants <= {grants[H-2:0], read_ready ? rdy_s1 : rdy_s0};
+            wp  <= read_ready ? wp_s1 : wp_s0;
+            rp  <= read_ready ? rp_s1 : rp;
         end else begin
             cnt <= cnt_n;
             grants <= {grants[H-2:0], (cnt_n + infl) <= CB'(D - 1)};

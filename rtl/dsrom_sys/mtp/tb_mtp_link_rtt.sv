@@ -12,12 +12,13 @@ module mtp_test_relay #(parameter integer W=1,HOPS=0)(
     end endgenerate
 endmodule
 module tb_mtp_link_rtt;
-    parameter integer F=5,R=5,SEL=0,ENABLE=1,STRESS=1,DEPTH=0;
+    parameter integer F=5,R=5,SEL=0,ENABLE=1,STRESS=1,DEPTH=0,OUTPUT_PIPE=0;
     localparam integer W=512,H=F+R+3,D=DEPTH>0?DEPTH:H+1,TOTAL=1200;
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0,sv=0,cr=0;
     wire sr,lv,lr,rv,rg,cv,tg;
     wire [W-1:0] sd,ld,rd,cd;
+    reg prior_stall=0; reg [W-1:0] prior_data;
     integer cycle=0,sent=0,received=0,stalls=0,drain=0,max_outstanding=0,first_sent=-1,first_received=-1;
     function automatic [511:0] payload(input integer number);
         integer k;reg [31:0] word;
@@ -33,7 +34,7 @@ module tb_mtp_link_rtt;
         .l_valid(lv),.l_ready(tg),.l_data(ld));
     mtp_test_relay #(.W(W+1),.HOPS(F)) forward(.clk(clk),.rst_n(rst_n),.in_data({lv,ld}),.out_data({rv,rd}));
     mtp_test_relay #(.W(1),.HOPS(R)) reverse(.clk(clk),.rst_n(rst_n),.in_data(rg),.out_data(tg));
-    ot_dsrom_mtp_lrx_rtt #(.W(W),.D(D),.SEL(SEL),.ENABLE_RTT(ENABLE),.FORWARD_HOPS(F),.RETURN_HOPS(R)) rx(
+    ot_dsrom_mtp_lrx_rtt #(.W(W),.D(D),.SEL(SEL),.ENABLE_RTT(ENABLE),.OUTPUT_PIPE(OUTPUT_PIPE),.FORWARD_HOPS(F),.RETURN_HOPS(R)) rx(
         .clk(clk),.rst_n(rst_n),.l_valid(rv),.l_ready(rg),.l_data(rd),.c_valid(cv),.c_ready(cr),.c_data(cd));
     initial begin repeat(8) @(negedge clk);rst_n=1; end
     always @(negedge clk) if(rst_n) begin
@@ -43,6 +44,9 @@ module tb_mtp_link_rtt;
     end
     always @(posedge clk) if(rst_n) begin
         cycle<=cycle+1;
+        if(OUTPUT_PIPE && prior_stall && (!cv || cd!==prior_data))
+            $fatal(1,"ELASTIC_OUTPUT_CHANGED_DURING_STALL");
+        prior_stall<=cv&&!cr; prior_data<=cd;
         if(!STRESS && first_sent>=0 && sent<TOTAL && !sr)$fatal(1,"FULL_RATE_GAP sent=%0d",sent);
         if(sv&&sr) begin sent<=sent+1;if(first_sent<0)first_sent<=cycle;end
         if(cv&&cr) begin

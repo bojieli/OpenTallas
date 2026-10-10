@@ -4,10 +4,10 @@ import argparse, ast, hashlib, json, re, subprocess, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SRC=['rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv','rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv','rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv']
-def run(out,f,r,sel,enable,mutant=False,stress=1,depth=0):
-    name=f'f{f}_r{r}_s{sel}_e{enable}'+('_short_history' if mutant else '')+('_fullrate' if not stress else '')+(f'_depth{depth}' if depth else '')
+def run(out,f,r,sel,enable,mutant=False,stress=1,depth=0,output_pipe=0):
+    name=f'f{f}_r{r}_s{sel}_e{enable}'+('_short_history' if mutant else '')+('_fullrate' if not stress else '')+(f'_depth{depth}' if depth else '')+('_output_pipe' if output_pipe else '')
     exe=out/(name+'.vvp');cmd=['iverilog','-g2012','-s','tb_mtp_link_rtt']
-    for k,v in dict(F=f,R=r,SEL=sel,ENABLE=enable,STRESS=stress,DEPTH=depth).items():cmd += [f'-Ptb_mtp_link_rtt.{k}={v}']
+    for k,v in dict(F=f,R=r,SEL=sel,ENABLE=enable,STRESS=stress,DEPTH=depth,OUTPUT_PIPE=output_pipe).items():cmd += [f'-Ptb_mtp_link_rtt.{k}={v}']
     if mutant:cmd+=['-DOT_MTP_NEG_SHORT_RTT']
     cmd+=['-o',str(exe)]+SRC
     c=subprocess.run(cmd,cwd=ROOT,capture_output=True,text=True)
@@ -17,7 +17,7 @@ def run(out,f,r,sel,enable,mutant=False,stress=1,depth=0):
     (out/(name+'.log')).write_text(p.stdout+p.stderr);exe.unlink()
     expected=p.returncode==1 and 'LINK_REG overflow' in p.stdout if mutant else p.returncode==0 and 'PASS RTT_LINK' in p.stdout
     counts={k:int(v) for k,v in re.findall(r'(W|F|R|H|D|SEL|ENABLE|STRESS|sent|received|cycles|stalls|max_outstanding|first_latency)=(\d+)',p.stdout)}
-    if not mutant:expected=expected and counts.get('sent')==1200 and counts.get('received')==1200 and counts.get('first_latency')==f+2
+    if not mutant:expected=expected and counts.get('sent')==1200 and counts.get('received')==1200 and counts.get('first_latency')==f+2+output_pipe
     return dict(name=name,expect='FAIL' if mutant else 'PASS',observed_rc=p.returncode,gate_pass=expected,measurement=counts)
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
