@@ -42,7 +42,8 @@ def rtl_key(bits):
     return (~z & 0xffffffff) if z >> 31 else (z ^ 0x80000000)
 
 
-HARD_SRC = ['rtl/hdc/ot_hdc_delay_ring.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_markov_bundle_glue.sv']
+HARD_SRC = ['rtl/hdc/ot_hdc_delay_ring.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_markov_bundle_glue.sv',
+            'rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340_h.sv']
 
 
 def main(a):
