@@ -406,10 +406,10 @@ def qwen(kv=None):
                                        record=ln["source"][0]["file"], note="per-token KV-path constant, placed on the cold layer"))
             if kv and oid == "residual" and kv.get("split_structure"):
                 sp = kv["split_structure"]
-                adders = list(adders) + [dict(item="rom_split_stations", cycles=sp["l0_delta"] if L == 0 else sp["layer_delta"],
+                adders = list(adders) + [dict(item="rom_split_stations_and_issue_relays", cycles=sp["l0_delta"] if L == 0 else sp["layer_delta"],
                                               grade="measured", record=sp["source"][1],
-                                              note="ROM-die split structure (pin stations + compensation + SU ML 7), "
-                                                   "token-exact L0-L2 chain vs base; charged on the layer's last op")]
+                                              note="ROM-die split structure (pin stations + compensation + SU ML) + the r22k issue / status relays, "
+                                                   "L0-L2 chain vs base (token-exact + split_relays.json); charged on the layer's last op")]
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
             deps = [prev_group_last] if i == 0 else None
             n = d.add(f"{g}.{oid}", lab, g, cls, cyc,
