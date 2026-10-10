@@ -155,6 +155,8 @@ def prep(d: Path):
                 b_, n_, m_, st_, ist_ = e[:5]
                 used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
     used[END_TOKEN_VM] = True
+    if not meta.get("needs_end"):                     # the program's own CTL.END token word (not a dispatched record)
+        used[recs[-1].desc["A"].base] = True
     best, i = (0, 0), 0
     while i < used.size:
         if not used[i]:
