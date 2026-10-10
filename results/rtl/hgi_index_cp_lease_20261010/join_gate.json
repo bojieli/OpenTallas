@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.hgi.index_cp_lease.native_join.v1",
+  "actor_source": "75e910e72c12c8dbe424fa5403cb47f4a51a13ec",
+  "unit_source": "4ebccc7fa6cba44b5a61d22623447b7f9b2f3d8e",
+  "default_enabled": false,
+  "exact": "PASS four modes actual actor+native unit+3capture/3launch wrapper",
+  "cases": [
+    "exact captured record + full73 accepted once + real job/gen/pos native frame after tagged weight reads",
+    "stale allocation grant blocks all actual unit acceptance and reads",
+    "stale framed actual unit acceptance faults/retains actor",
+    "stale service-read drain faults/retains actor"
+  ],
+  "VM": "minimum transactional responder echoes actual issued request tags with FP32 ones;16reads observed, not real SRAM service visibility proof",
+  "completion": "no source state/completion injection; no selector completions sent; frame retirement remains OPEN and no release permitted",
+  "mutant": "expected FAIL actual native frame job/gen replaced with zero, checked mutation exactly once",
+  "model": {
+    "actor_FF": 4125,
+    "native_metadata_state_FF": 152,
+    "native_metadata_wrapper_FF": 450,
+    "combined_increment_FF": 4727,
+    "metadata_capture_edges": 3,
+    "metadata_return_launch_edges": 3,
+    "physical_inventory": "baseline native wrapper/core separately owned; real mapped area/channel/clock closure still OPEN"
+  },
+  "providers_open": [
+    "full73 allocation owner",
+    "four real native99 quarter fanout paths",
+    "durable whole-frame key/query ACK ledger",
+    "service reads+native consumer+VM macro ACK drain join"
+  ],
+  "physical_closed": false,
+  "compiler_allocation_integrated": false,
+  "performance_credit": 0
+}
