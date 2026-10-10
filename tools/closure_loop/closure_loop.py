@@ -686,7 +686,8 @@ def bench_missing_paths(spec, git_=None):
     src = spec.get("source") or {}
     commit = str(src.get("commit", ""))
     benches = ((spec.get("stages") or {}).get("bench") or [])
-    if not commit or not benches:
+    if not commit or not (benches or any(isinstance((spec.get("stages") or {}).get(k), dict)
+                                         for k in ("calibrate", "route"))):
         return []
     git_ = git_ or submit_lint.Git(REPO)
     synced = [str(x).rstrip("/") for x in list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))]
@@ -702,6 +703,14 @@ def bench_missing_paths(spec, git_=None):
             body = git_.show(commit, sc.lstrip("./"))
             if body:
                 texts.append(body)
+    # drive-0849 2026-10-09: the calibrate / route commands too (their own text, not the scripts they call) --
+    # hbm_smh_{tile,be}_{w,e}g_cg-44351241f: --geom {SRC}/results/uarch/.../geom_362p88.json was not synced, the
+    # calibrate died 'No such file' (synth_or_place).  {SRC}/ and $SRC/ prefixes name the snapshot itself.
+    for k in ("calibrate", "route"):
+        st = (spec.get("stages") or {}).get(k) or {}
+        cmd = st.get("cmd") if isinstance(st, dict) else None
+        if cmd:
+            texts.append(re.sub(r"(\{SRC\}|\$\{?SRC\}?)/", " ", cmd))
     need = set()
     for t in texts:
         for path in BENCH_PATH_RE.findall(t):
