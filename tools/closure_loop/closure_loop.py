@@ -382,7 +382,7 @@ def stage_list(spec):
             tail += "\n" + cal["sdc_cmd"]
         out.append(dict(key="calibrate", kind="calibrate", cmd=cal["cmd"] + tail, ok=cal.get("ok"), sdc_cmd=cal.get("sdc_cmd"),
                         threads=cal.get("threads", spec.get("threads", 16)), ram=cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32)),
-                        logs=cal.get("logs", []), out_dir=cal.get("out_dir")))
+                        logs=cal.get("logs", []), out_dir=cal.get("out_dir"), requires_artifacts=cal.get("requires_artifacts", False)))
     for k in ("route", "signoff"):
         if st.get(k, {}).get("cmd"):
             t, r = STAGE_DEFAULTS[k] or (spec.get("threads", 16), spec.get("peak_ram_gb", 32))
@@ -2501,10 +2501,15 @@ def write_status(fleet_note=""):
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
           "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
-        r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
-        v = r.stdout.split()
-        if len(v) == 2:
-            ld = float(v[0])
+        try:
+            r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+            v = r.stdout.split() if r.returncode == 0 else []
+            ld = float(v[0]) if len(v) == 2 else None
+        except (subprocess.TimeoutExpired, OSError, ValueError):
+            # Fleet reporting must never terminate the coordinator or prevent
+            # the next intake tick because one SSH peer is unavailable.
+            v, ld = [], None
+        if ld is not None:
             running = sum(1 for x in act if x.get("host") == h["name"] and
                           x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL"))
             benches = sum(1 for x in act for b in (x.get("btrack") or {}).values()
@@ -3422,6 +3427,13 @@ def assumed_insertion(j):
 
 def start_parallel_calibrate(j, stl, st):
     if j["spec"].get("calibrate_parallel") is False:
+        return False
+    # Scalar insertion history cannot replace this run's own CTS database.
+    # Explicit artifact consumers and existing per-tap recipes must finish
+    # calibration before the route derives its source latencies.
+    route_cmd = (j["spec"].get("stages", {}).get("route") or {}).get("cmd", "")
+    if st.get("requires_artifacts") or "tap_latency.py" in route_cmd:
+        event(j, "calibrate first: route requires completed calibration artifacts")
         return False
     c0 = j.get("ctrack")
     if c0 and c0.get("state") == "done" and c0.get("measured"):
@@ -4835,6 +4847,19 @@ def write_near_miss_retain(jobs, closed=None):
     return rows
 
 
+# Preserve the live daemon's BF protection in pinned source; the owner extended
+# the deadline to 21:30 PT on October 10. No progressing job is restarted.
+BF_EXEMPT_UNTIL = "2026-10-10T21:30:00-07:00"
+
+
+def bf_exempt(j, now=None):
+    name = j.get("name") or (j.get("spec") or {}).get("name") or ""
+    if not name.startswith("bf") and (j.get("spec") or {}).get("block") != "ot_s81_bf_native":
+        return False
+    current = now if now is not None else dt.datetime.now(dt.timezone.utc)
+    return current < dt.datetime.fromisoformat(BF_EXEMPT_UNTIL)
+
+
 def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
     except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
@@ -4845,6 +4870,8 @@ def release_bulk(jobs):
         if n >= BULK_RELEASE_PER_TICK:
             break
         if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
+            continue
+        if bf_exempt(x):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
@@ -5039,6 +5066,8 @@ def closure_on_main(j, ev):
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
+        return None
+    if bf_exempt(j):
         return None
     if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
         return None

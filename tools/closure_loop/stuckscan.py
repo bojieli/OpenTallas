@@ -750,6 +750,8 @@ def redundant(j, jobs, closed, any_variant=False):
     descendant commit makes it redundant (sure)."""
     blk = j["spec"].get("block")
     c = j.get("commit_full") or j["spec"]["source"].get("commit", "")
+    if cl.bf_exempt(j):
+        return None, False
     if blk in closed:
         rv = cl.revoked_closures()
         cj = [x for x in jobs if x["spec"].get("block") == blk and cl.closure_counts(x, rv)]
