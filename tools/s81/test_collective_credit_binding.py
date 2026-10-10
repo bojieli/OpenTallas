@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Reject same-named legacy views and incomplete credit-link evidence without building a die."""
 import copy
+import hashlib
 import json
 import sys
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import die_sta as D
+import assemble_views as A
 
 
 class CreditBindingTest(unittest.TestCase):
@@ -35,6 +38,11 @@ class CreditBindingTest(unittest.TestCase):
                 p = self.root / directory / (m + '_' + c + '.lib')
                 p.write_text('cell (' + m + ') {}\n')
 
+        clock_dir = 'physical/s81_ph_views/closed/dsfd_coll_ck'
+        self.write(clock_dir + '/verdict.json', dict(verdict='CLOSED', commit='752a48488384dbe9c95a72c084bc24e0ac800a17', ss_ps=9000, ff_ps=31, drc=0))
+        for c in ('ss', 'tt', 'ff'):
+            (self.root / clock_dir / ('dsfd_coll_ck_' + c + '.lib')).write_text('cell (dsfd_coll_ck) {}')
+
     def write(self, relative, obj):
         p = self.root / relative
         p.parent.mkdir(parents=True, exist_ok=True)
@@ -57,6 +65,28 @@ class CreditBindingTest(unittest.TestCase):
         (self.root / vp).unlink()
         self.assertTrue(D.collective_credit_binding(self.root)['problems'])
 
+    def test_credit_recipe_preserves_full_width_lane_groups_and_mirrored_faces(self):
+        shutil.copytree(D.ROOT / 'physical/s81_ph_views/ports/contract_split3',
+                        self.root / 'physical/s81_ph_views/ports/contract_split3')
+        spec, recipe = A.collective_credit_recipe(self.root)
+        self.assertEqual(recipe['glue_bundles'], 87)
+        self.assertEqual(recipe['glue_bits'], 16050)
+        self.assertEqual(len(recipe['instances']), 11)
+        self.assertTrue(all(n['length_um'] < 0.5 for n in recipe['nets']))
+        for side, lanes in [('w', [1, 2]), ('e', [5, 6])]:
+            for group, lane in enumerate(lanes):
+                net = next(n for n in recipe['nets'] if n['launch'] == 'u_ce.' + side + 'lo_d'
+                           and n['capture'] == f'g_lane[{lane}].g_{side}.u_l.lo_d')
+                self.assertEqual(net['bits'], 553)
+                self.assertEqual(net['launch_bits'][0], f'{side}lo_d[{group*553}]')
+                self.assertEqual(net['capture_bits'][0], 'lo_d[0]')
+        lane = self.root / 'physical/s81_ph_views/ports/contract_split3/dsfd_coll_lane_w/ports.json'
+        bad = json.loads(lane.read_text())
+        bad['ports']['lo_d']['direction'] = 'output'
+        lane.write_text(json.dumps(bad))
+        with self.assertRaisesRegex(ValueError, 'bad seam shape/direction'):
+            A.collective_credit_recipe(self.root)
+
     def test_old_assembly_is_rejected_then_exact_credit_assembly_selected(self):
         binding = D.collective_credit_binding(self.root)
         self.assertFalse(binding['problems'])
@@ -68,9 +98,16 @@ class CreditBindingTest(unittest.TestCase):
         self.assertFalse(binding['qualified'])
         self.assertEqual(len(binding['problems']), 3)
         binding = D.collective_credit_binding(self.root)
-        assembly = dict(slab='dsfd_sp_collective', variant='split3cr', tile_bindings=binding['tile_bindings'],
+        manifest = json.loads((self.root / 'physical/s81_ph_views/collective/composition_split3cr.json').read_text())
+        q = dict(status='PASS', variant='split3cr', tile_bindings=binding['tile_bindings'], clock_binding=binding['clock_binding'], clock_period_ps=833.333, setup_uncertainty_ps=60, hold_uncertainty_ps=25, drc=0, tt_setup_ps=12, ff_hold_ps=3, clock_sinks=[r['inst'] + '/ck' for r in manifest['instances']], corner_sta='results/glue_corner.json')
+        q.update(source_latency_policy='option1', clock_root=dict(instance='u_ck', x_um=0, y_um=1400), clock_taps={r['inst']: dict(tt_source_latency_ps=500, ff_source_latency_ps=400) for r in manifest['instances']})
+        self.write('results/measured_glue.json', q)
+        self.write('results/glue_corner.json', {k: dict(worst_slack_ps=v, errors=[], odb_sha256='a'*64, spef_sha256='b'*64, sdc_sha256='c'*64) for k,v in [('setup_tt',12), ('hold_ff',3)]})
+        qhash = hashlib.sha256((self.root / 'results/measured_glue.json').read_bytes()).hexdigest()
+        assembly = dict(slab='dsfd_sp_collective', variant='split3cr', tile_bindings=binding['tile_bindings'], clock_binding=binding['clock_binding'],
+                        physical_qualification=dict(status='PASS', evidence='results/measured_glue.json', sha256=qhash),
                         glue_worst_ps=dict(tt_setup_bal=1, ff_hold_bal=2),
-                        corners={c: dict(libs={m: r['libs'][c] for m, r in binding['tile_bindings'].items()})
+                        corners={c: dict(libs=dict({m: r['libs'][c] for m, r in binding['tile_bindings'].items()}, dsfd_coll_ck=binding['clock_binding']['libs'][c]))
                                  for c in ('ss', 'tt', 'ff')})
         self.write('physical/assembled_credit/assembled.json', assembly)
         for c in candidates:

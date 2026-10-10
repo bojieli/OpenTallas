@@ -12,7 +12,7 @@ From a die variant (tools/dsrom_s81_fulldie.py options) writes, for SS and FF:
     views carry them: unconstrained here, reported as such).
   die_sta.py kit --s81-opts "<opts>" --die layer --out DIR
 """
-import argparse, json, math, re, shlex, sys
+import argparse, hashlib, json, math, re, shlex, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
@@ -116,10 +116,64 @@ def collective_credit_binding(root):
                 break
         if master not in bindings:
             problems.append(f'{master}: missing CLOSED source-pinned CR/LCR routed views and exact/negative gates')
-    return dict(variant='split3cr', tiles=list(COLL_CR_PARTS), tile_bindings=bindings,
+    clock = root / 'physical/s81_ph_views/closed/dsfd_coll_ck'
+    cv = clock / 'verdict.json'
+    clock_binding = None
+    if cv.is_file():
+        v = json.loads(cv.read_text())
+        libs = {c: clock / f'dsfd_coll_ck_{c}.lib' for c in ('ss', 'tt', 'ff')}
+        if (str(v.get('verdict', '')).startswith('CLOSED')
+                and v.get('commit') == '752a48488384dbe9c95a72c084bc24e0ac800a17'
+                and type(v.get('ss_ps')) in (int, float) and v['ss_ps'] >= 0
+                and type(v.get('ff_ps')) in (int, float) and v['ff_ps'] >= 0
+                and v.get('drc') == 0 and all(lp.is_file() for lp in libs.values())):
+            clock_binding = dict(verdict=str(cv.relative_to(root)), source_commit=v['commit'],
+                                 libs={c: str(lp.relative_to(root)) for c, lp in libs.items()})
+    if clock_binding is None:
+        problems.append('dsfd_coll_ck: missing source-pinned retained clock/reset tile')
+    return dict(variant='split3cr', tiles=list(COLL_CR_PARTS) + ['dsfd_coll_ck'], tile_bindings=bindings, clock_binding=clock_binding,
                 qualified=False, qualification='UNQUALIFIED: assembled slab and inter-tile glue gate required',
                 problems=problems, assembly_by_corner={})
 
+
+
+def credit_qualification_valid(root, qualification, binding):
+    """Measured qualification must exist and match the exact source-pinned assembly, not just a PASS label."""
+    try:
+        path = Path(root) / qualification['evidence']
+        data = path.read_bytes()
+        if qualification.get('status') != 'PASS' or hashlib.sha256(data).hexdigest() != qualification.get('sha256'):
+            return False
+        q = json.loads(data)
+        manifest = json.loads((Path(root) / 'physical/s81_ph_views/collective/composition_split3cr.json').read_text())
+        if (q.get('status') != 'PASS' or q.get('variant') != 'split3cr'
+                or q.get('tile_bindings') != binding['tile_bindings'] or q.get('clock_binding') != binding['clock_binding']
+                or q.get('clock_period_ps') != 833.333 or q.get('setup_uncertainty_ps') != 60
+                or q.get('hold_uncertainty_ps') != 25 or q.get('drc') != 0
+                or q.get('clock_sinks') != [r['inst'] + '/ck' for r in manifest['instances']]
+                or not all(type(q.get(k)) in (int, float) and math.isfinite(q[k]) and q[k] >= 0
+                           for k in ('tt_setup_ps', 'ff_hold_ps'))):
+            return False
+        sinks = [r['inst'] for r in manifest['instances']]
+        taps = q.get('clock_taps', {})
+        clock_root = q.get('clock_root', {})
+        if (q.get('source_latency_policy') != 'option1' or set(taps) != set(sinks)
+                or clock_root.get('instance') != 'u_ck'
+                or not all(type(clock_root.get(k)) in (int, float) and math.isfinite(clock_root[k]) for k in ('x_um', 'y_um'))
+                or not all(type(taps[n].get(k)) in (int, float) and math.isfinite(taps[n][k]) and taps[n][k] >= 0
+                           for n in sinks for k in ('tt_source_latency_ps', 'ff_source_latency_ps'))):
+            return False
+        corner = json.loads((Path(root) / q['corner_sta']).read_text())
+        for key, metric in (('setup_tt', 'tt_setup_ps'), ('hold_ff', 'ff_hold_ps')):
+            r = corner[key]
+            if r.get('errors') or r.get('worst_slack_ps') != q[metric]:
+                return False
+            if not all(re.fullmatch('[0-9a-f]{64}', str(r.get(k, ''))) for k in
+                       ('odb_sha256', 'spef_sha256', 'sdc_sha256')):
+                return False
+        return True
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
 
 def credit_assembled_views(root, binding, candidates):
     """Accept only a CR assembly explicitly bound to the selected four committed closure receipts."""
@@ -132,7 +186,7 @@ def credit_assembled_views(root, binding, candidates):
             assembly = json.loads(path.read_text())
             if assembly.get('slab') != 'dsfd_sp_collective':
                 continue
-            if assembly.get('variant') != 'split3cr' or assembly.get('tile_bindings') != binding['tile_bindings']:
+            if assembly.get('variant') != 'split3cr' or assembly.get('tile_bindings') != binding['tile_bindings'] or assembly.get('clock_binding') != binding['clock_binding']:
                 rejected.append(f'rejected legacy or mismatched assembly {path}')
                 continue
             glue = assembly.get('glue_worst_ps', {})
@@ -140,8 +194,13 @@ def credit_assembled_views(root, binding, candidates):
                        for k in ('tt_setup_bal', 'ff_hold_bal')):
                 rejected.append(f'unqualified inter-tile glue {path}')
                 continue
+            qualification = assembly.get('physical_qualification', {})
+            if not credit_qualification_valid(root, qualification, binding):
+                rejected.append(f'missing measured glue/clock qualification {path}')
+                continue
             used = assembly.get('corners', {}).get(corner, {}).get('libs', {})
             expected = {m: r['libs'][corner] for m, r in binding['tile_bindings'].items()}
+            expected['dsfd_coll_ck'] = binding['clock_binding']['libs'][corner]
             lp = path.parent / f'dsfd_sp_collective_{corner}.lib'
             if used != expected or not lp.is_file():
                 rejected.append(f'missing or mismatched tile library provenance {path}')
@@ -298,7 +357,7 @@ def main():
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
     parts = dict(PARTS)
     if getattr(S, 'COLL_SPLIT3_CR', False):
-        parts['dsfd_sp_collective'] = COLL_CR_PARTS
+        parts['dsfd_sp_collective'] = COLL_CR_PARTS + ('dsfd_coll_ck',)
         binding = collective_credit_binding(vroot)
         credit_assembled_views(vroot, binding, cls_)
         rec['collective_binding'] = binding
@@ -343,6 +402,8 @@ def main():
             if mst in parts:
                 if mst == 'dsfd_sp_collective' and 'collective_binding' in rec:
                     done = sorted(rec['collective_binding']['tile_bindings'])
+                    if rec['collective_binding']['clock_binding']:
+                        done.append('dsfd_coll_ck')
                     r_['qualification'] = rec['collective_binding']['qualification']
                     r_['binding_problems'] = rec['collective_binding']['problems']
                 else:
