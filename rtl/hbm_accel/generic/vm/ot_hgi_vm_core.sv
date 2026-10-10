@@ -311,15 +311,23 @@ module ot_hgi_vm_core #(
     // wide read lanes: acceptance -> address at the pins (r1) -> macro read edge (rm) -> rd_out captured (r2) -> decoded
     // response flop: the client pipeline's 4 edges
     reg [NB-1:0] r1_v, rm_v, r2_v; reg [SW-1:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
-    reg [33:0] dwr, dwc; reg [15:0] ce_w; reg ue_w;
-    always @* begin                                   // wide-lane corrected / uncorrectable words this edge
-        ce_w = 16'd0; ue_w = 1'b0;
-        for (integer lb = 0; lb < NB; lb = lb + 1)
-            if (RP > 0 && r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
-                dwc = dec(r2_raw[lb][q*WB +: WB]);
-                if (dwc[32]) ce_w = ce_w + 16'd1;
-                if (dwc[33]) ue_w = 1'b1;
-            end
+    reg [33:0] dwr; wire [15:0] ce_w; wire ue_w;
+    // wide-lane corrected / uncorrectable words this edge (generate-gated: with RP 0 an @* over a constant-false
+    // condition has no sensitivities in Icarus 12 and never runs, leaving ce = x)
+    if (RP > 0) begin : g_rce
+        reg [15:0] ce_r; reg ue_r; reg [33:0] dwc;
+        always @* begin
+            ce_r = 16'd0; ue_r = 1'b0;
+            for (integer lb = 0; lb < NB; lb = lb + 1)
+                if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
+                    dwc = dec(r2_raw[lb][q*WB +: WB]);
+                    if (dwc[32]) ce_r = ce_r + 16'd1;
+                    if (dwc[33]) ue_r = 1'b1;
+                end
+        end
+        assign ce_w = ce_r; assign ue_w = ue_r;
+    end else begin : g_nrce
+        assign ce_w = 16'd0; assign ue_w = 1'b0;
     end
     reg [(W2>0?W2:1)-1:0] w2_d1;
     always @(posedge clk or negedge rst_n)
