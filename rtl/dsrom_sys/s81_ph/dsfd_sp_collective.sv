@@ -40,14 +40,14 @@ module dsfd_sp_collective (
     wire s_lo3_v, s_lo3_r, s_li3_v, s_li3_r, s_lo7_v, s_lo7_r, s_li7_v, s_li7_r;
     wire [552:0] s_lo0_d, s_li0_d, s_lo4_d, s_li4_d, s_lo3_d, s_li3_d, s_lo7_d, s_li7_d;
     wire s_bw_v, s_bw_cr, s_bw_flt; wire [2099:1] s_bw_d;
-    dsfd_coll_cb u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+    dsfd_coll_cb #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
         .wlo_v(lo_v[0]), .wlo_r(lo_r[0]), .wlo_d(lo_d[0*553 +: 553]), .wli_v(li_v[0]), .wli_r(li_r[0]), .wli_d(li_d[0*553 +: 553]), .wflt(flt[0 +: 3]),
         .elo_v(lo_v[4]), .elo_r(lo_r[4]), .elo_d(lo_d[4*553 +: 553]), .eli_v(li_v[4]), .eli_r(li_r[4]), .eli_d(li_d[4*553 +: 553]), .eflt(flt[12 +: 3]),
         .fvm_u(s_fvm), .flt_u(s_fltu),
         .lo0_v(s_lo0_v), .lo0_r(s_lo0_r), .lo0_d(s_lo0_d), .li0_v(s_li0_v), .li0_r(s_li0_r), .li0_d(s_li0_d),
         .lo4_v(s_lo4_v), .lo4_r(s_lo4_r), .lo4_d(s_lo4_d), .li4_v(s_li4_v), .li4_r(s_li4_r), .li4_d(s_li4_d),
         .bw_v(s_bw_v), .bw_d(s_bw_d), .bw_cr(s_bw_cr), .bw_flt(s_bw_flt));
-    dsfd_coll_ce u_ce (.ck(pll_stream), .rs(rst_stream),
+    dsfd_coll_ce #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ce (.ck(pll_stream), .rs(rst_stream),
         .wlo_v(lo_v[2:1]), .wlo_r(lo_r[2:1]), .wlo_d(lo_d[1*553 +: 2*553]), .wli_v(li_v[2:1]), .wli_r(li_r[2:1]), .wli_d(li_d[1*553 +: 2*553]), .wflt(flt[3 +: 6]),
         .elo_v(lo_v[6:5]), .elo_r(lo_r[6:5]), .elo_d(lo_d[5*553 +: 2*553]), .eli_v(li_v[6:5]), .eli_r(li_r[6:5]), .eli_d(li_d[5*553 +: 2*553]), .eflt(flt[15 +: 6]),
         .fvm_u(s_fvm), .flt_u(s_fltu),
@@ -56,7 +56,7 @@ module dsfd_sp_collective (
         .bw_v(s_bw_v), .bw_d(s_bw_d), .bw_cr(s_bw_cr), .bw_flt(s_bw_flt),
         .lo3_v(s_lo3_v), .lo3_r(s_lo3_r), .lo3_d(s_lo3_d), .li3_v(s_li3_v), .li3_r(s_li3_r), .li3_d(s_li3_d),
         .lo7_v(s_lo7_v), .lo7_r(s_lo7_r), .lo7_d(s_lo7_d), .li7_v(s_li7_v), .li7_r(s_li7_r), .li7_d(s_li7_d), .flt_d(s_fltd));
-    dsfd_coll_ct #(.LR(`ifdef OT_S81PH_COLL_CTLR 1 `else 0 `endif)) u_ct (.ck(pll_stream), .rs(rst_stream),
+    dsfd_coll_ct #(.LR(`ifdef OT_S81PH_COLL_CTLR 1 `else 0 `endif), .CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ct (.ck(pll_stream), .rs(rst_stream),
         .wlo_v(lo_v[3]), .wlo_r(lo_r[3]), .wlo_d(lo_d[3*553 +: 553]), .wli_v(li_v[3]), .wli_r(li_r[3]), .wli_d(li_d[3*553 +: 553]), .wflt(flt[9 +: 3]),
         .elo_v(lo_v[7]), .elo_r(lo_r[7]), .elo_d(lo_d[7*553 +: 553]), .eli_v(li_v[7]), .eli_r(li_r[7]), .eli_d(li_d[7*553 +: 553]), .eflt(flt[21 +: 3]),
         .lo3_v(s_lo3_v), .lo3_r(s_lo3_r), .lo3_d(s_lo3_d), .li3_v(s_li3_v), .li3_r(s_li3_r), .li3_d(s_li3_d),
