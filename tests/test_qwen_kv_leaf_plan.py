@@ -43,6 +43,37 @@ class LeafPlan(unittest.TestCase):
         self.assertEqual(K.check(self.plan)['overlaps'],0)
         self.assertTrue(K.strict_ports(K.masters(self.plan))['ok'])
 
+    def test_binary_feed_retains_eight_physical_lane_pins(self):
+        plan = K.build(kv_wq_binary=True)
+        widths = K.port_widths(plan)
+        self.assertFalse(any(i.master == 'qkd_kvwq_lane_encoder' for i in plan['insts']))
+        for group in range(4):
+            self.assertEqual(widths[('qkd_kvwq_ctl_bin', f'f{group}')],298)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'die.v'
+            K.write_netlist(plan,1,path)
+            text = path.read_text()
+            for st in K.STACKS:
+                for group in range(4):
+                    net=f'n_wencoded_{st}_{group}'
+                    self.assertIn(f'.f{group}({{{net}[292:284], ctl_lane_high5_unused_{st}_{group}, {net}[283:0]}})',text)
+            self.assertFalse((Path(tmp)/'kv_wq_lane_encoder.sv').exists())
+
+    def test_south_face_leaf_and_actual_cdc_geometry_fit(self):
+        plan=K.build(kv_wq_leaf_s=True)
+        self.assertEqual(K.check(plan)['overlaps'],0)
+        self.assertEqual(K.check(plan)['outside'],0)
+        by={i.name:i for i in plan['insts']}
+        for st in K.STACKS:
+            for pc in range(32):
+                cdc=by[f'cdc_{st}_{pc}']; leaf=by[f'wleaf_{st}_{pc}']
+                self.assertEqual((cdc.w,cdc.h),(183.72,183.72))
+                self.assertAlmostEqual(cdc.y-(leaf.y+leaf.h),K.GY)
+                self.assertIn(leaf.orient,('MX','R180'))
+        rows,status=K.real_pin_bindings(plan)
+        self.assertEqual(status['qkd_cdc_wleaf']['size_um'],[183.72,183.72])
+        self.assertEqual(status['qkd_cdc_wleaf']['mapped_shapes'],1202)
+
     def test_candidate_cannot_launch_physical_case(self):
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaisesRegex(ValueError, 'plan-only'):

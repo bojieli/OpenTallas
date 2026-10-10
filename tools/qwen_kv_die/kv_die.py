@@ -168,6 +168,8 @@ BINDINGS['qkd_kvwq_ctl_bin'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl'])
 BINDINGS['qkd_kvwq_ctl_bin'].update(module='ot_qkvd_kv_wq_ctl_binary',
     file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv', parameters=dict(FLANE_BINARY=1))
 
+BINDINGS['qkd_kvwq_leaf_s'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf'])
+
 
 def _write_tiles(m, add):
     """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.
@@ -182,11 +184,24 @@ def _write_tiles(m, add):
         for pc in range(32):
             cdc = by[f'cdc_{st}_{pc}']
             cdc.master = 'qkd_cdc_wleaf'
-            x = m['geo']['x_land'] if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4
-            add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf', x, cdc.y, 86.4-SHAVE, 183.6-SHAVE,
-                'R0' if side == 'W' else 'MY', 'kv_write_leaf', 'strip')
+            if m['geo'].get('kv_wq_leaf_s'):
+                # The actual CDC LEF is183.72 square, not the old183.048 frame.
+                # Shift the column88.56um to fit the lowest leaf inside the die.
+                if side == 'E':
+                    cdc.x -= 183.72-cdc.w # grow inward, preserve controller-side gap
+                cdc.w = cdc.h = 183.72
+                cdc.y += 88.56
+                x = up(cdc.x + (cdc.w-86.4)/2, GX)
+                y = cdc.y - 183.6 - GY
+                add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf_s', x, y, 86.4, 183.6,
+                    'MX' if side == 'W' else 'R180', 'kv_write_leaf', 'strip')
+            else:
+                x = m['geo']['x_land'] if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4
+                add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf', x, cdc.y, 86.4-SHAVE, 183.6-SHAVE,
+                    'R0' if side == 'W' else 'MY', 'kv_write_leaf', 'strip')
         land = by[f'land_{st}']
-        x = m['geo']['x_land'] + 86.4 + GX if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4 - GX - 172.8
+        offset = CHAN if m['geo'].get('kv_wq_leaf_s') else 86.4 + GX
+        x = m['geo']['x_land'] + offset if side == 'W' else m['die']['w'] - m['geo']['x_land'] - offset - 172.8
         y = up(land.y + (land.h - 518.4)/2, GY)
         add(f'wctl_{st}', 'qkd_kvwq_ctl_bin' if m['geo'].get('kv_wq_binary') else 'qkd_kvwq_ctl', x, y, 172.8-SHAVE, 518.4-SHAVE,
             'R0' if side == 'W' else 'MY', 'kv_write_ctl', 'strip')
@@ -223,7 +238,8 @@ def _write_buses(m):
                   (f'wfault_{st}', 'spine_local', 1, [(ctl, 'fault'), (f'land_{st}', 'wfault')])]
         for g in range(4):
             enc = f'wenc_{st}_{g}'
-            chain = [f'wleaf_{st}_{8*g+i}' for i in range(7, -1, -1)]
+            order = range(8) if m['geo'].get('kv_wq_leaf_s') else range(7, -1, -1)
+            chain = [f'wleaf_{st}_{8*g+i}' for i in order]
             if m['geo'].get('kv_wq_binary'):
                 buses.append((f'wencoded_{st}_{g}', 'spine_local', 293, [(ctl, f'f{g}'), (chain[0], 'c')]))
             else:
@@ -299,7 +315,8 @@ def _band(T, side, Wk):
     return out, dy
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False):
+    kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
     kv_wq_leaves = kv_wq_leaves or kv_wq_binary
     T = tpl()
     I = T['insts']
@@ -307,7 +324,7 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False):
     Hk = up(2 * MARGIN + 2 * stack_h + GY, GY)
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
-    leaf_shift = 518.4 + GX if kv_wq_leaves else 0.0
+    leaf_shift = (432.0 + GX if kv_wq_leaf_s else 518.4 + GX) if kv_wq_leaves else 0.0
     x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
@@ -368,7 +385,7 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False):
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     m['geo'] = dict(x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
-                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, leaf_shift=leaf_shift)
+                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift)
     if kv_wq_leaves:
         _write_tiles(m, add)
     _buses(m, T, r)
@@ -461,7 +478,10 @@ def _relays(m):
     from collections import deque
     by = {i.name: i for i in m['insts']}
     Wd, Hd = m['die']['w'], m['die']['h']
-    G = GRID
+    # The south-face leaf fits inside the CDC-column gap.  A43.2um occupancy
+    # cell falsely merges that gap with the adjacent control tile; half-grid
+    # routing represents its actual free channels without moving a pin.
+    G = GRID/2 if m['geo'].get('kv_wq_leaf_s') else GRID
     nx, ny = int(Wd // G) + 1, int(Hd // G) + 1
     owner = {}
     for it in m['insts']:
@@ -616,7 +636,8 @@ def masters(m, k=1, port_bits=None):
                     mm.ports[p] = tuple(sp)
                     mm.order.append(p)
         else:
-            mm = F.Master(name, t['w'], t['h'], t['obs_top'], t['note'])
+            w, h = (183.72,183.72) if name == 'qkd_cdc_wleaf' and m['geo'].get('kv_wq_leaf_s') else (t['w'],t['h'])
+            mm = F.Master(name, w, h, t['obs_top'], t['note'])
             for p in (dict.fromkeys(t['order']) if name == 'qkd_cdc_wleaf' else t['order']):
                 if name == 'qkd_cdc_wleaf' and p == 'ci':
                     sp = t['ports'][p]
@@ -679,6 +700,10 @@ def masters(m, k=1, port_bits=None):
             if inst0.orient in ('MX', 'R180'):
                 dyp = -dyp
             face = ('E' if dxp > 0 else 'W') if abs(dxp) >= abs(dyp) else ('N' if dyp > 0 else 'S')
+            if mst == 'qkd_kvwq_leaf_s':
+                # MX places the S write face against the CDC S face, with the
+                # chain direction S->N after the flip (PC0..7).
+                face = dict(c='N', n='S', dn='S', dp='N', w='S', wr='S', lane='E').get(p, 'E')
             if mst == 'qkd_ectl':
                 # the tile column: si / so to the aggregator (E), the pair-0 copy / returns S, pair-1 N, KV rows W
                 face = {'si': 'E', 'so': 'E', 't0': 'S', 'e0': 'S', 'e1': 'S', 's0': 'S', 's1': 'S',
@@ -731,6 +756,90 @@ def masters(m, k=1, port_bits=None):
         if mst not in used and mst not in sizes:
             M.pop(mst)
     return M
+
+
+def real_pin_bindings(m):
+    """Read actual LEF shapes, mapped per RTL bit. Missing views stay explicit.
+
+    The CDC geometry view is historical evidence only; importing its pins does
+    not assert that an appropriate die-context timing model exists.
+    """
+    if not m['geo'].get('kv_wq_leaf_s'):
+        return {}, {}
+    import re
+    import die_top_lint as DTL
+    paths = dict(qkd_cdc_wleaf='physical/qwen_die_masters/views/qfd_cdc_eco_h1/qfd_cdc.lef',
+                 qkd_kvwq_leaf_s='physical/qwen_die_masters/views/qkd_kvwq_leaf_s/qkd_kvwq_leaf_s.lef',
+                 qkd_kvwq_ctl_bin='physical/qwen_die_masters/views/qkd_kvwq_ctl_bin_a/qkd_kvwq_ctl_bin_a.lef')
+    rows, status = {}, {}
+    for mst, rel in paths.items():
+        path = ROOT/rel
+        if not path.exists():
+            status[mst] = dict(path=rel, ready=False, reason='own routed view not yet present')
+            continue
+        text = path.read_text()
+        size = re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', text)
+        raw = {}
+        for pin in re.finditer(r'\bPIN\s+(\S+)(.*?)\bEND\s+\1\s', text, re.S):
+            shapes = []
+            for layer, a,b,c,d in re.findall(r'LAYER\s+(\w+)\s*;\s*RECT\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s*;', pin[2]):
+                shapes.append((layer, tuple(map(float, (a,b,c,d)))))
+            raw[pin[1]] = shapes
+        binding = BINDINGS[mst]
+        ports = DTL.parse_module(binding['file'], binding['module'], dict(TAGW=9,HD=128,QD=4,FLANE_BINARY=1))['ports']
+        def expand(names):
+            out = []
+            for name in names:
+                width = ports[name][1]
+                out += [name] if width == 1 else [f'{name}[{i}]' for i in range(width)]
+            return out
+        groups = {dp:expand(names) for dp,names in binding['ports'].items()}
+        if mst == 'qkd_kvwq_ctl_bin':
+            for g in range(4):
+                groups[f'f{g}'] = [f'f_v[{g}]'] + [f'f_d[{256*g+i}]' for i in range(256)] + \
+                    [f'f_sec[{24*g+i}]' for i in range(24)] + [f'f_lane[{8*g+i}]' for i in range(8)] + \
+                    [f'f_tag[{9*g+i}]' for i in range(9)]
+                groups[f'r{g}'] = [f'r_v[{g}]', f'r_bad[{g}]']
+        mapped = []
+        for dp, names in groups.items():
+            for i, name in enumerate(names):
+                if name not in raw:
+                    raise ValueError(f'{mst}: actual LEF missing RTL pin {name}')
+                mapped += [(f'{dp}[{i}]', layer, rect, name) for layer, rect in raw[name]]
+        status[mst] = dict(path=rel, ready=True, sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                           size_um=list(map(float,size.groups())), named_pins=len(raw), mapped_shapes=len(mapped),
+                           timing_gate='not implied by pin import')
+        rows[mst] = mapped
+    return rows, status
+
+
+def cdc_write_pin_reach(m, rows):
+    """Per-bit physical Manhattan distance, with the actual instance mirrors."""
+    if 'qkd_cdc_wleaf' not in rows or 'qkd_kvwq_leaf_s' not in rows:
+        return dict(ready=False, reason='actual CDC and south-face leaf pins both required')
+    by = {i.name:i for i in m['insts']}
+    def locations(it, port):
+        out = {}
+        for pin, layer, rect, rtl in rows[it.master]:
+            if not pin.startswith(port+'['):
+                continue
+            x=(rect[0]+rect[2])/2; y=(rect[1]+rect[3])/2
+            if it.orient in ('MY','R180'): x=it.w-x
+            if it.orient in ('MX','R180'): y=it.h-y
+            out.setdefault(pin,[]).append((it.x+x,it.y+y))
+        return out
+    distances=[]
+    for st in STACKS:
+        for pc in range(32):
+            leaf=by[f'wleaf_{st}_{pc}']; cdc=by[f'cdc_{st}_{pc}']
+            for lp,cp,width in [('w','wi',290),('wr','wr',11)]:
+                a=locations(leaf,lp); b=locations(cdc,cp)
+                for bit in range(width):
+                    near=min(abs(x-u)+abs(y-v) for x,y in a[f'{lp}[{bit}]'] for u,v in b[f'{cp}[{bit}]'])
+                    distances.append(dict(stack=st,pc=pc,port=lp,bit=bit,um=round(near,3)))
+    worst=max(distances,key=lambda x:x['um'])
+    return dict(ready=True, bits=len(distances), worst=worst, max_um=worst['um'],
+                over_100um=sum(x['um']>100 for x in distances), over_SS_504um=sum(x['um']>504 for x in distances))
 
 
 _BASE_PORT_WIDTHS = F.port_widths
@@ -870,12 +979,14 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--r', type=int, default=R)
     ap.add_argument('--kv-wq-leaves', action='store_true', help='candidate per-PC write leaves; encoder closure still owed')
+    ap.add_argument('--kv-wq-leaf-s', action='store_true', help='plan-only south-face leaf plus binary ctl candidate')
     ap.add_argument('--kv-wq-binary', action='store_true', help='plan-only binary ctl candidate; needs its own routed closure')
     a = ap.parse_args(argv)
+    a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.kv_wq_leaves:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
@@ -885,10 +996,14 @@ def main(argv=None):
     M = masters(m, 1)
     rec['masters_abstract'] = {n: dict(w=round(mm.w, 3), h=round(mm.h, 3), ports=len(mm.order)) for n, mm in M.items()}
     rec['strict_ports'] = strict_ports(M)
+    real_rows, real_status = real_pin_bindings(m)
+    if a.kv_wq_leaf_s:
+        rec['actual_pin_views'] = real_status
+        rec['cdc_write_pin_reach'] = cdc_write_pin_reach(m, real_rows)
     if a.kv_wq_leaves:
         rec['kv_wq_candidate'] = dict(adopted=False, leaves=128, control_tiles=4, encoder_tiles=0 if a.kv_wq_binary else 16,
             encoder='binary low3/high5zero inside successor ctl' if a.kv_wq_binary else '3 OR4 per group; matches ot_qkvd_kv_wq_leaves exactly',
-            gate='BLOCKED_BINARY_CTL_PHYSICAL_CLOSURE' if a.kv_wq_binary else 'BLOCKED_ENCODER_PHYSICAL_CLOSURE', chain_order='PC 8*g+7 through 8*g N-to-S, lane strap PC%8',
+            gate='BLOCKED_BINARY_CTL_PHYSICAL_CLOSURE' if a.kv_wq_binary else 'BLOCKED_ENCODER_PHYSICAL_CLOSURE', chain_order='PC 8*g through 8*g+7 S-to-N' if a.kv_wq_leaf_s else 'PC 8*g+7 through 8*g N-to-S, lane strap PC%8',
             cdc_ci_slices=dict(wi=[0,290], wr=[290,11], cf=[301,1]),
             chain_hop_cycles=dict(feed=2, done=1), relay_cycles=m['relay_stages'],
             controller_group_slices={g: dict(f_v=[g,1], f_d=[256*g,256], f_sec=[24*g,24],
@@ -898,6 +1013,8 @@ def main(argv=None):
                                 reserved_frame_mm2=0 if a.kv_wq_binary else round(16*43.2*43.2/1e6,6), measured_cell_area=None))
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+    if real_rows:
+        (a.out/'actual_pin_bindings.json').write_text(json.dumps(real_rows,indent=1)+'\n')
     (a.out / 'insts.json').write_text(json.dumps([i.d() for i in m['insts']]) + '\n')
     write_netlist(m, 1, a.out / 'kv_die.v', top='qkd_die')
     print(json.dumps({k_: rec[k_] for k_ in ('die_um', 'die_mm2', 'instances', 'fill', 'legality')}))
