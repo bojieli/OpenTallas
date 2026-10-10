@@ -1,0 +1,813 @@
+{
+  "schema": "opentallas.qwen.native_credit_successor.model.v1",
+  "target": "Qwen3-8B ROM",
+  "candidate": "qfd_native_elastic4_corr_a",
+  "arithmetic": "bit/order exact storage only",
+  "macs_per_cycle": 0,
+  "proposed_leaf": "ot_qwen_native_elastic_relay W546/516 DEPTH4",
+  "implementation_basis": "existing ot_link_credit_rx WFREE1 OREG0 plus one owning TX credit pin/counter and enable-free output pin registers; pinned helpers unchanged",
+  "opt_in": "new wrapper ENABLE defaults0; die selection defaults off",
+  "rows": [
+    {
+      "channel": "sq",
+      "payload_bits_per_cycle": 546,
+      "payload_bytes_per_cycle": 68.25,
+      "replicas": 86,
+      "receive_slots": 4,
+      "register_bits_each": 3308,
+      "sram_bits": 0,
+      "storage_area_mm2_each": 0.002511318462897526,
+      "proposed_frame_um": [
+        52.704,
+        86.4
+      ],
+      "frame_area_mm2_each": 0.004553625600000001,
+      "muxes_each": 546,
+      "mux_fanin": 4,
+      "control_fanout_before_synthesis": 546,
+      "boundary_bits": 548,
+      "face_tracks_required": 548,
+      "face_tracks_available": 1862,
+      "face_track_basis": "minimum N/S face length; two admitted pin layers; no rotations",
+      "local_credit_initial": 4,
+      "first_source_initial_credits": 4,
+      "final_receiver_initial_credits": 4
+    },
+    {
+      "channel": "cq",
+      "payload_bits_per_cycle": 516,
+      "payload_bytes_per_cycle": 64.5,
+      "replicas": 71,
+      "receive_slots": 4,
+      "register_bits_each": 3128,
+      "sram_bits": 0,
+      "storage_area_mm2_each": 0.002374668727915194,
+      "proposed_frame_um": [
+        52.704,
+        86.4
+      ],
+      "frame_area_mm2_each": 0.004553625600000001,
+      "muxes_each": 516,
+      "mux_fanin": 4,
+      "control_fanout_before_synthesis": 516,
+      "boundary_bits": 518,
+      "face_tracks_required": 518,
+      "face_tracks_available": 1862,
+      "face_track_basis": "minimum N/S face length; two admitted pin layers; no rotations",
+      "local_credit_initial": 4,
+      "first_source_initial_credits": 4,
+      "final_receiver_initial_credits": 4
+    }
+  ],
+  "aggregate_register_bits": 506576,
+  "aggregate_storage_area_mm2": 0.384574867491166,
+  "aggregate_proposed_frame_area_mm2": 0.7149192192,
+  "added_dies": 0,
+  "existing_measured": {
+    "initial_credits": 4,
+    "sq_relays": 67,
+    "first_rtt_serial_cycles": 205,
+    "credit_rate_ceiling_words_per_serial_cycle": 0.01951219512195122
+  },
+  "proposed_latency": "one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; 3 serial cycles per word with no stalls",
+  "composed_empty_path_serial_cycles": {
+    "sq_old": 67,
+    "sq_new": 258,
+    "cq_old": 55,
+    "cq_new": 213,
+    "added_roundtrip": 349
+  },
+  "composed_added_empty_roundtrip_ns": 387.77777777777777,
+  "token_latency_contribution": "added387.777778ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and native collective schedule before rate adoption",
+  "communication_intensity": "storage-only: one word transferred per accepted beat, no numerical compute",
+  "composed_latency_ready": true,
+  "gates": [
+    "minimum full-width local source4 -> DEPTH4 relay -> sink4 exactness/occupancy/RTT",
+    "minimum two-relay backpressure and overflow/extra-credit negative tests",
+    "reset valid flops at every elastic relay; synchronous reset release per clock domain; fault collection",
+    "actual placement of modeled frames in full r22k plan with no overlaps and <=350um native hop lengths",
+    "price added relay latency and collective burst amplification at token level; no rate adoption before this",
+    "source-pinned admitted W546 and W516 leaf PNR, actual TT setup/FF hold/DRC0, SS sensitivity retained",
+    "routed die composition and production group-direction mapping"
+  ],
+  "queue_ready": false,
+  "queue_blocker": "native component geometry and mechanism pass; token schedule/net latency pricing, whole-die unrelated unrepaired paths, reset/fault production wiring and face-specific measured physical qualification remain",
+  "alternative": {
+    "candidate": "qfd_native_central_credit256_a",
+    "required_sq_credits": 256,
+    "minimum_sq_credit_rtt_serial_cycles": 205,
+    "sq_input_storage_bits": 139776,
+    "sequencer_initial_credits_change": true,
+    "cq_credit_depth_required": "at least arriving N=4 amplified burst plus actual 55-relay CQ RTT; not just64 existing slots",
+    "rejected_for_queue": "central capacity alone requires new SQ receive selection and CQ reservation accounting; cannot reuse closed four-credit view"
+  },
+  "actual_geometry_source_commit": "bbe6e19fe",
+  "actual_geometry_native_paths": {
+    "seq_coll": {
+      "relays": 86,
+      "forward_cycles": 258,
+      "max_center_hop_um": 324.0
+    },
+    "coll_seq": {
+      "relays": 71,
+      "forward_cycles": 213,
+      "max_center_hop_um": 324.0
+    }
+  },
+  "die_area_mm2": 770.329,
+  "source_face_variants": [
+    {
+      "master": "qfd_erly4_518_ES_53x86",
+      "replicas": 2,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 516,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "E",
+      "output_face": "S",
+      "control_face": "N",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_518_ES_53x86.env",
+      "config_sha256": "ff66b8132fd17f30389cbc9df0f72b0fe55b34da6780b451b4bec3a5f1ee1102",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            516,
+            "i_d",
+            "input"
+          ],
+          [
+            516,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            517,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            516,
+            "o_d",
+            "output"
+          ],
+          [
+            516,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            517,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_518_NS_53x86",
+      "replicas": 67,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 516,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "N",
+      "output_face": "S",
+      "control_face": "E",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_518_NS_53x86.env",
+      "config_sha256": "8bf4b9495b1fc6fb98158da87d3c7cc659cb6cb0c27e1db0ff8cb130f4e22280",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            516,
+            "i_d",
+            "input"
+          ],
+          [
+            516,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            517,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            516,
+            "o_d",
+            "output"
+          ],
+          [
+            516,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            517,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_518_NW_53x86",
+      "replicas": 2,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 516,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "N",
+      "output_face": "W",
+      "control_face": "E",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_518_NW_53x86.env",
+      "config_sha256": "b5fd63e8497534c8e824b93d3d06c522c56166848f9c9ed1bbc6bc4bb4ace319",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            516,
+            "i_d",
+            "input"
+          ],
+          [
+            516,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            517,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            516,
+            "o_d",
+            "output"
+          ],
+          [
+            516,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            517,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_EN_53x86",
+      "replicas": 2,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "E",
+      "output_face": "N",
+      "control_face": "S",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_EN_53x86.env",
+      "config_sha256": "65d34c857a8e10348e9e653fd8cb93999da5cf79c1da3b2aeda5bf9f5cb4e45e",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_EW_53x86",
+      "replicas": 1,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "E",
+      "output_face": "W",
+      "control_face": "N",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_EW_53x86.env",
+      "config_sha256": "6b16793dacd45ff03a72a9d69daceb2439af2da60cfce10d1b2d9a63fc853fec",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_SN_53x86",
+      "replicas": 78,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "S",
+      "output_face": "N",
+      "control_face": "E",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_SN_53x86.env",
+      "config_sha256": "6ce359f9fa684832dc9114d29a1464b745766ef971030dce681233e4a6fb2b38",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_SW_53x86",
+      "replicas": 2,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "S",
+      "output_face": "W",
+      "control_face": "N",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_SW_53x86.env",
+      "config_sha256": "0f25607df092fd5b452ac920b45ea702f1e51de11c35d55a5424db4a216162d8",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_WE_53x86",
+      "replicas": 2,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "W",
+      "output_face": "E",
+      "control_face": "N",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_WE_53x86.env",
+      "config_sha256": "6276fd814d3a9a56414f6883c5cc6cffd2c7f86c624b0fe79cf34d1eb0082d80",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    },
+    {
+      "master": "qfd_erly4_548_WN_53x86",
+      "replicas": 1,
+      "hard_orientation": "N",
+      "source_top": "ot_qwen_native_elastic_relay",
+      "payload_W": 546,
+      "DEPTH": 4,
+      "OCRED": 4,
+      "ENABLE": 1,
+      "input_face": "W",
+      "output_face": "N",
+      "control_face": "E",
+      "config": "physical/qwen_die_masters/cfg/qfd_erly4_548_WN_53x86.env",
+      "config_sha256": "e8b012238fde793f27d651e60d01fe414906f40d821b379b1c3145d70eb84ee5",
+      "ports": {
+        "a": [
+          "i_v",
+          "i_d",
+          "i_cr"
+        ],
+        "b": [
+          "o_v",
+          "o_d",
+          "o_cr"
+        ],
+        "ck": "clk",
+        "reset": "rst_n",
+        "fault": "fault"
+      },
+      "clock": "clk_serial 0.9GHz production domain; physical leaf bench0.833333ns unchanged",
+      "status": "UNQUALIFIED source-bound face variant; no exported view or adoption alias",
+      "physical_group_maps": {
+        "a": [
+          [
+            0,
+            546,
+            "i_d",
+            "input"
+          ],
+          [
+            546,
+            1,
+            "i_v",
+            "input"
+          ],
+          [
+            547,
+            1,
+            "i_cr",
+            "output"
+          ]
+        ],
+        "b": [
+          [
+            0,
+            546,
+            "o_d",
+            "output"
+          ],
+          [
+            546,
+            1,
+            "o_v",
+            "output"
+          ],
+          [
+            547,
+            1,
+            "o_cr",
+            "input"
+          ]
+        ]
+      }
+    }
+  ],
+  "unrepaired_other_paths": [
+    "coll_tx (start 0, visited 0, sites 206890, D 430)",
+    "serdes_tx_x (start 14, visited 129836, sites 149853, D 426)",
+    "pword_1 (start 0, visited 0, sites 203363, D 426)",
+    "pword_4 (start 0, visited 0, sites 203363, D 426)",
+    "ucie_rx_x (start 0, visited 0, sites 149853, D 426)",
+    "serdes_rx (start 0, visited 0, sites 149853, D 426)",
+    "tt_xr (start 41, visited 176333, sites 206890, D 430)",
+    "tt_mx (start 0, visited 0, sites 203363, D 426)",
+    "tt_lc2 (start 0, visited 0, sites 206890, D 430)",
+    "tt_lf2 (start 9, visited 175128, sites 206890, D 430)",
+    "tt_ty (start 9, visited 117478, sites 146204, D 417)"
+  ],
+  "clock_nets_missing": [
+    "clk_r102",
+    "clk_r103",
+    "clk_r104",
+    "clk_r105",
+    "clk_r106",
+    "clk_r107"
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_native_elastic_relay.sv": "402eb8bee4118e27d8ee6197c8de11c1835a26a28f9e6b104c0345e075e0e22f",
+    "rtl/common/ot_link_credit.sv": "e8c63b3bf3af841d6cbad57f70e17571c0e2c9fcb44738698f7d1dee1ab58269",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843"
+  }
+}

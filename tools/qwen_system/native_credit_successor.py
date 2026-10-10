@@ -5,13 +5,15 @@ four-credit path remains authoritative until the gates in each row pass.
 """
 
 
-def sizing(depth=8):
+def sizing(depth=8, replicas=None):
     if depth not in (4,8):
         raise ValueError('only finite priced DEPTH4/8 candidates')
     # Same register-storage coefficient used by the full-die analytical model.
     mm2_per_bit = 2.53 / 3332608
     rows = []
-    for name, width, count in [('sq', 546, 67), ('cq', 516, 55)]:
+    counts = replicas or ({'sq':86, 'cq':71} if depth==4 else {'sq':67, 'cq':55})
+    for name, width in [('sq', 546), ('cq', 516)]:
+        count = counts[name]
         # FIFO + input pin + output pin. Add explicit pointer/count/credit,
         # valid and sticky fault registers rather than charging payload alone.
         payload_bits = width * (depth + 2)
@@ -31,10 +33,12 @@ def sizing(depth=8):
                          control_fanout_before_synthesis=width,
                          boundary_bits=width+2,
                          face_tracks_required=width+2,
-                         face_tracks_available=int(2*(frame_um[1]-8)/.048),
+                         face_tracks_available=int(2*(min(frame_um)-8)/.048),
+                         face_track_basis='minimum N/S face length; two admitted pin layers; no rotations',
                          local_credit_initial=depth,
                          first_source_initial_credits=4,
                          final_receiver_initial_credits=4))
+    added_cycles = 3*sum(counts.values())-122
     return dict(schema='opentallas.qwen.native_credit_successor.model.v1',
                 target='Qwen3-8B ROM', candidate=f'qfd_native_elastic{depth}_corr_a',
                 arithmetic='bit/order exact storage only', macs_per_cycle=0,
@@ -50,15 +54,15 @@ def sizing(depth=8):
                                        first_rtt_serial_cycles=205,
                                        credit_rate_ceiling_words_per_serial_cycle=4/205),
                 proposed_latency='one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; 3 serial cycles per word with no stalls',
-                composed_empty_path_serial_cycles=dict(sq_old=67, sq_new=201, cq_old=55, cq_new=165, added_roundtrip=244),
-                composed_added_empty_roundtrip_ns=244/.9,
-                token_latency_contribution='added271.111ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and the native collective schedule before rate adoption',
+                composed_empty_path_serial_cycles=dict(sq_old=67, sq_new=3*counts['sq'], cq_old=55, cq_new=3*counts['cq'], added_roundtrip=added_cycles),
+                composed_added_empty_roundtrip_ns=added_cycles/.9,
+                token_latency_contribution=f'added{added_cycles/.9:.6f}ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and native collective schedule before rate adoption',
                 communication_intensity='storage-only: one word transferred per accepted beat, no numerical compute',
                 composed_latency_ready=True,
-                gates=['minimum full-width local source4 -> DEPTH8 relay -> sink4 exactness/occupancy/RTT',
+                gates=[f'minimum full-width local source4 -> DEPTH{depth} relay -> sink4 exactness/occupancy/RTT',
                        'minimum two-relay backpressure and overflow/extra-credit negative tests',
                        'reset valid flops at every elastic relay; synchronous reset release per clock domain; fault collection',
-                       'actual placement of enlarged 53x156 frames in full r22k plan with no overlaps and <=350um hop lengths',
+                       'actual placement of modeled frames in full r22k plan with no overlaps and <=350um native hop lengths',
                        'price added relay latency and collective burst amplification at token level; no rate adoption before this',
                        'source-pinned admitted W546 and W516 leaf PNR, actual TT setup/FF hold/DRC0, SS sensitivity retained',
                        'routed die composition and production group-direction mapping'],

@@ -1287,7 +1287,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False, native_elas
     m['r21_stage_of'] = stage_of
     if native_elastic_relays:
         from qwen_system.native_credit_successor import sizing, square_sizing
-        m['native_elastic_relays'] = dict(model=square_sizing() if native_elastic_square else sizing(native_elastic_depth),
+        m['native_elastic_relays'] = dict(model=square_sizing() if native_elastic_square else sizing(native_elastic_depth,
+            replicas={"sq":len(plans["seq_coll"]["frames"]), "cq":len(plans["coll_seq"]["frames"])}),
             receive_depth=native_elastic_depth,
             square_frames=native_elastic_square,
             place_native_first=native_elastic_first,
