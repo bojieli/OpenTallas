@@ -65,6 +65,27 @@ class CreditBindingTest(unittest.TestCase):
         (self.root / vp).unlink()
         self.assertTrue(D.collective_credit_binding(self.root)['problems'])
 
+    def test_per_master_source_pin_rejects_previous_ce_and_accepts_only_successor(self):
+        path = 'physical/s81_ph_views/collective/composition_split3cr.json'
+        manifest = json.loads((self.root / path).read_text())
+        manifest['per_master_source_commits'] = {'dsfd_coll_ce': 'f' * 40}
+        self.write(path, manifest)
+        binding = D.collective_credit_binding(self.root)
+        self.assertNotIn('dsfd_coll_ce', binding['tile_bindings'])
+        self.assertEqual(len(binding['tile_bindings']), 3)
+        vp, receipt = self.receipts['dsfd_coll_ce']
+        successor = copy.deepcopy(receipt)
+        successor['source_commit'] = 'f' * 40
+        self.write(vp, successor)
+        self.assertFalse(D.collective_credit_binding(self.root)['problems'])
+        for bad in ('', 'wrong-source', 1):
+            manifest['per_master_source_commits']['dsfd_coll_ce'] = bad
+            self.write(path, manifest)
+            self.assertNotIn('dsfd_coll_ce', D.collective_credit_binding(self.root)['tile_bindings'])
+        manifest['per_master_source_commits'] = {'unknown_master': 'f' * 40}
+        self.write(path, manifest)
+        self.assertFalse(D.collective_credit_binding(self.root)['tile_bindings'])
+
     def test_credit_recipe_preserves_full_width_lane_groups_and_mirrored_faces(self):
         shutil.copytree(D.ROOT / 'physical/s81_ph_views/ports/contract_split3',
                         self.root / 'physical/s81_ph_views/ports/contract_split3')

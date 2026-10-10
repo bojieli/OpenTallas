@@ -14,6 +14,7 @@ mid-height between its two lane groups.  Writes physical/s81_ph_views/ports/<con
 and the three core tiles, and physical/s81_ph_views/collective/composition_split3.json."""
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -85,7 +86,15 @@ def main():
     ap.add_argument('--vm-pin-step', type=int, default=4)
     ap.add_argument('--contract', default='contract_split3')
     ap.add_argument('--credit-links', action='store_true', help='emit a separate opt-in credit-seam composition; all four CR/LCR masters must close before binding')
+    ap.add_argument('--credit-source', action='append', default=[], metavar='MASTER=COMMIT', help='explicit per-master source pin override for a separately qualified CR/LCR successor; credit-links only')
     a = ap.parse_args()
+    source_overrides = {}
+    for entry in a.credit_source:
+        master, sep, commit = entry.partition('=')
+        if (not a.credit_links or not sep or master not in {'dsfd_coll_cb', 'dsfd_coll_ce', 'dsfd_coll_ct', 'dsfd_coll_lane_w'}
+                or master in source_overrides or not re.fullmatch('[0-9a-f]{9,40}', commit)):
+            ap.error('credit-source requires a unique known master and 9..40 hexadecimal commit, with --credit-links')
+        source_overrides[master] = commit
     LW, CW = a.lane_width, a.core_width
     T.CONTRACT = a.contract
     SW = T.r4(2 * LW + CW + 0.192)
@@ -158,6 +167,8 @@ def main():
                    source_commits={'core': 'a17b27437', 'lane': '851328e6c'},
                    source='rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv with core_rtl_defines and lane_rtl_defines; rtl/common/ot_link_credit.sv WFREE credit landing',
                    cost='full rate; +2..3 cycles per lane/seam crossing each way; full-shape collective bench 3013 cycles vs current 3015, not a token-rate claim')
+    if source_overrides:
+        rec['per_master_source_commits'] = source_overrides
     out = ROOT / ('physical/s81_ph_views/collective/composition_split3cr.json' if a.credit_links else 'physical/s81_ph_views/collective/composition_split3.json')
     out.write_text(json.dumps(rec, indent=1) + '\n')
     print('ok', a.contract, 'slab', SW, 'x', T.SH, 'seam B/E end x', round(xs, 3), 'seam E/T end x', round(xt, 3))
