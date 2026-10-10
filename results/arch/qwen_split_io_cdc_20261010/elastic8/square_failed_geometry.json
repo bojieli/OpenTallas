@@ -1,0 +1,17 @@
+{
+  "source_commit": "074eb7505",
+  "verdict": "FAIL",
+  "queue_ready": false,
+  "paths": {
+    "seq_coll": {
+      "relays": 83,
+      "max_center_hop_um": 2099.52
+    },
+    "coll_seq": {
+      "relays": 77,
+      "max_center_hop_um": 570.24
+    }
+  },
+  "reason": "strict350 explicit gate rejects gaps, square area cannot overcome crowded late placement",
+  "quarter_turns": false
+}

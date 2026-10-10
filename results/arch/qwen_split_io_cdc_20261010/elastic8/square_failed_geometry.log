@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-codex-qwen-io-cdc-20261010/tools/qwen_rom_fulldie_b3r2.py", line 3335, in <module>
+    raise SystemExit(main())
+  File "/home/ubuntu/wt-codex-qwen-io-cdc-20261010/tools/qwen_rom_fulldie_b3r2.py", line 3272, in main
+    v, m = selected(True, cdc=_cdc_arg(cdc), **r)
+  File "/home/ubuntu/wt-codex-qwen-io-cdc-20261010/tools/qwen_rom_fulldie_b3r2.py", line 270, in selected
+    _relays(v, m, relay_pitch, native_elastic_relays=native_elastic_relays, native_elastic_square=native_elastic_square)
+  File "/home/ubuntu/wt-codex-qwen-io-cdc-20261010/tools/qwen_rom_fulldie_b3r2.py", line 1296, in _relays
+    raise ValueError('native elastic geometry UNREADY: '+json.dumps(failed,sort_keys=True))
+ValueError: native elastic geometry UNREADY: {"coll_seq": {"forward_cycles": 231, "max_center_hop_um": 570.24, "relays": 77}, "seq_coll": {"forward_cycles": 249, "max_center_hop_um": 2099.52, "relays": 83}}
