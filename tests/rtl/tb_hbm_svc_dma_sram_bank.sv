@@ -100,6 +100,14 @@ module tb_hbm_svc_dma_sram_bank;
       begin repeat(1) @(posedge clk); read_sector(31,pattern(999),0);end
     join
     golden[31]=pattern(999);drain();
+    // A continuously requested same-group read cannot starve a pending write.
+    // Use identical data to make the transaction golden independent of which
+    // completed version the reader observes.
+    fork
+      begin for(integer k=0;k<8;k=k+1) write_sector(0,golden[0],0);end
+      begin for(integer k=0;k<8;k=k+1) read_sector(0,golden[0],0);end
+    join
+    drain();repeat(4) @(negedge clk);
     // Every payload bit and every check bit can be corrected independently.
     for(b=0;b<256;b=b+1) begin
       @(negedge clk);dut.mem.arr[0][b]=~dut.mem.arr[0][b];
