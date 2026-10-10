@@ -18,7 +18,7 @@ SOURCES=['rtl/test/tb_hbm_att_result_valid.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv']
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--negative-only", action="store_true"); args=ap.parse_args()
-    out=ROOT/'results/rtl/hbm_att_result_valid_20261010'
+    out=ROOT/'results/rtl/hbm_att_result_valid_20261010_r2'
     out.mkdir(parents=True,exist_ok=True)
     runs=[]
     with tempfile.TemporaryDirectory(prefix='att-valid-') as td:

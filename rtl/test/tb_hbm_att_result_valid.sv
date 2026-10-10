@@ -39,7 +39,8 @@ module tb_hbm_att_result_valid;
         check({1'b1,values,faults});
         // Every missing head, including quad0/head0, is a transaction fault.
         for(h=0;h<16;h=h+1) begin
-            valid_heads=16'hffff ^ (16'h1 << h); faults=0; values={512{1'bx}};
+            // Start with head1 absent: head0 remains valid, exposing stale-data admission.
+            valid_heads=16'hffff ^ (16'h1 << ((h+1)%16)); faults=0; values={512{1'bx}};
             check({1'b1,512'd0,16'hffff});
         end
         // Any isolated arrival is also a fault, never dropped because head0 is idle.
