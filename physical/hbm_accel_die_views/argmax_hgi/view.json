@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "ot_hgi_argmax18_m",
+ "kind": "argmax_hgi",
+ "status": "closed",
+ "lef": "ot_hgi_argmax18_m.lef",
+ "lib": {
+  "ss": "ot_hgi_argmax18_m_ss.lib",
+  "ff": "ot_hgi_argmax18_m_ff.lib",
+  "tt": "ot_hgi_argmax18_m_tt.lib"
+ },
+ "files_sha256": {
+  "ot_hgi_argmax18_m.lef": "a497c6e1acd3bf647ad51407caab98d441dfaf0ed803bb6e54279e8163c5af23",
+  "ot_hgi_argmax18_m_ff.lib": "31ef53cbc4e1457eed30396b45d39b1dd903a93e93128631ef9cc944472877e8",
+  "ot_hgi_argmax18_m_ss.lib": "6ed6b3290a474d24806a21628ebb389255ca8115b79ba3e0af3570b76df56359",
+  "ot_hgi_argmax18_m_tt.lib": "8685bbb59ead6850ecef005bee3de2187db1123cbf8cc020db094a4332fe3593"
+ },
+ "check": {
+  "macro": "ot_hgi_argmax18_m",
+  "size_um": [
+   180.0,
+   140.0
+  ],
+  "ports": {
+   "cfg_imm_a": {
+    "dir": "input",
+    "bits": 18
+   },
+   "cfg_rank": {
+    "dir": "input",
+    "bits": 7
+   },
+   "clk": {
+    "dir": "input",
+    "bits": 1
+   },
+   "fault": {
+    "dir": "output",
+    "bits": 1
+   },
+   "in_bias": {
+    "dir": "input",
+    "bits": 256
+   },
+   "in_bias_en": {
+    "dir": "input",
+    "bits": 1
+   },
+   "in_last": {
+    "dir": "input",
+    "bits": 1
+   },
+   "in_mask": {
+    "dir": "input",
+    "bits": 8
+   },
+   "in_v": {
+    "dir": "input",
+    "bits": 1
+   },
+   "in_vals": {
+    "dir": "input",
+    "bits": 256
+   },
+   "out_idx": {
+    "dir": "output",
+    "bits": 18
+   },
+   "out_nan": {
+    "dir": "output",
+    "bits": 1
+   },
+   "out_range_fault": {
+    "dir": "output",
+    "bits": 1
+   },
+   "out_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "out_value": {
+    "dir": "output",
+    "bits": 32
+   },
+   "rst_n": {
+    "dir": "input",
+    "bits": 1
+   }
+  }
+ },
+ "size_um": [
+  180.0,
+  140.0
+ ],
+ "source": {
+  "job": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+  "host": "ot-epyc3",
+  "rtl": "f6d441b6a (GENERIC18=1, LP 8)",
+  "installed_base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl/routes/hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/work/orfs/results/asap7/opentallas_ot_hgi_argmax18_m_asap7_qdm_hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/base",
+  "input_sha256": {
+   "6_final.odb": "65508e527490b57472b75d03d1884243fccc3f0fc2e14926e4d1a8fba5eb83db",
+   "6_final.sdc": "1e11457cdf66dfeefdcb2183721dc0036c1bb2aad066d54e125dfcbcfbc8cbdf",
+   "6_final.spef": "4e198b4130c769b0645251bb7b593448a20c88cdaa10819664b28ef9193a66e3"
+  }
+ },
+ "signoff_833": {
+  "tt_setup_ps": 52.2,
+  "ff_hold_ps": 11.54,
+  "ss_sensitivity_ps": -266.51,
+  "drc": 0,
+  "post_sdc": "physical/common_flow/io_ref_routed.sdc"
+ },
+ "export_ws_ps": {
+  "tt_setup": 24.41,
+  "ff_hold": 11.54,
+  "ss_setup": -329.84,
+  "note": "export STA on 6_final.sdc without the loop post-SDC"
+ },
+ "die_binding": {
+  "variant": "r25gm / r25g4m (claude/mtp-hbmdie-20261009): second instance hb_mtp_am of the MD-7 MTP slot, east of hgi_mtp_native",
+  "open": "record dispatch adapter (hgi_argmax_cmd 683 -> cfg_rank 7 / cfg_imm_a 18 + in_v gating; ret 3) not in this view; in_* pins on the W / top faces face away from su_red (north)"
+ },
+ "export": {
+  "tool": "physical/hbm_mtp/views/run_export.sh + mk_export.py (openroad/orfs:asap7lock)"
+ },
+ "port_check": "port_check.json: abstract LEF pins == routed 6_final.v top ports, bit for bit (604)",
+ "exported_by": "mtp-lead 2026-10-09"
+}

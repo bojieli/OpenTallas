@@ -1,0 +1,573 @@
+{
+ "schema": "opentallas.die_evidence_report.v1",
+ "date": "2026-10-09 17:55 PDT",
+ "basis": "BRIEF.md owner steer 2026-10-07 (academic validation) + option B (TT setup / FF hold)",
+ "tool": "tools/die_evidence_report.py",
+ "dies": {
+  "qwen_r22k": {
+   "name": "Qwen3-8B ROM die r22k (ROM die + KV die pair)",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k",
+   "status_log": [
+    "2026-10-09 14:58:21 UTC chain start die=r22k src=e469ee605",
+    "2026-10-09 15:49:09 UTC real case: OT_LEGAL instances=12869 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE ",
+    "2026-10-10 00:45:29 UTC PDN PASS OT_PGCHECK VDD PASS OT_PGCHECK VSS PASS",
+    "2026-10-09 14:58:21 UTC start src=/srv/opentallas-scratch/claude/die-evidence-2/src_ffeb99671 (ffeb99671)",
+    "2026-10-09 14:58:21 UTC IR: Traceback (most recent call last):   File \"/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/ir/ir_judge.py\", line 3, in <module>     m=json.load(open(d+\"/manifest.json\")); w=m[\"window_um\"]; j=m[\"judged_um\"]; vdd=m.get('vdd_v',0.7)                 ~~~~^^^^^^^^^^^^^^^^^^^^ FileNotFoundError: [Errno 2] No such file or directory: 'ir22k_*/manifest.json' ",
+    "2026-10-09 15:01:14 UTC IR: ir22k_io_edge power_W=6.46 raw_r2r_mV=147.01@(21948, 32783) judged_r2r_mV=27.11@(19508, 32763) (VDD 19.72 + VSS 7.39) judged [19238, 29916, 21795, 32780] ir22k_shoreline_w power_W=4.72 raw_r2r_mV=46.24@(10, 7625) judged_r2r_mV=32.46@(10, 8244) (VDD 9.40 + VSS 23.06) judged [0, 7812, 1300, 10412] ir22k_spine_hub power_W=8.67 raw_r2r_mV=46.24@(9422, 14131) judged_r2r_mV=18.81@(10242, 16768) (VDD 12.13 + VSS 6.68) judged [9612, 14319, 13484, 16919] ir22k_spine_slab power_W=9.37 raw_r2r_mV=46.24@(9422, 6284) judged_r2r_mV=19.05@(12822, 6902) (VDD 6.30 + VSS 12.75) judged [9612, 6472, 13484, 9072] ",
+    "2026-10-09 15:09:06 UTC clock model: {\"die\": \"qwen_rom\", \"insts\": 12869, \"buses\": 16031, \"masters\": 162, \"regions\": 121, \"real\": 1, \"dir_failures\": 0}",
+    "2026-10-09 15:10:01 UTC CLOCK PLAN: {\"die\": \"qwen_rom\", \"regions\": 211, \"pairs\": 8624, \"max_intra\": 61.7, \"max_inter\": 61.5, \"viol_intra\": 0, \"viol_inter\": 0}"
+   ],
+   "views": {
+    "etm_bound": 147,
+    "assumed_constants": 15,
+    "classes": "real = ETM-bound masters (routed sign-off ETMs) + hard macros (PHY, UCIe, SerDes); relay = die relay stations; placeholder = ASSUMED constant views"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 1559,
+      "instance_frac": 0.1211,
+      "area_mm2": 567.627,
+      "area_frac": 0.9299,
+      "masters": 14
+     },
+     "real": {
+      "instances": 11310,
+      "instance_frac": 0.8789,
+      "area_mm2": 42.81,
+      "area_frac": 0.0701,
+      "masters": 148
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "pending",
+    "log": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/grt_r22k/grt.log"
+   },
+   "grt_spef": false,
+   "sta": {
+    "tt": {
+     "status": "pending",
+     "check": "setup",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/sta_r22k_tt"
+    },
+    "ff": {
+     "status": "pending",
+     "check": "hold",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/sta_r22k_ff"
+    }
+   },
+   "ir": {
+    "status": "done",
+    "judged": [
+     "ir22k_io_edge power_W=6.46 raw_r2r_mV=147.01@(21948, 32783) judged_r2r_mV=27.11@(19508, 32763) (VDD 19.72 + VSS 7.39) judged [19238, 29916, 21795, 32780]",
+     "ir22k_shoreline_w power_W=4.72 raw_r2r_mV=46.24@(10, 7625) judged_r2r_mV=32.46@(10, 8244) (VDD 9.40 + VSS 23.06) judged [0, 7812, 1300, 10412]",
+     "ir22k_spine_hub power_W=8.67 raw_r2r_mV=46.24@(9422, 14131) judged_r2r_mV=18.81@(10242, 16768) (VDD 12.13 + VSS 6.68) judged [9612, 14319, 13484, 16919]",
+     "ir22k_spine_slab power_W=9.37 raw_r2r_mV=46.24@(9422, 6284) judged_r2r_mV=19.05@(12822, 6902) (VDD 6.30 + VSS 12.75) judged [9612, 6472, 13484, 9072]",
+     "ir22k_tile_field power_W=9.20 raw_r2r_mV=46.24@(2389, 2418) judged_r2r_mV=16.09@(4749, 3154) (VDD 8.22 + VSS 7.86) judged [2579, 2605, 5136, 5188]"
+    ]
+   },
+   "clock_plan": {
+    "status": "done",
+    "plan": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/clock/plan.json",
+    "source_commit": "ffeb99671",
+    "regions": 211,
+    "synchronous_pairs": 8624,
+    "max_intra_skew_ss_ps": 61.7,
+    "max_inter_skew_ss_ps": 61.5,
+    "policy": {
+     "inter_ps": 150.0,
+     "intra_default_ps": 90.0,
+     "intra_margin_ps": 25.0,
+     "ocv": 0.05,
+     "hold_io_ps": 50.0
+    },
+    "violations_intra": 0,
+    "violations_inter": 0,
+    "violation_rows": [],
+    "trees": 109
+   },
+   "regions": [
+    {
+     "region": "guided windows",
+     "status": "pending"
+    }
+   ],
+   "lint": [
+    {
+     "file": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/lint/qwen_rom_lint_top_lint.json",
+     "census": {
+      "instances": 12869,
+      "buses": 16031,
+      "net_bits": 6696349,
+      "masters": 162,
+      "real_instances": 1,
+      "placeholder_instances": 12868
+     }
+    },
+    {
+     "file": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/lint_kv/qwen_kv_lint_top_lint.json",
+     "census": {
+      "instances": 936,
+      "buses": 1472,
+      "net_bits": 1627358,
+      "masters": 25,
+      "real_instances": 134,
+      "placeholder_instances": 802
+     }
+    }
+   ],
+   "probe_s": 2.8,
+   "gaps": [
+    "Same r22k recipe as qwen_r22k4 (the gap list is kept there); this run carries the clock plan, IR windows and the guided regions."
+   ]
+  },
+  "qwen_r22k4": {
+   "name": "Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst)",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/kv-die/die_r22k4",
+   "status_log": [
+    "2026-10-09 08:09:49 PDT chain start die=r22k src=r22k-channel-paths",
+    "2026-10-09 09:06:08 PDT real case: OT_LEGAL instances=12902 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE ",
+    "2026-10-09 15:43:02 PDT PDN PASS OT_PGCHECK VDD PASS OT_PGCHECK VSS PASS"
+   ],
+   "views": {
+    "etm_bound": 0,
+    "assumed_constants": 0,
+    "classes": "real = ETM-bound masters (routed sign-off ETMs) + hard macros (PHY, UCIe, SerDes); relay = die relay stations; placeholder = ASSUMED constant views"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 3171,
+      "instance_frac": 0.2458,
+      "area_mm2": 593.535,
+      "area_frac": 0.9723,
+      "masters": 30
+     },
+     "real": {
+      "instances": 1,
+      "instance_frac": 0.0001,
+      "area_mm2": 0.605,
+      "area_frac": 0.001,
+      "masters": 1
+     },
+     "relay": {
+      "instances": 9730,
+      "instance_frac": 0.7541,
+      "area_mm2": 16.332,
+      "area_frac": 0.0268,
+      "masters": 133
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "pending",
+    "log": "/srv/opentallas-scratch/claude/kv-die/die_r22k4/grt_r22k/grt.log"
+   },
+   "grt_spef": false,
+   "sta": {
+    "tt": {
+     "status": "pending",
+     "check": "setup",
+     "dir": "/srv/opentallas-scratch/claude/kv-die/die_r22k4/sta_r22k_tt"
+    },
+    "ff": {
+     "status": "pending",
+     "check": "hold",
+     "dir": "/srv/opentallas-scratch/claude/kv-die/die_r22k4/sta_r22k_ff"
+    }
+   },
+   "ir": {
+    "status": "pending",
+    "dir": "/srv/opentallas-scratch/claude/kv-die/die_r22k4/ir"
+   },
+   "clock_plan": {
+    "status": "pending",
+    "dir": "/srv/opentallas-scratch/claude/kv-die/die_r22k4/clock"
+   },
+   "regions": [
+    {
+     "region": "guided windows",
+     "status": "pending"
+    }
+   ],
+   "lint": [],
+   "probe_s": 1.8,
+   "gaps": [
+    "NO SPEF-BASED STA YET. Two r22k cases are at full-die GRT: kv-die die_r22k4 (EPYC1, r22k-channel-paths, 12,902 inst; PDN + PG VDD/VSS PASS 15:43, GRT running since 15:43) and die-evidence-2 qwen_r22k (EPYC3, 12,869 inst; real case legal + PA DONE, PDN + PG PASS 17:45, GRT running). Both GRTs write die_grt.spef; STA TT/FF follows. No r22k slack is quotable until then.",
+    "kv-die's die_r22k4 chain times ASSUMED element constants only (libs qfd_elements_*, no ETM binding). die-evidence-2 bound the closed-element ETMs to the r22k4 LEF (149 bound / 15 assumed, die-evidence-2/qwen_r22k4/libs) and re-times the routed die on its GRT SPEF when the GRT lands (qwen_r22k4_sta.sh armed). Quote that STA, not kv-die's.",
+    "Element views: 147 masters ETM-bound (slab_m8, cst, chead, relays by direction), 15 ASSUMED constants, including qfd_tile_nk (the no-KV tile, ~88% of the die area, no closed view) and the new r22k masters qfd_d2d_rom / qfd_clkrx / qfd_ckbump. The real-only slack covers the spine and slab paths only.",
+    "Die STA uses ideal clock roots at clk_rx (60 ps setup / 25 ps hold uncertainty); no measured per-region insertion / rule-H1 hold pads yet. Own clock plan DONE (clock-only CTS, 211 regions, 8,624 synchronous pairs): max intra 61.7 ps, max inter 61.5 ps, 0 violations -> the Qwen die clock-context step (plan insertion -> STA) is still to be written.",
+    "Earlier Qwen die STA had NO wire RC (GRT-0008: read_guides + estimate_parasitics). Affected: the r21 record TT +50.84 / FF -5.64, the r21b chain, and kv-die's die_kv / die_r22k. Fixed for this chain (GRT SPEF). Old numbers must not be quoted.",
+    "die_top_lint: 1 real instance of 12,869 (only the UCIe macro is bound to RTL), so the tie-off / connectivity check passes vacuously for placeholders. Data-bus margin lint FAILs: 55 reach and 64 far-side violations on the inherited spine chains (review KV2(a): fix in r22k). Also 26 abut-without-channel and 1 face-away.",
+    "IR DONE (5 windows, judged interior, 35 mV budget): io_edge 27.11 mV, shoreline_w 32.46 mV, spine_hub 18.81, spine_slab 19.05, tile_field 16.09 -- all pass. shoreline_w / io_edge were cut for the r21 outline: re-pick them for the r22k outline (UCIe at the bottom of spine column M) before quoting.",
+    "Representative regions: col / io / spine / vmsu / ucie windows are cut after the GRT (chain step D). Pending.",
+    "Compact constants sequencer (struct-close: CLOSED 259.2 x 333.36 um vs the 777.6 x 1000 slot master): recipe r22kcs (main 62c88c200) puts it in the NE corner of the old reservation under the constant ROM. Added relay stages (= cycles) per bus: seq_d2d +4, d2d_seq +3, d2d_flt +4, seq_ib +3, vm_meok +3, seq_su +2, seq_sud +2, seq_coll -6, new crom_st 2 stages; tt_si / tt_so / rst_seq / crom_a / crom_q 0. Lint unchanged (connectivity 0, unbound 0, margin FAIL with the same 4 reach violations) except face-away 1 -> 5. The CTL path to the KV die (seq_d2d / d2d_seq) grows by 3-4 cycles: price it in the ROM-die token model before adopting; the die cases above still carry the slot master (qwen_r22k_compact_seq.json).",
+    "Pending adoptions into the r22k plan: qfd_emb_pcport_kvw2 (KVW=2 pcport, CLOSED 150.12 um, main f70402e80) and the vector_memory widening (fill-5 F5-4: 1,036.8 / 1,166.4 um outlines, if they close)."
+   ]
+  },
+  "qwen_kv": {
+   "name": "Qwen3-8B KV die (die_kv5: PHY PDN fix, 988 inst)",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/kv-die/die_kv5",
+   "status_log": [
+    "2026-10-09 16:29:55 PDT chain start die=kv src=kv-phy-pdn",
+    "2026-10-09 16:33:23 PDT real case: OT_LEGAL instances=988 overlaps=0 outside=0 OT_ASSERT PASS OT_PA FAIL DRT-0073"
+   ],
+   "views": {
+    "etm_bound": 0,
+    "assumed_constants": 0,
+    "classes": "real = ETM-bound masters (routed sign-off ETMs) + hard macros (PHY, UCIe, SerDes); relay = die relay stations; placeholder = ASSUMED constant views"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 179,
+      "instance_frac": 0.1812,
+      "area_mm2": 85.436,
+      "area_frac": 0.6515,
+      "masters": 12
+     },
+     "real": {
+      "instances": 6,
+      "instance_frac": 0.0061,
+      "area_mm2": 44.242,
+      "area_frac": 0.3374,
+      "masters": 3
+     },
+     "relay": {
+      "instances": 803,
+      "instance_frac": 0.8128,
+      "area_mm2": 1.463,
+      "area_frac": 0.0112,
+      "masters": 11
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "pending"
+   },
+   "grt_spef": false,
+   "sta": {
+    "tt": {
+     "status": "pending",
+     "check": "setup",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/sta_kv_tt"
+    },
+    "ff": {
+     "status": "pending",
+     "check": "hold",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/sta_kv_ff"
+    }
+   },
+   "ir": {
+    "status": "pending",
+    "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/ir"
+   },
+   "clock_plan": {
+    "status": "pending",
+    "dir": "/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/clock"
+   },
+   "regions": [
+    {
+     "region": "guided windows",
+     "status": "pending"
+    }
+   ],
+   "lint": [],
+   "probe_s": 1.4,
+   "gaps": [
+    "Real case pin access still FAILS on every attempt (DRT-0073; die_kv5 16:33 with the PHY PDN fix, 988 inst). die_kv / die_kv4: PDN PG check VDD + VSS FAIL (PSM-0069); die_kv5 carries the PHY PDN grid fix. kv-die owns both.",
+    "Strict tie-off: ot_hbm3e_phy rsp_data has 8 of 8,192 bits unbound on each of the 4 PHYs. That is an unbound functional real-macro output, a build-every-path gap.",
+    "Assumed frames: qkd_astk (777.6 um x 4 engines), qkd_land (172.8 um) and the centre blocks are not measured. The 172.3 mm2 is not quotable until they are (review KV3).",
+    "NO SPEF-BASED STA YET: die_kv5 GRT running (congestion extra iteration 9/30 at 17:50); die_kv (old) GRT at extra iteration 11/30 after ~9.5 h. die-evidence-2 re-STA + regions armed on die_kv5 (EPYC1 die-evidence-2/qwen_kv5).",
+    "IR: there is no IR window generator for the KV die. qwen_rom_fulldie ir does not know the qwen_kv recipe.",
+    "Clock plan: extract_die --die qwen_kv is attempted, but the mesochronous forwarded clock to the ROM die is outside the plan. The cross-die skew is assumed absorbed by the UCIe macro (CONTRACT K5).",
+    "KV-die landing HBM write queue (posted KVN rows -> CDC w_v / w_sec / w_data) for KVW=2 is still owed by kv-die (sys-takeover 11:24)."
+   ]
+  },
+  "hbm_r25g": {
+   "name": "HBM generic die R25G (network probe)",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g",
+   "variant": "r25g",
+   "network_probe": true,
+   "status_log": [
+    "2026-10-09 07:45:32 PDT case ready: {\"relay_ends_dropped_short\": 48, \"buses_cut\": 370, \"relays\": 410, \"wire_stages\": 4028, \"unknown_dir_bits\": 0, \"skipped_multi\": 0, \"skipped_fclk\": 739, \"pin_fallback\": 14, \"qualification\": \"diagnostic-only: analytic views and unqualified flow control\", \"path_um_total\": 1720439.9977994524, \"extra_wire_stages\": 1984, \"instances\": 4438, \"unplaced_n\": 0} {\"case\": \"sta\", \"real_views\": 48, \"work\": \"/srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/case\"} ",
+    "2026-10-09 07:45:32 PDT clock context: {\"sinks\": 281, \"missing\": 303, \"regions\": 49, \"physical_clock\": false}",
+    "2026-10-09 07:45:33 PDT relay sta: {\"planned_sinks\": 281, \"relay_sinks\": 4438, \"relays_without_domain\": 0}",
+    "2026-10-09 07:46:16 PDT CLOCK PLAN max-merge 7000: {\"die\": \"hbm\", \"regions\": 54, \"pairs\": 1300, \"max_intra\": 83.7, \"max_inter\": 345.5, \"viol_intra\": 72, \"viol_inter\": 50}",
+    "2026-10-09 08:01:30 PDT IR rc=0 {'all_pass': True, 'completed': 130, 'failing': [], 'incomplete': [], 'no_core_load_windows': ['r25g/c_w00_10', 'r25g/c_w01_10', 'r25g/c_w02_10', 'r25g/c_w03_10', 'r25g/c_w04_10', 'r25g/c_w05_10', 'r25g/c_w06_00', 'r25g/c_w06_10', 'r25g/c_w08_10', 'r25g/c_w09_10', 'r25g/c_w10_10', 'r25g/c_w11_10', 'r25g/c_w12_10', 'r25g/c_w13_00', 'r25g/c_w13_01', 'r25g/c_w13_02', 'r25g/c_w13_03', 'r25g/c_w13_04', 'r25g/c_w13_05', 'r25g/c_w13_06', 'r25g/c_w13_07', 'r25g/c_w13_08', 'r25g/c_w13_09', 'r25g/c_w13_10'], 'windows': 130, 'worst_interior_rail_to_rail_mv': 25.37, 'worst_window': 'r25g/c_w12_00'}",
+    "2026-10-09 17:55:19 PDT router libs ss/ff swapped to kneg_orph2 lvt-hm0 (main aba559064; same LEF/pins) before STA; old in case/pre_router_swap; tt lib is still the old route (view has no new tt)"
+   ],
+   "views": {
+    "real_views": 48,
+    "classes": "real = manifest real_views; relay = hfd_rly_* die relays; placeholder = analytic / interim / new R25G masters"
+   },
+   "area": {
+    "by_class": {
+     "placeholder": {
+      "instances": 687,
+      "instance_frac": 0.1248,
+      "area_mm2": 330.513,
+      "area_frac": 0.6343,
+      "masters": 389
+     },
+     "real": {
+      "instances": 379,
+      "instance_frac": 0.0689,
+      "area_mm2": 188.658,
+      "area_frac": 0.362,
+      "masters": 48
+     },
+     "relay": {
+      "instances": 4438,
+      "instance_frac": 0.8063,
+      "area_mm2": 1.931,
+      "area_frac": 0.0037,
+      "masters": 4438
+     }
+    },
+    "masters_without_lef_size": [],
+    "n_masters_without_lef_size": 0
+   },
+   "grt": {
+    "status": "pending",
+    "log": "/srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/case/grt_sta.log"
+   },
+   "sta": {
+    "tt": {
+     "check": "setup",
+     "status": "pending"
+    },
+    "ff": {
+     "check": "hold",
+     "status": "pending"
+    },
+    "ss": {
+     "check": "setup (sensitivity)",
+     "status": "pending"
+    }
+   },
+   "hold_pads": {
+    "status": "pending"
+   },
+   "clock_plan": {
+    "status": "done",
+    "plan": "/srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/clock/plan.json",
+    "source_commit": "e469ee605",
+    "regions": 66,
+    "synchronous_pairs": 1300,
+    "max_intra_skew_ss_ps": 64.4,
+    "max_inter_skew_ss_ps": 362.1,
+    "policy": {
+     "inter_ps": 150.0,
+     "intra_default_ps": 90.0,
+     "intra_margin_ps": 25.0,
+     "ocv": 0.05,
+     "hold_io_ps": 50.0
+    },
+    "violations_intra": 0,
+    "violations_inter": 81,
+    "violation_rows": [
+     {
+      "skew_ps": 362.1,
+      "nominal_ps": 3.3,
+      "a": "sm5/ck",
+      "b": "w53_cdSW1/ck",
+      "ra": "clk_stream:GSWc2",
+      "rb": "clk_stream:die.0.0.0.1.1.1.1.1",
+      "cls": "control_leaf"
+     },
+     {
+      "skew_ps": 362.0,
+      "nominal_ps": 3.2,
+      "a": "sm7/ck",
+      "b": "w53_cdSW1/ck",
+      "ra": "clk_stream:GSWc1",
+      "rb": "clk_stream:die.0.0.0.1.1.1.1.1",
+      "cls": "control_leaf"
+     },
+     {
+      "skew_ps": 361.7,
+      "nominal_ps": 2.9,
+      "a": "sm7/ck",
+      "b": "w31_xmSW3/ck",
+      "ra": "clk_stream:GSWc1",
+      "rb": "clk_stream:die.0.0.1.0",
+      "cls": "x_leaf"
+     }
+    ],
+    "trees": 4
+   },
+   "ir": {
+    "status": "done",
+    "all_pass": true,
+    "completed": 130,
+    "failing": [],
+    "incomplete": [],
+    "no_core_load_windows": [
+     "r25g/c_w00_10",
+     "r25g/c_w01_10",
+     "r25g/c_w02_10",
+     "r25g/c_w03_10",
+     "r25g/c_w04_10",
+     "r25g/c_w05_10",
+     "r25g/c_w06_00",
+     "r25g/c_w06_10",
+     "r25g/c_w08_10",
+     "r25g/c_w09_10",
+     "r25g/c_w10_10",
+     "r25g/c_w11_10",
+     "r25g/c_w12_10",
+     "r25g/c_w13_00",
+     "r25g/c_w13_01",
+     "r25g/c_w13_02",
+     "r25g/c_w13_03",
+     "r25g/c_w13_04",
+     "r25g/c_w13_05",
+     "r25g/c_w13_06",
+     "r25g/c_w13_07",
+     "r25g/c_w13_08",
+     "r25g/c_w13_09",
+     "r25g/c_w13_10"
+    ],
+    "windows": 130,
+    "worst_interior_rail_to_rail_mv": 25.37,
+    "worst_window": "r25g/c_w12_00",
+    "budget_mv": 35.0
+   },
+   "regions": [
+    {
+     "region": "4 guided windows",
+     "status": "pending"
+    }
+   ],
+   "lint": [
+    {
+     "file": "/srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/lint/hbm_lint_top_lint.json",
+     "census": {
+      "instances": 1066,
+      "buses": 1582,
+      "net_bits": 1256469,
+      "masters": 437,
+      "real_instances": 51,
+      "placeholder_instances": 1015
+     }
+    }
+   ],
+   "probe_s": 14.6,
+   "gaps": [
+    "SUPERSEDED by hbm_r25gp: the R25G probe GRT was killed at 19:50 PT after 12 h (stuck in congestion extra iteration 3/30 since 17:12); its case pre-dated the widened attention slot, the router swap, the svc PS leaves and hfd_mtp. Kept: IR 130 windows pass (worst 25.37 mV), clock plan (81 inter-region violations at the fmt3 SM groups), lint ledgers."
+   ]
+  },
+  "s81_l1full": {
+   "name": "DeepSeek-V4.1 ROM S81 layer1 die (full recipe: --host, --wfc-hard, --path-pick)",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch/claude/die-evidence-2/s81_l1full",
+   "status_log": [
+    "2026-10-09T23:36:06Z start s81_l1full src 7bb71184d",
+    "2026-10-10T00:02:38Z GEN_DONE",
+    "2026-10-10T00:17:25Z PLACE rc=0",
+    "2026-10-10T00:35:18Z CLOCK_PLAN done"
+   ],
+   "sta": {
+    "status": "pending"
+   },
+   "grt": {
+    "status": "pending"
+   },
+   "clock_plan": {
+    "status": "done",
+    "plan": "/srv/opentallas-scratch/claude/die-evidence-2/s81_l1full/clock/plan.json",
+    "source_commit": "7bb71184d",
+    "regions": 173,
+    "synchronous_pairs": 75267,
+    "max_intra_skew_ss_ps": 75.9,
+    "max_inter_skew_ss_ps": 322.2,
+    "policy": {
+     "inter_ps": 150.0,
+     "intra_default_ps": 90.0,
+     "intra_margin_ps": 25.0,
+     "ocv": 0.05,
+     "hold_io_ps": 50.0
+    },
+    "violations_intra": 10,
+    "violations_inter": 8,
+    "violation_rows": [
+     {
+      "skew_ps": 75.9,
+      "nominal_ps": 3.8,
+      "a": "g_hc_SW_sp_host_7/ck",
+      "b": "g_hc_SW_sp_host_8/ck",
+      "ra": "clk_stream:die.0.0.0.1.0.1",
+      "rb": "clk_stream:die.0.0.0.1.0.1",
+      "cls": "host_wr"
+     },
+     {
+      "skew_ps": 74.6,
+      "nominal_ps": 2.1,
+      "a": "g_hc_SW_sp_host_25/ck",
+      "b": "g_hc_SW_sp_host_26/ck",
+      "ra": "clk_stream:die.0.1.0.0.1.1",
+      "rb": "clk_stream:die.0.1.0.0.1.1",
+      "cls": "host_wr"
+     },
+     {
+      "skew_ps": 74.5,
+      "nominal_ps": 1.9,
+      "a": "f_hb_gather_capture_3/ck",
+      "b": "f_hb_gather_capture_4/ck",
+      "ra": "clk_stream:die.0.1.0.0.1.1",
+      "rb": "clk_stream:die.0.1.0.0.1.1",
+      "cls": "hub"
+     }
+    ],
+    "trees": 131
+   },
+   "probe_s": 1.1,
+   "gaps": [
+    "Generation CLOSED (s81-gen, main 256d72798 + d2b8f7e64): full layer1 recipe (--host, --wfc-hard with the apply_options fix f362d0860, --path-pick, --hop-r-cc 500, --relay-tt-reach 600, --ctrl-rq) GEN_DONE 17:02 PT, PLACE rc 0.",
+    "Clock plan (clock-only CTS, 173 regions): 10 intra + 8 inter violations. Inter up to 322 ps on the NEW host write / control paths (g_hw_SW_svc_SW_*, g_hc_SW_sp_host_*) and the hr_W0/W1 -> sp_gather links; intra 72-76 ps (host_wr, hub gather_pq, local hqe/svc). The host path needs its own clock region / relay-region alignment.",
+    "NO SPEF-BASED STA YET: kit -> full-die GRT -> STA running (s81_opts_chain).",
+    "Relays placed beyond the SS reach in the TT tier (<= 600 um, hop_fix.tt_reach_relays / col_relays.tt_reach_relays): their SS setup is a known sensitivity, TT setup is the sign-off corner.",
+    "eng_SE = dsfd_engram interim (PARTS lkp + sink; only the sink has a CLOSED view).",
+    "Views: real 24.3% of instances / 17.0% of area. The BF elements are interim (BF full-rate vs HALF_PHL decision 21:30), and the slabs are partitioned with no composite view.",
+    "Region DRT on the current recipe: pending after the l1w GRT. r3fx regions stand as the reference: pqstrip 0 / bfcol 19 / spine 4 DRC, WL DRT/GRT 0.994-0.995."
+   ]
+  },
+  "s81_l1e": {
+   "name": "DeepSeek-V4.1 ROM S81 layer1e (Engram home die)",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch/claude/die-evidence-2/s81_l1e",
+   "status_log": [
+    "2026-10-09T23:36:06Z start s81_l1e src 7bb71184d",
+    "2026-10-10T00:18:56Z GEN_DONE",
+    "2026-10-10T00:31:44Z PLACE rc=0"
+   ],
+   "sta": {
+    "status": "pending"
+   },
+   "grt": {
+    "status": "pending"
+   },
+   "clock_plan": {
+    "status": "pending"
+   },
+   "probe_s": 1.0,
+   "gaps": [
+    "Generation CLOSED: layer1e (Engram home die) GEN_DONE 17:18 PT, PLACE rc 0; clock plan -> GRT -> STA running.",
+    "Engram lookup / sink, SE service, SRAM prefetch and loader bindings to the three-count-burst backend are interim views (Codex handover 4a86bf870): the die evidence times their placeholders.",
+    "scan / head dies for 1,792 stages: generation status with the Codex dies_scan_head child; no die evidence yet."
+   ]
+  }
+ }
+}

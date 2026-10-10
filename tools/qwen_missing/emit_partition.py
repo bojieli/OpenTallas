@@ -245,7 +245,8 @@ def _rst(w: str) -> str:
     return ", .RESET(1)" if w in ("1", "8", "16") else ""
 
 
-def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int = 0) -> str:
+def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int = 0, gq: int = 0,
+              dcu_me=None, duc_me=None) -> str:
     """ot_qwen_rom_core_part: the core re-wired across the three die masters with DCU / DUC pin stations and the
     split-exact compensation.  DCU = DUC = 0 (any COMP) is cycle-identical to ot_qwen_rom_core."""
     params, port_text = header(core)
@@ -260,9 +261,17 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
          "// qfd_sp_su64_sfu = ot_hdc_vstream_rt) with DCU / DUC pin stations and the split-exact compensation",
          "// (ot_qfd_split_exact.sv).  Same ports as ot_qwen_rom_core.",
          params.replace("module ot_qwen_rom_core #(", "module ot_qwen_rom_core_part #(", 1)
-         + f",\n    parameter integer DCU = {dcu},\n    parameter integer DUC = {duc},\n    parameter integer COMP = {comp}",
+         + f",\n    parameter integer DCU = {dcu},\n    parameter integer DUC = {duc},\n    parameter integer COMP = {comp}"
+         + ("" if dcu_me is None and duc_me is None else
+            f",\n    parameter integer DCU_ME = {dcu if dcu_me is None else dcu_me},"
+            f"\n    parameter integer DUC_ME = {duc if duc_me is None else duc_me}"),
          ") (", port_text, ");",
          "    localparam integer RT = DCU + DUC;   // c_me_clk = the controller's po_me_clk: the engine's gated clock"]
+    me_split = not (dcu_me is None and duc_me is None)    # kv-die 10-09: the die's ME issue / status relay chains (tt_si / tt_so)
+    if me_split:
+        L.append("    localparam integer RT_ME_D = DCU_ME + DUC_ME;")
+    rt_me = "RT_ME_D" if me_split else "RT"
+    dcu_m, duc_m = ("DCU_ME", "DUC_ME") if me_split else ("DCU", "DUC")
     dir_ports = {ex.split("[")[0] for _, ex, k, _ in ME + SU if k in ("dir_o", "dir_i")}
     for unit, table in (("me", ME), ("su", SU)):
         for p, ex, k, w in table:
@@ -301,13 +310,23 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
     L += ["    wire s_me_ready, s_me_idle, s_su_ready, s_su_idle;", "    wire [15:0] s_me_progress, s_su_progress, s_su_progress_rows;"]
     L.append("    ot_qwen_rom_core_ctrl #(" + ", ".join(f".{p}({p})" for p in pnames) + ") u_ctrl (\n        "
              + ",\n        ".join(cc) + ");")
-    L += ["    ot_qfd_issue_shell #(.RT_ME(RT), .RT_SU(RT), .COMP(COMP)) u_shell (.clk(clk), .rst_n(rst_n),",
-          "        .me_go(c_me_go), .su_go(c_su_go), .me_en(me_clk_en), .su_sfu(c_su_i_sfu), .me_amax(c_me_i_amax),",
-          "        .d_me_ready(c_me_ready), .d_me_idle(c_me_idle), .d_me_progress(c_me_progress),",
-          "        .d_su_ready(c_su_ready), .d_su_idle(c_su_idle), .d_su_active(c_su_rt_active), .d_su_inflight(c_su_rt_inflight),",
-          "        .d_su_progress(c_su_progress), .d_su_rows(c_su_progress_rows),",
-          "        .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),",
-          "        .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));"]
+    if gq:
+        # kv-die GO QUEUES (rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_gq.sv): ready = a free unit-side entry
+        L += ["    wire [3:0] c_me_popc, u_me_popc, c_su_popc, u_su_popc;",
+              f"    ot_qfd_issue_shell_gq #(.RT_ME({rt_me}), .RT_SU(RT), .GQ({gq})) u_shell (.clk(clk), .rst_n(rst_n),",
+              "        .me_go(c_me_go), .su_go(c_su_go), .me_en(me_clk_en), .me_amax(c_me_i_amax),",
+              "        .d_me_idle(c_me_idle), .d_me_progress(c_me_progress), .d_me_popc(c_me_popc),",
+              "        .d_su_idle(c_su_idle), .d_su_progress(c_su_progress), .d_su_rows(c_su_progress_rows), .d_su_popc(c_su_popc),",
+              "        .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),",
+              "        .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));"]
+    else:
+      L += [f"    ot_qfd_issue_shell #(.RT_ME({rt_me}), .RT_SU(RT), .COMP(COMP)) u_shell (.clk(clk), .rst_n(rst_n),",
+            "        .me_go(c_me_go), .su_go(c_su_go), .me_en(me_clk_en), .su_sfu(c_su_i_sfu), .me_amax(c_me_i_amax),",
+            "        .d_me_ready(c_me_ready), .d_me_idle(c_me_idle), .d_me_progress(c_me_progress),",
+            "        .d_su_ready(c_su_ready), .d_su_idle(c_su_idle), .d_su_active(c_su_rt_active), .d_su_inflight(c_su_rt_inflight),",
+            "        .d_su_progress(c_su_progress), .d_su_rows(c_su_progress_rows),",
+            "        .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),",
+            "        .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));"]
     # ---- per-token constants for the stream-unit side embedding decode (static from the token start)
     L += ["    reg es_pend; reg [15:0] es_hold; reg [NW-1:0] tok_l;",
           "    always @(posedge clk or negedge rst_n) if (!rst_n) es_pend <= 1'b0; else es_pend <= embed_scale_re;",
@@ -318,9 +337,9 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
         L.append(f"    ot_hdc_delay #(.W({w}), .D({d}){rst}) u_{name} (.clk({clk}), .rst_n(rst_n), .d({src}), .q({dst}));")
     for p, ex, k, w in ME:
         if k == "out" and p != "clk":
-            stn(f"sd_me_{p}", w, "DCU", "c_me_clk", f"c_me_{p}", f"u_me_{p}", ", .RESET(1)" if p == "go" else "")
+            stn(f"sd_me_{p}", w, dcu_m, "c_me_clk", f"c_me_{p}", f"u_me_{p}", ", .RESET(1)" if p == "go" else "")
         elif k == "in" and p not in ME_LOCAL:
-            stn(f"su_me_{p}", w, "DUC", "c_me_clk", f"u_me_{p}", f"c_me_{p}", _rst(w))
+            stn(f"su_me_{p}", w, duc_m, "c_me_clk", f"u_me_{p}", f"c_me_{p}", _rst(w))
     for p, ex, k, w in SU:
         if k == "out" and p != "va_q":
             stn(f"sd_su_{p}", w, "DCU", "clk", f"c_su_{p}", f"u_su_{p}", ", .RESET(1)" if p == "go" else "")
@@ -330,6 +349,22 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
     stn("sd_asrc", "1", "DCU", "clk", "c_su_asrc_raw", "u_su_asrc_raw")
     stn("sd_tok", "NW", "DCU", "clk", "c_tok", "u_tok")
     stn("sd_escale", "16", "DCU", "clk", "c_escale", "u_escale")
+    if gq:
+        for unit, table, ck in (("me", ME, "c_me_clk"), ("su", SU, "clk")):
+            fl = [(p, w) for p, ex, k, w in table if k == "out" and p not in ("clk", "go", "va_q")]
+            if unit == "su":
+                fl.append(("asrc_raw", "1"))      # the embedding decode selector travels with the go (class D)
+            tot = " + ".join(f"({w})" for _, w in fl)
+            L.append(f"    localparam integer GQW_{unit.upper()} = {tot};")
+            for p, w in fl:
+                L.append(f"    wire [{w}-1:0] g_{unit}_{p};")
+            L.append(f"    wire g_{unit}_go, g_{unit}_empty, g_{unit}_fault;")
+            L.append(f"    ot_qfd_go_queue #(.W(GQW_{unit.upper()}), .D({gq})) u_gq_{unit} (.clk({ck}), .rst_n(rst_n), "
+                     f".go_in(u_{unit}_go), .f_in({{{', '.join(f'u_{unit}_{p}' for p, _ in fl)}}}), "
+                     f".unit_ready(u_{unit}_ready), .go_out(g_{unit}_go), "
+                     f".f_out({{{', '.join(f'g_{unit}_{p}' for p, _ in fl)}}}), .empty(g_{unit}_empty), "
+                     f".popc(u_{unit}_popc), .fault(g_{unit}_fault));")
+            stn(f"su_{unit}_popc", "4", "DUC", ck, f"u_{unit}_popc", f"c_{unit}_popc", ", .RESET(1)")
     stn("su_kvwe", "SW", "DUC", "clk", "su_kv_we", "d_su_kv_we", ", .RESET(1)")
     # ---- engine side: VM write enables with the ICG enable (class E)
     L += ["    assign vw_me_we = u_me_o_we & {(G >> SMIN){me_clk_en}};",
@@ -338,6 +373,8 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
     for p, ex, k, w in ME:
         if p == "clk":
             sp.append(".clk(c_me_clk)")
+        elif k == "out" and gq:
+            sp.append(f".{p}(g_me_{p})")
         elif k in ("out", "in"):
             sp.append(f".{p}(u_me_{p})")
         elif k == "rst":
@@ -350,7 +387,8 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
     # ---- stream-unit side: embedding decode on the va loop (class D)
     L += ["    ot_qfd_su_embed #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .EMB_CODE_LANES(EMB_CODE_LANES),",
           "        .EMB_ADDR_BASE(EMB_ADDR_BASE), .QWEN_FULLSHAPE(QWEN_FULLSHAPE), .INT8_EMBED(INT8_EMBED)) u_emb (",
-          "        .clk(clk), .rst_n(rst_n), .go(u_su_go), .a_src(u_su_asrc_raw), .tok(u_tok), .scale(u_escale),",
+          "        .clk(clk), .rst_n(rst_n), .go(" + ("g_su_go" if gq else "u_su_go") + "), .a_src("
+          + ("g_su_asrc_raw" if gq else "u_su_asrc_raw") + "), .tok(u_tok), .scale(u_escale),",
           "        .su_va_re(u_su_va_re), .su_va_addr(u_su_va_addr), .su_va_q(u_su_va_q), .va_re(va_re), .va_addr(va_addr),",
           "        .va_q(va_q), .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr), .embed_code_q(embed_code_q),",
           "        .fault(u_su_efault));"]
@@ -364,6 +402,8 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
             L.append(f"    wire [{SU_MEM[p]}-1:0] ml_{p};")
             L.append(f"    ot_hdc_delay #(.W({SU_MEM[p]}), .D({su_ml})) u_ml_{p} (.clk(clk), .rst_n(rst_n), .d({src}), .q(ml_{p}));")
             su.append(f".{p}(ml_{p})")
+        elif k == "out" and gq and p != "va_q":
+            su.append(f".{p}(g_su_{p})")
         elif k in ("out", "in"):
             su.append(f".{p}(u_su_{p})")
         elif k in ("rst", "clk"):

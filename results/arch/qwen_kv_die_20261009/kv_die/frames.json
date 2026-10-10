@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.qwen-kv-die.frames.v1",
+ "date": "2026-10-09",
+ "question": "review-0528 item 4 / KD-b: measure the KV-die frames that were ASSUMED before quoting a package size",
+ "method": "yosys synth -flatten + abc to ASAP7 RVT TT liberty, cells only (tools/qwen_kv_die/synth/synth_area.sh, run_all.sh); utilisation = cells / frame; fp_lint limit 0.60",
+ "blocks": {
+  "qkd_reng (re-cut D)": {
+   "rtl": "ot_qwen_nearhbm_row_engine_d",
+   "cells_um2": 544000,
+   "cells_um2_composed": 529000,
+   "frame_um": [
+    531.36,
+    1998.0
+   ],
+   "note": "MEASURED (synth3/reng_d, yosys -noshare + abc, ASAP7 RVT TT): 5.44e5 um2 cells (51.8 % sequential), 2.9 % over the 529 k composed estimate; util 0.512 in the 531.36 x 1,998 frame (fp_lint limit 0.60): frame kept, KV die unchanged",
+   "util": 0.512
+  },
+  "qkd_ahub": {
+   "rtl": "ot_qwen_nearhbm_attn_hub_p",
+   "cells_um2": 127388.6,
+   "frame_um": [
+    648.0,
+    648.0
+   ],
+   "util": 0.303
+  },
+  "qkd_seq": {
+   "rtl": "ot_qkvd_kv_seq",
+   "cells_um2": 27919.3,
+   "frame_um": [
+    777.6,
+    518.4
+   ],
+   "util": 0.069
+  },
+  "qkd_d2d": {
+   "rtl": "ot_qkvd_kv_end",
+   "cells_um2": 52288.7,
+   "frame_um": [
+    777.6,
+    518.4
+   ],
+   "util": 0.13
+  },
+  "qfd_d2d_rom (ROM die)": {
+   "rtl": "ot_qkvd_rom_end",
+   "cells_um2": 47778.1,
+   "frame_um": [
+    777.6,
+    518.4
+   ],
+   "util": 0.119
+  },
+  "qkd_embgw": {
+   "rtl": "ot_qfd_emb_gw",
+   "cells_um2": 1843.7,
+   "frame_um": [
+    388.8,
+    388.8
+   ],
+   "util": 0.012
+  },
+  "qkd_land (logic part)": {
+   "rtl": "ot_qkvd_kv_merge E=8 (17,310.9) + ot_qfd_emb_strip (21,949.6)",
+   "cells_um2": 39260.5,
+   "frame_um": [
+    172.8,
+    12141.0
+   ],
+   "note": "plus the qfd_kvc landing crossbar (r21c frame 96.768 um wide, not re-synthesised); the column width is set by the 32 CDC + 8 engine faces, not by area",
+   "util": 0.019
+  },
+  "qkd_astk (re-cut D)": {
+   "rtl": "ot_qwen_nearhbm_attn_stack_d minus its engines",
+   "cells_um2": null,
+   "frame_um": [
+    777.6,
+    7992.0
+   ],
+   "note": "synthesis running (synth3/astk_d, -noshare); its score / e memories (4,096 x 128 + 4,096 x 64 b) are SRAM-macro class (~24-32 x ot_sram_1r1w_128x256, ~0.12-0.16 mm2), not flops"
+  }
+ },
+ "summary": "the centre blocks (seq, d2d, embgw, ahub) and the landing logic are measured at 1-30 % of their assumed frames: they do not set the die size (the KV die is set by the HBM PHY bands, the row-engine columns and the aggregator column). The re-cut D engine is measured at 544 k um2 (util 0.512 in its frame; KV die 192.1 mm2 unchanged). The aggregator (qkd_astk) frame stays ASSUMED until synth3/astk_d reports."
+}

@@ -2,7 +2,9 @@
 `default_nettype none
 // Source ready/valid -> actual selector four-credit pulse ABI. Credits are cold
 // reset state, never regenerated on frame-start. Owner remains at the stage join.
-module ot_hbm_native_index_query_credit #(parameter integer ENABLE=0)(
+// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
+// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
+module ot_hbm_native_index_query_credit #(parameter integer ENABLE=0,PROTECT=0)(
  input wire clk,por_n,
  input wire owner_valid,owner_fault,retained,
  input wire [72:0] owner_frame,block_frame,
@@ -18,7 +20,7 @@ module ot_hbm_native_index_query_credit #(parameter integer ENABLE=0)(
  reg seen_retained,seen_retained_n,sticky_fault;
  reg [1047:0] qb_hold,qb_n;
  assign qb=ENABLE&&coded_ok&&!sticky_fault&&!owner_fault?qb_hold:1048'd0;
- wire coded_ok=(credits_n==~credits)&&(order_n==~order)&&(seen_retained_n==~seen_retained)&&(qb_n==~qb_hold);
+ wire coded_ok=(PROTECT==0)||((credits_n==~credits)&&(order_n==~order)&&(seen_retained_n==~seen_retained)&&(qb_n==~qb_hold));
  wire allowed=ENABLE&&owner_valid&&!owner_fault&&retained&&!sticky_fault&&coded_ok;
  wire identity_ok=block_frame==owner_frame&&block_rank==owner_rank;
  wire order_ok=order<128&&{block_head,block_number}==order[6:0];

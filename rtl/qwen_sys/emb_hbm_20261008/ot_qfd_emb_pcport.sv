@@ -13,10 +13,26 @@
 //     (enc256) into a WQD-entry FIFO whose head is the PHY write data of the next static WR (col_v && col_we && col_sr).
 // Faults (sticky): a beat with no RD outstanding, class FIFO overflow, a static WR with no data, write FIFO overflow.
 // MUT = 3 (bench mutant, must FAIL): the correction is skipped (the raw data bits pass, nothing flagged).
+// KVW = 1 (sys-takeover 2026-10-09, opt-in; registry qfd_hbm_ecc_provider): the ECC provider for the MUTABLE KV payload.
+//   KV write data (kw_v / kw_d, 256 b, with its KV WR command, same credit discipline as w_v) is encoded here into the
+//   HBM3E ECC side-band (enc256: 32 check bits per 256, the layout ot_qfd_kv_landing_ecc decodes) into a KWQD FIFO whose
+//   head is the PHY write data of the next KV WR (col_v && col_we && !col_sr); wd = col_sr ? static head : KV head.
+//   KV reads already leave as the full 288-b codeword (kv_d) and are corrected by ot_qfd_kv_landing_ecc.  No in-band
+//   cost: 0 cycles, +KWQD x 288 flops.  Faults: KV WR with no data, KV write FIFO overflow.
+// KVW = 2 (sys-takeover 2026-10-09, the die's actual KV write timing): the per-PC STREAM4 CDC (ot_qwen_stream4_cdc_pc)
+//   hands the KV write data over at its WR COLUMN (h_wcon = col_v && col_we && !col_sr) and presents it ONE edge later
+//   (h_cv / h_cdata) -- it cannot be pushed ahead of the column as KVW 1 assumes (a KVW 1 port faults "KV WR with no
+//   data" on every die write).  KVW 2: kw_v / kw_d = h_cv / h_cdata, encoded (enc256) into a register; EVERY WR's PHY
+//   write data (static and KV) is presented on wd two edges after its WR column (static head captured at the column).
+//   Faults: KV data with no KV WR column on the previous edge, a KV WR column with no data on the next edge.  0 cycles
+//   on the token path (write data latency +2 hclk inside the PHY's programmable write latency).
+// MUT = 4 / 5 (bench mutants): KV write check column 0 wrong / KV write side-band dropped (check bits 0).
 module ot_qfd_emb_pcport #(
     parameter integer RQD = 32,
     parameter integer WQD = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer KVW = 0,
+    parameter integer KWQD = 4
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -25,7 +41,9 @@ module ot_qfd_emb_pcport #(
     input  wire         col_sr,
     input  wire         w_v,
     input  wire [255:0] w_d,
-    output wire [287:0] wd,               // the PHY write data of the next static WR (FIFO head)
+    output wire [287:0] wd,               // the PHY write data of the next static WR (FIFO head); KVW: of the next WR
+    input  wire         kw_v,             // KVW: KV write data (256 b), one per KV WR command
+    input  wire [255:0] kw_d,
     input  wire         r_v,
     input  wire [287:0] r_d,
     output reg          kv_v,
@@ -48,13 +66,36 @@ module ot_qfd_emb_pcport #(
     wire w_empty = ww == wr;
     wire w_full = (ww[WA-1:0] == wr[WA-1:0]) && (ww[WA] != wr[WA]);
     wire cls = kq[kr[RA-1:0]];
-    assign wd = wq[wr[WA-1:0]];
+    localparam integer KA = (KWQD > 1) ? $clog2(KWQD) : 1;
+    reg [287:0] kq_w [0:KWQD-1];
+    reg [KA:0] kww, kwr;
+    wire wr_kv = col_v && col_we && !col_sr;
+    wire kw_empty = kww == kwr;
+    wire kw_full = (kww[KA-1:0] == kwr[KA-1:0]) && (kww[KA] != kwr[KA]);
+    // KVW 2: wd two edges after every WR column (s2_wd); KVW 1 / 0: combinational heads at the column (unchanged)
+    reg wc1_kv, wc1_st; reg [287:0] st1_wd, s2_wd;
+    assign wd = (KVW == 2) ? s2_wd : (KVW != 0 && !col_sr) ? kq_w[kwr[KA-1:0]] : wq[wr[WA-1:0]];
+    function automatic [287:0] kenc(input [255:0] x);
+        reg [287:0] c;
+        begin
+            c = enc256(x);
+            if (MUT == 4) c[0] = ~c[0];          // check column 0 of word 0 wrong
+            if (MUT == 5) begin c[0] = 1'b0; c[1] = 1'b0; c[3] = 1'b0; c[7] = 1'b0; c[15] = 1'b0; c[31] = 1'b0; c[63] = 1'b0; c[71] = 1'b0; end
+            kenc = c;
+        end
+    endfunction
+    always @(posedge clk) if (KVW == 1 && kw_v) kq_w[kww[KA-1:0]] <= kenc(kw_d);
+    always @(posedge clk) if (KVW == 2) begin
+        if (wr_static) st1_wd <= wq[wr[WA-1:0]];
+        if (wc1_kv) s2_wd <= kenc(kw_d); else if (wc1_st) s2_wd <= st1_wd;
+    end
     // decode pipe: stage 1 raw + syndromes, stage 2 corrected
     reg v1; reg [287:0] c1; reg [31:0] y1;
     integer i;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            kw <= 0; kr <= 0; ww <= 0; wr <= 0; kv_v <= 1'b0; em_v <= 1'b0; v1 <= 1'b0; fault <= 1'b0;
+            kw <= 0; kr <= 0; ww <= 0; wr <= 0; kww <= 0; kwr <= 0; kv_v <= 1'b0; em_v <= 1'b0; v1 <= 1'b0; fault <= 1'b0;
+            wc1_kv <= 1'b0; wc1_st <= 1'b0;
         end else begin
             if (rd_issue) begin kw <= kw + 1'b1; if (k_full) fault <= 1'b1; end
             if (r_v) begin kr <= kr + 1'b1; if (k_empty) fault <= 1'b1; end
@@ -63,6 +104,12 @@ module ot_qfd_emb_pcport #(
             em_v <= v1;
             if (w_v) begin ww <= ww + 1'b1; if (w_full) fault <= 1'b1; end
             if (wr_static) begin wr <= wr + 1'b1; if (w_empty) fault <= 1'b1; end
+            if (KVW == 1 && kw_v) begin kww <= kww + 1'b1; if (kw_full) fault <= 1'b1; end
+            if (KVW == 1 && wr_kv) begin kwr <= kwr + 1'b1; if (kw_empty) fault <= 1'b1; end
+            if (KVW == 2) begin
+                wc1_kv <= wr_kv; wc1_st <= wr_static;
+                if (kw_v != wc1_kv) fault <= 1'b1;      // KV data exactly one edge after its KV WR column
+            end
         end
     always @(posedge clk) begin : dp
         reg [65:0] dc; reg ue, ce; reg [255:0] d;

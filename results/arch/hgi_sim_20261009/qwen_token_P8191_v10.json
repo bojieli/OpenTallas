@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.hgi_sim.qwen_proof.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T21:14:19Z",
+ "host": "known-grouse",
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218",
+ "stage": "token",
+ "layer": 0,
+ "position": 8191,
+ "runs": [
+  {
+   "stage": "token",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 46,
+   "image_bytes": 4768,
+   "executed_records": 1164,
+   "wall_s": 76.9,
+   "families": {
+    "embedding": {
+     "checks": 4,
+     "exact": 4
+    },
+    "layer": {
+     "checks": 144,
+     "exact": 144
+    },
+    "head+head_scale": {
+     "checks": 4,
+     "exact": 4
+    },
+    "argmax_local+argmax_merge+end": {
+     "checks": 1,
+     "exact": 1
+    }
+   },
+   "failures": [],
+   "record_families": [
+    "",
+    "all_reduce_down",
+    "all_reduce_o",
+    "argmax_local",
+    "argmax_merge",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "embedding",
+    "end",
+    "gu",
+    "head",
+    "head_scale",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 110780
+  }
+ ],
+ "spec": "HGI-1 1.0 (owner-approved encoding)",
+ "golden": "qwen_r25, permuted RoPE order (spec 7.2)",
+ "source_sha256": {
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "hgi_sim/machine.py": "043dca7cfbd0a9f7a23f05c5575ba5c475f5e1db2cf4682e2a0fb576cab7eed2",
+  "hgi_sim/qwen_compiler.py": "3dacfda322e9ee034988a1cce78f9fccface494d7ce71830950d971995966220",
+  "hgi_sim/qwen_proof.py": "8958458ce5017265d445f36cbbd2528f702ab45f0c2ddb4888282a622cfa8a23",
+  "qwen_r25_golden.py": "2a376d8a2c473efec9f62ba8b13ff75387cd8fde311e2ae1dcff2982e28f0867",
+  "hbm_generic_iface.py": "51d62acbcc860b3a0a3dbc762b434017a78dee2eae3f126aa25ad3f370461af9"
+ }
+}

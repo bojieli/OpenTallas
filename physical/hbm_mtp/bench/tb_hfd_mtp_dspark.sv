@@ -34,7 +34,8 @@ module tb_dshbm_dspark;
     parameter integer MUT = 0, ACCEPT_LEAF = 0, WR = 136, SR = 10, W = 128, MAXPOS = 128;
     parameter integer NEXP = 12, NDEXP = 4, KV = 6, KD = 3, LP = 8, RP = 4;
     parameter integer TIMEOUT = 200000000;
-    localparam integer TW = 17, PMAX = 8, IW = 9, AW = 32;
+    parameter integer TW = 17;                       // hbm-forks 2026-10-09: TW 18 (HGI-1 18-bit tokens) by -P override
+    localparam integer PMAX = 8, IW = 9, AW = 32;
     localparam [7:0] OP_CMD = 8'h01, OP_TOK = 8'h02, OP_WR = 8'h10, OP_RD = 8'h11, OP_SEL = 8'h12, OP_RV = 8'h20,
                      OP_VAL = 8'h21, OP_ID = 8'h22, OP_UNION = 8'h30, OP_UID = 8'h31, OP_LG = 8'h40,
                      OP_LV = 8'h41, OP_END = 8'hFE, OP_FINAL = 8'hF0, OP_EOF = 8'hFF;

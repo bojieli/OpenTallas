@@ -54,9 +54,24 @@ IMG = Path("/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1")  # links 
 X_PRELOAD = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191/x_preload.hex")
 KV_HISTORY = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/history")
 GOLD = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191")
+# token-exact 10-09: the TP4 36-layer regen failed (GPU down), so the full-history tree above may be absent.  The
+# realmem-ctx8k P8191 gold (layers 0-2: x preload, layer X, kv_pre, kv_at_P; every file sha-equal to the committed
+# oracle digests) carries the L3 chain mode.  QWEN_FX_HISTORY / QWEN_FX_GOLD / QWEN_FX_XPRE override the paths.
+REALMEM = Path("/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191")
+if not X_PRELOAD.exists() and (REALMEM / "x_preload.hex").exists():
+    X_PRELOAD = REALMEM / "x_preload.hex"
+if not GOLD.exists() and REALMEM.exists():
+    GOLD = REALMEM
+X_PRELOAD = Path(os.environ.get("QWEN_FX_XPRE", X_PRELOAD))
+KV_HISTORY = Path(os.environ.get("QWEN_FX_HISTORY", KV_HISTORY))
+GOLD = Path(os.environ.get("QWEN_FX_GOLD", GOLD))
+CHAIN = 3   # L3 mode: layers 0..CHAIN-1 at P8191 (measure-at-target-context: a 2-3 layer chain), current KV checked
 # When gold files are missing the COMMITTED oracle record still checks every layer X file, every head Xnorm and the
 # head argmax/logit by digest; current-token KV codes are checked wherever a gold kv_at_P JSON exists.
 REF = ROOT / "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json"
+# token-exact 10-09: a gold made by tools/qwen_hbmacc_position_oracle_gpu.py --kv-history (CPU, history-seeded) carries
+# its own oracle.json; QWEN_FX_REF points the digest checks (kv_at_P, head) at it instead of the committed real-prompt one
+REF = Path(os.environ.get("QWEN_FX_REF", REF))
 KV_GOLD = [GOLD / "kv_at_P", FIX / "claude/realmem-ctx8k/gold/P8191/kv_at_P"]
 POS, TOKEN = 8191, 24
 L0_MAX_CYCLES = 9000
@@ -123,10 +138,20 @@ def build(bld: Path, jobs: int):
                   "--die-header", bld / "die/Vdie___024root.h", "--tile-header", bld / "tile/Vtile___024root.h",
                   "--nport", 48, "--scale-banks", 13, "--code-banks", 5, "--crom-words", 1048576,
                   "--hbm-layers", 36, "--kv-ideal", 0, "--embed-rom", 1, "--out", gen / "rm_access.hpp"], bld, steps)
+    link(bld, steps, [m[0] for m in models])
+    pins = {str(p.relative_to(ROOT)): sha(p) for p in sorted({*die_sources(), *S4.TILE_RTL, *S4.COLL_RTL, HOST})}
+    (bld / "build.json").write_text(json.dumps(dict(executable_sha256=sha(bld / "qwen_plain_ar_stream4"), steps=steps,
+                                                    source_sha256=pins), indent=1) + "\n")
+    print("built", bld / "qwen_plain_ar_stream4")
+
+
+def link(bld: Path, steps, prefixes=("die", "coll", "tile")):
+    """The host link alone (relink phase: a host change on an existing verilated build; token-exact 10-09)."""
+    gen = bld / "gen"
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([VERILATOR, "-V"], text=True)).group(1)
     includes = {f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{S4.RT}", f"-I{S4.RR}", f"-I{gen}"}
     archives = []
-    for prefix, *_ in models:
+    for prefix in prefixes:
         archives += sorted((bld / prefix).rglob("*.a"))
         includes.add(f"-I{bld / prefix}")
         includes.update(f"-I{h.parent}" for h in (bld / prefix).rglob("V*.h"))
@@ -135,10 +160,7 @@ def build(bld: Path, jobs: int):
                 "-Wl,--start-group", *archives, "-Wl,--end-group",
                 *(f"{vroot}/include/{p}" for p in ("verilated.cpp", "verilated_threads.cpp", "verilated_dpi.cpp")),
                 "-o", exe], bld, steps)
-    pins = {str(p.relative_to(ROOT)): sha(p) for p in sorted({*die_sources(), *S4.TILE_RTL, *S4.COLL_RTL, HOST})}
-    (bld / "build.json").write_text(json.dumps(dict(executable_sha256=sha(exe), steps=steps, source_sha256=pins),
-                                               indent=1) + "\n")
-    print("built", exe)
+    return exe
 
 
 def e4m3(bits):
@@ -152,6 +174,10 @@ def read_words(p):
 
 def sha_file(p):
     return sha(p) if p.exists() else None
+
+
+def layers_of(mode):
+    return [0] if mode == "L0" else list(range(CHAIN)) if mode == "L3" else [] if mode == "head" else list(range(36))
 
 
 def check(out, mode, layers):
@@ -180,7 +206,7 @@ def check(out, mode, layers):
                 got_c = [int(r[3], 16) for r in rows if r[0] == kind]
                 want_c = [e4m3(int(b, 16)) for b in gold[field]]
                 kv[f"{key}_{kind}"] = sum(a != b for a, b in zip(got_c, want_c)) + abs(len(got_c) - len(want_c))
-    if mode == "full":
+    if mode in ("full", "head"):
         h0 = ref["head"]["head_die0"]
         expected = [h0["argmax_local"], int(h0["logit_bits"], 16)]   # rank 0 holds the global winner (token 18)
         for d in range(4):
@@ -194,15 +220,23 @@ def run(bld: Path, work: Path, mode: str, threads: int):
     work.mkdir(parents=True, exist_ok=True)
     # The full-token host refuses anything but [E,] L0..L35, head; the L0 mode runs the full list and stops at
     # --max-cycles once layer 0 has retired (published L0: cycles 7..6,051).
-    layers = [0] if mode == "L0" else list(range(36))
-    names = [f"L{n}" for n in layers] + ([] if mode == "L0" else ["head"])
+    layers = layers_of(mode)
     stages = work / "stages.txt"
     stages.write_text("".join(f"{n} " + " ".join(str(IMG / f"{n}-d{d}") for d in range(4)) + " 0\n"
                               for n in [f"L{n}" for n in range(36)] + ["head"]))
     out = work / "run"
-    cmd = [bld / "qwen_plain_ar_stream4", "--stages", stages, out, X_PRELOAD, "--pos", POS, "--token", TOKEN,
+    xpre = X_PRELOAD
+    if mode == "head":   # the head alone (minimum component): its input = the gold L35 output, identical on every rank
+        xs = [(GOLD / f"L35_die{d}_x.hex").read_text() for d in range(4)]
+        if any(x != xs[0] for x in xs):
+            raise SystemExit("gold L35 X differs between ranks: no single head preload")
+        xpre = work / "head_x_preload.hex"
+        xpre.write_text("@1000\n" + xs[0])
+    cmd = [bld / "qwen_plain_ar_stream4", "--stages", stages, out, xpre, "--pos", POS, "--token", TOKEN,
            "--kv-dir", KV_HISTORY, "--kv-ideal", 0, "--early-go", 1, "--posted-wb", 1,
-           *(["--max-cycles", L0_MAX_CYCLES] if mode == "L0" else [])]
+           *(["--max-cycles", L0_MAX_CYCLES] if mode == "L0" else []),
+           *(["--stop-after", CHAIN - 1] if mode == "L3" else []),
+           *(["--first-stage", 36] if mode == "head" else [])]
     env = dict(os.environ, RT_THREADS=str(threads))
     env.pop("RT_PROGRESS", None)
     t0 = time.monotonic()
@@ -214,8 +248,8 @@ def run(bld: Path, work: Path, mode: str, threads: int):
 
 def finish(bld, work, mode, returncode, wall):
     """Judge a finished run directory (also used by the `check` phase to re-judge without re-simulating)."""
-    layers = [0] if mode == "L0" else list(range(36))
-    names = [f"L{n}" for n in layers] + ([] if mode == "L0" else ["head"])
+    layers = layers_of(mode)
+    names = [f"L{n}" for n in layers] + (["head"] if mode in ("full", "head") else [])
     out = work / "run"
 
     class P:  # noqa: N801 -- the simulator's exit status
@@ -230,13 +264,17 @@ def finish(bld, work, mode, returncode, wall):
     layer_x, kv, heads, norms, unverified = check(out, mode, layers)
     done = re.search(r"QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=(\d+) cycles=(\d+)", text)
     drained = re.search(r"WRITEBACK drained=(\d)", text)
-    exact = bool((mode == "L0" or (p.returncode == 0 and done)) and list(stage_cycles) == names
+    if mode == "L3":   # all CHAIN layers' current K/V must have been read back and checked
+        exact_kv = len(kv) == 2 * 4 * CHAIN and not unverified
+    else:
+        exact_kv = True
+    exact = bool(exact_kv and (mode == "L0" or (p.returncode == 0 and done)) and list(stage_cycles) == names
                  and all(v == 0 for v in layer_x.values()) and all(v == 0 for v in kv.values())
                  and all(v == 0 for v in norms.values())
-                 and (mode != "full" or (len(heads) == 5 and all(v == heads["expected"] for v in heads.values()))))
+                 and (mode not in ("full", "head") or (len(heads) == 5 and all(v == heads["expected"] for v in heads.values()))))
     result = dict(schema="opentallas.exactness.qwen-rom-fulltoken.v1", mode=mode, exact=exact, returncode=p.returncode,
                   cycles=int(done[2]) if done else None, stage_cycles=stage_cycles,
-                  next_token=heads.get("die0", [None, None])[0] if heads else None,
+                  next_token=heads["die0"][0] if heads.get("die0") else None,
                   winning_logit_bits=f"{heads['die0'][1]:08x}" if heads.get("die0") and len(heads["die0"]) > 1 else None,
                   head_results=heads, head_xnorm_mismatches=norms,
                   layer_x_mismatches=sum(layer_x.values()), layer_x_checks=len(layer_x),
@@ -254,15 +292,19 @@ def finish(bld, work, mode, returncode, wall):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=("build", "run", "check"))
+    ap.add_argument("phase", choices=("build", "relink", "run", "check"))
     ap.add_argument("--build", type=Path, required=True)
     ap.add_argument("--work", type=Path)
-    ap.add_argument("--stages", choices=("L0", "full"), default="L0")
+    ap.add_argument("--stages", choices=("L0", "L3", "head", "full"), default="L0")
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     a = ap.parse_args()
     if a.phase == "build":
         build(a.build.resolve(), a.jobs)
+    elif a.phase == "relink":
+        st = []
+        link(a.build.resolve(), st)
+        print("relinked", st)
     elif a.phase == "check":
         w = a.work.resolve()
         text = (w / "runtime.log").read_text()

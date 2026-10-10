@@ -1,0 +1,746 @@
+{
+ "schema": "opentallas.hbm_generic_iface.v1",
+ "status": "PROPOSED design for owner review",
+ "r25_facts": {
+  "simt": "absent: fixed-function SMs, no kernel memory (hbm-forks.log 10-09 03:29)",
+  "ds_program": "native unit ops only (hbm-sim lowering), no SIMT.RUN"
+ },
+ "required_new_logic": [
+  "indexed descriptors (MDESC indexed, n_sel N_FROM_VM) in the unit dispatchers",
+  "generic IDX.TOPK decode over the existing selector"
+ ],
+ "version": "1.0",
+ "doc": "docs/HBM_GENERIC_INTERFACE.md",
+ "magic": "0x31494748",
+ "md_words": 64,
+ "md_fields": [
+  {
+   "name": "magic",
+   "word": 0,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject a non-HGI image",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_minor",
+   "word": 1,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_major",
+   "word": 1,
+   "lsb": 8,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "n_words",
+   "word": 1,
+   "lsb": 16,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "fixed 64; guards a truncated load",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "manifest_sha256",
+   "word": 32,
+   "lsb": 0,
+   "width": 256,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "sha256 of the model manifest JSON (C8); binds MD to one model",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cp_vocab",
+   "word": 40,
+   "lsb": 0,
+   "width": 18,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell / completion token range check (width 18 everywhere)",
+   "reset": 129280,
+   "legal": [
+    1,
+    262143
+   ]
+  },
+  {
+   "name": "cp_ctx_max",
+   "word": 41,
+   "lsb": 0,
+   "width": 21,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell position range check",
+   "reset": 1048576,
+   "legal": [
+    1,
+    1048576
+   ]
+  },
+  {
+   "name": "coll_group_size",
+   "word": 46,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "hfd_coll",
+   "why": "aligned groups (C6 set); rank = die_id mod size",
+   "reset": 96,
+   "legal": [
+    1,
+    2,
+    4,
+    8,
+    96
+   ]
+  },
+  {
+   "name": "entry_ar",
+   "word": 56,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "AR decode step: record offset in the image (16 B units)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_verify",
+   "word": 57,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP verify pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_draft",
+   "word": 58,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP draft pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_base",
+   "word": 60,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image in HBM, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_pages",
+   "word": 61,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image size, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "crc32",
+   "word": 63,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "IEEE CRC-32 of words 0..62",
+   "reset": null,
+   "legal": null
+  }
+ ],
+ "reserved_words": {
+  "geometry_in_manifest": "2-31",
+  "static_reserved": "42-45, 47-48, 46 bits 31:8",
+  "mtp": "49, 53-55",
+  "window_chunk": "50-52",
+  "other": "59, 62"
+ },
+ "coll_group_size_defined_rejected": [
+  16,
+  32,
+  64
+ ],
+ "errors": {
+  "0": "OK",
+  "1": "E_MAGIC",
+  "2": "E_VERSION",
+  "3": "E_CRC",
+  "4": "E_BUSY",
+  "5": "E_RANGE",
+  "6": "E_RESERVED"
+ },
+ "fmt": {
+  "FP32": 0,
+  "BF16": 1,
+  "FP8E4M3": 2,
+  "FP4E2M1": 3,
+  "INT8": 4,
+  "U32": 5,
+  "UE8M0": 6
+ },
+ "uop": {
+  "bits": 128,
+  "fields": [
+   {
+    "name": "imm_b",
+    "lsb": 0,
+    "width": 32
+   },
+   {
+    "name": "imm_a",
+    "lsb": 32,
+    "width": 32
+   },
+   {
+    "name": "param",
+    "lsb": 64,
+    "width": 25
+   },
+   {
+    "name": "slot",
+    "lsb": 89,
+    "width": 3
+   },
+   {
+    "name": "tmpl",
+    "lsb": 92,
+    "width": 1
+   },
+   {
+    "name": "opnd",
+    "lsb": 93,
+    "width": 7
+   },
+   {
+    "name": "pred",
+    "lsb": 100,
+    "width": 2
+   },
+   {
+    "name": "wait",
+    "lsb": 102,
+    "width": 16
+   },
+   {
+    "name": "op",
+    "lsb": 118,
+    "width": 6
+   },
+   {
+    "name": "unit",
+    "lsb": 124,
+    "width": 4
+   }
+  ],
+  "units": [
+   "CTL",
+   "SM",
+   "SU",
+   "SFU",
+   "FUSED",
+   "ATT",
+   "COLL",
+   "ARGMAX",
+   "DMA",
+   "IDX",
+   "HC",
+   "SIMT",
+   "RSV12",
+   "RSV13",
+   "RSV14",
+   "RSV15"
+  ],
+  "optional_units": {
+   "SIMT": "absent on r25; a record to an absent unit faults (completion status 3)"
+  },
+  "ops": {
+   "CTL": [
+    "NOP",
+    "LOOP",
+    "ENDLOOP",
+    "END",
+    "FENCE",
+    "TOKX",
+    "AMAX",
+    "ACCEPT"
+   ],
+   "SM": [
+    "MATVEC"
+   ],
+   "SU": [
+    "VOP"
+   ],
+   "SFU": [
+    "GLU"
+   ],
+   "FUSED": [
+    "HC_PRE_NORM",
+    "ROW_NORM",
+    "HC_POST",
+    "SOFTMAX",
+    "QDQ_FP8",
+    "QDQ_FP4_E8M0",
+    "QDQ_FP4_E4M3"
+   ],
+   "ATT": [
+    "QK",
+    "PV"
+   ],
+   "COLL": [
+    "ALL_REDUCE_SUM",
+    "ALL_GATHER",
+    "TOPK_MERGE",
+    "ARGMAX_MERGE",
+    "GROUP_REDUCE_MCAST",
+    "ROW_GATHER"
+   ],
+   "ARGMAX": [
+    "LOCAL"
+   ],
+   "DMA": [
+    "LOAD",
+    "STORE",
+    "FENCE",
+    "KVWB_DS"
+   ],
+   "IDX": [
+    "INDEX",
+    "MERGE",
+    "TOPK",
+    "OWNED",
+    "EHASH"
+   ],
+   "HC": [
+    "HC_MIX"
+   ],
+   "SIMT": [
+    "RUN"
+   ]
+  },
+  "op_code": "index in ops[unit]",
+  "wait_bit": "bit u = unit code u",
+  "pred": [
+   "ALWAYS",
+   "POS0",
+   "NOT_POS0",
+   "LAST_ITER"
+  ],
+  "opnd_order": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "O",
+   "R",
+   "I"
+  ],
+  "param": {
+   "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+   "CTL.TOKX": "PROPOSED (Q-MTP-1, hardware in hfd_cmdproc): A = U32 [1 + ncol]: A[0] = k (1 <= k <= ncol), A[1..k] = the committed tokens; the CP emits k completion beats {token A[i], pos + i - 1, status 0}; END follows",
+   "CTL.END": "token = A[0] (A required on r25: the ARGMAX / COLL.ARGMAX_MERGE output in VM); A-absent form (latest SIMT RESULT) only on dies with SIMT",
+   "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1 (P <= 8 slots share one weight read; A and O then carry one row per slot, m = P; each slot's result is the single-slot arithmetic) (G18)",
+   "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
+   "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
+   "FUSED.ROW_NORM": "[5:0] d_units (width/128: 32|40 prenorm; 8|2 Qwen TP4 QK-norm; with seg 128 and m > 1 rows, the width of one A row), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+   "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
+   "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (DS 1347: uniform 1,347-row head shards; Qwen3-8B 37984) (G17)",
+   "ATT.QK/PV": "[3:0] head lanes (0 encodes 16) (G19), [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / POS_SLOT1 = the mask), C (optional) = second row source appended after B (e.g. DS selected compressed rows); ring = 1: B is a ring of B.m slots (power of two), first row read = slot (POS1 - n) mod B.m, wrapping (G12)",
+   "FUSED.QDQ_FP8": "act_quant FP8E4M3 with a UE8M0 scale per 32-element block (hfd_quant): O = dequantised values (G8)",
+   "FUSED.QDQ_FP4_E8M0": "FP4E2M1 with a UE8M0 scale per 32-element block: O = dequantised values (G8)",
+   "FUSED.QDQ_FP4_E4M3": "FP4E2M1 with an FP8E4M3 scale per block; [7:0] block size (v1 legal set {16}, others E_RANGE; DS 16): O = dequantised values (G8)",
+   "COLL.ALL_GATHER": "even-split segments: rank r contributes elements [floor(r*n/G), floor((r+1)*n/G)) of A (n = A.n, G = group size); every rank receives all n in O (G9)",
+   "COLL.GROUP_REDUCE_MCAST": "[7:0] sub-group size s (2, 4, 8): each aligned sub-group of s ranks reduces A in the rank-order pairwise tree, and every sub-group's result is multicast to all ranks of the group; O = the sub-groups' results in sub-group order, format O.fmt (G10)",
+   "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's row store; row i is owned by rank (i div B) mod G and stored there at local row (i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
+   "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
+   "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
+   "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
+   "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = the layer-20 candidate table [block ids U32 | values FP32 at C.stride] (keep_en, G18a: owned blocks listed with value > -inf are kept), O / R = local top-k ids (ascending) / values, D = candidates in the same [ids | values] layout (cand_en)",
+   "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
+   "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
+   "MDESC.STREAM": "space 2: base = stream id; 0 SM -> SU lanes, 1 SU reduction -> ARGMAX, 2 SM -> ARGMAX; element FIFO (P-slot producers publish slot-major); underrun / overrun / unwired id faults; ids >= 3 reserved (E_RANGE)",
+   "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row r * M + j; D[0] = M (G21)",
+   "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
+   "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
+   "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
+   "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)"
+  },
+  "record": "header(16 B) + [SUT 32 B if tmpl] + one MDESC (32 B) per set opnd bit, in A,B,C,D,O,R,I order",
+  "same_unit_order": "a unit starts a record only after the previous record of the same unit has made its writes visible to that unit"
+ },
+ "mdesc": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "space",
+    "lsb": 0,
+    "width": 2
+   },
+   {
+    "name": "fmt",
+    "lsb": 2,
+    "width": 3
+   },
+   {
+    "name": "ibcast",
+    "lsb": 5,
+    "width": 1
+   },
+   {
+    "name": "base",
+    "lsb": 8,
+    "width": 40
+   },
+   {
+    "name": "n",
+    "lsb": 48,
+    "width": 20
+   },
+   {
+    "name": "m",
+    "lsb": 68,
+    "width": 20
+   },
+   {
+    "name": "stride",
+    "lsb": 88,
+    "width": 32
+   },
+   {
+    "name": "istride",
+    "lsb": 120,
+    "width": 16
+   },
+   {
+    "name": "lstride",
+    "lsb": 136,
+    "width": 32
+   },
+   {
+    "name": "dyn_sel",
+    "lsb": 168,
+    "width": 6
+   },
+   {
+    "name": "dyn_mul",
+    "lsb": 174,
+    "width": 27
+   },
+   {
+    "name": "n_sel",
+    "lsb": 201,
+    "width": 6
+   },
+   {
+    "name": "l1stride",
+    "lsb": 207,
+    "width": 32
+   },
+   {
+    "name": "indexed",
+    "lsb": 6,
+    "width": 1
+   }
+  ],
+  "space": [
+   "HBM",
+   "VM",
+   "STREAM",
+   "NONE"
+  ],
+  "dyn": [
+   "ZERO",
+   "POS",
+   "POS1",
+   "TOKEN",
+   "L",
+   "RANK",
+   "SLOT",
+   "POS_SLOT",
+   "L1",
+   "WIN_N0",
+   "WIN_START0",
+   "WIN_N1",
+   "WIN_START1",
+   "CHUNK_START",
+   "CHUNK_N",
+   "POS_SLOT1",
+   "DS_FULL_DYN[0]",
+   "DS_FULL_DYN[1]",
+   "DS_FULL_DYN[2]",
+   "DS_FULL_DYN[3]",
+   "DS_FULL_DYN[4]",
+   "DS_FULL_DYN[5]",
+   "DS_FULL_DYN[6]",
+   "DS_FULL_DYN[7]",
+   "DS_FULL_DYN[8]",
+   "DS_FULL_DYN[9]",
+   "DS_FULL_DYN[10]",
+   "DS_FULL_DYN[11]",
+   "DS_FULL_DYN[12]",
+   "DS_FULL_DYN[13]",
+   "DS_FULL_DYN[14]",
+   "DS_FULL_DYN[15]",
+   "DS_FULL_DYN[16]",
+   "DS_FULL_DYN[17]",
+   "DS_FULL_DYN[18]",
+   "DS_FULL_DYN[19]",
+   "DS_FULL_DYN[20]",
+   "DS_FULL_DYN[21]",
+   "DS_FULL_DYN[22]",
+   "DS_FULL_DYN[23]",
+   "DS_FULL_DYN[24]",
+   "DS_FULL_DYN[25]",
+   "DS_FULL_DYN[26]",
+   "DS_FULL_DYN[27]",
+   "DS_FULL_DYN[28]",
+   "DS_FULL_DYN[29]",
+   "DS_FULL_DYN[30]",
+   "DS_FULL_DYN[31]",
+   "DS_FULL_DYN[32]",
+   "DS_FULL_DYN[33]",
+   "DS_FULL_DYN[34]",
+   "DS_FULL_DYN[35]",
+   "DS_FULL_DYN[36]",
+   "DS_FULL_DYN[37]",
+   "DS_FULL_DYN[38]",
+   "DS_FULL_DYN[39]",
+   "DS_FULL_DYN[40]",
+   "DS_FULL_DYN[41]",
+   "DS_FULL_DYN[42]",
+   "DS_FULL_DYN[43]",
+   "DS_FULL_DYN[44]",
+   "DS_FULL_DYN[45]",
+   "DS_FULL_DYN[46]",
+   "N_FROM_VM"
+  ],
+  "address": "base + L*lstride + L1*l1stride + (indexed ? U32(VM[I_eff+L]) : DYN[dyn_sel])*dyn_mul",
+  "indexed": "id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L); id bounds software-owned: hardware checks only the 40-bit HBM / VM range, the simulator faults out-of-region accesses",
+  "istride": "0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"
+ },
+ "sut": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "a_src",
+    "lsb": 0,
+    "width": 2
+   },
+   {
+    "name": "a_ind",
+    "lsb": 2,
+    "width": 2
+   },
+   {
+    "name": "b_src",
+    "lsb": 4,
+    "width": 2
+   },
+   {
+    "name": "b_half",
+    "lsb": 6,
+    "width": 1
+   },
+   {
+    "name": "c_src",
+    "lsb": 7,
+    "width": 2
+   },
+   {
+    "name": "c_pair",
+    "lsb": 9,
+    "width": 1
+   },
+   {
+    "name": "d_src",
+    "lsb": 10,
+    "width": 2
+   },
+   {
+    "name": "a_rnd",
+    "lsb": 12,
+    "width": 1
+   },
+   {
+    "name": "a_relu",
+    "lsb": 13,
+    "width": 1
+   },
+   {
+    "name": "a_min",
+    "lsb": 14,
+    "width": 1
+   },
+   {
+    "name": "c_clip",
+    "lsb": 15,
+    "width": 1
+   },
+   {
+    "name": "m1",
+    "lsb": 16,
+    "width": 3
+   },
+   {
+    "name": "m2",
+    "lsb": 19,
+    "width": 2
+   },
+   {
+    "name": "qm",
+    "lsb": 21,
+    "width": 3
+   },
+   {
+    "name": "ad",
+    "lsb": 24,
+    "width": 3
+   },
+   {
+    "name": "sfu",
+    "lsb": 27,
+    "width": 3
+   },
+   {
+    "name": "e1",
+    "lsb": 30,
+    "width": 3
+   },
+   {
+    "name": "e2",
+    "lsb": 33,
+    "width": 2
+   },
+   {
+    "name": "rnd",
+    "lsb": 35,
+    "width": 1
+   },
+   {
+    "name": "dst",
+    "lsb": 36,
+    "width": 2
+   },
+   {
+    "name": "red",
+    "lsb": 38,
+    "width": 2
+   },
+   {
+    "name": "red_sq",
+    "lsb": 40,
+    "width": 1
+   },
+   {
+    "name": "red_whole",
+    "lsb": 41,
+    "width": 1
+   },
+   {
+    "name": "red_rnd",
+    "lsb": 42,
+    "width": 1
+   },
+   {
+    "name": "su_vec",
+    "lsb": 43,
+    "width": 2
+   },
+   {
+    "name": "red_tree",
+    "lsb": 45,
+    "width": 1
+   },
+   {
+    "name": "imm1",
+    "lsb": 46,
+    "width": 32
+   },
+   {
+    "name": "imm2",
+    "lsb": 78,
+    "width": 32
+   },
+   {
+    "name": "imm3",
+    "lsb": 110,
+    "width": 32
+   }
+  ],
+  "semantics": "tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (RoPE pairing is in the weights)"
+ },
+ "programs": {
+  "images": "one program image per die (rank); all images of a group have identical structure record for record (unit, op, opnd, collectives in the same order); they may differ in descriptor values and immediates, and a record a rank does not run is CTL.NOP (G11)",
+  "rank_masks": "not used"
+ },
+ "ds_lowering_items": {
+  "G8": {
+   "item": "FUSED.QDQ_FP8 / QDQ_FP4_E8M0 / QDQ_FP4_E4M3",
+   "needs": "existing DS act-quant engine behind FUSED; dispatcher decode"
+  },
+  "G9": {
+   "item": "ALL_GATHER even-split segment rule",
+   "needs": "none: the DS collective's split rule, stated"
+  },
+  "G10": {
+   "item": "COLL.GROUP_REDUCE_MCAST",
+   "needs": "existing DS o-group reduce on the collective (tree tap at log2 s); dispatcher decode"
+  },
+  "G11": {
+   "item": "per-die program images of identical structure",
+   "needs": "compiler only"
+  },
+  "G12": {
+   "item": "ATT second row source (C) and ring wrap",
+   "needs": "small hardware: ATT row-fetch front end (second list, mask on a power-of-two ring counter)"
+  },
+  "G13": {
+   "item": "IDX.EHASH Engram ids",
+   "needs": "existing DS Engram hash engine (ot_hdc_engram_hash) behind IDX; host-written ids are the bring-up fallback"
+  },
+  "G14": {
+   "item": "COLL.ROW_GATHER",
+   "needs": "owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"
+  }
+ },
+ "linear_attention": {
+  "scope": "in scope via software (owner decision 2026-10-09)",
+  "engines": "existing (SM, SU, DMA, COLL)",
+  "state": "FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",
+  "conv_ring": "FP32 [conv_k-1][channels] in region STATE",
+  "softplus": "SU template (no SFU code)",
+  "per_head": "second loop level (CTL.LOOP level 1, MDESC l1stride)"
+ }
+}

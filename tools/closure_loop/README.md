@@ -74,7 +74,10 @@ least T/(layers x max(L, 100 um))).  Fails as configured -> the first APPROVED a
 inline on the `bash ...route_master.sh` invocation and are recorded in `spec.submit_lint` (submitted spec kept in
 `spec_submitted`); no fix passes -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." saying why each fix does not.  Utilisation
 is estimated only from an earlier FLOORPLAN_MARGIN util measurement of the same synthesis input (STATE/submit_lint_util.json).
-`"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
+A setting counts only when the job's SOURCE COMMIT's flow reads it (drive-0212: OT_PIN_GROUP_MAX / OT_PIN_BALANCE_* exist in
+run_abi3_physical.py since dde873a8e, PIN_MIN_TRACKS in route_master.sh since main; on an older source the fix is not
+applied and the job is REFUSED "rebase the source").  Balanced regions add only where their ranges overlap (densest 100 um
+window).  `"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
 FLOORPLAN_MARGIN jobs without a live successor.
 
 ## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
@@ -188,6 +191,16 @@ bfh2_recut_lvt, SS 951 / FF 556) starts on its own value instead of calibrating 
   - only a missed ECO goes NEEDS_RTL
   - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
+
+### Automatic VT-swap setup ECO (2026-10-09, merge-eco)
+- A route whose only miss is a THIN TT setup miss -- TT in [-45, 0), FF >= 0, DRC 0, no failed check / bench / metric
+  error -- runs `vtswap_eco.sh` / `vtswap_eco.tcl` (eco-sweep e494ff8ac) as its ECO stage before NEEDS_RTL: RVT->LVT
+  master swaps on the worst TT paths, band-limited, prospective <= 2 % LVT cap, FF hold guard, no re-route (ASAP7 R/L
+  footprints are identical, so the route DRC stands). Same stage tag / output layout as the hold ECO: the ECO completion
+  installs, re-verdicts at the routed insertion and records it unchanged.
+- Targets 10 ps, then (on a miss) once more at 5 ps (fewer swaps under the cap); then NEEDS_RTL. Each run keeps its own
+  output (`cl/eco-vtswap-t<target>[-r<n>]`) and stage tag. Spec `hold_eco: {vtswap: false}` turns it off;
+  `vtswap_targets`, `vtswap_cap_pct` override. `vtswap_launch.py` remains the manual launcher for an already NEEDS_RTL job.
 
 ### Hold ECO rev 2 (2026-10-07): the "ECO buffers destroy setup" class
 Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Causes found, and what rev 2 does:

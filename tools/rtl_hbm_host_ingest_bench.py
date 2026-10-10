@@ -106,7 +106,7 @@ def case(rng, die=5, P=4652, win_layer=20, slots=((3, False), (1, True))):
 
 def build(work: Path, tag, nd, np_, srcs, fence=1):
     exe = work / f"hh_{tag}.vvp"
-    subprocess.run(["iverilog", "-g2012", "-o", str(exe), "-s", "tb_hbm_host_ingest", f"-Ptb_hbm_host_ingest.ND={nd}",
+    subprocess.run(["iverilog", "-g2012", *__import__("os").environ.get("OT_HING_DEFS", "").split(), "-o", str(exe), "-s", "tb_hbm_host_ingest", f"-Ptb_hbm_host_ingest.ND={nd}",
                     f"-Ptb_hbm_host_ingest.FENCE={fence}",
                     f"-Ptb_hbm_host_ingest.NP={np_}", *map(str, srcs), str(TB)], check=True, capture_output=True, text=True)
     return exe

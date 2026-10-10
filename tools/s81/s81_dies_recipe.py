@@ -20,8 +20,12 @@ r4b layer1 chain:
   headp2    the mtp-die P2 proposal (claude/mtp-die-20261008, results/arch/mtp_die_20261008/plan.json, NOT on main):
             the drafter's experts move to 40 draft dies, the head die keeps 511 pairs (globals 2,526 / 12 + DP1
             primary 282 + Markov 18) + 85 bundles.  The MTP sequencer / accept slab and the 5 draft fan-out SerDes come
-            from mtp-die's generator flags (--mtp-seq --mtp-links 5) once they land on main; until then they are
-            PLACEHOLDER area in the array composition (tools/dsrom_array_v2.py), not in this floorplan.
+            from mtp-die's generator flags (--mtp-seq --mtp-links 5).
+  head631   the MTP head die (Markov K256 storage, 631 pairs + 85 bundles, sequencer + 5 draft SerDes).
+  draftA/B  the MD-2 draft dies (mtp-draftdie 2026-10-09): layer1 recipe + --draft A|B.
+Since mtp-draftdie 2026-10-09 every head recipe carries the dsfd_mtp_seq slab (generator MTP_SEQ_DEFAULT; the
+--mtp-seq / --wfc-hard / --mtp-links flags were silent no-ops on main before that commit: a merge had dropped their
+binding, so earlier head631 / headp2 records were built WITHOUT the sequencer).
 
 Every recipe sets OT_S81_Q_LEF to the qs5f q abstract (as the m221pq / r4b chains do).
 
@@ -48,10 +52,18 @@ OUT = ROOT / 'results/rtl/dsrom_s81_fulldie_20261004/s81dies'
 LAYER1 = 'results/rtl/dsrom_s81_fulldie_20261004/m221pq/options.txt'
 
 
+LAYER1_FULL = 'results/physical/s81_gen_20261009/s81_layer1_full.opts'
+
+
 def _layer1_opts():
-    o = (ROOT / LAYER1).read_text().split()
+    """mtp-draftdie 2026-10-09: the s81-gen FULL layer1 recipe (r3 options + --face-pin-inset --host --wfc-hard
+    --nxt-reach --path-pick --hop-r-cc 500 --relay-tt-reach 600 --ctrl-rq; GEN_DONE + PLACE rc=0 on the die-evidence-2
+    chain).  The earlier base (r3 + --nxt-reach --host only) failed in _hop_fix on every die drawn from it: the frame_0
+    relay rt_0_8a_y1 (773.7 um hop at the 410 um common-clock reach; --hop-r-cc 500 clears it) and the 20 mm hw_SW host
+    chain (no box on the default L; --path-pick takes a corridor path)."""
+    o = (ROOT / LAYER1_FULL).read_text().split()
     i = o.index('--die')
-    return o[:i] + o[i + 2:] + ['--nxt-reach', '--host']   # r4b: r3 options + --nxt-reach; + dsfd_host (TA-17)
+    return o[:i] + o[i + 2:]
 
 
 def _sub(o, k, v=None):
@@ -93,6 +105,14 @@ def recipes():
                        note='uniform 241.92 um frames; content = embed + lm-head bundles + the whole drafter'),
         'head14': dict(opts=hb + ['--die', 'head', '--head-dies', '14'], role='head die, current content, 14 dies',
                        note='structural option: the 12-die content over 14 dies'),
+        'draftA': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'A'],
+                       role='MD-2 P2 draft die A (20 of the 40: 5 row packages x 4 ranks)',
+                       note='layer1 recipe + draft ROM image A (mtp.0 + mtp.2 experts 0..63, tools/dsrom_mtp_draft_images.py) '
+                            '+ dsfd_p2 selected-path transport slab (expert sum in id order); no WFC'),
+        'draftB': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'B'],
+                       role='MD-2 P2 draft die B (20 of the 40)',
+                       note='layer1 recipe + draft ROM image B (mtp.1 + mtp.2 experts 64..127); expert outputs to die A '
+                            'over the in-package UCIe; no WFC'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '

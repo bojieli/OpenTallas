@@ -50,7 +50,14 @@ QUARTERS = {
                C2=3, G=8, L=2, PIPE=5,
                # r23 coordinator decision 2026-10-07: end port bands for the S-face / N-face buses (2.8 mm from the
                # centre band): their face chains end at the far-end group of the south / north chains
-               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0)),
+               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0),
+               # coll inject ownership (hgi-takeover 2026-10-09, coll/rtl/spec.json ep.inj_data): f_coll carries the
+               # endpoint's {inj_rd[1:0], inj_idx[2 x 16], ...} at bits 579:546; inject flit i (lane h: inj_idx[16h+15:16h])
+               # is owned by quarter i mod 4 (SW 0, NW 1, SE 2, NE 3, the 2-bit strap qid tied by the die top); t_coll
+               # half h (512 bits) is the AND of the envelope's result with own_h = inj_rd[h] & (inj_idx_h[1:0] == qid),
+               # so a non-owner drives ZERO and hfd_coll's OR of the four quarters is the owner's data
+               inj_gate=dict(out='t_coll', ctl='f_coll', rd=578, idx=546, lanes=2, strap='qid',
+                             strap_pins=[('qid[0]', 1406.04, 4450.716), ('qid[1]', 1406.04, 4450.812)])),
     'sfu': dict(master='hfd_sfu', lane='ot_su12_sfu', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
                 C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48)),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 7, 'AL': 6},
@@ -182,7 +189,23 @@ class Plan:
     def slot(self, j, t):
         return (j * self.LO + t) % self.WC
 
-    def model(self, din_bits):
+    def model(self, din_bits, qid=None):
+        o = self.model_raw(din_bits)
+        ig = self.q.get('inj_gate')
+        if not ig or qid is None:
+            return o
+        d = self.split(din_bits, self.din)
+        c = d[ig['ctl']]
+        off = dict(zip([p for p, _ in self.dout], _offs(self.dout)))[ig['out']]
+        hw = dict(self.dout)[ig['out']] // ig['lanes']
+        for h in range(ig['lanes']):
+            idx = c[ig['idx'] + 16 * h] | c[ig['idx'] + 16 * h + 1] << 1
+            if not (c[ig['rd'] + h] and idx == qid):
+                for b in range(off + h * hw, off + (h + 1) * hw):
+                    o[b] = 0
+        return o
+
+    def model_raw(self, din_bits):
         acc = [[0] * self.WC for _ in range(self.K)]
         d = self.split(din_bits, self.din)
         for side in ('S', 'N'):                  # end-band inputs enter the far-end accumulator of their side's chains
@@ -216,7 +239,13 @@ def vec(bits):
     return ''.join(str(b) for b in reversed(bits))
 
 
-def emit_rtl(P, neg=False):
+def emit_rtl(P, neg=False, xroot=False):
+    """xroot (redesign-hbm 2026-10-09, opt-in): every register-to-register hop between two segment clock roots
+    (multi-ck wrappers) is launched from a LOCKUP register: a negedge copy of the source register on the SOURCE root.
+    The source -> lockup hop is root-local (half a cycle), the lockup -> destination hop gets half a cycle plus the
+    inter-root skew on the setup side and T/2 of hold margin, so an inter-root skew of up to ~T/2 - clk-to-Q is
+    absorbed without hold buffers.  Cycle-exact (the destination still samples the source's value of the previous
+    edge): 0 added cycles; cost = one flop per crossing bit (scan-chain lockup-latch practice)."""
     q = P.q
     m = q['master']
     nck = len(P.cks)
@@ -227,6 +256,22 @@ def emit_rtl(P, neg=False):
         if not nck:
             return 'clk'
         return f'clk{min(nck - 1, max(0, int(y // seg_h)))}'
+
+    cw, xk = {}, []                  # xroot: register -> (clock, width); emitted lockup registers
+
+    def R(name, w, c):
+        cw[name] = (c, w)
+
+    def X(name, d):
+        """the operand a register on clock d reads for register `name` (its lockup copy when the roots differ)"""
+        if not xroot or not nck or name not in cw or cw[name][0] == d:
+            return name
+        s, w = cw[name]
+        nm = f'{name}_xk'
+        if nm not in cw:
+            cw[nm] = (f'~{s}', w)
+            xk.append(f'    (* keep *) reg [{w - 1}:0] {nm};  always @(negedge {s}) {nm} <= {name};   // xroot lockup ({s} root)')
+        return nm
 
     band_y = P.H / 2
     gy = {}
@@ -241,7 +286,8 @@ def emit_rtl(P, neg=False):
           '`timescale 1ns/1ps', f'module {m} (']
     decl = []
     cports = [(c, 1) for c in P.cks] if nck else [('ck', 1)]
-    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)]):
+    ig = q.get('inj_gate')
+    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)] + ([(ig['strap'], 2)] if ig else [])):
         decl.append(f'    input  wire [{w - 1}:0] {p_}')
     for p_, w in P.dout:
         decl.append(f'    output wire [{w - 1}:0] {p_}')
@@ -254,27 +300,37 @@ def emit_rtl(P, neg=False):
            '    (* keep *) reg [1:0] rst_q;',
            f'    always @(posedge {ck(band_y)}) rst_q <= {{rst_q[0], rst[0]}};',
            '    // face chains: input stage 0 at the pin, a stage per <= 480 um to its band (per-port depth dp)']
+    R('rst_q', 2, ck(band_y))
     for p_, w in P.din:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
         for s_ in range(D):
-            src = p_ if s_ == 0 else f'{p_}_i{s_ - 1}'
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {ck(py + s_ / D * (ty - py))}) {p_}_i{s_} <= {src};')
-    L_.append(f'    wire [{P.WIm - 1}:0] din_q = {{' + ', '.join(f'{p_}_i{P.dp[p_] - 1}' for p_, _ in reversed(P.din_m)) + '};')
-    L_ += [f'    wire [{P.LB}:0] bsrc;']
-    fold = {}
-    for u in range(P.WIm):
-        fold.setdefault(u % P.LB, []).append(f'din_q[{u}]')
-    L_.append(f'    assign bsrc[{P.LB}] = rst_q[1];')
-    for t in range(P.LB):
-        L_.append(f'    assign bsrc[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
+            c_ = ck(py + s_ / D * (ty - py))
+            src = p_ if s_ == 0 else X(f'{p_}_i{s_ - 1}', c_)
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {c_}) {p_}_i{s_} <= {src};')
+            R(f'{p_}_i{s_}', w, c_)
+    # xroot: one broadcast source per destination root (each operand through its lockup copy when the roots differ)
+    bdst = sorted({ck(gy[(k, 0)]) for k in range(P.K)}) if xroot and nck else [None]
+    for d in bdst:
+        sfx = f'_{d}' if d else ''
+        L_.append(f'    wire [{P.WIm - 1}:0] din_q{sfx} = {{' + ', '.join(X(f'{p_}_i{P.dp[p_] - 1}', d) for p_, _ in reversed(P.din_m)) + '};')
+        L_ += [f'    wire [{P.LB}:0] bsrc{sfx};']
+        fold = {}
+        for u in range(P.WIm):
+            fold.setdefault(u % P.LB, []).append(f'din_q{sfx}[{u}]')
+        L_.append(f'    assign bsrc{sfx}[{P.LB}] = {X("rst_q", d)}[1];')
+        for t in range(P.LB):
+            L_.append(f'    assign bsrc{sfx}[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
     for k in range(P.K):
         for g in range(P.G):
-            src = 'bsrc' if g == 0 else f'bc_{k}_{g - 1}'
-            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) bc_{k}_{g} <= {src};')
+            c_ = ck(gy[(k, g)])
+            src = ('bsrc' + (f'_{c_}' if bdst != [None] else '')) if g == 0 else X(f'bc_{k}_{g - 1}', c_)
+            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {c_}) bc_{k}_{g} <= {src};')
+            R(f'bc_{k}_{g}', P.LB + 1, c_)
     for j, k, g, s_, i in P.lanes():
         b = f'bc_{k}_{g}'
         lc = ck(gy[(k, g)]) if q.get('lane_ck_bank') else ck(P.lane_y.get(j, band_y))
+        b = X(b, lc)
         conns = [f'.clk({lc})', f'.rst_n(~{b}[{P.LB}])']
         bi = 0
         pi = 0
@@ -297,6 +353,7 @@ def emit_rtl(P, neg=False):
             prm = '#(' + ', '.join(f'.{a}({v})' for a, v in q['params'].items()) + ') '
         L_.append(f'    {q["lane"]} {prm}u_lane_{j} (' + ', '.join(conns) + ');')
         L_.append(f'    (* keep *) reg [{P.LO - 1}:0] lq_{j};  always @(posedge {lc}) lq_{j} <= {lo};')
+        R(f'lq_{j}', P.LO, lc)
     # end-band inputs: XORed into the far-end accumulator of their side's chains
     einj = {}
     for side in ('S', 'N'):
@@ -304,11 +361,12 @@ def emit_rtl(P, neg=False):
         u = 0
         for p_, w in P.end_bits(side, P.din):
             for b in range(w):
-                einj.setdefault((ks[u % len(ks)], (u // len(ks)) % P.WC), []).append(f'{p_}_i{P.dp[p_] - 1}[{b}]')
+                einj.setdefault((ks[u % len(ks)], (u // len(ks)) % P.WC), []).append((f'{p_}_i{P.dp[p_] - 1}', b))
                 u += 1
     # accumulators: group G-1 is the far end; head g = 0 at the boundary
     for k in range(P.K):
         for g in reversed(range(P.G)):
+            c_ = ck(gy[(k, g)])
             terms = {}
             for j, kk, gg, s_, i in P.lanes():
                 if kk != k or gg != g:
@@ -317,37 +375,81 @@ def emit_rtl(P, neg=False):
                     x = P.slot(j, t)
                     if neg and j == 1 and t < 8:
                         x = (x + 1) % P.WC          # negative control: lane 1's first 8 result bits one slot off
-                    terms.setdefault(x, []).append(f'lq_{j}[{t}]')
+                    terms.setdefault(x, []).append(f'{X(f"lq_{j}", c_)}[{t}]')
             if g == P.G - 1:
                 for x in range(P.WC):
-                    terms.setdefault(x, []).extend(einj.get((k, x), []))
-            prev = f'acc_{k}_{g + 1}' if g + 1 < P.G else None
+                    terms.setdefault(x, []).extend(f'{X(n_, c_)}[{b_}]' for n_, b_ in einj.get((k, x), []))
+            prev = X(f'acc_{k}_{g + 1}', c_) if g + 1 < P.G else None
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
                 parts = ([f'{prev}[{x}]'] if prev else []) + terms.get(x, [])
                 L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' ^ '.join(parts) if parts else "1'b0") + ';')
-            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) acc_{k}_{g} <= nx_{k}_{g};')
+            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge {c_}) acc_{k}_{g} <= nx_{k}_{g};')
+            R(f'acc_{k}_{g}', P.WC, c_)
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
+    hd = {}
+
+    def heads(d):
+        """the chain heads as read by a register on clock d (xroot: through the heads' lockup copies)"""
+        if not xroot or not nck or all(cw[f'acc_{k}_0'][0] == d for k in range(P.K)):
+            return 'heads'
+        if d not in hd:
+            hd[d] = f'heads_{d}'
+            L_.append(f'    wire [{P.K * P.WC - 1}:0] heads_{d} = {{' + ', '.join(X(f'acc_{k}_0', d) for k in reversed(range(P.K))) + '};')
+        return hd[d]
     # face chains: the last output stage at the pin (per-port depth dp)
     ob = 0
     srcs = {}
     for p_, w in P.dout_m:
-        srcs[p_] = f'heads[{ob + w - 1}:{ob}]'
+        srcs[p_] = (lambda d, hi=ob + w - 1, lo=ob: f'{heads(d)}[{hi}:{lo}]')
         ob += w
     for side in ('S', 'N'):                      # end-band outputs: the far-end broadcast bank of their side
         ks = P.end_chains(side)
         t = 0
         for p_, w in P.end_bits(side, P.dout):
-            srcs[p_] = '{' + ', '.join(f'bc_{ks[tt % len(ks)]}_{P.G - 1}[{(tt // len(ks)) % P.LB}]'
-                                       for tt in reversed(range(t, t + w))) + '}'
+            srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'{X(f"bc_{ks[tt % len(ks)]}_{P.G - 1}", d)}[{(tt // len(ks)) % P.LB}]'
+                                                                for tt in reversed(range(t, t + w))) + '}')
             t += w
+    if ig:
+        cq = X(f"{ig['ctl']}_i{P.dp[ig['ctl']] - 1}", ck(band_y))   # the control port at the band (its last input stage)
+        hw = dict(P.dout)[ig['out']] // ig['lanes']
+        NR = hw // 32                                         # owner-flag replicas: fanout 32 each (no 512-wide net)
+        L_ += ['    // coll inject ownership gate (see the generator\'s QUARTERS su inj_gate): quarter qid drives t_coll half h',
+               '    // only when it owns inject flit inj_idx_h (inj_idx_h mod 4 == qid and inj_rd[h]); every other quarter drives 0',
+               f"    (* keep *) reg [1:0] qid_q;  always @(posedge {ck(band_y)}) qid_q <= {ig['strap']};"]
+        for h in range(ig['lanes']):
+            own = f"{cq}[{ig['rd'] + h}] & ({cq}[{ig['idx'] + 16 * h + 1}:{ig['idx'] + 16 * h}] == qid_q)"
+            L_.append('`ifdef OT_HFD_SU_MUT_NOGATE')
+            L_.append(f"    wire own_{h} = 1'b1;                       // NEGATIVE CONTROL: every quarter drives")
+            L_.append('`else')
+            L_.append(f'    wire own_{h} = {own};')
+            L_.append('`endif')
+            L_.append(f'    (* keep *) reg [{NR - 1}:0] own_r{h};  always @(posedge {ck(band_y)}) own_r{h} <= {{{NR}{{own_{h}}}}};')
+            R(f'own_r{h}', NR, ck(band_y))
+        ownw = {}
+
+        def own(d, NR=NR):
+            nm = f"{ig['out']}_own" + (f'_{d}' if xroot and nck and cw[f'own_r0'][0] != d else '')
+            if nm not in ownw:
+                ownw[nm] = 1
+                msk = ', '.join(f'{{32{{{X(f"own_r{h}", d)}[{r}]}}}}' for h in reversed(range(ig['lanes'])) for r in reversed(range(NR)))
+                L_.append(f"    wire [{dict(P.dout)[ig['out']] - 1}:0] {nm} = {{{msk}}};")
+            return nm
+        if not xroot:
+            own(None)
+        srcs[ig['out']] = (lambda d, f=srcs[ig['out']]: f"({f(d)} & {own(d)})")
     for p_, w in P.dout:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
         for s_ in range(D):
-            src = srcs[p_] if s_ == 0 else f'{p_}_o{s_ - 1}'
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_o{s_};  always @(posedge {ck(ty + (s_ + 1) / D * (py - ty))}) {p_}_o{s_} <= {src};')
+            c_ = ck(ty + (s_ + 1) / D * (py - ty))
+            src = srcs[p_](c_) if s_ == 0 else X(f'{p_}_o{s_ - 1}', c_)
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_o{s_};  always @(posedge {c_}) {p_}_o{s_} <= {src};')
+            R(f'{p_}_o{s_}', w, c_)
         L_.append(f'    assign {p_} = {p_}_o{D - 1};')
+    if xk:
+        L_.append(f'    // xroot: {len(xk)} lockup registers, {sum(cw[n][1] for n in cw if n.endswith("_xk"))} bits')
+        L_ += xk
     L_.append('endmodule\n')
     return '\n'.join(L_)
 
@@ -379,12 +481,26 @@ def emit_stub(P):
 def emit_tb(P, nvec, seed, out):
     rnd = random.Random(seed)
     vin, vout = [], []
-    for _ in range(nvec):
+    ig = P.q.get('inj_gate')
+    if ig:
+        nvec = max(nvec, 8)
+        coff = dict(zip([p for p, _ in P.din], _offs(P.din)))[ig['ctl']]
+    for v in range(nvec):
         d = [rnd.getrandbits(1) for _ in range(P.WI)]
+        if ig:          # inject beats: rd pattern and flit indices cycling through every owner on both lanes
+            rd = [3, 1, 2, 3, 0, 3, 3, 3][v % 8]
+            for h in range(ig['lanes']):
+                d[coff + ig['rd'] + h] = (rd >> h) & 1
+                i_ = (v + 3 * h) % 4
+                d[coff + ig['idx'] + 16 * h], d[coff + ig['idx'] + 16 * h + 1] = i_ & 1, i_ >> 1
         vin.append(d)
         vout.append(P.model(d))
     (out / 'tb_in.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WI + 3) // 4}x}' for d in vin) + '\n')
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
+    if ig:
+        for qd in range(4):
+            (out / f'tb_out_q{qd}.mem').write_text('\n'.join(f'{int(vec(P.model(d, qd)), 2):0{(P.WO + 3) // 4}x}'
+                                                            for d in vin) + '\n')
     q = P.q
     m = q['master']
     hold = 2 * P.G + 2 * P.DMAX + 14
@@ -402,9 +518,10 @@ module tb;
     reg [{P.WI - 1}:0] vin [0:{nvec - 1}];
     reg [{P.WO - 1}:0] vout [0:{nvec - 1}];
     integer v, c, bad, lat, first;
-    {m} dut({cks}, .rst(rst), {ports});
+    parameter integer QID = 0;
+    {m} dut({cks}, .rst(rst), {ports}{(", ." + ig['strap'] + "(QID[1:0])") if ig else ''});
     initial begin
-        $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
+        $readmemh("tb_in.mem", vin); {'$readmemh($sformatf("tb_out_q%0d.mem", QID), vout);' if ig else '$readmemh("tb_out.mem", vout);'}
         bad = 0; lat = 0;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < {nvec}; v = v + 1) begin
@@ -416,7 +533,7 @@ module tb;
             if (dout !== vout[v]) begin bad = bad + 1; $display("MISMATCH vec %0d", v); end
             if (first > lat) lat = first;
         end
-        $display("OT_RESULT vectors={nvec} mismatches=%0d settle_cycles=%0d", bad, lat + 1);
+        $display("OT_RESULT vectors={nvec} qid=%0d mismatches=%0d settle_cycles=%0d", QID, bad, lat + 1);
         if (bad != 0) $fatal(1, "FAIL");
         $finish;
     end
@@ -497,6 +614,8 @@ def main():
     ap.add_argument('--lane-size', nargs=2, type=float, metavar=('W', 'H'),
                     help='also write macro_place.tcl / floorplan.json for lanes of this footprint')
     ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
+    ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
+                    help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
@@ -528,8 +647,9 @@ def main():
         info_hop = max(hops)
         print(f'bc relay max hop {info_hop:.1f} um (limit {HOP})', file=sys.stderr)
         assert info_hop <= HOP, f'broadcast relay hop {info_hop:.1f} um > {HOP} um'
-    (out / f'{m}.sv').write_text(emit_rtl(P))
-    (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True))
+    xr = a.xroot == 'lockup'
+    (out / f'{m}.sv').write_text(emit_rtl(P, xroot=xr))
+    (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True, xroot=xr))
     (out / f'{q["lane"]}_simstub.sv').write_text(emit_stub(P))
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out))
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
@@ -537,6 +657,10 @@ def main():
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
                                                                      lane_output_stage=P.N * P.LO))
+    if q.get('inj_gate'):            # the strap pins (not die-view ports yet): appended to the route's io_place.tcl
+        (out / 'strap_pins.tcl').write_text('# tools/hbm_hub_quarter_gen.py: inject-ownership strap pins (qid, tied per quarter by the die top)\n' +
+            ''.join(f'place_pin -pin_name {{{n}}} -layer M4 -location {{{x:.4f} {y:.4f}}} -pin_size {{0.1920 0.0240}}\n'
+                    for n, x, y in q['inj_gate']['strap_pins']))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
         ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))

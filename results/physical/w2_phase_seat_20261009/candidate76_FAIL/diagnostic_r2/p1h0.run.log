@@ -1,0 +1,3 @@
+DIAG normal=x fault=x phase=010 localphase=00xx s_cbad=xxxxxxxxxx q=0000000000000000 d=123456789abcdef0 rawseat=0000000000000000 qd1=0000000000000000 qm=0000000000000000 qd2=0000000000000000
+FATAL: /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-76e087a20/diagnostic_r2/tb.sv:51: clean protected capture
+       Time: 8333320  Scope: tb_w2_bank_veto_top.u.fill

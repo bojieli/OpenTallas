@@ -1,0 +1,58 @@
+{
+  "source": "90fe3ec1e",
+  "functional_RTL": "bf4cf8ece",
+  "core_source": "b827340df",
+  "host": "ot-epyc3",
+  "admission_estimate_GiB": 4,
+  "driver_pid": 1098131,
+  "driver_terminal": true,
+  "driver_rc": 0,
+  "positive": {
+    "cases": 201,
+    "words": 10768,
+    "released_golden_beats": 184,
+    "E4_half_tail": 16,
+    "E4_full_plus_half_tail": 48,
+    "credit_stress_words": 2048,
+    "read_write_stalls": true,
+    "actual_write_ACK_delay": true,
+    "fault_cases": [
+      "provider fault with pendingread drained",
+      "tagmismatch drained",
+      "arithmetic NaN fault with23edge retirement drained",
+      "idle coldreset ready/drained"
+    ],
+    "multirow_strided": true,
+    "unaligned_base": true,
+    "input_broadcast": true,
+    "inplace_same_geometry": true
+  },
+  "mutants": {
+    "drop_vo": {
+      "rc": 134,
+      "checker": "DROP/CREDIT timeout"
+    },
+    "early_done": {
+      "rc": 134,
+      "checker": "EARLY_DONE actualACK accounting"
+    },
+    "credit_overflow": {
+      "rc": 134,
+      "checker": "WRITE mismatch realqueueoverflow at2048wordrecord"
+    }
+  },
+  "SHA256": {
+    "m0.log": "5b130c4ec837e7d5da33968658b470991ca51464c03c72243cd6bf95d1ca97c2",
+    "driver.log": "6714300265da2a189ea42233853299c740f9276d154182875fbe4d99a3968a54",
+    "m3.log": "da42875701860a80bb0c4f358b35d40bfe3a318df4f75abebf3e4562e3c19207",
+    "m1.log": "2d7e4cf0637867b015a28bcd9093282dbc28b334d534e8b2c5abd3d88dcb38b2",
+    "m2.log": "3a6596d5e4356fad8ceefd96b3462ef843b2d9093206c5ff28cdfd9d089387e3"
+  },
+  "limits": [
+    "partial-overlap aliaspolicy outstanding; notfullconformance",
+    "combinedstream1p2 physicalqualification notyetproven; no CDCwaiver",
+    "VMdieingressnotyetbound",
+    "actualsynthfit+boundary and2routespending"
+  ],
+  "rss_note": "driver GNUtime peak is measured singleprocess/tree inherited maximum, not simultaneous wholePG sum"
+}

@@ -31,6 +31,28 @@ import hbm_die_views as V  # noqa: E402
 import hbm_die_wrap as Wr  # noqa: E402
 
 S, H, L = V.S, V.H, V.L
+PS = '--ps' in sys.argv          # hbm-forks 2026-10-09: per-PC stream successor (ot_hbm_svc_ps_lib.sv); outputs *_ps
+# --fc (hbm-forks 2026-10-09, coordinator option (a)): face clock taps -- every one-stage chain portion anchored at a W / E
+# face pin is clocked by its own die clock leaf on that face (ckw / cke).  Measured on routed SW_s6 / SW_s7 / SE_s7 CTS
+# dbs: those face-corner stages arrive +55 .. +273 ps after the segment's mean insertion (the in-block tree from the N-face
+# ck leaf), the face-input hold failures; a die leaf at the face is balanced by the die tree instead.
+FC = '--fc' in sys.argv
+SEGD, SPLD, SDCD, STG = ((('rtl/seg_psfc', 'split_psfc', 'sdc_psfc', 'seg_stages_psfc.json') if FC else
+                          ('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json')) if PS else
+                         ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
+
+
+def fc_face(po, x0, x1):
+    """'W' / 'E' when this one-stage portion is anchored at a W / E face pin (FC mode), else None"""
+    if not FC or po['N'] != 1:
+        return None
+    for e in (po['A'], po['B']):
+        if e[0] == 'p' and abs(e[1] - x0) < 1.0:
+            return 'W'
+        if e[0] == 'p' and abs(e[1] - x1) < 1.0:
+            return 'E'
+    return None
+PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -41,6 +63,71 @@ PHY_BB = 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_p
 Y_LO, Y_MID, Y_HI = 5.0, 130.0, 254.0
 
 
+def _committed_parent(name):
+    """hbm-forks 2026-10-09: the parent hfd_svc_<st> record rebuilt from the COMMITTED legacy split (split/split.json +
+    split/<band>/ports.json): the current die model no longer carries the unsplit parent (master_record KeyError), so
+    the committed split is the authority for the parent's pins, faces, directions and forwarded-clock bits."""
+    sp = json.loads((HERE / 'split/split.json').read_text())
+    par = sp['parents'][name]
+    ports, fclk, r0 = {}, {}, None
+    for band in par['bands']:
+        r = json.loads((HERE / 'split' / band / 'ports.json').read_text())
+        r0 = r0 or r
+        x0 = sp['bands'][band]['x0_um']
+        for bn, pm in par['port_map'][band].items():
+            pn, (lo, hi) = pm['parent_port'], pm['parent_bits']
+            if pn == '<new>':
+                continue
+            src = r['ports'][bn]
+            dst = ports.setdefault(pn, dict(bits=0, layer=src['layer'], pins=[], face=src['face']))
+            for q in src['pins']:
+                i = int(re.search(r'\[(\d+)\]', q[0]).group(1)) + lo
+                dst['pins'].append([f'{pn}[{i}]', q[1], round(q[2] + x0, 4), q[3], round(q[4] + x0, 4), q[5]])
+            dst['bits'] = max(dst['bits'], hi + 1)
+            if pn == 'phy':
+                dst.setdefault('_dirs', []).extend((lo + a, lo + b, d) for a, b, d in src['dir_segments'])
+            else:
+                dst['dir_segments'] = src['dir_segments']; dst['direction'] = src['direction']
+            if bn in r.get('fclk', {}):
+                fclk[pn] = {int(b): v for b, v in r['fclk'][bn].items()}
+    ph = ports['phy']
+    ph['pins'].sort(key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+    segs_ = sorted(ph.pop('_dirs'))
+    merged = []
+    for a, b, d in segs_:
+        if merged and merged[-1][2] == d and merged[-1][1] == a:
+            merged[-1][1] = b
+        else:
+            merged.append([a, b, d])
+    ph['dir_segments'] = merged; ph['direction'] = 'inout'
+    w = max(sp['bands'][b]['x0_um'] + sp['bands'][b]['w_um'] for b in par['bands'])
+    return dict(master=name, kind='svc', w_um=round(w, 4), h_um=r0['h_um'], obs_top=r0['obs_top'],
+                note='parent rebuilt from the committed split', instances=1, orients=['R0'], inst_names=[name],
+                ports=ports, generator=r0['generator']), fclk
+
+
+_PARENTS = {}
+
+
+def _mrec(name, _orig=V.master_record):
+    if name in ('hfd_svc_SW', 'hfd_svc_SE', 'hfd_svc_NW', 'hfd_svc_NE'):
+        if name not in _PARENTS:
+            _PARENTS[name] = _committed_parent(name)
+        return json.loads(json.dumps(_PARENTS[name][0]))
+    return _orig(name)
+
+
+def _fclk(name, _orig=Wr.fclk_bits):
+    if name in ('hfd_svc_SW', 'hfd_svc_SE', 'hfd_svc_NW', 'hfd_svc_NE'):
+        _mrec(name)
+        return _PARENTS[name][1]
+    return _orig(name)
+
+
+V.master_record = _mrec
+Wr.fclk_bits = _fclk
+
+
 def cx(port):
     xs = [(p[2] + p[4]) / 2 for p in port['pins']]
     return sum(xs) / len(xs)
@@ -48,6 +135,62 @@ def cx(port):
 
 def ceil_hops(d):
     return max(1, math.ceil(d / HOP - 1e-9))
+
+
+PS_NEW = {}
+
+
+def ps_ports(P, parent, segs, seg_of, H_um, wants):
+    """PS row ports ks<k> (1,102 out: line + 3 forwarded clocks), credit ports kq<k> (2 in: {fclk, v}) and the
+    stream-done port kd (2 out: {fclk, done}): N-face M5 pins at 0.192 um pitch (the l<k> line ports' density, 5.2 b/um),
+    in the free N-face span nearest the unit inside the unit's segment."""
+    PITCH_N = 0.192
+    def merged(iv):
+        out = []
+        for a_, b_ in sorted(iv):
+            if out and a_ <= out[-1][1] + 1.0:
+                out[-1][1] = max(out[-1][1], b_)
+            else:
+                out.append([a_, b_])
+        return [tuple(x) for x in out]
+    occl = {L_: merged((q[2], q[4]) for v in P.values() for q in v['pins'] if v.get('face') == 'N' and q[1] == L_)
+            for L_ in ('M5',)}
+    fk = _PARENTS[parent][1]
+    for name, xc in wants:
+        bits = PS_PORTS_BITS[name[:2]]
+        j = seg_of(xc)
+        a, b = segs[j]
+        best = None
+        # M5 at the line ports' pitch (0.192 um, 5.2 b/um); where the segment's N face is full, M5 at 0.096 um (10.4 b/um,
+        # under the 12 b/um fail line; the die generator's split views take N-face pins on M5 only)
+        for L_, PITCH_N in (('M5', 0.192), ('M5', 0.096)):
+            need = bits * PITCH_N + 2.0
+            occ = occl[L_]
+            cands = sorted({round(x, 3) for x in [xc - need / 2, a + 2.0] + [e + 1.0 for _, e in occ] +
+                            [s_ - need - 1.0 for s_, _ in occ]})
+            for x0 in cands:
+                x0 = max(x0, a + 2.0)
+                x1 = x0 + need
+                if x1 > b - 2.0 or any(not (x1 <= s_ - 0.5 or x0 >= e + 0.5) for s_, e in occ):
+                    continue
+                d = abs(x0 + need / 2 - xc)
+                if best is None or d < best[0]:
+                    best = (d, x0, L_, PITCH_N)
+            if best is not None:
+                break
+        assert best is not None, (parent, name, xc, 'no free N-face span in segment', j)
+        L_, PITCH_N = best[2], best[3]
+        x0 = round(round((best[1] + 1.0) / 0.048) * 0.048, 4)
+        wpin = 0.024
+        pins = [[f'{name}[{i}]', L_, round(x0 + i * PITCH_N, 4), round(H_um - 0.192, 4), round(x0 + i * PITCH_N + wpin, 4),
+                 H_um] for i in range(bits)]
+        d_ = 'in' if name.startswith('kq') else 'out'
+        P[name] = dict(bits=bits, layer=L_, pins=pins, face='N', dir_segments=[[0, bits, d_]],
+                       direction='input' if d_ == 'in' else 'output')
+        occl[L_] = merged(occl[L_] + [(pins[0][2], pins[-1][4])])
+        fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
+                    {1: 'in'} if name.startswith('kq') else {1: 'out'})
+        PS_NEW[name] = (bits, P[name]['direction'])
 
 
 def plan_family(fam):
@@ -87,6 +230,11 @@ def plan_family(fam):
     for l in range(8):
         U[f'ln{l}'] = (lx[l], Y_LO)
     U['w'] = (wx, Y_LO); U['e'] = (ex, Y_HI); U['kv'] = (kvx, Y_HI); U['ik'] = (ikx, Y_HI)
+    if PS:
+        for k in range(8):
+            U[f'gp{k}'] = (smx[k], Y_HI)          # beside SM k's line assembler: the c_rs chains end there
+        ps_ports(P, parent, segs, seg_of, H_um, [('ks%d' % k, smx[k]) for k in range(8)] +
+                 [('kq%d' % k, smx[k]) for k in range(8)] + [('kd', ex)])
     C = []                                            # chains: name, W (payload), src unit, src v, src d, dst unit, dst v, dst d
 
     def ch(name, w, su, sv, sd, du, dv, dd, kind):
@@ -97,8 +245,12 @@ def plan_family(fam):
     for p in range(32):
         o, j = divmod(p, 4)
         ch(f'c_is{p}', 51, f'ar{o}', f'ar{o}_iv[{j}]', f'ar{o}_id[{j*51+50}:{j*51}]', f'pc{p}', f'pc{p}_iv', f'pc{p}_id', 'iss')
-        ch(f'c_rs{p}', 277, f'pc{p}', f"pc{p}_bv && (pc{p}_bt[16:15] == 2'b00)", f'{{pc{p}_bt, pc{p}_bb, pc{p}_bd}}',
-           f'as{o}', f'as{o}_sv[{j}]', f'as{o}_sq[{j*277+276}:{j*277}]', 'rsp')
+        if PS:      # every beat; SM (tag 00) and stream (tag 11) beats split at the assembler / group unit
+            ch(f'c_rs{p}', 277, f'pc{p}', f'pc{p}_bv', f'{{pc{p}_bt, pc{p}_bb, pc{p}_bd}}', f'as{o}', f'rs{p}_v', f'rs{p}_d',
+               'rsp')
+        else:
+            ch(f'c_rs{p}', 277, f'pc{p}', f"pc{p}_bv && (pc{p}_bt[16:15] == 2'b00)", f'{{pc{p}_bt, pc{p}_bb, pc{p}_bd}}',
+               f'as{o}', f'as{o}_sv[{j}]', f'as{o}_sq[{j*277+276}:{j*277}]', 'rsp')
         ch(f'c_dn{p}', 1, f'as{o}', f'as{o}_kt[{j}]', "1'b0", f'ar{o}', f'dn{p}_o', None, 'rsp_tok')
     for nm, pc, x_, tg in (('kv', KV, kvx, "2'b01"), ('ik', IK, ikx, "2'b10")):
         ch(f'c_{nm}r', 277, f'pc{pc}', f"pc{pc}_bv && (pc{pc}_bt[16:15] == {tg})", f'{{pc{pc}_bt, pc{pc}_bb, pc{pc}_bd}}',
@@ -114,6 +266,22 @@ def plan_family(fam):
     ch('c_ekb', 1, f'ar{KV // 4}', f'ar{KV // 4}_kt', "1'b0", 'e', 'e_bk', None, 'e_kv_tok')
     ch('c_ei', 40, 'e', 'e_oi', 'e_od', f'ar{IK // 4}', f'ar{IK // 4}_icv', f'ar{IK // 4}_icd', 'e_ik')
     ch('c_eib', 1, f'ar{IK // 4}', f'ar{IK // 4}_it', "1'b0", 'e', 'e_bi', None, 'e_ik_tok')
+    ps_lists = {}
+    if PS:
+        west = sorted((p for p in range(32) if pcx[p] < ex), key=lambda p: -pcx[p])
+        east = sorted((p for p in range(32) if pcx[p] >= ex), key=lambda p: pcx[p])
+        ps_lists = dict(w=west, e=east)
+        for side, Ls in ps_lists.items():
+            for i, p in enumerate(Ls):
+                src = ('e', 'e_sdv', 'e_sdd') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dov', f'pc{Ls[i-1]}_dod')
+                ch(f'c_sd{p}', 62, src[0], src[1], src[2], f'pc{p}', f'pc{p}_div', f'pc{p}_did', 'ps_desc')
+                dst = ('e', f'e_d{side}ok', f'e_d{side}ph') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dniok', f'pc{Ls[i-1]}_dniph')
+                ch(f'c_dd{p}', 1, f'pc{p}', f'pc{p}_dnook', f'pc{p}_dnoph', dst[0], dst[1], dst[2], 'ps_done')
+        for p in range(32):
+            o, j = divmod(p, 4)
+            ch(f'c_cr{p}', 1, f'gp{o}', f'gp{o}_cr[{j}]', "1'b0", f'pc{p}', f'pc{p}_crv', None, 'ps_cr')
+        for k in range(8):          # the stream's load tag (ATT ld fields, compiler-supplied) to each group unit
+            ch(f'c_sg{k}', 13, 'e', 'e_sgv', 'e_sgd', f'gp{k}', f'gp{k}_sgv', f'gp{k}_sgd', 'ps_tag')
     for c in C:
         c['xa'], c['ya'] = U[c['su']]; c['xb'], c['yb'] = U[c['du']]
         c['sa'], c['sb'] = seg_of(c['xa']), seg_of(c['xb'])
@@ -177,7 +345,7 @@ def plan_family(fam):
                 portions.append(dict(seg=s, N=N, A=A, B=B, d=round(d, 1)))
         c['portions'] = portions
         c['stages'] = sum(p_['N'] for p_ in portions)
-    return dict(fam=fam, parent=parent, rec=rec, g=g, segs=segs, cuts=cuts, U=U, C=C, cross=cross, face=face,
+    return dict(ps_lists=ps_lists, fam=fam, parent=parent, rec=rec, g=g, segs=segs, cuts=cuts, U=U, C=C, cross=cross, face=face,
                 KV=KV, IK=IK, wx=wx, arb=arb, smx=smx, H=H_um, W=W_um, seg_of=seg_of)
 
 
@@ -261,11 +429,17 @@ def build(pl):
     names = [f'hfd_svc_{fam}_s{j}' for j in range(len(segs))]
     port_map = {}                    # band -> {band port: (parent port, lo, hi)}
     recs = {}
+    nmv_ = {}       # (segment, N-face port) -> (old centre, new centre, new x0, new x1), global um (PS compaction)
     for j, (x0, x1) in enumerate(segs):
         w = round(x1 - x0, 4)
         ports, fc, pm = {}, {}, {}
         for n, p in P.items():
             if n == 'phy' or seg_of(p['pins'][0][2]) != j:
+                continue
+            if PS and n in ('ck', 'rst'):
+                # hbm-forks 2026-10-09: the parent's clock pin sat at x 0.6 of the 1,017-um SE_s0 (clock insertion
+                # 830-970 ps; both PS route variants stalled in CTS hold repair at -66.9 ps): every PS segment takes
+                # its own die clock leaf near its middle (below), the parent pin is not inherited
                 continue
             if n in ('ck', 'rst'):
                 bn = n
@@ -298,9 +472,14 @@ def build(pl):
         pm['phy'] = ('phy', lo, hi)
         if 'ck' not in ports:          # new die clock leaf / reset pins on the N face at a free spot near the middle
             occ = sorted((q[2], q[4]) for v in ports.values() for q in v['pins'] if v['face'] == 'N')
-            xc = w / 2
-            while any(a - 1.0 < xc < b + 1.0 or a - 1.0 < xc + 0.384 < b + 1.0 for a, b in occ):
-                xc += 1.0
+            busy_ = lambda x_: any(a - 1.0 < x_ < b + 1.0 or a - 1.0 < x_ + 0.384 < b + 1.0 for a, b in occ)  # noqa: E731
+            if PS:       # the free spot NEAREST the middle (searching right only slid SE_s0 / SW_s7 leaves to 0.87-1.0 w)
+                xc = next(w / 2 + sg * d_ for d_ in range(0, int(w)) for sg in (1, -1)
+                          if 1.0 < w / 2 + sg * d_ < w - 2.0 and not busy_(w / 2 + sg * d_))
+            else:
+                xc = w / 2
+                while busy_(xc):
+                    xc += 1.0
             xc = round(round(xc / 0.048) * 0.048, 4)
             for nm_, xx in (('ck', xc), ('rst', xc + 0.384)):
                 ports[nm_] = dict(bits=1, layer='M5', pins=[[f'{nm_}[0]', 'M5', round(xx, 4), round(pl['H'] - 0.192, 4),
@@ -313,11 +492,67 @@ def build(pl):
             east = cut == j
             nm_ = ('eo' if dirn == 'r' else 'ei') if east else ('wi' if dirn == 'r' else 'wo')
             xa_, xb_ = (w - 0.192, w) if east else (0.0, 0.192)
-            pins_ = [[f'{nm_}[{k}]', 'M4', round(xa_, 4), round(f['y0'] + k * PITCH, 4), round(xb_, 4),
-                      round(f['y0'] + k * PITCH + 0.024, 4)] for k in range(f['bits'])]
+            # PS (hbm-forks 2026-10-09): the widened cross buses DRC-failed at 0.096 um on M4 alone (SE_s6: 579 LEF /
+            # 197 short / 124 spacing at the W-face pins): alternate M4 / M6 per bit (0.192 um a layer, the submit lint's
+            # pin_balance rule); both faces of a cut come from this one plan, so the abutment still matches
+            lay_ = (lambda k: 'M4' if k % 2 == 0 else 'M6') if PS else (lambda k: 'M4')
+
+            def pin_(k):     # M4: 0.024-um pins on the 0.048 grid; M6: 0.032-um (min width) pins on its 0.064 track grid
+                y_ = f['y0'] + k * PITCH
+                if lay_(k) == 'M6':
+                    y_ = round(y_ / 0.064) * 0.064
+                    return [f'{nm_}[{k}]', 'M6', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.032, 4)]
+                return [f'{nm_}[{k}]', 'M4', round(xa_, 4), round(y_, 4), round(xb_, 4), round(y_ + 0.024, 4)]
+            pins_ = [pin_(k) for k in range(f['bits'])]
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',
                               dir_segments=[[0, f['bits'], d_]], direction='output' if d_ == 'out' else 'input')
+        if PS:
+            # hbm-forks 2026-10-09 (R25G die build: 'no free N-face span' for the loader port ki7 on SE_s7): a band whose
+            # N face keeps < NRES um of free M5 span after the PS ks port is compacted -- its 0.192-pitch N-face buses
+            # re-pitched to 0.096 in place and the N-face ports after them packed behind, leaving the E end free for the die
+            # variant's new ports (ki / kc: 1,099 + 1 b)
+            NRES = 115.0
+            nf = [n_ for n_, v in ports.items() if v['face'] == 'N' and v['layer'] == 'M5']
+            occ = sorted((min(q[2] for q in ports[n_]['pins']) - 2, max(q[4] for q in ports[n_]['pins']) + 2) for n_ in nf)
+            gaps, xe = [], 0.0
+            for a, b in occ:
+                gaps.append(a - xe); xe = max(xe, b)
+            gaps.append(w - xe)
+            if max(gaps) < NRES:
+                order = sorted((n_ for n_ in nf if n_ not in ('ck', 'rst')), key=lambda n_: min(q[2] for q in ports[n_]['pins']))
+                # from the first 0.192-pitch bus on, in place: it keeps its W end (its unit side stays close), the ports
+                # after it follow; ports before it (ks, the die clock leaf, reset) do not move
+                pit_ = {n_: (max(q[2] for q in ports[n_]['pins']) - min(q[2] for q in ports[n_]['pins'])) / max(1, len(ports[n_]['pins']) - 1)
+                        for n_ in order}
+                k0_ = next(i_ for i_, n_ in enumerate(order) if pit_[n_] > 0.15)
+                order = order[k0_:]
+                xc_ = min(q[2] for q in ports[order[0]]['pins'])
+                for n_ in order:
+                    if n_ not in ports:
+                        continue
+                    pins_ = sorted(ports[n_]['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+                    old_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    for k_, q in enumerate(pins_):
+                        wq = q[4] - q[2]
+                        q[2] = round(round((xc_ + k_ * 0.096) / 0.048) * 0.048, 4); q[4] = round(q[2] + wq, 4)
+                    new_c = sum((q[2] + q[4]) / 2 for q in pins_) / len(pins_)
+                    nmv_[(j, n_)] = (old_c + x0, new_c + x0, min(q[2] for q in pins_) + x0, max(q[4] for q in pins_) + x0)
+                    xc_ = max(q[4] for q in pins_) + 2.5
+                print(f'{names[j]}: N face compacted (max free span {max(gaps):.1f} < {NRES}): free E end from {xc_:.1f} of {w}')
+        if FC:
+            fcs = {fc_face(po, x0, x1) for cc in C for po in cc['portions'] if po['seg'] == j} - {None}
+            for fce in sorted(fcs):
+                occ = sorted((q[3], q[5]) for v in ports.values() for q in v['pins'] if v['face'] == fce)
+                bus_ = lambda y_: any(a - 0.5 < y_ < b + 0.5 for a, b in occ)  # noqa: E731
+                yc = next(pl['H'] / 2 + sg * d_ * 0.048 for d_ in range(0, int(pl['H'] / 0.048)) for sg in (1, -1)
+                          if 2.0 < pl['H'] / 2 + sg * d_ * 0.048 < pl['H'] - 2.0 and not bus_(pl['H'] / 2 + sg * d_ * 0.048))
+                yc = round(round(yc / 0.048) * 0.048, 4)
+                xa_, xb_ = (0.0, 0.192) if fce == 'W' else (w - 0.192, w)
+                nm_ = 'ckw' if fce == 'W' else 'cke'
+                ports[nm_] = dict(bits=1, layer='M4', pins=[[f'{nm_}[0]', 'M4', round(xa_, 4), yc, round(xb_, 4), round(yc + 0.024, 4)]],
+                                  face=fce, dir_segments=[[0, 1, 'in']], direction='input')
+                pm[nm_] = ('<new>', 0, 0)
         r = dict(master=names[j], kind='svc', w_um=w, h_um=pl['H'], obs_top=rec['obs_top'],
                  note=f"derived master: band x {x0} .. {x1} um of {FAM[fam]} (svc/gen_svc_seg.py)",
                  instances=len(FAM[fam]), orients=['R0', 'MX'], inst_names=[f'{FAM[fam][0]}_s{j}', f'{FAM[fam][1]}_s{j}'],
@@ -337,6 +572,10 @@ def build(pl):
               f'module {names[j]} (', V.svh(r).rstrip(), ');']
         A = Lx.append
         A('  wire c = ck[0]; wire rn, rdy_q, rdy_q2;')
+        if 'ckw' in r['ports']:
+            A('  wire cw = ckw[0];                // W-face die clock leaf: one-stage W-face chain portions (--fc)')
+        if 'cke' in r['ports']:
+            A('  wire ce = cke[0];                // E-face die clock leaf: one-stage E-face chain portions (--fc)')
         A('  ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));')
         A('  ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));')
         units = sorted(u for u, s in unit_seg.items() if s == j)
@@ -357,6 +596,12 @@ def build(pl):
                 k = int(u[2:]); fwd = g['fwd'][k]
                 decl.append(f'  wire [3:0] as{k}_sv, as{k}_kt; wire [1107:0] as{k}_sq; wire as{k}_wsv, as{k}_wt; '
                             f'wire [270:0] as{k}_wsq; wire [1098:0] as{k}_line;')
+                if PS:
+                    for jj in range(4):
+                        pp = 4 * k + jj
+                        decl.append(f'  wire rs{pp}_v; wire [276:0] rs{pp}_d;')
+                        body.append(f"  assign as{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b00); "
+                                    f"assign as{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
                 body.append(f'  ot_svs_asm #(.SLOT({ASM_SLOT.get(names[j], 4)})) u_as{k} (.ck(c), .rn(rn), .sv(as{k}_sv), .sq(as{k}_sq), .wsv(as{k}_wsv), '
                             f'.wsq(as{k}_wsq), .k_take(as{k}_kt), .w_take(as{k}_wt), .line(as{k}_line));')
                 if fwd:
@@ -392,6 +637,33 @@ def build(pl):
                             f'.sd(ar{k}_sd), .rq_take(ar{k}_take), .kvc_v(ar{k}_kcv), .kvc_d(ar{k}_kcd), .kv_take(ar{k}_kt), '
                             f'.ikc_v(ar{k}_icv), .ikc_d(ar{k}_icd), .ik_take(ar{k}_it), '
                             f".done({{{', '.join(reversed(dn))}}}), .iss_v(ar{k}_iv), .iss_d(ar{k}_id));")
+            elif u.startswith('pc') and PS:
+                p = int(u[2:])
+                side = 'w' if p in pl['ps_lists']['w'] else 'e'
+                Ls = pl['ps_lists'][side]
+                end = int(Ls.index(p) == len(Ls) - 1)
+                decl.append(f'  wire pc{p}_iv, pc{p}_k_v, pc{p}_k_rdy, pc{p}_kr_v, pc{p}_bv; wire [50:0] pc{p}_id; '
+                            f'wire [29:0] pc{p}_k_addr; wire [3:0] pc{p}_k_len, pc{p}_kr_beat, pc{p}_bb; '
+                            f'wire [16:0] pc{p}_k_tag, pc{p}_kr_tag, pc{p}_bt; wire [255:0] pc{p}_kr_data, pc{p}_bd; '
+                            f'wire pc{p}_div, pc{p}_dov, pc{p}_dniok, pc{p}_dniph, pc{p}_dnook, pc{p}_dnoph, pc{p}_crv; '
+                            f'wire [61:0] pc{p}_did, pc{p}_dod;')
+                if end:
+                    body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 1'b0;   // chain end (END = 1)")
+                body.append(f'  ot_svs_pcs #(.PCID({p}), .END({end})) u_pc{p} (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc{p}_iv), '
+                            f'.iss_d(pc{p}_id), .k_v(pc{p}_k_v), .k_rdy(pc{p}_k_rdy), .k_addr(pc{p}_k_addr), .k_len(pc{p}_k_len), '
+                            f'.k_tag(pc{p}_k_tag), .kr_v(pc{p}_kr_v), .kr_tag(pc{p}_kr_tag), .kr_beat(pc{p}_kr_beat), '
+                            f'.kr_data(pc{p}_kr_data), .b_v(pc{p}_bv), .b_t(pc{p}_bt), .b_b(pc{p}_bb), .b_d(pc{p}_bd), '
+                            f'.di_v(pc{p}_div), .di_d(pc{p}_did), .do_v(pc{p}_dov), .do_d(pc{p}_dod), .dni_ok(pc{p}_dniok), '
+                            f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .cr_v(pc{p}_crv));')
+            elif u.startswith('gp'):
+                k = int(u[2:])
+                decl.append(f'  wire [3:0] gp{k}_sv, gp{k}_cr; wire [1107:0] gp{k}_sq; wire gp{k}_ovf, gp{k}_sgv; wire [12:0] gp{k}_sgd;')
+                for jj in range(4):
+                    pp = 4 * k + jj
+                    body.append(f"  assign gp{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b11); "
+                                f"assign gp{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
+                body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp{k}_sv), .sq(gp{k}_sq), '
+                            f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
             elif u.startswith('pc'):
                 p = int(u[2:])
                 decl.append(f'  wire pc{p}_iv, pc{p}_k_v, pc{p}_k_rdy, pc{p}_kr_v, pc{p}_bv; wire [50:0] pc{p}_id; '
@@ -413,6 +685,18 @@ def build(pl):
                             'wire [23:0] w_addr_s; wire [5:0] w_len_s; wire [9:0] w_tag_s;')
                 body.append('  ot_svs_w u_w (.ck(c), .rn(rn), .cv(w_cv), .cd(w_cd), .c_take(w_ct), .room(w_room), '
                             '.lane_done(w_ld), .w_v(w_wv), .w_rdy(w_rdy_s), .w_addr(w_addr_s), .w_len(w_len_s), .w_tag(w_tag_s));')
+            elif u == 'e' and PS:
+                we, ee = int(not pl['ps_lists']['w']), int(not pl['ps_lists']['e'])
+                decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od; wire e_sdv; wire [61:0] e_sdd; '
+                            'wire e_dwok, e_dwph, e_deok, e_deph, e_sgv; wire [12:0] e_sgd;')
+                if we:
+                    body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0;   // no PC west of the e port")
+                if ee:
+                    body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0;   // no PC east of the e port")
+                body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee})) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
+                            '.e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
+                            '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd), '
+                            '.sg_v(e_sgv), .sg_d(e_sgd));')
             elif u == 'e':
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od;')
                 body.append('  ot_svs_e u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), .e_fclk(e[128]), .ow_v(e_ow), '
@@ -446,7 +730,9 @@ def build(pl):
                     vin, din = f'{pn}[{o}]', f'{pn}[{o + n_ - 1}:{o + 1}]'
                 nm = f"{cc['name']}_{k_}"
                 decl.append(f'  wire {nm}_v; wire [{wb - 1}:0] {nm}_d;')
-                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck(c), .rst_n(rn), .v({vin}), .d({din}), "
+                fce_ = fc_face(po, segs[j][0], segs[j][1])
+                ckn_ = 'cw' if fce_ == 'W' else 'ce' if fce_ == 'E' else 'c'
+                body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck({ckn_}), .rst_n(rn), .v({vin}), .d({din}), "
                             f".qv({nm}_v), .q({nm}_d));")
                 if po['B'][0] == 'u':
                     body.append(f"  assign {cc['dv']} = {nm}_v;")
@@ -469,8 +755,8 @@ def build(pl):
             else:
                 body.append(f'  assign {e_} = phy[{i - lo}];')
         Lx += decl + body + ['endmodule', '`default_nettype wire', '']
-        (HERE / 'rtl/seg').mkdir(parents=True, exist_ok=True)
-        (HERE / 'rtl/seg' / f'{names[j]}.sv').write_text('\n'.join(Lx))
+        (HERE / SEGD).mkdir(parents=True, exist_ok=True)
+        (HERE / SEGD / f'{names[j]}.sv').write_text('\n'.join(Lx))
         # forwarded input clocks of this segment
         sdc, cl = [], []
         for bn, (pn, lo_, hi_) in port_map[names[j]].items():
@@ -479,6 +765,9 @@ def build(pl):
                 # data bits were timed against vclk (v2 routes: -1006 ps).  Data in relative to its own forwarded clock.
                 sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[44]}}]'); cl.append(f'f{bn}')
                 sdc.append(f'for {{set i 0}} {{$i < 44}} {{incr i}} {{ set_input_delay -clock f{bn} 166.6 [get_ports [format {{{bn}[%d]}} $i]] }}')
+            if PS and bn.startswith('kq'):
+                sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[1]}}]'); cl.append(f'f{bn}')
+                sdc.append(f'set_input_delay -clock f{bn} 166.6 [get_ports {{{bn}[0]}}]')
             if bn == 'e':
                 sdc.append('create_clock -name fe -period 833 [get_ports {e[128]}]'); cl.append('fe')
                 sdc.append('for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe 166.6 [get_ports [format {e[%d]} $i]] }')
@@ -494,15 +783,26 @@ def build(pl):
                 fo += [f'kv[{i}]' for i in (1038, 1039, 1040)]
             elif bn == 'ik' and 'ik' in units:
                 fo += [f'ik[{i}]' for i in (1024, 1025)]
+            elif PS and bn.startswith('ks'):
+                fo += [f'{bn}[{i}]' for i in (1099, 1100, 1101)]
+            elif PS and bn == 'kd':
+                fo += ['kd[1]']
         if fo:
             sdc.append('set_false_path -to [get_ports -quiet {' + ' '.join(fo) + '}]')
+        if PS:      # PS row / done outputs: the consistent die-link split (S = R = 254.7 ps) until the rebudget covers them
+            for bn in port_map[names[j]]:
+                if bn.startswith('ks'):
+                    sdc.append(f'set_output_delay -clock vclk 254.7 [get_ports -quiet {{{bn}[*]}}]')
+                    sdc.append(f'set_false_path -to [get_ports -quiet {{{bn}[1099] {bn}[1100] {bn}[1101]}}]')
+                elif bn == 'kd':
+                    sdc.append('set_output_delay -clock vclk 254.7 [get_ports -quiet {kd[0]}]')
         if cl:
             sdc += ['set_clock_uncertainty -setup 60 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_uncertainty -hold 25 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_groups -asynchronous -group [get_clocks {core_clk vclk}] ' + ' '.join(f'-group [get_clocks {n}]' for n in cl)]
         if sdc:
-            (HERE / 'sdc').mkdir(exist_ok=True)
-            (HERE / 'sdc' / f'{names[j]}_fwd.sdc').write_text(
+            (HERE / SDCD).mkdir(exist_ok=True)
+            (HERE / SDCD / f'{names[j]}_fwd.sdc').write_text(
                 f'# {names[j]}: forwarded input clocks (two-clock FIFO writes, asynchronous to ck); forwarded-clock output bits\n' + '\n'.join(sdc) + '\n')
         # wire-stage endpoints (common/wire_stage_fence.tcl OT_WS_FILE), segment-local um
         x0 = segs[j][0]
@@ -512,9 +812,17 @@ def build(pl):
                 if po['seg'] != j:
                     continue
                 A_, B_ = po['A'], po['B']
+                def mv_(e_):     # a pin endpoint on a compacted N-face port follows the port's centre shift
+                    if e_[0] != 'p' or abs(e_[2] - pl['H']) > 3.0:
+                        return e_
+                    for (jj, pn_), (oc, nc, a_, b_) in nmv_.items():
+                        if jj == j and abs(e_[1] - oc) < 60.0:
+                            return (e_[0], e_[1] + nc - oc, e_[2])
+                    return e_
+                A_, B_ = mv_(A_), mv_(B_)
                 ws.append(f"set ws_ab({cc['name']}_{k_}) {{{A_[1] - x0:.3f} {A_[2]:.3f} {B_[1] - x0:.3f} {B_[2]:.3f} "
                           f"{int(A_[0] == 'p')} {int(B_[0] == 'p')}}}")
-        d_ = HERE / 'split' / names[j]
+        d_ = HERE / SPLD / names[j]
         d_.mkdir(parents=True, exist_ok=True)
         (d_ / 'ports.json').write_text(json.dumps(r, indent=0) + '\n')
         (d_ / 'io_place.tcl').write_text(V.io_tcl(r).replace("(tools/hbm_die_views.py ports",
@@ -523,6 +831,8 @@ def build(pl):
     # ---------------------------------------------------------------- joined tops (bench vehicles)
     for st in FAM[fam]:
         prec = V.master_record(st)
+        for n_, (b_, d_) in PS_NEW.items():
+            prec['ports'][n_] = dict(bits=b_, direction=d_)
         pg = json.loads((HERE / 'svc_geometry.json').read_text())[st]
         rk = {n: k for k, n in enumerate(pg['order'])}
         T = ['`default_nettype none', f'// GENERATED (gen_svc_seg.py): the {fam} segments joined with the ports of {st} (bench vehicle)',
@@ -536,7 +846,7 @@ def build(pl):
             con = []
             for bn, (pn, lo_, hi_) in port_map[names[j]].items():
                 if pn == '<new>':
-                    con.append(f'.{bn}({bn})')
+                    con.append(f'.{bn}(ck)' if bn in ('ckw', 'cke') else f'.{bn}({bn})')   # face leaves: the same die clock
                 elif bn == 'phy':
                     con.append(f'.phy(phy[{hi_}:{lo_}])')
                 elif pn.startswith(('lsm', 'qsm')):
@@ -554,7 +864,7 @@ def build(pl):
                 con.append(f'.{bn}(x{dirn}{cut})')
             T.append(f'  {names[j]} u_s{j} ({", ".join(con)});')
         T += ['endmodule', '`default_nettype wire', '']
-        (HERE / 'rtl/seg' / f'{st}_seg.sv').write_text('\n'.join(T))
+        (HERE / SEGD / f'{st}_seg.sv').write_text('\n'.join(T))
     return names, recs, port_map, phy_rng
 
 
@@ -616,9 +926,9 @@ def main():
                                 for c in pl['C']},
                         cross_bits={str(j): [pl['face'][(j, 'r')]['bits'], pl['face'][(j, 'l')]['bits']] for j in range(len(pl['cuts']))},
                         cycles=ledger(pl))
-    (HERE / 'split').mkdir(exist_ok=True)
-    (HERE / 'split/split.json').write_text(json.dumps(split, indent=1) + '\n')
-    (HERE / 'seg_stages.json').write_text(json.dumps(dict(hop_um=HOP, xst_ledger=XST, families=out), indent=1) + '\n')
+    (HERE / SPLD).mkdir(exist_ok=True)
+    (HERE / SPLD / 'split.json').write_text(json.dumps(split, indent=1) + '\n')
+    (HERE / STG).write_text(json.dumps(dict(hop_um=HOP, xst_ledger=XST, families=out), indent=1) + '\n')
     for fam, o in out.items():
         print(fam, 'cross bits (r,l):', o['cross_bits'])
         print(' cycles:', {k: v['added'] for k, v in o['cycles'].items()})

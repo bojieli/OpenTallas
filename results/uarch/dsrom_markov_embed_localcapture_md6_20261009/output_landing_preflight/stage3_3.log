@@ -1,0 +1,673 @@
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: pre-route gate hook patched
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx_cal/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx_cal/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx_cal/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx_cal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_global_place.tcl
+MD6_LOCALCAP bank=0 origin=15.984,10.8 direct_captures=256
+MD6_LOCALCAP bank=1 origin=15.984,82.08 direct_captures=256
+MD6_ELECTRICAL_ENV protected_direct_capture_nets=512
+MD6_ELECTRICAL_ENV mode=ss output_load=3.898 max_transition=250 max_fanout=16
+MD6_ELECTRICAL_ENV mode=ff output_load=3.898 max_transition=250 max_fanout=16
+Took 5 seconds: source /work/hooks/pre_global_place_pre_global_place.tcl
+[INFO RSZ-0026] Removed 57 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 15 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0031] Start output port buffering with BUFx24_ASAP7_75t_R.
+[INFO RSZ-0215] Buffering output port captured_data[0].
+[INFO RSZ-0215] Buffering output port captured_data[100].
+[INFO RSZ-0215] Buffering output port captured_data[101].
+[INFO RSZ-0215] Buffering output port captured_data[102].
+[INFO RSZ-0215] Buffering output port captured_data[103].
+[INFO RSZ-0215] Buffering output port captured_data[104].
+[INFO RSZ-0215] Buffering output port captured_data[105].
+[INFO RSZ-0215] Buffering output port captured_data[106].
+[INFO RSZ-0215] Buffering output port captured_data[107].
+[INFO RSZ-0215] Buffering output port captured_data[108].
+[INFO RSZ-0215] Buffering output port captured_data[109].
+[INFO RSZ-0215] Buffering output port captured_data[10].
+[INFO RSZ-0215] Buffering output port captured_data[110].
+[INFO RSZ-0215] Buffering output port captured_data[111].
+[INFO RSZ-0215] Buffering output port captured_data[112].
+[INFO RSZ-0215] Buffering output port captured_data[113].
+[INFO RSZ-0215] Buffering output port captured_data[114].
+[INFO RSZ-0215] Buffering output port captured_data[115].
+[INFO RSZ-0215] Buffering output port captured_data[116].
+[INFO RSZ-0215] Buffering output port captured_data[117].
+[INFO RSZ-0215] Buffering output port captured_data[118].
+[INFO RSZ-0215] Buffering output port captured_data[119].
+[INFO RSZ-0215] Buffering output port captured_data[11].
+[INFO RSZ-0215] Buffering output port captured_data[120].
+[INFO RSZ-0215] Buffering output port captured_data[121].
+[INFO RSZ-0215] Buffering output port captured_data[122].
+[INFO RSZ-0215] Buffering output port captured_data[123].
+[INFO RSZ-0215] Buffering output port captured_data[124].
+[INFO RSZ-0215] Buffering output port captured_data[125].
+[INFO RSZ-0215] Buffering output port captured_data[126].
+[INFO RSZ-0215] Buffering output port captured_data[127].
+[INFO RSZ-0215] Buffering output port captured_data[128].
+[INFO RSZ-0215] Buffering output port captured_data[129].
+[INFO RSZ-0215] Buffering output port captured_data[12].
+[INFO RSZ-0215] Buffering output port captured_data[130].
+[INFO RSZ-0215] Buffering output port captured_data[131].
+[INFO RSZ-0215] Buffering output port captured_data[132].
+[INFO RSZ-0215] Buffering output port captured_data[133].
+[INFO RSZ-0215] Buffering output port captured_data[134].
+[INFO RSZ-0215] Buffering output port captured_data[135].
+[INFO RSZ-0215] Buffering output port captured_data[136].
+[INFO RSZ-0215] Buffering output port captured_data[137].
+[INFO RSZ-0215] Buffering output port captured_data[138].
+[INFO RSZ-0215] Buffering output port captured_data[139].
+[INFO RSZ-0215] Buffering output port captured_data[13].
+[INFO RSZ-0215] Buffering output port captured_data[140].
+[INFO RSZ-0215] Buffering output port captured_data[141].
+[INFO RSZ-0215] Buffering output port captured_data[142].
+[INFO RSZ-0215] Buffering output port captured_data[143].
+[INFO RSZ-0215] Buffering output port captured_data[144].
+[INFO RSZ-0215] Buffering output port captured_data[145].
+[INFO RSZ-0215] Buffering output port captured_data[146].
+[INFO RSZ-0215] Buffering output port captured_data[147].
+[INFO RSZ-0215] Buffering output port captured_data[148].
+[INFO RSZ-0215] Buffering output port captured_data[149].
+[INFO RSZ-0215] Buffering output port captured_data[14].
+[INFO RSZ-0215] Buffering output port captured_data[150].
+[INFO RSZ-0215] Buffering output port captured_data[151].
+[INFO RSZ-0215] Buffering output port captured_data[152].
+[INFO RSZ-0215] Buffering output port captured_data[153].
+[INFO RSZ-0215] Buffering output port captured_data[154].
+[INFO RSZ-0215] Buffering output port captured_data[155].
+[INFO RSZ-0215] Buffering output port captured_data[156].
+[INFO RSZ-0215] Buffering output port captured_data[157].
+[INFO RSZ-0215] Buffering output port captured_data[158].
+[INFO RSZ-0215] Buffering output port captured_data[159].
+[INFO RSZ-0215] Buffering output port captured_data[15].
+[INFO RSZ-0215] Buffering output port captured_data[160].
+[INFO RSZ-0215] Buffering output port captured_data[161].
+[INFO RSZ-0215] Buffering output port captured_data[162].
+[INFO RSZ-0215] Buffering output port captured_data[163].
+[INFO RSZ-0215] Buffering output port captured_data[164].
+[INFO RSZ-0215] Buffering output port captured_data[165].
+[INFO RSZ-0215] Buffering output port captured_data[166].
+[INFO RSZ-0215] Buffering output port captured_data[167].
+[INFO RSZ-0215] Buffering output port captured_data[168].
+[INFO RSZ-0215] Buffering output port captured_data[169].
+[INFO RSZ-0215] Buffering output port captured_data[16].
+[INFO RSZ-0215] Buffering output port captured_data[170].
+[INFO RSZ-0215] Buffering output port captured_data[171].
+[INFO RSZ-0215] Buffering output port captured_data[172].
+[INFO RSZ-0215] Buffering output port captured_data[173].
+[INFO RSZ-0215] Buffering output port captured_data[174].
+[INFO RSZ-0215] Buffering output port captured_data[175].
+[INFO RSZ-0215] Buffering output port captured_data[176].
+[INFO RSZ-0215] Buffering output port captured_data[177].
+[INFO RSZ-0215] Buffering output port captured_data[178].
+[INFO RSZ-0215] Buffering output port captured_data[179].
+[INFO RSZ-0215] Buffering output port captured_data[17].
+[INFO RSZ-0215] Buffering output port captured_data[180].
+[INFO RSZ-0215] Buffering output port captured_data[181].
+[INFO RSZ-0215] Buffering output port captured_data[182].
+[INFO RSZ-0215] Buffering output port captured_data[183].
+[INFO RSZ-0215] Buffering output port captured_data[184].
+[INFO RSZ-0215] Buffering output port captured_data[185].
+[INFO RSZ-0215] Buffering output port captured_data[186].
+[INFO RSZ-0215] Buffering output port captured_data[187].
+[INFO RSZ-0215] Buffering output port captured_data[188].
+[INFO RSZ-0215] Buffering output port captured_data[189].
+[INFO RSZ-0215] Buffering output port captured_data[18].
+[INFO RSZ-0215] Buffering output port captured_data[190].
+[INFO RSZ-0215] Buffering output port captured_data[191].
+[INFO RSZ-0215] Buffering output port captured_data[192].
+[INFO RSZ-0215] Buffering output port captured_data[193].
+[INFO RSZ-0215] Buffering output port captured_data[194].
+[INFO RSZ-0215] Buffering output port captured_data[195].
+[INFO RSZ-0215] Buffering output port captured_data[196].
+[INFO RSZ-0215] Buffering output port captured_data[197].
+[INFO RSZ-0215] Buffering output port captured_data[198].
+[INFO RSZ-0215] Buffering output port captured_data[199].
+[INFO RSZ-0215] Buffering output port captured_data[19].
+[INFO RSZ-0215] Buffering output port captured_data[1].
+[INFO RSZ-0215] Buffering output port captured_data[200].
+[INFO RSZ-0215] Buffering output port captured_data[201].
+[INFO RSZ-0215] Buffering output port captured_data[202].
+[INFO RSZ-0215] Buffering output port captured_data[203].
+[INFO RSZ-0215] Buffering output port captured_data[204].
+[INFO RSZ-0215] Buffering output port captured_data[205].
+[INFO RSZ-0215] Buffering output port captured_data[206].
+[INFO RSZ-0215] Buffering output port captured_data[207].
+[INFO RSZ-0215] Buffering output port captured_data[208].
+[INFO RSZ-0215] Buffering output port captured_data[209].
+[INFO RSZ-0215] Buffering output port captured_data[20].
+[INFO RSZ-0215] Buffering output port captured_data[210].
+[INFO RSZ-0215] Buffering output port captured_data[211].
+[INFO RSZ-0215] Buffering output port captured_data[212].
+[INFO RSZ-0215] Buffering output port captured_data[213].
+[INFO RSZ-0215] Buffering output port captured_data[214].
+[INFO RSZ-0215] Buffering output port captured_data[215].
+[INFO RSZ-0215] Buffering output port captured_data[216].
+[INFO RSZ-0215] Buffering output port captured_data[217].
+[INFO RSZ-0215] Buffering output port captured_data[218].
+[INFO RSZ-0215] Buffering output port captured_data[219].
+[INFO RSZ-0215] Buffering output port captured_data[21].
+[INFO RSZ-0215] Buffering output port captured_data[220].
+[INFO RSZ-0215] Buffering output port captured_data[221].
+[INFO RSZ-0215] Buffering output port captured_data[222].
+[INFO RSZ-0215] Buffering output port captured_data[223].
+[INFO RSZ-0215] Buffering output port captured_data[224].
+[INFO RSZ-0215] Buffering output port captured_data[225].
+[INFO RSZ-0215] Buffering output port captured_data[226].
+[INFO RSZ-0215] Buffering output port captured_data[227].
+[INFO RSZ-0215] Buffering output port captured_data[228].
+[INFO RSZ-0215] Buffering output port captured_data[229].
+[INFO RSZ-0215] Buffering output port captured_data[22].
+[INFO RSZ-0215] Buffering output port captured_data[230].
+[INFO RSZ-0215] Buffering output port captured_data[231].
+[INFO RSZ-0215] Buffering output port captured_data[232].
+[INFO RSZ-0215] Buffering output port captured_data[233].
+[INFO RSZ-0215] Buffering output port captured_data[234].
+[INFO RSZ-0215] Buffering output port captured_data[235].
+[INFO RSZ-0215] Buffering output port captured_data[236].
+[INFO RSZ-0215] Buffering output port captured_data[237].
+[INFO RSZ-0215] Buffering output port captured_data[238].
+[INFO RSZ-0215] Buffering output port captured_data[239].
+[INFO RSZ-0215] Buffering output port captured_data[23].
+[INFO RSZ-0215] Buffering output port captured_data[240].
+[INFO RSZ-0215] Buffering output port captured_data[241].
+[INFO RSZ-0215] Buffering output port captured_data[242].
+[INFO RSZ-0215] Buffering output port captured_data[243].
+[INFO RSZ-0215] Buffering output port captured_data[244].
+[INFO RSZ-0215] Buffering output port captured_data[245].
+[INFO RSZ-0215] Buffering output port captured_data[246].
+[INFO RSZ-0215] Buffering output port captured_data[247].
+[INFO RSZ-0215] Buffering output port captured_data[248].
+[INFO RSZ-0215] Buffering output port captured_data[249].
+[INFO RSZ-0215] Buffering output port captured_data[24].
+[INFO RSZ-0215] Buffering output port captured_data[250].
+[INFO RSZ-0215] Buffering output port captured_data[251].
+[INFO RSZ-0215] Buffering output port captured_data[252].
+[INFO RSZ-0215] Buffering output port captured_data[253].
+[INFO RSZ-0215] Buffering output port captured_data[254].
+[INFO RSZ-0215] Buffering output port captured_data[255].
+[INFO RSZ-0215] Buffering output port captured_data[25].
+[INFO RSZ-0215] Buffering output port captured_data[26].
+[INFO RSZ-0215] Buffering output port captured_data[27].
+[INFO RSZ-0215] Buffering output port captured_data[28].
+[INFO RSZ-0215] Buffering output port captured_data[29].
+[INFO RSZ-0215] Buffering output port captured_data[2].
+[INFO RSZ-0215] Buffering output port captured_data[30].
+[INFO RSZ-0215] Buffering output port captured_data[31].
+[INFO RSZ-0215] Buffering output port captured_data[32].
+[INFO RSZ-0215] Buffering output port captured_data[33].
+[INFO RSZ-0215] Buffering output port captured_data[34].
+[INFO RSZ-0215] Buffering output port captured_data[35].
+[INFO RSZ-0215] Buffering output port captured_data[36].
+[INFO RSZ-0215] Buffering output port captured_data[37].
+[INFO RSZ-0215] Buffering output port captured_data[38].
+[INFO RSZ-0215] Buffering output port captured_data[39].
+[INFO RSZ-0215] Buffering output port captured_data[3].
+[INFO RSZ-0215] Buffering output port captured_data[40].
+[INFO RSZ-0215] Buffering output port captured_data[41].
+[INFO RSZ-0215] Buffering output port captured_data[42].
+[INFO RSZ-0215] Buffering output port captured_data[43].
+[INFO RSZ-0215] Buffering output port captured_data[44].
+[INFO RSZ-0215] Buffering output port captured_data[45].
+[INFO RSZ-0215] Buffering output port captured_data[46].
+[INFO RSZ-0215] Buffering output port captured_data[47].
+[INFO RSZ-0215] Buffering output port captured_data[48].
+[INFO RSZ-0215] Buffering output port captured_data[49].
+[INFO RSZ-0215] Buffering output port captured_data[4].
+[INFO RSZ-0215] Buffering output port captured_data[50].
+[INFO RSZ-0215] Buffering output port captured_data[51].
+[INFO RSZ-0215] Buffering output port captured_data[52].
+[INFO RSZ-0215] Buffering output port captured_data[53].
+[INFO RSZ-0215] Buffering output port captured_data[54].
+[INFO RSZ-0215] Buffering output port captured_data[55].
+[INFO RSZ-0215] Buffering output port captured_data[56].
+[INFO RSZ-0215] Buffering output port captured_data[57].
+[INFO RSZ-0215] Buffering output port captured_data[58].
+[INFO RSZ-0215] Buffering output port captured_data[59].
+[INFO RSZ-0215] Buffering output port captured_data[5].
+[INFO RSZ-0215] Buffering output port captured_data[60].
+[INFO RSZ-0215] Buffering output port captured_data[61].
+[INFO RSZ-0215] Buffering output port captured_data[62].
+[INFO RSZ-0215] Buffering output port captured_data[63].
+[INFO RSZ-0215] Buffering output port captured_data[64].
+[INFO RSZ-0215] Buffering output port captured_data[65].
+[INFO RSZ-0215] Buffering output port captured_data[66].
+[INFO RSZ-0215] Buffering output port captured_data[67].
+[INFO RSZ-0215] Buffering output port captured_data[68].
+[INFO RSZ-0215] Buffering output port captured_data[69].
+[INFO RSZ-0215] Buffering output port captured_data[6].
+[INFO RSZ-0215] Buffering output port captured_data[70].
+[INFO RSZ-0215] Buffering output port captured_data[71].
+[INFO RSZ-0215] Buffering output port captured_data[72].
+[INFO RSZ-0215] Buffering output port captured_data[73].
+[INFO RSZ-0215] Buffering output port captured_data[74].
+[INFO RSZ-0215] Buffering output port captured_data[75].
+[INFO RSZ-0215] Buffering output port captured_data[76].
+[INFO RSZ-0215] Buffering output port captured_data[77].
+[INFO RSZ-0215] Buffering output port captured_data[78].
+[INFO RSZ-0215] Buffering output port captured_data[79].
+[INFO RSZ-0215] Buffering output port captured_data[7].
+[INFO RSZ-0215] Buffering output port captured_data[80].
+[INFO RSZ-0215] Buffering output port captured_data[81].
+[INFO RSZ-0215] Buffering output port captured_data[82].
+[INFO RSZ-0215] Buffering output port captured_data[83].
+[INFO RSZ-0215] Buffering output port captured_data[84].
+[INFO RSZ-0215] Buffering output port captured_data[85].
+[INFO RSZ-0215] Buffering output port captured_data[86].
+[INFO RSZ-0215] Buffering output port captured_data[87].
+[INFO RSZ-0215] Buffering output port captured_data[88].
+[INFO RSZ-0215] Buffering output port captured_data[89].
+[INFO RSZ-0215] Buffering output port captured_data[8].
+[INFO RSZ-0215] Buffering output port captured_data[90].
+[INFO RSZ-0215] Buffering output port captured_data[91].
+[INFO RSZ-0215] Buffering output port captured_data[92].
+[INFO RSZ-0215] Buffering output port captured_data[93].
+[INFO RSZ-0215] Buffering output port captured_data[94].
+[INFO RSZ-0215] Buffering output port captured_data[95].
+[INFO RSZ-0215] Buffering output port captured_data[96].
+[INFO RSZ-0215] Buffering output port captured_data[97].
+[INFO RSZ-0215] Buffering output port captured_data[98].
+[INFO RSZ-0215] Buffering output port captured_data[99].
+[INFO RSZ-0215] Buffering output port captured_data[9].
+[INFO RSZ-0215] Buffering output port captured_valid.
+[INFO RSZ-0215] Buffering output port fault.
+[INFO RSZ-0028] Inserted 258 BUFx24_ASAP7_75t_R output buffers.
+MD6_OUTPUT_LANDING count=258 max_actual_Y_to_port_um=9.807 FIRM=true connectivity_editable=true
+MD6_ACTUAL_OUTPUT_BUFFER_MASTER BUFx24_ASAP7_75t_R
+global_placement -density 0.55 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.052  2.160 ) ( 187.974 152.820 ) um
+[INFO GPL-0016] Core area:                   28011.009 um^2
+[INFO GPL-0036] Movable instances area:         65.085 um^2
+[INFO GPL-0037] Total instances area:        16163.184 um^2
+[INFO GPL-0035] Pin density area adjust:        -1.057 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:              5075
+[INFO GPL-0007] Movable instances:                 813
+[INFO GPL-0008] Fixed instances:                  3283
+[INFO GPL-0009] Dummy instances:                   979
+[INFO GPL-0010] Number of nets:                   2147
+[INFO GPL-0011] Number of pins:                   5326
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 190.000 155.000 ) um
+[INFO GPL-0013] Placement BBox: (  2.052  2.160 ) ( 187.974 152.820 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 28011.009 um^2
+[INFO GPL-0017] Fixed instances area:        18423.580 um^2
+[INFO GPL-0018] Movable instances area:         64.028 um^2
+[INFO GPL-0019] Utilization:                     0.668 %
+[INFO GPL-0020] Standard cells area:            64.028 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 813	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00000011 HPWL: 168133857
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000010 HPWL: 169125820
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000011 HPWL: 165257748
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000008 HPWL: 162823761
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000009 HPWL: 161487746
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5500
+[INFO GPL-0024] Movable insts average area:      0.079 um^2
+[INFO GPL-0025] Ideal bin area:                  0.143 um^2
+[INFO GPL-0026] Ideal bin count:                195619
+[INFO GPL-0027] Total bin area:              28011.009 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.726 *  0.589 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.3491 |  5.669217e+04 |   +0.00% |  4.92e-13 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 1, overflow: 0.349, keep resizer changes at: 1, HPWL: 56692172
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      2147
+    final |     +0.0% |       0 |      44 |             1 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0035] Found 1 fanout violations.
+[INFO RSZ-0038] Inserted 44 buffers in 1 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |      1612
+      160 |     +0.0% |       0 |        0 |      1452
+      320 |     +0.0% |       0 |       52 |      1292
+      480 |     +0.1% |       0 |      130 |      1132
+      640 |     +0.1% |       0 |      130 |       972
+      800 |     +0.1% |       0 |      130 |       812
+      960 |     +0.1% |       0 |      130 |       652
+     1120 |     +0.1% |      44 |      173 |       492
+     1280 |     +0.1% |      44 |      173 |       332
+     1440 |     +0.1% |      44 |      173 |       172
+     1600 |     +0.1% |      44 |      173 |        12
+    final |     +0.1% |      44 |      173 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 1.0457055e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 15.192 um^2 (+23.73%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 173 (+21.28%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 217, deleted: 44
+[INFO GPL-0110] Timing-driven: new target density: 0.55158466
+[INFO GPL-0038] Routability snapshot saved at iter = 1
+        0 |   0.3491 |  5.688563e+04 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.5770 |  6.260745e+04 |  +10.43% |  7.32e-13 |      
+       20 |   0.5746 |  6.295968e+04 |   +0.56% |  1.08e-12 |      
+       30 |   0.5752 |  6.293025e+04 |   -0.05% |  1.59e-12 |      
+       40 |   0.5757 |  6.298443e+04 |   +0.09% |  2.34e-12 |      
+       50 |   0.5760 |  6.297881e+04 |   -0.01% |  3.44e-12 |      
+       60 |   0.5759 |  6.293791e+04 |   -0.06% |  5.07e-12 |      
+       70 |   0.5759 |  6.292878e+04 |   -0.01% |  7.48e-12 |      
+       80 |   0.5759 |  6.293935e+04 |   +0.02% |  1.10e-11 |      
+       90 |   0.5759 |  6.295105e+04 |   +0.02% |  1.62e-11 |      
+      100 |   0.5759 |  6.295500e+04 |   +0.01% |  2.39e-11 |      
+      110 |   0.5759 |  6.295040e+04 |   -0.01% |  3.52e-11 |      
+      120 |   0.5760 |  6.294522e+04 |   -0.01% |  5.19e-11 |      
+      130 |   0.5761 |  6.294723e+04 |   +0.00% |  7.64e-11 |      
+      140 |   0.5762 |  6.295701e+04 |   +0.02% |  1.13e-10 |      
+      150 |   0.5763 |  6.296960e+04 |   +0.02% |  1.66e-10 |      
+      160 |   0.5774 |  6.298297e+04 |   +0.02% |  2.44e-10 |      
+      170 |   0.5780 |  6.300262e+04 |   +0.03% |  3.60e-10 |      
+      180 |   0.5811 |  6.303513e+04 |   +0.05% |  5.30e-10 |      
+      190 |   0.5835 |  6.308921e+04 |   +0.09% |  7.81e-10 |      
+      200 |   0.5936 |  6.319177e+04 |   +0.16% |  1.15e-09 |      
+      210 |   0.5977 |  6.334370e+04 |   +0.24% |  1.69e-09 |      
+      220 |   0.6011 |  6.352989e+04 |   +0.29% |  2.50e-09 |      
+      230 |   0.5995 |  6.379864e+04 |   +0.42% |  3.68e-09 |      
+      240 |   0.5996 |  6.414080e+04 |   +0.54% |  5.42e-09 |      
+      250 |   0.5990 |  6.435585e+04 |   +0.34% |  7.98e-09 |      
+      260 |   0.5980 |  6.448801e+04 |   +0.21% |  1.18e-08 |      
+      270 |   0.5964 |  6.489107e+04 |   +0.63% |  1.73e-08 |      
+      280 |   0.5949 |  6.465519e+04 |   -0.36% |  2.55e-08 |      
+      290 |   0.5958 |  6.434708e+04 |   -0.48% |  3.76e-08 |      
+      300 |   0.5991 |  6.373872e+04 |   -0.95% |  5.54e-08 |      
+      310 |   0.5981 |  6.354437e+04 |   -0.30% |  8.16e-08 |      
+      320 |   0.5994 |  6.337388e+04 |   -0.27% |  1.20e-07 |      
+      330 |   0.5991 |  6.329791e+04 |   -0.12% |  1.77e-07 |      
+      340 |   0.5975 |  6.335762e+04 |   +0.09% |  2.61e-07 |      
+      350 |   0.5899 |  6.347689e+04 |   +0.19% |  3.84e-07 |      
+      360 |   0.5637 |  6.310929e+04 |   -0.58% |  5.66e-07 |      
+      370 |   0.5336 |  6.273800e+04 |   -0.59% |  8.34e-07 |      
+      380 |   0.5024 |  6.249394e+04 |   -0.39% |  1.23e-06 |      
+      390 |   0.5015 |  6.202440e+04 |   -0.75% |  1.81e-06 |      
+      400 |   0.4342 |  6.133953e+04 |   -1.10% |  2.66e-06 |      
+      410 |   0.3787 |  6.088721e+04 |   -0.74% |  3.93e-06 |      
+      420 |   0.2915 |  6.034707e+04 |   -0.89% |  5.78e-06 |      
+[INFO GPL-0040] Routability iteration: 1
+[INFO GPL-0041] Total routing overflow: 20.2466
+[INFO GPL-0042] Number of overflowed tiles: 701 (0.78%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0412
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0220
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0003
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.9690
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0316
+[INFO GPL-0048] Routing congestion (1.0316) lower than previous minimum (1e+30). Updating minimum.
+[INFO GPL-0086] Inflated area:                   0.315 um^2 (+0.40%)
+[INFO GPL-0052] Placement target density:       0.5516
+[INFO GPL-0076] Removing fillers, count: Before: 67960, After: 67956 (-0.01%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 5209.058, After: 5208.691 (-0.01%)
+[INFO GPL-0078] Removed fillers count: 4, area removed: 0.307 um^2. Remaining area to be compensated by modifying density: 0.009 um^2
+[INFO GPL-0058] White space area:             9587.429 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:       5288.279 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            5208.691 um^2 (-0.01%)
+[INFO GPL-0061] Total non-inflated area:      5288.228 um^2 (-0.00%)
+[INFO GPL-0062] Total inflated area:          5288.543 um^2 (-0.00%)
+[INFO GPL-0063] New Target Density:             0.5516
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      430 |   0.5787 |  6.260745e+04 |   +3.75% |  7.32e-13 |      
+      440 |   0.5763 |  6.295969e+04 |   +0.56% |  1.08e-12 |      
+      450 |   0.5769 |  6.293025e+04 |   -0.05% |  1.59e-12 |      
+      460 |   0.5774 |  6.298442e+04 |   +0.09% |  2.34e-12 |      
+      470 |   0.5777 |  6.297880e+04 |   -0.01% |  3.45e-12 |      
+      480 |   0.5692 |  6.293792e+04 |   -0.06% |  5.08e-12 |      
+      490 |   0.5585 |  6.292877e+04 |   -0.01% |  7.48e-12 |      
+      500 |   0.5484 |  6.293933e+04 |   +0.02% |  1.10e-11 |      
+      510 |   0.5386 |  6.295105e+04 |   +0.02% |  1.62e-11 |      
+      520 |   0.5292 |  6.295500e+04 |   +0.01% |  2.39e-11 |      
+      530 |   0.5202 |  6.295038e+04 |   -0.01% |  3.52e-11 |      
+      540 |   0.5115 |  6.294522e+04 |   -0.01% |  5.19e-11 |      
+      550 |   0.5032 |  6.294720e+04 |   +0.00% |  7.64e-11 |      
+      560 |   0.4952 |  6.295700e+04 |   +0.02% |  1.13e-10 |      
+      570 |   0.4875 |  6.296957e+04 |   +0.02% |  1.66e-10 |      
+      580 |   0.4809 |  6.298293e+04 |   +0.02% |  2.44e-10 |      
+      590 |   0.4740 |  6.300256e+04 |   +0.03% |  3.60e-10 |      
+      600 |   0.4695 |  6.303504e+04 |   +0.05% |  5.30e-10 |      
+      610 |   0.4645 |  6.308891e+04 |   +0.09% |  7.81e-10 |      
+      620 |   0.4659 |  6.319183e+04 |   +0.16% |  1.15e-09 |      
+      630 |   0.4622 |  6.334386e+04 |   +0.24% |  1.69e-09 |      
+      640 |   0.4584 |  6.353016e+04 |   +0.29% |  2.50e-09 |      
+      650 |   0.4509 |  6.379884e+04 |   +0.42% |  3.68e-09 |      
+      660 |   0.4450 |  6.414100e+04 |   +0.54% |  5.42e-09 |      
+      670 |   0.4387 |  6.435590e+04 |   +0.34% |  7.98e-09 |      
+      680 |   0.4323 |  6.448812e+04 |   +0.21% |  1.18e-08 |      
+      690 |   0.4256 |  6.489109e+04 |   +0.62% |  1.73e-08 |      
+      700 |   0.4191 |  6.465593e+04 |   -0.36% |  2.55e-08 |      
+      710 |   0.4147 |  6.434614e+04 |   -0.48% |  3.76e-08 |      
+      720 |   0.4119 |  6.373723e+04 |   -0.95% |  5.54e-08 |      
+      730 |   0.4063 |  6.354200e+04 |   -0.31% |  8.16e-08 |      
+      740 |   0.4024 |  6.337109e+04 |   -0.27% |  1.20e-07 |      
+      750 |   0.3977 |  6.329563e+04 |   -0.12% |  1.77e-07 |      
+      760 |   0.3920 |  6.335792e+04 |   +0.10% |  2.61e-07 |      
+      770 |   0.3824 |  6.347596e+04 |   +0.19% |  3.84e-07 |      
+      780 |   0.3615 |  6.310370e+04 |   -0.59% |  5.66e-07 |      
+      790 |   0.3374 |  6.272412e+04 |   -0.60% |  8.34e-07 |      
+      800 |   0.3119 |  6.248254e+04 |   -0.39% |  1.23e-06 |      
+      810 |   0.3134 |  6.201695e+04 |   -0.75% |  1.81e-06 |      
+[INFO GPL-0040] Routability iteration: 2
+[INFO GPL-0041] Total routing overflow: 29.7849
+[INFO GPL-0042] Number of overflowed tiles: 1094 (1.21%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0509
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0324
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0135
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.9815
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0416
+[INFO GPL-0049] Routing congestion (1.0416) higher than minimum (1.0316). Consecutive non-improvement count: 1.
+[INFO GPL-0086] Inflated area:                   0.529 um^2 (+0.66%)
+[INFO GPL-0052] Placement target density:       0.5516
+[INFO GPL-0076] Removing fillers, count: Before: 67956, After: 67950 (-0.01%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 5208.691, After: 5208.232 (-0.01%)
+[INFO GPL-0078] Removed fillers count: 6, area removed: 0.460 um^2. Remaining area to be compensated by modifying density: 0.069 um^2
+[INFO GPL-0058] White space area:             9587.429 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:       5288.279 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            5208.232 um^2 (-0.01%)
+[INFO GPL-0061] Total non-inflated area:      5288.297 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:          5288.826 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.5516
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      820 |   0.3683 |  6.215426e+04 |   +0.22% |  6.51e-13 |      
+      830 |   0.3533 |  6.294612e+04 |   +1.27% |  9.59e-13 |      
+      840 |   0.3502 |  6.292630e+04 |   -0.03% |  1.41e-12 |      
+      850 |   0.3468 |  6.296694e+04 |   +0.06% |  2.08e-12 |      
+      860 |   0.3436 |  6.298850e+04 |   +0.03% |  3.07e-12 |      
+      870 |   0.3402 |  6.294695e+04 |   -0.07% |  4.52e-12 |      
+      880 |   0.3369 |  6.292829e+04 |   -0.03% |  6.66e-12 |      
+      890 |   0.3337 |  6.293539e+04 |   +0.01% |  9.81e-12 |      
+      900 |   0.3305 |  6.294799e+04 |   +0.02% |  1.44e-11 |      
+      910 |   0.3274 |  6.295513e+04 |   +0.01% |  2.13e-11 |      
+      920 |   0.3244 |  6.295299e+04 |   -0.00% |  3.13e-11 |      
+      930 |   0.3215 |  6.294692e+04 |   -0.01% |  4.62e-11 |      
+      940 |   0.3186 |  6.294601e+04 |   -0.00% |  6.80e-11 |      
+      950 |   0.3158 |  6.295329e+04 |   +0.01% |  1.00e-10 |      
+      960 |   0.3130 |  6.296480e+04 |   +0.02% |  1.48e-10 |      
+      970 |   0.3105 |  6.297887e+04 |   +0.02% |  2.17e-10 |      
+      980 |   0.3086 |  6.299698e+04 |   +0.03% |  3.20e-10 |      
+      990 |   0.3064 |  6.302643e+04 |   +0.05% |  4.72e-10 |      
+     1000 |   0.3076 |  6.307767e+04 |   +0.08% |  6.95e-10 |      
+     1010 |   0.3097 |  6.318021e+04 |   +0.16% |  1.02e-09 |      
+     1020 |   0.3074 |  6.330818e+04 |   +0.20% |  1.51e-09 |      
+     1030 |   0.3061 |  6.349719e+04 |   +0.30% |  2.22e-09 |      
+     1040 |   0.3039 |  6.373405e+04 |   +0.37% |  3.27e-09 |      
+     1050 |   0.3017 |  6.404410e+04 |   +0.49% |  4.82e-09 |      
+[INFO GPL-0040] Routability iteration: 3
+[INFO GPL-0041] Total routing overflow: 66.8071
+[INFO GPL-0042] Number of overflowed tiles: 2199 (2.44%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0727
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0544
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0361
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.0015
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0636
+[INFO GPL-0049] Routing congestion (1.0636) higher than minimum (1.0316). Consecutive non-improvement count: 2.
+[INFO GPL-0086] Inflated area:                   0.705 um^2 (+0.88%)
+[INFO GPL-0052] Placement target density:       0.5516
+[INFO GPL-0076] Removing fillers, count: Before: 67950, After: 67941 (-0.01%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 5208.232, After: 5207.542 (-0.01%)
+[INFO GPL-0078] Removed fillers count: 9, area removed: 0.690 um^2. Remaining area to be compensated by modifying density: 0.015 um^2
+[INFO GPL-0058] White space area:             9587.429 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:       5288.279 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            5207.542 um^2 (-0.01%)
+[INFO GPL-0061] Total non-inflated area:      5288.312 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:          5289.017 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.5516
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+[INFO GPL-0040] Routability iteration: 4
+[INFO GPL-0041] Total routing overflow: 75.3652
+[INFO GPL-0042] Number of overflowed tiles: 1589 (1.76%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.1092
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0741
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0413
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.9940
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0917
+[INFO GPL-0049] Routing congestion (1.0917) higher than minimum (1.0316). Consecutive non-improvement count: 3.
+[INFO GPL-0086] Inflated area:                   2.907 um^2 (+3.60%)
+[INFO GPL-0052] Placement target density:       0.5516
+[INFO GPL-0076] Removing fillers, count: Before: 67941, After: 67904 (-0.05%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 5207.542, After: 5204.706 (-0.05%)
+[INFO GPL-0078] Removed fillers count: 37, area removed: 2.836 um^2. Remaining area to be compensated by modifying density: 0.071 um^2
+[INFO GPL-0054] No improvement in routing congestion for 3 consecutive iterations (limit is 3).
+[INFO GPL-0055] Reverting inflation values and target density from the iteration with minimum observed routing congestion.
+[INFO GPL-0056] Minimum observed routing congestion: 1.0316
+[INFO GPL-0057] Target density at minimum routing congestion: 0.5516
+[INFO GPL-0080] Restoring 56 previously removed fillers.
+[INFO GPL-0081] Number of fillers before restoration 67904 and after 67960 . Relative change: +0.08%%
+[INFO GPL-0082] Total filler area before restoration 5204.71 and after 5209.00 (um^2). Relative change: +0.08%%
+[INFO GPL-0089] Routability finished. Reverting to minimal observed routing congestion, could not reach target.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     1060 |   0.2891 |  5.807109e+04 |   -9.33% |  5.16e-13 |      
+     1070 |   0.2795 |  6.270920e+04 |   +7.99% |  7.60e-13 |      
+     1080 |   0.2767 |  6.284604e+04 |   +0.22% |  1.12e-12 |      
+     1090 |   0.2751 |  6.251636e+04 |   -0.52% |  1.65e-12 |      
+     1100 |   0.2725 |  6.216753e+04 |   -0.56% |  2.43e-12 |      
+     1110 |   0.2699 |  6.176336e+04 |   -0.65% |  3.58e-12 |      
+     1120 |   0.2669 |  6.150071e+04 |   -0.43% |  5.28e-12 |      
+     1130 |   0.2641 |  6.133646e+04 |   -0.27% |  7.77e-12 |      
+     1140 |   0.2617 |  6.113618e+04 |   -0.33% |  1.14e-11 |      
+     1150 |   0.2597 |  6.091693e+04 |   -0.36% |  1.69e-11 |      
+     1160 |   0.2578 |  6.074425e+04 |   -0.28% |  2.48e-11 |      
+     1170 |   0.2560 |  6.059817e+04 |   -0.24% |  3.66e-11 |      
+     1180 |   0.2543 |  6.044176e+04 |   -0.26% |  5.39e-11 |      
+     1190 |   0.2523 |  6.027611e+04 |   -0.27% |  7.94e-11 |      
+     1200 |   0.2489 |  6.010098e+04 |   -0.29% |  1.17e-10 |      
+     1210 |   0.2472 |  5.992121e+04 |   -0.30% |  1.72e-10 |      
+     1220 |   0.2465 |  5.979465e+04 |   -0.21% |  2.54e-10 |      
+     1230 |   0.2457 |  5.969724e+04 |   -0.16% |  3.74e-10 |      
+     1240 |   0.2438 |  5.958525e+04 |   -0.19% |  5.51e-10 |      
+     1250 |   0.2412 |  5.942613e+04 |   -0.27% |  8.12e-10 |      
+     1260 |   0.2437 |  5.931834e+04 |   -0.18% |  1.20e-09 |      
+     1270 |   0.2443 |  5.940532e+04 |   +0.15% |  1.76e-09 |      
+     1280 |   0.2439 |  5.940043e+04 |   -0.01% |  2.60e-09 |      
+     1290 |   0.2422 |  5.949630e+04 |   +0.16% |  3.82e-09 |      
+     1300 |   0.2358 |  5.961862e+04 |   +0.21% |  5.63e-09 |      
+     1310 |   0.2265 |  5.983534e+04 |   +0.36% |  8.30e-09 |      
+     1320 |   0.2229 |  6.034376e+04 |   +0.85% |  1.22e-08 |      
+     1330 |   0.2131 |  6.207382e+04 |   +2.87% |  1.80e-08 |      
+     1340 |   0.2043 |  6.304989e+04 |   +1.57% |  2.65e-08 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 1349, overflow: 0.194, keep resizer changes at: 1, HPWL: 60894310
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      2320
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |      1612
+      160 |     +0.0% |       0 |        3 |      1452
+      320 |     +0.0% |      52 |       57 |      1292
+      480 |     +0.0% |     130 |      135 |      1132
+      640 |     +0.0% |     130 |      136 |       972
+      800 |     +0.0% |     130 |      136 |       812
+      960 |     +0.0% |     130 |      136 |       652
+     1120 |     +0.0% |     173 |      177 |       492
+     1280 |     +0.0% |     173 |      177 |       332
+     1440 |     +0.0% |     173 |      177 |       172
+     1600 |     +0.0% |     173 |      178 |        12
+    final |     +0.0% |     173 |      179 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -2.4189206e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.700 um^2 (+0.87%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 6 (+0.61%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 179, deleted: 173
+[INFO GPL-0110] Timing-driven: new target density: 0.551813
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     1350 |   0.1912 |  6.075951e+04 |   -3.63% |  3.90e-08 |      
+     1360 |   0.2077 |  5.962222e+04 |   -1.87% |  5.75e-08 |      
+     1370 |   0.1931 |  5.760532e+04 |   -3.38% |  8.47e-08 |      
+     1380 |   0.1874 |  5.754839e+04 |   -0.10% |  1.25e-07 |      
+     1390 |   0.1822 |  5.726310e+04 |   -0.50% |  1.84e-07 |      
+     1400 |   0.1686 |  5.677546e+04 |   -0.85% |  2.71e-07 |      
+     1410 |   0.1773 |  5.656041e+04 |   -0.38% |  3.99e-07 |      
+     1420 |   0.1610 |  5.630212e+04 |   -0.46% |  5.87e-07 |      
+     1430 |   0.1477 |  5.578518e+04 |   -0.92% |  8.65e-07 |      
+     1440 |   0.1339 |  5.540581e+04 |   -0.68% |  1.27e-06 |      
+     1450 |   0.1270 |  5.538382e+04 |   -0.04% |  1.88e-06 |      
+     1460 |   0.1083 |  5.509769e+04 |   -0.52% |  2.77e-06 |      
+     1464 |   0.0998 |  5.498233e+04 |          |  3.36e-06 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 1464
+[INFO GPL-1017] Routability mode iteration count: 1055
+[INFO GPL-1005] Routability final weighted congestion: 1.0341
+[INFO GPL-1002] Placed Cell Area               79.9206
+[INFO GPL-1003] Available Free Area          9587.4289
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0093
+[INFO GPL-1008]     - For 80% usage of free space: 0.0104
+[INFO GPL-1009]     - For 50% usage of free space: 0.0167
+[INFO GPL-1011] Original area (um^2): 64.03
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 15.89 (+24.82%)
+[INFO GPL-1014] Final placement area: 79.92 (+24.82%)
+Took 125 seconds: global_placement -density 0.55 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 16179 um^2 58% utilization.
+write_db /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx_cal/base/3_3_place_gp.odb
+Elapsed time: 2:18.83[h:]min:sec. CPU time: user 338.94 sys 2.37 (245%). Peak memory: 1005704KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          138            982 87a61446f27140505a9d

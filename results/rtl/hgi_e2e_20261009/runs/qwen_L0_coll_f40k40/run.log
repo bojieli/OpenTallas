@@ -1,0 +1,25 @@
+E2E: 34 golden records, 100221 HBM sectors loaded
+E2E REAL 22 (all_reduce_o) VM[152576] = 00000000 golden 41656970
+E2E REAL 22 (all_reduce_o) VM[152577] = 00000000 golden 433c9a0b
+E2E REAL 22 (all_reduce_o) VM[152578] = 00000000 golden 440d26d7
+E2E REAL 22 (all_reduce_o) VM[152579] = 00000000 golden 42bbfe61
+E2E REAL 22 (all_reduce_o) VM[152580] = 00000000 golden 43b81dce
+E2E REAL 22 (all_reduce_o) VM[152581] = 00000000 golden c3661654
+E2E REAL 22 (all_reduce_o) VM[152582] = 00000000 golden c3b7e2f5
+E2E REAL 22 (all_reduce_o) VM[152583] = 00000000 golden c322d822
+E2E FINAL VM[0] = bd123c00 golden be2d6cba
+E2E FINAL VM[1] = bb6ec000 golden 3e8636f4
+E2E FINAL VM[2] = bd0c4400 golden 3ea9a379
+E2E FINAL VM[3] = 3c4af000 golden 3dd67f3c
+E2E FINAL VM[4] = bd272000 golden 3e2054dd
+E2E FINAL VM[5] = 3d153800 golden be23e56c
+E2E FINAL VM[6] = bc953800 golden bee6b10a
+E2E FINAL VM[7] = bd005400 golden bd54449a
+E2E SUMMARY cycles 410979 token -1 status 15 dispatched 23/34 dispatch_mismatch 0 final_vm_mismatch 41973 final_hbm_mismatch 0 unloaded_hbm_reads 120
+E2E CFG status err 0 loaded 1
+E2E COLL FAULT k 22: dec_err 0 pf_bad 0 pfg_bad 0 ep_fault 1 multi 0 gsz 2 pf 256 byp 0 mall 0 rank 0 g 4 st 7
+E2E COLL FAULT parts: ovf 0 dupe 0 mode 1 result 0
+E2E REAL COLL record 22: 4096 mismatches fault 1
+E2E WATCHDOG: no dispatch / retire for 400000 cycles at cyc 410979; ux_v 0000 ux_rdy fffe stub busy SU 0 SFU 0 DMA 0; real kq depth SU 0 SFU 0 DMA 0
+HGI_E2E FAIL (watchdog)
+rc=0

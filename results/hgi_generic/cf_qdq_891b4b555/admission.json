@@ -1,0 +1,11 @@
+{
+  "host": "ot-epyc3",
+  "source_commit": "891b4b555b3c7a46f98cfed050e9e2748808907c",
+  "remote_root": "/srv/opentallas-scratch/codex/hgi-qdq-891b4b555",
+  "admission": "/srv/opentallas-scratch/admit.sh 1",
+  "measured_peak_rss_kib": 41484,
+  "exit_code": 0,
+  "scope": "Finite-input released DS CF-QDQ goldens; no RTL conformance claim",
+  "boundary_correction": "2640/6=440. True scale432 midpoint is amax2592. Below2592 yields scale416; exact2592 ties to even448; above yields448. At2688 and2784 all requested neighbors yield saturated scale448.",
+  "original_evidence": "cf_qdq_d61ca29fc remains byte-identical"
+}

@@ -36,7 +36,7 @@ CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
-STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),
+STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
           ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_|hgi|ot_hgi|ot_hcoll|ot_gpu_rf_)')),
           ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_|ot_mtp_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
@@ -214,7 +214,7 @@ class Elements:
         self.area_path = self.state / 'element_area.json'
         try: self.area = json.loads(self.area_path.read_text())
         except Exception: self.area = {}
-        self.err = None; self.lock = threading.Lock(); self.data = dict(t=0, rows=[], summary={}, cats=CATS, targets=TARGETS); self.ver = 0
+        self.lock = threading.Lock(); self.data = dict(t=0, rows=[], summary={}, cats=CATS, targets=TARGETS); self.ver = 0
         self.md_t = 0
         threading.Thread(target=self.run, daemon=True, name='elements').start()
         threading.Thread(target=self.area_loop, daemon=True, name='elements-area').start()
@@ -475,11 +475,10 @@ class Elements:
             try:
                 d = self.compute()
                 with self.lock:
-                    self.data = d; self.ver += 1; self.err = None
+                    self.data = d; self.ver += 1
                 if time.time() - self.md_t >= self.md_period:
                     self.md_t = time.time(); self.write_md(d)
             except Exception as e:
-                self.err = '%s: %s' % (type(e).__name__, e)   # served as a freshness flag; the last good table stays, marked stale
                 self.log('elements: %s' % e)
             time.sleep(self.period)
 

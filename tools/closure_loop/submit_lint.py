@@ -64,6 +64,31 @@ ENV_KEYS = ("PIN_H", "PIN_V", "PIN_MIN_TRACKS", "OT_PIN_GROUP_MAX", "OT_PIN_BALA
 SYNTH_ENV_RE = re.compile(r"\b(OT_ABC_\w+|OT_SYNTH_\w+|OT_MULTI_VT|OT_KEEP_\w+)=('[^']*'|\"[^\"]*\"|[^\s;]+)")
 MASTER_RE = re.compile(r"(?:physical/qwen_die_masters/jobs/)?route_master\.sh\s+([A-Za-z0-9_.-]+)")
 CFG_DIR = "physical/qwen_die_masters/cfg"
+# drive-0212 2026-10-09: an IO-placer setting only acts when the job's SOURCE COMMIT's flow reads it.  OT_PIN_GROUP_MAX /
+# OT_PIN_BALANCE_H/V entered tools/run_abi3_physical.py at dde873a8e (2026-10-08 23:39) and route_master.sh never read
+# PIN_MIN_TRACKS before main; 12 of the 15 lint-at-submit pin_balance requeues ran on older sources, the env was
+# silently ignored and two re-failed at the IDENTICAL density (sys-08ef6a8a8-ls E/M4 20.8 @819, kv624-a732a1d76-ls
+# N/M5 20.8 @1).  Each key -> (file at the source commit, marker that file must contain for the key to take effect).
+FLOW_SUPPORT = {
+    "PIN_H": ("physical/qwen_die_masters/jobs/route_master.sh", "IO_PLACER_H"),
+    "PIN_V": ("physical/qwen_die_masters/jobs/route_master.sh", "IO_PLACER_V"),
+    "PIN_MIN_TRACKS": ("physical/qwen_die_masters/jobs/route_master.sh", "PIN_MIN_TRACKS"),
+    "OT_PIN_GROUP_MAX": ("tools/run_abi3_physical.py", "OT_PIN_GROUP_MAX"),
+    "OT_PIN_BALANCE_H": ("tools/run_abi3_physical.py", "OT_PIN_BALANCE_H"),
+    "OT_PIN_BALANCE_V": ("tools/run_abi3_physical.py", "OT_PIN_BALANCE_V"),
+}
+
+
+def flow_support(git, commit: str) -> dict:
+    """{env key: True when the source commit's flow reads it} (a missing file reads nothing)"""
+    cache, out = {}, {}
+    for k, (path, marker) in FLOW_SUPPORT.items():
+        if path not in cache:
+            cache[path] = git.show(commit, path) or ""
+        out[k] = marker in cache[path]
+    # dde873a8e itself balanced only bounded (lo-hi) regions and raised on a whole-face one; a66978536 relaxed it
+    out["balance_whole_face"] = "bounded regions" not in cache.get("tools/run_abi3_physical.py", "")
+    return out
 
 
 # ------------------------------------------------------------------------------------- constant expressions (SV)
@@ -299,7 +324,7 @@ def read_cfg(text: str) -> dict:
         p = f.name
     try:
         script = ('set +u; source "$1" >/dev/null 2>&1; '
-                  'for v in TOP SRCS FW FH PIN_H PIN_V PIN_MIN_TRACKS; do printf "%s=%s\\0" "$v" "${!v-__unset__}"; done; '
+                  'for v in TOP SRCS FW FH PIN_H PIN_V PIN_MIN_TRACKS QDMD SDCF; do printf "%s=%s\\0" "$v" "${!v-__unset__}"; done; '
                   'printf "PARAMS\\0"; for x in "${PARAMS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"; '
                   'printf "PINS\\0"; for x in "${PINS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"; '
                   'printf "MACROS\\0"; for x in "${MACROS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"')
@@ -413,21 +438,32 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
                 if best > grp:
                     grp, gwhy = best, f"group {r['regex']} {r['n']} pins" + (f" (chunks {group_max})" if group_max else "")
         if balance:
-            # run_abi3_physical OT_PIN_BALANCE: each region's pins uniformly over its span, layer alternating per chunk;
-            # regions sharing a face are taken to overlap (their densities add)
-            bal = 0.0
+            # run_abi3_physical OT_PIN_BALANCE: each region's pins uniformly over its span, layer alternating per chunk.
+            # drive-0212: the densities add only where regions OVERLAP along the edge; summing every region of a face
+            # refused qfd_hub_ps-dde873a8e-tc-bal32 at 26.3 b/um (six disjoint right:lo-hi ranges), measured 8.0, CLOSED.
+            # The estimate is the densest 100 um window over the piecewise-uniform pin line.
+            segs = []
             for r in regs:
                 if not r["n"]:
                     continue
-                span = (r["range_um"][1] - r["range_um"][0]) if r.get("range_um") else length[edge]
-                bal += r["n"] / (len(ls) * max(span, window))
-                if span / r["n"] < max(PITCH.get(lay, 0.048) for lay in ls):
-                    nofit.append(f"balanced {r['regex']} {r['n']} pins at {span / r['n']:.3f} um spacing < the layer pitch")
-            avg = max(avg, bal)
+                lo, hi = r["range_um"] if r.get("range_um") else (0.0, length[edge])
+                span = hi - lo
+                if span <= 0 or span / r["n"] < max(PITCH.get(lay, 0.048) for lay in ls):
+                    nofit.append(f"balanced {r['regex']} {r['n']} pins at {max(span, 0) / r['n']:.3f} um spacing "
+                                 f"< the layer pitch")
+                    continue
+                segs.append((lo, hi, r["n"] / span))
+            starts = {x for lo, hi, _ in segs for x in (lo, hi - window)}
+            peak = max((sum(rate * max(0.0, min(hi, a + window) - max(lo, a)) for lo, hi, rate in segs)
+                        for a in starts), default=0.0)
+            avg = max(avg, peak / (len(ls) * window))
         est = max(grp, avg)
         why = gwhy if grp >= avg else f"{total:.0f} pins over {length[edge]:.0f} um x {len(ls)} layer(s)"
         out[edge] = {"est": round(est, 2), "layers": ls, "why": why, "pins": round(total), "nofit": nofit}
     return out
+
+
+PPL_SECTION = 200  # OpenROAD place_pins slots per section (PPL-0005)
 
 
 def _fails(d: dict, limit: float) -> list[str]:
@@ -480,6 +516,14 @@ def master_plan(spec: dict, git: Git) -> dict:
     if text is None:
         raise LookupError(f"{CFG_DIR}/{name}.env not readable at {commit[:12]}")
     cfg = read_cfg(text)
+    # drive-0849 (2026-10-09): post_plain.tcl reads $QDM_SDC_DIR/io_plain.sdc after CTS / GRT / DRT / fill; a hand-made mc
+    # kit without it crashes the route at 4_1_cts (STA-0340: sys sequencer a2cf5ee1c x2, qfd_coll_xfifo acb615a21 x2).
+    qdmd = str(cfg.get("QDMD") or "")
+    kit_missing = []
+    if qdmd.startswith("/src/"):
+        for f in ("io_plain.sdc", "io_ref_skew.sdc", str(cfg.get("SDCF") or "die_p770.sdc")):
+            if git.show(commit, f"{qdmd[5:].rstrip('/')}/{f}") is None:
+                kit_missing.append(f"{qdmd[5:].rstrip('/')}/{f}")
     if not cfg.get("TOP") or not cfg.get("FW") or not cfg.get("FH"):
         raise ExprError(f"cfg {name}: TOP / FW / FH not set")
     env = cmd_env(cmd)
@@ -501,6 +545,10 @@ def master_plan(spec: dict, git: Git) -> dict:
         rx = re.compile(r["regex"])
         r["n"] = sum(1 for b in bits if rx.search(b))
     matched = sum(1 for b in bits if any(re.search(r["regex"], b) for r in regs))
+    # a setting the source's flow does not read is ignored by the flow, so the estimate ignores it too
+    flow = flow_support(git, commit)
+    cfg = {k: v for k, v in cfg.items() if k not in flow or flow[k]}
+    env = {k: v for k, v in env.items() if k not in flow or flow[k]}
     # route_master sources the cfg AFTER the environment: a variable the cfg sets wins over the command's
     layers = {k: cfg.get(k) or env.get(k) or DEFAULT[k] for k in ("PIN_H", "PIN_V")}
     synth_env = sorted(f"{a}={b}" for a, b in SYNTH_ENV_RE.findall(cmd))
@@ -513,6 +561,7 @@ def master_plan(spec: dict, git: Git) -> dict:
             "tracks": float(cfg.get("PIN_MIN_TRACKS") or env.get("PIN_MIN_TRACKS") or 1),
             "group_max": int(env.get("OT_PIN_GROUP_MAX") or 0),
             "balance": bool(env.get("OT_PIN_BALANCE_H") and env.get("OT_PIN_BALANCE_V") and env.get("OT_PIN_GROUP_MAX")),
+            "flow": flow, "commit": commit, "kit_missing": kit_missing,
             "synth_key": key, "core_um2": round((fw - 2 * CORE_INSET) * (fh - 2 * CORE_INSET), 1)}
 
 
@@ -523,12 +572,22 @@ def _choose_fix(plan, limit, window, res, force=False):
     cur_bal = plan["balance"]
     for fx in FIXES:
         env = fx["env"]
+        unread = [k for k in env if not plan.get("flow", {}).get(k, True)]
+        if unread:
+            why.append(f"{fx['name']}: the source {str(plan.get('commit'))[:9]} flow does not read "
+                       f"{','.join(unread)} (OT_PIN_* since dde873a8e; rebase the source)")
+            continue
         if fx["name"] == "pin_balance":
             if cur_bal:
                 why.append("pin_balance already set")
                 continue
             if not plan["regions"]:
                 why.append("pin_balance: no --pin-region to balance")
+                continue
+            if not plan.get("flow", {}).get("balance_whole_face", True) and \
+                    any("range_um" not in r for r in plan["regions"]):
+                why.append(f"pin_balance: the source {str(plan.get('commit'))[:9]} flow balances only lo-hi regions "
+                           f"(whole-face regions raise; relaxed at a66978536)")
                 continue
             d = density(plan, {"PIN_H": env["OT_PIN_BALANCE_H"], "PIN_V": env["OT_PIN_BALANCE_V"]}, plan["tracks"],
                         int(env["OT_PIN_GROUP_MAX"]), True, window)
@@ -558,6 +617,34 @@ def _choose_fix(plan, limit, window, res, force=False):
 
 
 def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
+    """pin-density / utilisation estimate (_pin_check) + the RTL registered-boundary check (rtl_boundary.py, struct-close
+    2026-10-09): boundary findings WARN (message + res["rtl_boundary"]) and REFUSE only when spec.registered_io is true"""
+    res = _pin_check(spec, git, util_db, force)
+    if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
+        return res
+    try:
+        sys.path.insert(0, str(HERE)); import rtl_boundary  # noqa: E702
+        rb = rtl_boundary.check(spec, git.show)
+    except Exception as ex:  # noqa: BLE001  (the boundary check never blocks intake on its own failure)
+        rb = {"verdict": "SKIP", "message": f"rtl_boundary skipped: {type(ex).__name__}: {str(ex)[:160]}"}
+    if rb.get("verdict") == "SKIP":
+        return res
+    res["rtl_boundary"] = {k: rb.get(k) for k in ("verdict", "message", "in_to_out_bits", "in_to_reg_max",
+                                                  "reg_to_out_max", "levels", "strict")}
+    if rb["verdict"] == "REFUSE":
+        res["verdict"] = "REFUSE"
+        res["message"] = (res.get("message", "") + " || " if res.get("verdict") != "SKIP" and res.get("message") else "") \
+            + rb["message"] + " (spec registered_io: true): register the boundary (pin flops / registered outputs) or drop the claim"
+    elif rb["verdict"] == "WARN":
+        if res.get("verdict") == "SKIP":
+            res["verdict"], res["message"] = "PASS", "pin estimate n/a"
+        res["message"] = res.get("message", "") + " || WARN " + rb["message"]
+    elif res.get("verdict") == "SKIP":
+        res["verdict"], res["message"] = "PASS", "pin estimate n/a || " + rb["message"]
+    return res
+
+
+def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
     """{"verdict": PASS|FIX|REFUSE|SKIP, "message", "est", "fix", "fix_env", "est_fix", "util_est", ...}
     force: apply the first fix that passes even when the estimate passes as configured (a MEASURED failure)"""
     if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
@@ -574,6 +661,16 @@ def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False
     res["est"] = {EDGES[e]: v["est"] for e, v in est.items()}
     msgs, verdict = [], "PASS"
     fails = _fails(est, limit)
+    # drive-0849 (2026-10-09): an ordered --pin-region group larger than an IO-placer section (PPL "Slots per section 200")
+    # is placed in FALLBACK mode and then fails PPL-0107 "Invalid pin placement" at 3_2_place_iop although its density
+    # passes (hgi_coll_row_formatter c130/c180 1024/512 pins, hgi_ehash_ds a/b 768/768/256, qfd_coll_xfifo a/b, 4 routes x 2
+    # crashes on 10-09).  Such a plan takes the approved pin_balance fix (32-pin chunks) at submit, as a measured failure.
+    gmax = int(th.get("ppl_group_max", PPL_SECTION))  # fp_lint {"set": {"ppl_group_max": 0}} switches the rule off
+    big = [r for r in plan["regions"] if r.get("n", 0) > gmax] if gmax and not (plan["group_max"] or plan["balance"]) else []
+    if big and not fails and not force:
+        force = True
+        names = ", ".join(f"{r['regex']} {r['n']}" for r in big[:3])
+        msgs.append(f"ordered pin group(s) > {gmax} pins ({names}) fall back in the IO placer (PPL-0107)")
     if fails or force:
         verdict, fix_msg, why_not = _choose_fix(plan, limit, window, res, force=force and not fails)
         if verdict == "FIX":
@@ -598,6 +695,11 @@ def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False
             msgs.append(f"utilisation {ue:.1%} > {th['util_max']:.0%} at submit: the same synthesis input measured "
                         f"{u['area_um2']:.0f} um2 (job {u.get('job')}) in this outline's {core_new:.0f} um2 core: "
                         f"grow the outline to <= 55-60%")
+    if plan.get("kit_missing"):
+        verdict = "REFUSE"
+        msgs.append(f"die-master kit incomplete at the source commit: {', '.join(plan['kit_missing'])} missing "
+                    f"(route_master's post_plain.tcl / pre_ref_skew.tcl read them; the route would crash at 4_1_cts "
+                    f"with STA-0340): commit them (io_plain.sdc = the plain IO delays of the kit SDC, see mk_mc_kit.py)")
     if verdict == "REFUSE" and warn_only:
         verdict, msgs = "PASS", ["warn_only: " + m for m in msgs]
     res["verdict"] = verdict

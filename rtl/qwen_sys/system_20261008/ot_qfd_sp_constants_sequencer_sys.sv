@@ -8,7 +8,8 @@ module ot_qfd_sp_constants_sequencer_sys #(
     parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0,
     parameter integer RT = 4,   // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)
     parameter integer FQ_HEAD = 1,  // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)
-    parameter integer MSTN = 1      // safe-qwen S-A6: me_mem_ok input station (the supply signals ready IS edges earlier)
+    parameter integer MSTN = 1,     // safe-qwen S-A6: me_mem_ok input station (the supply signals ready IS edges earlier)
+    parameter integer ICUT = 0      // struct-close (REVIEW Q3 + A6 re-cut): registered fault term + registered issue readiness (ot_qwen_rom_core_ctrl ICUT)
 ) (
     input wire d_start,
     input wire [NW-1:0] d_token, d_pos,
@@ -511,7 +512,7 @@ begin sys_descriptor_valid=(bank==0 && addr<1) || (bank==1 && addr<3) || (bank==
     wire wrom_re_w;
     assign b_rom_fault = wrom_re_w;
     assign b_core_fault = core_fault_w || template_fault;
-    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD)) u_ctrl (
+    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD), .ICUT(ICUT)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
         .start(core_start),

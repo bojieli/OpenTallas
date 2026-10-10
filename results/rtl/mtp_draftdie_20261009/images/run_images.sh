@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /srv/opentallas-scratch/claude/mtp-draftdie/src_086a41ed9
+/srv/opentallas-scratch/admit.sh 12 -- python3 tools/dsrom_mtp_draft_images.py build --snapshot /srv/opentallas-scratch/claude/mtp-draftdie/snap_dba1be0a40aa45a94ad051997016db3960a90277 --out /srv/opentallas-scratch/claude/mtp-draftdie/images > /srv/opentallas-scratch/claude/mtp-draftdie/build.log 2>&1; echo "rc=$?" >> /srv/opentallas-scratch/claude/mtp-draftdie/build.log
+/srv/opentallas-scratch/admit.sh 12 -- python3 tools/dsrom_mtp_draft_images.py check --snapshot /srv/opentallas-scratch/claude/mtp-draftdie/snap_dba1be0a40aa45a94ad051997016db3960a90277 --out /srv/opentallas-scratch/claude/mtp-draftdie/images --record /srv/opentallas-scratch/claude/mtp-draftdie/check.json --mutants > /srv/opentallas-scratch/claude/mtp-draftdie/check.log 2>&1; echo "rc=$?" >> /srv/opentallas-scratch/claude/mtp-draftdie/check.log

@@ -68,7 +68,8 @@ def run_repair(stats, guard_hm, env=""):
     ot_hm_guard rewrites -hold_margin to guard_hm; returns the repair_timing calls and the printed guard lines."""
     src = TCL.read_text()
     procs = []
-    for name in ("ot_env_num", "ot_hold_guard_on", "ot_repair_timing"):
+    for name in ("ot_env_num", "ot_hold_guard_on", "ot_hold_stage", "ot_hold_stop_cap", "ot_hold_stop_args", "ot_hold_stop",
+                 "ot_repair_timing"):
         i = src.index(f"proc {name} ")
         j = src.index("\nproc ", i + 1) if src.find("\nproc ", i + 1) > 0 else len(src)
         procs.append(src[i:j])

@@ -1,0 +1,28 @@
+{
+  "source": "ef5ef9cb5",
+  "RTL_source": "292b4fb50",
+  "bench": "rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv TU_LOCKSTEP",
+  "reference": "ot_hbm_accel_tu_endpoint_ps from pinned ef5ef9cb5 source",
+  "verdict": "PASS",
+  "cases": 10,
+  "scope": "legacy gszF cycle control/active TX/DEL data compared every clock edge, arithmeticgoldens and delivery counts independentlychecked",
+  "other_scope": "smallgroups/repeatedcommands/routedclosure not proven",
+  "command_inventory": "out/t/jobs.txt",
+  "resource": "resource.sample.json",
+  "artifacts": {
+    "driver.log": "e254699fc71fe3a4d2fd74e9fb3f6bca23de416f0aa251224eb89100c1ab340a",
+    "out/summary.txt": "df47c40e02182f9032b85a429fe1842abc059050b339335a8da5b91ce46ef86b",
+    "out/t/jobs.txt": "18800134e63b13a2fe40091f334b7989f9fd4b2ca817f8ee6cda21627b670505",
+    "out/t/run_1.log": "9d62d04172ac3f9579ce723062a558cf3fc4d7242d47656f13d24af7b81199fb",
+    "out/t/run_10.log": "c7b30602a2c066f6909126a78ff7d7ccf5abfd8904865cddd1b3e48d923814e5",
+    "out/t/run_2.log": "afda69209fd4724184a0b9bcbe2df08c5a3d5ac00dc255780b26b363ef5a367f",
+    "out/t/run_3.log": "c9f1fe84b237fae0ff8c77a0ba9705b551c5bcbae58cfe99d90f261c27e23d3f",
+    "out/t/run_4.log": "06bec64f4d9731a9f34f61ff56ca508ddfd771109a0b2bfc72c170b1c57701c4",
+    "out/t/run_5.log": "60c23d8e3c7f152f9392864b905b2cb3533dc097ef442310c08a8df4fcda57bc",
+    "out/t/run_6.log": "a31332fbb8c9a14ff3f351e0a2e5da5f93cbd9265ba2f9fc1f82705500d610af",
+    "out/t/run_7.log": "b4d7b195d6c627e0f85716bc3c7bf58f553459bd9adb0b579f8cc1eee458dcce",
+    "out/t/run_8.log": "290bcc1230d2390c0142949bc98c2d2c6dc68f8a8e2a9bb596af1f78f30bafed",
+    "out/t/run_9.log": "084b7e3b1bc0e7ceef60020450d56d60b8fa0ed5ea2e079ee4c179c8301d71b5",
+    "resource.sample.json": "19e81cab6e65b1c82770f02b52dc455143ecacd96345e6daddfe5683c2a03288"
+  }
+}

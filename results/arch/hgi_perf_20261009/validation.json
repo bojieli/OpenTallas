@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.hgi_perf.validation.v1",
+ "generated_utc": "2026-10-10T04:40:09Z",
+ "rows": [
+  {
+   "vehicle": "Qwen3-8B token, P8191, TP4",
+   "reference": "hgi_sim.qwen_timing S2 on the bit-exact qwen_compiler program (qwen_timing_P8191_v10.json)",
+   "reference_cycles": 1258136.1,
+   "collective_model": "calibration",
+   "perf_cycles": 1256405.4,
+   "error_pct": -0.14,
+   "perf_wall_s": 0.06
+  },
+  {
+   "vehicle": "Qwen3-8B token, P8191, TP4",
+   "reference": "hgi_sim.qwen_timing S2 on the bit-exact qwen_compiler program (qwen_timing_P8191_v10.json)",
+   "reference_cycles": 1258136.1,
+   "collective_model": "measured",
+   "perf_cycles": 1309627.8,
+   "error_pct": 4.09,
+   "perf_wall_s": 0.03
+  },
+  {
+   "vehicle": "Gated DeltaNet layer (Qwen3-Next dims), TP4",
+   "reference": "hgi_sim.gdn S2 (gdn_layer_v10.json; BF16 projections in both)",
+   "reference_cycles": 14795.0,
+   "collective_model": "calibration",
+   "perf_cycles": 14883.0,
+   "error_pct": 0.59
+  },
+  {
+   "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (generic MLA front end)",
+   "reference": "hgi_sim.ds_native_timing S2 on the bit-exact native record stream (ds_native_timing_1M.json)",
+   "reference_cycles": 543456.7,
+   "collective_model": "measured",
+   "perf_cycles": 680944.1,
+   "error_pct": 25.3,
+   "notes": [
+    "DS-V4 hybrid mapped to MLA-style shared latent (window + indexer-selected compressed rows); HC, Engram, compressor and MTP not modelled"
+   ]
+  },
+  {
+   "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (native-template path)",
+   "reference": "hgi_sim.ds_native_timing S2 (whole native stream scheduled at once)",
+   "reference_cycles": 543456.7,
+   "collective_model": "walk (measured)",
+   "perf_cycles": 526592.5,
+   "error_pct": -3.1,
+   "perf_wall_s": 1.4
+  },
+  {
+   "vehicle": "DeepSeek-V4.1-Flash token, 1M, TP96 (generic MLA front end)",
+   "reference": "published RTL-measured composition (dshbm_1m_allmeasured walk, 460.05 us)",
+   "reference_cycles": 552060.0,
+   "collective_model": "measured",
+   "perf_cycles": 680944.1,
+   "error_pct": 23.35
+  }
+ ],
+ "reading": [
+  "Qwen3-8B, calibration collectives: the same cost tables as the timed bit-exact program, so the error is the generic lowering + layer composition only",
+  "Qwen3-8B, measured collectives: the in-package all-reduce of 16 KB pays the endpoint serialisation the 1 KB calibration entry lacks",
+  "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition of one layer and the SU HBM first-access charge the reference predates",
+  "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~25 % above the native stream (fused SU chains, CP-aware order); the native-template path (the bit-exact records per layer type, steady increments) is within ~3 %; the published walk is a fused-chain composition without a command processor, not a record stream"
+ ],
+ "sources": {
+  "hgi_sim/perf.py": "3a4f3dd78b2c9af626fdb8414ae805a8f9325f7cb393abbc5a27ce5bd866ca8f",
+  "hgi_sim/timing.py": "5a83aff54f25b2234ec8ab87c5ba667f903ed1808c11eacf8acbb6c4a634b810",
+  "hgi_sim/ds_native_timing.py": "c83812cbceb633f1135d316a482833d996638fb69f2985f91d6b96f06ba99788"
+ }
+}

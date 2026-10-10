@@ -1,0 +1,114 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "ot_dsrom_hc_input_reader",
+   "target": "DS ROM",
+   "owner": "cont-takeover / sys-takeover",
+   "description": "HC input reader, plain rows (no flop SECDED, REVIEW S4) behind the die-link credit relay (ot_link_credit, LINK_CREDIT=1)",
+   "source": {
+    "commit": "b678636a2",
+    "paths": [
+     "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_input_reader.sv",
+     "rtl/common/ot_link_credit.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented (PLAIN_ROWS + REG_IO + credit relay)"
+   },
+   "physical": {
+    "status": "CLOSED",
+    "corners": {
+     "TT_setup_ps": 3.91,
+     "FF_hold_ps": 13.72,
+     "DRC": 0,
+     "SS_sensitivity_ps": -242.21
+    },
+    "evidence": [
+     "closure job hcreader-plain300-lk-b678636a2-tc-cl, record claude/cont-takeover-20261009 961fd8c83"
+    ],
+    "note": "credit-relay boundary signed off against the die-link budget (LB=1); earlier valid/ready-skid and pin-FIFO forms (hcreader_plain/rb, hcreader-plain300) are evidence only"
+   },
+   "recorded_at": "2026-10-09T22:22:25.381482+00:00"
+  },
+  {
+   "element": "qfd_row_merge_native_fence",
+   "target": "Qwen ROM",
+   "owner": "sys-takeover",
+   "description": "row crossbar + per-PC KV4 fence (CONTRACT v1.1) binding the 32 head owners to the row arb; ACK lanes {pc,mask}",
+   "source": {
+    "commit": "7eea9e354",
+    "paths": [
+     "rtl/qwen_sys/system_20261009/ot_qfd_row_merge_fence.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented opt-in; registered pin stage (+3 edges grant->next head, +2 fence release, bench +2.6 %)"
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS 24 layers x 32 PCs, 400-edge write stalls"
+    },
+    "negative": {
+     "status": "PASS fence-off and wrong-source mutants"
+    }
+   },
+   "physical": {
+    "status": "CLOSED",
+    "corners": {
+     "TT_setup_ps": 63.08,
+     "FF_hold_ps": 18.84,
+     "DRC": 0
+    },
+    "evidence": [
+     "rowfence_a-7eea9e354-tc (record ee9e21f5f)",
+     "rowfence_b-7eea9e354-tc TT +60.48 / FF +2.90 (005c6da73)"
+    ]
+   },
+   "integration": {
+    "status": "merged to main 3fd78b574; die binding of the block in the Qwen ROM recipe pending"
+   },
+   "recorded_at": "2026-10-09T22:22:25.381482+00:00"
+  },
+  {
+   "element": "qfd_hbm_ecc_provider",
+   "target": "Qwen ROM",
+   "owner": "sys-takeover",
+   "description": "HBM ECC sideband (32 per 256) on KV writes: ot_qfd_emb_pcport KVW=2 at the die's real write timing; reads corrected by the landing ECC",
+   "source": {
+    "commit": "b1916d941",
+    "paths": [
+     "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv",
+     "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc.sv"
+    ]
+   },
+   "implementation": {
+    "status": "adopted KVW=2 (coordinator); ROM / KV die recipes map it; die lint connectivity 0"
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS 96 KV + 3 static writes exact, 24 CE corrected, UE quarantined"
+    },
+    "negative": {
+     "status": "PASS 4 negatives"
+    }
+   },
+   "physical": {
+    "status": "CLOSED",
+    "corners": {
+     "TT_setup_ps": 92.33,
+     "FF_hold_ps": 5.53,
+     "DRC": 0
+    },
+    "evidence": [
+     "qfd_pcport_kvw2_b-b1916d941-tc (relocated record on main f70402e80)",
+     "qfd_pcport_kvw2_a TT +78.35 / FF +22.53"
+    ]
+   },
+   "dependencies": [
+    "kv-die landing HBM write queue (posted KVN rows -> CDC w_v/w_sec/w_data)"
+   ],
+   "recorded_at": "2026-10-09T22:22:25.381482+00:00"
+  }
+ ]
+}

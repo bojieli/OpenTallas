@@ -67,6 +67,16 @@ module ot_dsrom_engram_lookup #(
     parameter integer ABW   = 36,          // HBM byte address bits (2 stacks, 45 GB)
     parameter [ABW-1:0] BASE = {ABW{1'b0}},// region base (32-B aligned)
     parameter integer PIPE  = 0,           // 1: one-hot replicated atom select (+1 stage), linear-split CRC
+    // CRCMAT (sys-takeover 2026-10-09, opt-in; define OT_ENGRAM_CRCMAT or the parameter): every CRC term as an explicit
+    // GF(2) matrix (per output bit a reduction XOR of a constant-masked vector -> balanced XOR trees, depth log2 256 = 8)
+    // instead of 32 chained crc_byte calls (engram-lkp-B/C PREROUTE -2144 ps: e2_d -> g_crc1.ga, a ~100-level XOR chain).
+    // crc_beat(c, d) = crc_beat(c, 0) ^ crc_beat(0, d) and crc_byte(c, b) = crc_byte(c, 0) ^ crc_byte(0, b) (linear,
+    // no constant term): identical values, 0 cycles.
+`ifdef OT_ENGRAM_CRCMAT
+    parameter integer CRCMAT = 1,
+`else
+    parameter integer CRCMAT = 0,
+`endif
     parameter integer SLW   = (NSLOT > 1) ? $clog2(NSLOT) : 1
 ) (
     input  wire                     clk,
@@ -423,9 +433,56 @@ module ot_dsrom_engram_lookup #(
             crc_beat = x;
         end
     endfunction
+    // ---- CRCMAT: constant GF(2) columns and the per-output-bit masks ------------------------
+    wire [31:0] m_dcol [0:255];              // crc_beat(0, e_i)
+    wire [31:0] m_scol [0:31];               // crc_beat(e_k, 0)
+    wire [31:0] m_bcol [0:7];                // crc_byte(0, e_i)
+    wire [31:0] m_fcol [0:31];               // crc_byte(e_k, 0)
+    wire [255:0] m_dmask [0:31];
+    wire [31:0]  m_smask [0:31], m_fmask [0:31];
+    wire [7:0]   m_bmask [0:31];
+    genvar gmi, gmj;
+    generate
+        for (gmi = 0; gmi < 256; gmi = gmi + 1) begin : g_mdc
+            localparam [31:0] C = crc_beat(32'd0, 256'd1 << gmi);
+            assign m_dcol[gmi] = C;
+        end
+        for (gmi = 0; gmi < 32; gmi = gmi + 1) begin : g_msc
+            localparam [31:0] C = crc_beat(32'd1 << gmi, 256'd0);
+            localparam [31:0] F = crc_byte(32'd1 << gmi, 8'd0);
+            assign m_scol[gmi] = C; assign m_fcol[gmi] = F;
+        end
+        for (gmi = 0; gmi < 8; gmi = gmi + 1) begin : g_mbc
+            localparam [31:0] C = crc_byte(32'd0, 8'd1 << gmi);
+            assign m_bcol[gmi] = C;
+        end
+        for (gmj = 0; gmj < 32; gmj = gmj + 1) begin : g_mm
+            for (gmi = 0; gmi < 256; gmi = gmi + 1) begin : g_d
+                assign m_dmask[gmj][gmi] = m_dcol[gmi][gmj];
+            end
+            for (gmi = 0; gmi < 32; gmi = gmi + 1) begin : g_s
+                assign m_smask[gmj][gmi] = m_scol[gmi][gmj];
+                assign m_fmask[gmj][gmi] = m_fcol[gmi][gmj];
+            end
+            for (gmi = 0; gmi < 8; gmi = gmi + 1) begin : g_b
+                assign m_bmask[gmj][gmi] = m_bcol[gmi][gmj];
+            end
+        end
+    endgenerate
     reg [31:0] crc;
     reg        e3_last;
-    reg [7:0]  e3_scale;
+    wire [31:0] mx_d, mx_s, mx_f;            // crc_beat(0, e2_d), crc_beat(crc, 0), crc_byte(crc, e3_scale)
+    reg  [7:0]  e3_scale;
+    generate
+        for (gmj = 0; gmj < 32; gmj = gmj + 1) begin : g_mx
+            assign mx_d[gmj] = ^(e2_d & m_dmask[gmj]);
+            assign mx_s[gmj] = ^(crc & m_smask[gmj]);
+            assign mx_f[gmj] = (^(crc & m_fmask[gmj])) ^ (^(e3_scale & m_bmask[gmj]));
+        end
+    endgenerate
+    wire [31:0] beat_d = (CRCMAT != 0) ? mx_d : crc_beat(32'd0, e2_d);
+    wire [31:0] beat_s = (CRCMAT != 0) ? mx_s : crc_beat(crc, 256'd0);
+    wire [31:0] fold   = (CRCMAT != 0) ? mx_f : crc_byte(crc, e3_scale);
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
@@ -434,7 +491,8 @@ module ot_dsrom_engram_lookup #(
                     crc <= 32'hFFFFFFFF; e3_last <= 1'b0;
                 end else begin
                     e3_last <= e2_v && e2_k == 3'd7;
-                    if (e2_v) crc <= crc_beat((e2_k == 3'd0) ? 32'hFFFFFFFF : crc, e2_d);
+                    if (e2_v) crc <= (CRCMAT != 0) ? (((e2_k == 3'd0) ? crc_beat(32'hFFFFFFFF, 256'd0) : beat_s) ^ beat_d)
+                                                   : crc_beat((e2_k == 3'd0) ? 32'hFFFFFFFF : crc, e2_d);
                 end
             end
             always @(posedge clk) if (e2_v && e2_k == 3'd7) begin e3_scale <= e2_scale; e3_exp <= e2_crc; e3_s <= e2_s; end
@@ -451,11 +509,12 @@ module ot_dsrom_engram_lookup #(
                     a_v <= e2_v;
                     a_last <= e2_v && e2_k == 3'd7;
                     e3_last <= a_last;
-                    if (a_v) crc <= crc_beat(a_first ? 32'hFFFFFFFF : crc, 256'd0) ^ ga;
+                    if (a_v) crc <= ((CRCMAT != 0) ? (a_first ? crc_beat(32'hFFFFFFFF, 256'd0) : beat_s)
+                                                   : crc_beat(a_first ? 32'hFFFFFFFF : crc, 256'd0)) ^ ga;
                 end
             end
             always @(posedge clk) if (e2_v) begin
-                ga <= crc_beat(32'd0, e2_d);
+                ga <= beat_d;
                 a_first <= (e2_k == 3'd0);
                 a_scale <= e2_scale; a_exp <= e2_crc; a_s <= e2_s;
             end
@@ -470,8 +529,8 @@ module ot_dsrom_engram_lookup #(
             st_valid <= e3_last;
             if (e3_last) begin
                 st_slot <= e3_s;
-                st_bad <= (crc_byte(crc, e3_scale) != e3_exp);
-                if (crc_byte(crc, e3_scale) != e3_exp) fault <= 1'b1;
+                st_bad <= (fold != e3_exp);
+                if (fold != e3_exp) fault <= 1'b1;
             end
         end
     end

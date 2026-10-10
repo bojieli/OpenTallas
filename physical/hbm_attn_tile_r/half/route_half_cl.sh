@@ -9,7 +9,7 @@ lab=$1; shift
 W=${OUT:?}/$lab; mkdir -p $W
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 D=physical/hbm_attn_tile_r
-H=$D/half/${TOP:?}
+H=${HALFDIR:-$D/half}/${TOP:?}      # hbm-forks: HALFDIR=physical/hbm_attn_tile_r/half_ps (PS entry ports)
 DW=1778.52
 POSTPDN=$D/die_tile/quad_m7_link.tcl
 SLIVER=${SLIVER-12}

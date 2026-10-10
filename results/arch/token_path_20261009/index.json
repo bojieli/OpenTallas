@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.token_path.index.v1",
+ "designs": [
+  {
+   "design": "qwen_rom",
+   "title": "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)",
+   "file": "qwen_rom.json",
+   "tok_s": 4829.1,
+   "cycles": 248496.0,
+   "mtp": {
+    "available": false,
+    "reason": "no qualified speculative composition implemented"
+   },
+   "variant": "kvdie"
+  },
+  {
+   "design": "ds_rom",
+   "title": "DeepSeek-V4.1 ROM array (S81 die, 1,792 pairs, HALF_PHL BF), 1M context, AR",
+   "file": "ds_rom.json",
+   "tok_s": 1447.7,
+   "cycles": 828878.4,
+   "mtp": {
+    "available": true,
+    "file": "ds_rom_mtp.json",
+    "tok_s": 4238.4,
+    "tau": 4.159,
+    "step_cycles": 1177528.1,
+    "per_accepted_cycles": 283127.7,
+    "reason": null
+   }
+  },
+  {
+   "design": "hbm_ds",
+   "title": "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, AR",
+   "file": "hbm_ds.json",
+   "tok_s": 1716.3,
+   "cycles": 699175.7,
+   "mtp": {
+    "available": true,
+    "file": "hbm_ds_mtp.json",
+    "tok_s": 3699.9,
+    "tau": 4.159,
+    "step_cycles": 1348889.6,
+    "per_accepted_cycles": 324330.3,
+    "reason": null
+   }
+  }
+ ],
+ "systems": "systems.json",
+ "date": "2026-10-09"
+}

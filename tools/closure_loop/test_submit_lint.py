@@ -54,8 +54,15 @@ def spec(cmd_env="", name="t", **kw):
     return s
 
 
-def git_for(cfgtext, name="t"):
-    return FakeGit({f"physical/qwen_die_masters/cfg/{name}.env": cfgtext, "rtl/t.sv": RTL})
+FLOW_NEW = {"physical/qwen_die_masters/jobs/route_master.sh": "IO_PLACER_H IO_PLACER_V PIN_MIN_TRACKS",
+            "tools/run_abi3_physical.py": "OT_PIN_GROUP_MAX OT_PIN_BALANCE_H OT_PIN_BALANCE_V"}
+FLOW_PRE_DDE = {"physical/qwen_die_masters/jobs/route_master.sh": "IO_PLACER_H IO_PLACER_V",  # be5b56d78..08ef6a8a8
+                "tools/run_abi3_physical.py": "set_io_pin_constraint -group -order"}
+
+
+def git_for(cfgtext, name="t", flow=None):
+    return FakeGit({f"physical/qwen_die_masters/cfg/{name}.env": cfgtext, "rtl/t.sv": RTL,
+                    **(FLOW_NEW if flow is None else flow)})
 
 
 class Expr(unittest.TestCase):
@@ -103,6 +110,43 @@ class Density(unittest.TestCase):
         self.assertEqual(s2["submit_lint"]["env"]["OT_PIN_GROUP_MAX"], "32")
         self.assertNotIn("submit_lint", spec())
 
+    def test_fix_the_source_flow_does_not_read(self):
+        # drive-0212: sys-08ef6a8a8-ls / kv624-a732a1d76-ls ran pin_balance on a source predating dde873a8e and
+        # re-failed at the identical density.  A fix the source's flow does not read is never applied: REFUSE.
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"), flow=FLOW_PRE_DDE)
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("pin_balance: the source abcdef1 flow does not read OT_PIN_GROUP_MAX", r["message"])
+        self.assertIn("pin_tracks2_spread: the source abcdef1 flow does not read PIN_MIN_TRACKS", r["message"])
+        # balance already in the command but unread by the flow: the estimate ignores it (as the flow does)
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
+        self.assertEqual(S.check(spec(cmd_env=env), g)["verdict"], "REFUSE")
+        self.assertEqual(S.check(spec(cmd_env=env), git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'")))
+                         ["verdict"], "PASS")
+        # dde873a8e balanced only lo-hi regions: a whole-face region falls through to the second fix
+        strict = dict(FLOW_NEW, **{"tools/run_abi3_physical.py": FLOW_NEW["tools/run_abi3_physical.py"] +
+                                   " balanced pins require ... bounded regions"})
+        r3 = S.check(spec(), git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"), flow=strict))
+        self.assertEqual(r3.get("fix"), "pin_tracks2_spread", r3)
+        # a cfg PIN_MIN_TRACKS=2 the flow does not read gives no slot relief
+        g2 = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"),
+                     flow=FLOW_PRE_DDE)
+        self.assertEqual(S.check(spec(), g2)["verdict"], "REFUSE")
+
+    def test_balanced_disjoint_ranges_do_not_add(self):
+        # drive-0212: qfd_hub_ps-dde873a8e-tc-bal32 (six disjoint right:lo-hi ranges, balanced) was estimated at
+        # 26.3 b/um by summing every region of the face; measured 8.0, CLOSED.  Only overlapping ranges add.
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' "
+        pins = ("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left:0-250' "
+                "--pin-region '^i_data\\[[0-9]*[13579]\\]$=left:260-510'")
+        r = S.check(spec(cmd_env=env), git_for(cfg(pins)))
+        self.assertEqual(r["verdict"], "PASS", r)
+        self.assertLess(r["est"]["W"], 6)                                   # 2048 pins / 250 um x 100 um / 2 layers ~ 4.1
+        over = ("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left:0-150' "
+                "--pin-region '^i_data\\[[0-9]*[13579]\\]$=left:0-150'")
+        r2 = S.check(spec(cmd_env=env), git_for(cfg(over)))                # same range: 4096 / 150 um / 2 ~ 13.7
+        self.assertEqual(r2["verdict"], "REFUSE", r2)
+
     def test_refused_when_no_fix_fits(self):
         # 2048 pins on a 60 um face: balanced spacing 0.029 um < pitch, two-track group needs 197 um
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", fh=60))
@@ -134,11 +178,32 @@ class Density(unittest.TestCase):
 
     def test_pass_and_tracks_and_balance(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"))
-        self.assertEqual(S.check(spec(), g)["verdict"], "PASS")              # 2-track slots: 10.4 b/um
+        self.assertEqual(S.check(spec(fp_lint={"set": {"ppl_group_max": 0}}), g)["verdict"], "PASS")              # 2-track slots: 10.4 b/um
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
         env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
         r = S.check(spec(cmd_env=env), g)
         self.assertEqual(r["verdict"], "PASS", r)                            # uniform over 518 um: ~2 b/um/layer
+
+    def test_big_ordered_group_takes_pin_balance(self):
+        # drive-0849: a > 200-pin ordered group passes the density estimate but falls back in PPL (PPL-0107)
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"))
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "FIX", r)
+        self.assertEqual(r["fix"], "pin_balance")
+        self.assertIn("PPL-0107", r["message"])
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
+        self.assertEqual(S.check(spec(cmd_env=env), g)["verdict"], "PASS")    # already chunked: no rule
+        g2 = git_for(cfg("--pin-region '^i_a(\\[|$)=left'"))
+        self.assertEqual(S.check(spec(), g2)["verdict"], "PASS")             # small group: no rule
+
+    def test_incomplete_mc_kit_refused(self):
+        # drive-0849: a QDMD kit without io_plain.sdc crashes at 4_1_cts (STA-0340)
+        g = git_for(cfg("--pin-region '^i_a(\\[|$)=left'", extra="QDMD=/src/physical/k\nSDCF=plain.sdc"))
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("physical/k/io_plain.sdc", r["message"])
+        g.files.update({"physical/k/io_plain.sdc": "x", "physical/k/io_ref_skew.sdc": "x", "physical/k/plain.sdc": "x"})
+        self.assertEqual(S.check(spec(), g)["verdict"], "PASS")
 
     def test_env_settings_read(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
@@ -158,7 +223,7 @@ class Density(unittest.TestCase):
 
     def test_threshold_override_and_warn_only(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
-        self.assertEqual(S.check(spec(fp_lint={"set": {"pin_density_max": 25}}), g)["verdict"], "PASS")
+        self.assertEqual(S.check(spec(fp_lint={"set": {"pin_density_max": 25, "ppl_group_max": 0}}), g)["verdict"], "PASS")
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", fh=60))
         r = S.check(spec(fp_lint={"warn_only": True}), g)
         self.assertEqual(r["verdict"], "PASS")                              # warn_only never refuses
@@ -166,7 +231,7 @@ class Density(unittest.TestCase):
 
     def test_util_from_same_synthesis_input(self):
         def spec(**kw):
-            return globals()["spec"](fp_lint={"set": {"pin_density_max": 1000}}, **kw)
+            return globals()["spec"](fp_lint={"set": {"pin_density_max": 1000, "ppl_group_max": 0}}, **kw)
         g = git_for(cfg("--pin-region '^(clk|rst_n|i_\\w+|o_\\w+|fault)(\\[|$)=left'", fw=300, fh=300))
         reason = "util: utilisation 70.0% > 60% (std 60000 + macro 0 um2 in 85000 um2): grow the outline to <= 55-60%"
         key, rec = S.util_record(spec(), reason, g, "old")

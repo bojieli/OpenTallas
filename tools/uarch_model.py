@@ -235,6 +235,22 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hgi_collective_row_formatter_model(**kwargs):
+    from uarch_model_hgi_collective_decode import row_formatter_model
+    return row_formatter_model(**kwargs)
+
+
+def hgi_collective_endpoint_model():
+    from uarch_model_hgi_collective_decode import endpoint_model
+    return endpoint_model()
+
+
+def hgi_collective_decode_model():
+    """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
+    from uarch_model_hgi_collective_decode import model
+    return model()
+
+
 def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
     """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
 
@@ -14660,6 +14676,48 @@ def dsrom_wfc_prompt_pipe_model():
     from dsrom_wfc_prompt_pipe_model import model
     return model()
 
+def dsrom_wfc_token_hard_model():
+    """Size the four-edge token lookup before RTL; no physical credit."""
+    entry_bits = 43
+    added_bits = 36 + 8 * (entry_bits + 1) + 2 * 26
+    return dict(schema='opentallas.dsrom.wfc-token-hard.v1', adopted=False,
+        default_enabled=False, clock_ghz=1.2, macs_per_cycle=0,
+        compute_intensity=0, communication_intensity='one request/response per cycle',
+        memory_ports=dict(token_read_bytes_per_cycle=8*44/8,
+                          draft_write_bytes_per_cycle=5*44/8),
+        boundaries_bits_per_cycle=dict(draft=513, request=36, response=22, config=55),
+        routing_tracks=dict(draft=2052, request=144, response=88, config=220),
+        replicas=dict(stores=1, user_read_banks=8),
+        mux=dict(per_user_entries=16, final_users=8, data_width=44,
+                 request_address_fanout_banks=8, draft_write_slots=5),
+        area=dict(predecessor_measured_cells_um2=7145,
+                  added_register_bits_upper=added_bits,
+                  added_cells_proxy_um2=added_bits*2,
+                  outline_um=[162,151.2],
+                  estimated_fill=(7145+added_bits*2)/(162*151.2),
+                  proxy_is_not_physical_measurement=True),
+        latency=dict(response_edges=4, original_edges=1, r3_edges=2,
+                     added_cycles_original=3, added_cycles_r3=2,
+                     added_ns_original=3/1.2, initiation_interval_cycles=1,
+                     draft_visibility_edges=2,
+                     source_matching_metadata_required=True),
+        measured_latency=dict(original_ingress_edges=0, original_read_response_edges=1,
+                              r3_ingress_edges=0, r3_read_response_edges=2,
+                              hard_ingress_edges=1, hard_read_response_edges=3,
+                              hard_total_edges=4, delta_original_edges=3,
+                              delta_r3_edges=2,
+                              evidence='results/rtl/dsrom_wfc_token_hard_20261009/'
+                                       'baselines_5d64607cd/summary.json'),
+        finite_flow=dict(token_inflight_slots=4, initiation_interval_cycles=1,
+                         fixed_response_no_backpressure=True,
+                         source_return_queue_entries=4,
+                         source_metadata_extra_stages_required=2),
+        failure_path=dict(start='f_pr[25]', end='u_tok.pr_q[16]',
+            report='mtp_wfc_tok_a_e1c20dfb6_tc/physical_artifacts/6_finish.rpt',
+            historical_tt_setup_ps=-478.67),
+        qualification='Remote exact/mutant minimum gate, matched SOURCE integration, '
+                      'and own TT/FF/DRC route with SS sensitivity remain required')
+
 def s81_ctrl_die_model(column_width_um, role='layer', stage_handoffs=121):
     """RQ-DSC1/2 native controller shell sizing before build; closure credit is zero."""
     if column_width_um <= 0 or role not in ('layer', 'source', 'head'):
@@ -15035,3 +15093,114 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hbm_w2_phase_seat_model(no=2):
+    """Full-shaped default-off W2 phase locality and held-delay seats."""
+    from w2_phase_seat_model import model
+    return model(no)
+
+
+def mtp_ring_dyn_model():
+    """Price one-position ring addressing independently of multi-token slot state."""
+    return json.loads((ROOT / 'physical/mtp_ring_dyn/model.json').read_text())
+
+
+def hgi_attention_row_sources_model():
+    """HGI-1 G12 ordered-row frontend; arithmetic and gather engines unchanged."""
+    return dict(schema='hgi.att-row-sources.v1', enable_default=False,
+        model_before_build=True, MACs_per_cycle=0, arithmetic_order='B then C; existing tile chunk8/tree unchanged',
+        full_shape=dict(Qwen_rows=8192, maximum_linear_rows=1048576, effective_count_bits=21, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
+        replicas=4, placement='one frontend per HBM stack, upstream of existing gather reader',
+        ports=dict(command_bits=85, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
+                   selected_ID_bytes_per_cycle=4, HBM_payload_bytes_per_cycle=0),
+        boundary_bits_per_cycle=43, mux_cost='one B/C row-index mux; no payload mux',
+        fanout='local command registers only, 4 independent replicas',
+        latency_cycles=dict(command_to_first_request=3, initiation_interval=1,
+                            added_row_payload_cycles=0, post_command_tail=0),
+        token_latency='Three frontend command edges per attention invocation; existing gather/tile/formatter separately priced; no ideal throughput credit',
+        slot_um=[120,120], initial_state_bit_upper_bound=384, area_measured_um2=None,
+        floorplan_utilisation_target=0.55, fit='pending synthesis and route, no physical claim',
+        routing=dict(signal_bits_estimate=220, pin_layers=2, pitch_um=0.48,
+                     perimeter_tracks_capacity=1000, capacity_fraction=0.22,
+                     actual_pin_lint='required before route'),
+        source_binding='B ring physical index; C existing selected-ID stream, does not replace DS nine-sector gather reader',
+        clock_ns=0.833333, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def hgi_attention_record_adapter_model():
+    """Normative ATT records to G12 row front + existing ATT controller, no payload arithmetic."""
+    return dict(schema='hgi.att-record-adapter.v1',model_before_build=True,
+        transport_ABI='valid1/header128/SUT256/MDESC1024 actual3fae tuple; normative fields required',
+        upstream_gap='3fae sequencer is legacy fields/count20; Claude must supply normative header and full typed counts',
+        sideband_bits=dict(POS1=21,effective_B_count=32,effective_C_count=32),
+        replicas=4,MACs_per_cycle=0,memory_bytes_per_cycle=0,
+        record_payload_bits=1408,record_transport_bytes=176,
+        ATT_setup_payload_bits=1152,row_command_payload_bits=85,
+        state_bits_upper_bound=2656,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
+        slot_variants_um=[[320,320],[360,360]],stdcell_area_measured_um2=None,utilisation_target=0.55,
+        routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
+                     perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
+                     face_capacity_320=1316,actual_submit_lint='mandatory'),
+        latency_cycles=dict(added_record_command_edges=3,record_to_first_row_edges_including_G12=6,row_II=1),
+        token_charge=dict(DS_40_layers_QK_PV=240,Qwen_36_layers_two_local_KV_heads_QK_PV=432),
+        retirement='rows_done AND actual_ATT_done; sticky fault halts CP without completion; recovery only by externally drained reset',
+        selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
+        physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)
+
+
+def hgi_quant_vm_transport_model(depth=32, vm_rtt=4):
+    """HGI QDQ component using existing CP 337/273 byte-sector ABI."""
+    if depth < 24 or vm_rtt < 1:
+        raise ValueError("result reservation must cover nonelastic 23-edge pipe")
+    return dict(candidate="HGI_QUANT_VM_TRANSPORT", default_enabled=False,
+        clock_domain="opt-in stream1p2 pending TT/FF physical qualification; legacy serial0p9 unchanged",
+        CDC_qualified=False, command_capture_validate_edges=2,
+        replicas=1, MACs_per_cycle=0, compute="existing 32-lane QDQ core,23 edges,II1",
+        input_words_per_beat=32, read_sector_bytes=32, write_sector_bytes=32,
+        max_VM_bytes_per_cycle=32, request_bits=337, response_bits=273,
+        core_input_bits=1024, core_output_bits=512, record_bits=1409,
+        output_queue_depth=depth, output_queue_flop_bits=depth*512,
+        output_queue_SRAM_macros=0, input_assembly_flop_bits=1024, request_boundary_flop_bits=338, response_boundary_flop_bits=274,
+        held_descriptors_flop_bits=512, held_header_flop_bits=128,
+        address_count_control_declared_flop_bits=716,
+        declared_adapter_flop_bits_excluding_core=19376,
+        note_storage="preoptimization declared register inventory; unused descriptor fields may optimize away; actual mapped sequential cells govern floorplan",
+        result_capacity_rule="reserve before first read; release only after final write ACK",
+        maximum_reserved_beats=depth, VM_outstanding_requests=1,
+        throughput_bound_beats_per_cycle=1/(8*(vm_rtt+1)),
+        latency_cycles_first_result="min(record_beats,depth)*4*(VM_RTT+3)read edges + max(23-drain overlap,0) +4*(VM_RTT+3)ACK edges; measure component",
+        legal_shapes="UE n%32=0;E4 n%16=0;VM FP32 input/BF16-or-FP32 output; multirow/innerstride/broadcast fallback",
+        fallback="one word selected per physical32byte sector; widenedFP32word mask writes; boundedonependingACK",
+        strided_latency="up to64*(VM_RTT+3)+23 edges per32element block, preservegoldenblockorder",
+        address_registers="two32bit currentword addresses androwbases, two20bit row/col cursors, two16bit innerstrides, two32bit rowstrides",
+        E4_tail="two8word sectors;zero-fill absent half;publish exactly16 widenedBF16 words",
+        routing_tracks_boundary_bits=337+273+1409+6,
+        routing_tracks_required=2030, corridor_capacity_tracks="two layer faces; cmd0.4003/req0.7152/rsp0.5794 b/um/layer vs currentflow12limit",
+        slot_area_um2=496080, legacy_die_slot_area_um2=500000, required_die_slot_delta_um2=0,
+        current_die_slot_fit="outline fits1814.376x276.456; rails/halos/pinmap pending", die_geometry_adoption_requires_coordinator=True,
+        actual_stdcell_area_um2=29130.81084, actual_cells=200951,
+        slot_fit_proven=True, slot_fit_source="2cb556822 actualTTsizing fitcompact1800x275.6; physicalqualification pending",
+        floorplan_requirement="size from synthesized flop/core area at55percent before route",
+        fanout="record header held once;one selected result queue mux; no payload ECC on flops",
+        token_latency="sum actual 8sector handshakes perfull beat +23edges, no invented overlap credit",
+        physical_qualified=False)
+
+def hgi_quant_decode_model():
+    """Owner-approved G8: existing DS arithmetic, generic record dispatch."""
+    return dict(element='ot_hgi_quant_decode', replicas=1, macs_per_cycle=0,
+        elements_per_cycle=32, memory_ports=dict(A_native_bytes_per_beat=128,
+            O_native_BF16_bytes_per_beat=64,O_VM_FP32_bytes_per_beat=128,
+            VM_assembly_and_publication="external finite transport: four8word reads/four8word writes; separately priced"),
+        boundary_bits=dict(A=1024,O=512,record=128), input_decode_fanout=2,
+        max_reduction_inputs=32, output_mux_inputs=2, additional_register_bits=15*(512+2)+23*2,
+        ue8m0_latency_edges=23,e4m3_native_latency_edges=8,e4m3_latency_edges=23,
+        e4m3_added_edges_per_record=15, ds_token_added_edges_upper_bound=40*15,
+        ds_token_reference_cycles=461646, ds_token_added_fraction_upper_bound=600/461646,
+        ds_default='legacy fp4 input selects unchanged margin core with generic_enable=0',
+        provisional_slot_um=[1800,600], provisional_area_mm2=1.08,
+        slot_basis='historical quant reservation 0.502mm2 plus second existing DS fp4 engine and alignment flops; measurement required',
+        two_layer_pin_spread=True, tracks_required_per_face=1024,
+        tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
+        new_numerical_format=False, performance_gain_claim=None,
+        adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')

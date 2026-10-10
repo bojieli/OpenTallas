@@ -35,10 +35,12 @@
   "sources": {
     "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
     "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "13a25c4a9e0b3e05365a4053a8dc6688933c51d5aaaf6b3f672ce347d2f9c6ad",
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
     "rtl/test/ot_hdc_v41x_attn_service_lint_stub.sv": "f2107e720e5527bfa8df36b2024a689767baab4be55277f8c3007bff3a62c475",
-    "rtl/test/tb_v41x_attn_packed_bypass.sv": "2a99454ed1c89d74f891e98d6dcf81a65b0e8dc5eb9f718f14c3b653d4788464"
+    "rtl/test/tb_v41x_attn_packed_bypass.sv": "2a99454ed1c89d74f891e98d6dcf81a65b0e8dc5eb9f718f14c3b653d4788464",
+    "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv": "d5859787a61f670d65a0137fc2a5e068e8db2f66479b3d9e04d5a34b3bdd26a1"
   },
-  "status": "pass"
+  "status": "pass",
+  "source_repin_20261009": "mtp-lead: core re-pinned after the ring-DYN changes (aff63db74 / 3dea693b1 enable DYN25/26 for one-position cores; b03898cfe moves the DYN table verbatim into ot_hdc_v41x_dyn_unit, 0 cycles, campaign 14/15 cycle-identical). No attention/descriptor logic changed; the replay test of this record re-ran PASS on these sources."
 }

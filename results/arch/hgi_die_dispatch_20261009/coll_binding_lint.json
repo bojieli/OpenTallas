@@ -1,0 +1,268 @@
+{
+ "schema": "opentallas.hgi_coll_binding_lint.v1",
+ "variant": {
+  "n_mirror_fix": true,
+  "x_chain": true,
+  "w_my": true,
+  "strip_d": 864.0,
+  "port_fix": true,
+  "ew_corridor": true,
+  "sm_xmid": true,
+  "lanes": true,
+  "spch": 1244.16,
+  "root_pins": true,
+  "serdes_mg": 250.56,
+  "orient_fix": true,
+  "clk_dom": true,
+  "sm_rtl_w": true,
+  "sm_desc": true,
+  "link_rtl": true,
+  "coll_rtl": true,
+  "attn_rtl": true,
+  "hub_io": true,
+  "fwd": true,
+  "rq_chain": true,
+  "stn_share": true,
+  "hub_h": 12100.0,
+  "spine_h": 7500.0,
+  "spine_w": 1399.68,
+  "face_vm": 2000.0,
+  "attn_tile_w_um": 1778.544,
+  "attn_tile_h_um": 1350.0,
+  "face_fix": true,
+  "router_env": [
+   9338.688,
+   326.28
+  ],
+  "corner_rule": {
+   "hfd_stn_r26": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r11": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r19": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r21": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r23": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_meso_r1": {
+    "keep": 1.0,
+    "tail": 8
+   }
+  },
+  "pin_centre": {
+   "hfd_stn_r23|rst": 10.0,
+   "hfd_router|rst": 366.0253,
+   "hfd_router|ck": 612.5932,
+   "hfd_loader|rst": 366.0253,
+   "hfd_loader|ck": 612.5932
+  },
+  "split_masters": {
+   "hfd_index_q": "physical/hbm_accel_die_views/index_q/split/split.json",
+   "hfd_cmdproc": "physical/hbm_accel_die_views/cmdproc/split/split.json"
+  },
+  "split_lattice": {
+   "hfd_index_q": {
+    "hfd_index_q_b1:R0": 0.27,
+    "hfd_index_q_b4:R0": 1.62,
+    "hfd_index_q_b1:MX": 1.62,
+    "hfd_index_q_b0:R0": 0.0,
+    "hfd_index_q_b2:R0": 0.0,
+    "hfd_index_q_b3:R0": 0.0,
+    "hfd_index_q_b5:R0": 0.0,
+    "hfd_index_q_b0:MX": 0.0,
+    "hfd_index_q_b2:MX": 0.0,
+    "hfd_index_q_b3:MX": 0.0,
+    "hfd_index_q_b4:MX": 0.0,
+    "hfd_index_q_b5:MX": 0.0
+   }
+  },
+  "spine_slots": {
+   "su_red": [
+    1399.656,
+    218.136
+   ],
+   "su_full": [
+    346.008,
+    347.736
+   ]
+  },
+  "split_x_masters": "physical/hbm_accel_die_views/svc/split/split.json",
+  "host_bb": true,
+  "budget_stages": true,
+  "hub_stage_all": true,
+  "fwd_hub": true,
+  "spine_region": true,
+  "barrier_low": true,
+  "ck_centre": true,
+  "vm_split": true,
+  "pin_stage_roots": true,
+  "vm_ck_centre": true,
+  "iv_pin_stn": true,
+  "relay_all": true,
+  "hub_scale": 2.0,
+  "stable_roles": true,
+  "hub_pin_window": 1200.0,
+  "split_stations": [
+   "hfd_mcast_r6"
+  ],
+  "attn_tile_w0_um": 1349.136,
+  "attn_grow_mid": true,
+  "serdes_w_um": 2462.4,
+  "vm_cross_aligned": true,
+  "fix_station_pins": [
+   "hfd_cdist_r14",
+   "hfd_cdist_r15",
+   "hfd_gath_r10",
+   "hfd_gath_r24",
+   "hfd_gath_r25",
+   "hfd_gath_r8",
+   "hfd_gath_r9",
+   "hfd_meso_r28",
+   "hfd_meso_r32",
+   "hfd_stn_r2",
+   "hfd_stn_r34",
+   "hfd_stn_r18",
+   "hfd_stn_r20",
+   "hfd_stn_r31"
+  ],
+  "hub_ck_seg": 8,
+  "hub_pin_p4": true,
+  "vm_cross_2layer": true,
+  "hub_ports_file": "physical/hbm_accel_die_views/hub_ports_r24p.json",
+  "hgi_dispatch": [
+   "coll"
+  ],
+  "split_extra_ports": {
+   "hfd_cmdproc": {
+    "t_hgi_coll": [
+     "hfd_cmdproc_n",
+     968,
+     "N",
+     "M5",
+     0.25,
+     2
+    ],
+    "f_hgi_coll": [
+     "hfd_cmdproc_n",
+     3,
+     "N",
+     "M5",
+     0.29,
+     2
+    ],
+    "t_hgi_cfg_coll": [
+     "hfd_cmdproc_n",
+     40,
+     "N",
+     "M5",
+     0.33,
+     2
+    ]
+   }
+  },
+  "hgi_dispatch_pins_done": true,
+  "W": 30590.352,
+  "H": 24621.84
+ },
+ "census": {
+  "instances": 562,
+  "buses": 940,
+  "net_bits": 840752,
+  "masters": 87,
+  "real_instances": 46,
+  "placeholder_instances": 516
+ },
+ "hfd_coll": {
+  "rtl": "ot_hbm_accel_tu_endpoint",
+  "links": 9,
+  "checks": {
+   "su_delivery_and_inject_request": {
+    "rtl": 2218,
+    "die": 2218,
+    "note": "4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd broadcast to every quarter",
+    "match": true
+   },
+   "su_inject_data": {
+    "rtl": 1024,
+    "die_per_quarter": [
+     1024
+    ],
+    "note": "each quarter drives inj_data; the fan-in inside the block selects one",
+    "match": true
+   },
+   "config_in": {
+    "rtl": 25,
+    "die": 25,
+    "match": true
+   },
+   "status_out": {
+    "rtl": 33,
+    "die": 33,
+    "match": true
+   },
+   "link_tx": {
+    "rtl": 4376,
+    "die": 4392,
+    "match": true
+   },
+   "link_rx": {
+    "rtl": 4376,
+    "die": 4392,
+    "match": true
+   },
+   "clocks": {
+    "rtl": "clk / rst_n / pclk / prst_n",
+    "die": [
+     "pll_hbm",
+     "pll_link",
+     "pll_serial",
+     "pll_stream",
+     "por_hbm",
+     "por_link",
+     "por_serial",
+     "por_stream"
+    ],
+    "match": true
+   },
+   "unmatched_die_ports": [],
+   "hgi_f_hgi_cmdproc": {
+    "rtl": 968,
+    "die": 968,
+    "match": true
+   },
+   "hgi_t_hgi_cmdproc": {
+    "rtl": 3,
+    "die": 3,
+    "match": true
+   },
+   "hgi_f_hgi_cfg": {
+    "rtl": 40,
+    "die": 40,
+    "match": true
+   },
+   "hgi_view_ports_without_die_net": [
+    "f_hgi_rowfmt",
+    "t_hgi_rowfmt",
+    "t_hgi_vmaddr"
+   ]
+  },
+  "pass_": false
+ },
+ "verdict": "record pins MATCH (968 / 3 / 40); FAIL on 3 view ports without die nets: t_hgi_vmaddr (A/O bases -> SU inject/deliver addressing; SU needs the pins), t_hgi_rowfmt / f_hgi_rowfmt (ROW_GATHER: row formatter between the svc row reader and the endpoint injection; datapath not built)",
+ "benches": {
+  "record": "rtl/hbm_accel/generic/collective/tb_hgi_coll_record.sv PASS 113 cases / 104 go; MUT_PF, MUT_DONE FATAL (local iverilog)",
+  "decoder": "16,654 PASS; MUT_AR96 FATAL",
+  "view_lint": "verilator --lint-only hfd_coll rtl_hgi: 0 errors"
+ }
+}

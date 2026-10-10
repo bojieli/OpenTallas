@@ -1,0 +1,456 @@
+{
+ "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
+ "recipe": "r22k = r21c + tools/qwen_kv_die/rom_r22k.py surgery",
+ "generator_sha256": "6e0e423b402e7f824fbed4bb378efea0815e57aca7b24dfc6062549cf56c173e",
+ "surgery_sha256": "8c856778459a8a5b23879d7e25bfa93ae794785aee325ec68ebd3ca62efcd937",
+ "die_um": [
+  23484.384,
+  32801.76
+ ],
+ "die_mm2": 770.329,
+ "reticle_mm2": 858.0,
+ "margin_mm2": 87.671,
+ "r21c_die_mm2": 846.792,
+ "instances": 12902,
+ "buses": 16064,
+ "instance_mm2": 610.472,
+ "area_by_kind_mm2": {
+  "tile": 529.628,
+  "spine_block": 36.369,
+  "io": 17.6,
+  "relay": 16.332,
+  "station": 8.387,
+  "xfifo": 0.626,
+  "phy_d2d": 0.605,
+  "d2d": 0.403,
+  "head": 0.349,
+  "clock_root": 0.17,
+  "bump": 0.002
+ },
+ "ucie": {
+  "name": "ucie_kv",
+  "master": "ot_qkvd_ucie_x64_phy",
+  "x": 11418.624,
+  "y": 21.6,
+  "w": 777.6,
+  "h": 777.6,
+  "orient": "R0",
+  "kind": "phy_d2d",
+  "region": "io",
+  "domain": "stream_1p2",
+  "mm2": 0.6047,
+  "edge": "S",
+  "edge_um": 777.6
+ },
+ "d2d_rom": {
+  "name": "d2d_rom",
+  "master": "qfd_d2d_rom",
+  "x": 11418.624,
+  "y": 801.36,
+  "w": 777.576,
+  "h": 518.376,
+  "orient": "R0",
+  "kind": "d2d",
+  "region": "io",
+  "domain": "stream_1p2"
+ },
+ "clk_rx": {
+  "name": "clk_rx",
+  "master": "qfd_clkrx",
+  "x": 10616.4,
+  "y": 15413.76,
+  "w": 412.536,
+  "h": 412.536,
+  "orient": "R0",
+  "kind": "clock_root",
+  "region": "hub",
+  "domain": "stream_1p2"
+ },
+ "crossing_bus_stages": {
+  "x3": 25,
+  "attn_ret": 28,
+  "emb": 25,
+  "emb_a": 25,
+  "emb_cr": 25,
+  "seq_d2d": 12,
+  "d2d_seq": 13,
+  "d2d_fdi": 0,
+  "pll_fwd": 0,
+  "rst_fwd": 0
+ },
+ "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
+ "r22k": {
+  "removed_instances": {
+   "qfd_kvc_n": 2,
+   "qfd_cdc": 128,
+   "qfd_lst_v_split": 6,
+   "qfd_lst_h_w": 10,
+   "qfd_hub": 1,
+   "qfd_lst_c_split": 2,
+   "qfd_lst_h_e": 10,
+   "qfd_ctrl": 4,
+   "qfd_kvc": 2,
+   "ot_hbm3e_phy": 4,
+   "qfd_lst_v": 3,
+   "qfd_lst_c": 1
+  },
+  "dropped_buses": {
+   "link_channel": 24,
+   "link_spine": 12,
+   "kv_land": 1536,
+   "hbm_cdc": 256,
+   "cdc_core": 256,
+   "phy_dfi": 4,
+   "clock_trunk": 52,
+   "reset": 8
+  },
+  "rebound": [
+   "x3 (512 b): hub_el.x3 -> d2d_rom.x3",
+   "attn_ret (519 b): hub_el.ar -> d2d_rom.ar",
+   "emb (513 b): hub_el.eq -> d2d_rom.eq",
+   "emb_a (26 b): hub_el.ea -> d2d_rom.ea",
+   "clk_root: source io_collective.pll_stream -> clk_rx.pll_root (collective is a sink)",
+   "emb_cr (1 b): hub_el.ecr -> d2d_rom.ecr"
+  ],
+  "added_instances": [
+   {
+    "name": "ucie_kv",
+    "master": "ot_qkvd_ucie_x64_phy",
+    "x": 11289.024,
+    "y": 21.6,
+    "w": 777.6,
+    "h": 777.6,
+    "orient": "R0",
+    "kind": "phy_d2d",
+    "region": "io",
+    "domain": "stream_1p2"
+   },
+   {
+    "name": "d2d_rom",
+    "master": "qfd_d2d_rom",
+    "x": 11289.024,
+    "y": 801.36,
+    "w": 777.576,
+    "h": 518.376,
+    "orient": "R0",
+    "kind": "d2d",
+    "region": "io",
+    "domain": "stream_1p2"
+   },
+   {
+    "name": "clk_rx",
+    "master": "qfd_clkrx",
+    "x": 10616.4,
+    "y": 15413.76,
+    "w": 412.536,
+    "h": 412.536,
+    "orient": "R0",
+    "kind": "clock_root",
+    "region": "hub",
+    "domain": "stream_1p2"
+   },
+   {
+    "name": "ckb_rom",
+    "master": "qfd_ckbump",
+    "x": 11241.504,
+    "y": 21.6,
+    "w": 43.176,
+    "h": 43.176,
+    "orient": "R0",
+    "kind": "bump",
+    "region": "io",
+    "domain": "stream_1p2"
+   }
+  ],
+  "added_buses": [
+   [
+    "d2d_fdi",
+    "d2d_fdi",
+    1099,
+    [
+     [
+      "d2d_rom",
+      "fdi"
+     ],
+     [
+      "ucie_kv",
+      "fdi"
+     ]
+    ]
+   ],
+   [
+    "seq_d2d",
+    "sequencer",
+    530,
+    [
+     [
+      "sp_constants_sequencer",
+      "dc"
+     ],
+     [
+      "d2d_rom",
+      "dc"
+     ]
+    ]
+   ],
+   [
+    "d2d_seq",
+    "sequencer",
+    530,
+    [
+     [
+      "d2d_rom",
+      "dh"
+     ],
+     [
+      "sp_constants_sequencer",
+      "dh"
+     ]
+    ]
+   ],
+   [
+    "pll_fwd",
+    "clock_trunk",
+    1,
+    [
+     [
+      "ckb_rom",
+      "pll_ck"
+     ],
+     [
+      "clk_rx",
+      "pll_fwd"
+     ]
+    ]
+   ],
+   [
+    "rst_fwd",
+    "reset",
+    1,
+    [
+     [
+      "ckb_rom",
+      "rs"
+     ],
+     [
+      "clk_rx",
+      "rst_fwd"
+     ]
+    ]
+   ],
+   [
+    "clk_d2d",
+    "clock_trunk",
+    1,
+    [
+     [
+      "clk_rx",
+      "pll_d2d"
+     ],
+     [
+      "d2d_rom",
+      "ck"
+     ],
+     [
+      "ucie_kv",
+      "clk"
+     ]
+    ]
+   ],
+   [
+    "rst_d2d",
+    "spine_local",
+    1,
+    [
+     [
+      "clk_rx",
+      "rso_d2d"
+     ],
+     [
+      "d2d_rom",
+      "rst_n"
+     ],
+     [
+      "ucie_kv",
+      "rst_n"
+     ]
+    ]
+   ],
+   [
+    "rst_seq",
+    "spine_local",
+    1,
+    [
+     [
+      "clk_rx",
+      "rso_seq"
+     ],
+     [
+      "sp_constants_sequencer",
+      "rsi"
+     ]
+    ]
+   ],
+   [
+    "d2d_flt",
+    "spine_local",
+    9,
+    [
+     [
+      "d2d_rom",
+      "flt"
+     ],
+     [
+      "sp_constants_sequencer",
+      "dflt"
+     ]
+    ]
+   ]
+  ],
+  "spine_relay_channel_um": 259.2,
+  "spine_relay_channel_wm_um": 129.6,
+  "spine_channel_x": [
+   11223.8,
+   12325.8
+  ]
+ },
+ "margin_lint": {
+  "chains": 2676,
+  "reach_um": 504.0,
+  "reach_violations": 4,
+  "far_side_relays": 35,
+  "reach_examples": [
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "seg": "rly_coll_tx_4->rly_coll_tx_5",
+    "um": 1559.6,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
+    "um": 1029.9,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "seg": "rly_tt_ty_0->rly_tt_ty_1",
+    "um": 966.4,
+    "hops": 1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "seg": "rly_coll_tx_5->rly_coll_tx_6",
+    "um": 671.4,
+    "hops": 1
+   }
+  ],
+  "far_side_examples": [
+   {
+    "chain": "sp_vector_memory->sp_tree_top",
+    "relay": "rly_tt_xr_21",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_1->sp_port_tiles_0",
+    "relay": "rly_bword_42_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_17->sp_port_tiles_4",
+    "relay": "rly_bword_46_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_21->sp_port_tiles_5",
+    "relay": "rly_bword_47_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "sp_constants_sequencer->sp_tree_top",
+    "relay": "rly_tt_si_33",
+    "back_um": 410.4
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_3",
+    "relay": "rly_tt_c3_6",
+    "back_um": 324.0
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_2",
+    "relay": "rly_tt_c2_27",
+    "back_um": 302.4
+   },
+   {
+    "chain": "t_27_17->sp_port_tiles_4",
+    "relay": "rly_bword_40_6",
+    "back_um": 291.6
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "relay": "rly_tt_lc2_4",
+    "back_um": 278.6
+   },
+   {
+    "chain": "t_63_9->sp_port_tiles_2_f1",
+    "relay": "rly_bword_92_31",
+    "back_um": 259.2
+   },
+   {
+    "chain": "t_63_21->sp_port_tiles_5_f1",
+    "relay": "rly_bword_95_31",
+    "back_um": 259.2
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_1",
+    "relay": "rly_tt_c1_29",
+    "back_um": 244.1
+   },
+   {
+    "chain": "t_63_1->sp_port_tiles_0_f1",
+    "relay": "rly_bword_90_31",
+    "back_um": 226.8
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_0",
+    "relay": "rly_tt_c0_39",
+    "back_um": 222.5
+   },
+   {
+    "chain": "sp_tree_top->sp_vector_memory",
+    "relay": "rly_tt_mx_15",
+    "back_um": 151.2
+   },
+   {
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "relay": "rly_pword_2_19",
+    "back_um": 108.0
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_4",
+    "back_um": 102.4
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_6",
+    "back_um": 88.1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_3",
+    "back_um": 69.1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "relay": "rly_tt_ty_2",
+    "back_um": 68.3
+   }
+  ],
+  "verdict": "FAIL"
+ },
+ "margin_note": "data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)",
+ "relay_kinds": [
+  "relay"
+ ]
+}

@@ -39,6 +39,23 @@ foreach i [$ws_blk getInsts] {
     if {![info exists ws_n($c)] || $k + 1 > $ws_n($c)} { set ws_n($c) [expr {$k + 1}] }
   }
 }
+# hbm-forks 2026-10-09: a one-stage chain's register drives the module output directly and synthesis names it after
+# that output (<chain>.q[*], <chain>.qv): those chains were never fenced (svc PS: the W/E cross-bus input stage of
+# c_sd / c_dd / c_wd chains sat at the destination unit, routed TT -47 .. -84 ps from the face pin).  Treat them as
+# the chain's LAST stage: N - 1 with N from its rv[] / st[] names (rv is one vector, every bit kept), stage 0 when the
+# chain has no other register (N = 1, rv itself renamed qv).
+array set ws_q {}
+foreach i [$ws_blk getInsts] {
+  set n [string map {"\\" ""} [$i getName]]
+  if {[regexp {^(c_[a-z]+[0-9]+_[0-9]+)\.(?:q\[[0-9]+\]|qv)} $n -> c] && [[$i getMaster] isSequential]} {
+    lappend ws_q($c) $i
+  }
+}
+foreach c [array names ws_q] {
+  set k [expr {[info exists ws_n($c)] ? $ws_n($c) - 1 : 0}]
+  foreach i $ws_q($c) { lappend ws_st($c,$k) $i; set ws_chain([$i getName]) $c }
+  set ws_n($c) [expr {$k + 1}]
+}
 proc ws_skip {n} {
   global ws_fan
   return [expr {$n eq "NULL" || [$n getSigType] in {POWER GROUND CLOCK RESET} || [llength [$n getITerms]] > $ws_fan + 1}]
@@ -212,7 +229,12 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
   set K [expr {max(1, int(ceil(sqrt(double($m)*$rowh/$pitch))))}]
   set tx [lindex $ws_tgt($key) 0]; set ty [lindex $ws_tgt($key) 1]
   set r0 [expr {max(0, min($nrows-1, int(($ty-$rowy0)/$rowh)))}]
-  set q 0; set dr 0; set tries 0
+  set q 0; set K0 $K
+  # hbm-forks 2026-10-09: when every row's window around the target is taken (many one-stage chains now anchored at
+  # the same face pins: svc PS SW_s1, 101 cells unplaced), widen the window 2x / 4x / 8x / 16x around the same point
+  foreach ws_wf {1 2 4 8 16} {
+  if {$q >= $m} break
+  set K [expr {$K0 * $ws_wf}]; set dr 0; set tries 0
   # rows alternate around the target row; in each row up to K slots centred on the target x, sliding past occupancy
   while {$q < $m && $tries < 4*$nrows} {
     set ri [expr {$r0 + (($dr % 2) ? -(($dr+1)/2) : ($dr/2))}]; incr dr; incr tries
@@ -239,7 +261,56 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
       set x [expr {$x + $pitch}]
     }
   }
+  }
   incr nplaced $q; incr nfail [expr {$m - $q}]; incr nst
 }
 puts "OT_WS: $ntok token stages joined their data stage; $nst stages, $nplaced cells placed FIRM, $nfail not placed (density $ws_dens)"
 if {$nfail > 0} { error "OT_WS: $nfail stage cells could not be placed" }
+# ---------------------------------------------------------------- pin registers (OT_WS_PINREG=1)
+# hbm-forks 2026-10-09 (svc SW_s7: wi -> c_wl stage 0 -41 ps / q7 -> u_sp7.loc.d_r -65 ps at the routed reference, the
+# input-pin -> first-register wire alone 120-130 ps): every flop whose D is driven straight from ONE input pin (the
+# first register of a face chain, an SM port's local input register) is moved, bit by bit, to the free site nearest
+# ITS OWN pin (a chain's stage block is packed around the chain's centre, up to ~100 um from a bit's pin) and fixed.
+# For faces whose inputs fail SETUP; it shortens the input min path too (hold-side faces use the --fc clock taps).
+if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
+  set npr 0; set nprf 0
+  set rx0_all [lindex $rows 0 1]; set rx1_all [lindex $rows 0 2]
+  foreach i [$ws_blk getInsts] {
+    if {![[$i getMaster] isSequential]} continue
+    set dit [$i findITerm D]
+    if {$dit eq "NULL"} continue
+    set dn [$dit getNet]
+    if {$dn eq "NULL"} continue
+    set bts [$dn getBTerms]
+    if {[llength $bts] != 1} continue
+    set bt [lindex $bts 0]
+    if {[$bt getIoType] ne "INPUT"} continue
+    set bn [$bt getName]
+    if {![info exists ws_pin($bn)]} continue
+    lassign $ws_pin($bn) px py
+    set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
+    # nearest row to the pin, then outward; in each row the free slot nearest the pin x (sliding both ways)
+    set r0 [expr {max(0, min($nrows-1, int(($py-$rowy0)/$rowh)))}]
+    set done 0
+    for {set dr 0} {$dr < 200 && !$done} {incr dr} {
+      foreach ri [list [expr {$r0 - $dr}] [expr {$r0 + $dr}]] {
+        if {$done || $ri < 0 || $ri >= $nrows} continue
+        set row [lindex $rows $ri]; set ry [lindex $row 0]; set rx0 [lindex $row 1]; set rx1 [lindex $row 2]
+        set xb [expr {$rx0 + int((max($rx0, min($rx1 - $wr, $px)) - $rx0)/$sitew)*$sitew}]
+        for {set s 0} {$s < 400 && !$done} {incr s} {
+          foreach x [list [expr {$xb + $s*$sitew}] [expr {$xb - $s*$sitew}]] {
+            if {$done || $x < $rx0 || $x + $wr > $rx1} continue
+            if {[ws_free $ri $x [expr {$x+$wr}]]} {
+              $i setPlacementStatus PLACED     ;# a fenced stage flop is FIRM: unfix before moving (ODB-0359)
+              $i setOrient [lindex $row 5]; $i setLocation $x $ry; $i setPlacementStatus FIRM
+              lappend occ($ri) [list $x [expr {$x+$wr}]]
+              set done 1
+            }
+          }
+        }
+      }
+    }
+    if {$done} { incr npr } else { incr nprf }
+  }
+  puts "OT_WS_PINREG: $npr pin registers placed beside their pins, $nprf not placed"
+}

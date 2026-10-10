@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsrom_one_position_compressor_ring_dyn",
+      "target": "DeepSeek ROM",
+      "owner": "mtp_numerical_repair",
+      "description": "Canonical one-position compressor ring DYN25/26 address-state repair; default enabled after four source-identical original campaign gates, native selected consumer binding pending",
+      "source": {
+        "commit": "3dea693b1",
+        "paths": [
+          "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+          "tools/mtp_exact_wavefront2.py"
+        ]
+      },
+      "implementation": {
+        "status": "CANONICAL_DEFAULT_ENABLED_AFTER_FOUR_CASE_GATE_V36",
+        "evidence": [
+          "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+          "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json",
+          "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
+        ]
+      },
+      "model": {
+        "status": "MODELED_FIVE_NONCONSTANT_STATE_BITS_ZERO_ADDED_CYCLES",
+        "evidence": [
+          "physical/mtp_ring_dyn/model.json",
+          "tools/uarch_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "CAMPAIGNS14_AND19_18_JOB_PASS_ORIGINAL_RING8_FIXTURE",
+          "evidence": [
+            "results/rtl/mtp_ring_dyn_20261009/campaign14_vehicle_bound.json",
+            "results/rtl/mtp_ring_dyn_20261009/campaign19_terminal.json",
+            "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
+          ]
+        },
+        "negative": {
+          "status": "CAMPAIGNS15_AND20_PROTOCOL11_EXPECTED_FAIL_PAYLOAD_AND_STATE_EXACT",
+          "evidence": [
+            "results/rtl/mtp_ring_dyn_20261009/campaign15_vehicle_bound.json",
+            "results/rtl/mtp_ring_dyn_20261009/campaign20_terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLOSED_VEHICLE_ROUTE",
+        "corners": {
+          "mtp-ringdyn-a-673d12103-tc": {
+            "tt_setup_ps": 64.79,
+            "ff_hold_ps": 24.03,
+            "drc": 0,
+            "ss_sensitivity_ps": -289.99
+          },
+          "mtp-ringdyn-b-673d12103-tc": {
+            "tt_setup_ps": 30.74,
+            "ff_hold_ps": 3.39,
+            "drc": 0,
+            "ss_sensitivity_ps": -306.29
+          }
+        },
+        "vehicle": "physical/mtp_ring_dyn/ot_dsrom_ring_dyn_vehicle.sv",
+        "module": "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv",
+        "jobs": [
+          "mtp-ringdyn-a-673d12103-tc",
+          "mtp-ringdyn-b-673d12103-tc"
+        ],
+        "evidence": [
+          "physical/mtp_ring_dyn/model.json",
+          "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/bench.json",
+          "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/refactor_verbatim.json",
+          "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/core_lint.txt",
+          "results/rtl/mtp_lead_20261009/routes/mtp-ringdyn-a-673d12103-tc",
+          "results/rtl/mtp_lead_20261009/routes/mtp-ringdyn-b-673d12103-tc"
+        ],
+        "note": "mtp-lead 2026-10-09: DYN table + read selectors extracted verbatim into ot_hdc_v41x_dyn_unit; core behaviour proven unchanged by campaign 14/15 rerun (record in ring_dyn_vehicle/)"
+      },
+      "dependencies": [
+        "Native selected one-position ring8 consumer binding: owner mtp_rom/draft_p2; must demonstrate actual compiled program DYN25/26 use before porting canonical repair",
+        "Consuming sequencer contextual SS setup and FF hold qualification; no standalone route per V36",
+        "Claude central integration before live registry publication"
+      ],
+      "integration": {
+        "status": "FOUR_CASE_GATE_QUALIFIED_BRANCH_PUSHED_CLAUDE_MAIN_INTEGRATION_PENDING",
+        "evidence": [
+          "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
+        ]
+      },
+      "recorded_at": "2026-10-09T09:47:00Z"
+    }
+  ]
+}
