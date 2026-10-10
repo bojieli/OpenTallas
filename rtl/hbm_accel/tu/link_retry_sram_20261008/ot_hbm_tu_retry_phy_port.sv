@@ -127,7 +127,10 @@ module ot_hbm_tu_retry_phy_port #(
  // LINK_CREDIT (cont-takeover 2026-10-09, REVIEW ~11:30; needs REG_IO): the FEC tx / rx channels are die-link credit
  // relays (rtl/common/ot_link_credit.sv): fec_tx_ready / fec_rx_ready carry credit pulses; landing overflow = fault.
  parameter LINK_CREDIT=0,LINK_DEPTH=8,
- parameter IQ_SKID=`ifdef OT_TU_IQSKID 1 `else 0 `endif   // redesign-ds: ingress head skid (see the core)
+ parameter IQ_SKID=`ifdef OT_TU_IQSKID 1 `else 0 `endif,  // redesign-ds: ingress head skid (see the core)
+ // redesign-ds: NOEPOCH reaches the wrapper (sys-takeover's review S4/S5 option in the core): iqs2-a post-place -452 =
+ // ses_q -> 24-bit read_epoch == session compare -> replay accept -> 545-b tx select -> u_tx.l_data
+ parameter NOEPOCH=`ifdef OT_TU_NOEPOCH 1 `else 0 `endif
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -146,7 +149,7 @@ module ot_hbm_tu_retry_phy_port #(
  output wire[SW-1:0]ingress_debt,output wire[CW-1:0]rx_debt
 );
  generate if(!(REG_IO&&ENABLE))begin:g_core
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID)) u(.*);
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH)) u(.*);
  end else begin:g_reg
  wire phy_run=prst_n&&phy_link_up,core_run=rst_n&&core_link_up;
  // pclk input flops
@@ -167,7 +170,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.PIPE_FIX(LINK_CREDIT)) u(
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.PIPE_FIX(LINK_CREDIT)) u(
  .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),
