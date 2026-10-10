@@ -73,6 +73,11 @@ module ot_qkvd_hbm_timed_stack #(
     reg        sl_g   [0:R-1][0:NSLOT-1];
     reg [12:0] sl_t   [0:R-1][0:NSLOT-1];
     integer    wp [0:R-1], rp [0:R-1], nout [0:R-1];
+    // statistics (printed at the end of the run when +hbmt_stats): row latency issue -> release, sector issue -> return
+    longint    sl_t0 [0:R-1][0:NSLOT-1];
+    longint    cyc_n = 0, rows_n = 0, lat_sum = 0, lat_max = 0, busy_n = 0, first_rq = -1, last_rel = 0;
+    longint    pc_sec [0:31];
+    integer    hist [0:7];
     integer x, q, p, k, j, s, e;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -80,9 +85,10 @@ module ot_qkvd_hbm_timed_stack #(
             for (x = 0; x < R; x = x + 1) begin wp[x] = 0; rp[x] = 0; nout[x] = 0; end
             m_v <= 0; m_addr <= 0; m_tag <= 0; row_rdy <= 0; row_vv <= 0; row_g <= 0; row_t <= 0; fault <= 1'b0;
         end else begin
+            cyc_n = cyc_n + 1;
             // 1. the model accepted last edge's offers
             for (p = 0; p < NPC; p = p + 1)
-                if (m_v[p] && m_rdy[p]) begin pq_rp[p] = (pq_rp[p] + 1) % PCQ; pq_n[p] = pq_n[p] - 1; end
+                if (m_v[p] && m_rdy[p]) begin pc_sec[p] = pc_sec[p] + 1; pq_rp[p] = (pq_rp[p] + 1) % PCQ; pq_n[p] = pq_n[p] - 1; end
             // 2. returned sectors -> their engine's slot
             for (p = 0; p < NPC; p = p + 1)
                 if (m_rsp_v[p]) begin
@@ -94,6 +100,7 @@ module ot_qkvd_hbm_timed_stack #(
                 if (rq_v[x]) begin
                     if (nout[x] == NSLOT) fault <= 1'b1;
                     s = wp[x];
+                    sl_t0[x][s] = cyc_n; if (first_rq < 0) first_rq = cyc_n;
                     sl_cnt[x][s] = 3'd0; sl_vv[x][s] = rq_vv[x]; sl_g[x][s] = rq_g[x]; sl_t[x][s] = rq_t[13*x +: 13];
                     wp[x] = (wp[x] + 1) % NSLOT; nout[x] = nout[x] + 1;
                     for (q = 0; q < 4; q = q + 1) begin
@@ -119,9 +126,18 @@ module ot_qkvd_hbm_timed_stack #(
                     row_rdy[x] <= 1'b1; row_vv[x] <= sl_vv[x][rp[x]]; row_g[x] <= sl_g[x][rp[x]];
                     row_t[13*x +: 13] <= sl_t[x][rp[x]];
                     sl_cnt[x][rp[x]] = 3'd0;
+                    rows_n = rows_n + 1; lat_sum = lat_sum + (cyc_n - sl_t0[x][rp[x]]); last_rel = cyc_n;
+                    if (cyc_n - sl_t0[x][rp[x]] > lat_max) lat_max = cyc_n - sl_t0[x][rp[x]];
+                    hist[((cyc_n - sl_t0[x][rp[x]]) >> 5) > 7 ? 7 : ((cyc_n - sl_t0[x][rp[x]]) >> 5)] = hist[((cyc_n - sl_t0[x][rp[x]]) >> 5) > 7 ? 7 : ((cyc_n - sl_t0[x][rp[x]]) >> 5)] + 1;
                     rp[x] = (rp[x] + 1) % NSLOT; nout[x] = nout[x] - 1;
                 end
             end
         end
+    end
+    initial begin for (k = 0; k < 8; k = k + 1) hist[k] = 0; for (k = 0; k < 32; k = k + 1) pc_sec[k] = 0; end
+    final begin
+        $fwrite(32'h80000002, "HBMT_STATS rows %0d lat_mean %0d lat_max %0d span %0d rows_per_cyc_x1000 %0d hist32 %0d %0d %0d %0d %0d %0d %0d %0d pc0 %0d pc31 %0d\n",
+                rows_n, rows_n ? lat_sum / rows_n : 0, lat_max, last_rel - first_rq, (last_rel > first_rq) ? rows_n * 1000 / (last_rel - first_rq) : 0,
+                hist[0], hist[1], hist[2], hist[3], hist[4], hist[5], hist[6], hist[7], pc_sec[0], pc_sec[31]);
     end
 endmodule
