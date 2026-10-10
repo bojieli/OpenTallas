@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_crom_gs_a",
+ "orfs_dir": "/srv/opentallas-data/claude/closure-loop/qfd_crom_gs_a-5bb157d94-tc/routes/qfd_crom_gs_a_5bb157d94_tc/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_crom_gs_a.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-3.097533340934433e-10",
+  "ws_min": "1.194181975527897e-10"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "4.1103564996092246e-11",
+  "ws_min": "7.382755518037243e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "1.7472440161370173e-10",
+  "ws_min": "3.867567377469072e-11"
+ },
+ "files": {
+  "qfd_crom_gs_a.lef": "2ae5ef337edc34f6d6ba655da9bc9ba765a36f51bf2b6a5ee5d697e0f6b4c528",
+  "qfd_crom_gs_a_ff.lib": "481bda59684b2baca163f30e8087f7b24787445c2aebb3db5f32ca409891c185",
+  "qfd_crom_gs_a_ss.lib": "1b68ec81be3659fd9059e9aa90b235afe69fa27d7451d5a8cb5056253143e779",
+  "qfd_crom_gs_a_tt.lib": "29c945e48377b3c3f6abea21e26800ef2510ae8f1ade0fd0b7d511db5ef7a33d"
+ }
+}
