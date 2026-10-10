@@ -45,7 +45,7 @@ R = 8                           # row engines a stack (near-HBM gate R = 8: 1,82
 # away from the control tile) stays inside the wire reach; the control tile 24,507 um2 synthesized (route qkd_ectl_a), its
 # height set by its E face (634 + 425 pins).
 HEAD = (648.0, 453.6)
-ECTL = (648.0, 108.0)
+ECTL = (648.0, 129.6)            # E face: si 634 + so 425 pins on M4 at 2-track pitch (101.7 um) + margins
 ENG_H = 4 * HEAD[1] + ECTL[1] + 4 * GY
 RENG = (HEAD[0], ENG_H)         # the engine column slot
 # tile offsets inside an engine column (bottom -> top): head 0, head 1, control, head 2, head 3
@@ -210,7 +210,7 @@ def build(r=R):
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
     x_grp = up(x_land + LAND_W + CHAN, GX)
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
-    centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0]) + 2 * CHAN
+    centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     Wk = up(2 * (x_grp + grp_w) + centre_w, 2 * GX)
     m = dict(die=dict(w=Wk, h=Hk), insts=[], buses=[], regions=[], geo={})
     ins = m['insts']
@@ -572,8 +572,8 @@ def masters(m, k=1, port_bits=None):
             if mst == 'qkd_astk' and p[0] in 'ef' and p[1].isdigit():
                 face = 'W' if int(p[1]) < 4 else 'E'
             layer = 'M4' if face in ('E', 'W') else 'M5'
-            if (mst == 'qkd_ectl' and p == 'so') or (mst == 'qkd_astk' and p[0] == 'e' and p[-1] == 'i'):
-                layer = 'M6'                     # control so on M6, control si on M4 (same face)
+            # the control tile's horizontal pins all on M4: with M4 + M6 its legal origins sit on an 8.64-um lattice
+            # (lcm 48 / 64 / 270 nm) that the 2.16-um tile gaps cannot absorb (die_kv10: no legal origin for ectl_WS_3)
             # the head tile is placed MX / R180 below the control tile: a mirrored master's horizontal pins must be
             # mirror-legal on every layer at once (origin = 2 off - H mod pitch per layer).  M4 (off 12 / 48) and M8 (116 /
             # 80) agree mod 16, M6 (16 / 64) agrees with neither (die_kv8: 'qkd_rhead MX y has no legal origin') -> the
@@ -600,8 +600,11 @@ def masters(m, k=1, port_bits=None):
                     e = int(p[1])
                     t_ = 'c' if p[0] == 'e' else f'h{p[2]}'
                     sp[4] = (e % 4) * (RENG[1] + GY) + TILE_Y[t_] + (ECTL[1] if t_ == 'c' else HEAD[1]) / 2   # level with its tile
+                    if t_ == 'c':            # facing the control tile's si (below) / so (above)
+                        sp[4] += (1 if p[-1] == 'i' else -1) * (ECTL[1] - 4.0) * (425 if p[-1] == 'o' else 634) / (2 * 1059)
                 if mst == 'qkd_ectl' and p in ('si', 'so'):
-                    sp[4] = ECTL[1] / 2
+                    # one face, one layer: si below so, each centred on its share of the face
+                    sp[4] = ECTL[1] / 2 + (-1 if p == 'si' else 1) * (ECTL[1] - 4.0) * (425 if p == 'si' else 634) / (2 * 1059)
                 mm.ports[p] = tuple(sp)
                 pos += span
     for mst in list(M):
