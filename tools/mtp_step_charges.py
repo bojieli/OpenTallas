@@ -195,6 +195,13 @@ def hbm_ds():
     assert hb["verdict"].startswith("PASS")
     ch = []
     ch.append(charge(
+        "ctl_stop.nreg", "adopted NREG controller transition between successive MTP passes", 1,
+        anchor="draft.last", phase="draft",
+        formula="+1 per steady-state MTP pass after the first; single-pass/EOS/prefill cases add 0",
+        source=["results/rtl/mtp_hfdpipe_20261009/gates.json cycles_added and multistep_differential",
+                "results/rtl/mtp_lead_20261009/routes/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc"],
+        variant="adopted NREG=1; step throughput conservatively charges the recurring transition"))
+    ch.append(charge(
         "hfd_mtp.round_trips", "hfd_mtp die master pin flops (command -> engine done round trips)", 7 * 2,
         anchor="draft.last", phase="draft",
         formula="7 dependent round trips a step (5 draft-head commands, verify, accept/emit) x 2 (+1 per pin crossing)",
@@ -241,24 +248,25 @@ def hbm_ds():
     draft_cyc = sum(n["cycles"] for n in nodes if n.get("phase") == "draft" and n["critical"] and not n["id"].startswith("mc."))
     rows = moe * 6
     ch.append(charge(
-        "dskv_wb_spec.rows", "ot_hbm_accel_dskv_wb_spec registered-boundary variant (+1 a row)", rows, anchor="step.start",
+        "dskv_wb_spec.rows", "adopted ot_hbm_accel_dskv_wb_spec PIPE=2 (+3 a row)", rows * 3, anchor="step.start",
         phase="draft", critical=False,
-        formula=f"{moe} layers x up to 6 accepted positions = {rows} KV rows x +1",
-        source=["results/rtl/mtp_lead_20261009/dskv_wb_spec_rb/README.md (PIPE=1 S_OWN +1 cycle/row)"],
-        variant="rb variant (mtprb-dskvwb_spec_rb-2426c04bd-tc); the a/b variants add 0",
+        formula=f"{moe} layers x up to 6 accepted positions = {rows} KV rows x +3",
+        source=["results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md (+3 a row vs PIPE 0)"],
+        variant="adopted mtprb-dskvwb_spec_p2a-5ce6c3c62-tc; wrapper pin FIFO costs retained",
         proof=f"the accepted rows of step s are written while step s+1 drafts: the draft phase ({draft_cyc:,.0f} cycles) runs "
               "on the DSpark stages' own state (main_x + their wkv window rows), and the first read of a main-model KV row is "
-              "verify layer 0 after the draft; the +1/row adds <= "
-              f"{rows} cycles to a write stream that must fit in {draft_cyc:,.0f} cycles"))
-    hbm_sim = dict(note="hbm-sim: the DS spec-conformant rate is the native record stream (results/arch/hgi_sim_20261009/"
-                        "ds_native_timing_1M.json result.S2 = 1,658.1 tok/s AR, not the 1,716.3 walk); these charges are "
-                        "per MTP step and carry over to that basis unchanged")
-    return finish("hbm_ds", ch, mtp, basis_note=hbm_sim, inputs=[HBM_BENCH, SPEC_SWEEP, COMMIT_RTL])
+              "verify layer 0 after the draft; the +3/row adds <= "
+              f"{rows * 3} cycles to a write stream that must fit in {draft_cyc:,.0f} cycles"))
+    hbm_sim = dict(note="The HBM native and approved gather paths are distinct; systems.json uses "
+                        "ds_sw_seq_pricing.json approved_path_c2_g22 and adds its delta relative to native S2 once "
+                        "per verify pass. These component charges carry over to either basis unchanged.")
+    return finish("hbm_ds", ch, mtp, basis_note=hbm_sim, inputs=[HBM_BENCH, SPEC_SWEEP, COMMIT_RTL, "results/rtl/mtp_hfdpipe_20261009/gates.json",
+                "results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md"])
 
 
 def finish(key, ch, mtp, sens=None, ar_effect=None, basis_note=None, inputs=()):
     tau = mtp["totals"]["tau"]
-    base = mtp["totals"]["cycles"] - sum(n["cycles"] for n in mtp["nodes"] if n["id"].startswith("mc."))
+    base = mtp["totals"]["cycles"] - sum(n["cycles"] for n in mtp["nodes"] if n["id"].startswith("mc.") and n["critical"])
     crit = sum(c["cycles"] for c in ch if c["critical"])
     crit_lo = sum(c.get("cycles_lower", c["cycles"]) for c in ch if c["critical"])
     rec = dict(

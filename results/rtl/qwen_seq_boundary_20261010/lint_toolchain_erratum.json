@@ -1,0 +1,7 @@
+{
+  "record": "results/rtl/qwen_seq_boundary_20261010/lint.json",
+  "correction": "The tool field labels Verilator5.x, but system verilator is actually4.038. The PASS and diagnostic-log SHA remain unchanged; preserve prior record as history.",
+  "actual_version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+  "reference_tool_available": "Verilator 5.050 2026-07-01 rev v5.050",
+  "unsupported_claim": "no toolchain-reference equivalence claimed by the system lint gate"
+}

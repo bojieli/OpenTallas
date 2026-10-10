@@ -44,3 +44,24 @@ def model():
                      headers_endpoint_credit_and_ordering_stalls_unmeasured=True,
                      historical_P2_point2us_budget_qualified=False),
         qualification='model-before-build; full-shape output ordering and finite transport gates required')
+
+
+def rootpipe_model():
+    """P2 rb4 sizing, written before RTL; route remains generic-IO pathfinding."""
+    return dict(schema='opentallas.mtp-p2-rootpipe.v1', adopted=False,
+                parent='b9e5dd224', MACs_per_cycle=0, FP32_add_lanes=16,
+                arithmetic_order='+0,E0,E1,E2; unchanged FP32 rounding',
+                ports_bytes_per_cycle=dict(ingress=128, output=64, SRAM_read=96, SRAM_write=96),
+                boundary_bits_per_cycle=dict(ingress=1208, output=594),
+                replicas=dict(accumulator_decode_stage=1, output_groups=19),
+                added_storage_bits=512+3+594+19+3,
+                mux_demux_fanout=dict(output_data_mux_levels=0, output_enable_fanout_max=32,
+                                      output_ready_pin_fanout=2),
+                routing=dict(data_tracks=512, existing_channel_tracks=548, added_external_wires=0),
+                area=dict(outline_um=[560,460], added_FF_envelope_um2=1131*.6,
+                          slot_fit='same 12 SRAM grid; synthesis/floorplan must confirm'),
+                latency=dict(parent_cycles=5954, added_decode_cycles=240,
+                             predicted_cycles_lower=6194, output_release_bubble_cycles=1,
+                             output_station_capacity=1, pipeline_cycles_per_drain_word=1,
+                             worst_increment_cycles=320, upper_cycles=6274),
+                qualification='exact transaction bench and mutants; TT setup/FF hold/DRC gate required')

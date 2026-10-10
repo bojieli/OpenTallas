@@ -1,0 +1,483 @@
+{
+  "time_utc": "2026-10-10T12:31:39.863712+00:00",
+  "meminfo": "MemTotal:       131810932 kB\nMemFree:        18990296 kB\nMemAvailable:   26615692 kB\nBuffers:           82616 kB\nCached:         30812052 kB\nSwapCached:            0 kB\nActive:         52989396 kB\nInactive:       57852652 kB\nActive(anon):   52361628 kB\nInactive(anon): 49683340 kB\nActive(file):     627768 kB\nInactive(file):  8169312 kB\nUnevictable:       10924 kB\nMlocked:            6924 kB\nSwapTotal:             0 kB\nSwapFree:              0 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1716 kB\nWriteback:             0 kB\nAnonPages:      79960548 kB\nMapped:           240632 kB\nShmem:          22092796 kB\nKReclaimable:     631440 kB\nSlab:            1264872 kB\nSReclaimable:     631440 kB\nSUnreclaim:       633432 kB\nKernelStack:       21664 kB\nPageTables:       177292 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    65905464 kB\nCommitted_AS:   90374120 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       47556 kB\nVmallocChunk:          0 kB\nPercpu:           155136 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:     34816 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:          721924 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      310176 kB\nDirectMap2M:    12204032 kB\nDirectMap1G:    123731968 kB\n",
+  "loadavg": "13.16 19.63 22.83 13/1288 2628449\n",
+  "containers": [
+    {
+      "id": "f944f9d3dd5d14ece7cbe5a9dc2fc7bffbf48026701512e1be14428e2bbb40a9",
+      "name": "/eloquent_shtern",
+      "pid": 2628254,
+      "started": "2026-10-10T12:31:33.325907359Z",
+      "memory_limit_bytes": 0,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0/src",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0/routes/qfd_res_slot_3eb23e910_tc_hm0/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "502628352",
+        "memory.peak": "502628352",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "4f3a7744c8c650d7dabd938b66eb67ca392686644634c8155099d3cf4b5ae741",
+      "name": "/trusting_moore",
+      "pid": 2627851,
+      "started": "2026-10-10T12:31:18.764943186Z",
+      "memory_limit_bytes": 120259084288,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_ctl_a-849012083-prst0-cl/cl/fplint/calibrate.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_ctl_a-849012083-prst0-cl/routes/hgi_adp_su_ctl_a_849012083_prst0_cl_cal/work/orfs/results/asap7/opentallas_ot_hgi_su_ctl_asap7_mtp_hgi_adp_su_ctl_a_849012083_prst0_cl_cal/base",
+        "/tmp/tmpoxhk8yvz"
+      ],
+      "cgroup": {
+        "memory.current": "535773184",
+        "memory.peak": "536215552",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "fd77a78ee367f9ad984be10c08b7b154d7a742019b9670070bc1a308c3460537",
+      "name": "/tender_banach",
+      "pid": 2627746,
+      "started": "2026-10-10T12:31:18.679247972Z",
+      "memory_limit_bytes": 120259084288,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_ctl_b-849012083-prst0-cl/cl/fplint/calibrate.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_ctl_b-849012083-prst0-cl/routes/hgi_adp_su_ctl_b_849012083_prst0_cl_cal/work/orfs/results/asap7/opentallas_ot_hgi_su_ctl_asap7_mtp_hgi_adp_su_ctl_b_849012083_prst0_cl_cal/base",
+        "/tmp/tmpcmkp57p8"
+      ],
+      "cgroup": {
+        "memory.current": "535986176",
+        "memory.peak": "536510464",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "965512545d8bd2f9e3d7c29fd3b2a5d9f968524346c5ad6337c2b7af56944068",
+      "name": "/pedantic_williams",
+      "pid": 2611827,
+      "started": "2026-10-10T12:13:26.354803902Z",
+      "memory_limit_bytes": 120259084288,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_unit_a-199dc0b71-tc-cl/cl/fplint/route.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_unit_a-199dc0b71-tc-cl/src",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_su_unit_a-199dc0b71-tc-cl/routes/hgi_adp_su_unit_a_199dc0b71_tc_cl/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "1397198848",
+        "memory.peak": "1505452032",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "56e4e4b3e8a313c1e8e742650edece3916a3c0213859c63e4f24de1e330f0d20",
+      "name": "/dazzling_napier",
+      "pid": 2609019,
+      "started": "2026-10-10T12:11:37.529492632Z",
+      "memory_limit_bytes": 0,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl/eco-codex4/pass1",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/src",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base"
+      ],
+      "cgroup": {
+        "memory.current": "14836936704",
+        "memory.peak": "14837059584",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "f6a18df03b37185fff961ca82edac4e4c2db7f7bd35482a86b446d0c35b7fbce",
+      "name": "/awesome_snyder",
+      "pid": 2564870,
+      "started": "2026-10-10T11:45:25.050742812Z",
+      "memory_limit_bytes": 137438953472,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_pub_a-8086a2e91-tc-cl/cl/fplint/calibrate.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_pub_a-8086a2e91-tc-cl/src",
+        "/srv/opentallas-scratch/claude/closure-loop/hgi_adp_pub_a-8086a2e91-tc-cl/routes/hgi_adp_pub_a_8086a2e91_tc_cl_cal/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "7439564800",
+        "memory.peak": "7968350208",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "01b08b819a3fc0d7b8f5e5d47d9a40dcedf07f09ac95a00ac2e0ce08ebbc39d1",
+      "name": "/adoring_solomon",
+      "pid": 2515590,
+      "started": "2026-10-10T10:58:19.070407019Z",
+      "memory_limit_bytes": 137438953472,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl/eco/pass1",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/src"
+      ],
+      "cgroup": {
+        "memory.current": "15031451648",
+        "memory.peak": "15824977920",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "09757a3c9011bde222ba695f7b190e9ce5b71c5c6d0200870828ed1bdfda7793",
+      "name": "/flamboyant_lamport",
+      "pid": 2503280,
+      "started": "2026-10-10T10:51:22.553052142Z",
+      "memory_limit_bytes": 137438953472,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_b-765c8c422-tc-hm10-cl2/cl/fplint/route.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_b-765c8c422-tc-hm10-cl2/src",
+        "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_b-765c8c422-tc-hm10-cl2/routes/qkd_d2d_b_765c8c422_tc_hm10_cl2/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "8537882624",
+        "memory.peak": "9725902848",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "fa615cb83ef883ea1bac359b8b0093b2e6d9a1a70791ce515f6c9914faa472d1",
+      "name": "/upbeat_hofstadter",
+      "pid": 3759513,
+      "started": "2026-10-10T10:47:39.5894465Z",
+      "memory_limit_bytes": 0,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl/eco-sca/pass1",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/src",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl"
+      ],
+      "cgroup": {
+        "memory.current": "14953611264",
+        "memory.peak": "14953877504",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "32c833c9970af0f52f0d4336f0456376d55358423fd46891409d53550d206840",
+      "name": "/vibrant_curran",
+      "pid": 3759265,
+      "started": "2026-10-10T10:47:37.06061772Z",
+      "memory_limit_bytes": 0,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl/eco-scb/pass1",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/src",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/cl",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base",
+        "/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl/routes/bfa_full_a_948dc49b1_cl/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfa_full_a_948dc49b1_cl/base"
+      ],
+      "cgroup": {
+        "memory.current": "14946734080",
+        "memory.peak": "15132258304",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "20b8d9a913bbf8cfc5c48196457efc4bef5adfbae45d6e059430763ccf786c5d",
+      "name": "/awesome_hopper",
+      "pid": 355804,
+      "started": "2026-10-10T10:24:09.873669736Z",
+      "memory_limit_bytes": 171798691840,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/cl/fplint/route.a1",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/src",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/routes/s81b_selt_q2_frprck2b_1dc5e37d5_tc_rd/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "1703256064",
+        "memory.peak": "1846398976",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    {
+      "id": "1fb96747c25a97088b46aa80688b65e54cdeb37b90c2bd20f0d8824c9bd3b85e",
+      "name": "/dazzling_jackson",
+      "pid": 4123031,
+      "started": "2026-10-10T10:21:10.686203201Z",
+      "memory_limit_bytes": 171798691840,
+      "mounts": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/cl/fplint/calibrate.a1c1",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/src",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd/routes/s81b_selt_q2_frprck2b_1dc5e37d5_tc_rd_cal/work/orfs"
+      ],
+      "cgroup": {
+        "memory.current": "1702711296",
+        "memory.peak": "1843351552",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    }
+  ],
+  "large_processes": [
+    {
+      "pid": 356241,
+      "name": "openroad",
+      "rss_kib": 1655452,
+      "hwm": "1699148 kB",
+      "ppid": "356240",
+      "cwd": "/proc/356241/cwd"
+    },
+    {
+      "pid": 2515590,
+      "name": "openroad",
+      "rss_kib": 14659260,
+      "hwm": "14689948 kB",
+      "ppid": "2515567",
+      "cwd": "/proc/2515590/cwd"
+    },
+    {
+      "pid": 2565344,
+      "name": "yosys",
+      "rss_kib": 5886940,
+      "hwm": "6348056 kB",
+      "ppid": "2565343",
+      "cwd": "/proc/2565344/cwd"
+    },
+    {
+      "pid": 2584403,
+      "name": "yosys-abc",
+      "rss_kib": 1353304,
+      "hwm": "1683520 kB",
+      "ppid": "2565344",
+      "cwd": "/proc/2584403/cwd"
+    },
+    {
+      "pid": 2609019,
+      "name": "openroad",
+      "rss_kib": 14474924,
+      "hwm": "14474924 kB",
+      "ppid": "2608995",
+      "cwd": "/proc/2609019/cwd"
+    },
+    {
+      "pid": 2612173,
+      "name": "openroad",
+      "rss_kib": 8324064,
+      "hwm": "8324064 kB",
+      "ppid": "2612171",
+      "cwd": "/proc/2612173/cwd"
+    },
+    {
+      "pid": 2615733,
+      "name": "openroad",
+      "rss_kib": 1030440,
+      "hwm": "1030440 kB",
+      "ppid": "2615732",
+      "cwd": "/proc/2615733/cwd"
+    },
+    {
+      "pid": 2627746,
+      "name": "openroad",
+      "rss_kib": 578564,
+      "hwm": "578564 kB",
+      "ppid": "2627709",
+      "cwd": "/proc/2627746/cwd"
+    },
+    {
+      "pid": 2627851,
+      "name": "openroad",
+      "rss_kib": 579116,
+      "hwm": "579116 kB",
+      "ppid": "2627765",
+      "cwd": "/proc/2627851/cwd"
+    },
+    {
+      "pid": 2628254,
+      "name": "openroad",
+      "rss_kib": 545964,
+      "hwm": "545964 kB",
+      "ppid": "2628230",
+      "cwd": "/proc/2628254/cwd"
+    },
+    {
+      "pid": 3759265,
+      "name": "openroad",
+      "rss_kib": 14571560,
+      "hwm": "14602080 kB",
+      "ppid": "3759243",
+      "cwd": "/proc/3759265/cwd"
+    },
+    {
+      "pid": 3759513,
+      "name": "openroad",
+      "rss_kib": 14580380,
+      "hwm": "14609904 kB",
+      "ppid": "3759491",
+      "cwd": "/proc/3759513/cwd"
+    },
+    {
+      "pid": 4123856,
+      "name": "openroad",
+      "rss_kib": 1654924,
+      "hwm": "1704760 kB",
+      "ppid": "4123855",
+      "cwd": "/proc/4123856/cwd"
+    }
+  ],
+  "kernel_oom_excerpt": "Oct 10 05:17:45 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-1656a391ec4a4d8f0dbf7c7a62b770633725efca7e5dc786004c74a0727afb21.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2542903,uid=1000\nOct 10 05:17:45 vm-xry57mhfyn kernel: Out of memory: Killed process 2542903 (python3) total-vm:48660kB, anon-rss:25608kB, file-rss:1648kB, shmem-rss:0kB, UID:1000 pgtables:136kB oom_score_adj:500\nOct 10 05:17:52 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=polkit.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2610026,uid=1000\nOct 10 05:17:52 vm-xry57mhfyn kernel: Out of memory: Killed process 2610026 (python3) total-vm:46296kB, anon-rss:24132kB, file-rss:1656kB, shmem-rss:0kB, UID:1000 pgtables:128kB oom_score_adj:500\nOct 10 05:17:53 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-387d031055b0f7fff83a0c0ac16ad6e79baa33cbb523ee89fa28718dff4f14e8.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2598676,uid=1000\nOct 10 05:17:53 vm-xry57mhfyn kernel: Out of memory: Killed process 2598676 (python3) total-vm:43096kB, anon-rss:20660kB, file-rss:1620kB, shmem-rss:0kB, UID:1000 pgtables:124kB oom_score_adj:500\nOct 10 05:17:54 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=containerd.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=3743799,uid=1000\nOct 10 05:17:54 vm-xry57mhfyn kernel: Out of memory: Killed process 3743799 (python3) total-vm:41836kB, anon-rss:19088kB, file-rss:1648kB, shmem-rss:0kB, UID:1000 pgtables:116kB oom_score_adj:500\nOct 10 05:19:17 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=ssh.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2603983,uid=1000\nOct 10 05:19:17 vm-xry57mhfyn kernel: Out of memory: Killed process 2603983 (python3) total-vm:41712kB, anon-rss:18540kB, file-rss:1652kB, shmem-rss:0kB, UID:1000 pgtables:120kB oom_score_adj:500\nOct 10 05:19:18 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=user.slice,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2601058,uid=1000\nOct 10 05:19:18 vm-xry57mhfyn kernel: Out of memory: Killed process 2601058 (python3) total-vm:41708kB, anon-rss:18552kB, file-rss:1608kB, shmem-rss:0kB, UID:1000 pgtables:116kB oom_score_adj:500\nOct 10 05:19:18 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=containerd.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2614780,uid=1000\nOct 10 05:19:18 vm-xry57mhfyn kernel: Out of memory: Killed process 2614780 (python3) total-vm:41456kB, anon-rss:14744kB, file-rss:1648kB, shmem-rss:0kB, UID:1000 pgtables:112kB oom_score_adj:500\nOct 10 05:19:19 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-1656a391ec4a4d8f0dbf7c7a62b770633725efca7e5dc786004c74a0727afb21.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2614791,uid=1000\nOct 10 05:19:19 vm-xry57mhfyn kernel: Out of memory: Killed process 2614791 (python3) total-vm:41448kB, anon-rss:14736kB, file-rss:1644kB, shmem-rss:0kB, UID:1000 pgtables:116kB oom_score_adj:500\nOct 10 05:19:20 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2614790,uid=1000\nOct 10 05:19:20 vm-xry57mhfyn kernel: Out of memory: Killed process 2614790 (python3) total-vm:43764kB, anon-rss:14744kB, file-rss:1616kB, shmem-rss:0kB, UID:1000 pgtables:124kB oom_score_adj:500\nOct 10 05:19:20 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2514035,uid=1000\nOct 10 05:19:20 vm-xry57mhfyn kernel: Out of memory: Killed process 2514035 (python3) total-vm:31880kB, anon-rss:14292kB, file-rss:1660kB, shmem-rss:0kB, UID:1000 pgtables:100kB oom_score_adj:500\nOct 10 05:19:22 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-1656a391ec4a4d8f0dbf7c7a62b770633725efca7e5dc786004c74a0727afb21.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=docker,pid=2515548,uid=1000\nOct 10 05:19:22 vm-xry57mhfyn kernel: Out of memory: Killed process 2515548 (docker) total-vm:3177904kB, anon-rss:10108kB, file-rss:1212kB, shmem-rss:0kB, UID:1000 pgtables:412kB oom_score_adj:500\nOct 10 05:21:03 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-1656a391ec4a4d8f0dbf7c7a62b770633725efca7e5dc786004c74a0727afb21.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=docker,pid=2564828,uid=1000\nOct 10 05:21:03 vm-xry57mhfyn kernel: Out of memory: Killed process 2564828 (docker) total-vm:3178160kB, anon-rss:10084kB, file-rss:1212kB, shmem-rss:0kB, UID:1000 pgtables:408kB oom_score_adj:500\nOct 10 05:21:03 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=init.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=docker,pid=2599711,uid=1000\nOct 10 05:21:03 vm-xry57mhfyn kernel: Out of memory: Killed process 2599711 (docker) total-vm:2957220kB, anon-rss:9960kB, file-rss:1212kB, shmem-rss:0kB, UID:1000 pgtables:384kB oom_score_adj:500\nOct 10 05:21:03 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=python3,pid=2578730,uid=1000\nOct 10 05:21:03 vm-xry57mhfyn kernel: Out of memory: Killed process 2578730 (python3) total-vm:20444kB, anon-rss:5056kB, file-rss:1532kB, shmem-rss:0kB, UID:1000 pgtables:76kB oom_score_adj:500\nOct 10 05:21:03 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=systemd-journald.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=tail,pid=2614945,uid=1000\nOct 10 05:21:03 vm-xry57mhfyn kernel: Out of memory: Killed process 2614945 (tail) total-vm:17400kB, anon-rss:1160kB, file-rss:1656kB, shmem-rss:0kB, UID:1000 pgtables:80kB oom_score_adj:500\nOct 10 05:21:04 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=containerd.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=bash,pid=2578674,uid=1000\nOct 10 05:21:04 vm-xry57mhfyn kernel: Out of memory: Killed process 2578674 (bash) total-vm:8604kB, anon-rss:896kB, file-rss:1404kB, shmem-rss:0kB, UID:1000 pgtables:60kB oom_score_adj:500\nOct 10 05:21:04 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=systemd-journald.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=bash,pid=68909,uid=1000\nOct 10 05:21:04 vm-xry57mhfyn kernel: Out of memory: Killed process 68909 (bash) total-vm:8092kB, anon-rss:452kB, file-rss:1404kB, shmem-rss:0kB, UID:1000 pgtables:56kB oom_score_adj:500\nOct 10 05:21:04 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=ssh.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=bash,pid=2578254,uid=1000\nOct 10 05:21:04 vm-xry57mhfyn kernel: Out of memory: Killed process 2578254 (bash) total-vm:8092kB, anon-rss:352kB, file-rss:1400kB, shmem-rss:0kB, UID:1000 pgtables:52kB oom_score_adj:500\nOct 10 05:21:04 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-87826.scope,task=bash,pid=68037,uid=1000\nOct 10 05:21:04 vm-xry57mhfyn kernel: Out of memory: Killed process 68037 (bash) total-vm:7960kB, anon-rss:288kB, file-rss:1404kB, shmem-rss:0kB, UID:1000 pgtables:60kB oom_score_adj:500\nOct 10 05:21:08 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/user@1000.service/session.slice/dbus.service,task=dbus-daemon,pid=2591672,uid=1000\nOct 10 05:21:08 vm-xry57mhfyn kernel: Out of memory: Killed process 2591672 (dbus-daemon) total-vm:8316kB, anon-rss:368kB, file-rss:2056kB, shmem-rss:0kB, UID:1000 pgtables:60kB oom_score_adj:200\nOct 10 05:21:10 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-1656a391ec4a4d8f0dbf7c7a62b770633725efca7e5dc786004c74a0727afb21.scope,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41.scope,task=openroad,pid=2594609,uid=0\nOct 10 05:21:10 vm-xry57mhfyn kernel: Out of memory: Killed process 2594609 (openroad) total-vm:18018696kB, anon-rss:17314732kB, file-rss:292kB, shmem-rss:0kB, UID:0 pgtables:34392kB oom_score_adj:0",
+  "full_kernel_capture_sha256": "b1449fdf9383601f8fcf51b8640251f633e01384a78672d563ca052187b2dfff",
+  "full_kernel_capture_path": "/home/ubuntu/codex-takeover-20261010/fleet/agidock_global_oom_20261010.json",
+  "job_identity_records": [
+    {
+      "name": "hgi_adp_su_unit_a-199dc0b71-tc-cl",
+      "status": "RUNNING",
+      "stage_key": "route",
+      "stage_started": "2026-10-10T05:27:28-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "codex/hbm-flow-20261010",
+        "commit": "199dc0b7197c2693ac9f97871f544486fac84d52",
+        "extra_paths": [
+          "results/rtl/hgi_su_ctl_pin_return_20261010"
+        ]
+      },
+      "declared_peak_ram_gb": 16,
+      "stage_peak_ram_gb": null
+    },
+    {
+      "name": "hgi_adp_su_ctl_a-849012083-prst0-cl",
+      "status": "READY",
+      "stage_key": "calibrate",
+      "stage_started": "2026-10-10T05:25:10-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "codex/hbm-flow-20261010",
+        "commit": "849012083c17bb6d4b640b761d09fb91ffd01d4b",
+        "extra_paths": [
+          "results/rtl/hgi_su_ctl_reset_payload_20261010"
+        ]
+      },
+      "declared_peak_ram_gb": 16,
+      "stage_peak_ram_gb": 16
+    },
+    {
+      "name": "hgi_adp_pub_a-8086a2e91-tc-cl",
+      "status": "NEEDS_HUMAN",
+      "stage_key": "calibrate",
+      "stage_started": "2026-10-10T04:28:19-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "claude/hgi-adapters-20261009",
+        "commit": "8086a2e91be61ee26e74e29b96c464e88fb77857"
+      },
+      "declared_peak_ram_gb": 32,
+      "stage_peak_ram_gb": 32
+    },
+    {
+      "name": "qkd_d2d_b-765c8c422-tc-hm10-cl2",
+      "status": "RUNNING",
+      "stage_key": "route",
+      "stage_started": "2026-10-10T05:29:59-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "claude/kv-die-20261009",
+        "commit": "765c8c422",
+        "required_files": [
+          "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+          "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+          "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+          "physical/qwen_die_masters/cfg/qkd_d2d_b.env",
+          "physical/qwen_die_masters/signoff/qkd_d2d_b.sdc",
+          "results/arch/qwen_kv_die_20261009/bench.json"
+        ],
+        "extra_paths": [
+          "results/arch/qwen_kv_die_20261009"
+        ]
+      },
+      "declared_peak_ram_gb": 24,
+      "stage_peak_ram_gb": 32
+    },
+    {
+      "name": "hgi_adp_su_ctl_b-849012083-prst0-cl",
+      "status": "READY",
+      "stage_key": "calibrate",
+      "stage_started": "2026-10-10T05:25:10-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "codex/hbm-flow-20261010",
+        "commit": "849012083c17bb6d4b640b761d09fb91ffd01d4b",
+        "extra_paths": [
+          "results/rtl/hgi_su_ctl_reset_payload_20261010"
+        ]
+      },
+      "declared_peak_ram_gb": 16,
+      "stage_peak_ram_gb": 16
+    },
+    {
+      "name": "s81b-selt_q2-frprck2b-1dc5e37d5-tc-rd",
+      "status": "RUNNING",
+      "stage_key": "route",
+      "stage_started": "2026-10-10T05:27:29-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "claude/redesign-ds-selq2-20261009",
+        "commit": "1dc5e37d5476277c7413c341b42e09d2dd405bd5"
+      },
+      "declared_peak_ram_gb": 40,
+      "stage_peak_ram_gb": null
+    },
+    {
+      "name": "qfd_res_slot-3eb23e910-tc-hm0",
+      "status": "CANCELLED",
+      "stage_key": "route",
+      "stage_started": "2026-10-10T05:26:17-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "codex/res-ser-tiles-20261010",
+        "commit": "3eb23e9101f6502aab732c6f0c5cba27ef4b47cf"
+      },
+      "declared_peak_ram_gb": 24,
+      "stage_peak_ram_gb": 24
+    },
+    {
+      "name": "bfa_full_a_948dc49b1-cl",
+      "status": "NEEDS_RTL",
+      "stage_key": "summary",
+      "stage_started": "2026-10-10T05:23:26-07:00",
+      "hosts": null,
+      "source_commit": null,
+      "source": {
+        "branch": "claude/bf-arch-20261009",
+        "commit": "948dc49b1117040aae4ba7c98c9eda2016e2a5cf"
+      },
+      "declared_peak_ram_gb": 60,
+      "stage_peak_ram_gb": null
+    }
+  ],
+  "admission_policy": {
+    "source_commit": "c30f01fe2857ee6a19bce6638179fe42b4084e7c",
+    "source_file": "tools/closure_loop/closure_loop.py",
+    "safety_gb": 16,
+    "agidock_safety_gb": 2,
+    "pending_ram_window_s": 180,
+    "pending_ram_subtracted": false,
+    "external_remaining_peak_subtracted": false,
+    "source_policy": "Owner drive-resume actual MemAvailable >= job request + fixed safety; future-growth reservations prohibited."
+  },
+  "findings": [
+    "Kernel CONSTRAINT_NONE/global_oom proves host-wide capacity exhaustion, not individual memory.max failure.",
+    "Four BF ECO containers are live while their shared job state is NEEDS_RTL; state-only own_running tracking cannot represent them.",
+    "Publication calibration remains live while its job state is NEEDS_HUMAN; cancelled qfd_res_slot has a live container. Neither can be treated as absent.",
+    "At this snapshot all surviving cgroup memory.events oom/oom_kill counters are zero; deceased PCMUX kernel record remains immutable.",
+    "Pending launch claims are calculated but not subtracted by current _fits; multiple admissions can use the same cached MemAvailable before child growth."
+  ],
+  "recommendation": "Preserve all progressing containers. Hold new large AGIdock admissions until measured actual container/job inventory fits the request. An explicit short pending-launch accounting change requires owner-policy reconciliation; do not silently impose future-growth reserves or guessed per-job caps. Invalidate cached host measurement after launching and include orphan/sidecar identities in operational inventory."
+}

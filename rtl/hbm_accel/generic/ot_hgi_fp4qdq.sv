@@ -29,14 +29,15 @@
 // Stages: S0 input register; S1 |x| and 16 -> 4 per block; S2 4 -> 1; S2b the
 // floor; S3 scale; S4 thresholds; S5 codes; S6 outputs (registers).
 // ---------------------------------------------------------------------------
-module ot_hgi_fp4qdq (
+module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
     input  wire [1023:0] x,
     output reg           vo,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    output wire [264:0]  packed_word
 );
     localparam [30:0] FLOOR = 31'h3c400000;   // float32(6 * 2^-9)
     localparam [30:0] SUBN  = 31'h3dc00000;   // float32(6 * 2^-6): below it s is subnormal E4M3
@@ -241,6 +242,26 @@ module ot_hgi_fp4qdq (
             s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
+
+    // Preserve original quantizer provenance, aligned with S6 y/vo. No re-quantization.
+    function automatic [7:0] packed_scale(input [4:0] n, input signed [9:0] qs);
+        begin
+            if (qs == -10'sd9 && n < 5'd8) packed_scale = {5'd0,n[2:0]};
+            else if (n == 5'd16) packed_scale = {1'b0,4'(qs+10'sd11),3'd0};
+            else packed_scale = {1'b0,4'(qs+10'sd10),n[2:0]};
+        end
+    endfunction
+    generate if(PACKED) begin : g_packed
+        reg [143:0] meta; integer k;
+        always @(posedge clk) begin
+            meta[135:128] <= packed_scale(s5_n[0],s5_qs[0]);
+            meta[143:136] <= packed_scale(s5_n[1],s5_qs[1]);
+            for(k=0;k<32;k=k+1) meta[4*k +:4] <= {s5_sgn[k],s5_c[k]};
+        end
+        assign packed_word = {1'b1,120'd0,meta};
+    end else begin : g_no_packed
+        assign packed_word = 265'd0;
+    end endgenerate
 
     // -- S6: BF16 of sign * E2M1[code] * n * 2^qs --------------------------------------------
     reg [7:0]         r;

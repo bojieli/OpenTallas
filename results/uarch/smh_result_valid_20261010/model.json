@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.smh-result-valid.v1",
+  "opt_in_default": false,
+  "master": "ot_hbm_accel_smh_front_s",
+  "columns": 8,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "existing_result_bits_per_cycle": 368,
+  "added_boundary_bits_per_cycle": 0,
+  "added_data_registers": 0,
+  "qualification_and_gates": 8,
+  "reduction_gate_upper_bound": 32,
+  "replicas": 1,
+  "mux_demux_cost": 0,
+  "control_fanout_max": 2,
+  "local_routing_tracks_upper_bound": 24,
+  "floorplan_slot_fit": "existing south-front result landing; <=5*columns small gates, physical route required",
+  "added_cycles": 0,
+  "token_latency_added_ns": 0.0,
+  "correctness": "fault only with own-column valid; row retires only with all columns valid; any partial valid vector raises fault",
+  "physical_gate": "refresh full NC8 front_s timing/DRC with RESULT_VALID=1; unchanged BE/tile closures do not qualify it"
+}

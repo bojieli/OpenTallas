@@ -1,0 +1,47 @@
+{
+  "status": "EXACT_BENCH_PASS_NOT_PHYSICALLY_QUALIFIED",
+  "model_source_commit": "3d92eae58",
+  "rtl_sha256": "36c225129cffa6db0f36fd50fbb027f8a0b492903a711298628b1ea35ac8b91f",
+  "shape": {
+    "sources": 4,
+    "entries_each": 8,
+    "payload_bits": 340,
+    "outputs": 1468
+  },
+  "instances": 1,
+  "transactions": 217,
+  "completed": 217,
+  "readbeats": 277,
+  "latency": "PREG: all outputs equal input-registered core at same edge; OREG default one-edge later",
+  "records": {
+    "pos": {
+      "log": "pos.log",
+      "sha256": "bfcc5745d80fc3f83e21cc3d49a819704da58057eb8408a11b428ecda5f434b8",
+      "expect": "pass",
+      "cycles": 3504,
+      "mismatches": 0
+    },
+    "default": {
+      "log": "default.log",
+      "sha256": "bfcc5745d80fc3f83e21cc3d49a819704da58057eb8408a11b428ecda5f434b8",
+      "expect": "pass",
+      "cycles": 3504,
+      "mismatches": 0
+    },
+    "neg_data": {
+      "log": "neg_data.log",
+      "sha256": "f376522df8df6cd87cbec1c581504df3e302eb7456c8c54f818f863e2ca3adf4",
+      "expect": "fail",
+      "cycles": 3504,
+      "mismatches": 217
+    },
+    "neg_credit": {
+      "log": "neg_credit.log",
+      "sha256": "8c526b8a9559a1e79e47dc8d1f226491c6ca97a19147dbc1eadae076065a1222",
+      "expect": "fail",
+      "cycles": 3504,
+      "mismatches": 434
+    }
+  },
+  "physical_adoption": false
+}

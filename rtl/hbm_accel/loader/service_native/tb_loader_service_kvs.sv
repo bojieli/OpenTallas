@@ -37,7 +37,7 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,CONCURRENT=0,KNO=15,XS
     .w_v(), .w_rdy(1'b0), .w_addr(), .w_len(), .w_tag(), .w_room(8'd0), .wr_v(8'd0), .wr_rdy(), .wr_tag(80'd0),
     .wr_beat(40'd0), .wr_data(2048'd0), .wq_d(292'd0), .wq_fclk(1'b0), .wq_g(), .k_wr_done(k_wr_done),
     .kvs(kvs), .kvs_done(kvs_done),
-    .outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'hbeef),
+    .outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'hbeef),.native_len(4'd1),
     .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_tag(native_rsp_tag),.native_rsp_data(native_rsp_data),.native_fault(native_fault));
   ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(30), .DW(256), .MEM_WORDS(1024), .TAGW(17), .LENW(4), .BEATW(4),
     .QD(64), .REFPB(3), .MEM_MODE(1), .CLK_PS(TCK)) u_m (

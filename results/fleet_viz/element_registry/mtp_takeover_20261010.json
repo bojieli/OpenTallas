@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsrom_mtp_head_full340_A",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T11:59:08.952812+00:00",
+      "description": "Production wrapper exists (85 bundles,340 Markov engines); released-weight NB4/405-row ring-delay gate PASS and three mutants FAIL. rg1a/rg1s component routes live; complete head-die master/inventory binding remains open.",
+      "source": {
+        "commit": "8ab941dbd",
+        "paths": [
+          "tools/mtp_die_reprice.py",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented wrapper; full physical composition pending",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv",
+          "tools/dsrom_markov_head_full340_gate.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "component subset passed (NB4/405 rows)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_pos/verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "passed (three mutants fail)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut1/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut2/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mutring/verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending (component evidence cannot close die composition)",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "mtp-head340-mkdrv-rg1a-21471e786-tc or rg1s component closure",
+        "340-engine hardened full head inventory and buses",
+        "full typed BF inventory and full wrapper composition"
+      ],
+      "integration": {
+        "status": "full die unbound; component routes in progress",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T11:59:08.952941+00:00",
+      "description": "Actual NW21 ports now bind directed buses513/1/648/2/47/37 bits (1248 total). Historical head631 incorrectly includes reverse grants in forward chains and must regenerate. Closed sequencer component does not qualify native identity composition.",
+      "source": {
+        "commit": "45b6394cc",
+        "paths": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "directed bus model corrected; historical die chains stale",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "tools/dsrom_s81_fulldie.py",
+          "tools/mtp_native_binding_audit.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending (component evidence cannot close die composition)",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "regenerated head die with separate reverse grant chains",
+        "seed/draft native endpoints",
+        "verify causal path",
+        "rollback committed-state join",
+        "full production head inventory and routed timing"
+      ],
+      "integration": {
+        "status": "directed port contract passed; historical floorplan binding fails until regenerated; native identity composition pending",
+        "evidence": [
+          "results/rtl/mtp_takeover_20261010/native_directed_bus_binding_verified.json"
+        ]
+      }
+    },
+    {
+      "element": "ot_dsrom_markov_row_K256_PINREG1",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T12:18:40.670270+00:00",
+      "description": "Legacy PINREG1 row closure superseded in execution by the full-K256 Markov head driver with IOREG1/RINGDLY1. rg1a/rg1s remain live; pin1a adds owner-standard pin anchoring and face-midpoint clock. Physical successor adoption pending; no closed alias yet.",
+      "source": {
+        "commit": "ef227c660",
+        "paths": [
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv",
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv",
+          "physical/dsrom_markov_head_driver/route.sh"
+        ]
+      },
+      "implementation": {
+        "status": "implemented in production driver; successor physical jobs active",
+        "evidence": [
+          "physical/dsrom_markov_head_driver/route.sh",
+          "tools/closure_loop/jobs/mtp-head340-mkdrv-pin1a-ef227c660-tc.json"
+        ]
+      },
+      "model": {
+        "status": "sized (K256,32 rows per driver,340 replicas)",
+        "evidence": [
+          "tools/dsrom_markov_model.py",
+          "results/rtl/mtp_takeover_20261010/head_pin_anchor_model.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "released-weight driver context passed; full K256",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_pos/verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "passed (three mutants fail)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut1/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut2/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mutring/verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending successor closure",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "ot_dsrom_markov_head_driver TT setup/FF hold/DRC closure at full K256",
+        "source-pinned successor view export",
+        "full340 head die inventory and identity join"
+      ],
+      "integration": {
+        "status": "successor driver binding planned; no physical adoption",
+        "evidence": [
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv"
+        ]
+      }
+    },
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T12:26:01.519000+00:00",
+      "description": "Regenerated head631/headp2 pass actual six directed bus bindings (1248 bits). Geometry fits and is legal; margin lint FAIL remains immutable. Native identity/credit/physical integration remains OPEN.",
+      "source": {
+        "commit": "ef227c660",
+        "paths": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "directed bus model and both historical head recipes regenerated",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "tools/dsrom_s81_fulldie.py",
+          "tools/mtp_native_binding_audit.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending (component evidence cannot close die composition)",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "seed/draft native endpoints",
+        "verify causal path",
+        "rollback committed-state join",
+        "full production head inventory and routed timing",
+        "RTT credit successor and option1 die-source qualified endpoint integration"
+      ],
+      "integration": {
+        "status": "six-chain generated binding PASS; full native identity composition OPEN",
+        "evidence": [
+          "results/rtl/mtp_takeover_20261010/head631_native_binding_verified.json",
+          "results/rtl/mtp_takeover_20261010/headp2_native_binding_verified.json",
+          "results/rtl/mtp_takeover_20261010/head_recipe_regeneration.json"
+        ]
+      }
+    }
+  ]
+}

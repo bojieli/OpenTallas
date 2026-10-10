@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenTallas Codex takeover deadline
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ubuntu/OpenTallas
+ExecStart=/usr/bin/python3 /home/ubuntu/OpenTallas/tools/takeover/cadence.py deadline

@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+"""One SU tile with physical falling-edge output lockups for clock-root hops.
+
+Same lane arithmetic and same receiving-edge values as the positive-edge tile.
+Each output becomes visible half a cycle later. No whole-cycle latency added.
+"""
+import argparse,json,sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+import hbm_hub_quarter_gen as H
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--ports');a=ap.parse_args()
+    # The tile bit shape is invariant under the quarter face geometry.
+    q=dict(H.QUARTERS['su']);ports=json.loads(Path(a.ports).read_text()) if a.ports else {'ports':{'in':{'direction':'input','bits':6310},'out':{'direction':'output','bits':5376}}};p=H.Plan(q,ports)
+    p.tiled=True
+    s=H.emit_tile_xl(p)
+    out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+    (out/'hfd_su_tile_xl.sv').write_text(s)
+    (out/'hfd_su_tile.sv').write_text(H.emit_tile(p))
+    (out/'ot_su12_light_simstub.sv').write_text(H.emit_stub(p))
+    tw,th=187.056,164.16
+    (out/'io_place.tcl').write_text(H.emit_tile_io(p,tw,th))
+    (out/'macro_place.tcl').write_text('place_macro -macro_name {u_lane} -location {100.224 1.080} -orientation R0 -exact\n')
+    (out/'tile.json').write_text(json.dumps(dict(master='hfd_su_tile_xl',w_um=tw,h_um=th,LB=p.LB,LO=p.LO,WCT=p.WCT,registered_bits=p.LB+1+p.LO+p.WCT,lockup_bits=p.LB+1+p.WCT,data_cycles_added=0,visibility_half_cycles_added=1),indent=2)+'\n')
+if __name__=='__main__':main()

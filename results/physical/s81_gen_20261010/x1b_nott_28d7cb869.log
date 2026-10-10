@@ -1,0 +1,464 @@
+src /srv/opentallas-scratch/claude/s81-gen/src_28d7cb869 opts /srv/opentallas-scratch/claude/s81-gen/x1b_nott.opts extra 
+2026-10-10T11:40:12Z
+{
+ "instances": 59265,
+ "overlaps": 0,
+ "overlap_examples": [],
+ "outside": 0,
+ "outside_examples": []
+}
+{"generated_pin_clashes": 0, "examples": [], "k16_clashes": 0, "k16_examples": []}
+{
+ "slot": {
+  "elem_frame_h_um": 198.72,
+  "q_elem_frame_h_um": 221.4,
+  "frame_h_um": 2646.0,
+  "slot_h_um": 280.8,
+  "slots_per_column": 9,
+  "capacity": {
+   "elem_frame_h_um": 198.72,
+   "q_elem_frame_h_um": 221.4,
+   "frame_h_um": 2646.0,
+   "slot_h_um": 280.8,
+   "slots_per_column": 9,
+   "columns": 128,
+   "max_pairs_per_layer_die": 1792,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 438,
+   "extra_layer_dies": 114,
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 41057.3
+   },
+   "bf_per_region_flavours": {
+    "4": {
+     "max_pairs": 1792,
+     "bf": 512,
+     "slots_per_column": 9,
+     "slot_h_um": 280.8
+    },
+    "0": {
+     "max_pairs": 2048,
+     "bf": 0,
+     "slots_per_column": 8,
+     "slot_h_um": 280.8
+    }
+   }
+  }
+ },
+ "instances": {
+  "bf": 512,
+  "cfg": 12544,
+  "seq": 1792,
+  "q": 1280,
+  "sstn": 1152,
+  "qbank": 3840,
+  "node": 3456,
+  "cfifo": 128,
+  "pqstn": 256,
+  "pqroot": 128,
+  "hub": 11,
+  "pqrom": 3,
+  "phy": 1,
+  "ctrl": 1,
+  "svc": 1,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 256,
+  "rly": 31360,
+  "hend": 31,
+  "stn": 2208,
+  "hstn": 285,
+  "xstg": 2,
+  "lkck": 8
+ },
+ "placed_footprint_mm2": 417.86,
+ "utilisation": {
+  "placed_over_die": 0.487,
+  "field_frames_mm2": 400.61
+ },
+ "forwarded": {
+  "stations": 2208,
+  "ot_fwd_link_stage_instances": 6535,
+  "chains": 86,
+  "max_hop_um": 430.3,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 269,
+  "ratio_cdc_fifos": 6
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 73,
+  "cycles": 164,
+  "x_trunk_stages": 62,
+  "column_slot_stages": 9,
+  "root_stages": 2,
+  "return_trunk_stages": 60,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 4,
+  "hop_fix": {
+   "classes": {
+    "cfg": {
+     "hops": 7424,
+     "stations": 0,
+     "max_um": 455.4,
+     "max_added": 0
+    },
+    "go": {
+     "hops": 3456,
+     "stations": 0,
+     "max_um": 425.8,
+     "max_added": 0
+    },
+    "rom_a": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 309.5,
+     "max_added": 0
+    },
+    "rom_ce": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 311.1,
+     "max_added": 0
+    },
+    "rom_q": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 312.5,
+     "max_added": 0
+    },
+    "x_lane": {
+     "hops": 3200,
+     "stations": 0,
+     "max_um": 353.1,
+     "max_added": 0
+    },
+    "x_ctl": {
+     "hops": 1408,
+     "stations": 0,
+     "max_um": 471.4,
+     "max_added": 0
+    },
+    "pad_fallback": {
+     "hops": 0,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0,
+     "frame_out": 128,
+     "nxt_relaxed": 384,
+     "relaxed_die": 384,
+     "die": 3,
+     "0": 1
+    },
+    "stat": {
+     "hops": 1408,
+     "stations": 128,
+     "max_um": 544.9,
+     "max_added": 1
+    },
+    "ret_leaf": {
+     "hops": 4352,
+     "stations": 1792,
+     "max_um": 933.6,
+     "max_added": 1
+    },
+    "lane": {
+     "hops": 87,
+     "stations": 97,
+     "max_um": 1032.9,
+     "max_added": 2
+    },
+    "local": {
+     "hops": 17,
+     "stations": 20,
+     "max_um": 785.9,
+     "max_added": 2
+    },
+    "lane:no_fclk": {
+     "hops": 28,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0
+    },
+    "hub": {
+     "hops": 35,
+     "stations": 36,
+     "max_um": 272.2,
+     "max_added": 2
+    }
+   },
+   "planned_hops": 48295,
+   "fwd_rt_add": 2,
+   "reach_um": {
+    "common_clock": 500.0,
+    "forwarded": 430.56,
+    "tt_exception": null
+   },
+   "tt_reach_relays": []
+  },
+  "q_bank_stages": 2,
+  "column_relays_x": 1,
+  "column_relays_return": 15,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ }
+}
+{
+ "margin_lint": {
+  "mode": "edges",
+  "chains": 61455,
+  "reach_um": 504.0,
+  "reach_violations": 384,
+  "far_side_relays": 3593,
+  "reach_examples": [
+   {
+    "chain": "g_rt_127_8b_y0_y_rt_127_8b_0_0->y_rt_127_8b_0",
+    "seg": "g_rt_127_8b_y0_y_rt_127_8b_0_0->y_rt_127_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_126_8b_y0_y_rt_126_8b_0_0->y_rt_126_8b_0",
+    "seg": "g_rt_126_8b_y0_y_rt_126_8b_0_0->y_rt_126_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_125_8b_y0_y_rt_125_8b_0_0->y_rt_125_8b_0",
+    "seg": "g_rt_125_8b_y0_y_rt_125_8b_0_0->y_rt_125_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_124_8b_y0_y_rt_124_8b_0_0->y_rt_124_8b_0",
+    "seg": "g_rt_124_8b_y0_y_rt_124_8b_0_0->y_rt_124_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_123_8b_y0_y_rt_123_8b_0_0->y_rt_123_8b_0",
+    "seg": "g_rt_123_8b_y0_y_rt_123_8b_0_0->y_rt_123_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_122_8b_y0_y_rt_122_8b_0_0->y_rt_122_8b_0",
+    "seg": "g_rt_122_8b_y0_y_rt_122_8b_0_0->y_rt_122_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_121_8b_y0_y_rt_121_8b_0_0->y_rt_121_8b_0",
+    "seg": "g_rt_121_8b_y0_y_rt_121_8b_0_0->y_rt_121_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_120_8b_y0_y_rt_120_8b_0_0->y_rt_120_8b_0",
+    "seg": "g_rt_120_8b_y0_y_rt_120_8b_0_0->y_rt_120_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_119_8b_y0_y_rt_119_8b_0_0->y_rt_119_8b_0",
+    "seg": "g_rt_119_8b_y0_y_rt_119_8b_0_0->y_rt_119_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_118_8b_y0_y_rt_118_8b_0_0->y_rt_118_8b_0",
+    "seg": "g_rt_118_8b_y0_y_rt_118_8b_0_0->y_rt_118_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_117_8b_y0_y_rt_117_8b_0_0->y_rt_117_8b_0",
+    "seg": "g_rt_117_8b_y0_y_rt_117_8b_0_0->y_rt_117_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_116_8b_y0_y_rt_116_8b_0_0->y_rt_116_8b_0",
+    "seg": "g_rt_116_8b_y0_y_rt_116_8b_0_0->y_rt_116_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_115_8b_y0_y_rt_115_8b_0_0->y_rt_115_8b_0",
+    "seg": "g_rt_115_8b_y0_y_rt_115_8b_0_0->y_rt_115_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_114_8b_y0_y_rt_114_8b_0_0->y_rt_114_8b_0",
+    "seg": "g_rt_114_8b_y0_y_rt_114_8b_0_0->y_rt_114_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_113_8b_y0_y_rt_113_8b_0_0->y_rt_113_8b_0",
+    "seg": "g_rt_113_8b_y0_y_rt_113_8b_0_0->y_rt_113_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_112_8b_y0_y_rt_112_8b_0_0->y_rt_112_8b_0",
+    "seg": "g_rt_112_8b_y0_y_rt_112_8b_0_0->y_rt_112_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_111_8b_y0_y_rt_111_8b_0_0->y_rt_111_8b_0",
+    "seg": "g_rt_111_8b_y0_y_rt_111_8b_0_0->y_rt_111_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_110_8b_y0_y_rt_110_8b_0_0->y_rt_110_8b_0",
+    "seg": "g_rt_110_8b_y0_y_rt_110_8b_0_0->y_rt_110_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_109_8b_y0_y_rt_109_8b_0_0->y_rt_109_8b_0",
+    "seg": "g_rt_109_8b_y0_y_rt_109_8b_0_0->y_rt_109_8b_0",
+    "um": 847.2,
+    "hops": 1
+   },
+   {
+    "chain": "g_rt_108_8b_y0_y_rt_108_8b_0_0->y_rt_108_8b_0",
+    "seg": "g_rt_108_8b_y0_y_rt_108_8b_0_0->y_rt_108_8b_0",
+    "um": 847.2,
+    "hops": 1
+   }
+  ],
+  "far_side_examples": [
+   {
+    "chain": "f_KE3t_56->lk_E3",
+    "relay": "f_KE3txs_0",
+    "back_um": 286.8
+   },
+   {
+    "chain": "f_KE2t_53->lk_E2",
+    "relay": "f_KE2txs_0",
+    "back_um": 286.8
+   },
+   {
+    "chain": "f_KW3t_42->lk_W3",
+    "relay": "f_KW3txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KW2t_37->lk_W2",
+    "relay": "f_KW2txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KW1t_46->lk_W1",
+    "relay": "f_KW1txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KE1t_54->lk_E1",
+    "relay": "f_KE1txs_0",
+    "back_um": 273.9
+   },
+   {
+    "chain": "y_es_1791_1->t127_8",
+    "relay": "y_es_1791_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1777_1->t126_8",
+    "relay": "y_es_1777_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1763_1->t125_8",
+    "relay": "y_es_1763_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1749_1->t124_8",
+    "relay": "y_es_1749_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1735_1->t123_8",
+    "relay": "y_es_1735_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1721_1->t122_8",
+    "relay": "y_es_1721_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1707_1->t121_8",
+    "relay": "y_es_1707_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1693_1->t120_8",
+    "relay": "y_es_1693_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1679_1->t119_8",
+    "relay": "y_es_1679_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1665_1->t118_8",
+    "relay": "y_es_1665_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1651_1->t117_8",
+    "relay": "y_es_1651_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1637_1->t116_8",
+    "relay": "y_es_1637_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1623_1->t115_8",
+    "relay": "y_es_1623_2",
+    "back_um": 252.7
+   },
+   {
+    "chain": "y_es_1609_1->t114_8",
+    "relay": "y_es_1609_2",
+    "back_um": 252.7
+   }
+  ],
+  "verdict": "FAIL",
+  "tt": {
+   "reach_um": 674.0,
+   "reach_violations": 128,
+   "verdict_reach": "FAIL",
+   "max_um": 847.2
+  }
+ }
+}
+exit 3
+2026-10-10T11:59:39Z

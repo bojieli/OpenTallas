@@ -139,7 +139,11 @@ select -clear
 } elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
 puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
 } else {
-select -assert-min 1 {w:g_rc.u_elem.*}
+# Yosys names the else-if generate branch genblk3.g_rc after HCOL
+# was added. Match that optional prefix while retaining the full RECUT
+# element and its four real 4096x274 ROM macro instances.
+select -assert-min 1 {w:*g_rc.u_elem.*}
+select -assert-count 4 {t:ot_rom_4096x274_m8}
 select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}
 puts "OT_BF_RECUT synth: q-element build, no W10 wake leaves to retain"
 }
@@ -234,7 +238,11 @@ select -clear
 } elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
 puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
 } else {
-select -assert-min 1 {w:g_rc.u_elem.*}
+# Yosys names the else-if generate branch genblk3.g_rc after HCOL
+# was added. Match that optional prefix while retaining the full RECUT
+# element and its four real 4096x274 ROM macro instances.
+select -assert-min 1 {w:*g_rc.u_elem.*}
+select -assert-count 4 {t:ot_rom_4096x274_m8}
 select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}
 puts "OT_BF_RECUT synth: q-element build, no W10 wake leaves to retain"
 }

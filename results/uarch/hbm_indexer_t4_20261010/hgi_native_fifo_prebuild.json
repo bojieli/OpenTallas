@@ -1,0 +1,53 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "MACs_per_cycle": 0,
+  "outgoing": {
+    "fs": 90,
+    "qb": 1048,
+    "kin": 345,
+    "toc": 1,
+    "coc": 1,
+    "total_bits_per_cycle": 1485
+  },
+  "incoming": {
+    "qbr": 1,
+    "to": 612,
+    "co": 72,
+    "ev": 2,
+    "total_bits_per_cycle": 687
+  },
+  "memory_port": {
+    "vmq_bits": 338,
+    "vmr_bits": 274,
+    "peak_read_bytes_per_cycle": 32
+  },
+  "face_stages": 3,
+  "extra_pin_pipeline_FF_bits": 6516,
+  "extra_pin_pipeline_FF_floor_um2": 1900.0656000000001,
+  "slot_um": [
+    640.008,
+    600.48
+  ],
+  "slot_um2": 384312.00384,
+  "input_capture_extra_cycles": 3,
+  "output_launch_extra_cycles": 3,
+  "qb_initial_credits": 4,
+  "query_blocks_per_frame": 128,
+  "output_FIFO": {
+    "depth_each": 8,
+    "topk_bits": 612,
+    "candidate_bits": 72,
+    "total_payload_bits": 5472,
+    "occupancy_bits": 8,
+    "occupancy_FF_floor_um2": 2.3328,
+    "added_latency_cycles": 0,
+    "replicas": 1,
+    "fanout": "Two local4bit counters and credit-sized queue boundary comparators"
+  },
+  "readiness": "Frame issued once; query and output streams retain native finite credits across relay roundtrips",
+  "selector_boundary": "Native T1 LA7 selector full payloads; co_quarter_last is not required by per-lane streaming candidate compaction, which ends on co.last wholeframe",
+  "qualification": "Port-exposure candidate only; actual core synthesis, longest clock hops and exact connected fullframe tests remain required",
+  "routing_tracks": "2172 newly exposed native bits; actual die relay/corridor layer capacity remains unqualified",
+  "token_latency": "Three capture plus three launch edges per crossing, plus real path hops and credit stalls; no performance credit before measured composition"
+}

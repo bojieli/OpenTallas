@@ -7,6 +7,21 @@
  "rule": "MTP step = the composed step (token_path_export) + every critical charge; overlapped charges carry their proof",
  "charges": [
   {
+   "id": "ctl_stop.nreg",
+   "element": "adopted NREG controller transition between successive MTP passes",
+   "cycles": 1.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "+1 per steady-state MTP pass after the first; single-pass/EOS/prefill cases add 0",
+   "source": [
+    "results/rtl/mtp_hfdpipe_20261009/gates.json cycles_added and multistep_differential",
+    "results/rtl/mtp_lead_20261009/routes/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc"
+   ],
+   "grade": "measured",
+   "variant": "adopted NREG=1; step throughput conservatively charges the recurring transition"
+  },
+  {
    "id": "hfd_mtp.round_trips",
    "element": "hfd_mtp die master pin flops (command -> engine done round trips)",
    "cycles": 14.0,
@@ -144,37 +159,39 @@
   },
   {
    "id": "dskv_wb_spec.rows",
-   "element": "ot_hbm_accel_dskv_wb_spec registered-boundary variant (+1 a row)",
-   "cycles": 240.0,
+   "element": "adopted ot_hbm_accel_dskv_wb_spec PIPE=2 (+3 a row)",
+   "cycles": 720.0,
    "critical": false,
    "phase": "draft",
    "anchor": "step.start",
-   "formula": "40 layers x up to 6 accepted positions = 240 KV rows x +1",
+   "formula": "40 layers x up to 6 accepted positions = 240 KV rows x +3",
    "source": [
-    "results/rtl/mtp_lead_20261009/dskv_wb_spec_rb/README.md (PIPE=1 S_OWN +1 cycle/row)"
+    "results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md (+3 a row vs PIPE 0)"
    ],
    "grade": "measured",
-   "variant": "rb variant (mtprb-dskvwb_spec_rb-2426c04bd-tc); the a/b variants add 0",
-   "overlap_proof": "the accepted rows of step s are written while step s+1 drafts: the draft phase (54,336 cycles) runs on the DSpark stages' own state (main_x + their wkv window rows), and the first read of a main-model KV row is verify layer 0 after the draft; the +1/row adds <= 240 cycles to a write stream that must fit in 54,336 cycles"
+   "variant": "adopted mtprb-dskvwb_spec_p2a-5ce6c3c62-tc; wrapper pin FIFO costs retained",
+   "overlap_proof": "the accepted rows of step s are written while step s+1 drafts: the draft phase (54,336 cycles) runs on the DSpark stages' own state (main_x + their wkv window rows), and the first read of a main-model KV row is verify layer 0 after the draft; the +3/row adds <= 720 cycles to a write stream that must fit in 54,336 cycles"
   }
  ],
  "totals": {
-  "critical_cycles": 130.0,
-  "critical_cycles_lower": 130.0,
-  "overlapped_cycles": 240.0,
-  "composed_step_cycles": 1348519.6,
-  "charged_step_cycles": 1348649.6,
+  "critical_cycles": 131.0,
+  "critical_cycles_lower": 131.0,
+  "overlapped_cycles": 720.0,
+  "composed_step_cycles": 1348759.6,
+  "charged_step_cycles": 1348890.6,
   "tau": 4.159,
-  "MTP_tok_s_composed": 3700.9,
-  "MTP_tok_s_charged": 3700.6,
-  "MTP_tok_s_charged_lower_charges": 3700.6
+  "MTP_tok_s_composed": 3700.3,
+  "MTP_tok_s_charged": 3699.9,
+  "MTP_tok_s_charged_lower_charges": 3699.9
  },
  "inputs": {
   "results/rtl/hbm_mtp_20261008/bench/round1.json": "c83f06eaf58d52d7",
   "results/rtl/mtp_exact_20261008/spec_state/sweep.json": "f9bdcb1950a767e5",
-  "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8"
+  "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8",
+  "results/rtl/mtp_hfdpipe_20261009/gates.json": "a546eac7c27387c1",
+  "results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md": "d3d35365d68eddef"
  },
  "basis_note": {
-  "note": "hbm-sim: the DS spec-conformant rate is the native record stream (results/arch/hgi_sim_20261009/ds_native_timing_1M.json result.S2 = 1,658.1 tok/s AR, not the 1,716.3 walk); these charges are per MTP step and carry over to that basis unchanged"
+  "note": "The HBM native and approved gather paths are distinct; systems.json uses ds_sw_seq_pricing.json approved_path_c2_g22 and adds its delta relative to native S2 once per verify pass. These component charges carry over to either basis unchanged."
  }
 }

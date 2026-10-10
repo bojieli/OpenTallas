@@ -1,0 +1,31 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv": "d178716e65a0f89e18a29927c2afadc9c9044bfc5063693414db234af6a55e11",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+    "tools/hgi_adapters/att_scaled_bench.py": "0c39a6005b7f09351dc509d606fa9885a951d7099584a26fc91a2b8d3fbad820",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_scaled.sv": "493503dae40444e0fb297e710bdc265af880a2b9593b9cf44fc67862dde44961"
+  },
+  "exact": "311blocks PASS original/candidateBF16 lockstep, allpackedcodes/scales, actualexisting32dequantizers and actualexistingchunk8 tile",
+  "counterexample": {
+    "input": [
+      5.25,
+      2.625
+    ],
+    "BF16_bits": [
+      "40a8",
+      "4028"
+    ],
+    "chunk8_sum_bits": "40fc0000"
+  },
+  "latency": {
+    "producer_cycles": 8,
+    "added_cycles": 0,
+    "II": 1
+  },
+  "negative": "MUT_SCALE makes actualchunk0 mismatch got410a0000 vs40fc0000 expected; rejects wrongscale provenance",
+  "vehicle": "actual ot_hgi_fp4qdq and ot_hdc_v41x_attn_deq; existingattentiontile H1TD8 minimummechanism, no fullH16 performance claim",
+  "physical": "notadopted; no wholeATTunit closure claim",
+  "raw_transport": "nativebody opaque256bit/fullwordmask; frontformat0bitwise32 or5U32, n136words/stride136; 17sectors544B with14Bzero padding; actualquadpackedgate delegatednative_burst"
+}

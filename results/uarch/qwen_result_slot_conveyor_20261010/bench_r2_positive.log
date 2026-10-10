@@ -1,0 +1,5 @@
+PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55
+- rtl/test/res_tiles/tb_res_tiles.sv:56: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 120us; walltime 0.019 s; speed 6.157 ms/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 9 MB

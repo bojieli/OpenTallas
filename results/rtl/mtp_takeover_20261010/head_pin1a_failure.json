@@ -1,0 +1,15 @@
+{
+  "job": "mtp-head340-mkdrv-pin1a-ef227c660-tc",
+  "source": "ef227c660",
+  "verdict": "FAIL",
+  "phase": "pre-synthesis argument validation",
+  "error": "--pin-region '^clk$=top:300-300': HIGH must exceed LOW",
+  "run": "ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-head340-mkdrv-pin1a-ef227c660-tc",
+  "successor": "mtp-head340-mkdrv-pin1b-b0bd92a8e-tc",
+  "clock_interval_um": [
+    299,
+    301
+  ],
+  "rtl_change": false,
+  "cycles_added": 0
+}

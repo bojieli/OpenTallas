@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-10T12:07:42.693844+00:00",
+  "old_need_gib": 40,
+  "new_need_gib": 2,
+  "waiting_guard_pid": 3376211,
+  "measurement": {
+    "host": "ot-epyc3",
+    "pid": 2501242,
+    "VmHWM_kib": 413428,
+    "VmPeak_kib": 431664,
+    "inventory": "same dsrom_s81_fulldie full layer1e generator sourcec18b51ab7,13pairs; observed legal x1b full14pair58625instances vs13pair55992 ~4.7%instancegrowth"
+  },
+  "margin": "2GiB >4xfullshapeVmHWM, targeted probe stops before whole-die hop pass; no process limit, host guard remains100GiB+remaining reservations",
+  "progressing_job": "ss450pid3367131 alreadyadmitted40GiB unchanged"
+}

@@ -28,10 +28,34 @@ module tb_hgi_su_unit;
 `else
     localparam integer GL = 0;
 `endif
-    ot_hgi_su_unit #(.N(32), .M(8), .LV(7), .GLU(GL), .MUT_DIRTY(MD)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_su_unit #(
+`ifdef NO_PAYLOAD_RST
+    .PAYLOAD_RESET(0),
+`endif
+.N(32), .M(8), .LV(7), .GLU(GL), .MUT_DIRTY(MD)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
         .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
         .rec_n_a(cur[2196:2176]), .rec_done(done), .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur));
+`ifdef NO_PAYLOAD_RST
+    // Valid qualification audit: the resetless payload station must issue exactly the same
+    // records/ops as the original station at every accepted edge, including the first after reset.
+    wire shadow_rdy, shadow_done, shadow_fault, shadow_halted, shadow_opv;
+    wire [669:0] shadow_opw; wire [1:0] shadow_strm;
+    ot_hgi_su_record #(.LEGACY(0), .GLU(GL), .STREAM_OK(!GL), .PAYLOAD_RESET(1)) shadow (
+        .clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(shadow_rdy),
+        .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
+        .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
+        .rec_n_a(cur[2196:2176]), .rec_done(shadow_done), .rec_fault(shadow_fault), .halted(shadow_halted),
+        .op_v(shadow_opv), .op_w(shadow_opw), .op_strm(shadow_strm), .op_rdy(u.u_ctl.op_rdy_r),
+        .su_idle(u.u_ctl.su_idle_r), .su_fault(u.u_ctl.su_fault_r), .lg_v(1'b0), .lg_w(670'd0), .lg_rdy(), .drained());
+    always @(posedge clk) if (rst_n) begin
+        if ({rec_rdy, done, fault, halted, u.u_ctl.op_v} !==
+            {shadow_rdy, shadow_done, shadow_fault, shadow_halted, shadow_opv})
+            $fatal(1, "PAYLOAD valid/control differed");
+        if (shadow_opv && ({u.u_ctl.op_w, u.u_ctl.strm} !== {shadow_opw, shadow_strm}))
+            $fatal(1, "PAYLOAD visible word differed");
+    end
+`endif
     ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
     task automatic vm_req(input we, input [31:0] word, input [31:0] data, output [31:0] qd);
         integer tw;

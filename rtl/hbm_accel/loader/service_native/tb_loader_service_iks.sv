@@ -12,7 +12,7 @@ ot_hbm_svc_core_native #(.NATIVE(1),.IKS(1),.E_ST(2),.XST(0))dut(.ck(clk),.rst(r
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(),.phy_rst_n(),.k_v(kv),.k_rdy(32'hffffffff),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(),.k_wstrb(),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
 .wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(32'd0),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault),
-.outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'h1234),
+.outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'h1234),.native_len(4'd1),
 .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_tag(native_rsp_tag),.native_rsp_data(native_rsp_data),.native_fault(native_fault));
 reg[16:0]qt[0:31][0:255];reg[3:0]qb[0:31][0:255];reg[29:0]qa[0:31][0:255];integer head[0:31],tail[0:31],count[0:31];integer p,b,w,cyc=0;
 function automatic[29:0] kaddr(input integer pc,j);

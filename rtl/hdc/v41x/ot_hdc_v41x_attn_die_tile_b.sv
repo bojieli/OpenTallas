@@ -66,6 +66,7 @@ module ot_attn_fpipe #(parameter integer W = 1, parameter integer N = 1) (
 endmodule
 
 module hfd_attn_tile_b #(
+    parameter integer CG = 0, // gated quads and coherent-result guard, jointly opt-in
     parameter integer NK = 4,
     parameter integer NC = 2,
     parameter integer NR = 3,
@@ -122,7 +123,7 @@ module hfd_attn_tile_b #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0, qv, qf;
             wire [127:0] qy0, qy;
-            ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the quad's results -> NL banks (every quad the same depth: one result word)
@@ -136,7 +137,13 @@ module hfd_attn_tile_b #(
     // ---- results: the chain word i -> pin bank -> NI banks; valid-priority merge into the o pin bank
     wire [RW-1:0] chn_r;
     ot_attn_bpipe #(.W(RW), .N(1 + NI), .EW0(1)) u_pi (.clk(clk), .d(i), .q(chn_r));
-    wire [RW-1:0] loc_r = {gov[0], oy, oflt};
+    // CG-qualified boundary: the fixed word represents all16 heads. A partial
+    // arrival is an explicit transaction fault, never a stale head's arithmetic.
+    // Idle oflt/oy are held by gated producers and are consumed only under valid.
+    wire coherent_v = &gov;
+    wire [RW-1:0] loc_r = (CG != 0) ?
+        {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} :
+        {gov[0], oy, oflt};
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));

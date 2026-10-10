@@ -97,8 +97,8 @@ module ot_hgi_idx_unit #(
     reg w_go; wire w_done, w_fault;
     wire w_legal = opnd[0] && opnd[3] && opnd[4] && opnd[5] && dA[1:0] == 2'd1 && dA[4:2] == 3'd5 && dO[1:0] == 2'd1 &&
                    dO[4:2] == 3'd5 && dR[1:0] == 2'd1 && dR[4:2] == 3'd5 && dD[1:0] == 2'd1 && dD[4:2] == 3'd5 &&
-                   hdr[88:80] == 9'd0;
-    ot_hgi_idx_owned u_owned (.clk(clk), .rst_n(rst_n), .go(w_go), .blk(hdr[71:64]), .grp(hdr[79:72]), .die(rdie),
+                   hdr[88] == 1'b0;
+    ot_hgi_idx_owned u_owned (.clk(clk), .rst_n(rst_n), .go(w_go), .blk(hdr[71:64]), .grp(hdr[79:72]), .die(rdie), .batch(hdr[87:80]),
         .k(a_n), .a_base(a_base[17:0]), .o_base(o_base[17:0]), .r_base(r_base[17:0]), .d_base(dD[25:8]),
         .done(w_done), .fault(w_fault), .vmq(vmq_w), .vmr(w_active ? vmr : 274'd0));
     // ---------------------------------------------------------------- output buffer (order = 1: k <= 8 ascending ids)

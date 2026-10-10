@@ -1,0 +1,143 @@
+{
+  "source_commit": "ef227c660",
+  "remote": "ot-epyc3:/srv/opentallas-scratch2/scratch/codex/mtp-head-regenerate-ef227c660",
+  "command": "tools/s81/s81_dies_recipe.py plan --only head631,headp2",
+  "admission_gb": 30,
+  "exit_code": 0,
+  "recipes": [
+    {
+      "recipe": "head631",
+      "floorplan": "results/rtl/mtp_takeover_20261010/regenerated/head631/floorplan.json",
+      "sha256": "803b007066df886dd749954852d27737630f35e3e1fb7abe715eb4a1ad1da971",
+      "placed_mm2": 322.5,
+      "utilisation": {
+        "placed_over_die": 0.3759,
+        "field_frames_mm2": 392.43
+      },
+      "legality": {
+        "instances": 25847,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": []
+      },
+      "pin_clashes": 0,
+      "margin_lint": {
+        "status": "FAIL",
+        "reach_violations": 0,
+        "far_side_relays": 732
+      },
+      "directed_bus_binding_passed": true,
+      "chains": [
+        {
+          "source": "capture",
+          "destination": "mtp",
+          "bits": 513,
+          "stations": 5
+        },
+        {
+          "source": "mtp",
+          "destination": "capture",
+          "bits": 1,
+          "stations": 6
+        },
+        {
+          "source": "mtp",
+          "destination": "collective",
+          "bits": 648,
+          "stations": 6
+        },
+        {
+          "source": "collective",
+          "destination": "mtp",
+          "bits": 2,
+          "stations": 7
+        },
+        {
+          "source": "vm",
+          "destination": "mtp",
+          "bits": 47,
+          "stations": 9
+        },
+        {
+          "source": "mtp",
+          "destination": "vm",
+          "bits": 37,
+          "stations": 10
+        }
+      ]
+    },
+    {
+      "recipe": "headp2",
+      "floorplan": "results/rtl/mtp_takeover_20261010/regenerated/headp2/floorplan.json",
+      "sha256": "aab48bd8ad99022627fcc302f6e4715057ed57008c301cdcc771b4c26f321266",
+      "placed_mm2": 297.42,
+      "utilisation": {
+        "placed_over_die": 0.3466,
+        "field_frames_mm2": 392.43
+      },
+      "legality": {
+        "instances": 21438,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": []
+      },
+      "pin_clashes": 0,
+      "margin_lint": {
+        "status": "FAIL",
+        "reach_violations": 0,
+        "far_side_relays": 584
+      },
+      "directed_bus_binding_passed": true,
+      "chains": [
+        {
+          "source": "capture",
+          "destination": "mtp",
+          "bits": 513,
+          "stations": 5
+        },
+        {
+          "source": "mtp",
+          "destination": "capture",
+          "bits": 1,
+          "stations": 6
+        },
+        {
+          "source": "mtp",
+          "destination": "collective",
+          "bits": 648,
+          "stations": 6
+        },
+        {
+          "source": "collective",
+          "destination": "mtp",
+          "bits": 2,
+          "stations": 7
+        },
+        {
+          "source": "vm",
+          "destination": "mtp",
+          "bits": 47,
+          "stations": 9
+        },
+        {
+          "source": "mtp",
+          "destination": "vm",
+          "bits": 37,
+          "stations": 10
+        }
+      ]
+    }
+  ],
+  "identity_composition_qualified": false,
+  "physical_qualified": false,
+  "full340_production_inventory_qualified": false,
+  "remaining": [
+    "native seed/draft/verify/rollback identity join",
+    "RTT credit successor integration and option1 die-source timing",
+    "margin lint far-side relays",
+    "full340 production head inventory",
+    "routed native die timing/DRC"
+  ]
+}
