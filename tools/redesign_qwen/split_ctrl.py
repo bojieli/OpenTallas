@@ -50,7 +50,7 @@ import emit_partition as P  # noqa: E402
 
 BASE_EMIT = F.EMIT.emit
 SPLIT_RTL = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv"
-CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24, chl=0, chl_d=2, xreg=0)
+CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24, chl=0, chl_d=2, xreg=0, fqh=0)
 OPTS = {  # r22k: seq <-> TT 37 stations a way, seq <-> SU 7; SU <-> TT 21 (centre to centre, 430.56-um pitch + pins)
     "3": dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37),
     "4": dict(dcu_s=2, duc_s=2, dcu_m=2, duc_m=2, x_m2s=21, x_s2m=21, dstart=37),
@@ -136,6 +136,69 @@ def ctrl_x(ctrl: str) -> str:
             "done <= 1'b1; next_token <= (OWN == 2) ? x_fidx : fin_idx; next_val <= (OWN == 2) ? x_fval : fin_val;")
     t = one(t, "    wire [31:0] fin_val = am_wins ? am_val : run_val;\n",
             "    wire [31:0] fin_val = am_wins ? am_val : run_val;\n    assign o_fidx = fin_idx; assign o_fval = fin_val;\n")
+    return t
+
+
+def ctrl_icut(t: str) -> str:
+    """qwen-1010/a ICUT for the two-controller ctrl_x (the struct-close ICUT of ot_qfd_sp_constants_sequencer_sys,
+    ported): the seq_su routes fail post-CTS at -434 .. -870 ps on ONE cone -- the issue: the SU status input stations
+    -> issue shell (ready from inflight) -> unit_ready / own_idle -> issue -> load -> the 1,024-b head / decode enables
+    (and d_chase_n -> chase compare -> issue -> hq).  ICUT = 1: the whole readiness of the op that holds NEXT after this
+    edge is a REGISTER (ready_q), evaluated one edge ahead (the head word's fields when loading) against the status
+    predicted after the edge: the own unit issued on this edge reads busy (idle / ready 0, kv_write_drained 0 for an SU
+    issue); the other unit's snapshot is taken with the NEXT edge's count (o_dif_n, as XREG) -- the hold rule keeps the
+    other unit from accepting a later op while this op reads its status, so its status only improves.  ready_q implies
+    the live issue condition (assertion off SYNTHESIS); an issue can be one edge later than live, never earlier.  Op
+    order unchanged.  me_en / kv_gate / w_gate stay live.  Needs XREG 1."""
+    t = re.sub(r"(    parameter integer XREG = 0,[^\n]*\n)", r"\1    parameter integer ICUT = 0,       // qwen-1010/a: registered readiness (ctrl_icut)\n", t, count=1)
+    t = one(t, "    wire issue = (st == S_RUN) && nx_v && own && xdep_ok\n                 && unit_ready && kv_gate && w_gate;\n",
+            "    wire issue_live = (st == S_RUN) && nx_v && own && xdep_ok\n                 && unit_ready && kv_gate && w_gate;\n"
+            "    reg ready_q;\n"
+            "    wire issue = (ICUT == 0) ? issue_live :\n"
+            "                 ((st == S_RUN) && nx_v && own && ready_q && (d_unit != 2'd1 || me_en) && kv_gate && w_gate);\n")
+    t = one(t, "    wire push = (st == S_RUN) && pend1;\n",
+            "    wire push = (st == S_RUN) && pend1;\n"
+            "    // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge\n"
+            "    wire own_ready = (OWN == 1) ? me_ready : su_ready;\n"
+            "    wire own_idle_n = own_idle && !issue;\n"
+            "    wire own_ready_n = own_ready && !issue;\n"
+            "    wire kd_n = kv_write_drained && !(issue && OWN == 2);\n"
+            "    wire osync_n = (o_dif_n == {XW{1'b0}});\n"
+            "    wire o_drained_n = osync_n && x_oidle;\n"
+            "    function automatic rdy_x(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu);\n"
+            "        reg chd, wo, wu, xd;\n"
+            "        begin\n"
+            "            chd = osync_n && ((OWN == 1 && chr) ? (x_orows >= chn) : (x_oprog >= chn));\n"
+            "            wo = (OWN == 1) ? wsu : wme;\n"
+            "            wu = (OWN == 1) ? wme : wsu;\n"
+            "            xd = (XMUT == 1 && OWN == 1) ? 1'b1 :\n"
+            "                 (bar ? (own_idle_n && o_drained_n && (!KV_VEC_WRITE_BRIDGE || kd_n)) :\n"
+            "                        ((!ch || chd) && (!wu || own_idle_n) && (!wo || o_drained_n)));\n"
+            "            rdy_x = (u == OWN[1:0]) && xd &&\n"
+            "                    ((OWN == 1) ? own_ready_n : (own_ready_n && (!KV_VEC_WRITE_BRIDGE || (own_idle_n && kd_n))));\n"
+            "        end\n"
+            "    endfunction\n"
+            "    generate if (ICUT != 0) begin : g_icut\n"
+            "`ifdef OT_ICUT_MUT_NOPRED\n"
+            "        // mutant: the own unit's status NOT predicted (it still reads ready / idle after its own go)\n"
+            "        wire r_load = rdy_x(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU)) ||\n"
+            "                      ((`F(UNIT) == OWN[1:0]) && issue);\n"
+            "`else\n"
+            "        wire r_load = rdy_x(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU));\n"
+            "`endif\n"
+            "        wire r_hold = rdy_x(d_unit, d_barrier, d_chase, d_chase_rows, d_chase_n, d_wait_me, d_wait_su);\n"
+            "        always @(posedge clk or negedge rst_n)\n"
+            "            if (!rst_n) ready_q <= 1'b0;\n"
+            "            else ready_q <= load ? r_load : r_hold;\n"
+            "`ifndef SYNTHESIS\n"
+            "        always @(posedge clk) if (rst_n && issue && !issue_live) begin\n"
+            "            $display(\"ICUT_ILLEGAL_ISSUE t=%0t own=%0d\", $time, OWN);\n"
+            "            $fatal(1, \"ICUT issue without the live issue condition\");\n"
+            "        end\n"
+            "`endif\n"
+            "    end else begin : g_noicut\n"
+            "        always @(posedge clk) ready_q <= 1'b0;\n"
+            "    end endgenerate\n")
     return t
 
 
@@ -227,7 +290,8 @@ def emit_part_x(core: str, c: dict) -> str:
                    ".x_fidx('0)", ".x_fval('0)", ".o_fin(m_fin)", ".o_fidx(m_fidx)", ".o_fval(m_fval)"]
         own_n = 1 if side == "me" else 2
         return (f"    ot_qwen_rom_core_ctrl_x #(.OWN({own_n}), .XW(XW), .XMUT(XMUT), .XREG(XREG), "
-                + ", ".join(f".{p}({p})" for p in pnames) + f") u_ctrl{'_me' if side == 'me' else ''} (\n        "
+                + ", ".join(f".{p}({p})" for p in pnames) + (", .FQ_HEAD(1)" if c.get("fqh") else "")
+                + f") u_ctrl{'_me' if side == 'me' else ''} (\n        "
                 + ",\n        ".join(cc) + ");")
     # the ME-side controller's token start: the start / token / pos relayed to the tree-top tile
     L += ["    wire m_start; wire [NW-1:0] m_token, m_pos;",
@@ -360,14 +424,15 @@ def patch_die(t: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=("build", "run", "emit", "emit-tile", "emit-seq-su", "emit-seq-su-boundary"))
+    ap.add_argument("phase", choices=("build", "run", "emit", "emit-tile", "emit-seq-su", "emit-seq-su-boundary",
+                                      "emit-seq-su-bi", "emit-tile-i"))
     ap.add_argument("--build", type=Path)
     ap.add_argument("--work", type=Path)
     ap.add_argument("--stages", choices=("L0", "L3", "full"), default="L3")
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--opt", choices=sorted(OPTS), default="4")
-    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut", "chl", "chl_d", "xreg"):
+    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut", "chl", "chl_d", "xreg", "fqh"):
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
     ap.add_argument("--max-cycles", type=int, default=0)
     ap.add_argument("--out", type=Path, help="emit: write the generated core here")
@@ -384,6 +449,12 @@ def main():
         return
     if a.phase == "emit-tile":
         a.out.write_text(emit_tt_ctlm())
+        return
+    if a.phase == "emit-seq-su-bi":
+        a.out.write_text(emit_seq_su_bi())
+        return
+    if a.phase == "emit-tile-i":
+        a.out.write_text(emit_tt_ctlm_i())
         return
     if a.phase in ("emit-seq-su", "emit-seq-su-boundary"):
         a.out.write_text(emit_seq_su(boundary=a.phase == "emit-seq-su-boundary"))
@@ -695,6 +766,84 @@ def emit_seq_su(boundary: bool = False) -> str:
             stage = "IS" if name.startswith("pi_") else "OS"
             text = re.sub(r"(\.D\("+stage+r"\))(\) u_[io]_"+name+r"\b)", r"\1, .RESET(1)\2", text)
     return text
+
+
+TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
+
+
+def tp_seq_vrl() -> str:
+    """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
+    the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
+    master the read leaves through the output station and the word returns through the input station, so the base
+    queued the word of an earlier read (every all-reduce partial wrong).  The read queue grows to 8 words when VRL > 1
+    so the reads in flight keep the stream rate (QD = 2^ceil(log2(VRL + 4))).  VRL 1 is the base."""
+    t = TP_SEQ.read_text()
+    t = one(t, "module ot_qwen_tp_seq_w12 #(", "module ot_qwen_tp_seq_w12_vrl #(\n    parameter integer VRL = 1,     // vre -> vrq edges")
+    # the read queue covers the whole round trip (reads in flight + 4 queued words): one word a cycle at any VRL
+    t = one(t, "    localparam integer QD = 4;", "    localparam integer QB = (VRL > 1) ? $clog2(VRL + 4) : 2;   // queue address bits\n"
+               "    localparam integer QD = 1 << QB;")
+    t = one(t, "    reg [1:0]    q_w, q_r;", "    reg [QB-1:0] q_w, q_r;")
+    t = one(t, "    reg [2:0]    q_n;", "    reg [QB:0]   q_n;")
+    t = one(t, "    reg          rd_v;", "    reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1\n    wire          rd_v = rd_p[VRL-1];\n"
+               "    integer       rd_i, rd_n;\n    always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end")
+    t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
+    t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
+    t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    return t
+
+
+def ctrl_prl(t: str) -> str:
+    """qwen-1010/a PRL: program read latency a parameter (prog_re -> prog_q edges; the base is 1).  The masters' program
+    store is 64 x 1,024 configuration flops: seq_su_bi_b post-CTS -476 ps on prog_base -> add -> 64:1 x 1,024 read mux
+    -> prog_q.  PRL 2 lets the master register the read address (the fetch runs ahead of issue, so a segment start pays
+    one edge)."""
+    t = re.sub(r"(    parameter integer ICUT = 0,[^\n]*\n)", r"\1    parameter integer PRL = 1,        // qwen-1010/a: program read latency (ctrl_prl)\n", t, count=1)
+    t = one(t, "    reg        pend1;                     // a program read whose word arrives this cycle\n",
+            "    reg        pend1;                     // a program read whose word arrives this cycle\n    reg        pend2;                     // PRL 2: ... the cycle after\n")
+    t = one(t, "    wire push = (st == S_RUN) && pend1;", "    wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);")
+    t = t.replace("pend1 <= 1'b0;", "pend1 <= 1'b0; pend2 <= 1'b0;")
+    t = one(t, "            pend1 <= prog_re && (st != S_IDLE);\n",
+            "            pend1 <= prog_re && (st != S_IDLE);\n            pend2 <= (PRL > 1) && pend1 && (st != S_IDLE);\n")
+    t = one(t, "+ prog_re + pend1 < NFQ)", "+ prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ)")
+    return t
+
+
+def master_prl(t: str, base: str) -> str:
+    """the master's program store read with a registered address (PRL 2)"""
+    t = one(t, f"    wire [11:0] prog_a = {base} + prog_addr;\n",
+            f"    wire [11:0] prog_a = {base} + prog_addr;\n"
+            "    reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered\n"
+            "    always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;\n"
+            "    always @(posedge clk) prog_a_r <= prog_a;\n")
+    t = one(t, "        if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;\n",
+            "        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n")
+    return t
+
+
+# qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
+# above stay byte-identical.
+def emit_seq_su_bi() -> str:
+    """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
+    (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
+    t = ctrl_prl(ctrl_icut(emit_seq_su(boundary=True)))
+    t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
+    t = master_prl(t, "prog_base")
+    t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
+    t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
+    t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
+    # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
+    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
+    return t + "\n" + tp_seq_vrl()
+
+
+def emit_tt_ctlm_i() -> str:
+    """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
+    t = ctrl_prl(ctrl_icut(emit_tt_ctlm()))
+    t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
+    t = master_prl(t, "q_prog_base")
+    t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
+    t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
+    return t
 
 
 if __name__ == "__main__":
