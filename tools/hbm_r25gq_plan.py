@@ -12,9 +12,10 @@ blocks are re-routed.  The wiring model therefore carries the R25GPH logical net
   * R25GQ terminal map: every instance keeps its name; the 64 -> 32 attention tiles map base row r onto row r // 2
     (the pair's nets land on the surviving tile, so the bits are kept -- conservative); SU / SFU / index nets keep their
     R25GPH widths (the quarter faces are unchanged, conservative for 512 lanes / 36 score lanes);
-  * Option A additions: the shared wide VM lane groups (32R + 32W lanes = 17,792 b, ot_hgi_vm_unit 34c89274a): one
-    chained SU -> SFU -> HC group in the SW quarter and one spine-client group quant | VM | CP; ATT record broadcast
-    1,250 b CP -> each quadrant's root tile; CP <-> MTP ports (db_loff / md_kent / md_kstride, 120 b);
+  * Option A additions: the VM lane groups (hgi-1010/b ot_hgi_vm_lanearb: read ~8.8 kb + write ~9 kb a group): the W
+    group through SU -> SFU -> HC (SW quarter), the E group through the abutted VM | CP | quant; ATT record broadcast
+    1,250 b CP -> each quadrant's root tile; CP <-> MTP ports (120 b) + f_mtp 517 / t_mtp 197; the loader host port
+    widening (HOST_H_HGI); the IKS issuer nets hgi_iks_<st> (IDX -> svc e, 128 b + fclk);
   * router: a congestion-negotiated grid router (100 um cells, 5 rounds, use reported on 300-um box sums; a bus wider
     than 2,100 b is routed as <= 2,100-b bundles, which spread over its face as the real pins do) over the placed blocks; a cell's track capacity
     is its free (unblocked) area x the GRT-derated tracks per um of the R25GP die run (M4-M9, GRT-0053), the same
@@ -46,20 +47,20 @@ SKIP = ('clock', 'reset', 'strap', 'phy_dfi')      # phy_dfi: PHY <-> svc by abu
 BLOCK_COST = 20.0
 TARGET = 0.55
 BUNDLE = 2100       # bits per routed bundle (a 2,068-b x trunk stays one bundle)
-VMW = 17792        # one 32R + 32W lane group: 32 x 273 + 32 x 280 (+ sec / mask fields), budget item 1
-OPTION_A = [('vm_grpA_su', 'hub_vm_lanes', VMW, ['hb_hgi_vm', 'hb_su_SW']),
-            ('vm_grpA_sfu', 'hub_vm_lanes', VMW, ['hb_su_SW', 'hb_sfu_SW']),
-            ('vm_grpA_hc', 'hub_vm_lanes', VMW, ['hb_sfu_SW', 'hb_hc_SW']),
-            ('vm_grpB_quant', 'hub_vm_lanes', VMW, ['hb_quant', 'hb_hgi_vm']),
-            ('vm_grpB_cp', 'hub_vm_lanes', VMW, ['hb_hgi_vm', 'hb_cmdproc']),
+VMW = 8800 + 9000  # one lane group: read ~8.8 kb + write ~9 kb (hgi-1010/b, ot_hgi_vm_lanearb ace618cd8)
+OPTION_A = [('vm_lgW_0', 'hub_vm_lanes', VMW, ['hb_hgi_vm', 'hb_su_SW']),      # W group through SU -> SFU -> HC
+            ('vm_lgW_1', 'hub_vm_lanes', VMW, ['hb_su_SW', 'hb_sfu_SW']),
+            ('vm_lgW_2', 'hub_vm_lanes', VMW, ['hb_sfu_SW', 'hb_hc_SW']),
+            ('vm_lgE_0', 'hub_vm_lanes', VMW, ['hb_hgi_vm', 'hb_cmdproc']),     # E group: VM | CP | quant abut
+            ('vm_lgE_1', 'hub_vm_lanes', VMW, ['hb_cmdproc', 'hb_quant']),
             ('cp_mtp_ports', 'control', 120, ['hb_cmdproc', 'hb_mtp']),
-            # [fp] request 2026-10-10 (hgi-1010/mtp): reserve the CP <-> MTP f_mtp 517 / t_mtp 197 nets
             ('cp_mtp_f_mtp', 'control', 517, ['hb_mtp', 'hb_cmdproc']),
             ('cp_mtp_t_mtp', 'control', 197, ['hb_cmdproc', 'hb_mtp']),
             # loader host port h: exact HOST_H_HGI 406 / 381 (ot_hfd_loader_hgi host-facing ports) = R25GPH 256 / 256
             # + 150 / + 125, to the host interface, pipelined
             ('loader_h_widen', 'host', 150 + 125, ['hb_loader', 'lk_host'])] + \
-           [(f'att_rec_{q}', 'att_record', 1250, ['hb_cmdproc', f'at_{q}_00_lo']) for q in ('SW', 'SE', 'NW', 'NE')]
+           [(f'att_rec_{q}', 'att_record', 1250, ['hb_cmdproc', f'at_{q}_00_lo']) for q in ('SW', 'SE', 'NW', 'NE')] + \
+           [(f'hgi_iks_{q}', 'expert_req', 129, ['hb_hgi_idx', f'svc_{q}_s3']) for q in ('SW', 'SE', 'NW', 'NE')]
 
 
 def logical_nets(base):
