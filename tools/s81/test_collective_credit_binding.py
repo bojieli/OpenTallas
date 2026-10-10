@@ -65,6 +65,13 @@ class CreditBindingTest(unittest.TestCase):
         (self.root / vp).unlink()
         self.assertTrue(D.collective_credit_binding(self.root)['problems'])
 
+    def test_ce_pipeline_parameter_matches_exact_bench_vehicle(self):
+        vp, receipt = self.receipts['dsfd_coll_ce']
+        bad = copy.deepcopy(receipt)
+        bad['job_spec']['stages']['route']['cmd'] = 'route --param CR=1 --param QPIPE=0'
+        self.write(vp, bad)
+        self.assertNotIn('dsfd_coll_ce', D.collective_credit_binding(self.root)['tile_bindings'])
+
     def test_per_master_source_pin_rejects_previous_ce_and_accepts_only_successor(self):
         path = 'physical/s81_ph_views/collective/composition_split3cr.json'
         manifest = json.loads((self.root / path).read_text())

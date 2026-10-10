@@ -161,7 +161,7 @@ def main():
                    core_rtl_defines=rec['core_rtl_defines'] + ['OT_S81PH_COLL_CR'],
                    lane_rtl_defines=rec['lane_rtl_defines'] + ['OT_S81PH_LANE_CR'],
                    boundary_protocol='lo_r / li_r are credit pulses, not combinational ready; every lane and seam uses an 8-deep credit landing FIFO',
-                   required_parameters={'dsfd_coll_cb': {'CR': 1}, 'dsfd_coll_ce': {'CR': 1},
+                   required_parameters={'dsfd_coll_cb': {'CR': 1}, 'dsfd_coll_ce': {'CR': 1, 'QPIPE': 1},
                                         'dsfd_coll_ct': {'CR': 1, 'LR': 0}, 'dsfd_coll_lane_w': {'LCR': 1}},
                    physical_adoption='UNQUALIFIED: cb, ce, ct and lane LCR must all close with exactness and negative-control gates before binding',
                    source_commits={'core': 'a17b27437', 'lane': '851328e6c'},
