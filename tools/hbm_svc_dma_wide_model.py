@@ -12,11 +12,13 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
     stacks=4; pcs=32; hz=1.2e9
     sustained=3.8e12/hz;nominal=4e12/hz;target=.9*nominal
     peak=stacks*lanes*32
-    fill=native_latency+request_hops+data_hops+5+2
+    write_commit=3;read_publication=5;seam_captures=2
+    fill=native_latency+request_hops+write_commit+read_publication+data_hops+seam_captures
     descriptor_cycles=sectors_per_request/lanes
     required_windows=math.ceil(fill/descriptor_cycles)
     tag_count=1<<tag_bits
-    rtt=data_hops+credit_hops+2
+    # Credit is reserved at read launch, before registered publication.
+    rtt=read_publication+data_hops+credit_hops+seam_captures
     credits=1<<math.ceil(math.log2(rtt))
     lease_count=1<<math.ceil(math.log2(math.ceil(native_latency/4)+1))
     width=lanes*(256+2+tag_bits+8)+1+tag_bits+9+37+lanes+1
@@ -63,6 +65,10 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
         VM_bank_depth_scaling_at_fixed_capacity='512physicalbanks eachquarterdepth of128bankdesign; SRAMinventory regenerated beforeRTL',
         supported_formats='0FP32/5U32,1BF16,2FP8E4M3,4INT8; FP4notimplementedinexistingDMAfront',
         initial_credits=credits,credit_RTT_cycles_budget=rtt,
+        SRAM_write_commit_cycles=write_commit,
+        SRAM_read_publication_cycles=read_publication,
+        interface_seam_capture_cycles=seam_captures,
+        credit_reservation_point='cache_read_launch_before_registered_publication',
         source_to_first_data_fill_cycles_budget=fill,
         request_window_sectors=sectors_per_request,
         port_peak_descriptor_drain_cycles=descriptor_cycles,
