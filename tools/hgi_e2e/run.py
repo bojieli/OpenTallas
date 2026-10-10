@@ -144,6 +144,11 @@ def prep(d: Path):
 
 
 def script(a):
+    gd = dict(g.split("=", 1) for g in a.g)
+    for key in ("FLAT", "KLAT", "VLAT"):                 # latency knobs are script flags, not extra -G
+        if key in gd:
+            setattr(a, key.lower(), int(gd.pop(key)))
+            a.g = [g for g in a.g if not g.startswith(key + "=")]
     real = [x for x in a.real.split(",") if x]
     src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
     src = list(dict.fromkeys(src + closure(src)))
@@ -151,7 +156,6 @@ def script(a):
     gp += (" +define+E2E_COLL_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     tag = ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
-    gd = dict(g.split("=", 1) for g in a.g)
     wi = ""
     if "coll" in real and ("COLL_BF16" in gd or "COLL_PFMAX" in gd):
         # what-if copy of the collective block body: the PSG endpoint built with these parameters
