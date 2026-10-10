@@ -78,8 +78,17 @@ def collective_credit_binding(root):
     manifest = json.loads(manifest_path.read_text())
     bindings, problems = {}, []
     receipts = sorted((root / 'results/closure_loop').glob('*/verdict.json'))
+    overrides = manifest.get('per_master_source_commits', {})
+    invalid_mapping = False
+    if not isinstance(overrides, dict) or set(overrides) - set(COLL_CR_PARTS):
+        overrides = {}
+        invalid_mapping = True
+        problems.append('collective: invalid per-master source mapping')
     for master in COLL_CR_PARTS:
-        expected = manifest['source_commits']['lane' if master == 'dsfd_coll_lane_w' else 'core']
+        expected = overrides.get(master, manifest['source_commits']['lane' if master == 'dsfd_coll_lane_w' else 'core'])
+        if invalid_mapping or not isinstance(expected, str) or not re.fullmatch('[0-9a-f]{9,40}', expected):
+            problems.append(f'{master}: invalid source pin')
+            continue
         params = manifest['required_parameters'][master]
         for vp in receipts:
             v = json.loads(vp.read_text())
