@@ -143,6 +143,7 @@ module ot_qwen_nearhbm_head_h #(
     input  wire [HD*8-1:0]      row_in,
     input  wire [15:0]          e_in,         // this head's e
     input  wire [LTW-1:0]       lt_in,        // local-tree / node decision word (S1b)
+    input  wire [1:0]           hid,          // this tile's head (0..3): a die-top strap, so one hard tile serves every head
     input  wire                 q_valid_in,   // the q beat broadcast (S1b)
     input  wire [5:0]           q_beat_in,
     input  wire [511:0]         q_data_in,
@@ -174,11 +175,20 @@ module ot_qwen_nearhbm_head_h #(
         if (!rt) begin c2[3:1] <= 3'd0; lt2 <= {LTW{1'b0}}; qv2 <= 1'b0; end
         else begin c2[3:1] <= c_in[3:1]; lt2 <= lt_in; qv2 <= q_valid_in; end
     always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; end
-    // q rows of heads H (g = 0) and 4 + H (g = 1): beats 4 H .. 4 H + 3 and 4 (4 + H) .. + 3 of the h-major broadcast
+    // q rows of heads hid (g = 0) and 4 + hid (g = 1): beats NB hid .. + NB - 1 and NB (4 + hid) .. of the h-major
+    // broadcast (NB = HD 16 / 512 beats a row; a beat-aligned row is captured by the strap; else by the parameter H)
     reg  [HD*16-1:0] q0, q1;
     localparam integer NQB = 8 * HD * 16 / 512;
+    localparam integer NB = HD * 16 / 512;
     genvar bi;
-    generate for (bi = 0; bi < NQB; bi = bi + 1) begin : g_qw
+    generate if ((HD * 16) % 512 == 0) begin : g_qa
+        for (bi = 0; bi < NB; bi = bi + 1) begin : g_qw
+            always @(posedge clk) begin
+                if (qv2 && qb2 == 6'(NB * {30'd0, hid} + bi))       q0[512*bi +: 512] <= qd2;
+                if (qv2 && qb2 == 6'(NB * (4 + {30'd0, hid}) + bi)) q1[512*bi +: 512] <= qd2;
+            end
+        end
+    end else for (bi = 0; bi < NQB; bi = bi + 1) begin : g_qw
         // the part of beat bi inside head H's / head 4 + H's row (q is h-major: head x at bits x HD 16 ..)
         localparam integer BO = 512 * bi;
         localparam integer L0 = H * HD * 16, L1 = (4 + H) * HD * 16;
@@ -376,17 +386,18 @@ module ot_qwen_nearhbm_ectl_h #(
     // cycle markers for the bench
     output reg                  ev_k_first,
     output reg                  ev_v_first,
-    // ---- the head tiles (hard sub-tiles): S1b outputs per tile pair, returns per head ----
-    output wire [2*4-1:0]       t_c,
-    output wire [2*HD*8-1:0]    t_row,
-    output wire [2*64-1:0]      t_e,
-    output wire [2*12-1:0]      t_lt,
-    output wire [1:0]           t_qv,
-    output wire [2*6-1:0]       t_qb,
-    output wire [2*512-1:0]     t_qd,
-    input  wire [4*32-1:0]      t_sc,
-    input  wire [3:0]           t_sf,
-    input  wire [3:0]           t_gf
+    // ---- the head tiles (hard sub-tiles): one S1b copy per tile pair (t0: heads 0 / 1 on the S face, t1: heads 2 / 3 on
+    //      the N face), the heads' returns on the same faces ----
+    output wire [3:0]           t0_c,   t1_c,
+    output wire [HD*8-1:0]      t0_row, t1_row,
+    output wire [31:0]          t0_e,   t1_e,       // e of the pair's two heads (16 b each)
+    output wire [11:0]          t0_lt,  t1_lt,
+    output wire                 t0_qv,  t1_qv,
+    output wire [5:0]           t0_qb,  t1_qb,
+    output wire [511:0]         t0_qd,  t1_qd,
+    input  wire [2*32-1:0]      ts0_sc, ts1_sc,     // {head 2P + 1, head 2P}
+    input  wire [1:0]           ts0_sf, ts1_sf,
+    input  wire [1:0]           ts0_gf, ts1_gf
 );
     localparam integer LN = 4 * HD;
     localparam integer LV = $clog2(HD);
@@ -634,12 +645,29 @@ module ot_qwen_nearhbm_ectl_h #(
         if (!rc) begin c1[3:1] <= 3'd0; lt1 <= {LTW{1'b0}}; end
         else begin c1[3:1] <= {k_issue, v_issue && c_vrow, v_issue && (c_k == 4'd0)}; lt1 <= ltw; end
     always @(posedge clk) begin c1[0] <= c_g; row1 <= row; e1 <= e_word; end
+    wire [2*4-1:0]    t_c;
+    wire [2*HD*8-1:0] t_row;
+    wire [2*32-1:0]   t_e;
+    wire [2*12-1:0]   t_lt;
+    wire [1:0]        t_qv;
+    wire [2*6-1:0]    t_qb;
+    wire [2*512-1:0]  t_qd;
+    wire [4*32-1:0]   t_sc = {ts1_sc, ts0_sc};
+    wire [3:0]        t_sf = {ts1_sf, ts0_sf};
+    wire [3:0]        t_gf = {ts1_gf, ts0_gf};
+    assign {t1_c, t0_c} = t_c;
+    assign {t1_row, t0_row} = t_row;
+    assign {t1_e, t0_e} = t_e;
+    assign {t1_lt, t0_lt} = t_lt;
+    assign {t1_qv, t0_qv} = t_qv;
+    assign {t1_qb, t0_qb} = t_qb;
+    assign {t1_qd, t0_qd} = t_qd;
     genvar gg, h;
     generate for (gg = 0; gg < 2; gg = gg + 1) begin : g_s1b
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(3)) u_c (.clk(clk), .rst_n(rhalf[gg]), .d(c1[3:1]), .q(t_c[4*gg+1 +: 3]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_g (.clk(clk), .d(c1[0]), .q(t_c[4*gg]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(HD*8)) u_r (.clk(clk), .d(row1), .q(t_row[HD*8*gg +: HD*8]));
-        (* keep_hierarchy *) ot_nhb_rep_h #(.W(64)) u_e (.clk(clk), .d(e1), .q(t_e[64*gg +: 64]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(32)) u_e (.clk(clk), .d(e1[32*gg +: 32]), .q(t_e[32*gg +: 32]));
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(LTW)) u_t (.clk(clk), .rst_n(rhalf[gg]), .d(lt1), .q(t_lt[LTW*gg +: LTW]));
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_qv (.clk(clk), .rst_n(rhalf[gg]), .d(qv_r), .q(t_qv[gg]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(6 + 512)) u_qd (.clk(clk), .d({qb_r, qd_r}), .q({t_qb[6*gg +: 6], t_qd[512*gg +: 512]}));
@@ -812,7 +840,7 @@ module ot_qwen_nearhbm_row_engine_h #(
 );
     wire [2*4-1:0]    t_c;
     wire [2*HD*8-1:0] t_row;
-    wire [2*64-1:0]   t_e;
+    wire [2*32-1:0]   t_e;
     wire [2*12-1:0]   t_lt;
     wire [1:0]        t_qv;
     wire [2*6-1:0]    t_qb;
@@ -827,14 +855,17 @@ module ot_qwen_nearhbm_row_engine_h #(
         .er_addr(er_addr), .er_data(er_data), .sc_valid(sc_valid), .sc_addr(sc_addr), .sc_data(sc_data), .lmax(lmax),
         .lmax_any(lmax_any), .nb_valid(nb_valid), .nb_beat(nb_beat), .nb_g(nb_g), .nb_gam(nb_gam), .nb_cr(nb_cr),
         .k_done(k_done), .v_done(v_done), .fault(fault), .ev_k_first(ev_k_first), .ev_v_first(ev_v_first),
-        .t_c(t_c), .t_row(t_row), .t_e(t_e), .t_lt(t_lt), .t_qv(t_qv), .t_qb(t_qb), .t_qd(t_qd), .t_sc(t_sc),
-        .t_sf(t_sf), .t_gf(t_gf));
+        .t0_c(t_c[3:0]), .t1_c(t_c[7:4]), .t0_row(t_row[0 +: HD*8]), .t1_row(t_row[HD*8 +: HD*8]),
+        .t0_e(t_e[31:0]), .t1_e(t_e[63:32]), .t0_lt(t_lt[11:0]), .t1_lt(t_lt[23:12]), .t0_qv(t_qv[0]), .t1_qv(t_qv[1]),
+        .t0_qb(t_qb[5:0]), .t1_qb(t_qb[11:6]), .t0_qd(t_qd[511:0]), .t1_qd(t_qd[1023:512]),
+        .ts0_sc(t_sc[63:0]), .ts1_sc(t_sc[127:64]), .ts0_sf(t_sf[1:0]), .ts1_sf(t_sf[3:2]), .ts0_gf(t_gf[1:0]),
+        .ts1_gf(t_gf[3:2]));
     genvar h;
     generate for (h = 0; h < 4; h = h + 1) begin : g_head
         localparam integer P = h / 2;          // the S1b copy of this head's tile pair
         ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
-            .e_in(t_e[64*P + 16*h +: 16]), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
             .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
             .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
     end endgenerate

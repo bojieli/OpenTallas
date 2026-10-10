@@ -33,6 +33,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import qwen_rom_fulldie as F     # noqa: E402  (Inst, Master, lattice, phy_pins, pin_rects, write_netlist)
 
 GX, GY, SHAVE = F.GX, F.GY, F.SHAVE
+F.MINW_PINS = True               # M6 / M7 face pins at 0.032 (die_kv7 PA DRT-0073: 0.024 is sub-minimum)
 up = F.up
 TPL_PATH = ROOT / 'tools' / 'qwen_kv_die' / 'r21c_band.json'
 MARGIN = 21.6
