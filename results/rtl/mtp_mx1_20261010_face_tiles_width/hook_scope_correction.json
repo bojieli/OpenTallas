@@ -1,0 +1,14 @@
+{
+  "prior_source": "45ba54810",
+  "prior_job": "hfd_cmdproc_s_mtp_native_mx1_rb-ft3-hm10-45ba54810-tc",
+  "failed_stage": "3_3_place_gp PRE_GLOBAL_PLACE hook invoked inside ORFS proc",
+  "failure": "mx_row_at helper cannot read global mx_nr because hook source created locals",
+  "fix": "explicit global mx_rows mx_nr mx_occ before assigning helper state; no RTL changes",
+  "verification": "actualFT3 3_2_place_iop.odb loaded read-only, source hook inside procedure; PASS4524 anchored FFs/lockups max20.748um",
+  "signoff": false,
+  "logs": {
+    "ft3_hook_scope_failure.log": "61648197f11d247762338fa8a1a699d5cf3d290209b8b9626c7516a841b26406",
+    "ft3_proc_pin_seats.log": "705b2c17e5489fe1b67746b443384eefa9eb7148f0be4fcdb5affea35c83c584",
+    "ft3_proc_pin_stations.tsv": "9f7228f6b61ecdce81b04e72430939bdf9a2628feaee01283fa69a896f7d3a58"
+  }
+}

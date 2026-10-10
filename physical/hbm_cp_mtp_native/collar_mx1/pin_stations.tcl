@@ -1,5 +1,8 @@
 # PRE_GLOBAL_PLACE, TILECLK candidate only: actual capture FFs, lockups, and
 # output pin FFs own their pin seats. No other cells or paths are moved/exempted.
+# ORFS source_step_tcl invokes hooks inside a procedure. Share only helpers
+# state explicitly, so helper procs see the same rows/occupancy in either scope.
+global mx_rows mx_nr mx_occ
 set mx_blk [ord::get_db_block]
 set mx_dbu [$mx_blk getDbUnitsPerMicron]
 set mx_io /src/physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/io_place.tcl
