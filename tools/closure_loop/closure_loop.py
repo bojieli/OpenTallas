@@ -364,7 +364,7 @@ def stage_list(spec):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
-                        min_count_regex=b.get("min_count_regex"),
+                        min_count_regex=b.get("min_count_regex"), timeout_s=b.get("timeout_s"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     # OWNER 2026-10-08: a recipe that references IO in-run to its own propagated clock (io_ref_skew.sdc) needs no

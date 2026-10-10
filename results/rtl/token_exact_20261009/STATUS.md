@@ -15,7 +15,7 @@ exists but a fixture or host is missing.
 
 | Target | Layer verdict (RTL, current structure) | Token composition |
 |---|---|---|
-| Qwen3-8B ROM (TP4 ROM die + KV die), P8191 | **exact.** Three chained layers L0-L2 on the split partition (sequencer / tree top / SU across the die-master boundary, DCU=DUC=2 stations, split compensation, SU lane ML 7): 12/12 layer X and 12/12 current-K/V writes bit-exact, write-back drained. Every new mechanism outside that vehicle is exact on its own bench. | 36 x the L1 layer + L0 + head. The head is **not run** on the split core: its input fixture needs the TP4 36-layer gold, and that regeneration is blocked because the GPU needs a reset (owner). |
+| Qwen3-8B ROM (TP4 ROM die + KV die), P8191 | **exact.** Three chained layers L0-L2 on the split partition (sequencer / tree top / SU across the die-master boundary, DCU=DUC=2 stations, split compensation, SU lane ML 7): 12/12 layer X and 12/12 current-K/V writes bit-exact, write-back drained. The LM head on the same split core is exact (token and winning logit on all 4 ranks, all 4 normalised head inputs). Every new mechanism outside that vehicle is exact on its own bench. | L0 + 35 x the L1 layer + the head, all measured: **201,041 cycles** (see Composition). |
 | HBM generic die: Qwen TP4 INT8 + DS | **exact in the simulator** (HGI-1 records on r25: Qwen full token at P8191, DS full 1M token). **RTL:** exact on the main-line vehicles (Qwen TP2 L0, DS SM PQ/XMAP joint P1+P6). Exact on the fork block benches, with DS / legacy lockstep against the pre-fork RTL. | No r25 RTL layer bench exists yet: the forks are not on main and the R25G die is not assembled. |
 | DS-V4.1 ROM (S81), P1,048,575 | **exact.** L20 (ratio-1 + compressor + indexer layer): 24 field phases x 2,864 region runs in RTL, 26 field ops / 34,880 rows chained through the VM, the chain VM equal to the golden after all 143 ops, final VM 450,479 words equal, the selector exact on the 1M golden scores. The mutant is detected. BF, coll_core and Engram are exact on their own benches. | The 117 non-field ops are golden-composed: their inputs are proven bit-identical at every op boundary. |
 
@@ -36,7 +36,7 @@ exists but a fixture or host is missing.
 | Split spine end to end (BANDF slab ports, LNK1/CLNK2, die geometry GT 6,144, splits 7-11) | exact: sb_exact / sb_link / sb_qwen PASS; 4 mutants FAIL | `qwen_comp/STATUS.txt` |
 | Q / new-K / V -> KV die -> attention result crossing, **with the KV4 write-then-read fence** (kv-die 224d19c30, STACK d) | exact: 14/14 base runs (7 vectors incl. ctx 8192 normal/peaky, 8191, 4097, 2048, 129, 1; stall 0/1) at best / typical / worst PHY latency (8192 layer step 1,827 / 1,829 / 1,841 cycles); mutants 1-5 and 7 FAIL; base-RTL controls 6 (TIGHT) and 8 (fence stall 400) exact. Measured by the kv-die stream (run11), harvested here | `kv_die/run11_results.jsonl.txt` |
 | Embedding from HBM (boot load, gateway, PC strip, far bus, SU landing) | exact: base_kv0/1/2 + twin_kv1/2 PASS (mean fill latency 459-488 cycles); mut_row / mut_scale / mut_ecc / mut_gate FAIL; 160-token image | `qwen_comp/emb_hbm_run.json` |
-| Head (LM head + argmax) on the split core | not run: no L35 X fixture (TP4 36-layer gold regen blocked by the GPU, which needs a reset) | - |
+| Head (LM head + argmax) on the split core (s22ml7), head alone with the CPU gold's L35 output as its input | exact: token 24 / logit 0x41962749 on all 4 ranks, 4/4 head Xnorm digests; 3,048 stage cycles (base die: 2,999, also exact) | `heads/qwen_rom_head_s22ml7.json`, `heads/qwen_rom_head_base.json` |
 | Collective tags at full shape (one stage program per start: tags repeat across the 36 layer stages) | exact (fixed, reviewed 2026-10-09): `ot_qwen_tp_seq_w12_fs` (instantiated by `ot_qfd_sp_constants_sequencer_sys`) tags `{gen, stage, pos[12:0], token[7:0], seg[2:0]}`; bench with two AR segments a stage, 38 stages x P 5/261/517/8191: 0 collisions (base 28,576); stage / pos8 / seg collision mutants FAIL | `results/rtl/qwen_system_20261008/tag/review_20261009/`, `physical/sys_takeover/seq_tag_bench.sh` |
 
 ### (b) HBM generic die
@@ -50,7 +50,7 @@ exists but a fixture or host is missing.
 | Fork: collective group sizes (ot_hbm_accel_tu_endpoint_psg) | exact: n = 2/4/8 | exact: legacy CF-1 set (62 runs) | `hbm_forks/STATUS_fa2b6fdb2.txt`; 4 pad negatives caught |
 | Fork: attention half tile with the ldk strap | exact: ldk 1 | exact: CF-1 roles 0-4 lockstep, ldk 0 | same; LDK mutant FAIL |
 | r25 Qwen TP4 INT8 RTL layer / token bench | not run: no bench exists until the forks land and R25G is assembled (hbm-forks, Codex die integration) | not run (same) | - |
-| HBM-Qwen LM head (hbm_qwen_head) | blocked: TP2 36-layer gold regen failed (export lacked compiler/models/qwen3-8b/config.json) and the GPU needs a reset | - | fixtures.log |
+| HBM-Qwen LM head (TP2 w224 head bench) on the CPU TP2 gold | exact: token 24, logit 0x416f3349 = gold, 4,641 cycles (= the harness's expected head cycles) | - | `heads/hbm_qwen_head_token_result.json` |
 
 ### (c) DS-V4.1 ROM (S81), P1,048,575
 
@@ -70,5 +70,14 @@ exists but a fixture or host is missing.
 
 ## Composition (pathfinding)
 
-On the split, the Qwen ROM token is measured as 6,151 cycles for L0 and 5,480 for each later layer. That is +107 and +198 cycles against the published base (6,044 / 5,282). Composed: 193,955 + 107 + 35 x 198 = **200,992 cycles + the head delta (unmeasured)**, about +3.6 % per token from the split stations, the compensation and the SU ML 7. The KV-die crossing adds the kv-die stream's own +8 cycles a layer for the fence (CONTRACT v1.1). That stream prices it; it is not composed here.
+On the split, the Qwen ROM token is measured as 6,151 cycles for L0, 5,480 for each later layer and 3,048 for the head. That is +107, +198 and +49 cycles against the base die measured on the same tree (6,044 / 5,282 / 2,999, the published per-stage cycles). Composed: 193,955 + 107 + 35 x 198 + 49 = **201,041 cycles**, +3.65 % per token from the split stations, the compensation and the SU ML 7. The KV-die crossing adds the kv-die stream's own +8 cycles a layer for the fence (CONTRACT v1.1). That stream prices it; it is not composed here.
 
+
+## 36-layer golds regenerated on CPU (owner decision 2026-10-09: no GPU reset)
+
+- **Tool.** `tools/qwen_hbmacc_position_oracle_gpu.py --device cpu` runs the same torch golden: the r21/split TP4 and the TP2 summation orders, chunked K-split, rank-order fold, and the chunked running argmax head. It runs on ot-epyc1tb in a uv venv (torch 2.14 + numpy 2.5.3, 32 threads). The primitive self-test passed bit for bit against `hdc_golden` before use.
+- **History seeding.** `--kv-history` seeds every layer's K/V store and decodes only position 8191. measure-at-target-context allows a format-valid synthetic history, because a layer is a pure function of its inputs. L0-L2 use the real prompt history (the committed pin). L3-L35 reuse L0's history. The RTL runs used the same history files.
+- **Cross-check of the CPU path.** The CPU gold reproduces the committed real-prompt digests for every L0-L2 layer X, kv_pre and kv_at_P, and for the x preload. This holds for TP4 against the committed oracle and for TP2 against the verified tp2_l3 gold (`heads/STATUS_HEADS.txt`).
+- **Records.** `heads/cpu_gold_{tp4,tp2}_oracle.json`: next token 24, TP4 logit 0x41962749, TP2 logit 0x416f3349. Each gold took 17-18 min wall time and 12-13 GB RSS.
+- **Why not the full real-prompt prefill.** On CPU it costs 1,016 s per position for 36 layers plus the head. That is about 96 days for 8,192 positions, so it is not feasible. The committed real-prompt digests remain the reference for L0-L2.
+- **Restored HBM-Qwen head images.** The TP2 W12 stage images (`hbm-accel-qwen-token/w12`) were swept from scratch-overflow on 10-09. The head images were rebuilt from the pinned prep npz with `tools/exactness/w12_head_restore.py`. All three files per die are sha256-equal to the pins, so they are byte-identical restorations. The head program and segments came from `w12_head_stage.py` + `qwen_rom_program_sw.py`; the identical procedure reproduces the surviving TP4 head program and segments byte for byte. The layer images (L0-L35) are still lost.
