@@ -11,6 +11,7 @@ module tb_hbm_svc_dma_pc_cache_wide;
  ot_hbm_svc_dma_pc_cache_wide #(.ENABLE(1),.MUT_EPOCH(MUT)) dut(.*);
  reg [1027:0] expect_q[0:511];integer sent=0,seen=0,rejected=0,cycle=0;
  integer first_fetch=-1,first_publish=-1,previous_publish=-1,max_gap=0;
+ integer same_bank_stalls=0;
  reg measure=0,held=0;reg [1027:0] held_word;
  function automatic [255:0] pat(input integer g,input integer b,input bit e);
    pat={64'h123456789abcdef0^g,64'hfedcba9876543210^b,64'h55aa00ff3333aaaa^g,64'h0f0f1f1f2f2f3f3f^e};
@@ -22,6 +23,7 @@ module tb_hbm_svc_dma_pc_cache_wide;
    cycle=cycle+1;
    if(rst_n) begin
      if(ret_reject)rejected=rejected+1;
+     if(ret_v && !ret_rdy)same_bank_stalls=same_bank_stalls+1;
      if(measure && fetch_v && fetch_rdy && first_fetch<0)first_fetch=cycle;
      if(held && (!out_v || {out_fault,out_data}!==held_word))$fatal(1,"held bundle changed");
      held=out_v && !out_rdy;if(held)held_word={out_fault,out_data};
@@ -88,6 +90,17 @@ module tb_hbm_svc_dma_pc_cache_wide;
    for(b=0;b<4;b=b+1)respond(4,b,1,0);
    drain();if(rejected!=5)$fatal(1,"epoch rejection count");
    respond(4,0,1,0);if(rejected!=6)$fatal(1,"duplicate response accepted");
+   // A queued dispatch can hold continuous valid across different groups
+   // targeting the same bank. Its II2 creates real admission stalls; tags and
+   // data remain attached to each accepted response through write completion.
+   for(g=80;g<88;g=g+1)allocate(g,0,1);
+   for(g=80;g<88;g=g+1)begin
+     @(negedge clk);ret_v=1;ret_group=g;ret_bank=0;ret_epoch=1;ret_data=pat(g,0,1);ret_fault=0;
+     @(posedge clk);while(!ret_rdy)@(posedge clk);
+   end
+   @(negedge clk);ret_v=0;
+   for(g=80;g<88;g=g+1)fetch(g,1,1,0);
+   drain();if(same_bank_stalls<7)$fatal(1,"same bank collision not exercised");
    // Stored SRAM fault record is a poisoned sector in an otherwise exact bundle.
    for(b=0;b<4;b=b+1)allocate(70,b,1);
    for(b=0;b<4;b=b+1)respond(70,b,1,b==2);
@@ -106,7 +119,7 @@ module tb_hbm_svc_dma_pc_cache_wide;
    ret_group=70;ret_bank=0;ret_epoch=0;ret_v=1;
    repeat(2)@(negedge clk);ret_v=0;
    if(!metadata_fault || out_v || alloc_rdy || fetch_rdy)$fatal(1,"metadata detection failure");
-   $display("PASS bundles=%0d rejected=%0d fetch_before_alloc epoch debt backpressure protected_metadata",seen,rejected);
+   $display("PASS bundles=%0d rejected=%0d same_bank_stalls=%0d fetch_before_alloc epoch debt backpressure protected_metadata",seen,rejected,same_bank_stalls);
    $finish;
  end
  initial begin repeat(30000)@(posedge clk);$display("DEBUG seen=%0d sent=%0d g=%0d b=%0d af=%b rf=%b ff=%b mf=%b head=%d tail=%d st0=%h req0=%h meta200=%h brv=%h bov=%h",seen,sent,g,b,alloc_rdy,ret_rdy,fetch_rdy,metadata_fault,dut.head,dut.tail,dut.st[0],dut.req[0],dut.meta[200],dut.brv,dut.bov);$fatal(1,"deadlock");end
