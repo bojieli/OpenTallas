@@ -19,6 +19,7 @@
 // ---------------------------------------------------------------------------
 module hfd_attn_half_lo #(
     parameter integer CG = 0, // must match half_hi for gated successor
+    parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2); 0 = SN (half / half_ps)
     parameter integer NK = 4,
     parameter integer NC = 2,
     parameter integer NR = 3,
@@ -76,7 +77,8 @@ module hfd_attn_half_lo #(
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 2 * x;
             wire [PW-1:0] row_q;
-            ot_attn_bpipe #(.W(PW), .N(1)) u_row (.clk(clk), .d(mid_q), .q(row_q));
+            // hbm-phys-1010 [att]: ROWEW 1 = the ROW stage as EW banks (q facing the quad's M4 input edge; floorplan v2)
+            ot_attn_bpipe #(.W(PW), .N(1), .EW0(ROWEW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
             wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
             wire [2:0]    q_ld_bank, q_ibank;
             wire [7:0]    q_ld_grp;
@@ -96,6 +98,7 @@ endmodule
 
 module hfd_attn_half_hi #(
     parameter integer CG = 0, // must match half_lo; validates all16 required heads
+    parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2)
     parameter integer PMID = 2,
     parameter integer NFC = 2,
     parameter integer NL = 8,
@@ -125,7 +128,8 @@ module hfd_attn_half_hi #(
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 8 + 2 * x;
             wire [PW-1:0] row_q;
-            ot_attn_bpipe #(.W(PW), .N(1)) u_row (.clk(clk), .d(mid_q), .q(row_q));
+            // hbm-phys-1010 [att]: ROWEW 1 = the ROW stage as EW banks (q facing the quad's M4 input edge; floorplan v2)
+            ot_attn_bpipe #(.W(PW), .N(1), .EW0(ROWEW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
             wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
             wire [2:0]    q_ld_bank, q_ibank;
             wire [7:0]    q_ld_grp;

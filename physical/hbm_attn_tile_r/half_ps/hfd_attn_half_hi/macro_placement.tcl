@@ -23,8 +23,8 @@ place_macro -macro_name {g_y1.g_x\[0\].u_row.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -loc
 place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {1055.808 366.696} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {1055.808 380.664} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {1055.808 394.680} -orientation R0 -exact
-place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {15.000 333.700} -orientation MY -exact
-place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {15.000 167.890} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {15.000 333.696} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {15.000 167.904} -orientation MY -exact
 place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {81.888 63.384} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {344.832 60.984} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {607.776 58.584} -orientation R0 -exact
@@ -35,10 +35,10 @@ place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -loca
 place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {667.632 33.816} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {998.304 38.856} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {1328.976 37.464} -orientation R0 -exact
-place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1743.408 333.700} -orientation R0 -exact
-place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1743.408 167.890} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1743.408 333.696} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1743.408 167.904} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {1657.776 85.416} -orientation R0 -exact
-place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {1657.968 70.440} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {1657.968 70.488} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {1658.208 55.512} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[5\].g_c\[0\].g_sn.u_b} -location {1658.448 40.536} -orientation R0 -exact
 place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[6\].g_c\[0\].g_sn.u_b} -location {1658.640 25.560} -orientation R0 -exact

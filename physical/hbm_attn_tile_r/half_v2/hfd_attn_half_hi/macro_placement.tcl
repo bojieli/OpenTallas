@@ -1,0 +1,59 @@
+# hfd_attn_half_hi floorplan v2 (tools/hbm_attn_half_tile_place_v2.py, access zones 20.0 um): NK=4 NC=2 NR=3 PMID=2 NFC=2 NFR=3 NL=8 NI=6 NLL=3
+place_macro -macro_name {g_y1.g_x\[0\].u_q} -location {91.230 105.120} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_q} -location {1169.808 105.120} -orientation R0 -exact
+place_macro -macro_name {u_xin.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {733.536 0.024} -orientation R0 -exact
+place_macro -macro_name {u_xin.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {841.056 0.024} -orientation R0 -exact
+place_macro -macro_name {u_xin.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {948.576 0.024} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {30.000 0.024} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_xr.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {1718.496 0.024} -orientation R0 -exact
+place_macro -macro_name {u_fc.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {733.536 676.872} -orientation R0 -exact
+place_macro -macro_name {u_fc.gn.g_s\[1\].g_c\[1\].g_sn.u_b} -location {841.056 676.872} -orientation R0 -exact
+place_macro -macro_name {u_fc.gn.g_s\[1\].g_c\[2\].g_sn.u_b} -location {948.576 676.872} -orientation R0 -exact
+place_macro -macro_name {u_pi.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {0.000 2.016} -orientation R0 -exact
+place_macro -macro_name {u_oo.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1766.592 2.016} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_row.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {632.736 226.176} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_row.gn.g_s\[0\].g_c\[1\].g_ew.u_b} -location {632.736 333.696} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_row.gn.g_s\[0\].g_c\[2\].g_ew.u_b} -location {632.736 441.216} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1131.312 226.176} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[1\].g_ew.u_b} -location {1131.312 333.696} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_row.gn.g_s\[0\].g_c\[2\].g_ew.u_b} -location {1131.312 441.216} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {52.752 372.576} -orientation MY -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {52.752 338.496} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1711.296 372.576} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[1\].g_c\[0\].g_ew.u_b} -location {1711.296 338.496} -orientation MY -exact
+place_macro -macro_name {u_fc.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {733.536 338.424} -orientation R0 -exact
+place_macro -macro_name {u_fc.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {841.056 338.424} -orientation R0 -exact
+place_macro -macro_name {u_fc.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {948.576 338.424} -orientation R0 -exact
+place_macro -macro_name {g_y1.u_mid.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {733.536 244.056} -orientation R0 -exact
+place_macro -macro_name {g_y1.u_mid.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {841.056 244.056} -orientation R0 -exact
+place_macro -macro_name {g_y1.u_mid.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {948.576 244.056} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {44.640 67.800} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {308.880 53.256} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {586.800 52.392} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[5\].g_c\[0\].g_sn.u_b} -location {864.720 51.528} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[6\].g_c\[0\].g_sn.u_b} -location {1142.640 50.712} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_res.gn.g_s\[7\].g_c\[0\].g_sn.u_b} -location {1420.560 49.848} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {338.880 36.792} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {677.136 39.864} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {1017.600 42.888} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[0\].u_xr.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {1358.064 45.960} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {1703.184 303.432} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {1703.184 260.232} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {1703.184 217.032} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[5\].g_c\[0\].g_sn.u_b} -location {1703.184 173.832} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[6\].g_c\[0\].g_sn.u_b} -location {1703.184 130.680} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_res.gn.g_s\[7\].g_c\[0\].g_sn.u_b} -location {1703.184 87.480} -orientation MX -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_xr.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {1718.496 33.240} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_xr.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {1690.416 18.984} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_xr.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {1688.352 52.344} -orientation R0 -exact
+place_macro -macro_name {g_y1.g_x\[1\].u_xr.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {1661.040 4.200} -orientation MX -exact
+place_macro -macro_name {u_pi.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {192.720 44.616} -orientation MX -exact
+place_macro -macro_name {u_pi.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {437.232 45.336} -orientation R0 -exact
+place_macro -macro_name {u_pi.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {705.456 54.696} -orientation R0 -exact
+place_macro -macro_name {u_pi.gn.g_s\[4\].g_c\[0\].g_sn.u_b} -location {911.040 57.624} -orientation MX -exact
+place_macro -macro_name {u_pi.gn.g_s\[5\].g_c\[0\].g_sn.u_b} -location {1172.832 47.544} -orientation MX -exact
+place_macro -macro_name {u_pi.gn.g_s\[6\].g_c\[0\].g_sn.u_b} -location {1415.136 15.864} -orientation R0 -exact
+foreach ot_i [[ord::get_db_block] getInsts] {
+  if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }
+}
+puts "OT_ATTN_HALF_PLACED hfd_attn_half_hi banks=52"
