@@ -426,7 +426,8 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | 42–45 | reserved | — |
 | 46 | `coll_group_size` (bits 7:0) | collective |
 | 47–48 | reserved | — |
-| 49, 53–55 | reserved for MTP parameters (§10.3) | — |
+| 49 | MTP per-layer kernel stride `kstride` (G26), 16-byte units; 0 = one body per kind | CP (MTP translator) |
+| 53–55 | reserved for MTP parameters (§10.3) | — |
 | 50–52 | reserved for window and chunk parameters (§10.2) | — |
 | 56–58 | entry offsets: AR, verify, draft | CP |
 | 59 | reserved | — |
@@ -699,6 +700,8 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 Completion status: 0 OK, 1 unit fault, 2 no result, 3 bad command or range.
 
 **Entry 3 = KERNEL (G23).** A doorbell with `entry` 3 starts the program at MD word 16 + `kernel` (a kernel entry of 0, or `kernel` > 10, completes at once with status 3). The generic die's native DSpark MTP controller uses it: its operations (the DS draft, verify and head steps) are expanded by the CP's backend translator into one KERNEL doorbell per launch, in the order of the shipped DS-V4.1 DSpark expansion, each with that launch's `token` and `pos`. The completion of a head kernel (the verify-row and draft heads) carries the merged argmax id read by its `CTL.END`; the translator hands it to the controller. The host never needs entry 3; the translator owns the doorbell while a native MTP job runs.
+
+**Per-layer kernels (G26).** Kinds 3 (`layer`), 7 (`dsa`) and 8 (`dsb`) run a different body per DS layer (7 layer types) or draft stage, so one entry per kind cannot serve them. The image places layer L's body at `kent[kind] + L′ · kstride` (MD word 49, 16-byte units), with L′ = L for kind 3 and the draft stage st for kinds 7 and 8. The translator takes L from the position field of the column's preceding `swapin` launch (kind 0: L for a verify layer, 40 + st for a draft stage) and registers L′ · kstride when that swapin launches; no memory is read. Each body ends with `CTL.END`, so the padding up to the next body never runs. `kstride` 0 keeps one body per kind (G23).
 
 ### 6.12 Model manifest schema
 

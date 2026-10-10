@@ -76,3 +76,21 @@ def test_container_kill_exemption_checks_mounts():
         result = subprocess.run(["bash", "-c", script], env={"INSPECTED": inspected}, text=True, capture_output=True, check=True)
         assert result.stdout.strip() == ("" if expected == "protected" else "stoppable"), (inspected, result)
     assert "{{.Name}} {{range .Mounts}}{{.Source}} {{end}}" in skip
+
+
+def test_container_processes_inherit_stage_oom_adj(tmp_path=None):
+    # drive-1010: in-container openroad/yosys must carry +500 too, else the kernel kills tiny +500 wrappers first
+    import os, subprocess, tempfile, pathlib
+    d = pathlib.Path(tempfile.mkdtemp())
+    (d / "shim").mkdir(); (d / "real").mkdir()
+    (d / "shim" / "docker").write_text(cl.DOCKER_SHIM); (d / "shim" / "docker").chmod(0o755)
+    (d / "real" / "docker").write_text('#!/bin/bash\necho "$@"\n'); (d / "real" / "docker").chmod(0o755)
+    env = dict(os.environ, PATH=f"{d}/shim:{d}/real:/usr/bin:/bin", OT_MEM_CAP_GB="64")
+    env.pop("OT_FP_LINT_DIR", None)
+    out = subprocess.run([str(d / "shim" / "docker"), "run", "img", "cmd"], env=env, capture_output=True, text=True).stdout
+    assert "--oom-score-adj 500" in out and "--memory 64g" in out and out.rstrip().endswith("img cmd")
+    env["OT_FP_LINT_DIR"] = str(d / "fpl")
+    out = subprocess.run([str(d / "shim" / "docker"), "run", "img"], env=env, capture_output=True, text=True).stdout
+    assert "--oom-score-adj 500" in out
+    out = subprocess.run([str(d / "shim" / "docker"), "ps"], env=env, capture_output=True, text=True).stdout
+    assert out.strip() == "ps"

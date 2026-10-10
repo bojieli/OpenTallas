@@ -171,7 +171,10 @@ def ssh(host, script, timeout=120, check=False, input=None):
             return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
     try:
-        with transport_command(host) as base:
+        # The lease wait counts against the caller's timeout: a host whose channels are all held
+        # (slow transfers, a wedged master) fails this call as a TimeoutExpired instead of parking
+        # the caller -- the main thread in write_status() waited 20+ min on 2026-10-10.
+        with transport_command(host, wait_s=timeout) as base:
             remote = "bash -s" if input is None else script
             payload = script if input is None else input
             # Inspect only a completed SSH result.  Timeouts/disconnects may have executed
@@ -1641,7 +1644,7 @@ def sync_source(j):
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
                   f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-        with transport_command(host) as base:
+        with transport_command(host, bulk=True, wait_s=600) as base:
             if verified_tar is not None:
                 # Transfer this exact validated tar, not a second git archive.
                 with verified_tar.open("rb") as stream:
@@ -1712,7 +1715,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
@@ -1772,12 +1775,15 @@ for e in ${PATH//:/ }; do
       # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
-      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+      exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
         -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
+    # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
+    # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
+    # The host probe still lowers die containers to -900 after start.
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -2455,7 +2461,7 @@ def publish(j, metrics):
             isdir = ssh(j["host"], f"test -d {shlex.quote(src)}", timeout=30).returncode == 0
             dst.parent.mkdir(parents=True, exist_ok=True)
             excl = sum((["--exclude", x] for x in r.get("exclude", [])), [])
-            with transport_command(j['host']) as base:
+            with transport_command(j['host'], bulk=True) as base:
                 remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
                 if isdir:
                     dst.mkdir(parents=True, exist_ok=True)
@@ -2516,7 +2522,7 @@ def ledger(j, text):
                   + "".join(f"    {x}\n" for x in rest if x))
 
 
-def write_status(fleet_note=""):
+def write_status(fleet_note="", fleet=None):
     rows = all_jobs()
     act = [r for r in rows if r["status"] not in TERMINAL]
     done = [r for r in rows if r["status"] in TERMINAL][-25:]
@@ -2538,10 +2544,16 @@ def write_status(fleet_note=""):
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
           "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
+        # Status reporting reads the admission probe the job threads already took; the main thread
+        # never opens ssh (it blocked tick() on an exhausted EPYC3 lease pool 2026-10-10 06:03-06:2x).
+        good = getattr(fleet, "last_good", {}).get(h["name"]) if fleet is not None else None
         try:
-            r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
-            v = r.stdout.split() if r.returncode == 0 else []
-            ld = float(v[0]) if len(v) == 2 else None
+            if good is not None and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                v, ld = ["", str(good[1]["mem_gb"])], float(good[1]["load1"])
+            else:   # no fresh probe: a bounded read (lease wait included), never an unbounded park
+                r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+                v = r.stdout.split() if r.returncode == 0 else []
+                ld = float(v[0]) if len(v) == 2 else None
         except (subprocess.TimeoutExpired, OSError, ValueError):
             # Fleet reporting must never terminate the coordinator or prevent
             # the next intake tick because one SSH peer is unavailable.
@@ -4604,7 +4616,7 @@ def migrate_checkpoint(j, dest):
     ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
     with ExitStack() as stack:
         # Stable order avoids opposite-direction migrations deadlocking channel leases.
-        commands = {h: stack.enter_context(transport_command(h)) for h in sorted({src, dest})}
+        commands = {h: stack.enter_context(transport_command(h, bulk=True)) for h in sorted({src, dest})}
         read = shlex.join(commands[src] + [f"tar -C {shlex.quote(run)} -cf - ."])
         write = shlex.join(commands[dest] + [f"tar -C {shlex.quote(run)} -xf -"])
         p = subprocess.run(["bash", "-o", "pipefail", "-c", f"{read} | {write}"],
@@ -5246,7 +5258,7 @@ def tick(fleet):
                 continue
             _INFLIGHT.add(x["name"])
         _POOL.submit(_advance_and_release, x["name"], fleet)
-    write_status()
+    write_status(fleet=fleet)
 
 
 _RECOVERY_POOL = None
