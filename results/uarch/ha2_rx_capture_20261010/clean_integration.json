@@ -3,7 +3,11 @@
   "inherited_dependencies_byte_identical": true,
   "imported_dependencies": [
     "physical/ha2_truecredit_20261007/ot_ha2_truecredit_rx_s_phys.sv",
-    "tools/ha2_rxs_gate.py"
+    "tools/ha2_rxs_gate.py",
+    "physical/common_flow/io_flop_at_pins.tcl",
+    "physical/common_flow/io_flop_release.tcl"
   ],
-  "integration": "Narrow assets only; preserve current main runner variants and model contents. Never merge old candidate ancestry."
+  "integration": "Narrow assets only; preserve current main runner variants and model contents. Never merge old candidate ancestry.",
+  "failed_job": "ha2_rxs_cp-f3cbfc400-tc-rvt-hm10-cl",
+  "failure": "Fresh main lacked common io_flop helpers; macro collar successfully anchored1120 before missing-helper stop. Failure immutable; newsource/newjob."
 }
