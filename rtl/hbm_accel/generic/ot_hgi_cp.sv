@@ -10,7 +10,8 @@
 module ot_hgi_cp #(
     parameter integer SETTLE = 64,
     parameter integer RW = 512,
-    parameter integer USE_MACRO = 1
+    parameter integer USE_MACRO = 1,
+    parameter integer FETCH_PIN_FIFO = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -87,11 +88,44 @@ module ot_hgi_cp #(
     ot_hgi_cfg_rx #(.W0(40), .NW(2), .RST({HGI_RST_W41, HGI_RST_W40})) u_rx (.clk(clk), .rst_n(rst_n), .bus(cfg_bus),
         .act(cp_act));
     assign cfg_cp_act = cp_act;
+    // The sequencer's rqf[rqh] is a mux, so it cannot be the die pin stage.
+    // Two elastic slots put both address and valid on a register at the pin.
+    // Ready reserves the back slot; downstream stalls never lose a request.
+    wire sf_v, sf_rdy; wire [39:0] sf_addr;
+    generate if (FETCH_PIN_FIFO) begin : g_fetch_pin
+        (* keep = 1 *) reg [39:0] front_addr, back_addr;
+        (* keep = 1 *) reg front_v, back_v;
+        wire take_in = sf_v && sf_rdy;
+        wire take_out = front_v && f_req_rdy;
+        assign sf_rdy = !back_v;
+        assign f_req_v = front_v;
+        assign f_req_addr = front_addr;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin front_v <= 0; back_v <= 0; end
+            else begin
+                if (take_out) begin
+                    front_v <= back_v || take_in;
+                    back_v <= 0;
+                end else if (take_in) begin
+                    if (!front_v) front_v <= 1;
+                    else back_v <= 1;
+                end
+            end
+        always @(posedge clk) begin
+            if (take_out && back_v) front_addr <= back_addr;
+            else if (take_in && (!front_v || take_out)) front_addr <= sf_addr;
+            if (take_in && front_v && !take_out) back_addr <= sf_addr;
+        end
+    end else begin : g_fetch_legacy
+        assign f_req_v = sf_v;
+        assign f_req_addr = sf_addr;
+        assign sf_rdy = f_req_rdy;
+    end endgenerate
     ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),
-        .db_entry(db_entry), .db_ncol(db_ncol), .db_kernel(db_kernel), .md_k(md_k), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr), .f_rsp_v(f_rsp_v),
+        .db_entry(db_entry), .db_ncol(db_ncol), .db_kernel(db_kernel), .md_k(md_k), .f_req_v(sf_v), .f_req_rdy(sf_rdy), .f_req_addr(sf_addr), .f_rsp_v(f_rsp_v),
         .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
