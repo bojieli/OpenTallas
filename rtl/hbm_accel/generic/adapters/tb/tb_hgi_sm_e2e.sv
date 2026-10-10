@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // hgi-adapters (2026-10-09): END-TO-END SM.MATVEC: records -> ot_hgi_sm_record (NSM 2, LEGACY 0) -> ot_hgi_sm_xload
-// (2 VM clients) -> 2 REAL ot_hbm_accel_smh (ENABLE_INT8 1, PIPE_INT8 1; weight lines from a line-memory model with
+// (2 VM clients) -> 2 REAL ot_hbm_accel_smh (ENABLE_INT8 1, PIPE_INT8 1, RMAX 256 as the smh benches; weight lines from a line-memory model with
 // in-order responses) -> ot_hgi_sm_pub (2 VM clients) -> the REAL HGI VM (ot_hgi_vm_unit NC 5: client 4 = this bench).
 // Vectors tools/hgi_adapters/sm_e2e_bench.py (INT8 and BF16, P 1..8, uneven row splits, an idle SM).  Every published
 // O word == the golden.  Prints HGI_SM_E2E PASS / FAIL.
@@ -61,8 +61,8 @@ module tb_hgi_sm_e2e;
         wire start_ready, d_ready, req_v, fault_s, arrive, released, busy; wire [31:0] req_addr; wire [9:0] req_tag;
         reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
         assign sm_ret[s*4 +: 4] = {fault_s, arrive, d_ready, start_ready};
-        ot_hbm_accel_smh #(.ENABLE_INT8(1), .PIPE_INT8(1)) u_sm (.clk(clk), .rst_n(rst_n), .start(c[0]),
-            .start_ready(start_ready), .op_rows(c[13:1]), .op_c(c[29:14]), .op_g(c[37:30]), .op_gs(c[38]),
+        ot_hbm_accel_smh #(.ENABLE_INT8(1), .PIPE_INT8(1), .RMAX(256)) u_sm (.clk(clk), .rst_n(rst_n), .start(c[0]),
+            .start_ready(start_ready), .op_rows(c[9:1]), .op_c(c[29:14]), .op_g(c[37:30]), .op_gs(c[38]),
             .op_fmt(c[40:39]), .op_xb(c[47:41]), .busy(busy), .d_valid(c[48]), .d_ready(d_ready), .d_base(c[80:49]),
             .d_lines(c[104:81]), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
             .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),

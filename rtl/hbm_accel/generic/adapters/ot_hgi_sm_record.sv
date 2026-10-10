@@ -126,7 +126,8 @@ module ot_hgi_sm_record #(
                (mm == 20'd0) || (g_full > 21'd255) || (q_full > 16'd4095) ||
                ((pf == 2'd1 || pf == 2'd2) && (|nb_q[4:0])) ||
                (pp > 4'd1 && (a_q[87:68] != {16'd0, pp} || o_q[87:68] != {16'd0, pp}));
-    wire bad = bad1 || (b1[119:88] != {13'd0, lpr1} * {24'd0, lb1});          // E2
+    reg  [18:0] strp; reg s2_v;                                                // E2: LPR x LB, registered
+    wire bad = bad1 || (b1[119:88] != {13'd0, strp});                          // E3
 
     // ---- products: QS = Q * B.stride, LQ = Q * LPR, ML = M * LPR (radix-16 iterative Horner, 5 digits, E2-E6)
     reg  [19:0] q_r; reg [7:0] g_r; reg [10:0] lpr_r; reg [19:0] m_r; reg [39:0] base_r; reg [31:0] str_r;
@@ -136,11 +137,12 @@ module ot_hgi_sm_record #(
     reg  [2:0]  dig;                     // radix-16 digits left (5: Q and M are <= 20 b)
     reg         prod_v, pd_seen;
     // per-SM fields (2 register stages)
-    reg  [NSM*45-1:0] sqs; reg [NSM*31-1:0] slq; reg [NSM*17-1:0] sq;
+
     reg  [NSM-1:0]    act;
     reg  [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s;
     reg  [19:0] q_sh, m_sh;
-    reg  [1:0]  fld_ph; reg fb; reg [NSM*20-1:0] rdf; reg [NSM*31-1:0] ldf;
+    reg  [1:0]  fld_ph; reg fb; reg [5:0] fk; reg [16:0] sq_acc; reg [30:0] slq_acc; reg t_v, t_act;
+    reg  [19:0] t_rdf; reg [30:0] t_ldf; reg [31:0] t_db; reg [4:0] t_k; reg [NSM*20-1:0] rdf; reg [NSM*31-1:0] ldf;
     reg         go_ok, xs_done, started, pub_sent, x_sent;
     reg  [NSM-1:0] st_pend, d_pend, arr_want, arr_seen;
     reg  [NSM-1:0] rel;                  // release_in a SM (the adapter echoes arrive at retire)
@@ -177,7 +179,7 @@ module ot_hgi_sm_record #(
 
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
-            fb <= 1'b0; raw_v <= 1'b0; s1_v <= 1'b0; rdy_r <= 1'b0; bad1 <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; dv_chk <= 1'b0; dv_k <= 6'd0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
+            fb <= 1'b0; raw_v <= 1'b0; s1_v <= 1'b0; s2_v <= 1'b0; fk <= 6'd0; t_v <= 1'b0; rdy_r <= 1'b0; bad1 <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; dv_chk <= 1'b0; dv_k <= 6'd0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
             x_v <= 1'b0; pub_v <= 1'b0; go_ok <= 1'b0; xs_done <= 1'b0; started <= 1'b0; pub_sent <= 1'b0;
             x_sent <= 1'b0; st_pend <= 0; d_pend <= 0; arr_want <= 0; arr_seen <= 0; rel <= 0; act <= 0; fld_ph <= 0;
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
@@ -188,15 +190,16 @@ module ot_hgi_sm_record #(
             rec_done <= 1'b0; rec_fault <= 1'b0;
             hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o; na_q <= rec_n_a; nb_q <= rec_n_b;   // pin flops
             if (rec_v && rec_rdy) raw_v <= 1'b1;
-            rdy_r <= hen && !raw_v && !s1_v && !busy && !halt_q && !(rec_v && rec_rdy);
+            rdy_r <= hen && !raw_v && !s1_v && !s2_v && !busy && !halt_q && !(rec_v && rec_rdy);
             // E1: copy the pin flops, count-derived fields, header checks
             if (raw_v) begin
                 raw_v <= 1'b0; s1_v <= 1'b1; h1 <= hdr_q; a1 <= a_q; b1 <= b_q; o1 <= o_q; na1 <= na_q; nb1 <= nb_q;
                 g1 <= g_full[7:0]; q1 <= q_full; lpr1 <= lpr_d; lb1 <= lby; bad1 <= bad0;
             end
-            // E2: the stride check, then issue the x load + publication and start the products
-            if (s1_v) begin
-                s1_v <= 1'b0;
+            // E2: the row-stride product; E3: the stride check, then issue the x load + publication, start the products
+            if (s1_v) begin s1_v <= 1'b0; s2_v <= 1'b1; strp <= lpr1 * lb1; end
+            if (s2_v) begin
+                s2_v <= 1'b0;
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; xs_done <= 1'b0; started <= 1'b0; go_ok <= 1'b0; fld_ph <= 2'd0;
@@ -231,35 +234,30 @@ module ot_hgi_sm_record #(
                     dv_r <= r2[8:0]; dv_n <= dv_n << 2; dv_q <= {dv_q[37:0], q1, q2};
                 end
             end
-            if (prod_v && fld_ph == 2'd0 && dv_k == 6'd0) begin
-                for (s = 0; s < NSM; s = s + 1) begin
-                    sqs[s*45 +: 45] <= qs * s;
-                    slq[s*31 +: 31] <= {7'd0, lq} * s;
-                    sq[s*17 +: 17] <= q_r[16:0] * s;
-                end
-                fld_ph <= 2'd1;
+            // per-SM fields, ONE SM AN EDGE (accumulators: s Q and s Q LPR by repeated add, no per-SM multiplier),
+            // two stages: A the differences, B the clamps; NSM + 2 edges, under the x load
+            if (busy && prod_v && fld_ph == 2'd0 && dv_k == 6'd0) begin
+                fld_ph <= 2'd1; fk <= 6'd0; sq_acc <= 17'd0; slq_acc <= 31'd0; t_v <= 1'b0;
             end
-            if (fld_ph == 2'd1 && !fb) begin                    // per-SM fields, stage A: the differences
-                for (s = 0; s < NSM; s = s + 1) begin
-                    act[s] <= ({3'd0, m_r} > {3'd0, sq[s*17 +: 17]});
-                    rdf[s*20 +: 20] <= m_r - sq[s*17 +: 17];
-                    ldf[s*31 +: 31] <= ml - slq[s*31 +: 31];
-                    dbase_s[s*32 +: 32] <= dv_q[31:0] + {1'b0, slq[s*31 +: 31]};
+            if (fld_ph == 2'd1) begin
+                if (fk != NSM) begin                               // stage A for SM fk
+                    t_act <= ({3'd0, m_r} > {3'd0, sq_acc}); t_rdf <= m_r - {3'd0, sq_acc}; t_ldf <= ml - slq_acc;
+                    t_db <= dv_q[31:0] + {1'b0, slq_acc}; t_k <= fk[4:0]; t_v <= 1'b1;
+                    sq_acc <= sq_acc + q_r[16:0]; slq_acc <= slq_acc + {7'd0, lq}; fk <= fk + 6'd1;
+                end else t_v <= 1'b0;
+                if (t_v) begin                                     // stage B
+                    act[t_k] <= t_act;
+                    rows_s[t_k*13 +: 13] <= t_act ? ((t_rdf > q_r) ? q_r[12:0] : t_rdf[12:0]) : 13'd0;
+                    dl_s[t_k*24 +: 24] <= t_act ? ((t_ldf > {7'd0, lq}) ? lq : t_ldf[23:0]) : 24'd0;
+                    dbase_s[t_k*32 +: 32] <= t_db;
                 end
-                fb <= 1'b1;
-            end
-            if (fld_ph == 2'd1 && fb) begin                     // stage B: clamp to Q / Q LPR
-                for (s = 0; s < NSM; s = s + 1) begin
-                    rows_s[s*13 +: 13] <= act[s] ? ((rdf[s*20 +: 20] > q_r) ? q_r[12:0] : rdf[s*20 +: 13]) : 13'd0;
-                    dl_s[s*24 +: 24] <= act[s] ? ((ldf[s*31 +: 31] > {7'd0, lq}) ? lq : ldf[s*31 +: 24]) : 24'd0;
-                end
-                fb <= 1'b0; fld_ph <= 2'd2;
+                if (fk == NSM && !t_v) fld_ph <= 2'd2;
             end
             if (fld_ph == 2'd2) begin
                 fld_ph <= 2'd3; st_pend <= act; d_pend <= act; arr_want <= act;
             end
             if (busy && in_xd) xs_done <= 1'b1;
-            if (fld_ph == 2'd3 && xs_done && !started) begin go_ok <= 1'b1; started <= 1'b1;
+            if (busy && fld_ph == 2'd3 && xs_done && !started) begin go_ok <= 1'b1; started <= 1'b1;
                 if (MUT_EARLY) begin rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; end
             end
             if (go_ok) begin
@@ -274,7 +272,7 @@ module ot_hgi_sm_record #(
                     if (arr_want[s] && ret_q[s*4 + 2] != rel[s]) arr_seen[s] <= 1'b1;
             end
             if (busy && dv_chk && dv_k == 6'd0 && dv_r != 9'd0) begin            // B.base not a multiple of LB
-                rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0; dv_chk <= 1'b0;
+                rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0; dv_chk <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0;
             end else if (busy && (any_fault || in_xf || in_pf)) begin
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0;
             end else if (busy && started && !go_ok && all_arr && pd_seen && st_pend == 0 && d_pend == 0) begin
