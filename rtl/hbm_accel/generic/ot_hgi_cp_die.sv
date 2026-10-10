@@ -15,11 +15,20 @@
 //     {entry 3 KERNEL, kind, G26 L' x kstride} share the one doorbell station with the host (the host pulse wins a tie,
 //     the translator holds its valid), and the completion of a translator-launched job returns to the translator, not
 //     the loader.  Kernel entries / kstride = the committed MD words 16-26 / 49.  MTP=0: x_* unused, as before.
+//   * MTP=2 (hgi-1010/h 2026-10-10; decision 3 finished): the MX1 MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job
+//     admission, transaction join, finite-8 emit queue; physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv,
+//     unchanged, unregistered form) lives here too.  Its controller side is the die nets f_mtp 517 (in, from
+//     hgi_mtp_native t_cmdproc) / t_mtp 197 (out, to its f_cmdproc); its backend side (t_backend / f_backend / f_am)
+//     is wired to the translator INSIDE (the x_* ports are unused: outputs 0).  The collar's host side (job f_host,
+//     t_host, the emit records t_emit_host / f_emit_host, t_drained, t_abort) and provider side (f_provider /
+//     t_provider: prompt / forced-token reads, t_emit) are the mh_* ports: classed for the die (bound to the loader
+//     band in the follow-up, proposal in hgi-1010.log: loader AXI-lite MTP window + completion FIFO for emits).
+//     Translator external_fault = the collar's abort.
 module ot_hgi_cp_die #(
     parameter integer RW = 4096,       // 64 KB record ring (hgi-1010: DFlash verify bodies are 39.6 KB; 512 = the old 8 KB)
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
-    parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports)
+    parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
     parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
 ) (
     input  wire          clk,
@@ -75,7 +84,19 @@ module ot_hgi_cp_die #(
     output wire [16:0]   x_am_idx,
     output wire          x_drained_ready,
     input  wire          x_ext_fault,
-    input  wire [16:0]   x_noise
+    input  wire [16:0]   x_noise,
+    // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar) and the collar's host / provider sides
+    input  wire [516:0]  f_mtp,
+    output wire [196:0]  t_mtp,
+    input  wire [215:0]  mh_f_host,         // {job config 179, generation 4, job 32, valid}
+    output wire [4:0]    mh_t_host,         // {fault, identity fault, inflight, active, admit}
+    input  wire [178:0]  mh_f_provider,     // prompt token [48 +: 17], forced token [65 +: 17] (others: 0)
+    output wire [42:0]   mh_t_provider,     // {forced address 23, prompt address 20}
+    output wire [37:0]   mh_t_emit,
+    input  wire [1:0]    mh_f_emit_host,    // {done ready, record ready}
+    output wire [99:0]   mh_t_emit_host,
+    output wire          mh_t_abort,
+    output wire          mh_t_drained
 );
     // ---------------------------------------------------------------- loader link fields
     wire        cfg_we = lcp[0];      wire [5:0] cfg_addr = lcp[6:1];   wire [63:0] cfg_wdata = lcp[70:7];
@@ -117,21 +138,48 @@ module ot_hgi_cp_die #(
         .cpl_v(cpl_v), .cpl_rdy(!cpl_hold || x_run), .cpl_token(cpl_token), .cpl_pos(cpl_pos), .cpl_job(cpl_job),
         .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_tokx(cpl_tokx));
     // ---------------------------------------------------------------- MTP backend translator (MTP=1)
+    // translator native side: the x_* ports (MTP=1) or the collar inside (MTP=2)
+    wire xi_cmd_v, xi_cmd_ready, xi_cpl_v, xi_cpl_ready, xi_cpl_fault, xi_am_v, xi_drained, xi_ext_fault;
+    wire [200:0] xi_cmd; wire [31:0] xi_cmd_job, xi_cmd_seq, xi_cpl_job, xi_cpl_seq; wire [3:0] xi_cmd_gen, xi_cpl_gen;
+    wire [16:0] xi_am_idx;
+    generate if (MTP == 2) begin : g_collar
+        wire [270:0] t_be;
+        hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) u_collar (.ck(clk), .rst(~rst_n), .f_mtp(f_mtp),
+            .emit_pend(f_mtp[43]), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
+            .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
+            .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
+            .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
+            .t_backend(t_be));
+        assign xi_cmd_v = t_be[0]; assign xi_cmd = t_be[1 +: 201]; assign xi_cmd_job = t_be[202 +: 32];
+        assign xi_cmd_gen = t_be[234 +: 4]; assign xi_cmd_seq = t_be[238 +: 32]; assign xi_cpl_ready = t_be[270];
+        assign xi_ext_fault = mh_t_abort;
+        assign x_cmd_ready = 1'b0; assign x_cpl_v = 1'b0; assign x_cpl_job = 32'd0; assign x_cpl_gen = 4'd0;
+        assign x_cpl_seq = 32'd0; assign x_cpl_fault = 1'b0; assign x_am_v = 1'b0; assign x_am_idx = 17'd0;
+        assign x_drained_ready = 1'b0;
+    end else begin : g_xports
+        assign xi_cmd_v = x_cmd_v; assign xi_cmd = x_cmd; assign xi_cmd_job = x_cmd_job; assign xi_cmd_gen = x_cmd_gen;
+        assign xi_cmd_seq = x_cmd_seq; assign xi_cpl_ready = x_cpl_ready; assign xi_ext_fault = x_ext_fault;
+        assign x_cmd_ready = xi_cmd_ready; assign x_cpl_v = xi_cpl_v; assign x_cpl_job = xi_cpl_job;
+        assign x_cpl_gen = xi_cpl_gen; assign x_cpl_seq = xi_cpl_seq; assign x_cpl_fault = xi_cpl_fault;
+        assign x_am_v = xi_am_v; assign x_am_idx = xi_am_idx; assign x_drained_ready = xi_drained;
+        assign t_mtp = 197'd0; assign mh_t_host = 5'd0; assign mh_t_provider = 43'd0; assign mh_t_emit = 38'd0;
+        assign mh_t_emit_host = 100'd0; assign mh_t_abort = 1'b0; assign mh_t_drained = 1'b0;
+    end endgenerate
     generate if (MTP) begin : g_mtp
-        ot_hgi_mtp_xlate u_xlate (.clk(clk), .rst_n(rst_n), .external_fault(x_ext_fault), .backend_quiescent(!units_busy),
+        ot_hgi_mtp_xlate u_xlate (.clk(clk), .rst_n(rst_n), .external_fault(xi_ext_fault), .backend_quiescent(!units_busy),
             .kent(md_kent), .kstride(md_kstride), .noise_token(x_noise),
-            .cmd_v(x_cmd_v), .cmd_ready(x_cmd_ready), .cmd(x_cmd), .cmd_job(x_cmd_job), .cmd_generation(x_cmd_gen),
-            .cmd_sequence(x_cmd_seq), .cpl_v(x_cpl_v), .cpl_ready(x_cpl_ready), .cpl_job(x_cpl_job),
-            .cpl_generation(x_cpl_gen), .cpl_sequence(x_cpl_seq), .cpl_fault(x_cpl_fault), .am_v(x_am_v), .am_idx(x_am_idx),
-            .drained_ready(x_drained_ready),
+            .cmd_v(xi_cmd_v), .cmd_ready(xi_cmd_ready), .cmd(xi_cmd), .cmd_job(xi_cmd_job), .cmd_generation(xi_cmd_gen),
+            .cmd_sequence(xi_cmd_seq), .cpl_v(xi_cpl_v), .cpl_ready(xi_cpl_ready), .cpl_job(xi_cpl_job),
+            .cpl_generation(xi_cpl_gen), .cpl_sequence(xi_cpl_seq), .cpl_fault(xi_cpl_fault), .am_v(xi_am_v), .am_idx(xi_am_idx),
+            .drained_ready(xi_drained),
             .db_v(xdb_v), .db_rdy(xdb_rdy), .db_token(xdb_tok), .db_pos(xdb_pos), .db_job(xdb_job), .db_gen(xdb_gen),
             .db_entry(xdb_ent), .db_off(xdb_off), .db_kind(xdb_kind), .db_loff(xdb_loff),
             .c_v(cpl_v && x_run), .c_rdy(), .c_token(cpl_token), .c_pos(cpl_pos), .c_job(cpl_job), .c_gen(cpl_gen),
             .c_status(cpl_status), .c_tokx(cpl_tokx));
     end else begin : g_nomtp
-        assign x_cmd_ready = 1'b0; assign x_cpl_v = 1'b0; assign x_cpl_job = 32'd0; assign x_cpl_gen = 4'd0;
-        assign x_cpl_seq = 32'd0; assign x_cpl_fault = 1'b0; assign x_am_v = 1'b0; assign x_am_idx = 17'd0;
-        assign x_drained_ready = 1'b1; assign xdb_v = 1'b0; assign xdb_tok = 18'd0; assign xdb_pos = 20'd0;
+        assign xi_cmd_ready = 1'b0; assign xi_cpl_v = 1'b0; assign xi_cpl_job = 32'd0; assign xi_cpl_gen = 4'd0;
+        assign xi_cpl_seq = 32'd0; assign xi_cpl_fault = 1'b0; assign xi_am_v = 1'b0; assign xi_am_idx = 17'd0;
+        assign xi_drained = 1'b1; assign xdb_v = 1'b0; assign xdb_tok = 18'd0; assign xdb_pos = 20'd0;
         assign xdb_job = 32'd0; assign xdb_gen = 4'd0; assign xdb_ent = 2'd0; assign xdb_off = 32'd0;
         assign xdb_kind = 4'd0; assign xdb_loff = 32'd0;
     end endgenerate
