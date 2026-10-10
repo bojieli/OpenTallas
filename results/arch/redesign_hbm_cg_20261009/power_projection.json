@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.redesign_hbm.cg_power_projection.v1",
+ "evidence": "/home/ubuntu/wt-claude-redesign-hbm-cg/results/physical/die_evidence_20261009/hbm_r25gp_power.json",
+ "cooling_limit_w": 474.56,
+ "grade": "PROJECTION (measured per-block a20 / a00 + measured duties; gated residual r bracketed) -- to be replaced by die-evidence-2's re-measure of the gated routes",
+ "workloads": {
+  "ds_v41_1M": {
+   "duty": {
+    "SM": 0.1978,
+    "ATT": 0.0503,
+    "SU": 0.2562,
+    "FUSED": 0.1361,
+    "HC": 0.1769,
+    "IDX": 0.0356,
+    "COLL": 0.4946,
+    "DMA": 0.0797,
+    "ARGMAX": 0.0069,
+    "SFU": 0.2562,
+    "SU+FUSED": 0.3923,
+    "SVC": 0.2775,
+    "ON": 1.0
+   },
+   "evidence_no_icg_w": 396.3,
+   "evidence_with_icg_w": 108.3,
+   "projection_w": {
+    "none_r05": 395.0,
+    "none_r15": 395.0,
+    "smatt_r05": 187.0,
+    "smatt_r15": 208.9,
+    "all_r05": 142.1,
+    "all_r15": 168.7
+   }
+  },
+  "qwen3_8b_P8191": {
+   "duty": {
+    "SM": 0.7861,
+    "ATT": 0.0767,
+    "SU": 0.1005,
+    "FUSED": 0.0176,
+    "HC": 0,
+    "IDX": 0,
+    "COLL": 0.0789,
+    "DMA": 0.0163,
+    "ARGMAX": 0.0616,
+    "SFU": 0.0017,
+    "SU+FUSED": 0.1181,
+    "SVC": 0.8024,
+    "ON": 1.0
+   },
+   "evidence_no_icg_w": 461.1,
+   "evidence_with_icg_w": 255.5,
+   "projection_w": {
+    "none_r05": 460.1,
+    "none_r15": 460.1,
+    "smatt_r05": 337.2,
+    "smatt_r15": 350.2,
+    "all_r05": 282.2,
+    "all_r15": 301.0
+   }
+  },
+  "envelope_max": {
+   "duty": {
+    "SM": 0.7861,
+    "ATT": 0.0767,
+    "SU": 0.2562,
+    "FUSED": 0.1361,
+    "HC": 0.1769,
+    "IDX": 0.0356,
+    "COLL": 0.4946,
+    "DMA": 0.0797,
+    "ARGMAX": 0.0616,
+    "SFU": 0.2562,
+    "SU+FUSED": 0.3923,
+    "SVC": 0.8024,
+    "ON": 1.0
+   },
+   "evidence_no_icg_w": 472.1,
+   "evidence_with_icg_w": 279.0,
+   "projection_w": {
+    "none_r05": 470.6,
+    "none_r15": 470.6,
+    "smatt_r05": 347.8,
+    "smatt_r15": 360.7,
+    "all_r05": 304.2,
+    "all_r15": 321.8
+   }
+  }
+ },
+ "verdict": {
+  "built_scenario": "smatt",
+  "envelope_max_w_high_residual": 360.7,
+  "limit_w": 474.56,
+  "passes": true,
+  "note": "the peak in-phase a20 point (613.5 W) assumes every unit busy at once, which the measured workloads never do; gating changes the duty-mix point, not a20"
+ }
+}
