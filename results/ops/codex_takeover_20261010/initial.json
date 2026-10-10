@@ -1,0 +1,27 @@
+{
+  "time": "2026-10-10T11:55:54.017542+00:00",
+  "handoff_path": "/home/ubuntu/claude-takeover-20261007/CLAUDE_HANDOFF_20261010.md",
+  "handoff_sha256": "a5f013c2500295cff8fdd060ef88eb62a853f24bb3c9f2bab5c3c368e340451a",
+  "owners": {
+    "BF": "/root/bf_deadline",
+    "HBM": "/root/hbm_takeover",
+    "ROM": "/root/rom_takeover",
+    "MTP_structural_reprice": "/root/crosscut_takeover",
+    "fleet": "/root/fleet_review"
+  },
+  "registry_open": 101,
+  "registry_idle": 28,
+  "cadence": {
+    "drive": "minute07/37",
+    "review": "minute43",
+    "BF_report": "2026-10-10 09:00 America/Los_Angeles",
+    "thread": "01a125a7-3957-71d1-8206-888977e691ff"
+  },
+  "adoption_line": "owner latest option B: TT setup >=0, FF hold >=0, DRC0; bench exactness required; TT not SS",
+  "BF_deadline": "2026-10-10 09:30 America/Los_Angeles",
+  "gates": {
+    "BF": "full1.2GHz ECO pending; HALF_PHL closed fallback",
+    "service_segments": "held pending independent sb4 scoreboard PASS",
+    "S81": "x1b residual SS reach526.2um >504um; no adoption"
+  }
+}
