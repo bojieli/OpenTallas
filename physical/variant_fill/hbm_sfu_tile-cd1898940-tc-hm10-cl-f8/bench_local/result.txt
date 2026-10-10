@@ -1,0 +1,19 @@
+repro hfd_sfu.sv ok
+repro hfd_sfu_neg.sv ok
+repro hfd_sfu_tile.sv ok
+repro tile/io_place.tcl ok
+repro tile/macro_place.tcl ok
+repro tile/tile.json ok
+repro macro_place.tcl ok
+lint hfd_sfu_tile generated-file warnings=0 errors=0
+lint hfd_sfu generated-file warnings=0 errors=0
+pos rc=0 OT_RESULT vectors=6 qid=0 mismatches=0 settle_cycles=37
+neg rc=1 OT_RESULT vectors=6 qid=0 mismatches=6 settle_cycles=1
+mut_rot rc=1 OT_RESULT vectors=6 qid=0 mismatches=6 settle_cycles=1
+mut_tap rc=1 OT_RESULT vectors=6 qid=0 mismatches=6 settle_cycles=1
+mut_acc rc=1 OT_RESULT vectors=6 qid=0 mismatches=6 settle_cycles=1
+neg FAILS as required
+mut_rot FAILS as required
+mut_tap FAILS as required
+mut_acc FAILS as required
+SFU_TILED_BENCH_PASS

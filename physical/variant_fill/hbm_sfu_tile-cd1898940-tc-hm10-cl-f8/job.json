@@ -1,0 +1,77 @@
+{
+ "name": "hbm_sfu_tile-cd1898940-tc-hm10-cl-f8",
+ "block": "hfd_sfu_tile",
+ "owner": "Claude:hbm-phys-1010",
+ "purpose": "FILL-8 2026-10-10 (drive-1010 IDLE hfd_sfu): structural fix of the flat SFU quarter (r24p pinko 8de4473c4: post-place TT -2,012..-2,117 ps over ~3,000 endpoints at 1,123 ps flat-quarter insertion, FF hold -238): Tensix-style tile hfd_sfu_tile = one CLOSED ot_su12_sfu lane + its register strip (posedge pin flops at both faces, negedge face lockups, lane-input pin bank with a per-tile reset copy, output capture); Option-A half-width quarter = 16 abutted tiles in one column (2 chains x 8), only registered tile-to-tile hops (0.54 um), in-tile crossings <= 443 um, band->head 171 um. Tile 271.944 x 332.64, lane at (110.592, 1.056) on the M4 lattice. IO: falling-edge peer launch (sfu/tile/faced_io.sdc), no IO false path; pin flops/lockups anchored (OT_WS_PINREG/OUTPUT_PINREG). PD 0.50, HM 0.010, TC route. Modelled on hbm_su_tile-9b87c8930-tc-hm10-cl-f7. Lane view: the committed CLOSED ot_su12_sfu (eco4: SS +38.94 / FF +16.06, own TT export; no ttviews copy exists for it).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/fill-8-20261010-sfutile",
+  "commit": "cd189894068469a5a96a6af8d354784fb397035a",
+  "extra_paths": [
+   "results/uarch/hbm_current_target_portmap_20261005",
+   "results/rtl/hbm_accel_die_floorplan_20261005",
+   "results/rtl/die_top_lint_20261006",
+   "results/rtl/dshbm_matched_reference_20261005",
+   "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp",
+   "results/rtl/hbm_accel_die_views_20261006",
+   "results/rtl/budgets_20261006/sheets_r24"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "sfu_tiled_bench",
+    "cmd": "bash physical/hbm_accel_die_views/sfu/bench_tiled.sh {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "SFU_TILED_BENCH_PASS",
+    "threads": 2,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "register-bounded tile: every pin is a pin flop or a negedge face lockup; IO budgets are fixed 0.2 T phases (faced_io.sdc), the quarter carries the inter-tile skew"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 PD=0.50 HM=0.010 bash physical/hbm_accel_die_views/sfu/tile/route_tile.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/ && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/view"
+  }
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "register-bounded tile element (pin flops + face lockups); the tiled quarter carries the budget"
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/sfu/tile/signoff833_faced.sdc"
+  ],
+  "macros": [
+   "physical/hbm_accel_die_views/sfu/lane/ot_su12_sfu"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/variant_fill/hbm_sfu_tile-cd1898940-tc-hm10-cl-f8/view_hm10"
+  }
+ ],
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "merge_target": null
+}
