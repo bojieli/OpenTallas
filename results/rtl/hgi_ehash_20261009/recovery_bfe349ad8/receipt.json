@@ -1,0 +1,95 @@
+{
+  "host": "ot-pve1",
+  "source": "27186ef4916226efb73a2bc2ce30a6c74685f3cb",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "parameters": {
+    "ENABLE_GENERIC": 1,
+    "NSLOT": 8,
+    "MUTANT": 0
+  },
+  "boundary_timeout": null,
+  "results": {
+    "hgi-ehash-ds-b-27186ef49-tc-cx": {
+      "key": "013253938549096fa8395227",
+      "recipe": {
+        "top": "ot_hbm_idx_ehash_ds",
+        "sources": [
+          "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+          "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ],
+        "params": {
+          "ENABLE_GENERIC": "1",
+          "NSLOT": "8",
+          "MUTANT": "0"
+        },
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "result": {
+        "in_to_out_bits": 1,
+        "in_to_out_max": 3,
+        "in_to_out_example": [
+          "cmd_ready"
+        ],
+        "in_to_reg_max": 189,
+        "reg_to_out_max": 44,
+        "reg_to_out_example": "row_id[9]",
+        "cells": 7630732,
+        "ctrl_ports": [
+          "clk",
+          "rst_n"
+        ],
+        "top": "ot_hbm_idx_ehash_ds",
+        "levels": 16,
+        "strict": true,
+        "verdict": "REFUSE",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds (registered_io): 1 output bit(s) combinational from data inputs (max 3 levels, e.g. cmd_ready); input->register 189 gate levels > 16; register->output 44 gate levels > 16 (e.g. row_id[9])"
+      }
+    },
+    "hgi-ehash-ds-a-27186ef49-tc-cx": {
+      "key": "013253938549096fa8395227",
+      "recipe": {
+        "top": "ot_hbm_idx_ehash_ds",
+        "sources": [
+          "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+          "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ],
+        "params": {
+          "ENABLE_GENERIC": "1",
+          "NSLOT": "8",
+          "MUTANT": "0"
+        },
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "result": {
+        "in_to_out_bits": 1,
+        "in_to_out_max": 3,
+        "in_to_out_example": [
+          "cmd_ready"
+        ],
+        "in_to_reg_max": 189,
+        "reg_to_out_max": 44,
+        "reg_to_out_example": "row_id[9]",
+        "cells": 7630732,
+        "ctrl_ports": [
+          "clk",
+          "rst_n"
+        ],
+        "cached": true,
+        "top": "ot_hbm_idx_ehash_ds",
+        "levels": 16,
+        "strict": true,
+        "verdict": "REFUSE",
+        "message": "rtl_boundary ot_hbm_idx_ehash_ds (registered_io): 1 output bit(s) combinational from data inputs (max 3 levels, e.g. cmd_ready); input->register 189 gate levels > 16; register->output 44 gate levels > 16 (e.g. row_id[9])"
+      }
+    }
+  }
+}
