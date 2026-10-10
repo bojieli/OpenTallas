@@ -316,7 +316,9 @@ module ot_svs_kvasm #(parameter integer KV = 1) (
     .bdata(sq[255:0]), .full(full_), .tag(t13), .data(dd), .take(1'b1));
   reg v; reg [12:0] t; reg [1023:0] d;
   always @(posedge ck or negedge rn) if (!rn) v <= 1'b0; else v <= full_;
-  always @(posedge ck) if (full_) begin t <= t13; d <= dd; end
+  // t / d reset (2026-10-10, no X on any output): ik carries no valid, so its value before the first index command
+  // was X on the segment boundary (the legacy and PS benches both flagged it); the kv payload under v = 0 likewise
+  always @(posedge ck or negedge rn) if (!rn) begin t <= 13'd0; d <= 1024'd0; end else if (full_) begin t <= t13; d <= dd; end
   assign kv = KV ? {d, t, v} : 1038'd0;
   assign ik = d;
   assign dn = full_;

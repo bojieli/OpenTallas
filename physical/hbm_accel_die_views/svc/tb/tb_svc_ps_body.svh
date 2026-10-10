@@ -101,7 +101,7 @@
   integer xerr = 0, xk;
   always @(posedge ck) if (rst && $time > 64 * TCK) begin
     for (xk = 0; xk < 8; xk = xk + 1) if (^ln[xk] === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on SM %0d line at %0t", xk, $time); end
-    if ((^kvo === 1'bx || ^iko === 1'bx) && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kv / ik at %0t", $time); end
+    if ((^kvo === 1'bx || ^iko === 1'bx) && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kv %0d / ik %0d at %0t", ^kvo === 1'bx, ^iko === 1'bx, $time); end
   end
   // ---------------------------------------------------------------- expected responses
   // SM line expectations: tag -> (addr, kind) per SM, unique tags
@@ -140,6 +140,11 @@
   end
   // ---------------------------------------------------------------- PS streams
   wire [1101:0] ks [0:7]; reg [3:0] kq [0:7]; wire [1:0] kd;
+  integer xk2;
+  always @(posedge ck) if (rst && $time > 64 * TCK) begin   // no X on the PS outputs either
+    for (xk2 = 0; xk2 < 8; xk2 = xk2 + 1) if (^ks[xk2] === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on PS stream %0d at %0t", xk2, $time); end
+    if (^kd === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kd at %0t", $time); end
+  end
   function automatic [29:0] kmap(input [4:0] pc, input [4:0] bank, input [18:0] row, input [4:0] col);
     reg [2:0] bhi; reg [1:0] blo; reg [4:0] hi5;
     begin bhi = bank[4:2] ^ row[4:2]; blo = bank[1:0] ^ row[1:0]; hi5 = {row[1:0], bhi};
