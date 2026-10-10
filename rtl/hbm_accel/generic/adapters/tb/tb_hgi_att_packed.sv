@@ -15,6 +15,7 @@ ot_hgi_att_unit #(.H(1),.D(64),.TD(64),.NL(2),.BLK(64),.PACKED_ROWS(1),.SELECTED
 reg[63:0] initm[0:NM-1],expm[0:NE-1];reg[1215:0] recm[0:1];
 reg[31:0] mem[longint]; reg[337:0] mainq[$],selq[$]; reg[337:0] req;
 reg[255:0] data; integer j,b,word,cycles=0,nd=0,errors=0; string dir;
+integer mutant=0; reg corrupted=0;
 always @(posedge clk) begin
  cycles<=cycles+1;mr<=0;sr<=0;srdy<=cycles%4!=0;
  if(rst_n) begin
@@ -36,18 +37,25 @@ always @(posedge clk) begin
     if(!mem.exists(word+b)) $fatal(1,"cold selected word %0d",word+b);
     data[32*b+:32]=mem[word+b];
    end
-   sr<={1'b1,req[15:0],1'b0,data};
+   if(!corrupted && mutant==2) begin sr<={1'b1,req[15:0]^16'h100,1'b0,data};corrupted=1;end
+   else if(!corrupted && mutant==3) begin sr<={1'b1,req[15:0],1'b1,data};corrupted=1;end
+   else sr<={1'b1,req[15:0],1'b0,data};
   end
   if(hv) $fatal(1,"unexpected HBM request");
-  if(fault) $fatal(1,"ATT fault state %0d",u.st);
+  if(fault) begin
+   if(mutant!=0) begin $display("PACKED ATT NEGATIVE PASS mutant%0d failclosed state%0d",mutant,u.st);$finish;end
+   else $fatal(1,"ATT fault state %0d",u.st);
+  end
   if(done) nd<=nd+1;
  end
 end
 integer r,start;
 initial begin
  if(!$value$plusargs("DIR=%s",dir)) dir=".";
+ if($value$plusargs("MUTANT=%d",mutant)) ;
  $readmemh({dir,"/mem.mem"},initm);$readmemh({dir,"/exp.mem"},expm);$readmemh({dir,"/rec.mem"},recm);
  for(r=0;r<NM;r=r+1) mem[initm[r][63:32]]=initm[r][31:0];
+ if(mutant==1) mem[16]=mem[16] ^ 32'h40000; // C row0 first forbidden padding bit530
  repeat(3) @(negedge clk);rst_n=1;
  for(r=0;r<2;r=r+1) begin
   @(negedge clk);cur=recm[r];rec_v=1;while(!ready) @(negedge clk);
@@ -59,6 +67,7 @@ initial begin
   if(errors<8) $display("wrong [%0d] got%h expected%h",expm[r][63:32],mem[expm[r][63:32]],expm[r][31:0]);
   errors=errors+1;
  end
+ if(mutant!=0) $fatal(1,"mutant escaped failclosed gate");
  if(errors) $fatal(1,"PACKED ATT errors%0d",errors);
  $display("PACKED ATT PASS H1 D64 T130 three jobs %0d words",NE);$finish;
 end
