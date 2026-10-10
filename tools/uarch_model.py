@@ -34,6 +34,23 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def ds_collective_engine_reset_keep_model():
+    """Preserve the pre-existing three-edge engine reset release identity."""
+    return dict(schema='opentallas.ds_collective_reset_keep.v1', adopted=False,
+        source='a17b27437 full-shape split3CR CE; erst_n merged with eg[0] at synthesis',
+        MACs_per_cycle=0, added_memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0, replicas=1, added_flops=1,
+        added_mux_demux=0, reset_sink_count_measured=3776,
+        added_routing_tracks_minimum=1,
+        area=dict(CE_core_um2=462209.328,baseline_CE_synthesis_um2=254842.711,
+                  added_area_upper_um2=5,assumption='conservative one-flop allowance; actual routing buffering unmeasured'),
+        latency=dict(added_cycles=0,engine_reset_release_cycles=3,token_latency_added_ns=0),
+        constraint='Restore name-based existing 3-cycle engine-release selector; never alter numerical constraint or release pipeline',
+        gates=['full-shape CR exact bench and credit/no-return negative controls',
+               'synthesized kept erst_n cell distinct from eg[0], existing MCP selects it',
+               'actual reset fanout and route TT>=0 FF>=0 DRC0; final own-loop reSTA'])
+
+
 def pcmux_parallel_pin_model():
     """Size the optional full-shape next-equation pin outputs before RTL."""
     from pcmux_parallel_pin_model import model
