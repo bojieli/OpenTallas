@@ -352,7 +352,8 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
     for j, k, g, s_, i in P.lanes():
         gy.setdefault((k, g), []).append(P.lane_y.get(j, band_y))
     gy = {kg: sum(v) / len(v) for kg, v in gy.items()}
-    L_ = [f'// tools/hbm_hub_quarter_gen.py --quarter {[k for k, v in QUARTERS.items() if v is q][0]}: PHYSICAL ENVELOPE die '
+    qn = q.get('qname') or [k for k, v in QUARTERS.items() if v is q][0]
+    L_ = [f'// tools/hbm_hub_quarter_gen.py --quarter {qn}: PHYSICAL ENVELOPE die '
           f'wrapper of {m} around {P.N} closed {q["lane"]} lanes; see the generator docstring.',
           f'// WI {P.WI} die input bits (centre band {P.WIm}), WO {P.WO} die output bits (centre band {P.WOm}), lane: broadcast '
           f'{P.LB} + per-lane {P.LP} in, {P.LO} out; {P.K} chains x {P.G} groups x 2 columns x {P.L} lanes.'
@@ -897,10 +898,27 @@ def main():
     ap.add_argument('--cg-input-stages', type=int, default=0, help='real face wake registers before band cg_q; adds same number of external wake lead edges')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
+    ap.add_argument('--lanes', type=int, default=0,
+                    help='lanes per quarter (hbm-phys-1010 [su], owner Option A 2026-10-10: 128 for the 512-lane die); '
+                         'sets the column-pair count C2 = lanes / (4 G L), the rest of the plan (G groups, L lanes, tile '
+                         'width, broadcast word) is unchanged.  The tile accumulator width WCT = ceil(WO_mid / (4 C2)) follows')
+    ap.add_argument('--groups', type=int, default=0, help='groups per half G (tiled: tiles per chain NT = G L); default the quarter preset')
+    ap.add_argument('--wct', type=int, default=0, help='tiled: tile accumulator width (>= ceil(WO_mid / chains); the spare '
+                    'high bits ride along unused) -- keeps one hardened hfd_su_tile_xl across lane counts')
     a = ap.parse_args()
-    q = QUARTERS[a.quarter]
+    q = dict(QUARTERS[a.quarter], qname=a.quarter)
+    if a.groups:
+        q['G'] = a.groups
+    if a.lanes:
+        per = 4 * q['G'] * q['L']
+        assert a.lanes % per == 0, f'--lanes {a.lanes} is not a multiple of 4 G L = {per}'
+        q['C2'] = a.lanes // per
     P = Plan(q, json.loads(Path(a.ports).read_text()))
     P.tiled = a.tiled
+    if a.wct:
+        assert a.tiled and a.wct >= P.WCT, f'--wct {a.wct} < the {P.WCT} accumulator bits a chain must carry'
+        P.WCT = a.wct
+        P.RA = (P.LO % P.WCT) or 1
     P.cg_input_stages = a.cg_input_stages
     assert a.cg_input_stages >= 0
     out = Path(a.out)
