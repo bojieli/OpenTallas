@@ -1,0 +1,4015 @@
+{
+  "schema": 1,
+  "status": "ACTUAL_CACHE_AND_EPOCH_INGRESS_FLOOR_NOT_COMPLETE_MAPPED_TOTAL",
+  "sources": {
+    "results/uarch/hbm_svc_dma_physical_20261010/cache_pc_mappedshape_a8717d65e.json": "d9857566c95021a9be744469595c5386acc4302a2247dd549292e147fccea8bf",
+    "results/uarch/hbm_svc_dma_physical_20261010/native32_reference_mappedshape.json": "12bb605e3d89218943ef05455353928c99fa89aa3116f5efb2bd6417404ef101",
+    "results/uarch/hbm_svc_dma_physical_20261010/ingress_model_b8a17bef3.py": "dbaf8340e5fdd83599b8df510855048cd4cef5ae3599788f061b52754a212aa9",
+    "tools/hbm_svc_dma_actual_cache_inventory.py": "52d461c4c81bb2917f0311082a8d9ebfc3d05738fff764e6adb6412dfdfc460e",
+    "tools/hbm_svc_dma_wide_plan.py": "0e42f7ff594b0281a770f3fa184746cbbb652850889708b7e9ae4b394ad6e82b",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+  },
+  "cache_mapping_commit": "a8717d65e",
+  "cache_mapped_controller_um2_per_pc": 8417.631780000002,
+  "cache_actual_four_bank_eight_macro_um2_per_pc": 71445.57882,
+  "cache_RTL_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/hbm/hbm_svc_dma_sram_bank_wide.sv": "6899a83091b52ec3bac7e4d16615a45f64f1e91b862550655a2398da76e6f3e2",
+    "rtl/hbm/ot_hbm_svc_dma_pc_cache_wide.sv": "6d46af3705629db1b39de8db0f46373be5e2da2fc802012bfea0c52476ca8044",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.json": "deea0ddcdd9655c6de307b33bf1f35f80b29dad803d797f36f81606a745b8aa4"
+  },
+  "cache_mapping_scope": "full PC controller mapped against4hardened bank abstracts; inherited8realmacro area; RVT SS; no timing/route claim",
+  "predecessor_combined2000_budget_verdict": "FAIL_budget_exceeded",
+  "previous_guessed_cache_sensitivities_preserved": true,
+  "epoch_ingress_model_commit": "b8a17bef3",
+  "epoch_ingress_source_inventory": {
+    "proposed_entries_per_bank": 32,
+    "banks_per_PC": 4,
+    "entries_per_PC": 128,
+    "payload_bits_per_entry": 256,
+    "planned_SECDED_bits_per_entry": 32,
+    "slot_index_epoch_fault_metadata_bits_per_entry": 16,
+    "planned_paired_metadata_bits_per_entry": 32,
+    "protected_storage_bits_per_PC": 40960,
+    "aggregate_four_stack_storage_bits": 5242880,
+    "native_return_backpressure_allowed": false,
+    "reserve_every_burst_beat_before_native_issue": true,
+    "reservation_release_point": "queued_beat_dispatch_into_fixed_write_commit_pipeline",
+    "worst_case_reserved_sectors_per_bank_with32_fourbeat_leases": 32,
+    "four_entries_per_bank_predecessor_admission": "FAIL:16beats total cannot hide104cycle native latency without inventing PHY return backpressure",
+    "arrival_sector_per_PC_cycle": 1,
+    "per_bank_service_sector_per_cycle": 0.5,
+    "balanced_per_bank_arrival_sector_per_cycle": 0.25,
+    "finite_queue_BW_validation_required": true,
+    "rationale": "direct CAM-to-bank selected response stalls at bankII2; bank-local elastic queues decouple OOO return bursts without changing raw roof or descriptor workload",
+    "no_guarantee_for_arbitrarily_unbalanced_bank_streams": true
+  },
+  "ingress_bits": {
+    "payload_ECC_bits_per_pc": 36864,
+    "paired_slot_index_epoch_fault_bits_per_pc": 4096,
+    "total_bits_per_pc": 40960,
+    "total_bits_four_stacks": 5242880,
+    "adds_two_epoch_paired_bits_per_entry": true,
+    "finite_decoder_publication_slots": null,
+    "pointer_control_mux_logic_area_um2": null
+  },
+  "native": {
+    "reference_mapped_um2_per_pc": 495.18054000000006,
+    "reference_metadata_protected": false,
+    "protected_uplift_um2_per_pc": null,
+    "reserve_um2_per_pc": 1000,
+    "reserve_is_provisional": true,
+    "RTL_sha256": {
+      "rtl/ot_hbm_svc_dma_pc_tile_wide.sv": "017bcd13d628ad7803d1ddf40cc695768615e610fcb16bebded3a2d7968e27b3"
+    }
+  },
+  "die": {
+    "original_outline_um": [
+      31734.288,
+      25282.8
+    ],
+    "proposed_outline_um": [
+      31734.288,
+      25999.92
+    ],
+    "original_area_mm2": 802.3316566464,
+    "proposed_area_mm2": 825.08894925696,
+    "added_area_mm2": 22.75729261056,
+    "insertion_per_band_um": 358.56,
+    "insertion_grid_um": 2.16,
+    "insertion_cut_y_um": [
+      1466.616,
+      23816.16
+    ],
+    "reticle_fit": true,
+    "naive_360um_band_insertion_height_um": 26002.8,
+    "newly_introduced_existing_block_overlaps": [],
+    "outline_failures": [],
+    "baseline_existing_overlap_count": 0,
+    "horizontal_reticle_headroom_um": 1265.7119999999995,
+    "vertical_reticle_headroom_um": 0.08000000000174623,
+    "outline_changed_in_this_revision": false,
+    "horizontal_growth_not_assumed": true
+  },
+  "geometry_fit": true,
+  "points": [
+    {
+      "ingress_FF_policy": "payload_ECC_unreset_metadata_reset",
+      "native_reserve_policy": "unprotected_reference_floor",
+      "ingress_FF_floor_um2_per_pc": 12302.25408,
+      "native_area_um2_per_pc": 495.18054000000006,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.7170273470993117,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -32720.069759999984,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -8312.069759999984,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 16095.930240000016,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 40503.930240000016,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "w_um": 1305.912,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 436877.48639999994,
+          "total_utilization_floor": 0.6969546416603875,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 407444.544,
+              "remaining_floor_um2": -29432.94239999994,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 438786.43200000003,
+              "remaining_floor_um2": 1908.9456000000937,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 470128.32,
+              "remaining_floor_um2": 33250.83360000007,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 501470.208,
+              "remaining_floor_um2": 64592.72160000005,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "w_um": 1056.984,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.689903358991243,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 329779.008,
+              "remaining_floor_um2": -20245.06176000001,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 355146.624,
+              "remaining_floor_um2": 5122.554240000027,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 380514.23999999993,
+              "remaining_floor_um2": 30490.17023999995,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 405881.8559999999,
+              "remaining_floor_um2": 55857.78623999993,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "w_um": 1072.968,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.679625871414618,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 334766.016,
+              "remaining_floor_um2": -15258.05375999998,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 360517.248,
+              "remaining_floor_um2": 10493.178240000037,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 386268.48,
+              "remaining_floor_um2": 36244.41024,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 412019.71200000006,
+              "remaining_floor_um2": 61995.642240000074,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "w_um": 785.976,
+          "h_um": 480,
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 265781.05632,
+          "total_utilization_floor": 0.7044878393233381,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 245224.512,
+              "remaining_floor_um2": -20556.544319999986,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 264087.936,
+              "remaining_floor_um2": -1693.1203199999873,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 282951.36,
+              "remaining_floor_um2": 17170.30368000001,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 301814.784,
+              "remaining_floor_um2": 36033.72768000001,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "w_um": 1062.984,
+          "h_um": 480,
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.6860092080407607,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331651.008,
+              "remaining_floor_um2": -18373.06176000001,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 357162.624,
+              "remaining_floor_um2": 7138.554240000027,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382674.23999999993,
+              "remaining_floor_um2": 32650.17023999995,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 408185.8559999999,
+              "remaining_floor_um2": 58161.78623999993,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "w_um": 1061.976,
+          "h_um": 480,
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.6866603501397395,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331336.51200000005,
+              "remaining_floor_um2": -18687.557759999938,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356823.936,
+              "remaining_floor_um2": 6799.866240000003,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382311.36,
+              "remaining_floor_um2": 32287.290240000002,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407798.78400000004,
+              "remaining_floor_um2": 57774.71424000006,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "w_um": 1136.064,
+          "h_um": 480,
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.6418800454903948,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 354451.96800000005,
+              "remaining_floor_um2": 4427.898240000068,
+              "floor_fit": true
+            },
+            "70": {
+              "area_budget_um2": 381717.5040000001,
+              "remaining_floor_um2": 31693.43424000009,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 408983.0400000001,
+              "remaining_floor_um2": 58958.97024000011,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 436248.5760000001,
+              "remaining_floor_um2": 86224.50624000013,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.7170273470993117,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -32720.069759999984,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -8312.069759999984,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 16095.930240000016,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 40503.930240000016,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "w_um": 1300.968,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 436877.48639999994,
+          "total_utilization_floor": 0.6996032415862649,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 405902.016,
+              "remaining_floor_um2": -30975.470399999933,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 437125.248,
+              "remaining_floor_um2": 247.7616000000853,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 468348.48,
+              "remaining_floor_um2": 31470.993600000045,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 499571.71200000006,
+              "remaining_floor_um2": 62694.22560000012,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "w_um": 1061.928,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.686691387740035,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331321.5360000001,
+              "remaining_floor_um2": -18702.533759999904,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356807.808,
+              "remaining_floor_um2": 6783.738240000035,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382294.0800000001,
+              "remaining_floor_um2": 32270.01024000009,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407780.352,
+              "remaining_floor_um2": 57756.28224000003,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "w_um": 1381.992,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 436877.48639999994,
+          "total_utilization_floor": 0.6585866126576708,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 431181.50399999996,
+              "remaining_floor_um2": -5695.982399999979,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 464349.31200000003,
+              "remaining_floor_um2": 27471.8256000001,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 497517.12,
+              "remaining_floor_um2": 60639.63360000006,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 530684.9280000001,
+              "remaining_floor_um2": 93807.44160000014,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "w_um": 1008.984,
+          "h_um": 480,
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.7227238608342649,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 314803.00800000003,
+              "remaining_floor_um2": -35221.06175999995,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 339018.624,
+              "remaining_floor_um2": -11005.445759999973,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 363234.24,
+              "remaining_floor_um2": 13210.170240000007,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 387449.856,
+              "remaining_floor_um2": 37425.786240000045,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "w_um": 1094.952,
+          "h_um": 480,
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 350024.06976,
+          "total_utilization_floor": 0.6659806201550388,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 341625.024,
+              "remaining_floor_um2": -8399.045760000008,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 367903.872,
+              "remaining_floor_um2": 17879.80223999999,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 394182.72,
+              "remaining_floor_um2": 44158.65023999999,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 420461.56799999997,
+              "remaining_floor_um2": 70437.49823999999,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "w_um": 763.992,
+          "h_um": 480,
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 265781.05632,
+          "total_utilization_floor": 0.7247595969591304,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 238365.504,
+              "remaining_floor_um2": -27415.552319999988,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 256701.312,
+              "remaining_floor_um2": -9079.744319999969,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 275037.11999999994,
+              "remaining_floor_um2": 9256.063679999963,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 293372.92799999996,
+              "remaining_floor_um2": 27591.871679999982,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "w_um": 870.048,
+          "h_um": 480,
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 265781.05632,
+          "total_utilization_floor": 0.6364137771709146,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 271454.97599999997,
+              "remaining_floor_um2": 5673.919679999992,
+              "floor_fit": true
+            },
+            "70": {
+              "area_budget_um2": 292336.12799999997,
+              "remaining_floor_um2": 26555.071679999994,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 313217.28,
+              "remaining_floor_um2": 47436.223680000054,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 334098.432,
+              "remaining_floor_um2": 68317.37568,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        }
+      ],
+      "max_total_utilization_floor": 0.7247595969591304,
+      "fits_all_floors_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "ingress_FF_policy": "payload_ECC_unreset_metadata_reset",
+      "native_reserve_policy": "provisional1000_protected_reserve",
+      "ingress_FF_floor_um2_per_pc": 12302.25408,
+      "native_area_um2_per_pc": 1000,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.7211638552933464,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -34739.34759999998,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -10331.34759999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 14076.65240000002,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 38484.65240000002,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "w_um": 1305.912,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 439401.58369999996,
+          "total_utilization_floor": 0.7009813571218172,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 407444.544,
+              "remaining_floor_um2": -31957.039699999965,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 438786.43200000003,
+              "remaining_floor_um2": -615.1516999999294,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 470128.32,
+              "remaining_floor_um2": 30726.736300000048,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 501470.208,
+              "remaining_floor_um2": 62068.624300000025,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "w_um": 1056.984,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.6938833897517213,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 329779.008,
+              "remaining_floor_um2": -22264.339600000007,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 355146.624,
+              "remaining_floor_um2": 3103.2764000000316,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 380514.23999999993,
+              "remaining_floor_um2": 28470.892399999953,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 405881.8559999999,
+              "remaining_floor_um2": 53838.50839999993,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "w_um": 1072.968,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.683546611672793,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 334766.016,
+              "remaining_floor_um2": -17277.331599999976,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 360517.248,
+              "remaining_floor_um2": 8473.900400000042,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 386268.48,
+              "remaining_floor_um2": 34225.1324,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 412019.71200000006,
+              "remaining_floor_um2": 59976.36440000008,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "w_um": 785.976,
+          "h_um": 480,
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 267295.5147,
+          "total_utilization_floor": 0.708502111546663,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 245224.512,
+              "remaining_floor_um2": -22071.002700000012,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 264087.936,
+              "remaining_floor_um2": -3207.5787000000128,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 282951.36,
+              "remaining_floor_um2": 15655.845299999986,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 301814.784,
+              "remaining_floor_um2": 34519.269299999985,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "w_um": 1062.984,
+          "h_um": 480,
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.6899667735669901,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331651.008,
+              "remaining_floor_um2": -20392.339600000007,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 357162.624,
+              "remaining_floor_um2": 5119.276400000032,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382674.23999999993,
+              "remaining_floor_um2": 30630.892399999953,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 408185.8559999999,
+              "remaining_floor_um2": 56142.50839999993,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "w_um": 1061.976,
+          "h_um": 480,
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.6906216720842403,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331336.51200000005,
+              "remaining_floor_um2": -20706.835599999933,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356823.936,
+              "remaining_floor_um2": 4780.588400000008,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382311.36,
+              "remaining_floor_um2": 30268.012400000007,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407798.78400000004,
+              "remaining_floor_um2": 55755.436400000064,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "w_um": 1136.064,
+          "h_um": 480,
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.6455830312670177,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 354451.96800000005,
+              "remaining_floor_um2": 2408.6204000000726,
+              "floor_fit": true
+            },
+            "70": {
+              "area_budget_um2": 381717.5040000001,
+              "remaining_floor_um2": 29674.156400000094,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 408983.0400000001,
+              "remaining_floor_um2": 56939.692400000116,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 436248.5760000001,
+              "remaining_floor_um2": 84205.22840000014,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.7211638552933464,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -34739.34759999998,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -10331.34759999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 14076.65240000002,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 38484.65240000002,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "w_um": 1300.968,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 439401.58369999996,
+          "total_utilization_floor": 0.7036452595618544,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 405902.016,
+              "remaining_floor_um2": -33499.567699999956,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 437125.248,
+              "remaining_floor_um2": -2276.335699999938,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 468348.48,
+              "remaining_floor_um2": 28946.896300000022,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 499571.71200000006,
+              "remaining_floor_um2": 60170.1283000001,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "w_um": 1061.928,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.690652888739475,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331321.5360000001,
+              "remaining_floor_um2": -20721.8115999999,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356807.808,
+              "remaining_floor_um2": 4764.46040000004,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 382294.0800000001,
+              "remaining_floor_um2": 30250.732400000095,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407780.352,
+              "remaining_floor_um2": 55737.004400000034,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "w_um": 1381.992,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 61511.2704,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 439401.58369999996,
+          "total_utilization_floor": 0.6623916535274202,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 431181.50399999996,
+              "remaining_floor_um2": -8220.079700000002,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 464349.31200000003,
+              "remaining_floor_um2": 24947.728300000075,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 497517.12,
+              "remaining_floor_um2": 58115.536300000036,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 530684.9280000001,
+              "remaining_floor_um2": 91283.34430000011,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "w_um": 1008.984,
+          "h_um": 480,
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.7268932320367154,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 314803.00800000003,
+              "remaining_floor_um2": -37240.33959999995,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 339018.624,
+              "remaining_floor_um2": -13024.723599999968,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 363234.24,
+              "remaining_floor_um2": 11190.892400000012,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 387449.856,
+              "remaining_floor_um2": 35406.50840000005,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "w_um": 1094.952,
+          "h_um": 480,
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 49209.01632,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 352043.3476,
+          "total_utilization_floor": 0.6698226413882374,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 341625.024,
+              "remaining_floor_um2": -10418.323600000003,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 367903.872,
+              "remaining_floor_um2": 15860.524399999995,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 394182.72,
+              "remaining_floor_um2": 42139.37239999999,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 420461.56799999997,
+              "remaining_floor_um2": 68418.22039999999,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "w_um": 763.992,
+          "h_um": 480,
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 267295.5147,
+          "total_utilization_floor": 0.7288893805497964,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 238365.504,
+              "remaining_floor_um2": -28930.010700000013,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 256701.312,
+              "remaining_floor_um2": -10594.202699999994,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 275037.11999999994,
+              "remaining_floor_um2": 7741.605299999937,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 293372.92799999996,
+              "remaining_floor_um2": 26077.413299999957,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "w_um": 870.048,
+          "h_um": 480,
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 36906.762240000004,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 267295.5147,
+          "total_utilization_floor": 0.6400401536754294,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 271454.97599999997,
+              "remaining_floor_um2": 4159.461299999966,
+              "floor_fit": true
+            },
+            "70": {
+              "area_budget_um2": 292336.12799999997,
+              "remaining_floor_um2": 25040.613299999968,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 313217.28,
+              "remaining_floor_um2": 45921.76530000003,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 334098.432,
+              "remaining_floor_um2": 66802.91729999997,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        }
+      ],
+      "max_total_utilization_floor": 0.7288893805497964,
+      "fits_all_floors_at_percent": {
+        "65": false,
+        "70": false,
+        "75": true,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [],
+        "80": []
+      }
+    },
+    {
+      "ingress_FF_policy": "all_ingress_storage_reset",
+      "native_reserve_policy": "unprotected_reference_floor",
+      "ingress_FF_floor_um2_per_pc": 15527.1168,
+      "native_area_um2_per_pc": 495.18054000000006,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7434519842674533,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -45619.52064,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -21211.520640000002,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 3196.4793599999975,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 27604.479359999998,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "w_um": 1305.912,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 453001.79999999993,
+          "total_utilization_floor": 0.7226779063214059,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 407444.544,
+              "remaining_floor_um2": -45557.255999999936,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 438786.43200000003,
+              "remaining_floor_um2": -14215.3679999999,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 470128.32,
+              "remaining_floor_um2": 17126.520000000077,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 501470.208,
+              "remaining_floor_um2": 48468.408000000054,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "w_um": 1056.984,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7153283947533738,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 329779.008,
+              "remaining_floor_um2": -33144.51264000003,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 355146.624,
+              "remaining_floor_um2": -7776.896639999992,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 380514.23999999993,
+              "remaining_floor_um2": 17590.71935999993,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 405881.8559999999,
+              "remaining_floor_um2": 42958.33535999991,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "w_um": 1072.968,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7046721505207983,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 334766.016,
+              "remaining_floor_um2": -28157.50464,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 360517.248,
+              "remaining_floor_um2": -2406.272639999981,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 386268.48,
+              "remaining_floor_um2": 23344.95935999998,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 412019.71200000006,
+              "remaining_floor_um2": 49096.191360000055,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "w_um": 785.976,
+          "h_um": 480,
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 275455.64447999996,
+          "total_utilization_floor": 0.7301316147057925,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 245224.512,
+              "remaining_floor_um2": -30231.13247999997,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 264087.936,
+              "remaining_floor_um2": -11367.708479999972,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 282951.36,
+              "remaining_floor_um2": 7495.715520000027,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 301814.784,
+              "remaining_floor_um2": 26359.139520000026,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "w_um": 1062.984,
+          "h_um": 480,
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.71129073250397,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331651.008,
+              "remaining_floor_um2": -31272.51264000003,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 357162.624,
+              "remaining_floor_um2": -5760.896639999992,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382674.23999999993,
+              "remaining_floor_um2": 19750.71935999993,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 408185.8559999999,
+              "remaining_floor_um2": 45262.33535999991,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "w_um": 1061.976,
+          "h_um": 480,
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7119658711684632,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331336.51200000005,
+              "remaining_floor_um2": -31587.008639999956,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356823.936,
+              "remaining_floor_um2": -6099.5846400000155,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382311.36,
+              "remaining_floor_um2": 19387.839359999984,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407798.78400000004,
+              "remaining_floor_um2": 44875.26336000004,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "w_um": 1136.064,
+          "h_um": 480,
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.6655352761816234,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 354451.96800000005,
+              "remaining_floor_um2": -8471.55263999995,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 381717.5040000001,
+              "remaining_floor_um2": 18793.98336000007,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 408983.0400000001,
+              "remaining_floor_um2": 46059.51936000009,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 436248.5760000001,
+              "remaining_floor_um2": 73325.05536000011,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7434519842674533,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -45619.52064,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -21211.520640000002,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 3196.4793599999975,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 27604.479359999998,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "w_um": 1300.968,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 453001.79999999993,
+          "total_utilization_floor": 0.7254242610118004,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 405902.016,
+              "remaining_floor_um2": -47099.78399999993,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 437125.248,
+              "remaining_floor_um2": -15876.551999999909,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 468348.48,
+              "remaining_floor_um2": 15346.680000000051,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 499571.71200000006,
+              "remaining_floor_um2": 46569.91200000013,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "w_um": 1061.928,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7119980525986696,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331321.5360000001,
+              "remaining_floor_um2": -31601.984639999922,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356807.808,
+              "remaining_floor_um2": -6115.712639999983,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382294.0800000001,
+              "remaining_floor_um2": 19370.559360000072,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407780.352,
+              "remaining_floor_um2": 44856.83136000001,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "w_um": 1381.992,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 2475.9027000000006,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 453001.79999999993,
+          "total_utilization_floor": 0.6828937866499949,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 431181.50399999996,
+              "remaining_floor_um2": -21820.295999999973,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 464349.31200000003,
+              "remaining_floor_um2": 11347.512000000104,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 497517.12,
+              "remaining_floor_um2": 44515.320000000065,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 530684.9280000001,
+              "remaining_floor_um2": 77683.12800000014,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "w_um": 1008.984,
+          "h_um": 480,
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.7493584318482751,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 314803.00800000003,
+              "remaining_floor_um2": -48120.51263999997,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 339018.624,
+              "remaining_floor_um2": -23904.89663999999,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 363234.24,
+              "remaining_floor_um2": 310.7193599999882,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 387449.856,
+              "remaining_floor_um2": 24526.335360000026,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "w_um": 1094.952,
+          "h_um": 480,
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 1980.7221600000003,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 362923.52064,
+          "total_utilization_floor": 0.6905240302771264,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 341625.024,
+              "remaining_floor_um2": -21298.496640000027,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 367903.872,
+              "remaining_floor_um2": 4980.3513599999715,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 394182.72,
+              "remaining_floor_um2": 31259.19935999997,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 420461.56799999997,
+              "remaining_floor_um2": 57538.04735999997,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "w_um": 763.992,
+          "h_um": 480,
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 275455.64447999996,
+          "total_utilization_floor": 0.7511412763484434,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 238365.504,
+              "remaining_floor_um2": -37090.14047999997,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 256701.312,
+              "remaining_floor_um2": -18754.332479999954,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 275037.11999999994,
+              "remaining_floor_um2": -418.52448000002187,
+              "floor_fit": false
+            },
+            "80": {
+              "area_budget_um2": 293372.92799999996,
+              "remaining_floor_um2": 17917.283519999997,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "w_um": 870.048,
+          "h_um": 480,
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 1485.5416200000002,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 275455.64447999996,
+          "total_utilization_floor": 0.6595796162970318,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 271454.97599999997,
+              "remaining_floor_um2": -4000.668479999993,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 292336.12799999997,
+              "remaining_floor_um2": 16880.48352000001,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 313217.28,
+              "remaining_floor_um2": 37761.63552000007,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 334098.432,
+              "remaining_floor_um2": 58642.78752000001,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        }
+      ],
+      "max_total_utilization_floor": 0.7511412763484434,
+      "fits_all_floors_at_percent": {
+        "65": false,
+        "70": false,
+        "75": false,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SW_s7_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32",
+          "hfd_svc_dma_SE_s7_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "80": []
+      }
+    },
+    {
+      "ingress_FF_policy": "all_ingress_storage_reset",
+      "native_reserve_policy": "provisional1000_protected_reserve",
+      "ingress_FF_floor_um2_per_pc": 15527.1168,
+      "native_area_um2_per_pc": 1000,
+      "tiles": [
+        {
+          "master": "hfd_svc_dma_SW_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7475884924614881,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -47638.79848,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -23230.798479999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 1177.2015200000023,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 25585.201520000002,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s1_w32",
+          "w_um": 1305.912,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 626837.76,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 455525.89729999995,
+          "total_utilization_floor": 0.7267046217828357,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 407444.544,
+              "remaining_floor_um2": -48081.35329999996,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 438786.43200000003,
+              "remaining_floor_um2": -16739.465299999923,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 470128.32,
+              "remaining_floor_um2": 14602.422700000054,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 501470.208,
+              "remaining_floor_um2": 45944.31070000003,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s2_w32",
+          "w_um": 1056.984,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 507352.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7193084255138521,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 329779.008,
+              "remaining_floor_um2": -35163.790480000025,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 355146.624,
+              "remaining_floor_um2": -9796.174479999987,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 380514.23999999993,
+              "remaining_floor_um2": 15571.441519999935,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 405881.8559999999,
+              "remaining_floor_um2": 40939.057519999915,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s3_w32",
+          "w_um": 1072.968,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "slot_um2": 515024.64,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7085928907789731,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 334766.016,
+              "remaining_floor_um2": -30176.782479999994,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 360517.248,
+              "remaining_floor_um2": -4425.550479999976,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 386268.48,
+              "remaining_floor_um2": 21325.681519999984,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 412019.71200000006,
+              "remaining_floor_um2": 47076.91352000006,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s4_w32",
+          "w_um": 785.976,
+          "h_um": 480,
+          "pc_ids": [
+            17,
+            18,
+            19
+          ],
+          "slot_um2": 377268.48,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 276970.10286,
+          "total_utilization_floor": 0.7341458869291174,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 245224.512,
+              "remaining_floor_um2": -31745.590859999997,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 264087.936,
+              "remaining_floor_um2": -12882.166859999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 282951.36,
+              "remaining_floor_um2": 5981.2571400000015,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 301814.784,
+              "remaining_floor_um2": 24844.68114,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s5_w32",
+          "w_um": 1062.984,
+          "h_um": 480,
+          "pc_ids": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "slot_um2": 510232.31999999995,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7152482980301993,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331651.008,
+              "remaining_floor_um2": -33291.790480000025,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 357162.624,
+              "remaining_floor_um2": -7780.174479999987,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382674.23999999993,
+              "remaining_floor_um2": 17731.441519999935,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 408185.8559999999,
+              "remaining_floor_um2": 43243.057519999915,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s6_w32",
+          "w_um": 1061.976,
+          "h_um": 480,
+          "pc_ids": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "slot_um2": 509748.48000000004,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7159271931129642,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331336.51200000005,
+              "remaining_floor_um2": -33606.28647999995,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356823.936,
+              "remaining_floor_um2": -8118.862480000011,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382311.36,
+              "remaining_floor_um2": 17368.56151999999,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407798.78400000004,
+              "remaining_floor_um2": 42855.985520000046,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SW_s7_w32",
+          "w_um": 1136.064,
+          "h_um": 480,
+          "pc_ids": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 545310.7200000001,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.6692382619582463,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 354451.96800000005,
+              "remaining_floor_um2": -10490.830479999946,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 381717.5040000001,
+              "remaining_floor_um2": 16774.705520000076,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 408983.0400000001,
+              "remaining_floor_um2": 44040.2415200001,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 436248.5760000001,
+              "remaining_floor_um2": 71305.77752000012,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s0_w32",
+          "w_um": 1017.0,
+          "h_um": 480,
+          "pc_ids": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "slot_um2": 488160.0,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7475884924614881,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 317304.0,
+              "remaining_floor_um2": -47638.79848,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 341712.0,
+              "remaining_floor_um2": -23230.798479999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 366120.0,
+              "remaining_floor_um2": 1177.2015200000023,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 390528.0,
+              "remaining_floor_um2": 25585.201520000002,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s1_w32",
+          "w_um": 1300.968,
+          "h_um": 480,
+          "pc_ids": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "slot_um2": 624464.64,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 455525.89729999995,
+          "total_utilization_floor": 0.7294662789873898,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 405902.016,
+              "remaining_floor_um2": -49623.88129999995,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 437125.248,
+              "remaining_floor_um2": -18400.649299999932,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 468348.48,
+              "remaining_floor_um2": 12822.582700000028,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 499571.71200000006,
+              "remaining_floor_um2": 44045.814700000104,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s2_w32",
+          "w_um": 1061.928,
+          "h_um": 480,
+          "pc_ids": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "slot_um2": 509725.44000000006,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7159595535981095,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 331321.5360000001,
+              "remaining_floor_um2": -33621.26247999992,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 356807.808,
+              "remaining_floor_um2": -8134.990479999979,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 382294.0800000001,
+              "remaining_floor_um2": 17351.281520000077,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 407780.352,
+              "remaining_floor_um2": 42837.553520000016,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s3_w32",
+          "w_um": 1381.992,
+          "h_um": 480,
+          "pc_ids": [
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "slot_um2": 663356.16,
+          "macro_count": 40,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 42088.15890000001,
+          "actual_hard_bank_logic_area_um2": 31265.9352,
+          "actual_eight_macro_area_um2": 283873.8,
+          "actual_total_cache_pc_area_um2": 357227.8941,
+          "native_reference_or_reservation_um2": 5000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 204800,
+          "epoch_protected_ingress_FF_floor_um2": 77635.584,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 53712,
+          "relay_FF_area_floor_um2": 15662.419200000002,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 455525.89729999995,
+          "total_utilization_floor": 0.6866988275197443,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 431181.50399999996,
+              "remaining_floor_um2": -24344.393299999996,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 464349.31200000003,
+              "remaining_floor_um2": 8823.414700000081,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 497517.12,
+              "remaining_floor_um2": 41991.22270000004,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 530684.9280000001,
+              "remaining_floor_um2": 75159.03070000012,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s4_w32",
+          "w_um": 1008.984,
+          "h_um": 480,
+          "pc_ids": [
+            18,
+            19,
+            20,
+            21
+          ],
+          "slot_um2": 484312.32,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.7535278030507256,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 314803.00800000003,
+              "remaining_floor_um2": -50139.79047999997,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 339018.624,
+              "remaining_floor_um2": -25924.174479999987,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 363234.24,
+              "remaining_floor_um2": -1708.558480000007,
+              "floor_fit": false
+            },
+            "80": {
+              "area_budget_um2": 387449.856,
+              "remaining_floor_um2": 22507.05752000003,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s5_w32",
+          "w_um": 1094.952,
+          "h_um": 480,
+          "pc_ids": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "slot_um2": 525576.96,
+          "macro_count": 32,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 33670.527120000006,
+          "actual_hard_bank_logic_area_um2": 25012.74816,
+          "actual_eight_macro_area_um2": 227099.04,
+          "actual_total_cache_pc_area_um2": 285782.31528,
+          "native_reference_or_reservation_um2": 4000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 163840,
+          "epoch_protected_ingress_FF_floor_um2": 62108.4672,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 364942.79848,
+          "total_utilization_floor": 0.694366051510325,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 341625.024,
+              "remaining_floor_um2": -23317.774480000022,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 367903.872,
+              "remaining_floor_um2": 2961.0735199999763,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 394182.72,
+              "remaining_floor_um2": 29239.921519999974,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 420461.56799999997,
+              "remaining_floor_um2": 55518.76951999997,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s6_w32",
+          "w_um": 763.992,
+          "h_um": 480,
+          "pc_ids": [
+            26,
+            27,
+            28
+          ],
+          "slot_um2": 366716.16,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 276970.10286,
+          "total_utilization_floor": 0.7552710599391094,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 238365.504,
+              "remaining_floor_um2": -38604.59886,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 256701.312,
+              "remaining_floor_um2": -20268.79085999998,
+              "floor_fit": false
+            },
+            "75": {
+              "area_budget_um2": 275037.11999999994,
+              "remaining_floor_um2": -1932.9828600000474,
+              "floor_fit": false
+            },
+            "80": {
+              "area_budget_um2": 293372.92799999996,
+              "remaining_floor_um2": 16402.82513999997,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        },
+        {
+          "master": "hfd_svc_dma_SE_s7_w32",
+          "w_um": 870.048,
+          "h_um": 480,
+          "pc_ids": [
+            29,
+            30,
+            31
+          ],
+          "slot_um2": 417623.04,
+          "macro_count": 24,
+          "macro_geometry_fit": true,
+          "actual_cache_controller_area_um2": 25252.895340000003,
+          "actual_hard_bank_logic_area_um2": 18759.56112,
+          "actual_eight_macro_area_um2": 170324.28,
+          "actual_total_cache_pc_area_um2": 214336.73646,
+          "native_reference_or_reservation_um2": 3000,
+          "native_protected_uplift_um2": null,
+          "epoch_protected_ingress_storage_bits": 122880,
+          "epoch_protected_ingress_FF_floor_um2": 46581.350399999996,
+          "ingress_decoder_publication_slots": null,
+          "ingress_decoder_publication_area_um2": null,
+          "ingress_mux_protection_pointer_control_area_um2": null,
+          "physical_face_traffic_bits": 8952,
+          "logical_face_traffic_bits": 8790,
+          "relay_reservation_ff_count": 44760,
+          "relay_FF_area_floor_um2": 13052.016000000001,
+          "face_clock_roots": 8,
+          "slice_height_um": 120,
+          "source_clock_latency_ps": null,
+          "clock_CTS_hold_routing_added_area_um2": null,
+          "measured_cache_plus_reserved_native_ingress_relay_area_floor_um2": 276970.10286,
+          "total_utilization_floor": 0.6632059928015466,
+          "planning_thresholds": {
+            "65": {
+              "area_budget_um2": 271454.97599999997,
+              "remaining_floor_um2": -5515.1268600000185,
+              "floor_fit": false
+            },
+            "70": {
+              "area_budget_um2": 292336.12799999997,
+              "remaining_floor_um2": 15366.025139999983,
+              "floor_fit": true
+            },
+            "75": {
+              "area_budget_um2": 313217.28,
+              "remaining_floor_um2": 36247.17714000004,
+              "floor_fit": true
+            },
+            "80": {
+              "area_budget_um2": 334098.432,
+              "remaining_floor_um2": 57128.32913999999,
+              "floor_fit": true
+            }
+          },
+          "current_total_area": "UNKNOWN; additional finite decoder/publication/control/clock/hold/wiring costs not measured"
+        }
+      ],
+      "max_total_utilization_floor": 0.7552710599391094,
+      "fits_all_floors_at_percent": {
+        "65": false,
+        "70": false,
+        "75": false,
+        "80": true
+      },
+      "failures_by_percent": {
+        "65": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SW_s7_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s3_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s5_w32",
+          "hfd_svc_dma_SE_s6_w32",
+          "hfd_svc_dma_SE_s7_w32"
+        ],
+        "70": [
+          "hfd_svc_dma_SW_s0_w32",
+          "hfd_svc_dma_SW_s1_w32",
+          "hfd_svc_dma_SW_s2_w32",
+          "hfd_svc_dma_SW_s3_w32",
+          "hfd_svc_dma_SW_s4_w32",
+          "hfd_svc_dma_SW_s5_w32",
+          "hfd_svc_dma_SW_s6_w32",
+          "hfd_svc_dma_SE_s0_w32",
+          "hfd_svc_dma_SE_s1_w32",
+          "hfd_svc_dma_SE_s2_w32",
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "75": [
+          "hfd_svc_dma_SE_s4_w32",
+          "hfd_svc_dma_SE_s6_w32"
+        ],
+        "80": []
+      }
+    }
+  ],
+  "current_total_fit": "UNKNOWN",
+  "route_admission": false,
+  "bulk_jobs_launched": false,
+  "required_gates": [
+    "actual protected ingress full mapping including finite decoder publication and pointer/control",
+    "protected native successor measured mapping",
+    "real corridors and VM inventory",
+    "every PHY response accepted without backpressure; exact transactions and measured>=90%HBMroof",
+    "in-context SS/FF physical closure and measured host admission"
+  ],
+  "planning_policy": "65/70/75/80% sensitivity floors; actual need drives area or die changes, no arbitrary adoption cap"
+}
