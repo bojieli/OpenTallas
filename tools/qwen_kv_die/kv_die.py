@@ -147,12 +147,103 @@ FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-c
                   qkd_ckbump='clock / reset bump pair to the ROM die (pad cell, no logic: by design)')
 
 
+WQ_FILE = 'rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_tiles.sv'
+BINDINGS['qkd_kvwq_leaf'] = dict(module='ot_qkvd_kv_wq_leaf', file=WQ_FILE,
+    ports=dict(c=['c_v', 'c_d', 'c_sec', 'c_lane', 'c_tag'], n=['n_v', 'n_d', 'n_sec', 'n_lane', 'n_tag'],
+               dn=['dn_v', 'dn_bad'], dp=['dp_v', 'dp_bad'], w=['w_v', 'w_sec', 'w_data', 'w_tag'],
+               wr=['w_room', 'wd_v', 'wd_tag'], ck=['clk'], rst_n=['rst_n'], lane=['lane']), classed={})
+BINDINGS['qkd_kvwq_ctl'] = dict(module='ot_qkvd_kv_wq_ctl', file=WQ_FILE,
+    ports=dict(kvn=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'],
+               f0=['f_v', 'f_d', 'f_sec', 'f_lane', 'f_tag'], r0=['r_v', 'r_bad'],
+               durable=['rw_v', 'rw_id'], fault=['fault'], ck=['clk'], rst_n=['rst_n']),
+    sliced=dict(f1='f0', f2='f0', f3='f0', r1='r0', r2='r0', r3='r0'), classed={})
+BINDINGS['qkd_cdc_wleaf'] = dict(module='ot_qwen_stream4_cdc_pc', file='rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv',
+    ports=dict(ho=['h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag', 'h_fault'],
+               hi=['h_lv', 'h_lsec', 'h_lrow', 'h_ldata', 'h_hand', 'h_wcon', 'h_av', 'h_atag'],
+               co=['l_v', 'l_sec', 'l_row', 'l_data', 'l_pop'], wi=['w_v', 'w_sec', 'w_data', 'w_tag'],
+               wr=['w_room', 'wd_v', 'wd_tag'], cf=['c_fault'], clk=['clk'], hclk=['hclk'],
+               c_arst_n=['c_arst_n'], h_arst_n=['h_arst_n']), classed={})
+
+
+def _write_tiles(m, add):
+    """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.
+
+    Preserve the 129.6-um attention-side relay channel.  A separate control/relay
+    strip beside the leaves avoids cutting the landing placeholder; its width
+    is the first tested width at which this generator routes every candidate bus.
+    """
+    by = {i.name: i for i in m['insts']}
+    for st in STACKS:
+        side = st[0]
+        for pc in range(32):
+            cdc = by[f'cdc_{st}_{pc}']
+            cdc.master = 'qkd_cdc_wleaf'
+            x = m['geo']['x_land'] if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4
+            add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf', x, cdc.y, 86.4-SHAVE, 183.6-SHAVE,
+                'R0' if side == 'W' else 'MY', 'kv_write_leaf', 'strip')
+        land = by[f'land_{st}']
+        x = m['geo']['x_land'] + 86.4 + GX if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4 - GX - 172.8
+        y = up(land.y + (land.h - 518.4)/2, GY)
+        add(f'wctl_{st}', 'qkd_kvwq_ctl', x, y, 172.8-SHAVE, 518.4-SHAVE,
+            'R0' if side == 'W' else 'MY', 'kv_write_ctl', 'strip')
+        for g in range(4):
+            ex = x if side == 'W' else x + 172.8 - 43.2
+            add(f'wenc_{st}_{g}', 'qkd_kvwq_lane_encoder', ex, y - (g+1)*45.36, 43.2-SHAVE, 43.2-SHAVE,
+                'R0' if side == 'W' else 'MY', 'kv_write_encoder_unclosed', 'strip')
+
+
+def _write_buses(m):
+    """Split ci[301:0]: write[289:0], room/done[300:290], fault[301].
+
+    co[282:0], including l_pop, stays with the landing.  Four independent
+    registered chains a stack visit PCs 8*g+7 .. 8*g N->S; lane straps pc%8.
+    The feed encoder implements the exact three OR4 equations of leaves_top.
+    """
+    buses = []
+    for bid, cl, bits, eps in m['buses']:
+        if bid.startswith('cdci_'):
+            st, pc = bid[5:].rsplit('_', 1)
+            buses.extend([(f'ww_{st}_{pc}', 'cdc_core', 290, [(f'wleaf_{st}_{pc}', 'w'), (f'cdc_{st}_{pc}', 'wi')]),
+                          (f'wr_{st}_{pc}', 'cdc_core', 11, [(f'cdc_{st}_{pc}', 'wr'), (f'wleaf_{st}_{pc}', 'wr')]),
+                          (f'wcf_{st}_{pc}', 'cdc_core', 1, [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
+        elif bid.startswith('kvn_'):
+            st = bid[4:]
+            buses.append((bid, cl, bits, [('seq', f'kvn_{st}'), (f'wctl_{st}', 'kvn')]))
+        else:
+            buses.append((bid, cl, bits, eps))
+    m['buses'] = buses
+    m['wq_straps'] = {}
+    for st in STACKS:
+        ctl = f'wctl_{st}'
+        buses += [(f'wdurable_{st}', 'spine_local', 23, [(ctl, 'durable'), (f'land_{st}', 'wdurable')]),
+                  (f'wfault_{st}', 'spine_local', 1, [(ctl, 'fault'), (f'land_{st}', 'wfault')])]
+        for g in range(4):
+            enc = f'wenc_{st}_{g}'
+            chain = [f'wleaf_{st}_{8*g+i}' for i in range(7, -1, -1)]
+            buses += [(f'wfeed_{st}_{g}', 'spine_local', 298, [(ctl, f'f{g}'), (enc, 'a')]),
+                      (f'wencoded_{st}_{g}', 'spine_local', 293, [(enc, 'b'), (chain[0], 'c')]),
+                      (f'wret_{st}_{g}', 'spine_local', 2, [(chain[0], 'dp'), (ctl, f'r{g}')])]
+            for a, b in zip(chain, chain[1:]):
+                buses += [(f'wchain_{a}', 'spine_local', 293, [(a, 'n'), (b, 'c')]),
+                          (f'wback_{a}', 'spine_local', 2, [(b, 'dp'), (a, 'dn')])]
+            buses.append((f'wtail_{st}_{g}', 'constant', 2, [(chain[-1], 'dn')]))
+            for pc in range(8*g, 8*g+8):
+                leaf = f'wleaf_{st}_{pc}'
+                m['wq_straps'][f'wlane_{st}_{pc}'] = pc % 8
+                buses.append((f'wlane_{st}_{pc}', 'constant', 3, [(leaf, 'lane')]))
+        for kind, srcport, dstport in [('clock_trunk', f'pll_{st}', 'ck'), ('reset', f'rso_{st}', 'rst_n')]:
+            buses.append((f'wq_{kind}_{st}', kind, 1, [('pll', srcport)] +
+                          [(f'wleaf_{st}_{pc}', dstport) for pc in range(32)] + [(ctl, dstport)]))
+
+
 def strict_ports(M):
     """every RTL port of every bound master is in exactly one die port (or classed debug / by_design) and every die
     port of the master is bound.  -> dict(ok, failures, rows)."""
     import re as _re
     rows, fails = [], []
     for mst, b in BINDINGS.items():
+        if mst not in M:
+            continue
         txt = _re.sub(r'//[^\n]*', '', (ROOT / b['file']).read_text())
         mm = _re.search(r'module\s+' + b['module'] + r'\b.*?\);', txt, _re.S)
         rtl = set(_re.findall(r'(?:input|output)\s+(?:wire|reg)?\s*(?:\[[^\]]*\])?\s*(\w+)', mm.group(0)))
@@ -201,14 +292,15 @@ def _band(T, side, Wk):
     return out, dy
 
 
-def build(r=R):
+def build(r=R, kv_wq_leaves=False):
     T = tpl()
     I = T['insts']
     stack_h = I['ctrl_WS']['h']
     Hk = up(2 * MARGIN + 2 * stack_h + GY, GY)
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
-    x_grp = up(x_land + LAND_W + CHAN, GX)
+    leaf_shift = 518.4 + GX if kv_wq_leaves else 0.0
+    x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     Wk = up(2 * (x_grp + grp_w) + centre_w, 2 * GX)
@@ -230,7 +322,7 @@ def build(r=R):
     for st in STACKS:
         side, half = st[0], st[1]
         y0 = ystack[half]
-        lx = x_land if side == 'W' else Wk - x_land - LAND_W
+        lx = x_land + leaf_shift if side == 'W' else Wk - x_land - leaf_shift - LAND_W
         add(f'land_{st}', 'qkd_land', lx, y0, LAND_W - SHAVE, stack_h - SHAVE, 'MY' if side == 'W' else 'R0',
             'land', 'strip')
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
@@ -268,8 +360,12 @@ def build(r=R):
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     m['geo'] = dict(x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
-                    ystack=ystack, r=r)
+                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, leaf_shift=leaf_shift)
+    if kv_wq_leaves:
+        _write_tiles(m, add)
     _buses(m, T, r)
+    if kv_wq_leaves:
+        _write_buses(m)
     _relays(m)
     m['regions'] = _regions(m)
     m['die']['mm2'] = round(Wk * Hk / 1e6, 3)
@@ -417,7 +513,7 @@ def _relays(m):
         return path[::-1]
     nb, stages, lengths = [], {}, {}
     for bid, cl, bits, eps in m['buses']:
-        if cl in ABUT or cl in ('clock_trunk', 'reset') or len(eps) != 2:
+        if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
             stages[bid] = 0
             continue
@@ -488,7 +584,9 @@ def masters(m, k=1, port_bits=None):
         for inst, port in eps:
             used.setdefault(by[inst].master, {})[port.lstrip('*')] = max(bits, used.get(by[inst].master, {}).get(port.lstrip('*'), 0))
     M = {}
-    tmap = dict(qkd_ctrl='qfd_ctrl', qkd_cdc='qfd_cdc', qkd_land='qfd_kvc')     # ot_hbm3e_phy: the real LEF (k = 1)
+    tmap = dict(qkd_ctrl='qfd_ctrl', qkd_cdc='qfd_cdc', qkd_land='qfd_kvc')
+    if m['geo'].get('kv_wq_leaves'):
+        tmap['qkd_cdc_wleaf'] = 'qfd_cdc'     # ot_hbm3e_phy: the real LEF (k = 1)
     for name, src in tmap.items():
         t = T['masters'][src]
         if name == 'qkd_land':
@@ -507,9 +605,19 @@ def masters(m, k=1, port_bits=None):
                     mm.order.append(p)
         else:
             mm = F.Master(name, t['w'], t['h'], t['obs_top'], t['note'])
-            for p in t['order']:
-                mm.ports[p] = tuple(t['ports'][p])
-                mm.order.append(p)
+            for p in (dict.fromkeys(t['order']) if name == 'qkd_cdc_wleaf' else t['order']):
+                if name == 'qkd_cdc_wleaf' and p == 'ci':
+                    sp = t['ports'][p]
+                    for pn, lo, width in [('wi', 0, 290), ('wr', 290, 11), ('cf', 301, 1)]:
+                        part = list(sp)
+                        part[1] = width
+                        # Pin centres retain the original 302-bit ci order and pitch.
+                        part[4] = sp[4] + (lo + (width-1)/2 - (302-1)/2)*0.048*sp[5]
+                        mm.ports[pn] = tuple(part)
+                        mm.order.append(pn)
+                else:
+                    mm.ports[p] = tuple(t['ports'][p])
+                    mm.order.append(p)
         M[name] = mm
     sizes = {i.master: (i.w, i.h) for i in m['insts']}
     for mst, (w, h) in sizes.items():
@@ -620,6 +728,30 @@ def port_widths(m, k=1):
     return _BASE_PORT_WIDTHS(m, k)
 
 
+def write_netlist(m, k, path, top='qkd_die'):
+    F.write_netlist(m, k, path, top=top)
+    if not m['geo'].get('kv_wq_leaves'):
+        return
+    if k != 1:
+        raise ValueError('per-PC leaves require full-width nets (k=1)')
+    # These constants are die-top straps, not muxes or a second CDC writer.
+    p = Path(path)
+    txt = p.read_text()
+    ties = [f"  assign n_{bid} = 3'd{lane};" for bid, lane in m['wq_straps'].items()]
+    ties += [f"  assign n_wtail_{st}_{g} = 2'b00;" for st in STACKS for g in range(4)]
+    txt = txt.replace('endmodule', '\n'.join(ties) + '\nendmodule', 1)
+    p.write_text(txt)
+    # Explicit nine OR2-equivalent gates a group; no silent 8-bit/3-bit rename.
+    # This module is functional composition RTL only.  The die physical abstract
+    # remains UNQUALIFIED until this encoder closes at SS/FF in context.
+    p.with_name('kv_wq_lane_encoder.sv').write_text("""module qkd_kvwq_lane_encoder(input wire [297:0] a, output wire [292:0] b);
+  wire [7:0] oh = a[288:281];
+  wire [2:0] lane = {oh[4]|oh[5]|oh[6]|oh[7], oh[2]|oh[3]|oh[6]|oh[7], oh[1]|oh[3]|oh[5]|oh[7]};
+  assign b = {a[297:289], lane, a[280:0]};
+endmodule
+""")
+
+
 def record(m):
     by_m = {}
     for i in m['insts']:
@@ -671,6 +803,8 @@ def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
+    if m['geo'].get('kv_wq_leaves'):
+        raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
     saved = F.masters, F.port_widths
     F.masters, F.port_widths = masters, port_widths
     try:
@@ -702,8 +836,11 @@ def main(argv=None):
     ap.add_argument('mode', choices=['plan', 'case'])
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--r', type=int, default=R)
+    ap.add_argument('--kv-wq-leaves', action='store_true', help='candidate per-PC write leaves; encoder closure still owed')
     a = ap.parse_args(argv)
-    m = build(a.r)
+    if a.mode == 'case' and a.kv_wq_leaves:
+        ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
@@ -713,10 +850,21 @@ def main(argv=None):
     M = masters(m, 1)
     rec['masters_abstract'] = {n: dict(w=round(mm.w, 3), h=round(mm.h, 3), ports=len(mm.order)) for n, mm in M.items()}
     rec['strict_ports'] = strict_ports(M)
+    if a.kv_wq_leaves:
+        rec['kv_wq_candidate'] = dict(adopted=False, leaves=128, control_tiles=4, encoder_tiles=16,
+            encoder='3 OR4 per group; matches ot_qkvd_kv_wq_leaves exactly; SS/FF context closure owed',
+            gate='BLOCKED_ENCODER_PHYSICAL_CLOSURE', chain_order='PC 8*g+7 through 8*g N-to-S, lane strap PC%8',
+            cdc_ci_slices=dict(wi=[0,290], wr=[290,11], cf=[301,1]),
+            chain_hop_cycles=dict(feed=2, done=1), relay_cycles=m['relay_stages'],
+            controller_group_slices={g: dict(f_v=[g,1], f_d=[256*g,256], f_sec=[24*g,24],
+                                             f_lane=[8*g,8], f_tag=[9*g,9], r_v=[g,1], r_bad=[g,1]) for g in range(4)},
+            physical_gate='closed leaf/ctl pin shapes and context SS/FF must replace candidate abstracts',
+            encoder_sizing=dict(or4_per_group=3, or2_equivalent_total=144,
+                                reserved_frame_mm2=round(16*43.2*43.2/1e6,6), measured_cell_area=None))
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     (a.out / 'insts.json').write_text(json.dumps([i.d() for i in m['insts']]) + '\n')
-    F.write_netlist(m, 1, a.out / 'kv_die.v', top='qkd_die')
+    write_netlist(m, 1, a.out / 'kv_die.v', top='qkd_die')
     print(json.dumps({k_: rec[k_] for k_ in ('die_um', 'die_mm2', 'instances', 'fill', 'legality')}))
     return 0 if not rec['legality']['overlaps'] and not rec['legality']['outside'] else 1
 
