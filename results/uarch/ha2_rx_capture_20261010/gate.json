@@ -1,0 +1,193 @@
+{
+  "gate": "ha2_rxs",
+  "dut": "ot_ha2_truecredit_receiver_s",
+  "passed": true,
+  "checks": {
+    "f0_r0_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=8 cret=3 stalls=877 credit_stalls=361 elapsed=948 credit_drain=64\n"
+    },
+    "f0_r0_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1842,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=1 cret=0 stalls=2248 credit_stalls=1512 elapsed=1842 credit_drain=64\n"
+    },
+    "f0_r0_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1170,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=4 cret=7 stalls=1225 credit_stalls=649 elapsed=1170 credit_drain=64\n"
+    },
+    "f0_r0_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=16 cret=20 stalls=879 credit_stalls=362 elapsed=948 credit_drain=64\n"
+    },
+    "f7_r7_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=8 cret=3 stalls=891 credit_stalls=354 elapsed=948 credit_drain=64\n"
+    },
+    "f7_r7_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1842,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=1 cret=0 stalls=2262 credit_stalls=1505 elapsed=1842 credit_drain=64\n"
+    },
+    "f7_r7_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1170,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=4 cret=7 stalls=1239 credit_stalls=642 elapsed=1170 credit_drain=64\n"
+    },
+    "f7_r7_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=16 cret=20 stalls=893 credit_stalls=355 elapsed=948 credit_drain=64\n"
+    },
+    "f1_r64_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=8 cret=3 stalls=1005 credit_stalls=360 elapsed=948 credit_drain=64\n"
+    },
+    "f1_r64_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1842,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=1 cret=0 stalls=2376 credit_stalls=1511 elapsed=1842 credit_drain=64\n"
+    },
+    "f1_r64_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1170,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=4 cret=7 stalls=1353 credit_stalls=648 elapsed=1170 credit_drain=64\n"
+    },
+    "f1_r64_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=16 cret=20 stalls=1007 credit_stalls=361 elapsed=948 credit_drain=64\n"
+    },
+    "f64_r1_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=8 cret=3 stalls=879 credit_stalls=297 elapsed=948 credit_drain=64\n"
+    },
+    "f64_r1_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1842,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=1 cret=0 stalls=2250 credit_stalls=1448 elapsed=1842 credit_drain=64\n"
+    },
+    "f64_r1_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1170,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=4 cret=7 stalls=1227 credit_stalls=585 elapsed=1170 credit_drain=64\n"
+    },
+    "f64_r1_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 948,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=16 cret=20 stalls=881 credit_stalls=298 elapsed=948 credit_drain=64\n"
+    },
+    "wrap_tag8": {
+      "passed": true,
+      "rc": 0,
+      "elapsed": 1996,
+      "tail": "PASS_TRUECREDIT_CR rows=640 injectors=2 width=544 fwd=7 ret=64 crd=8 cret=3 stalls=2053 credit_stalls=802 elapsed=1996 credit_drain=64\n"
+    },
+    "mut_ignore_reservations": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 1,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=1 rx=0 cycle=73\n       Time: 786000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_corrupt_retire_id": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 2,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=1 rx=0 cycle=58\n       Time: 636000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_corrupt_forward_id": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 3,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=45\n       Time: 506000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_read_addr_off_by_one": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 4,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=51\n       Time: 566000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_credit_over_issue": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 5,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:84: TRUECREDIT_CONSUMER_OVF lane=0 cycle=58\n       Time: 636000 Scope: tb_ha2_truecredit_cr.$ivl_for_loop4\n"
+    },
+    "mut_spurious_credit_overflow": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 6,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=607\n       Time: 6126000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_deliver_skips_rreg_stage": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 9,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=51\n       Time: 566000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_credit_return_dropped": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 8,
+      "tail": "FATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr.sv:93: TRUECREDIT_TIMEOUT received=8/8\n       Time: 49126000 Scope: tb_ha2_truecredit_cr\n"
+    },
+    "reset_flight": {
+      "passed": true,
+      "rc": 0,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=29/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_CR_RESET crd=8 cret=5 fwd=7 ret=7 fresh_rows=192 injectors=2 cycles=1011\n"
+    },
+    "reset_long_flight": {
+      "passed": true,
+      "rc": 0,
+      "tail": "RESET_INTERRUPTION fwd=64 ret=64 issued=85/72 received=40/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_CR_RESET crd=8 cret=20 fwd=64 ret=64 fresh_rows=192 injectors=2 cycles=1227\n"
+    },
+    "reset_return_pipe_removed": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=29/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr_reset.sv:103: RESET_STALE_RETURN_PIPE\n       Time: 2821000 Scope: tb_ha2_truecredit_cr_reset\n"
+    },
+    "reset_stale_sender_credit": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=29/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr_reset.sv:81: RESET_PROTOCOL_FAULT epoch=1 tx=1 rx=0\n       Time: 2876000 Scope: tb_ha2_truecredit_cr_reset.run_phase\n"
+    },
+    "reset_stale_credit_line": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=29/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /tmp/codex-ha2-rx-c-gate-final-20261010/tb_ha2_truecredit_cr_reset.sv:81: RESET_PROTOCOL_FAULT epoch=1 tx=0 rx=1\n       Time: 2896000 Scope: tb_ha2_truecredit_cr_reset.run_phase\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d6db07d4ed8f086c4b3144f3a3d6a571f580f0b6671d23aaeab0c15ee4b5700",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxs_c.sv": "8e7a481df2b58f743d0d106d838211137ccc5d01531f79bab58c1703138c6832",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_cr.sv": "5bcb0ddfc70a1b7677034d1f6029c4fb37d352cb92603c65e9e9b72b443a9322",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_cr_reset.sv": "2ddb9792f4962f1f4f65e20e5e7d1b519a1f55eec619d0e1ba3ba8f8668a6aac",
+    "tools/ha2_rxs_gate.py": "112f8394165c48defc1bbc84b5f2b5333c3cb84580e00d9b2649650168776c4c"
+  },
+  "cycles_added": "vs RREG: +1 bank-local capture edge; vs original SRAM receiver: RREG +1 plus capture +1; credit issue remains at fetch"
+}

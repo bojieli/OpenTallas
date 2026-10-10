@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.physical.ha2_capture_hook_probe.v1",
+  "failed_job": "ha2_rxs_c-8e003d00e-tc-rvt-hm10-cl",
+  "failed_stage": "PRE_GLOBAL_PLACE",
+  "failed_reason": "Hook matched 0 flops because ODB names preserve escaped brackets. No physical timing result.",
+  "failure_preserved": true,
+  "fix": "Normalize escaped instance brackets for regex parsing; preserve original name for macro lookup; correct newline separators; handle R0/MY/MX/R180 macro orientations.",
+  "probe": {
+    "host": "ot-epyc3",
+    "read_only_database": "ha2_rxs_c_8e003d00e_tc_rvt_hm10_cl_cal/3_2_place_iop.odb",
+    "actual_capture_registers_anchored": 1120,
+    "core_bounds_check": "PASS",
+    "physical_route_verdict": "NOT YET"
+  },
+  "source_sha256": {
+    "physical/ha2_truecredit_20261007/rx_capture_at_macros.tcl": "136484941b63b4d0c84dcfc03d947fb834246569c6193c11312e9cccf1520e33",
+    "physical/ha2_truecredit_20261007/rx_capture_release.tcl": "d92c38227511e903b651151490c92d778b82211bb23323627c30626dca481dca"
+  }
+}

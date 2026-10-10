@@ -104,3 +104,14 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
                       measured_profile_bursts=360,
                       profile_scope='saturated element, immediate consumer credit, full shape actual SRAM model; not token rate'),
         exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
+
+
+def ha2_truecredit_capture_collar_model():
+    """Price the local SRAM output capture stage before RTL build."""
+    from tools.ha2_rxs_capture_model import model
+    return model()
+
+
+def ha2_truecredit_capture_return_pin_model():
+    from tools.ha2_rxs_capture_model import return_pin_model
+    return return_pin_model()

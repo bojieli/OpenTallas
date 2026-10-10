@@ -1,0 +1,9 @@
+{
+  "base_commit": "018395ed6a1cecdc2e6fe99558b3732ba0e1721f",
+  "inherited_dependencies_byte_identical": true,
+  "imported_dependencies": [
+    "physical/ha2_truecredit_20261007/ot_ha2_truecredit_rx_s_phys.sv",
+    "tools/ha2_rxs_gate.py"
+  ],
+  "integration": "Narrow assets only; preserve current main runner variants and model contents. Never merge old candidate ancestry."
+}
