@@ -218,7 +218,7 @@ This is the only address arithmetic the hardware performs on the program's behal
 
 A record's 2-bit **predicate** decides whether it runs: always, only at position 0, only at positions other than 0, or only on the last loop iteration. A skipped record has no effect.
 
-`CTL.LOOP` and `CTL.ENDLOOP` bracket a body that runs `count` times. The loop's level selects its counter: level 0 drives `L`, level 1 drives `L1`. Two levels may nest, for example layers (`L`) around per-head records (`L1`). Loop bodies replay from the prefetch ring, so a body must fit the ring. Unrolled programs are equally legal.
+`CTL.LOOP` and `CTL.ENDLOOP` bracket a body that runs `count` times. The loop's level selects its counter: level 0 drives `L`, level 1 drives `L1`. Two levels may nest, for example layers (`L`) around per-head records (`L1`). Loop bodies replay from the prefetch ring, so a body must fit the ring: 64 KB (4,096 16-byte words; a body must end within 4,094 words of its start). Unrolled programs are equally legal.
 
 ### 3.5 The life of a token
 
@@ -241,7 +241,7 @@ A record's 2-bit **predicate** decides whether it runs: always, only at position
 
 *Figure 3-1. One token from doorbell to completion.*
 
-**Doorbell.** The host starts a token by ringing the doorbell with `{token 18, pos 20, job 32, gen 4, entry 2, ncol 4}` (field widths in bits). `token` is the input token (the previous step's output), `pos` its position, `entry` selects the entry point (AR, verify, draft), and `ncol` is the number of positions for a verify pass (1 at AR). The CP refuses the doorbell (`db_rdy` = 0) while a descriptor commit is settling (§5.5).
+**Doorbell.** The host starts a token by ringing the doorbell with `{token 18, pos 20, job 32, gen 4, entry 2, ncol 4}` (field widths in bits). `token` is the input token (the previous step's output), `pos` its position, `entry` selects the entry point (AR, verify, draft), and `ncol` is the number of positions for a verify pass (1 at AR; F11: the value 0 encodes 16, so DFlash block 16 can commit k = 16). The CP refuses the doorbell (`db_rdy` = 0) while a descriptor commit is settling (§5.5).
 
 **Records.** The CP fills the DYN banks and runs records from the entry point. The token's work is entirely described by the records; no engine starts on its own.
 
@@ -623,7 +623,7 @@ Operation codes are the index of each operation in its unit's list in `spec.json
 
 | Unit | Operations (code order) | `param` and immediates | Semantics (bit-exact reference) |
 |---|---|---|---|
-| Control (CTL) | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX (**proposed**, §7.4, SPEC_GAP Q-MTP-1): A = U32 [1 + ncol], A[0] = k (1 ≤ k ≤ ncol), A[1..k] = the committed tokens; the CP emits k completion beats {token A[i], pos + i − 1, status 0} before `END`. AMAX, ACCEPT: reserved (DFlash needs neither, §7.4). |
+| Control (CTL) | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX (**proposed**, §7.4, SPEC_GAP Q-MTP-1): A = U32 [1 + ncol], A[0] = k (1 ≤ k ≤ ncol, ncol 0 = 16), A[1..k] = the committed tokens; the CP emits k completion beats {token A[i], pos + i − 1, status 0} before `END`. AMAX, ACCEPT: reserved (DFlash needs neither, §7.4). |
 | Matrix engine (SM) | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). With P > 1 slots, A and O carry one row per slot (m = P) and each slot's result is the single-slot arithmetic, bit for bit. Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
 | Stream unit (SU) | VOP | — (the template carries the configuration) | `Machine.su1` (R-ARITH chunk8) |
 | Special-function unit (SFU) | GLU | `imm_a` = clamp limit (FLT_MAX disables) | The fused SwiGLU chain; output format = O `fmt` |

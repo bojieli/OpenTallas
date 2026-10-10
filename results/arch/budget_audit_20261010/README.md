@@ -111,3 +111,32 @@ The scripts are in `tools/budget_audit/`:
 - `assemble.py` merges them with the compute-unit fragment, `hbm_compute.json`.
 
 The fragment paths point at the coordination folder `/home/ubuntu/claude-takeover-20261007/budget-audit-1010/`. The table is a snapshot; it is not a closed rate.
+
+## Right-sizing the generic HBM die (owner follow-up)
+
+Files:
+- `rightsize.json`: the per-unit table;
+- `rightsize_sweep.json`: the raw sweeps;
+- `tools/budget_audit/rightsize_sweep.py`: the sweep script.
+
+**Rule.** A unit's count is the minimum that keeps the designed tok/s within 1%. Each sweep varies one unit and holds everything else at budget, on the S2 schedule. Load/compute overlap is as the schedule models it. The generic die needs the larger of the two requirements, Qwen (TP4, 8K) or DS (TP96, 1M).
+
+**Power basis.** Peak in-phase power from the floorplan tool: SM 5.48 W, attention tile 2.52 W, hub 1.05 W/mm². Today the die is 468.0 W against a 474.56 W limit.
+
+| Unit | Today | Qwen needs | DS needs | Generic die | Set by | Area saved (mm²) | Peak W saved |
+|---|---:|---:|---:|---:|---|---:|---:|
+| SM | 32 | **32** (28 SMs: +10.6% cycles) | 28 (+0.7%; 24 SMs: +3.0%) | 32 | Qwen: SM-issue bound | 0 | 0 |
+| Attention tiles | 64 | **52** (44 at the measured KV rate) | 32 (prices measured on NL 4 × S 8) | 52 | Qwen: GQA 25% lane use (G4: 36.9k tile cycles vs 47.7k KV stream at 64 tiles) | 28.9 | 30.3 |
+| SU lanes | N1024 | 512 (+0.41%) | 512 (+0.05%) | 512 | Qwen | 7.8 | 8.2 |
+| SFU | 1 | ½ width (+0.17%) | 0 | ½ width | Qwen GLU (2,160 cycles/token) | 4.4 | 4.6 |
+| HC | 4 quarters | 0 | 4 | 4 | DS: 17% of the token, critical | 0 | 0 |
+| Index score lanes | 64 keys/cycle | 0 | 36 (needs 30) | 36 | DS indexer | ≤ 9.0 | ≤ 9.4 |
+| **Total** | | | | | | **≈ 50** | **≈ 52** |
+
+Notes on the table:
+- **SM.** DS per-die SM work is small, but cutting below 28 SMs still costs DS through the expert matvecs. Qwen sets the count at 32.
+- **HC.** Keep all 4 quarters. The audit shows the HC RTL is already far below its price, so HC needs more effective throughput (wide VM lanes), not fewer quarters.
+- **Index.** The saving is an upper bound. The 20.57 mm² figure covers the whole indexer, and only the score array shrinks.
+- **Attention tiles.** Check the Qwen MTP/DFlash verify programs before cutting below 52. At p = 4 a verify pass fills all 16 head lanes.
+
+**Reinvest option.** Qwen is SM-issue bound at 32 SMs. With 40 SMs its cycles drop 14.3%, from 953.8 to about 1,113 tok/s; DS is unchanged within 0.2%. Beyond 40, Qwen becomes HBM-bound: 48 SMs add only another 0.7%. The 8 extra SMs cost 36.5 mm² and 43.9 W. That is less than the ~50 mm² and ~52 W freed above, so the net is −13.6 mm² and −8.6 W, which keeps the die inside 474.56 W. This is an owner decision.
