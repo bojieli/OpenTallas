@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/s81-gen/src_28d7cb869/../codex_return_probe.py", line 13, in <module>
+    print(json.dumps({'frame':m['frames'][0],'points':{n:vars(by[n]) for n in names if n in by},'edges':[b for b in m['buses'] if b[0].startswith('rt_0_8b') or any(e[0] in names for e in b[3])]},default=str),flush=True)
+                                                         ~~~~^^^^^^^
+TypeError: vars() argument must have __dict__ attribute

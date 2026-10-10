@@ -1,0 +1,21 @@
+{
+  "scope": "Minimum atomic score join; arithmetic/T4/full die not qualified",
+  "gates": [
+    {
+      "mode": "base",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "mode": "MUT_SWAP",
+      "returncode": 1,
+      "gate_pass": true
+    },
+    {
+      "mode": "MUT_DROP_CREDIT",
+      "returncode": 1,
+      "gate_pass": true
+    }
+  ],
+  "verdict": "PASS"
+}

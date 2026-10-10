@@ -1,0 +1,60 @@
+  O[0] 0000c6c0 want 000018d8
+  O[1] 000142c0 want 00002858
+  O[2] 00007618 want 000015ab
+FAIL case 0: 521 mismatches (M 9 want 12)
+  O[0] 00002eb8 want 00000b84
+  O[1] 00003458 want 00000d0f
+  O[2] 000043a0 want 00001409
+FAIL case 1: 519 mismatches (M 11 want 12)
+  O[0] 00011a40 want 00002348
+  O[1] 00007360 want 00001ac8
+  O[2] 0000ae50 want 000010bc
+FAIL case 2: 520 mismatches (M 12 want 15)
+  O[0] 00013c10 want 000002b7
+  O[1] 0000c3e8 want 000019e0
+  O[2] 000041c8 want 00002464
+FAIL case 3: 519 mismatches (M 11 want 12)
+  O[0] 0000dc30 want 00001c80
+  O[1] 0000e400 want 00000881
+  O[2] 00001148 want 0000190b
+FAIL case 4: 516 mismatches (M 13 want 13)
+  O[0] 0000edc8 want 000023f9
+  O[1] 0000fd08 want 00000e44
+  O[2] 00014c90 want 00000c69
+FAIL case 5: 519 mismatches (M 11 want 10)
+  O[0] 00001d8e want 00001f02
+  O[1] 000125b6 want 000010a1
+  O[2] 0000e62e want 00000185
+FAIL case 6: 2072 mismatches (M 35 want 33)
+  O[0] 000e7595 want 0000e7db
+  O[1] 00030afd want 0000acdb
+  O[2] 0008257d want 00010af8
+FAIL case 7: 580 mismatches (M 74 want 75)
+  O[0] 000a68be want 0001a68e
+  O[1] 000ebdfe want 0001e45a
+  O[2] 000e45aa want 000323af
+FAIL case 8: 370 mismatches (M 81 want 78)
+  O[0] 000aa15b want 0005542b
+  O[1] 000f65b6 want 0001ecb6
+  O[2] 000c3c2d want 00058785
+FAIL case 9: 7 mismatches (M 7 want 7)
+OWNED case 10: B=1 G=2 die=1 K=64 M=34 EXACT cycles=291
+  O[0] 000498bf want 0000179a
+  O[1] 0002b3ff want 000018ba
+  O[2] 00025e5f want 00001e7b
+FAIL case 11: 520 mismatches (M 11 want 12)
+  O[1] 00000000 want 00000001
+  O[2] 00000000 want 00000002
+  O[3] 00000000 want 00000003
+FAIL case 12: 4096 mismatches (M 256 want 2048)
+  O[256] dead0100 want 00000000
+  O[257] dead0101 want 00000000
+  O[258] dead0102 want 00000000
+FAIL case 13: 3841 mismatches (M 256 want 2048)
+  O[0] 000d8049 want 0007b009
+  O[1] 00087876 want 00010f0e
+  O[2] 000edcf6 want 0007db9e
+FAIL case 14: 2048 mismatches (M 2048 want 2048)
+OWNED case 15: out-of-range id faults as required
+FATAL: rtl/hbm_accel/generic/idx/tb_hgi_idx_owned.sv:63: HGI_IDX_OWNED 14 cases failed
+       Time: 60484000 Scope: tb_hgi_idx_owned

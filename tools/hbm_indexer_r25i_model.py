@@ -152,3 +152,26 @@ def hbm_indexer_quarter_end_model():
       purpose='Lossless candidate quarter termination; whole-frame co.last cannot flush partial quarter flits',
       source='33b02c114 EXPOSE_QUARTER_LAST',
       physical='Fresh6903pin native master; historical6902pin record and failedroute preserved')
+
+
+def hbm_indexer_t4_join_model():
+    """Prebuild sizing for four real L4 taps behind the native L16 boundary."""
+    return dict(default_enabled=False, adopted=False,
+      taps_per_stack=4, lanes_per_tap=4, stacks=4,
+      MACs_per_stack_cycle=16*32*128,
+      tap_payload_bits=153, tap_landing_depth=128,
+      landing_bits_per_stack=4*153*128,
+      landing_FF_floor_um2_per_stack=4*153*128*0.2916,
+      output_payload_bits=609, output_credits=128,
+      bits_per_cycle=dict(tap_inputs=4*154, output=610,
+                          tap_credits=4, output_credit=1),
+      tap_slot_um=[1400,1250], grid_slot_um=[2800,2500],
+      grid_outline_mm2_per_stack=7.0,
+      historical_native_outline_mm2_per_stack=2000.16*3000.264/1e6,
+      added_grid_outline_mm2_per_die=4*(7-2000.16*3000.264/1e6),
+      join_slot_um=[420,360], join_slot_um2=420*360,
+      join_outline_status='Separate hardened join required; mapped area and actual routing tracks unmeasured',
+      query_latency_extra_cycles_per_tap=3,
+      join_latency_min_cycles=2,
+      token_latency_status='Must measure tap/query/join/backpressure and compose8index layers; no rate credit',
+      acceptance='Atomic lane order and last agreement with finite credits; arbitrary tap skew and stalled downstream; dropped credit and lane swap negatives rejected; actual four-tap arithmetic exact gate and physical views remain required')

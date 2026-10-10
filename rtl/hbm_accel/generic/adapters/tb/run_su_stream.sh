@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd)
 OUT=$(realpath -m "${1:-/tmp/hgi_ss_run}")
 VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" ] && echo "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" || echo verilator)}
-MODE=${2:-}; D=""; [ "$MODE" = PUB ] && D="-DPUB"; [ "$MODE" = MUT_ROW ] && D="-DPUB -GMUTR=1"
+MODE=${2:-}; D="${XDEF:-}"; [ "$MODE" = PUB ] && D="${XDEF:-} -DPUB"; [ "$MODE" = MUT_ROW ] && D="${XDEF:-} -DPUB -GMUTR=1"
 mkdir -p "$OUT"; cd "$ROOT"
 python3 tools/hgi_adapters/su_stream_bench.py --out "$OUT/vec" > "$OUT/gen.log"
 VEC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv

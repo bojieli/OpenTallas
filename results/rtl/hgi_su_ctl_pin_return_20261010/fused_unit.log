@@ -1,0 +1,16 @@
+case 0: 3 records in 11428 cycles
+case 1: 1 records in 8538 cycles
+case 2: 1 records in 1871 cycles
+case 3: 1 records in 999 cycles
+case 4: 1 records in 1083 cycles
+case 5: 1 records in 2437 cycles
+case 6: 1 records in 2805 cycles
+case 7: 1 records in 7757 cycles
+case 8: 1 records in 16495 cycles
+case 9: 1 records in 50317 cycles
+summary: 10 FUSED data cases through the D1 unit, 34112 VM words exact
+HGI_FUSED_UNIT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 161.215 s; speed 8.841 us/s
+- Verilator: cpu 161.113 s on 1 threads; allocated 24 MB

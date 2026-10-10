@@ -30,7 +30,7 @@ module tb_hfd_loader_kport;
    .wq_d(q[291:0]),.wq_fclk(clk),.wq_source(2'd2),.wq_source_g(wq_source_g),.wq_source_fault(wq_source_fault),
    .wq_source_busy(wq_source_busy),.wq_pending(wq_pending),.k_wr_done(k_wr_done),.phy_rst_n(phy_rst_n),
    .outer_write_pending(q[345]),
-   .native_v(q[292]),.native_rdy(n_rdy),.native_pc(q[297:293]),.native_addr(q[327:298]),.native_tag(q[343:328]),
+   .native_v(q[292]),.native_rdy(n_rdy),.native_pc(q[297:293]),.native_addr(q[327:298]),.native_tag(q[343:328]),.native_len(4'd1),
    .native_rsp_v(n_rsp_v),.native_rsp_rdy(q[344]),.native_rsp_pc(n_rsp_pc),.native_rsp_tag(n_rsp_tag),
    .native_rsp_beat(n_rsp_beat),.native_rsp_data(n_rsp_data),.native_fault(native_fault));
   ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(0)) phy(

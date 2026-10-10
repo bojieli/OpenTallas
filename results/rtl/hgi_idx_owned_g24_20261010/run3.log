@@ -1,0 +1,18 @@
+OWNED case 0: B=8 G=96 die=0 K=512 M=12 EXACT cycles=1229
+OWNED case 1: B=8 G=96 die=0 K=512 M=12 EXACT cycles=1233
+FAIL case 2: 1 mismatches (M 15 want 15)
+FAIL case 3: 1 mismatches (M 12 want 12)
+FAIL case 4: 1 mismatches (M 13 want 13)
+FAIL case 5: 1 mismatches (M 10 want 10)
+FAIL case 6: 1 mismatches (M 33 want 33)
+FAIL case 7: 1 mismatches (M 75 want 75)
+FAIL case 8: 1 mismatches (M 78 want 78)
+FAIL case 9: 1 mismatches (M 7 want 7)
+FAIL case 10: 1 mismatches (M 34 want 34)
+FAIL case 11: 1 mismatches (M 12 want 12)
+FAIL case 12: 1 mismatches (M 2048 want 2048)
+FAIL case 13: 1 mismatches (M 2048 want 2048)
+FAIL case 14: 1 mismatches (M 2048 want 2048)
+OWNED case 15: out-of-range id faults as required
+FATAL: rtl/hbm_accel/generic/idx/tb_hgi_idx_owned.sv:63: HGI_IDX_OWNED 13 cases failed
+       Time: 64524000 Scope: tb_hgi_idx_owned

@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_be_wg_cg-80412d770-tc-np-cl-r2/routes/hbm_smh_be_wg_cg_80412d770_tc_np_cl_r2_cal/results/asap7/smh_be_toW_hbm_smh_be_wg_cg_80412d770_tc_np_cl_r2_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 472,
+   "mean": 404.8,
+   "min": 357.7,
+   "max": 425.6
+  },
+  "all": {
+   "n": 6821,
+   "mean": 397.3,
+   "min": 356.8,
+   "max": 448.6
+  },
+  "errors": []
+ },
+ "tt": {
+  "boundary": {
+   "n": 472,
+   "mean": 306.0,
+   "min": 258.5,
+   "max": 325.8
+  },
+  "all": {
+   "n": 6821,
+   "mean": 298.3,
+   "min": 257.8,
+   "max": 347.8
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 472,
+   "mean": 247.4,
+   "min": 200.6,
+   "max": 266.5
+  },
+  "all": {
+   "n": 6821,
+   "mean": 239.7,
+   "min": 200.0,
+   "max": 287.6
+  },
+  "errors": []
+ },
+ "route_corner": "TC",
+ "env": {
+  "CK_SS_MEAN": 306,
+  "CK_SS_ALL_MEAN": 298,
+  "CK_SS_MIN": 258,
+  "CK_SS_ALL_MIN": 258,
+  "CK_SS_MAX": 326,
+  "CK_SS_ALL_MAX": 348,
+  "CK_TT_MEAN": 306,
+  "CK_TT_ALL_MEAN": 298,
+  "CK_TT_MIN": 258,
+  "CK_TT_ALL_MIN": 258,
+  "CK_TT_MAX": 326,
+  "CK_TT_ALL_MAX": 348,
+  "CK_FF_MEAN": 247,
+  "CK_FF_ALL_MEAN": 240,
+  "CK_FF_MIN": 201,
+  "CK_FF_ALL_MIN": 200,
+  "CK_FF_MAX": 266,
+  "CK_FF_ALL_MAX": 288,
+  "CK_SSLIB_MEAN": 405,
+  "CK_SSLIB_MIN": 358,
+  "CK_SSLIB_MAX": 426,
+  "CK_SSLIB_ALL_MEAN": 397,
+  "CK_SSLIB_ALL_MIN": 357,
+  "CK_SSLIB_ALL_MAX": 449,
+  "CK_ROUTE_REF": "TT"
+ }
+}

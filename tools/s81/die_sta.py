@@ -12,7 +12,7 @@ From a die variant (tools/dsrom_s81_fulldie.py options) writes, for SS and FF:
     views carry them: unconstrained here, reported as such).
   die_sta.py kit --s81-opts "<opts>" --die layer --out DIR
 """
-import argparse, json, re, shlex, sys
+import argparse, hashlib, json, math, re, shlex, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
@@ -67,6 +67,154 @@ def closed_libs(corner, root=ROOT, label='m221pq'):
     return out
 
 
+
+COLL_CR_PARTS = ('dsfd_coll_lane_w', 'dsfd_coll_cb', 'dsfd_coll_ce', 'dsfd_coll_ct')
+
+
+def collective_credit_binding(root):
+    """Select source-pinned credit masters; same-named legacy libraries cannot satisfy this variant."""
+    root = Path(root)
+    manifest_path = root / 'physical/s81_ph_views/collective/composition_split3cr.json'
+    manifest = json.loads(manifest_path.read_text())
+    bindings, problems = {}, []
+    receipts = sorted((root / 'results/closure_loop').glob('*/verdict.json'))
+    for master in COLL_CR_PARTS:
+        expected = manifest['source_commits']['lane' if master == 'dsfd_coll_lane_w' else 'core']
+        params = manifest['required_parameters'][master]
+        for vp in receipts:
+            v = json.loads(vp.read_text())
+            if v.get('block') != master or not str(v.get('source_commit', '')).startswith(expected):
+                continue
+            metrics, benches = v.get('metrics', {}), v.get('benches', {})
+            def nonnegative(value):
+                return type(value) in (int, float) and math.isfinite(value) and value >= 0
+            if (v.get('status') != 'CLOSED' or not nonnegative(metrics.get('ss_ps'))
+                    or not nonnegative(metrics.get('ff_ps')) or metrics.get('drc') != 0
+                    or metrics.get('drc_skipped') or not benches
+                    or not all(b.get('ok') is True for b in benches.values())
+                    or not any(b.get('expect') == 'pass' for b in benches.values())
+                    or sum(b.get('expect') == 'fail' for b in benches.values()) < 2):
+                continue
+            route = v.get('job_spec', {}).get('stages', {}).get('route', {}).get('cmd', '')
+            if not all(re.search(r'--param\s+' + re.escape(k) + r'=' + str(val) + r'(?:\s|$)', route)
+                       for k, val in params.items() if k != 'LR' or val != 0):
+                continue
+            if re.search(r'--param\s+LR=(?!0(?:\s|$))', route):
+                continue
+            for record in v.get('job_spec', {}).get('record', []):
+                directory = root / record['to']
+                libs = {c: directory / f'{master}_{c}.lib' for c in ('ss', 'tt', 'ff')}
+                if not all(lp.is_file() for lp in libs.values()):
+                    continue
+                check = directory / 'check.json'
+                if not check.is_file() or json.loads(check.read_text()).get('verdict') != 'MATCH':
+                    continue
+                bindings[master] = dict(verdict=str(vp.relative_to(root)), source_commit=v['source_commit'],
+                                        libs={c: str(lp.relative_to(root)) for c, lp in libs.items()})
+                break
+            if master in bindings:
+                break
+        if master not in bindings:
+            problems.append(f'{master}: missing CLOSED source-pinned CR/LCR routed views and exact/negative gates')
+    clock = root / 'physical/s81_ph_views/closed/dsfd_coll_ck'
+    cv = clock / 'verdict.json'
+    clock_binding = None
+    if cv.is_file():
+        v = json.loads(cv.read_text())
+        libs = {c: clock / f'dsfd_coll_ck_{c}.lib' for c in ('ss', 'tt', 'ff')}
+        if (str(v.get('verdict', '')).startswith('CLOSED')
+                and v.get('commit') == '752a48488384dbe9c95a72c084bc24e0ac800a17'
+                and type(v.get('ss_ps')) in (int, float) and v['ss_ps'] >= 0
+                and type(v.get('ff_ps')) in (int, float) and v['ff_ps'] >= 0
+                and v.get('drc') == 0 and all(lp.is_file() for lp in libs.values())):
+            clock_binding = dict(verdict=str(cv.relative_to(root)), source_commit=v['commit'],
+                                 libs={c: str(lp.relative_to(root)) for c, lp in libs.items()})
+    if clock_binding is None:
+        problems.append('dsfd_coll_ck: missing source-pinned retained clock/reset tile')
+    return dict(variant='split3cr', tiles=list(COLL_CR_PARTS) + ['dsfd_coll_ck'], tile_bindings=bindings, clock_binding=clock_binding,
+                qualified=False, qualification='UNQUALIFIED: assembled slab and inter-tile glue gate required',
+                problems=problems, assembly_by_corner={})
+
+
+
+def credit_qualification_valid(root, qualification, binding):
+    """Measured qualification must exist and match the exact source-pinned assembly, not just a PASS label."""
+    try:
+        path = Path(root) / qualification['evidence']
+        data = path.read_bytes()
+        if qualification.get('status') != 'PASS' or hashlib.sha256(data).hexdigest() != qualification.get('sha256'):
+            return False
+        q = json.loads(data)
+        manifest = json.loads((Path(root) / 'physical/s81_ph_views/collective/composition_split3cr.json').read_text())
+        if (q.get('status') != 'PASS' or q.get('variant') != 'split3cr'
+                or q.get('tile_bindings') != binding['tile_bindings'] or q.get('clock_binding') != binding['clock_binding']
+                or q.get('clock_period_ps') != 833.333 or q.get('setup_uncertainty_ps') != 60
+                or q.get('hold_uncertainty_ps') != 25 or q.get('drc') != 0
+                or q.get('clock_sinks') != [r['inst'] + '/ck' for r in manifest['instances']]
+                or not all(type(q.get(k)) in (int, float) and math.isfinite(q[k]) and q[k] >= 0
+                           for k in ('tt_setup_ps', 'ff_hold_ps'))):
+            return False
+        sinks = [r['inst'] for r in manifest['instances']]
+        taps = q.get('clock_taps', {})
+        clock_root = q.get('clock_root', {})
+        if (q.get('source_latency_policy') != 'option1' or set(taps) != set(sinks)
+                or clock_root.get('instance') != 'u_ck'
+                or not all(type(clock_root.get(k)) in (int, float) and math.isfinite(clock_root[k]) for k in ('x_um', 'y_um'))
+                or not all(type(taps[n].get(k)) in (int, float) and math.isfinite(taps[n][k]) and taps[n][k] >= 0
+                           for n in sinks for k in ('tt_source_latency_ps', 'ff_source_latency_ps'))):
+            return False
+        corner = json.loads((Path(root) / q['corner_sta']).read_text())
+        for key, metric in (('setup_tt', 'tt_setup_ps'), ('hold_ff', 'ff_hold_ps')):
+            r = corner[key]
+            if r.get('errors') or r.get('worst_slack_ps') != q[metric]:
+                return False
+            if not all(re.fullmatch('[0-9a-f]{64}', str(r.get(k, ''))) for k in
+                       ('odb_sha256', 'spef_sha256', 'sdc_sha256')):
+                return False
+        return True
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+def credit_assembled_views(root, binding, candidates):
+    """Accept only a CR assembly explicitly bound to the selected four committed closure receipts."""
+    if binding['problems']:
+        return
+    assemblies = sorted((Path(root) / 'physical').rglob('assembled.json'))
+    for corner, index in candidates.items():
+        rejected = []
+        for path in assemblies:
+            assembly = json.loads(path.read_text())
+            if assembly.get('slab') != 'dsfd_sp_collective':
+                continue
+            if assembly.get('variant') != 'split3cr' or assembly.get('tile_bindings') != binding['tile_bindings'] or assembly.get('clock_binding') != binding['clock_binding']:
+                rejected.append(f'rejected legacy or mismatched assembly {path}')
+                continue
+            glue = assembly.get('glue_worst_ps', {})
+            if not all(type(glue.get(k)) in (int, float) and math.isfinite(glue[k]) and glue[k] >= 0
+                       for k in ('tt_setup_bal', 'ff_hold_bal')):
+                rejected.append(f'unqualified inter-tile glue {path}')
+                continue
+            qualification = assembly.get('physical_qualification', {})
+            if not credit_qualification_valid(root, qualification, binding):
+                rejected.append(f'missing measured glue/clock qualification {path}')
+                continue
+            used = assembly.get('corners', {}).get(corner, {}).get('libs', {})
+            expected = {m: r['libs'][corner] for m, r in binding['tile_bindings'].items()}
+            expected['dsfd_coll_ck'] = binding['clock_binding']['libs'][corner]
+            lp = path.parent / f'dsfd_sp_collective_{corner}.lib'
+            if used != expected or not lp.is_file():
+                rejected.append(f'missing or mismatched tile library provenance {path}')
+                continue
+            binding['assembly_by_corner'][corner] = str(lp.relative_to(root))
+            index['dsfd_sp_collective'] = (lp, 'assembled')
+            break
+        else:
+            binding['problems'].append(f'{corner}: missing qualified split3cr assembled slab; ' + '; '.join(rejected))
+    binding['qualified'] = not binding['problems'] and len(binding['assembly_by_corner']) == 3
+    if binding['qualified']:
+        binding['qualification'] = 'source-pinned split3cr assembled timing and glue; die context still required'
+
+
 def measured_insertion(path):
     """block -> {ss, ff, tt} routed clock insertion (ps) from the closure loop's measured_insertion.json; a corner whose
     routed measurement is on another clock than the block's falls back to the calibrate CTS-only value; tt missing ->
@@ -88,7 +236,7 @@ def measured_insertion(path):
     return out
 
 
-def arcs_insertion(mst, view, mi, libpath=None):
+def arcs_insertion(mst, view, mi, libpath=None, parts=None):
     """[ss, ff, tt] clock insertion carried INSIDE a view's arcs (closed: its routed measurement, else the calib.json
     boundary mean beside the lib; assembled: mean over its tiles); interim / partitioned / macro carry none"""
     if view == 'closed':
@@ -100,7 +248,7 @@ def arcs_insertion(mst, view, mi, libpath=None):
             ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
             return [ss, ff, (ss + ff) / 2]
     if view == 'assembled':
-        src = [x for x in PARTS.get(mst, ()) if x in mi]
+        src = [x for x in (parts or PARTS).get(mst, ()) if x in mi]
         if src:
             return [sum(mi[x][c] for x in src) / len(src) for c in ('ss', 'ff', 'tt')]
     return [0.0, 0.0, 0.0]
@@ -114,7 +262,7 @@ def co_delay(lib):
     return float(m.group(1)) if m else 0.0
 
 
-def balance_latency(lat, pin_master, masters, mi, libs=None, group=None):
+def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
     (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
     hangs off its cfifo `co` and can only pad below it; group: pin -> tree key, default one tree).  Returns the record."""
@@ -124,7 +272,7 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None):
         if mst not in ins:
             r = masters.get(mst, {})
             lp = libs and libs['ss'].get(mst, (None,))[0]
-            ins[mst] = arcs_insertion(mst, r.get('view', 'interim'), mi, lp)
+            ins[mst] = arcs_insertion(mst, r.get('view', 'interim'), mi, lp, parts)
             if any(ins[mst]):
                 r['insertion_in_arcs_ps'] = [round(x, 1) for x in ins[mst]]
             r.pop('insertion_added_ps', None)
@@ -192,6 +340,7 @@ def main():
     ap.add_argument('--measured', type=Path, default=ROOT / 'results/rtl/budgets_20261006/measured_insertion.json',
                     help='closure-loop routed block clock insertion: the in-arc insertion of closed / assembled views, '
                          'subtracted from their planned pin latency (balanced die tree, balance_latency)')
+    ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
     a = ap.parse_args()
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
@@ -206,6 +355,17 @@ def main():
     rec = dict(masters={}, clocks=[])
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
+    parts = dict(PARTS)
+    if getattr(S, 'COLL_SPLIT3_CR', False):
+        parts['dsfd_sp_collective'] = COLL_CR_PARTS + ('dsfd_coll_ck',)
+        binding = collective_credit_binding(vroot)
+        credit_assembled_views(vroot, binding, cls_)
+        rec['collective_binding'] = binding
+        if not binding['qualified']:
+            for index in cls_.values():
+                index.pop('dsfd_sp_collective', None)
+            if a.require_qualified_collective:
+                raise ValueError('UNQUALIFIED split3cr collective: ' + '; '.join(binding['problems']))
     for corner in ('ss', 'tt', 'ff'):
         cl = cls_[corner]
         cells, libs = [], set()
@@ -218,7 +378,7 @@ def main():
                 r_ = rec['masters'].setdefault(mst, dict(view=src[1], libs={}))
                 if src[1] == 'assembled' and 'glue_worst_ps' not in r_:
                     aj = json.loads((src[0].parent / 'assembled.json').read_text())
-                    r_.update(tiles=list(PARTS.get(mst, ())), glue_worst_ps=aj['glue_worst_ps'],
+                    r_.update(tiles=list(parts.get(mst, ())), glue_worst_ps=aj['glue_worst_ps'],
                               tiles_ss_as_tt=aj['corners']['tt']['tiles_ss_as_tt'])
                 r_['libs'][corner] = str(src[0].relative_to(vroot)) + (' (SS as TT)' if src is not cl.get(mst) else '')
                 continue
@@ -239,9 +399,16 @@ def main():
                 ports = dict(pdir.get(mst, {}))
             cells.append((mst, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
             r_ = dict(view='interim', ports=len(ports))
-            if mst in PARTS:
-                done = sorted(x for x in PARTS[mst] if x in cls_['ss'] and cls_['ss'][x][1] == 'closed')
-                r_.update(view='partitioned', tiles=list(PARTS[mst]), tiles_closed=done)
+            if mst in parts:
+                if mst == 'dsfd_sp_collective' and 'collective_binding' in rec:
+                    done = sorted(rec['collective_binding']['tile_bindings'])
+                    if rec['collective_binding']['clock_binding']:
+                        done.append('dsfd_coll_ck')
+                    r_['qualification'] = rec['collective_binding']['qualification']
+                    r_['binding_problems'] = rec['collective_binding']['problems']
+                else:
+                    done = sorted(x for x in parts[mst] if x in cls_['ss'] and cls_['ss'][x][1] == 'closed')
+                r_.update(view='partitioned', tiles=list(parts[mst]), tiles_closed=done)
             rec['masters'][mst] = r_
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
@@ -294,7 +461,7 @@ def main():
         for bid, inst, p_ in sinks:
             pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]
             grp[pk] = bid if bid.startswith('ck_col_') else 'trunk'
-        bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp)
+        bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp, parts)
         rec['routed_insertion'] = dict(file=str(a.measured), **bal)
         for ci, corner in ((0, 'ss'), (1, 'ff'), (2, 'tt')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
@@ -348,7 +515,7 @@ def main():
         idx = dict(schema='opentallas.s81.die_view_index.v1', die=a.die, label=a.label, s81_opts=a.s81_opts,
                    counts=dict(n), instances={k: sum(cnt[m_] for m_, v in rec['masters'].items() if v['view'] == k) for k in n},
                    masters={k: dict(v, instances=cnt[k]) for k, v in sorted(rec['masters'].items())},
-                   routed_insertion=rec.get('routed_insertion'))
+                   routed_insertion=rec.get('routed_insertion'), collective_binding=rec.get('collective_binding'))
         a.index_out.parent.mkdir(parents=True, exist_ok=True)
         a.index_out.write_text(json.dumps(idx, indent=1) + '\n')
     print(json.dumps(dict(n), indent=0), len(srcs), 'clock sources')

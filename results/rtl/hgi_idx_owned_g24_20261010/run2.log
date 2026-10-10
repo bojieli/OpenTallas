@@ -1,0 +1,57 @@
+  R[0] 000000b4 want 0000000f
+  R[1] 000003cc want 00000051
+  R[2] 0000003c want 00000005
+FAIL case 0: 511 mismatches (M 12 want 12)
+  R[0] 0000021c want 0000002d
+  R[1] 0000039c want 0000004d
+  R[2] 00000018 want 00000002
+FAIL case 1: 511 mismatches (M 12 want 12)
+  R[0] 00000465 want 0000004b
+  R[1] 00000276 want 0000002a
+  R[2] 00000438 want 00000048
+FAIL case 2: 511 mismatches (M 15 want 15)
+  R[0] 00000408 want 00000056
+  R[1] 00000120 want 00000018
+  R[2] 00000210 want 0000002c
+FAIL case 3: 511 mismatches (M 12 want 12)
+  R[0] 00000179 want 0000001d
+  R[1] 0000045e want 00000056
+  R[2] 000001fb want 00000027
+FAIL case 4: 511 mismatches (M 13 want 13)
+  R[0] 000001cc want 0000002e
+  R[1] 00000140 want 00000020
+  R[2] 00000302 want 0000004d
+FAIL case 5: 511 mismatches (M 10 want 10)
+  R[0] 000007bc want 0000003c
+  R[1] 00000b79 want 00000059
+  R[2] 00000063 want 00000003
+FAIL case 6: 2047 mismatches (M 33 want 33)
+  R[0] 00000096 want 00000002
+  R[1] 0000020d want 00000007
+  R[2] 0000020e want 0000000f
+FAIL case 7: 511 mismatches (M 75 want 75)
+  R[0] 0000009c want 00000002
+  R[1] 0000004e want 00000001
+  R[2] 0000004f want 00000005
+FAIL case 8: 299 mismatches (M 78 want 78)
+OWNED case 9: B=8 G=1 die=5 K=7 M=7 EXACT cycles=159
+  R[0] 00000022 want 00000001
+  R[2] 00000023 want 00000003
+  R[3] 00000001 want 00000002
+FAIL case 10: 62 mismatches (M 34 want 34)
+  R[0] 00000150 want 0000001c
+  R[1] 00000180 want 00000020
+  R[2] 00000450 want 0000005c
+FAIL case 11: 511 mismatches (M 12 want 12)
+  R[0] 00001800 want 00000003
+  R[1] 00001801 want 00000063
+  R[2] 00001802 want 000000c3
+FAIL case 12: 2048 mismatches (M 2048 want 2048)
+  R[0] 00001800 want 00000003
+  R[1] 00001801 want 00000063
+  R[2] 00001802 want 000000c3
+FAIL case 13: 2048 mismatches (M 2048 want 2048)
+OWNED case 14: B=8 G=1 die=0 K=2048 M=2048 EXACT cycles=4754
+OWNED case 15: out-of-range id faults as required
+FATAL: rtl/hbm_accel/generic/idx/tb_hgi_idx_owned.sv:63: HGI_IDX_OWNED 13 cases failed
+       Time: 64524000 Scope: tb_hgi_idx_owned

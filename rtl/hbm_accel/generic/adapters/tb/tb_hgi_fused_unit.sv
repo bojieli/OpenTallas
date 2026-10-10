@@ -19,7 +19,11 @@ module tb_hgi_fused_unit;
     reg rst_n = 0; reg [1214:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
     wire [337:0] fq, mq; wire [273:0] fr, mr, tr; reg [337:0] tq = 0;
-    ot_hgi_fused_record #(.UNIT(1)) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
+    ot_hgi_fused_record #(
+`ifdef NO_PAYLOAD_RST
+    .PAYLOAD_RESET(0),
+`endif
+.UNIT(1)) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]),
         .rec_o(cur[1151:896]), .rec_n_a(cur[1172:1152]), .rec_n_b(cur[1193:1173]), .rec_n_o(cur[1214:1194]),
         .rec_done(done), .rec_fault(fault), .halted(halted), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),

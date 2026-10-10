@@ -219,7 +219,9 @@ class Ref:
                     name = OPS['CTL'][op]
                     if name == 'LOOP':
                         cnt, lvl = param & 0xFFFF, (param >> 16) & 1
-                        if cnt == 0 or len(stack) == 2 or any(s[0] == lvl for s in stack):
+                        if param & (1 << 17):
+                            cnt = self.vmr(field(h, UOP, "imm_a"))
+                        if not 1 <= cnt < (1 << 16) or len(stack) == 2 or any(s[0] == lvl for s in stack):
                             raise Fault('bad LOOP')
                         Lc[lvl] = 0
                         stack.append((lvl, cnt, i + rlen))

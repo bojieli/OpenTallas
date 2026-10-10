@@ -382,7 +382,7 @@ def stage_list(spec):
             tail += "\n" + cal["sdc_cmd"]
         out.append(dict(key="calibrate", kind="calibrate", cmd=cal["cmd"] + tail, ok=cal.get("ok"), sdc_cmd=cal.get("sdc_cmd"),
                         threads=cal.get("threads", spec.get("threads", 16)), ram=cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32)),
-                        logs=cal.get("logs", []), out_dir=cal.get("out_dir")))
+                        logs=cal.get("logs", []), out_dir=cal.get("out_dir"), requires_artifacts=cal.get("requires_artifacts", False)))
     for k in ("route", "signoff"):
         if st.get(k, {}).get("cmd"):
             t, r = STAGE_DEFAULTS[k] or (spec.get("threads", 16), spec.get("peak_ram_gb", 32))
@@ -863,16 +863,17 @@ def report_stopped_waiters(host, rows):
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
 # host probe marks die-level containers (names / run mounts below) oom_score_adj -900: the kernel then picks a block
 # route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
-DIE_CONTAINER_RE = r"^/?(qfd_dietop_|dieev_|de2_|die_|dsrom_s81|s81_l1|r25gp|hbm_r25gp|qwen_r22k)"
+DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
                  "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 "for p in $(pgrep -f '/(die-evidence[^/ ]*|kv-die)/' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
-DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}}' $c | grep -qE '{DIE_CONTAINER_RE}' && continue; ")
+DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}} {{{{{{{{range .Mounts}}}}}}}}{{{{{{{{.Source}}}}}}}} {{{{{{{{end}}}}}}}}' $c "
+                      f"| grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
 
 
@@ -2500,10 +2501,15 @@ def write_status(fleet_note=""):
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
           "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
-        r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
-        v = r.stdout.split()
-        if len(v) == 2:
-            ld = float(v[0])
+        try:
+            r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+            v = r.stdout.split() if r.returncode == 0 else []
+            ld = float(v[0]) if len(v) == 2 else None
+        except (subprocess.TimeoutExpired, OSError, ValueError):
+            # Fleet reporting must never terminate the coordinator or prevent
+            # the next intake tick because one SSH peer is unavailable.
+            v, ld = [], None
+        if ld is not None:
             running = sum(1 for x in act if x.get("host") == h["name"] and
                           x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL"))
             benches = sum(1 for x in act for b in (x.get("btrack") or {}).values()
@@ -3421,6 +3427,13 @@ def assumed_insertion(j):
 
 def start_parallel_calibrate(j, stl, st):
     if j["spec"].get("calibrate_parallel") is False:
+        return False
+    # Scalar insertion history cannot replace this run's own CTS database.
+    # Explicit artifact consumers and existing per-tap recipes must finish
+    # calibration before the route derives its source latencies.
+    route_cmd = (j["spec"].get("stages", {}).get("route") or {}).get("cmd", "")
+    if st.get("requires_artifacts") or "tap_latency.py" in route_cmd:
+        event(j, "calibrate first: route requires completed calibration artifacts")
         return False
     c0 = j.get("ctrack")
     if c0 and c0.get("state") == "done" and c0.get("measured"):
@@ -4834,6 +4847,19 @@ def write_near_miss_retain(jobs, closed=None):
     return rows
 
 
+# Preserve the live daemon's BF protection in pinned source; the owner extended
+# the deadline to 21:30 PT on October 10. No progressing job is restarted.
+BF_EXEMPT_UNTIL = "2026-10-10T21:30:00-07:00"
+
+
+def bf_exempt(j, now=None):
+    name = j.get("name") or (j.get("spec") or {}).get("name") or ""
+    if not name.startswith("bf") and (j.get("spec") or {}).get("block") != "ot_s81_bf_native":
+        return False
+    current = now if now is not None else dt.datetime.now(dt.timezone.utc)
+    return current < dt.datetime.fromisoformat(BF_EXEMPT_UNTIL)
+
+
 def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
     except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
@@ -4844,6 +4870,8 @@ def release_bulk(jobs):
         if n >= BULK_RELEASE_PER_TICK:
             break
         if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
+            continue
+        if bf_exempt(x):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
@@ -5038,6 +5066,8 @@ def closure_on_main(j, ev):
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
+        return None
+    if bf_exempt(j):
         return None
     if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
         return None
