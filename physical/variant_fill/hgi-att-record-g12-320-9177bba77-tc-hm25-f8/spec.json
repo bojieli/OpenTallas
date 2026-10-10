@@ -1,0 +1,98 @@
+{
+ "name": "hgi-att-record-g12-320-9177bba77-tc-hm25-f8",
+ "block": "hgi_att_record_g12_320",
+ "owner": "Claude:hgi-1010",
+ "purpose": "FILL-8 2026-10-10 root cause (hgi_att_record_g12_320): best hgi-att-record-g12-320-630558368-tc-cx-f6-hm25 TT +1.08 / FF -9.08; worst TT = rec_v PIN -> AND3 -> 10-buffer enable tree onto ~1,460 capture flops (418 ps buffering, TT +1.08), so the FF output-hold ECO (att_desc flop->port, -9.08) had no setup room (ECO FF +11.7 / TT -1.8). RTL 9177bba77-line: capture regs enabled by rec_r (state), reset-free data regs (rst_n only on 12 control flops); cycle-identical. RVT, HM 25, same pins/outline. 76bb97ff2 stall = PPL-0107 retry hang (pin groups, fixed at 630558368).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc4",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/fill-8-20261010-att",
+  "commit": "9177bba77744d720dcc77db0ed599d89cc605731"
+ },
+ "registered_io": true,
+ "stages": {
+  "bench": [
+   {
+    "name": "fullshape_record_leaf_exact",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter  -o {RUN}/bench/exact rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "PASS G12_RECORD cases=18 rows=1059089",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "ring",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_RING=1 -o {RUN}/bench/ring rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/ring",
+    "expect": "fail",
+    "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "count",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_COUNTS=1 -o {RUN}/bench/count rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/count",
+    "expect": "fail",
+    "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "fields",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_FIELDS=1 -o {RUN}/bench/fields rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/fields",
+    "expect": "fail",
+    "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "completion",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_EARLY_DONE=1 -o {RUN}/bench/completion rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/completion",
+    "expect": "fail",
+    "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "fault",
+    "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_FAULT_RELEASE=1 -o {RUN}/bench/fault rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/fault",
+    "expect": "fail",
+    "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Currentroute_master measuresownTT/FFboundaryreferenceinrun, no assumedclockinsertion"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt;python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/hgi_att_record_g12_320.sdc;HM=0.025 SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh hgi_att_record_g12_320 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/hgi_att_record_g12_320.sdc"
+  ],
+  "macros": []
+ },
+ "cycles_added": 0,
+ "merge_target": null,
+ "route_corner": "TC",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025
+}
