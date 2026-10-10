@@ -39,7 +39,15 @@ SRC_REAL = {
     "idx": ["rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv", "rtl/hbm_accel/generic/idx/ot_hgi_idx_merge.sv",
             "rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv"],
 }
-TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
+VEC = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+       "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+       "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+       "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+       "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"]
+SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv"]
+SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_sfu_record.sv"]
+TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+      "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
 def prep(d: Path):
@@ -86,7 +94,7 @@ def prep(d: Path):
 
 def script(a):
     real = [x for x in a.real.split(",") if x]
-    src = SRC_BASE + sum((SRC_REAL[x] for x in real), [])
+    src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
     gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real)
     tag = "_".join(sorted(real)) or "stubs"
     return f"""#!/bin/bash
@@ -95,11 +103,11 @@ set -e
 S=${{SRC:-src}}; V=${{VEC:-vec}}/{a.vehicle}; O=${{OUT:-out}}/{a.vehicle}_{tag}_f{a.flat}k{a.klat}
 mkdir -p $O
 VER=${{VERILATOR:-verilator}}
-$VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style --timing -O2 \\
+$VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
   -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
   {' '.join('$S/' + s for s in src)} \\
-  $S/{TB[0]} $S/{TB[1]} --Mdir $O/obj -o tb > $O/build.log 2>&1
+  {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
 $O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" >> $O/run.log

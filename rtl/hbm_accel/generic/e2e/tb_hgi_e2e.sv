@@ -20,7 +20,8 @@
 // DIE GAP used by the harness: the ux_* ports of ot_hgi_cp_die carry valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0;
+    parameter integer SU_N = 16, SU_M = 8;
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
@@ -85,9 +86,31 @@ module tb_hgi_e2e;
         end
     end
     // ---------------------------------------------------------------- unit slots
-    localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0);
+    localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
+                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0);
+    localparam [15:0] REAL_UX = REALM & ~16'h0250;            // real units on ux_* ports
+    wire [15:0] r_rdy, r_done, r_fault;                       // their handshakes
+    assign r_rdy[1:0] = 2'b0; assign r_done[1:0] = 2'b0; assign r_fault[1:0] = 2'b0;
+    assign r_rdy[7:4] = 4'b0; assign r_done[7:4] = 4'b0; assign r_fault[7:4] = 4'b0;
+    assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
+    // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
+    generate if (REAL_SU) begin : g_su
+        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[2]),
+            .rec_rdy(r_rdy[2]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
+            .rec_done(r_done[2]), .rec_fault(r_fault[2]));
+    end else begin : g_su_stub
+        assign r_rdy[2] = 1'b0; assign r_done[2] = 1'b0; assign r_fault[2] = 1'b0;
+    end endgenerate
+    generate if (REAL_SFU) begin : g_sfu
+        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[3]),
+            .rec_rdy(r_rdy[3]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
+            .rec_done(r_done[3]), .rec_fault(r_fault[3]));
+    end else begin : g_sfu_stub
+        assign r_rdy[3] = 1'b0; assign r_done[3] = 1'b0; assign r_fault[3] = 1'b0;
+    end endgenerate
     // DMA (unit 8)
     wire dma_rdy, dma_done, dma_fault;
+    assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
         wire mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done; wire [226:0] mv;
         ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(ux_v[8]), .rec_rdy(dma_rdy),
@@ -146,10 +169,8 @@ module tb_hgi_e2e;
     endfunction
     always @* begin
         ux_rdy = 16'd0;
-        for (integer u = 1; u < 16; u = u + 1) ux_rdy[u] = (sbusy[u] == 0);
-        if (REAL_DMA) ux_rdy[8] = dma_rdy;
-        ux_done = s_done; ux_fault = 16'd0;
-        if (REAL_DMA) begin ux_done[8] = dma_done; ux_fault[8] = dma_fault; end
+        for (integer u = 1; u < 16; u = u + 1) ux_rdy[u] = REAL_UX[u] ? r_rdy[u] : (sbusy[u] == 0);
+        ux_done = (s_done & ~REAL_UX) | (r_done & REAL_UX); ux_fault = r_fault & REAL_UX;
         coll_ret = {1'b0, s6_done, 1'b1};
         quant_ret = {q_ret[2], q_ret[1] | s4_done, 1'b1};
         idx_ret = REAL_IDX ? i_ret : {1'b0, s9_done, 1'b1};
@@ -171,9 +192,9 @@ module tb_hgi_e2e;
                 end
             end
             // real units retire: check the record's golden writes
-            if (REAL_DMA && (dma_done || dma_fault)) begin
-                k = kpop(8); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
-                if (m != 0 || dma_fault) begin real_bad = real_bad + 1; $display("E2E REAL DMA record %0d: %0d mismatches fault %0d", k, m, dma_fault); end
+            for (u = 1; u < 16; u = u + 1) if (REAL_UX[u] && (r_done[u] || r_fault[u])) begin
+                k = kpop(u); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
+                if (m != 0 || r_fault[u]) begin real_bad = real_bad + 1; $display("E2E REAL unit %0d record %0d: %0d mismatches fault %0d", u, k, m, r_fault[u]); end
             end
             if (REAL_IDX && (i_ret[1] || i_ret[2])) begin
                 k = kpop(9); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
