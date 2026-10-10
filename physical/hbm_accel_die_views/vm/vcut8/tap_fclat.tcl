@@ -85,6 +85,10 @@ proc ot_fcl_apply {tag} {
   foreach t $taps { lassign $t n net; lassign [ot_fcl_sinks $net] pins tree; set built [expr {$built || $tree}]; lappend meas [list $n $pins] }
   if {!$built} { puts "OT_FCL $tag: no clock tree on the taps -> calibrated tap latencies kept"; return }
   foreach t $taps { set_clock_latency -source 0 [get_ports -quiet "[lindex $t 0]\[0\]"] }
+  # a fresh STA session (corner_sta: read_db / read_sdc / read_spef, then this SDC) has no timing graph yet:
+  # get_property <pin> arrival_* then dereferences a null graph (SIGSEGV in Graph::pinVertices, vm8bfp_new lvt
+  # corner STA rc 139 on all three corners).  Force the graph and arrivals first.
+  catch {sta::worst_slack_cmd max}
   set f [dict create]; set st [dict create]; set nsink 0; set spread 0.0
   foreach m $meas {
     lassign $m n pins
