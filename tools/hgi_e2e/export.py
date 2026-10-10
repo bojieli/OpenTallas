@@ -436,7 +436,7 @@ def export_dflash(a):
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "vm0.bin").write_bytes(vm0.astype("<u4").tobytes())
     (a.out / "gold.txt").write_text("".join(f"{x} {y & 0xFFFFFFFF}\n" for x, y in gold_words))
-    ncol = min(B, 15)            # F11: the doorbell ncol field is 4 bits; B = 16 cannot be expressed (k <= 15 here)
+    ncol = B % 16                # F11 (main 6c1053933): doorbell ncol 0 encodes 16
     meta = dict(schema="opentallas.hgi_e2e.export.v1", model=f"Qwen3-8B DFlash b{B} ({a.dims} dims)",
                 vehicle=f"dflash_{a.dims}_b{B}" + (f"_mut_{a.mutant}" if a.mutant else ""), dims=a.dims,
                 cfg={k_: cfg[k_] for k_ in ("hidden_size", "num_hidden_layers", "num_attention_heads",
