@@ -71,9 +71,9 @@ def model():
         qualification='model sizing only; no measured closure or adoption credit')
 
 
-def compact_hierarchy_model():
+def compact_hierarchy_model(height=220.32, hub_column_width=1080.):
     """Model true hardened-column locality within the existing reticle width."""
-    col_w, front_w, height = 450.144, 100.224, 220.32
+    col_w, front_w = 450.144, 100.224
     macro_w, macro_h, halo = 125.304, 62.952, 5.4
     column_std = 52977 - 2*macro_w*macro_h
     column_sites = (col_w-4.32)*(height-4.32)-2*(macro_w+2*halo)*(macro_h+2*halo)
@@ -91,7 +91,7 @@ def compact_hierarchy_model():
     sys.modules[spec.name] = geo
     spec.loader.exec_module(geo)
     rows = []
-    for frame_h in (198.72,228.96):
+    for frame_h in (198.72,height+8.64):
         geo.configure('layer','r8')
         geo.Q_ELEM_FRAME_H=241.92
         geo.BF_PER_REGION=2
@@ -107,6 +107,9 @@ def compact_hierarchy_model():
         element='front + two mirrored instances of one hardened column',
         dimensions_um=dict(column=[col_w,height],front=[front_w,height],pair=[width,height]),
         die_reticle_um=[33000,26000],die_outline_delta=0,die_count_delta=0,
+        hub_column_width_um=hub_column_width,hub_spine_extra_width_um=2*(hub_column_width-1015.2),
+        hub_widening_uses_existing_die_horizontal_slack=True,
+        full_generator_legal_plan='required; slot-capacity check alone is not placement qualification',
         actual_generator_slot_capacity=rows,remaining_capacity='same9slots/frame and1792pairs; no PQrebinning',
         MACs_per_cycle_peak=model()['MACs_per_cycle_peak'],
         memory_ports=model()['memory'],external_bits_delta=0,
