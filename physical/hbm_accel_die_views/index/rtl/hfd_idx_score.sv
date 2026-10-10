@@ -32,6 +32,8 @@ module hfd_idx_score #(
   parameter integer FA = 4,          // line FIFO address bits (depth 16 per port)
   parameter integer CRED = 64,       // output credits (hfd_idx_sel landing FIFO depth)
   parameter integer SAFE_QUERY_GATE = 0,
+  parameter integer BK = 16,         // keys of the stack beat (16: the svc's 8-line group; 12: the R25GQ 12-lane grid, three
+                                     // L4 taps behind hfd_idx_lrg, lines numbered 6b.. per beat; see hfd_idx_lrg / _t3_join)
   parameter integer NK = 4, IW = 20, MD = 64, FPL = 7, FML = 5, QL = 5,
   parameter integer NP = L / 2,      // line ports (a line = 2 keys)
   parameter integer NS = L / NK,     // score slices
@@ -73,6 +75,9 @@ module hfd_idx_score #(
   reg active, qloaded, fault;
   reg [5:0] heads; reg [2:0] settle;
   reg [8:0] beat, nbeats;               // beats of this frame (<= 171)
+  reg [11:0] kb;                        // BK != 16: first key of the beat being loaded (BK * beat)
+  reg [10:0] lnb, nl;                   // BK != 16: first line of the beat (BK/2 * beat), lines of the frame (8 * ceil(nq/16))
+  reg in_done;                          // BK != 16: last beat loaded
   reg ql_v; reg [7:0] ql_head; reg [511:0] ql_codes; reg [31:0] ql_sc; reg [15:0] ql_w;
   wire ql_ready;
   always @(posedge ck) begin
@@ -109,9 +114,9 @@ module hfd_idx_score #(
   reg [L*KB-1:0] bkey;
   wire a_ready;
   wire take = bv && a_ready;
-  wire last_beat = (beat + 9'd1 == nbeats);
+  wire last_beat = (BK == 16) ? (beat + 9'd1 == nbeats) : (lnb + 11'(BK / 2) >= nl);
   wire empty_frame = (nq == 12'd0);
-  wire beat_go = active && qloaded && (settle == 3'd0) && (beat < nbeats) && (!bv || take);
+  wire beat_go = active && qloaded && (settle == 3'd0) && ((BK == 16) ? (beat < nbeats) : !in_done) && (!bv || take);
   assign pop = beat_go && !empty_frame && (&lne);
   wire beat_load = beat_go && (empty_frame || (&lne));
   // global ID of key 16b + l: 8 * (96 * (ford + 2b + l/8) + rank) + l%8 (ot_hbm_accel_index_path ID rule)
@@ -121,21 +126,24 @@ module hfd_idx_score #(
   always @* begin
     tag_bad = 1'b0;
     for (j = 0; j < NP; j = j + 1)
-      if (lrd[j*1098 +: 10] != 10'({beat, 3'b000} + 12'(LANE0 / 2 + j))) tag_bad = 1'b1;
+      if (lrd[j*1098 +: 10] != ((BK == 16) ? 10'({beat, 3'b000} + 12'(LANE0 / 2 + j)) : 10'(lnb + 11'(LANE0 / 2 + j))))
+        tag_bad = 1'b1;
   end
   always @(posedge ck) if (beat_load) begin
     for (l = 0; l < L; l = l + 1) begin
       bkey[l*KB +: KB] <= empty_frame ? {KB{1'b0}} : lrd[(l/2)*1098 + 10 + (((l < 2) && mut_lane) ? 1 - (l%2) : (l%2))*KB +: KB];
-      bkv[l] <= ({beat, 4'(LANE0 + l)} < {1'b0, nq});
+      bkv[l] <= (BK == 16) ? ({beat, 4'(LANE0 + l)} < {1'b0, nq}) : ((kb + 12'(LANE0 + l)) < nq);
       bref[l] <= !empty_frame && (lrd[(l/2)*1098 + 10 + (l%2)*KB + 512 +: 8] >= 8'd253 ||
                                   lrd[(l/2)*1098 + 10 + (l%2)*KB + 520 +: 8] >= 8'd253 ||
                                   lrd[(l/2)*1098 + 10 + (l%2)*KB + 528 +: 8] >= 8'd253 ||
                                   lrd[(l/2)*1098 + 10 + (l%2)*KB + 536 +: 8] >= 8'd253);
-      bkeep[l] <= !keep_en || mut_keep || (({1'b0, beat, 1'b0} + 11'((LANE0 + l) / 8)) < 11'd342 &&
-                                                keepbm[{1'b0, beat, 1'b0} + 11'((LANE0 + l) / 8)]);
+      bkeep[l] <= !keep_en || mut_keep || ((BK == 16) ?
+                    (({1'b0, beat, 1'b0} + 11'((LANE0 + l) / 8)) < 11'd342 && keepbm[{1'b0, beat, 1'b0} + 11'((LANE0 + l) / 8)]) :
+                    (11'((kb + 12'(LANE0 + l)) >> 3) < 11'd342 && keepbm[11'((kb + 12'(LANE0 + l)) >> 3)]));
     end
     for (l = 0; l < NS; l = l + 1)
-      bfirst[l*IW +: IW] <= g0 + IW'(((LANE0 + l * NK) / 8) * 768 + (LANE0 + l * NK) % 8);
+      bfirst[l*IW +: IW] <= (BK == 16) ? g0 + IW'(((LANE0 + l * NK) / 8) * 768 + (LANE0 + l * NK) % 8) :
+                            g0 + IW'(768) * IW'((kb + 12'(LANE0 + l * NK)) >> 3) + IW'((kb + 12'(LANE0 + l * NK)) & 12'd7);
     blast <= {NS{last_beat}};
   end
   // ------------------------------------------------------------------ frame control
@@ -148,6 +156,7 @@ module hfd_idx_score #(
   always @(posedge ck or negedge rn) begin
     if (!rn) begin
       active <= 1'b0; qloaded <= 1'b0; fault <= 1'b0; heads <= 6'd0; settle <= 3'd0; beat <= 9'd0; nbeats <= 9'd0;
+      in_done <= 1'b0;
       bv <= 1'b0; ql_v <= 1'b0; cred <= 8'(CRED); ikc <= {NP{1'b0}}; keep_en <= 1'b0; nq <= 12'd0;
       st <= 4'd0;
     end else begin
@@ -159,6 +168,7 @@ module hfd_idx_score #(
         g0 <= IW'(768) * IW'(qp[17:7]) + IW'(8) * IW'(qp[6:0]) + (mut_gid ? IW'(8) : IW'(0));
         nbeats <= (qp[29:18] == 12'd0) ? 9'd1 : 9'((qp[29:18] + 12'd15) >> 4);
         beat <= 9'd0; heads <= 6'd0; qloaded <= 1'b0; settle <= 3'd0; active <= 1'b1;
+        kb <= 12'd0; lnb <= 11'd0; in_done <= 1'b0; nl <= {8'((qp[29:18] + 12'd15) >> 4), 3'b000};
         if (active) fault <= 1'b1;                // previous frame not drained
       end
       if (qv && qk == 2'd2) keepbm <= qp[341:0];
@@ -170,7 +180,8 @@ module hfd_idx_score #(
       if (settle != 3'd0) settle <= settle - 3'd1;
       if (beat_load) begin
         bv <= 1'b1; beat <= beat + 9'd1;
-        g0 <= g0 + IW'(1536);
+        if (BK == 16) g0 <= g0 + IW'(1536);
+        kb <= kb + 12'(BK); lnb <= lnb + 11'(BK / 2); if (last_beat) in_done <= 1'b1;
         if (pop && tag_bad) fault <= 1'b1;
       end else if (take) bv <= 1'b0;
       if (o_take && o_last[0]) active <= 1'b0;

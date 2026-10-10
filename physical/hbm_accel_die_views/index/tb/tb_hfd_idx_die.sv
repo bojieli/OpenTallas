@@ -15,6 +15,9 @@ module tb_hfd_idx_die;
   parameter integer LA = 6;
   parameter integer CRED = 64;
   parameter integer T = 1;             // scorer blocks a stack (1: one L16 block; 4: four L4 column taps)
+  parameter integer COMP = 0;          // 3: the R25GQ 12-lane grid a stack (hfd_idx_lrg + 3 L4 BK12 taps + hfd_idx_t3_join;
+                                       // T must be 1: the join drives the selector's 16-lane boundary)
+  parameter integer HOP = 2;           // COMP: stages of the in-slot hops (lrg -> taps, taps -> join, credits, q chain)
   localparam integer L = 16 / T, NP = L / 2, SW = 38 * L + 2, NB_ = 4 * T;
   reg ck = 1'b0;
   always #416 ck = ~ck;                 // 832 ps (1.2 GHz)
@@ -39,7 +42,61 @@ module tb_hfd_idx_die;
   reg [8*1099-1:0] ik [0:3];            // the stack's 8 line ports (port p: lines p, p+8, ...)
   wire [7:0] ikc [0:3];
   genvar g;
-  generate for (g = 0; g < NB_; g = g + 1) begin : gs
+  generate if (COMP == 3) begin : gcomp
+   for (g = 0; g < 4; g = g + 1) begin : gs
+    wire [8*1099-1:0] ikd; wire [7:0] ikc_;
+    for (genvar kp = 0; kp < 8; kp = kp + 1) begin : key_leg
+      wire [1097:0] kd; wire kv, kc; wire [0:0] ucd;
+      hfd_idx_pipe #(.W(1098), .N(KEYLEG)) u_key (.ck(ck), .rst_n(rst), .v(ik[g][kp*1099]), .d(ik[g][kp*1099+1 +: 1098]),
+        .qv(kv), .q(kd));
+      assign ikd[kp*1099 +: 1099] = {kd, kv};
+      hfd_idx_pipe #(.W(1), .N(KEYLEG)) u_credit (.ck(ck), .rst_n(rst), .v(ikc_[kp]), .d(1'b0), .qv(kc), .q(ucd));
+      assign ikc[g][kp] = kc;
+    end
+    // q bus: selector -> LEG -> lrg -> HOP -> tap t (one registered copy each)
+    wire qv0; wire [569:0] qd0; wire [3*571-1:0] qlx; wire [570:0] tq [0:2]; wire [570:0] tqx [0:2];
+    hfd_idx_pipe #(.W(570), .N(LEG)) u_pq (.ck(ck), .rst_n(rst), .v(qo[g*571]), .d(qo[g*571+1 +: 570]), .qv(qv0), .q(qd0));
+    wire [6*1099-1:0] lo; wire [5:0] loc; wire [1:0] lst;
+    hfd_idx_lrg #(.FA(FA), .FT(4)) u_lrg (.ck(ck), .rst(rst), .ik(ikd), .ikc(ikc_), .q({qd0, qv0}), .qx(qlx), .lo(lo),
+      .loc(loc), .st(lst));
+    wire [461:0] jt; wire [2:0] jc;
+    for (genvar t = 0; t < 3; t = t + 1) begin : gt
+      wire [570:0] qsrc = qlx[t*571 +: 571];
+      wire qv_; wire [569:0] qd_;
+      hfd_idx_pipe #(.W(570), .N(HOP)) u_q (.ck(ck), .rst_n(rst), .v(qsrc[0]), .d(qsrc[570:1]), .qv(qv_), .q(qd_));
+      assign tq[t] = {qd_, qv_};
+      wire [2*1099-1:0] tik; wire [1:0] tikc;
+      for (genvar j = 0; j < 2; j = j + 1) begin : gl
+        wire lv_; wire [1097:0] ld_; wire cv_; wire [0:0] cu_;
+        hfd_idx_pipe #(.W(1098), .N(HOP)) u_l (.ck(ck), .rst_n(rst), .v(lo[(2*t+j)*1099]), .d(lo[(2*t+j)*1099+1 +: 1098]),
+          .qv(lv_), .q(ld_));
+        assign tik[j*1099 +: 1099] = {ld_, lv_};
+        hfd_idx_pipe #(.W(1), .N(HOP)) u_c (.ck(ck), .rst_n(rst), .v(tikc[j]), .d(1'b0), .qv(cv_), .q(cu_));
+        assign loc[2*t+j] = cv_;
+      end
+      wire [153:0] ts; wire tsc; wire [3:0] tst;
+      hfd_idx_score #(.FA(4), .CRED(128), .L(4), .LANE0(4 * t), .BK(12)) u_s (.ck(ck), .rst(rst), .ik(tik), .ikf(2'b0),
+        .ikc(tikc), .q(tq[t]), .qx(tqx[t]), .s(ts), .sc(tsc), .st(tst));
+      wire sv_; wire [152:0] sd_; wire cv_; wire [0:0] cu_;
+      hfd_idx_pipe #(.W(153), .N(HOP)) u_s2 (.ck(ck), .rst_n(rst), .v(ts[0]), .d(ts[153:1]), .qv(sv_), .q(sd_));
+      assign jt[t*154 +: 154] = {sd_, sv_};
+      hfd_idx_pipe #(.W(1), .N(HOP)) u_c2 (.ck(ck), .rst_n(rst), .v(jc[t]), .d(1'b0), .qv(cv_), .q(cu_));
+      assign tsc = cv_;
+    end
+    wire jf;
+    hfd_idx_t3_join #(.AW(7), .CRED(CRED)) u_j (.ck(ck), .rst(rst), .taps(jt), .tap_credit(jc), .s(so[g]), .sc(sco[g]),
+      .fault(jf));
+    wire sv_; wire cv_; wire [SW-2:0] sd_; wire [0:0] cd_unused;
+    hfd_idx_pipe #(.W(SW-1), .N(LEG)) u_ps (.ck(ck), .rst_n(rst), .v(so[g][0]), .d(so[g][SW-1:1]), .qv(sv_), .q(sd_));
+    assign si[g*SW +: SW] = {sd_, sv_};
+    hfd_idx_pipe #(.W(1), .N(LEG)) u_pc (.ck(ck), .rst_n(rst), .v(sc[g]), .d(1'b0), .qv(cv_), .q(cd_unused));
+    assign sco[g] = cv_;
+    always @(posedge ck) if (rst && (jf || lst[1])) begin
+      $display("HBMIDX_COMP_FAULT q=%0d join=%0d lrg=%0d cyc=%0d", g, jf, lst[1], cyc); $finish;
+    end
+   end
+  end else begin : gsplit
+  for (g = 0; g < NB_; g = g + 1) begin : gs
     localparam integer QQ = g / T, TT = g % T;
     wire [NP-1:0] ikc_;
     wire [NP*1099-1:0] ik_delayed;
@@ -72,6 +129,7 @@ module tb_hfd_idx_die;
     wire [0:0] cd_unused;
     hfd_idx_pipe #(.W(1), .N(LEG)) u_pc (.ck(ck), .rst_n(rst), .v(sc[g]), .d(1'b0), .qv(cv_), .q(cd_unused));
     assign sco[g] = cv_;
+  end
   end endgenerate
   hfd_idx_sel #(.T(T), .LA(LA)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
     .to(to), .toc(toc), .co(co), .coc(coc), .ev(ev));
