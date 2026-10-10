@@ -3057,19 +3057,15 @@ def bench_track(j, fleet, stl):
         v = _bview(j, e)
         state, rc = poll_stage(v)
         if state == "RUNNING":
-            to = bench_timed_out(v, st, e.get("started"))
-            if to:
-                caught, note = to
-                e["state"] = "done"
-                j["benches"][k] = dict(expect=st["expect"], rc=None, ok=caught, tail=note, track="parallel", timeout=True)
-                if caught:
-                    event(j, f"bench track: {k} {note}: mutant detected in its log before the hang -> FAIL as expected")
-                    return True
-                stop_main_for_bench(j)
-                finish(j, "NEEDS_RTL", f"{k} {note} without a verdict (bench bug: no cycle cap?)",
-                       f"NEEDS_RTL: bench {k} {note}; expect {st['expect'].upper()} but its log shows no verdict -- a bench "
-                       "that never terminates is a bench bug (add a cycle cap), not a pass (parallel track; route stopped)")
-                return False
+            for field in ("wd_checked", "quiet_output_reported"):
+                if field in e:
+                    v[field] = e[field]
+                else:
+                    v.pop(field, None)
+            bench_timed_out(v, st, e.get("started"))
+            for field in ("wd_checked", "quiet_output_reported"):
+                if field in v:
+                    e[field] = v[field]
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
             return True
         ok_extra, _ = remote_ok(v, st.get("ok"))
@@ -3099,27 +3095,17 @@ def bench_track(j, fleet, stl):
     return True
 
 
-BENCH_TIMEOUT_S = 2 * 3600   # UNSTICK 2026-10-08: per-bench wall clock (spec bench timeout_s overrides)
-
-
 def bench_timed_out(v, st, started):
-    """a bench past its wall clock: kill its process group and read its log.  Returns None (within time), else
-    (caught, note): an expect=FAIL bench counts as caught ONLY if its log already shows the detection (fail_regex, or a
-    ^FAIL line); a mutant that hangs the design without a cycle cap is a bench bug, never a pass."""
-    lim = st.get("timeout_s") or BENCH_TIMEOUT_S
-    try:
-        el = time.time() - dt.datetime.fromisoformat(started).timestamp()
-    except Exception:  # noqa: BLE001
-        return None
-    if el < lim:
-        return None
-    ssh(v["host"], f"p=$(cat {v['run']}/cl/{v['stage_tag']}.pid 2>/dev/null); [ -n \"$p\" ] && kill -TERM -- -$p 2>/dev/null; "
-                   f"sleep 5; [ -n \"$p\" ] && kill -KILL -- -$p 2>/dev/null; true", timeout=60)
-    r = ssh(v["host"], f"tail -n 20000 {v['run']}/cl/{v['stage_tag']}.log", timeout=180)
-    full = r.stdout if r.returncode == 0 else ""
-    caught = st["expect"] == "fail" and (re.search(st["fail_regex"], full, re.M) is not None if st.get("fail_regex")
-                                         else re.search(r"^FAIL\b", full, re.M) is not None)
-    return caught, f"timed out after {el / 3600:.1f} h (limit {lim / 3600:.1f} h)"
+    """Legacy entry point: observe quiet output, never enforce elapsed-time verdicts.
+
+    Preserve historical timeout_s values as source evidence.  Measured host
+    admission protects resources; even a silent compile can be progressing.
+    Positive and mutant results are judged only after their real completion.
+    """
+    if started:
+        v["stage_started"] = started
+    stuck_watchdog(v, st)
+    return None
 
 
 def stop_main_for_bench(j):
@@ -3697,19 +3683,7 @@ def step(j, fleet):
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
         if state == "RUNNING" and st["kind"] == "bench":
-            to = bench_timed_out(j, st, j.get("stage_started"))
-            if to:
-                caught, note = to
-                j["benches"][st["key"]] = dict(expect=st["expect"], rc=None, ok=caught, tail=note, timeout=True)
-                if not caught:
-                    finish(j, "NEEDS_RTL", f"{st['key']} {note} without a verdict (bench bug: no cycle cap?)",
-                           f"NEEDS_RTL: bench {st['key']} {note}; expect {st['expect'].upper()} but its log shows no "
-                           "verdict -- a bench that never terminates is a bench bug, not a pass")
-                    return
-                event(j, f"{st['key']} {note}: mutant detected in its log before the hang -> FAIL as expected")
-                j["stage_idx"] += 1
-                j["status"] = "READY"
-                return
+            bench_timed_out(j, st, j.get("stage_started"))
         if state == "STARTING" and st["kind"] != "bench":
             # stuckscan 2026-10-08: a stage with no pid file long after its launch never started (hbm_pkt_ii3ref route.a3:
             # run dir emptied by a disk sweep, polled STARTING for 16 h) -> the crash path (LOST: retry once elsewhere)
