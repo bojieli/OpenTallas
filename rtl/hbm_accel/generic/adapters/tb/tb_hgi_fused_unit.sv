@@ -36,13 +36,14 @@ module tb_hgi_fused_unit;
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0; reg [36:0] pa;
     always @(posedge clk) begin
-        k_rsp_v <= 0; k_req_rdy <= !pend && ($random(seed) & 1);
+        k_rsp_v <= 0;
         if (rst_n && k_req_v && k_req_rdy && !pend) begin pend = 1; pa = k_addr; klat = 2 + ($random(seed) & 7); end
         else if (pend && klat > 0) klat = klat - 1;
         else if (pend) begin
             for (q = 0; q < 8; q = q + 1) k_rsp_data[32*q +: 32] <= hbm.exists((pa >> 2) + q) ? hbm[(pa >> 2) + q] : 32'd0;
             k_rsp_v <= 1; k_rsp_we <= 0; pend = 0;
         end
+        k_req_rdy <= !pend && ($random(seed) & 1);     // hgi-takeover: ready from the state after this edge's accept
     end
     task automatic vm_req(input we, input [31:0] word, input [31:0] data, output [31:0] qd);
         integer tw;

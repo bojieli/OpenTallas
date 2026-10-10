@@ -17,7 +17,7 @@
 // Checks (hgi_e2e_dpi.cpp): every CP dispatch == the golden record (unit, header, effective base / n of every
 // operand); every REAL unit's retire: its golden VM / HBM writes present bit for bit, no stray writes; at the end the
 // whole VM == the golden final VM and every golden HBM write range == golden; the completion token == golden.
-// DIE GAP used by the harness: the ux_* ports of ot_hgi_cp_die carry valid / ready / done / fault but no record
+// (closed by hgi-takeover: every unit has a die record bus; the real slots read their payload from it) DIE GAP was: the ux_* ports of ot_hgi_cp_die carried valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
@@ -62,11 +62,19 @@ module tb_hgi_e2e;
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
     wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
-    wire [15:0] ux_v; reg [15:0] ux_rdy, ux_done, ux_fault;
+    wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
+    wire [690:0] am_rec; wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     ot_hgi_cp_die #(.USE_MACRO(0)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
-        .idx_rec(idx_rec), .idx_ret(idx_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done),
-        .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .idx_rec(idx_rec), .idx_ret(idx_ret),
+        .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
+        .sm_rec(sm_rec), .sm_ret({ux_fault[1], ux_done[1], ux_rdy[1]}), .su_rec(su_rec), .su_ret({ux_fault[2], ux_done[2], ux_rdy[2]}),
+        .sfu_rec(sfu_rec), .sfu_ret({ux_fault[3], ux_done[3], ux_rdy[3]}), .att_rec(att_rec), .att_ret({ux_fault[5], ux_done[5], ux_rdy[5]}),
+        .dma_rec(dma_rec), .dma_ret({ux_fault[8], ux_done[8], ux_rdy[8]}), .hc_rec(hc_rec), .hc_ret({ux_fault[10], ux_done[10], ux_rdy[10]}),
+        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+    // hgi-takeover (DIE GAP closed): units 1-10 have die record buses; real slots take the payload from the bus (no
+    // internal tap); the handshake fields {fault, done, ready} are the harness's per-unit ux_* values
+    wire [15:0] ux_v = ux_v_raw | {5'd0, hc_rec[0], 1'b0, dma_rec[0], am_rec[0], 1'b0, att_rec[0], 1'b0, sfu_rec[0], su_rec[0], sm_rec[0], 1'b0};
     hgi_e2e_vmc #(.UNIT(0), .LAT(VLAT)) vm_cp (.clk(clk), .rst_n(rst_n), .q(cp_vmq), .r(cp_vmr));
     // the sequencer's dispatch (the record payload of the ux units: die gap, see header)
     wire [15:0]   s_uv = cpd.u_cp.u_v;
@@ -103,8 +111,8 @@ module tb_hgi_e2e;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
-        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[2]),
-            .rec_rdy(r_rdy[2]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
+        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(su_rec[0]),
+            .rec_rdy(r_rdy[2]), .rec_hdr(su_rec[128:1]), .rec_sut(su_rec[384:129]), .rec_desc(su_rec[2176:385]), .rec_n_a(su_rec[2197:2177]),
             .rec_done(r_done[2]), .rec_fault(r_fault[2]));
     end else begin : g_su_stub
         assign r_rdy[2] = 1'b0; assign r_done[2] = 1'b0; assign r_fault[2] = 1'b0;
@@ -114,8 +122,8 @@ module tb_hgi_e2e;
 `endif
 `ifdef E2E_VEC
     generate if (REAL_SFU) begin : g_sfu
-        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[3]),
-            .rec_rdy(r_rdy[3]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
+        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(sfu_rec[0]),
+            .rec_rdy(r_rdy[3]), .rec_hdr(sfu_rec[128:1]), .rec_sut(256'd0), .rec_desc({512'd0, sfu_rec[1152:897], 256'd0, sfu_rec[896:129]}), .rec_n_a(sfu_rec[1173:1153]),
             .rec_done(r_done[3]), .rec_fault(r_fault[3]));
     end else begin : g_sfu_stub
         assign r_rdy[3] = 1'b0; assign r_done[3] = 1'b0; assign r_fault[3] = 1'b0;
@@ -128,9 +136,9 @@ module tb_hgi_e2e;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
         wire mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done; wire [226:0] mv;
-        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(ux_v[8]), .rec_rdy(dma_rdy),
-            .rec_hdr(d_hdr), .rec_a(d_desc[0 +: 256]), .rec_o(d_desc[4*256 +: 256]), .rec_n_a(d_n[0 +: 21]),
-            .rec_n_o(d_n[4*21 +: 21]), .rec_pos1(d_pos1), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
+        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
+            .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
+            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
             .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
             .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
@@ -373,22 +381,23 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
 endmodule
 
 // kport lane on the HBM model: one transaction outstanding, the response LAT cycles after acceptance.
-module hgi_e2e_kport #(parameter integer LAT = 40) (
+module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
     input wire clk, input wire rst_n, input wire req_v, output reg req_rdy, input wire req_we, input wire [36:0] req_addr,
     input wire [255:0] req_wd, input wire [31:0] req_ws, output reg rsp_v, output reg rsp_we, output reg [255:0] rsp_d);
     import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
                                                 input bit [31:0] strb, output bit [255:0] rd);
-    reg pend = 0; integer cnt = 0; reg we_q; reg [255:0] d_q;
+    // hgi-takeover F5 / F6: the lane takes a request a cycle and answers IN ORDER LAT cycles later (the pipelined kport
+    // lane); PIPE = 0 is the old one-transaction lane.  The memory is accessed at acceptance (program order).
+    reg [255:0] qd [0:255]; reg qw [0:255]; longint qt [0:255]; integer qh = 0, qn = 0; longint tn = 0;
     always @(posedge clk) begin
+        tn <= tn + 1;
         rsp_v <= 1'b0;
-        req_rdy <= rst_n && !pend;
-        if (rst_n && req_v && req_rdy && !pend) begin : acc
+        if (qn > 0 && qt[qh % 256] <= tn) begin rsp_v <= 1'b1; rsp_we <= qw[qh % 256]; rsp_d <= qd[qh % 256]; qh = qh + 1; qn = qn - 1; end
+        if (rst_n && req_v && req_rdy) begin : acc
             bit [255:0] rd;
             e2e_hbm_sector({27'd0, req_addr}, req_we, req_wd, req_ws, rd);
-            pend = 1; cnt = LAT; we_q = req_we; d_q = rd; req_rdy <= 1'b0;
-        end else if (pend) begin
-            if (cnt > 1) cnt = cnt - 1;
-            else begin rsp_v <= 1'b1; rsp_we <= we_q; rsp_d <= d_q; pend = 0; end
+            qd[(qh + qn) % 256] = rd; qw[(qh + qn) % 256] = req_we; qt[(qh + qn) % 256] = tn + LAT - 1; qn = qn + 1;
         end
+        req_rdy <= rst_n && ((PIPE != 0) ? (qn < 200) : (qn == 0));
     end
 endmodule

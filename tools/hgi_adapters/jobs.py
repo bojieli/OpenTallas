@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 BR = 'claude/hgi-adapters-20261009'
+V41 = ['rtl/hdc/ot_hdc_delay.sv', 'rtl/hdc/ot_hdc_fpu.sv', 'rtl/hdc/ot_hdc_fp32_mul_pipe.sv', 'rtl/proto/ot_fp32_add_rne_pipe.sv', 'rtl/hdc/ot_hdc_sfu.sv', 'rtl/hdc/ot_hdc_fastfp.sv', 'rtl/hdc/ot_hdc_fastfp_lat.sv', 'rtl/hdc/ot_hdc_fp32_mul_lat.sv', 'rtl/hdc/ot_hdc_fp32_add_lat.sv', 'rtl/hdc/ot_hdc_prefix.sv', 'rtl/hdc/v41/ot_hdc_fsqrt.sv', 'rtl/hdc/v41/ot_hdc_fdiv.sv', 'rtl/hdc/v41/ot_hdc_softplus.sv', 'rtl/hdc/v41x/ot_hdc_v41x_sfu.sv']
 HOSTS = ['ot-epyc3', 'ot-epyc1tb', 'ot-epyc2']
 A = 'rtl/hbm_accel/generic/adapters'
 TT = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && "
@@ -36,24 +37,41 @@ UNITS = {
     'fused': ('ot_hgi_fused_record', [f'{A}/ot_hgi_su_record.sv', f'{A}/ot_hgi_fused_record.sv'], (320, 320), (420, 260),
               'run_small.sh fused (HGI_FUSED: CF-NORM d4096 BF16 + QK-norm seg 128 FP32 EXACT on the real vec + mover model; '
               'Qwen ROW_NORM shapes vs hgi_sim row_norm; MUT_SEG FAIL)'),
-    'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv'], (300, 300), (400, 240),
-              'run_small.sh mover (HGI_MOVER: DMA adapter + mover on the real HGI VM + kport HBM model: CF-IDXD / CF-KV x 3 '
-              'exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL)'),
+    'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv',
+                                   'rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv'], (340, 340), (440, 260),
+              'run_small.sh mover (HGI_MOVER: DMA adapter + mover (F6 sector engine + serial engine) on the real HGI VM + '
+              'kport HBM model: CF-IDXD / CF-KV x 3 exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL; '
+              'MUT 2 (sector engine drops a partial row-end sector) FAIL)'),
     'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv'], (520, 520), (640, 420),
               'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load -> 2 real smh -> publication -> real VM; MUT_T FAIL)'),
     'pub': ('ot_hgi_sm_pub', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv'], (700, 700), (860, 560),
             'run_small.sh sm_e2e (HGI_SM_E2E; MUT_ROW FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),
            'run_small.sh hc (HGI_HC: DS HC_MIX shapes; MUT_NF FAIL)'),
+    # D1 die bodies at reduced memory / lane parameters: the routes time the NEW stage / sequence / drain logic around
+    # the r25 engines (the full-size local memories are macros in the die, not flops)
+    'hc_unit': ('ot_hgi_hc_unit', V41 + ['rtl/hdc/v41x/ot_hdc_v41x_hcp.sv', 'rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv',
+                'rtl/hdc/v41/ot_hdc_sk_arith.sv', 'rtl/hdc/v41/ot_hdc_sk_recip_rom.sv', 'rtl/hdc/v41/ot_hdc_sinkhorn.sv',
+                'rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv', f'{A}/ot_hgi_hc_record.sv',
+                'rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv'], (900, 900), (1100, 800),
+                'run_hc_unit.sh (HGI_HC_UNIT: Model.hc_mixes exact incl. Sinkhorn, K 256 / 800 / 28,672 on the real VM + a '
+                'reordering HBM model; MUT_POST FAIL); routed at W 8, RMAX 8'),
+    'su_unit': ('ot_hgi_su_unit', V41 + ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv', 'rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv',
+                'rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv', 'rtl/hdc/v41x/ot_hdc_v41x_vec.sv', f'{A}/ot_hgi_su_record.sv',
+                'rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv'], (1500, 1500), (1800, 1400),
+                'run_small.sh su_unit / sfu_unit, run_su_stream.sh [PUB], run_fused_unit.sh (HGI_SU_UNIT / SFU_UNIT / '
+                'SU_STREAM / PUB_STREAM / FUSED_UNIT PASS on the real VM; MUT_DIRTY FAIL); routed at N 8, LV 5, 1K words'),
 }
+PARAMS = {'ot_hgi_hc_unit': ' --param W=8 --param RMAX=8',
+          'ot_hgi_su_unit': ' --param N=8 --param LV=5 --param LWB=10 --param SLB=8'}
 
 
-NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover', 'ot_hgi_sm_xload', 'ot_hgi_sm_pub'}     # no legacy pass-through parameter
+NOLEG = {'ot_hgi_su_unit', 'ot_hgi_hc_unit', 'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover', 'ot_hgi_sm_xload', 'ot_hgi_sm_pub'}     # no legacy pass-through parameter
 
 
 def route(top, srcs, die, hm, pd):
     w, h = die
-    par = '' if top in NOLEG else ' --param LEGACY=0'
+    par = ('' if top in NOLEG else ' --param LEGACY=0') + PARAMS.get(top, '')
     args = ' '.join(f'--source {s}' for s in srcs) + (f"{par} --clock-port clk --die-area 0 0 {w} {h} "
                                                      f"--core-area 10.8 10.8 {w - 10.8:.1f} {h - 10.8:.1f}")
 

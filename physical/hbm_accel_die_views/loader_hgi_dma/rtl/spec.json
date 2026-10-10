@@ -1,7 +1,7 @@
 {
  "master": "hfd_loader",
- "hgi_unit": "cp",
- "note": "HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link).",
+ "hgi_unit": "dma",
+ "note": "HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + the F6 full-rate mover on kport lane 2 + one hfd_hgi_vm client.",
  "instances": [
   {
    "name": "ld",
@@ -88,32 +88,14 @@
     "cpl": "die:f_hgi_cp[0:222]",
     "lq": "die:qSW[0:346]+qSE[0:346]+qNW[0:346]+qNE[0:346]",
     "lr": "die:rSW[0:293]+rSE[0:293]+rNW[0:293]+rNE[0:293]",
-    "dma_rec": "cfg",
-    "dma_ret": "fold",
-    "dma_vmq": "fold",
-    "dma_vmr": "cfg"
+    "dma_rec": "die:f_hgi_cmdproc[0:704]",
+    "dma_ret": "die:t_hgi_cmdproc[0:3]",
+    "dma_vmq": "die:t_hgi_vmq[0:338]",
+    "dma_vmr": "die:f_hgi_vmr[0:274]"
    }
   }
  ],
  "kept_out_regs": true,
  "face_stages": 5,
- "replaced_when_hgi": "dma",
- "ties": {
-  "ld.dma_rec": {
-   "class": "by_design",
-   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
-  },
-  "ld.dma_ret": {
-   "class": "by_design",
-   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
-  },
-  "ld.dma_vmq": {
-   "class": "by_design",
-   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
-  },
-  "ld.dma_vmr": {
-   "class": "by_design",
-   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
-  }
- }
+ "ties": {}
 }
