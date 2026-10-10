@@ -104,8 +104,9 @@
    "g00_w": 0.00021049357019364834,
    "source": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_wg_cg_80412.kv",
    "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_wg_cg_80412.src",
-   "point": "TT OpenSTA report_power, routed SPEF, one ICG ENA forced 0",
-   "original_record_commit": "fb12301e5"
+   "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF, one ICG ENA forced 0",
+   "original_record_commit": "fb12301e5",
+   "clock_period_ns": 0.833
   },
   "sm_be_eg": {
    "a20_w": 0.026453407481312752,
@@ -114,8 +115,9 @@
    "g00_w": 0.00020964471332263201,
    "source": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_eg_cg_80412.kv",
    "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_eg_cg_80412.src",
-   "point": "TT OpenSTA report_power, routed SPEF, one ICG ENA forced 0",
-   "original_record_commit": "13323125b"
+   "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF, one ICG ENA forced 0",
+   "original_record_commit": "13323125b",
+   "clock_period_ns": 0.833
   }
  },
  "verdict": {
