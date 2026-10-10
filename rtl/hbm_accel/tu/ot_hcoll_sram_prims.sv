@@ -174,24 +174,27 @@ endmodule
 // of <= 64 bits, each an ot_ha2_fifo with its own write / read pointers and its own registered push copy, so no
 // pointer or push fans out beyond one slice.  All slices push / pop together; empty / count are slice 0's.
 module ot_hcoll_headq #(parameter integer W=545, parameter integer AW=3, parameter integer SW=64,
-    parameter integer NS=(W+SW-1)/SW)(
+    parameter integer NS=(W+SW-1)/SW, parameter integer VP=0)(   // VP: per-slice pop_v / empty_v (hardcore-1010 FB)
     input  wire          clk,
     input  wire          rst_n,
     input  wire [NS-1:0] push,
     input  wire [W-1:0]  din,
     input  wire          pop,
+    input  wire [NS-1:0] pop_v,
     output wire          empty,
+    output wire [NS-1:0] empty_v,
     output wire [W-1:0]  dout,
     output wire          ovf,
     output wire [AW:0]   count
 );
   wire [NS-1:0] e, o;
+  assign empty_v = e;
   wire [AW:0] cnt [0:NS-1];
   for (genvar s=0;s<NS;s=s+1) begin : g_s
     localparam integer LO = s*SW;
     localparam integer WS = (W-LO < SW) ? W-LO : SW;
     (* keep_hierarchy *) ot_ha2_fifo #(.W(WS), .AW(AW)) u_f (.clk(clk), .rst_n(rst_n), .push(push[s]), .din(din[LO+:WS]),
-        .pop(pop), .empty(e[s]), .dout(dout[LO+:WS]), .ovf(o[s]), .count(cnt[s]));
+        .pop(VP ? pop_v[s] : pop), .empty(e[s]), .dout(dout[LO+:WS]), .ovf(o[s]), .count(cnt[s]));
   end
   assign empty = e[0]; assign ovf = |o; assign count = cnt[0];
 endmodule
@@ -299,7 +302,9 @@ module ot_hcoll_sfifo #(
     parameter integer W  = 8,
     parameter integer AW = 7,
     parameter integer K  = 4,
-    parameter integer PAYLOAD_ECC = 0
+    parameter integer PAYLOAD_ECC = 0,
+    parameter integer FB = 0,           // hardcore-1010 FALLBACK (PAYLOAD_ECC 0): sliced head, per-slice pop_v / empty_v
+    parameter integer NSV = (W + 63) / 64
 ) (
     output wire         ecc_ce,
     output wire         ecc_ue,
@@ -309,6 +314,8 @@ module ot_hcoll_sfifo #(
     input  wire         push,
     input  wire [W-1:0] din,
     input  wire         pop,
+    input  wire [NSV-1:0] pop_v,        // FB: per-slice pop (all equal by construction; pop == pop_v[0])
+    output wire [NSV-1:0] empty_v,      // FB: per-slice empty (all equal by construction)
     output wire         empty,
     output wire [W-1:0] dout,
     output reg          ovf,
@@ -343,7 +350,8 @@ module ot_hcoll_sfifo #(
     // (ot_hcoll_headq), each pushed by its own registered copy hpush_q[s] = v3 && !ue (the push decision of v4), so
     // neither the push enable nor a head pointer fans out over the 545-bit word.
     localparam integer ES = PAYLOAD_ECC ? 2 : 0;
-    localparam integer KC = K + ES;
+    localparam integer FBH = (FB != 0 && PAYLOAD_ECC == 0) ? 1 : 0;   // FB head: +1 edge (registered push copies / data)
+    localparam integer KC = K + ES + 2*FBH;
     localparam integer NS = (W + 63) / 64;
     reg v3, v4; reg [W-1:0] dec_q; reg ce_q, ue_q;
     reg [NS-1:0] hpush_q;
@@ -372,28 +380,41 @@ module ot_hcoll_sfifo #(
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 3'(fetch) + 3'(do_pop) + 3'(ecc_drop);
             v1 <= fetch; v2 <= v1; v3 <= v2; v4 <= v3;
-            hpush_q <= {NS{v3 && !ue2}};
+`ifdef OT_HCOLL_FB_MUT_SLICE
+            hpush_q <= FBH ? {{(NS-1){v2}}, v1} : {NS{v3 && !ue2}};   // mutant: slice 0 pushes one edge early
+`else
+            hpush_q <= FBH ? {NS{v2}} : {NS{v3 && !ue2}};
+`endif
             if ((push_p && full) || hovf) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        dec_q <= decoded2; ce_q <= ce2; ue_q <= ue2;
+        dec_q <= FBH ? sampled[W-1:0] : decoded2; ce_q <= ce2; ue_q <= ue2;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
-    generate if (ES != 0) begin : g_ecc_head
+    generate if (FBH != 0) begin : g_fb_head
+        // hardcore-1010 FALLBACK: the raw word is registered (dec_q) with NS registered push copies, then a sliced head
+        // whose every slice has its own pointers / empty / pop (the port's arbiter is replicated per slice)
+        assign cw_q = '0; assign decoded2 = '0; assign ce2 = 1'b0; assign ue2 = 1'b0;
+        wire [3:0] hc4;
+        ot_hcoll_headq #(.W(W), .AW(3), .VP(1)) u_head (.clk(clk), .rst_n(rst_n), .push(hpush_q), .din(dec_q), .pop(pop),
+            .pop_v(pop_v), .empty(empty), .empty_v(empty_v), .dout(dout), .ovf(hovf), .count(hc4));
+        assign hc = '0;
+    end else if (ES != 0) begin : g_ecc_head
         ot_hcoll_secded_dec2 #(.W(W),.CW(CW)) u_dec (.clk(clk), .sampled(sampled), .cw_q(cw_q), .decoded(decoded2), .ce(ce2), .ue(ue2));
         ot_hcoll_headq #(.W(W), .AW(3)) u_head (.clk(clk), .rst_n(rst_n), .push(hpush_q), .din(dec_q), .pop(pop),
-            .empty(empty), .dout(dout), .ovf(hovf), .count(hc[3:0]));
+            .pop_v({NS{pop}}), .empty(empty), .empty_v(empty_v), .dout(dout), .ovf(hovf), .count(hc[3:0]));
         assign hc[2+ES] = 1'b0;
     end else begin : g_raw_head
         assign cw_q = '0; assign decoded2 = '0; assign ce2 = 1'b0; assign ue2 = 1'b0;
         ot_ha2_fifo #(.W(W), .AW(2)) u_head (.clk(clk), .rst_n(rst_n), .push(v2 && !ue), .din(decoded), .pop(pop),
             .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
+        assign empty_v = {NS{empty}};
     end endgenerate
     assign count = scnt;
 endmodule
@@ -406,7 +427,8 @@ module ot_hcoll_sfifo_x #(
     parameter integer W  = 8,
     parameter integer AW = 7,
     parameter integer K  = 8,
-    parameter integer PAYLOAD_ECC = 0
+    parameter integer PAYLOAD_ECC = 0,
+    parameter integer FB = 0            // hardcore-1010 FALLBACK (PAYLOAD_ECC 0): registered macro write, bank select per slice
 ) (
     output wire         ecc_ce,
     output wire         ecc_ue,
@@ -450,6 +472,10 @@ module ot_hcoll_sfifo_x #(
     // early on its own CTS net): put_q / wp_q / wd_q register the write one edge later, and fetch reads the AVAILABLE
     // count (words whose write has landed) while full still counts every accepted push.  PAYLOAD_ECC = 0 unchanged.
     localparam integer EX = PAYLOAD_ECC ? 1 : 0;
+    localparam integer FBX = (FB != 0 && PAYLOAD_ECC == 0) ? 1 : 0;
+    localparam integer WR = (EX != 0 || FBX != 0) ? 1 : 0;   // registered macro write (put_q / wp_q / wd_q)
+    localparam integer NSX = (W + 63) / 64;
+    reg [NSX-1:0] bs2v; reg [W-1:0] dqf;
     reg          v3, v4, ueq, ceq; reg [W-1:0] dq;
     wire [CW-1:0] cw_q; wire [W-1:0] decoded2; wire ce2, ue2;
     wire vd = EX ? v4 : v3;
@@ -463,7 +489,7 @@ module ot_hcoll_sfifo_x #(
     reg          v1, v2;
     wire full  = scnt == (AW+1)'(N);
     wire put   = push_p && !full;
-    wire fetch = (EX ? (avail != '0) : (scnt != '0)) && (ocr != 4'd0);
+    wire fetch = (WR ? (avail != '0) : (scnt != '0)) && (ocr != 4'd0);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             push_p <= 1'b0; scnt <= '0; avail <= '0; put_q <= 1'b0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; v4 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
@@ -483,7 +509,13 @@ module ot_hcoll_sfifo_x #(
         wp_q <= wp; wd_q <= din_p;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        if (EX) begin dq <= decoded2; ceq <= ce2; ueq <= ue2; end
+`ifdef OT_HCOLL_FB_MUT_BS
+        bs2v <= {NSX{~bs1}};               // mutant: wrong bank select copy
+`else
+        bs2v <= {NSX{bs1}};
+`endif
+        if (FBX) begin dq <= dqf; ceq <= 1'b0; ueq <= 1'b0; end
+        else if (EX) begin dq <= decoded2; ceq <= ce2; ueq <= ue2; end
         else begin dq <= decoded; ceq <= ce; ueq <= ue; end
         out_d <= dq;
     end
@@ -492,9 +524,15 @@ module ot_hcoll_sfifo_x #(
     end else begin : g_dec1
         assign cw_q = '0; assign decoded2 = '0; assign ce2 = 1'b0; assign ue2 = 1'b0;
     end endgenerate
-    wire          mw_v = EX ? put_q : put;
-    wire [AW-1:0] mw_a = EX ? wp_q : wp;
-    wire [CW-1:0] mw_d = EX ? wd_q : din_p;
+    // FB: each 64-bit slice selects its bank with its own copy of bs2 (bbe601a79 SS -255 on bs2 -> 545-bit bank mux)
+    for (genvar s = 0; s < NSX; s = s + 1) begin : g_fbs
+        localparam integer LO = s*64;
+        localparam integer WS = (W-LO < 64) ? W-LO : 64;
+        always @* dqf[LO+:WS] = (NBK > 1 && bs2v[s]) ? rawb[NBK-1][LO+:WS] : rawb[0][LO+:WS];
+    end
+    wire          mw_v = WR ? put_q : put;
+    wire [AW-1:0] mw_a = WR ? wp_q : wp;
+    wire [CW-1:0] mw_d = WR ? wd_q : din_p;
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(mw_v && (NBK == 1 || mw_a[AW-1] == 1'(b))), .w_addr(7'(mw_a)), .wd(mw_d));

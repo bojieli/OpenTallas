@@ -21,6 +21,7 @@ module ot_hcoll_port #(
     parameter integer SWCRED = 256,
     parameter integer K = 8,
     parameter integer PAYLOAD_ECC = 0,
+    parameter integer FB = 0,           // hardcore-1010 FALLBACK (needs PAYLOAD_ECC 0, FACE_CK 0): per-slice arbiter
     parameter integer FACE_CK = 0       // bit 0: the RX pin flops run on the face clock tap ckf; bit 1: the TX pin flops on ckt
 ) (
     input  wire           clk,
@@ -74,21 +75,59 @@ module ot_hcoll_port #(
     reg qp_pop, qr_pop, tv;
     reg [PWT-1:0] tf;
     integer credit;
-    (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(QAW)) u_qp (.ecc_ce(ce[0]),.ecc_ue(ue[0]),.ecc_drop(drop[0]),.clk(clk), .rst_n(rst_n), .push(qp_push), .din(qp_din),
-        .pop(qp_pop), .empty(qp_empty), .dout(qp_head), .ovf(qp_ovf), .count(c0));
-    (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(QAW)) u_qr (.ecc_ce(ce[1]),.ecc_ue(ue[1]),.ecc_drop(drop[1]),.clk(clk), .rst_n(rst_n), .push(qr_push), .din(qr_din),
-        .pop(qr_pop), .empty(qr_empty), .dout(qr_head), .ovf(qr_ovf), .count(c1));
-    always @* begin
-        qp_pop = 1'b0; qr_pop = 1'b0; tv = 1'b0; tf = '0;
-        if (credit > 0) begin
-            if (!qp_empty) begin qp_pop = 1'b1; tv = 1'b1; tf = qp_head; end
-            else if (!qr_empty) begin qr_pop = 1'b1; tv = 1'b1; tf = qr_head; end
+    localparam integer NS = (PWT + 63) / 64;
+    wire [NS-1:0] pe, re, pp, rr;      // FB: per-slice empty / pop of the partial and result queues
+    wire          tv_w;                // the TX wire stage's valid (FB: registered with tf)
+    (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.FB(FB),.W(PWT), .AW(QAW)) u_qp (.ecc_ce(ce[0]),.ecc_ue(ue[0]),.ecc_drop(drop[0]),.clk(clk), .rst_n(rst_n), .push(qp_push), .din(qp_din),
+        .pop(qp_pop), .pop_v(pp), .empty_v(pe), .empty(qp_empty), .dout(qp_head), .ovf(qp_ovf), .count(c0));
+    (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.FB(FB),.W(PWT), .AW(QAW)) u_qr (.ecc_ce(ce[1]),.ecc_ue(ue[1]),.ecc_drop(drop[1]),.clk(clk), .rst_n(rst_n), .push(qr_push), .din(qr_din),
+        .pop(qr_pop), .pop_v(rr), .empty_v(re), .empty(qr_empty), .dout(qr_head), .ovf(qr_ovf), .count(c1));
+    generate if (FB != 0) begin : g_fb
+`ifndef SYNTHESIS
+        initial if (PAYLOAD_ECC != 0 || FACE_CK != 0) $fatal(1, "ot_hcoll_port: FB needs PAYLOAD_ECC 0 and FACE_CK 0");
+`endif
+        // hardcore-1010 FALLBACK: the arbiter is replicated per 64-bit slice.  Slice s decides from its own queue-head
+        // empty flags (pe[s] / re[s]) and its own copy cok[s] of the credit test, registered from the value credit takes
+        // (cok == credit > 0 every cycle); the selected slice word is registered (tfq) with its valid (tvq) before the
+        // TX wire stage: +1 edge on the TX path, no control net wider than one slice.  All slices take the same decision
+        // every cycle (lock-step queues), so the credit counter follows slice 0.
+        reg [NS-1:0]  cok;
+        reg           tvq;
+        reg [PWT-1:0] tfq;
+        for (genvar s = 0; s < NS; s = s + 1) begin : g_arb
+            localparam integer LO = s*64;
+            localparam integer WS = (PWT-LO < 64) ? PWT-LO : 64;
+            assign pp[s] = cok[s] && !pe[s];
+            assign rr[s] = cok[s] && pe[s] && !re[s];
+            always @(posedge clk) tfq[LO+:WS] <= pp[s] ? qp_head[LO+:WS] : qr_head[LO+:WS];
         end
-    end
+        always @* begin qp_pop = pp[0]; qr_pop = rr[0]; tv = pp[0] | rr[0]; tf = tfq; end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin cok <= {NS{SWCRED > 0}}; tvq <= 1'b0; end
+            else begin
+`ifdef OT_HCOLL_FB_MUT_CREDIT
+                cok <= {NS{credit > 0}};    // mutant: stale credit test (one edge late) -> over-issue past the switch credit
+`else
+                cok <= {NS{(credit - (tv ? 1 : 0) + (cr_p ? 1 : 0) + (drop[2] ? 1 : 0)) > 0}};
+`endif
+                tvq <= tv;
+            end
+        assign tv_w = tvq;
+    end else begin : g_arb0
+        assign pp = '0; assign rr = '0;
+        always @* begin
+            qp_pop = 1'b0; qr_pop = 1'b0; tv = 1'b0; tf = '0;
+            if (credit > 0) begin
+                if (!qp_empty) begin qp_pop = 1'b1; tv = 1'b1; tf = qp_head; end
+                else if (!qr_empty) begin qr_pop = 1'b1; tv = 1'b1; tf = qr_head; end
+            end
+        end
+        assign tv_w = tv;
+    end endgenerate
     // ---- TX wire stages -> 2-entry queue -> serializer pacing ----
     wire w1_v;
     wire [PWT-1:0] w1_d;
-    (* keep_hierarchy *) ot_hcoll_sdelay #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .D(WSTG)) u_wtx (.ecc_ce(ce[2]),.ecc_ue(ue[2]),.ecc_drop(drop[2]),.clk(clk), .rst_n(rst_n), .v_in(tv), .d_in(tf),
+    (* keep_hierarchy *) ot_hcoll_sdelay #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .D(WSTG)) u_wtx (.ecc_ce(ce[2]),.ecc_ue(ue[2]),.ecc_drop(drop[2]),.clk(clk), .rst_n(rst_n), .v_in(tv_w), .d_in(tf),
         .v_out(w1_v), .d_out(w1_d));
     wire tx_empty, tx_ovf;
     wire [PWT-1:0] tx_head;
@@ -98,7 +137,7 @@ module ot_hcoll_port #(
     // pacing test of the NEXT cycle is registered (acc_ok = acc' + BITS_X100 >= PWB * 100, computed from the value acc
     // takes), so tx_pop is one flop and the empty test.  Exact: acc_ok always equals the old combinational test.
     reg acc_ok;
-    wire acc_go = TXF ? acc_ok : (acc + BITS_X100 >= PWB * 100);
+    wire acc_go = (TXF || FB) ? acc_ok : (acc + BITS_X100 >= PWB * 100);
     wire tx_pop = !tx_empty && acc_go;
     (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(1)) u_txq (.clk(clk), .rst_n(rst_n), .push(w1_v), .din(w1_d), .pop(tx_pop),
         .empty(tx_empty), .dout(tx_head), .ovf(tx_ovf), .count(sc));
@@ -108,7 +147,7 @@ module ot_hcoll_port #(
     wire rb_ovf;
     (* keep_hierarchy *) ot_hcoll_sdelay #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .D(WSTG)) u_wrx (.ecc_ce(ce[3]),.ecc_ue(ue[3]),.ecc_drop(drop[3]),.clk(clk), .rst_n(rst_n), .v_in(rxv_p), .d_in(rxf_p),
         .v_out(w2_v), .d_out(w2_d));
-    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(RXAW), .K(K)) u_rb (.ecc_ce(ce[4]),.ecc_ue(ue[4]),.ecc_drop(drop[4]),.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
+    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.PAYLOAD_ECC(PAYLOAD_ECC),.FB(FB),.W(PWT), .AW(RXAW), .K(K)) u_rb (.ecc_ce(ce[4]),.ecc_ue(ue[4]),.ecc_drop(drop[4]),.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
         .cr_in(rbcr_p), .out_v(rb_v), .out_d(rb_d), .ovf(rb_ovf));
     // ---- state, output flops ----
     always @(posedge clk or negedge rst_n)

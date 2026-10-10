@@ -85,6 +85,34 @@ def hgi_collective_payload_secded_model(widths=(544,545), ports=8):
         qualification='unadopted until connected fault-free lockstep, CE/UE and physical gates')
 
 
+def hcoll_port_fb_model(ports=8, layers=61, coll_per_layer=4, phases=2, clock_ghz=1.2,
+                        ar_us=575.856, mtp_step_us=1117.179, ar_tok_s=1736.5, mtp_tok_s=3722.8):
+    """hardcore-1010 group B FALLBACK of ot_hcoll_port (FB=1, PAYLOAD_ECC=0, FACE_CK=0), sized before RTL.
+
+    Replicated per-64-bit-slice control: queue heads (own pointers / empty / registered push copy), arbiter with a
+    registered credit test copy per slice, registered TX selection (tfq), receive-buffer bank select per slice and a
+    registered macro write.  Same 18 macros / outline.  Upper-bound price: every edge on every port traversal of every
+    collective phase is on the single-user critical path (no overlap credit).
+    """
+    ns = (545 + 63) // 64
+    edges = dict(tx_select_register=1, queue_head_register=1, rx_buffer_write_register=1)
+    per_traversal = sum(edges.values())
+    tok_cycles = per_traversal * phases * coll_per_layer * layers
+    add_us = tok_cycles / (clock_ghz * 1e3)
+    return dict(schema='opentallas.hcoll-port-fb.v1', opt_in_default=False, macs_per_cycle=0, replicas=ports,
+        slices=ns, per_port_macros=18, macros_added=0, payload_ecc=0, face_clock=0,
+        added_edges_per_traversal=edges, token_cycles_added_upper=tok_cycles, token_us_added_upper=round(add_us, 3),
+        ar_tok_s_upper_bound=round(1e6 / (ar_us + add_us), 1), ar_pct=round(100 * add_us / ar_us, 3),
+        mtp_tok_s_upper_bound=round(mtp_tok_s * mtp_step_us / (mtp_step_us + add_us), 1),
+        mtp_pct=round(100 * add_us / mtp_step_us, 3),
+        flops_added_per_port=dict(tfq=545, cok=ns, head_slices=2 * 4 * 545, head_data=2 * 545, rx_write=545 + 9,
+                                  bank_select_copies=ns),
+        widest_control_fanout_bits=64, throughput='1 flit / cycle (tb_port_fb burst phase)',
+        bits_per_cycle_boundary=dict(tx=546, rx=546, queue_push=2 * 546, rb=546),
+        note='vs the PAYLOAD_ECC line the fallback is shorter (no D+3 / 7-edge ECC paths); fault-free SRAM per the '
+             '10-10 academic-validation SRAM ECC policy (link CRC / retry unaffected)')
+
+
 def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
     """Option-4 boundary successor, sized before RTL; no new rate claim."""
     start_bits = 1 + 2 * nw + 12
