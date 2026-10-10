@@ -5,6 +5,7 @@ p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument
 r=pathlib.Path(__file__).resolve().parents[1];o=pathlib.Path(a.out).resolve();o.mkdir(parents=True,exist_ok=True)
 src=[r/__import__('os').environ.get('OT_HGI_TOPK_CORE','rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv'),   # redesign-hbm: _sys = systolic
  r/'rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv',r/'rtl/test/hbm_generic_20261009/tb_hgi_idx_topk.sv']
+src+=[r/x for x in __import__('os').environ.get('OT_HGI_TOPK_EXTRA','').split()]   # RESET-APPLY: e.g. rtl/lib/ot_rst_relay.sv
 (o/'sources.json').write_text(json.dumps({str(s.relative_to(r)):hashlib.sha256(s.read_bytes()).hexdigest() for s in src},indent=2)+'\n')
 cmd=['iverilog','-g2012','-s','tb_hgi_idx_topk','-o',str(o/'gate.vvp')]+__import__('os').environ.get('OT_HGI_TOPK_DEFS','').split()
 if a.mutant:cmd+=['-Ptb_hgi_idx_topk.MUTANT=1']

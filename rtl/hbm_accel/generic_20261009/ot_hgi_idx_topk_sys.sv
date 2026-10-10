@@ -23,7 +23,12 @@ module ot_hgi_idx_topk #(
  parameter bit MUTANT_TIE=0,
  parameter integer EL=3, parameter integer EF=8, parameter integer NT=64,   // enable-tree depth, FIFO depth, cells per leaf
  parameter integer TS=`ifdef OT_TOPK_SYS_TS2 2 `else 1 `endif,              // cells a key crosses per edge (travelling regs every TS cells)
- parameter integer MUT_SYS=`ifdef OT_TOPK_SYS_MUT_DRAIN 1 `else 0 `endif   // 1: no drain (shifts start while the last waves are in flight: bench mutant)
+ parameter integer MUT_SYS=`ifdef OT_TOPK_SYS_MUT_DRAIN 1 `else 0 `endif,  // 1: no drain (shifts start while the last waves are in flight: bench mutant)
+ // RESET-APPLY (drive-1010 2026-10-10, opt-in, default 0 = historical): rst_n is already a synchronous-release relay copy
+ // (ot_hgi_idx_topk_registered RST_RELAY); it drives only NL+1 kept local relay flops, one per shift-enable leaf (its NT
+ // cells' clear tokens) plus one for the control, so no reset net spans the array (sys1 worst path was rst_n -> t_clr).
+ // Release one edge after rst_n.
+ parameter integer RST_RELAY=0
 )(
  input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
@@ -72,6 +77,14 @@ module ot_hgi_idx_topk #(
  assign out_values_valid=out_valid&&fq_vals[fr];
  integer i;
  genvar g;
+ wire [NL:0] rq;                                   // [l] array leaf l, [NL] control
+ generate if(RST_RELAY) begin:g_rr
+  (* keep = "true", dont_touch = "true" *) reg [NL:0] rq_q;
+  always @(posedge clk or negedge rst_n) if(!rst_n) rq_q<={(NL+1){1'b0}}; else rq_q<={(NL+1){1'b1}};
+  assign rq=rq_q;
+ end else begin:g_rr_port
+  assign rq={(NL+1){rst_n}};
+ end endgenerate
  // ---- cells: stage s = cells s*TS .. s*TS+TS-1; one local compare per cell, its own leaf of the shift-enable tree
  wire [52:0] xi_key[0:MAX_K-1]; wire [31:0] xi_val[0:MAX_K-1];    // key arriving at cell g this edge
  wire [52:0] xo_key[0:MAX_K-1]; wire [31:0] xo_val[0:MAX_K-1];    // key cell g passes on
@@ -94,12 +107,12 @@ module ot_hgi_idx_topk #(
     else if(sh) begin t_key[S+1]<=t_key[S]; t_val[S+1]<=t_val[S]; end
     else begin t_key[S+1]<=xo_key[g]; t_val[S+1]<=xo_val[g]; end
    end
-   always @(posedge clk or negedge rst_n) if(!rst_n) t_clr[S+1]<=1'b0; else t_clr[S+1]<=t_clr[S];
+   always @(posedge clk or negedge rq[(S*TS)/NT]) if(!rq[(S*TS)/NT]) t_clr[S+1]<=1'b0; else t_clr[S+1]<=t_clr[S];
   end
  end endgenerate
  // ---- control (state, entry at cell 0, credits, tree, FIFO)
- always @(posedge clk or negedge rst_n) begin
-  if(!rst_n) begin
+ always @(posedge clk or negedge rq[NL]) begin
+  if(!rq[NL]) begin
    state<=IDLE; values_enabled<=0; done<=0;error<=0;n<=0;m<=0;k<=0;row<=0;cursor<=0;ecnt<=0;dcnt<=0;
    t_clr[0]<=1'b0; t_key[0]<=0; t_val[0]<=0; se0<=0; credit<=EF; inflight<=0; fw<=0; fr<=0; fn<=0;
    for(i=0;i<N1;i=i+1) se1[i]<=0;

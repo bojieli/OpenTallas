@@ -41,14 +41,19 @@ module tb_hgi_su_unit;
     // records/ops as the original station at every accepted edge, including the first after reset.
     wire shadow_rdy, shadow_done, shadow_fault, shadow_halted, shadow_opv;
     wire [669:0] shadow_opw; wire [1:0] shadow_strm;
+`ifdef OT_SU_RST_RELAY
+    wire shadow_rst_n = u.u_ctl.rr[0];      // RESET-APPLY: the shadow station shares the unit's relayed record reset
+`else
+    wire shadow_rst_n = rst_n;
+`endif
     ot_hgi_su_record #(.LEGACY(0), .GLU(GL), .STREAM_OK(!GL), .PAYLOAD_RESET(1)) shadow (
-        .clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(shadow_rdy),
+        .clk(clk), .rst_n(shadow_rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(shadow_rdy),
         .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
         .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
         .rec_n_a(cur[2196:2176]), .rec_done(shadow_done), .rec_fault(shadow_fault), .halted(shadow_halted),
         .op_v(shadow_opv), .op_w(shadow_opw), .op_strm(shadow_strm), .op_rdy(u.u_ctl.op_rdy_r),
         .su_idle(u.u_ctl.su_idle_r), .su_fault(u.u_ctl.su_fault_r), .lg_v(1'b0), .lg_w(670'd0), .lg_rdy(), .drained());
-    always @(posedge clk) if (rst_n) begin
+    always @(posedge clk) if (shadow_rst_n) begin
         if ({rec_rdy, done, fault, halted, u.u_ctl.op_v} !==
             {shadow_rdy, shadow_done, shadow_fault, shadow_halted, shadow_opv})
             $fatal(1, "PAYLOAD valid/control differed");

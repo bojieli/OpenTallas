@@ -2,13 +2,15 @@
 module tb_hgi_idx_topk;
  parameter MUTANT=0;
  parameter EARLY_MUTANT=0;
+ parameter RST_RELAY=0;   // RESET-APPLY opt-ins of ot_hgi_idx_topk_registered (-Ptb_hgi_idx_topk.RST_RELAY=1 ...)
+ parameter OUT_SKID=0;
  reg clk=0;always #416.6665 clk=~clk;
  reg rst_n=0,cv=0,iv=0,ready=1,values_enable=1;
  reg [3:0] unit_id=9;reg [5:0] op=2;
  reg [24:0] param_k;reg [31:0] n,m,score;
  wire cr,ir,ov,last,vv,done;wire[3:0]error;
  wire[31:0]id,value,row;
- ot_hgi_idx_topk_registered #(.ENABLE(1),.MUTANT_TIE(MUTANT),.MUTANT_EARLY_DONE(EARLY_MUTANT)) dut(
+ ot_hgi_idx_topk_registered #(.ENABLE(1),.MUTANT_TIE(MUTANT),.MUTANT_EARLY_DONE(EARLY_MUTANT),.RST_RELAY(RST_RELAY),.OUT_SKID(OUT_SKID)) dut(
  .clk(clk),.rst_n(rst_n),.cmd_valid(cv),.cmd_ready(cr),.cmd_unit(unit_id),.cmd_op(op),
  .cmd_param(param_k),.cmd_n(n),.cmd_m(m),.cmd_values(values_enable),.in_valid(iv),.in_ready(ir),
  .in_score(score),.out_valid(ov),.out_ready(ready),.out_id(id),.out_score(value),
