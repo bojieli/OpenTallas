@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.qwen-kv-mirror-pin-plan.v1",
+ "model_precedes_pnr": true,
+ "adopted": false,
+ "macs_per_cycle": 0,
+ "compute_intensity_macs_per_byte": 0,
+ "memory_ports_bytes_per_cycle": 0,
+ "replicas": {
+  "leaf": 128,
+  "controller": 4
+ },
+ "boundary_bits_per_cycle": {
+  "leaf_S": 596,
+  "leaf_N": 295,
+  "leaf_E": 5,
+  "controller_E": 1200,
+  "controller_W": 1048
+ },
+ "routing": {
+  "leaf_horizontal_layer": "M4",
+  "leaf_vertical_layer": "M5",
+  "pitch_um": 0.048,
+  "controller_pin_plan": "zero-edge binary_a candidate unless HEAD_PIPE explicitly selected; loop verdict and actual MY origin gate required",
+  "leaf_S_tracks": 2700,
+  "controller_E_tracks": 10800,
+  "leaf_S_density_bits_per_um": 4.598765432098766,
+  "controller_E_density_bits_per_um": 2.314814814814815,
+  "removed_pair_reason": "M4/M5 flipped origin24 modulo48 conflicts with M6/M7 origin32 modulo64, independent of outline"
+ },
+ "area": {
+  "leaf_slot_um": [
+   129.6,
+   183.6
+  ],
+  "controller_slot_um": [
+   172.8,
+   518.4
+  ],
+  "die_mm2": 205.806,
+  "cell_area_change": 0
+ },
+ "latency": {
+  "added_edges_vs_wide_leaf": 0,
+  "controller_head_edges": 0,
+  "posted_relay_forward_edges": 42,
+  "posted_relay_return_edges": 41
+ },
+ "replica_mux_demux_fanout": "same exact RTL, registers and logical boundary bus ownership",
+ "qualification": "own optionB closure; actual LEF on-track origin, mirror access and composed timing required; no existing job/view overwritten"
+}
