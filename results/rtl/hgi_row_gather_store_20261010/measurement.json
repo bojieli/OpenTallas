@@ -112,7 +112,8 @@
     "tools/hgi_adapters/sm_bench.py": "32f0f9fb5cd45a7bb02a23964a8b12a01e31f993440116d043812b8ce45d50ee",
     "tools/hgi_adapters/sm_e2e_bench.py": "fad5ae8e255c917ea61abb0268bddb0f01065518a8b56a3ce3d5b7a098dcd133",
     "tools/hgi_adapters/su_bench.py": "8d393af7f3c691ff6bbcb20b297c44aa28bc30cad9b48fe114f6e7d0dece6ae5",
-    "tools/hgi_adapters/su_stream_bench.py": "9a43f0eddcd56c22fc4acd41f0d2ff8b5aed0b4ff2dd04216fd04300214e9bab"
+    "tools/hgi_adapters/su_stream_bench.py": "9a43f0eddcd56c22fc4acd41f0d2ff8b5aed0b4ff2dd04216fd04300214e9bab",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
   },
   "generator": "tools/hgi_adapters/row_gather_store_bench.py --out VECTORS --vm-base 145344",
   "vector_sha256": {
@@ -179,5 +180,7 @@
     "verdict": "FAIL",
     "mismatched_words": 48640
   },
-  "model_consequence": "Fixed30-cycle STORE and a full-bandwidth LOAD-only front do not describe this STORE mechanism. Use measured shape costs for sensitivity until native row-gather or a wide STORE successor is measured."
+  "model_consequence": "Fixed30-cycle STORE and a full-bandwidth LOAD-only front do not describe this STORE mechanism. Use measured shape costs for sensitivity until native row-gather or a wide STORE successor is measured.",
+  "build_command": "--binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN --top-module tb_hgi_row_gather_store -I/home/ubuntu/claude-takeover-20261007/codex-row-store-vec -Mdir /home/ubuntu/claude-takeover-20261007/codex-row-store-build-inventory rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/adapters/tb/tb_hgi_row_gather_store.sv -j 4",
+  "run_command": "Vtb_hgi_row_gather_store +VEC=VECTORS (positive), same binary +VEC=STRIDE_MUTANT (negative)"
 }
