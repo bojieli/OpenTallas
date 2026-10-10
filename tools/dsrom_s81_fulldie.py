@@ -1344,6 +1344,7 @@ def legality(m):
 # side of its driver (r3 hop relays g_rt_*_8a_y1: 776-906 um backwards, 860 ps of GRT wire).  `check` exits 3 on a FAIL.
 MARGIN_RELAY_KINDS = ('stn', 'sstn', 'rly', 'hstn', 'rstg', 'pqstn')
 SS_REACH_UM = 504.0
+TT_REACH_UM = 674.0             # TT wire fit 261 ps + 0.76 ps/um within 833.333 - 60 ps (reported, option B)
 
 
 def margin_lint(m):
@@ -1352,8 +1353,14 @@ def margin_lint(m):
     # s81-gen 2026-10-09: data buses only.  Clock trunks / resets / column clock trees fan out from sp_collective (the
     # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
     data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
-    return FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
-                          edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
+    edges = os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1'
+    out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges)
+    # s81-gen 2026-10-10: the sign-off corner is TT (owner option B); the SS 504 um verdict above stays the gate, and the
+    # TT reach (833.333 - 60 ps setup unc. = 261 ps + 0.76 ps/um x L -> 674 um) is reported beside it
+    tt = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=TT_REACH_UM, edges=edges, limit=5)
+    out['tt'] = dict(reach_um=TT_REACH_UM, reach_violations=tt['reach_violations'], verdict_reach='PASS' if not tt['reach_violations'] else 'FAIL',
+                     max_um=max((r['um'] for r in out['reach_examples']), default=0.0))
+    return out
 
 
 def write_def_floorplan(m, path):

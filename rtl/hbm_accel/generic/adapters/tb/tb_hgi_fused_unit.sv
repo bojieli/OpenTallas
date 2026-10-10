@@ -27,12 +27,13 @@ module tb_hgi_fused_unit;
         .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0));
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
+    wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
     ot_hgi_dma_mover u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .fence_v(1'b0), .fence_rdy(), .fence_done(), .k_req_v(k_req_v), .k_req_rdy(k_req_rdy),
         .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd), .k_req_wstrb(k_ws), .k_req_tag(k_tag),
         .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(1'b0),
-        .vmq(mq), .vmr(mr));
-    ot_hgi_vm_unit #(.NC(3)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status());
+        .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
+    ot_hgi_vm_unit #(.NC(3), .WP(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(), .wq(wl), .wq_done(wl_done));
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0; reg [36:0] pa;
     always @(posedge clk) begin

@@ -31,8 +31,8 @@
 module ot_hgi_dma_mover #(
     parameter integer MUT_RNE = 0,        // mutant: BF16 store truncates (no round to nearest even)
     parameter integer MUT = 0,
-    parameter integer KOUT = 8,           // HBM lane requests in flight (the lane answers in order)
-    parameter integer SFD = 8             // landing FIFO, source sectors
+    parameter integer KOUT = 64,          // HBM lane requests in flight (the lane answers in order; >= the lane latency)
+    parameter integer SFD = 64            // landing FIFO, source sectors (a power of 2, >= KOUT; a 1R1W macro in the view)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -59,10 +59,17 @@ module ot_hgi_dma_mover #(
     input  wire          k_fault,
     // VM packet client
     output wire [337:0]  vmq,
-    input  wire [273:0]  vmr
+    input  wire [273:0]  vmr,
+    // VM WIDE WRITE PORT lane (hgi-takeover 2026-10-10, coordinator decision): the sector engine writes its VM
+    // destination sectors here, one a cycle, never back-pressured, {v, sector 15, wdata 256, word mask 8}; wl_done
+    // returns when the write is in the macro (ot_hgi_vm_unit wq / wq_done)
+    output reg  [279:0]  wl,
+    input  wire          wl_done
 );
     // the sector engine's port registers (the serial engine has its own; sel_s picks)
     reg f_kv, f_kwe; reg [36:0] f_ka; reg [255:0] f_kd; reg [31:0] f_ks; reg [337:0] f_vmq;
+    reg [1:0] kq_n; reg kq_h, kq_t; reg kq_we [0:1]; reg [36:0] kq_a [0:1]; reg [255:0] kq_d [0:1]; reg [31:0] kq_s [0:1];
+    always @* begin f_kv = kq_n != 2'd0; f_kwe = kq_we[kq_h]; f_ka = kq_a[kq_h]; f_kd = kq_d[kq_h]; f_ks = kq_s[kq_h]; end
     assign k_req_tag = 16'h4D56;
     assign k_rsp_rdy = 1'b1;
     // ================================================================ dispatch: sector engine or serial engine
@@ -161,13 +168,14 @@ module ot_hgi_dma_mover #(
     reg [19:0] u_o; reg [20:0] u_left; reg [4:0] u_sp; reg u_rowstart; reg [41:0] u_srow, u_drow;
     reg [36:0] u_dsec; reg [5:0] u_dp; reg u_done;
     // ---- landing FIFO (source sectors in order)
-    reg [255:0] sfd [0:SFD-1]; reg [3:0] sf_h, sf_t; reg [4:0] sf_n;
+    localparam integer SB = $clog2(SFD);
+    reg [255:0] sfd [0:SFD-1]; reg [SB-1:0] sf_h, sf_t; reg [8:0] sf_n;
     // ---- port in-flight accounting: per port a kind FIFO (0 read, 1 write) for the in-order responses
-    reg [3:0] k_in; reg [2:0] v_in; reg [15:0] k_kind; reg [7:0] v_kind;    // shift registers of kinds, oldest at [0]
-    reg [4:0] rd_in;                                          // source reads in flight (landing room)
+    reg [7:0] k_in; reg [2:0] v_in; reg [255:0] k_kind; reg [7:0] v_kind;    // shift registers of kinds, oldest at [0]
+    reg [8:0] rd_in;                                          // source reads in flight (landing room)
     // ---- write queue
     reg [255:0] wq_d [0:3]; reg [31:0] wq_s [0:3]; reg [36:0] wq_a [0:3]; reg [1:0] wq_h, wq_t; reg [2:0] wq_n;
-    reg [4:0] wr_in;                                          // writes issued, not acknowledged
+    reg [8:0] wr_in;                                          // writes issued, not acknowledged
     // ---- pipeline registers
     reg        p1_v; reg [3:0] p1_k; reg [255:0] p1_sec; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
@@ -187,7 +195,7 @@ module ot_hgi_dma_mover #(
         if (kk > {16'd0, s_room}) kk = {16'd0, s_room};
         if (kk > {16'd0, d_room}) kk = {16'd0, d_room};
         u_k = kk[3:0];
-        u_go = busy_f && !u_done && go_q2 && sf_n != 5'd0 && wq_room;
+        u_go = busy_f && !u_done && go_q2 && sf_n != 9'd0 && wq_room;
         u_fl = (u_dp + {2'd0, u_k} * des == 6'd32) || ({1'b0, u_left} == {18'd0, u_k});
         u_pop = ({1'b0, u_sp} + {2'd0, u_k} * ses == 6'd32) || ({1'b0, u_left} == {18'd0, u_k});   // sector used up / row ends
     end
@@ -229,10 +237,10 @@ module ot_hgi_dma_mover #(
     always @* begin
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q2 && !f_fault) begin
-            if (wq_n != 3'd0 && dst_hbm && k_in < 4'(KOUT) && !f_kv) iss_kw = 1'b1;
-            else if (!r_done && src_hbm && k_in < 4'(KOUT) && !f_kv && ({1'b0, sf_n} + rd_in) < 6'(SFD)) iss_kr = 1'b1;
-            if (wq_n != 3'd0 && !dst_hbm && v_in < 3'd4) iss_vw = 1'b1;
-            else if (!r_done && !src_hbm && v_in < 3'd4 && ({1'b0, sf_n} + rd_in) < 6'(SFD)) iss_vr = 1'b1;
+            if (wq_n != 3'd0 && dst_hbm && k_in < 8'(KOUT) && kq_n < 2'd2) iss_kw = 1'b1;
+            else if (!r_done && src_hbm && k_in < 8'(KOUT) && kq_n < 2'd2 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD)) iss_kr = 1'b1;
+            if (wq_n != 3'd0 && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
+            if (!r_done && !src_hbm && v_in < 3'd4 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD)) iss_vr = 1'b1;
         end
     end
     // ---- response routing (in order per port)
@@ -242,11 +250,10 @@ module ot_hgi_dma_mover #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
-            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_kv <= 1'b0; f_vmq <= 338'd0;
-            k_in <= 4'd0; v_in <= 3'd0; k_kind <= 16'd0; v_kind <= 8'd0; rd_in <= 5'd0; wr_in <= 5'd0;
-            sf_h <= 4'd0; sf_t <= 4'd0; sf_n <= 5'd0; wq_h <= 2'd0; wq_t <= 2'd0; wq_n <= 3'd0;
+            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0;
+            k_in <= 8'd0; v_in <= 3'd0; k_kind <= 256'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0; kq_n <= 2'd0; kq_h <= 1'b0; kq_t <= 1'b0;
+            sf_h <= '0; sf_t <= '0; sf_n <= 9'd0; wq_h <= 2'd0; wq_t <= 2'd0; wq_n <= 3'd0;
             p1_v <= 1'b0; p2_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
-            f_kwe <= 1'b0; f_ka <= 37'd0; f_kd <= 256'd0; f_ks <= 32'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
@@ -283,20 +290,27 @@ module ot_hgi_dma_mover #(
                 end
             end
             // ---- issue: lane / client requests
-            if (f_kv && k_req_rdy) f_kv <= 1'b0;
             f_vmq[337] <= 1'b0;
             begin : issue
                 reg kpush, kkind, vpush, vkind;
                 kpush = 1'b0; kkind = 1'b0; vpush = 1'b0; vkind = 1'b0;
+                // lane requests enter a 2-entry skid (its head drives k_req; k_req_rdy only pops it)
                 if (iss_kw) begin
-                    f_kv <= 1'b1; f_kwe <= 1'b1; f_ka <= {wq_a[wq_h][31:0], 5'd0}; f_kd <= wq_d[wq_h];
-                    f_ks <= wq_s[wq_h]; kpush = 1'b1; kkind = 1'b1;
+                    kq_we[kq_t] <= 1'b1; kq_a[kq_t] <= {wq_a[wq_h][31:0], 5'd0}; kq_d[kq_t] <= wq_d[wq_h];
+                    kq_s[kq_t] <= wq_s[wq_h]; kpush = 1'b1; kkind = 1'b1;
                 end else if (iss_kr) begin
-                    f_kv <= 1'b1; f_kwe <= 1'b0; f_ka <= {r_sec[31:0], 5'd0}; kpush = 1'b1;
+                    kq_we[kq_t] <= 1'b0; kq_a[kq_t] <= {r_sec[31:0], 5'd0}; kpush = 1'b1;
                 end
-                if (iss_vw) begin
-                    f_vmq <= {1'b1, 1'b1, wq_a[wq_h][26:0], 5'd0, wq_d[wq_h], wq_s[wq_h], 16'h4D57}; vpush = 1'b1; vkind = 1'b1;
-                end else if (iss_vr) begin
+                if (kpush) kq_t <= ~kq_t;
+                if (kq_n != 2'd0 && k_req_rdy && !sel_s) kq_h <= ~kq_h;
+                kq_n <= kq_n + {1'b0, kpush} - {1'b0, kq_n != 2'd0 && k_req_rdy && !sel_s};
+                wl[279] <= 1'b0;
+                if (iss_vw) begin : wide
+                    reg [7:0] wm; integer t;
+                    for (t = 0; t < 8; t = t + 1) wm[t] = &wq_s[wq_h][4*t +: 4];
+                    wl <= {1'b1, wq_a[wq_h][14:0], wq_d[wq_h], wm};
+                end
+                if (iss_vr) begin
                     f_vmq <= {1'b1, 1'b0, r_sec[26:0], 5'd0, 256'd0, 32'd0, 16'h4D52}; vpush = 1'b1;
                 end
                 // write queue pop
@@ -311,12 +325,12 @@ module ot_hgi_dma_mover #(
                     end else r_sec <= r_sec + 37'd1;
                 end
                 // in-flight accounting (kind shift registers: push at the tail, pop at the head)
-                k_in <= k_in + {3'd0, kpush} - {3'd0, k_rv};
+                k_in <= k_in + {7'd0, kpush} - {7'd0, k_rv};
                 v_in <= v_in + {2'd0, vpush} - {2'd0, v_rv};
                 begin : kk
-                    reg [15:0] t; t = k_kind;
+                    reg [255:0] t; t = k_kind;
                     if (k_rv) t = t >> 1;
-                    if (kpush) t[k_in - {3'd0, k_rv}] = kkind;
+                    if (kpush) t[k_in - {7'd0, k_rv}] = kkind;
                     k_kind <= t;
                 end
                 begin : vk
@@ -325,22 +339,22 @@ module ot_hgi_dma_mover #(
                     if (vpush) t[v_in - {2'd0, v_rv}] = vkind;
                     v_kind <= t;
                 end
-                rd_in <= rd_in + {4'd0, iss_kr | iss_vr} - {4'd0, k_rd_land | v_rd_land};
-                wr_in <= wr_in + {4'd0, iss_kw | iss_vw} - {4'd0, k_wr_ack | v_wr_ack};
+                rd_in <= rd_in + {8'd0, iss_kr | iss_vr} - {8'd0, k_rd_land | v_rd_land};
+                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wl_done & busy_f)};
             end
             if (k_fault && busy_f) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
             // ---- landing
             begin : land
                 reg push_, pop_;
                 push_ = k_rd_land || v_rd_land; pop_ = u_go && u_pop;
-                if (push_) begin sfd[sf_t[2:0] % SFD] <= k_rd_land ? kr_d : vr_q[255:0]; sf_t <= sf_t + 4'd1; end
-                if (pop_) sf_h <= sf_h + 4'd1;
-                sf_n <= sf_n + {4'd0, push_} - {4'd0, pop_};
+                if (push_) begin sfd[sf_t] <= k_rd_land ? kr_d : vr_q[255:0]; sf_t <= sf_t + 1'b1; end
+                if (pop_) sf_h <= sf_h + 1'b1;
+                sf_n <= sf_n + {8'd0, push_} - {8'd0, pop_};
             end
             // ---- unpack (stage U -> p1)
             p1_v <= 1'b0;
             if (u_go) begin
-                p1_v <= 1'b1; p1_k <= u_k; p1_sec <= sfd[sf_h[2:0] % SFD]; p1_sp <= u_sp; p1_dp <= u_dp; p1_dsec <= u_dsec;
+                p1_v <= 1'b1; p1_k <= u_k; p1_sec <= sfd[sf_h]; p1_sp <= u_sp; p1_dp <= u_dp; p1_dsec <= u_dsec;
                 p1_fl <= u_fl;
                 if ({1'b0, u_left} == {18'd0, u_k}) begin                    // row end: next row
                     if (u_o + 20'd1 == mm) u_done <= 1'b1;
@@ -376,10 +390,10 @@ module ot_hgi_dma_mover #(
             wq_n <= wq_n + {2'd0, p3_v && p3_fl && p3_keep} - {2'd0, iss_kw | iss_vw};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
             if (busy_f && go_q2 && !f_fault && u_done && r_done && !p1_v && !p2_v && !p3_v && wq_n == 3'd0 && wr_in == 5'd0 &&
-                !(iss_kw | iss_vw) && rd_in == 5'd0 && sf_n == 5'd0) begin
+                !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0 && kq_n == 2'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end
-            if (f_fault && busy_f && k_in == 4'd0 && v_in == 3'd0) busy_f <= 1'b0;
+            if (f_fault && busy_f && k_in == 8'd0 && v_in == 3'd0) busy_f <= 1'b0;
         end
     end
     function automatic [255:0] mk(input [31:0] s);

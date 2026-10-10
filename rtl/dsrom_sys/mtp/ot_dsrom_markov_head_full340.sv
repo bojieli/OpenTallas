@@ -101,7 +101,7 @@ endmodule
 
 // One bundle (1 B + 4 A + 4 Markov) without its own lookup: start / embedding pushed, go and x from the die.
 module ot_dsrom_markov_head_bundle_x #(
-    parameter bit ENABLE = 0, parameter integer PINREG = 1, parameter integer CACHE_PINREG = 0, parameter integer IOREG = 0,
+    parameter bit ENABLE = 0, parameter integer PINREG = 1, parameter integer CACHE_PINREG = 0, parameter integer IOREG = 0, parameter integer RINGDLY = 0,
     parameter integer VALID_ROWS = 128, parameter integer A_INPUT_STAGES = 4,
     parameter [8:0] CUT = 511, parameter integer SPLIT9 = 1,
     parameter integer SK = 1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
@@ -149,7 +149,7 @@ module ot_dsrom_markov_head_bundle_x #(
             .INSTANCE({PFX, (q==0 ? "ha0" : q==1 ? "ha1" : q==2 ? "ha2" : "ha3")}), .SAFE(1)) a (
             .clk(clk), .rst_n(rst_n), .go(ag), .row0(ar), .x(ax), .b_v(bvalid), .b_d(ad), .o_v(), .o_d(),
             .l_v(hv), .l_d(hb), .done(), .best_row(), .best_bits(), .best_key(), .fault(af[q]));
-        ot_dsrom_markov_head_driver #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .VALID_ROWS(NVALID),
+        ot_dsrom_markov_head_driver #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .RINGDLY(RINGDLY), .VALID_ROWS(NVALID),
             .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE({PFX, (q==0 ? "mk0" : q==1 ? "mk1" : q==2 ? "mk2" : "mk3")})) markov (
             .clk(clk), .rst_n(rst_n), .start(accept), .start_ready(sr[q]), .row0(driver_row), .transaction(transaction),
             .embed_valid(embed_valid), .embed_ready(er[q]), .embed_data(embed_data), .embed_beat(embed_beat),
@@ -198,6 +198,7 @@ module ot_dsrom_markov_head_full340 #(
     parameter integer FIRST_BUNDLE = 0,      // bundle id of instance 0 (ROM image names b<id>_*)
     parameter integer PINREG = 1, parameter integer CACHE_PINREG = 0, parameter integer A_INPUT_STAGES = 4,
     parameter integer IOREG = 1,             // Markov element pin-registered (margin-first; +2 cycles to head_go)
+    parameter integer RINGDLY = 1,           // Markov dot lane delays as ring buffers (hold-safe; 0 cycles)
     parameter [8:0] CUT = 511, parameter integer SPLIT9 = 1,
     parameter integer FAN = 8,
     parameter integer LOOKUP = 1,            // 1: the die's shared lookup is inside; 0: embed_* pins (MD6 element)
@@ -267,7 +268,7 @@ module ot_dsrom_markov_head_full340 #(
         end else begin : g_on
             assign s_m = s;
         end
-        ot_dsrom_markov_head_bundle_x #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .VALID_ROWS(VR),
+        ot_dsrom_markov_head_bundle_x #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .RINGDLY(RINGDLY), .VALID_ROWS(VR),
             .A_INPUT_STAGES(A_INPUT_STAGES), .CUT(CUT), .SPLIT9(SPLIT9),
             .PFX(PFX)) u (
             .clk(clk), .rst_n(rst_n), .start(s_m[0]), .start_ready(b_rdy[b]),

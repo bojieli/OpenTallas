@@ -49,7 +49,8 @@ module ot_dsrom_markov_head_driver #(
  // IOREG (mtp-lead 2026-10-09, margin-first; default 0 = unchanged): every input captured in a pin flop, every
  // output launched from a flop, and the embedding write split into check -> registered one-hot bank enable -> write
  // (the 32-bit id compare and the 4->16 decode no longer reach the 4,096 vector enables). +2 cycles to head_go.
- parameter integer IOREG=0
+ parameter integer IOREG=0,
+ parameter integer RINGDLY=0       // ot_dsrom_markov_row RINGDLY (hold-safe ring delay lines)
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] row0,input wire[31:0] transaction,
  input wire embed_valid,output wire embed_ready,input wire[255:0] embed_data,
@@ -112,7 +113,7 @@ module ot_dsrom_markov_head_driver #(
  integer cache_bank,cache_bit;
  ot_dsrom_markov_weight32 #(.INSTANCE(INSTANCE)) weights(.clk(clk),.rst_n(rst_n),
   .req_valid(launch),.req_ready(wr_ready),.row(rq[hr]),.out_valid(wv),.out_ready(mk_in_ready),.out_data(wd),.out_beat(wb),.out_last(wl));
- ot_dsrom_markov_row #(.K(256),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD)) dot(
+ ot_dsrom_markov_row #(.K(256),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD),.RINGDLY(RINGDLY)) dot(
   .clk(clk),.rst_n(rst_n),.start(launch),.start_ready(mk_ready),.head_logit(hq[hr]),
   .in_valid(wv),.in_ready(mk_in_ready),.weight_bf16(wd),.embed_bf16(vector[read_beat]),
   .out_valid(mk_valid),.out_ready(1'b1),.out_bits(mk_bits),.fault(mk_fault));
