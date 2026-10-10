@@ -1,0 +1,9 @@
+merged tree (main 86ee9156a PIPE + claude/hgi-rowgather-hw-20261010 RGX), tb_hgi_coll_pipe, LAT 453 CRED 137 rank 37 (epyc3)
+PIPE=0 base           : 13 gathers 9752 cycles  PASS   (main: 9752 PASS)
+PIPE=1                : 13 gathers 2950 cycles  PASS   (main: 2950 PASS)
+PIPE=1 +LEAD=1 +GAP=1500 : 19805 cycles PASS          (main lead1: 19805 PASS)
+MUT_PIPE=1            : FAIL errors=24111       (main: FAIL)
+MUT_PIPE=2 LEAD1 GAP1500 : FAIL errors=30837, 11018148 cycles (main: FAIL, 11018148)
+MUT_PIPE=3            : FAIL errors=23554       (main: FAIL)
+run_coll_regress.sh (PIPE=0 bypass / record / mode guard): identical to main regress_pipe0_new.txt
+run_rgx_bench.sh matrix: HGI_RGX PASS 38 cases (incl. 5 mutants FAIL as expected)
