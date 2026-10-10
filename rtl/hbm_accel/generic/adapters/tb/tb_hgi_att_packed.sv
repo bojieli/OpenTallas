@@ -6,7 +6,7 @@ reg clk=0; always #1 clk=~clk;
 reg rst_n=0, rec_v=0; reg[1215:0] cur; wire ready,done,fault,halted;
 wire[337:0] mq,sq; reg[273:0] mr=0,sr=0; reg srdy=0;
 wire hv; wire[34:0] ha; wire[7:0] ht;
-ot_hgi_att_unit #(.H(1),.D(64),.TD(64),.NL(2),.BLK(64),.PACKED_ROWS(1),.SELECTED_VM(1),.SELECTED_C_ONLY(0)) u
+ot_hgi_att_unit #(.H(1),.D(DIM),.TD(64),.NL(2),.BLK(64),.PACKED_ROWS(1),.SELECTED_VM(1),.SELECTED_C_ONLY(0)) u
 (.clk(clk),.rst_n(rst_n),.rec_v(rec_v),.rec_rdy(ready),.rec_hdr(cur[127:0]),.rec_a(cur[383:128]),
  .rec_b(cur[639:384]),.rec_c(cur[895:640]),.rec_o(cur[1151:896]),.rec_n_b(cur[1172:1152]),
  .rec_n_c(cur[1193:1173]),.rec_pos1(cur[1214:1194]),.rec_done(done),.rec_fault(fault),.halted(halted),
@@ -55,7 +55,7 @@ initial begin
  if($value$plusargs("MUTANT=%d",mutant)) ;
  $readmemh({dir,"/mem.mem"},initm);$readmemh({dir,"/exp.mem"},expm);$readmemh({dir,"/rec.mem"},recm);
  for(r=0;r<NM;r=r+1) mem[initm[r][63:32]]=initm[r][31:0];
- if(mutant==1) mem[16]=mem[16] ^ 32'h40000; // C row0 first forbidden padding bit530
+ if(mutant==1) mem[(DIM/32*265)/32]=mem[(DIM/32*265)/32] ^ (32'd1 << ((DIM/32*265)%32));
  repeat(3) @(negedge clk);rst_n=1;
  for(r=0;r<2;r=r+1) begin
   @(negedge clk);cur=recm[r];rec_v=1;while(!ready) @(negedge clk);
@@ -69,6 +69,6 @@ initial begin
  end
  if(mutant!=0) $fatal(1,"mutant escaped failclosed gate");
  if(errors) $fatal(1,"PACKED ATT errors%0d",errors);
- $display("PACKED ATT PASS H1 D64 T130 three jobs %0d words",NE);$finish;
+ $display("PACKED ATT PASS H1 D%0d T%0d BLK64 %0d words",DIM,TOTAL,NE);$finish;
 end
 endmodule

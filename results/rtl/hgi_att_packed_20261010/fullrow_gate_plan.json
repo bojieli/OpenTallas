@@ -1,0 +1,19 @@
+{
+  "base_receipt": "e4c8a3f8f H1D64BLK64 frontend1328.434MB",
+  "next_gate": {
+    "H": 1,
+    "D": 512,
+    "BLK": 64,
+    "T": 640,
+    "NB": 128,
+    "NC": 512
+  },
+  "capacity": "17sectors/row,348160BselectedC/69632BwindowB; same finite64-row engine staging as base",
+  "frontend_admission_GiB": 16,
+  "admission_basis": "D/TD tiles scale1to8 at fixedH/BLK; base1328.434MB x8=10.378GiB plus measuredobjectinventory221MB x8=1.727GiB;16GiB covers declared total",
+  "scope": "fullD512 consumer row service plus exact QK/PV overactualDSrecorddimensions, BLK64component ratherthanproductionBLK512 transactiontiming",
+  "golden": "random independent BF16 Q/P; originalscale provenance rows; hgi_sim chunk8/pairwise",
+  "physical": "nowholeH16or8MiBarray discovery",
+  "model": "hgi_att_scaled_model packedconsumer D5124240bits17stations; hgi_att_stager_model engine topology alreadypriced",
+  "adopted": false
+}
