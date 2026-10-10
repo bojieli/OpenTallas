@@ -79,7 +79,8 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
 endmodule
 
 module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, parameter integer CRR = 16,
-                    parameter integer END = 0) (
+                    parameter integer END = 0, parameter integer DMA = 0, parameter integer DH = 8,
+                    parameter integer DG = 4) (
   input wire ck, input wire rn, input wire rdy_q2,
   input wire iss_v, input wire [50:0] iss_d,
   output wire k_v, input wire k_rdy, output wire [29:0] k_addr, output wire [3:0] k_len, output wire [16:0] k_tag,
@@ -87,7 +88,16 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   output wire b_v, output wire [16:0] b_t, output wire [3:0] b_b, output wire [255:0] b_d,
   input wire di_v, input wire [61:0] di_d, output reg do_v, output reg [61:0] do_d,
   input wire dni_ok, input wire dni_ph, output reg dno_ok, output reg dno_ph,
-  input wire cr_v);
+  input wire cr_v,
+  // DMA stream (ot_hbm_svc_dma_lib.sv, 2026-10-10): row reads {gq10, row28} from the group unit's command decode (at
+  // most DH queued: the hub's credit), group row-buffer slots freed back as a mask
+  input wire dq_v, input wire [37:0] dq_d, input wire dcr_v, input wire [DG-1:0] dcr_d);
+  // ---- DMA row-read queue and the group slots this PC may fill
+  localparam integer DQW = $clog2(DH);
+  reg [37:0] dfq [0:DH-1]; reg [DQW-1:0] dfh, dft; reg [DQW:0] dfn; reg [DG-1:0] dsf;
+  wire [1:0] dslot = dsf[0] ? 2'd0 : dsf[1] ? 2'd1 : dsf[2] ? 2'd2 : 2'd3;
+  wire dreq = (DMA != 0) && (dfn != 0) && (dsf != 0);
+  wire [37:0] dhd = dfq[dfh];
   // ---- stream state (descriptor {ph, idx, nocr, row0 15, nsec 12, mask 32})
   reg act, ph, idx, nocr, mine; reg [14:0] row0; reg [11:0] nsec;
   reg [11:0] jn; reg [12:0] jr; reg [6:0] nob; reg [7:0] cred;
@@ -103,13 +113,14 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   wire idle = !pend && !v;
   wire go_sm = (iss_v && idle) || (smh && idle);
   wire go_s  = idle && !iss_v && !smh && sreq;
+  wire go_d  = idle && !iss_v && !smh && !sreq && dreq;     // DMA rows below SM issues and PS stream reads
   wire sacc  = pend && v_d && k_rdy_q && sr;
   always @(posedge ck or negedge rn)
     if (!rn) begin v <= 1'b0; pend <= 1'b0; v_d <= 1'b0; k_rdy_q <= 1'b0; sr <= 1'b0; smh <= 1'b0; end
     else begin
       k_rdy_q <= k_rdy; v_d <= v;
       if (iss_v && !idle) smh <= 1'b1; else if (go_sm) smh <= 1'b0;
-      if (go_sm || go_s) begin v <= 1'b1; pend <= 1'b1; sr <= go_s; end
+      if (go_sm || go_s || go_d) begin v <= 1'b1; pend <= 1'b1; sr <= go_s; end
       else if (v) v <= 1'b0;
       else if (pend && v_d && k_rdy_q) pend <= 1'b0;
       else if (pend && !v_d) v <= 1'b1;
@@ -118,11 +129,23 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
     if (iss_v && !idle) smd <= iss_d;
     if (go_sm) {t, ln, a} <= (iss_v && idle) ? iss_d : smd;
     else if (go_s) begin a <= {sa[29:2], 2'b00}; ln <= 4'd4; t <= {2'b11, jn[11:2], 5'd0}; end
+    else if (go_d) begin a <= {dhd[27:0], 2'b00}; ln <= 4'd4; t <= {2'b11, dhd[37:28], 1'b1, dslot, 2'b00}; end
   end
+  // DMA queue / slots: a row enters on dq_v, leaves at its K request; its slot is busy until the group frees it
+  always @(posedge ck) if (dq_v) dfq[dft] <= dq_d;
+  always @(posedge ck or negedge rn)
+    if (!rn) begin dfh <= {DQW{1'b0}}; dft <= {DQW{1'b0}}; dfn <= {(DQW+1){1'b0}}; dsf <= {DG{1'b1}}; end
+    else begin
+      if (dq_v) dft <= dft + 1'b1;
+      if (go_d) dfh <= dfh + 1'b1;
+      dfn <= dfn + (dq_v ? 1'b1 : 1'b0) - (go_d ? 1'b1 : 1'b0);
+      dsf <= (dsf & ~(go_d ? (DG'(1) << dslot) : {DG{1'b0}})) | (dcr_v ? dcr_d : {DG{1'b0}});
+    end
   assign k_v = v; assign k_addr = a; assign k_len = ln; assign k_tag = t;
   // ---- responses: raw capture + aligned register (ot_svs_pc); stream beats get {idx, valid, slot} in tag[4:0]
   reg kr_v_q, bv; reg [16:0] t_r, bt; reg [3:0] bb_r, bb; reg [255:0] d_r, bd;
-  wire s_beat = t_r[16:15] == 2'b11;
+  wire d_beat = t_r[16:15] == 2'b11 && t_r[4];    // DMA row beat: tag kept, beat[3] marks it for the group
+  wire s_beat = t_r[16:15] == 2'b11 && !t_r[4];
   wire [11:0] bj4 = {t_r[14:5], 2'b00};
   wire [14:0] rr = row0 + 15'(bj4 >> 10);
   wire [1:0] slot = bb_r[1:0] ^ rr[1:0];
@@ -132,10 +155,10 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   always @(posedge ck) begin
     t_r <= kr_tag; bb_r <= kr_beat; d_r <= kr_data;
     bt <= s_beat ? {t_r[16:5], nocr, idx, svalid, slot} : t_r;
-    bb <= bb_r; bd <= d_r;
+    bb <= d_beat ? {1'b1, bb_r[2:0]} : bb_r; bd <= d_r;
   end
   assign b_v = bv; assign b_t = bt; assign b_b = bb; assign b_d = bd;
-  wire s_ret = bv && bt[16:15] == 2'b11;          // a stream beat returned (counted at the aligned register)
+  wire s_ret = bv && bt[16:15] == 2'b11 && !bb[3];   // a stream beat returned (counted at the aligned register)
   // ---- stream engine
   always @(posedge ck or negedge rn)
     if (!rn) begin act <= 1'b0; ph <= 1'b0; idx <= 1'b0; nocr <= 1'b1; mine <= 1'b0; jn <= 0; jr <= 0; nob <= 0; cred <= 8'(CRR);
@@ -160,19 +183,29 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   always @(posedge ck) if (di_v) do_d <= di_d;
 endmodule
 
-module ot_svs_grp #(parameter integer K = 0) (
+module ot_svs_grp #(parameter integer K = 0, parameter integer DMA = 0, parameter integer DG = 4) (
   input wire ck, input wire rst, input wire rn,
   input wire [3:0] sv_i, input wire [4*277-1:0] sq_i,     // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
   input wire sg_v, input wire [12:0] sg_d,                 // the running stream's load tag (from the e port)
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
-  output wire ovf);                                        // a beat found its row buffer still full / credit queue overflow (never)
+  output wire ovf,                                         // a beat found its row buffer still full / credit queue overflow (never)
+  // DMA stream (ot_hbm_svc_dma_lib.sv, 2026-10-10): the hub's command chain passes every group unit (registered here);
+  // a command for PC 4K + j leaves on that PC's dq chain; the PC's row beats fill a DG-slot row buffer; a full row
+  // joins inward chain A (even gq) or B (odd gq) in a free slot; the freed slot goes back to its PC (mask on dcr)
+  input wire ci_v, input wire [93:0] ci_d, output reg co_v, output reg [93:0] co_d,
+  output reg [3:0] dq_v, output reg [4*38-1:0] dq_d, output reg [3:0] dcr_v, output reg [4*DG-1:0] dcr_d,
+  input wire ai_v, input wire [1038:0] ai_d, output reg ao_v, output reg [1038:0] ao_d,
+  input wire bi_v, input wire [1038:0] bi_d, output reg bo_v, output reg [1038:0] bo_d);
   // hbm-forks 2026-10-09 (svc SE_s2 routed c_rs13_1.q -> u_gp3.b -53.9 ps: a beat's index bits fanned out to the 2 x 4
   // row-buffer write enables across the buffer array straight from the chain's last stage): the beat lands in the
   // group unit's own input register (sv / sq, at the unit) with its write enables pre-decoded one-hot (we1h), and is
   // written one edge later (+1 cycle on the stream path; the stream beats carry no backpressure)
   reg [3:0] sv; reg [4*277-1:0] sq; reg [3:0] we1h [0:3];
+  wire [3:0] dm;                                           // the beat is a DMA row beat (beat[3])
+  genvar gd;
+  generate for (gd = 0; gd < 4; gd = gd + 1) begin : gdm assign dm[gd] = sq[gd*277 + 259]; end endgenerate
   integer pi_;
   always @(posedge ck or negedge rn)
     if (!rn) sv <= 4'd0;
@@ -215,7 +248,7 @@ module ot_svs_grp #(parameter integer K = 0) (
     end else begin
       av <= any; ov <= av;
       if (any) begin rr <= sel + 2'd1; full[sel][rs[sel]] <= 1'b0; rs[sel] <= ~rs[sel]; end
-      for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
+      for (p = 0; p < 4; p = p + 1) if (sv[p] && !dm[p]) begin
         if (full[p][ws[p]] && !(any && sel == p && rs[p] == ws[p])) ovb <= 1'b1;
         sm[p][ws[p]] <= ((cnt[p][ws[p]] == 3'd0) ? 4'd0 : sm[p][ws[p]]) |
                         (sq[p*277+260+2] ? (4'd1 << sq[p*277+260 +: 2]) : 4'd0);
@@ -225,7 +258,7 @@ module ot_svs_grp #(parameter integer K = 0) (
       end
     end
   always @(posedge ck) begin
-    for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
+    for (p = 0; p < 4; p = p + 1) if (sv[p] && !dm[p]) begin
       for (s = 0; s < 4; s = s + 1) if (we1h[p][s]) b[p][ws[p]][s] <= sq[p*277 +: 256];
       rq[p][ws[p]] <= sq[p*277+265 +: 10];
       ix[p][ws[p]] <= sq[p*277+260+3];
@@ -264,5 +297,67 @@ module ot_svs_grp #(parameter integer K = 0) (
       if (push && qn == QD) ovq <= 1'b1;
     end
   assign cr = crq;
+  // ================================================================== DMA stream
+  generate if (DMA != 0) begin : dma
+    // command chain: forward (registered), decode this group's PCs
+    integer c, q, r;
+    always @(posedge ck or negedge rn)
+      if (!rn) begin co_v <= 1'b0; co_d <= 94'd0; dq_v <= 4'd0; end
+      else begin
+        co_v <= ci_v; co_d <= ci_d;
+        dq_v <= 4'd0;
+        for (c = 0; c < 2; c = c + 1)
+          if (ci_v && ci_d[c*47 + 46] && ci_d[c*47 + 43 +: 3] == 3'(K)) dq_v[ci_d[c*47 + 41 +: 2]] <= 1'b1;
+      end
+    always @(posedge ck)
+      for (c = 0; c < 2; c = c + 1)
+        if (ci_v && ci_d[c*47 + 46] && ci_d[c*47 + 43 +: 3] == 3'(K)) dq_d[ci_d[c*47 + 41 +: 2]*38 +: 38] <= ci_d[c*47 + 3 +: 38];
+    // row buffers: DG slots a PC
+    reg [255:0] db [0:3][0:DG-1][0:3]; reg [9:0] dg [0:3][0:DG-1]; reg [2:0] dc [0:3][0:DG-1];
+    wire [4*DG-1:0] rA, rB;
+    genvar gp_, gs_;
+    for (gp_ = 0; gp_ < 4; gp_ = gp_ + 1) begin : rr_
+      for (gs_ = 0; gs_ < DG; gs_ = gs_ + 1) begin : ss_
+        assign rA[gp_*DG + gs_] = dc[gp_][gs_] == 3'd4 && !dg[gp_][gs_][0];
+        assign rB[gp_*DG + gs_] = dc[gp_][gs_] == 3'd4 &&  dg[gp_][gs_][0];
+      end
+    end
+    // the first full row of each parity, inserted only into a free chain slot
+    reg pA, pB; reg [$clog2(4*DG)-1:0] iA, iB;
+    always @* begin
+      pA = 1'b0; pB = 1'b0; iA = 0; iB = 0;
+      for (r = 4*DG-1; r >= 0; r = r - 1) begin
+        if (rA[r]) begin pA = 1'b1; iA = r[$clog2(4*DG)-1:0]; end
+        if (rB[r]) begin pB = 1'b1; iB = r[$clog2(4*DG)-1:0]; end
+      end
+    end
+    wire insA = pA && !ai_v, insB = pB && !bi_v;
+    wire [1:0] pAp = iA / DG, pBp = iB / DG; wire [$clog2(DG)-1:0] pAs = iA % DG, pBs = iB % DG;
+    always @(posedge ck or negedge rn)
+      if (!rn) begin
+        ao_v <= 1'b0; bo_v <= 1'b0; ao_d <= 1039'd0; bo_d <= 1039'd0; dcr_v <= 4'd0; dcr_d <= {4*DG{1'b0}};
+        for (q = 0; q < 4; q = q + 1) for (r = 0; r < DG; r = r + 1) dc[q][r] <= 3'd0;
+      end else begin
+        ao_v <= ai_v || insA; bo_v <= bi_v || insB;
+        ao_d <= ai_v ? ai_d : {dg[pAp][pAs], 5'(4 * K) + {3'd0, pAp}, db[pAp][pAs][3], db[pAp][pAs][2], db[pAp][pAs][1], db[pAp][pAs][0]};
+        bo_d <= bi_v ? bi_d : {dg[pBp][pBs], 5'(4 * K) + {3'd0, pBp}, db[pBp][pBs][3], db[pBp][pBs][2], db[pBp][pBs][1], db[pBp][pBs][0]};
+        for (q = 0; q < 4; q = q + 1) begin
+          dcr_v[q] <= (insA && pAp == 2'(q)) || (insB && pBp == 2'(q));
+          for (r = 0; r < DG; r = r + 1) begin
+            dcr_d[q*DG + r] <= (insA && pAp == 2'(q) && pAs == r) || (insB && pBp == 2'(q) && pBs == r);
+            if ((insA && pAp == 2'(q) && pAs == r) || (insB && pBp == 2'(q) && pBs == r)) dc[q][r] <= 3'd0;
+            else if (sv[q] && dm[q] && sq[q*277 + 262 +: 2] == 2'(r)) dc[q][r] <= dc[q][r] + 3'd1;
+          end
+        end
+      end
+    always @(posedge ck)
+      for (q = 0; q < 4; q = q + 1) if (sv[q] && dm[q]) begin
+        db[q][sq[q*277 + 262 +: 2]][sq[q*277 + 256 +: 2]] <= sq[q*277 +: 256];
+        dg[q][sq[q*277 + 262 +: 2]] <= sq[q*277 + 265 +: 10];
+      end
+  end else begin : nodma
+    always @* begin co_v = 1'b0; co_d = 94'd0; dq_v = 4'd0; dq_d = 152'd0; dcr_v = 4'd0; dcr_d = {4*DG{1'b0}};
+      ao_v = ai_v; ao_d = ai_d; bo_v = bi_v; bo_d = bi_d; end
+  end endgenerate
 endmodule
 `default_nettype wire
