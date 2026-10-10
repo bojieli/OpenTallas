@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.hgi.index_cp_lease.v1",
+  "default_enabled": false,
+  "targets": [
+    "DeepSeek-V4.1 HBM"
+  ],
+  "replicas_per_die": 1,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_bytes_per_cycle": 0,
+  "communication_intensity": "one held HGI record and framed control receipts per INDEX",
+  "added_FF_bits": 4125,
+  "estimated_FF_area_floor_um2": 1202.8500000000001,
+  "added_SRAM": 0,
+  "slot_um": [
+    420,
+    420
+  ],
+  "mapped_area_um2": null,
+  "floorplan_slot_fit": false,
+  "mux_demux": "one held record seat; one native sink; quarter2 selects four existing source/receiver paths; one4:1 receipt mux and metadata1:4 demux must be mapped",
+  "fanout": "full record complementary compare; five full73 receipt comparisons; no free owner alias",
+  "routing_tracks_required": 1996,
+  "routing_tracks_capacity": null,
+  "loaded_delay_ps": null,
+  "command": {
+    "record_bits": 1819,
+    "retained_frame_bits": 73,
+    "layer": "record imm_b32 checked<40; held in actual record",
+    "position": "record20 equals full73[72:53]",
+    "rank": "die_id8 modulo96"
+  },
+  "grant": {
+    "frame_bits": 73,
+    "layer_bits": 6,
+    "rank_bits": 7,
+    "pos_bits": 20,
+    "key_row0_bits": 60,
+    "exclusive_row_end_bits": 64,
+    "blocks_bits": 36,
+    "bounds": "for each nonempty contiguous2736-key quarter: row0<exclusive_end<=32768; blocks=ceil(min(max(ndie-2736*q,0),2736)/8)<=342",
+    "physical_row_mapping": "OPEN: native99 kind2 row capabilities, not EPS physical HBM rows; provider certifies exact mapping/extent/capacity; no layer->row arithmetic"
+  },
+  "receipts": {
+    "key_visible_frame_bits": 73,
+    "query_ACK_frame_bits": 73,
+    "prefetch_accept_frame_bits": 73,
+    "prefetch_quarter_bits": 2,
+    "drain_frame_bits": 73,
+    "durable_visibility": "all actual sectors committed with SECDED ACK, not issued writes/KD"
+  },
+  "latency": {
+    "command_capture_edges": 1,
+    "grant_capture_edges": 1,
+    "visible_receipt_capture_edges": 1,
+    "prefetch_accept_edges_per_nonempty_quarter": 1,
+    "zero_quarter_skip_edges": 1,
+    "native_accept_edges": 1,
+    "release_edges": 1,
+    "composed": "5 local actor edges +4 quarter accept/skip edges + actual provider grant/visibility, native prefetch CDC/accept, native execution, read/consumer/VM ACK drain and release backpressure; no overlap credit",
+    "wrapper_crossing_edges_each": 6,
+    "die_relay_hops": "actual path required"
+  },
+  "mutable_protection": "complementary record/owner/grant/flags/state; mismatch sticky fail-stop retains lease until cold POR",
+  "empty_frame": "n0 allowed; matching grant/query ACK required; no key visibility or blocks0 prefetch; four skip edges before empty native launch",
+  "grant_provider": "OPEN: generic CP has no allocation owner; legacy PS row15/blocks9/tag13/KD is insufficient",
+  "service_binding": "OPEN: wide TAG6+stack ledger must retain full73 through actual macro ACK and read drain",
+  "prefetch_fanout": "OPEN: unchanged native99 sink rejects repeated full73, so four real per-quarter source/sink actors are required; serialize selected-quarter requests, each source sees one descriptor/frame and deasserted request after its receipt. One unchanged shared99 sink is illegal.",
+  "external_prefetch_transport_replicas": 4,
+  "external_prefetch_transport_area": "actual existing inventory/source/sink cost required; not included in4125 actor FF or priced as free",
+  "compiler_integration": false,
+  "source_provider_bound": false,
+  "physical_qualified": false,
+  "measured_join": false,
+  "performance_credit": 0
+}

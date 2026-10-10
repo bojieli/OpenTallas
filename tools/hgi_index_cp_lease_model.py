@@ -11,7 +11,7 @@ def model():
         communication_intensity='one held HGI record and framed control receipts per INDEX',
         added_FF_bits=ff, estimated_FF_area_floor_um2=ff*.2916,
         added_SRAM=0, slot_um=[420,420], mapped_area_um2=None, floorplan_slot_fit=False,
-        mux_demux='one held record seat; one source/native sink; no payload replicas',
+        mux_demux='one held record seat; one native sink; quarter2 selects four existing source/receiver paths; one4:1 receipt mux and metadata1:4 demux must be mapped',
         fanout='full record complementary compare; five full73 receipt comparisons; no free owner alias',
         routing_tracks_required=1819+73+6+60+36+2,
         routing_tracks_capacity=None, loaded_delay_ps=None,
@@ -34,5 +34,8 @@ def model():
         empty_frame='n0 allowed; matching grant/query ACK required; no key visibility or blocks0 prefetch; four skip edges before empty native launch',
         grant_provider='OPEN: generic CP has no allocation owner; legacy PS row15/blocks9/tag13/KD is insufficient',
         service_binding='OPEN: wide TAG6+stack ledger must retain full73 through actual macro ACK and read drain',
+        prefetch_fanout='OPEN: unchanged native99 sink rejects repeated full73, so four real per-quarter source/sink actors are required; serialize selected-quarter requests, each source sees one descriptor/frame and deasserted request after its receipt. One unchanged shared99 sink is illegal.',
+        external_prefetch_transport_replicas=4,
+        external_prefetch_transport_area='actual existing inventory/source/sink cost required; not included in4125 actor FF or priced as free',
         compiler_integration=False, source_provider_bound=False, physical_qualified=False,
         measured_join=False, performance_credit=0)
