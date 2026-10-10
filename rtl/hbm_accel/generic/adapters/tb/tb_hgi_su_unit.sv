@@ -48,6 +48,15 @@ module tb_hgi_su_unit;
     endtask
     integer k, nf;
     always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
+    integer reads = 0, writes = 0, rd_rsp = 0, wr_rsp = 0, stage_credit_stall = 0, drain_credit_stall = 0;
+    integer read0, write0, rr0, wr0, ss0, ds0;
+    always @(posedge clk) begin
+        if (uq[337]) begin if (uq[336]) writes <= writes + 1; else reads <= reads + 1; end
+        if (ur[273]) begin if (ur[256]) wr_rsp <= wr_rsp + 1; else rd_rsp <= rd_rsp + 1; end
+        if (u.u_ctl.st == 5 && u.u_ctl.rk < 4 && u.u_ctl.outst == 4 && u.u_ctl.cur_sec <= u.u_ctl.end_sec)
+            stage_credit_stall <= stage_credit_stall + 1;
+        if (u.u_ctl.st == 9 && u.u_ctl.outst == 4) drain_credit_stall <= drain_credit_stall + 1;
+    end
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, words = 0, cases = 0, t0;
     reg [31:0] qd, gaddr;
     initial begin
@@ -64,6 +73,7 @@ module tb_hgi_su_unit;
                 if (j + 1 == nve || vmem[ve0 + j + 1][63:32] != gaddr) vm_req(1'b1, gaddr, 32'hA5A5A5A5, qd);
             end
             k = 0; nf = 0; t0 = cyc;
+            read0 = reads; write0 = writes; rr0 = rd_rsp; wr0 = wr_rsp; ss0 = stage_credit_stall; ds0 = drain_credit_stall;
             for (phase_ix = 0; phase_ix < 16; phase_ix = phase_ix + 1) phase_start[phase_ix] = phase_count[phase_ix];
             for (j = 0; j < nr; j = j + 1) begin
                 @(negedge clk); cur = recm[r0 + j]; rec_v = 1;
@@ -79,6 +89,7 @@ module tb_hgi_su_unit;
                 phase_sum = phase_sum + phase_count[phase_ix] - phase_start[phase_ix];
             end
             $display("SU_PHASE_SUM case=%0d counted=%0d elapsed=%0d", c, phase_sum, cyc - t0);
+            $display("SU_SERVICE case=%0d read_req=%0d read_rsp=%0d write_req=%0d write_rsp=%0d stage_credit_stall=%0d drain_credit_stall=%0d", c, reads-read0, rd_rsp-rr0, writes-write0, wr_rsp-wr0, stage_credit_stall-ss0, drain_credit_stall-ds0);
             if (phase_sum != cyc - t0) begin errors = errors + 1; $display("ERR phase census accounting"); end
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
