@@ -889,6 +889,18 @@ class Fleet:
         c = self.probe_cache.get(host)
         if c and time.time() - c[0] < 45:
             return c[1]
+        # NO SSH UNDER FLEET_LOCK (drive-0849 2026-10-10, fleet STARVED: 91 waiting, EPYC2 520 GB free / load 40): every
+        # launch_ready / cal_track / hold-ECO capacity check ran fleet.fits under FLEET_LOCK, and an expired cache made it
+        # probe the host by ssh INSIDE the lock -- 2-3 s per host per 45 s, and up to ~130 s (40 s timeout x 3 + 7 s of
+        # retry sleeps) when a probe failed -- so every other job thread queued on the lock (py-spy: 19 threads idle at
+        # step/launch_ready, the holder in _probe_once).  Under the lock a probe now answers from the last good probe
+        # (<= PROBE_LAST_GOOD_S old); the refresh happens outside the lock (fits(), step()).
+        if FLEET_LOCK._is_owned():
+            good = self.last_good.get(host)
+            if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                return dict(good[1], stale_s=round(time.time() - good[0])) if time.time() - good[0] >= 45 else good[1]
+            if c:
+                return c[1]
         info = self._probe_once(host)
         for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
             if info is not None:
@@ -961,6 +973,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return sum(p[1] for p in other), sum(p[2] for p in other if p[0] >= tr)
 
     def fits(self, host, threads, ram, job=None):
+        if not FLEET_LOCK._is_owned():
+            self.probe(host)                   # refresh (cached 45 s) OUTSIDE the lock
         with FLEET_LOCK:
             return self._fits(host, threads, ram, job)
 
