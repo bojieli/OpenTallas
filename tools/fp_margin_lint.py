@@ -242,15 +242,19 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                     nxs = {x for _, x in succ.get(nx, ())}
                     if len(nxs) == 1 and len(pred[nx]) == 1:
                         q = c(by[next(iter(nxs))])
-                        p0 = c(by[cur])
+                        p0, p1 = c(by[cur]), c(by[nx])
                         if anchor is not None:
+                            # pin to pin on both sides: the driver's output pin and the relay's own output pin, each
+                            # against the next point's input pin (a relay centre against a driver pin overstated the
+                            # step back by up to half the relay)
                             n2 = next(iter(nxs))
                             b2 = next(bb for bb, xx in succ[nx] if xx == n2)
                             q = anchor(by[n2], pin_.get((b2, n2))) or q
                             p0 = anchor(by[cur], pout.get(b_)) or p0
-                        if mh(c(by[nx]), q) > mh(p0, q) + back_slack_um:
+                            p1 = anchor(by[nx], pout.get(b2)) or p1
+                        if mh(p1, q) > mh(p0, q) + back_slack_um:
                             far_bad.append(dict(chain=f'{cur}->{next(iter(nxs))}', relay=nx,
-                                                back_um=round(mh(c(by[nx]), q) - mh(p0, q), 1)))
+                                                back_um=round(mh(p1, q) - mh(p0, q), 1)))
                     if nx not in seen_n:
                         seen_n.add(nx)
                         frontier.append(nx)

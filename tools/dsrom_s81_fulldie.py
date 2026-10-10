@@ -2398,22 +2398,27 @@ HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo,
 HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
 # --markov-full340 (mtp-head-1010 2026-10-10, default off): the production full340 Markov head
 # (rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv) on the head die: per bundle 4 ot_dsrom_markov_head_driver row
-# engines (one per A element, 2 x 2 under the A row) + one Markov bundle glue (start / embedding fan-out to the 4
+# engines (one per A element) in the bundle's own DRIVER FRAME (4 x 600 um stacked = 2,417 of the 2,592 um column: a
+# 2 x 2 block is 1,208.6 um wide > the 1,182.8 um frame, one column beside the bundle row 2,979 um tall; driver frames
+# flank their bundle frame in one tier row) + one Markov bundle glue (start / embedding fan-out to the 4
 # drivers, ready / head_go AND, 4 -> 1 lowest-row first-max pick, fault); per head-bundle frame the Markov stream enters
 # and the frame's best leaves through the column FIFO (one more W512 meso slot each way); die level: a FAN-8 registered
 # broadcast tree from the Markov root (dsfd_mkl: shared-lookup stream head + die argmax root, beside the MTP sequencer)
 # to the frames and a registered FAN-2 pick tree back.  Outlines are model placeholders until the routed views exist:
 # the driver must be slot-conforming (2 a 1,182.8 um frame row): rg1a's 600 x 600 slot is 2 slots tall and 1 a row.
 MARKOV_FULL340 = False
-MKDRV_WH = (583.2, 315.36)                  # driver outline (rg1a cells 31.9k um2 + 2 ROM4096 16.9k um2 -> 26.5 % util)
+MKDRV_WH = (600.0, 600.0)                   # driver outline: the routed rg1a view (mkdrv-rg1a-21471e786, 600 x 600 slot)
 MKG_WH = (172.8, 151.2)                     # Markov bundle glue (pick 2 x 83 + result 50 + pins 327 / 87 x 2 + 4 x 55)
 MKN_WH = (64.8, 64.8)                       # die tree node (bcast 327 b FAN 8 / pick 2 x 87 -> 87)
 MKL_WH = (216.0, 172.8)                     # die Markov root
 MK_SB, MK_RB, MK_DB, MK_HB = 327, 87, 55, 33  # stream word, frame result {seen,valid,key,row,bits,4 status}, driver result, A join
 
 
+MKD_FRAMES = {}                             # --markov-full340: driver frame -> (bundle frame, bundle)
+
+
 def hb_h():
-    return HB_H + (2 * (MKDRV_WH[1] + 4.32) if MARKOV_FULL340 else 0.0)
+    return HB_H
 HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
 HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)
 SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spread at 3 tracks (r8 GRT: a 52 um station
@@ -2650,12 +2655,45 @@ def frame_plan_r8():
         for r in fr:
             hb[r] = min(HB_PER_FRAME(), left)
             left -= hb[r]
-    rest = [r for r in range(ROOTS) if r not in hb]
-    rng = {r: (0, 0) for r in hb}
+    MKD_FRAMES.clear()
+    if HEAD_BUNDLES and MARKOV_FULL340:
+        hb = _mk_frame_plan()
+    rest = [r for r in range(ROOTS) if r not in hb and r not in MKD_FRAMES]
+    rng = {r: (0, 0) for r in list(hb) + list(MKD_FRAMES)}
     assert not hb or HB_PER_FRAME() >= 1
     for i, r in enumerate(rest):
         rng[r] = (math.floor(i * PAIRS / len(rest)), math.floor((i + 1) * PAIRS / len(rest)))
     return rng, hb
+
+
+def _mk_frame_plan():
+    """--markov-full340: groups of [bundle frame + one driver frame per bundle] on adjacent columns of one tier row,
+    the bundle frame central; groups spread over the 2 x TIERS rows (frame order = half, tier, column)"""
+    nb, per = HEAD_BUNDLES, HB_PER_FRAME()
+    sizes = []
+    while nb > 0:
+        sizes.append(min(per, nb))
+        nb -= sizes[-1]
+    rows, r0 = [], 0
+    for h in 'WE':
+        for t_ in range(len(TIER_COLS8)):
+            rows.append(list(range(r0, r0 + TIER_COLS8[t_])))
+            r0 += TIER_COLS8[t_]
+    used = {i: 0 for i in range(len(rows))}
+    hb = {}
+    for g_, s in enumerate(sizes):
+        pref = sorted(range(len(rows)), key=lambda i: (used[i] // (s + 1), abs(i - (g_ + 0.5) * len(rows) / len(sizes))))
+        i = next((i for i in pref if len(rows[i]) - used[i] >= s + 1), None)
+        assert i is not None, (f'--markov-full340: {HEAD_BUNDLES} bundles need {len(sizes)} groups of '
+                               f'{[s_ + 1 for s_ in sizes]} frames; the tier rows {[len(r_) for r_ in rows]} hold no '
+                               f'more: add head dies')
+        cols = rows[i][used[i]:used[i] + s + 1]
+        used[i] += s + 1
+        mid = len(cols) // 2
+        hb[cols[mid]] = s
+        for b, r in enumerate(cols[:mid] + cols[mid + 1:]):
+            MKD_FRAMES[r] = (cols[mid], b)
+    return hb
 
 
 # ---------------------------------------------------------------------------------------- occupancy / placement
@@ -2703,7 +2741,8 @@ class Placer:
         self.occ.add(it.box())
         return it
 
-    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None, cross_step=None):
+    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None, cross_step=None,
+             box=None):
         """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev` and
         (s81-die-timing 2026-10-08) within `nreach` of the next point `nxt` of the chain (r3: hop relays that found no
         spot inside a packed frame landed up to 906 um short of their load, on the far side of their driver)."""
@@ -2718,6 +2757,8 @@ class Placer:
             if prev is not None and _mh(prev, (x + w / 2, y + h / 2)) > reach:
                 continue
             if nxt is not None and _mh(nxt, (x + w / 2, y + h / 2)) > nreach:
+                continue
+            if box is not None and not (box[0] <= x + w / 2 <= box[2] and box[1] <= y + h / 2 <= box[3]):
                 continue
             r = (x, y, x + w, y + h)
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
@@ -2973,6 +3014,18 @@ def build_r8(variant=None):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
         regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + FRAME_H]))
+        if r in MKD_FRAMES:
+            # --markov-full340 driver frame: the 4 ot_dsrom_markov_head_driver of one bundle, stacked; the frame's
+            # column FIFO stays (every frame is a trunk tap) and is idle
+            rb, b = MKD_FRAMES[r]
+            frames[r].update(elems=[], bundles=0, mkd=(rb, b), last_slot=-1, ret_stages=0, tree=([], None))
+            for q in range(4):
+                insts.append(Inst(f'g{rb}_{b}d{q}', 'dsfd_mkdrv', x0 + 4.32, y0 + 4.32 + q * (MKDRV_WH[1] + 4.32),
+                                  MKDRV_WH[0] - SHAVE, MKDRV_WH[1] - SHAVE, kind='mkdrv', region=f'frame_{r}',
+                                  power_w=50426 * FLOP_CLK_W * 1.5))
+            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+                              CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+            continue
         if r in hbf:
             # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
             ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
@@ -2984,12 +3037,6 @@ def build_r8(variant=None):
                     insts.append(Inst(f'{g}mk', 'dsfd_mkg', x0 + 4.32 + HB_PITCH[0] + HB_GLUE[0] + 8.64, yb + 64.8,
                                       MKG_WH[0] - SHAVE, MKG_WH[1] - SHAVE, kind='mkg', region=f'frame_{r}',
                                       power_w=1600 * FLOP_CLK_W * 1.5))
-                    for q in range(4):
-                        i_, j_ = q % 2, q // 2
-                        insts.append(Inst(f'{g}d{q}', 'dsfd_mkdrv', x0 + 4.32 + i_ * (MKDRV_WH[0] + 4.32),
-                                          yb - 4.32 + HB_H + 4.32 + j_ * (MKDRV_WH[1] + 4.32), MKDRV_WH[0] - SHAVE,
-                                          MKDRV_WH[1] - SHAVE, kind='mkdrv', region=f'frame_{r}',
-                                          power_w=50426 * FLOP_CLK_W * 1.5))
                 insts.append(Inst(f'{g}b', rb_['name'], x0 + 4.32, yb, rb_['w'], rb_['h'], kind='hb_elem',
                                   region=f'frame_{r}', power_w=HEAD_ELEM_W['B']))
                 insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,
@@ -3422,6 +3469,10 @@ def buses_r8(m):
         _markov_die_trees(m, P, cor, bus)
     # ---------------- field, per frame
     for r, f in m['frames'].items():
+        if f.get('mkd'):                              # --markov-full340 driver frame: its idle column FIFO's clock
+            bus(f'ck_col_{r}', 'col_clock', 1, [(f'cf{r}', 'co')] + ([(f'cf{r}', 'cr')] if CFIFO_COLCK else []))
+            bus(f'rs_col_{r}', 'col_reset', 1, [(f'cf{r}', 'rs')])
+            continue
         if f.get('bundles'):
             continue
         cf = f'cf{r}'
@@ -4173,6 +4224,8 @@ def _hop_fix(m, P):
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             d0, l0 = by[eps[0][0]], by[e[0]]
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
+            if cls in ('mk_bc', 'mk_pick'):
+                reg = None                # --markov-full340 die tree: hub -> frame hops take channel stations
             if fwd:
                 fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
                 fi_ = fclk_of.get((eps[0][0], e[0], fport)) if fport else None
@@ -4195,8 +4248,7 @@ def _hop_fix(m, P):
                 # v6b: stations only in the die's channels (v6 placed them anywhere on the die: 41-54 PA overlaps,
                 # and the corridor / VCH crossing got denser); frame relays inside their frame
                 if reg is not None and not fwd:
-                    f_ = m['frames'][int(reg.split('_')[1])]
-                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + column_height())]
+                    allowed = [_frames_box(m, d0, l0)]
                 else:
                     allowed = list(cor.values())
                 # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
@@ -4508,6 +4560,18 @@ def _markov_die_trees(m, P, cor, bus):
                                note='outlines are model placeholders until the routed views exist')
 
 
+def _frames_box(m, d0, l0):
+    """the relay box of a frame bus: the driver's frame, or (--markov-full340 bundle frame -> driver frame in one
+    tier row) the span of both frames"""
+    fs = [m['frames'][int(x.region.split('_')[1])] for x in (d0, l0)
+          if x is not None and x.region and x.region.startswith('frame_')]
+    f0 = fs[0]
+    box = (f0['x'], f0['y'] - 60.0, f0['x'] + COL_W8, f0['y'] + column_height())
+    if MARKOV_FULL340 and len(fs) == 2 and fs[1] is not f0 and fs[1]['y'] == f0['y']:
+        box = (min(box[0], fs[1]['x']), box[1], max(box[2], fs[1]['x'] + COL_W8), box[3])
+    return box
+
+
 def _col_relays(m, P):
     """common-clock column nets whose driver -> load centre distance exceeds BANK_RULE_UM get relay registers
     (one cycle each) at equal spacing on an L path, inside the frame.  Records per frame the relays on the worst x
@@ -4530,6 +4594,9 @@ def _col_relays(m, P):
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
         fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
+        if MARKOV_FULL340:
+            fr = _frames_box(m, d0, max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)),
+                                        default=None))
         if RELAY_PIN_PATH and HOP_M0 is not None:
             # mtp-head-1010: pin anchors (generated faces), centres only for real macros / relays
             def anc(it, port):
@@ -4559,8 +4626,12 @@ def _col_relays(m, P):
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
             if RELAY_PIN_PATH:
                 # every relay advances toward the load: never farther from it than the previous chain point (+ the
-                # 20 um lint slack), so no relay stands on the far side of its driver
-                NR = dict(nxt=b, nreach=min(NR.get('nreach', 1e9), _mh(cur, b) + 20.0))
+                # 20 um lint slack), so no relay stands on the far side of its driver; and monotone on BOTH axes (centre
+                # inside the previous point -> load box + slack): a Manhattan-only advance let y_es_508_1 step 96 um
+                # west but 60 um north past both neighbours, which flips its output face away from the load
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', 1e9), _mh(cur, b) + 20.0),
+                          box=(min(cur[0], b[0]) - 20.0, min(cur[1], b[1]) - 20.0,
+                               max(cur[0], b[0]) + 20.0, max(cur[1], b[1]) + 20.0))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
             if pl is None and RELAY_PIN_PATH:
                 # wider in the frame, then (head / PQ dies) beside it, both reaches and the advance kept
@@ -4569,20 +4640,41 @@ def _col_relays(m, P):
                                 rows=rows_, **NR)
                     if pl:
                         break
-                if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
-                    pl = _tt_place(P, cx, cy, w_, h_, cur, BANK_RULE_UM + 50.0, b, NR['nreach'], True)
+                if pl is None:
+                    # beside the frame: the same advancing, monotone search on the whole die (the TT-tier _tt_place
+                    # below knows neither constraint)
+                    pl = P.near(cx, cy, w_, h_, [(0.0, 0.0, DIE[0], DIE[1])], prev=cur, horiz=True,
+                                reach=BANK_RULE_UM + 40.0, span=800.0, rows=80, **NR)
             if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
                 if RELAY_PIN_PATH:
-                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', 1e9), _mh(cur, b) + 20.0))
+                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', 1e9), _mh(cur, b) + 20.0), box=NR['box'])
                 pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
                             rows=40, **nr_tt)
-                if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
+                if pl is None and (PQ_PLACE or FRAME_OUT_RELAY) and not RELAY_PIN_PATH:
                     pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, nr_tt.get('nxt'), nr_tt.get('nreach'), True)
                 if pl:
                     tt_col.append(f'y_{bid}_{k}')
+            if pl is None and RELAY_PIN_PATH:
+                # mtp-head-1010: before the unbounded fallback (which put y_rt_*_2b_4 180 um east of both neighbours),
+                # a wide advancing search: the frame, then anywhere on the die, SS reach from the previous point and
+                # no farther from the load than it
+                for alw, span_, rows_ in (([fr], 1600.0, 160), ([(0.0, 0.0, DIE[0], DIE[1])], 1600.0, 160)):
+                    pl = P.near(cx, cy, w_, h_, alw, prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=span_,
+                                rows=rows_, **NR)
+                    if pl:
+                        break
+                if pl is None:
+                    # last bounded tier: the advance and SS reach kept, the axis box dropped (listed)
+                    pl = P.near(cx, cy, w_, h_, [(0.0, 0.0, DIE[0], DIE[1])], prev=cur, horiz=True,
+                                reach=BANK_RULE_UM + 40.0, span=1600.0, rows=160,
+                                **{k_: v for k_, v in NR.items() if k_ != 'box'})
+                    if pl:
+                        m.setdefault('pin_path_unboxed', []).append(f'y_{bid}_{k}')
+                if pl is None:
+                    m.setdefault('pin_path_unbounded', []).append(f'y_{bid}_{k}')
             if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             assert pl, (bid, k)
@@ -4615,7 +4707,7 @@ def _col_relays(m, P):
                 B[i] = (bid, cls, bits, eps + [(nm, 'ck' if cls == 'col_clock' else 'rs') for nm in ck_add[r]])
     # per frame: bank stages (2 if any q element) + the worst relay count on an x path and on a leaf -> root path
     for r, f in m['frames'].items():
-        if f.get('bundles'):
+        if f.get('bundles') or f.get('mkd'):
             continue
         nodes, root = f['tree']
         ids = {n_[0]: j for j, n_ in enumerate(nodes)}
@@ -4639,6 +4731,9 @@ def _col_relays(m, P):
     m['col_relays'] = dict(nets=len(added), relays=sum(added.values()), tt_reach_relays=sorted(tt_col),
                            by_class={c: sum(v for k_, v in added.items() if k_.startswith(c)) for c in
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
+    if RELAY_PIN_PATH:
+        m['col_relays'].update(pin_path_unboxed=len(m.get('pin_path_unboxed', [])),
+                               pin_path_unbounded=sorted(m.get('pin_path_unbounded', [])))
 
 
 def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
