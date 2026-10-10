@@ -10,8 +10,8 @@
   "rtl/hbm_accel/generic/collective/run_coll_regress.sh": "705bff450593d99756ba3a0dcfd134064fa1a5a5f0e7ffa56a5a351407677706"
  },
  "price": {
-  "cycles": 3991.2,
-  "how": "tools/hgi_sim/ds_native_timing.py NativeCost: perf.coll_cycles per w19 op shared over its records (= e2e_calibration sim_cost 3991.2 on ds_L0)"
+  "cycles": 4117.4,
+  "how": "ds_L0 NativeCost per record (e2e sim_cost) for the 13 bench records"
  },
  "runs": {
   "run_base": {
@@ -62,11 +62,11 @@
  },
  "baseline": {
   "cycles": 9752,
-  "ratio": 2.443
+  "ratio": 2.368
  },
  "pipelined": {
   "cycles": 2950,
-  "ratio": 0.739
+  "ratio": 0.716
  },
  "mutants": {
   "MUT_PIPE=1 tag ignored": "FAIL",
@@ -80,5 +80,12 @@
   "PIPE pipelines ALL_GATHER only; reductions / ARGMAX_MERGE / ROW_GATHER stay single and wait for an empty pipe",
   "issue rate is now the record setup (S_DIV 21 + S_TAB G+1 edges ~124 cycles a sliced gather)",
   "PIPE adds EQ x PPK x 545 b parking (1.1 Mb) + 4 slice tables: physical closure of the PIPE=1 coll element pending"
- ]
+ ],
+ "price_correction": {
+  "previous": {
+   "cycles": 3991.2,
+   "how": "tools/hgi_sim/ds_native_timing.py NativeCost: perf.coll_cycles per w19 op shared over its records (= e2e_calibration sim_cost 3991.2 on ds_L0)"
+  },
+  "reason": "the bench sequence has 13 gathers (8 expert_intermediate records: s0..s6 plus one more 2,304-word gather) while the ds_L0 calibration has 12; price of the 13 = 3,991.2 + 126.2"
+ }
 }
