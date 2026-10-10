@@ -23,7 +23,10 @@ lab=$1; master=$2; topsrc=$3; shift 3
 [ "${CTSA:-}" = keep_ndr ] && CTSA= || CTSA=${CTSA:--sink_clustering_enable -repair_clock_nets -apply_ndr none}
 W=$OUT/$lab; mkdir -p $W; cd $SRC
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
-python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }
+# PORTS_DIR ([cg-hc] 2026-10-10): a committed pin plan (<dir>/<master>/{ports.json,io_place.tcl}) instead of the die
+# generator's, for a reshaped block ahead of its die net build (hfd_hc R25GQ); unset = unchanged
+if [ -n "${PORTS_DIR:-}" ]; then mkdir -p $W/ports && cp -r $SRC/$PORTS_DIR/$master $W/ports/ && echo "ports from $PORTS_DIR" > $W/ports.log
+else python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }; fi
 read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.json'));print(d['w_um'],d['h_um'])")
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 [ -n "${IOAPP:-}" ] && cat $SRC/$IOAPP >> $SRC/.views/$lab/io_place.tcl   # extra pins not yet in the die view (hfd_su qid strap)

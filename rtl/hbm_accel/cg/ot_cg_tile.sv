@@ -21,7 +21,12 @@ module ot_cg_tile #(
     parameter integer MUT_LATE = 0,
     // RSTEN 0 (redesign-hbm 2026-10-10): no !rst_n term in the enable (the async reset already forces wq = 1); for gates whose
     // reset comes from far away (hub quarter: rst -> every group ICG ENA was a 1.3-3.6 ns gating-check path)
-    parameter integer RSTEN = 1
+    parameter integer RSTEN = 1,
+    // ENREG 1 ([cg-hc] 2026-10-10): the ICG enable is ONE register, en_r <= the next value of (wq | cnt != 0), so the
+    // ICG's ENA is driven by a flop the placer puts beside the gate (hbm_hc_quarter rootcg-40ec7b434: wq / cnt sat 1 mm
+    // from the group ICG, ENA wire 2.3 ns, TT -3,186 ps).  Same value every cycle (0 cycles); reset 1 like wq / cnt.
+    // MUT_LATE > 0 (bench mutant) keeps the combinational enable.
+    parameter integer ENREG = 0
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -44,7 +49,12 @@ module ot_cg_tile #(
             cnt <= w_eff ? HOLD[CW-1:0] : ((cnt != 0) ? cnt - 1'b1 : cnt);
         end
     assign w_eff = (MUT_LATE == 0) ? wq : wl[MUT_LATE];
-    wire en = w_eff | (cnt != 0) | ((RSTEN != 0) ? !rst_n : 1'b0);
+    wire en_c = w_eff | (cnt != 0);
+    reg  en_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) en_r <= 1'b1;
+        else        en_r <= cgi | wq | (cnt > 1);   // = wq' | (cnt' != 0): cnt' = HOLD (wq) or cnt - 1 (cnt != 0)
+    wire en = (((ENREG != 0) && (MUT_LATE == 0) && (HOLD >= 2)) ? en_r : en_c) | ((RSTEN != 0) ? !rst_n : 1'b0);
     assign cgo = wq;
     ot_hdc_cg u_cg (.clk(clk), .en(en), .gclk(gclk));
 endmodule
