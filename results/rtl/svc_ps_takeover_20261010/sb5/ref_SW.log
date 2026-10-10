@@ -1,0 +1,11 @@
+ERR X on SM 0 line at 66048000
+ERR X on SM 1 line at 66048000
+ERR X on SM 2 line at 66048000
+ERR X on SM 3 line at 66048000
+ERR X on SM 4 line at 66048000
+ERR X on SM 5 line at 66048000
+ERR X on SM 6 line at 66048000
+ERR X on SM 7 line at 66048000
+SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=0 ps_rows=0 ps_kd=0 errors=8
+FATAL: physical/hbm_accel_die_views/svc/tb/tb_svc_ps_body.svh:301: SVC_BENCH FAIL
+       Time: 961024000  Scope: tb_svc_ps_SW

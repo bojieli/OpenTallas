@@ -1,0 +1,6 @@
+ERR timeout lines 207/208 kv 16/16 ik 16/16 e 48
+ERR PS streams 12 rows 17018/17018 kd 12 busy 0
+SVC_BENCH lines=207 kv=16 ik=16 e=48 ps_streams=12 ps_rows=17018 ps_kd=12 errors=1
+[1228872192000] %Fatal: tb_svc_ps_body.svh:312: Assertion failed in tb_svc_ps_SW: SVC_BENCH FAIL
+%Error: physical/hbm_accel_die_views/svc/tb/tb_svc_ps_body.svh:312: Verilog $stop
+Aborting...
