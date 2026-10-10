@@ -1,0 +1,64 @@
+{
+  "source_commit": "e4c8a3f8f",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv": "28b262584796ca3ce472cf60ff9d993eae216f24d911daf5ed0d08b97b9b04c3",
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_selected_bridge.sv": "7e684a080d95679232d248e0074fab86fea0da3026edd19c1f0c4f7faf8204fc",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_packed.sv": "f39702ac38e4f7b8dabd5ae05b022eb0879b9d04a844810eaca24ae676896f7e",
+    "tools/hgi_adapters/att_packed_bench.py": "c86d368dd8a1337ffc458496b979d0b958e626dd5bdd51b3225cde0c94bc527f",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+  },
+  "parameters": {
+    "H": 1,
+    "D": 64,
+    "TD": 64,
+    "NL": 2,
+    "BLK": 64,
+    "PACKED_ROWS": 1,
+    "SELECTED_VM": 1,
+    "SELECTED_C_ONLY": 0
+  },
+  "records": [
+    "QK",
+    "PV"
+  ],
+  "rows": 130,
+  "engine_jobs_per_record": 3,
+  "exact_output_words": 194,
+  "cycles": {
+    "QK": 2291,
+    "PV": 2712
+  },
+  "golden": "hgi_sim.lib att_qk/att_pv originalchunk8/pairwise; exactBF16-valuedFP32 Q/P",
+  "payload": "one FP8 UE8M0 window row;129FP4 originalE4M3scale0/1=0x36 rows, values5.25/2.625 per32group",
+  "consumer_peer": "sparselogical fulladdress packet model, finite issue credit ledgers are actualRTL; this is notactual8MiB SRAM simulation",
+  "actual_memory_composition": "native_burst ccac3e341 actual16macroquad exact4240bitD512row plus112zero bits,17commits and8credit packetread; separate minimummechanism",
+  "producer_composition": "0514f84d1 actualFP4QDQ sidecar311blocks;1d05a1d7b actualFP8 actquant sidecar311blocks; unchangedgolden rounding",
+  "addresses": {
+    "C_byte": 0,
+    "B_byte": 4194304,
+    "Q_word": 1167488,
+    "P_word": 1172480,
+    "SCORE_word": 1168000,
+    "PV_word": 1174848
+  },
+  "negative_gates": [
+    "nonzero rowtailpadding",
+    "wrongresponseepoch/tag",
+    "UE response"
+  ],
+  "minimum_consumer_PB_index": "H1 TD64 requires6-bit row position; parameterizedPJ preservesexisting5-bit H16/H4 cases",
+  "compile_allocated_MB": 1328.434,
+  "simulation_allocated_MB": 10,
+  "raw_D512_row_bytes": 544,
+  "default_off": true,
+  "adopted": false,
+  "model_rate_credit": 0,
+  "remaining": [
+    "actual compiler rawproducer/STORE/GATHER binding",
+    "production H1D512 transaction/phase measurement",
+    "physical engine/memory/station abstracts and contextualclosure",
+    "fullproduction checkpoint distribution receipt"
+  ],
+  "scope": "Minimum actual ATT engine+selectedreader+rowassembler+crossjobmerge; noH16 throughput or wholeunitphysicalclaim"
+}

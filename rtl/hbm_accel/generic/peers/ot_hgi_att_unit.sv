@@ -21,6 +21,12 @@
 //     one node of the tree; job j: at level l, bit l of j set -> add(stored[l], cur) and climb, clear -> store and stop;
 //     the last job climbs every level, a clear bit passing cur up unchanged = cur + +0); O = the root, h < lanes, d < hd.
 //   * an element not on the E4M3 grid (|x| > 448, finer than its binade's quantum, or NaN / inf) faults (fail closed).
+// PACKED_ROWS=1 changes B/C fmt3 to opaque original producer groups: D/32 x265bits,
+// padded with zero bits to whole sectors. Each group's own format bit selects
+// FP8+UE8M0 or FP4+two E4M3 scales. Payload is never numerically converted here.
+// The original engine dequantizer applies the original producer rounding.
+// This opt-in descriptor contract needs a producer/raw STORE/GATHER binding;
+// its minimum arithmetic/transport proofs do not qualify the whole H16 unit.
 // Ports: the record (header, A, B, C, O, n_B, n_C, POS1; SUT unused), ONE VM packet client (q / p reads, score and
 // output writes), ONE HBM read lane {sector address, tag} -> {tag, 256 b} with NOUT outstanding, any response order.
 // ---------------------------------------------------------------------------------------------------------------------
