@@ -45,6 +45,6 @@ def local_transport_model():
         tracks_needed_max=512+256+20,
         channel_capacity_tracks=int(77.76/.096),
         collar_columns=8,
-        placement_obligations=['Inventory every write flop destination across all banks; reject unexpected shared destinations until modeled', 'Use actual transformed macro pin coordinates for R0/MY/MX/R180', 'Anchor1120 write and1120 transport flops before GPL; release for DPL legalization', 'No netlist or clock/pin constraint change'])
+        placement_obligations=['Inventory every write flop destination across all banks; reject unexpected shared destinations until modeled', 'Use actual transformed macro pin coordinates for R0/MY/MX/R180', 'Anchor1120 write and1120 transport flops before GPL; project blocked midpoints to real free channels with 1um macro clearance; release for DPL legalization', 'No netlist or clock/pin constraint change'])
     assert r['tracks_needed_max'] <= r['channel_capacity_tracks']
     return r

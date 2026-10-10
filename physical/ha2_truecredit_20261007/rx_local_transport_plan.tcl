@@ -6,6 +6,7 @@ set cc [$cb getCoreArea]
 array set wd_sinks {}
 array set caps {}
 set raws {}
+set macro_rects {}
 foreach inst [$cb getInsts] {
  set n [$inst getName];regsub -all {\\} $n {} plain
  if {[regexp {^(.*g_lane\[[0-9]+\])\.g_ram\[([0-9]+)\]\.cap_q\[([0-9]+)\]} $plain -> lane bank bit]} {
@@ -16,6 +17,8 @@ foreach inst [$cb getInsts] {
  }
  # Each actual SRAM input is inventoried, including its transformed face.
  if {![string match ot_sram_1r1w* [[$inst getMaster] getName]]} continue
+ set mb [$inst getBBox]
+ lappend macro_rects [list [expr {double([$mb xMin])/$cd}] [expr {double([$mb yMin])/$cd}] [expr {double([$mb xMax])/$cd}] [expr {double([$mb yMax])/$cd}]]
  if {[$inst getOrient] ni {R0 MY MX R180}} {error "Unsupported transport macro orientation [$inst getOrient]"}
  foreach it [$inst getITerms] {
   set pn [[$it getMTerm] getName]
@@ -80,6 +83,29 @@ foreach rr $raws {
  set width [expr {double([[$ff getMaster] getWidth])/$cd}]
  set x [expr {max(double([$cc xMin])/$cd,min($x,double([$cc xMax])/$cd-$width))}]
  set y [expr {max(double([$cc yMin])/$cd,min($y,double([$cc yMax])/$cd-.27))}]
+ # Project the desired midpoint to the nearest real free channel. A firm
+ # seed inside a macro would only move the long transport to legalization.
+ set candidates [list [list $x $y]]
+ foreach rect $macro_rects {
+  lassign $rect x0 y0 x1 y1
+  lappend candidates [list [expr {$x0-1.08-$width}] $y] [list [expr {$x1+1.08}] $y] \
+    [list $x [expr {$y0-1.08-.27}]] [list $x [expr {$y1+1.08}]]
+ }
+ set best "";set cost 1e99
+ foreach pos $candidates {
+  lassign $pos px py;set py [expr {floor($py/.27)*.27}]
+  if {$px<double([$cc xMin])/$cd || $px+$width>double([$cc xMax])/$cd || $py<double([$cc yMin])/$cd || $py+.27>double([$cc yMax])/$cd} continue
+  set blocked 0
+  foreach rect $macro_rects {
+   lassign $rect x0 y0 x1 y1
+   if {$px+$width>$x0-1.0 && $px<$x1+1.0 && $py+.27>$y0-1.0 && $py<$y1+1.0} {set blocked 1;break}
+  }
+  if {$blocked} continue
+  set d [expr {abs($px-$x)+abs($py-$y)}]
+  if {$d<$cost} {set cost $d;set best [list $px $py]}
+ }
+ if {$best eq ""} {error "No legal transport channel for [$ff getName]"}
+ lassign $best x y
  $ff setLocation [expr {round($x*$cd)}] [expr {round($y*$cd)}];$ff setPlacementStatus FIRM
  lappend anchored [$ff getName]
 }
