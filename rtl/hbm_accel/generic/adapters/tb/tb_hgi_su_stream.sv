@@ -36,7 +36,11 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
 `endif
     wire su_rdy, su_done, su_fault, su_halt; wire [522:0] ams; wire am_rdy; wire [2:0] am_ret; wire nan_flag;
     wire [337:0] sq, aq; wire [273:0] sr, ar, tr; reg [337:0] tq = 0;
-    ot_hgi_su_unit #(.N(32), .M(8), .LV(7)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(su_v), .rec_rdy(su_rdy),
+    ot_hgi_su_unit #(
+`ifdef NO_PAYLOAD_RST
+    .PAYLOAD_RESET(0),
+`endif
+.N(32), .M(8), .LV(7)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(su_v), .rec_rdy(su_rdy),
         .rec_hdr(sur[127:0]), .rec_sut(sur[383:128]), .rec_a(sur[639:384]), .rec_b(sur[895:640]), .rec_c(sur[1151:896]),
         .rec_d(sur[1407:1152]), .rec_o(sur[1663:1408]), .rec_r(sur[1919:1664]), .rec_i(sur[2175:1920]),
         .rec_n_a(sur[2196:2176]), .rec_done(su_done), .rec_fault(su_fault), .halted(su_halt), .vmq(sq), .vmr(sr),

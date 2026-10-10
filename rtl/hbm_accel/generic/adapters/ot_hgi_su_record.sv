@@ -31,6 +31,7 @@ module ot_hgi_su_record #(
     parameter integer MUT_ISTRIDE = 0,     // mutant: Xsi = istride (no 0 -> 1, no ibcast)
     parameter integer MUT_EARLY = 0,       // mutant: retire on the unit's accept, not on its completion
     parameter integer GLU = 0,
+    parameter integer PAYLOAD_RESET = 1, // opt-in0: valid-qualified record/op payloads never drive the reset tree
     parameter integer STREAM_OK = 0,       // 1 (the D1 SU unit): A may be STREAM (stream 0, SM -> SU), O may be STREAM
                                            //    (SU -> ARGMAX); reported on op_strm with the op             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
@@ -150,21 +151,36 @@ module ot_hgi_su_record #(
         2'd0, 2'd0, 2'd0, 2'd0,                                                // dsrc, csrc, bsrc, asrc
         na_q[15:0], nout[15:0]};
 
+    // With reset payload disabled, only raw_v/dec_v/exec make these values observable.
+    // The landing bank still captures the accepted record at its first edge; no release bubble.
+    generate if (!PAYLOAD_RESET) begin : unreset_payload
+        always @(posedge clk) begin
+            hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= GLU ? rec_c : rec_b; c_q <= GLU ? rec_b : rec_c;
+            d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
+            if (raw_v) w_q <= w_dec;
+        end
+    end endgenerate
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             raw_v <= 1'b0; dec_v <= 1'b0; exec <= 1'b0; halt_q <= 1'b0; el_seen <= 1'b0; exec_ph <= 2'd0;
-            rec_done <= 1'b0; rec_fault <= 1'b0; nop_q <= 1'b0; bad_q <= 1'b0; w_q <= 670'd0;
-            hdr_q <= 128'd0; sut_q <= 256'd0; a_q <= 256'd0; b_q <= 256'd0; c_q <= 256'd0; d_q <= 256'd0;
-            o_q <= 256'd0; r_q <= 256'd0; i_q <= 256'd0; na_q <= 21'd0;
+            rec_done <= 1'b0; rec_fault <= 1'b0; nop_q <= 1'b0; bad_q <= 1'b0;
+            if (PAYLOAD_RESET) begin
+                w_q <= 670'd0;
+                hdr_q <= 128'd0; sut_q <= 256'd0; a_q <= 256'd0; b_q <= 256'd0; c_q <= 256'd0; d_q <= 256'd0;
+                o_q <= 256'd0; r_q <= 256'd0; i_q <= 256'd0; na_q <= 21'd0;
+            end
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
             // pin flops: the record bus lands unconditionally (no enable fanout from the rec_v pin); raw_v marks the
             // accepted record, decoded at the next edge
+            if (PAYLOAD_RESET) begin
             hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= GLU ? rec_c : rec_b; c_q <= GLU ? rec_b : rec_c;
             d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
+            end
             if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (raw_v) begin                                  // E1: the decoded word
-                raw_v <= 1'b0; dec_v <= 1'b1; w_q <= w_dec; nop_q <= nop; bad_q <= bad;
+                raw_v <= 1'b0; dec_v <= 1'b1; if (PAYLOAD_RESET) w_q <= w_dec; nop_q <= nop; bad_q <= bad;
                 op_strm <= {po && o_q[1:0] == 2'd2, a_q[1:0] == 2'd2};
             end
             // a refusal or an empty op retires in order: only once the op ahead of it has retired
