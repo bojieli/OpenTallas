@@ -20,12 +20,13 @@
 // (closed by hgi-takeover: every unit has a die record bus; the real slots read their payload from it) DIE GAP was: the ux_* ports of ot_hgi_cp_die carried valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0, REAL_ATT = 0;
     parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
+    parameter integer ATT_H = 16, ATT_D = 512, ATT_TD = 64, ATT_NL = 4, ATT_PIPE = 0, ATT_MUT_ROW = 0;   // REAL_ATT: r25 engine geometry
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
@@ -103,11 +104,31 @@ module tb_hgi_e2e;
     end
     // ---------------------------------------------------------------- unit slots
     localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
-                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0);
+                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0) | (REAL_ATT ? 16'h0020 : 16'h0);
     localparam [15:0] REAL_UX = REALM & ~16'h0250;            // real units on ux_* ports
     wire [15:0] r_rdy, r_done, r_fault;                       // their handshakes
     assign r_rdy[1:0] = 2'b0; assign r_done[1:0] = 2'b0; assign r_fault[1:0] = 2'b0;
-    assign r_rdy[7:4] = 4'b0; assign r_done[7:4] = 4'b0; assign r_fault[7:4] = 4'b0;
+    assign r_rdy[4] = 1'b0; assign r_done[4] = 1'b0; assign r_fault[4] = 1'b0;
+    assign r_rdy[7:6] = 2'b0; assign r_done[7:6] = 2'b0; assign r_fault[7:6] = 2'b0;
+    // ATT (unit 5, hgi-1010/g): the die body ot_hgi_att_unit (r25 engine geometry ATT_H / ATT_NL / ATT_TD, head_dim ATT_D)
+    // on the die att record bus, its VM packet client on the VM model, its HBM read lane on an in-order KLAT model
+`ifdef E2E_ATT
+    generate if (REAL_ATT) begin : g_att
+        wire [337:0] vq; wire [273:0] vr; wire hq_v, hq_rdy, hr_v; wire [34:0] hq_addr; wire [7:0] hq_tag, hr_tag; wire [255:0] hr_data;
+        ot_hgi_att_unit #(.H(ATT_H), .D(ATT_D), .TD(ATT_TD), .NL(ATT_NL), .PIPE(ATT_PIPE), .MUT_ROW(ATT_MUT_ROW)) u_a (.clk(clk), .rst_n(rst_n),
+            .rec_v(att_rec[0]), .rec_rdy(r_rdy[5]), .rec_hdr(att_rec[128:1]), .rec_a(att_rec[640:385]), .rec_b(att_rec[896:641]),
+            .rec_c(att_rec[1152:897]), .rec_o(att_rec[1408:1153]), .rec_n_b(att_rec[1429:1409]), .rec_n_c(att_rec[1450:1430]),
+            .rec_pos1(att_rec[1471:1451]), .rec_done(r_done[5]), .rec_fault(r_fault[5]), .halted(), .vmq(vq), .vmr(vr),
+            .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
+        hgi_e2e_vmc #(.UNIT(5), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+        hgi_e2e_att_hbm #(.LAT(KLAT)) u_hb (.clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .req_sec(hq_addr),
+            .req_tag(hq_tag), .rsp_v(hr_v), .rsp_tag(hr_tag), .rsp_d(hr_data));
+    end else begin : g_att_stub
+        assign r_rdy[5] = 1'b0; assign r_done[5] = 1'b0; assign r_fault[5] = 1'b0;
+    end endgenerate
+`else
+    assign r_rdy[5] = 1'b0; assign r_done[5] = 1'b0; assign r_fault[5] = 1'b0;
+`endif
     assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
@@ -216,7 +237,7 @@ module tb_hgi_e2e;
     reg q_inflight;                     // unit-4 record went to the real quant unit
     integer errs = 0, real_recs = 0, real_bad = 0, faults = 0, qs_busy = 0, qs_cnt = 0, qs_k = -1;
     function automatic integer is_real(input integer u, input integer quant_now);
-        is_real = (u == 8 && REAL_DMA != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
+        is_real = (u == 8 && REAL_DMA != 0) || (u == 5 && REAL_ATT != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
     endfunction
     task automatic kpush(input integer u, input integer k); begin kq[u][kt[u] % 8] = k; kt[u] = kt[u] + 1; end endtask
     function automatic integer kpop(input integer u);
