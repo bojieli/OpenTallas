@@ -5,7 +5,7 @@
 // directly). DSTAGE=1 (rb2 SS -383..-419: SECDED d -> native/UE verdict -> contribution / accum enables; adder err ->
 // sum_q enables) adds IDEC2 (decoded beat + UE / native / CE flags registered, consumed next cycle) and ADDS2 (sum
 // captured on add_v, err judged next cycle): +2 cycles per beat. Default 0: the original logic.
-module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0)(
+module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0, ROOTPIPE=0)(
  input wire clk,rst_n,start_v, output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire in_v,output wire in_r,input wire [73:0] in_identity,
@@ -20,9 +20,9 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  assign out_word=0;assign out_last=0;assign out_secded=0;
  assign done=0;assign fault=0;assign corrected=0;
  end else begin: enabled
- localparam [3:0] IDLE=0,RECEIVE=1,IDEC=2,AREQ=3,AWAIT=4,ADEC=5,
- ARESULT=6,ISSUE=7,ADDS=8,ENC1=9,ENC2=10,WRITE=11,ADVANCE=12,HOLD=13,IDEC2=14,ADDS2=15;
- reg [3:0] state,state_copy;reg [1:0] expert_index,expert_copy;
+ localparam [4:0] IDLE=0,RECEIVE=1,IDEC=2,AREQ=3,AWAIT=4,ADEC=5,
+ ARESULT=6,ISSUE=7,ADDS=8,ENC1=9,ENC2=10,WRITE=11,ADVANCE=12,HOLD=13,IDEC2=14,ADDS2=15,ARESULT2=16;
+ reg [4:0] state,state_copy;reg [1:0] expert_index,expert_copy;
  reg [6:0] word_index,word_copy;reg [73:0] identity,identity_copy;
  reg [26:0] ids,ids_copy;reg draining,draining_copy,fault_q,done_q,corrected_q;
  reg [511:0] contribution,accum,sum_q,di_q;reg ue_q,nb_q,ce_q,err_q;
@@ -59,11 +59,14 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  .w_addr_in(word_index),.wd_in(mw[256*mi+:256]),.w_mask_in({256{1'b1}}),
  .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(16'd0));
  end
+ reg [511:0] acc_stage;reg acc_ue,acc_ce;
+ // Capture corrected SRAM data separately from the verdict and accumulator enable.
+ always @(posedge clk) begin acc_stage<=acc_data;acc_ue<=|aue;acc_ce<=|ace;end
  reg input_native_bad;integer lane;
  always @*begin input_native_bad=0;
  for(lane=0;lane<16;lane=lane+1)if(input_data[32*lane+:16]!=0)input_native_bad=1;
  end
- task automatic ns(input [3:0] n);begin state<=n;state_copy<=n;end endtask
+ task automatic ns(input [4:0] n);begin state<=n;state_copy<=n;end endtask
  task automatic sw(input [6:0] n);begin word_index<=n;word_copy<=n;end endtask
  always @(posedge clk or negedge rst_n)begin
  if(!rst_n)begin state<=IDLE;state_copy<=IDLE;expert_index<=0;expert_copy<=0;
@@ -80,17 +83,21 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  if(in_identity!=identity||in_expert!=ids[9*expert_index+:9]||in_shared||in_word!=word_index||
  in_row_last!=(word_index==79)||in_transaction_last!=((expert_index==2)&&(word_index==79)))fault_q<=1;
  ns(IDEC);end
- IDEC:if(&iov&&DSTAGE)begin di_q<=input_data;ue_q<=|iue;nb_q<=input_native_bad;ce_q<=|ice;ns(IDEC2);end
+ IDEC:if(DSTAGE)begin if(&iov)begin di_q<=input_data;ue_q<=|iue;nb_q<=input_native_bad;ce_q<=|ice;ns(IDEC2);end end
  else if(&iov)begin if((|iue)||input_native_bad)fault_q<=1;
  else begin contribution<=input_data;if(|ice)corrected_q<=1;
  if(expert_index==0)begin accum<=0;if(MUT_COPY_FIRST)begin sum_q<=input_data;ns(ENC1);end else ns(ISSUE);end
  else ns(AREQ);end end
  AREQ:ns(AWAIT);AWAIT:ns(ADEC);ADEC:ns(ARESULT);
- ARESULT:if(&aov)begin if(|aue)fault_q<=1;
+ ARESULT:if(ROOTPIPE)begin if(&aov)ns(ARESULT2);end
+ else if(&aov)begin if(|aue)fault_q<=1;
  else begin if(|ace)corrected_q<=1;if(draining)begin sum_q<=acc_data;ns(ENC1);end
  else begin accum<=acc_data;ns(ISSUE);end end end
+ ARESULT2:if(acc_ue)fault_q<=1;
+ else begin if(acc_ce)corrected_q<=1;if(draining)begin sum_q<=acc_stage;ns(ENC1);end
+ else begin accum<=acc_stage;ns(ISSUE);end end
  ISSUE:ns(ADDS);
- ADDS:if(&add_v&&DSTAGE)begin sum_q<=add_data;err_q<=|add_err;ns(ADDS2);end
+ ADDS:if(DSTAGE)begin if(&add_v)begin sum_q<=add_data;err_q<=|add_err;ns(ADDS2);end end
  else if(&add_v)begin if(|add_err)fault_q<=1;else begin sum_q<=add_data;ns(ENC1);end end
  ADDS2:if(err_q)fault_q<=1;else ns(ENC1);
  IDEC2:if(ue_q||nb_q)fault_q<=1;

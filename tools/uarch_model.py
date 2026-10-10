@@ -121,3 +121,9 @@ def qwen_ctlm_deep_queue_model():
 def hbm_native_hgi_index_join_model():
     from hbm_indexer_r25i_model import hbm_native_hgi_index_join_model as impl
     return impl()
+
+
+def dsrom_mtp_p2_rootpipe_model():
+    """Static decode separation and pin-local single-flight P2 output sizing."""
+    from dsrom_mtp_p2_transport_model import rootpipe_model
+    return rootpipe_model()

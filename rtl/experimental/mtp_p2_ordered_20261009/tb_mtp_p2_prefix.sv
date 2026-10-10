@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_mtp_p2_prefix;
- parameter integer MUT_COPY_FIRST=0,ERROR_MODE=0,DSTAGE=0;
+ parameter integer MUT_COPY_FIRST=0,ERROR_MODE=0,DSTAGE=0,ROOTPIPE=0;
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0,start_v=0,iv=0,abort=0;wire sr,ir,ov,done,fault,corrected;
  reg [73:0] identity=74'h12345678;reg [26:0] ids={9'd127,9'd65,9'd3};
@@ -10,7 +10,7 @@ module tb_mtp_p2_prefix;
  wire [73:0] oid;wire [6:0] ow;wire olast;reg ordy=0;
  reg [31:0] inputs[0:3839],gold[0:1279];
  integer cycles=0,received=0,e,w,l,s;
- ot_mtp_p2_prefix #(.ENABLE(1),.MUT_COPY_FIRST(MUT_COPY_FIRST),.DSTAGE(DSTAGE)) dut(
+ ot_mtp_p2_prefix #(.ENABLE(1),.MUT_COPY_FIRST(MUT_COPY_FIRST),.DSTAGE(DSTAGE),.ROOTPIPE(ROOTPIPE)) dut(
  .clk(clk),.rst_n(rst_n),.start_v(start_v),.start_r(sr),.start_identity(identity),.start_ids(ids),
  .in_v(iv),.in_r(ir),.in_identity(identity),.in_expert(expert),.in_shared(1'b0),
  .in_row_last(last),.in_transaction_last(transaction_last),.in_word(word),.in_secded(incoming),

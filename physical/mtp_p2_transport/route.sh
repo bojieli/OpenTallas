@@ -32,7 +32,8 @@ if [ "${P2_PATH:-0}" = 1 ]; then
  EXTRA=(--source $D/ot_mtp_p2_ordered_rows.sv --source $D/ot_mtp_p2_prefix.sv --source $D/ot_mtp_p2_prefix_native.sv
         --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv --source rtl/common/ot_sc_pfifo.sv)
  # (ot_sc_pfifo: REGB=1 pin FIFOs, mtp-lead p2fix 2026-10-09; unused when REGB=0)
- MPT=/src/physical/mtp_p2_transport/macro_place_grid.tcl; DW=${P2_W:-480}; DH=${P2_H:-400}; PARAMS=(--param ENABLE=1)
+ MPT=/src/physical/mtp_p2_transport/macro_place_grid.tcl; DW=${P2_W:-480}; DH=${P2_H:-400}; PARAMS=(--param ENABLE=1 --param ROOTPIPE=${P2_ROOTPIPE:-0})
+ if [ "${P2_ROOTPIPE:-0}" = 1 ]; then EXTRA+=(--step-tcl POST_IO_PLACEMENT=physical/mtp_p2_transport/rootpipe_pin_place.tcl); fi
 fi
 args=(--source $P2SRC "${EXTRA[@]}"
  --source rtl/common/ot_secded.sv --source $MV/${M}_bb.v
