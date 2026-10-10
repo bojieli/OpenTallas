@@ -63,6 +63,12 @@ module ot_s81_bf_native #(
     // QZE (RECUT only, 2026-10-08, default 0): the q-element's ICG enable retimed onto a register beside the ICG
     // (ot_v41_rom_elem_qx_w10 QZE); zero added cycles.
     parameter integer QZE = 0,
+    // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
+    // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
+    // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
+    // the register's new value only after the falling edge (hold margin ~T/2); the element captures at the next rising edge
+    // the value the register took at the previous rising edge, i.e. exactly what it captures without the latch (0 cycles).
+    parameter integer PINLAT = 0,
     parameter integer RDRAIN = 200,
     parameter INSTANCE = ""
 ) (
@@ -200,26 +206,50 @@ module ot_s81_bf_native #(
             r_xb_u <= xb_u;
             r_xb_d <= xb_d;
         end
+        // PINLAT: the latched data copies (r_l* names: the pin-group CTS hook clocks them with the g_pin.r_* registers)
+        reg [7:0] r_lxs_p; reg [2:0] r_lxs_b; reg [1:0] r_lxs_sv; reg [255:0] r_lxs_q0, r_lxs_q1; reg [9:0] r_lxs_e0, r_lxs_e1;
+        reg [2:0] r_lxs_pos, r_lxb_pos, r_lxb_b; reg [3:0] r_lxb_sv; reg [31:0] r_lxb_u; reg [1023:0] r_lxb_d;
+        if (PINLAT != 0) begin : g_lat
+            always_latch if (!clk) begin
+                r_lxs_p = r_xs_p; r_lxs_b = r_xs_b; r_lxs_sv = r_xs_sv; r_lxs_q0 = r_xs_q0; r_lxs_e0 = r_xs_e0;
+                r_lxs_q1 = r_xs_q1; r_lxs_e1 = r_xs_e1; r_lxs_pos = r_xs_pos; r_lxb_pos = r_xb_pos; r_lxb_b = r_xb_b;
+                r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u;
+`ifdef PINLAT_MUTANT_B0
+                r_lxb_d = {r_xb_d[1023:1], 1'b0};   // negative control: one data bit lost through the latch
+`else
+                r_lxb_d = r_xb_d;
+`endif
+            end
+`ifndef SYNTHESIS
+            initial if (HALF != 0) $fatal(1, "PINLAT is for the full-rate element (HALF = 0)");
+`endif
+        end else begin : g_nolat
+            always @* begin
+                r_lxs_p = r_xs_p; r_lxs_b = r_xs_b; r_lxs_sv = r_xs_sv; r_lxs_q0 = r_xs_q0; r_lxs_e0 = r_xs_e0;
+                r_lxs_q1 = r_xs_q1; r_lxs_e1 = r_xs_e1; r_lxs_pos = r_xs_pos; r_lxb_pos = r_xb_pos; r_lxb_b = r_xb_b;
+                r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u; r_lxb_d = r_xb_d;
+            end
+        end
         assign cfg_v_i = r_cfg_v;
         assign cfg_a_i = r_cfg_a;
         assign cfg_d_i = r_cfg_d;
         assign go_i = r_go;
         assign go_bf_i = r_go_bf;
         assign xs_v_i = r_xs_v;
-        assign xs_p_i = r_xs_p;
-        assign xs_b_i = r_xs_b;
-        assign xs_sv_i = r_xs_sv;
-        assign xs_q0_i = r_xs_q0;
-        assign xs_e0_i = r_xs_e0;
-        assign xs_q1_i = r_xs_q1;
-        assign xs_e1_i = r_xs_e1;
-        assign xs_pos_i = r_xs_pos;
-        assign xb_pos_i = r_xb_pos;
+        assign xs_p_i = r_lxs_p;
+        assign xs_b_i = r_lxs_b;
+        assign xs_sv_i = r_lxs_sv;
+        assign xs_q0_i = r_lxs_q0;
+        assign xs_e0_i = r_lxs_e0;
+        assign xs_q1_i = r_lxs_q1;
+        assign xs_e1_i = r_lxs_e1;
+        assign xs_pos_i = r_lxs_pos;
+        assign xb_pos_i = r_lxb_pos;
         assign xb_v_i = r_xb_v;
-        assign xb_b_i = r_xb_b;
-        assign xb_sv_i = r_xb_sv;
-        assign xb_u_i = r_xb_u;
-        assign xb_d_i = r_xb_d;
+        assign xb_b_i = r_lxb_b;
+        assign xb_sv_i = r_lxb_sv;
+        assign xb_u_i = r_lxb_u;
+        assign xb_d_i = r_lxb_d;
         assign busy = r_busy; assign fault = r_fault;
     end else begin : g_nopin
         assign cfg_v_i = cfg_v;
