@@ -6,11 +6,12 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
  ot_qfd_res_tiles #(.MUT(MUT),.USE_MACRO(USE_MACRO)) dut(.clk(clk),.rst_n(rst_n),.me_en(me_en),.i_ov(i_ov),.i_we(i_we),
  .i_addr(i_addr),.i_mask(i_mask),.i_data(i_data),.o_v(ov),.o_end(oe),.o_nul(onul),.o_row(row),.o_mask(mask),.o_data(data),.o_cr(cr),.rok(rok),.fault(fault));
  reg [550:0] expq[0:40000];integer ew=0,er=0,pending=0,burst=0,c=0,k,j,last,stopdebt=0;
- integer rq_cycle[0:40000];integer qw=0,qr=0;
+ integer rq_cycle[0:40000];integer qw=0,qr=0,peak_n=0;
  reg [7:0] wen;reg endbit;integer x;reg [511:0] word;
  task tick;
  begin
  @(negedge clk);
+ if(dut.u_ctl.n>peak_n) peak_n=dut.u_ctl.n;
  if(dut.u_ctl.rq_v) begin rq_cycle[qw]=c;qw=qw+1;end
  if(dut.u_ctl.rv) begin
   if(qr==qw || c-rq_cycle[qr]!=19) $fatal(1,"CONVEYOR latency=%0d",c-rq_cycle[qr]);
@@ -33,7 +34,7 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
   // A falling ready permits a realistic 42-edge engine stopping debt.
   if(rok) stopdebt=42;else if(stopdebt>0) stopdebt=stopdebt-1;
   me_en=(rok||stopdebt>0)&&x%7!=0;
-  i_ov=me_en && x%11==0 && burst<360;
+  i_ov=me_en && (x<2000 || x%11==0) && burst<360;
   if(i_ov) begin
    wen=8'((burst*53)^ (burst>>2));if(burst%13==0) wen=0;if(burst%17==0) wen=255;
    i_we=wen;last=-1;for(k=0;k<8;k=k+1) if(wen[k]) last=k;
@@ -52,6 +53,6 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
  me_en=0;i_ov=0;
  while(er<ew && c<30000) tick();
  if(er!=ew||burst!=360||qw!=qr) $fatal(1,"DRAIN er=%0d ew=%0d bursts=%0d",er,ew,burst);
- $display("PASS res_tiles bursts=%0d beats=%0d cycles=%0d request_to_chain=19 request_to_output=21",burst,er,c);$finish;
+ $display("PASS res_tiles bursts=%0d beats=%0d cycles=%0d request_to_chain=19 request_to_output=21 peak_bursts=%0d",burst,er,c,peak_n);$finish;
  end
 endmodule
