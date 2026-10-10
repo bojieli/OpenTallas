@@ -73,6 +73,7 @@ module hgi_e2e_su_slot #(
         .dbg_res(dbg_res), .dbg_sseq(dbg_sseq));
     // the VM model's synchronous ports: reads registered (the word the next cycle), then this edge's writes
     integer l, s;
+    reg fseen = 1'b0;
     always @(posedge clk) begin
         for (l = 0; l < N; l = l + 1) begin
             if (vi_re[l]) vi_q[32*l +: 32] <= e2e_vm_rd(int'(vi_addr[l*AW +: 18]));
@@ -85,6 +86,13 @@ module hgi_e2e_su_slot #(
             for (l = 0; l < NR; l = l + 1)
                 if (res_we[l]) e2e_vm_wr(UNIT, int'(res_addr[l*AW +: 18]), int'(res_data[32*l +: 32]));
             if (kv_we != 0) $display("E2E SU%0d wrote the KV port (no KV SRAM on the HBM die)", UNIT);
+            if (su_fault && !fseen) begin
+                fseen <= 1'b1;
+                $display("E2E SU%0d FAULT lanes %h side %0d red %0d cfg %0d (promote %0d) red.fsq %0d fch %0d tf %0d sf %0d top_bad %0d tap_multi %0d res_multi %0d",
+                         UNIT, u_vec.l_fault, u_vec.side_f, u_vec.red_f, u_vec.p_bad, u_vec.promote,
+                         |u_vec.u_red.fsq, |u_vec.u_red.fch, |u_vec.u_red.tf, |u_vec.u_red.sf, u_vec.u_red.top_bad,
+                         u_vec.u_red.tap_multi, u_vec.u_red.res_multi);
+            end
         end
     end
 endmodule
