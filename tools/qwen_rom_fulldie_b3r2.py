@@ -1006,7 +1006,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False, native_elas
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
         if bid in elastic_bids:
             side = v.up(156.0, v.GY)
-            return (side if native_elastic_square else v.up(53.0, v.GX)) - v.SHAVE, side - v.SHAVE
+            return (side if native_elastic_square else v.CORR) - v.SHAVE, side - v.SHAVE
         span1 = bits * 0.048 + 4.0
         if bits <= 512:
             return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE

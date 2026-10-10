@@ -16,9 +16,9 @@ def sizing():
         payload_bits = width * (depth + 2)
         control_bits = 32
         bits = payload_bits + control_bits
-        # A 53 x 156 frame exceeds the analytical register area, preserves
+        # The actual52.704um corridor frame exceeds analytical register area,
         # <=350um wire station pitch, and offers ample two-layer pin tracks.
-        frame_um = [53.136, 157.68]
+        frame_um = [52.704, 157.68]
         rows.append(dict(channel=name, payload_bits_per_cycle=width,
                          payload_bytes_per_cycle=width / 8,
                          replicas=count, receive_slots=depth,
@@ -35,7 +35,7 @@ def sizing():
                          first_source_initial_credits=4,
                          final_receiver_initial_credits=4))
     return dict(schema='opentallas.qwen.native_credit_successor.model.v1',
-                target='Qwen3-8B ROM', candidate='qfd_native_elastic8_a',
+                target='Qwen3-8B ROM', candidate='qfd_native_elastic8_corr_a',
                 arithmetic='bit/order exact storage only', macs_per_cycle=0,
                 proposed_leaf='ot_qwen_native_elastic_relay W546/516 DEPTH8',
                 implementation_basis='existing ot_link_credit_rx WFREE1 OREG0 and ot_link_credit_tx; no modifications to pinned helpers',

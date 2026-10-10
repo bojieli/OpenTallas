@@ -1,0 +1,17 @@
+{
+  "source_commit": "5398d2875",
+  "verdict": "FAIL",
+  "queue_ready": false,
+  "paths": {
+    "seq_coll": {
+      "relays": 30,
+      "max_center_hop_um": 19581.612
+    },
+    "coll_seq": {
+      "relays": 73,
+      "max_center_hop_um": 550.368
+    }
+  },
+  "root_cause": "53.136um frame is0.432um wider than real52.704um corridor; excluded from all corridor sites",
+  "successor": "qfd_native_elastic8_corr_a uses real corridor width, storage/clock constraints unchanged"
+}

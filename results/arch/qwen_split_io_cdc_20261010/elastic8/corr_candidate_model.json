@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.qwen.native_credit_successor.model.v1",
+  "target": "Qwen3-8B ROM",
+  "candidate": "qfd_native_elastic8_corr_a",
+  "arithmetic": "bit/order exact storage only",
+  "macs_per_cycle": 0,
+  "proposed_leaf": "ot_qwen_native_elastic_relay W546/516 DEPTH8",
+  "implementation_basis": "existing ot_link_credit_rx WFREE1 OREG0 and ot_link_credit_tx; no modifications to pinned helpers",
+  "opt_in": "new wrapper ENABLE defaults0; die selection defaults off",
+  "rows": [
+    {
+      "channel": "sq",
+      "payload_bits_per_cycle": 546,
+      "payload_bytes_per_cycle": 68.25,
+      "replicas": 67,
+      "receive_slots": 8,
+      "register_bits_each": 5492,
+      "sram_bits": 0,
+      "storage_area_mm2_each": 0.004169335247349823,
+      "proposed_frame_um": [
+        52.704,
+        157.68
+      ],
+      "frame_area_mm2_each": 0.00831036672,
+      "muxes_each": 546,
+      "mux_fanin": 8,
+      "control_fanout_before_synthesis": 546,
+      "boundary_bits": 548,
+      "face_tracks_required": 548,
+      "face_tracks_available": 6236,
+      "local_credit_initial": 8,
+      "first_source_initial_credits": 4,
+      "final_receiver_initial_credits": 4
+    },
+    {
+      "channel": "cq",
+      "payload_bits_per_cycle": 516,
+      "payload_bytes_per_cycle": 64.5,
+      "replicas": 55,
+      "receive_slots": 8,
+      "register_bits_each": 5192,
+      "sram_bits": 0,
+      "storage_area_mm2_each": 0.003941585689045936,
+      "proposed_frame_um": [
+        52.704,
+        157.68
+      ],
+      "frame_area_mm2_each": 0.00831036672,
+      "muxes_each": 516,
+      "mux_fanin": 8,
+      "control_fanout_before_synthesis": 516,
+      "boundary_bits": 518,
+      "face_tracks_required": 518,
+      "face_tracks_available": 6236,
+      "local_credit_initial": 8,
+      "first_source_initial_credits": 4,
+      "final_receiver_initial_credits": 4
+    }
+  ],
+  "aggregate_register_bits": 653524,
+  "aggregate_storage_area_mm2": 0.49613267446996456,
+  "aggregate_proposed_frame_area_mm2": 1.01386473984,
+  "added_dies": 0,
+  "existing_measured": {
+    "initial_credits": 4,
+    "sq_relays": 67,
+    "first_rtt_serial_cycles": 205,
+    "credit_rate_ceiling_words_per_serial_cycle": 0.01951219512195122
+  },
+  "proposed_latency": "one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; 3 serial cycles per word with no stalls",
+  "composed_empty_path_serial_cycles": {
+    "sq_old": 67,
+    "sq_new": 201,
+    "cq_old": 55,
+    "cq_new": 165,
+    "added_roundtrip": 244
+  },
+  "composed_added_empty_roundtrip_ns": 271.1111111111111,
+  "token_latency_contribution": "added271.111ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and the native collective schedule before rate adoption",
+  "communication_intensity": "storage-only: one word transferred per accepted beat, no numerical compute",
+  "composed_latency_ready": true,
+  "gates": [
+    "minimum full-width local source4 -> DEPTH8 relay -> sink4 exactness/occupancy/RTT",
+    "minimum two-relay backpressure and overflow/extra-credit negative tests",
+    "reset valid flops at every elastic relay; synchronous reset release per clock domain; fault collection",
+    "actual placement of enlarged 53x156 frames in full r22k plan with no overlaps and <=350um hop lengths",
+    "price added relay latency and collective burst amplification at token level; no rate adoption before this",
+    "source-pinned admitted W546 and W516 leaf PNR, actual TT setup/FF hold/DRC0, SS sensitivity retained",
+    "routed die composition and production group-direction mapping"
+  ],
+  "queue_ready": false,
+  "queue_blocker": "model candidate only: minimum mechanism, enlarged placement, composed token latency and RTL leaf source not yet ready",
+  "alternative": {
+    "candidate": "qfd_native_central_credit256_a",
+    "required_sq_credits": 256,
+    "minimum_sq_credit_rtt_serial_cycles": 205,
+    "sq_input_storage_bits": 139776,
+    "sequencer_initial_credits_change": true,
+    "cq_credit_depth_required": "at least arriving N=4 amplified burst plus actual 55-relay CQ RTT; not just64 existing slots",
+    "rejected_for_queue": "central capacity alone requires new SQ receive selection and CQ reservation accounting; cannot reuse closed four-credit view"
+  }
+}
