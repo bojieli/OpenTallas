@@ -104,3 +104,12 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
                       measured_profile_bursts=360,
                       profile_scope='saturated element, immediate consumer credit, full shape actual SRAM model; not token rate'),
         exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
+
+
+def hgi_inverse_selected_candidate_model(k=2048, group=96):
+    """G25 protected inverse candidate; no physical or adoption credit."""
+    try:
+        from tools.uarch_model_hgi_inverse import model
+    except ModuleNotFoundError:
+        from uarch_model_hgi_inverse import model
+    return model(k=k, group=group)
