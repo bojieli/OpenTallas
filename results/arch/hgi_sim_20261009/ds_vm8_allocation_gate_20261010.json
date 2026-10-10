@@ -1,0 +1,1063 @@
+{
+  "schema": "opentallas.ds_vm8_allocation.gate.v1",
+  "scope": "descriptor relocation and exact bounds; no producer substitution/native service or whole-token exactness claim",
+  "enabled_default": false,
+  "program_input_sha256": "6bb6344fc46b9195a9e753db2b5f342be7916c60c3c8529f99dcaa028e143e6d",
+  "program_output_sha256": "5d02599bdd15d4825e99579b07e3ed5555c236e200901b659de95fee7f8c304e",
+  "source_layout_sha256": "6f87e87d0098e7ca2f094a4de067af749a2e6932bf5c8554eb6b6bb93329d3fa",
+  "plan": {
+    "vm_bytes": 8388608,
+    "max_selected": 2048,
+    "selected": {
+      "base": 0,
+      "bytes": 4194304
+    },
+    "window": {
+      "base": 4194304,
+      "bytes": 262144
+    },
+    "scratch": {
+      "base": 4456448,
+      "end": 5532160
+    },
+    "spans": [
+      {
+        "name": "h",
+        "old_base": 0,
+        "new_base": 1114112,
+        "old_words": 20480,
+        "words": 20480
+      },
+      {
+        "name": "RES",
+        "old_base": 20480,
+        "new_base": 1134592,
+        "old_words": 20480,
+        "words": 20480
+      },
+      {
+        "name": "PRE",
+        "old_base": 40960,
+        "new_base": 1155072,
+        "old_words": 4,
+        "words": 4
+      },
+      {
+        "name": "MIXa",
+        "old_base": 41024,
+        "new_base": 1155136,
+        "old_words": 24,
+        "words": 24
+      },
+      {
+        "name": "MIXf",
+        "old_base": 41088,
+        "new_base": 1155200,
+        "old_words": 24,
+        "words": 24
+      },
+      {
+        "name": "x",
+        "old_base": 41152,
+        "new_base": 1155264,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "qa",
+        "old_base": 46272,
+        "new_base": 1160384,
+        "old_words": 1280,
+        "words": 1280
+      },
+      {
+        "name": "kvraw",
+        "old_base": 47552,
+        "new_base": 1161664,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "GQN",
+        "old_base": 48064,
+        "new_base": 1162176,
+        "old_words": 1280,
+        "words": 1280
+      },
+      {
+        "name": "GKV",
+        "old_base": 49344,
+        "new_base": 1163456,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "SS",
+        "old_base": 49856,
+        "new_base": 1163968,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "RS",
+        "old_base": 49920,
+        "new_base": 1164032,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "qr",
+        "old_base": 49984,
+        "new_base": 1164096,
+        "old_words": 1280,
+        "words": 1280
+      },
+      {
+        "name": "kvn",
+        "old_base": 51264,
+        "new_base": 1165376,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "kvr",
+        "old_base": 51776,
+        "new_base": 1165888,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "win_new",
+        "old_base": 52288,
+        "new_base": 1166400,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "q",
+        "old_base": 52800,
+        "new_base": 1166912,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "ROPE",
+        "old_base": 53312,
+        "new_base": 1167424,
+        "old_words": 64,
+        "words": 64
+      },
+      {
+        "name": "q_own",
+        "old_base": 53376,
+        "new_base": 1167488,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "SC",
+        "old_base": 53888,
+        "new_base": 1168000,
+        "old_words": 640,
+        "words": 2176
+      },
+      {
+        "name": "MB",
+        "old_base": 54528,
+        "new_base": 1170176,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "E",
+        "old_base": 54592,
+        "new_base": 1170240,
+        "old_words": 640,
+        "words": 2176
+      },
+      {
+        "name": "SE",
+        "old_base": 55232,
+        "new_base": 1172416,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "EB",
+        "old_base": 55296,
+        "new_base": 1172480,
+        "old_words": 640,
+        "words": 2176
+      },
+      {
+        "name": "SINK",
+        "old_base": 55936,
+        "new_base": 1174656,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "ES",
+        "old_base": 56000,
+        "new_base": 1174720,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "DEN",
+        "old_base": 56064,
+        "new_base": 1174784,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "PV",
+        "old_base": 56128,
+        "new_base": 1174848,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "O",
+        "old_base": 56640,
+        "new_base": 1175360,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "o_own",
+        "old_base": 57152,
+        "new_base": 1175872,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "zpart",
+        "old_base": 57664,
+        "new_base": 1176384,
+        "old_words": 12288,
+        "words": 12288
+      },
+      {
+        "name": "z",
+        "old_base": 69952,
+        "new_base": 1188672,
+        "old_words": 12288,
+        "words": 12288
+      },
+      {
+        "name": "y",
+        "old_base": 82240,
+        "new_base": 1200960,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "gsc",
+        "old_base": 87360,
+        "new_base": 1206080,
+        "old_words": 384,
+        "words": 384
+      },
+      {
+        "name": "BIAS",
+        "old_base": 87744,
+        "new_base": 1206464,
+        "old_words": 384,
+        "words": 384
+      },
+      {
+        "name": "router",
+        "old_base": 88128,
+        "new_base": 1206848,
+        "old_words": 384,
+        "words": 384
+      },
+      {
+        "name": "rid",
+        "old_base": 88512,
+        "new_base": 1207232,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "SEL",
+        "old_base": 88576,
+        "new_base": 1207296,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "TOT",
+        "old_base": 88640,
+        "new_base": 1207360,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "DENR",
+        "old_base": 88704,
+        "new_base": 1207424,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "route_w",
+        "old_base": 88768,
+        "new_base": 1207488,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "yf",
+        "old_base": 88832,
+        "new_base": 1207552,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "TOK",
+        "old_base": 93952,
+        "new_base": 1212672,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "EGW",
+        "old_base": 94016,
+        "new_base": 1212736,
+        "old_words": 20480,
+        "words": 20480
+      },
+      {
+        "name": "EGID",
+        "old_base": 114496,
+        "new_base": 1233216,
+        "old_words": 32,
+        "words": 32
+      },
+      {
+        "name": "EGC",
+        "old_base": 114560,
+        "new_base": 1233280,
+        "old_words": 6144,
+        "words": 6144
+      },
+      {
+        "name": "EGS",
+        "old_base": 120704,
+        "new_base": 1239424,
+        "old_words": 192,
+        "words": 192
+      },
+      {
+        "name": "SSH",
+        "old_base": 120896,
+        "new_base": 1239616,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "RH",
+        "old_base": 120960,
+        "new_base": 1239680,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "SSK",
+        "old_base": 121024,
+        "new_base": 1239744,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "RK",
+        "old_base": 121088,
+        "new_base": 1239808,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "RST",
+        "old_base": 121152,
+        "new_base": 1239872,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "DOTR",
+        "old_base": 121216,
+        "new_base": 1239936,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "GATE",
+        "old_base": 121280,
+        "new_base": 1240000,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "cmp",
+        "old_base": 121344,
+        "new_base": 1240064,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "iwr",
+        "old_base": 122368,
+        "new_base": 1241088,
+        "old_words": 32,
+        "words": 32
+      },
+      {
+        "name": "iq",
+        "old_base": 122432,
+        "new_base": 1241152,
+        "old_words": 4096,
+        "words": 4096
+      },
+      {
+        "name": "SELIDX",
+        "old_base": 126528,
+        "new_base": 1245248,
+        "old_words": 2048,
+        "words": 2048
+      },
+      {
+        "name": "SLOTKV",
+        "old_base": 128576,
+        "new_base": 1247296,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "SLOTSC",
+        "old_base": 129600,
+        "new_base": 1248320,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "MXC",
+        "old_base": 130624,
+        "new_base": 1249344,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "EC",
+        "old_base": 131136,
+        "new_base": 1249856,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "DENC",
+        "old_base": 132160,
+        "new_base": 1250880,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "PC",
+        "old_base": 132672,
+        "new_base": 1251392,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "P2",
+        "old_base": 133696,
+        "new_base": 1252416,
+        "old_words": 1024,
+        "words": 1024
+      },
+      {
+        "name": "POOL",
+        "old_base": 134720,
+        "new_base": 1253440,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "LAT0",
+        "old_base": 135232,
+        "new_base": 1253952,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "LAT",
+        "old_base": 135744,
+        "new_base": 1254464,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "GCN",
+        "old_base": 136256,
+        "new_base": 1254976,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "KIN",
+        "old_base": 136768,
+        "new_base": 1255488,
+        "old_words": 128,
+        "words": 128
+      },
+      {
+        "name": "GKN",
+        "old_base": 136896,
+        "new_base": 1255616,
+        "old_words": 128,
+        "words": 128
+      },
+      {
+        "name": "KN",
+        "old_base": 137024,
+        "new_base": 1255744,
+        "old_words": 128,
+        "words": 128
+      },
+      {
+        "name": "KR",
+        "old_base": 137152,
+        "new_base": 1255872,
+        "old_words": 128,
+        "words": 128
+      },
+      {
+        "name": "LR",
+        "old_base": 137280,
+        "new_base": 1256000,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "IK",
+        "old_base": 137792,
+        "new_base": 1256512,
+        "old_words": 128,
+        "words": 128
+      },
+      {
+        "name": "CK",
+        "old_base": 137920,
+        "new_base": 1256640,
+        "old_words": 512,
+        "words": 512
+      },
+      {
+        "name": "ROPE2",
+        "old_base": 138432,
+        "new_base": 1257152,
+        "old_words": 64,
+        "words": 64
+      },
+      {
+        "name": "logits",
+        "old_base": 138496,
+        "new_base": 1257216,
+        "old_words": 1352,
+        "words": 1352
+      },
+      {
+        "name": "IWS",
+        "old_base": 139904,
+        "new_base": 1258624,
+        "old_words": 32,
+        "words": 32
+      },
+      {
+        "name": "SELT",
+        "old_base": 139968,
+        "new_base": 1258688,
+        "old_words": 1024,
+        "words": 2048
+      },
+      {
+        "name": "CANDM",
+        "old_base": 140992,
+        "new_base": 1260736,
+        "old_words": 4096,
+        "words": 4096
+      },
+      {
+        "name": "MIXRAW",
+        "old_base": 145088,
+        "new_base": 1264832,
+        "old_words": 24,
+        "words": 24
+      },
+      {
+        "name": "OWNL",
+        "old_base": 145152,
+        "new_base": 1264896,
+        "old_words": 64,
+        "words": 2048
+      },
+      {
+        "name": "MCNT",
+        "old_base": 145216,
+        "new_base": 1266944,
+        "old_words": 8,
+        "words": 8
+      },
+      {
+        "name": "RGCNT",
+        "old_base": 145280,
+        "new_base": 1267008,
+        "old_words": 16,
+        "words": 16
+      },
+      {
+        "name": "ea",
+        "old_base": 145344,
+        "new_base": 1267072,
+        "old_words": 16128,
+        "words": 16128
+      },
+      {
+        "name": "eg_kv",
+        "old_base": 161472,
+        "new_base": 1283200,
+        "old_words": 25600,
+        "words": 25600
+      },
+      {
+        "name": "eg_rows",
+        "old_base": 187072,
+        "new_base": 1308800,
+        "old_words": 6144,
+        "words": 6144
+      },
+      {
+        "name": "e0.g",
+        "old_base": 193216,
+        "new_base": 1314944,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e0.u",
+        "old_base": 195520,
+        "new_base": 1317248,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e0.d",
+        "old_base": 197824,
+        "new_base": 1319552,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e1.g",
+        "old_base": 202944,
+        "new_base": 1324672,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e1.u",
+        "old_base": 205248,
+        "new_base": 1326976,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e1.d",
+        "old_base": 207552,
+        "new_base": 1329280,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e2.g",
+        "old_base": 212672,
+        "new_base": 1334400,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e2.u",
+        "old_base": 214976,
+        "new_base": 1336704,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e2.d",
+        "old_base": 217280,
+        "new_base": 1339008,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e3.g",
+        "old_base": 222400,
+        "new_base": 1344128,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e3.u",
+        "old_base": 224704,
+        "new_base": 1346432,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e3.d",
+        "old_base": 227008,
+        "new_base": 1348736,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e4.g",
+        "old_base": 232128,
+        "new_base": 1353856,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e4.u",
+        "old_base": 234432,
+        "new_base": 1356160,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e4.d",
+        "old_base": 236736,
+        "new_base": 1358464,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e5.g",
+        "old_base": 241856,
+        "new_base": 1363584,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e5.u",
+        "old_base": 244160,
+        "new_base": 1365888,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e5.d",
+        "old_base": 246464,
+        "new_base": 1368192,
+        "old_words": 5120,
+        "words": 5120
+      },
+      {
+        "name": "e6.g",
+        "old_base": 251584,
+        "new_base": 1373312,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e6.u",
+        "old_base": 253888,
+        "new_base": 1375616,
+        "old_words": 2304,
+        "words": 2304
+      },
+      {
+        "name": "e6.d",
+        "old_base": 256192,
+        "new_base": 1377920,
+        "old_words": 5120,
+        "words": 5120
+      }
+    ],
+    "new_bases": {
+      "h": 1114112,
+      "RES": 1134592,
+      "PRE": 1155072,
+      "MIXa": 1155136,
+      "MIXf": 1155200,
+      "x": 1155264,
+      "qa": 1160384,
+      "kvraw": 1161664,
+      "GQN": 1162176,
+      "GKV": 1163456,
+      "SS": 1163968,
+      "RS": 1164032,
+      "qr": 1164096,
+      "kvn": 1165376,
+      "kvr": 1165888,
+      "win_new": 1166400,
+      "q": 1166912,
+      "ROPE": 1167424,
+      "q_own": 1167488,
+      "SC": 1168000,
+      "MB": 1170176,
+      "E": 1170240,
+      "SE": 1172416,
+      "EB": 1172480,
+      "SINK": 1174656,
+      "ES": 1174720,
+      "DEN": 1174784,
+      "PV": 1174848,
+      "O": 1175360,
+      "o_own": 1175872,
+      "zpart": 1176384,
+      "z": 1188672,
+      "y": 1200960,
+      "gsc": 1206080,
+      "BIAS": 1206464,
+      "router": 1206848,
+      "rid": 1207232,
+      "SEL": 1207296,
+      "TOT": 1207360,
+      "DENR": 1207424,
+      "route_w": 1207488,
+      "yf": 1207552,
+      "TOK": 1212672,
+      "EGW": 1212736,
+      "EGID": 1233216,
+      "EGC": 1233280,
+      "EGS": 1239424,
+      "SSH": 1239616,
+      "RH": 1239680,
+      "SSK": 1239744,
+      "RK": 1239808,
+      "RST": 1239872,
+      "DOTR": 1239936,
+      "GATE": 1240000,
+      "cmp": 1240064,
+      "iwr": 1241088,
+      "iq": 1241152,
+      "SELIDX": 1245248,
+      "SLOTKV": 1247296,
+      "SLOTSC": 1248320,
+      "MXC": 1249344,
+      "EC": 1249856,
+      "DENC": 1250880,
+      "PC": 1251392,
+      "P2": 1252416,
+      "POOL": 1253440,
+      "LAT0": 1253952,
+      "LAT": 1254464,
+      "GCN": 1254976,
+      "KIN": 1255488,
+      "GKN": 1255616,
+      "KN": 1255744,
+      "KR": 1255872,
+      "LR": 1256000,
+      "IK": 1256512,
+      "CK": 1256640,
+      "ROPE2": 1257152,
+      "logits": 1257216,
+      "IWS": 1258624,
+      "SELT": 1258688,
+      "CANDM": 1260736,
+      "MIXRAW": 1264832,
+      "OWNL": 1264896,
+      "MCNT": 1266944,
+      "RGCNT": 1267008,
+      "ea": 1267072,
+      "eg_kv": 1283200,
+      "eg_rows": 1308800,
+      "e0.g": 1314944,
+      "e0.u": 1317248,
+      "e0.d": 1319552,
+      "e1.g": 1324672,
+      "e1.u": 1326976,
+      "e1.d": 1329280,
+      "e2.g": 1334400,
+      "e2.u": 1336704,
+      "e2.d": 1339008,
+      "e3.g": 1344128,
+      "e3.u": 1346432,
+      "e3.d": 1348736,
+      "e4.g": 1353856,
+      "e4.u": 1356160,
+      "e4.d": 1358464,
+      "e5.g": 1363584,
+      "e5.u": 1365888,
+      "e5.d": 1368192,
+      "e6.g": 1373312,
+      "e6.u": 1375616,
+      "e6.d": 1377920,
+      "CANDT": 1176384,
+      "GALL": 1267072
+    },
+    "required_score_words": 2176,
+    "qualified": false,
+    "reason": "Capacity/bounds only; native producer, consumer ACK/ECC and physical gates required",
+    "attention_descriptors": [
+      {
+        "layer": 2,
+        "tag": "attend.qk",
+        "descriptors": {
+          "A": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 1167488,
+            "n": 512,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "B": {
+            "space": "HBM",
+            "fmt": "FP32",
+            "base": 4194304,
+            "n": 128,
+            "m": 128,
+            "stride": 2048,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "C": {
+            "space": "HBM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 512,
+            "m": 1,
+            "stride": 2048,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "O": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 1168000,
+            "n": 640,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          }
+        }
+      },
+      {
+        "layer": 2,
+        "tag": "attend.pv",
+        "descriptors": {
+          "A": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 1172480,
+            "n": 640,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "B": {
+            "space": "HBM",
+            "fmt": "FP32",
+            "base": 4194304,
+            "n": 128,
+            "m": 128,
+            "stride": 2048,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "C": {
+            "space": "HBM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 512,
+            "m": 1,
+            "stride": 2048,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "O": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 1174848,
+            "n": 512,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          }
+        }
+      }
+    ],
+    "reuse_contract": "Producer overwrite waits prior epoch finalPV endpoint ACK; one common physical selected range hazard across source IDs, immutable snapshot QK throughPV, contextflush drains readers/writers"
+  },
+  "verdict": "PASS",
+  "gates": [
+    "default leaves program unchanged",
+    "actual G24 OWNED/VMcountLOOP/slotmajorSTORE/indexedcountpointer relocation",
+    "actual prior L2ATT/softmax scalarbroadcast descriptors relocated",
+    "C low4MiB and B exact upperwindow",
+    "scratch Q/P/O explicit highword addresses",
+    "negative C overflow, B low alias, scratch overlap all rejected",
+    "strict each-live-buffer extent including GALL alias;2177scorewords rejected against2176capacity"
+  ],
+  "allocator_source_commit": "36fc44b67",
+  "allocator_source_sha256": "59fa73a6aa01896b1cd322df3deb0d933743d03cf3022f0e7b68b011329c67a5",
+  "fixture_sha256": "fd7f9fe4989c8c612ac9274e3dafc13e0e431a3e18f9532218bc33ef617f2697",
+  "lifetime_inventory_commit": "c81a0ca54",
+  "live_epoch_gate": "Boundary/lifetime metadata only: scheduler/controller must enforce finalPVACK and flush drains; no producer/consumer qualification claimed"
+}
