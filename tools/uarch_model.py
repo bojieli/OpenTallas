@@ -15287,3 +15287,9 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def hbm_mx1_local_reset_model():
+    """Zero-cycle MX1 reset replicas, sized before implementing the opt-in RTL."""
+    from tools.hbm_mx1_local_reset_model import model
+    return model()

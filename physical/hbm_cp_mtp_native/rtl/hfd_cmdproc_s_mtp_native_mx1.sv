@@ -50,7 +50,7 @@
 // lockstep-equal to hfd_cmdproc_s, tb_hfd_cmdproc_s_fc_lockstep).  The taps are die clock leaves balanced by the die tree
 // (tools/hbm_accel_die_fp.py: they ride the band's ck net, clock_leaf_offsets).  The AR instance stays `ar` (no generate
 // wrapper): its macro ar.u_cpS.g_on.u_cmem keeps the name macro_place.tcl places (fc6/fc7 died on g_ar_fc.ar...).
-module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
+module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0, parameter integer LOCALRST=0)(
  inout wire [826:0] cSE,cSW,
  input wire [0:0] ck,rst,
  input wire [0:0] cks,ckn,cke,ckw,
@@ -84,12 +84,62 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   reg [1:0] rs;
   always @(posedge c or posedge rst[0]) if (rst[0]) rs<=2'b11; else rs<={rs[0],1'b0};
   wire rm=rs[1];wire rn=~rm;
+  // Optional unit-owned reset trees: each two-flop replica has exactly rs's
+  // async assertion and two-edge deassertion. Kept instances cannot merge.
+  wire rm_level,rn_level;
+  wire rm_jf,rn_jf;
+  wire rm_ef,rn_ef;
+  wire rm_cf,rn_cf;
+  wire rm_kf,rn_kf;
+  wire rm_bf,rn_bf;
+  wire rm_hf,rn_hf;
+  wire rm_df,rn_df;
+  wire rm_mtp,rn_mtp;
+  wire rm_out,rn_out;
+  wire rm_argmax,rn_argmax;
+  if (LOCALRST) begin: g_localrst
+   ot_mx1_reset_leaf r_level(.clk(c),.rst(rst[0]),.q(rm_level));
+   ot_mx1_reset_leaf r_jf(.clk(c),.rst(rst[0]),.q(rm_jf));
+   ot_mx1_reset_leaf r_ef(.clk(c),.rst(rst[0]),.q(rm_ef));
+   ot_mx1_reset_leaf r_cf(.clk(c),.rst(rst[0]),.q(rm_cf));
+   ot_mx1_reset_leaf r_kf(.clk(c),.rst(rst[0]),.q(rm_kf));
+   ot_mx1_reset_leaf r_bf(.clk(c),.rst(rst[0]),.q(rm_bf));
+   ot_mx1_reset_leaf r_hf(.clk(c),.rst(rst[0]),.q(rm_hf));
+   ot_mx1_reset_leaf r_df(.clk(c),.rst(rst[0]),.q(rm_df));
+   ot_mx1_reset_leaf r_mtp(.clk(c),.rst(rst[0]),.q(rm_mtp));
+   ot_mx1_reset_leaf r_out(.clk(c),.rst(rst[0]),.q(rm_out));
+   ot_mx1_reset_leaf r_argmax(.clk(c),.rst(rst[0]),.q(rm_argmax));
+  end else begin: g_sharedrst
+   assign rm_level=rm;
+   assign rm_jf=rm;
+   assign rm_ef=rm;
+   assign rm_cf=rm;
+   assign rm_kf=rm;
+   assign rm_bf=rm;
+   assign rm_hf=rm;
+   assign rm_df=rm;
+   assign rm_mtp=rm;
+   assign rm_out=rm;
+   assign rm_argmax=rm;
+  end
+  assign rn_level=~rm_level;
+  assign rn_jf=~rm_jf;
+  assign rn_ef=~rm_ef;
+  assign rn_cf=~rm_cf;
+  assign rn_kf=~rm_kf;
+  assign rn_bf=~rm_bf;
+  assign rn_hf=~rm_hf;
+  assign rn_df=~rm_df;
+  assign rn_mtp=~rm_mtp;
+  assign rn_out=~rm_out;
+  assign rn_argmax=~rm_argmax;
+
   // ---- core view of the pins
   wire [516:0] mi;wire [196:0] mo;wire [215:0] hi;wire [4:0] ho;wire [37:0] eo;wire [42:0] po;
   wire [1:0] ehi;wire [99:0] eho;wire ab,dr;wire [17:0] ami;wire [72:0] bi;wire [270:0] bo;
   // ---- level pin flops
   reg q81,q71,q72;reg [2:0] qst;reg qam;reg [16:0] qami;reg [67:0] qid;
-  always @(posedge c or posedge rm) if (rm) begin q81<=0;q71<=0;q72<=0;qam<=0;end
+  always @(posedge c or posedge rm_level) if (rm_level) begin q81<=0;q71<=0;q72<=0;qam<=0;end
    else begin q81<=f_mtp[81];q71<=f_backend[71];q72<=f_backend[72];qam<=f_am[0];end
   always @(posedge c) begin qst<=f_mtp[514+:3];qami<=f_am[1+:17];qid<=f_backend[2+:68];end
   // ---- input channels
@@ -97,29 +147,29 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   // waiting job), so a job is never parked in the pin FIFO while admission is closed (held native done until the
   // drained reset, which would discard it): one job per admission window, as without the boundary
   wire jf_ir,jf_ov;wire [214:0] jf_od;reg open_q;
-  wire jf_push=f_host[0]&&rn&&open_q&&jf_ir;
-  always @(posedge c or posedge rm) if (rm) open_q<=1'b0; else open_q<=ho[0]&&!jf_push&&!jf_ov;
-  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn),.in_valid(f_host[0]&&rn&&open_q),.in_ready(jf_ir),.in_data(f_host[1+:215]),
+  wire jf_push=f_host[0]&&rn_jf&&open_q&&jf_ir;
+  always @(posedge c or posedge rm_jf) if (rm_jf) open_q<=1'b0; else open_q<=ho[0]&&!jf_push&&!jf_ov;
+  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn_jf),.in_valid(f_host[0]&&rn_jf&&open_q),.in_ready(jf_ir),.in_data(f_host[1+:215]),
    .out_valid(jf_ov),.out_ready(ho[0]),.out_data(jf_od));
   wire ef_ir,ef_ov;wire [36:0] ef_od;
-  ot_sc_pfifo #(.W(37),.S(2),.G(37)) ef(.clk(c),.rst_n(rn),.in_valid(f_mtp[43]&&rn),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
+  ot_sc_pfifo #(.W(37),.S(2),.G(37)) ef(.clk(c),.rst_n(rn_ef),.in_valid(f_mtp[43]&&rn_ef),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
    .out_valid(ef_ov),.out_ready(mo[139]),.out_data(ef_od));
   wire cf_ir,cf_ov;wire [200:0] cf_od;
-  ot_sc_pfifo #(.W(201),.S(2),.G(32)) cf(.clk(c),.rst_n(rn),.in_valid(f_mtp[82]&&rn),.in_ready(cf_ir),.in_data(f_mtp[83+:201]),
+  ot_sc_pfifo #(.W(201),.S(2),.G(32)) cf(.clk(c),.rst_n(rn_cf),.in_valid(f_mtp[82]&&rn_cf),.in_ready(cf_ir),.in_data(f_mtp[83+:201]),
    .out_valid(cf_ov),.out_ready(mo[82]),.out_data(cf_od));
   wire kf_ir,kf_ov;wire [68:0] kf_od;
-  ot_sc_pfifo #(.W(69),.S(2),.G(35)) kf(.clk(c),.rst_n(rn),.in_valid(f_backend[1]&&rn),.in_ready(kf_ir),.in_data(f_backend[2+:69]),
+  ot_sc_pfifo #(.W(69),.S(2),.G(35)) kf(.clk(c),.rst_n(rn_kf),.in_valid(f_backend[1]&&rn_kf),.in_ready(kf_ir),.in_data(f_backend[2+:69]),
    .out_valid(kf_ov),.out_ready(bo[270]),.out_data(kf_od));
   // ---- output channels
   wire bf_ir,bf_ov;wire [268:0] bf_od;
-  ot_sc_pfifo #(.W(269),.S(2),.G(32)) bf(.clk(c),.rst_n(rn),.in_valid(bo[0]),.in_ready(bf_ir),.in_data(bo[1+:269]),
+  ot_sc_pfifo #(.W(269),.S(2),.G(32)) bf(.clk(c),.rst_n(rn_bf),.in_valid(bo[0]),.in_ready(bf_ir),.in_data(bo[1+:269]),
    .out_valid(bf_ov),.out_ready(f_backend[0]),.out_data(bf_od));
   wire hf_ir,hf_ov;wire [72:0] hf_od;
-  ot_sc_pfifo #(.W(73),.S(2),.G(37)) hf(.clk(c),.rst_n(rn),.in_valid(eho[0]),.in_ready(hf_ir),.in_data(eho[1+:73]),
+  ot_sc_pfifo #(.W(73),.S(2),.G(37)) hf(.clk(c),.rst_n(rn_hf),.in_valid(eho[0]),.in_ready(hf_ir),.in_data(eho[1+:73]),
    .out_valid(hf_ov),.out_ready(f_emit_host[0]),.out_data(hf_od));
   wire hf_empty=(MUT==2)?1'b1:!hf_ov;
   wire df_ir,df_ov;wire [2:0] df_od;
-  ot_sc_pfifo #(.W(3),.S(2),.G(3)) df(.clk(c),.rst_n(rn),.in_valid(eho[74]&&hf_empty),.in_ready(df_ir),.in_data(eho[75+:3]),
+  ot_sc_pfifo #(.W(3),.S(2),.G(3)) df(.clk(c),.rst_n(rn_df),.in_valid(eho[74]&&hf_empty),.in_ready(df_ir),.in_data(eho[75+:3]),
    .out_valid(df_ov),.out_ready(f_emit_host[1]),.out_data(df_od));
   // ---- core inputs
   assign mi[42:0]=43'b0;                                   // provider addresses leave through t_provider (below)
@@ -136,24 +186,24 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   // empty head also tracks its input one cycle late; the explicit flops keep this independent of that detail.)
   wire [67:0] id=kf_ov?kf_od[67:0]:qid;
   assign bi={q72,q71&&!bf_ov&&!kf_ov,kf_od[68],id,kf_ov,bf_ir};
-  hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(c),.rst(rm),
+  hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(c),.rst(rm_mtp),
    .f_mtp(mi),.emit_pend(ef_ov),.t_mtp(mo),.f_host(hi),.t_host(ho),.f_provider(f_provider),
    .t_emit(eo),.t_provider(po),.f_emit_host(ehi),.t_emit_host(eho),
    .t_abort(ab),.t_drained(dr),.f_am(ami),.f_backend(bi),.t_backend(bo));
   // ---- registered outputs
   reg [196:0] tm_q;reg [4:1] th_q;reg [37:0] te_q;reg [42:0] tp_q;reg [24:0] teh_q;reg ab_q,dr_q;
   wire fifos_empty=!(jf_ov||ef_ov||cf_ov||kf_ov||bf_ov||hf_ov||df_ov);
-  always @(posedge c or posedge rm) if (rm) begin tm_q<=0;th_q<=0;te_q<=0;tp_q<=0;teh_q<=0;ab_q<=0;dr_q<=0;end
+  always @(posedge c or posedge rm_out) if (rm_out) begin tm_q<=0;th_q<=0;te_q<=0;tp_q<=0;teh_q<=0;ab_q<=0;dr_q<=0;end
    else begin
     tm_q<=mo;th_q<=ho[4:1];te_q<=ENABLE_MTP?{ef_od,ef_ov&&mo[139]}:38'b0;tp_q<=ENABLE_MTP?f_mtp[0+:43]:43'b0;
     teh_q<={eho[99],eho[78+:21],eho[75+:3]};ab_q<=ab;dr_q<=dr&&fifos_empty;
    end
-  assign t_mtp={tm_q[196:140],ef_ir&&rn,tm_q[138:83],cf_ir&&rn,tm_q[81:0]};
-  assign t_host={th_q,jf_ir&&rn&&open_q};
+  assign t_mtp={tm_q[196:140],ef_ir&&rn_ef,tm_q[138:83],cf_ir&&rn_cf,tm_q[81:0]};
+  assign t_host={th_q,jf_ir&&rn_jf&&open_q};
   assign t_emit=te_q;assign t_provider=tp_q;
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;
-  assign t_backend={kf_ir&&rn,bf_od,bf_ov};
+  assign t_backend={kf_ir&&rn_kf,bf_od,bf_ov};
   // ---- HGI ARGMAX dispatch relay (sequencer band -> ARGMAX unit), three 1-entry stages (see header)
   wire rn_t;   // reset replica for the top ready pin (fanout 1)
   ot_sc_rep_ff #(.RV(1'b0)) u_rn_t(.clk(c),.rst_n(1'b1),.d(~rs[0]),.q(rn_t));
@@ -166,9 +216,9 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
    if (!m_full) m_d<=t_d;
    if (!b_full) b_d<=m_d;
   end
-  always @(posedge c or posedge rm) if (rm) begin t_full<=0;m_full<=0;b_full<=0;b_v<=0;u_rdy_q<=0;b_hold<=0; end
+  always @(posedge c or posedge rm_argmax) if (rm_argmax) begin t_full<=0;m_full<=0;b_full<=0;b_v<=0;u_rdy_q<=0;b_hold<=0; end
    else begin
-    t_full<=t_full ? m_full : (x_hgi_argmax_rec[0]&&rn);
+    t_full<=t_full ? m_full : (x_hgi_argmax_rec[0]&&rn_argmax);
     m_full<=m_full ? b_full : t_full;
     b_full<=b_full ? !b_v : m_full;
     u_rdy_q<=f_hgi_argmax[0];
@@ -176,7 +226,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
     b_hold<=b_send ? 2'd2 : (b_hold==2'd0 ? 2'd0 : b_hold-2'd1);
    end
   reg [2:1] ar_b,ar_m,ar_t;
-  always @(posedge c or posedge rm) if (rm) begin ar_b<=0;ar_m<=0;ar_t<=0; end
+  always @(posedge c or posedge rm_argmax) if (rm_argmax) begin ar_b<=0;ar_m<=0;ar_t<=0; end
    else begin ar_b<=f_hgi_argmax[2:1];ar_m<=ar_b;ar_t<=ar_m; end
   assign t_hgi_argmax={b_d,b_v};
   assign x_hgi_argmax_ret={ar_t,!t_full&&rn_t};
@@ -233,3 +283,11 @@ module hfd_cmdproc_s_mtp_native_mx1_mtp #(parameter integer ENABLE_MTP=0)(
   .drained_ready(guard_drained),.active(t_host[1]),.inflight(t_host[2]),.identity_fault(t_host[3]),.fault(guard_fault));
 endmodule
 `default_nettype wire
+
+// Keep independent unit-owned reset trees in the mapped graph.
+(* keep_hierarchy *)
+module ot_mx1_reset_leaf(input wire clk,input wire rst,output wire q);
+ reg [1:0] rs;
+ always @(posedge clk or posedge rst) if(rst) rs<=2'b11;else rs<={rs[0],1'b0};
+ assign q=rs[1];
+endmodule

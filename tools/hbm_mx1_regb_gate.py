@@ -99,12 +99,24 @@ def slot(work, name, mut):
 
 
 def main():
+    global TB_R, TB_D
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--local-reset', action='store_true', help='qualify opt-in LOCALRST=1 with identical transaction and mutant cases')
     ap.add_argument('--single', help='run one system case (e.g. R_mutant_done_not_held) and exit with its raw simulation '
                                      'rc (closure-loop expect=fail bench); --out is then the case log')
     a = ap.parse_args()
+    if a.local_reset:
+        a.work.mkdir(parents=True, exist_ok=True)
+        for key in ('TB_R', 'TB_D'):
+            origin = ROOT / globals()[key]
+            text = origin.read_text()
+            needle = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),'
+            assert text.count(needle) == 1
+            target = a.work.resolve() / origin.name
+            target.write_text(text.replace(needle, needle + '.LOCALRST(1),'))
+            globals()[key] = str(target)
     if a.single:
         a.work.mkdir(parents=True, exist_ok=True)
         sysb = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R]]
@@ -159,7 +171,7 @@ def main():
     srcs = NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R, TB_L, TB_D, TB_F, 'physical/hbm_cp_mtp_native/gen_ar_fc.py', 'rtl/hbm_accel/generic/ot_hgi_argmax_slot.sv',
                                      'rtl/hbm_accel/generic/adapters/ot_hgi_argmax_record.sv',
                                      'rtl/hbm_accel/generic/tb/tb_hgi_argmax_slot.sv', 'rtl/hbm_accel/generic/tb/run_argmax_slot.sh']
-    rec = dict(schema='opentallas.hbm.mx1_regb.gate.v1', verdict='PASS' if ok else 'FAIL', expectations=want, cases=cases,
+    rec = dict(local_reset=a.local_reset, schema='opentallas.hbm.mx1_regb.gate.v1', verdict='PASS' if ok else 'FAIL', expectations=want, cases=cases,
                source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in srcs},
                scope='MX1 registered MTP boundary in the connected native closed control (real controller hgi_mtp_native PRL 4 '
                      '+ physical top incl. AR + typed backend + finite queue; synthetic SM arithmetic / kernel PCs); legacy '
