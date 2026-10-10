@@ -319,3 +319,29 @@ module ot_qfd_crom_lbuf #(
         else if (!fault && ((|t_miss) || f_fault || grp_dis)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : f_fault ? 2'd2 : 2'd3; end
     end
 endmodule
+
+// Die master qfd_su_cbuf: ot_qfd_crom_lbuf SRAM 1, far latency 11 (crom 5 + 3 + 3 relays), no top parameters (yosys 0.68
+// asserts on a re-processed parameterised top).
+module ot_qfd_su_cbuf (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [63:0]       crom_re,
+    input  wire [64*24-1:0]  crom_addr,
+    input  wire [5:0]        crom_stage,
+    output wire [64*64-1:0]  crom_q,
+    input  wire [5:0]        stage,
+    input  wire              tok_start,
+    input  wire [17:0]       tpos,
+    output wire              st_rdy,
+    output wire [63:0]       f_re,
+    output wire [64*24-1:0]  f_addr,
+    output wire [5:0]        f_stage,
+    input  wire [64*64-1:0]  f_q,
+    input  wire              f_fault,
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+    ot_qfd_crom_lbuf #(.SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy),
+        .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q), .f_fault(f_fault), .fault(fault), .fault_code(fault_code));
+endmodule
