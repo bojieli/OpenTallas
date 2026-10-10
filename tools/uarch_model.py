@@ -15741,3 +15741,28 @@ def dsrom_selector_one_row_frpr_model():
     from s81_ph import selector_one_row
     # The standalone planner keeps its sibling import for direct CLI use.
     return selector_one_row.build(Path(__file__).resolve().parents[1])
+
+
+def dsrom_selector_registered_seam_model(stages=7):
+    """Before-RTL sizing of full-width selector quarter/control seam registers."""
+    if stages < 0 or stages > 7:
+        raise ValueError('measured candidate range is zero through seven stages')
+    bits=4*(865+354+66+1)*stages
+    return dict(element='ot_s81ph_sel_t',opt_in='SEAM_STAGES',default=0,
+        qualified=False,macs_per_cycle=0,memory_port_changes=0,quarters=4,
+        independent_full_bundle_register_bits=bits,
+        station_512_chunks=4*(2+1+1+1)*stages,
+        register_area_proxy_um2=bits*5.0,
+        area_basis='conservative5um2 per bit proxy includes pin/clock/reset overhead; physical mapping required',
+        forward_added_cycles=stages,reverse_added_cycles=stages,
+        control_roundtrip_added_cycles=2*stages,
+        control_parameters=dict(QIO=1,XDX=1+stages,SLAT=4),credits_per_quarter=4,
+        max_credit_limited_beats_per_cycle=4/(9+2*stages),
+        source_latency_mean_cycles=174,source_latency_max_cycles=310,
+        full_segment_added_cycles='minimum full-shape transaction bench measures all waits/replay and credit occupancy before admission',
+        boundary_bits_per_cycle=5144,
+        routing_tracks='one-row actual M8 0.08um dedicated686.88um north channel; station placements and PG qualification pending',
+        pin_segment_um_target=100,track_capacity_qualification='UNQUALIFIED',
+        mux_demux='no arbitration or numeric reorder; explicit full-width pipeline registers',
+        fanout='one local rst synchronizer per quarter seam, no unregistered ready fanout',
+        composed_latency_ready_for_route=False)
