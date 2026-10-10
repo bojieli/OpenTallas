@@ -31,6 +31,7 @@ module ot_hgi_att_unit #(
     parameter integer NL = 2,               // row lanes (D / (NL x S) <= 32: a tile's dims in one 32-dim group)
     parameter integer BLK = 512,
     parameter integer NOUT = 8,
+    parameter integer SECTOR_CAPTURE = 0, // opt-in codec output capture
     parameter integer MUT_RING = 0          // mutant: ring rows from slot 0
 ) (
     input  wire          clk,
@@ -130,7 +131,17 @@ module ot_hgi_att_unit #(
     // ---- banked writes (each bank: one write an edge)
     wire land_q = (st == S_QRD) && qk && hq < lanes && vr[273] && !vr[256];
     wire land_p = (st == S_PRD) && vr[273] && !vr[256];
-    wire land_c = (st == S_KVC) && hr_vq;
+    wire codec_v; wire [255:0] codec_codes; wire [31:0] codec_mask, codec_bad; wire [7:0] codec_addr;
+    generate if (SECTOR_CAPTURE) begin : g_codec
+        ot_hgi_att_sector_codec u_codec (.clk(clk), .rst_n(rst_n), .in_v(hr_v), .in_data(hr_data),
+            .in_tag(hr_tag), .in_es(es_b), .out_v(codec_v), .out_codes(codec_codes),
+            .out_mask(codec_mask), .out_bad(codec_bad), .out_addr(codec_addr));
+    end else begin : g_no_codec
+        assign codec_v = 1'b0; assign codec_codes = 256'd0; assign codec_mask = 32'd0;
+        assign codec_bad = 32'd0; assign codec_addr = 8'd0;
+    end endgenerate
+    wire response_land = SECTOR_CAPTURE ? codec_v : hr_vq;
+    wire land_c = (st == S_KVC) && response_land;
     wire [26:0] qbase = {9'd0, abase} + hq * {9'd0, astr};
     wire [26:0] pbase = qbase + {6'd0, blk0};
     genvar gb, gh;
@@ -178,7 +189,9 @@ module ot_hgi_att_unit #(
         always @(posedge clk) begin
             cflt[gb] <= 1'b0;
             if (land_c) begin
-                if (es_b == 2'd0) m[hr_tq] <= hr_dq[8*gb +: 8];
+                if (SECTOR_CAPTURE) begin
+                    if (codec_mask[gb]) begin m[codec_addr] <= codec_codes[8*gb +: 8]; cflt[gb] <= codec_bad[gb]; end
+                end else if (es_b == 2'd0) m[hr_tq] <= hr_dq[8*gb +: 8];
                 else if (es_b == 2'd1 && hr_tq[0] == gb / 16) begin m[hr_tq >> 1] <= c16[7:0]; cflt[gb] <= c16[8]; end
                 else if (es_b == 2'd2 && hr_tq[1:0] == gb / 8) begin m[hr_tq >> 2] <= c32[7:0]; cflt[gb] <= c32[8]; end
             end
@@ -359,8 +372,8 @@ module ot_hgi_att_unit #(
                     if ((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) begin
                         hq_v <= 1'b1; hq_addr <= (rbyte >> 5) + isec; hq_tag <= isec; isec <= isec + 8'd1;
                     end
-                    hout <= hout + (((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (hr_vq ? 4'd1 : 4'd0);
-                    if (isec == nsec && hout == 4'd0 && !hr_vq && (!kv_v || kv_ready)) begin
+                    hout <= hout + (((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (response_land ? 4'd1 : 4'd0);
+                    if (isec == nsec && hout == 4'd0 && !response_land && (!kv_v || kv_ready)) begin
                         // the row -> staging slot kl; a beat leaves with NL rows (or the job's last rows)
                         kv_w[kl * ROWW +: ROWW] <= kv_row;
                         if (kl == NL - 1 || row == blk0 + tb - 21'd1) begin

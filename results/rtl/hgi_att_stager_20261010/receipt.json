@@ -1,0 +1,15 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_sector_codec.sv": "2c978dd498f0106175de8bdb37f4a60f41374a73bdcdfc8be66ad693b4767a83",
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv": "8e09ab1590efbf85213c9385366ef8441512a3dc6ba86c5ad553d011f3f8112f",
+    "tools/hgi_adapters/att_sector_bench.py": "c7750959e6d1bb9c0c3f7e076c7baf133c82221e419f717d6e7e5a7e6c0c7e27",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_sector.sv": "71dc2f0d113b5ee522b0c880c252c0f8f47684442ae8b52b10634770db06c54b",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "exact": "4265 sectors PASS; exhaustive65536BF16/all256rawFP8/FP32grid+fault/random",
+  "four_state": "idle payload X, valid reset retained, scoreboard valid-gated",
+  "negative": "MUT_ADDR1 rejected sector0 wrongsectoridentity",
+  "unit_integration": "opt-in SECTOR_CAPTURE default0; full transaction gate pending",
+  "physical": "standalone actual sector codec; not ATT engine qualification",
+  "unit_cycles": "adds one response pipeline stage and delays last-sector drain one edge/row; actual record delta pending"
+}

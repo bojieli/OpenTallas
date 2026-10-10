@@ -7,7 +7,7 @@ VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/veril
 mkdir -p "$OUT"; cd "$ROOT"
 python3 tools/hgi_adapters/att_unit_bench.py --out "$OUT/vec" --big ${BIG:-1} > "$OUT/gen.log"
 SRC="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv
-  rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv
+  rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv rtl/hbm_accel/generic/peers/ot_hgi_att_sector_codec.sv
   rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
 D=""; [ -n "$MUT" ] && D="-D$MUT"

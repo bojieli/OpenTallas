@@ -20,11 +20,16 @@ module tb_hgi_att_unit;
 `else
     localparam integer MR = 0;
 `endif
+`ifdef SECTOR_CAPTURE
+    localparam integer SC = 1;
+`else
+    localparam integer SC = 0;
+`endif
     reg rst_n = 0; reg [1215:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire hq_v; reg hq_rdy = 0; wire [34:0] hq_addr; wire [7:0] hq_tag;
     reg hr_v = 0; reg [7:0] hr_tag = 0; reg [255:0] hr_data = 0;
-    ot_hgi_att_unit #(.H(4), .MUT_RING(MR)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_att_unit #(.H(4), .SECTOR_CAPTURE(SC), .MUT_RING(MR)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
         .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
