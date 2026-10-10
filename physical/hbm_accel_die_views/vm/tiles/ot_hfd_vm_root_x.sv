@@ -7,7 +7,7 @@
 // All payload+192-bit source identities live in actual 128x256 SRAM with W6
 // SECDED. Writes are ACKed only after SRAM readback. No zero-init dependency.
 // por_n is COLD reset only. The caller must drain before resetting ownership.
-module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
+module ot_hfd_vm_root_x #(parameter integer ENABLE=0,parameter integer SEATP=0,parameter integer FREG=0)(
  output wire mem_cmd_v,output wire mem_cmd_we,output wire mem_cmd_bank,output wire [6:0] mem_cmd_addr,output wire [2815:0] mem_wd,
  input wire mem_rd_v,input wire [2815:0] mem_rd,
  input wire clk,por_n,
@@ -41,7 +41,7 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
   assign drained=1;assign fault=0;
   assign mem_cmd_v=0;assign mem_cmd_we=0;assign mem_cmd_bank=0;assign mem_cmd_addr=0;assign mem_wd=0;
  end else begin:on
-  localparam [3:0] IDLE=0,WRITE=1,VERIFY=2,CAPTURE=3,CHECK=4,WACK=5,READ=6,PUBLISH=7,WAIT_RD=8;
+  localparam [3:0] IDLE=0,WRITE=1,VERIFY=2,CAPTURE=3,CHECK=4,WACK=5,READ=6,PUBLISH=7,WAIT_RD=8,LOAD=9;
   reg [3:0] state,next_state;
   reg bank,next_bank,is_write,next_is_write,sticky,next_sticky;
   reg [6:0] addr,next_addr;
@@ -67,10 +67,17 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
    assign sample_data[k*64+:64]=b[63:0];assign sample_UE[k]=b[65];
   end
   wire seat_bad=|seat_UE;
-  assign fault=sticky||control_bad||(|valid_UE)||(state!=IDLE&&seat_bad);
+  reg bad_cv_q,seat_bad_q,seat_ld_q;   // FREG registered verdicts (cold reset)
+  wire bad_cv=FREG?bad_cv_q:(control_bad||(|valid_UE));
+  wire seat_bad_e=FREG?(seat_bad_q&&!seat_ld_q):seat_bad;
+  assign fault=sticky||bad_cv||(state!=IDLE&&seat_bad_e);
   assign wr_ready=state==IDLE&&!fault&&!rd_v;
   assign rd_ready=state==IDLE&&!fault&&!wr_v;
   wire wf=wr_v&&wr_ready,rf=rd_v&&rd_ready;
+  wire fault_i=sticky||bad_cv;   // = fault in IDLE
+  wire ld_w=SEATP?(state==IDLE&&!fault_i&&wr_v&&!rd_v):wf,ld_r=SEATP?(state==IDLE&&!fault_i&&rd_v&&!wr_v):rf;
+  reg chk_err_q;reg [36*72-1:0] smp_enc_q;   // smp_enc_q: data register (no reset), loaded in CHECK
+  always @(posedge clk)if(SEATP!=0&&state==CHECK)for(integer k=0;k<36;k=k+1)smp_enc_q[k*72+:72]<=encode64(sample_data[k*64+:64]);
   assign wr_ACK_v=state==WACK&&!fault;
   assign wr_ACK_owner=seat_data[2063+:192];
   assign drained=state==IDLE&&!fault;
@@ -90,7 +97,7 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
   end
   always @*begin
    next_state=state;next_bank=bank;next_addr=addr;next_is_write=is_write;
-   next_sent=sent;next_acked=acked;next_sticky=sticky||control_bad||(|valid_UE)||(state!=IDLE&&seat_bad);
+   next_sent=sent;next_acked=acked;next_sticky=sticky||bad_cv||(state!=IDLE&&seat_bad_e);
    if((|tap_ACK_v)&&state!=PUBLISH)next_sticky=1;
    if(!fault)case(state)
     IDLE:begin
@@ -105,7 +112,10 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
     VERIFY,READ:next_state=WAIT_RD;
     WAIT_RD:if(mem_rd_v)next_state=CAPTURE;
     CAPTURE:next_state=CHECK;
-    CHECK:begin
+    LOAD:begin
+     if(chk_err_q)next_sticky=1;else if(is_write)next_state=WACK;else next_state=PUBLISH;
+    end
+    CHECK:if(SEATP)next_state=LOAD;else begin
      if((|sample_UE)||(|sample_data[2303:2255]))next_sticky=1;
      else if(is_write)begin
       if(sample_data!=seat_data)next_sticky=1;else next_state=WACK;
@@ -131,18 +141,33 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0)(
   always @(posedge clk or negedge por_n)begin
    if(!por_n)begin
     state<=IDLE;bank<=0;addr<=0;is_write<=0;sticky<=0;sent<=0;acked<=0;
-    control_code<=0;seat<=0;sampled<=0;validity<=0;
+    control_code<=0;seat<=0;sampled<=0;validity<=0;chk_err_q<=0;bad_cv_q<=0;seat_bad_q<=0;seat_ld_q<=0;
    end else begin
     state<=next_state;bank<=next_bank;addr<=next_addr;is_write<=next_is_write;
     sticky<=next_sticky;sent<=next_sent;acked<=next_acked;control_code<=encode64(next_control);
-    if(wf||rf)begin
-     raw=wf?{49'b0,wr_owner,wr_data}:{49'b0,rd_owner,2063'b0};
+    bad_cv_q<=control_bad||(|valid_UE);seat_bad_q<=seat_bad;
+    seat_ld_q<=(ld_w||ld_r)
+`ifndef MUT_SEATP
+     ||(SEATP!=0&&state==LOAD&&!chk_err_q&&!is_write)
+`endif
+     ||(SEATP==0&&state==CHECK&&!fault&&!is_write&&!next_sticky);
+    if(ld_w||ld_r)begin
+     raw=ld_w?{49'b0,wr_owner,wr_data}:{49'b0,rd_owner,2063'b0};
      for(integer k=0;k<36;k=k+1)seat[k*72+:72]<=encode64(raw[k*64+:64]);
     end
     if(state==CAPTURE&&!fault)sampled<=rd_hold;
-    if(state==CHECK&&!fault&&!is_write&&!next_sticky)
+    if(SEATP!=0&&state==CHECK&&!fault)
+     chk_err_q<=(|sample_UE)||(|sample_data[2303:2255])||(is_write?(sample_data!=seat_data):(sample_data[2063+:192]!=seat_data[2063+:192]));
+`ifndef MUT_SEATP
+    if(SEATP!=0&&state==LOAD&&!chk_err_q&&!is_write)seat<=smp_enc_q;
+`endif
+    if(SEATP!=0&&state==LOAD&&!chk_err_q&&is_write)begin
+     next_valid=valid_bits;next_valid[{bank,addr}]=1;
+     for(integer k=0;k<4;k=k+1)validity[k*72+:72]<=encode64(next_valid[k*64+:64]);
+    end
+    if(SEATP==0&&state==CHECK&&!fault&&!is_write&&!next_sticky)
      for(integer k=0;k<36;k=k+1)seat[k*72+:72]<=encode64(sample_data[k*64+:64]);
-    if(state==CHECK&&!fault&&is_write&&!next_sticky)begin
+    if(SEATP==0&&state==CHECK&&!fault&&is_write&&!next_sticky)begin
      next_valid=valid_bits;next_valid[{bank,addr}]=1;
      for(integer k=0;k<4;k=k+1)validity[k*72+:72]<=encode64(next_valid[k*64+:64]);
     end

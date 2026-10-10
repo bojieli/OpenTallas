@@ -1,0 +1,215 @@
+{
+ "master": "hfd_vm_se_e",
+ "kind": "vm8v",
+ "w_um": 350.76,
+ "h_um": 1000.056,
+ "obs_top": 7,
+ "parent": "hfd_vm_se",
+ "half": "e",
+ "side": "outer",
+ "generator": "physical/hbm_accel_die_views/vm/vcut8/make_vm_vcut8.py",
+ "ports": {
+  "ck": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M7",
+   "layers": [
+    "M7"
+   ],
+   "x": [
+    175.376,
+    175.376
+   ],
+   "y": [
+    500.028,
+    500.028
+   ]
+  },
+  "rst": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M5",
+   "layers": [
+    "M5"
+   ],
+   "x": [
+    9.996,
+    9.996
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "f_n_wr": {
+   "bits": 2264,
+   "direction": "input",
+   "layer": "M5",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "x": [
+    165.9,
+    328.784
+   ],
+   "y": [
+    999.96,
+    999.96
+   ]
+  },
+  "f_su_SE": {
+   "bits": 2048,
+   "direction": "input",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    350.664,
+    350.664
+   ],
+   "y": [
+    35.004,
+    296.912
+   ]
+  },
+  "iSE": {
+   "bits": 512,
+   "direction": "input",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    350.664,
+    350.664
+   ],
+   "y": [
+    899.532,
+    964.816
+   ]
+  },
+  "qSE": {
+   "bits": 582,
+   "direction": "output",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    350.664,
+    350.664
+   ],
+   "y": [
+    559.824,
+    634.064
+   ]
+  },
+  "t_n_ctl": {
+   "bits": 256,
+   "direction": "output",
+   "layer": "M5",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "x": [
+    329.148,
+    347.472
+   ],
+   "y": [
+    999.96,
+    999.96
+   ]
+  },
+  "t_n_row": {
+   "bits": 2256,
+   "direction": "output",
+   "layer": "M5",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "x": [
+    3.216,
+    165.52
+   ],
+   "y": [
+    999.96,
+    999.96
+   ]
+  },
+  "t_su_SE": {
+   "bits": 2048,
+   "direction": "output",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    350.664,
+    350.664
+   ],
+   "y": [
+    297.42,
+    559.312
+   ]
+  },
+  "xSE": {
+   "bits": 2068,
+   "direction": "output",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    350.664,
+    350.664
+   ],
+   "y": [
+    634.572,
+    899.024
+   ]
+  },
+  "w2e": {
+   "bits": 3293,
+   "direction": "input",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    30.864,
+    662.94
+   ]
+  },
+  "e2w": {
+   "bits": 1591,
+   "direction": "output",
+   "layer": "M4",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    663.564,
+    968.844
+   ]
+  }
+ }
+}

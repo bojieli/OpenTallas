@@ -468,6 +468,8 @@ R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_e
 # nominal 432-um front_c strip (route line hgi_smh_front_c_int8_nom).  787.15 mm2, 30.59 x 25.73 mm (H on the 26-mm
 # axis), full network build (not a probe), margin lint PASS, SM path stages = R25S.
 R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True))
+# vm8-seam 2026-10-09: R25G with the VM as the eight vertical-cut halves (vm/vcut8; VM slot and outline unchanged).
+R25GV = dict(R25G, vm_split8=True, vm8_vcut=True, vm8_exact_pins=True)
 ADOPTED = R25
 
 
@@ -1362,6 +1364,7 @@ def vm_cross_align(M, k, two_layer=False):
 
 
 VM8_DIR = 'physical/hbm_accel_die_views/vm/split8/ports'
+VM8V_DIR = 'physical/hbm_accel_die_views/vm/vcut8/ports'   # vm8-seam 2026-10-09: vertical-cut halves (vm8_vcut)
 
 
 def split_vm8(m):
@@ -1370,20 +1373,33 @@ def split_vm8(m):
     hfd_vm_<q>_s / _n (699.816 x 500.04 um, north at y + 500.016), each with its own centre M7 ck and rst; every die
     port goes to the half whose record (vm/split8/ports/<master>/ports.json) carries it, and the halves are joined by
     the zero-length seam s2n / n2s (registered both ends, +2 cycles per crossing).  Pin plans fixed to the records."""
+    # vm8_vcut (vm8-seam 2026-10-09, vm/vcut8/make_vm_vcut8.py): the quadrant is cut at x = 349.056 into a west / east
+    # half (349.056 / 350.760 x 1,000.056 um, both origins on the 1.728 um centre-ck lattice), seam w2e / e2w on the cut;
+    # same quadrant outline, so the VM slot is unchanged.  Pins only from the half records (exact rectangles).
+    vcut = bool(m['variant'].get('vm8_vcut'))
+    HS = 'we' if vcut else 'sn'
     recs = {}
     for q in ('sw', 'se', 'nw', 'ne'):
-        for h in 'sn':
-            recs[(q, h)] = json.loads((ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/ports.json').read_text())
+        for h in HS:
+            recs[(q, h)] = json.loads((ROOT / (VM8V_DIR if vcut else VM8_DIR) / f'hfd_vm_{q}_{h}/ports.json').read_text())
     tiles = {it.name: it for it in m['insts'] if it.name.startswith('hb_vm_') and it.master.startswith('hfd_vm_')}
     halves, own = {}, {}
     for nm, it in tiles.items():
         q = it.master[len('hfd_vm_'):]
-        dy = 500.04 if m['variant'].get('vm8_nonoverlap') else 1000.056 - 500.04
-        hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
-        hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
-                  region=it.region, domain=it.domain)
+        if vcut:
+            rw, re_ = recs[(q, 'w')], recs[(q, 'e')]
+            assert abs(rw['w_um'] + re_['w_um'] - it.w) < 0.05 and rw['h_um'] <= it.h + 0.05, (nm, it.w, it.h)
+            hs = Inst(nm + '_w', it.master + '_w', it.x, it.y, rw['w_um'], rw['h_um'], it.orient, kind=it.kind, region=it.region,
+                      domain=it.domain)
+            hn = Inst(nm + '_e', it.master + '_e', round(it.x + rw['w_um'], 4), it.y, re_['w_um'], re_['h_um'], it.orient,
+                      kind=it.kind, region=it.region, domain=it.domain)
+        else:
+            dy = 500.04 if m['variant'].get('vm8_nonoverlap') else 1000.056 - 500.04
+            hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
+            hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
+                      region=it.region, domain=it.domain)
         halves[nm] = (hs, hn)
-        for h, x in (('s', hs), ('n', hn)):
+        for h, x in zip(HS, (hs, hn)):
             for p_ in recs[(q, h)]['ports']:
                 own[(nm, p_)] = x.name
     m['insts'] = [i for i in m['insts'] if i.name not in tiles] + [x for ab in halves.values() for x in ab]
@@ -1400,6 +1416,11 @@ def split_vm8(m):
         nb.append((bid, cls, bits, e2))
     for nm, (hs, hn) in halves.items():
         q = tiles[nm].master[len('hfd_vm_'):]
+        if vcut:
+            rp = recs[(q, 'w')]['ports']
+            nb.append((f'{nm}_seam_w2e', 'hub', rp['w2e']['bits'], [(hs.name, 'w2e'), (hn.name, 'w2e')]))
+            nb.append((f'{nm}_seam_e2w', 'hub', rp['e2w']['bits'], [(hn.name, 'e2w'), (hs.name, 'e2w')]))
+            continue
         rp = recs[(q, 's')]['ports']
         nb.append((f'{nm}_seam_s2n', 'hub', rp['s2n']['bits'], [(hs.name, 's2n'), (hn.name, 's2n')]))
         nb.append((f'{nm}_seam_n2s', 'hub', rp['n2s']['bits'], [(hn.name, 'n2s'), (hs.name, 'n2s')]))
@@ -1427,7 +1448,7 @@ def split_vm8(m):
         if m['variant'].get('vm8_exact_pins'):
             # Preserve each requested rectangle and bit identity. Ranges lose
             # single-pin faces and the half-track origin of even-width groups.
-            text=(ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/io_place.tcl').read_text()
+            text=(ROOT / (VM8V_DIR if vcut else VM8_DIR) / f'hfd_vm_{q}_{h}/io_place.tcl').read_text()
             pattern=r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
             exact=defaultdict(dict)
             for port,bit,layer,x,y,w_,h_ in re.findall(pattern,text):
@@ -3717,7 +3738,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gv=R25GV, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
