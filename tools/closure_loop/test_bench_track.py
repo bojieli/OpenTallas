@@ -17,10 +17,13 @@ class Fleet:
     def fits(self, *a):
         return True, "ok"
 
-    def launched(self, *a):
+    def launched(self, *a, **kw):
         pass
 
-    def _launched(self, *a):
+    def _launched(self, *a, **kw):
+        pass
+
+    def launch_complete(self, *a):
         pass
 
     def probe(self, *a):

@@ -880,6 +880,7 @@ PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMI
 class Fleet:
     def __init__(self):
         self.pending = {}      # host -> [(t, threads, ram)]
+        self.inflight_launches = {}  # actual stage reservations newer than the measured host snapshot
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
@@ -902,17 +903,20 @@ class Fleet:
                 return dict(good[1], stale_s=round(time.time() - good[0])) if time.time() - good[0] >= 45 else good[1]
             if c:
                 return c[1]
+        measured_at = time.time()
         info = self._probe_once(host)
         for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
             if info is not None:
                 break
             time.sleep(delay)
+            measured_at = time.time()
             info = self._probe_once(host)
         if info is None:
             good = self.last_good.get(host)
             if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
                 info = dict(good[1], stale_s=round(time.time() - good[0]))
         else:
+            info = dict(info, admission_measured_at=measured_at)
             self.last_good[host] = (time.time(), info)
         self.probe_cache[host] = (time.time(), info)
         return info
@@ -1005,8 +1009,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
         if ram <= 2:          # 2026-10-08: collect/export copy files; host-local, so they cannot move -- a 16 GB headroom
             head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
-        if info["mem_gb"] < ram + head:
-            return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB < {ram}+{head:.0f}"
+        # Actual launches reserved after this measurement must not spend the same free bytes twice.
+        # Waiting/migration claims and historical peaks never enter this ledger. A successful fresh
+        # snapshot observes the live host directly and clears older launch charges (no growth reserve).
+        measured_at = info.get("admission_measured_at", 0)
+        recent = [p for p in self.inflight_launches.get(host, []) if p[3] is None or p[3] >= measured_at]
+        self.inflight_launches[host] = recent
+        launch_ram = sum(p[1] for p in recent if job is None or p[2] != job)
+        if info["mem_gb"] - launch_ram < ram + head:
+            return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB - snapshot launches {launch_ram} GB < {ram}+{head:.0f}"
         # drive-0849 2026-10-09 (coordinator): a light stage (bench / collect / export: ram <= LIGHT_STAGE_RAM_GB) writes a few
         # GB at most; the 200 GB run-root floor held EPYC4's benches + collects for > 1 h at 192-197 GB free while 250 GB
         # of RAM sat idle.  Light stages keep only LIGHT_DISK_FLOOR_GB; routes / calibrates / ECOs keep the full floor.
@@ -1021,16 +1032,29 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return False, f"{cfg['label']} {path} has {free} GB free < {floor}"
         return True, "ok"
 
-    def launched(self, host, threads, ram, job=None):
+    def launched(self, host, threads, ram, job=None, *, actual=False):
         with FLEET_LOCK:
-            self._launched(host, threads, ram, job)
+            token = self._launched(host, threads, ram, job, actual=actual)
+            if actual:  # this public notification follows launch_stage
+                self.launch_complete(host, token)
 
-    def _launched(self, host, threads, ram, job=None):
+    def _launched(self, host, threads, ram, job=None, *, actual=False):
+        token = time.time()
+        if actual:
+            self.inflight_launches.setdefault(host, []).append((token, ram, job, None))
         if job is not None:   # one claim per job: a launch or a new host choice replaces its earlier claims
             for hh in self.pending:
                 self.pending[hh] = [p for p in self.pending[hh] if len(p) < 4 or p[3] != job]
         self.pending.setdefault(host, []).append((time.time(), threads, ram, job))
         self.probe_cache.pop(host, None)
+        return token
+
+    def launch_complete(self, host, token):
+        # The pre-launch invalidation can be refreshed while SSH starts a child; refresh again after it.
+        with FLEET_LOCK:
+            self.inflight_launches[host] = [(*p[:3], time.time()) if p[0] == token else p
+                                           for p in self.inflight_launches.get(host, [])]
+            self.probe_cache.pop(host, None)
 
     def choose(self, spec, exclude=()):
         with FLEET_LOCK:
@@ -2749,7 +2773,7 @@ def summarize_failure(j, fleet, metrics):
            f"{','.join(fail_corners)} --output {j['run']}/cl/path_summary.json")
     st = dict(key="summary", kind="summary", threads=2, ram=16)
     launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 2, 16)
+    fleet.launched(j["host"], 2, 16, actual=True)
     j["status"], j["stage_key"] = "SUMMARY", "summary"
     return True
 
@@ -2848,13 +2872,16 @@ def launch_ready(j, fleet, spec, stl, st):
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        fleet._launched(j["host"], st["threads"], st["ram"], j["name"])  # reservation (replaces the job's claim)
+        st["admission_launch_token"] = fleet._launched(j["host"], st["threads"], st["ram"], j["name"], actual=True)  # reservation (replaces the job's claim)
         return st
 
 
 def launch_now(j, fleet, st):
     """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
-    launch_stage(j, st, st["cmd"])
+    try:
+        launch_stage(j, st, st["cmd"])
+    finally:
+        fleet.launch_complete(j["host"], st["admission_launch_token"])
     j["status"] = "RUNNING"
     event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
     experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
@@ -2999,10 +3026,13 @@ def bench_track(j, fleet, stl):
                         j["bwait"] = why
                         event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                fleet._launched(host, st["threads"], st["ram"])
+                launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             n = (e or {}).get("n", 0) + 1
             v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
-            launch_stage(v, st, st["cmd"])
+            try:
+                launch_stage(v, st, st["cmd"])
+            finally:
+                fleet.launch_complete(host, launch_token)
             j["bench_location"] = location
             tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
@@ -3498,10 +3528,13 @@ def cal_track(j, fleet, stl):
             ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
             if not ok:
                 return
-            fleet._launched(j["host"], st["threads"], st["ram"])
+            launch_token = fleet._launched(j["host"], st["threads"], st["ram"], actual=True)
         c["n"] += 1
         v = dict(j, attempt=f"{j['attempt']}c{c['n']}")
-        launch_stage(v, st, retry_aside(dict(j, attempt=2), st) + st["cmd"])   # an old _cal dir is moved aside
+        try:
+            launch_stage(v, st, retry_aside(dict(j, attempt=2), st) + st["cmd"])   # an old _cal dir is moved aside
+        finally:
+            fleet.launch_complete(j["host"], launch_token)
         c.update(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], started=now_iso())
         event(j, f"parallel calibrate launched ({c['tag']}) beside {j.get('stage_key')}")
         return
@@ -4073,7 +4106,7 @@ def start_vtswap_eco(j, fleet, m):
                     started=now_iso(), target_ps=target, lvt_cap_pct=cap, auto=True)
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=16)
     launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 8, 16)
+    fleet.launched(j["host"], 8, 16, actual=True)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"thin TT setup miss ({setup_corner_label(m)} {tt:+.2f} / FF {m['ff_ps']:+.2f} / DRC 0): post-route VT-swap setup ECO "
              f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
@@ -4122,7 +4155,7 @@ def start_combo_hold_retry(j, fleet, m, prev):
                     setup_post_sdc=list(prev.get("setup_post_sdc") or []), pre=prev.get("pre"), started=now_iso(),
                     hold_retry=True, auto=True)
     launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
-    fleet.launched(j["host"], 8, 16)
+    fleet.launched(j["host"], 8, 16, actual=True)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"combo ECO result {prev.get('result', {}).get('ss_ps')} / FF {prev.get('result', {}).get('ff_ps')} misses hold by "
              f"< {-COMBO_HOLD_RETRY_FF:g} ps: one stacked hold pass (HM 0, ALLOW 4) on the combo db; out {out}")
@@ -4185,7 +4218,7 @@ def start_combo_eco(j, fleet, m):
                     sdc_name=m.get("sdc_name") or "6_final.sdc", setup_post_sdc=list(m.get("setup_post_sdc") or []),
                     pre=dict(ss_ps=tt, ff_ps=ff), started=now_iso(), lvt_cap_pct=cap, auto=True)
     launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
-    fleet.launched(j["host"], 8, 16)
+    fleet.launched(j["host"], 8, 16, actual=True)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"thin TT AND FF miss ({setup_corner_label(m)} {tt:+.2f} / FF {ff:+.2f} / DRC 0): post-route COMBO ECO "
              f"(VT-swap <= {cap:g} % LVT, then hold ECO HM 12 stacked on it, no re-route) on {rb}/6_final.odb; out {out}")
@@ -4291,7 +4324,7 @@ def start_hold_eco(j, fleet, m):
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_stage(j, st, cmd)
-    fleet.launched(j["host"], 8, 32)
+    fleet.launched(j["host"], 8, 32, actual=True)
     j["status"], j["stage_key"] = "ECO", "hold_eco"
     event(j, f"hold-only miss ({setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f}, DRC 0): post-route hold ECO launched on "
              f"{rb}/5_2_route.odb")
