@@ -79,8 +79,7 @@
      "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains"
     }
    ],
-   "spillover_only": true,
-   "note": " | 2026-10-10 06:5x drive-1010: spillover_only (ranked after every other host for NEW placements; running jobs and their retries stay) -- localhost->EPYC3 link 190 ms RTT / 20-40 % loss makes each 373 MB source tar ~30 min; lift when the host-side git mirror sync is live.",
+   "note": " | 2026-10-10 06:5x drive-1010: spillover_only (ranked after every other host for NEW placements; running jobs and their retries stay) -- localhost->EPYC3 link 190 ms RTT / 20-40 % loss makes each 373 MB source tar ~30 min; lift when the host-side git mirror sync is live. | 2026-10-10 07:1x drive-1010: spillover_only LIFTED with the host-side git mirror sync (d3e891f77; measured EPYC3 sync 11-17 s).",
    "git_mirror": "/srv/opentallas-scratch2/scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
   },
