@@ -84,7 +84,7 @@ def unit_ratios(reports):
     as the e2e reports): unit.op -> {ratio, records, run}.  They take precedence over the die-level bench ratios, whose
     SU/SFU/FUSED vehicles are reduced width and whose other ops are often a single record."""
     import hbm_generic_iface as HGI
-    out = {}
+    acc = {}
     for p in reports:
         d = json.loads(p.read_text())
         if not d.get("pass_", d.get("pass", True)):
@@ -92,10 +92,10 @@ def unit_ratios(reports):
         for (u, op), v in service(d["records"]).items():
             if v["sim"] > 0:
                 name = f"{u}.{HGI.D_OPS[u][op]}" if u in HGI.D_OPS and op < len(HGI.D_OPS[u]) else f"{u}.{op}"
-                out[name] = dict(rtl_service=round(v["rtl"], 1), sim_cost=round(v["sim"], 1),
-                                 ratio=round(v["rtl"] / v["sim"], 3), records=v["n"], run=str(p),
-                                 grade=d.get("grade", "production_width"))
-    return out
+                a = acc.setdefault(name, dict(rtl=0.0, sim=0.0, n=0, runs=[], grade=d.get("grade", "production_width")))
+                a["rtl"] += v["rtl"]; a["sim"] += v["sim"]; a["n"] += v["n"]; a["runs"].append(str(p))
+    return {k: dict(rtl_service=round(a["rtl"], 1), sim_cost=round(a["sim"], 1), ratio=round(a["rtl"] / a["sim"], 3),
+                    records=a["n"], runs=a["runs"], grade=a["grade"]) for k, a in acc.items()}
 
 
 REDUCED_E2E_UNITS = ("SU.", "SFU.", "FUSED.")      # the die bench builds these at reduced stream-unit width
@@ -141,11 +141,11 @@ def main():
     ap.add_argument("--dflash", action="store_true", help="also re-time the DFlash block-16 step")
     ap.add_argument("--reports", type=Path, nargs="*", help="hgi-e2e report.json files (default: results/rtl/hgi_e2e_*)")
     ap.add_argument("--unit-reports", type=Path, nargs="*",
-                    help="production-width unit benches (default: results/rtl/hgi_unit_tput_*/*/report.json)")
+                    help="production-width unit benches (default: results/rtl/hgi_unit_tput_*/**/report.json, merged per unit.op)")
     a = ap.parse_args()
     reports = sorted(a.reports) if a.reports else sorted(ROOT.glob("results/rtl/hgi_e2e_*/runs/*/report.json"))
     ureports = sorted(a.unit_reports) if a.unit_reports is not None else \
-        sorted(ROOT.glob("results/rtl/hgi_unit_tput_*/*/report.json"))
+        sorted(ROOT.glob("results/rtl/hgi_unit_tput_*/**/report.json"))
     rt, runs = ratios(reports)
     prod = unit_ratios(ureports)
     res = dict(runs=runs, per_unit=rt, production_width_units=prod, unit_reports=[str(p) for p in ureports],

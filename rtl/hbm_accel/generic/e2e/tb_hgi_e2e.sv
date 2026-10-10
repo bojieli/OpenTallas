@@ -25,6 +25,9 @@ module tb_hgi_e2e;
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer REAL_FETCH = 1;  // 1: the record-ring fetch goes through the REAL ot_hfd_loader_kport (lane 1: one
+                                       // transaction outstanding per lane, native endpoint) to a stack-service model at
+                                       // FLAT cycles; 0: the FPIPE lane model (FPIPE 1 hides the CP fetch gap)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -89,20 +92,55 @@ module tb_hgi_e2e;
     // ---------------------------------------------------------------- record-ring fetch (loader memory lane 1): HBM model
     // F5 (hgi-takeover): the lane takes a request a cycle and answers IN ORDER FLAT cycles later (the pipelined lane-1
     // read path the loader / kport fork provides); FPIPE = 0 is the old one-outstanding lane
+    generate if (!REAL_FETCH) begin : g_fetch_model
     integer fq_t [0:255]; reg [36:0] fq_a [0:255]; integer fq_h = 0, fq_n = 0; longint tn = 0;
-    always @(posedge clk) begin
-        tn <= tn + 1;
-        m_rsp_v <= 1'b0;
-        m_req_rdy <= (FPIPE != 0) ? (fq_n < 200) : (fq_n == 0);
-        if (fq_n > 0 && fq_t[fq_h % 256] <= tn) begin : frsp
-            bit [255:0] rd;
-            e2e_hbm_sector({27'd0, fq_a[fq_h % 256]}, 1'b0, 256'd0, 32'd0, rd);
-            m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
+        always @(posedge clk) begin
+            tn <= tn + 1;
+            m_rsp_v <= 1'b0;
+            m_req_rdy <= (FPIPE != 0) ? (fq_n < 200) : (fq_n == 0);
+            if (fq_n > 0 && fq_t[fq_h % 256] <= tn) begin : frsp
+                bit [255:0] rd;
+                e2e_hbm_sector({27'd0, fq_a[fq_h % 256]}, 1'b0, 256'd0, 32'd0, rd);
+                m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
+            end
+            if (rst_n && m_req_v && m_req_rdy) begin
+                fq_a[(fq_h + fq_n) % 256] = m_req_addr; fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1; fq_n = fq_n + 1;
+            end
         end
-        if (rst_n && m_req_v && m_req_rdy) begin
-            fq_a[(fq_h + fq_n) % 256] = m_req_addr; fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1; fq_n = fq_n + 1;
+    end else begin : g_fetch_real
+        // lane 1 of the die's loader memory port (ot_hfd_loader_hgi: kport ND 3, lane 1 = CP record-ring fetch)
+        wire [4*346-1:0] lq; reg [4*293-1:0] lr;
+        wire k_rsp_v, k_rsp_we, k_fault; wire [15:0] k_rsp_tag; wire [255:0] k_rsp_data; wire k_req_rdy;
+        ot_hfd_loader_kport #(.ENABLE(1), .ND(1)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(m_req_v), .req_rdy(k_req_rdy),
+            .req_we(1'b0), .req_addr(m_req_addr), .req_wdata(256'd0), .req_wstrb(32'd0), .req_tag(16'hf000),
+            .rsp_v(k_rsp_v), .rsp_rdy(1'b1), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data), .lq(lq), .lr(lr),
+            .fault(k_fault));
+        always @* m_req_rdy = k_req_rdy;
+        always @* begin m_rsp_v = k_rsp_v; m_rsp_data = k_rsp_data; end
+        // per stack service model: one native read at a time (the endpoint's), answered FLAT cycles after issue with the
+        // sector of the byte address the lane asked for (ND 1: at most one transaction in flight on the whole port)
+        reg [36:0] last_a; longint tn2 = 0; longint due [0:3]; reg busy_s [0:3]; reg [4:0] pc_s [0:3]; reg [15:0] tag_s [0:3];
+        initial for (int i = 0; i < 4; i++) begin busy_s[i] = 0; due[i] = 0; end
+        always @(posedge clk) begin
+            tn2 <= tn2 + 1;
+            if (rst_n && m_req_v && k_req_rdy) last_a <= m_req_addr;
+            if (rst_n && k_fault) begin $display("E2E FAIL: loader kport fault"); end
+            for (int st = 0; st < 4; st++) begin
+                automatic bit [345:0] q = lq[st*346 +: 346];
+                automatic bit rd_v = q[292]; automatic bit rr = q[344];
+                if (!busy_s[st]) begin
+                    lr[st*293 +: 293] <= 293'd1;                          // native_rdy
+                    if (rd_v) begin busy_s[st] <= 1; pc_s[st] <= q[297:293]; tag_s[st] <= q[343:328]; due[st] <= tn2 + FLAT - 1;
+                                    lr[st*293 +: 293] <= 293'd0; end
+                end else if (tn2 >= due[st]) begin
+                    automatic bit [255:0] rdat;
+                    e2e_hbm_sector({27'd0, last_a}, 1'b0, 256'd0, 32'd0, rdat);
+                    lr[st*293 +: 293] <= {1'b0, 8'd0, 1'b0, rdat, 4'd0, tag_s[st], pc_s[st], 1'b1, 1'b0};
+                    if (lr[st*293 + 1] && rr) begin busy_s[st] <= 0; lr[st*293 +: 293] <= 293'd1; end
+                end
+            end
         end
-    end
+    end endgenerate
     // ---------------------------------------------------------------- unit slots
     localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
                               (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0);

@@ -30,6 +30,9 @@ END_TOKEN_VM = 0x3FFF0
 SRC_BASE = [
     "rtl/hbm_accel/generic/ot_hgi_cfg.sv", "rtl/hbm_accel/generic/ot_hgi_seq.sv", "rtl/hbm_accel/generic/ot_hgi_cp.sv",
     "rtl/hbm_accel/generic/ot_hgi_cp_die.sv", "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
+    # REAL_FETCH 1 (default): the record-ring fetch through the die's loader memory port
+    "rtl/hbm_accel/loader/service_native/ot_hfd_loader_kport.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
 ]
 SRC_REAL = {
     "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
