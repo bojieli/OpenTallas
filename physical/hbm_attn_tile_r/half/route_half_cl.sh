@@ -34,6 +34,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
   --macro-view ot_attn_tile_m6h1q=$QUADDIR \
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
+  --macro-view ot_attn_bank_sn136=$D/bank/ot_attn_bank_sn136 --macro-view ot_attn_bank_ew136=$D/bank/ot_attn_bank_ew136 \
   --macro-place-halo 1 1 \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 $IOFLAGS --stages pnr \
@@ -48,7 +49,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *"stop-after"*) exit $rc ;; esac
-M="--macro $QUADDIR --macro $D/bank/ot_attn_bank_sn544 --macro $D/bank/ot_attn_bank_ew544"
+M="--macro $QUADDIR --macro $D/bank/ot_attn_bank_sn544 --macro $D/bank/ot_attn_bank_ew544 --macro $D/bank/ot_attn_bank_sn136 --macro $D/bank/ot_attn_bank_ew136"
 python3 tools/w18/corner_sta.py $M --orfs-dir $W/work/orfs --post-sdc $D/signoff_833_int.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 exit $rc
