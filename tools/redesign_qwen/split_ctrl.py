@@ -50,7 +50,7 @@ import emit_partition as P  # noqa: E402
 
 BASE_EMIT = F.EMIT.emit
 SPLIT_RTL = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv"
-CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24, chl=0, chl_d=2, xreg=0)
+CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24, chl=0, chl_d=2, xreg=0, fqh=0)
 OPTS = {  # r22k: seq <-> TT 37 stations a way, seq <-> SU 7; SU <-> TT 21 (centre to centre, 430.56-um pitch + pins)
     "3": dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37),
     "4": dict(dcu_s=2, duc_s=2, dcu_m=2, duc_m=2, x_m2s=21, x_s2m=21, dstart=37),
@@ -290,7 +290,8 @@ def emit_part_x(core: str, c: dict) -> str:
                    ".x_fidx('0)", ".x_fval('0)", ".o_fin(m_fin)", ".o_fidx(m_fidx)", ".o_fval(m_fval)"]
         own_n = 1 if side == "me" else 2
         return (f"    ot_qwen_rom_core_ctrl_x #(.OWN({own_n}), .XW(XW), .XMUT(XMUT), .XREG(XREG), "
-                + ", ".join(f".{p}({p})" for p in pnames) + f") u_ctrl{'_me' if side == 'me' else ''} (\n        "
+                + ", ".join(f".{p}({p})" for p in pnames) + (", .FQ_HEAD(1)" if c.get("fqh") else "")
+                + f") u_ctrl{'_me' if side == 'me' else ''} (\n        "
                 + ",\n        ".join(cc) + ");")
     # the ME-side controller's token start: the start / token / pos relayed to the tree-top tile
     L += ["    wire m_start; wire [NW-1:0] m_token, m_pos;",
@@ -431,7 +432,7 @@ def main():
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--opt", choices=sorted(OPTS), default="4")
-    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut", "chl", "chl_d", "xreg"):
+    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut", "chl", "chl_d", "xreg", "fqh"):
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
     ap.add_argument("--max-cycles", type=int, default=0)
     ap.add_argument("--out", type=Path, help="emit: write the generated core here")
