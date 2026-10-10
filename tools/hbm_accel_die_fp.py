@@ -1411,6 +1411,10 @@ def split_vm8(m):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(halves[inst][0].name, port), (halves[inst][1].name, port)]
+                if port == 'ck' and vcut:   # vm8-seam face clock leaves (ckw / cke / ckn / cks) ride the same clock net
+                    q_ = tiles[inst].master[len('hfd_vm_'):]
+                    e2 += [(x.name, tp) for h_, x in zip(HS, halves[inst]) for tp in ('ckw', 'cke', 'ckn', 'cks')
+                           if tp in recs[(q_, h_)]['ports']]
             else:
                 e2.append((own[(inst, port)], port))
         nb.append((bid, cls, bits, e2))

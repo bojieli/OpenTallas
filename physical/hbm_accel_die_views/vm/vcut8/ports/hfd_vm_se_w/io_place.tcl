@@ -1,5 +1,8 @@
 # hfd_vm_se_w: 8-way VM half pins, vertical cut (vm/vcut8/make_vm_vcut8.py)
 place_pin -pin_name {ck[0]} -layer M7 -location {174.5440 500.0280} -pin_size {0.0320 0.2880}
+place_pin -pin_name {cke[0]} -layer M7 -location {345.0400 530.0280} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckn[0]} -layer M7 -location {204.5600 996.0560} -pin_size {0.0320 0.2880}
+place_pin -pin_name {ckw[0]} -layer M7 -location {3.9840 530.0280} -pin_size {0.0320 0.2880}
 place_pin -pin_name {e2w[0]} -layer M4 -location {348.9600 663.5640} -pin_size {0.1920 0.0240}
 place_pin -pin_name {e2w[1]} -layer M6 -location {348.9600 663.5680} -pin_size {0.1920 0.0320}
 place_pin -pin_name {e2w[2]} -layer M4 -location {348.9600 663.9480} -pin_size {0.1920 0.0240}

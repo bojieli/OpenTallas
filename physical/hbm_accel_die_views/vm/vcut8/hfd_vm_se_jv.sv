@@ -26,6 +26,6 @@ module hfd_vm_se_jv (
 `else
     wire [3292:0] w2e_x = w2e;
 `endif
-    hfd_vm_se_w u_w (.*);
-    hfd_vm_se_e u_e (.*, .w2e(w2e_x));
+    hfd_vm_se_w u_w (.*, .ckw(ck), .cke(ck), .ckn(ck));
+    hfd_vm_se_e u_e (.*, .w2e(w2e_x), .ckw(ck), .cke(ck), .ckn(ck));
 endmodule

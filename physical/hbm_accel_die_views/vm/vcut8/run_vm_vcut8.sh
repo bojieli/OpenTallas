@@ -9,12 +9,12 @@
 #   negatives: MUT_XBUS (SW -> SE wr bus bits 10/11 swapped) and MUT_SEAM (SE seam tap bits 10/11 swapped) must FAIL mode 1
 O=${1:?}; VL=${2:-verilator}; mkdir -p $O; V=physical/hbm_accel_die_views; T=$V/vm/tiles; S=$V/vm/vcut8
 SR1=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-BASE="$V/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv $SR1 $V/vm/rtl/ot_hbm_die_vm_multicast_root.sv $V/vm/rtl/hfd_vm.sv $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv"
+BASE="$V/common/ot_hfd_oreg1.sv $V/vm/vcut8/ot_hfd_oreg_fc.sv rtl/common/ot_fwd_link_stage.sv $SR1 $V/vm/rtl/ot_hbm_die_vm_multicast_root.sv $V/vm/rtl/hfd_vm.sv $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv"
 HALVES=""; for q in sw nw se ne; do HALVES="$HALVES $S/hfd_vm_${q}_w.sv $S/hfd_vm_${q}_e.sv $S/hfd_vm_${q}_jv.sv"; done
 Q4="$T/hfd_vm_sw.sv $T/hfd_vm_nw.sv $T/hfd_vm_se.sv $T/hfd_vm_ne.sv"
 ok=1
 for q in sw nw se ne; do for h in w e; do
-  $VL --lint-only --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module hfd_vm_${q}_${h} $V/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $S/hfd_vm_${q}_${h}.sv > $O/lint_${q}_${h}.log 2>&1 && echo "LINT hfd_vm_${q}_${h} ok" || { echo "LINT hfd_vm_${q}_${h} FAIL"; grep -m5 -i error $O/lint_${q}_${h}.log; ok=0; }
+  $VL --lint-only --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module hfd_vm_${q}_${h} $V/common/ot_hfd_oreg1.sv $V/vm/vcut8/ot_hfd_oreg_fc.sv rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $S/hfd_vm_${q}_${h}.sv > $O/lint_${q}_${h}.log 2>&1 && echo "LINT hfd_vm_${q}_${h} ok" || { echo "LINT hfd_vm_${q}_${h} FAIL"; grep -m5 -i error $O/lint_${q}_${h}.log; ok=0; }
 done; done
 b() { n=$1; tb=$2; srcs=$3; shift 3; $VL -I$T --binary --timing -j 16 --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-initial unique --top-module tb_vm_tiles "$@" -Mdir $O/$n.obj -o sim $BASE $srcs $tb > $O/$n.build 2>&1 || { echo "$n BUILD_FAILED"; grep -m5 -i error $O/$n.build; return 2; }; }
 for s in 1 2 3; do b m1s$s $S/tb_vm_vcut8.sv "$HALVES" -DVCUT8 -DMODE=1 -DSEED=$s && (cd $O && ./m1s$s.obj/sim +verilator+seed+$s > m1s$s.log 2>&1); grep VM_TILES $O/m1s$s.log; grep -q "hash=MATCH" $O/m1s$s.log && ! grep -q "VM_TILES FAIL" $O/m1s$s.log || ok=0; done

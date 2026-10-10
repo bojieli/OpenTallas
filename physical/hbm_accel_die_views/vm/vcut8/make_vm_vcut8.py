@@ -36,7 +36,7 @@ D = Path(__file__).resolve().parent
 TD = D.parent / 'tiles'
 sys.path.insert(0, str(TD))
 import make_vm_tiles as mt          # noqa: E402
-from make_vm_tiles import NF, W, R, C, TAPW, cat, cross_in, cross_out, slice_inst   # noqa: E402
+from make_vm_tiles import NF, W, R, C, TAPW, cat, slice_inst   # noqa: E402
 
 QH = 1000.056                       # r22 quadrant tile height (both halves)
 WW, WE = 349.056, 350.760           # west / east half widths: 202 x 1.728 and the rest of 699.816
@@ -77,12 +77,47 @@ def half_of(q, p):
 
 SEAM = {'sw': (3034, 5401), 'nw': (2048, 2048), 'se': (3293, 1591), 'ne': (2866, 2048)}   # (w2e, e2w) widths
 
-def half_ports(q, h):
+# ---------------------------------------------------------------- face clocks (coordinator 2026-10-09 ~20:10)
+# redesign-hbm classified the VM8 hold endpoints: ~90% at the block edges; ONE in-block tree reaches the edge flops at
+# ~380 ps and the deep flops at ~690 ps while the edge timing assumes 589 ps -> the clock plan, not the seam geometry (the
+# 71b59c2c2 vcut routes confirmed it: all EARLY_FAIL_HOLD, -108..-278 ps at CTS).  Adopted the hbm-forks svc face-clock
+# pattern (gen_svc_seg.py --fc, afaaf0d7f): every face of a half gets its own die clock leaf ck<f> (M7 area pin 4 um
+# inside that face, mid-face), balanced by the DIE tree; the pin-stage register of every port (input pin register / the
+# output pin register) runs on its face leaf; everything else on the centre ck.  Every crossing between a face root and
+# the core root is launched from a NEGEDGE LOCKUP copy on the SOURCE root (redesign-hbm --xroot lockup, 470d0d3ba):
+#   input :  p -> x<f> (posedge ck<f>) -> lockup (negedge ck<f>) -> core (posedge ck)
+#   output:  core -> [stages on ck] -> lockup (negedge ck) -> pin register (posedge ck<f>)   (ot_hfd_oreg<n>x)
+# Source -> lockup is root-local (T/2), lockup -> destination gets T/2 of hold margin.  Cycle-exact: 0 added cycles.
+FC = True
+FACES = 'wens'
+
+def port_face(q, h, p):
+    if p in ('w2e', 'e2w'):
+        return 'e' if h == 'w' else 'w'
+    if p in DIE[q]:
+        return OUTER[q]
+    if p == 't_quant':
+        return 'n'
+    if re.fullmatch(r'[ft]_[ns]_(wr|row|ctl)', p):
+        return 'n' if q in ('sw', 'se') else 's'
+    if re.fullmatch(r'[ft]_[ew]_(wr|row|ctl)', p):
+        return INNER[q]
+    raise KeyError((q, h, p))
+
+def faces_of(q, h):
+    fs = {port_face(q, h, n) for _, _, n in base_ports(q, h) if n not in ('ck', 'rst')}
+    return [f for f in FACES if f in fs]
+
+def base_ports(q, h):
     w2e, e2w = SEAM[q]
     ps = [('input', 1, 'ck'), ('input', 1, 'rst')]
     ps += [p for p in qports(q) if p[2] not in ('ck', 'rst') and half_of(q, p[2]) == h]
     ps += [('output', w2e, 'w2e'), ('input', e2w, 'e2w')] if h == 'w' else [('input', w2e, 'w2e'), ('output', e2w, 'e2w')]
     return ps
+
+def half_ports(q, h):
+    ps = base_ports(q, h)
+    return ps[:1] + ([('input', 1, f'ck{f}') for f in faces_of(q, h)] if FC else []) + ps[1:]
 
 class H(mt.T):
     def __init__(s, q, h):
@@ -93,6 +128,36 @@ class H(mt.T):
         s.L.append(f'module hfd_vm_{q}_{h} (\n{decl}\n);')
         s.L += ['    wire clk = ck[0];', '    reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};',
                 '    wire rst_n = ~rst_s[1];']
+        s.q, s.h = q, h
+        if FC:
+            for f in faces_of(q, h):
+                s.L.append(f'    wire cf_{f} = ck{f}[0];   // face die clock leaf ({f.upper()} face)')
+    def cf(s, p):
+        return f'cf_{port_face(s.q, s.h, p)}' if FC else 'clk'
+    def inp(s, p, w, n):           # die face input chain of n stages -> i_<p>; stage 0 on the face leaf + lockup
+        if not FC:
+            return mt.T.inp(s, p, w, n)
+        c = s.cf(p)
+        s.a(f'reg [{w-1}:0] i0_{p}; always @(posedge {c}) i0_{p} <= {p};')
+        s.a(f'reg [{w-1}:0] il_{p}; always @(negedge {c}) il_{p} <= i0_{p};   // lockup (face root)')
+        prev = f'il_{p}'
+        for k in range(1, n - 1):
+            s.a(f'reg [{w-1}:0] i{k}_{p}; always @(posedge clk) i{k}_{p} <= {prev};'); prev = f'i{k}_{p}'
+        s.a(f'reg [{w-1}:0] i_{p}; always @(posedge clk) i_{p} <= {prev};')
+    def out(s, p, w, n, expr, fclk=()):   # output through per-bit ot_hfd_oreg<n>x: lockup on ck, pin register on the face leaf
+        if not FC:
+            return mt.T.out(s, p, w, n, expr, fclk)
+        c = s.cf(p)
+        s.a(f'wire [{w-1}:0] od_{p} = {expr};'); s.a(f'wire [{w-1}:0] o_{p};')
+        s.a(f'for (genvar k = 0; k < {w}; k = k + 1) begin : g_o_{p}')
+        s.a(f'    ot_hfd_oreg{n}x u (.clk(clk), .clkf({c}), .d(od_{p}[k]), .q(o_{p}[k]));'); s.a('end')
+        for k in range(w):
+            if k in fclk:      # forwarded clocks leave on the same face leaf as their data
+                s.n += 1; s.a(f'wire fclk_{s.n}; ot_fwd_clk_inv u_fclk_{s.n} (.a({c}), .y(fclk_{s.n})); assign {p}[{k}] = fclk_{s.n};')
+        if fclk:
+            s.a(f'for (genvar k = 0; k < {min(fclk)}; k = k + 1) begin : g_a_{p} assign {p}[k] = o_{p}[k]; end')
+        else:
+            s.a(f'assign {p} = o_{p};')
     def zero(s, *ps):
         for p in ps:
             w = dict((n, w) for _, w, n in s.ports)[p]
@@ -103,6 +168,15 @@ class H(mt.T):
         for d, w, n in s.ports:
             if d == 'output':
                 assert re.search(rf'assign {n}( =|\[)|assign {n}\[k\] =', txt), (s.t, n)
+
+def cross_in(s, p, w):     # cross / seam input: pin register on the face leaf + lockup -> x_<p> (read by the core on ck)
+    if not FC:
+        return mt.cross_in(s, p, w)
+    c = s.cf(p)
+    s.a(f'reg [{w-1}:0] xf_{p}; always @(posedge {c}) xf_{p} <= {p};')
+    s.a(f'reg [{w-1}:0] x_{p}; always @(negedge {c}) x_{p} <= xf_{p};   // lockup (face root)')
+
+def cross_out(s, p, w, expr): s.out(p, w, 1, expr)
 
 # ---------------------------------------------------------------- SW (O = w: die face + slice; I = e: root + cross)
 def sw_w():
@@ -247,7 +321,10 @@ def join(q):
         mut = f'    wire [{w2e-1}:0] w2e_x = w2e;\n'
     return (f'// GENERATED by vm/vcut8/make_vm_vcut8.py: hfd_vm_{q} as its two vertical-cut halves (bench join; quadrant ports)\n'
             f'module hfd_vm_{q}_jv (\n{decl}\n);\n    wire [{w2e-1}:0] w2e; wire [{e2w-1}:0] e2w;\n{mut}'
-            f'    hfd_vm_{q}_w u_w (.*);\n    hfd_vm_{q}_e u_e (.*, .w2e(w2e_x));\nendmodule\n')
+            f'    hfd_vm_{q}_w u_w (.*{fcc(q, "w")});\n    hfd_vm_{q}_e u_e (.*, .w2e(w2e_x){fcc(q, "e")});\nendmodule\n')
+
+def fcc(q, h):     # bench join: the face leaves are the same die clock
+    return ''.join(f', .ck{f}(ck)' for f in faces_of(q, h)) if FC else ''
 
 def tb():
     t = (TD / 'tb_vm_tiles.sv').read_text()
@@ -381,6 +458,21 @@ def plan():
             while not free('M5', xr):
                 xr += 0.048
             pins[m].append(('rst', 0, 'M5', round(xr, 4), ys, SZ['M5']))
+    # face clock leaves (FC): M7 area pin 4 um inside its face, mid-face (off the centre ck column), on a free M7 track
+    if FC:
+        for q in OUTER:
+            for h in 'we':
+                m = f'hfd_vm_{q}_{h}'
+                w = WID[h]
+                for f in faces_of(q, h):
+                    if f in 'we':
+                        xt, y = (4.0 if f == 'w' else w - 4.0), round(QH / 2 + 30.0, 4)
+                    else:
+                        xt, y = w / 2 + 30.0, (4.0 if f == 's' else round(QH - 4.0, 4))
+                    x = 0.016 + round((xt - 0.016) / 0.064) * 0.064
+                    while not free('M7', x):
+                        x += 0.064 if f != 'e' else -0.064
+                    pins[m].append((f'ck{f}', 0, 'M7', round(x, 4), y, '0.0320 0.2880'))
     # sanity: every half port has all its bits, no two pins of one layer on one spot, all inside the outline
     for m, ps in pins.items():
         q, h = m.split('_')[2], m.split('_')[3]
@@ -415,14 +507,26 @@ if __name__ == '__main__':
     for f in HALVES:
         s = f(); s.check(); (D / f'hfd_vm_{s.t}.sv').write_text(s.text())
         (D / f'hfd_vm_{s.t}_face_stages.tcl').write_text('# generated by make_vm_vcut8.py: die port -> face chain depth\n' +
-            ''.join(f'set fc_ps({n}) {NF if n.startswith(("f_su", "t_su", "i", "q", "x", "t_router", "t_quant")) else 1}\n'
-                    for _, _, n in s.ports if n not in ('ck', 'rst')))
+            ''.join(f'set fc_ps({n}) {(NF if n.startswith(("f_su", "t_su", "i", "q", "x", "t_router", "t_quant")) else 1) + (1 if FC else 0)}\n'
+                    for _, _, n in s.ports if n not in ('ck', 'rst') and not re.fullmatch(r'ck[wens]', n)))
     for q in OUTER:
         (D / f'hfd_vm_{q}_jv.sv').write_text(join(q))
     (D / 'tb_vm_vcut8.sv').write_text(tb())
     pins, dens = plan()
     for m, ps in pins.items():
         write_ports(m, ps)
+    # macro placement (hbm_vm8v_sww 71b59c2c2 FLOORPLAN_MARGIN: auto placement left a 7.49 um macro gap holding rows): the
+    # slice's 2 banks x NM macros (94.824 x 41.04) as two columns 14.04 um apart, rows 14.04 um apart, R0, on the site
+    # (0.054) / row (0.27, core y0 0.54) grid; centred in x, low in y (clear of the centre ck pin and the face lockups).
+    for m, nm in (('hfd_vm_sw_w', 3), ('hfd_vm_nw_e', 3), ('hfd_vm_se_w', 3), ('hfd_vm_ne_w', 2)):
+        w = WID[m[-1]]
+        x0 = round(round((w / 2 - (2 * 94.824 + 14.04) / 2) / 0.054) * 0.054, 3)
+        L = [f'# {m}: slice macros (make_vm_vcut8.py)']
+        for b in range(2):
+            for k in range(nm):
+                y = round(0.54 + round((200.0 + k * 55.08) / 0.27) * 0.27, 3)
+                L.append(f'place_macro -macro_name {{u_slice.banks\\[{b}\\].macros\\[{k}\\].u_sram}} -location {{{round(x0 + b * 108.864, 3)} {y}}} -orientation R0')
+        (D / f'{m}_macro_place.tcl').write_text('\n'.join(L) + '\n')
     rows = [dict(master=a, face=f, bits=n, span_um=sp, bits_per_um=d, pair_pitch_um=P, used_um=nd) for a, f, n, sp, d, P, nd in dens]
     (D / 'pin_density.json').write_text(json.dumps(rows, indent=1) + '\n')
     for r in rows:
