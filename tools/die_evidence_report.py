@@ -665,8 +665,8 @@ def probe_qwen_r22k():
 
 
 def probe_qwen_r22k4():
-    R = f'{SCR}/kv-die/die_r22k4'
-    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{R}/sta_r22k_{c}'], f'{R}/libs',
+    R, E = f'{SCR}/kv-die/die_r22k4', f'{SCR}/die-evidence-2/qwen_r22k4'   # E: ETM-bound libs + STA on R's SPEF
+    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{E}/sta_r22k_{c}', f'{R}/sta_r22k_{c}'], f'{E}/libs',
                           f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
 
 
