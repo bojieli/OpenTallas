@@ -23,7 +23,7 @@ def model():
                         actual_existing_engine=True,new_arithmetic_macros=0),
         latency_composition='producer +0cycles; packed read17sectors vs64FP32sectors atD512; actual selected arb/drain measurement pending',
         mechanism_gate='actual quantizer->packed sidecar->existing dequant and chunk8 tile on5.25/2.625 and golden random blocks',
-        full_unit='packed row packet assembler and native producer sidecar STORE/GATHER binding pending; restricted old transport stays off',
+        packed_consumer=dict(default_on=False,parameter='PACKED_ROWS',source_format=3,record_formats='B/C fmt3 rawpacked; per265bitgroup fmt chooses originalwindow orcompressedrow',row_bits_D512=4240,storage_bits_added_vs_codebuffer_D512=144,sectors_per_row_D512=17,register_capture_cycles_added=0,memory='17 staticallyselected registerstations; actual finite valid-qualified payload, no ideal SRAM claim',tail='last14zero bytes checked',engine_wire_bits_added=0,physical='distributedstation/engine views unqualified; no giantflattened PNR'),full_unit='packed row producer STORE/GATHER binding pending; restricted old transport stays off',
         model_rate_credit=0,adoption=False)
 
 if __name__=='__main__':print(json.dumps(model(),indent=2))
