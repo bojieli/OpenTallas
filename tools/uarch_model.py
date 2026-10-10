@@ -15214,3 +15214,9 @@ def hbm_svc_reset_boundary_model():
 def hgi_dma_credit_model(**kwargs):
     from hgi_dma_credit_model import model
     return model(**kwargs)
+
+
+def hgi_dma_wide_vm_model(**kwargs):
+    """Opt-in raw-routing DMA and actual protected shared VM physical sizing."""
+    from hgi_dma_wide_vm_model import model
+    return model(**kwargs)
