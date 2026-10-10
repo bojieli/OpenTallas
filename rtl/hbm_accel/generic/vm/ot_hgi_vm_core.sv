@@ -22,11 +22,16 @@ module ot_hgi_vm_core #(
     parameter integer WP = 1,          // wide write lanes (DMA streaming port, coordinator 2026-10-10: up to ~1 KB / cycle)
     parameter integer WDIRECT = 0,     // 1 (WP = 32): lane b writes bank b only (the DMA front routes by bank); a lane
                                        // whose sector is in another bank is dropped and latches wl_conflict
-    parameter integer RP = 0,          // hgi-unitrate: wide READ lanes (lane b reads bank b only; the SU / SFU wide stage)
-    parameter integer W2 = 0,          // hgi-unitrate: second wide WRITE group (lane b writes bank b only; the SU / SFU drain)
+    parameter integer RP = 0,          // hgi-unitrate: wide READ lanes, 0 or 32 x groups (lane g*32 + b reads bank b
+                                       //   only; one 32-lane group per wide client: the SU and the SFU wide stage)
+    parameter integer W2 = 0,          // hgi-unitrate: wide WRITE lanes of the client groups, 0 or 32 x groups (lane
+                                       //   g*32 + b writes bank b only; the SU / SFU drain)
     parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
                                        //   3 write responses skip the read pipeline (out of order: must FAIL),
-                                       //   4 the wide port ignores its word mask
+                                       //   4 the wide port ignores its word mask, 5 a wide read response goes to
+                                       //   group 0 whatever group asked, 6 a packet client write does not yield
+                                       //   to a client-group wide write on its bank (one of the two is lost), 7 no
+                                       //   packet-write age promotion (a streaming drain starves packet writes)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -182,13 +187,36 @@ module ot_hgi_vm_core #(
                 end
         end
     end
-    // second wide write group / wide read lanes per bank (lane b <-> bank b)
-    reg [NB-1:0] w2_hit, rl_hit, rl_bad, w2_bad;
+    // client wide lane groups per bank (lane g*32 + b <-> bank b): the lowest group index with a request wins the bank.
+    // Packet-client writes are age-promoted: one that has waited CAGE edges for its bank's write port goes ahead of
+    // the client groups (never ahead of the DMA group, which is never back-pressured), so a streaming drain cannot
+    // starve a packet client.
+    localparam integer CAGE = 8;
+    reg [NC-1:0] acc;
+    reg [3:0] c_wait [0:NC-1]; reg [NB-1:0] c_old;
+    always @* begin
+        c_old = {NB{1'b0}};
+        for (integer ac = 0; ac < NC; ac = ac + 1)
+            if (req_v[ac] && !busy[ac] && c_we[ac] && c_wait[ac] >= 4'(CAGE)) c_old[c_bank[ac]] = 1'b1;
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) for (integer ac = 0; ac < NC; ac = ac + 1) c_wait[ac] <= 4'd0;
+        else for (integer ac = 0; ac < NC; ac = ac + 1)
+            c_wait[ac] <= (req_v[ac] && !busy[ac] && c_we[ac] && !acc[ac]) ? ((c_wait[ac] == 4'd15) ? 4'd15 : c_wait[ac] + 4'd1) : 4'd0;
+    localparam integer NGR = RP / 32, NGW = W2 / 32, RPL = RP > 0 ? RP : 1, W2L = W2 > 0 ? W2 : 1;
+    reg [NB-1:0] w2_hit, rl_hit, rl_bad, w2_bad, rl_any;
+    reg [1:0] rl_g [0:NB-1]; reg [1:0] w2_g [0:NB-1];
     always @* begin
         for (integer ab = 0; ab < NB; ab = ab + 1) begin
-            w2_hit[ab] = (ab < W2) && w2_v[ab % (W2>0?W2:1)] && w2_sec[(ab % (W2>0?W2:1))*15 +: 5] == 5'(ab) && !wb_hit[ab];
-            w2_bad[ab] = (ab < W2) && w2_v[ab % (W2>0?W2:1)] && w2_sec[(ab % (W2>0?W2:1))*15 +: 5] != 5'(ab);
-            rl_bad[ab] = (ab < RP) && rl_v[ab % (RP>0?RP:1)] && rl_sec[(ab % (RP>0?RP:1))*15 +: 5] != 5'(ab);
+            w2_hit[ab] = 1'b0; w2_bad[ab] = 1'b0; rl_any[ab] = 1'b0; rl_bad[ab] = 1'b0; rl_g[ab] = 2'd0; w2_g[ab] = 2'd0;
+            for (integer gg = NGW - 1; gg >= 0; gg = gg - 1) begin
+                if (w2_v[gg*32 + ab] && w2_sec[(gg*32 + ab)*15 +: 5] == 5'(ab) && !wb_hit[ab] && !(c_old[ab] && MUT != 7)) begin w2_hit[ab] = 1'b1; w2_g[ab] = 2'(gg); end
+                if (w2_v[gg*32 + ab] && w2_sec[(gg*32 + ab)*15 +: 5] != 5'(ab)) w2_bad[ab] = 1'b1;
+            end
+            for (integer gg = NGR - 1; gg >= 0; gg = gg - 1) begin
+                if (rl_v[gg*32 + ab] && rl_sec[(gg*32 + ab)*15 +: 5] == 5'(ab)) begin rl_any[ab] = 1'b1; rl_g[ab] = 2'(gg); end
+                if (rl_v[gg*32 + ab] && rl_sec[(gg*32 + ab)*15 +: 5] != 5'(ab)) rl_bad[ab] = 1'b1;
+            end
         end
     end
     always @* begin
@@ -196,22 +224,21 @@ module ot_hgi_vm_core #(
             gr_r[ab] = {NC{1'b0}}; gr_w[ab] = {NC{1'b0}};
             for (integer ac = NC - 1; ac >= 0; ac = ac - 1) begin
                 if (req_v[ac] && !busy[ac] && c_bank[ac] == ab && !c_we[ac]) gr_r[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
-                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac] && !wb_hit[ab] && !w2_hit[ab]) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
+                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac] && !wb_hit[ab] && (!w2_hit[ab] || MUT == 6)) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
             end
         end
     end
-    reg [NC-1:0] acc;
     always @* begin
         acc = {NC{1'b0}};
         for (integer ab = 0; ab < NB; ab = ab + 1) acc = acc | gr_r[ab] | gr_w[ab];
         for (integer ab = 0; ab < NB; ab = ab + 1)
-            rl_hit[ab] = (ab < RP) && rl_v[ab % (RP>0?RP:1)] && !rl_bad[ab] && !(|gr_r[ab]);
+            rl_hit[ab] = rl_any[ab] && !(|gr_r[ab]);
     end
-    for (g = 0; g < (RP>0?RP:1); g = g + 1) begin : g_rlacc
-        assign rl_acc[g] = (RP > 0) && rl_hit[g];
+    for (g = 0; g < RPL; g = g + 1) begin : g_rlacc
+        assign rl_acc[g] = (RP > 0) && rl_hit[g % 32] && rl_g[g % 32] == 2'(g / 32);
     end
-    for (g = 0; g < (W2>0?W2:1); g = g + 1) begin : g_w2acc
-        assign w2_acc[g] = (W2 > 0) && w2_hit[g];
+    for (g = 0; g < W2L; g = g + 1) begin : g_w2acc
+        assign w2_acc[g] = (W2 > 0) && w2_hit[g % 32] && w2_g[g % 32] == 2'(g / 32);
     end
     assign req_r = acc;
     // ---------------------------------------------------------------- banks
@@ -230,9 +257,9 @@ module ot_hgi_vm_core #(
             if (|rl_bad) rl_conflict <= 1'b1;
             for (b = 0; b < NB; b = b + 1) begin
                 m_re[b] <= |gr_r[b] | rl_hit[b]; m_we[b] <= |gr_w[b] | wb_hit[b] | w2_hit[b];
-                if (rl_hit[b]) m_ra[b] <= rl_sec[(b % (RP>0?RP:1))*15 + 5 +: 10];
+                if (rl_hit[b]) m_ra[b] <= rl_sec[(32 * rl_g[b] + b)*15 + 5 +: 10];
                 if (w2_hit[b]) begin : wide2
-                    integer lq; lq = b % (W2>0?W2:1);
+                    integer lq; lq = 32 * w2_g[b] + b;
                     m_wa[b] <= w2_sec[lq*15 + 5 +: 10];
                     for (w = 0; w < 8; w = w + 1) begin
                         m_wd[b][w*39 +: 39] <= enc(w2_d[lq*256 + w*32 +: 32]);
@@ -272,11 +299,11 @@ module ot_hgi_vm_core #(
     end
     // wide read lanes: acceptance -> address at the pins (r1) -> macro read edge (rm) -> rd_out captured (r2) -> decoded
     // response flop: the client pipeline's 4 edges
-    reg [NB-1:0] r1_v, rm_v, r2_v; reg [311:0] r2_raw [0:NB-1];
+    reg [NB-1:0] r1_v, rm_v, r2_v; reg [311:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
     reg [33:0] dwr, dwc; reg [15:0] ce_w; reg ue_w;
     always @* begin                                   // wide-lane corrected / uncorrectable words this edge
         ce_w = 16'd0; ue_w = 1'b0;
-        for (integer lb = 0; lb < (RP>0?RP:1); lb = lb + 1)
+        for (integer lb = 0; lb < NB; lb = lb + 1)
             if (RP > 0 && r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
                 dwc = dec(r2_raw[lb][q*39 +: 39]);
                 if (dwc[32]) ce_w = ce_w + 16'd1;
@@ -288,11 +315,13 @@ module ot_hgi_vm_core #(
         if (!rst_n) begin r1_v <= {NB{1'b0}}; rm_v <= {NB{1'b0}}; r2_v <= {NB{1'b0}}; rl_rsp <= '0; w2_d1 <= '0; w2_done <= '0; end
         else begin
             r1_v <= rl_hit; rm_v <= r1_v; r2_v <= rm_v;
-            for (integer lb = 0; lb < (RP>0?RP:1); lb = lb + 1) begin
-                rl_rsp[lb*257 + 256] <= (RP > 0) && r2_v[lb];
+            for (integer lb = 0; lb < NB; lb = lb + 1) begin r1_g[lb] <= rl_g[lb]; rm_g[lb] <= r1_g[lb]; r2_g[lb] <= rm_g[lb]; end
+            for (integer ln = 0; ln < RPL; ln = ln + 1) begin : rsp
+                integer lb; lb = ln % 32;
+                rl_rsp[ln*257 + 256] <= (RP > 0) && r2_v[lb] && ((MUT == 5) ? (ln / 32 == 0) : (r2_g[lb] == 2'(ln / 32)));
                 if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
                     dwr = dec(r2_raw[lb][q*39 +: 39]);
-                    rl_rsp[lb*257 + q*32 +: 32] <= dwr[31:0];
+                    rl_rsp[ln*257 + q*32 +: 32] <= dwr[31:0];
                 end
             end
             w2_d1 <= w2_acc; w2_done <= w2_d1;
