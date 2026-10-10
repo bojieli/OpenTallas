@@ -102,9 +102,9 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
         for (i = 0; i < TD; i = i + 1) ib[i*18 +: 18] <= relem(0);
         if (rst_n) begin
             if (ov_l) nov <= nov + 1;
-            // CG: a gated leaf holds oy while ov is low (the ungated leaf shows raw datapath values there); ov and oflt are still
-            // compared every cycle, oy wherever ov is set (the consumer takes oy only with ov)
-            if (cyc > RIN + XD + 8 && (ov_l !== ov_s || ((CG == 0 || ov_l) && oy_l !== oy_c) || of_l !== of_s)) begin
+            // CG: a gated leaf holds oy / oflt while ov is low (the ungated leaf registers its raw datapath there every cycle;
+            // oflt 'raises with its output', ot_hdc_v41x_attn_tile.sv); ov is compared every cycle, oy and oflt wherever ov is set
+            if (cyc > RIN + XD + 8 && (ov_l !== ov_s || ((CG == 0 || ov_l) && (oy_l !== oy_c || of_l !== of_s)))) begin
                 mism <= mism + 1;
                 if (mism < 5) $display("MISMATCH cyc=%0d ov %b/%b oy %h / %h of %h / %h", cyc, ov_l, ov_s, oy_l, oy_s,
                                        of_l, of_s);
