@@ -78,7 +78,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, split_io_cdc=False):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, split_io_cdc=False, native_elastic_relays=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -261,9 +261,11 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if split_io_cdc:
         from qwen_system.split_io_cdc import integrate
         integrate(v, m)
+    if native_elastic_relays and not split_io_cdc:
+        raise ValueError('native elastic relays require explicit split native CDC composition')
     if relay_pitch:
         _io_south(v)
-        _relays(v, m, relay_pitch)
+        _relays(v, m, relay_pitch, native_elastic_relays=native_elastic_relays)
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     if su_vm_abut:
         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
@@ -841,7 +843,7 @@ RELAY_MAX_UM = 350.0   # owner fast rule 2026-10-06: every die wire > ~350 um ge
 RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
 
 
-def _relays(v, m, pitch=RELAY_PITCH_UM):
+def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False):
     """r21 (owner fast rule 2026-10-06): relay registers on every die wire longer than ~350 um, at <= `pitch` um along
     a rectilinear path.  A relay is one registered hop of the bus (the closed station family, ot_qwen_die_station
     TAP=0 at the bus width: qfd_cst SS +73.7 / FF +26.3, qfd_chead SS +51.3), standard cells M1-M3 only (OBS M1-M3),
@@ -995,9 +997,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     order = {'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
     buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
     keep = {}
-    def relay_frame(bits, cl):
+    elastic_bids = {'seq_coll', 'coll_seq'} if native_elastic_relays else set()
+
+    def relay_frame(bits, cl, bid=None):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
+        if bid in elastic_bids:
+            return v.up(53.0, v.GX) - v.SHAVE, v.up(156.0, v.GY) - v.SHAVE
         span1 = bits * 0.048 + 4.0
         if bits <= 512:
             return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
@@ -1022,6 +1028,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         span2 = bits * 0.096 + 4.0
 
         def frame(c, bits=bits, span1=span1, span2=span2):
+            if bid in elastic_bids:
+                return relay_frame(bits, cl, bid)
             if c[3] is not None:       # corridor lane: full corridor width, faces at 1 track up to 512 b
                 if bits <= 512:
                     return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
@@ -1127,7 +1135,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if max(hs) <= RMAX + 25.0:
             continue
         bits = pl['bits']
-        w, h = relay_frame(bits, pl['cl'])
+        w, h = relay_frame(bits, pl['cl'], pl['bid'])
         W, H = w + v.SHAVE, h + v.SHAVE
         arr, tree = sites(W, H)
         if tree is None:
@@ -1223,7 +1231,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     fo = 'E' if dx >= 0 else 'W'
                 else:
                     fo = 'N' if dy >= 0 else 'S'
-            mn = f'qfd_rly{"f" if link else ""}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+            elastic = bid in elastic_bids
+            prefix = ('qfd_erly4' if k == len(pl['frames']) - 1 else 'qfd_erly8') if elastic else ('qfd_rlyf' if link else 'qfd_rly')
+            mn = f'{prefix}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
             masters_needed[mn] = (bits, fi, fo, w, h, link)
             nm = f'rly_{bid}_{k}'
             ccx, ccy = x0 + w / 2, y0 + h / 2
@@ -1266,6 +1276,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     missing = sorted(ck_add)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
+    if native_elastic_relays:
+        from qwen_system.native_credit_successor import sizing
+        m['native_elastic_relays'] = dict(model=sizing(),
+            paths={pl['bid']: dict(relays=len(pl['frames']), forward_cycles=3*len(pl['frames']),
+                                  max_center_hop_um=round(max(hops_of(pl)),3))
+                   for pl in plans.values() if pl['bid'] in elastic_bids},
+            gate='unqualified candidate geometry; reset/fault production wiring, leaf physical closure and token schedule pricing required')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
@@ -1277,8 +1294,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
         for mn, (bits, fi, fo, w, h, link) in masters_needed.items():
+            elastic = mn.startswith('qfd_erly')
             M = v.Master(mn, w, h, 3, f'die relay: one registered {bits}-b hop (ot_qwen_die_station TAP=0 family), '
                          f'standard cells M1-M3, in {fi} out {fo}')
+            if elastic:
+                M.note = f'unqualified ot_qwen_native_elastic_relay ENABLE1 W{bits-2} DEPTH8 OCRED{4 if mn.startswith("qfd_erly4") else 8}; finite local credits'
             for port, f in (('a', fi), ('b', fo)):
                 along = w if f in 'NS' else h
                 pitch_tr = 2 if bits * 0.096 + 2.0 <= along else 1
@@ -1288,6 +1308,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 M.area('fck_b', 1, w / 2 + 0.8, h / 2, 1)
             else:
                 M.area('ck', 1, w / 2, h / 2, 1)
+            if elastic:
+                M.area('rst_n',1,w/2-1,h/2,1)
+                M.area('fault',1,w/2+1,h/2,1)
             o[mn] = M
         return o
     v.masters = masters
@@ -2928,7 +2951,8 @@ def record(v, m):
                 fifo=fifo_accounting(v, m), clock_regions_summary=by_kind, clock_regions=m['clock_regions'],
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
                 link_stages=v.link_stages(m), bword_stages=bword_stages(v, m),
-                **({'split_io_cdc': m['split_io_cdc']} if 'split_io_cdc' in m else {}))
+                **({'split_io_cdc': m['split_io_cdc']} if 'split_io_cdc' in m else {}),
+                **({'native_elastic_relays': m['native_elastic_relays']} if 'native_elastic_relays' in m else {}))
 
 
 GCELL_OVER_TCL = r"""
@@ -3163,6 +3187,8 @@ def main(argv=None):
                     '(548-b forward, 518-b return through io_xfifo NCOLL); default the 66-b descriptor word')
     ap.add_argument('--split-io-cdc', action='store_true', help='four closed 1024-bit CDC tiles plus the native '
                     'collective endpoint (requires --native-coll)')
+    ap.add_argument('--native-elastic-relays', action='store_true', help='unqualified finite DEPTH8 SQ/CQ relay '
+                    'candidate frames (requires --split-io-cdc; off by default)')
     ap.add_argument('--bw-sp', type=float, default=100.0, help='b3r13: root-row block-word pin spacing in a slab (um)')
     ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
     ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
@@ -3228,6 +3254,7 @@ def main(argv=None):
         r = dict(DTL.QWEN_RECIPES[a.recipe])
         cdc = r.pop('cdc')
         r['split_io_cdc'] = a.split_io_cdc
+        r['native_elastic_relays'] = a.native_elastic_relays
         v, m = selected(True, cdc=_cdc_arg(cdc), **r)
     else:
         v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
@@ -3237,7 +3264,7 @@ def main(argv=None):
                         edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                         slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                         slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish, split_io_cdc=a.split_io_cdc)
+                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish, split_io_cdc=a.split_io_cdc, native_elastic_relays=a.native_elastic_relays)
     if a.mode == 'relaycost':
         rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
         if a.out:

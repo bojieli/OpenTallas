@@ -18,7 +18,7 @@ def sizing():
         bits = payload_bits + control_bits
         # A 53 x 156 frame exceeds the analytical register area, preserves
         # <=350um wire station pitch, and offers ample two-layer pin tracks.
-        frame_um = [53.0, 156.0]
+        frame_um = [53.136, 157.68]
         rows.append(dict(channel=name, payload_bits_per_cycle=width,
                          payload_bytes_per_cycle=width / 8,
                          replicas=count, receive_slots=depth,
@@ -48,9 +48,12 @@ def sizing():
                 existing_measured=dict(initial_credits=4, sq_relays=67,
                                        first_rtt_serial_cycles=205,
                                        credit_rate_ceiling_words_per_serial_cycle=4/205),
-                proposed_latency='one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; measure before token substitution',
+                proposed_latency='one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; 3 serial cycles per word with no stalls',
+                composed_empty_path_serial_cycles=dict(sq_old=67, sq_new=201, cq_old=55, cq_new=165, added_roundtrip=244),
+                composed_added_empty_roundtrip_ns=244/.9,
+                token_latency_contribution='added271.111ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and the native collective schedule before rate adoption',
                 communication_intensity='storage-only: one word transferred per accepted beat, no numerical compute',
-                composed_latency_ready=False,
+                composed_latency_ready=True,
                 gates=['minimum full-width local source4 -> DEPTH8 relay -> sink4 exactness/occupancy/RTT',
                        'minimum two-relay backpressure and overflow/extra-credit negative tests',
                        'reset valid flops at every elastic relay; synchronous reset release per clock domain; fault collection',

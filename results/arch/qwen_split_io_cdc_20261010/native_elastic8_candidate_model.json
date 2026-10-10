@@ -18,16 +18,16 @@
       "sram_bits": 0,
       "storage_area_mm2_each": 0.004169335247349823,
       "proposed_frame_um": [
-        53.0,
-        156.0
+        53.136,
+        157.68
       ],
-      "frame_area_mm2_each": 0.008268,
+      "frame_area_mm2_each": 0.008378484480000002,
       "muxes_each": 546,
       "mux_fanin": 8,
       "control_fanout_before_synthesis": 546,
       "boundary_bits": 548,
       "face_tracks_required": 548,
-      "face_tracks_available": 6166,
+      "face_tracks_available": 6236,
       "local_credit_initial": 8,
       "first_source_initial_credits": 4,
       "final_receiver_initial_credits": 4
@@ -42,16 +42,16 @@
       "sram_bits": 0,
       "storage_area_mm2_each": 0.003941585689045936,
       "proposed_frame_um": [
-        53.0,
-        156.0
+        53.136,
+        157.68
       ],
-      "frame_area_mm2_each": 0.008268,
+      "frame_area_mm2_each": 0.008378484480000002,
       "muxes_each": 516,
       "mux_fanin": 8,
       "control_fanout_before_synthesis": 516,
       "boundary_bits": 518,
       "face_tracks_required": 518,
-      "face_tracks_available": 6166,
+      "face_tracks_available": 6236,
       "local_credit_initial": 8,
       "first_source_initial_credits": 4,
       "final_receiver_initial_credits": 4
@@ -59,7 +59,7 @@
   ],
   "aggregate_register_bits": 653524,
   "aggregate_storage_area_mm2": 0.49613267446996456,
-  "aggregate_proposed_frame_area_mm2": 1.008696,
+  "aggregate_proposed_frame_area_mm2": 1.0221751065600002,
   "added_dies": 0,
   "existing_measured": {
     "initial_credits": 4,
@@ -67,9 +67,18 @@
     "first_rtt_serial_cycles": 205,
     "credit_rate_ceiling_words_per_serial_cycle": 0.01951219512195122
   },
-  "proposed_latency": "one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; measure before token substitution",
+  "proposed_latency": "one receive pin cycle + one FIFO write cycle + one transmit capture per elastic relay; 3 serial cycles per word with no stalls",
+  "composed_empty_path_serial_cycles": {
+    "sq_old": 67,
+    "sq_new": 201,
+    "cq_old": 55,
+    "cq_new": 165,
+    "added_roundtrip": 244
+  },
+  "composed_added_empty_roundtrip_ns": 271.1111111111111,
+  "token_latency_contribution": "added271.111ns empty SQ+CQ roundtrip at0.9GHz; finite-stall savings require measured local credit RTT and the native collective schedule before rate adoption",
   "communication_intensity": "storage-only: one word transferred per accepted beat, no numerical compute",
-  "composed_latency_ready": false,
+  "composed_latency_ready": true,
   "gates": [
     "minimum full-width local source4 -> DEPTH8 relay -> sink4 exactness/occupancy/RTT",
     "minimum two-relay backpressure and overflow/extra-credit negative tests",

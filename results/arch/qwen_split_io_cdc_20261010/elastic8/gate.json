@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.qwen.native_elastic8.minimum_gate.v1",
+  "sources": {
+    "rtl/test/tb_qwen_native_elastic_relay.sv": "5d94a237433a488e2c87af196632865a6902f1f5df95b6220af9f9650b976e8a",
+    "rtl/physical/ot_qwen_native_elastic_relay.sv": "132846e440d1ec6f47a37d157215a79b2c93e2d4cdeefbd9bfd26b2ed8a9f41c",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "rtl/common/ot_link_credit.sv": "e8c63b3bf3af841d6cbad57f70e17571c0e2c9fcb44738698f7d1dee1ab58269"
+  },
+  "results": [
+    {
+      "name": "w546_n1_neg0_stall0",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_native_elastic_relay",
+        "-Ptb_qwen_native_elastic_relay.W=546",
+        "-Ptb_qwen_native_elastic_relay.NF=1",
+        "-Ptb_qwen_native_elastic_relay.NEG=0",
+        "-Ptb_qwen_native_elastic_relay.STALL=0",
+        "-o",
+        "/tmp/codex-native-elastic8/w546_n1_neg0_stall0.vvp",
+        "rtl/test/tb_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_die_station.sv",
+        "rtl/common/ot_link_credit.sv"
+      ],
+      "returncode": 0,
+      "stdout": "PASS elastic width=546 relays=1 words=256 first_credit_cycles=3 launch_window=382\n"
+    },
+    {
+      "name": "w546_n2_neg0_stall1",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_native_elastic_relay",
+        "-Ptb_qwen_native_elastic_relay.W=546",
+        "-Ptb_qwen_native_elastic_relay.NF=2",
+        "-Ptb_qwen_native_elastic_relay.NEG=0",
+        "-Ptb_qwen_native_elastic_relay.STALL=1",
+        "-o",
+        "/tmp/codex-native-elastic8/w546_n2_neg0_stall1.vvp",
+        "rtl/test/tb_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_die_station.sv",
+        "rtl/common/ot_link_credit.sv"
+      ],
+      "returncode": 0,
+      "stdout": "PASS elastic width=546 relays=2 words=256 first_credit_cycles=3 launch_window=558\n"
+    },
+    {
+      "name": "w516_n2_neg0_stall1",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_native_elastic_relay",
+        "-Ptb_qwen_native_elastic_relay.W=516",
+        "-Ptb_qwen_native_elastic_relay.NF=2",
+        "-Ptb_qwen_native_elastic_relay.NEG=0",
+        "-Ptb_qwen_native_elastic_relay.STALL=1",
+        "-o",
+        "/tmp/codex-native-elastic8/w516_n2_neg0_stall1.vvp",
+        "rtl/test/tb_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_die_station.sv",
+        "rtl/common/ot_link_credit.sv"
+      ],
+      "returncode": 0,
+      "stdout": "PASS elastic width=516 relays=2 words=256 first_credit_cycles=3 launch_window=558\n"
+    },
+    {
+      "name": "w546_n2_neg2_stall1",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_native_elastic_relay",
+        "-Ptb_qwen_native_elastic_relay.W=546",
+        "-Ptb_qwen_native_elastic_relay.NF=2",
+        "-Ptb_qwen_native_elastic_relay.NEG=2",
+        "-Ptb_qwen_native_elastic_relay.STALL=1",
+        "-o",
+        "/tmp/codex-native-elastic8/w546_n2_neg2_stall1.vvp",
+        "rtl/test/tb_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_native_elastic_relay.sv",
+        "rtl/physical/ot_qwen_die_station.sv",
+        "rtl/common/ot_link_credit.sv"
+      ],
+      "returncode": 0,
+      "stdout": "MISMATCH at=5 expected=00c50075 actual=01090099\nMISMATCH at=6 expected=00f40064 actual=010000b0\nMISMATCH at=7 expected=01e300b3 actual=013700a7\nNEG_DETECTED elastic width=546 negative=2 bad=4\n"
+    }
+  ],
+  "adoption": false,
+  "pnr_ready": false,
+  "pnr_blockers": [
+    "enlarged full-shape frame placement and actual leaf physical source config",
+    "composed collective schedule/token rate pricing",
+    "production reset/fault wiring and routed die"
+  ]
+}
