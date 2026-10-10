@@ -23,21 +23,47 @@ module ot_qkvd_hbm_timed_stack #(
     parameter integer REFPB  = 3,
     parameter integer PULLIN = 0,
     parameter integer ROW0   = 64,
-    parameter integer PCQ    = 256         // sector requests queued per PC ahead of the model port
+    parameter integer PCQ    = 256,        // sector requests queued per PC ahead of the model port
+    parameter integer RQ_FAR = 0,          // qwen-1010/b: die relay stations ectl -> landing (rq) of the far engines
+    parameter integer RS_FAR = 0           //   and landing -> ectl (rs); engines R/2..R-1 are the far column, 0..R/2-1 abut
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    input  wire [R-1:0]      rq_v,
-    input  wire [R-1:0]      rq_vv,        // 0 K row, 1 V row
-    input  wire [R-1:0]      rq_g,
-    input  wire [13*R-1:0]   rq_t,
-    output reg  [R-1:0]      row_rdy,
-    output reg  [R-1:0]      row_vv,
-    output reg  [R-1:0]      row_g,
-    output reg  [13*R-1:0]   row_t,
+    input  wire [R-1:0]      rq_v_i,
+    input  wire [R-1:0]      rq_vv_i,      // 0 K row, 1 V row
+    input  wire [R-1:0]      rq_g_i,
+    input  wire [13*R-1:0]   rq_t_i,
+    output wire [R-1:0]      row_rdy,
+    output wire [R-1:0]      row_vv,
+    output wire [R-1:0]      row_g,
+    output wire [13*R-1:0]   row_t,
     output reg               fault
 );
     localparam integer NPC = 32, AW = 30, TAGW = 17, SW = $clog2(NSLOT);
+    // ---- the die relay stations of the row path (registered stages; the far column only) ----
+    wire [R-1:0] rq_v, rq_vv, rq_g; wire [13*R-1:0] rq_t;
+    reg  [R-1:0] row_rdy_r, row_vv_r, row_g_r; reg [13*R-1:0] row_t_r;
+    genvar gx;
+    generate for (gx = 0; gx < R; gx = gx + 1) begin : g_rl
+        localparam integer DQ_ = (gx >= R / 2) ? RQ_FAR : 0;
+        localparam integer DS_ = (gx >= R / 2) ? RS_FAR : 0;
+        if (DQ_ > 0) begin : g_q
+            ot_hdc_delay #(.W(1), .D(DQ_), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(rq_v_i[gx]), .q(rq_v[gx]));
+            ot_hdc_delay #(.W(15), .D(DQ_)) u_d (.clk(clk), .rst_n(rst_n), .d({rq_vv_i[gx], rq_g_i[gx], rq_t_i[13*gx +: 13]}),
+                                                .q({rq_vv[gx], rq_g[gx], rq_t[13*gx +: 13]}));
+        end else begin : g_q0
+            assign rq_v[gx] = rq_v_i[gx]; assign rq_vv[gx] = rq_vv_i[gx]; assign rq_g[gx] = rq_g_i[gx];
+            assign rq_t[13*gx +: 13] = rq_t_i[13*gx +: 13];
+        end
+        if (DS_ > 0) begin : g_s
+            ot_hdc_delay #(.W(1), .D(DS_), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(row_rdy_r[gx]), .q(row_rdy[gx]));
+            ot_hdc_delay #(.W(15), .D(DS_)) u_d (.clk(clk), .rst_n(rst_n), .d({row_vv_r[gx], row_g_r[gx], row_t_r[13*gx +: 13]}),
+                                                .q({row_vv[gx], row_g[gx], row_t[13*gx +: 13]}));
+        end else begin : g_s0
+            assign row_rdy[gx] = row_rdy_r[gx]; assign row_vv[gx] = row_vv_r[gx]; assign row_g[gx] = row_g_r[gx];
+            assign row_t[13*gx +: 13] = row_t_r[13*gx +: 13];
+        end
+    end endgenerate
     // ---- the timed stack ----
     reg  [NPC-1:0]      m_v;
     wire [NPC-1:0]      m_rdy;
@@ -83,7 +109,7 @@ module ot_qkvd_hbm_timed_stack #(
         if (!rst_n) begin
             for (p = 0; p < NPC; p = p + 1) begin pq_rp[p] = 0; pq_n[p] = 0; end
             for (x = 0; x < R; x = x + 1) begin wp[x] = 0; rp[x] = 0; nout[x] = 0; end
-            m_v <= 0; m_addr <= 0; m_tag <= 0; row_rdy <= 0; row_vv <= 0; row_g <= 0; row_t <= 0; fault <= 1'b0;
+            m_v <= 0; m_addr <= 0; m_tag <= 0; row_rdy_r <= 0; row_vv_r <= 0; row_g_r <= 0; row_t_r <= 0; fault <= 1'b0;
         end else begin
             cyc_n = cyc_n + 1;
             // 1. the model accepted last edge's offers
@@ -121,10 +147,10 @@ module ot_qkvd_hbm_timed_stack #(
             end
             // 5. in-order release, one row a cycle per engine
             for (x = 0; x < R; x = x + 1) begin
-                row_rdy[x] <= 1'b0;
+                row_rdy_r[x] <= 1'b0;
                 if (nout[x] != 0 && sl_cnt[x][rp[x]] == 3'd4) begin
-                    row_rdy[x] <= 1'b1; row_vv[x] <= sl_vv[x][rp[x]]; row_g[x] <= sl_g[x][rp[x]];
-                    row_t[13*x +: 13] <= sl_t[x][rp[x]];
+                    row_rdy_r[x] <= 1'b1; row_vv_r[x] <= sl_vv[x][rp[x]]; row_g_r[x] <= sl_g[x][rp[x]];
+                    row_t_r[13*x +: 13] <= sl_t[x][rp[x]];
                     sl_cnt[x][rp[x]] = 3'd0;
                     rows_n = rows_n + 1; lat_sum = lat_sum + (cyc_n - sl_t0[x][rp[x]]); last_rel = cyc_n;
                     if (cyc_n - sl_t0[x][rp[x]] > lat_max) lat_max = cyc_n - sl_t0[x][rp[x]];

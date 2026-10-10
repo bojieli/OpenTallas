@@ -32,6 +32,8 @@ module ot_qkvd_layer_tb #(
     parameter integer HBMT   = 0,      // qwen-1010/b: 1 = rows timed by ot_qkvd_hbm_timed_stack (timed HBM3E, REFpb) per stack
     parameter integer HBMT_SLOT = 64,  //   reorder slots per engine
     parameter integer HBMT_PULLIN = 0, //   REFpb pull-in (model PULLIN)
+    parameter integer RQ_FAR = 0,      //   die relay stations on the far engines' rq / rs (kv_die.py relay_stages)
+    parameter integer RS_FAR = 0,
     parameter integer E      = 4 * R
 ) (
     input  wire              clk,
@@ -212,8 +214,8 @@ module ot_qkvd_layer_tb #(
     genvar hs;
     generate if (HBMT) begin : g_hbmt
         for (hs = 0; hs < 4; hs = hs + 1) begin : g_s
-            ot_qkvd_hbm_timed_stack #(.R(R), .NSLOT(HBMT_SLOT), .PULLIN(HBMT_PULLIN)) u_hs (.clk(clk), .rst_n(rst_n),
-                .rq_v(req_valid[R*hs +: R]), .rq_vv(req_v[R*hs +: R]), .rq_g(req_g[R*hs +: R]), .rq_t(req_t[13*R*hs +: 13*R]),
+            ot_qkvd_hbm_timed_stack #(.R(R), .NSLOT(HBMT_SLOT), .PULLIN(HBMT_PULLIN), .RQ_FAR(RQ_FAR), .RS_FAR(RS_FAR)) u_hs (.clk(clk), .rst_n(rst_n),
+                .rq_v_i(req_valid[R*hs +: R]), .rq_vv_i(req_v[R*hs +: R]), .rq_g_i(req_g[R*hs +: R]), .rq_t_i(req_t[13*R*hs +: 13*R]),
                 .row_rdy(hrow_rdy[R*hs +: R]), .row_vv(hrow_v[R*hs +: R]), .row_g(hrow_g[R*hs +: R]),
                 .row_t(hrow_t[13*R*hs +: 13*R]), .fault(hrow_fault[hs]));
         end
