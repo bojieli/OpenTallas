@@ -1,0 +1,10 @@
+case 0: 1 records retired in 1118 cycles (stage + compute + drain)
+case 1: 12 records retired in 2704 cycles (stage + compute + drain)
+case 2: 1 records retired in 274 cycles (stage + compute + drain)
+case 3: 1 records retired in 1280 cycles (stage + compute + drain)
+summary: 4 SU data cases through stage / compute / drain, 2572 VM words exact
+HGI_SU_UNIT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_unit.sv:88: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 92us; walltime 5.921 s; speed 15.513 us/s
+- Verilator: cpu 5.921 s on 1 threads; allocated 23 MB

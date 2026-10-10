@@ -1,0 +1,59 @@
+{
+  "source_base": "8ab941dbd",
+  "block": "ot_hgi_su_ctl",
+  "mechanism": "Registered local-memory return data/mask plus matching sector/valid; registered engine status",
+  "sizing": {
+    "local_buffer_words": 131072,
+    "local_buffer_bytes": 524288,
+    "dirty_mask_bytes": 16384,
+    "vm_request_bits": 338,
+    "vm_response_bits": 274,
+    "max_vm_outstanding": 4,
+    "local_return_bytes_per_cycle": 32,
+    "local_return_boundary_bits": 264,
+    "added_register_bits": 295,
+    "controller_slot_variants_um": [
+      [
+        320,
+        320
+      ],
+      [
+        420,
+        260
+      ]
+    ],
+    "memory": "unchanged r25 SU macros",
+    "compute": "unchanged vec"
+  },
+  "latency": {
+    "memory_return_cycles_added": 1,
+    "stream_cycles_added_per_8_words": 1,
+    "drain": "one additional in-flight return reserves one of four outstanding credits; compose actual VM acknowledgement latency",
+    "measured_status_only_records": [
+      1086,
+      2680,
+      272,
+      1240
+    ],
+    "measured_return_pin_records": [
+      1118,
+      2704,
+      274,
+      1280
+    ],
+    "records_per_case": [
+      1,
+      12,
+      1,
+      1
+    ],
+    "checked_words": 2572
+  },
+  "boundary_check": {
+    "input_to_register_levels": 3,
+    "previous": 20,
+    "register_to_output_levels": 2,
+    "input_to_output_bits": 0
+  },
+  "physical_adoption": "pending admitted routes, real pin placement, TT setup/FF hold and DRC; no physical closure claimed"
+}
