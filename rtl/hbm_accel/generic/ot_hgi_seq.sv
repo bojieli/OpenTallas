@@ -9,7 +9,7 @@
 //     ot_sram_1r1w_256x256 macro at RW = 512; behavioural here, 1-cycle registered read);
 //   * decode word-serially: header (16 B) + [SUT 32 B] + one MDESC (32 B) per opnd bit in A, B, C, D, O, R, I order;
 //   * predicate ALWAYS / POS0 / NOT_POS0 / LAST_ITER (innermost loop); CTL.LOOP param[15:0] count, [16] level
-//     (0 -> L, 1 -> L1), two levels nested in either order, bodies REPLAYED from the ring (a body must fit: the record
+//     (0 -> L, 1 -> L1), [17] count from U32(VM[imm_a]) after wait bits, valid 1..65535; two levels nested in either order, bodies REPLAYED from the ring (a body must fit: the record
 //     ending past RW - 2 words of the outermost body start faults); CTL.FENCE = every unit drained AND every posted
 //     HBM write visible (wr_quiet); CTL.END = token U32(VM[A_eff]) after END's wait mask, range-checked against 2^18 and
 //     cp_vocab;
@@ -123,7 +123,7 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
                      S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15,
-                     S_HQ = 5'd16, S_DB2 = 5'd17, S_DB3 = 5'd18;     // header pre-evaluation (registered decision flags)
+                     S_HQ = 5'd16, S_DB2 = 5'd17, S_DB3 = 5'd18, S_LOOPWAIT = 5'd19, S_LOOPRD = 5'd20, S_LOOPPUT = 5'd21;     // header pre-evaluation (registered decision flags)
     reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
@@ -184,6 +184,7 @@ module ot_hgi_seq #(
         end
     endfunction
     // ------------------------------------------------------------------ loops
+    reg [15:0] loop_count_q; reg loop_range_q;
     reg [1:0]  depth;
     reg        lv_lvl [0:1]; reg [15:0] lv_cnt [0:1]; reg [RB:0] lv_body [0:1];
     reg [15:0] Lc, L1c;
@@ -578,7 +579,7 @@ module ot_hgi_seq #(
                     hq_noa <= is_ctl && !h_opnd[0];
                     hq_rlen <= rlen; hq_rpn <= rp + {{(RB-4){1'b0}}, rlen};
                     hq_op <= h_op;
-                    hq_loopbad <= (h_param[15:0] == 16'd0 || depth == 2'd2 || (depth == 2'd1 && lv_lvl[0] == h_param[16]));
+                    hq_loopbad <= ((!h_param[17] && h_param[15:0] == 16'd0) || (h_param[17] && h[63:50] != 14'd0) || depth == 2'd2 || (depth == 2'd1 && lv_lvl[0] == h_param[16]));
                     for (k = 0; k < 7; k = k + 1) hq_sl[k] <= mth(h_opnd, k[2:0]);
                     st <= S_RDW;
                 end
@@ -591,6 +592,7 @@ module ot_hgi_seq #(
                         case (hq_op)
                             6'd0: begin advance(hq_rlen); st <= S_DEC; end                       // NOP
                             6'd1: if (hq_loopbad) fault3;                                    // LOOP
+                                  else if (h_param[17]) st <= S_LOOPWAIT;
                                   else begin
                                       lv_lvl[depth[0]] <= h_param[16]; lv_cnt[depth[0]] <= h_param[15:0];
                                       lv_body[depth[0]] <= hq_rpn;
@@ -740,6 +742,25 @@ module ot_hgi_seq #(
                     endcase
                 S_DISP: if (acc_q) begin st <= S_ADV; u_vr <= 16'd0; end                   // accepted (registered): the ring advances next
                 S_ADV: begin advance(hq_rlen); st <= S_DEC; end
+                // G24: scalar count snapshot after the producer's wait bits.  The
+                // registered range result keeps a 32-bit check off stack write enables.
+                S_LOOPWAIT: if (waitok(h_wait, busy_u)) begin
+                    vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= h[49:32]; st <= S_LOOPRD;
+                end
+                S_LOOPRD: if (vr_rsp_v_r) begin
+                    loop_count_q <= vr_rsp_data_r[15:0];
+                    loop_range_q <= (vr_rsp_data_r == 32'd0 || vr_rsp_data_r[31:16] != 16'd0);
+                    st <= S_LOOPPUT;
+                end
+                S_LOOPPUT: if (loop_range_q) fault3;
+                    else begin
+                        lv_lvl[depth[0]] <= h_param[16]; lv_cnt[depth[0]] <= loop_count_q;
+                        lv_body[depth[0]] <= hq_rpn;
+                        if (h_param[16]) L1c <= 16'd0; else Lc <= 16'd0;
+                        depth <= depth + 2'd1; rp <= hq_rpn;
+                        if (depth == 2'd0) frp <= hq_rpn;
+                        st <= S_DEC;
+                    end
                 S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin advance(hq_rlen); st <= S_DEC; end
                 S_ENDRD: begin
                     if (vr_rsp_v_r) begin

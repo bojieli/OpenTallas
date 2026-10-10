@@ -235,6 +235,29 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hgi_seq_vm_loop_model(vm_response_cycles=4, loops_per_token=8):
+    """G24: one scalar VM read at each data-dependent LOOP header, after waits.
+
+    Reuses the existing single-outstanding 18-bit-address/32-bit-data VM port.
+    No MACs, macros, replicas or die wires are added. One 16-bit count latch
+    plus valid flag isolates range checking from loop-stack write enables.
+    Costs are incremental to the existing static LOOP header path.
+    """
+    return dict(schema="opentallas.hgi_seq_vm_loop.v1", macs_per_cycle=0,
+                compute_intensity="scalar control", communication_bytes_per_loop=4,
+                vm_read_bytes_per_cycle_peak=4, vm_write_bytes_per_cycle=0,
+                existing_boundary_bits=18+32+4, added_boundary_bits=0,
+                added_routing_tracks=0, replicas=1, added_mux_inputs=2,
+                added_register_bits=17, area_mm2_estimate=17*2/1e6,
+                floorplan_slot_fit="existing sequencer slot; physical requalification required",
+                wait_latency_cycles="producer retirement, unchanged wait mask",
+                added_header_cycles=vm_response_cycles+4,
+                added_token_cycles=loops_per_token*(vm_response_cycles+4),
+                loops_per_token=loops_per_token, vm_response_cycles=vm_response_cycles,
+                admission="scalar-only; no large build or array simulation",
+                qualification="analytical sizing; no timing or adoption claim")
+
+
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
     return row_formatter_model(**kwargs)

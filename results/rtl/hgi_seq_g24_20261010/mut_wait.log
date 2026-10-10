@@ -1,0 +1,11 @@
+WARNING: /tmp/hgi-g24-cxmufwm9/tb_hgi_seq.sv:111: $readmemh(hgi_seq_vmi_conf.mem): Not enough words in the file for the requested range [0:40].
+FAIL case 0: token 4242/4242 status 0/0 dispatches 2/4
+SEQ case 1: 0 dispatches, token 4242 status 0, 50 cycles
+SEQ case 2: 1 dispatches, token 4242 status 0, 72 cycles
+SEQ case 3: 4 dispatches, token 4242 status 0, 173 cycles
+SEQ case 4: 0 dispatches, token 0 status 3, 67 cycles
+SEQ case 5: 0 dispatches, token 0 status 3, 78 cycles
+SEQ case 6: 0 dispatches, token 0 status 3, 110 cycles
+SEQ case 7: 0 dispatches, token 0 status 3, 100 cycles
+SEQ case 8: 2 dispatches, token 4242 status 0, 164 cycles
+HGI_SEQ FAIL 1
