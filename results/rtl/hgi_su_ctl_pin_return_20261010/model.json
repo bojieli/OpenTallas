@@ -55,5 +55,65 @@
     "register_to_output_levels": 2,
     "input_to_output_bits": 0
   },
-  "physical_adoption": "pending admitted routes, real pin placement, TT setup/FF hold and DRC; no physical closure claimed"
+  "physical_adoption": "pending admitted routes, real pin placement, TT setup/FF hold and DRC; no physical closure claimed",
+  "measurement_shapes": {
+    "N": 32,
+    "M": 8,
+    "LV": 7,
+    "SU_cases": [
+      {
+        "op": "CF-BCAST",
+        "nin": 128,
+        "nout": 8,
+        "records": 1
+      },
+      {
+        "op": "CF-LOOP2",
+        "nin": 16,
+        "nout": 1,
+        "records": 12
+      },
+      {
+        "op": "CF-ROPE DS tail64",
+        "nin": 64,
+        "nout": 1,
+        "records": 1
+      },
+      {
+        "op": "CF-ROPE Qwen permuted",
+        "nin": 128,
+        "nout": 10,
+        "records": 1
+      }
+    ],
+    "SFU_cases": [
+      {
+        "op": "GLU BF16 no clamp",
+        "nin": 3072,
+        "nout": 1,
+        "cycles": 3929
+      },
+      {
+        "op": "GLU clamp10 FP32",
+        "nin": 2304,
+        "nout": 1,
+        "cycles": 3017
+      }
+    ],
+    "STREAM_cases": [
+      {
+        "elements": 300,
+        "cycles": 619
+      },
+      {
+        "elements": 1001,
+        "cycles": 1895
+      },
+      {
+        "elements": 37984,
+        "cycles": 67800
+      }
+    ],
+    "scope": "exact component transactions, no full die rate claim"
+  }
 }
