@@ -36,6 +36,7 @@ CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
 SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+TT_ISSUE_BOTTOM = False                    # relay fix F1: the tree top's issue / status pins at its BOTTOM (toward the VM / SU)
 SEQ_COMPACT_ANCHOR = 'top'                 # 'top': the compact frame at the top of the old slot (toward the SU / VM / tree top)
 SEQ_COMPACT = None                         # (w, h): the closed compact ICUT sequencer (icut_t-a8f3ba53c 259.2 x 333.36)
 SPINE_RELAY_CH_WM = 129.6                   # KV2: extra relay channel width between spine columns W and M
@@ -220,7 +221,7 @@ def _compact_seq_master(v, model, old, sqi):
                     peer[p] = others[0]
     cx, cy = sqi.x + sqi.w / 2, sqi.y + sqi.h / 2
     L = {'E': sqi.h, 'W': sqi.h, 'N': sqi.w, 'S': sqi.w}
-    cap = {f: 2 * (L[f] - 4.0) / 0.048 for f in 'NSEW'}          # two layers a face, one-track pitch
+    cap = {f: (2 if f in 'EW' else 1) * (L[f] - 4.0) / 0.048 for f in 'NSEW'}   # E / W: M4 + M6, N / S: M5
     cap['S'] -= 2 * 530 + 9 + 40                                  # dc / dh / dflt (added below) on the S face
     load = {f: 0 for f in 'NSEW'}
     faces = {}
@@ -246,7 +247,7 @@ def _compact_seq_master(v, model, old, sqi):
         tot = sum(bits[p] for p in fl) or 1
         span_all = L[f] - 4.0 if f != 'S' else (L[f] - 4.0) * 0.5
         pos = 2.0 if f != 'S' else 2.0 + (L[f] - 4.0) * 0.5
-        lay = ('M4', 'M6') if f in 'EW' else ('M5', 'M7')
+        lay = ('M4', 'M6') if f in 'EW' else ('M5', 'M5')
         for n, p in enumerate(fl):
             span = span_all * bits[p] / tot
             mm.face(p, bits[p], f, lay[n % 2], pos + span / 2, 1)
@@ -281,6 +282,11 @@ def _wrap_masters(v, m):
                 sqi.w, sqi.h = sq_wh
         if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
             M['qfd_sp_constants_sequencer'] = _compact_seq_master(v, model, M['qfd_sp_constants_sequencer'], sqi)
+        if TT_ISSUE_BOTTOM:
+            tt = M['qfd_sp_tree_top']
+            for pn, c in (('si', 150.0), ('so', 60.0)):
+                if pn in tt.ports:
+                    tt.ports[pn] = tt.ports[pn][:4] + (c,) + tt.ports[pn][5:]
         t = M.pop('qfd_tile')
         M.pop('qfd_tile_e', None)
         t = copy.deepcopy(t)
