@@ -3160,7 +3160,7 @@ def build_r8(variant=None):
     links = []
     for side in 'WE':
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
-        if MTP_LINKS and DIE_KIND == 'head':     # MTP-DIE: draft fan-out SerDes, W gets the odd one
+        if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P'):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
             stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
         tot = sum(m_['h'] for _, m_ in stack) + (len(stack) - 1) * 43.2
         y = up(mid - tot / 2, GY)
@@ -3191,11 +3191,11 @@ def build_r8(variant=None):
     if BF_EXPLICIT_IDS is not None:
         variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
     variant.update(wfc_hard=bool(wfc_die), mtp_seq=(MTP_SEQ_MM2 if MTP_SEQ and DIE_KIND == 'head' else None),
-                   mtp_links=MTP_LINKS if DIE_KIND == 'head' else 0, draft=DRAFT_SIDE)
+                   mtp_links=MTP_LINKS if (DIE_KIND == 'head' or DRAFT_SIDE == 'P') else 0, draft=DRAFT_SIDE)
     if DRAFT_SIDE:
         variant['role'] = ('MD-2 P2 draft die %s (40 = 5 row packages x 4 ranks x A/B; layer1 recipe): %s'
                            % (DRAFT_SIDE, DRAFT_CONTENT[DRAFT_SIDE]))
-        variant['draft_image'] = dict(DRAFT_IMAGE, side=DRAFT_SIDE)
+        variant['draft_image'] = dict(DRAFT_IMAGE_P if DRAFT_SIDE == 'P' else DRAFT_IMAGE, side=DRAFT_SIDE)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -3763,7 +3763,12 @@ P2_OUTLINE_UM = (560.0, 460.0)  # the larger of the two first P2 routes (mtp-p2-
 P2_SLAB_MM2 = P2_OUTLINE_UM[0] * P2_OUTLINE_UM[1] / 1e6
 DRAFT_SIDE = None               # --draft A|B (MD-2 P2 draft die; None = a stage die)
 DRAFT_CONTENT = dict(A='mtp.0 experts 0..127 + mtp.2 experts 0..63 (rank-k row quarter), P2 expert sum in id order',
-                     B='mtp.1 experts 0..127 + mtp.2 experts 64..127 (rank-k row quarter), outputs to die A over UCIe')
+                     B='mtp.1 experts 0..127 + mtp.2 experts 64..127 (rank-k row quarter), outputs to die A over UCIe',
+                     P='DSpark primary rank k: mtp.0..2 attention / router / shared expert (L0 runs, one pair a run per '
+                       'phase group) + hc HE / CROM providers + mtp.0 seed projection; board SerDes to the 5 row packages')
+DRAFT_IMAGE_P = dict(tool='tools/dsrom_s81_mtp_binding.py', layout='S81 L0 superrow runs, one pair a run per phase group',
+                     storage_pairs=1792, words_per_die=2614272, words_capacity=1792 * 8192, fill=0.178,
+                     record='results/uarch/dsrom_s81_mtp_binding_20261010')
 DRAFT_IMAGE = dict(tool='tools/dsrom_mtp_draft_images.py', layout='rowpack whole-superrow (dsrom_mtp_p2_rowpack)',
                    storage_pairs=1792, words_per_die=13762560, words_capacity=1792 * 8192, fill=0.9375,
                    images_per_side=4, note='8 distinct images (side x rank) serve the 40 dies (5 row replicas)')
@@ -5825,8 +5830,10 @@ def die_options(ap):
                     help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) between capture and collective, '
                     'wired; default MTP_SEQ_DEFAULT (ON since mtp-lead 2026-10-09: dsfd_mtp_seq CLOSED c67a71fe5); '
                     '--no-mtp-seq reproduces the pre-MTP head dies')
-    ap.add_argument('--draft', choices=['A', 'B'], help='MD-2 P2 draft die (40 dies = 5 row packages x 4 ranks x '
-                    'A/B): the layer1 recipe with the draft ROM image of side A or B '
+    ap.add_argument('--draft', choices=['A', 'B', 'P'], help='MD-2 P2 draft die (40 dies = 5 row packages x 4 ranks x '
+                    'A/B): the layer1 recipe with the draft ROM image of side A or B; P = the DSpark PRIMARY die (4 = '
+                    'TP4; mtp-dsbind 2026-10-10: non-expert mtp.0..2 + seed on the L0 run rule, '
+                    'tools/dsrom_s81_mtp_binding.py; takes --mtp-links N draft fan-out SerDes) '
                     '(tools/dsrom_mtp_draft_images.py); side A also carries the P2 selected-path transport slab '
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
