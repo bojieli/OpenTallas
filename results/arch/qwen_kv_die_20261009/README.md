@@ -2,6 +2,8 @@
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a). KV never crosses the link.
 
+**Exactness status (2026-10-10): reference-level only.** The layer and token exactness below was proven on the unstationed reference topology, where the VM read is co-located and takes 1 edge. The TP sequencer (ot_qwen_tp_seq_w12 / _sys) assumes that 1-edge VM read, and the closed ICUT sequencer master puts pin stations on that read. The r22k floorplan has no sequencer <-> VM all-reduce read bus. Until the stationed re-proof lands (claude-takeover qwen-1010.log), die-level exactness and the AR read cost are unproven.
+
 **Status.** Every number here is a priced candidate or a generator floorplan, not a closed rate.
 
 **Update 2026-10-10 ~04:30 PT (re-cut H on the die).**
