@@ -15443,3 +15443,20 @@ def hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token=0):
 def hbm_indexer_t4_join_model():
     from hbm_indexer_r25i_model import hbm_indexer_t4_join_model as impl
     return impl()
+
+
+def hgi_quant_serial_shape_model(records_per_token=80):
+    """Size exact serial shape arithmetic before building quant transport RTL."""
+    return dict(element='ot_hgi_quant_vm_transport', opt_in='SERIAL_SHAPE',
+        default_enabled=False, replicas=1, MACs_per_cycle=0,
+        arithmetic='four unsigned 20x32/16 products, four parallel64bit shift-add accumulators; registered sum; existing registered bounds checks',
+        memory_bytes_per_cycle=0, additional_boundary_bits=0,
+        register_bits=4*(64+64+20)+5+1,
+        mux_inputs_per_accumulator=2, accumulator_fanout=1,
+        routing_tracks_added_external=0, slot_area_um2=496080,
+        estimated_extra_area_um2=4*(148*0.5+64*0.4),
+        slot_fit='less than0.1percent existing slot; actual synthesis/route required',
+        validation_cycles_old=4, validation_cycles_new=25,
+        token_added_cycles=21*records_per_token,
+        token_latency='+21cycles per quant record, compose actual dispatch count; no payload throughput change',
+        physical_qualified=False, exact_gate='existing458transportcases+mutants and product/range edgecases')

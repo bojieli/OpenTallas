@@ -1,0 +1,23 @@
+{
+  "element": "ot_hgi_quant_vm_transport",
+  "opt_in": "SERIAL_SHAPE",
+  "default_enabled": false,
+  "replicas": 1,
+  "MACs_per_cycle": 0,
+  "arithmetic": "four unsigned 20x32/16 products, four parallel64bit shift-add accumulators; registered sum; existing registered bounds checks",
+  "memory_bytes_per_cycle": 0,
+  "additional_boundary_bits": 0,
+  "register_bits": 598,
+  "mux_inputs_per_accumulator": 2,
+  "accumulator_fanout": 1,
+  "routing_tracks_added_external": 0,
+  "slot_area_um2": 496080,
+  "estimated_extra_area_um2": 398.4,
+  "slot_fit": "less than0.1percent existing slot; actual synthesis/route required",
+  "validation_cycles_old": 4,
+  "validation_cycles_new": 25,
+  "token_added_cycles": 1680,
+  "token_latency": "+21cycles per quant record, compose actual dispatch count; no payload throughput change",
+  "physical_qualified": false,
+  "exact_gate": "existing458transportcases+mutants and product/range edgecases"
+}
