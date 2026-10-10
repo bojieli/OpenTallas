@@ -9,9 +9,12 @@ module dsfd_mtp_seq_rtt #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
     parameter integer MAXU = 8, parameter integer G = 5,
     parameter integer SW = USER_W + 3 * NW + 4, parameter integer DW = USER_W + 3 + NW,
-    // actual registered relay stations of the head-die chains (head631 / headp2 regenerated, ef227c660):
-    //   capture -> mtp 5 (data) / mtp -> capture 6 (grant); vm -> mtp 9 (data) / mtp -> vm 10 (grant)
-    parameter integer FWD_R = 5, parameter integer RET_R = 6, parameter integer FWD_V = 9, parameter integer RET_V = 10,
+    // actual registered stages of the head-die chains, pin to pin (ds-1010 lat-audit 2026-10-10, tools/s81/hub_stage_count.py
+    // on the head631 recipe): the hub-bus chain stations PLUS the --hop-fix / --pin-relay stations (g_hb_*) the
+    // generator adds on the first / last segment.  The earlier values 5 / 6 / 9 / 10 counted the chain stations only
+    // (floorplan 'chains' record): every receiver's grant history was 2-3 cycles short -> receive FIFO overflow.
+    //   capture -> mtp 6 (data) / mtp -> capture 7 (grant); vm -> mtp 11 (data) / mtp -> vm 11 (grant)
+    parameter integer FWD_R = 6, parameter integer RET_R = 7, parameter integer FWD_V = 11, parameter integer RET_V = 11,
     // full-rate depth: one slot per grant of the round trip (history F + R + 3) plus one
     parameter integer D_R = FWD_R + RET_R + 4, parameter integer D_V = FWD_V + RET_V + 4
 ) (
