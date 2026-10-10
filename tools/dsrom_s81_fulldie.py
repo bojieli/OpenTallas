@@ -2268,6 +2268,18 @@ TIER_COLS8 = (10, 11, 11, 11, 11, 10)
 SPF = 518.4                         # spine <-> field column 0 channel (S14; 259.2 overflowed: W chains + VM pins)
 RSC_W = 47.52                       # return-stage sub-column of the node strip
 COL_W8 = 2 * LANE_W + NS_W + RSC_W  # 1,182.816
+# --bf-hier COL_W (s81-gen 2026-10-09, bf-arch request 19:50, branch claude/bf-arch-20261009 f2c75c4f7): the BF pair as
+# THREE abutted hardened blocks W -> E: dsfd_bf_col (ot_v41_bf_col, R0) | dsfd_bf_front (ot_s81_bf_front) | dsfd_bf_col (MY),
+# all 190.08 um tall (the height the BF blocks route at; the flat dsfd_bf frame was 157.68 by default).  The pair is
+# 2 x COL_W + 280.152 wide: every frame's lane zone widens by BF_FRAME_EXTRA (node strip / return column move east) and
+# the die widens by 2 x 11 columns x BF_FRAME_EXTRA (no reticle rescue: 128 frames, PQ r128 kept; reported).
+BF_HIER = None                       # column width (520.128 | 600.264) or None
+BF_FRONT_W = 280.152
+BF_ROUTE_H = 190.08
+BF_FRAME_EXTRA = 0.0
+LANES_W = 2 * LANE_W                 # lane zone width of a frame (2 lanes + BF_FRAME_EXTRA)
+BFH_IFACE = (('issue', 1), ('a_ctr', 14), ('i1_v', 1), ('i1_bk', 1), ('i1_bf', 1), ('i1_t', 17), ('i2x_q0', 256),
+             ('i2x_e0', 10), ('i2x_q1', 256), ('i2x_e1', 10), ('ze_d', 1), ('so_row', 128), ('so_idx', 40), ('so_n', 40))
 COL_PITCH8 = COL_W8 + 8.64
 HC_CORR = 1209.6                    # HC split: E-half crossing corridor at the VM's y (604.8: GRT overflow, see r8 README)
 VCH8 = 1209.6                       # r8 VCH (604.8 in r7; the r8 forwarded chains + hub CDC blocks overflowed it)
@@ -2769,7 +2781,7 @@ def MESO_P():
 
 HOP_FWD_CLS = ('lane',)
 HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in', 'fclk', 'phy_dfi',
-            'hbm_read', 'hbm_req')    # hbm_req (s81-gen --ctrl-rq): abutting controller faces, as hbm_read
+            'hbm_read', 'hbm_req', 'bfh')    # hbm_req (s81-gen --ctrl-rq): abutting controller faces, as hbm_read
 
 
 def _anchor(Mx, it, port):
@@ -2888,6 +2900,14 @@ def build_r8(variant=None):
                 nh = up(NVX_UM2 / 1002.888, GY)
                 insts.append(Inst(f'v{p}', 'dsfd_nvx', ex, sy + SLOT_H + CFG_DY, 1002.888, nh - SHAVE, kind='nvx',
                                   region=f'frame_{r}'))
+            elif kind == 'BF' and BF_HIER:
+                cw_ = BF_HIER
+                insts.append(Inst(f'e{p}w', 'dsfd_bf_col', ex, sy + ELEM_DY, cw_, BF_ROUTE_H, 'R0', kind='bfcol',
+                                  region=f'frame_{r}'))
+                insts.append(Inst(f'e{p}e', 'dsfd_bf_col', ex + cw_ + BF_FRONT_W, sy + ELEM_DY, cw_, BF_ROUTE_H, 'MY',
+                                  kind='bfcol', region=f'frame_{r}'))
+                it = Inst(f'e{p}', 'dsfd_bf_front', ex + cw_, sy + ELEM_DY, BF_FRONT_W, BF_ROUTE_H, kind='bf',
+                          region=f'frame_{r}')
             elif kind == 'BF':
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
             else:
@@ -2928,7 +2948,7 @@ def build_r8(variant=None):
         frames[r]['tree'] = (nodes, root)
         rank = _inorder_rank(nodes, root)
         for j, (nid, a, b) in enumerate(nodes):
-            insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + 2 * LANE_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
+            insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + LANES_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
                               NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
         # (--pq-place: below the root row, which takes the channel's top PQ_ROOT_ROW)
@@ -2939,7 +2959,7 @@ def build_r8(variant=None):
             # S81-DIE PQ root row: N station (tree word in) / ret_root_r128 / S station (root word out), centred in the
             # 142.56 um return strip (node strip + rstg sub-column) directly under the frame
             yr = ch_y[t] + chh(t) - PQ_ROOT_ROW
-            xr = up(x0 + 2 * LANE_W + (NS_W + RSC_W - PQ_ROOT_WH[0]) / 2, GX)
+            xr = up(x0 + LANES_W + (NS_W + RSC_W - PQ_ROOT_WH[0]) / 2, GX)
             insts.append(Inst(f'pqs{r}', 'dsfd_rstg_pq%d' % PQ_RO, xr, yr + 4.32, PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE,
                               kind='pqstn', region=f'frame_{r}'))
             insts.append(Inst(f'pqr{r}', 'dsfd_pq_root', xr, yr + 4.32 + PQ_STN_H, PQ_ROOT_WH[0] - SHAVE,
@@ -3133,7 +3153,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -3352,7 +3372,7 @@ def buses_r8(m):
         # root -> column FIFO through register stages in the strip sub-column
         rootn = by[f'n{r}_{ids[root]}'] if f'n{r}_{ids[root]}' in by else next(i_ for i_ in m['insts'] if i_.name == f'n{r}_{ids[root]}')
         cfi = next(i_ for i_ in m['insts'] if i_.name == cf)
-        sx = f['x'] + 2 * LANE_W + NS_W + 4.32
+        sx = f['x'] + LANES_W + NS_W + 4.32
         ytop = rootn.y + rootn.h
         ybot = cfi.y + cfi.h
         if PQ_PLACE:      # the strip chain now ends at the root row's N station, not at the column FIFO
@@ -3383,6 +3403,8 @@ def buses_r8(m):
         f['ret_stages'] = nst
         bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
+    if BF_HIER:
+        _bf_hier_nets(m)
     if REV == 'r9':
         _bank_nets(m)
         _col_relays(m, P)
@@ -3826,6 +3848,28 @@ def _q_banks(p, ex, ey, rq, region):
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
+
+
+def _bf_hier_nets(m):
+    """--bf-hier: the BF pair's partial outputs leave from its columns (old r0 -> west column r, r1 -> east column r),
+    the column clock / reset reach all three blocks, and the front <-> column interface is an abutted net per column
+    (front c<k> -> column ci: BFH_IFACE 776 b; column qy -> front qy<k>, the registered fault OR)"""
+    names = {it.name for it in m['insts']}
+    B = m['buses']
+    for i, (bid, cls, bits, eps) in enumerate(B):
+        eps2 = []
+        for inst, port in eps:
+            if port in ('r0', 'r1') and f'{inst}w' in names:
+                eps2.append((f'{inst}{"w" if port == "r0" else "e"}', 'r'))
+            elif cls in ('col_clock', 'col_reset') and f'{inst}w' in names and port in ('ck', 'rs'):
+                eps2 += [(inst, port), (f'{inst}w', port), (f'{inst}e', port)]
+            else:
+                eps2.append((inst, port))
+        B[i] = (bid, cls, bits, eps2)
+    for it in [x for x in m['insts'] if x.kind == 'bf' and f'{x.name}w' in names]:
+        for k, side in ((0, 'w'), (1, 'e')):
+            B.append((f'bfh_{it.name}_c{k}', 'bfh', sum(b for _, b in BFH_IFACE), [(it.name, f'c{k}'), (f'{it.name}{side}', 'ci')]))
+            B.append((f'bfh_{it.name}_q{k}', 'bfh', 1, [(f'{it.name}{side}', 'qy'), (it.name, f'qy{k}')]))
 
 
 def _bank_nets(m):
@@ -5183,6 +5227,14 @@ def _faces_r8(m, Mx, it, ports):
             if need > L:
                 raise ValueError(f'{Mx.name}: face {f} needs {need:.1f} um > {L:.1f}')
             _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
+    elif kind == 'bf' and BF_HIER:   # dsfd_bf_front: x stream N, control S, column interfaces W / E (abutted)
+        _lay(Mx, 'N', P_(['x0', 'x1']), 'M5', pitch=1)
+        _lay(Mx, 'S', P_(['go', 'cfg', 'st', 'ck', 'rs']), 'M5')
+        _lay(Mx, 'W', P_(['c0', 'qy0']), 'M4', gap=0.0)
+        _lay(Mx, 'E', P_(['c1', 'qy1']), 'M4', gap=0.0)
+    elif kind == 'bfcol':            # dsfd_bf_col: front interface on E (MY east copy faces west), partials + ck S (middle)
+        _lay(Mx, 'E', P_(['ci', 'qy']), 'M4', gap=0.0)
+        _lay(Mx, 'S', P_(['r', 'ck', 'rs']), 'M5')
     elif kind in ('bf', 'bf_nv'):
         _lay(Mx, 'S', P_(['go', 'cfg', 'ck', 'rs']), 'M5', start=230.0)
         _lay(Mx, 'S', P_(['x0', 'x1']), 'M5', start=SSTN_X - 4.32 - 10.0)
@@ -5633,6 +5685,8 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
+                    'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
                     'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
@@ -5720,7 +5774,16 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
+    BF_HIER = getattr(a, 'bf_hier', None)
+    BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
+    LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
+    COL_W8 = LANES_W + NS_W + RSC_W
+    COL_PITCH8 = COL_W8 + 8.64
+    DIE = (up(33000.0 + 2 * max(TIER_COLS8) * BF_FRAME_EXTRA, GX) if BF_HIER else 33000.0, 26000.0)
+    if BF_HIER:
+        assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
+            '--bf-hier: the BF frame (--elem-h) must hold the 190.08 um routed BF blocks + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
