@@ -11,10 +11,22 @@ import argparse, hashlib, json, pathlib, re, subprocess, time
 SOURCE='948dc49b1117040aae4ba7c98c9eda2016e2a5cf'
 ORIGINAL='/srv/opentallas-scratch/claude/closure-loop/bfa_full_a_948dc49b1-cl'
 MACRO='physical/asap7_memory_macros_v2/ot_rom_4096x274_m8'
-CANDIDATES={'hm30orphan':'eco/pass1','sca':'eco-sca/pass1','scb':'eco-scb/pass1','codex4':'eco-codex4/pass1'}
+CANDIDATES={'hm30orphan':'eco/pass1','sca':'eco-sca','scb':'eco-scb','codex4':'eco-codex4'}
 PROBE=r'''
 import hashlib,json,pathlib,re,sys
-r=pathlib.Path(sys.argv[1]);rel=sys.argv[2];e=r/'cl'/rel;log=e/'eco_mm.log'
+r=pathlib.Path(sys.argv[1]);rel=sys.argv[2];e=r/'cl'/rel
+# A live sidecar's wrapper still owns its corner collection and later passes.
+# Wait for the selected final positive result; the dead original wrapper is
+# the sole exception, and its completed raw pass is recovered independently.
+if rel!='eco/pass1':
+ rc=r/'cl'/(rel+'.rc');result=e/'result.json'
+ if not rc.exists() or not result.exists():raise SystemExit(3)
+ if rc.read_text().strip() not in ('0','rc=0'):raise SystemExit(3)
+ d=json.loads(result.read_text())
+ if not all(d.get(k,-1)>=0 for k in ('score','ss_ps','ff_ps')) or d.get('drc',1)!=0:raise SystemExit(3)
+ actual=(e/'orfs').resolve();e=actual.parent
+log=e/'eco_mm.log'
+if not log.is_file():log=e/'eco_ff.log'
 if not log.is_file() or 'OT_ECO done' not in log.read_text():raise SystemExit(3)
 text=log.read_text();drc=re.findall(r'Number of violations = (\d+)',text)
 if not drc:raise SystemExit(4)
