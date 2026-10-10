@@ -15719,3 +15719,9 @@ def hgi_inverse_selected_candidate_model(k=2048, group=96):
     except ModuleNotFoundError:
         from uarch_model_hgi_inverse import model
     return model(k=k, group=group)
+
+
+def hgi_att_scaled_model():
+    """Original scaled-FP4 provenance into the existing exact attention engine."""
+    from hgi_att_scaled_model import model
+    return model()
