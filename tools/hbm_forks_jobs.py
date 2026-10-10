@@ -45,9 +45,11 @@ def fc_cmd(c):
     return c.replace('SRC="{SRC}" OUT=', "CKP='ck*' SRC=\"{SRC}\" OUT=")
 
 
-def spec(m, commit, hm, tag, fc=False):
-    name = f'hbm_svc_{m[8:]}_ps{"fc" if fc else ""}_{commit[:9]}_tc_{tag}-cl'
+def spec(m, commit, hm, tag, fc=False, pinreg=False):
+    name = f'hbm_svc_{m[8:]}_ps{"fc" if fc else ""}{"pr" if pinreg else ""}_{commit[:9]}_tc_{tag}-cl'
     cmd = stage_cmd(m, hm)
+    if pinreg:      # setup-failing faces: every pin-fed register beside its own pin (common/wire_stage_fence.tcl OT_WS_PINREG)
+        cmd = cmd.replace('--orfs-var GPL_ROUTABILITY_DRIVEN=0', '--orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_PINREG=1')
     if fc:
         cmd = fc_cmd(cmd)
     d_ = dict(
@@ -88,6 +90,8 @@ def spec(m, commit, hm, tag, fc=False):
                         .replace('seg_ps/', 'seg_psfc/').replace('sdc_ps/', 'sdc_psfc/').replace('split_psfcfc', 'split_psfc')
                         .replace('seg_psfcfc', 'seg_psfc').replace('sdc_psfcfc', 'sdc_psfc'))
         d_['purpose'] = d_['purpose'] + ' | FC: W / E face one-stage chains on face die clock leaves ckw / cke (gen_svc_seg.py --fc)'
+    if pinreg:
+        d_['purpose'] = d_['purpose'] + ' | PINREG: every input-pin-fed register placed beside its own pin (OT_WS_PINREG)'
     return name, d_
 
 
