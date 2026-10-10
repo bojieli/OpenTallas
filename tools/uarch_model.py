@@ -15357,3 +15357,35 @@ def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
         area=dict(added_ff_estimate=149, slot_fit='requires re-route of IDX unit', physical_qualified=False),
         fanout=dict(slot_shift_add=2, batch_to_division=13),
         physical_adoption=False)
+
+
+def hbm_hc_group_root_icg_model():
+    """HC xlcg physical candidate: preserve the 22 RTL group clock roots.
+
+    The push-down netlist clones each group's gate across its sink clusters
+    while sharing one HOLD-counter enable; measured group enable transport
+    is 1203.7ps. This candidate keeps the actual one-gate group hierarchy,
+    root-local reset/wake, cross-root lockups, and existing timing budgets.
+    """
+    groups=22
+    group_register_sinks=162+512+136
+    return dict(candidate='HBM_HC_GROUP_ROOT_ICG', enabled_default=False,
+        model_source='physical/hbm_accel_die_views/hcp/rtl_xlcg/{plan,floorplan}.json',
+        footprint_um=[550.776,5529.576], footprint_mm2=550.776*5529.576/1e6,
+        lanes=88, lanes_per_group=4, clock_face_roots=8, group_clock_roots=groups,
+        registers_per_group_clock=group_register_sinks, macro_clock_pins_per_group=4,
+        HOLD=64, wake_cycles_per_group=1, wake_bits_per_group=1,
+        gate_enable_fanout=1, automatic_gate_cloning=False,
+        extra_wake_or_data_cycles=0, single_user_token_added_cycles=0,
+        added_state_bits=0, added_cell_area_um2=0,
+        clock_tree_area_delta_um2=None, clock_tree_power_delta_w=None,
+        external_boundary_bits_per_cycle_delta=0, memory_port_bytes_per_cycle_delta=0,
+        macs_per_cycle_delta=0, routing_tracks_delta_external=0,
+        existing_root_local_control='one wake flop, HOLD counter and reset relay per group',
+        internal_boundary_bits_per_cycle=groups*(162+512+136),
+        channel_capacity='same existing quarter channels; actual CTS/route required',
+        worst_prior_enable_wire_ps=1203.7, worst_prior_enable_cell_ps=308.3,
+        prior_gate_setup_TT_ps=-1482.5,
+        qualification='OPEN: exact/cross-root/late-wake gates and TT>=0 FF>=0 DRC0',
+        design_applicability={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+            'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True})
