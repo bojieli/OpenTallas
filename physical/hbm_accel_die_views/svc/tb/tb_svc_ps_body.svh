@@ -50,6 +50,10 @@
       for (j = 0; j < 8; j = j + 1) begin x = x ^ (x << 13); x = x ^ (x >> 17); x = x ^ (x << 5); f[j*32 +: 32] = x ^ a; end
     end
   endfunction
+`ifdef OT_SVC_EARLY_FAIL
+  // A scoreboard error is permanent: stop known-bad mutants after the first proof of failure.
+  always @(negedge ck) if (err != 0) $fatal(1,"SVC_MUTANT_CAUGHT errors=%0d",err);
+`endif
   integer wait_cycles;
   integer seed = 20261006;
   // per-PC queue of reads: (addr, len, tag, issue time)
