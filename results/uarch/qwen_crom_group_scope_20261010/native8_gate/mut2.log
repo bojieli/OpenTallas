@@ -1,0 +1,28 @@
+[3000] %Fatal: tb_qfd_crom_native8.sv:23: Assertion failed in tb_qfd_crom_native8.tick: MISMATCH native8 cycle=4 fault=0/0 code=0/0
+%Error: rtl/test/redesign_qwen/tb_qfd_crom_native8.sv:23: Verilog $stop
+Aborting...
+FAIL native8 mutant detected MUT=2
+Command exited with non-zero status 1
+	Command being timed: "bash physical/redesign_qwen/native8_bench.sh 2 /srv/opentallas-scratch/codex/res-ser/native8-11ec31b34/bench/mut2"
+	User time (seconds): 63.52
+	System time (seconds): 1.95
+	Percent of CPU this job got: 202%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:32.40
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 615552
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1019730
+	Voluntary context switches: 251
+	Involuntary context switches: 229
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 392456
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
