@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "status": "PROSPECTIVE_DMA_ONLY_PHYSICAL_RESERVATION",
+  "source_sha256": {
+    "physical/hbm_accel_die_views/svc/split_psfc/split.json": "8593d499f066e911bb412eabbbf93eee5c2dd2e1d3ed3080b451cb1da7f18c97",
+    "physical/hbm_accel_die_views/svc/svc_geometry.json": "01a8bd7465e4ce4a26911d01a1acc235e87e8c203ae7b98ac0af80d4513551c0",
+    "tools/hbm_accel_die_fp.py": "a7179e954383dfab1deeac79828fb3b8516e83a2fd74f5ad00256343ca40d601"
+  },
+  "hop_um": 380.0,
+  "pitch_um": 0.096,
+  "traffic_pins_per_um_per_layer": 10.416666666666666,
+  "pin_density_limit_per_um_per_layer": 12.0,
+  "layers": [
+    "M4",
+    "M6"
+  ],
+  "lane_bits": 2160,
+  "request_bits": 51,
+  "credit_bits": 8,
+  "ready_bits": 1,
+  "edge_traffic_bits": 2220,
+  "initial_credits": 64,
+  "credit_scope": "provisional end-to-end credits; independent local credits may decouple front RTT",
+  "qualification": "relay ledger for proposed geometry, not measured hardware latency or achieved bandwidth",
+  "loader": {
+    "name": "hb_loader",
+    "x_um": 14735.952,
+    "y_um": 9104.4,
+    "w_um": 1399.6560000000002,
+    "h_um": 237.576
+  },
+  "route_admission": false,
+  "gates": [
+    "new tile RTL pins and relay instances match these records",
+    "measured cell area fits at <=60% utilization",
+    "resolve all proposed die placement/corridor conflicts",
+    "front endpoint physical pin allocation and clock-root lockups",
+    ">=90% bandwidth with composed actual credits/RTT",
+    "transaction exactness and in-context timing/DRC"
+  ],
+  "stacks": {
+    "SW": {
+      "inner_gap_um": 129.624,
+      "inner_gap_neighbor": "sm0",
+      "service_to_companion_gap_um": 4.0,
+      "companion_to_neighbor_gap_um": 5.624,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 134,
+      "credit_utilization_at_planned_worst_path": 0.47761194029850745,
+      "minimum_credits_for_90pct": 121,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": true,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 46,
+      "front_leg_um": 16595.791999999998,
+      "placement_conflicts": []
+    },
+    "SE": {
+      "inner_gap_um": 129.624,
+      "inner_gap_neighbor": "sm8",
+      "service_to_companion_gap_um": 4.0,
+      "companion_to_neighbor_gap_um": 5.624,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 138,
+      "credit_utilization_at_planned_worst_path": 0.463768115942029,
+      "minimum_credits_for_90pct": 125,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": true,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 48,
+      "front_leg_um": 17202.56,
+      "placement_conflicts": []
+    },
+    "NW": {
+      "inner_gap_um": 131.76,
+      "inner_gap_neighbor": "sm16",
+      "service_to_companion_gap_um": 4.0,
+      "companion_to_neighbor_gap_um": 7.76,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 170,
+      "credit_utilization_at_planned_worst_path": 0.3764705882352941,
+      "minimum_credits_for_90pct": 153,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": true,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 64,
+      "front_leg_um": 23432.191999999995,
+      "placement_conflicts": []
+    },
+    "NE": {
+      "inner_gap_um": 131.76,
+      "inner_gap_neighbor": "sm24",
+      "service_to_companion_gap_um": 4.0,
+      "companion_to_neighbor_gap_um": 7.76,
+      "internal_one_way_cycles_planned": 20,
+      "composed_credit_rtt_cycles_planned": 174,
+      "credit_utilization_at_planned_worst_path": 0.367816091954023,
+      "minimum_credits_for_90pct": 157,
+      "next_power_of_two_credit_depth": 256,
+      "placement_fit": true,
+      "front_corridor_fit": "HOLD: endpoint pin and track allocation not measured",
+      "front_leg_cycles": 66,
+      "front_leg_um": 24038.96,
+      "placement_conflicts": []
+    }
+  },
+  "tiles_per_family": {
+    "SW": 8,
+    "SE": 9
+  }
+}

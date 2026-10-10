@@ -1,5 +1,5 @@
 import unittest
-from hbm_svc_dma_physical import edge_ports, validate_pins, relay_path, HEIGHT
+from hbm_svc_dma_physical import edge_ports, validate_pins, relay_path, HEIGHT, plan
 
 
 class PhysicalPlanTests(unittest.TestCase):
@@ -20,6 +20,17 @@ class PhysicalPlanTests(unittest.TestCase):
         self.assertEqual(roles.count('seam_input_pin'), 2)
         self.assertLessEqual(path['max_wire_hop_um'], 380)
         self.assertEqual(path['manhattan_um'], 1100)
+
+    def test_all_four_companions_fit_actual_r25gph_inner_gaps(self):
+        p = plan()
+        self.assertEqual(len(p['families']['SW']['tiles']), 8)
+        self.assertEqual(len(p['families']['SE']['tiles']), 9)
+        self.assertLess(p['traffic_pins_per_um_per_layer'], 12)
+        for stack in p['stacks'].values():
+            self.assertTrue(stack['placement_fit'])
+            self.assertGreater(stack['companion_to_neighbor_gap_um'], 0)
+            self.assertFalse(any(r['conflicting_instances'] for r in stack['reservations']))
+        self.assertFalse(p['route_admission'])
 
     def test_east_stack_data_flow_reverses(self):
         p = edge_ports(400.032, reverse=True)

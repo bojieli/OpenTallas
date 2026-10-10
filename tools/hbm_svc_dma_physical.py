@@ -14,8 +14,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HOP = 380.0
-PITCH = 0.192
-HEIGHT = 240.0
+PITCH = 0.096
+HEIGHT = 120.0
 PORTS = [('lane', 2160, 'output'), ('req', 51, 'input'),
          ('credit', 8, 'input'), ('ready', 1, 'output')]
 
@@ -25,7 +25,7 @@ def overlap(a, b):
 
 
 def edge_ports(width, reverse=False):
-    """Two sparse horizontal layers, 1,110 traffic pins per face per layer."""
+    """Two horizontal layers, 1,110 traffic pins per face per layer."""
     ports = {}
     for face in ('W', 'E'):
         index = 0
@@ -107,7 +107,8 @@ def plan(root=ROOT, credits=64):
     result=dict(schema=1, status='PROSPECTIVE_DMA_ONLY_PHYSICAL_RESERVATION',
                 source_sha256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
                     for p in [svc/'split_psfc/split.json',svc/'svc_geometry.json',root/'tools/hbm_accel_die_fp.py']},
-                hop_um=HOP, pitch_um=PITCH, layers=['M4','M6'], lane_bits=2160,
+                hop_um=HOP, pitch_um=PITCH, traffic_pins_per_um_per_layer=1/PITCH,
+                pin_density_limit_per_um_per_layer=12.0, layers=['M4','M6'], lane_bits=2160,
                 request_bits=51, credit_bits=8, ready_bits=1, edge_traffic_bits=2220,
                 initial_credits=credits,
                 credit_scope='provisional end-to-end credits; independent local credits may decouple front RTT',
@@ -140,7 +141,9 @@ def plan(root=ROOT, credits=64):
             family_tiles.append(dict(master=f'hfd_svc_dma_{family}_s{j}',kind='svc_dma',
                 x0_um=b['x0_um'],w_um=width,h_um=HEIGHT,ports=ports,
                 face_pin_counts=count,existing_service_face_pin_counts=old_counts,pc_ids=pcids,
-                storage_bits=8192*len(pcids),cell_area_um2=None,
+                storage_bits=8192*len(pcids),
+                storage_implementation='distributed per-PC SRAM reservation; macro selection/area not measured',
+                cell_area_um2=None,
                 cell_area_capacity_um2=round(width*HEIGHT*0.60,3),
                 implementation='separate DMA companion; no existing port moved or replaced',
                 fit='PASS pin rectangles; HOLD measured cells/die placement/timing'))
@@ -166,9 +169,14 @@ def plan(root=ROOT, credits=64):
     for stack,i in stacks.items():
         fam='SW' if stack[1]=='W' else 'SE'
         f=result['families'][fam]
-        # Reserve outside the service face; actual intersection checks below
-        # retain conflicts rather than quietly moving the hardened neighbors.
-        y=i.y-HEIGHT if stack[0]=='S' else i.y+i.h
+        # Use the measured existing service-to-SM inner gap, with 4um
+        # separation from the released service. Do not move either neighbor.
+        south=stack[0]=='S'
+        y=i.y+i.h+4.0 if south else i.y-HEIGHT-4.0
+        neighbors=[n for n in insts if n.name!=i.name and n.x<i.x+i.w and i.x<n.x+n.w
+                   and (n.y>=i.y+i.h if south else n.y+n.h<=i.y)]
+        neighbor=min(neighbors,key=lambda n:n.y-i.y-i.h if south else i.y-n.y-n.h)
+        gap=neighbor.y-i.y-i.h if south else i.y-neighbor.y-neighbor.h
         reservations=[]
         for tile in f['tiles']:
             box=[i.x+tile['x0_um'],y,i.x+tile['x0_um']+tile['w_um'],y+HEIGHT]
@@ -183,6 +191,9 @@ def plan(root=ROOT, credits=64):
                      for pc,p in enumerate(f['pc_to_lane']))
         rtt=2*(front['cycles']+internal)+2
         result['stacks'][stack]=dict(reservations=reservations,front_leg=front,
+            inner_gap_um=round(gap,4),inner_gap_neighbor=neighbor.name,
+            service_to_companion_gap_um=4.0,
+            companion_to_neighbor_gap_um=round(gap-HEIGHT-4.0,4),
             internal_one_way_cycles_planned=internal,composed_credit_rtt_cycles_planned=rtt,
             credit_utilization_at_planned_worst_path=min(1,credits/rtt),
             minimum_credits_for_90pct=math.ceil(.9*rtt),
