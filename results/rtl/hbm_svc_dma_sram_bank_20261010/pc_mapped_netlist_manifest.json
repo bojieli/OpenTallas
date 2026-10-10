@@ -1,0 +1,12 @@
+{
+  "artifact": "results/rtl/hbm_svc_dma_sram_bank_20261010/pc_controller_mapped.json.gz",
+  "compressed_sha256": "b1294eaaa42e2cf0b023bafd2c767edb521c2c65da3429876b443c91495c2753",
+  "uncompressed_sha256": "f45466a17d2e42f7dbd29b066393e8dedf30cd78a2b5dd9eb3cbb418128898c1",
+  "scope": "complete mapped PCcontroller with4hardwidebankabstracts; bank8macros separatelypinned; replay physical6144metadataFFpairproof",
+  "authoritative_record": "pc_mappedshape_authoritative.json",
+  "audit_failures": [
+    "pc_mappedshape_r2.json",
+    "pc_mappedshape_final.json"
+  ],
+  "audit_failure_reason": "mapper initially lacked customcell Liberty pin directions and expected Qnetaliases removed by Yosys clean; correctedaudit uses same preserved completed netlist and proves unique Dinput consumers/Qoutputs; no RTL/physical failure, no resynthesis"
+}
