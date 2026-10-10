@@ -38,7 +38,14 @@ module ot_hgi_sm_record #(
     parameter integer NSM = 32,
     parameter integer MUT_ROWS = 0,       // mutant: an even floor split (M >> 5 rows a SM) instead of the ceil blocks
     parameter integer MUT_EARLY = 0,      // mutant: retire when the SMs start
-    parameter integer LEGACY = 1          // 1: static legacy pass-through mux; 0: the routed adapter (records only)
+    parameter integer LEGACY = 1,         // 1: static legacy pass-through mux; 0: the routed adapter (records only)
+    // redesign-hbm 2026-10-09: FINR 1 = the record's completion / fault decision reads a REGISTERED snapshot of the 32-SM
+    // reductions (st_pend == 0, d_pend == 0, all_arr, any_fault): hgi_adp_sm_b-547554dd6 TT -404.5 = st_pend[26] -> act[25]
+    // (822 ps of cell: 32-bit reductions + the fault / divide priority chain + the act / arr_want / rel enables in one edge).
+    // Fault and completion both see the same snapshot (fault keeps priority); the completion inputs are monotone once the
+    // SMs are started, so the record retires one edge later and the outcome is unchanged.  Cost: +1 edge per record.
+    parameter integer FINR = 0,
+    parameter integer MUT_FINR = 0        // mutant: the snapshot sticks at 'all arrived / nothing pending' (stale true)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -176,6 +183,11 @@ module ot_hgi_sm_record #(
         any_fault = 1'b0;
         for (s = 0; s < NSM; s = s + 1) if (act[s] && ret_q[s*4 + 3]) any_fault = 1'b1;
     end
+    reg any_fault_q, all_arr_q, pend0_q;
+    always @(posedge clk) begin any_fault_q <= any_fault; all_arr_q <= all_arr || (MUT_FINR != 0); pend0_q <= ((st_pend == 0) && (d_pend == 0)) || (MUT_FINR != 0); end
+    wire flt_x  = (FINR != 0) ? any_fault_q : any_fault;
+    wire arr_x  = (FINR != 0) ? all_arr_q : all_arr;
+    wire pend_x = (FINR != 0) ? pend0_q : ((st_pend == 0) && (d_pend == 0));
 
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
@@ -273,9 +285,9 @@ module ot_hgi_sm_record #(
             end
             if (busy && dv_chk && dv_k == 6'd0 && dv_r != 9'd0) begin            // B.base not a multiple of LB
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0; dv_chk <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0;
-            end else if (busy && (any_fault || in_xf || in_pf)) begin
+            end else if (busy && (flt_x || in_xf || in_pf)) begin
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0;
-            end else if (busy && started && !go_ok && all_arr && pd_seen && st_pend == 0 && d_pend == 0) begin
+            end else if (busy && started && !go_ok && arr_x && pd_seen && pend_x) begin
                 rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; started <= 1'b0;
                 for (s = 0; s < NSM; s = s + 1) if (arr_want[s]) rel[s] <= ret_q[s*4 + 2];
                 arr_want <= 0; act <= 0;

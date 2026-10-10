@@ -19,6 +19,14 @@ module tb_hgi_sm_record;
 `else
     localparam integer ME = 0;
 `endif
+    // redesign-hbm 2026-10-09: OT_SM_FINR = the registered completion snapshot (FINR 1); MUT_FINR = its stale-true mutant
+`ifdef MUT_FINR
+    localparam integer FR = 1, MF = 1;
+`elsif OT_SM_FINR
+    localparam integer FR = 1, MF = 0;
+`else
+    localparam integer FR = 0, MF = 0;
+`endif
     `include "sm_sizes.svh"
     localparam integer NSM = 32, CW = 106;
     reg clk = 0;
@@ -40,7 +48,7 @@ module tb_hgi_sm_record;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; reg [NSM*4-1:0] sm_ret = 0;
-    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1),
+    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME), .FINR(FR), .MUT_FINR(MF)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1),
         .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]),
         .rec_o(cur[895:640]), .rec_n_a(cur[916:896]), .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault),
         .halted(halted), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride),
@@ -51,7 +59,7 @@ module tb_hgi_sm_record;
     // ---- legacy-mode identity
     reg [NSM*CW-1:0] lgc; reg [NSM*4-1:0] lgr; wire [NSM*CW-1:0] l_cmd; wire [NSM*4-1:0] l_ret; integer q, lock_n = 0;
     wire l_rdy, l_done, l_fault;
-    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0),
+    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME), .FINR(FR), .MUT_FINR(MF)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0),
         .rec_v(1'b1), .rec_rdy(l_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]),
         .rec_o(cur[895:640]), .rec_n_a(cur[916:896]), .rec_n_b(cur[937:917]), .rec_done(l_done), .rec_fault(l_fault),
         .halted(), .x_v(), .x_rdy(1'b1), .x_base(), .x_n(), .x_p(), .x_stride(), .x_space(), .x_fmt(), .x_done(1'b1),
