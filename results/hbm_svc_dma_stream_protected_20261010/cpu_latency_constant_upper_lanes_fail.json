@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL",
+  "returncode": 1,
+  "output": "FATAL: rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected_latency.sv:13: latency vehicle identity slot=37 idx= 19 data=00000000000000000000000000000000000000000000000000000000xXXXXXXX fault=x epoch=1 bank=0 cf=0 expecteddata=00000000000000000000000000000000000000000000000000000000feed9876\n       Time: 95000000 Scope: tb_hbm_svc_dma_pc_ingress_protected_latency\n",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/ot_hbm_svc_dma_pc_ingress_protected.sv": "d98f7e4b4ae9a4239fc20b43d8a3f9d38e140cc759e71e67b2cbb2c7f836c836",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected_latency.sv": "c227631c76f68e03f3b38378ec4f2dc5af5765c18088c502d855f4f880521e3f"
+  },
+  "diagnosis": "Upper64bit codec lanes kept constant zero from simulation initialization; existing encoder always@* requires initial input event. Latency bench will establish known values in every lane before native valid."
+}

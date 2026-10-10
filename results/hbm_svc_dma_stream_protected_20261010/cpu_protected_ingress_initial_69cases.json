@@ -1,0 +1,498 @@
+{
+  "schema": "opentallas.hbm_svc.dma_pc_ingress_protected.v1",
+  "verdict": "PASS",
+  "sources_unchanged": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "disabled",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS disabled_opt_in\n"
+    },
+    {
+      "case": "overreservation",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT protected protocol violation\n"
+    },
+    {
+      "case": "unreserved_return",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT unreserved\n"
+    },
+    {
+      "case": "zero_burst",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT protected protocol violation\n"
+    },
+    {
+      "case": "overflow",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT protected protocol violation\n"
+    },
+    {
+      "case": "control_pair",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT control\n"
+    },
+    {
+      "case": "held_publication_pair",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT publication\n"
+    },
+    {
+      "case": "wrong_bank_identity",
+      "verdict": "FAIL",
+      "expected": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected.sv:13: ingress metadata identity/order\n       Time: 1735000000 Scope: tb_hbm_svc_dma_pc_ingress_protected\n"
+    },
+    {
+      "case": "metadata_pair_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit4",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit5",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit6",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit7",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit8",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit9",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit10",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit11",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit12",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit13",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit14",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "metadata_pair_bit15",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "EXPECTED_FAULT metadata\n"
+    },
+    {
+      "case": "data_single_lane0_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=0 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane0_bit63",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=0 bit=63\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane1_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=1 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane1_bit63",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=1 bit=63\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane2_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=2 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane2_bit63",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=2 bit=63\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane3_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=3 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "data_single_lane3_bit63",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=9 lane=3 bit=63\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=1\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=2\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=3\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit4",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=4\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit5",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=5\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit6",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=6\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane0_bit7",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=0 bit=7\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=1\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=2\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=3\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit4",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=4\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit5",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=5\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit6",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=6\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane1_bit7",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=1 bit=7\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=1\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=2\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=3\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit4",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=4\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit5",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=5\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit6",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=6\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane2_bit7",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=2 bit=7\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=1\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=2\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=3\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit4",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=4\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit5",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=5\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit6",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=6\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "ECC_single_lane3_bit7",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=10 lane=3 bit=7\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "double_UE_lane0",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=11 lane=0 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "double_UE_lane1",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=11 lane=1 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "double_UE_lane2",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=11 lane=2 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    },
+    {
+      "case": "double_UE_lane3",
+      "verdict": "PASS",
+      "expected": "PASS",
+      "returncode": 0,
+      "output": "PASS actual_SECDED_fault_injection mutation=11 lane=3 bit=0\nPASS protected_one_PC four32deep_bank_FIFOs wholeburst_reservation unbackpressured128returns reversedbankreturns FIFOidentity stalledbankdrain interleavedissue_return_drain pointerwrap unbalanced_partial_banks\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/ot_hbm_svc_dma_pc_ingress_protected.sv": "d98f7e4b4ae9a4239fc20b43d8a3f9d38e140cc759e71e67b2cbb2c7f836c836",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected.sv": "f57688bb1d13fdf24da69794011d98244c2a302da6ce482bb8662d9f08553759",
+    "tools/hbm_svc_dma_pc_ingress_protected_bench.py": "99c312d2b52c641fe52c51884182c1a412a528ad62b214552da09d318d6c2e5a"
+  },
+  "scope": "One actual protected RTL PC ingress, four32deep288bit SECDED banks, real four64b encoder1/decoder2 codecs, paired16bit epoch metadata and controls, four finite paired publication slots. Full occupancy/wrapped pointers/partial unbalanced banks, unbackpressured128returns, sticky immediate pair-fault containment, single-bit data+all32ECC-bit correction and double-bit UE zero-sector/fault. Physical mapping and complete native CAM/epoch integration remain unqualified."
+}

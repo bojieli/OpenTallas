@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL",
+  "returncode": 1,
+  "output": "FATAL: rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected_latency.sv:13: latency vehicle identity slot=37 idx= 19 data=00000000000000000000000000000000000000000000000000000000xXXXXXXX fault=x epoch=1 bank=0 cf=0 expecteddata=00000000000000000000000000000000000000000000000000000000feed9876\n       Time: 95000000 Scope: tb_hbm_svc_dma_pc_ingress_protected_latency\n",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/ot_hbm_svc_dma_pc_ingress_protected.sv": "d98f7e4b4ae9a4239fc20b43d8a3f9d38e140cc759e71e67b2cbb2c7f836c836",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_ingress_protected_latency.sv": "767c414d80a42a7d6d4e82f45d1a0e009acdb05d01ffc87c00c7c4e8e822c6cd"
+  },
+  "diagnosis": "Icarus existing codec combinational always@* did not see initialized constant test input transition; corrected latency vehicle drives its payload after reset before valid handshake."
+}
