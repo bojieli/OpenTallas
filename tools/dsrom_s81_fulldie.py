@@ -3856,6 +3856,7 @@ def _bank_nets(m):
 
 
 PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+HOPDBG = os.environ.get('OT_S81_HOPDBG', '')
 # --relay-tt-reach UM (s81-gen 2026-10-09): option-B sign-off is TT setup (owner 10-07).  A relay / station with no legal box
 # inside the SS-derived reach (HOP_R_CC 410 um: the frame / corridor is 100 % packed, m221pq_r4c rt_0_8a_y1) takes the
 # nearest legal box within the TT reach instead (real relay, counted in hop_fix.pad_fallback.tt_reach and listed by name in
@@ -4077,23 +4078,34 @@ def _hop_fix(m, P):
                 cands = _hop_paths(a, b, cor)
                 rects = list(cor.values())
                 order = [cands[0]] + sorted(cands[1:], key=lambda p_: (-round(_corr_frac(p_, rects), 2), _poly_len(p_)))
+                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
+                # stations fall behind the path, e.g. a vertical leg through the field where boxes exist only in the
+                # tier channels; layer1e VM -> eng_SE ended 1,164 um short).  First clean candidate wins; if none is
+                # clean, the placeable one with the fewest relaxed stations (default L on ties).
                 n0 = n
+                best = None
                 for j_, cand in enumerate(order):
                     n_c = n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)
                     pos_c = stations_at(cand, n_c)
-                    cur_, ok = a, True
+                    cur_, ok, rc_ = a, True, {}
                     for k in range(len(pos_c)):
-                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, {}, [])
+                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
                         if pl_ is None:
                             ok = False
                             break
                         cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
-                    if ok:
-                        if j_:
-                            path, n = cand, n_c
-                            kind_ = 'vfirst' if len(cand) == 3 else 'z'
-                            rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if not ok:
+                        continue
+                    bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
+                    if best is None or bad < best[0]:
+                        best = (bad, j_, cand, n_c)
+                    if bad == 0:
                         break
+                if best is not None and best[1]:
+                    _, j_, cand, n_c = best
+                    path, n = cand, n_c
+                    kind_ = 'vfirst' if len(cand) == 3 else 'z'
+                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
             Lp = _poly_len(path)
             pos = stations_at(path, n)
             n = len(pos)
@@ -4102,6 +4114,9 @@ def _hop_fix(m, P):
             tt_ = m.setdefault('tt_reach_relays', [])
             for k in range(n):
                 pl, (cx, cy), dch, horiz, w_, h_, NR = find(k, n, path, pos, cur, rec['pad_fallback'], tt_)
+                if HOPDBG and bid.startswith(HOPDBG):     # OT_S81_HOPDBG=<bus prefix>: per-station trace (stderr)
+                    print('HOPDBG', bid, e, k, n, [tuple(round(v, 1) for v in q) for q in path], round(pos[k], 1),
+                          (round(cx, 1), round(cy, 1)), pl, dict(rec['pad_fallback']), file=sys.stderr)
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:

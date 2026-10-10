@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 9,
-   "merged": 9,
+   "closed": 22,
+   "merged": 22,
    "record_only": 6
   },
   "jobs": {
@@ -1544,7 +1544,20 @@
    "hgi_adp_mover_b-58682fb1f-tc-cl": "same source; record 9a237f4cf",
    "hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0": "ADOPTED (coordinator 15:2x): live physical/hbm_accel_die_views/router/ view swapped to this closure (lef/ss/ff libs, corner_sta, calib, check, route_args; view.json status closed + closure block); same LEF SIZE 1399.66 x 326.28 and 2118/2118 pins MATCH; old hfd_router_tt.lib left (not part of view.json)",
    "hbm_sfu_lane_ring3_aa5dd28d5": "source on main; record cae03da69 (view su/lane/ot_su12_sfu_ring3)",
-   "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl": "wfc_vmx RQFREE 2 RTL + prd bench cases from c39e235bb only; record 82204e4f3"
+   "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl": "wfc_vmx RQFREE 2 RTL + prd bench cases from c39e235bb only; record 82204e4f3",
+   "qfd_coll_xfifo_b-66fd85cda-tc": "merged: acb615a21 (sys-takeover native collective binding, NCOLL=0 default unchanged) + 66fd85cda (kit io_plain) + record b2ca0a6ef (record spec fixed: was cloned from qfd_hub_emb and pointed at its evidence dir). Local: coll_native_bench pos PASS (reduce_320w 1,121 cyc), gate mutant DETECTED. No exported view (collect copies sign-off only).",
+   "hgi_mtp_native-nreg-a-lvt-eaea6da41-tc": "ADOPTED (HBM native MTP master, R25G slot): source eaea6da41 already on main; closed by the drive-0849 combo ECO (VT-swap + stacked hold, TT -13.94/FF -7.28 -> +10.43/+1.80); record 8ada8c419",
+   "hgi_adp_dma_a-dfe4ac2c5-tc-cl": "ot_hgi_dma_record.sv from dfe4ac2c5 only; record fb2ed11ff; local HGI_DMA PASS, MUT_SLOT/MUT_EARLY FAIL",
+   "mtp-seedproj-b-7c1939686-tc": "ADOPTED (better hold: TT +39.25 / FF +10.02; MTP seed projection ot_dsrom_mtp_seed_ctl); source on main; record ab4ef42fb (view lef/libs/export.json under results/rtl/mtp_lead_20261009/routes/)",
+   "mtp-seedproj-a-7c1939686-tc": "record only (TT +34.69 / FF +4.27; b adopted); f3d3f7cec",
+   "collvmpub_fix2_a-f11374855-tc-hm10-f6-lvt": "HBM collective VM publication: element sources already on main (byte-identical: _rb wrapper, pfifo, secded, replay sram); record 30df13e36; closed via drive-0849 combo ECO",
+   "hgi_adp_su_a-dfe4ac2c5-tc-cl": "ot_hgi_su_record.sv on main byte-identical; record 4ffc1428e",
+   "hgi_adp_dma_b-dfe4ac2c5-tc-cl": "ot_hgi_dma_record.sv merged with dma_a (331227e92); record 36dc84138",
+   "hostnative_pipec_a-18f1b50d4-tc": "DS host ingest rev c: merge 18f1b50d4 (sys-takeover 25ce04993 / bacb74ab4 / 18f1b50d4 + struct-close HCUT 96b16b623; all opt-in, defaults unchanged); record 1ab54de47. Local: host_native_pipe_bench pos / pos2 PASS, apstale2 + fencevis2 (strengthened multi-fence visibility bench, bacb74ab4) NEG DETECTED; rtl_hbm_host_ingest_bench (hfd default) PASS with window/no-fence mutants detected",
+   "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc": "ADOPTED (HBM die MTP master hfd_mtp, TT +17.39 / FF +8.65); source on main; record 867da6c5f (corner_sta/physical/args; no LEF/lib in the record -> view export owed)",
+   "hfd-mtp-x-stop-nreg-hm0-7bebe74b7-tc": "record only (TT +10.04 / FF +5.23; hm10 adopted); 7027a09fa",
+   "hcjoin-mc420-lk-d4211f538-tc-cl": "ADOPTED (DS HC seed join on the credit relay, TT +19.31 / FF +21.50); source on main; record 91fefaacb",
+   "hcjoin-mc500-lk-d4211f538-tc-cl": "record only (TT +17.36 / FF +23.52; mc420 adopted); e8de73fef"
   }
  }
 }

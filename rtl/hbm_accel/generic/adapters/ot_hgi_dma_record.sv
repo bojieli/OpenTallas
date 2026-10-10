@@ -19,7 +19,7 @@
 // FENCE (op 2): the fence port; the record retires when the mover reports every DMA write before it visible.
 // Retire = the mover's done for the move (in order: one move outstanding) / fence_done.  Refusals (rec_fault, sticky
 // halt): unit != 8, op > 3, a missing / wrong-space / wrong-format operand, n or m mismatch, KVWB ring not a power of 2.
-// Latency: accept E0, decode E1, move_v E2 (KVWB: E7).  LEGACY = 1 adds the static legacy pass-through on both ports.
+// Latency: accept E0 (pin flops), checks E1, move word E2, move_v visible after E2 (KVWB: +6 for slot x stride).  LEGACY = 1 adds the static legacy pass-through on both ports.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_record #(
     parameter integer MUT_SLOT = 0,       // mutant: KVWB slot = POS (no ring wrap)
@@ -60,10 +60,11 @@ module ot_hgi_dma_record #(
     reg  [226:0] mv_q;
     reg  [2:0]   dig;
     reg  [19:0]  slot; reg [31:0] ost; reg [51:0] prod;
+    reg          s1_v, bad1, rdy_r; reg [5:0] op1; reg [255:0] a1, o1; reg [20:0] na1; reg [19:0] slot1;
     reg          in_done, in_fault, in_fdone;
     always @(posedge clk) begin in_done <= mv_done; in_fault <= mv_fault; in_fdone <= fence_done; end
     assign halted = halt_q;
-    assign rec_rdy = hen && !raw_v && !busy && !halt_q;
+    assign rec_rdy = hen && rdy_r;                                       // registered
     assign mv_v    = hen ? (iss && !is_fence) : lg_mv_v;
     assign mv      = hen ? mv_q : lg_mv;
     assign lg_mv_rdy = !hen && mv_rdy;
@@ -91,31 +92,34 @@ module ot_hgi_dma_record #(
     wire [20:0] pos = pos1_q - 21'd1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; iss <= 1'b0; is_fence <= 1'b0; kv <= 1'b0; kv_iss <= 1'b0; mul_run <= 1'b0;
+            raw_v <= 1'b0; s1_v <= 1'b0; bad1 <= 1'b0; rdy_r <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; iss <= 1'b0; is_fence <= 1'b0; kv <= 1'b0; kv_iss <= 1'b0; mul_run <= 1'b0;
             rec_done <= 1'b0; rec_fault <= 1'b0; hdr_q <= 0; a_q <= 0; o_q <= 0; na_q <= 0; no_q <= 0; pos1_q <= 0;
             mv_q <= 0; dig <= 0; slot <= 0; ost <= 0; prod <= 0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            if (rec_v && rec_rdy) begin
-                raw_v <= 1'b1; hdr_q <= rec_hdr; a_q <= rec_a; o_q <= rec_o; na_q <= rec_n_a; no_q <= rec_n_o;
-                pos1_q <= rec_pos1;
+            hdr_q <= rec_hdr; a_q <= rec_a; o_q <= rec_o; na_q <= rec_n_a; no_q <= rec_n_o; pos1_q <= rec_pos1;  // pin flops
+            if (rec_v && rec_rdy) raw_v <= 1'b1;
+            rdy_r <= hen && !raw_v && !s1_v && !busy && !halt_q && !(rec_v && rec_rdy);
+            if (raw_v) begin                                   // E1: checks + the ring slot, operands copied
+                raw_v <= 1'b0; s1_v <= 1'b1; bad1 <= bad; op1 <= op; a1 <= a_q; o1 <= o_q; na1 <= na_q;
+                slot1 <= MUT_SLOT ? pos[19:0] : (pos[19:0] & (om - 20'd1));
             end
-            if (raw_v) begin                                   // E1
-                raw_v <= 1'b0;
-                if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
+            if (s1_v) begin                                    // E2: the move word
+                s1_v <= 1'b0;
+                if (bad1) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
-                    busy <= 1'b1; is_fence <= (op == 6'd2); kv <= (op == 6'd3); kv_iss <= 1'b0;
-                    mv_q <= {na_q, a_q[87:68], ist(o_q), o_q[119:88], o_q[47:8], of, os,
-                             ist(a_q), a_q[119:88], a_q[47:8], af, as};
-                    if (op == 6'd3) begin
-                        slot <= MUT_SLOT ? pos[19:0] : (pos[19:0] & (om - 20'd1)); ost <= o_q[119:88];
-                        prod <= 52'd0; dig <= 3'd5; mul_run <= 1'b1;
+                    busy <= 1'b1; is_fence <= (op1 == 6'd2); kv <= (op1 == 6'd3); kv_iss <= 1'b0;
+                    mv_q <= {na1, a1[87:68], ist(o1), o1[119:88], o1[47:8], o1[4:2], o1[1:0],
+                             ist(a1), a1[119:88], a1[47:8], a1[4:2], a1[1:0]};
+                    if (op1 == 6'd3) begin
+                        slot <= slot1; ost <= o1[119:88]; prod <= 52'd0; dig <= 3'd5; mul_run <= 1'b1;
                     end else iss <= 1'b1;
                 end
             end
-            if (mul_run) begin                                 // dst base = O.base + slot * O.stride
-                dig <= dig - 3'd1;
-                prod <= (prod << 4) + ost * slot[4*(dig - 1) +: 4];
+            if (mul_run) begin                                 // dst base = O.base + slot * O.stride (radix 16, the
+                dig <= dig - 3'd1;                             // slot shifts out its top digit: no indexed select)
+                prod <= (prod << 4) + ost * slot[19:16];
+                slot <= slot << 4;
                 if (dig == 3'd1) mul_run <= 1'b0;
             end
             if (kv && busy && !mul_run && !kv_iss && dig == 3'd0) begin   // fields: o base [137:98], m [205:186]

@@ -2,7 +2,7 @@
  "id": "topk_k6_n384_m1_asc",
  "row": "CF-TOPK",
  "mode": "DS",
- "what": "IDX.TOPK k = 6 over 1 row(s) of 384; ties to the lowest index; ids in ASCENDING ID order (param[12], open gap G15: the DS router / index order)",
+ "what": "IDX.TOPK k = 6 over 1 row(s) of 384; ties to the lowest index; ids in ASCENDING ID order (param[12] order = 1, legal for k <= 8: the DS router top-6, G15)",
  "cfg": {
   "cp_vocab": 129280,
   "cp_ctx_max": 1048576,

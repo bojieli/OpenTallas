@@ -4161,7 +4161,10 @@ def eco_install_cmd(j):
         macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
-                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; fi")
+                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "
+                     # drive-0849: the pre-ECO view (w18 export) carried export.json, which collect recipes copy; the
+                     # abstract writes abstract.json -> keep both names (mtp-seedproj a/b collect crashed twice on it)
+                     f"[ -f {W}/view/export.json ] || [ ! -f {W}/view/abstract.json ] || cp {W}/view/abstract.json {W}/view/export.json; fi")
     return "\n".join(lines)
 
 

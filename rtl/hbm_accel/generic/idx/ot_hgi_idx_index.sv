@@ -15,7 +15,9 @@
 // the top-k beats (to, 16 lanes) and candidate beats (co, 2 lanes) are compacted lane by lane into O / R / D through
 // sector packers (masked 8-word VM writes); toc / coc return one credit per beat consumed; done when the selector's
 // done (ev[0]) is seen, both streams have delivered their last beat and every packer is flushed; ev[1] (selector
-// fault: refused key, overflow, replay) or an illegal operand -> fault.  One VM request outstanding (the VM packet ABI).
+// fault: refused key, overflow, replay) or an illegal operand -> fault.  VM fast path: the 512 query sectors of A stream
+// with up to 4 requests outstanding (in-order responses into a 4-sector buffer); B / C loads and the packer writes share
+// the same client.
 module ot_hgi_idx_index #(
     parameter integer MUT = 0     // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane
 ) (
@@ -48,7 +50,11 @@ module ot_hgi_idx_index #(
     input  wire [1:0]    ev
 );
     // ---------------------------------------------------------------- VM reader: word w -> one-sector cache
-    reg vm_pend, vm_rd; reg [14:0] c_sec; reg c_ok; reg [255:0] c_dat; reg [14:0] rd_sec;
+    reg [2:0] ocnt; wire vm_pend = ocnt != 3'd0; reg iss;
+    reg vm_rd; reg [14:0] c_sec; reg c_ok; reg [255:0] c_dat; reg [14:0] rd_sec;
+    // A stream: next sector to request, reads in flight, 4-sector in-order buffer
+    reg [9:0] a_req; reg [2:0] a_fl; reg [255:0] af [0:3]; reg [1:0] af_h, af_t; reg [2:0] af_n; reg [1:0] qs;
+    reg af_push, af_pop, a_iss;
     // ---------------------------------------------------------------- packers: 0 O, 1 R, 2 D ids, 3 D values
     reg [17:0] pk_a [0:3];                 // next word address
     reg [255:0] pk_d [0:3]; reg [7:0] pk_m [0:3]; reg [3:0] pk_full;   // pending sector content / word mask
@@ -91,7 +97,8 @@ module ot_hgi_idx_index #(
     wire c_lv = ch[4 + cl]; wire [16:0] c_blk = ch[38 + 17*cl +: 17]; wire [15:0] c_val = ch[6 + 16*cl +: 16];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; done <= 1'b0; fault <= 1'b0; vmq <= 338'd0; vm_pend <= 1'b0; c_ok <= 1'b0;
+            st <= S_IDLE; done <= 1'b0; fault <= 1'b0; vmq <= 338'd0; ocnt <= 3'd0; c_ok <= 1'b0; a_fl <= 3'd0; af_n <= 3'd0;
+            af_h <= 2'd0; af_t <= 2'd0;
             fs <= 90'd0; qb <= 1048'd0; kin <= 345'd0; toc <= 1'b0; coc <= 1'b0; pk_full <= 4'd0;
             tfh <= 3'd0; tft <= 3'd0; tfn <= 4'd0; cfh <= 3'd0; cft <= 3'd0; cfn <= 4'd0;
             for (i = 0; i < 4; i = i + 1) begin pk_m[i] <= 8'd0; pk_d[i] <= 256'd0; end
@@ -105,9 +112,10 @@ module ot_hgi_idx_index #(
             if (ev[0]) sel_done <= 1'b1;
             if (ev[1] && st != S_IDLE) bad <= 1'b1;
             // ---- VM responses
+            iss = 1'b0; af_push = 1'b0; af_pop = 1'b0; a_iss = 1'b0;
             if (vmr[273]) begin
-                vm_pend <= 1'b0;
-                if (vm_rd) begin c_ok <= 1'b1; c_sec <= rd_sec; c_dat <= vmr[255:0]; end
+                if (vmr[272:257] == 16'h0910 || vmr[272:257] == 16'h0911) begin c_ok <= 1'b1; c_sec <= rd_sec; c_dat <= vmr[255:0]; end
+                if (vmr[272:257] == 16'h0912) begin af[af_t] <= vmr[255:0]; af_t <= af_t + 2'd1; af_push = 1'b1; end
             end
             case (st)
                 S_IDLE: if (go) begin
@@ -115,7 +123,7 @@ module ot_hgi_idx_index #(
                         fault <= 1'b1;
                     else begin
                         st <= S_BW; wi <= 6'd0; c_ok <= 1'b0; sel_done <= 1'b0; to_last <= 1'b0; co_last <= !cand_en;
-                        bad <= 1'b0; qblk <= 8'd0; qw <= 5'd0; qfull <= 1'b0; qcred <= 3'd4; tl <= 5'd0; cl <= 2'd0;
+                        bad <= 1'b0; qblk <= 8'd0; qw <= 5'd0; qfull <= 1'b0; a_req <= 10'd0; qs <= 2'd0; qcred <= 3'd4; tl <= 5'd0; cl <= 2'd0;
                         nout <= 32'd0; ncand <= 32'd0; kgap <= 3'd0; tfn <= 4'd0; cfn <= 4'd0; tfh <= 3'd0; tft <= 3'd0; cfh <= 3'd0; cft <= 3'd0;
                         pk_a[0] <= o_base; pk_a[1] <= r_base; pk_a[2] <= d_base; pk_a[3] <= d_base + d_stride;
                         for (i = 0; i < 4; i = i + 1) begin pk_m[i] <= 8'd0; pk_s[i] <= 15'd0; end
@@ -129,7 +137,7 @@ module ot_hgi_idx_index #(
                         if (wi == 6'd31) begin wi <= 6'd0; st <= keep_en ? S_KEEP : S_FS; end
                         else wi <= wi + 6'd1;
                     end else begin
-                        vm_pend <= 1'b1; vm_rd <= 1'b1; rd_sec <= (b_base + wi) >> 3;
+                        iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (b_base + wi) >> 3;
                         vmq <= {1'b1, 1'b0, {12'd0, 15'((b_base + wi) >> 3), 5'd0}, 256'd0, 32'd0, 16'h0910};
                     end
                 end
@@ -140,7 +148,7 @@ module ot_hgi_idx_index #(
                         if (wi == 6'd43) begin st <= S_KSEND; kq <= 2'd0; kgap <= 3'd0; end
                         else wi <= wi + 6'd1;
                     end else begin
-                        vm_pend <= 1'b1; vm_rd <= 1'b1; rd_sec <= (c_base + wi) >> 3;
+                        iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (c_base + wi) >> 3;
                         vmq <= {1'b1, 1'b0, {12'd0, 15'((c_base + wi) >> 3), 5'd0}, 256'd0, 32'd0, 16'h0911};
                     end
                 end
@@ -161,15 +169,16 @@ module ot_hgi_idx_index #(
                                2'((qblk - 8'd1) % 4), 5'((qblk - 8'd1) / 4), 1'b1};
                         qcred <= qcred - 3'd1 + {2'd0, qbr}; qfull <= 1'b0;
                     end
-                    if (!qfull && qblk != 8'd128 && !vm_pend && !wp_v) begin
-                        if (c_ok && c_sec == a_word[17:3]) begin
-                            qdat[qw * 32 +: 32] <= c_dat[a_word[2:0] * 32 +: 32];
-                            qw <= qw + 5'd1;
-                            if (qw == 5'd31) begin qfull <= 1'b1; qblk <= qblk + 8'd1; end
-                        end else begin
-                            vm_pend <= 1'b1; vm_rd <= 1'b1; rd_sec <= a_word[17:3];
-                            vmq <= {1'b1, 1'b0, {12'd0, a_word[17:3], 5'd0}, 256'd0, 32'd0, 16'h0912};
-                        end
+                    // A stream: request the next sector while < 4 are in flight or buffered (and the client has room)
+                    if (a_req != 10'd512 && ocnt < 3'd4 && a_fl + af_n < 3'd4 && !wp_v) begin
+                        iss = 1'b1; a_iss = 1'b1;
+                        vmq <= {1'b1, 1'b0, {12'd0, 15'(a_base[17:3] + a_req), 5'd0}, 256'd0, 32'd0, 16'h0912};
+                        a_req <= a_req + 10'd1;
+                    end
+                    // assemble a 32-word block from 4 buffered sectors
+                    if (!qfull && qblk != 8'd128 && af_n != 3'd0) begin
+                        qdat[qs * 256 +: 256] <= af[af_h]; af_h <= af_h + 2'd1; af_pop = 1'b1; qs <= qs + 2'd1;
+                        if (qs == 2'd3) begin qfull <= 1'b1; qblk <= qblk + 8'd1; end
                     end
                     // ---- top-k lanes -> O, R
                     if (tft != tfh && pk_ok(0) && (!has_r || pk_ok(1))) begin
@@ -215,13 +224,16 @@ module ot_hgi_idx_index #(
                 default: st <= S_IDLE;
             endcase
             // ---- packer writes (masked sector writes), one outstanding request
-            if (wp_v && !vm_pend && !(st == S_BW || st == S_KEEP) && !(vmq[337])) begin
-                vm_pend <= 1'b1; vm_rd <= 1'b0;
+            if (wp_v && !iss && ocnt < 3'd4 && !(st == S_BW || st == S_KEEP)) begin
+                iss = 1'b1;
                 vmq <= {1'b1, 1'b1, {12'd0, pk_s[wp], 5'd0}, pk_d[wp],
                         {{4{pk_m[wp][7]}}, {4{pk_m[wp][6]}}, {4{pk_m[wp][5]}}, {4{pk_m[wp][4]}},
                          {4{pk_m[wp][3]}}, {4{pk_m[wp][2]}}, {4{pk_m[wp][1]}}, {4{pk_m[wp][0]}}}, 16'h0913};
                 pk_full[wp] <= 1'b0; pk_m[wp] <= 8'd0;
             end
+            ocnt <= ocnt + {2'd0, iss} - {2'd0, vmr[273]};
+            a_fl <= a_fl + {2'd0, a_iss} - {2'd0, af_push};
+            af_n <= af_n + {2'd0, af_push} - {2'd0, af_pop};
         end
     end
 endmodule

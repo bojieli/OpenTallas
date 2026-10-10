@@ -472,16 +472,18 @@ def step_program(g: DGeom, md, timing_pos=None):
             for k, s in enumerate(ss):
                 e.norm(f"{kind}.final_norm.s{s}", f"{kind}_prenorm", V("X", H, off=s * H), gain,
                        V("HF", H, off=k * H, fmt="BF16"), 0, ["X"], ["HF"])
+            # the logits never touch VM: matvec -> STREAM 0 -> row scale (SU) -> STREAM 1 -> one ARGMAX a slot
+            # (element FIFOs, slot-major: the slots' results are published in slot order)
+            S0 = MDesc(space="STREAM", fmt="FP32", base=0, n=hr, m=len(ss))
+            S1 = MDesc(space="STREAM", fmt="FP32", base=1, n=hr, m=len(ss))
             e.sm(f"{kind}.head.s{ss[0]}", f"{kind}_head", V("HF", H, m=len(ss), stride=H),
-                 MDesc(space="HBM", fmt="INT8", base=HB, n=H, m=hr, stride=H), V("LOG", hr, m=len(ss), stride=hr),
-                 len(ss), 3, ["HF"], ["LOG"])
+                 MDesc(space="HBM", fmt="INT8", base=HB, n=H, m=hr, stride=H), S0, len(ss), 3, ["HF"], [])
             e.su(f"{kind}.head_scale.s{ss[0]}", f"{kind}_head_scale", dict(
-                A=V("LOG", hr, m=len(ss), stride=hr), B=MDesc(space="HBM", fmt="BF16", base=HB + al(hr * H), n=hr,
-                                                               m=len(ss), stride=0),
-                O=V("LOG", hr, m=len(ss), stride=hr)), ["LOG"], ["LOG"], m1=I.M1_AB)
+                A=S0, B=MDesc(space="HBM", fmt="BF16", base=HB + al(hr * H), n=hr, m=len(ss), stride=0), O=S1),
+                [], [], m1=I.M1_AB)
             for k, s in enumerate(ss):
-                e.rec("ARGMAX", "LOCAL", ["LOG"], ["AMX"], f"{kind}.argmax.s{s}", f"{kind}_argmax", imm_a=hr,
-                      desc=dict(A=V("LOG", hr, off=k * hr), O=V("AMX", 2, off=2 * s)))
+                e.rec("ARGMAX", "LOCAL", [], ["AMX"], f"{kind}.argmax.s{s}", f"{kind}_argmax", imm_a=hr,
+                      desc=dict(A=MDesc(space="STREAM", fmt="FP32", base=1, n=hr), O=V("AMX", 2, off=2 * s)))
                 e.rec("COLL", "ARGMAX_MERGE", ["AMX"], [out_name], f"{kind}.merge.s{s}", f"{kind}_argmax",
                       desc=dict(A=V("AMX", 2, off=2 * s), O=V(out_name, 1, off=out_off + s, fmt="U32")))
 

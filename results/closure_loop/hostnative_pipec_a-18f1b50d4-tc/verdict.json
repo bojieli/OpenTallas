@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hostnative_pipec_a-18f1b50d4-tc",
+ "block": "dsfd_host_native",
+ "owner": "Claude:sys-takeover",
+ "source_branch": "claude/sys-takeover-hostnative-c-20261009",
+ "record_branch": "codex/closure-record-hostnative_pipec_a-18f1b50d4-tc",
+ "source_commit": "18f1b50d4b60e648cedaea3f48c3d20d74c58ed9",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/hostnative_pipec_a-18f1b50d4-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 46.85,
+  "ff_ps": 5.13,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -315.42,
+  "ss_sensitivity_tns_ps": -358291.0,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/hostnative_pipec_a-18f1b50d4-tc/routes/hostnative_pipec_a_18f1b50d4_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/rom_host_ingest/sdc/hing_clocks_div2.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/hostnative_pipec_a-18f1b50d4-tc/routes/hostnative_pipec_a_18f1b50d4_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/hostnative_pipec_a-18f1b50d4-tc/routes/hostnative_pipec_a_18f1b50d4_tc/work/orfs/logs/asap7/opentallas_dsfd_host_native_asap7_hing_hostnative_pipec_a_18f1b50d4_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_host_native_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "case raw PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=1064\ncase v41_win PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=8074\ncase raw_fenced_b2b PASS descs=8 fenced=8 hing=ok vis_err=0 ck_cycles=529\ncase raw_fenced_mixed PASS descs=10 fenced=6 hing=ok vis_err=0 ck_cycles=629\ncase raw_fenced_stall PASS descs=8 fenced=6 hing=ok vis_err=0 ck_cycles=1353\nHNP_PASS\n",
+   "track": "parallel"
+  },
+  "bench_host_native_neg_apstale": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "case raw PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=1064\ncase v41_win FAIL descs=1 fenced=1 hing=FAIL vis_err=0 ck_cycles=7675\ncase raw_fenced_b2b PASS descs=8 fenced=8 hing=ok vis_err=0 ck_cycles=529\ncase raw_fenced_mixed PASS descs=10 fenced=6 hing=ok vis_err=0 ck_cycles=629\ncase raw_fenced_stall PASS descs=8 fenced=6 hing=ok vis_err=0 ck_cycles=1353\nHNP_NEG_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_host_native_neg_fence": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9, 11, 12, 1, 3, 4, 7, 8, 9] != expected [1, 3, 4, 7, 8, 9, 11, 12]\ncase raw_fenced_b2b FAIL descs=8 fenced=8 hing=FAIL vis_err=0 ck_cycles=528\n  done counts [9, 31, 55] != expected [9, 14, 31, 40, 55, 56]\ncase raw_fenced_mixed FAIL descs=10 fenced=6 hing=FAIL vis_err=0 ck_cycles=4217\ncase raw_fenced_stall FAIL descs=8 fenced=6 hing=ok vis_err=1 ck_cycles=1349\nHNP_NEG_DETECTED (visibility check)\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T16:46:37-07:00",
+ "job_spec": {
+  "name": "hostnative_pipec_a-18f1b50d4-tc",
+  "block": "dsfd_host_native",
+  "element": "dsfd_host_native",
+  "owner": "Claude:sys-takeover",
+  "purpose": "dsfd_host_native rev c (18f1b50d4): hostnative_pipe_a-25ce04993 TT -46.97 (st_d -> ap_* 41-42 lv; w_fire -> n_sectors 33; fence landed update 39) -> engine APIPE 2 (two-stage address terms, registered fire count + done delay) + fence PIPE 2 (monotonic check registered). Bench pos2 (exact done counts) + fencevis2 / apstale2 mutants. Variant a HM 0.010.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/sys-takeover-hostnative-c-20261009",
+   "commit": "18f1b50d4",
+   "extra_paths": [
+    "tests/rtl"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "host_native_exact",
+     "cmd": "python3 physical/sys_takeover/host_native_pipe_bench.py pos2 {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "HNP_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "host_native_neg_apstale",
+     "cmd": "python3 physical/sys_takeover/host_native_pipe_bench.py apstale2 {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "HNP_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "host_native_neg_fence",
+     "cmd": "python3 physical/sys_takeover/host_native_pipe_bench.py fencevis2 {RUN}/bench_negf",
+     "expect": "fail",
+     "fail_regex": "HNP_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" DIV=\"2\" UTIL=\"30\" PD=\"0.45\" HM=\"0.010\" NEED=\"24\" XSRCS=\"rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv\" bash physical/rom_host_ingest/route.sh {LABEL} dsfd_host --top dsfd_host_native --param ENABLE=1 --param PROTECT=0 --param FPIPE=2 --param ENG_TRIM=1 --param APIPE=2",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "enabled": false,
+    "reason": "multi-clock block (second clock / virtual AON clock defined in its own SDC): no single core_clk insertion to calibrate; block-internal closure at the generic IO budget first"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/rom_host_ingest/sdc/hing_clocks_div2.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "cycles added: 0 (protection stripped; TA15: same 3-edge release)",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
