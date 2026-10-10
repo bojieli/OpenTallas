@@ -173,3 +173,49 @@ module ot_hbm_accel_int8_credit #(parameter integer RW = 8) (
             assign intake_credit=!count_state[CWID];
 `endif
 endmodule
+
+// [cg] 2026-10-10 (front_c INT8 closure, PIPE_INT8 = 2): the PIPE = 1 adapter behind a 2-entry output queue whose
+// ready to the adapter is a REGISTERED count compare.  Root cause it removes (hgi_smh_front_c_int8-32a436201 pd65,
+// CTS report): u_issue.si -> issue_w_ready -> m_ready -> capacity -> a_capacity -> high_codes / a_data / m_data
+// enables, a ~30-level cone fanning out to ~2.7k flop enables (-1076.6 ps at 770 ps).  Here the issue's ready reaches
+// only the queue's read pointer and count; the queue's storage enables depend on registers alone.  +1 cycle per fmt3
+// beat (fmt3 path only; DS formats bypass the adapter and stay cycle-identical); order and data unchanged.
+module ot_hbm_accel_int8_line_ob (
+    input wire clk, rst_n, int8_mode,
+    input wire s_valid,
+    output wire s_ready,
+    input wire [1087:0] s_data,
+    output wire busy,
+    output wire m_valid,
+    input wire m_ready,
+    output wire [1087:0] m_data
+);
+    wire c_v, c_busy;
+    wire [1087:0] c_d;
+    reg  [1:0] cnt;
+    reg        rp, wp;
+    reg  [1087:0] e0, e1;
+`ifdef OT_INT8_MUT_OBDROP
+    wire c_rdy = 1'b1;                                  // NEGATIVE CONTROL: the queue ignores its fill (overrun drops a beat)
+`else
+    wire c_rdy = (cnt != 2'd2);
+`endif
+    ot_hbm_accel_int8_line #(.PIPE(1)) u_core (.clk(clk), .rst_n(rst_n), .int8_mode(int8_mode), .s_valid(s_valid),
+        .s_ready(s_ready), .s_data(s_data), .busy(c_busy), .m_valid(c_v), .m_ready(c_rdy), .m_data(c_d));
+    wire push = c_v && c_rdy;
+    assign m_valid = (cnt != 2'd0);
+    wire pop = m_valid && m_ready;
+    assign m_data = rp ? e1 : e0;
+    assign busy = c_busy || (cnt != 2'd0);
+    always @(posedge clk) begin
+        if (push && !wp) e0 <= c_d;
+        if (push &&  wp) e1 <= c_d;
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cnt <= 2'd0; rp <= 1'b0; wp <= 1'b0; end
+        else begin
+            if (push) wp <= ~wp;
+            if (pop)  rp <= ~rp;
+            cnt <= cnt + {1'b0, push} - {1'b0, pop};
+        end
+endmodule

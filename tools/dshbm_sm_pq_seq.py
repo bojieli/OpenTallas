@@ -138,13 +138,13 @@ def cmd_run(a):
         params["PIPE_INT8"] = a.int8_pipe
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
-                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
+                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_obdrop" if a.mut_obdrop else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
                               + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else ""))
     cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else [])
     if a.cg and not a.smh:
         raise SystemExit("--cg needs --smh")
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly,
-                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []) + cgdefs,
+                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_INT8_MUT_OBDROP"] if a.mut_obdrop else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []) + cgdefs,
                              cg=a.cg)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}", f"+GAP={a.cg_gap}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
@@ -256,6 +256,7 @@ def main(argv=None):
                     "be cycle-identical to the default build: CF-1)")
     ap.add_argument("--int8-pipe", type=int, default=1)
     ap.add_argument("--mut-nobyp", action="store_true", help="--int8 negative control: DS formats through the adapter")
+    ap.add_argument("--mut-obdrop", action="store_true", help="--int8 --int8-pipe 2 negative control: the output queue ignores its fill")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")
