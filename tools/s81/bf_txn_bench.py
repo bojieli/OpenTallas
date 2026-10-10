@@ -30,7 +30,7 @@ SRC = {'cand_ot_v41_rom_elem_w10.sv': 'rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_p
        'cand_ot_prefix.sv': 'rtl/common/ot_prefix.sv'}
 # recut: the q-element and its re-cut modules (not in the prepared package), compiled as extra cand-namespace files
 EXTRA = ['ot_v41_rom_elem_qx_w10', 'ot_v41_chain2u2', 'ot_v41_kreg', 'ot_v41_chain3', 'ot_v41_chain4', 'ot_v41_fadd2', 'ot_v41_bterm3_w10',
-         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_bf16_lanes3', 'ot_v41_tile_clk', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
+         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_bf16_lanes3', 'ot_v41_tile_clk', 'ot_v41_bf_col', 'ot_v41_bf_front_core', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
 
 SHADOW = '''
     // ---- transaction shadow (tools/s81/bf_txn_bench.py, variant @VAR@) ----
