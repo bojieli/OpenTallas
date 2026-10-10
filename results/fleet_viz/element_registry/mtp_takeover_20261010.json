@@ -346,7 +346,8 @@
         "positive": {
           "status": "RTT component60cases/50400flits PASS; optional outputpipe30cases/24000flits PASS",
           "evidence": [
-            "physical/mtp_link_rtt/head631/record.json"
+            "physical/mtp_link_rtt/head631/record.json",
+            "physical/mtp_link_rtt/output_pipe/record.json"
           ]
         },
         "negative": {
@@ -361,7 +362,7 @@
         "corners": {},
         "evidence": [
           "tools/closure_loop/jobs/mtp-rtt512-f9r10-d23-dd7ddda95-hm10.json",
-          "tools/closure_loop/jobs/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10.json",
+          "physical/mtp_link_rtt/output_pipe/closure_job.json",
           "physical/mtp_link_rtt/head631/route_model.json",
           "physical/mtp_link_rtt/native_legacy_failure/record.json"
         ]
