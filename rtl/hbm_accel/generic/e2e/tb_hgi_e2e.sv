@@ -24,6 +24,7 @@ module tb_hgi_e2e;
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 64, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
+    parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
                                                input bit [31:0] mask, output bit [255:0] rd);
@@ -197,6 +198,18 @@ module tb_hgi_e2e;
         idx_ret = REAL_IDX ? i_ret : {1'b0, s9_done, 1'b1};
     end
     integer u, k, m;
+    longint last_prog = 0; integer nprog = 0;
+    always @(posedge clk) if (rst_n) begin
+        if (cyc % 50000 == 0) $display("E2E PROGRESS cyc %0d events %0d", cyc, nprog);
+        if (cyc - last_prog > WD && cpd.u_cp.u_seq.busy) begin
+            $display("E2E WATCHDOG: no dispatch / retire for %0d cycles at cyc %0d; ux_v %h ux_rdy %h stub busy SU %0d SFU %0d DMA %0d; real kq depth SU %0d SFU %0d DMA %0d",
+                     WD, cyc, ux_v, ux_rdy, sbusy[2], sbusy[3], sbusy[8], kt[2] - kh[2], kt[3] - kh[3], kt[8] - kh[8]);
+            void'(e2e_finish(cyc, -1, 15));
+            $display("HGI_E2E FAIL (watchdog)");
+            $finish;
+        end
+    end
+    always @(posedge clk) if (|(s_uv & s_ur) || |ux_done || quant_ret[1] || coll_ret[1] || idx_ret[1]) begin last_prog <= cyc; nprog <= nprog + 1; end
     always @(posedge clk) begin
         if (!rst_n) begin
             for (u = 0; u < 16; u = u + 1) begin kh[u] = 0; kt[u] = 0; sbusy[u] = 0; scnt[u] = 0; sk[u] = -1; end
