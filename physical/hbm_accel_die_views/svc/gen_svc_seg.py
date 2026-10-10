@@ -37,9 +37,19 @@ PS = '--ps' in sys.argv          # hbm-forks 2026-10-09: per-PC stream successor
 # dbs: those face-corner stages arrive +55 .. +273 ps after the segment's mean insertion (the in-block tree from the N-face
 # ck leaf), the face-input hold failures; a die leaf at the face is balanced by the die tree instead.
 FC = '--fc' in sys.argv
+# --dma (hbm-phys [svc] 2026-10-10, with --ps): the DMA stream v2 (ot_hbm_svc_dma_lib.sv, agreed with hgi-1010/c): the
+# request unit 'dr' beside the e port takes the die request yq (51 in) / yr (1 out) and broadcasts it on one daisy chain a
+# side through the PCs (c_dq, the PS descriptor-chain order); the PCs' pop counts come back on a min chain (c_dm); each PC
+# reads its own rows and sends the in-request sectors on its c_rs beat chain to its group unit, which drives them on its
+# N-face lane port yd<k> (1,080 out: lanes 4k .. 4k+3) and returns the front's credit pulses yc<k> (4 in) to the PCs (c_lc);
+# a PC's kr_rdy PHY pin is driven by the PC unit (lane-credit backpressure).  Outputs *_psd / *_psfcd.
+DMA = PS and '--dma' in sys.argv
 SEGD, SPLD, SDCD, STG = ((('rtl/seg_psfc', 'split_psfc', 'sdc_psfc', 'seg_stages_psfc.json') if FC else
                           ('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json')) if PS else
                          ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
+if DMA:
+    SEGD, SPLD, SDCD = SEGD + 'd', SPLD + 'd', SDCD + 'd'
+    STG = STG.replace('.json', 'd.json')
 
 
 def fc_face(po, x0, x1):
@@ -52,7 +62,7 @@ def fc_face(po, x0, x1):
         if e[0] == 'p' and abs(e[1] - x1) < 1.0:
             return 'E'
     return None
-PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
+PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2, yq=51, yr=1, yd=1080, yc=4)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -184,12 +194,13 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
         wpin = 0.024
         pins = [[f'{name}[{i}]', L_, round(x0 + i * PITCH_N, 4), round(H_um - 0.192, 4), round(x0 + i * PITCH_N + wpin, 4),
                  H_um] for i in range(bits)]
-        d_ = 'in' if name.startswith('kq') else 'out'
+        d_ = 'in' if name.startswith(('kq', 'yq', 'yc')) else 'out'
         P[name] = dict(bits=bits, layer=L_, pins=pins, face='N', dir_segments=[[0, bits, d_]],
                        direction='input' if d_ == 'in' else 'output')
         occl[L_] = merged(occl[L_] + [(pins[0][2], pins[-1][4])])
-        fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
-                    {1: 'in'} if name.startswith('kq') else {1: 'out'})
+        if name.startswith(('ks', 'kq', 'kd')):
+            fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
+                        {1: 'in'} if name.startswith('kq') else {1: 'out'})
         PS_NEW[name] = (bits, P[name]['direction'])
 
 
@@ -235,6 +246,35 @@ def plan_family(fam):
             U[f'gp{k}'] = (smx[k], Y_HI)          # beside SM k's line assembler: the c_rs chains end there
         ps_ports(P, parent, segs, seg_of, H_um, [('ks%d' % k, smx[k]) for k in range(8)] +
                  [('kq%d' % k, smx[k]) for k in range(8)] + [('kd', ex)])
+        if DMA:
+            # the lane ports need N-face room: in a segment whose free M5 span is short of its DMA ports, the 0.192-um
+            # N-face buses (SM lines, PS rows) are re-pitched to 0.096 um in place (W end kept) -- the build-time NRES
+            # compaction's rule, applied before the DMA ports are placed
+            want = [('yd%d' % k, smx[k]) for k in range(8)] + [('yc%d' % k, smx[k]) for k in range(8)] + [('yq', ex), ('yr', ex)]
+            for j, (a, b) in enumerate(segs):
+                need = sum(PS_PORTS_BITS[n[:2]] * 0.096 + 6.0 for n, x in want if seg_of(x) == j)
+                nf = [n for n, v in P.items() if v.get('face') == 'N' and v.get('layer') == 'M5' and seg_of(v['pins'][0][2]) == j]
+                used = sum(max(q[4] for q in P[n]['pins']) - min(q[2] for q in P[n]['pins']) + 4.0 for n in nf)
+                if not need or (b - a) - used >= need + 20.0:
+                    continue
+                xn_ = None              # ports packed W to E behind the first one (2.5 um apart), buses re-pitched
+                for n in sorted(nf, key=lambda n_: min(q[2] for q in P[n_]['pins'])):
+                    pins = sorted(P[n]['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+                    rp_ = len(pins) >= 2 and (pins[-1][2] - pins[0][2]) / (len(pins) - 1) >= 0.15
+                    x0_ = pins[0][2] if xn_ is None else min(pins[0][2], xn_)
+                    if not rp_:
+                        sh_ = round(round((x0_ - pins[0][2]) / 0.048) * 0.048, 4)
+                        for q in pins:
+                            q[2] = round(q[2] + sh_, 4); q[4] = round(q[4] + sh_, 4)
+                        xn_ = max(q[4] for q in pins) + 2.5
+                        continue
+                    for k_, q in enumerate(pins):
+                        wq = q[4] - q[2]
+                        q[2] = round(round((x0_ + k_ * 0.096) / 0.048) * 0.048, 4); q[4] = round(q[2] + wq, 4)
+                    xn_ = max(q[4] for q in pins) + 2.5
+                print(f'{parent} segment {j}: N-face buses {sorted(nf)} re-pitched to 0.096 um for the DMA lane ports')
+            ps_ports(P, parent, segs, seg_of, H_um, want)
+            U['dr'] = (ex, Y_HI)                  # the DMA request unit beside the e port
     C = []                                            # chains: name, W (payload), src unit, src v, src d, dst unit, dst v, dst d
 
     def ch(name, w, su, sv, sd, du, dv, dd, kind):
@@ -280,6 +320,16 @@ def plan_family(fam):
         for p in range(32):
             o, j = divmod(p, 4)
             ch(f'c_cr{p}', 1, f'gp{o}', f'gp{o}_cr[{j}]', "1'b0", f'pc{p}', f'pc{p}_crv', None, 'ps_cr')
+        if DMA:     # DMA stream v2: request daisy chain a side (PS descriptor order), min chain back, lane credits
+            for side, Ls in ps_lists.items():
+                for i, p in enumerate(Ls):
+                    src = ('dr', f'dr_{side}v', f'dr_{side}d') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_rqov', f'pc{Ls[i-1]}_rqo')
+                    ch(f'c_dq{p}', 43, src[0], src[1], src[2], f'pc{p}', f'pc{p}_rqiv', f'pc{p}_rqi', 'dma_req')
+                    dst = ('dr', f'dr_{side}mv', f'dr_{side}m') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_pmiv', f'pc{Ls[i-1]}_pmi')
+                    ch(f'c_dm{p}', 8, f'pc{p}', "1'b1", f'pc{p}_pmo', dst[0], dst[1], dst[2], 'dma_min')
+            for p in range(32):
+                o, j = divmod(p, 4)
+                ch(f'c_lc{p}', 1, f'gp{o}', f'gp{o}_dcr[{j}]', "1'b0", f'pc{p}', f'pc{p}_lcv', None, 'dma_cr')
         for k in range(8):          # the stream's load tag (ATT ld fields, compiler-supplied) to each group unit
             ch(f'c_sg{k}', 13, 'e', 'e_sgv', 'e_sgd', f'gp{k}', f'gp{k}_sgv', f'gp{k}_sgd', 'ps_tag')
     for c in C:
@@ -375,6 +425,8 @@ def phy_expr(b, ix):
         return f'pc{p}_{b}[{i}]'
     if b in ('k_we', 'k_wdata', 'k_wstrb'):
         return "1'b0"
+    if b == 'kr_rdy' and DMA:
+        return f'pc{ix}_kr_rdyo'                  # lane-credit backpressure (ot_svs_pcs DMA = 1, registered)
     if b in ('kr_rdy', 'wr_rdy'):
         return 'rdy_q'
     lw = dict(wr_tag=10, wr_beat=5, wr_data=256)
@@ -649,12 +701,21 @@ def build(pl):
                             f'wire [61:0] pc{p}_did, pc{p}_dod;')
                 if end:
                     body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 1'b0;   // chain end (END = 1)")
-                body.append(f'  ot_svs_pcs #(.PCID({p}), .END({end})) u_pc{p} (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc{p}_iv), '
+                dma_ = ''
+                if DMA:
+                    decl.append(f'  wire pc{p}_kr_rdyo, pc{p}_rqiv, pc{p}_rqov, pc{p}_pmiv, pc{p}_lcv; wire [42:0] pc{p}_rqi, pc{p}_rqo; '
+                                f'wire [7:0] pc{p}_pmi, pc{p}_pmo;')
+                    if end:
+                        body.append(f"  assign pc{p}_pmiv = 1'b0; assign pc{p}_pmi = 8'd0;   // min chain end")
+                    # a min-chain value counts only once its stages hold real values (qv): before, 0 (no pops) is safe
+                    dma_ = (f", .kr_rdy_o(pc{p}_kr_rdyo), .rq_iv(pc{p}_rqiv), .rq_i(pc{p}_rqi), .rq_ov(pc{p}_rqov), "
+                            f".rq_o(pc{p}_rqo), .pm_i(pc{p}_pmiv ? pc{p}_pmi : 8'd0), .pm_o(pc{p}_pmo), .lc_v(pc{p}_lcv)")
+                body.append(f'  ot_svs_pcs #(.PCID({p}), .END({end}), .DMA({int(DMA)})) u_pc{p} (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc{p}_iv), '
                             f'.iss_d(pc{p}_id), .k_v(pc{p}_k_v), .k_rdy(pc{p}_k_rdy), .k_addr(pc{p}_k_addr), .k_len(pc{p}_k_len), '
                             f'.k_tag(pc{p}_k_tag), .kr_v(pc{p}_kr_v), .kr_tag(pc{p}_kr_tag), .kr_beat(pc{p}_kr_beat), '
                             f'.kr_data(pc{p}_kr_data), .b_v(pc{p}_bv), .b_t(pc{p}_bt), .b_b(pc{p}_bb), .b_d(pc{p}_bd), '
                             f'.di_v(pc{p}_div), .di_d(pc{p}_did), .do_v(pc{p}_dov), .do_d(pc{p}_dod), .dni_ok(pc{p}_dniok), '
-                            f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .cr_v(pc{p}_crv));')
+                            f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .cr_v(pc{p}_crv){dma_});')
             elif u.startswith('gp'):
                 k = int(u[2:])
                 decl.append(f'  wire [3:0] gp{k}_sv, gp{k}_cr; wire [1107:0] gp{k}_sq; wire gp{k}_ovf, gp{k}_sgv; wire [12:0] gp{k}_sgd;')
@@ -662,8 +723,22 @@ def build(pl):
                     pp = 4 * k + jj
                     body.append(f"  assign gp{k}_sv[{jj}] = rs{pp}_v && (rs{pp}_d[276:275] == 2'b11); "
                                 f"assign gp{k}_sq[{jj*277+276}:{jj*277}] = rs{pp}_d;")
-                body.append(f'  ot_svs_grp #(.K({k})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp{k}_sv), .sq_i(gp{k}_sq), '
-                            f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf));')
+                gd_ = ''
+                if DMA:
+                    decl.append(f'  wire [3:0] gp{k}_dcr;')
+                    gd_ = f', .dd(yd{k}), .dc(yc{k}), .dcr(gp{k}_dcr)'
+                body.append(f'  ot_svs_grp #(.K({k}), .DMA({int(DMA)})) u_gp{k} (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp{k}_sv), .sq_i(gp{k}_sq), '
+                            f'.kq(kq{k}), .sg_v(gp{k}_sgv), .sg_d(gp{k}_sgd), .cr(gp{k}_cr), .ks(ks{k}), .ovf(gp{k}_ovf){gd_});')
+            elif u == 'dr':
+                we, ee = int(not pl['ps_lists']['w']), int(not pl['ps_lists']['e'])
+                decl.append('  wire dr_wv, dr_ev, dr_wmv, dr_emv; wire [42:0] dr_wd, dr_ed; wire [7:0] dr_wm, dr_em;')
+                if we:
+                    body.append("  assign dr_wmv = 1'b0; assign dr_wm = 8'd0;   // no PC west of the request unit")
+                if ee:
+                    body.append("  assign dr_emv = 1'b0; assign dr_em = 8'd0;   // no PC east of the request unit")
+                body.append(f'  ot_svd_req #(.WEMPTY({we}), .EEMPTY({ee})) u_dr (.ck(c), .rn(rn), .dq(yq), .dq_rdy(yr[0]), '
+                            ".rqw_v(dr_wv), .rqw(dr_wd), .rqe_v(dr_ev), .rqe(dr_ed), "
+                            ".pmw(dr_wmv ? dr_wm : 8'd0), .pme(dr_emv ? dr_em : 8'd0));")
             elif u.startswith('pc'):
                 p = int(u[2:])
                 decl.append(f'  wire pc{p}_iv, pc{p}_k_v, pc{p}_k_rdy, pc{p}_kr_v, pc{p}_bv; wire [50:0] pc{p}_id; '
