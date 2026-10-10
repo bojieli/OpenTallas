@@ -114,5 +114,5 @@
   "positive_cases": 19,
   "mechanism_mutants_caught": 8,
   "reset_mutants_caught": 3,
-  "note": "For CRD8/default CRET3: steady rate preserved at f0/r0 (+1 final drain edge); CRD1 and long return delays price additional credit roundtrip bubbles explicitly. No token-rate gain claimed before parent composition."
+  "note": "The consumer-stalled mechanism grid has identical elapsed drain times across both variants; it checks exactness and bounded credit behavior. First-send latency and sustained II require the independent continuous full-shape receiver bench."
 }
