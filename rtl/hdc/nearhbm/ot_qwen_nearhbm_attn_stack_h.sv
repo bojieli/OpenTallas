@@ -445,11 +445,16 @@ module ot_qwen_nearhbm_ectl_h #(
     wire [13:0] base_s = 14'd128 * S;
     wire        any_s = (T > base_s);
     wire [13:0] rem = T - base_s;                                        // positions at or after this stack's base
-    wire [4:0]  gmax = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups
+    wire [4:0]  gmax_c = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups
+    reg  [4:0]  gmax;
     // positions in this stack: 128 per full 512 round, plus the partial round's share
     wire [13:0] tail = {5'd0, T[8:0]};
     wire [13:0] part = (tail > base_s) ? ((tail - base_s > 14'd128) ? 14'd128 : (tail - base_s)) : 14'd0;
-    wire [11:0] n_s = {T[13:9], 7'd0} + part[11:0];
+    wire [11:0] n_s_c = {T[13:9], 7'd0} + part[11:0];
+    reg  [11:0] n_s;
+    reg  [31:0] exp_done_r;
+    always @(posedge clk) begin n_s <= n_s_c; gmax <= gmax_c; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) exp_done_r <= 32'd0; else exp_done_r <= exp_done;
     function automatic [13:0] tpos(input [3:0] k, input [6:0] r);
         tpos = {1'b0, k, SB, r};
     endfunction
@@ -472,7 +477,7 @@ module ot_qwen_nearhbm_ectl_h #(
     wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
     wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);
     wire       rg_v_valid_row = (rg_vt < T);
-    wire       rg_v_gate = exp_done[{rg_g, rg_gam[3:0]}];
+    wire       rg_v_gate = exp_done_r[{rg_g, rg_gam[3:0]}];
     wire       has_credit = (credit_used < DQ);
     reg        issue;
     always @(posedge clk or negedge rc) begin

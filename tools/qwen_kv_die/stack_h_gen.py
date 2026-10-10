@@ -275,6 +275,18 @@ def generate():
     input  wire [3:0]           t_gf
 );""")
     # q: no engine q registers (the tiles hold them); the count stays
+    # ectl timing (qkd_ectl_a TT -92.6: T -> n_s / gmax compare -> issue -> row FIFO pointer; exp_done pin -> request
+    # generator): the per-layer geometry n_s / gmax are registers (T is stable from start; first use one edge later),
+    # exp_done is captured at the pin (a V request opens one edge later)
+    ectl = rep(ectl, """    wire [4:0]  gmax = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups""",
+               """    wire [4:0]  gmax_c = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups
+    reg  [4:0]  gmax;""")
+    ectl = rep(ectl, """    wire [11:0] n_s = {T[13:9], 7'd0} + part[11:0];""", """    wire [11:0] n_s_c = {T[13:9], 7'd0} + part[11:0];
+    reg  [11:0] n_s;
+    reg  [31:0] exp_done_r;
+    always @(posedge clk) begin n_s <= n_s_c; gmax <= gmax_c; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) exp_done_r <= 32'd0; else exp_done_r <= exp_done;""")
+    ectl = rep(ectl, """    wire       rg_v_gate = exp_done[{rg_g, rg_gam[3:0]}];""", """    wire       rg_v_gate = exp_done_r[{rg_g, rg_gam[3:0]}];""")
     ectl = rep(ectl, """    reg  [8*HD*16-1:0] q_bf16;
 """, "")
     ectl = rep(ectl, """    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; if (qv_r) q_bf16[512*qb_r +: 512] <= qd_r; end""",
