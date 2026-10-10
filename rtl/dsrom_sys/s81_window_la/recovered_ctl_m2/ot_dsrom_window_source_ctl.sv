@@ -93,7 +93,12 @@ module ot_dsrom_window_source_ctl #(
     parameter integer POS_W = 21, USER_W = 10, SEC_W = 30, HAW = 30, TAGW = 16,
     parameter integer WIN_STACK = 0, REFILL_CREDITS = 1,
     parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8, LA_ISSUE_PC = 0,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    // RST_TREE = 1 (with MARGIN; Claude mtp-wfc 2026-10-10, wide-reset design standard): the synchronised reset
+    // is re-registered into NRST kept per-unit copies (asynchronous assert from rst_n, synchronous release one edge
+    // after rst_s2, all copies on the same edge), so no reset net spans the block. Release is one cycle later than
+    // RST_TREE = 0; every transaction after reset is unchanged.
+    parameter bit RST_TREE = 0
 ) (
     input wire clk, rst_n,
     input wire [SEC_W-1:0] region_base_sector, region_sector_count,
@@ -173,6 +178,18 @@ module ot_dsrom_window_source_ctl #(
     end else begin : g_rst_direct
         assign rst_i = rst_n;
     end endgenerate
+    // per-unit reset copies: 0 boundary flops, 1 prime/start skids, 2 blk skid, 3 K-port request skid,
+    // 4 writer, 5 idle/mirror-write/mv, 6 acc valid, 7 stream engine, 8 FSM, 9 outputs
+    localparam integer NRST = 10;
+    wire [NRST-1:0] rst_g;
+    generate if (MARGIN && RST_TREE) begin : g_rtree
+        (* keep *) reg [NRST-1:0] rst_r;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rst_r <= '0; else rst_r <= {NRST{rst_i}};
+        assign rst_g = rst_r;
+    end else begin : g_rtree_off
+        assign rst_g = {NRST{rst_i}};
+    end endgenerate
     localparam integer PITCH = 17, REGION_SECTORS = 128 * PITCH;
     localparam [2:0] IDLE = 0, LOAD = 1, ISSUE = 2, RUN = 3, FAILED = 4, ADMIT1=5, ADMIT2=6, ADMIT3=7;
     // ---------------- boundary (MARGIN) ----------------
@@ -192,8 +209,8 @@ module ot_dsrom_window_source_ctl #(
         reg go_q, all_q, sf_q, mr_q, md_q, mf_q;
         reg [11:0] landed_q;
         reg [3:0] wd_q, sv_q; reg [4*TAGW-1:0] st_q; reg [15:0] sb_q; reg [1023:0] sd_q;
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) begin
+        always @(posedge clk or negedge rst_g[0])
+            if (!rst_g[0]) begin
                 rb_q <= 0; rc_q <= 0; go_q <= 0; all_q <= 0; sf_q <= 0; mr_q <= 0; md_q <= 0; mf_q <= 0;
                 landed_q <= 0; wd_q <= 0; sv_q <= 0; st_q <= 0; sb_q <= 0; sd_q <= 0;
             end else begin
@@ -207,20 +224,20 @@ module ot_dsrom_window_source_ctl #(
         assign i_merge_ready = mr_q; assign i_merge_done = md_q; assign i_merge_fault = mf_q;
         assign i_m_wr_done = wd_q; assign i_s_v = sv_q; assign i_s_tag = st_q; assign i_s_beat = sb_q;
         assign i_s_data = sd_q;
-        ot_dsrom_window_skid #(.W(USER_W+POS_W), .PTR(MARGIN >= 2)) u_prime (.clk(clk), .rst_n(rst_i),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W), .PTR(MARGIN >= 2)) u_prime (.clk(clk), .rst_n(rst_g[1]),
             .in_v(prime_v), .in_ready(prime_ready), .in_d({prime_user, prime_row}),
             .out_v(i_prime_v), .out_ready(i_prime_ready), .out_d({i_prime_user, i_prime_row}));
-        ot_dsrom_window_skid #(.W(USER_W+POS_W+4+256+8), .PTR(MARGIN >= 2)) u_blk (.clk(clk), .rst_n(rst_i),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W+4+256+8), .PTR(MARGIN >= 2)) u_blk (.clk(clk), .rst_n(rst_g[2]),
             .in_v(blk_v), .in_ready(blk_ready), .in_d({blk_user, blk_row, blk_idx, blk_codes, blk_scale}),
             .out_v(i_blk_v), .out_ready(i_blk_ready),
             .out_d({i_blk_user, i_blk_row, i_blk_idx, i_blk_codes, i_blk_scale}));
-        ot_dsrom_window_skid #(.W(USER_W+POS_W+8), .PTR(MARGIN >= 2)) u_start (.clk(clk), .rst_n(rst_i),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W+8), .PTR(MARGIN >= 2)) u_start (.clk(clk), .rst_n(rst_g[1]),
             .in_v(start_v), .in_ready(start_ready), .in_d({start_user, start_first, start_count}),
             .out_v(i_start_v), .out_ready(i_start_ready), .out_d({i_start_user, i_start_first, i_start_count}));
         // K-port write request: one lane (WIN_STACK) carries the writer's request; the others stay zero.
         localparam integer MW = HAW + 4 + TAGW + 1 + 256 + 32;
         wire mo_v; wire [MW-1:0] mo_d; wire mi_ready;
-        ot_dsrom_window_skid #(.W(MW), .ZERO_IDLE(1), .PTR(MARGIN >= 2)) u_mreq (.clk(clk), .rst_n(rst_i),
+        ot_dsrom_window_skid #(.W(MW), .ZERO_IDLE(1), .PTR(MARGIN >= 2)) u_mreq (.clk(clk), .rst_n(rst_g[3]),
             .in_v(w_m_v[WIN_STACK]), .in_ready(mi_ready),
             .in_d({w_m_addr[WIN_STACK*HAW +: HAW], w_m_len[WIN_STACK*4 +: 4], w_m_tag[WIN_STACK*TAGW +: TAGW],
                    w_m_we[WIN_STACK], w_m_wdata[WIN_STACK*256 +: 256], w_m_wstrb[WIN_STACK*32 +: 32]}),
@@ -272,7 +289,7 @@ module ot_dsrom_window_source_ctl #(
     ot_dsrom_window_writer_pipeline #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
         .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
         .REFILL_CREDITS(REFILL_CREDITS), .BANKED_STAGE(1), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2)) u_writer (
-        .clk(clk), .rst_n(rst_i),
+        .clk(clk), .rst_n(rst_g[4]),
         .region_base_sector(rg_base), .region_sector_count(rg_count),
         .prime_v(i_prime_v && i_prime_ready), .prime_ready(wr_prime_ready),
         .prime_user(i_prime_user), .prime_row(i_prime_row),
@@ -303,8 +320,8 @@ module ot_dsrom_window_source_ctl #(
     wire fsm_fault_c = wr_fault || la_fault || i_stage_fault || i_merge_fault;
     wire accept;
     wire idle_next = (st == IDLE && !accept) || (st == RUN && i_merge_done && !fsm_fault_c);
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin idle_p <= 1'b1; idle_b <= 1'b1; idle_s <= 1'b1; end
+    always @(posedge clk or negedge rst_g[5])
+        if (!rst_g[5]) begin idle_p <= 1'b1; idle_b <= 1'b1; idle_s <= 1'b1; end
         else begin idle_p <= idle_next; idle_b <= idle_next; idle_s <= idle_next; end
 `ifndef SYNTHESIS
     always @(posedge clk) if (MARGIN >= 2 && rst_i && (idle_p != (st == IDLE) || idle_b != idle_p || idle_s != idle_p))
@@ -325,15 +342,15 @@ module ot_dsrom_window_source_ctl #(
     // MARGIN 2: the command is decoded before its register (tag/user write, mv set, mv clear), with one kept copy
     // of the tag-write enable per 16-entry group.
     (* keep *) reg [7:0] mw_tagw_q; reg mw_mv1_q, mw_mv0_q;
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin mw_tagw_q <= 0; mw_mv1_q <= 0; mw_mv0_q <= 0; end
+    always @(posedge clk or negedge rst_g[5])
+        if (!rst_g[5]) begin mw_tagw_q <= 0; mw_mv1_q <= 0; mw_mv0_q <= 0; end
         else begin
             mw_tagw_q <= {8{mw_prime || (mw_blk && i_blk_idx == 4'd0)}};
             mw_mv1_q <= mw_prime || (mw_blk && i_blk_idx == 4'd15);
             mw_mv0_q <= mw_blk && i_blk_idx == 4'd0;
         end
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin mw_prime_q <= 0; mw_blk_q <= 0; end
+    always @(posedge clk or negedge rst_g[5])
+        if (!rst_g[5]) begin mw_prime_q <= 0; mw_blk_q <= 0; end
         else begin
             mw_prime_q <= mw_prime; mw_blk_q <= mw_blk;
             mw_idx_q <= i_blk_idx; mw_row_q <= mw_row;
@@ -346,8 +363,8 @@ module ot_dsrom_window_source_ctl #(
     wire [3:0] a_idx = MARGIN ? mw_idx_q : i_blk_idx;
     wire [POS_W-1:0] a_row = MARGIN ? mw_row_q : (mw_prime ? i_prime_row : i_blk_row);
     wire [USER_W-1:0] a_user = MARGIN ? mw_user_q : (mw_prime ? i_prime_user : i_blk_user);
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) mv <= 0;
+    always @(posedge clk or negedge rst_g[5])
+        if (!rst_g[5]) mv <= 0;
         else if (MARGIN >= 2) begin
             for (mwi = 0; mwi < 128; mwi = mwi + 1) if (mw_sel_q[mwi]) begin
                 if (mw_tagw_q[mwi/16]) begin mtag[mwi] <= a_row; muser[mwi] <= a_user; end
@@ -420,8 +437,8 @@ module ot_dsrom_window_source_ctl #(
     wire [NPC-1:0] a_v; wire [NPC*WTAGW-1:0] a_tag; wire [NPC*BEATW-1:0] a_beat; wire [NPC*256-1:0] a_data;
     generate if (MARGIN) begin : g_acc
         reg [NPC-1:0] v_q; reg [NPC*WTAGW-1:0] t_q; reg [NPC*BEATW-1:0] b_q; reg [NPC*256-1:0] d_q;
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) v_q <= '0; else v_q <= acc_v;
+        always @(posedge clk or negedge rst_g[6])
+            if (!rst_g[6]) v_q <= '0; else v_q <= acc_v;
         always @(posedge clk) begin t_q <= acc_tag; b_q <= acc_beat; d_q <= acc_data; end
         assign a_v = v_q; assign a_tag = t_q; assign a_beat = b_q; assign a_data = d_q;
     end else begin : g_acc_direct
@@ -429,7 +446,7 @@ module ot_dsrom_window_source_ctl #(
     end endgenerate
     ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW),
         .ISSUE_PC(LA_ISSUE_PC), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2)) u_la (
-        .clk(clk), .rst_n(rst_i), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
+        .clk(clk), .rst_n(rst_g[7]), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
         .req_v(wl_req_v), .req_rdy(wl_req_rdy), .req_addr(wl_req_addr), .req_len(wl_req_len), .req_tag(wl_req_tag),
         .rsp_v(a_v), .rsp_tag(a_tag), .rsp_beat(a_beat), .rsp_data(a_data));
     assign stage_job_v = stage_job;
@@ -441,8 +458,8 @@ module ot_dsrom_window_source_ctl #(
     reg mstart_q;
     assign merge_start_v = MARGIN ? mstart_q : (issue_v && issue_ready);
     generate if (MARGIN < 2) begin : g_fsm1
-    always @(posedge clk or negedge rst_i) begin
-        if (!rst_i) begin
+    always @(posedge clk or negedge rst_g[8]) begin
+        if (!rst_g[8]) begin
             st <= IDLE; j_user <= 0; j_first <= 0; j_count <= 0; j_base <= 0; load_cyc <= 0; load_cyc_q <= 0;
             staged_sent <= 0; done_r <= 0; ctl_fault <= 0; ctl_code <= 0; la_start <= 0; stage_job<=0;
             cfg_base<=0; cfg_count<=0; ck_valid<=0; ck_issue<=0;
@@ -536,8 +553,8 @@ module ot_dsrom_window_source_ctl #(
     reg [POS_W-1:0] ck_stag [0:3][0:31]; reg [USER_W-1:0] ck_suser [0:3][0:31]; reg [31:0] ck_smv [0:3];
     reg [POS_W-1:0] ck_htag [0:3][0:1]; reg [USER_W-1:0] ck_huser [0:3][0:1]; reg [1:0] ck_hmv [0:3];
     integer ck_s;
-    always @(posedge clk or negedge rst_i) begin
-        if (!rst_i) begin
+    always @(posedge clk or negedge rst_g[8]) begin
+        if (!rst_g[8]) begin
             st <= IDLE; j_user <= 0; j_first <= 0; j_count <= 0; j_base <= 0; load_cyc <= 0; load_cyc_q <= 0;
             staged_sent <= 0; done_r <= 0; ctl_fault <= 0; ctl_code <= 0; la_start <= 0; stage_job<=0;
             cfg_base<=0; cfg_count<=0; ck_valid<=0; ck_issue<=0;
@@ -635,8 +652,8 @@ module ot_dsrom_window_source_ctl #(
     assign rows_refilled = j_count;
     generate if (MARGIN) begin : g_out
         reg busy_q, fault_q, staged_q; reg [4:0] code_q; reg [31:0] rf_q, sr_q;
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) begin busy_q <= 0; fault_q <= 0; staged_q <= 0; code_q <= 0; rf_q <= 0; sr_q <= 0; end
+        always @(posedge clk or negedge rst_g[9])
+            if (!rst_g[9]) begin busy_q <= 0; fault_q <= 0; staged_q <= 0; code_q <= 0; rf_q <= 0; sr_q <= 0; end
             else begin
                 busy_q <= i_busy; fault_q <= i_fault; staged_q <= i_staged_v; code_q <= i_fault_code;
                 rf_q <= i_rows_fetched; sr_q <= 32'(i_landed);

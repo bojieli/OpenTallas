@@ -41,8 +41,8 @@ def main():
     p.add_argument('--jobs', type=int, default=1)
     p.add_argument('--stage-margin', type=int, default=0, choices=(0, 1),
                    help='ot_dsrom_window_stage_pipeline MARGIN (default off)')
-    p.add_argument('--ctl-leaf', type=int, default=0, choices=(0, 1, 2, 3),
-                   help='isolated pinned controller leaf with MARGIN 0/1/2')
+    p.add_argument('--ctl-leaf', type=int, default=0, choices=(0, 1, 2, 3, 4),
+                   help='isolated pinned controller leaf with MARGIN 0/1/2 (4: MARGIN 2 + replicated reset tree)')
     p.add_argument('--mutant-late-payload', action='store_true',
                    help='controller negative: capture K-port request payload one edge late')
     a = p.parse_args()

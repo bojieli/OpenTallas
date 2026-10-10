@@ -30,7 +30,7 @@ module ot_dsrom_window_source_pipeline #(
     parameter integer MAX_CONTEXT = 1048576,
     parameter integer SPLIT_COLUMNS = 0,
     // 0: original body.  1/2: control leaf ot_dsrom_window_source_ctl (MARGIN 0/1) beside the staging
-    // array and the row merge (takeover-ds 2026-10-06, default off).
+    // array and the row merge (takeover-ds 2026-10-06, default off).  4: MARGIN 2 + RST_TREE (Claude 2026-10-10).
     parameter integer CTL_LEAF = 0
 ) (
     input wire clk, rst_n,
@@ -331,7 +331,7 @@ module ot_dsrom_window_source_pipeline #(
         wire all_rows, stage_fault, stage_job; wire [11:0] landed;
         wire [USER_W-1:0] sj_user, mg_user; wire [POS_W-1:0] sj_first, mg_first; wire [7:0] sj_count, mg_count;
         wire merge_start_v, merge_start_ready, merge_done, merge_fault;
-        ot_dsrom_window_source_ctl #(.MARGIN(CTL_LEAF >= 2 ? CTL_LEAF - 1 : 0), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
+        ot_dsrom_window_source_ctl #(.MARGIN(CTL_LEAF >= 4 ? 2 : CTL_LEAF >= 2 ? CTL_LEAF - 1 : 0), .RST_TREE(CTL_LEAF >= 4), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
             .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
             .REFILL_CREDITS(REFILL_CREDITS), .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),
             .LA_ISSUE_PC(LA_ISSUE_PC), .MAX_CONTEXT(MAX_CONTEXT)) u_ctl (
