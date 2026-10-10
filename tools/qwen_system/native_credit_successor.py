@@ -70,3 +70,20 @@ def sizing():
                                  sequencer_initial_credits_change=True,
                                  cq_credit_depth_required='at least arriving N=4 amplified burst plus actual 55-relay CQ RTT; not just64 existing slots',
                                  rejected_for_queue='central capacity alone requires new SQ receive selection and CQ reservation accounting; cannot reuse closed four-credit view'))
+
+
+def square_sizing():
+    """Higher-area fallback. Actual retained hard LEFs do not permit rotations."""
+    d = sizing()
+    d['candidate'] = 'qfd_native_elastic8_square_a'
+    old = d['aggregate_proposed_frame_area_mm2']
+    for row in d['rows']:
+        row['proposed_frame_um'] = [157.68,157.68]
+        row['frame_area_mm2_each'] = 157.68**2/1e6
+    d['aggregate_proposed_frame_area_mm2'] = sum(r['frame_area_mm2_each']*r['replicas'] for r in d['rows'])
+    d['added_frame_area_vs_rectangle_mm2'] = d['aggregate_proposed_frame_area_mm2']-old
+    d['hard_view_orientation_gate'] = dict(actual_retained_lefs_symmetry='none',allowed=['N'],
+                                          quarter_turns=False,mirrors_qualified=False,
+                                          placeholder_symmetry='X Y cannot authorize an actual hard-view transform')
+    d['queue_blocker'] = 'square full placement and actual face-specific hard-view pin/clock transforms not ready; no orientation alias'
+    return d

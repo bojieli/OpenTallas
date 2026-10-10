@@ -20,12 +20,14 @@ module ot_qwen_native_elastic_relay #(
         assign {o_v,o_d}=forward;
         assign fault=1'b0;
     end else begin:g_elastic
+        wire local_rst_n;
+        ot_reset_sync reset_release(.clk(clk),.async_rst_n(rst_n),.sync_rst_n(local_rst_n));
         wire valid, ready, rf; wire [W-1:0] data;
         ot_link_credit_rx #(.W(W),.DEPTH(DEPTH),.OREG(0),.WFREE(1)) rx(
-            .clk(clk),.rst_n(rst_n),.l_valid(i_v),.l_data(i_d),.l_credit(i_cr),
+            .clk(clk),.rst_n(local_rst_n),.l_valid(i_v),.l_data(i_d),.l_credit(i_cr),
             .o_valid(valid),.o_ready(ready),.o_data(data),.fault(rf));
         ot_link_credit_tx #(.W(W),.CRED(OCRED)) tx(
-            .clk(clk),.rst_n(rst_n),.i_valid(valid),.i_ready(ready),.i_data(data),
+            .clk(clk),.rst_n(local_rst_n),.i_valid(valid),.i_ready(ready),.i_data(data),
             .l_valid(o_v),.l_data(o_d),.l_credit(o_cr));
         // Monitor the same captured credit/send accounting as tx. Overflow
         // remains visible; this never manufactures credits or suppresses data.
@@ -33,8 +35,8 @@ module ot_qwen_native_elastic_relay #(
         reg cr_q, cf, fault_q; reg [CB-1:0] cred;
         wire send=valid && ready;
         wire [CB-1:0] next_credit=cred+cr_q-send;
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n) begin cr_q<=0;cf<=0;fault_q<=0;cred<=OCRED;end
+        always @(posedge clk or negedge local_rst_n)
+            if(!local_rst_n) begin cr_q<=0;cf<=0;fault_q<=0;cred<=OCRED;end
             else begin
                 cr_q<=o_cr; cred<=next_credit;
                 cf<=cf || next_credit>OCRED;

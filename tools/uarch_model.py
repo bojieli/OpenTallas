@@ -15269,6 +15269,12 @@ def qwen_split_io_cdc_model():
     return sizing()
 
 
+def qwen_native_elastic_credit_model(square=False):
+    """Finite credit successor before RTL/PNR; no unqualified token-rate credit."""
+    from tools.qwen_system.native_credit_successor import sizing, square_sizing
+    return square_sizing() if square else sizing()
+
+
 def hgi_token18_fullcore_model():
     """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
     return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,

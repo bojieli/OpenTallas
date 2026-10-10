@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.qwen.native_elastic8.geometry_probe.v1",
+  "source_commit": "53bdff10b",
+  "plan_sha256": "01cd9877f3378d43ca0765428c52f6453d16bd1b0b902580f4b320b7bc37cbee",
+  "die": {
+    "w": 23484.384,
+    "h": 32801.76,
+    "mm2": 770.329,
+    "budget_mm2": 858,
+    "margin_mm2": 87.671
+  },
+  "paths": {
+    "seq_coll": {
+      "relays": 30,
+      "forward_cycles": 90,
+      "max_center_hop_um": 19581.612
+    },
+    "coll_seq": {
+      "relays": 78,
+      "forward_cycles": 234,
+      "max_center_hop_um": 524.448
+    }
+  },
+  "verdict": "FAIL",
+  "queue_ready": false,
+  "reason": "emitted unrepaired paths exceed350um; new explicit gate refuses this plan"
+}

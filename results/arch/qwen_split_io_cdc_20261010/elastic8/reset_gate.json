@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.qwen.native_elastic8.reset_gate.v1",
+  "sources": {
+    "rtl/test/tb_qwen_native_elastic_relay.sv": "5d94a237433a488e2c87af196632865a6902f1f5df95b6220af9f9650b976e8a",
+    "rtl/physical/ot_qwen_native_elastic_relay.sv": "0c2b7b51206e3b1274923dc7aa757d0e906871726b065dff117c32e99168877f",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "rtl/common/ot_link_credit.sv": "e8c63b3bf3af841d6cbad57f70e17571c0e2c9fcb44738698f7d1dee1ab58269",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "release": "asynchronous assert, two-flop local synchronous release in ENABLE1; valid flops reset at each relay",
+  "production_wiring": "unresolved; global reset must abort live transactions consistently across source, relays, CDC and engine",
+  "gates": {
+    "sq": "PASS elastic width=546 relays=2 words=256 first_credit_cycles=3 launch_window=558",
+    "cq": "PASS elastic width=516 relays=2 words=256 first_credit_cycles=3 launch_window=558",
+    "neg": "MISMATCH at=5 expected=00c50075 actual=010000b0\nMISMATCH at=6 expected=00f40064 actual=013700a7\nMISMATCH at=7 expected=01e300b3 actual=012200f2\nNEG_DETECTED elastic width=546 negative=2 bad=3"
+  }
+}
