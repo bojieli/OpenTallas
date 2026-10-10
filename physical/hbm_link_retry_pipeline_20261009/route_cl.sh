@@ -2,6 +2,7 @@
 # struct-close 2026-10-09 ("-cl" line): closure-loop route of the UNGUARDED retry pipeline (ot_hbm_link_retry_pipeline_cl.sv,
 # W 545, replay 512 x 16 SRAM macros) on the current flow: the loop exports OT_ORFS_CORNER_OVERRIDE=TC (WC names read TT),
 # OT_MM_FF_SDC / OT_CTS_FIX_HOOKS; outline / macro placement as the Codex pathfinding (690 x 460, macro_place.tcl).
+# redesign-hbm 2026-10-09: REPLAY_SRC=rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv routes the pipelined decode
 #   route_cl.sh <label> [extra run_abi3_physical args]   env: OUT, CORES (16), UTIL (55), PD (0.55), HM (0.010), DW/DH (690/460)
 set -u
 lab=$1; shift
@@ -18,7 +19,7 @@ echo "UTIL=${UTIL:-55} PD=${PD:-0.55} HM=${HM:-0.010} DW=$DW DH=$DH VT=${OT_MULT
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asap7 --top ot_hbm_link_retry_pipeline \
  --param ENABLE=1 --param W=545 --param EW=24 --param DEPTH=512 ${RSTR:+--param RSTR=$RSTR} \
- --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv \
+ --source rtl/common/ot_secded.sv --source ${REPLAY_SRC:-rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv} \
  --source rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv \
  --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \
  --macro-place-halo 4 4 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_link_retry_pipeline_20261009/macro_place.tcl \

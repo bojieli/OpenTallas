@@ -8,7 +8,7 @@ p.add_argument('--cl',action='store_true');a=p.parse_args()
 out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=False)
 sources=['rtl/common/ot_secded.sv','rtl/common/ot_secded_cols.svh',
 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
-'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv',
+__import__('os').environ.get('OT_RETRY_REPLAY_SRC','rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv'),   # redesign-hbm: _dp = pipelined decode
 'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline'+('_cl' if a.cl else '')+'.sv',
 'rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv']
 sha={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources};gates=[]
