@@ -86,8 +86,8 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire d_lastr=dsc[18]; wire d_lastw=dsc[17]; wire d_final=dsc[16]; wire [15:0] d_tag=dsc[15:0];
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
  // staging the next request (the seat is free, or is being taken this cycle) while fewer than 4 are in flight
- wire stage=busy&&!validating&&!bad&&!launch&&(write_offer||read_offer)&&(!seat_v||take_req)&&
-             (pd_n+{2'd0,take_req})<3'd4;          // after this edge: in flight + the new seat <= 4
+ // (req_r is NOT in this cone: the boundary stays registered -- a seat is restaged the cycle after it is taken)
+ wire stage=busy&&!validating&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
  wire s_last_read=!write_offer&&(read_part+offer_step==32 || read_col+offer_step==n);
  wire s_last_write=write_offer&&(write_part+offer_step==32 || write_col+offer_step==n);
  wire s_final=s_last_write&&write_row+1==m&&write_col+offer_step==n;

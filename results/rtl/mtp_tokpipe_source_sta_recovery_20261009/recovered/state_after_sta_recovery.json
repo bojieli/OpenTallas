@@ -1,0 +1,869 @@
+{
+ "name": "mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+ "spec": {
+  "name": "mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+  "block": "ot_dsrom_wfc_tokpipe_src",
+  "owner": "Codex:mtp-rom/WFCbinding",
+  "purpose": "Separate full-shape src hardened successor of closed SOURCEr24/STGr11. +1SOURCEprompt cycle, +0R6 current-user launch cycles. Retain770ps route/833ps signoff,60/25 uncertainty,150ps dieclock IO obligation and90ps regional/50ps IOhold policy. Exact/negative gates run remotely beside admitted physical; no inherited closedview. Owner continuation acceptance TT setup>=0/FF hold>=0/DRC0; SS sensitivity.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 64,
+  "bench_first": false,
+  "source": {
+   "branch": "codex/mtp-wfc-token-r3-route-20261009",
+   "commit": "9f7a7f35e",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ],
+   "required_files": [
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv",
+    "physical/dsrom_wfc_tokpipe/src_basis.json"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_src",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/bench --case s0_tr_dspark",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "negative_src",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/negative --case s0_neg_noepoch --raw-negative",
+     "expect": "fail",
+     "fail_regex": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst src --case {RUN}/cal --src {SRC} --cores 12 --need 64 && WFC_TARGET=cts bash {RUN}/cal/run.sh",
+    "base": "{RUN}/cal/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+    "threads": 12,
+    "peak_ram_gb": 64
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst src --case {RUN}/route --src {SRC} --cores 12 --need 64 && bash {RUN}/route/run.sh",
+    "ok": "grep -q '^flow_rc=0' {RUN}/route/status && grep -q '^sta_rc=0' {RUN}/route/status",
+    "logs": [
+     "{RUN}/route/flow.log",
+     "{RUN}/route/sta.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/case.json {RUN}/route/config.mk {RUN}/route/constraint.sdc {RUN}/route/signoff.sdc {RUN}/route/wf_sta.json {RUN}/route/wf_drv.json {RUN}/route/check.json {RUN}/record/ && B=$(ls -d {RUN}/route/results/asap7/*/base | tail -1) && cp \"$B/6_final.odb\" \"$B/6_final.def\" \"$B/6_final.v\" \"$B/6_final.sdc\" \"$B/6_final.spef\" {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "metrics_cmd": "python3 tools/dsrom_wfc_tokpipe_metrics.py --case {RUN}/route",
+   "checks": [
+    {
+     "name": "TT_FF0_DRC0_region_die150",
+     "cmd": "python3 tools/dsrom_wfc_tokpipe_metrics.py --case {RUN}/route --check"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src"
+   }
+  ],
+  "cycles_added": 1,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Retained source-pinned full shape and IO boundary budgets; owner continuation TT/FF0/DRC0 with SS sensitivity."
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/mtp-wfc-src-tokpipe-9f7a7f35e-tc.json",
+ "created": "2026-10-09T00:17:03-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 4,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {
+  "bench_exact_src": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"s0_tr_dspark\", \"expected\": \"pass\", \"pass_\": true, \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_dspark.cfg.json\", \"plen\": 8, \"ngen\": 16, \"passes\": 15, \"drafter\": \"dspark\", \"accepted\": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, \"log\": \"s0_tr_dspark/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_negative_src": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-09T00:17:03-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/mtp-wfc-src-tokpipe-9f7a7f35e-tc.json",
+  "2026-10-09T00:20:59-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+  "2026-10-09T00:24:06-07:00 source 9f7a7f35e94a synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/src",
+  "2026-10-09T00:25:00-07:00 bench track: launched bench_exact_src (bench_exact_src.a1b1) beside None",
+  "2026-10-09T00:25:05-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+  "2026-10-09T00:26:08-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+  "2026-10-09T00:27:09-07:00 bench track: bench_exact_src PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-09T00:27:12-07:00 bench track: launched bench_negative_src (bench_negative_src.a1b1) beside calibrate",
+  "2026-10-09T00:27:13-07:00 ot-epyc1tb reachable again; calibrate still running",
+  "2026-10-09T00:28:24-07:00 bench track: bench_negative_src FAIL as expected (rc=1) ",
+  "2026-10-09T00:30:07-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+  "2026-10-09T00:31:09-07:00 ot-epyc1tb reachable again; calibrate still running",
+  "2026-10-09T00:58:20-07:00 calibrate done (rc=0)",
+  "2026-10-09T00:58:20-07:00 calibrated insertion CK_SS_MEAN=440 CK_SS_MIN=414 CK_SS_MAX=546 CK_TT_MEAN=440 CK_TT_MIN=414 CK_TT_MAX=546 CK_FF_MEAN=360 CK_FF_MIN=338 CK_FF_MAX=459 CK_SSLIB_MEAN=572 CK_SSLIB_MIN=541 CK_SSLIB_MAX=688 CK_ROUTE_REF=TT",
+  "2026-10-09T00:59:21-07:00 route waiting for capacity: EPYC1 MemAvailable 395-220 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:00:24-07:00 route waiting for capacity: EPYC1 MemAvailable 396-156 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:01:22-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-09T02:33:59-07:00 route crashed (rc=0 ok-check failed: ) -> retry once on the same host",
+  "2026-10-09T02:35:08-07:00 route waiting for capacity: EPYC1 MemAvailable 436-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:35:58-07:00 route waiting for capacity: EPYC1 MemAvailable 429-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:36:59-07:00 route waiting for capacity: EPYC1 MemAvailable 439-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:37:58-07:00 route waiting for capacity: EPYC1 MemAvailable 435-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:39:04-07:00 route waiting for capacity: EPYC1 MemAvailable 446-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:39:58-07:00 route waiting for capacity: EPYC1 MemAvailable 445-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:41:04-07:00 route waiting for capacity: EPYC1 MemAvailable 446-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:42:07-07:00 route waiting for capacity: EPYC1 MemAvailable 445-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:42:59-07:00 route waiting for capacity: EPYC1 MemAvailable 447-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:43:59-07:00 route waiting for capacity: EPYC1 MemAvailable 443-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:44:59-07:00 route waiting for capacity: EPYC1 MemAvailable 441-102 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:46:00-07:00 route waiting for capacity: EPYC1 MemAvailable 439-96 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:47:03-07:00 route waiting for capacity: EPYC1 MemAvailable 444-126 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:47:59-07:00 route waiting for capacity: EPYC1 MemAvailable 448-130 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:48:59-07:00 route waiting for capacity: EPYC1 MemAvailable 447-134 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:50:00-07:00 route waiting for capacity: EPYC1 MemAvailable 442-132 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:51:00-07:00 route waiting for capacity: EPYC1 MemAvailable 440-114 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:51:48-07:00 launched route (attempt 2) on ot-epyc1tb",
+  "2026-10-09T04:48:34-07:00 NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ; resource=False)",
+  "2026-10-09T11:57:24.858594+00:00 Approved source STA-only recovery submitted through6GiBguard, using original pinned CLI without unsupported --macros; original route and failure snapshots retained, no verdict reentry until fresh all-mode receipt succeeds.",
+  "2026-10-09T12:09:11.579132+00:00 Same-job verdict re-entry after original full four-SRAM STA-only recovery exit0. Measured timing/electrical remain mandatory. No reroute.",
+  "2026-10-09T05:09:47-07:00 verdict TT +102.80 / FF -69.30 / DRC 0 / checks failed ['TT_FF0_DRC0_region_die150'] -> NOT CLOSED",
+  "2026-10-09T05:09:50-07:00 routed-insertion IO re-STA: unavailable: re-STA incomplete (TT None / FF None; ['no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ss.tcl', 'no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ff.tcl'])",
+  "2026-10-09T05:10:50-07:00 NEEDS_RTL: TT 102.8 / FF -69.3 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); checks failed: TT_FF0_DRC0_region_die150"
+ ],
+ "updated": "2026-10-09T05:10:50-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_exact_src": {
+   "state": "done",
+   "tag": "bench_exact_src.a1b1",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T00:25:00-07:00",
+   "stage_source": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  },
+  "bench_negative_src": {
+   "state": "done",
+   "tag": "bench_negative_src.a1b1",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T00:27:12-07:00",
+   "stage_source": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+ "source_synced": true,
+ "commit_full": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+ "source_archive": {
+  "commit": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile",
+   "results/rtl/dshbm_dspark_rtl_20261003/traces"
+  ],
+  "required_sha256": {
+   "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "be24e569b6d643d9d4c43dc458572944c8105655564a2bc64427c678ae0db0c9",
+   "physical/dsrom_wfc_tokpipe/src_basis.json": "0c45013c7150d6b3dd99804af33c0b422a19fe5322cdff5948f0a7340820ff73"
+  },
+  "archive_sha256": "cbe04e3253eca6c24d6fc332ba6f3b610b2353a6b43e590158ecad3586a45706",
+  "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+  "runtime_files_pending": []
+ },
+ "reason": "TT 102.8 / FF -69.3 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); checks failed: TT_FF0_DRC0_region_die150",
+ "bench_location": {
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "summary",
+ "stage_tag": "summary.a2",
+ "stage_started": "2026-10-09T05:09:53-07:00",
+ "unreachable": 0,
+ "bench_work": {
+  "bench_exact_src": "WARN: pass log has no count line (set min_count_regex)"
+ },
+ "wd_checked": 1791545533.9118836,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3995,
+    "mean": 572.5,
+    "min": 541.1,
+    "max": 688.1
+   },
+   "all": {
+    "n": 32534,
+    "mean": 567.2,
+    "min": 535.7,
+    "max": 688.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3995,
+    "mean": 360.4,
+    "min": 337.7,
+    "max": 459.1
+   },
+   "all": {
+    "n": 32534,
+    "mean": 355.8,
+    "min": 332.6,
+    "max": 459.1
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 440,
+   "CK_SS_ALL_MEAN": 436,
+   "CK_SS_MIN": 414,
+   "CK_SS_ALL_MIN": 409,
+   "CK_SS_MAX": 546,
+   "CK_SS_ALL_MAX": 546,
+   "CK_TT_MEAN": 440,
+   "CK_TT_ALL_MEAN": 436,
+   "CK_TT_MIN": 414,
+   "CK_TT_ALL_MIN": 409,
+   "CK_TT_MAX": 546,
+   "CK_TT_ALL_MAX": 546,
+   "CK_FF_MEAN": 360,
+   "CK_FF_ALL_MEAN": 356,
+   "CK_FF_MIN": 338,
+   "CK_FF_ALL_MIN": 333,
+   "CK_FF_MAX": 459,
+   "CK_FF_ALL_MAX": 459,
+   "CK_SSLIB_MEAN": 572,
+   "CK_SSLIB_MIN": 541,
+   "CK_SSLIB_MAX": 688,
+   "CK_SSLIB_ALL_MEAN": 567,
+   "CK_SSLIB_ALL_MIN": 536,
+   "CK_SSLIB_ALL_MAX": 688,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ef_checked": 1791546089.0369792,
+ "crashes": [
+  {
+   "stage": "route",
+   "host": "ot-epyc1tb",
+   "attempt": 1,
+   "why": "rc=0 ok-check failed: ",
+   "resource": false,
+   "tail": "647 fd63910e1bccc8467e4a\n3_1_place_gp_skip_io      .odb           40            836 0f36f73338a5ca86a07a\n3_2_place_iop             .odb            3            575 d5f78bf5d1dbb9d8931d\n3_3_place_gp              .odb          359           2421 9e57ad2fcbcf3aeb27c9\n3_4_place_resized         .odb          209           1260 6058c92da227001feb51\n3_5_place_dp              .odb          260           1771 0b1d2316485ab7e43cd9\n4_1_cts                   .odb          395           2232 f06ea96ed1f1b4cb7bdb\n5_1_grt                   .odb         1855           4177 567a2f26ae7a41fdd44a\n5_1_grt                   .sdc                             566cb65ea33d97c23e3a\n5_2_route                 .odb         1335          20083 ddb032002baa1e907c90\n5_3_fillcell              .odb            7           1328 20e786a95092ca6fb259\n6_1_fill                  .odb            3            840 20e786a95092ca6fb259\n6_1_fill                  .sdc                             566cb65ea33d97c23e3a\n6_1_merge                                11           1326                  N/A\n6_report                                426           5308                  N/A\nTotal                                  5316          20083                     \nusage: dsrom_wfc_tokpipe_physical.py [-h] --inst {src,stg} --case CASE\n                                     [--src SRC] [--cores CORES] [--need NEED]\n                                     {prep,sta,check}\ndsrom_wfc_tokpipe_physical.py: error: unrecognized arguments: --macros\n",
+   "first_error": ""
+  },
+  {
+   "stage": "route",
+   "host": "ot-epyc1tb",
+   "attempt": 2,
+   "why": "rc=0 ok-check failed: ",
+   "resource": false,
+   "tail": "647 c1bb1f90bf26116456e6\n3_1_place_gp_skip_io      .odb           38            836 90546a6677e2e5bb1002\n3_2_place_iop             .odb            2            573 6ae525b42d56e7a999f2\n3_3_place_gp              .odb          349           2419 74fdbc31d589c1f31745\n3_4_place_resized         .odb          182           1262 1d106831cc1c96fd63f2\n3_5_place_dp              .odb          232           1755 6bfbb0397f0e8c9b3063\n4_1_cts                   .odb          382           2233 b4ded8b952bc344009fe\n5_1_grt                   .odb         1859           4183 a1c4479cdf9ef83e5415\n5_1_grt                   .sdc                             566cb65ea33d97c23e3a\n5_2_route                 .odb         2689          21193 f8e9951815e7ceace538\n5_3_fillcell              .odb            9           1325 7795b098e874b9bccf5f\n6_1_fill                  .odb            6            839 7795b098e874b9bccf5f\n6_1_fill                  .sdc                             566cb65ea33d97c23e3a\n6_1_merge                                17           1326                  N/A\n6_report                                584           5337                  N/A\nTotal                                  6751          21193                     \nusage: dsrom_wfc_tokpipe_physical.py [-h] --inst {src,stg} --case CASE\n                                     [--src SRC] [--cores CORES] [--need NEED]\n                                     {prep,sta,check}\ndsrom_wfc_tokpipe_physical.py: error: unrecognized arguments: --macros\n",
+   "first_error": ""
+  }
+ ],
+ "operator_recovery": {
+  "kind": "STA-only exact existing objects",
+  "flow_fix_commit": "0505549cc",
+  "launcher": 3921792,
+  "host": "ot-epyc1tb",
+  "out": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/cl/source_sta_recovery_0505549cc",
+  "started": "2026-10-09T11:57:24.858594+00:00",
+  "original_failure_preserved": "/home/ubuntu/.local/state/closure_loop/operator_actions/mtp-wfc-src-tokpipe-9f7a7f35e-tc.sta-only-recovery/before_state.json",
+  "terminal": true,
+  "helper_exit": 0,
+  "full_corners": [
+   "SS",
+   "TT",
+   "FF"
+  ]
+ },
+ "verdict_history": [
+  {
+   "at": "2026-10-09T12:09:11.579132+00:00",
+   "status": "NEEDS_HUMAN",
+   "reason": "route crashed twice (rc=0 ok-check failed: ; resource=False)",
+   "disposition": "Unsupported --macros original failure preserved; same completed route STA recovered."
+  }
+ ],
+ "pid": null,
+ "metrics": {
+  "ss_ps": 102.8,
+  "ff_ps": -69.3,
+  "drc": 0,
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base",
+  "setup_corner": "TT",
+  "clock_periods_ps": null,
+  "ss_sensitivity_ps": -222.7,
+  "raw": {
+   "ss_ps": 102.8,
+   "tt_setup_ps": 102.8,
+   "ss_sensitivity_ps": -222.7,
+   "ff_ps": -69.3,
+   "drc": 0,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base",
+   "setup_corner": "TT",
+   "accepted": false,
+   "case": {
+    "inst": "src",
+    "route_period_ps": 770,
+    "die_skew_ps": 150,
+    "accepted_40_15_die150": false,
+    "accepted_15_15_region": false,
+    "margin_closed": false,
+    "util": 50,
+    "params": {
+     "WAVE": 1,
+     "WIN": 6,
+     "FLIT": 512,
+     "NW": 21,
+     "AW": 30,
+     "VWA": 15,
+     "USER_W": 10,
+     "MAXU": 866,
+     "KVW": 32768,
+     "SEND_HIDDEN": 1,
+     "HID_DEST": 1,
+     "FWD_TOKEN": 1,
+     "SOURCE": 1,
+     "XWORDS": 41,
+     "RXWORDS": 41,
+     "REC_SRAM": 1,
+     "UPOS_LWR": 1,
+     "CONTROL_PIPE": 1,
+     "CFG_Q": 1,
+     "PRECOMP": 1,
+     "IN_DEC": 1,
+     "TXQ_SLICE": 1,
+     "RDY_LT": 1,
+     "FANOUT_COPY": 1,
+     "MARGIN": 1,
+     "LINK_REG": 1,
+     "LINK_SEL": 1,
+     "VM_REG": 1,
+     "RD_PIPE": 1,
+     "SLEW_COPY": 1
+    },
+    "orfs_var": [
+     "SLEW_MARGIN=30",
+     "CAP_MARGIN=20",
+     "HOLD_SLACK_MARGIN=28"
+    ],
+    "source_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/src",
+    "ctrl_sha256": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "insertion_ps": {
+     "SS": [
+      447.9,
+      605.6
+     ],
+     "FF": [
+      267.8,
+      374.6
+     ]
+    },
+    "timing": {
+     "block": {
+      "ss_setup_ps": -222.7,
+      "ss_hold_ps": 76.5,
+      "ff_setup_ps": 159.9,
+      "ff_hold_ps": -103.3,
+      "ss_failing": [
+       3548,
+       0
+      ],
+      "ff_failing": [
+       0,
+       1226
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ]
+     },
+     "incontext": {
+      "ss_setup_ps": -222.7,
+      "ss_hold_ps": 76.5,
+      "ff_setup_ps": 267.3,
+      "ff_hold_ps": 20.4,
+      "ss_failing": [
+       3548,
+       0
+      ],
+      "ff_failing": [
+       0,
+       0
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ]
+     },
+     "die150": {
+      "ss_setup_ps": -222.7,
+      "ss_hold_ps": -64.5,
+      "ff_setup_ps": 235.3,
+      "ff_hold_ps": -69.3,
+      "ss_failing": [
+       3548,
+       306
+      ],
+      "ff_failing": [
+       0,
+       2880
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ]
+     },
+     "region": {
+      "ss_setup_ps": -222.7,
+      "ss_hold_ps": -41.1,
+      "ff_setup_ps": 243.0,
+      "ff_hold_ps": -67.6,
+      "ss_failing": [
+       3548,
+       143
+      ],
+      "ff_failing": [
+       0,
+       1021
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ]
+     },
+     "reg2reg": {
+      "ss_setup_ps": -222.7,
+      "ss_hold_ps": 76.5,
+      "ff_setup_ps": 267.3,
+      "ff_hold_ps": 20.4,
+      "ss_failing": [
+       3548,
+       0
+      ],
+      "ff_failing": [
+       0,
+       0
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ]
+     }
+    },
+    "drv": {
+     "SS": {
+      "done": true,
+      "violators": {
+       "slew": 1009,
+       "capacitance": 0,
+       "fanout": 0
+      }
+     },
+     "FF": {
+      "done": true,
+      "violators": {
+       "slew": 3,
+       "capacitance": 0,
+       "fanout": 0
+      }
+     }
+    },
+    "drc_errors": 0,
+    "antenna_violating_nets": 0,
+    "stdcell_area_um2": 24059.2,
+    "macro_area_um2": 20710.5,
+    "die_area_um2": 86229.7,
+    "utilization": 0.534201,
+    "artifacts_sha256": {
+     "6_final.odb": "c45bcfaa16bbfe28123eacf0b412b4cc3c8ffc345fff456f3369d55612a36345",
+     "6_final.sdc": "333f997e04844994567f7c366ff16eefae1c0e63cfb40cee1f96e4b84d1e3656",
+     "6_final.spef": "3030595d6ffe9a738d9ceb1cbb99c69ac6c18249a33af1c0b8d14068746db17c"
+    },
+    "closed": false
+   },
+   "corners": {
+    "SS": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      447.9,
+      605.6
+     ],
+     "block": {
+      "setup_wns_ps": -222.7,
+      "hold_wns_ps": 76.5,
+      "failing_setup": 3548,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": -222.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+       "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 76.5,
+      "worst_min_path_group": "core_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": -222.7,
+      "hold_wns_ps": 76.5,
+      "failing_setup": 3548,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": -222.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+       "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 76.5,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": -222.7,
+      "hold_wns_ps": -64.5,
+      "failing_setup": 3548,
+      "failing_hold": 306,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": -222.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "core_next_val[23]",
+       "u_wfc.g_core_in_q.v_q[23]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -64.5,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": -222.7,
+      "hold_wns_ps": -41.1,
+      "failing_setup": 3548,
+      "failing_hold": 143,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": -222.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[208]",
+       "u_wfc.g_link_reg.u_rx.pd[208]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -41.1,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": -222.7,
+      "hold_wns_ps": 76.5,
+      "failing_setup": 3548,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": -222.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+       "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 76.5,
+      "worst_min_path_group": "core_clk"
+     }
+    },
+    "TT": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      335.3,
+      462.6
+     ],
+     "block": {
+      "setup_wns_ps": 102.8,
+      "hold_wns_ps": -7.9,
+      "failing_setup": 0,
+      "failing_hold": 2,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": 102.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_tx.d[126]$_DFF_P_",
+       "out_data[126]"
+      ],
+      "worst_min_path_slack_ps": -7.9,
+      "worst_min_path_group": "io_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": 102.8,
+      "hold_wns_ps": 43.7,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": 102.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+       "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 43.7,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": 102.8,
+      "hold_wns_ps": -62.0,
+      "failing_setup": 0,
+      "failing_hold": 938,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": 102.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "vm_rq[25]",
+       "u_wfc.g_txq_slice.g_s[0].qd[3][25]$_DFFE_PP_"
+      ],
+      "worst_min_path_slack_ps": -62.0,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": 102.8,
+      "hold_wns_ps": -57.4,
+      "failing_setup": 0,
+      "failing_hold": 781,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": 102.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[208]",
+       "u_wfc.g_link_reg.u_rx.pd[208]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -57.4,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": 102.8,
+      "hold_wns_ps": 43.7,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.rst_q$_DFF_PN0_",
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+      ],
+      "worst_max_path_slack_ps": 102.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+       "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 43.7,
+      "worst_min_path_group": "core_clk"
+     }
+    },
+    "FF": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      267.8,
+      374.6
+     ],
+     "block": {
+      "setup_wns_ps": 159.9,
+      "hold_wns_ps": -103.3,
+      "failing_setup": 0,
+      "failing_hold": 1226,
+      "worst_max_path": [
+       "vm_rq[100]",
+       "u_wfc.g_txq_slice.g_s[3].qd[1][4]$_DFFE_PP_"
+      ],
+      "worst_max_path_slack_ps": 159.9,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_tx.d[126]$_DFF_P_",
+       "out_data[126]"
+      ],
+      "worst_min_path_slack_ps": -103.3,
+      "worst_min_path_group": "io_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": 267.3,
+      "hold_wns_ps": 20.4,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_link_reg.u_rx.cnt[1]$_SDFF_PN0_",
+       "u_wfc.g_vm_reg.wd_q[508]$_DFF_P_"
+      ],
+      "worst_max_path_slack_ps": 267.3,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_txq_slice.g_s[8].qd[0][4]$_DFFE_PP_",
+       "u_wfc.g_link_reg.u_tx.d[260]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 20.4,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": 235.3,
+      "hold_wns_ps": -69.3,
+      "failing_setup": 0,
+      "failing_hold": 2880,
+      "worst_max_path": [
+       "vm_rq[100]",
+       "u_wfc.g_txq_slice.g_s[3].qd[1][4]$_DFFE_PP_"
+      ],
+      "worst_max_path_slack_ps": 235.3,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "vm_rq[31]",
+       "u_wfc.g_txq_slice.g_s[0].qd[1][31]$_DFFE_PP_"
+      ],
+      "worst_min_path_slack_ps": -69.3,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": 243.0,
+      "hold_wns_ps": -67.6,
+      "failing_setup": 0,
+      "failing_hold": 1021,
+      "worst_max_path": [
+       "in_data[187]",
+       "u_wfc.g_link_reg.u_rx.pd[187]$_DFF_P_"
+      ],
+      "worst_max_path_slack_ps": 243.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[182]",
+       "u_wfc.g_link_reg.u_rx.pd[182]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -67.6,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": 267.3,
+      "hold_wns_ps": 20.4,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_link_reg.u_rx.cnt[1]$_SDFF_PN0_",
+       "u_wfc.g_vm_reg.wd_q[508]$_DFF_P_"
+      ],
+      "worst_max_path_slack_ps": 267.3,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_txq_slice.g_s[8].qd[0][4]$_DFFE_PP_",
+       "u_wfc.g_link_reg.u_tx.d[260]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 20.4,
+      "worst_min_path_group": "core_clk"
+     }
+    }
+   },
+   "closure_rule": "TT setup >=0; FF hold >=0; DRC0; SS sensitivity; retained region/die150 IO budgets"
+  }
+ },
+ "checks": {
+  "TT_FF0_DRC0_region_die150": {
+   "ok": false,
+   "out": "max_path_group\":\"core_clk\",\"worst_min_path\":[\"u_wfc.g_txq_slice.g_s[8].qd[0][4]$_DFFE_PP_\",\"u_wfc.g_link_reg.u_tx.d[260]$_DFF_P_\"],\"worst_min_path_slack_ps\":20.4,\"worst_min_path_group\":\"core_clk\"}}},\"closure_rule\":\"TT setup >=0; FF hold >=0; DRC0; SS sensitivity; retained region/die150 IO budgets\"}\n"
+  }
+ },
+ "failed_checks": [
+  "TT_FF0_DRC0_region_die150"
+ ],
+ "routed_ioref": {
+  "key": "2|/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base|0|ae0410",
+  "at": "2026-10-09T05:09:47-07:00",
+  "available": false,
+  "ioref_edge": {
+   "tt": {},
+   "ff": {}
+  },
+  "tt": null,
+  "ff": null,
+  "errors": [
+   "no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ss.tcl",
+   "no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ff.tcl"
+  ],
+  "ioref": {
+   "tt": {},
+   "ff": {}
+  },
+  "tt_i2r": null,
+  "tt_out": null,
+  "ff_i2r": null,
+  "ff_out": null,
+  "ff_r2r": null,
+  "json": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/cl/routed_ioref.a2.json",
+  "why": "re-STA incomplete (TT None / FF None; ['no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ss.tcl', 'no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_src_route/base/w18_sta_ff.tcl'])"
+ }
+}

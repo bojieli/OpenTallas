@@ -30,7 +30,8 @@ EXTRA=(); MPT=/src/physical/mtp_p2_transport/macro_place.tcl; DW=400; DH=360; PA
 if [ "${P2_PATH:-0}" = 1 ]; then
  TOP=ot_mtp_p2_prefix_path; D=rtl/experimental/mtp_p2_ordered_20261009; P2SRC=$D/ot_mtp_p2_prefix_path.sv
  EXTRA=(--source $D/ot_mtp_p2_ordered_rows.sv --source $D/ot_mtp_p2_prefix.sv --source $D/ot_mtp_p2_prefix_native.sv
-        --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv)
+        --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv --source rtl/common/ot_sc_pfifo.sv)
+ # (ot_sc_pfifo: REGB=1 pin FIFOs, mtp-lead p2fix 2026-10-09; unused when REGB=0)
  MPT=/src/physical/mtp_p2_transport/macro_place_grid.tcl; DW=${P2_W:-480}; DH=${P2_H:-400}; PARAMS=(--param ENABLE=1)
 fi
 args=(--source $P2SRC "${EXTRA[@]}"

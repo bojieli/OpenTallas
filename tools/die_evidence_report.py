@@ -55,18 +55,28 @@ DIES = {
         name='Qwen3-8B ROM die r22k (ROM die + KV die pair)', host='ot-epyc3',
         note=f'chain {SCR}/die-evidence-2/qwen_r22k (EVIDENCE.log + STATUS.log): kv-die die_chain.sh with the GRT-0008 '
              'fix (GRT SPEF) + ETM-bound libs, own clock plan, IR windows, guided regions'),
+    'qwen_r22k4': dict(
+        name='Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst)', host='ot-epyc1tb',
+        note=f'kv-die chain {SCR}/kv-die/die_r22k4 (r22k-channel-paths: real case -> PDN PASS -> full-die GRT writing '
+             'die_grt.spef -> STA reading it); the current r22k recipe. die-evidence-2/qwen_r22k (EPYC3, 12,869 inst) '
+             'carries the clock plan / IR / regions for the same recipe'),
     'qwen_kv': dict(
-        name='Qwen3-8B KV die (172.3 mm2, assumed frames)', host='ot-epyc1tb',
-        note=f'kv-die chain {SCR}/kv-die/die_kv (GRT + STA owned by kv-die; its STA predates the GRT-0008 fix) + '
-             f'die-evidence-2 re-STA on the GRT SPEF {SCR}/die-evidence-2/qwen_kv'),
+        name='Qwen3-8B KV die (die_kv5: PHY PDN fix, 988 inst)', host='ot-epyc1tb',
+        note=f'kv-die chain {SCR}/kv-die/die_kv5 (GRT + STA owned by kv-die) + die-evidence-2 clock plan / re-STA on '
+             f'the GRT SPEF / regions {SCR}/die-evidence-2/qwen_kv5'),
     'hbm_r25g': dict(
         name='HBM generic die R25G (network probe)', host='ot-epyc4',
         note=f'chain {SCR}/die-evidence-2/hbm_r25g/STATUS.log: R25G = r25s + r25m + r25iqg + fmt3 wide SM grid; the '
-             'generator builds it only as a NETWORK PROBE (retiled SM network unqualified)'),
-    's81_l1w': dict(
-        name='DeepSeek-V4.1 ROM S81 layer1 die (r3 relay rule + WFC hard + face-pin inset; no --host)', host='ot-epyc3',
-        note=f'chain {SCR}/die-evidence-2/s81_l1w (s81_opts_chain.sh: gen -> own clock plan -> kit -> place -> full GRT -> '
-             'STA). --host (dsfd_host) and --nxt-reach both fail generation today (hw_SW / rt_0_8a_y1 relay placement)'),
+             'generator builds it only as a NETWORK PROBE (retiled SM network unqualified). Case built 07:45 PT, BEFORE '
+             'the hi attention half widening (slot 1,503.36 um), the router kneg_orph2 swap, the svc PS leaf moves and '
+             'the hfd_mtp closure'),
+    's81_l1full': dict(
+        name='DeepSeek-V4.1 ROM S81 layer1 die (full recipe: --host, --wfc-hard, --path-pick)', host='ot-epyc3',
+        note=f'chain {SCR}/die-evidence-2/s81_l1full (s81-gen handoff 11:24; src s81-gen/src_7bb71184d, which carries '
+             'the apply_options WFC_HARD / MTP_SEQ fix f362d0860): gen -> place -> clock plan -> kit -> GRT -> STA'),
+    's81_l1e': dict(
+        name='DeepSeek-V4.1 ROM S81 layer1e (Engram home die)', host='ot-epyc3',
+        note=f'chain {SCR}/die-evidence-2/s81_l1e (layer1 full recipe + --die layer1e; same src)'),
 }
 STATIC = {
     # evidence that lives only in a log / committed record (no live probe); cited, never recomputed
@@ -654,8 +664,14 @@ def probe_qwen_r22k():
                           f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
 
 
+def probe_qwen_r22k4():
+    R = f'{SCR}/kv-die/die_r22k4'
+    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{R}/sta_r22k_{c}'], f'{R}/libs',
+                          f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
+
+
 def probe_qwen_kv():
-    K, E = f'{SCR}/kv-die/die_kv', f'{SCR}/die-evidence-2/qwen_kv'
+    K, E = f'{SCR}/kv-die/die_kv5', f'{SCR}/die-evidence-2/qwen_kv5'
     return probe_qwen_run(K, f'{K}/case_kv', f'{K}/grt_kv', lambda c: [f'{E}/sta_kv_{c}', f'{K}/sta_kv_{c}'], f'{K}/libs',
                           f'{E}/ir', f'{E}/clock', f'{E}/regions/gwkv_*')
 
@@ -704,12 +720,17 @@ def probe_hbm_r25g():
     return probe_hbm_run(B, f'{B}/case', 'r25g')
 
 
-def probe_s81_l1w():
-    return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1w')
+def probe_s81_l1full():
+    return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1full')
+
+
+def probe_s81_l1e():
+    return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1e')
 
 
 PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head,
-              qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g, s81_l1w=probe_s81_l1w)
+              qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g,
+              qwen_r22k4=probe_qwen_r22k4, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e)
 
 
 # ----------------------------------------------------------------------------------------------- local driver
@@ -771,11 +792,15 @@ def readme(rep):
         ctxt = (f"{cp['regions']} regions, intra <= {cp['max_intra_skew_ss_ps']}, inter <= {cp['max_inter_skew_ss_ps']} ps, "
                 f"{cp['violations_intra']}+{cp['violations_inter']} viol" if cp.get('status') == 'done' else cp.get('status', 'pending'))
         ir = d.get('ir') or {}
-        if ir.get('windows'):
+        jv = [float(x) for ln in (ir.get('judged') or []) for x in re.findall(r'judged_r2r_mV=([0-9.]+)', ln)]
+        if isinstance(ir.get('windows'), dict) and ir['windows']:
             vals = [w['rail_to_rail_interior_mv'] for w in ir['windows'].values()]
             itxt = f"{min(vals)}-{max(vals)} mV interior / 35 ({len(vals)} windows)"
+        elif jv:
+            itxt = f"{min(jv)}-{max(jv)} mV judged interior / 35 ({len(jv)} windows)"
         elif ir.get('worst_interior_rail_to_rail_mv') is not None:
-            itxt = f"{ir['worst_interior_rail_to_rail_mv']} mV / {ir['budget_mv']:.0f} ({ir.get('placement')})"
+            itxt = (f"{ir['worst_interior_rail_to_rail_mv']} mV / {ir.get('budget_mv', 35):.0f} "
+                    f"({ir.get('placement') or str(ir.get('windows')) + ' windows'})")
         else:
             itxt = ir.get('status', 'pending')
         a = ((d.get('area') or {}).get('by_class') or {}).get('real')
@@ -870,7 +895,19 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='results/arch/die_evidence_20261008')
     ap.add_argument('--die', default='qwen,hbm,s81,s81scan,s81head')
+    ap.add_argument('--render', action='store_true',
+                    help='re-render README.md from <out>/report.json with the current gaps.json (no probes)')
     a = ap.parse_args(argv)
+    if a.render:
+        out = Path(a.out)
+        rep = json.loads((out / 'report.json').read_text())
+        for d, r in rep['dies'].items():
+            if GAPS.get(d):
+                r['gaps'] = GAPS[d]
+        (out / 'report.json').write_text(json.dumps(rep, indent=1) + '\n')
+        (out / 'README.md').write_text(readme(rep))
+        print(out / 'README.md')
+        return 0
     dies = a.die.split(',')
     with concurrent.futures.ThreadPoolExecutor(len(dies)) as ex:
         res = dict(zip(dies, ex.map(run_probe, dies)))

@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Exact +0,E0,E1,E2 prefix; systematic Hsiao code matches ordered transport.
-module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
+// mtp-lead 2026-10-09: BREG=1 gates healthy with a registered duplicate-state compare (bad_q; fault still sees bad
+// directly). Default 0: the original logic.
+module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0)(
  input wire clk,rst_n,start_v, output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire in_v,output wire in_r,input wire [73:0] in_identity,
@@ -24,7 +26,8 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  reg [511:0] contribution,accum,sum_q;
  wire bad=(state!=state_copy)||(expert_index!=expert_copy)||(word_index!=word_copy)||
  (identity!=identity_copy)||(ids!=ids_copy)||(draining!=draining_copy);
- wire healthy=!fault_q&&!bad&&!abort;
+ reg bad_q;
+ wire healthy=!fault_q&&!(BREG?bad_q:bad)&&!abort;
  assign start_r=healthy&&state==IDLE;assign in_r=healthy&&state==RECEIVE;
  assign out_v=healthy&&state==HOLD;assign out_identity=identity;
  assign out_word=word_index;assign out_last=word_index==79;
@@ -64,8 +67,8 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0)(
  if(!rst_n)begin state<=IDLE;state_copy<=IDLE;expert_index<=0;expert_copy<=0;
  word_index<=0;word_copy<=0;identity<=0;identity_copy<=0;ids<=0;ids_copy<=0;
  draining<=0;draining_copy<=0;fault_q<=0;done_q<=0;corrected_q<=0;
- contribution<=0;accum<=0;sum_q<=0;end
- else begin done_q<=0;if(bad||abort)fault_q<=1;
+ contribution<=0;accum<=0;sum_q<=0;bad_q<=0;end
+ else begin done_q<=0;bad_q<=bad;if(bad||abort)fault_q<=1;
  if(healthy)case(state)
  IDLE:if(start_v&&start_r)begin
  if(!(start_ids[8:0]<start_ids[17:9]&&start_ids[17:9]<start_ids[26:18]&&start_ids[26:18]<384))fault_q<=1;
