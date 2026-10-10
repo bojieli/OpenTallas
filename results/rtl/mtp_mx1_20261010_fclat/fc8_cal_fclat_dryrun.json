@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.mx1_fclat.v1",
+ "cal_base": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc/routes/hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm10_96ee08233_tc_cal/work/orfs/results/asap7/opentallas_hfd_cmdproc_s_mtp_native_mx1_asap7_mtp_hfd_cmdproc_s_mtp_native_mx1_rb_fc8_hm10_96ee08233_tc_cal/base",
+ "reference": {
+  "tt": 767.0,
+  "ff": 650.0
+ },
+ "measured": {
+  "tt": {
+   "ck[0]": {
+    "n": 8797,
+    "mean": 759.0,
+    "min": 716.3,
+    "max": 831.0
+   },
+   "cks[0]": {
+    "n": 516,
+    "mean": 216.0,
+    "min": 182.0,
+    "max": 241.5
+   },
+   "ckn[0]": {
+    "n": 195,
+    "mean": 519.4,
+    "min": 499.3,
+    "max": 541.1
+   },
+   "cke[0]": {
+    "n": 890,
+    "mean": 601.5,
+    "min": 548.9,
+    "max": 770.4
+   },
+   "ckw[0]": {
+    "n": 888,
+    "mean": 761.3,
+    "min": 727.8,
+    "max": 948.4
+   }
+  },
+  "ff": {
+   "ck[0]": {
+    "n": 8797,
+    "mean": 639.6,
+    "min": 589.5,
+    "max": 705.3
+   },
+   "cks[0]": {
+    "n": 516,
+    "mean": 181.0,
+    "min": 149.5,
+    "max": 205.4
+   },
+   "ckn[0]": {
+    "n": 195,
+    "mean": 441.0,
+    "min": 421.7,
+    "max": 461.2
+   },
+   "cke[0]": {
+    "n": 890,
+    "mean": 512.0,
+    "min": 465.8,
+    "max": 659.6
+   },
+   "ckw[0]": {
+    "n": 888,
+    "mean": 648.6,
+    "min": 619.5,
+    "max": 810.9
+   }
+  }
+ },
+ "die_leaf_source_latency_ps": {
+  "tt": {
+   "cks[0]": 551.0,
+   "ckn[0]": 247.6,
+   "cke[0]": 165.5,
+   "ckw[0]": 5.7
+  },
+  "ff": {
+   "cks[0]": 469.0,
+   "ckn[0]": 209.0,
+   "cke[0]": 138.0,
+   "ckw[0]": 1.4
+  }
+ },
+ "warnings": [],
+ "rule": "source_latency(leaf) = reference - local_insertion(leaf); face sinks land at the reference",
+ "note": "Dry run of mx1_fclat.py on fc8 (96ee08233, TILECLK=0) calibrate 4_1_cts.odb with reference = measured core mean (TT 759 / FF 640 rounded to 767/650 inputs). fc8 route used source latency 879 (FF value picked in the TT mode) on every face port and propagated local face trees of 216-761 ps mean (max 948) on top -> face sinks ~1.15 ns after core sinks at the lk_cSW -> i1_cSW half-cycle hop (-934 ps). The loop's CK_TT_MEAN 987/990 for TILECLK=0 runs is contaminated by face sinks (core_clk was created on every ck* port); core-only mean is 759.",
+ "fc8_worst_path": {
+  "start": "ar.lk_cSW[558]",
+  "end": "ar.i1_cSW[558]",
+  "slack_ps": -934.34,
+  "launch_clk_at_sink": 2298.82,
+  "capture_clk_at_sink": 1564.28,
+  "launch_terms": "fall 416.5 + source 879 + ckw local tree 1003.3",
+  "capture_terms": "rise 833 + core tree 731.3",
+  "data_ps": 68.3
+ }
+}
