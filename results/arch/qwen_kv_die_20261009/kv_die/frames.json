@@ -72,13 +72,15 @@
   },
   "qkd_astk (re-cut D)": {
    "rtl": "ot_qwen_nearhbm_attn_stack_d minus its engines",
-   "cells_um2": null,
+   "cells_um2": 774000,
    "frame_um": [
-    777.6,
+    220.32,
     7992.0
    ],
-   "note": "synthesis running (synth3/astk_d, -noshare); its score / e memories (4,096 x 128 + 4,096 x 64 b) are SRAM-macro class (~24-32 x ot_sram_1r1w_128x256, ~0.12-0.16 mm2), not flops"
+   "note": "MEASURED by parts (synth4, yosys -noshare + abc, RVT TT): 8 x ot_qwen_nearhbm_exp_quad_d 39,285 + ot_qwen_nearhbm_ztree_d 99,350 + ot_qwen_nearhbm_pvtree_d 287,991 + node staging / q broadcast / messages ~73 k (estimate) um2; the score / e memories (4,096 x 128 + 4,096 x 64 b) as SRAM macros ~0.19 mm2 (0.119 um2 / b x 2 banking). The flattened whole-stack synthesis tripped an ABC assertion (synth3/astk_d). Frame 220.32 x 7,992 (was 777.6 ASSUMED): KV die 192.1 -> 164.9 mm2.",
+   "sram_mm2_est": 0.19,
+   "util": 0.547
   }
  },
- "summary": "the centre blocks (seq, d2d, embgw, ahub) and the landing logic are measured at 1-30 % of their assumed frames: they do not set the die size (the KV die is set by the HBM PHY bands, the row-engine columns and the aggregator column). The re-cut D engine is measured at 544 k um2 (util 0.512 in its frame; KV die 192.1 mm2 unchanged). The aggregator (qkd_astk) frame stays ASSUMED until synth3/astk_d reports."
+ "summary": "Every KV-die frame now measured or sized from synthesis: the engine (544 k um2, util 0.51), the aggregator (by parts, util ~0.55 with its SRAM), the centre blocks and landing logic at 1-30 % of their frames. KV die 164.9 mm2."
 }

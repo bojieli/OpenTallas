@@ -1,20 +1,20 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
+ "generator_sha256": "0c5580a869f3eb6998cd42b5df95904e039f3d8aa4d38e84d5beb7c010d432cf",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
  },
  "die_um": [
-  7894.368,
+  6779.808,
   24328.08
  ],
- "die_mm2": 192.055,
- "instances": 988,
- "buses": 1524,
- "instance_mm2": 131.141,
- "fill": 0.6828,
+ "die_mm2": 164.94,
+ "instances": 938,
+ "buses": 1474,
+ "instance_mm2": 113.208,
+ "fill": 0.6864,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -34,7 +34,7 @@
   },
   "qkd_astk": {
    "n": 4,
-   "mm2": 24.8776
+   "mm2": 7.0481
   },
   "qkd_cdc": {
    "n": 128,
@@ -73,24 +73,24 @@
    "mm2": 33.9711
   },
   "qkd_rly_1": {
-   "n": 156,
-   "mm2": 0.2482
+   "n": 154,
+   "mm2": 0.245
   },
   "qkd_rly_10": {
    "n": 43,
    "mm2": 0.0684
   },
   "qkd_rly_1025": {
-   "n": 88,
-   "mm2": 0.2501
+   "n": 73,
+   "mm2": 0.2075
   },
   "qkd_rly_1048": {
-   "n": 54,
-   "mm2": 0.1596
+   "n": 50,
+   "mm2": 0.1478
   },
   "qkd_rly_16": {
-   "n": 85,
-   "mm2": 0.1352
+   "n": 68,
+   "mm2": 0.1082
   },
   "qkd_rly_21": {
    "n": 4,
@@ -105,8 +105,8 @@
    "mm2": 0.0334
   },
   "qkd_rly_530": {
-   "n": 260,
-   "mm2": 0.4137
+   "n": 248,
+   "mm2": 0.3946
   },
   "qkd_rly_540": {
    "n": 56,
@@ -130,7 +130,7 @@
  "relay_stages": {
   "af_EN": 1,
   "af_ES": 27,
-  "af_WN": 1,
+  "af_WN": 2,
   "af_WS": 27,
   "am_EN": 5,
   "am_ES": 5,
@@ -140,80 +140,80 @@
   "ap_ES": 4,
   "ap_WN": 5,
   "ap_WS": 5,
-  "aq_EN": 2,
+  "aq_EN": 1,
   "aq_ES": 27,
   "aq_WN": 1,
-  "aq_WS": 26,
+  "aq_WS": 27,
   "ares": 21,
-  "emf_EN": 4,
-  "emf_ES": 25,
-  "emf_WN": 4,
-  "emf_WS": 25,
-  "emr_EN": 4,
-  "emr_ES": 25,
-  "emr_WN": 4,
-  "emr_WS": 25,
+  "emf_EN": 3,
+  "emf_ES": 24,
+  "emf_WN": 3,
+  "emf_WS": 24,
+  "emr_EN": 3,
+  "emr_ES": 24,
+  "emr_WN": 3,
+  "emr_WS": 24,
   "hc": 43,
   "hf": 21,
   "hs": 21,
-  "ing_EN": 25,
-  "ing_ES": 4,
-  "ing_WN": 25,
-  "ing_WS": 4,
-  "krq_EN_0": 2,
-  "krq_EN_1": 8,
-  "krq_EN_2": 8,
-  "krq_EN_3": 3,
-  "krq_ES_0": 2,
-  "krq_ES_1": 8,
-  "krq_ES_2": 8,
-  "krq_ES_3": 3,
-  "krq_WN_4": 3,
-  "krq_WN_5": 8,
-  "krq_WN_6": 8,
-  "krq_WN_7": 3,
-  "krq_WS_4": 2,
-  "krq_WS_5": 8,
-  "krq_WS_6": 8,
-  "krq_WS_7": 3,
-  "krs_EN_0": 3,
-  "krs_EN_1": 8,
-  "krs_EN_2": 8,
-  "krs_EN_3": 3,
-  "krs_ES_0": 3,
-  "krs_ES_1": 8,
-  "krs_ES_2": 8,
-  "krs_ES_3": 3,
-  "krs_WN_4": 3,
+  "ing_EN": 24,
+  "ing_ES": 3,
+  "ing_WN": 24,
+  "ing_WS": 3,
+  "krq_EN_0": 1,
+  "krq_EN_1": 7,
+  "krq_EN_2": 7,
+  "krq_EN_3": 2,
+  "krq_ES_0": 1,
+  "krq_ES_1": 7,
+  "krq_ES_2": 7,
+  "krq_ES_3": 2,
+  "krq_WN_4": 1,
+  "krq_WN_5": 7,
+  "krq_WN_6": 7,
+  "krq_WN_7": 2,
+  "krq_WS_4": 1,
+  "krq_WS_5": 7,
+  "krq_WS_6": 7,
+  "krq_WS_7": 2,
+  "krs_EN_0": 2,
+  "krs_EN_1": 7,
+  "krs_EN_2": 7,
+  "krs_EN_3": 2,
+  "krs_ES_0": 2,
+  "krs_ES_1": 7,
+  "krs_ES_2": 7,
+  "krs_ES_3": 2,
+  "krs_WN_4": 2,
   "krs_WN_5": 8,
-  "krs_WN_6": 8,
-  "krs_WN_7": 3,
-  "krs_WS_4": 3,
-  "krs_WS_5": 8,
-  "krs_WS_6": 8,
-  "krs_WS_7": 3,
+  "krs_WN_6": 7,
+  "krs_WN_7": 2,
+  "krs_WS_4": 2,
+  "krs_WS_5": 7,
+  "krs_WS_6": 7,
+  "krs_WS_7": 2,
   "kst": 43,
-  "kvn_EN": 4,
-  "kvn_ES": 23,
-  "kvn_WN": 4,
-  "kvn_WS": 23,
+  "kvn_EN": 3,
+  "kvn_ES": 22,
+  "kvn_WN": 3,
+  "kvn_WS": 22,
   "lt_EN": 1,
   "lt_ES": 1,
   "lt_WN": 1,
   "lt_WS": 1,
-  "mf_EN": 4,
-  "mf_ES": 25,
-  "mf_WN": 4,
+  "mf_EN": 3,
+  "mf_ES": 24,
+  "mf_WN": 3,
   "mf_WS": 25,
   "tk": 43
  },
  "critical_stages": {
   "d2d_to_seq": 0,
   "seq_to_astk": {
-   "WS": 26,
+   "WS": 27,
    "WN": 1,
    "ES": 27,
-   "EN": 2
+   "EN": 1
   },
   "astk_to_hub": {
    "WS": 5,
@@ -230,29 +230,29 @@
   "hub_to_seq": 21,
   "seq_to_d2d": 0,
   "seq_to_land": {
-   "WS": 23,
-   "WN": 4,
-   "ES": 23,
-   "EN": 4
+   "WS": 22,
+   "WN": 3,
+   "ES": 22,
+   "EN": 3
   },
   "gw_to_land": {
-   "WS": 25,
-   "WN": 4,
-   "ES": 25,
-   "EN": 4
+   "WS": 24,
+   "WN": 3,
+   "ES": 24,
+   "EN": 3
   },
   "land_to_gw": {
-   "WS": 25,
-   "WN": 4,
-   "ES": 25,
-   "EN": 4
+   "WS": 24,
+   "WN": 3,
+   "ES": 24,
+   "EN": 3
   },
   "seq_to_gw": 0,
   "gw_to_seq": 0
  },
  "assumed": {
   "row_engine_frame": "re-cut D qkd_reng 531.36 x 1,998 (~529 k um2 cells composed from synthesis, 0.50)",
-  "astk_w": 777.6,
+  "astk_w": 220.32,
   "land_w": 172.8,
   "frames": {
    "qkd_ckbump": [
@@ -309,7 +309,7 @@
    "ports": 91
   },
   "qkd_astk": {
-   "w": 777.576,
+   "w": 220.296,
    "h": 7998.456,
    "ports": 23
   },
@@ -463,7 +463,7 @@
    "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
    "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
    "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
-   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)",
+   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)",
    "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
   }
  }
