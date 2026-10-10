@@ -15383,3 +15383,36 @@ def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
         area=dict(added_ff_estimate=149, slot_fit='requires re-route of IDX unit', physical_qualified=False),
         fanout=dict(slot_shift_add=2, batch_to_division=13),
         physical_adoption=False)
+
+
+def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
+    """Full-shape structural successor; price before RTL, no adoption credit."""
+    assert ns == 8 and db == 64 and crb >= ns
+    latency = 2*ns + 5
+    slot_w, slot_h = 259.2, 324.0
+    boundary = 1+3+6 + 1+1+1+20+16+512
+    ff = 64*38 + 3*552 + 2*10 + 600
+    return dict(schema='opentallas.qwen_result_slot_conveyor.v1',
+        adopted=False, default_off=True, models=['Qwen3-8B ROM'],
+        MACs_per_cycle=0, compute_intensity_MACs_per_byte=0,
+        replicas=dict(bands=6,slots_per_band=ns,total_slot_macros=6*ns),
+        memory=dict(bytes_per_write_cycle=64,bytes_per_read_cycle=64,
+                    macro='ot_sram_1r1w_64x512_m1_r2c2',depth=db),
+        boundary=dict(request_bits_per_cycle=10,response_bits_per_cycle=551,
+                      producer_bits_per_slot=557,credit_bits_per_cycle=1),
+        routing=dict(estimated_tracks=boundary,available_tracks=int(2*slot_h/.064*.70),
+                     pin_layers=['M4','M6','M5','M7']),
+        replicas_cost=dict(global_data_mux_inputs=0,local_response_mux_inputs=2,
+                            metadata_read_mux_levels=[8,8],control_fanout='local pin seat per slot'),
+        area=dict(slot_um=[slot_w,slot_h],slot_area_um2=slot_w*slot_h,
+                  macro_area_um2=171.288*77.760,estimated_FF=ff,
+                  FF_area_proxy_um2=ff*DFF_UM2,controller_slot_um=[216,216],
+                  band_area_um2=ns*slot_w*slot_h+216*216,physical_fit=False),
+        latency=dict(request_to_response_cycles=latency,burst_issue_cycles=ns,
+                     worst_full_burst_response_cycles=latency+ns-1,
+                     baseline_first_beat_cycles=5,added_first_beat_cycles=latency-5,
+                     token_cost='+16 edges per serially exposed burst; measured landed token bench required',
+                     stall_budget_edges=rs,store_headroom_bursts=5,
+                     ready_threshold=db-rs-5),
+        capacity=dict(credits=crb,reserve_per_request=1,disabled_slot_refund=True),
+        exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
