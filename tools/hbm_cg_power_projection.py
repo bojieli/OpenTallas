@@ -27,6 +27,15 @@ def gated_share(m, v):
     else:
         return 0.0
     return g / tot
+def measured_power_at_period(point, key, reference_period_ns):
+    """Match the reference frequency while preserving the raw point and its leakage."""
+    power = point[key]
+    period = point.get("clock_period_ns")
+    if period is None or reference_period_ns is None:
+        return power
+    leak = point["leakage_w"]
+    return leak + (power - leak) * period / reference_period_ns
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--evidence", default=str(ROOT / "results/physical/die_evidence_20261009/hbm_r25gp_power.json"))
@@ -82,11 +91,11 @@ def main():
                                 block = d["blocks"][part["part"]]
                                 old_idle = block["w"]["a00"]
                                 measured = meas.get(key)
-                                floor = (measured["gated_idle_w"] if measured else
+                                floor = (measured_power_at_period(measured, "gated_idle_w", block.get("clock_period_ns")) if measured else
                                          r * old_idle + (block.get("leak_w") or 0.0))
                                 idle_each += part["count"] * (floor - old_idle)
                                 if measured and "a20_w" in measured:
-                                    a20 += v["n"] * part["count"] * (measured["a20_w"] - part["w_each_a20"])
+                                    a20 += v["n"] * part["count"] * (measured_power_at_period(measured, "a20_w", block.get("clock_period_ns")) - part["w_each_a20"])
                             idle = idle_each * v["n"]
                     tot += dt * a20 + (1 - dt) * idle
                 tot += d["relay_stations"]["w"]["a00"] + mix.get("wire_w", 0.0)

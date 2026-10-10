@@ -18,7 +18,9 @@
   "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_wg_cg_80412.src",
   "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF, one ICG ENA forced 0",
   "original_record_commit": "fb12301e5",
-  "clock_period_ns": 0.833
+  "clock_period_ns": 0.833,
+  "leakage_w": 4.211884515825659e-06,
+  "composition_note": "Scale dynamic power by routed period / ungated reference period; preserve leakage. Raw measured points remain unchanged."
  },
  "sm_be_eg": {
   "a20_w": 0.026453407481312752,
@@ -29,6 +31,8 @@
   "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_eg_cg_80412.src",
   "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF, one ICG ENA forced 0",
   "original_record_commit": "13323125b",
-  "clock_period_ns": 0.833
+  "clock_period_ns": 0.833,
+  "leakage_w": 4.230843387631467e-06,
+  "composition_note": "Scale dynamic power by routed period / ungated reference period; preserve leakage. Raw measured points remain unchanged."
  }
 }
