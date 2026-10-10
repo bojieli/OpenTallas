@@ -2,7 +2,7 @@
 # hbm-forks 2026-10-09: PS (per-PC stream) successor of the segmented svc.   run_bench_ps.sh <out dir> [quick]
 #   lint of every PS segment master (yosys, check -assert);
 #   sim_ps_SW / sim_ps_NE   legacy traffic + 12 per-PC streams (KV no-credit, IK credited) on the PS segments: PASS
-#   ls_SW / ls_NE           CF-1: PS segments in LOCKSTEP with the legacy segments on legacy traffic (no streams): PASS
+#   ref_SW / ref_NE         CF-1: the LEGACY segments as the DUT (own PHY model) under the same scoreboard (transaction level)
 #   neg_slot                mutant: the sector slot ignores the row's bank XOR (beat order) -> must FAIL
 #   neg_done                mutant: a PC reports done without its sectors -> must FAIL
 #   neg_pc                  mutant: PC collapse (only PC 0 streams; I2 lane-drop) -> must FAIL
@@ -38,12 +38,12 @@ sed 's/&& pdone && !di_v;/\&\& !di_v;/' $PSLIB > $O/ps_mut_done.sv
 sed 's/mine <= di_d\[PCID\]; act <= di_d\[PCID\];/mine <= di_d[PCID] \&\& PCID == 0; act <= di_d[PCID] \&\& PCID == 0;/' $PSLIB > $O/ps_mut_pc.sv
 for m in slot done pc; do cmp -s $O/ps_mut_$m.sv $PSLIB && { echo "$m mutant not applied" >> $O/summary.txt; rc=1; }; done
 sim sim_ps_SW SW SW $PSLIB -DPS_STREAMS & sim sim_ps_NE NE SE $PSLIB -DPS_STREAMS &
-sim ls_SW SW SW $PSLIB -DLOCKSTEP & sim ls_NE NE SE $PSLIB -DLOCKSTEP &
+sim ref_SW SW SW $PSLIB -DREFDUT & sim ref_NE NE SE $PSLIB -DREFDUT &
 sim neg_slot SW SW $O/ps_mut_slot.sv -DPS_STREAMS & sim neg_done SW SW $O/ps_mut_done.sv -DPS_STREAMS &
 sim neg_pc SW SW $O/ps_mut_pc.sv -DPS_STREAMS &
 sim neg_conc SW SW $PSLIB -DPS_STREAMS -DOT_PS_MUT_CONC &
 wait
-for L in sim_ps_SW sim_ps_NE ls_SW ls_NE; do
+for L in sim_ps_SW sim_ps_NE ref_SW ref_NE; do
   grep -q "^SVC_BENCH PASS" $O/$L.log; r=$?
   echo "$L rc=$r $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
 done

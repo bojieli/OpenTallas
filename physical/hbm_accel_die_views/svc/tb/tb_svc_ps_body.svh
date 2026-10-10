@@ -4,6 +4,8 @@
 // of its kport_map address, exactly once per (PC, rq), sector valid masks, a kd pulse per stream; credits held by the
 // consumer at random (back-pressure).  LOCKSTEP: a legacy segmented DUT shares every input and the PHY bundle (any
 // divergence on a svc -> PHY bit resolves to X) and its lines / kv / ik are compared with the PS DUT every cycle.
+// 2026-10-10 (owner: transaction-level exactness): LOCKSTEP retired; REFDUT runs the legacy segments as the DUT with
+// their own PHY model under the same scoreboard; every output is X-free after reset; budget 1.2M cycles.
 // Original header:
 // CLAUDE HBM-ABSTRACTS (svcidx): stream-service view bench body (included by the generated tb_svc_<st>.sv, which
 // declares the DUT on these uniform nets, in core SM order k = SM ports by x).  One seed; exits nonzero ($fatal) on
@@ -95,6 +97,12 @@
     end
   end
   initial begin k_rdy = 0; kr_v = 0; w_rdy = 0; w_room = 8'hff; wr_v = 0; wbusy = 0; end
+  // ---------------------------------------------------------------- no X on any output after reset (2026-10-10 gate)
+  integer xerr = 0, xk;
+  always @(posedge ck) if (rst && $time > 64 * TCK) begin
+    for (xk = 0; xk < 8; xk = xk + 1) if (^ln[xk] === 1'bx && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on SM %0d line at %0t", xk, $time); end
+    if ((^kvo === 1'bx || ^iko === 1'bx) && xerr < 8) begin xerr = xerr + 1; err = err + 1; $display("ERR X on kv / ik at %0t", $time); end
+  end
   // ---------------------------------------------------------------- expected responses
   // SM line expectations: tag -> (addr, kind) per SM, unique tags
   reg [31:0] exp_a [0:7][0:1023]; reg exp_w [0:7][0:1023]; reg exp_on [0:7][0:1023];
@@ -275,7 +283,7 @@
         repeat (50) @(posedge ck);
         disable wait_done;
       end
-      begin repeat (200000) @(posedge ck); $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines,
+      begin repeat (1200000) @(posedge ck); $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines,
           want_lines, kv_got, kv_want, ik_got, ik_want, ne); $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows,
           ps_want, ps_kd, ps_busy); err = err + 1; disable wait_done; end
     join
