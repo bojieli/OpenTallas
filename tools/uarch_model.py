@@ -15287,3 +15287,11 @@ def hgi_token18_fullcore_model():
         exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
         physical_fit_measured=False, routes_required=2,
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
+
+
+def dsrom_window_source_pin_anchor_model():
+    """Same MARGIN2 byte-pinned controller; root pin access/anchor successor, +0 cycles."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        "physical/dsrom_window_source/model_pin_anchor.json").read_text())

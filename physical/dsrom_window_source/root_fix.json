@@ -1,0 +1,29 @@
+{
+  "status": "PIN_ACCESS_ANCHOR_ROUTE_PENDING",
+  "adopted": false,
+  "rtl_commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a",
+  "physical_predecessor": "3ee14f399",
+  "worst_ff_input_ps": -7.626788,
+  "violating_d_pins": 15,
+  "ff_reg2reg_ps": 2.994577,
+  "ff_output_ps": 0.7227,
+  "root": "Unanchored acc_tag pin capture and upper-metal W-edge via crash during ECO",
+  "changes": [
+    "IO M4/M6 horizontal and M5/M7 vertical",
+    "clock pin at W-face midpoint",
+    "per-pin boundary registers FIRM during global placement, released for legalization",
+    "remove ideal core network latency; measured virtual reference retained"
+  ],
+  "added_cycles": 0,
+  "die_um": [
+    540,
+    540
+  ],
+  "place_density": 0.5,
+  "gate": "Historical 344-case ctl3 positive and production W339 PTR1 ZERO_IDLE1 mutant; identical recovered source manifest; minimum gate repeated by bench stage",
+  "historical_gate": "results/rtl/dsrom_window_source_m2_recovery_20261007/negative_terminal/minimum_gate.json",
+  "hashes": {
+    "meas_ff.log": "7b75358414c40761d05038c721c4947b7c86735c9305b4199f9780acf387a2f8",
+    "meas_ff.tcl": "ddb79d90a69c085fd0ea4bac220e287ed7a75202f1ab86ae8b75d3fdc64f5d37"
+  }
+}
