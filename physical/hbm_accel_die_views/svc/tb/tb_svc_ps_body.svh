@@ -22,6 +22,7 @@
 `endif
   localparam [31:0] W_SALT = 32'h5a5a_0000;
   reg ck = 0, rst = 0, fck = 0;
+  reg bench_ready = 0; // no requests until reset has reached every segment boundary
   always #(TCK/2) ck = ~ck;
   always #(TFW/2) fck = ~fck;
   // uniform DUT-side nets
@@ -130,8 +131,8 @@
     end
   end
   // index keys: ik carries no valid; it is checked when it changes (each command has a distinct address)
-  reg [1023:0] ik_prev = {1024{1'bx}};
-  always @(posedge ck) if (iko !== ik_prev && rst) begin
+  reg [1023:0] ik_prev = 1024'd0; // defined reset payload is the baseline, never a response
+  always @(posedge ck) if (iko !== ik_prev && rst && bench_ready) begin
     ik_prev <= iko;
     if (ik_got >= ik_want) begin err = err + 1; $display("ERR unexpected ik change"); end
     else if (iko !== {f(ik_a[ik_got], 3), f(ik_a[ik_got], 2), f(ik_a[ik_got], 1), f(ik_a[ik_got], 0)}) begin
@@ -206,7 +207,7 @@
   genvar gk;
   generate for (gk = 0; gk < 8; gk = gk + 1) begin : gs
     if (!FWDV[gk]) begin : loc
-      always @(posedge ck) if (rst) begin
+      always @(posedge ck) if (rst && bench_ready) begin
         if (qv[gk] && qrdy[gk]) begin qv[gk] <= 1'b0; end
         else if (!qv[gk] && sent[gk] < NREQ && outst[gk] < 6 && ($urandom % 2)) begin : snd
           reg [31:0] a; a = {$urandom} & 32'h3fff_fff0 | gk;
@@ -217,7 +218,7 @@
     end else begin : fwd   // row-1 SMs: forwarded, no ready: at most 3 outstanding (the SM's ring), one per fck
       always @(posedge fck) begin
         qv[gk] <= 1'b0;
-        if (rst && sent[gk] < NREQ && outst[gk] < 3 && ($urandom % 3 == 0)) begin : snd
+        if (rst && bench_ready && sent[gk] < NREQ && outst[gk] < 3 && ($urandom % 3 == 0)) begin : snd
           reg [31:0] a; a = {$urandom} & 32'h3fff_fff0 | gk;
           qd[gk] <= {ntag[gk], a}; qv[gk] <= 1'b1; expect_line(gk, ntag[gk], a, 1'b0);
           ntag[gk] <= ntag[gk] + 1; sent[gk] <= sent[gk] + 1;
@@ -230,7 +231,7 @@
   always @(posedge fck) begin
     ev <= 1'b0;
 `ifdef PS_STREAMS
-    if (rst && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
+    if (rst && bench_ready && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
@@ -251,7 +252,7 @@
       end
     end else
 `endif
-    if (rst && ne < 48 && ($urandom % 9 == 0)) begin : snd
+    if (rst && bench_ready && ne < 48 && ($urandom % 9 == 0)) begin : snd
       reg [1:0] kind; reg [31:0] a; reg [9:0] t; integer s;
       kind = ne % 3; a = {$urandom} & 32'h00ff_fff0; s = $urandom % 8;
       if (kind == 0 && outst[s] < 6) begin
@@ -281,6 +282,9 @@
     ev = 0;
     for (k = 0; k < 8; k = k + 1) for (j = 0; j < 1024; j = j + 1) exp_on[k][j] = 1'b0;
     repeat (8) @(posedge ck); rst = 1;
+    repeat (64) @(negedge ck);
+    if (iko !== 1024'd0) $fatal(1, "IK reset baseline must be zero before requests");
+    bench_ready = 1;
     fork : wait_done
       begin
         wait (ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want &&
