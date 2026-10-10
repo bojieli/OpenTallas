@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_qwen_r25_causal_mask",
+      "target": "HBM accelerator",
+      "owner": "qwen_hbm_unify/stage_harness",
+      "recorded_at": "2026-10-09T07:25:00Z",
+      "description": "Qwen HBM full p4 causal mask: committed full-capacity correctness gate; physical successor remains pathfinding",
+      "source": {"commit": "30ecdf1cc", "paths": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv", "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_on.sv", "rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask.sv"]},
+      "implementation": {"status": "implemented; opt-in wrapper; flattened synthesis successor d46418795 needs its own exact qualification", "evidence": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv", "d46418795:rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_flat.sv"]},
+      "model": {"status": "sized: 200x200 um proposed slot, streaming 1.2GHz, one mask cycle; physical harness adds two boundary cycles only for pathfinding", "evidence": ["d46b7384b:tools/qwen_r25_su_dispatch_model.py", "948e88eba:tools/uarch_model.py"]},
+      "exactness": {
+        "positive": {"status": "PASS: actual mask consumer, 257 groups and 32896 row-query checks, held output and CE correction; no arithmetic-quarter claim", "evidence": ["0f6fb9bd9:results/rtl/qwen_r25_su_stage_20261009/causal_mask_p4/verdict.json"]},
+        "negative": {"status": "PASS: six shared-latest-limit mutant leaks detected, UE/owner/capacity/truncation rejection", "evidence": ["0f6fb9bd9:results/rtl/qwen_r25_su_stage_20261009/causal_mask_p4/verdict.json"]}
+      },
+      "physical": {"status": "first synthesis flow failed on package import; admitted flattened successor uses registered timing harness and false-path external IO: pathfinding only; production boundary qualification missing", "corners": {}, "evidence": ["d46418795:results/rtl/qwen_r25_su_stage_20261009/mask_route_attempt2/failed.json"]},
+      "dependencies": ["production producer/consumer boundary contract", "Qwen HBM p4 attention and per-query window binding", "flattened successor exact gate", "actual native boundary timing qualification"],
+      "integration": {"status": "production token-path binding and contextual qualification pending", "evidence": []}
+    },
+    {
+      "element": "ot_qwen_r25_su_dispatch",
+      "target": "HBM accelerator",
+      "owner": "qwen_hbm_unify/stage_harness",
+      "recorded_at": "2026-10-09T07:25:00Z",
+      "description": "Native four-quarter Qwen HBM SU dispatcher; corrected reserved identifier; production arithmetic binding incomplete",
+      "source": {"commit": "c17b6a4b0", "paths": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv"]},
+      "implementation": {"status": "corrected elaboration PASS reported by owner; first failure retained; runtime ROM-response harness under repair", "evidence": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv", "c17b6a4b0:results/rtl/qwen_r25_su_stage_20261009/dispatcher_first_elab/failed.log", "d46418795:results/rtl/qwen_r25_su_stage_20261009/dispatcher_first_elab/first_bench_failed.log"]},
+      "model": {"status": "sized: four native ROM banks, serial 0.9GHz, four serial dispatch cycles per op; physical qualification pending", "evidence": ["d46b7384b:tools/qwen_r25_su_dispatch_model.py", "948e88eba:tools/uarch_model.py"]},
+      "exactness": {"positive": {"status": "pending corrected runtime bench and production arithmetic quarter binding", "evidence": []}, "negative": {"status": "pending production native quarter negative controls", "evidence": []}},
+      "physical": {"status": "not qualified: actual clock and producer/consumer boundary budgets pending", "corners": {}, "evidence": []},
+      "dependencies": ["actual arithmetic quarter binding", "corrected runtime ROM-response harness", "production native program and completion contract", "actual serial clock and boundary IO budget"],
+      "integration": {"status": "missing production arithmetic quarter binding", "evidence": []}
+    }
+  ]
+}

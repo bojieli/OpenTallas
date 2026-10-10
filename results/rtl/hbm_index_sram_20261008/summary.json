@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hbm_index_sram_summary.v1",
+  "native_component_gate": "PASS",
+  "timed_actual_service_gate": "PASS",
+  "core_source_sha256": "97f85a65d42d8882fdacd40e136a79c00cda6d7fab0a5fb5dd888191f0224073",
+  "source_commit": "2a570d0c0",
+  "logical_full_shape": {
+    "blocks": 342,
+    "lines": 1368,
+    "PCs": 32,
+    "ports": 8,
+    "descriptors": 14,
+    "logical_bytes": 186048,
+    "padded_read_bytes": 188416
+  },
+  "normal_credit_last_line_ns": {
+    "min": 292.928,
+    "max": 1034.432,
+    "mean": 409.6426666666667
+  },
+  "normal_credit_logical_TBs": {
+    "min": 0.179855,
+    "max": 0.635132,
+    "mean": 0.51736975
+  },
+  "controller_peak_TBs": 1,
+  "meets90percent": false,
+  "native_macros": 64,
+  "macro_area_mm2": 0.24906092544,
+  "check_sidecar_mm2": 0.005971968,
+  "codec_and_remap_area": "unmeasured synthesis required",
+  "macro_CRED": 64,
+  "legacy_timed_baseline_CRED": 16,
+  "performance_comparison": "No speedup claimed; baseline credit shape differs and refresh phases interact with repeat timing. Firstrep phases1300/2700/4100/5500/6900 each add5controller cycles versus legacy shape; composition uses5cycles increment (encoder1 plus readpipeline5 replacing baseline1).",
+  "protection_gates": [
+    "singledata bit corrected",
+    "singlecheck bit corrected",
+    "doubledata poison suppressed",
+    "valid scoreboard complement corruption fails closed",
+    "byte corruption before encoder rejected by independent transport checker"
+  ],
+  "r1_failure": "Individual slot count plus pair-swapped response addresses violated four-sector cohort reservation at wrap; failed evidence retained. Corrected producer reserves4slots before cohort and returns every184paddedsector/PC.",
+  "physical_qualification": false,
+  "production_adoption": false,
+  "remaining": [
+    "native1R1W FFsidecar/codec area synthesis",
+    "r25I fit including all legacy units",
+    "SS/FF timing DRC physical macros and distributed output stations",
+    "production default-off binding after context qualification"
+  ]
+}

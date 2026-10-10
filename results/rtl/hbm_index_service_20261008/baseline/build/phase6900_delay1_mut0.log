@@ -1,0 +1,9 @@
+IKS_TIMED rep=0 phase_ns=6900 credit_delay=1 lines=1368 bytes=186048 last_line_ns=290.944 drain_ns=291.456 logical_tbs=0.639463
+IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=1317 max_queued=58 queued_integral=179384 queued_head_in_REFpb=0
+IKS_TIMED rep=1 phase_ns=6900 credit_delay=1 lines=1368 bytes=186048 last_line_ns=954.240 drain_ns=954.752 logical_tbs=0.194970
+IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=19998 max_queued=60 queued_integral=405212 queued_head_in_REFpb=8696
+PASS_HBM_SVC_IKS_TIMED
+- /srv/opentallas-scratch2/codex/hbm-service-striped-20261008/binding-r1/rtl/test/hbm_accel/tb_hbm_svc_iks_binding.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.078 s; speed 110.489 us/s
+- Verilator: cpu 0.078 s on 1 threads; allocated 8 MB

@@ -771,7 +771,18 @@ end endgenerate
     //: LRST: kept reset copies (async assert, released one edge after rst_n): one per lane group, one per tree level
     wire [G-1:0]  rst_g;
     wire [LG:0]   rst_t;
-    generate if (LRST != 0) begin : g_lrst
+    // LRST = 2 (struct-close 2026-10-09, "-cl"): the same copies as keep_hierarchy instances.  With LRST = 1 the ORFS
+    // yosys (0.68) opt_merge folds the identical (* keep *) flops back into ONE (qfd_tile_rp1p / tile_e_rp2np post-CTS:
+    // the only startpoint is u_me.g_lrst.rt[0] -> lane multipliers / tree adders, -45..-75 ps TT, fanout tree 200+ ps
+    // of wire).  Same reset behaviour (async assert, release one edge after rst_n), 0 cycles.
+    generate if (LRST == 2) begin : g_lrst2
+        for (g = 0; g < G; g = g + 1) begin : g_rg
+            ot_qwen_lrst_ff u_rg (.clk(clk), .rst_n(rst_n), .q(rst_g[g]));
+        end
+        for (g = 0; g <= LG; g = g + 1) begin : g_rt
+            ot_qwen_lrst_ff u_rt (.clk(clk), .rst_n(rst_n), .q(rst_t[g]));
+        end
+    end else if (LRST != 0) begin : g_lrst
         (* keep *) reg [G-1:0] rg;
         (* keep *) reg [LG:0]  rt;
         always @(posedge clk or negedge rst_n) begin
@@ -1325,4 +1336,11 @@ module ot_qwen_w12_ksum #(parameter integer W = 24, parameter integer N = 8) (
     wire [W-1:0] a, b;
     ot_qwen_w12_csa_tree #(.W(W), .N(N)) u_t (.rows(rows), .s(a), .c(b));
     ot_qwen_w12_kadd #(.W(W)) u_a (.a(a), .b(b), .s(s));
+endmodule
+
+// struct-close 2026-10-09: one kept local reset copy (ot_qwen_w12_matvec_part LRST = 2).  keep_hierarchy stops opt_merge
+// from folding the identical copies (plain (* keep *) regs are merged by the ORFS yosys).
+(* keep_hierarchy *)
+module ot_qwen_lrst_ff (input wire clk, input wire rst_n, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
 endmodule

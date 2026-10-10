@@ -1,0 +1,266 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+ "block": "ot_hgi_argmax18_m",
+ "owner": "Claude:hgi-takeover",
+ "source_branch": "claude/hgi-argmax18-pinsep-20261009",
+ "record_branch": "codex/closure-record-hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+ "source_commit": "30853dbe12f0822a4e10b15f41a5a06a6bf8de92",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 52.2,
+  "ff_ps": 11.54,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -266.51,
+  "ss_sensitivity_tns_ps": -260122.8,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl/routes/hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl/routes/hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl/routes/hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/work/orfs/logs/asap7/opentallas_ot_hgi_argmax18_m_asap7_qdm_hgi_argmax18_pinsep_30853dbe1_pd55_tc_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_cf_arg_ds_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "HGI_ARGMAX18 PASS rows=8 cycles=19063 DS_LOCKSTEP=1\nphysical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:61: $finish called at 15901878 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_mutant_1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=20863 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\nFATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=20863 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_2": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=113971 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\nFATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=113971 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_3": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=37998 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\nFATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=37998 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_value_zero": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=151935 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\nFATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=151935 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_nan_payload": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=2 idx=75972 exp=75972 nan=1 range=0\n       Time: 15869779  Scope: tb_hgi_argmax18\nFATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=2 idx=75972 exp=75972 nan=1 range=0\n       Time: 15869779  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 4818,
+    "mean": 267.8,
+    "min": 255.6,
+    "max": 276.7
+   },
+   "all": {
+    "n": 9613,
+    "mean": 267.6,
+    "min": 255.4,
+    "max": 276.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 4818,
+    "mean": 164.3,
+    "min": 154.8,
+    "max": 171.8
+   },
+   "all": {
+    "n": 9613,
+    "mean": 164.0,
+    "min": 154.6,
+    "max": 172.3
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 203,
+   "CK_SS_ALL_MEAN": 202,
+   "CK_SS_MIN": 192,
+   "CK_SS_ALL_MIN": 192,
+   "CK_SS_MAX": 211,
+   "CK_SS_ALL_MAX": 211,
+   "CK_TT_MEAN": 203,
+   "CK_TT_ALL_MEAN": 202,
+   "CK_TT_MIN": 192,
+   "CK_TT_ALL_MIN": 192,
+   "CK_TT_MAX": 211,
+   "CK_TT_ALL_MAX": 211,
+   "CK_FF_MEAN": 164,
+   "CK_FF_ALL_MEAN": 164,
+   "CK_FF_MIN": 155,
+   "CK_FF_ALL_MIN": 155,
+   "CK_FF_MAX": 172,
+   "CK_FF_ALL_MAX": 172,
+   "CK_SSLIB_MEAN": 268,
+   "CK_SSLIB_MIN": 256,
+   "CK_SSLIB_MAX": 277,
+   "CK_SSLIB_ALL_MEAN": 268,
+   "CK_SSLIB_ALL_MIN": 255,
+   "CK_SSLIB_ALL_MAX": 277,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T10:25:06-07:00",
+ "job_spec": {
+  "name": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+  "block": "ot_hgi_argmax18_m",
+  "owner": "Claude:hgi-takeover",
+  "purpose": "hgi-takeover: argmax18 f6d441b6a RTL with clk/rst_n isolated pin regions (pd55 ended TT +58.86 / FF +13.36 / DRC 1 M5 clk vs in_bias_en).",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/hgi-argmax18-pinsep-20261009",
+   "commit": "30853dbe1"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_cf_arg_ds_lockstep",
+     "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
+     "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
+     "peak_ram_gb": 1,
+     "expect": "pass",
+     "min_count_regex": "rows=([0-9]+)",
+     "min_count": 6
+    },
+    {
+     "name": "mutant_1",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1 || bench_rc=$?; cat {RUN}/bench_mut1/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_2",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2 || bench_rc=$?; cat {RUN}/bench_mut2/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_3",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3 || bench_rc=$?; cat {RUN}/bench_mut3/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_value_zero",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4 || bench_rc=$?; cat {RUN}/bench_mut4/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_nan_payload",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5 || bench_rc=$?; cat {RUN}/bench_mut5/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18_pinsep {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes cts",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 2
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18_pinsep {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/hgi_argmax18_20261009/routes/hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl"
+   }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "Memory claim16GiB conservative ceil2x measured nearest native LP8/FLAT7/FAST1 DRT7956564KiB(7.588GiB); calibration2GiB based native CTS884264KiB and GP937244KiB, new winner/index/offset flop overhead. These are admission claims, not generic measured peaks or hard caps. Own synth mapped area required <=11918um2 before continuing physical adoption. Corrected source own synthesis mapped area=5767.945um\u00b2 <=11918um\u00b2, exact6rows +5compiledmutants PASS; actual remote boundary PASS12/1 levels. Native sibling16GiB route reservation remains conservative.",
+  "registered_io": true,
+  "rtl_boundary": {
+   "levels": 16
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

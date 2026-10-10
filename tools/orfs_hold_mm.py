@@ -7,6 +7,7 @@ OT_HOLD_MM=1 the patched scripts behave exactly as the originals.  Applied like 
    orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -108,9 +109,87 @@ def patch_fp_lint(scripts: Path) -> str:
     return "patched"
 
 
+# SLIVER-BLOCK (LOOP-AUTO 2026-10-10, auto-react class d): with OT_SLIVER_BLOCK=1 in the container env, ORFS PRE
+# GLOBAL_PLACE (after the block's own hook, BEFORE the floorplan lint) sources the common sliver hooks: a hard placement
+# blockage over every macro-to-macro gap and every macro-to-core-edge gap narrower than 12 um (OT_EDGE_SLIVER_UM).
+# Placement only; routing and constraints untouched.  Inserted right after the anchor, so it precedes the lint code.
+SLV_CODE = ('  if {$hook_type eq "PRE" && $step_name eq "GLOBAL_PLACE" && [info exists ::env(OT_SLIVER_BLOCK)] && '
+            '$::env(OT_SLIVER_BLOCK) ni {"" 0 false}} {\n'
+            '    foreach ot_slv {/src/physical/common_flow/macro_sliver_block.tcl /src/physical/common_flow/edge_sliver_block.tcl} {\n'
+            '      if {[file exists $ot_slv]} { source $ot_slv } else { puts "OT_SLIVER_BLOCK: $ot_slv missing" }\n'
+            '    }\n'
+            '  }\n')
+
+
+def patch_sliver_block(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "OT_SLIVER_BLOCK" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: sliver block unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + SLV_CODE, 1))
+    return "patched"
+
+
+# PREROUTE-GATE (owner 2026-10-08): the pre-route timing gate runs at the end of ORFS detailed placement (POST DETAIL_PLACE,
+# after the block's own POST_DETAIL_PLACE hook: resizer + detailed placement done, placement parasitics estimated, timing
+# already updated by report_metrics).  Inert unless the container env has OT_PREROUTE_GATE=1 (the closure loop's docker
+# shim passes it only when the gate is enabled); tools/preroute_gate.tcl stops the flow with PREROUTE_MARGIN.
+PRG_CODE = ('  if {$hook_type eq "POST" && $step_name eq "DETAIL_PLACE" && [info exists ::env(OT_PREROUTE_GATE)] && '
+            '$::env(OT_PREROUTE_GATE) ni {"" 0 false}} {\n'
+            '    set ot_prg [expr {[info exists ::env(OT_PREROUTE_GATE_TCL)] ? $::env(OT_PREROUTE_GATE_TCL) : "/src/tools/preroute_gate.tcl"}]\n'
+            '    if {[file exists $ot_prg]} { source $ot_prg; ot_preroute_gate_flow } else { puts "OT_PREROUTE_GATE: $ot_prg missing: gate skipped" }\n'
+            '  }\n')
+
+
+def patch_preroute_gate(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_preroute_gate_flow" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: pre-route gate unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + PRG_CODE, 1))
+    return "patched"
+
+
+def patch_abc_no_dch(scripts: Path, env=None) -> str:
+    """ABC-NODCH (drive-2155 2026-10-08): yosys-abc's &dch asserts on some netlists (aigDup.c:602 Aig_ManDupDfs,
+    'ABC failed with status 86'; dsfd_wfc_vmx: 253k ANDs, &get -n; &st; &dch alone reproduces it, abc_area too).  With
+    OT_ABC_NO_DCH=1 in the container env the disposable container's abc_speed / abc_area scripts run &synch2 (synthesis
+    with structural choices, already in the script) in place of &dch.  Without the variable nothing changes."""
+    env = os.environ if env is None else env
+    if env.get("OT_ABC_NO_DCH") != "1":
+        return "off"
+    out = []
+    for name in ("abc_speed.script", "abc_area.script"):
+        f = scripts / name
+        if not f.is_file():
+            continue
+        lines = f.read_text().splitlines()
+        new = ["&synch2" if ln.strip() in ("&dch", "&dch -f") else ln for ln in lines]
+        if new != lines:
+            f.write_text("\n".join(new) + "\n")
+            out.append(f"{name}: {sum(a != b for a, b in zip(lines, new))} x &dch -> &synch2")
+    return "; ".join(out) or "no &dch found"
+
+
 if __name__ == "__main__":
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
+    try:
+        print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001
+        print(f"orfs_hold_mm: abc no-dch not applied ({ex})")
     try:
         print("orfs_hold_mm: fp lint hook", patch_fp_lint(Path(sys.argv[1])))
     except Exception as ex:  # noqa: BLE001 - the lint hook must never break a flow
         print(f"orfs_hold_mm: fp lint hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: sliver block hook", patch_sliver_block(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the sliver hook must never break a flow
+        print(f"orfs_hold_mm: sliver block hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: pre-route gate hook", patch_preroute_gate(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the gate hook must never break a flow
+        print(f"orfs_hold_mm: pre-route gate hook not installed ({ex})")

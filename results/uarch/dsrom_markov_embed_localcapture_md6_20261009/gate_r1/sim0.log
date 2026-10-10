@@ -1,0 +1,5 @@
+PASS LOCALCAP lookup actual160beats ROM744ps capture2edges stalls bounds tokenonly defaultoff creditmax=8 fullstop=96 cycles=412 pairintervalfault=1
+- /srv/opentallas-scratch/claude/md6-localcapture-gate-r1/gate/tb.sv:56: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 348ns; walltime 11.733 s; speed 29.676 ns/s
+- Verilator: cpu 11.733 s on 1 threads; alloced 1089 MB

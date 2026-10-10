@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "source_commit": "8d593d7b4",
+  "phase": "firstheader/inversegate",
+  "cause": "producer parser omitted actual mtp.0/1/2 tensor names and correctly refused partial80/86catalogue; nooutputimageproduced",
+  "error": "ValueError: catalogue must contain all86released fn tensors",
+  "fixed_commit": "4820aa09c"
+}

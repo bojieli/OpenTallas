@@ -1,0 +1,7 @@
+ITER it=0 pos=6 in=4013 accepted=5 emitted=6 cycles=2414708 draft_cycles=197458 fault=0
+ITER it=1 pos=12 in=1504 accepted=5 emitted=6 cycles=2634166 draft_cycles=208452 fault=0
+HDC41_MTP prompt=6 generated=13 iters=2 token_mismatches=0 accept_mismatches=0 heads=18 head_mismatches=0 prefill_cycles=1968635 iter_cycles=5048874 draft_cycles=405910 vm_mismatch=0 kv_mismatch=0
+ACCEPT_HIST a0=0 a1=0 a2=0 a3=0 a4=0 a5=2
+UTIL me_busy=1855440 su_busy=1949066 qe_busy=908381 xu_busy=384831 he_busy=659656
+PASS
+- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish

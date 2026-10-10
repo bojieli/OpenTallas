@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_descriptor_guard_gate.v1",
+  "source_commit": "eb4c566ed",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv": "06b555e5c5ffbdaae6045860d84b130ef59a99a06ca484806a74ab018091dbd9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv": "9220a10c3ebc189b7342582d28c5aec39236e86afa984c54cffa8d41ce55b1e6",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_descriptor_guard.sv": "70d9ab2d5baced754587b2469795d2c3c4cbb953ccb82c9bb8f9df2bce9a2cd6",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_accel_dskv_descriptor_guard_gate.py": "45b38c804c211a3fd24c4924b5f69224810bfc8dc14991ff6ad1ae39be0f4c35"
+  },
+  "host": "climbing-locust",
+  "admission_peak_gb": 2.0,
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "clock_ns": 0.833,
+  "sources": [
+    "rtl/common/ot_secded.sv",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_descriptor_guard.sv"
+  ],
+  "cases": [
+    {
+      "mut": 0,
+      "build_returncode": 0,
+      "build_max_rss_kib": 318268,
+      "verdict": "PASS",
+      "metrics": {
+        "cases": 20,
+        "positive_posts": 3,
+        "positive_writes": 20,
+        "positive_reads": 3,
+        "nonowner_drop": 1,
+        "bad": 0
+      },
+      "returncode": 0
+    },
+    {
+      "mut": 1,
+      "build_returncode": 0,
+      "build_max_rss_kib": 318280,
+      "verdict": "FAIL",
+      "metrics": {
+        "cases": 20,
+        "positive_posts": 3,
+        "positive_writes": 20,
+        "positive_reads": 3,
+        "nonowner_drop": 1,
+        "bad": 168
+      },
+      "returncode": 1
+    }
+  ],
+  "verdict": "PASS",
+  "input_unchanged": true
+}

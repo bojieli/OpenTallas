@@ -1,0 +1,1 @@
+mtp_topk_f384 L=373 UTIL=35 PD=0.55 HM=0.025 LB=0 VT=rvt SDCX= --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source physical/hbm_mtp/rtl/mtp_topk_tops.sv

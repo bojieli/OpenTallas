@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm_control_robustness.model.v1",
+  "default_enabled": false,
+  "signoff": false,
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": "control only",
+  "memory_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": 52,
+  "replicas": 1,
+  "mux_cost": "32-bit sticky cause OR; 32-bit saturating CE/UE counters",
+  "fanout": "local synchronous release collars, no direct asynchronous status fanout",
+  "routing_tracks": 52,
+  "channel_capacity_required_tracks": 52,
+  "register_bits": 170,
+  "cell_area_floor_um2": 64.444,
+  "floorplan_slot": {
+    "width_um": 100,
+    "height_um": 100,
+    "utilization_target": 0.55,
+    "fit_is_physical_pending": true
+  },
+  "boot_release_cycles": {
+    "status_sync": 2,
+    "stages": 5,
+    "region_release": 3
+  },
+  "token_latency_delta_cycles": 0,
+  "fault_status_latency_cycles": 1,
+  "clock": {
+    "stream_mhz": 1200,
+    "aon_mhz": "platform dependent; not token path",
+    "ss_setup_uncertainty_ps": 60,
+    "ff_hold_uncertainty_ps": 25
+  },
+  "obligations": [
+    "SS/FF +15ps and DRC0 with real pins",
+    "Production vendor PLL lock and clocks",
+    "CDC reset release at each region clock",
+    "Fault end-to-end token-loop stop and host record"
+  ]
+}

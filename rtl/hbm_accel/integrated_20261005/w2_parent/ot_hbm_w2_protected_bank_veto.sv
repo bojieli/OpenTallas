@@ -33,7 +33,7 @@
 // the groups. The presented data takes the same extra edge (q = code three
 // edges ago), so every verdict is still about exactly the presented bits; the
 // reduced Boolean is unchanged (AND/OR are associative).
-module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DIST=0, RED=(WORDS>8))(
+module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DIST=0, RED=(WORDS>8),LOCAL_PHASE=0,HOLD_SEAT=0)(
  input wire clk,por_n,load,load_sel,fatal,
  input wire [WORDS*72-1:0] encoded_d,
  output wire [WORDS*64-1:0] q,
@@ -61,6 +61,18 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  localparam integer NG=RED?(WORDS+7)/8:WORDS;
  wire [NG-1:0] m_same,m_bad,m_cbad,m_ce,m_ue,m_clean;wire [2:0] m_ph;wire m_ctlbad;
  wire [63:0] q_m[0:WORDS-1];
+ wire [63:0] raw_seat[0:WORDS-1],d1_seat[0:WORDS-1],qm_seat[0:WORDS-1];
+ for(genvar hs=0;hs<WORDS;hs=hs+1)begin:hseat
+  if(HOLD_SEAT)begin:real_delay
+   ot_hbm_w2_hold_seat #(.W(64)) u_raw(.a(raw64(code[hs])),.y(raw_seat[hs]));
+   ot_hbm_w2_hold_seat #(.W(64)) u_d1(.a(q_d1[hs]),.y(d1_seat[hs]));
+   if(RED)begin:extra
+    ot_hbm_w2_hold_seat #(.W(64)) u_qm(.a(q_m[hs]),.y(qm_seat[hs]));
+   end else assign qm_seat[hs]=q_m[hs];
+  end else begin:bypass
+   assign raw_seat[hs]=raw64(code[hs]);assign d1_seat[hs]=q_d1[hs];assign qm_seat[hs]=q_m[hs];
+  end
+ end
  wire [63:0] phase_raw=raw64(phase_code);
  wire [2:0] phase=phase_raw[2:0];
  // raw[3] is the protected commit select (data vs zero codeword).
@@ -71,6 +83,10 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  wire [WORDS-1:0] same,bad,cbad,ce,ue,clean,input_bad;
  wire [71:0] snap[0:WORDS-1];
  wire [7:0] syn[0:WORDS-1];
+ // Declare shared drivers before the generate scope: otherwise implicit
+ // one-bit local nets can shadow the next-state signals in Verilog.
+ wire freeze=failed || failed==failed_n || f2 || fatal;
+ reg [2:0] phase_next;reg sel_next;
  for(genvar g=0;g<WORDS;g=g+1)begin:word
   wire [63:0] hi=raw64(snapshot_hi[g]);
   wire [63:0] status=raw64(syndrome[g]);
@@ -82,10 +98,17 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
   wire [63:0] v=raw64(verdict[g]);
   wire bound=(checked_lo[g]===snapshot_lo[g])&&(checked_hi[g]===snapshot_hi[g])&&(checked_syn[g]===syndrome[g]);
   assign bad[g]=!bound || check72(verdict[g])!=0 || v[63:4]!=0 || v[3];
-  // Kept enable copies must equal the protected phase they act for.
-  assign cbad[g]=(com_q[g]!=(phase==P_COMMIT)) || (rep_q[g]!=(phase==P_REPAIR)) ||
-                 (chk_q[g]!=(phase==P_CHECK)) || (ver_q[g]!=(phase==P_VERIFY)) ||
-                 (sel_q[g]!=(phase==P_COMMIT && sel_bit));
+  // Kept per-word phase replicas reduce fanout for timing (binding V16).
+  // Capture the same next-state value as phase_code; no new copy-check.
+  wire [3:0] local_phase;
+  if(LOCAL_PHASE)begin:lph
+   ot_hbm_w2_keep_reg #(.W(4),.RV(4'b0100)) u_phase(
+    .clk(clk),.rst_n(por_n),.d(freeze?{sel_bit,phase}:{sel_next,phase_next}),.q(local_phase));
+  end else begin:gph assign local_phase={sel_bit,phase}; end
+  wire [2:0] wp=local_phase[2:0]; wire ws=local_phase[3];
+  assign cbad[g]=(com_q[g]!=(wp==P_COMMIT)) || (rep_q[g]!=(wp==P_REPAIR)) ||
+                 (chk_q[g]!=(wp==P_CHECK)) || (ver_q[g]!=(wp==P_VERIFY)) ||
+                 (sel_q[g]!=(wp==P_COMMIT && ws));
   assign ce[g]=v[1];assign ue[g]=v[2];assign clean[g]=v[0];
   assign q[g*64+:64]=q_d2[g];
   ot_hbm_w2_keep_reg #(.W(5),.RV(5'b10000)) u_cp(.clk(clk),.rst_n(por_n),
@@ -107,16 +130,15 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
     r_same<=g_same;r_bad<=g_bad;r_cbad<=g_cbad;r_ce<=g_ce;r_ue<=g_ue;r_clean<=g_clean;
     r_ph<=s_ph;r_ctlbad<=s_ctlbad;
    end
-  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=q_d1[w];
+  always @(posedge clk)for(integer w=0;w<WORDS;w=w+1)r_q[w]<=d1_seat[w];
   assign m_same=r_same;assign m_bad=r_bad;assign m_cbad=r_cbad;assign m_ce=r_ce;assign m_ue=r_ue;
   assign m_clean=r_clean;assign m_ph=r_ph;assign m_ctlbad=r_ctlbad;
   for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=r_q[w];end
  end else begin:nosm
   assign m_same=s_same;assign m_bad=s_bad;assign m_cbad=s_cbad;assign m_ce=s_ce;assign m_ue=s_ue;
   assign m_clean=s_clean;assign m_ph=s_ph;assign m_ctlbad=s_ctlbad;
-  for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=q_d1[w];end
+  for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=d1_seat[w];end
  end endgenerate
- wire freeze=failed || failed==failed_n || f2 || fatal;
  assign fault=failed || failed==failed_n || f2;
  assign normal=n2 && phase==P_EVAL && !failed && failed_n && !fatal;
  assign repairing=!fault && !normal;
@@ -126,7 +148,6 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  wire d_check=settled && !same2;
  wire d_repair=settled && same2 && ce2;
  assign d_commit=settled && same2 && !ce2 && normal && load;
- reg [2:0] phase_next;reg sel_next;
  always @*begin
   phase_next=phase;sel_next=(phase==P_COMMIT||phase==P_PCOMMIT)&&sel_bit;
   if(!freeze)case(phase)
@@ -171,7 +192,7 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  // kept per-word copies only, so no bank-wide enable crosses the block.
  always @(posedge clk)begin
   for(i=0;i<WORDS;i=i+1)begin
-   q_d1[i]<=raw64(code[i]);q_d2[i]<=q_m[i];
+   q_d1[i]<=raw_seat[i];q_d2[i]<=qm_seat[i];
    if(STAGE && phase==P_EVAL)staged[i]<=encoded_d[i*72+:72];
    if(com_q[i])code[i]<=sel_q[i]?(STAGE?staged[i]:encoded_d[i*72+:72]):72'b0;
    else if(rep_q[i]&&ce[i])code[i]<=snap[i]^(72'b1<<(syn[i][6:0]==0?7'd71:syn[i][6:0]-1'b1));
@@ -194,7 +215,7 @@ endmodule
 // THIS edge (the item is taken when in_v&&in_r). PREENC=1 encodes in_d here
 // and stages it; PREENC=0 takes caller codes (incl. the valid bit) that stay
 // stable until the commit edge (the station's encoded input seat).
-module ot_hbm_w2_protected_cut_veto_on #(parameter integer W=337, PREENC=1, DIST=0)(
+module ot_hbm_w2_protected_cut_veto_on #(parameter integer W=337, PREENC=1, DIST=0, LOCAL_PHASE=0,HOLD_SEAT=0)(
  input wire clk,por_n,in_v,output wire in_r,
  input wire [W-1:0] in_d,input wire [((W+1+63)/64)*72-1:0] in_codes,
  output wire out_v,input wire out_r,
@@ -211,7 +232,7 @@ module ot_hbm_w2_protected_cut_veto_on #(parameter integer W=337, PREENC=1, DIST
  assign in_r=normal&&(!valid||out_r);
  assign out_v=normal&&valid;assign out_d=q[W-1:0];
  assign empty=normal&&!valid;
- ot_hbm_w2_protected_bank_veto_on #(.WORDS(N),.STAGE(PREENC),.DIST(DIST)) u_state(
+ ot_hbm_w2_protected_bank_veto_on #(.WORDS(N),.STAGE(PREENC),.DIST(DIST),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_state(
   .clk(clk),.por_n(por_n),.load(in_r&&(in_v||valid)),.load_sel(in_v),.fatal(1'b0),
   .encoded_d(PREENC?preencoded:in_codes),
   .q(q),.normal(normal),.fault(fault),.repairing(repairing));
@@ -241,3 +262,17 @@ module ot_hbm_w2_keep_dreg #(parameter integer W=1)(
  input wire clk,input wire [W-1:0] d,output reg [W-1:0] q);
  always @(posedge clk)q<=d;
 endmodule
+
+// Eight real cells, logically identity. Hierarchy prevents ABC cancelling the
+// chain; positive/negative exact gates and mapped inventory verify the seats.
+(* keep_hierarchy=1 *)
+module ot_hbm_w2_hold_seat #(parameter integer W=64)(input wire [W-1:0] a,output wire [W-1:0] y);
+ wire [W-1:0] stage[0:8];assign stage[0]=a;assign y=stage[8];
+ for(genvar bitn=0;bitn<W;bitn=bitn+1)begin:b
+  for(genvar n=0;n<8;n=n+1)begin:i
+   ot_hbm_w2_hold_inv u_inv(.a(stage[n][bitn]),.y(stage[n+1][bitn]));
+  end
+ end
+endmodule
+(* keep_hierarchy=1 *)
+module ot_hbm_w2_hold_inv(input wire a,output wire y);assign y=~a;endmodule

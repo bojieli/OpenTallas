@@ -1,0 +1,36 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "host": "ot-agidock128",
+  "simulator": "Verilator5.032",
+  "source_parent": "ea6214c7f",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "9b9de7a2db9255d2917261967a92b72f239df6935285de418b9008d2d6c1f6cf",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv": "33dd5e9569b1cf21f373d2a9828910cb56e594d8212e7813352dfdc45bf14c0d",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_vm_adapter.sv": "ce70a66a765532a3b4905422848c9080052a7bab33debbea38230ed3faac57ee",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hop_vm.sv": "d0edb3fc5896312f0042abff1644789e36faed4f39448c97f77584f30efae08a",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hop_vm.sh": "173502e6434ac427cd1c33c90caf9680ca588fc9d634a493a2546c4956b2109f",
+    "physical/s81_ctrl/rtl/dsfd_sp_ctrl.sv": "c5f063ae2eae1d1540a457ed9569c9ad930af9cb407f636e7d46181259f539c1",
+    "physical/s81_ctrl/rtl/dsfd_sp_ctrl_src.sv": "8a05626050cf9ae83676c4e072b22d5e1306c58d0310e2b84c0803d668ba332d",
+    "physical/s81_ctrl/rtl/dsfd_sp_ctrl_h.sv": "7d2ff46318e6e3ee5cb26be8e0fa4204c1975dc0b2b10873a84893023377f5e2",
+    "physical/s81_ctrl/rtl/dsfd_sp_ctrl_core.sv": "0d60bc1009f2c8d720d51ebb27e4e4056c3a6611ec667d23598faf79fe3aff5c",
+    "tools/s81_ctrl/specialize_master.py": "8b4d2403feffe4c4b8ee5bcd509d7a66a45d6a32f0b139aacc829d306f500789"
+  },
+  "scope": "Actual native VM bank/ordering/read-return RTL feeding full640flit512bit stage-hop; MACRO0 isolates transport/control, not macro physical qualification.",
+  "model": "vm_adapter_prebuild_model.json",
+  "results": {
+    "native_return_first_payload_cycles": 15,
+    "native_completion_cycles": 655,
+    "return_relay8_first_payload_cycles": 23,
+    "return_relay8_completion_cycles": 663,
+    "stalled_completion_cycles": 1197,
+    "max_read_pending": 20,
+    "outputqueue_bound": 32,
+    "payloads_bit_exact": 640,
+    "context_and_completion_tag": "PASS",
+    "data_corruption_mutant": "FAIL",
+    "response_drop_mutant": "FAIL"
+  },
+  "shells": "Three native46pin roles expose MY_ID/SRC_LO/SRC_HI/TYPE_MASK and VM-return mode. Remote emitted constant-id17/source16 variants rv1q32 all elaborate. These example identities are tests, not authorization for an actual die.",
+  "integration_contract": "VM must reserve two actual request slots with write-before-read order and real return-valid. Bind vrv to o_v of the reserved read slot; configure USE_VM_RVALID=1 and OUT_DEPTH32. Original fixed1cycle contract remains default historical. Select specialized hard-master source and reclose exact variant.",
+  "log": "hop_vm_verdicts.log"
+}

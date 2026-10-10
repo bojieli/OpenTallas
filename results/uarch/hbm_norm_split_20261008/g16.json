@@ -1,0 +1,137 @@
+{
+  "schema": "opentallas.uarch.hbm_norm_split.v1",
+  "process_order": {
+    "model_before_inherited_build": false,
+    "classification": "RETROSPECTIVE_MODEL_GAP",
+    "inherited_source_commit": "26f2e4ed219675d4cc71eea046a9c9de483d250a"
+  },
+  "scope": "One DeepSeek HBM N64 D5120 MEM1 HC1 QUANT1 partitioned norm engine",
+  "adopted": false,
+  "enabled_default": false,
+  "headline_rate_credit": 0,
+  "other_design_deltas": {
+    "Qwen_ROM": 0,
+    "DeepSeek_ROM": 0,
+    "Qwen_HBM": 0
+  },
+  "shape": {
+    "lanes": 64,
+    "elements": 5120,
+    "vectors": 80,
+    "group_lanes": 16,
+    "group_replicas": 4,
+    "SRAMs_per_group": 4,
+    "SRAMs_total": 16,
+    "top_tree_levels": 2,
+    "group_tree_levels": 1
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "rounded_FP32_ops_peak": 703,
+    "arithmetic_delta_ops": 0,
+    "group_hc_multiply": 64,
+    "group_hc_add": 48,
+    "group_square_multiply": 16,
+    "group_scale_multiply": 32,
+    "group_partial_tree_add": 1,
+    "top_partial_tree_add": 3,
+    "FP32_ops_per_internal_memory_byte": 0.6865234375,
+    "arithmetic": "Golden multiply/add rounding and aligned subtree association retained"
+  },
+  "memory_ports_bytes_per_cycle": {
+    "X_read": 256,
+    "X_write": 256,
+    "gain_read": 256,
+    "gain_write": 256,
+    "per_macro_read": 32,
+    "per_macro_write": 32
+  },
+  "communication": {
+    "HC_input_bytes_per_cycle": 1024,
+    "gain_input_bytes_per_cycle": 256,
+    "normalized_bytes_per_cycle": 256,
+    "per_group_reduction_bytes_per_cycle": 4,
+    "broadcast_payload_bytes_per_cycle": 4,
+    "replicated_broadcast_wire_bytes_per_cycle": 16,
+    "memory_bytes_per_normalized_element": 16
+  },
+  "boundary_bits_per_cycle": {
+    "per_group_input_payload_and_control": 2732,
+    "per_group_output_payload_and_control": 563,
+    "all_group_boundaries": 13180,
+    "clocks_and_reset_per_group": 2
+  },
+  "replica_cost": {
+    "group_pin_register_bits": 3296,
+    "total_group_pin_register_bits": 13184,
+    "scope": "Absolute group interface registers, not a delta against flat engine",
+    "shared_scalar_control_fanout": 4,
+    "lane_data_demultiplexer": "Static lane slice wiring; no dynamic mux",
+    "reduction_mux": "Fixed golden tree; no arbitration",
+    "gain_address_fanout_per_group": 2,
+    "SRAM_logical_bits": 327680,
+    "SRAM_physical_bits": 524288
+  },
+  "routing": {
+    "channel_width_um": 72,
+    "assumed_signal_layers": 4,
+    "pitch_um": 0.08,
+    "group_boundary_tracks_required": 3295,
+    "channel_capacity_tracks": 3600,
+    "analytical_channel_fits": true,
+    "minimum_channel_width_um": 65.9,
+    "actual_channel_and_pin_access_verified": false,
+    "basis": "Conservative simultaneous pin-bit tracks; dedicated channels assumed"
+  },
+  "area": {
+    "group_width_um": 540,
+    "group_height_um": 540,
+    "group_dimension_basis": "inherited route dimensions; not a hardened view",
+    "group_slot_um2": 291600,
+    "replicated_slots_um2": 1166400,
+    "top_die_um": [
+      1284,
+      1464
+    ],
+    "top_die_um2": 1879776,
+    "flat_die_um2": 1218816,
+    "die_area_ratio": 1.542296786389414,
+    "top_logic_band_um": 180,
+    "outer_ring_total_um": 60,
+    "channel_um": 72,
+    "measured_total_cell_um2": null,
+    "floorplan_slot_fit": null,
+    "power_delta_W": null,
+    "energy_delta_J_per_token": null,
+    "die_count_delta": null,
+    "limitation": "Die outline, placement, clock, pin access and power await physical evidence"
+  },
+  "latency": {
+    "candidate_clock_GHz": 1.2,
+    "group_result_and_top_capture_hops": 2,
+    "removed_RW_stages": 2,
+    "top_broadcast_and_group_capture_hops": 2,
+    "removed_BW_stages": 2,
+    "reduction_broadcast_loop_delta_cycles": 0,
+    "rstd_delta_cycles": 1,
+    "y_delta_cycles": 1,
+    "quant_delta_cycles": 2,
+    "rstd_y_delta_ns": 0.8333333333333334,
+    "quant_delta_ns": 1.6666666666666667,
+    "throughput_delta_vectors_per_cycle": 0,
+    "exposed_y_calls_per_token": null,
+    "exposed_q_calls_per_token": null,
+    "token_delta_cycles": null,
+    "token_delta_ns": null,
+    "composition": "Count only nonoverlapping exposed invocations; q delta already includes y delta",
+    "limitation": "Global invocation calendar must supply exposed counts before rate publication"
+  },
+  "qualification": {
+    "SS_setup": false,
+    "FF_hold": false,
+    "DRC0": false,
+    "physical_closed": false,
+    "die_context": false,
+    "model_ready_for_adoption": false
+  }
+}

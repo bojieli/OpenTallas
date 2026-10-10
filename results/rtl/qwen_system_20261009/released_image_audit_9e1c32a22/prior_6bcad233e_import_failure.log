@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qwen-image-audit-6bcad233e/tools/qwen_system/resident_image_audit.py", line 4, in <module>
+    import hdc_qwen_fullshape_isa_w12 as ISA
+  File "/srv/opentallas-scratch/codex/qwen-image-audit-6bcad233e/tools/hdc_qwen_fullshape_isa_w12.py", line 9, in <module>
+    import hdc_program as P
+ModuleNotFoundError: No module named 'hdc_program'

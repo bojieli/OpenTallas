@@ -1,0 +1,135 @@
+// Opt-in TOKEN18 candidate; legacy source byte-identical. No physical claim.
+// Additive token17 successor, priced by ds_hbm_bridge17_model.py. Originals untouched.
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// ot_gpu_cmdproc: the front-end command processor of one die of the
+// GPU-organised HBM comparator (the GPU "host interface / front end" that
+// walks a pushbuffer and launches kernels onto SMs in stream order).
+//
+// The host driver loads a command list (a captured graph of kernel launches,
+// one decode step) into command memory; a doorbell carrying the step's
+// {token, position} starts it at entry 0.  Commands (64 bits):
+//   [63:60] op   1 LAUNCH: pulse launch to every SM of [59:44] (mask) at
+//                entry PC [31:0], then wait until each has signalled done
+//                (stream order: the next kernel starts only after the whole
+//                previous grid retired, as a CUDA stream orders kernels);
+//                2 END: post the completion {RESULT payload, status, cycles}.
+// The completion carries the latest RESULT payload any SM posted during the
+// step (the kernel's semaphore/payload release); status 0 OK, 1 SM fault,
+// 2 no RESULT, 3 bad command.  A fault aborts the list.
+// ENABLE = 0: inert, every output 0.
+// ---------------------------------------------------------------------------
+module ot_qwen_r25_cmdproc18 #(
+    parameter integer TW = 18, PW = 20, CONTEXT_POSITIONS = 1048576,
+    parameter integer VOCAB_SIZE = 151936,
+    parameter integer ENABLE = 0,
+    parameter integer NSM    = 2,
+    parameter integer NCMD   = 256
+) (
+    input  wire                     clk,
+    input  wire                     rst_n,
+    input  wire                     cmd_we,
+    input  wire [$clog2(NCMD)-1:0]  cmd_addr,
+    input  wire [63:0]              cmd_wdata,
+    input  wire                     db_v,
+    output wire                     db_rdy,
+    input  wire [TW-1:0]            db_token,
+    input  wire [PW-1:0]            db_pos,
+    input wire [31:0] db_job,
+    input wire [3:0] db_generation,
+    output wire [PW-1:0] cpl_position,
+    output wire [31:0] cpl_job,
+    output wire [3:0] cpl_generation,
+    output reg  [NSM-1:0]           launch_v,
+    output reg  [31:0]              launch_pc,
+    output reg  [TW-1:0]            launch_token,
+    output reg  [PW-1:0]            launch_pos,
+    input  wire [NSM-1:0]           sm_done,
+    input  wire [NSM-1:0]           sm_fault,
+    input  wire [NSM-1:0]           res_v,
+    input  wire [NSM*32-1:0]        res_data,
+    output wire                     cpl_v,
+    input  wire                     cpl_rdy,
+    output reg  [TW-1:0]            cpl_token,
+    output reg  [3:0]               cpl_status,
+    output reg  [31:0]              cpl_cycles,
+    output reg  [31:0]              st_kernels,
+    output reg  [31:0]              st_busy
+);
+reg [31:0] job_q;
+reg [3:0] generation_q;
+assign cpl_position=launch_pos;
+assign cpl_job=job_q;assign cpl_generation=generation_q;
+initial if(ENABLE && (PW!=20 || TW!=18 || CONTEXT_POSITIONS<1048576 || CONTEXT_POSITIONS>1048576 || VOCAB_SIZE<1 || VOCAB_SIZE>(1<<TW)))
+    $fatal(1,"Qwen r25 POS20/TOKEN18 contract");
+always @(posedge clk or negedge rst_n) begin
+ if(!rst_n) begin job_q<=0;generation_q<=0;end
+ else if(ENABLE && db_v && db_rdy) begin job_q<=db_job;generation_q<=db_generation;end
+end
+generate if (ENABLE == 0) begin : g_off
+    always @(posedge clk) begin
+        launch_v <= {NSM{1'b0}}; launch_pc <= 32'd0; launch_token <= 16'd0; launch_pos <= 16'd0;
+        cpl_token <= 16'd0; cpl_status <= 4'd0; cpl_cycles <= 32'd0; st_kernels <= 32'd0; st_busy <= 32'd0;
+    end
+    assign db_rdy = 1'b0;
+    assign cpl_v = 1'b0;
+end else begin : g_on
+    localparam integer CB = $clog2(NCMD);
+    localparam [2:0] S_IDLE = 3'd0, S_FETCH = 3'd1, S_EXEC = 3'd2, S_WAIT = 3'd3, S_CPL = 3'd4;
+    reg [63:0]   cmem [0:NCMD-1];
+    always @(posedge clk) if (cmd_we) cmem[cmd_addr] <= cmd_wdata;
+    reg [2:0]    st;
+    reg [CB-1:0] cp;
+    reg [63:0]   cmd;
+    reg [NSM-1:0] waiting;
+    reg          have_res;
+    reg [31:0]   res_q;
+    integer i;
+    assign db_rdy = (st == S_IDLE);
+    assign cpl_v = (st == S_CPL);
+    wire [3:0] c_op = cmd[63:60];
+    wire [NSM-1:0] c_mask = cmd[44 +: NSM];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            st <= S_IDLE; cp <= 0; cmd <= 64'd0; waiting <= 0; have_res <= 1'b0; res_q <= 32'd0;
+            launch_v <= 0; launch_pc <= 0; launch_token <= 0; launch_pos <= 0;
+            cpl_token <= 0; cpl_status <= 0; cpl_cycles <= 0; st_kernels <= 0; st_busy <= 0;
+        end else begin
+            launch_v <= {NSM{1'b0}};
+            if (st != S_IDLE) begin st_busy <= st_busy + 1; cpl_cycles <= cpl_cycles + 1; end
+            for (i = 0; i < NSM; i = i + 1)
+                if (res_v[i]) begin have_res <= 1'b1; res_q <= res_data[i*32 +: 32]; end
+            case (st)
+                S_IDLE: if (db_v) begin
+                    if ({1'b0,db_pos} >= CONTEXT_POSITIONS || {1'b0,db_token} >= VOCAB_SIZE) begin
+                        cpl_status<=4'd3; cpl_token<=0; st<=S_CPL;
+                    end else begin
+                    st <= S_FETCH; cp <= 0; have_res <= 1'b0; cpl_cycles <= 0;
+                    launch_token <= db_token; launch_pos <= db_pos;
+                    end
+                end
+                S_FETCH: begin cmd <= cmem[cp]; cp <= cp + 1'b1; st <= S_EXEC; end
+                S_EXEC: begin
+                    if (c_op == 4'd1 && c_mask != 0) begin
+                        launch_v <= c_mask; launch_pc <= cmd[31:0]; waiting <= c_mask;
+                        st_kernels <= st_kernels + 1; st <= S_WAIT;
+                    end else if (c_op == 4'd2) begin
+                        cpl_status <= !have_res ? 4'd2 : ((res_q >> TW) != 0 || res_q >= VOCAB_SIZE ? 4'd3 : 4'd0); cpl_token <= res_q[TW-1:0]; st <= S_CPL;
+                    end else begin
+                        cpl_status <= 4'd3; cpl_token <= 16'd0; st <= S_CPL;
+                    end
+                end
+                S_WAIT: begin
+                    if (|(sm_fault & cmd[44 +: NSM])) begin cpl_status <= 4'd1; cpl_token <= 16'd0; st <= S_CPL; end
+                    else begin
+                        if ((waiting & ~sm_done) == 0) st <= S_FETCH;
+                        waiting <= waiting & ~sm_done;
+                    end
+                end
+                S_CPL: if (cpl_rdy) st <= S_IDLE;
+                default: st <= S_IDLE;
+            endcase
+        end
+    end
+end endgenerate
+endmodule

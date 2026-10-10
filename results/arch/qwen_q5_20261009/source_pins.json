@@ -1,0 +1,14 @@
+{
+  "source_commit": "6f5cf762b",
+  "sha256": {
+    "rtl/qwen_sys/q5_20261009/ot_qfd_kv_landing_ecc.sv": "bd3d72b30f7fb13d42e2d9d817bfe2f06d0cbd10fa49136313fc093f4be1a99f",
+    "rtl/qwen_sys/q5_20261009/ot_qfd_stream4_cdc_ecc_pc.sv": "5dd96e730d94bc6a5f25db9564309989c0e481dd91fed024db8b209459587487",
+    "rtl/test/qwen_system/tb_qfd_q5_native.sv": "f9037798fa0edc88adba3bcdbcfdb32211e97cd6c560b8fecd5899818140d880",
+    "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv": "6ea452253a92307d9d7da7b55bcf15a93dfbf5b7daa39912f6b76c8b2d1e98c8",
+    "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv": "60c209c729d899e399f01239a8b67f936ef82c9778bdb35f85e5ae4bf7908fba",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+  },
+  "remote_host": "ot-epyc2",
+  "remote_dir": "/srv/opentallas-scratch2/codex/q5-20261009",
+  "compute_local": false
+}

@@ -1,0 +1,19 @@
+{
+  "baseline_job": "hbm_quant_e7c2e5b06-tt",
+  "baseline_CTS_peak_KiB": 3462408,
+  "baseline_DRT_peak_KiB": 18642752,
+  "adapter_cells": 200951,
+  "adapter_area_um2": 29130.81084,
+  "adapter_outline_um": [
+    1800,
+    275.6
+  ],
+  "synth_source": "2cb556822",
+  "formula": "actual baseline phasepeak *max(actualcellratio,actualarearatio)*outlinearea ratio*1.10 growth;roundconservatively next4GiB",
+  "scale": 1.9483617768447237,
+  "estimate_GiB": {
+    "calibrate": 8,
+    "route": 36
+  },
+  "status": "measuredsibling-derived estimate,notmeasuredadapterphysicalphase/notcap"
+}

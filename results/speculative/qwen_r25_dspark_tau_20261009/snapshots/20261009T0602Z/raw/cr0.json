@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-tau.v1",
+ "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+ "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+ "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+ "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+ "max_new_tokens": 512,
+ "mode": "non-thinking chat template, greedy",
+ "compute_dtype": "float32",
+ "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
+ "samples": [
+  {
+   "class": "creative",
+   "workload": "creative",
+   "prompt_id": null,
+   "thinking": false,
+   "prompt_index": 0,
+   "prompt_tokens": 22,
+   "generated": 120,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.5454545454545454,
+   "tau_bf16_S7_B3": 2.0338983050847457,
+   "tau_bf16_S7_B4": 2.2222222222222223,
+   "tau_bf16_S7_B5": 2.4489795918367347,
+   "tau_bf16_S7_B6": 2.4489795918367347,
+   "tau_bf16_S7_B7": 2.4489795918367347,
+   "tau_bf16_S7_B8": 2.4489795918367347,
+   "tau_bf16_S3_B4": 2.0689655172413794,
+   "tau_bf16_S1_B2": 1.5384615384615385,
+   "seconds": 630.3
+  },
+  {
+   "class": "creative",
+   "workload": "creative",
+   "prompt_id": null,
+   "thinking": false,
+   "prompt_index": 1,
+   "prompt_tokens": 26,
+   "generated": 138,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.6428571428571428,
+   "tau_bf16_S7_B3": 1.943661971830986,
+   "tau_bf16_S7_B4": 2.262295081967213,
+   "tau_bf16_S7_B5": 2.3,
+   "tau_bf16_S7_B6": 2.3,
+   "tau_bf16_S7_B7": 2.3220338983050848,
+   "tau_bf16_S7_B8": 2.3389830508474576,
+   "tau_bf16_S3_B4": 2.014705882352941,
+   "tau_bf16_S1_B2": 1.6235294117647059,
+   "seconds": 559.2
+  }
+ ],
+ "fp32_greedy_check": null,
+ "device": "cpu",
+ "prompts_jsonl": {
+  "path": "src/prompts.jsonl.gz",
+  "sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+  "class_map": {
+   "chat": [
+    "chat_mt_bench"
+   ],
+   "reasoning": [
+    "reasoning_math500"
+   ],
+   "coding": [
+    "reasoning_humaneval"
+   ],
+   "agentic": [
+    "agentic_swe_agent",
+    "agentic_tau_bench",
+    "agentic_mind2web"
+   ],
+   "assistant_fc": [
+    "agentic_bfcl",
+    "agentic_json_mode"
+   ]
+  }
+ }
+}

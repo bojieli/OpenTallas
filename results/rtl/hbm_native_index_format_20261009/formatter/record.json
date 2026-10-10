@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "source_sha256": "2ed1222cb5f53484b145abc6b2d1f7ef3c2172595ad9e52fb5068d92b70e6990",
+  "packets": 863,
+  "flits": 118,
+  "runs": [
+    {
+      "name": "base",
+      "exit": 0,
+      "pass_gate": true
+    },
+    {
+      "name": "MUT_ID",
+      "exit": -6,
+      "pass_gate": true
+    }
+  ],
+  "scope": "lossless literal slots, quarter partial, actual33bit header, finite8credits,90percent TU stalls; no physical credit"
+}

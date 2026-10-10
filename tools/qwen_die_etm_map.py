@@ -139,12 +139,13 @@ def main(argv=None):
     a = ap.parse_args(argv)
     import die_top_lint as DTL
     DTL.QWEN_RECIPE = a.recipe
-    bind = DTL.real_blocks('qwen_rom')['qfd_cdc']['binding']
+    # die-evidence-2 2026-10-09: r22k (ROM die of the ROM die + KV die pair) has no qfd_cdc (the CDC frames moved to the KV die)
+    bind = (DTL.real_blocks('qwen_rom').get('qfd_cdc') or {}).get('binding', {})
     a.out.mkdir(parents=True, exist_ok=True)
     lef_text = a.lef.read_text()
     slabs = sorted(set(re.findall(r'^MACRO (qfd_port_tiles_\w+)$', lef_text, re.M)))
     # the CDC ETM is optional: its routed ODB is gone (EPYC3 cleanup 2026-10-08); without it qfd_cdc stays ASSUMED
-    has_cdc = all((a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').exists() for c in a.corners.split(','))
+    has_cdc = bool(bind) and all((a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').exists() for c in a.corners.split(','))
     bound = (['qfd_cdc'] if has_cdc else []) + slabs
     station_bound = {}
     pin_bindings, source_hashes = {}, {}

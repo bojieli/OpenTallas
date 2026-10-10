@@ -1,0 +1,5 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 204.8 -clock clk [get_ports {cmd_v cmd[*] read_credit s_v s_we s_bank[*] s_col[*] s_row[*]}]
+set_output_delay 204.8 -clock clk [get_ports {cmd_credit row_v row_op[*] row_bank[*] row_row[*] col_v col_we col_bank[*] col_col[*] col_sr s_cr busy fault}]
+set_false_path -from [get_ports {rst_n}]

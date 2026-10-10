@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-08T23:46:23.596739-07:00",
+  "before_sha256": "838b506970ec60d6f8a5880476f430c87aa0728b18ad6177c24c8403225a51fb",
+  "after_sha256": "7996844d8a12b32bb09ff3b12291c68ae067549f9b9eb844c3da5273cec78b63",
+  "change": "Measure remaining expected peaks for two verified external EPYC4 jobs by PID and command; subtract from admission until main process disappears or identity differs. Extend existing preserved-checkpoint flag to calibration. No CPU cap; no local compute restarted.",
+  "remote_tests": "3 focused reservation fixtures PASS on admitted EPYC2"
+}

@@ -1,0 +1,12 @@
+{
+  "actual_source_commit": "9a437c54d",
+  "raw_source_commit_label": "2PLACE",
+  "label_error": "launcher literal placeholder retained in immutable rawrecord; actual archive sources matched9a437c54d",
+  "source_file_hash_matches": {
+    "rtl/common/ot_secded.sv": true,
+    "rtl/common/ot_secded_cols.svh": true,
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": true,
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": true,
+    "rtl/test/hbm_accel/tb_hbm_index_lines_sram.sv": true
+  }
+}

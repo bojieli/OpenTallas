@@ -1,0 +1,8 @@
+[Unit]
+Description=Owner-authorized Codex takeover review cadence
+[Timer]
+OnCalendar=*-*-* *:43:00
+Persistent=true
+AccuracySec=1s
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.embedding_actual_vertical_transport_lower_bound.v1",
+  "source": "composed_slots/composed_slots.json source-pinned actualgeometry",
+  "replicas_PC": 128,
+  "maximum_vertical_separation_um": 5988.6,
+  "maximum_oneway_350um_segments": 18,
+  "minimum_total_oneway_registered_stations": 716,
+  "minimum_maximum_command_plus_return_edges": 34,
+  "bits_per_station_pair": 548,
+  "minimum_mutable_pipeline_bits_across_all_branches": 392368,
+  "area_proxy_um2_per_bit": 0.32,
+  "minimum_pipeline_flop_proxy_mm2": 0.12555776000000002,
+  "core_period_ps": 833.333333,
+  "minimum_maximum_roundtrip_pipeline_ns": 28.333333322,
+  "finite_flow": "SQD4 commands andPFD4 returnwords/PC remain actual bounds. Pipelined pulse station occupancy andcredit roundtrip must be measured, with initialcredits tied to destinationqueue rather than speculativecapacity. No combinationalready assumption.",
+  "warning": "Lower bound from geometricintervalseparation only. Actual pin coordinates, horizontalwires, routing detours andstations may addmore. Existing old route design may already include pricedparts; full source/latencycomposition needed before incrementalheadlineclaim.",
+  "old_two_edge_estimate": "Only lateralcolumnshift, notcompletePCtransport; notqualification",
+  "adopted": false,
+  "physical_closed": false,
+  "latency_credit": 0
+}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-08T22:50:51.577698-07:00",
+  "reason": "Daemon crash KeyError status; four externally written name/spec-only objects. Archived byte-identically, submitted frozen specs to normal validating ingest; no live handles existed in malformed records.",
+  "jobs": [
+    {
+      "name": "engram-lkp-A-tt",
+      "sha256": "a083d32374b43091a2b1aac8fa5798fc3cf419c873b34f94c0e6b1f0e4298232",
+      "archive": "/home/ubuntu/.local/state/closure_loop/malformed_recovery_20261008/engram-lkp-A-tt.json",
+      "inbox": "/tmp/claude-review-20261003/closure_jobs/engram-lkp-A-tt.json"
+    },
+    {
+      "name": "engram-sink-A-tt",
+      "sha256": "37402b56449ffd4afbdfbf46e582c8debc45690261e062617d0f2a4a92a91dfc",
+      "archive": "/home/ubuntu/.local/state/closure_loop/malformed_recovery_20261008/engram-sink-A-tt.json",
+      "inbox": "/tmp/claude-review-20261003/closure_jobs/engram-sink-A-tt.json"
+    },
+    {
+      "name": "engram-lkp-B-tt",
+      "sha256": "02a1c784324b6da2d2c95aa0599c3cadcb7bfc13e4642144278fe833becddc33",
+      "archive": "/home/ubuntu/.local/state/closure_loop/malformed_recovery_20261008/engram-lkp-B-tt.json",
+      "inbox": "/tmp/claude-review-20261003/closure_jobs/engram-lkp-B-tt.json"
+    },
+    {
+      "name": "engram-lkp-C-tt",
+      "sha256": "0d44285074616f2a49a5a0e74322b74c686d4080af207fa2fa4608eb80e27b4c",
+      "archive": "/home/ubuntu/.local/state/closure_loop/malformed_recovery_20261008/engram-lkp-C-tt.json",
+      "inbox": "/tmp/claude-review-20261003/closure_jobs/engram-lkp-C-tt.json"
+    }
+  ]
+}

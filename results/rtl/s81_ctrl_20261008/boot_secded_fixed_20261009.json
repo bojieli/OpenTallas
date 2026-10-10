@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "scope": "RoPE boot and HBM/SRAM SECDED component, not die integration or physical closure",
+  "source_parent": "5282e3ecc",
+  "simulator": "Verilator 5.032",
+  "host": "ot-epyc3",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "db5ae3fc3f24063294ad042a965f12d6bbe3398279f55f0c3964b9a023903366",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv": "284fe81f68d64f757c4259553c3fb3404e215777434bc2bd882ed65e9949512b"
+  },
+  "tested_boot_seq_commit": "e0f7ab25c",
+  "golden": "tools/s81_ctrl/rope_boot_image.py: released config rope_cs binary32, top 64 of 1M positions",
+  "root_cause": "Verilator 5.032 procedural incrementing-index pack/unpack miscompilation in replicated codec; fixed Hamming data position concatenations preserve format and hardware. SRAM bench sampled valid one cycle late.",
+  "cycles_change": 0,
+  "logs": [
+    "logs/boot_secded_original_fail_20261009.log",
+    "logs/boot_secded_fixed_20261009.log"
+  ],
+  "checks": {
+    "sectors": 1024,
+    "single_hbm": 40,
+    "double_hbm": 6,
+    "single_sram": 576,
+    "double_sram": 2556,
+    "base": "PASS",
+    "badsum": "PASS",
+    "short": "PASS",
+    "no_correction_mutant": "FAIL",
+    "no_overall_parity_mutant": "FAIL"
+  }
+}

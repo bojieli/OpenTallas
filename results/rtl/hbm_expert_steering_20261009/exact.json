@@ -1,0 +1,49 @@
+{
+  "scope": "full metadata mechanism; unchangedFP32 forwarding, no arithmetic, no physical qualification",
+  "cases": [
+    {
+      "mode": 0,
+      "returncode": 0,
+      "log": "PASS checks=29952 mode=0\n"
+    },
+    {
+      "mode": 1,
+      "returncode": 0,
+      "log": "PASS checks=29976 mode=1\n"
+    },
+    {
+      "mode": 2,
+      "returncode": 0,
+      "log": "PASS checks=29952 mode=2\n"
+    },
+    {
+      "mode": 3,
+      "returncode": 0,
+      "log": "PASS checks=29976 mode=3\n"
+    },
+    {
+      "mode": 4,
+      "returncode": 0,
+      "log": "PASS checks=29976 mode=4\n"
+    },
+    {
+      "mode": 5,
+      "returncode": 0,
+      "log": "PASS checks=29977 mode=5\n"
+    }
+  ],
+  "negative_wrong_source_slice": {
+    "returncode": 1,
+    "log": "FATAL: /tmp/tmpmctcd9qh/tb.sv:20: descriptor wrong sm           1\n       Time: 75 Scope: tb\n"
+  },
+  "negative_missing_job_check": {
+    "returncode": 1,
+    "log": "FATAL: /tmp/tmpmctcd9qh/tb.sv:76: wrong job escaped\n       Time: 1418640 Scope: tb\n"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_expert_workgroup.sv": "b040e500b1ba59df076bb607c50cdfca434c1ae36b636c163b091b8b84ad1674",
+    "tools/hbm_expert_steering_bench.py": "d45fda7965a8a6819d678eb34a4a1aede67001f4e443ec60ff43fe61a04c3c46",
+    "tools/hbm_expert_steering_model.py": "62ab927a1f6e8eb2c8f0390cb939e05b953e35953c5600e691eba4c02da82068"
+  },
+  "verdict": "PASS"
+}

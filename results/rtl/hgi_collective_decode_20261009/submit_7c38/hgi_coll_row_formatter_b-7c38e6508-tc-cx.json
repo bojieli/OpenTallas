@@ -1,0 +1,30 @@
+{
+  "cfg": "hgi_coll_row_formatter_b",
+  "pins": 1253,
+  "die_um": [
+    600.0,
+    240.0
+  ],
+  "layers": {
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+  },
+  "tracks": 1.0,
+  "limit": 12.0,
+  "est": {
+    "W": 6.44,
+    "E": 6.07,
+    "S": 0.02
+  },
+  "verdict": "PASS",
+  "message": "pin density within limits (estimate)",
+  "rtl_boundary": {
+    "verdict": "PASS",
+    "message": "rtl_boundary ot_hgi_coll_row_formatter: registered boundary (in->reg 8, reg->out 3 levels)",
+    "in_to_out_bits": 0,
+    "in_to_reg_max": 8,
+    "reg_to_out_max": 3,
+    "levels": 16,
+    "strict": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "top": "hfd_mtp_x_stop",
+  "sources": [
+    "rtl/hbm_accel/control/hfd_mtp_x_stop.sv",
+    "rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv",
+    "rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv",
+    "rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv",
+    "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+    "physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv",
+    "rtl/gpu/dshbm/ot_dshbm_accept_port.sv",
+    "rtl/hdc/ot_hdc_accept.sv",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv",
+    "rtl/gpu/ot_gpu_router_topk.sv",
+    "rtl/gpu/ot_gpu_router_topk_f.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/gpu/ot_gpu_fadd.sv",
+    "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+  ]
+}

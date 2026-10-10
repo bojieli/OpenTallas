@@ -1,0 +1,27 @@
+hgi_coll_decode_a-7c38e6508-tc-cx {"cfg": "hgi_coll_decode_a", "pins": 264, "die_um": [300.0, 160.0], "layers": {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}, "tracks": 1.0, "limit": 12.0, "est": {"W": 1.8, "E": 0.82, "S": 0.02}, "verdict": "PASS", "message": "pin density within limits (estimate)", "rtl_boundary": {"verdict": "PASS", "message": "rtl_boundary ot_hgi_coll_decode: registered boundary (in->reg 4, reg->out 2 levels)", "in_to_out_bits": 0, "in_to_reg_max": 4, "reg_to_out_max": 2, "levels": 16, "strict": true}}
+hgi_coll_decode_b-7c38e6508-tc-cx {"cfg": "hgi_coll_decode_b", "pins": 264, "die_um": [300.0, 160.0], "layers": {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}, "tracks": 1.0, "limit": 12.0, "est": {"W": 1.8, "E": 0.82, "S": 0.02}, "verdict": "PASS", "message": "pin density within limits (estimate)", "rtl_boundary": {"verdict": "PASS", "message": "rtl_boundary ot_hgi_coll_decode: registered boundary (in->reg 4, reg->out 2 levels)", "in_to_out_bits": 0, "in_to_reg_max": 4, "reg_to_out_max": 2, "levels": 16, "strict": true}}
+hgi_coll_row_formatter_a-7c38e6508-tc-cx {"cfg": "hgi_coll_row_formatter_a", "pins": 1253, "die_um": [600.0, 240.0], "layers": {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}, "tracks": 1.0, "limit": 12.0, "est": {"W": 6.44, "E": 6.07, "S": 0.02}, "verdict": "PASS", "message": "pin density within limits (estimate)", "rtl_boundary": {"verdict": "PASS", "message": "rtl_boundary ot_hgi_coll_row_formatter: registered boundary (in->reg 8, reg->out 3 levels)", "in_to_out_bits": 0, "in_to_reg_max": 8, "reg_to_out_max": 3, "levels": 16, "strict": true}}
+hgi_coll_row_formatter_b-7c38e6508-tc-cx {"cfg": "hgi_coll_row_formatter_b", "pins": 1253, "die_um": [600.0, 240.0], "layers": {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}, "tracks": 1.0, "limit": 12.0, "est": {"W": 6.44, "E": 6.07, "S": 0.02}, "verdict": "PASS", "message": "pin density within limits (estimate)", "rtl_boundary": {"verdict": "PASS", "message": "rtl_boundary ot_hgi_coll_row_formatter: registered boundary (in->reg 8, reg->out 3 levels)", "in_to_out_bits": 0, "in_to_reg_max": 8, "reg_to_out_max": 3, "levels": 16, "strict": true}}
+	Command being timed: "python3 /srv/opentallas-scratch/codex/hgi-coll-lint-7c38e6508/lint.py"
+	User time (seconds): 3.99
+	System time (seconds): 0.47
+	Percent of CPU this job got: 115%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 322064
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 195477
+	Voluntary context switches: 12395
+	Involuntary context switches: 4217
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 360
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

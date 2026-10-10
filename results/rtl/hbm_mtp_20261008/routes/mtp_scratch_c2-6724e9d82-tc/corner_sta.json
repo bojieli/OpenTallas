@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp_scratch_c2-6724e9d82-tc/routes/mtp_scratch_c2_6724e9d82_tc/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_gpu_scratch_service_m\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 69.04,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 73.38913,
+  "worst_reg_to_reg_slack_ps": 361.38,
+  "worst_input_to_reg_slack_ps": 73.39,
+  "worst_output_port_slack_ps": 69.038666,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "8276cce32f420f5cde50c5df7499753768488c0ea127e8c5469f2545ac322cfc",
+  "spef_sha256": "1963ce43c2691182c9572618e525a1212da8f2421561c983940429e05e90fb5d",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "315c4c54531aad708edc0d9398738c5608ad51e6487acf309639c07f3daf01a3"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -18.52,
+  "tns_ps": -502.0,
+  "worst_register_d_slack_ps": -18.515966,
+  "worst_reg_to_reg_slack_ps": 152.72,
+  "worst_input_to_reg_slack_ps": -18.52,
+  "worst_output_port_slack_ps": 34.818039,
+  "violating_d_pins": 53,
+  "errors": [],
+  "odb_sha256": "8276cce32f420f5cde50c5df7499753768488c0ea127e8c5469f2545ac322cfc",
+  "spef_sha256": "1963ce43c2691182c9572618e525a1212da8f2421561c983940429e05e90fb5d",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "315c4c54531aad708edc0d9398738c5608ad51e6487acf309639c07f3daf01a3"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 13.18,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 22.411518,
+  "worst_reg_to_reg_slack_ps": 22.41,
+  "worst_input_to_reg_slack_ps": 14.29,
+  "worst_output_port_slack_ps": 13.182775,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "8276cce32f420f5cde50c5df7499753768488c0ea127e8c5469f2545ac322cfc",
+  "spef_sha256": "1963ce43c2691182c9572618e525a1212da8f2421561c983940429e05e90fb5d",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "315c4c54531aad708edc0d9398738c5608ad51e6487acf309639c07f3daf01a3"
+ },
+ "post_sdc": {
+  "physical/hbm_mtp/scratch_cap2.sdc": "97a091506ea76f9ccbb7ea766e8e136c871210d151429a5b6e680f92c9c9c418",
+  "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+  "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "f66cdafb09fe13d61388da7a4458d2928db63582af041985d1d345ac8635d7d3"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": -18.52,
+ "closes_signoff": true
+}

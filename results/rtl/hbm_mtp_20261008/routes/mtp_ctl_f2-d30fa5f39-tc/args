@@ -1,0 +1,1 @@
+ot_dshbm_dspark_ctl L=116 UTIL=40 PD=0.55 HM=0.025 LB=0 VT=rvt SDCX= --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_accept.sv --source rtl/gpu/dshbm/ot_dshbm_accept_port.sv --source rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv --param TW=17 --param NL=40 --param MAXPOS=1048576 --param ACCEPT_LEAF=0 --param FAST=1

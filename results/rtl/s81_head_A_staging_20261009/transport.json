@@ -1,0 +1,25 @@
+{
+  "pass_transport": true,
+  "stages": [
+    0,
+    4
+  ],
+  "bits_per_A": 307,
+  "scope": "transport-only element traffic stubs; no numerical or physical qualification",
+  "original_sha256": "7072bd85f5ab821287be3ee6ba210529e6df74c95365ffd1db58e52c4f6f8ea1",
+  "candidate_sha256": "a24a454205fcc4a474dd21a38a99f0eee40fa0c0224dbd917980b5d23b328bac",
+  "cases": {
+    "baseline": {
+      "exit": 0,
+      "output": "PASS aligned307 stage0/stage4 checked=1197 validresults=545 resetbursts=2\n/srv/opentallas-scratch/claude/s81-dies/A_staging/rtl/test/s81/tb_head_A_input_staging.sv:57: $finish called at 1503000 (1ps)"
+    },
+    "misaligned_payload": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/s81-dies/A_staging/rtl/test/s81/tb_head_A_input_staging.sv:41: default changed cycle=101 A=0\n       Time: 105000  Scope: tb"
+    },
+    "lost_B_data": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/s81-dies/A_staging/rtl/test/s81/tb_head_A_input_staging.sv:41: default changed cycle=101 A=0\n       Time: 105000  Scope: tb"
+    }
+  }
+}

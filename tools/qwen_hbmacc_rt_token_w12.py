@@ -305,8 +305,13 @@ def main() -> None:
                                           "actual_sha256": sha(got_p) if got else None, "expected_sha256": sha(want_p) if want else None}
     m = re.search(r"QWEN_HBMACC_TOKEN PASS stages=(\d+) token=(\d+) val=([0-9a-f]+) die1_token=(\d+) cycles=(\d+)", text)
     full = any(n == "head" for n, *_ in stages)
-    ofile = args.oracle_dir / "head.json"
-    oracle = json.loads(ofile.read_text()) if ofile.exists() else json.loads((args.oracle_dir / "oracle.json").read_text())
+    # token-exact 10-09: the regenerated fixtures keep oracle.json one level up (gold/<name>/oracle.json); a layer-only
+    # run checks layer X only and needs no oracle record
+    ofile = next((q for q in (args.oracle_dir / "head.json", args.oracle_dir / "oracle.json",
+                              args.oracle_dir.parent / "oracle.json") if q.exists()), None)
+    if ofile is None and full:
+        raise SystemExit(f"no oracle record for the head under {args.oracle_dir}")
+    oracle = json.loads(ofile.read_text()) if ofile else {}
     token = int(m.group(2)) if m else None
     token_ok = (not full) or (bool(m) and token == oracle.get("next_token") and int(m.group(4)) == token
                               and m.group(3) == oracle.get("next_logit_bits"))

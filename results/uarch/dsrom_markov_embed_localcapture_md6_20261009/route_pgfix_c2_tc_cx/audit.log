@@ -1,0 +1,179 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_CORNER tt
+OT_WS 6.817557629545945e-11
+OT_TNS 0.0
+Startpoint: select_output$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: captured_data[54] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  25.12   25.12 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.96   49.08 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  28.67   77.74 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  29.93  107.68 ^ clkbuf_2_0__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  52.60  160.28 ^ clkbuf_leaf_9_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   2.26  162.53 ^ select_output$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  67.70  230.24 v select_output$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  43.67  273.91 v place458/Y (BUFx3_ASAP7_75t_R)
+  50.82  324.73 v place457/Y (BUFx3_ASAP7_75t_R)
+  41.87  366.60 v place455/Y (BUFx3_ASAP7_75t_R)
+  62.73  429.33 ^ _1681_/Y (NAND2x1_ASAP7_75t_R)
+  74.22  503.55 ^ _1682_/Y (OA21x2_ASAP7_75t_R)
+ 166.46  670.01 ^ wire403/Y (BUFx6f_ASAP7_75t_R)
+   1.14  671.16 ^ captured_data[54] (out)
+         671.16   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+ -34.00  739.33   output external delay
+         739.33   data required time
+---------------------------------------------------------
+         739.33   data required time
+        -671.16   data arrival time
+---------------------------------------------------------
+          68.18   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 283.649506
+OT_WS_OUT 68.175575
+OT_WS_R2R 530.814392
+OT_WS_I2R 283.649506
+OT_I16_ELECTRICAL_BEGIN
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+captured_data[89]                     250.00  510.66 -260.66 (VIOLATED)
+captured_data[53]                     250.00  505.13 -255.13 (VIOLATED)
+captured_data[36]                     250.00  473.43 -223.43 (VIOLATED)
+wire372/A                             250.00  456.10 -206.10 (VIOLATED)
+captured_data[33]                     250.00  454.13 -204.13 (VIOLATED)
+captured_data[93]                     250.00  445.18 -195.18 (VIOLATED)
+captured_data[80]                     250.00  427.06 -177.06 (VIOLATED)
+captured_data[100]                    250.00  425.23 -175.23 (VIOLATED)
+captured_data[41]                     250.00  424.44 -174.44 (VIOLATED)
+captured_data[21]                     250.00  418.09 -168.09 (VIOLATED)
+captured_data[37]                     250.00  417.63 -167.63 (VIOLATED)
+captured_data[92]                     250.00  410.78 -160.78 (VIOLATED)
+captured_data[61]                     250.00  407.85 -157.85 (VIOLATED)
+captured_data[12]                     250.00  402.65 -152.65 (VIOLATED)
+captured_data[64]                     250.00  393.89 -143.89 (VIOLATED)
+captured_data[88]                     250.00  393.35 -143.35 (VIOLATED)
+wire383/A                             250.00  390.77 -140.77 (VIOLATED)
+captured_data[40]                     250.00  388.88 -138.88 (VIOLATED)
+captured_data[116]                    250.00  387.41 -137.41 (VIOLATED)
+captured_data[48]                     250.00  387.07 -137.07 (VIOLATED)
+captured_data[104]                    250.00  384.70 -134.70 (VIOLATED)
+captured_data[57]                     250.00  381.02 -131.02 (VIOLATED)
+captured_data[113]                    250.00  380.89 -130.89 (VIOLATED)
+wire403/A                             250.00  377.05 -127.05 (VIOLATED)
+wire409/A                             250.00  373.37 -123.37 (VIOLATED)
+wire408/A                             250.00  371.18 -121.18 (VIOLATED)
+captured_data[13]                     250.00  367.72 -117.72 (VIOLATED)
+wire389/A                             250.00  366.08 -116.08 (VIOLATED)
+wire375/A                             250.00  363.99 -113.99 (VIOLATED)
+captured_data[49]                     250.00  362.89 -112.89 (VIOLATED)
+captured_data[65]                     250.00  361.75 -111.75 (VIOLATED)
+captured_data[77]                     250.00  360.65 -110.65 (VIOLATED)
+wire411/A                             250.00  357.39 -107.39 (VIOLATED)
+captured_data[69]                     250.00  356.87 -106.87 (VIOLATED)
+captured_data[24]                     250.00  355.83 -105.83 (VIOLATED)
+captured_data[32]                     250.00  353.44 -103.44 (VIOLATED)
+captured_data[25]                     250.00  350.09 -100.09 (VIOLATED)
+captured_data[72]                     250.00  349.62  -99.62 (VIOLATED)
+captured_data[85]                     250.00  348.37  -98.37 (VIOLATED)
+captured_data[128]                    250.00  346.58  -96.58 (VIOLATED)
+captured_data[16]                     250.00  346.54  -96.54 (VIOLATED)
+wire398/A                             250.00  346.18  -96.18 (VIOLATED)
+captured_data[125]                    250.00  343.97  -93.97 (VIOLATED)
+captured_data[44]                     250.00  343.18  -93.18 (VIOLATED)
+wire412/A                             250.00  343.03  -93.03 (VIOLATED)
+wire396/A                             250.00  341.05  -91.05 (VIOLATED)
+captured_data[60]                     250.00  340.64  -90.64 (VIOLATED)
+captured_data[52]                     250.00  332.24  -82.24 (VIOLATED)
+captured_data[76]                     250.00  330.93  -80.93 (VIOLATED)
+wire391/A                             250.00  330.02  -80.02 (VIOLATED)
+captured_data[121]                    250.00  329.62  -79.62 (VIOLATED)
+captured_data[97]                     250.00  328.32  -78.32 (VIOLATED)
+wire393/A                             250.00  325.37  -75.37 (VIOLATED)
+captured_data[105]                    250.00  324.01  -74.01 (VIOLATED)
+captured_data[20]                     250.00  316.84  -66.84 (VIOLATED)
+wire402/A                             250.00  312.75  -62.75 (VIOLATED)
+captured_data[120]                    250.00  311.74  -61.74 (VIOLATED)
+captured_data[81]                     250.00  311.14  -61.14 (VIOLATED)
+wire377/A                             250.00  306.09  -56.09 (VIOLATED)
+wire415/A                             250.00  304.45  -54.45 (VIOLATED)
+wire367/A                             250.00  304.43  -54.43 (VIOLATED)
+captured_data[8]                      250.00  301.51  -51.51 (VIOLATED)
+captured_data[109]                    250.00  299.17  -49.17 (VIOLATED)
+wire385/A                             250.00  296.97  -46.97 (VIOLATED)
+wire371/A                             250.00  293.52  -43.52 (VIOLATED)
+captured_data[117]                    250.00  293.28  -43.28 (VIOLATED)
+captured_data[124]                    250.00  291.88  -41.88 (VIOLATED)
+wire422/A                             250.00  291.88  -41.88 (VIOLATED)
+wire397/A                             250.00  287.96  -37.96 (VIOLATED)
+wire407/A                             250.00  287.62  -37.62 (VIOLATED)
+wire418/A                             250.00  287.58  -37.58 (VIOLATED)
+captured_data[5]                      250.00  286.05  -36.05 (VIOLATED)
+output24/Y                            250.00  286.02  -36.02 (VIOLATED)
+wire400/A                             250.00  285.94  -35.94 (VIOLATED)
+wire381/A                             250.00  285.76  -35.76 (VIOLATED)
+captured_data[45]                     250.00  285.51  -35.51 (VIOLATED)
+wire392/A                             250.00  284.11  -34.11 (VIOLATED)
+captured_data[68]                     250.00  283.76  -33.76 (VIOLATED)
+wire370/A                             250.00  282.90  -32.90 (VIOLATED)
+output270/Y                           250.00  281.69  -31.69 (VIOLATED)
+captured_data[29]                     250.00  278.02  -28.02 (VIOLATED)
+wire376/A                             250.00  277.28  -27.28 (VIOLATED)
+wire369/A                             250.00  274.64  -24.64 (VIOLATED)
+wire384/A                             250.00  269.48  -19.48 (VIOLATED)
+wire394/A                             250.00  269.26  -19.26 (VIOLATED)
+output266/Y                           250.00  267.52  -17.52 (VIOLATED)
+captured_data[9]                      250.00  266.95  -16.95 (VIOLATED)
+wire421/A                             250.00  266.52  -16.52 (VIOLATED)
+captured_data[28]                     250.00  263.50  -13.50 (VIOLATED)
+wire379/A                             250.00  262.75  -12.75 (VIOLATED)
+output227/Y                           250.00  262.45  -12.45 (VIOLATED)
+captured_data[84]                     250.00  260.65  -10.65 (VIOLATED)
+wire364/A                             250.00  260.50  -10.50 (VIOLATED)
+wire414/A                             250.00  259.63   -9.63 (VIOLATED)
+wire419/A                             250.00  259.00   -9.00 (VIOLATED)
+wire420/A                             250.00  258.64   -8.64 (VIOLATED)
+wire374/A                             250.00  256.99   -6.99 (VIOLATED)
+output28/Y                            250.00  256.76   -6.76 (VIOLATED)
+
+OT_I16_ELECTRICAL_END
+OT_I16_CAPTURES 512
+OT_I16_CAPTURE_DISTANCE 13.839
+OT_I16_ROW_MISMATCH 0
+OT_I16_CLOCK_LEAVES 47
+OT_I16_CLOCK_LEAF_MAX 13
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_I16_PG_VDD_PASS
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_I16_PG_VSS_PASS

@@ -1,0 +1,18 @@
+{
+  "source_failed": "4a4c4b97d",
+  "job_failed": "qfd_crom48-4a4c4b97d-tc-hm10",
+  "verdict_failed": "FLOORPLAN_MARGIN",
+  "failure": "N/M5=20.8bits/um over100um; threshold12",
+  "repair": "64 per-lane topfacewindows each12.15um,89pinbits; all5696sharedfacepins exactlyonce in source regexpartition",
+  "outline_um": [
+    777.6,
+    1000
+  ],
+  "added_cycles": 0,
+  "physical_claim": "not measured yet; successor required",
+  "two_layers": [
+    "M5",
+    "M7"
+  ],
+  "nominal_bits_um_per_layer": 3.662551440329218
+}

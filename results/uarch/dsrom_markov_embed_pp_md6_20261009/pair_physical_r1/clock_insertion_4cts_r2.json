@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.w18.clock_insertion.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/md6-lookup-pp-source/pair_physical_r1/work/orfs",
+ "stage": "4_cts",
+ "ss": {
+  "corner": "ss",
+  "clock_pins": 264,
+  "min_ps": 184.1,
+  "max_ps": 233.4,
+  "mid_ps": 208.8
+ },
+ "ff": {
+  "corner": "ff",
+  "clock_pins": 264,
+  "min_ps": 111.4,
+  "max_ps": 157.2,
+  "mid_ps": 134.3
+ }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.embedding_cdc_gate.v1",
+  "source_commit": "d568c4ba7",
+  "positive": "PASS 256 commands/responses/credits at833.333334ps core and1024ps HBM",
+  "negative": "Expected FAIL: decoded-response bit0 mutation",
+  "enabled_composite_elaboration": "PASS",
+  "full_composite_functional_and_physical": "OPEN",
+  "scope": "Minimum three-FIFO embedding crossing component; no whole-die simulation or full composite latency claim",
+  "logs_sha256": {
+    "source.sha256": "ae5a5ca6795e956298aa59830fe30bc3d3683da132a5e118246777810d94a01e",
+    "positive.log": "a09e1931307d70a32a58766d12385d65c034234aff05430a6e7b218fe094fad8",
+    "composite_parse.log": "78f897576c8665ebe1e57b6d62a0838283fe5b6ea99a8132e7164f1cdde9e29e",
+    "negative.log": "96b94b9a5ec0a4a7e09a1781edf51b5491ea3c1c34ef70c401e159caf8890351",
+    "run.sh": "51d310cf718c7f8fe90173fa6c4e022749d61abe0e44b7ca559d12ebf72eefb8"
+  }
+}

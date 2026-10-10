@@ -1,0 +1,14 @@
+{
+  "source": "19a1b52dc",
+  "quarter_actual": "PASS_NATIVE_QUARTER_PUBLICATION checks19 fanouts3/3/3/2 realprovider32macros",
+  "crossbank_actual": "PASS7 checks veto_edges6",
+  "bank_negatives": "B1/B2/B3/B4 fail as expected",
+  "remaining": "S1 compiler progressing; no full terminal gate yet",
+  "active_host": "ot-epyc4",
+  "gate_pid": 2409628,
+  "current_compiler_wrapper": 2583437,
+  "stopped_old_route_waiter": 2411731,
+  "source_scope": "Historical rejected newcopycheck source; not current-source adoption or seatroute permission",
+  "owner_current_rule": "C1 existing fec1faadd ODB holdECO only; no newphase-seatroute",
+  "old_passes_preserved": true
+}

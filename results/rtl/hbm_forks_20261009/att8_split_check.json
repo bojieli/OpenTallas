@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.hgi_att8_split.v1",
+ "rule": "hbm-forks (2026-10-09, REVIEW_20261009 review-0400 R4 condition 1): the 8-entry-point attention split.\n\nRule (both goldens, no golden change): the positions of one attention row (Qwen: 0 .. P-1; DS: the selected rows in the\ngolden's index order) are cut into the R-ARITH chunks of 8 (hdc_golden_v41.csum), the chunk count padded to a power of two\nNP, and pair g (g = 0..7) owns the CONTIGUOUS ALIGNED block of NP/8 chunks [g*NP/8, (g+1)*NP/8) (when NP < 8: blocks of\none chunk, pairs >= NP idle).  Each pair computes its block's partial Z and p.v with the same chunk-8 chains and the\npairwise tree of its block; the 8 partials merge in pair order by the tree's top log2(min(8, NP)) levels:\n((P0+P1)+(P2+P3))+((P4+P5)+(P6+P7)).  Because every block is an aligned subtree of the golden's padded pairwise tree,\nthe merged result equals csum over all positions bit for bit.  The global row max (needed before exp) is order-free\n(a max), so pass 1 merges maxima in any order.  The compiler lays block g's rows into PC group g of every stack (rows\nchannel-major per chunk block), so ATT pair g consumes ks<g> with no reorder hardware.",
+ "cases": 45,
+ "mismatches": 0,
+ "mutant_swap_detected_cases": 30,
+ "mutant_interleaved_detected_cases": 26,
+ "mutant_balanced_swap_detected_cases": 3,
+ "mutant_local_max_detected_cases": 36,
+ "per_pair_load": [
+  {
+   "P": 1,
+   "chunks": 1,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 0.125,
+   "balanced_eff": 0.125
+  },
+  {
+   "P": 7,
+   "chunks": 1,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 0.125,
+   "balanced_eff": 0.125
+  },
+  {
+   "P": 8,
+   "chunks": 1,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 0.125,
+   "balanced_eff": 0.125
+  },
+  {
+   "P": 9,
+   "chunks": 2,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 0.25,
+   "balanced_eff": 0.25
+  },
+  {
+   "P": 63,
+   "chunks": 8,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 1.0,
+   "balanced_eff": 1.0
+  },
+  {
+   "P": 64,
+   "chunks": 8,
+   "aligned_max_chunks": 1,
+   "balanced_max_chunks": 1,
+   "aligned_eff": 1.0,
+   "balanced_eff": 1.0
+  },
+  {
+   "P": 65,
+   "chunks": 9,
+   "aligned_max_chunks": 2,
+   "balanced_max_chunks": 2,
+   "aligned_eff": 0.562,
+   "balanced_eff": 0.562
+  },
+  {
+   "P": 100,
+   "chunks": 13,
+   "aligned_max_chunks": 2,
+   "balanced_max_chunks": 2,
+   "aligned_eff": 0.812,
+   "balanced_eff": 0.812
+  },
+  {
+   "P": 513,
+   "chunks": 65,
+   "aligned_max_chunks": 16,
+   "balanced_max_chunks": 9,
+   "aligned_eff": 0.508,
+   "balanced_eff": 0.903
+  },
+  {
+   "P": 1000,
+   "chunks": 125,
+   "aligned_max_chunks": 16,
+   "balanced_max_chunks": 16,
+   "aligned_eff": 0.977,
+   "balanced_eff": 0.977
+  },
+  {
+   "P": 2048,
+   "chunks": 256,
+   "aligned_max_chunks": 32,
+   "balanced_max_chunks": 32,
+   "aligned_eff": 1.0,
+   "balanced_eff": 1.0
+  },
+  {
+   "P": 2049,
+   "chunks": 257,
+   "aligned_max_chunks": 64,
+   "balanced_max_chunks": 33,
+   "aligned_eff": 0.502,
+   "balanced_eff": 0.973
+  },
+  {
+   "P": 4095,
+   "chunks": 512,
+   "aligned_max_chunks": 64,
+   "balanced_max_chunks": 64,
+   "aligned_eff": 1.0,
+   "balanced_eff": 1.0
+  },
+  {
+   "P": 8192,
+   "chunks": 1024,
+   "aligned_max_chunks": 128,
+   "balanced_max_chunks": 128,
+   "aligned_eff": 1.0,
+   "balanced_eff": 1.0
+  },
+  {
+   "P": 9000,
+   "chunks": 1125,
+   "aligned_max_chunks": 256,
+   "balanced_max_chunks": 141,
+   "aligned_eff": 0.549,
+   "balanced_eff": 0.997
+  }
+ ],
+ "verdict": "PASS",
+ "sizes": [
+  1,
+  7,
+  8,
+  9,
+  63,
+  64,
+  65,
+  100,
+  513,
+  1000,
+  2048,
+  2049,
+  4095,
+  8192,
+  9000
+ ]
+}

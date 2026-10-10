@@ -4,7 +4,7 @@
 // a 64-bit host DMA memory, a per-die MREQ memory with random ready / response delay; host 1.0 ns, memory 0.833 ns).
 // Programs per seed: LOAD (verify on/off, right / wrong expected CRC), STORE back, a misaligned descriptor.
 // Compared: the ordered memory-write stream (die, address, data), the DMA write stream (address, data, strobes), and
-// every CSR of every engine after each descriptor completes except CYCLES (the busy-cycle count, +2 by design).  `MARGIN selects the module of instance b; `HALF_B=<SHARED> makes it the half-rate adapter ot_hfd_loader_half, `SAME_CLK ties clk_mem to clk_host.
+// every CSR of every engine after each descriptor completes except CYCLES (the busy-cycle count, +2 by design).  `MARGIN selects the module of instance b; `HALF_B=<SHARED> makes it the half-rate adapter ot_hfd_loader_half, `DIV_B=<SHARED> the divided-clock CDC adapter ot_hfd_loader_div (L-DIV), `SAME_CLK ties clk_mem to clk_host.
 module ldm_env #(parameter integer MARGIN = 0, parameter integer SEED = 1) (input wire clk_host, input wire clk_mem,
     input wire rst_n, output reg [63:0] mw_hash, output reg [63:0] dw_hash, output integer mw_n, output integer dw_n);
     localparam integer ND = 2;
@@ -18,7 +18,9 @@ module ldm_env #(parameter integer MARGIN = 0, parameter integer SEED = 1) (inpu
     reg [ND*16-1:0] rsp_tag=0; reg [ND*256-1:0] rsp_data=0; wire irq, fault;
     wire h_dma_arready, h_dma_rvalid, h_dma_rlast, h_dma_awready, h_dma_wready, h_dma_bvalid; wire [63:0] h_dma_rdata; wire [1:0] h_dma_rresp, h_dma_bresp;
     generate if (MARGIN) begin : g_m
-`ifdef HALF_B
+`ifdef DIV_B
+        ot_hfd_loader_div #(.ENABLE(1), .ND(ND), .SHARED(`DIV_B)) dut (
+`elsif HALF_B
         ot_hfd_loader_half #(.ENABLE(1), .ND(ND), .SHARED(`HALF_B)) dut (
 `else
         ot_hfd_loader_host_m #(.ENABLE(1), .ND(ND)) dut (

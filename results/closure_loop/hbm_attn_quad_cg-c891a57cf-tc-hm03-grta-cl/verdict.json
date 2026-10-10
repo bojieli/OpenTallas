@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+ "block": "ot_attn_tile_m6h1q",
+ "owner": "Claude:redesign-hbm",
+ "source_branch": "claude/redesign-hbm-cg-20261009",
+ "record_branch": "codex/closure-record-hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+ "source_commit": "c891a57cfc83ccce2b4e64b76b6a54bb8af2fca9",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 66.98,
+  "ff_ps": 42.48,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -230.26,
+  "ss_sensitivity_tns_ps": -445.7,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl/routes/hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/corner_sta_833.json",
+  "post_sdc": [
+   "physical/hbm_attn_tile_r/signoff_833_int.sdc",
+   "physical/hbm_attn_tile_r/leaf_reset_mcp.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl/routes/hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/corner_sta_833.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl/routes/hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/work/orfs/logs/asap7/opentallas_ot_attn_tile_m6h1q_asap7_qb_hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_quad_cg_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060\nQCG_PASS gated_quad0=1060\n",
+   "track": "parallel"
+  },
+  "bench_quad_cg_late_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "6e228008f77f603f61216b0a74fd2000f8f900007d907b607a6fa000 / 6eed1944efbd9000fde50000f4541cb2f1fe0e62fe9d800cebf2eb00fc8cd80079da3304fc97df285e8dbdece93b80016b2f6540760188347d1e5200f375a000 of ffff / ffff\nMISMATCH cyc=1070 ov 1/0 oy 79f5040071c7c0fceda0692e71eb20006c24fffd7c130000f522c0c074b52000e1a6b440e05ba0006c7340006982a0007dc9aec0f1991a1076ceb676fd43f000 / 7035200079ac900072041b3c7b97117c6aa9bfc87dd50d26f48b6000789a0000648ce5a0771932b97e0b1cc4de292099fc334000d551b30a7ec9a200fb4de000 of ffff / ffff\nTILERLOCK cycles=12000 mismatches=780 ov=3597 gated_quad0=1057\nQCG_FAIL rc=1 gated_quad0=1057\n",
+   "track": "parallel"
+  },
+  "bench_quad_cg_hold0_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "04c910145f3a20000d18f00006c1ce000ee87a0006b3c3ffdfa6d8000 / 7acfa000fea0e000c231c0006f1b4000cad10000b9b00000f4c60000672e6000fc68600058766000798140006409d000739702004c9e7b0cb9d9200079644000 of ffff / ffff\nMISMATCH cyc=78 ov 1/1 oy 0000000000000000000000007e85c000000000000000000000000000623bd7000000000000000000000000000000000000000000000000000000000000000000 / f978e4bb3ba6800076458000735c8b987e700000d13f4000d4034000490fd000726c4000577540007353e280d3331000600280007c1ea00076ed000070eec000 of ffff / ffff\nTILERLOCK cycles=12000 mismatches=9958 ov=3597 gated_quad0=7560\nQCG_FAIL rc=1 gated_quad0=7560\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T00:22:33-07:00",
+ "job_spec": {
+  "name": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+  "block": "ot_attn_tile_m6h1q",
+  "owner": "Claude:redesign-hbm",
+  "purpose": "redesign-hbm 2026-10-09 (coordinator top item: coarse per-unit clock gating, attention 180.3 W at 5-8 % duty): ot_attn_tile_m6h1q CG=1 = HC bank on the raw clock, the 4 hgrp leaf macros' clock pins + nothing else on ONE ICG (cg_pushdown clones it), woken by the quad's own input valids (ld_v | ld_w2v | iv | !rst_n) + HOLD 256; no new pins (die views unchanged). Bench: four gated quads vs ot_hdc_v41x_attn_tile_l lockstep with 300-cycle idle windows; late-wake mutant must fail. qb1 recipe, HM 0.030. Lockstep (EPYC3): gated 0 mismatches / 3,597 outputs (gated cycles 1,060); late-wake mutant 780; HOLD 0 mutant 9,958. (r2: fp_lint off -- the closed qb1 quad outline / macro placement unchanged, util 81 % counts the 4 leaf macros; only an ICG added) (grta: the hm10 r2 route ended GRT-0116 on ONE M7 gcell at 7.6 % usage; allow it for detail route)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/redesign-hbm-cg-20261009",
+   "commit": "c891a57cfc83ccce2b4e64b76b6a54bb8af2fca9"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "quad_cg_lockstep",
+     "cmd": "bash physical/hbm_attn_tile_r/cg_lockstep.sh {RUN}/qcg pos -GCG=1 -GIDLE=300 -GACT=200",
+     "expect": "pass",
+     "pass_regex": "QCG_PASS",
+     "threads": 16,
+     "peak_ram_gb": 24,
+     "timeout_s": 21600
+    },
+    {
+     "name": "quad_cg_late_mutant",
+     "cmd": "bash physical/hbm_attn_tile_r/cg_lockstep.sh {RUN}/qcg late -GCG=1 -GIDLE=300 -GACT=200 -GMUTCG=1",
+     "expect": "fail",
+     "fail_regex": "QCG_FAIL",
+     "threads": 16,
+     "peak_ram_gb": 24,
+     "timeout_s": 21600
+    },
+    {
+     "name": "quad_cg_hold0_mutant",
+     "cmd": "bash physical/hbm_attn_tile_r/cg_lockstep.sh {RUN}/qcg h0 -GCG=1 -GIDLE=300 -GACT=200 -GHOLDQ=0",
+     "expect": "fail",
+     "fail_regex": "QCG_FAIL",
+     "threads": 16,
+     "peak_ram_gb": 24,
+     "timeout_s": 21600
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "quad IO false-pathed (--false-path-io as qb1_bd150); interface timing comes from quad_interface.sdc in the view export"
+   },
+   "route": {
+    "cmd": "bash $(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh /srv/opentallas-scratch/claude/ttviews/ttv_install.sh 2>/dev/null | head -1) {SRC} ot_attn_hgrp_m6h1=physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1 && export OT_ORFS_CORNER_OVERRIDE=TC OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 HM=0.030 TPARAM=CG=1 GRTA=\"-congestion_iterations 60 -allow_congestion -verbose\" bash physical/hbm_attn_tile_r/route_qb_cl.sh {LABEL} --source rtl/hdc/ot_hdc_cg.sv --source rtl/hbm_accel/cg/ot_cg_tile.sv",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta*.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/exit {RUN}/record/ 2>/dev/null; true"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta_833.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/hbm_attn_tile_r/signoff_833_int.sdc",
+    "physical/hbm_attn_tile_r/leaf_reset_mcp.sdc"
+   ],
+   "macros": [
+    "physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_attn_tile_r/quad_b_tc/6ce4b64fd"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "fp_lint": false
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

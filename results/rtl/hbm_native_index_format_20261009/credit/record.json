@@ -1,0 +1,34 @@
+{
+  "verdict": "PASS",
+  "runs": [
+    {
+      "component": "query",
+      "test": "base",
+      "exit": 0,
+      "pass_gate": true,
+      "source_sha256": "1f7cd056dfa648f5ea715abf0402536f11c6fe1e50d4c7ad3aa35c36e6b36c86"
+    },
+    {
+      "component": "query",
+      "test": "MUT_OWNER",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "1f7cd056dfa648f5ea715abf0402536f11c6fe1e50d4c7ad3aa35c36e6b36c86"
+    },
+    {
+      "component": "parse",
+      "test": "base",
+      "exit": 0,
+      "pass_gate": true,
+      "source_sha256": "58fed9bbeadd5f48a161b9efbf50c325178bb5849910058fa580e46389973dd0"
+    },
+    {
+      "component": "parse",
+      "test": "MUT_RESERVED",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "58fed9bbeadd5f48a161b9efbf50c325178bb5849910058fa580e46389973dd0"
+    }
+  ],
+  "scope": "query128blocks twoframes cold4credits delayedreturns; actual15slot TU parser backpressure/negative reservedbit; no physical credit"
+}

@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_ps-dde873a8e-tc-bal32/routes/qfd_hub_ps_dde873a8e_tc_bal32/work/orfs",
+ "extra_sdc": "# qfd_hub sign-off at 833.333 ps (jobs/mk_mc_kit.py)\ncreate_clock -name ck -period 833.333 [get_ports {ck}]\ncreate_clock -name fck0 -period 833.333 [get_ports {fck0}]\ncreate_clock -name fck1 -period 833.333 [get_ports {fck1}]\ncreate_clock -name fck2 -period 833.333 [get_ports {fck2}]\ncreate_clock -name fck3 -period 833.333 [get_ports {fck3}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_propagated_clock [all_clocks]\n# unrelated-clock crossings: one period minus the setup uncertainty, both directions; hold: non-negative\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks ck] -to [get_clocks fck0]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks ck] -to [get_clocks fck0]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks ck] -to [get_clocks fck1]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks ck] -to [get_clocks fck1]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks ck] -to [get_clocks fck2]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks ck] -to [get_clocks fck2]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks ck] -to [get_clocks fck3]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks ck] -to [get_clocks fck3]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck0] -to [get_clocks ck]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck0] -to [get_clocks ck]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck0] -to [get_clocks fck1]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck0] -to [get_clocks fck1]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck0] -to [get_clocks fck2]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck0] -to [get_clocks fck2]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck0] -to [get_clocks fck3]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck0] -to [get_clocks fck3]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck1] -to [get_clocks ck]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck1] -to [get_clocks ck]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck1] -to [get_clocks fck0]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck1] -to [get_clocks fck0]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck1] -to [get_clocks fck2]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck1] -to [get_clocks fck2]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck1] -to [get_clocks fck3]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck1] -to [get_clocks fck3]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck2] -to [get_clocks ck]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck2] -to [get_clocks ck]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck2] -to [get_clocks fck0]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck2] -to [get_clocks fck0]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck2] -to [get_clocks fck1]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck2] -to [get_clocks fck1]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck2] -to [get_clocks fck3]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck2] -to [get_clocks fck3]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck3] -to [get_clocks ck]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck3] -to [get_clocks ck]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck3] -to [get_clocks fck0]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck3] -to [get_clocks fck0]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck3] -to [get_clocks fck1]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck3] -to [get_clocks fck1]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks fck3] -to [get_clocks fck2]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks fck3] -to [get_clocks fck2]\nset ::env(OT_IO_HOLD_SKEW) 50\n# die-context boundary per domain, referenced to the propagated arrival L at a register of that domain's tree:\n# 0.2 T outside + 150 ps (die wire to another region; 90 ps for the --intra domains), hold allowance 50 ps\nset ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]\nsta::worst_slack_cmd max\nunset_input_delay [all_inputs]\nunset_output_delay [all_outputs]\nforeach {clk sk ins outs} {\n  ck 150 {x3_v x3_d[*] x3_tag[*] ar_cr} {x3_cr ar_v ar_d[*] fault l0_o[*] l1_o[*] l2_o[*] l3_o[*]}\n  fck0 150 {l0_i[*]} {}\n  fck1 150 {l1_i[*]} {}\n  fck2 150 {l2_i[*]} {}\n  fck3 150 {l3_i[*]} {}\n} {\n  set ref [lindex [all_registers -clock $clk -clock_pins] 0]\n  set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]\n  set T [get_property [get_clocks $clk] period]\n  puts \"QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $sk\"\n  if {[llength $ins]} {\n    set_input_delay  [expr {0.2*$T + $lmax + $sk}] -max -clock $clk [get_ports $ins]\n    set_input_delay  [expr {$lmin - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}]       -min -clock $clk [get_ports $ins] }\n  if {[llength $outs]} {\n    set_output_delay [expr {0.2*$T - $lmax + $sk}] -max -clock $clk [get_ports $outs]\n    set_output_delay [expr {-$lmin - $ot_hk}]      -min -clock $clk [get_ports $outs] }\n}\nset_false_path -from [get_ports {rst_n}]\n",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 70.91,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 70.90728,
+  "worst_reg_to_reg_slack_ps": 70.91,
+  "worst_input_to_reg_slack_ps": 128.2,
+  "worst_output_port_slack_ps": 236.019989,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "e300439722524ff1cb7debdd9f65610a71c9b9af839e545330d94698fc49ecfe",
+  "spef_sha256": "ef055f4464f8570c07319bf0321778e0fbf7b07eb5e3c096874b9cd1e094402a",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a4fda0bf0c6aa6334886d2b03eeeb030770b6aa730a03c592988bd9f752bf566"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -197.65,
+  "tns_ps": -1177629.1,
+  "worst_register_d_slack_ps": -197.651123,
+  "worst_reg_to_reg_slack_ps": -197.65,
+  "worst_input_to_reg_slack_ps": -10.79,
+  "worst_output_port_slack_ps": 108.785202,
+  "violating_d_pins": 18578,
+  "errors": [],
+  "odb_sha256": "e300439722524ff1cb7debdd9f65610a71c9b9af839e545330d94698fc49ecfe",
+  "spef_sha256": "ef055f4464f8570c07319bf0321778e0fbf7b07eb5e3c096874b9cd1e094402a",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a4fda0bf0c6aa6334886d2b03eeeb030770b6aa730a03c592988bd9f752bf566"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 1.82,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 1.819989,
+  "worst_reg_to_reg_slack_ps": 3.6,
+  "worst_input_to_reg_slack_ps": 1.82,
+  "worst_output_port_slack_ps": 7.103485,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "e300439722524ff1cb7debdd9f65610a71c9b9af839e545330d94698fc49ecfe",
+  "spef_sha256": "ef055f4464f8570c07319bf0321778e0fbf7b07eb5e3c096874b9cd1e094402a",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a4fda0bf0c6aa6334886d2b03eeeb030770b6aa730a03c592988bd9f752bf566"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT, hold at FF, SS setup = ss_sensitivity; 60/25 ps",
+ "ss_sensitivity": -197.65,
+ "closes_signoff": true
+}

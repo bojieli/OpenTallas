@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.emb_hbm_hub_memory_inventory.v1",
+  "source": "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qwen_die_hub_emb.sv",
+  "source_commit": "4f7992d5d",
+  "largest_inferred_instance_bits": 66944,
+  "generic_synthesis_memory_threshold_bits": 65536,
+  "required_threshold_bits": 66944,
+  "inferred_memories": [
+    [
+      128,
+      523,
+      4
+    ],
+    [
+      32,
+      523,
+      1
+    ],
+    [
+      8,
+      1,
+      1
+    ],
+    [
+      8,
+      512,
+      1
+    ],
+    [
+      8,
+      2,
+      1
+    ],
+    [
+      8,
+      11,
+      1
+    ],
+    [
+      32,
+      25,
+      1
+    ]
+  ],
+  "total_declared_inferred_memory_bits": 289520,
+  "host_capacity_policy": "Does not cap process RAM or file size. Existing measured admission and preserved completed objects remain required.",
+  "physical_area_status": "OPEN: actual mapped cells and framed utilization must be measured; modeled FIFO capacity is unchanged.",
+  "failure": "f42e102ca hub ORFS synthesis stopped at generic65536-bit inventory limit after import repair. No hardware verdict or progressingP&R."
+}

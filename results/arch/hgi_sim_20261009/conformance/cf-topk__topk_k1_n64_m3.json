@@ -1,0 +1,157 @@
+{
+ "id": "topk_k1_n64_m3",
+ "row": "CF-TOPK",
+ "mode": "GENERIC",
+ "what": "IDX.TOPK k = 1 over 3 row(s) of 64; ties to the lowest index; ids by descending score",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000001000020060080900100000000004000300000400000000000000000000000000000000000000000150000010000010030000001000000000000000000000000000000000000000001000002000001003000000100000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000100002006008090010000000000400030000040000000000000000000000000000000000000000015000001000001003000000100000000000000000000000000000000000000000100000200000100300000010000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "IDX",
+   "op": "TOPK",
+   "param": 1,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 64,
+     "m": 3,
+     "stride": 64,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 65536,
+     "n": 1,
+     "m": 3,
+     "stride": 1,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 131072,
+     "n": 1,
+     "m": 3,
+     "stride": 1,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "c72c853f09ccd5be65a1c93e3e1ee2be9de30a409de34a40b680dc3da61152bf1967b0be9de34a409238b6bd0a01afbf2581203ffa78e63e4358cfbe253c3ebf5b66bf3f6469733e75fab63f9ed814bfb06a973f009e3f3fc17291be9363ddbf46e87a3e075b0b3e25024f3d6a4b83bfc8fb2a3f8b8c983ecda9313ef3ef5e3fb6fc073fee5d9fbf2d4da3be27c9193fe1df543f21e6a63ed035803f5cc1c83f5ede3bbf21f2013da97f2e3e9f6b843f76c1db3f1c1d4d3feb2f233fbf8238bfb35e183eb8e9b03f5d18563f970eb83e862e6dbe299ea1be0d0d074077821f3f5e48993fab2a893f2f4076bf8190c73fda01b0bf4ae9243fef8d613f67034ebf4334c6bd2829dfbd0fb54b3fd023d83d0ce3ce3f013d5b40e5f98f3e4dcfed3ee94a90bf013d5b409e76c1bfb30930bf8a3e0ebf4088d73f1958be3f02cdbf3f4af21cc0fbcb39bebe02ca3fc6a9813fd1a57b3f6961d5be3f13c93dd15b20bf9755103f24bd09401ecea63f0ae0403fd53c143ea45ec13d183a233f6929a93f013d1b40c3110fbe319fba3fd2af91be1d25933e07dae1be6c24b43d40999dbf26eacbbd2db1cc3dea2d9fbf1468863f6b1544bf861bac3f91a8963fad72a13f0631f93ebaca0240f3c7b73a2976a2bf451288be19b8c53ff9239b3e511c173f97a8803e3aa694bf7fe780bf6ca54abecc1698befe29903ff83e10bf56e098be545183bfae442f3ff5ec92be8cef8b3e190e67bf97c25840a745f5beb82d4d3e7044b6bf97c2584042a1553fef63363dc92fe7bf150f81bf8486ec3e1f5b333fe6689a3fab0ca0bece581cbfe21b1dbf6761ff3e67a69cbcba960cc07f530d40e698753f4759803feb5da2bf1380a63f5261b23fddb22bbfa9b3d53e97c218409811423f21f5fd3d558f963f17ebcd3fab6336bf6e6a813fdec87bbf409f12bfd37484bd8b9e683e9af1adbf3c00ca3fe216a23f6c1488be41bb843fe021ca3fea1b763d61af7ebf8a926abb23bd043e191905bf047448bf76ab693f0fd13ebf17848e3f4d515ebcc8bf0f3f24f9583e6cead53fc4fd3e3f5308063fb3eb2e3f"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      65536,
+      "050000000500000005000000"
+     ],
+     [
+      131072,
+      "9de34a40013d5b4097c25840"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "b7d00416f2aaa6a3e4b9ea68c473167faf65a72374efcbcacb6864a0893caef0"
+ },
+ "mutants": [
+  {
+   "name": "tie_high",
+   "defect": "ties resolved to the higher index",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "f2e6e66438429900bc61f9da0cdbee7cf1e815aa9bb949f063a507e15e704363"
+  }
+ ]
+}

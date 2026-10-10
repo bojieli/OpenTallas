@@ -37,10 +37,9 @@ def main(argv=None):
                setup_tt=C.run(o, "tt", a.macro), setup_ss=C.run(o, "ss", a.macro), hold_ff=C.run(o, "ff", a.macro),
                libraries=C.LIBS,
                tool_sha256=C.sha(Path(C.__file__)),
-               policy="OWNER OPTION B 2026-10-07: setup at TT, hold at FF, SS setup = ss_sensitivity; 60/25 ps")
+               policy=C.STA_POLICY)
     rec["ss_sensitivity"] = rec["setup_ss"]["worst_slack_ps"]
-    rec["closes_signoff"] = bool(rec["setup_tt"]["worst_slack_ps"] is not None and rec["setup_tt"]["worst_slack_ps"] >= 0
-                                 and rec["hold_ff"]["worst_slack_ps"] is not None and rec["hold_ff"]["worst_slack_ps"] >= 0)
+    rec["closes_signoff"] = C.timing_checks_pass(rec)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps({k: rec[k] for k in ("setup_tt", "setup_ss", "hold_ff", "closes_signoff")}, indent=1))

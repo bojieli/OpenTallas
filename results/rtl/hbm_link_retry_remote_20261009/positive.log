@@ -1,0 +1,7 @@
+PASS full551 payload, pressure, ringwrap, faultfree0replay
+PASS UE NAK replay full551
+PASS reset session, duplicate/stale/corrupt ACK
+PASS bounded retry exhaustion retains owned debt
+PASS full configured replay512 entries, duplicate/stale NAK
+PASS_ALL
+/srv/opentallas-data/codex/hbm-link-retry/2248cff73/src/rtl/test/tb_hbm_link_retry.sv:99: $finish called at 47836000 (1ps)

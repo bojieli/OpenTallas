@@ -1,0 +1,531 @@
+{
+  "schema": "opentallas.s81_x1b_takeover.v1",
+  "source": "28d7cb869fda34389dce3b1375671282e4f7e2e7",
+  "adoption": "OFF, candidate uses stub view; no physical closure claimed",
+  "old_qs5f_ss_violations": 768,
+  "x1b_removes_original_x_lane_class": true,
+  "residual_ss_violations": 128,
+  "residual_class": "g_rt_*_8b_y2_y_rt_*_8b_2_0 -> y_rt_*_8b_2 at526.2um",
+  "required_ss_reach_um": 504,
+  "tt_scope": "wire-reach-only PASS; not routed STA or SS qualification",
+  "owner_selected_pairs_per_frame": 14,
+  "candidate_opts_preserve_20261009_defaults": true,
+  "active_diagnostics": [
+    {
+      "host": "ot-epyc1tb",
+      "pid": 2353375,
+      "name": "x1b_hx",
+      "source": "28d7cb869",
+      "actual_added_stations": "up to2per failing hop via --hop-extra2; final model costs pending"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "pid": 2353376,
+      "name": "x1b_nott",
+      "source": "28d7cb869",
+      "purpose": "noTT relay fallback diagnostic"
+    }
+  ],
+  "runs": [
+    {
+      "case": "full",
+      "evidence": "results/physical/s81_gen_20261010/x1b_full_28d7cb869.log",
+      "sha256": "c8ef889fe5c239dcdc32ce8ca7aa1f5d10701dcbe35426fa54c16088e336dd53",
+      "geometry": {
+        "instances": 58625,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": []
+      },
+      "margin": {
+        "mode": "edges",
+        "chains": 60815,
+        "reach_um": 504.0,
+        "reach_violations": 128,
+        "far_side_relays": 3593,
+        "reach_examples": [
+          {
+            "chain": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+            "seg": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+            "seg": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+            "seg": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+            "seg": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+            "seg": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+            "seg": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+            "seg": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+            "seg": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+            "seg": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+            "seg": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+            "seg": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+            "seg": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+            "seg": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+            "seg": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+            "seg": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+            "seg": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+            "seg": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+            "seg": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+            "seg": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+            "seg": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+            "um": 526.2,
+            "hops": 1
+          }
+        ],
+        "far_side_examples": [
+          {
+            "chain": "f_KE3t_56->lk_E3",
+            "relay": "f_KE3txs_0",
+            "back_um": 286.8
+          },
+          {
+            "chain": "f_KE2t_53->lk_E2",
+            "relay": "f_KE2txs_0",
+            "back_um": 286.8
+          },
+          {
+            "chain": "f_KW3t_42->lk_W3",
+            "relay": "f_KW3txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KW2t_37->lk_W2",
+            "relay": "f_KW2txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KW1t_46->lk_W1",
+            "relay": "f_KW1txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KE1t_54->lk_E1",
+            "relay": "f_KE1txs_0",
+            "back_um": 273.9
+          },
+          {
+            "chain": "y_es_1791_1->t127_8",
+            "relay": "y_es_1791_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1777_1->t126_8",
+            "relay": "y_es_1777_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1763_1->t125_8",
+            "relay": "y_es_1763_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1749_1->t124_8",
+            "relay": "y_es_1749_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1735_1->t123_8",
+            "relay": "y_es_1735_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1721_1->t122_8",
+            "relay": "y_es_1721_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1707_1->t121_8",
+            "relay": "y_es_1707_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1693_1->t120_8",
+            "relay": "y_es_1693_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1679_1->t119_8",
+            "relay": "y_es_1679_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1665_1->t118_8",
+            "relay": "y_es_1665_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1651_1->t117_8",
+            "relay": "y_es_1651_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1637_1->t116_8",
+            "relay": "y_es_1637_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1623_1->t115_8",
+            "relay": "y_es_1623_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1609_1->t114_8",
+            "relay": "y_es_1609_2",
+            "back_um": 252.7
+          }
+        ],
+        "verdict": "FAIL",
+        "tt": {
+          "reach_um": 674.0,
+          "reach_violations": 0,
+          "verdict_reach": "PASS",
+          "max_um": 526.2
+        }
+      }
+    },
+    {
+      "case": "l1e",
+      "evidence": "results/physical/s81_gen_20261010/x1b_l1e_28d7cb869.log",
+      "sha256": "29acfb76fce60c7099340dbd7753302f98d4869468142371daceacd513f1bc58",
+      "geometry": {
+        "instances": 59320,
+        "overlaps": 0,
+        "overlap_examples": [],
+        "outside": 0,
+        "outside_examples": []
+      },
+      "margin": {
+        "mode": "edges",
+        "chains": 61509,
+        "reach_um": 504.0,
+        "reach_violations": 128,
+        "far_side_relays": 3594,
+        "reach_examples": [
+          {
+            "chain": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+            "seg": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+            "seg": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+            "seg": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+            "seg": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+            "seg": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+            "seg": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+            "seg": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+            "seg": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+            "seg": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+            "seg": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+            "seg": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+            "seg": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+            "seg": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+            "seg": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+            "seg": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+            "seg": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+            "seg": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+            "seg": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+            "seg": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+            "um": 526.2,
+            "hops": 1
+          },
+          {
+            "chain": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+            "seg": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+            "um": 526.2,
+            "hops": 1
+          }
+        ],
+        "far_side_examples": [
+          {
+            "chain": "f_KE3t_56->lk_E3",
+            "relay": "f_KE3txs_0",
+            "back_um": 286.8
+          },
+          {
+            "chain": "f_KE2t_53->lk_E2",
+            "relay": "f_KE2txs_0",
+            "back_um": 286.8
+          },
+          {
+            "chain": "f_KW3t_42->lk_W3",
+            "relay": "f_KW3txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KW1t_46->lk_W1",
+            "relay": "f_KW1txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KW2t_37->lk_W2",
+            "relay": "f_KW2txs_0",
+            "back_um": 282.5
+          },
+          {
+            "chain": "f_KE1t_54->lk_E1",
+            "relay": "f_KE1txs_0",
+            "back_um": 273.9
+          },
+          {
+            "chain": "y_es_1791_1->t127_8",
+            "relay": "y_es_1791_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1777_1->t126_8",
+            "relay": "y_es_1777_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1763_1->t125_8",
+            "relay": "y_es_1763_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1749_1->t124_8",
+            "relay": "y_es_1749_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1735_1->t123_8",
+            "relay": "y_es_1735_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1721_1->t122_8",
+            "relay": "y_es_1721_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1707_1->t121_8",
+            "relay": "y_es_1707_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1693_1->t120_8",
+            "relay": "y_es_1693_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1679_1->t119_8",
+            "relay": "y_es_1679_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1665_1->t118_8",
+            "relay": "y_es_1665_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1651_1->t117_8",
+            "relay": "y_es_1651_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1637_1->t116_8",
+            "relay": "y_es_1637_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1623_1->t115_8",
+            "relay": "y_es_1623_2",
+            "back_um": 252.7
+          },
+          {
+            "chain": "y_es_1609_1->t114_8",
+            "relay": "y_es_1609_2",
+            "back_um": 252.7
+          }
+        ],
+        "verdict": "FAIL",
+        "tt": {
+          "reach_um": 674.0,
+          "reach_violations": 0,
+          "verdict_reach": "PASS",
+          "max_um": 526.2
+        }
+      }
+    }
+  ]
+}

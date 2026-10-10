@@ -1,0 +1,34 @@
+{
+  "binding": "REVIEW_20261009.md CONFIRMED review-0637 GH1/GH-e",
+  "legal_E4M3_block_set": [
+    16
+  ],
+  "tested_parameter_count": 256,
+  "legal_accepted": 1,
+  "illegal_rejected": 255,
+  "total_lockstep_outputs": 5410,
+  "total_illegal_decode_reports": 300,
+  "bench_commit": "8a154e1bf",
+  "block_mutant_commit": "ad38d6f7d",
+  "functional_rtl_commit": "b827340df",
+  "route_rtl_unchanged": true,
+  "positive_runner_rc": 0,
+  "format_mutant_rc": 134,
+  "non16_accept_mutant_rc": 134,
+  "non16_accept_mutant_error": "DECODE mismatch",
+  "host": "ot-epyc3",
+  "admission_gib": 2,
+  "admission_basis": "samefullshape observedwholePG ~0.956GiB, conservative2GiB nohardcap",
+  "not_claimed": [
+    "fullrecordproducerconsumerclosure",
+    "sharedDSclampreachability",
+    "physicalclosure"
+  ],
+  "files": {
+    "positive.log": "af76ffded3b0692a3262eef7d105849258e7f9227900cfd037403d759d8bc858",
+    "block_accept_mutant.log": "3bcb642fb0191b4c73ea09e52a3440ef64981d435652f43c110f5a1bad31d18f",
+    "source_and_rc.txt": "cb0cad1dc2dca44b0f1c564e76bbc5c23dde7c72dc5bbbdcd564060155617b2c",
+    "format_mutant.log": "743da9e4936edb8d31ce3043033bf2b0f28ea8e65099262c6304918547d8ef0c",
+    "positive.time": "30663427a0313315667af35edbf035d884a578b98f82477b52c2ffad7b1144fc"
+  }
+}

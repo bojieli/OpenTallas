@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-tau.v1",
+ "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+ "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+ "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+ "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+ "max_new_tokens": 512,
+ "mode": "non-thinking chat template, greedy",
+ "compute_dtype": "float32",
+ "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
+ "samples": [
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_bfcl",
+   "prompt_id": "simple_219",
+   "thinking": false,
+   "prompt_index": 0,
+   "prompt_tokens": 241,
+   "generated": 32,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.9375,
+   "tau_bf16_S7_B3": 2.8181818181818183,
+   "tau_bf16_S7_B4": 3.4444444444444446,
+   "tau_bf16_S7_B5": 4.428571428571429,
+   "tau_bf16_S7_B6": 5.166666666666667,
+   "tau_bf16_S7_B7": 5.166666666666667,
+   "tau_bf16_S7_B8": 6.2,
+   "tau_bf16_S3_B4": 3.4444444444444446,
+   "tau_bf16_S1_B2": 1.8235294117647058,
+   "seconds": 462.5
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_bfcl",
+   "prompt_id": "simple_199",
+   "thinking": false,
+   "prompt_index": 1,
+   "prompt_tokens": 227,
+   "generated": 31,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.875,
+   "tau_bf16_S7_B3": 2.727272727272727,
+   "tau_bf16_S7_B4": 3.3333333333333335,
+   "tau_bf16_S7_B5": 4.285714285714286,
+   "tau_bf16_S7_B6": 5.0,
+   "tau_bf16_S7_B7": 5.0,
+   "tau_bf16_S7_B8": 5.0,
+   "tau_bf16_S3_B4": 3.3333333333333335,
+   "tau_bf16_S1_B2": 1.875,
+   "seconds": 466.3
+  }
+ ],
+ "fp32_greedy_check": null,
+ "device": "cpu",
+ "prompts_jsonl": {
+  "path": "src/prompts.jsonl.gz",
+  "sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+  "class_map": {
+   "chat": [
+    "chat_mt_bench"
+   ],
+   "reasoning": [
+    "reasoning_math500"
+   ],
+   "coding": [
+    "reasoning_humaneval"
+   ],
+   "agentic": [
+    "agentic_swe_agent",
+    "agentic_tau_bench",
+    "agentic_mind2web"
+   ],
+   "assistant_fc": [
+    "agentic_bfcl",
+    "agentic_json_mode"
+   ]
+  }
+ }
+}

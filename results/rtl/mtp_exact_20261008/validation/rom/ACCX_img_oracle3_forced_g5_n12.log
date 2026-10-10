@@ -1,0 +1,35 @@
+ITER it=0 pos=3 in=2047 accepted=3 emitted=4 cycles=2316388 draft_cycles=195658 fault=0
+HEAD 9: 4040 logits differ
+HEAD 10: 4040 logits differ
+HEAD 11: 4040 logits differ
+HEAD 12: 4040 logits differ
+HEAD 13: 4040 logits differ
+ITER it=1 pos=7 in=1762 accepted=1 emitted=2 cycles=2453606 draft_cycles=198044 fault=0
+ITER it=2 pos=9 in=1564 accepted=1 emitted=2 cycles=2523086 draft_cycles=199492 fault=0
+ITER it=3 pos=11 in=3898 accepted=1 emitted=2 cycles=2594918 draft_cycles=200924 fault=0
+ITER it=4 pos=13 in=3784 accepted=1 emitted=2 cycles=2665438 draft_cycles=209164 fault=0
+vm 0 rtl 3f3a0000 expect c0b40000
+vm 1 rtl 3f450000 expect 3ff90000
+vm 2 rtl befe0000 expect 3f220000
+vm 3 rtl bff70000 expect bead0000
+vm 4 rtl 3ff30000 expect c0290000
+vm 5 rtl bf9a0000 expect bfea0000
+vm 6 rtl bf950000 expect 3fb50000
+vm 7 rtl be9c0000 expect 3f390000
+vm 8 rtl becd0000 expect bf9b0000
+vm 9 rtl 3e660000 expect 3fa10000
+kv 6 rtl 3f000000 expect 3f300000
+kv 7 rtl c0000000 expect bed00000
+kv 8 rtl bed00000 expect 3fc00000
+kv 9 rtl 3f900000 expect 3b400000
+kv 10 rtl bfc00000 expect 3fc00000
+kv 11 rtl 3fb00000 expect bfc00000
+kv 12 rtl bfb00000 expect 3ec00000
+kv 13 rtl 3e700000 expect bfc00000
+kv 14 rtl bfb00000 expect bed00000
+kv 22 rtl 3df00000 expect 40000000
+HDC41_MTP prompt=3 generated=13 iters=5 token_mismatches=8 accept_mismatches=5 heads=33 head_mismatches=24 prefill_cycles=967745 iter_cycles=12553436 draft_cycles=1003282 vm_mismatch=99093 kv_mismatch=64399
+ACCEPT_HIST a0=0 a1=4 a2=0 a3=1 a4=0 a5=0
+UTIL me_busy=4581768 su_busy=4856025 qe_busy=2270886 xu_busy=961974 he_busy=1649140
+FAIL
+- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish

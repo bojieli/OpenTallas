@@ -1,0 +1,951 @@
+{
+  "passed": true,
+  "scope": "one actual 4A+1B+4Markov successor bundle; shared lookup; A_INPUT_STAGES4; manifest interior and shard ends21/22; not full die/physical closure",
+  "results": [
+    {
+      "die": 0,
+      "bundle": 83,
+      "valid_rows": 128,
+      "exit": 0,
+      "passed": true,
+      "image_manifest": {
+        "schema": "opentallas.md6.semantic-bundle-image.v1",
+        "adopted": false,
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "head.weight",
+        "checkpoint_header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            5120
+          ],
+          "data_offsets": [
+            0,
+            1323827200
+          ]
+        },
+        "index_sha256": null,
+        "source_window_provenance": {
+          "die": 0,
+          "bundle": 83,
+          "row0": 10624,
+          "VALID_ROWS": 128,
+          "payloads": [
+            {
+              "key": "head.weight",
+              "shard": "model-00043-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  5120
+                ],
+                "data_offsets": [
+                  0,
+                  1323827200
+                ]
+              },
+              "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+              "file_byte_offset": 108789944,
+              "file_byte_count": 1310720,
+              "source_rows": [
+                10624,
+                10752
+              ],
+              "name": "head.bin"
+            },
+            {
+              "key": "mtp.2.markov_head.head.weight",
+              "shard": "model-00046-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  256
+                ],
+                "data_offsets": [
+                  71470552,
+                  137661912
+                ]
+              },
+              "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+              "file_byte_offset": 76995664,
+              "file_byte_count": 65536,
+              "source_rows": [
+                10624,
+                10752
+              ],
+              "name": "markov.bin"
+            }
+          ]
+        },
+        "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+        "die": 0,
+        "bundle": 83,
+        "global_row0": 10624,
+        "B_VALID_ROWS": 128,
+        "A": [
+          {
+            "A": 0,
+            "row0": 10624,
+            "VALID_ROWS": 32,
+            "head": {
+              "payload_sha256": "44b51b367943ffa4aa12557644a94967abb14b9b6e78019776544c945b87ad60",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10624,
+              "VALID_ROWS": 32,
+              "payload_sha256": "191c9ad796bd398707d04e771ae1ebaec6ed1a57bde6fdf8da7b61d4748fb3cc",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 1,
+            "row0": 10656,
+            "VALID_ROWS": 32,
+            "head": {
+              "payload_sha256": "91c225744d0e5fa4fe618dd2f4fd8501e129692c2fa6954000bfb3a0721970f6",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10656,
+              "VALID_ROWS": 32,
+              "payload_sha256": "885a710e1b08104925e12cb252fc7aa6f9c40d543c4e4365882b548f0aede2d4",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 2,
+            "row0": 10688,
+            "VALID_ROWS": 32,
+            "head": {
+              "payload_sha256": "e6bc1250e3836b0f332f4b056f13f587b8dc6278d6ca66335075e86b301f3906",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10688,
+              "VALID_ROWS": 32,
+              "payload_sha256": "ed42d165c66100ba9347d07713942369f3e28ce98a47bd08f6a89b5b502e187f",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 3,
+            "row0": 10720,
+            "VALID_ROWS": 32,
+            "head": {
+              "payload_sha256": "a41d46933cfb067dfae200480e58e408afe66cb34d40e295b35947744ff69176",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10720,
+              "VALID_ROWS": 32,
+              "payload_sha256": "422d6f3c7346ca06d5d44c64070138c1e29950992def0a0a3686d827ec26d767",
+              "serialized_readback": true
+            }
+          }
+        ],
+        "B": {
+          "payload_sha256": "bd799e79e897ace1738705077edba3b724e8203dc4fea0d8d60d79cc6333be3f",
+          "released_and_padding_readback": true
+        },
+        "K_spans": {
+          "A": [
+            0,
+            4096
+          ],
+          "B": [
+            4096,
+            5120
+          ],
+          "Markov": [
+            0,
+            256
+          ]
+        },
+        "SK": 11,
+        "B_row_order": "n=4*k+q; global row=global_row0+32*q+k",
+        "released_payload_sha256": "1efd757eab192cfad7e0a70230b95bfcb0c506c005d73cd5d5c36321858563b9",
+        "padding_rows": 0,
+        "padding": "zero image words; VALID_ROWS masks argmax; scheduled rows still consumed",
+        "ROM_ECC": false,
+        "images": {
+          "mk2_0.viamap.hex": "a147879841c3ea2028047967e1c70a8ed6ff9ad561b125069a738aa13219d406",
+          "ha1_1.viamap.hex": "181a42e0f1f975e56f3b5980d49580104a345be87d65bee25bad4643e58e44d2",
+          "ha0_1.viamap.hex": "24b7f652ecc1a2b7fa3b1a858fd8a9576ce58a1844c06eb87a9277e53b2273df",
+          "mk2_1.viamap.hex": "25dd5dbf3c8e458b71b73c891fba6c1664a01bceaf2b930da739fffb32047739",
+          "ha3_1.viamap.hex": "12c4151a5e93c9546b5e16e332abfbec305c88890d4bee2eae6ea7d2b1f19ec8",
+          "ha2_0.viamap.hex": "b82dfdec23f17abf44c3c813146ef217cf67e9378df2e502a1cc8fbc45f80860",
+          "ha0_0.viamap.hex": "218ca2e1085a5cc79e92e4eb3d772e85036166e76a81ffdf8328256eead3db7c",
+          "mk0_1.viamap.hex": "80a65e6b082f266eedb19d13a30ae00e8514a0247775daebb04da8c768fcf757",
+          "hb_0.viamap.hex": "4f989a8c849c3968543f0639f35b35e5b15030838c413b81ef97979d14cf38ec",
+          "mk3_1.viamap.hex": "e978b9dfa7512845f44c023f9cf81883f369cbd1034f1802779dde6e0c48ff19",
+          "hb_1.viamap.hex": "9b81392e3b454feab1c14dbd0140bbf24b203e2729f21f81486503b46cce9899",
+          "ha2_1.viamap.hex": "cddd6960232d07bc5bcb3e3e41ce7df1b093c5ae8f7d38e806bd111f728068ac",
+          "mk1_1.viamap.hex": "b70514f1809afac62ceb89ea16737e74a66d30e86d92d667039db599ffc46e2e",
+          "mk3_0.viamap.hex": "b8f9b56924b153e130eb56fb1a79205767751832c1ebabce2c7e4a75ad3c6068",
+          "mk1_0.viamap.hex": "a422a8096fa1b15c092051de37e77540f6dee3f56a90996e2b6df03c93c6ef52",
+          "ha1_0.viamap.hex": "eaac0074ae520aaa5a8c9f076eed3d47c547a693a3f64590414ba1274588abf1",
+          "ha3_0.viamap.hex": "3911b8344249cc48d33e4bdc49bb7646e46fd5f6386bb8b19bf707296774a6a2",
+          "mk0_0.viamap.hex": "d41546da37f8d919c58065ea6dd37c2ee5285876e10bf9b90f34bce9ef1de5ae"
+        }
+      }
+    },
+    {
+      "die": 0,
+      "bundle": 84,
+      "valid_rows": 21,
+      "exit": 0,
+      "passed": true,
+      "image_manifest": {
+        "schema": "opentallas.md6.semantic-bundle-image.v1",
+        "adopted": false,
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "head.weight",
+        "checkpoint_header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            5120
+          ],
+          "data_offsets": [
+            0,
+            1323827200
+          ]
+        },
+        "index_sha256": null,
+        "source_window_provenance": {
+          "die": 0,
+          "bundle": 84,
+          "row0": 10752,
+          "VALID_ROWS": 21,
+          "payloads": [
+            {
+              "key": "head.weight",
+              "shard": "model-00043-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  5120
+                ],
+                "data_offsets": [
+                  0,
+                  1323827200
+                ]
+              },
+              "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+              "file_byte_offset": 110100664,
+              "file_byte_count": 215040,
+              "source_rows": [
+                10752,
+                10773
+              ],
+              "name": "head.bin"
+            },
+            {
+              "key": "mtp.2.markov_head.head.weight",
+              "shard": "model-00046-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  256
+                ],
+                "data_offsets": [
+                  71470552,
+                  137661912
+                ]
+              },
+              "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+              "file_byte_offset": 77061200,
+              "file_byte_count": 10752,
+              "source_rows": [
+                10752,
+                10773
+              ],
+              "name": "markov.bin"
+            }
+          ]
+        },
+        "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+        "die": 0,
+        "bundle": 84,
+        "global_row0": 10752,
+        "B_VALID_ROWS": 21,
+        "A": [
+          {
+            "A": 0,
+            "row0": 10752,
+            "VALID_ROWS": 21,
+            "head": {
+              "payload_sha256": "3fe943a472d6d8e56d0a5461a547763db4f99f8f5315e064a046fc0ee37fcbb7",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10752,
+              "VALID_ROWS": 21,
+              "payload_sha256": "3df3c2096806db7cdb7fa6466c65e790fdade77e0b79610690bc752f7bd82d17",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 1,
+            "row0": 10784,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10784,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 2,
+            "row0": 10816,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10816,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 3,
+            "row0": 10848,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 10848,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          }
+        ],
+        "B": {
+          "payload_sha256": "f88950e22e43e97de3b2bfb52c877dbf9e111b8293b5f4f146d31d5da224a2e4",
+          "released_and_padding_readback": true
+        },
+        "K_spans": {
+          "A": [
+            0,
+            4096
+          ],
+          "B": [
+            4096,
+            5120
+          ],
+          "Markov": [
+            0,
+            256
+          ]
+        },
+        "SK": 11,
+        "B_row_order": "n=4*k+q; global row=global_row0+32*q+k",
+        "released_payload_sha256": "18cc210a22c582ce904e90b561e81a866da2bd51629c33f7964b2340e2f2b259",
+        "padding_rows": 107,
+        "padding": "zero image words; VALID_ROWS masks argmax; scheduled rows still consumed",
+        "ROM_ECC": false,
+        "images": {
+          "mk2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha0_1.viamap.hex": "17e845b397f6f4343b5d9dad68e91da0d57e4737a05fbf456f1b2f4ae9ca560b",
+          "mk2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha0_0.viamap.hex": "71a6d9b85a7e0bc66d21153fd2ec3480e08eaa10b1e59e674d25a3206d71af10",
+          "mk0_1.viamap.hex": "1ebe0eaa582d0f7cc7500dc4af49c9e1d26c013bc34c5c58c1469d3772346ab4",
+          "hb_0.viamap.hex": "33bfaff07bf9756244cc681b20573b5261b930ec98ee1c3a5ade09543607bc73",
+          "mk3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "hb_1.viamap.hex": "9c07767cb6daf4fca838bda9530a449ecf11dc99e43f84c27eddead2e6d6fb31",
+          "ha2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk0_0.viamap.hex": "5170fa724649e6da636626ed685516ab28c4d91369055fed7862c6f9f135578e"
+        }
+      }
+    },
+    {
+      "die": 2,
+      "bundle": 84,
+      "valid_rows": 22,
+      "exit": 0,
+      "passed": true,
+      "image_manifest": {
+        "schema": "opentallas.md6.semantic-bundle-image.v1",
+        "adopted": false,
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "head.weight",
+        "checkpoint_header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            5120
+          ],
+          "data_offsets": [
+            0,
+            1323827200
+          ]
+        },
+        "index_sha256": null,
+        "source_window_provenance": {
+          "die": 2,
+          "bundle": 84,
+          "row0": 32298,
+          "VALID_ROWS": 22,
+          "payloads": [
+            {
+              "key": "head.weight",
+              "shard": "model-00043-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  5120
+                ],
+                "data_offsets": [
+                  0,
+                  1323827200
+                ]
+              },
+              "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+              "file_byte_offset": 330731704,
+              "file_byte_count": 225280,
+              "source_rows": [
+                32298,
+                32320
+              ],
+              "name": "head.bin"
+            },
+            {
+              "key": "mtp.2.markov_head.head.weight",
+              "shard": "model-00046-of-00048.safetensors",
+              "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+              "header": {
+                "dtype": "BF16",
+                "shape": [
+                  129280,
+                  256
+                ],
+                "data_offsets": [
+                  71470552,
+                  137661912
+                ]
+              },
+              "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+              "file_byte_offset": 88092752,
+              "file_byte_count": 11264,
+              "source_rows": [
+                32298,
+                32320
+              ],
+              "name": "markov.bin"
+            }
+          ]
+        },
+        "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+        "die": 2,
+        "bundle": 84,
+        "global_row0": 32298,
+        "B_VALID_ROWS": 22,
+        "A": [
+          {
+            "A": 0,
+            "row0": 32298,
+            "VALID_ROWS": 22,
+            "head": {
+              "payload_sha256": "d0420364bea397cd997e53ecb6d44475d63387310d552aea3dfd18626791669d",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 32298,
+              "VALID_ROWS": 22,
+              "payload_sha256": "35b5314796b3c88577c9f3cdb59112618cf59c264ea4ef34db202ff9e3966d03",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 1,
+            "row0": 32330,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 32330,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 2,
+            "row0": 32362,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 32362,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          },
+          {
+            "A": 3,
+            "row0": 32394,
+            "VALID_ROWS": 0,
+            "head": {
+              "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+              "released_and_padding_readback": true
+            },
+            "Markov": {
+              "row0": 32394,
+              "VALID_ROWS": 0,
+              "payload_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "serialized_readback": true
+            }
+          }
+        ],
+        "B": {
+          "payload_sha256": "691c6fee3bbf0ab6b3a1d2b2553b7868bb07b52c8303b089ffa1ee23603193c7",
+          "released_and_padding_readback": true
+        },
+        "K_spans": {
+          "A": [
+            0,
+            4096
+          ],
+          "B": [
+            4096,
+            5120
+          ],
+          "Markov": [
+            0,
+            256
+          ]
+        },
+        "SK": 11,
+        "B_row_order": "n=4*k+q; global row=global_row0+32*q+k",
+        "released_payload_sha256": "dbaedbca56fa3744b8b36501493d55dbc58882c5e6ed836c35c88bf4f6fb1246",
+        "padding_rows": 106,
+        "padding": "zero image words; VALID_ROWS masks argmax; scheduled rows still consumed",
+        "ROM_ECC": false,
+        "images": {
+          "mk2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha0_1.viamap.hex": "a894248bec32a5643352575de08a945b363ce73f15b6a7162b2273e7eaab3054",
+          "mk2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha0_0.viamap.hex": "42a789beb2db7c1ec3b811a3b9fcaca8b71159748942adfd9882c00138be68ad",
+          "mk0_1.viamap.hex": "d247a2c284c56869ef431df058c974ad0197c33efb0282d18d112e583a8be9b0",
+          "hb_0.viamap.hex": "248e30afe45bea34cdf3fdd1a3c4b036dc24ef30e71d101419a9fee583b5e4fa",
+          "mk3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "hb_1.viamap.hex": "2f746f770701e6e4ed1a5224a75d92be4e3191987f0acaf1684909c5ca68bf91",
+          "ha2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "ha3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk0_0.viamap.hex": "bca2d953c8364568e79e75ea21397d875cc4d1eca33df1365411cfb3c657d7f4"
+        }
+      }
+    }
+  ],
+  "activation_and_embedding": {
+    "head.bin": {
+      "key": "head.weight",
+      "rows": [
+        21920,
+        21921,
+        21922,
+        21923,
+        21924,
+        21925,
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21932,
+        21933,
+        21934,
+        21935,
+        21936,
+        21937,
+        21938,
+        21939,
+        21940,
+        21941,
+        21942,
+        21943,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21950,
+        21951
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          5120
+        ],
+        "data_offsets": [
+          0,
+          1323827200
+        ]
+      },
+      "shard": "model-00043-of-00048.safetensors",
+      "sha256": "91b36dfedd66e1542472fc7f176b60ee831ea1f34f8479d16ce954d3326cc3c3"
+    },
+    "weight.bin": {
+      "key": "mtp.2.markov_head.head.weight",
+      "rows": [
+        21920,
+        21921,
+        21922,
+        21923,
+        21924,
+        21925,
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21932,
+        21933,
+        21934,
+        21935,
+        21936,
+        21937,
+        21938,
+        21939,
+        21940,
+        21941,
+        21942,
+        21943,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21950,
+        21951
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          71470552,
+          137661912
+        ]
+      },
+      "shard": "model-00046-of-00048.safetensors",
+      "sha256": "cd16cd1b1cae27f2a2d39195e3f9ff80e7b599cbaf5bb0f8b0520c904a275cd8"
+    },
+    "embed.bin": {
+      "key": "mtp.2.markov_head.embed.weight",
+      "rows": [
+        21946
+      ],
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          5279192,
+          71470552
+        ]
+      },
+      "shard": "model-00046-of-00048.safetensors",
+      "sha256": "5f0a69bb44b4e3ba8a75e8f566def14733a5ccc4f80b0ee834d754a409d13fdc"
+    },
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "row0": 21920,
+    "token": 21946
+  },
+  "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+  "window_provenance": {
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "endianness": "little raw BF16 words; no conversion",
+    "windows": [
+      {
+        "die": 0,
+        "bundle": 83,
+        "row0": 10624,
+        "VALID_ROWS": 128,
+        "payloads": [
+          {
+            "key": "head.weight",
+            "shard": "model-00043-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                5120
+              ],
+              "data_offsets": [
+                0,
+                1323827200
+              ]
+            },
+            "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+            "file_byte_offset": 108789944,
+            "file_byte_count": 1310720,
+            "source_rows": [
+              10624,
+              10752
+            ],
+            "name": "head.bin"
+          },
+          {
+            "key": "mtp.2.markov_head.head.weight",
+            "shard": "model-00046-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                256
+              ],
+              "data_offsets": [
+                71470552,
+                137661912
+              ]
+            },
+            "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+            "file_byte_offset": 76995664,
+            "file_byte_count": 65536,
+            "source_rows": [
+              10624,
+              10752
+            ],
+            "name": "markov.bin"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "bundle": 84,
+        "row0": 10752,
+        "VALID_ROWS": 21,
+        "payloads": [
+          {
+            "key": "head.weight",
+            "shard": "model-00043-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                5120
+              ],
+              "data_offsets": [
+                0,
+                1323827200
+              ]
+            },
+            "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+            "file_byte_offset": 110100664,
+            "file_byte_count": 215040,
+            "source_rows": [
+              10752,
+              10773
+            ],
+            "name": "head.bin"
+          },
+          {
+            "key": "mtp.2.markov_head.head.weight",
+            "shard": "model-00046-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                256
+              ],
+              "data_offsets": [
+                71470552,
+                137661912
+              ]
+            },
+            "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+            "file_byte_offset": 77061200,
+            "file_byte_count": 10752,
+            "source_rows": [
+              10752,
+              10773
+            ],
+            "name": "markov.bin"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "bundle": 84,
+        "row0": 21525,
+        "VALID_ROWS": 21,
+        "payloads": [
+          {
+            "key": "head.weight",
+            "shard": "model-00043-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                5120
+              ],
+              "data_offsets": [
+                0,
+                1323827200
+              ]
+            },
+            "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+            "file_byte_offset": 220416184,
+            "file_byte_count": 215040,
+            "source_rows": [
+              21525,
+              21546
+            ],
+            "name": "head.bin"
+          },
+          {
+            "key": "mtp.2.markov_head.head.weight",
+            "shard": "model-00046-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                256
+              ],
+              "data_offsets": [
+                71470552,
+                137661912
+              ]
+            },
+            "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+            "file_byte_offset": 82576976,
+            "file_byte_count": 10752,
+            "source_rows": [
+              21525,
+              21546
+            ],
+            "name": "markov.bin"
+          }
+        ]
+      },
+      {
+        "die": 2,
+        "bundle": 84,
+        "row0": 32298,
+        "VALID_ROWS": 22,
+        "payloads": [
+          {
+            "key": "head.weight",
+            "shard": "model-00043-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                5120
+              ],
+              "data_offsets": [
+                0,
+                1323827200
+              ]
+            },
+            "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+            "file_byte_offset": 330731704,
+            "file_byte_count": 225280,
+            "source_rows": [
+              32298,
+              32320
+            ],
+            "name": "head.bin"
+          },
+          {
+            "key": "mtp.2.markov_head.head.weight",
+            "shard": "model-00046-of-00048.safetensors",
+            "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+            "header": {
+              "dtype": "BF16",
+              "shape": [
+                129280,
+                256
+              ],
+              "data_offsets": [
+                71470552,
+                137661912
+              ]
+            },
+            "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+            "file_byte_offset": 88092752,
+            "file_byte_count": 11264,
+            "source_rows": [
+              32298,
+              32320
+            ],
+            "name": "markov.bin"
+          }
+        ]
+      }
+    ]
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "1fd607d6540d3a644ba64fcc7c596bf9c52ce6bdb9a2c068883aaf7f56252034",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv": "acd4663aff09cd4b8ffce232a431734cfc34cc41682e616c72d4a85fde1d2da5",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv": "5f425991704c88906c6bd6d9e18953f962132b8f892c378127a93eeb8d975e54",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_bundle.sv": "b45efa914afb71c54162e457cbb552a271c945ff59d2f97f28621071d540f510"
+  },
+  "physical_qualified": false
+}

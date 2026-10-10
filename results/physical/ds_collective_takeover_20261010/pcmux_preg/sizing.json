@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.pcmux_parallel_pin.v1",
+  "adopted": false,
+  "default_off": true,
+  "models": [
+    "DeepSeek-V4.1 ROM"
+  ],
+  "master": "ot_s81_native_pc_mux_plain",
+  "opt_in": {
+    "PICK": 1,
+    "PRE": 1,
+    "OREG": 0,
+    "PREG": 1
+  },
+  "MACs_per_cycle": 0,
+  "compute_intensity_MACs_per_byte": 0,
+  "communication_intensity_bits_per_cycle": 3113,
+  "memory": {
+    "queue_sources": 4,
+    "depth_per_source": 8,
+    "payload_bits": 340,
+    "max_write_bytes_per_cycle": 170,
+    "max_head_read_bytes_per_cycle": 170
+  },
+  "boundary": {
+    "input_bits_per_cycle": 1645,
+    "output_bits_per_cycle": 1468,
+    "input_pin_flops": 1645,
+    "parallel_output_pin_flops": 1468,
+    "added_boundary_bits_per_cycle": 0
+  },
+  "replicas": {
+    "masters": 1,
+    "source_queues": 4,
+    "entries_per_queue": 8
+  },
+  "mux_demux": {
+    "head_mux_inputs": 4,
+    "source_demux_outputs": 4,
+    "output_copy_Q_to_D_paths": 0,
+    "parallel_next_equation_sinks": 2,
+    "payload_muxes_unchanged": true
+  },
+  "routing": {
+    "top_face_bits": 2488,
+    "bottom_face_bits": 625,
+    "nominal_face_tracks": 7500.0,
+    "capacity_assumption": "M4/M6 64nm pitch; nominal, no congestion qualification",
+    "next_equation_added_sink_max": 1,
+    "unqualified": true
+  },
+  "area": {
+    "slot_um": [
+      240,
+      480
+    ],
+    "core_area_um2": 114423.5664,
+    "baseline_synthesis_area_um2": 10052.341,
+    "baseline_source": "pcmux_ob_a c60bc4ed7 2_1_floorplan.log",
+    "conservative_area_upper_um2": 21488.341,
+    "utilization_bound": 0.18779646253011742,
+    "assumptions": "5um2 per pin flop plus4096 gates at1um2 each; upper sizing allowance, not measured area",
+    "floorplan_fit_analytical": true,
+    "physical_fit": false
+  },
+  "latency": {
+    "input_boundary_cycles": 1,
+    "output_boundary_cycles": 0,
+    "saved_cycles_vs_OREG": 1,
+    "request_boundary_round_trip_cycles": 1,
+    "response_boundary_cycles": 1,
+    "credit_depth": 8,
+    "token_latency_saving_ns_upper_per_crossing": 0.833333,
+    "per_user_rate_gain": null,
+    "contract": "All outputs equal input-registered core at same edge after POR; metadata/payload/credit share edge; no transaction reordering"
+  },
+  "correctness_gate": "Full 4-source x8-entry x340-bit queue closed-loop bench plus next-equation and alignment mutants",
+  "physical_gate": "Full-shape source-pinned PREG1 TT>=0 FF>=0 DRC0 with unchanged uncertainty and independent loop reSTA"
+}

@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "hbm_svc_SE_s5_tt_c10b5fc9a",
+ "block": "hfd_svc_SE_s5",
+ "die": "hbm_r25",
+ "die_master": "hfd_svc_SE_s5",
+ "tile": null,
+ "host": "ot-epyc3",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tt_c10b5fc9a",
+ "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tt_c10b5fc9a/routes/hbm_svc_SE_s5_tt_c10b5fc9a/work/orfs",
+ "measured_at": "2026-10-08T20:36:15-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 541.6,
+    "T": 833.0
+   },
+   "fq6": {
+    "L": 1113.0,
+    "T": 833.0
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 434.6,
+    "T": 833.0
+   },
+   "fq6": {
+    "L": 791.4,
+    "T": 833.0
+   }
+  }
+ },
+ "r2r": {
+  "tt": 67.83,
+  "ff": 10.01
+ },
+ "errors": [],
+ "ports": {
+  "ei": {
+   "dir": "in",
+   "bits": 558,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 1946.0,
+   "h": 11.7
+  },
+  "q6": {
+   "dir": "in",
+   "bits": 44,
+   "clock": "fq6",
+   "T": 833.0,
+   "R": 1946.0,
+   "h": -434.6
+  },
+  "wi": {
+   "dir": "in",
+   "bits": 648,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 90.9,
+   "h": 0.2
+  },
+  "eo": {
+   "dir": "out",
+   "bits": 376,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 234.4,
+   "smin": 111.5
+  },
+  "l6": {
+   "dir": "out",
+   "bits": 1102,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 443.9,
+   "smin": -36.7
+  },
+  "phy": {
+   "dir": "out",
+   "bits": 2488,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 1664.4,
+   "smin": -12.4
+  },
+  "wo": {
+   "dir": "out",
+   "bits": 560,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 262.3,
+   "smin": 137.5
+  }
+ },
+ "fwd": {},
+ "internal_ok": true
+}

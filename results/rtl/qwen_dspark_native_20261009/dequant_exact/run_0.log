@@ -1,0 +1,2 @@
+QWEN_W1_DEQUANT_PASS packets=262144 exact_or_quarantined_products=16777216 allBF16=65536 allINT8=256 native64lanes=1 stall_identity=1
+rtl/test/qwen_system/tb_qwen_dspark_w1_dequant.sv:32: $finish called at 1197121376 (1ps)

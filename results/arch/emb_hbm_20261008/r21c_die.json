@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.emb_hbm_r21c.v1",
+ "recipe": "r21c = r21b + emb_hbm (tools/die_top_lint.py QWEN_R21C)",
+ "die_um": [
+  25815.456,
+  32801.76
+ ],
+ "die_mm2": 846.792,
+ "reticle_mm2": 858,
+ "margin_mm2": 11.208,
+ "note": "die outline unchanged (IO band depth kept); the 11.046 mm2 r21b placeholder is freed as IO-band slack (7,063.6 um of band length); a re-cut IO band is not part of r21c",
+ "allocated_mm2_excl_freed": 835.746,
+ "margin_if_band_slack_counted_mm2": 22.254,
+ "relay_stages_r21c": {
+  "emb_a": 12,
+  "emb": 21,
+  "emb_cr": 12
+ },
+ "relay_stages_r21b": {
+  "emb_a": 54,
+  "emb": 58,
+  "emb_cr": 56
+ },
+ "r21c": {
+  "removed": {
+   "instance": "io_embedding_rom",
+   "master": "qfd_io_embedding_rom",
+   "rect_um": [
+    4688.928,
+    31216.32,
+    7063.608,
+    1563.816
+   ],
+   "mm2": 11.046,
+   "buses_dropped": [
+    "clk_r115"
+   ],
+   "note": "the r21b placeholder; the RTL-sized full replica (2,374 code + 3 scale bank parents + 2,376 taps + root) would need ~88.1 mm2 (EMB_HBM_FEASIBILITY.md)"
+  },
+  "rerouted": [
+   "emb_a (26 b) sp_su64_sfu.ea -> hub_el.ea",
+   "emb (513 b) hub_el.eq -> sp_su64_sfu.eq",
+   "emb_cr (1 b) hub_el.ecr -> sp_su64_sfu.ecr"
+  ],
+  "rtl": {
+   "qfd_hub": "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv ot_qwen_die_hub_emb_top (+ ot_qfd_emb_gw)",
+   "qfd_ctrl (per PC)": "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv (ot_hbm_r14_stream_pc_srow SROW 1) + ot_qfd_emb_pcport.sv",
+   "qfd_kvc (strip end)": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv + ot_qfd_link_far.sv (class split)"
+  },
+  "in_frame_mm2": {
+   "gateway_in_hub": 0.0041,
+   "strip_engine_per_stack": 0.0358,
+   "pcport_per_pc": 0.00197
+  },
+  "io_band_slack_um": 7063.632
+ }
+}

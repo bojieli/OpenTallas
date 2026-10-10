@@ -1,0 +1,54 @@
+{
+  "verdict": "PASS",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/tb_hgi_vm_wide.sv": "94d39b20be60c3deafdddab08dd222e7f4bafa98a2f18b9be99152e47c33c76b",
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_wide.sv": "d4c1268aed02918e433ee283053faa599749d062171bed6f0e02b30b81de230e",
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_wide_bank.sv": "2cd7d79262b4d39dadb188069d2cc892e9f1b53b8ed1b62bb832e411db700c0c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "expected_pass": true,
+      "log": "results/rtl/hgi_vm_wide_body_20261010_r2/run_gate_m0.log"
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "expected_pass": false,
+      "log": "results/rtl/hgi_vm_wide_body_20261010_r2/run_gate_m1.log"
+    }
+  ],
+  "actual_macros": 16,
+  "logical_banks": 4,
+  "physical_banks": 8,
+  "measured_DMA_sectors": 512,
+  "native_COLL_commits": 10,
+  "packet_responses": 20,
+  "write_body_elapsed_cycles": 5,
+  "read_body_elapsed_cycles": 6,
+  "mechanisms": [
+    "real macro II2 phase interleave",
+    "shared native/DMA write arbitration",
+    "concurrent packet read/native writes",
+    "OUT8 overload negative",
+    "inorder returned user tags",
+    "response backpressure",
+    "uninitialized read rejection",
+    "cold partial-word initialization visibility",
+    "mirrored held response data and control",
+    "high address and alignment rejection"
+  ],
+  "macro_bank_exact_mutants_source": "59a9e0b4f",
+  "default_adoption": false,
+  "physical_qualified": false,
+  "capacity_composition": {
+    "replica_quad_tiles": 128,
+    "bank_roof_decoded_Bpc": 16384,
+    "FP32raw_Bpc": 16384,
+    "BF16raw_Bpc": 8192,
+    "FP8raw_Bpc": 4096,
+    "includes_measured_HBM_utilization": false
+  }
+}

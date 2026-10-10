@@ -1,0 +1,7 @@
+SHADOW_ERROR response poison mismatch transaction=682
+SHADOW_ERROR response data mismatch transaction=682
+SHADOW_METRICS transactions=693 reads=415 writes=278 full_reads=272 stall_cycles=1415 max_response_cycles=4 bad=2 mut=2
+SHADOW_VERDICT FAIL
+[5580000000] %Fatal: tb_hbm_accel_dskv_shadow_sram.sv:143: Assertion failed in tb_hbm_accel_dskv_shadow_sram: shadow exactness gate failed
+%Error: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/test/hbm_accel/tb_hbm_accel_dskv_shadow_sram.sv:143: Verilog $stop
+Aborting...

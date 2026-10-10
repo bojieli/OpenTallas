@@ -261,6 +261,11 @@ def qwen():
         dict(item="emb_root_lvt", lo=0, hi=0, what="Embedding root LVT: 0 cycles", status="0"),
     ]
     res = dict(basis="unified_composition qwen_rom (1.2 GHz, AR mode)", items=items, rows={})
+    # emb-hbm 2026-10-08: the embedding moved to attached HBM (owner decision ~21:00 PT).  Its measured per-token cycles
+    # are RECORDED for the next reprice run, not applied here (no new headline until the design review passes).
+    emb = ROOT / "results/arch/emb_hbm_20261008/reprice_item.json"
+    if emb.exists():
+        res["pending_next_reprice"] = json.loads(emb.read_text())
     for base_key in ("unified_candidate", "unified_candidate_with_closure_upper"):
         cyc0 = u[base_key]["cycles"]
         for key in ("lo", "hi"):
@@ -275,6 +280,19 @@ def qwen():
     return res
 
 
+OPTIONAL_TARGETS = ("qwen_hbm",)
+
+
+def optional_prices(namespace):
+    """Include a target only after its composition implementation lands.
+
+    This discovery does not supply a speculative acceptance rate or turn a
+    design study into a measured composition.
+    """
+    return {name: namespace[name]() for name in OPTIONAL_TARGETS
+            if callable(namespace.get(name))}
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="reprice-") as td:
@@ -282,6 +300,7 @@ def main():
                    rule="today's recorded closure cycle costs only, each itemised and composed cumulatively by the existing "
                         "composition tools; upper bounds where a cost's exposure is not measured; no physical adoption implied",
                    ds_rom=ds_rom(Path(td)), hbm_ds=hbm(), qwen_rom=qwen())
+        rec.update(optional_prices(globals()))
     (OUT / "reprice.json").write_text(json.dumps(rec, indent=1) + "\n")
     d = rec["ds_rom"]
     for k in d["before"]:

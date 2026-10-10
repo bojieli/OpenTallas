@@ -1,0 +1,230 @@
+{
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "endianness": "little raw BF16 words; no conversion",
+  "windows": [
+    {
+      "die": 0,
+      "bundle": 83,
+      "row0": 10624,
+      "VALID_ROWS": 128,
+      "payloads": [
+        {
+          "key": "head.weight",
+          "shard": "model-00043-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              5120
+            ],
+            "data_offsets": [
+              0,
+              1323827200
+            ]
+          },
+          "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+          "file_byte_offset": 108789944,
+          "file_byte_count": 1310720,
+          "source_rows": [
+            10624,
+            10752
+          ],
+          "name": "head.bin"
+        },
+        {
+          "key": "mtp.2.markov_head.head.weight",
+          "shard": "model-00046-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              256
+            ],
+            "data_offsets": [
+              71470552,
+              137661912
+            ]
+          },
+          "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+          "file_byte_offset": 76995664,
+          "file_byte_count": 65536,
+          "source_rows": [
+            10624,
+            10752
+          ],
+          "name": "markov.bin"
+        }
+      ]
+    },
+    {
+      "die": 0,
+      "bundle": 84,
+      "row0": 10752,
+      "VALID_ROWS": 21,
+      "payloads": [
+        {
+          "key": "head.weight",
+          "shard": "model-00043-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              5120
+            ],
+            "data_offsets": [
+              0,
+              1323827200
+            ]
+          },
+          "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+          "file_byte_offset": 110100664,
+          "file_byte_count": 215040,
+          "source_rows": [
+            10752,
+            10773
+          ],
+          "name": "head.bin"
+        },
+        {
+          "key": "mtp.2.markov_head.head.weight",
+          "shard": "model-00046-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              256
+            ],
+            "data_offsets": [
+              71470552,
+              137661912
+            ]
+          },
+          "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+          "file_byte_offset": 77061200,
+          "file_byte_count": 10752,
+          "source_rows": [
+            10752,
+            10773
+          ],
+          "name": "markov.bin"
+        }
+      ]
+    },
+    {
+      "die": 1,
+      "bundle": 84,
+      "row0": 21525,
+      "VALID_ROWS": 21,
+      "payloads": [
+        {
+          "key": "head.weight",
+          "shard": "model-00043-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              5120
+            ],
+            "data_offsets": [
+              0,
+              1323827200
+            ]
+          },
+          "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+          "file_byte_offset": 220416184,
+          "file_byte_count": 215040,
+          "source_rows": [
+            21525,
+            21546
+          ],
+          "name": "head.bin"
+        },
+        {
+          "key": "mtp.2.markov_head.head.weight",
+          "shard": "model-00046-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              256
+            ],
+            "data_offsets": [
+              71470552,
+              137661912
+            ]
+          },
+          "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+          "file_byte_offset": 82576976,
+          "file_byte_count": 10752,
+          "source_rows": [
+            21525,
+            21546
+          ],
+          "name": "markov.bin"
+        }
+      ]
+    },
+    {
+      "die": 2,
+      "bundle": 84,
+      "row0": 32298,
+      "VALID_ROWS": 22,
+      "payloads": [
+        {
+          "key": "head.weight",
+          "shard": "model-00043-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              5120
+            ],
+            "data_offsets": [
+              0,
+              1323827200
+            ]
+          },
+          "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+          "file_byte_offset": 330731704,
+          "file_byte_count": 225280,
+          "source_rows": [
+            32298,
+            32320
+          ],
+          "name": "head.bin"
+        },
+        {
+          "key": "mtp.2.markov_head.head.weight",
+          "shard": "model-00046-of-00048.safetensors",
+          "source_blob": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+          "header": {
+            "dtype": "BF16",
+            "shape": [
+              129280,
+              256
+            ],
+            "data_offsets": [
+              71470552,
+              137661912
+            ]
+          },
+          "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+          "file_byte_offset": 88092752,
+          "file_byte_count": 11264,
+          "source_rows": [
+            32298,
+            32320
+          ],
+          "name": "markov.bin"
+        }
+      ]
+    }
+  ]
+}

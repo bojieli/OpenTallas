@@ -1,0 +1,21 @@
+{
+  "status": "PREBUILD_MODEL_NOT_ADOPTED",
+  "source": "results/rtl/s81_ctrl_20261008/programs/index.json",
+  "block": "ot_s81_engine_adapter",
+  "replicas_per_die_max": 12,
+  "macs_per_cycle": 0,
+  "clock_domains_GHz": {"controller": 1.2, "serial_engine": 0.9},
+  "ports_bits_per_cycle": {"controller_cmd": 84, "controller_done": 8, "engine_cmd": 84, "engine_done": 8},
+  "queue_depth": 8,
+  "storage_per_replica_bits": {"pulse_cmd_queue": 672, "async_cmd_queue": 672, "pulse_done_queue": 64, "async_done_queue": 64, "source_tag_ownership": 256, "engine_tag_ownership": 256},
+  "listed_storage_per_die_bits": 23808,
+  "additional_control": "Four queue pointer/count sets, two outstanding counts, reset and pointer synchronizers; no arithmetic datapath.",
+  "replica_cost": "Independent per-engine queues and ownership, no global descriptor mux/demux or data fanout; stage sequencer already has12 native ports.",
+  "memory_bytes_per_cycle": {"each_command_queue_write": 10.5, "each_command_queue_read": 10.5, "each_done_queue_write": 1, "each_done_queue_read": 1},
+  "channel_tracks": "Native84+valid command and8+valid done per engine, plus local ready/inputs-present. Existing controller binding manifests must route these to adjacent adapters with actual budget; no claimed floorplan fit before synthesis.",
+  "floorplan": "Adapter must be beside each target engine; a singleton0.15mm2 controller slot does not include these replicas. Existing die generator must add measured adapter area and boundary budget before physical eligibility.",
+  "command_latency_budget_controller_cycles": 12,
+  "done_latency_budget_controller_cycles": 12,
+  "token_latency": "Descriptors arrive ahead of data. Existing golden-stage proof covers12 cycles each direction atQD8. Actual adapter visibility will be measured; repeat stage proof only if measured bound exceeds12. Late descriptors or slower clock/dispatch will be priced rather than given speculative zero-cycle credit.",
+  "admission": "New compilation/simulation only on remote hosts through admission guard; exactness, actual descriptor visibility, and SS/FF closure still gate adoption. No local validation execution."
+}

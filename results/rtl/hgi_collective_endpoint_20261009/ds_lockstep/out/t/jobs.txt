@@ -1,0 +1,10 @@
+ar pos +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=1
+ar pos +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=1
+ar pos +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1
+ar pos +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1 +SAMECOL=1
+ga pos +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1
+ga pos +VEC=fx/gather_pf1 +PF=1 +RANK=95 +SEED=1
+ga pos +VEC=fx/gather_pf64 +PF=64 +RANK=0 +SEED=1
+ga pos +VEC=fx/gather_pf64 +PF=64 +RANK=95 +SEED=1
+arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=1
+arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=1

@@ -1,0 +1,5 @@
+#!/bin/bash
+# sql - query sales.db through the warm query server.  ./sql .tables | ./sql ".schema TABLE" | ./sql .indexes | ./sql "SELECT ..."
+q="$*"; [ -z "$q" ] && q="$(cat)"
+exec 3<>/dev/tcp/127.0.0.1/17655 || { echo "sql: query server not running"; exit 2; }
+printf '%s\0' "$q" >&3; cat <&3; exec 3<&-

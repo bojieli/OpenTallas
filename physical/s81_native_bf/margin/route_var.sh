@@ -11,12 +11,14 @@ L=${1:?label}; shift; S=${SRC:-.}; O=${OUT:?out}/$L; mkdir -p $O; cd $S
 V=${BF_VAR:?BF_VAR=half|recut}
 SS=${CK_SS_MEAN:-1042}
 export OT_ORFS_NUM_CORES=16 OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29}
-POST="--post-sdc physical/s81_native_bf/margin/signoff_ref.sdc"
+# BF option C (2026-10-09): PER (route period, ns; default .730) / SIGNOFF_SDC (default signoff_ref.sdc, 833.333 ps):
+# the full-rate BF element in a 3:4 (900 MHz, 1111.111 ps) domain routes at PER=.980 and signs off with signoff_ref_c900.sdc.
+POST="--post-sdc ${SIGNOFF_SDC:-physical/s81_native_bf/margin/signoff_ref.sdc}"
 [ "$V" = half ] && POST="$POST --post-sdc physical/s81_native_bf/margin/half_mc.sdc"
 VA="--$V"
 [ "$V" = unroll ] && { VA="--recut --recut-level 3"; POST="$POST --post-sdc physical/s81_native_bf/margin/u2_mc.sdc"; }
 echo "$(date -Is) START $(hostname) var=$V ss=$SS args=$*" >> $O/MANIFEST
-python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period .730 --work $O/work --output $O/physical.json \
+python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period ${PER:-.730} --work $O/work --output $O/physical.json \
   --util 45 --tag $L --ins-ss $SS --ins-ff $SS --extra="$*" > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" > $O/exit
 if [ $rc -eq 0 ] && [[ " $* " != *"--pnr-stop-after"* ]]; then

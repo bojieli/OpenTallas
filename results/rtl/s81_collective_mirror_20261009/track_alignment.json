@@ -1,0 +1,306 @@
+{
+ "macros": [
+  {
+   "allowed_orientations": [
+    "R0"
+   ],
+   "dimension_parity": {
+    "M4": {
+     "axis_dim_nm": 340200,
+     "dim_mod_track_pitch_nm": 24,
+     "fix": {
+      "needed": false
+     },
+     "mirror_residue_shift_nm": 0,
+     "orientation_flipping_this_axis": [
+      "MX",
+      "R180"
+     ],
+     "row_or_site_multiple": true,
+     "track_pitch_nm": 48
+    },
+    "M5": {
+     "axis_dim_nm": 345600,
+     "dim_mod_track_pitch_nm": 0,
+     "fix": {
+      "grow_dimension_free": {
+       "area_delta_pct": 0.007,
+       "area_delta_um2": 8.165,
+       "delta_nm": 24,
+       "new_dim_nm": 345624
+      },
+      "grow_dimension_on_snap_grid": {
+       "area_delta_pct": 0.062,
+       "area_delta_um2": 73.483,
+       "delta_nm": 216,
+       "new_dim_nm": 345816,
+       "snap_nm": 216
+      },
+      "needed": true,
+      "shift_pins_keep_dim": {
+       "note": "zero area; unmirrored origin residue changes by -shift",
+       "pin_shift_options_nm": [
+        -12,
+        12
+       ]
+      }
+     },
+     "mirror_residue_shift_nm": 24,
+     "orientation_flipping_this_axis": [
+      "MY",
+      "R180"
+     ],
+     "row_or_site_multiple": true,
+     "track_pitch_nm": 48
+    }
+   },
+   "findings": [
+    "M5: same-layer OBS within min spacing of pins",
+    "M4: same-layer OBS within min spacing of pins",
+    "M4: pins on adjacent tracks (centre step 48 nm)"
+   ],
+   "lef": "s81-collective-mirror-audit/inputs/w_view/dsfd_coll_lane_w.lef",
+   "macro": "dsfd_coll_lane_w",
+   "orientations": {
+    "M4": {
+     "R0": {
+      "adjacent_layer_via_access": {
+       "M3": {
+        "axis": "x",
+        "by_edge": {
+         "L": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            35
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 1028
+         },
+         "R": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            35
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 1113
+         }
+        },
+        "track_period_nm": 36
+       },
+       "M5": {
+        "axis": "x",
+        "by_edge": {
+         "L": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            47
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 1028
+         },
+         "R": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            47
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 1113
+         }
+        },
+        "track_period_nm": 48
+       }
+      },
+      "joint_with_row": {
+       "joint_period_nm": 2160,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 270
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "y",
+      "track_period_nm": 48,
+      "uniform": true
+     }
+    },
+    "M5": {
+     "R0": {
+      "adjacent_layer_via_access": {
+       "M4": {
+        "axis": "y",
+        "by_edge": {
+         "T": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            47
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 3
+         }
+        },
+        "track_period_nm": 48
+       },
+       "M6": {
+        "axis": "y",
+        "by_edge": {
+         "T": {
+          "crossing_origin_residues_nm": [
+           [
+            0,
+            63
+           ]
+          ],
+          "origin_0_crosses_all": true,
+          "pins": 3
+         }
+        },
+        "track_period_nm": 64
+       }
+      },
+      "joint_with_site": {
+       "joint_period_nm": 432,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 54
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "x",
+      "track_period_nm": 48,
+      "uniform": true
+     }
+    }
+   },
+   "pg_pins": [
+    "VDD",
+    "VSS"
+   ],
+   "pin_checks": {
+    "M4": {
+     "adjacent_layer_obs_covers_pin": {
+      "M3": 0,
+      "M5": 0
+     },
+     "below_min_area": 0,
+     "below_min_width": 0,
+     "min_area_nm2": 2000,
+     "min_width_nm": 24,
+     "pin_area_nm2": [
+      4608,
+      4608
+     ],
+     "pin_centre_steps_nm": [
+      48,
+      96,
+      192
+     ],
+     "pin_width_nm": [
+      24,
+      24
+     ],
+     "pins_on_macro_edge": 2141,
+     "pref_track_pitch_nm": 48,
+     "preferred_direction": "H",
+     "same_layer_obs_min_gap_nm": 0,
+     "same_layer_obs_overlap_or_within_spacing": 2141
+    },
+    "M5": {
+     "adjacent_layer_obs_covers_pin": {
+      "M4": 0,
+      "M6": 0
+     },
+     "below_min_area": 0,
+     "below_min_width": 0,
+     "min_area_nm2": 2000,
+     "min_width_nm": 24,
+     "pin_area_nm2": [
+      4608,
+      4608
+     ],
+     "pin_centre_steps_nm": [
+      4800
+     ],
+     "pin_width_nm": [
+      24,
+      24
+     ],
+     "pins_on_macro_edge": 3,
+     "pref_track_pitch_nm": 48,
+     "preferred_direction": "V",
+     "same_layer_obs_min_gap_nm": 0,
+     "same_layer_obs_overlap_or_within_spacing": 3
+    }
+   },
+   "pin_layers": {
+    "M4": 2141,
+    "M5": 3
+   },
+   "signal_pins": 2144,
+   "size_um": [
+    345.6,
+    340.2
+   ],
+   "summary": {
+    "M4": {
+     "no_legal_origin": [],
+     "offtrack_under_origin_0_snap": [],
+     "orientation_invariant": true,
+     "origin_rule_mod_track_nm": {
+      "R0": [
+       0
+      ]
+     }
+    },
+    "M5": {
+     "no_legal_origin": [],
+     "offtrack_under_origin_0_snap": [],
+     "orientation_invariant": true,
+     "origin_rule_mod_track_nm": {
+      "R0": [
+       0
+      ]
+     }
+    }
+   },
+   "symmetry": []
+  }
+ ],
+ "schema": "opentallas.macro_track_alignment.v1",
+ "site_nm": [
+  54,
+  270
+ ],
+ "tracks_source": "ORFS flow/platforms/asap7/openRoad/make_tracks.tcl"
+}

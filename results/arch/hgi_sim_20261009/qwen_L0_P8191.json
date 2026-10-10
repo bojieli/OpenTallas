@@ -1,0 +1,917 @@
+{
+ "schema": "opentallas.hgi_sim.qwen_proof.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T10:43:29Z",
+ "host": "ot-epyc1tb",
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218",
+ "stage": "layer",
+ "layer": 0,
+ "position": 8191,
+ "runs": [
+  {
+   "stage": "layer",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 34,
+   "image_bytes": 3712,
+   "executed_records": 33,
+   "wall_s": 2.4,
+   "families": {
+    "prenorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "qkv+row_scale_qkv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "qknorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "rope": {
+     "checks": 4,
+     "exact": 4
+    },
+    "round_q": {
+     "checks": 4,
+     "exact": 4
+    },
+    "kv_append": {
+     "checks": 16,
+     "exact": 16
+    },
+    "attention_qk": {
+     "checks": 4,
+     "exact": 4
+    },
+    "softmax": {
+     "checks": 4,
+     "exact": 4
+    },
+    "attention_pv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "pv_normalize": {
+     "checks": 4,
+     "exact": 4
+    },
+    "o": {
+     "checks": 4,
+     "exact": 4
+    },
+    "all_reduce_o+row_scale_o+residual": {
+     "checks": 4,
+     "exact": 4
+    },
+    "gu+row_scale_gu": {
+     "checks": 4,
+     "exact": 4
+    },
+    "swiglu": {
+     "checks": 4,
+     "exact": 4
+    },
+    "down": {
+     "checks": 4,
+     "exact": 4
+    },
+    "all_reduce_down+row_scale_down+residual": {
+     "checks": 4,
+     "exact": 4
+    }
+   },
+   "failures": [],
+   "record_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "end",
+    "gu",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 0
+  },
+  {
+   "stage": "layer",
+   "layer": 0,
+   "position": 8191,
+   "mutant": "rope_adjacent",
+   "pass_": false,
+   "records": 34,
+   "image_bytes": 3712,
+   "executed_records": 33,
+   "wall_s": 1.9,
+   "families": {
+    "prenorm": {
+     "checks": 8,
+     "exact": 4
+    },
+    "qkv+row_scale_qkv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "qknorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "rope": {
+     "checks": 4,
+     "exact": 0
+    },
+    "round_q": {
+     "checks": 4,
+     "exact": 0
+    },
+    "kv_append": {
+     "checks": 16,
+     "exact": 8
+    },
+    "attention_qk": {
+     "checks": 4,
+     "exact": 0
+    },
+    "softmax": {
+     "checks": 4,
+     "exact": 0
+    },
+    "attention_pv": {
+     "checks": 4,
+     "exact": 0
+    },
+    "pv_normalize": {
+     "checks": 4,
+     "exact": 0
+    },
+    "o": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_o+row_scale_o+residual": {
+     "checks": 4,
+     "exact": 0
+    },
+    "gu+row_scale_gu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "swiglu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "down": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_down+row_scale_down+residual": {
+     "checks": 4,
+     "exact": 0
+    }
+   },
+   "failures": [
+    {
+     "family": "rope",
+     "what": "q",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "round_q",
+     "what": "q_bf16",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "kv_append",
+     "what": "K0",
+     "die": 0,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "kv_append",
+     "what": "K1",
+     "die": 0,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_qk",
+     "what": "scores*scale",
+     "die": 0,
+     "n": 65536,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "softmax",
+     "what": "Z",
+     "die": 0,
+     "n": 8,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_pv",
+     "what": "pv",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "pv_normalize",
+     "what": "attn",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "o",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_o+row_scale_o+residual",
+     "what": "x_mid",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "prenorm",
+     "what": "ffn",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "gu+row_scale_gu",
+     "what": "gu",
+     "die": 0,
+     "n": 6144,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "swiglu",
+     "what": "act",
+     "die": 0,
+     "n": 3072,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "down",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_down+row_scale_down+residual",
+     "what": "x_out",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "rope",
+     "what": "q",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "round_q",
+     "what": "q_bf16",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "kv_append",
+     "what": "K0",
+     "die": 1,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "kv_append",
+     "what": "K1",
+     "die": 1,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_qk",
+     "what": "scores*scale",
+     "die": 1,
+     "n": 65536,
+     "bit_exact": false,
+     "first_bad": 0
+    }
+   ],
+   "record_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "end",
+    "gu",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 0
+  },
+  {
+   "stage": "layer",
+   "layer": 0,
+   "position": 8191,
+   "mutant": "kv_swap",
+   "pass_": false,
+   "records": 34,
+   "image_bytes": 3712,
+   "executed_records": 33,
+   "wall_s": 1.5,
+   "families": {
+    "prenorm": {
+     "checks": 8,
+     "exact": 4
+    },
+    "qkv+row_scale_qkv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "qknorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "rope": {
+     "checks": 4,
+     "exact": 4
+    },
+    "round_q": {
+     "checks": 4,
+     "exact": 4
+    },
+    "kv_append": {
+     "checks": 16,
+     "exact": 16
+    },
+    "attention_qk": {
+     "checks": 4,
+     "exact": 0
+    },
+    "softmax": {
+     "checks": 4,
+     "exact": 0
+    },
+    "attention_pv": {
+     "checks": 4,
+     "exact": 0
+    },
+    "pv_normalize": {
+     "checks": 4,
+     "exact": 0
+    },
+    "o": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_o+row_scale_o+residual": {
+     "checks": 4,
+     "exact": 0
+    },
+    "gu+row_scale_gu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "swiglu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "down": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_down+row_scale_down+residual": {
+     "checks": 4,
+     "exact": 0
+    }
+   },
+   "failures": [
+    {
+     "family": "attention_qk",
+     "what": "scores*scale",
+     "die": 0,
+     "n": 65536,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "softmax",
+     "what": "Z",
+     "die": 0,
+     "n": 8,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_pv",
+     "what": "pv",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "pv_normalize",
+     "what": "attn",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "o",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_o+row_scale_o+residual",
+     "what": "x_mid",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "prenorm",
+     "what": "ffn",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "gu+row_scale_gu",
+     "what": "gu",
+     "die": 0,
+     "n": 6144,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "swiglu",
+     "what": "act",
+     "die": 0,
+     "n": 3072,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "down",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_down+row_scale_down+residual",
+     "what": "x_out",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_qk",
+     "what": "scores*scale",
+     "die": 1,
+     "n": 65536,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "softmax",
+     "what": "Z",
+     "die": 1,
+     "n": 8,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_pv",
+     "what": "pv",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "pv_normalize",
+     "what": "attn",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "o",
+     "what": "partial",
+     "die": 1,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_o+row_scale_o+residual",
+     "what": "x_mid",
+     "die": 1,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "prenorm",
+     "what": "ffn",
+     "die": 1,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "gu+row_scale_gu",
+     "what": "gu",
+     "die": 1,
+     "n": 6144,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "swiglu",
+     "what": "act",
+     "die": 1,
+     "n": 3072,
+     "bit_exact": false,
+     "first_bad": 0
+    }
+   ],
+   "record_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "end",
+    "gu",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 0
+  },
+  {
+   "stage": "layer",
+   "layer": 0,
+   "position": 8191,
+   "mutant": "qknorm_bf16",
+   "pass_": false,
+   "records": 34,
+   "image_bytes": 3712,
+   "executed_records": 33,
+   "wall_s": 1.7,
+   "families": {
+    "prenorm": {
+     "checks": 8,
+     "exact": 4
+    },
+    "qkv+row_scale_qkv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "qknorm": {
+     "checks": 8,
+     "exact": 0
+    },
+    "rope": {
+     "checks": 4,
+     "exact": 0
+    },
+    "round_q": {
+     "checks": 4,
+     "exact": 0
+    },
+    "kv_append": {
+     "checks": 16,
+     "exact": 9
+    },
+    "attention_qk": {
+     "checks": 4,
+     "exact": 0
+    },
+    "softmax": {
+     "checks": 4,
+     "exact": 0
+    },
+    "attention_pv": {
+     "checks": 4,
+     "exact": 0
+    },
+    "pv_normalize": {
+     "checks": 4,
+     "exact": 0
+    },
+    "o": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_o+row_scale_o+residual": {
+     "checks": 4,
+     "exact": 0
+    },
+    "gu+row_scale_gu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "swiglu": {
+     "checks": 4,
+     "exact": 0
+    },
+    "down": {
+     "checks": 4,
+     "exact": 0
+    },
+    "all_reduce_down+row_scale_down+residual": {
+     "checks": 4,
+     "exact": 0
+    }
+   },
+   "failures": [
+    {
+     "family": "qknorm",
+     "what": "q",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "qknorm",
+     "what": "k",
+     "die": 0,
+     "n": 256,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "rope",
+     "what": "q",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "round_q",
+     "what": "q_bf16",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "kv_append",
+     "what": "K0",
+     "die": 0,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 32
+    },
+    {
+     "family": "kv_append",
+     "what": "K1",
+     "die": 0,
+     "n": 128,
+     "bit_exact": false,
+     "first_bad": 19
+    },
+    {
+     "family": "attention_qk",
+     "what": "scores*scale",
+     "die": 0,
+     "n": 65536,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "softmax",
+     "what": "Z",
+     "die": 0,
+     "n": 8,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "attention_pv",
+     "what": "pv",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "pv_normalize",
+     "what": "attn",
+     "die": 0,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "o",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_o+row_scale_o+residual",
+     "what": "x_mid",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "prenorm",
+     "what": "ffn",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "gu+row_scale_gu",
+     "what": "gu",
+     "die": 0,
+     "n": 6144,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "swiglu",
+     "what": "act",
+     "die": 0,
+     "n": 3072,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "down",
+     "what": "partial",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "all_reduce_down+row_scale_down+residual",
+     "what": "x_out",
+     "die": 0,
+     "n": 4096,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "qknorm",
+     "what": "q",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "qknorm",
+     "what": "k",
+     "die": 1,
+     "n": 256,
+     "bit_exact": false,
+     "first_bad": 0
+    },
+    {
+     "family": "rope",
+     "what": "q",
+     "die": 1,
+     "n": 1024,
+     "bit_exact": false,
+     "first_bad": 0
+    }
+   ],
+   "record_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "end",
+    "gu",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 0
+  }
+ ],
+ "spec": "HGI-1 v0.9 (024fa2af1)",
+ "source_sha256": {
+  "hgi_sim/records.py": "93974eaa31e62a45973a742ed0f261184381033ce060664e48c367644659b1f6",
+  "hgi_sim/lib.py": "f17a3b8ffce378bec66c844dc0b074459b5189d7c69c93221408fa2829a6893a",
+  "hgi_sim/machine.py": "07515666126c5c513d4ca47c89ceeaf33ea100da8bacab50fe6d7f11b568f870",
+  "hgi_sim/qwen_compiler.py": "6ad9a747e1d4c6727cb2f4f5b46bd2837e9d0daedab31ee4deeaa57eea7dba2b",
+  "hgi_sim/qwen_proof.py": "e8040c3619d5b80ceaca5e74cf7fd2186206c98152b71700045bef78d2401404",
+  "qwen_r25_golden.py": "d6feb1247e08708a6f15a8e63ef4e2376d316dc04cd8ba06e4f298f058412439",
+  "hbm_generic_iface.py": "02d82eeaecf6937d0504382e542de90b809639c6b236ac061b8df96a25d0b826"
+ }
+}

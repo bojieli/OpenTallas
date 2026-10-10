@@ -1,0 +1,87 @@
+{
+  "name": "bfa_tcg_pinlat_a1200_45c0807b1-cl",
+  "block": "ot_s81_bf_native",
+  "owner": "Codex:bf-deadline",
+  "purpose": "Owner21:30PT BF deadline: exact structural TCG+BXST2+FXST2+PINLAT combination. 37localclock/resettiles retain setup fixes; 1614 declared low-phase pin lockups remove cross-root shortpath race. Modelc08d67645. No clock/uncertainty relaxation. Bothowner-authorized1.2GHz and900MHz physical variants. Synthesis recipe successor: optional genblk3 generate prefix, assert four actual ROM macros; old synthesis infrastructure failure retained.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc2",
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+    "branch": "codex/bf-tcg-pinlat-20261010",
+    "commit": "45c0807b1bd0569b551af47467c6182694cd7094"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "new CTS topology but the route reference is only the TT boundary mean for route-time setup IO; same-RTL measurement 841 (bfk_recut_qze_ttref calib.json) used; the verdict re-STAs at the routed insertion (BF-PINCLK owner deadline: no serial calibrate)"
+    },
+    "route": {
+      "cmd": "export CK_SS_MEAN=841; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/s81_native_bf/margin/pinclk_group.tcl'; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL} --hold-margin-ns 0.000 --param QZE=1 --param TCG=1 --param BXST=2 --param FXST=2 --param PINLAT=1",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "peak_ram_gb": 60
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && (grep -h \"BF_PINCLK\\|BF_INHOLD_PAD\\|BF_IO\" {RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/4_1_cts.log > {RUN}/record/pinclk_cts.txt || true)"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "pinclk_group_built",
+        "cmd": "grep -q '^BF_PINCLK group: ' {RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/4_1_cts.log"
+      },
+      {
+        "name": "combined_full_pair_exact_gate",
+        "cmd": "python3 -c 'import json;d=json.load(open('\"'\"'{CL}/bf_tcg_pinlat_exact.json'\"'\"'));assert d['\"'\"'pass'\"'\"'] and d['\"'\"'source_commit'\"'\"'].startswith('\"'\"'c8a5b4352'\"'\"');assert d['\"'\"'cases'\"'\"']['\"'\"'positive'\"'\"']['\"'\"'ok'\"'\"'];assert all(d['\"'\"'cases'\"'\"'][k]['\"'\"'ok'\"'\"'] and any('\"'\"'DIFF'\"'\"' in m for m in d['\"'\"'cases'\"'\"'][k]['\"'\"'markers'\"'\"']) for k in ('\"'\"'mutant_dp'\"'\"','\"'\"'mutant_recut'\"'\"','\"'\"'mutant_pinlat'\"'\"','\"'\"'mutant_tcg'\"'\"','\"'\"'mutant_xst'\"'\"','\"'\"'mutant_fxst'\"'\"'))'"
+      },
+      {
+        "name": "exact_gate_native_rtl_byte_identity",
+        "cmd": "sha256sum {SRC}/rtl/s81/ot_s81_bf_native.sv | grep -q '^a8d7593ad80dc3823187d009a95fdebe6efd332f319886a21248023776ebd7dd '"
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_native_bf/margin/signoff_ref.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+    ]
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "Guarded rev3 reproduces SS/FF sign-off independently; owner BF recovery requests first hold-only ECO",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/s81_bf_tcg_pinlat_20261010/bfa_tcg_pinlat_a1200_45c0807b1-cl"
+    }
+  ],
+  "cycles_added": "PINLAT +0vsfull948dc49b1; TCG0; BXST2/FXST2 +2partialcycles vsflatQZE. 900MHzprices all BFwork4/3 of1.2GHz.",
+  "merge_target": null,
+  "no_bench_reason": "Minimum full native pair benchmark sourcec8a5b4352 onEPYC3; positive and six trueDIFF mutants required by separate verdictcheck at{CL}/bf_tcg_pinlat_exact.json. No adoption until checkpasses.",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "fp_lint": {
+    "set": {
+      "sliver_um": 10.0
+    },
+    "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
+  }
+}

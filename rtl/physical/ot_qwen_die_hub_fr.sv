@@ -23,7 +23,8 @@ module ot_qwen_die_hub_fr #(
     parameter integer OD  = 8,
     parameter integer XS  = 8,
     parameter integer ARC = 4,
-    parameter integer AD  = 8
+    parameter integer AD  = 8,
+    parameter integer RXAFW = 0     // safe-qwen S-A4: receive endpoint FIFO with per-slice read-pointer copies (cdc_ch AFW)
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -55,7 +56,7 @@ module ot_qwen_die_hub_fr #(
     reg  [3:0]         rcnt [0:NL-1];
     generate for (k = 0; k < NL; k = k + 1) begin : g_rx
         wire [LW-1:0] w = l_i[k*LW +: LW];
-        ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD)) u_rx (
+        ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD), .AFW(RXAFW)) u_rx (
             .wclk(fck[k]), .wrst_n(rst_n), .i_v(w[0]), .i_d({w[15:5], w[LW-1:16]}), .i_cr(rcr[k]), .w_fault(rwf[k]),
             .rclk(ck), .rrst_n(rst_n), .o_v(rv[k]), .o_d(rd[k*523 +: 523]), .o_cr(rtake[k]), .r_fault(rrf[k]));
         reg [3:0] cb, cg;

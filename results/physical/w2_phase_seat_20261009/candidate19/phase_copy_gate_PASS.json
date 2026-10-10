@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "positive",
+      "returncode": 0,
+      "expected": 0,
+      "log": "PASS full37word localphase selection upset\n/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/phase_copy_gate/tb.sv:15: $finish called at 110000 (1ps)\n"
+    },
+    {
+      "name": "missing_phase_identity",
+      "returncode": 1,
+      "expected": 1,
+      "log": "FATAL: /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/phase_copy_gate/tb.sv:14: unchecked phase selection replica escaped\n       Time: 140000  Scope: tb\n"
+    },
+    {
+      "name": "odd_delay_chain",
+      "returncode": 1,
+      "expected": 1,
+      "log": "FATAL: /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/phase_copy_gate/tb.sv:11: boot\n       Time: 80000  Scope: tb\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "e700b5a5010f854b6ce33999dbe0ab165c2198719c2a68843e685f30d055b8ed",
+    "tools/w2_phase_copy_gate.py": "95edc559cbb183ff39a7720d3442000c87a916fdfec3f81fc3f86d7acc5704ae"
+  }
+}

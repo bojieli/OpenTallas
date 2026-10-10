@@ -1,0 +1,83 @@
+{
+  "source_commit": "f6d441b6a",
+  "recipe": {
+    "top": "ot_hgi_argmax18_m",
+    "sources": [
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv"
+    ],
+    "params": {
+      "LP": "8",
+      "FLAT": "7",
+      "FAST": "1",
+      "GENERIC18": "1"
+    },
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "key": "e8df6787972b2114908376ac",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n",
+  "result": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 12,
+    "reg_to_out_max": 1,
+    "reg_to_out_example": "out_range_fault",
+    "cells": 64113,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ],
+    "top": "ot_hgi_argmax18_m",
+    "levels": 16,
+    "strict": true,
+    "verdict": "PASS",
+    "message": "rtl_boundary ot_hgi_argmax18_m: registered boundary (in->reg 12, reg->out 1 levels)"
+  },
+  "cache_entry": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 12,
+    "reg_to_out_max": 1,
+    "reg_to_out_example": "out_range_fault",
+    "cells": 64113,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "cache_path": "../boundary_cache/rtl_boundary_cache.json"
+}
+	Command being timed: "python3 ../boundary_check.py"
+	User time (seconds): 2.62
+	System time (seconds): 0.28
+	Percent of CPU this job got: 125%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 194956
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 137318
+	Voluntary context switches: 14986
+	Involuntary context switches: 390
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 80
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

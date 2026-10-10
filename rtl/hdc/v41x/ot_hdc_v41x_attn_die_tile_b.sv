@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+// hbm-phys-1010 [att]: the quad's CG parameter selects the gated RTL in simulation; in synthesis the quad is the hard
+// macro whose view IS the gated (CG 1: quad_b_tc/c891a57cf_cg_hm10) or ungated quad (route_half_cl.sh pairs them), and a
+// hard-macro cell has no parameters.
+`ifndef OT_ATTN_QCG
+`ifdef SYNTHESIS
+`define OT_ATTN_QCG
+`else
+`define OT_ATTN_QCG #(.CG(CG))
+`endif
+`endif
 // ---------------------------------------------------------------------------
 // HBM attention DIE TILE, margin + option-B version (Claude HBM SU/attn, 2026-10-06): the die master hfd_attn_tile
 // (exact r16h ports, faces and pin positions; the HBM-ABSTRACTS interim view physical/hbm_accel_die_views/attn_tile/rtl
@@ -46,6 +56,40 @@ module ot_attn_bpipe #(
     end endgenerate
 endmodule
 
+// hbm-phys-1010 [att]: the quad-result pipe (<= 136 bits) on the right-sized ot_attn_bank_{sn,ew}136 banks.  In a 544
+// bank it routed 408 dead spare wires every hop (the hi half's SE merge corner: 42.8 k of its 103 k GRT-overflow net
+// mentions).  Same parameters and bank instance names (gn.g_s[s].g_c[0].g_{sn,ew}.u_b) as ot_attn_bpipe.
+module ot_attn_bpipe136 #(
+    parameter integer W = 136,
+    parameter integer N = 1,
+    parameter integer EW0 = 0,
+    parameter integer EWN = 0,
+    parameter integer EWM = 0
+) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    initial if (W > 136) $fatal(1, "ot_attn_bpipe136: W <= 136");
+    genvar s, c;
+    generate if (N == 0) begin : g0
+        assign q = d;
+    end else begin : gn
+        wire [135:0] st [0:N];
+        assign st[0] = {{(136-W){1'b0}}, d};
+        for (s = 0; s < N; s = s + 1) begin : g_s
+            for (c = 0; c < 1; c = c + 1) begin : g_c
+                if ((s == 0 && EW0 != 0) || (s == N - 1 && EWN != 0) || ((EWM >> s) & 1)) begin : g_ew
+                    ot_attn_bank_ew136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
+                end else begin : g_sn
+                    ot_attn_bank_sn136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
+                end
+            end
+        end
+        assign q = st[N][W-1:0];
+    end endgenerate
+endmodule
+
 // N kept flop banks in series (std cells, for the few bits that do not fill a bank: q[581:544] and rst)
 module ot_attn_fpipe #(parameter integer W = 1, parameter integer N = 1) (
     input  wire         clk,
@@ -66,6 +110,7 @@ module ot_attn_fpipe #(parameter integer W = 1, parameter integer N = 1) (
 endmodule
 
 module hfd_attn_tile_b #(
+    parameter integer CG = 0, // gated quads and coherent-result guard, jointly opt-in
     parameter integer NK = 4,
     parameter integer NC = 2,
     parameter integer NR = 3,
@@ -122,11 +167,11 @@ module hfd_attn_tile_b #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0, qv, qf;
             wire [127:0] qy0, qy;
-            ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the quad's results -> NL banks (every quad the same depth: one result word)
-            ot_attn_bpipe #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
+            ot_attn_bpipe136 #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
             for (l = 0; l < 4; l = l + 1) begin : g_l
                 localparam integer G = GB + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
@@ -136,8 +181,30 @@ module hfd_attn_tile_b #(
     // ---- results: the chain word i -> pin bank -> NI banks; valid-priority merge into the o pin bank
     wire [RW-1:0] chn_r;
     ot_attn_bpipe #(.W(RW), .N(1 + NI), .EW0(1)) u_pi (.clk(clk), .d(i), .q(chn_r));
-    wire [RW-1:0] loc_r = {gov[0], oy, oflt};
+    // CG-qualified boundary: the fixed word represents all16 heads. A partial
+    // arrival is an explicit transaction fault, never a stale head's arithmetic.
+    // Idle oflt/oy are held by gated producers and are consumed only under valid.
+    wire [RW-1:0] loc_r;
+    ot_attn_res_guard #(.CG(CG)) u_guard (.gov(gov), .oy(oy), .oflt(oflt), .w(loc_r));
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));
+endmodule
+
+// ---------------------------------------------------------------------------
+// hbm-phys-1010 [att] (hgi-e2e audit item 1): the one result-word boundary of the 16 heads, shared by hfd_attn_tile_b,
+// hfd_attn_half_hi and the bench quad set ot_attn_tile_m6h1x.  CG 0 (ungated quads, every head registers its datapath
+// every cycle): the word rides head 0's valid, as before.  CG 1 (gated quads hold oy / oflt while their valid is low):
+// the word is valid when ANY head is valid; it carries the heads' oy / oflt only when ALL 16 are valid together
+// (the quads wake on one broadcast, so a coherent result is the only legal one); a partial arrival (a quad late,
+// early or masked) is a transaction FAULT -- every oflt set, oy zero -- never a held head's stale value.
+// ---------------------------------------------------------------------------
+module ot_attn_res_guard #(parameter integer CG = 0) (
+    input  wire [15:0]  gov,
+    input  wire [511:0] oy,
+    input  wire [15:0]  oflt,
+    output wire [528:0] w
+);
+    wire coherent_v = &gov;
+    assign w = (CG != 0) ? {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} : {gov[0], oy, oflt};
 endmodule

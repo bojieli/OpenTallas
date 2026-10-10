@@ -1,0 +1,25 @@
+{
+  "source_commit": "19a1b52dc",
+  "host": "ot-epyc4",
+  "base": "/srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc",
+  "calibration": {
+    "pid": 2409627,
+    "status": "verified_live_admission_wait",
+    "peak_gib": 48,
+    "threads": 16
+  },
+  "gate": {
+    "pid": 2409628,
+    "status": "verified_live_iverilog",
+    "peak_gib": 4
+  },
+  "continuation": {
+    "pid": 2411731,
+    "status": "verified_live_admission_wait_then_calibration_pid_wait",
+    "peak_gib": 48,
+    "threads": 16
+  },
+  "adoption": false,
+  "policy": "historical strict W2 SS/FF recipe retained; root audits latest OptionB and holduncertainty attribution",
+  "source_failure": "candidate76 fullbank failures preserved; nextphase declared before generate fixes implicit one-bit unknown nets"
+}

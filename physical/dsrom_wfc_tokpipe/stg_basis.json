@@ -1,0 +1,43 @@
+{
+ "inst": "stg",
+ "params": {
+  "WAVE": 1,
+  "WIN": 6,
+  "FLIT": 512,
+  "NW": 21,
+  "AW": 30,
+  "VWA": 15,
+  "USER_W": 10,
+  "MAXU": 866,
+  "KVW": 32768,
+  "SEND_HIDDEN": 1,
+  "HID_DEST": 1,
+  "FWD_TOKEN": 1,
+  "SOURCE": 0,
+  "XWORDS": 46,
+  "RXWORDS": 41,
+  "UPOS_LWR": 1,
+  "CONTROL_PIPE": 1,
+  "PRECOMP": 1,
+  "IN_DEC": 1,
+  "TXQ_SLICE": 1,
+  "RDY_LT": 1,
+  "FANOUT_COPY": 1,
+  "MARGIN": 1,
+  "LINK_REG": 1,
+  "LINK_SEL": 1,
+  "VM_REG": 1,
+  "SLEW_COPY": 1
+ },
+ "util": 50,
+ "macros": false,
+ "route_period_ps": 770,
+ "die_skew_ps": 150,
+ "orfs_var": [
+  "SLEW_MARGIN=30",
+  "CAP_MARGIN=20",
+  "HOLD_SLACK_MARGIN=28"
+ ],
+ "src": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271",
+ "ctrl_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8"
+}

@@ -1,0 +1,222 @@
+{
+  "schema": "opentallas.md6.semantic-bundle-image.v1",
+  "adopted": false,
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "key": "head.weight",
+  "checkpoint_header": {
+    "dtype": "BF16",
+    "shape": [
+      129280,
+      5120
+    ],
+    "data_offsets": [
+      0,
+      1323827200
+    ]
+  },
+  "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "source_window_provenance": null,
+  "manifest_sha256": "d440835f9e935486bef381815300c2ba1ca90fb74a84c874efca283a32cc9b5b",
+  "die": 2,
+  "bundle": 84,
+  "global_row0": 32298,
+  "B_VALID_ROWS": 22,
+  "A": [
+    {
+      "A": 0,
+      "row0": 32298,
+      "VALID_ROWS": 22,
+      "head": {
+        "payload_sha256": "d0420364bea397cd997e53ecb6d44475d63387310d552aea3dfd18626791669d",
+        "released_and_padding_readback": true
+      },
+      "Markov": {
+        "schema": "opentallas.md6.markovweight-image.v1",
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "mtp.2.markov_head.head.weight",
+        "shard": "model-00046-of-00048.safetensors",
+        "header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            256
+          ],
+          "data_offsets": [
+            71470552,
+            137661912
+          ]
+        },
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "row0": 32298,
+        "VALID_ROWS": 22,
+        "released_rows_copied": 22,
+        "padded_rows": 10,
+        "payload_sha256": "2baf5ba310343c27cd988b785b07d67138368a6cffdd8cb8ff162ab99d8eb157",
+        "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+        "ROM_ECC": false,
+        "images": {
+          "mk0_1.viamap.hex": "d247a2c284c56869ef431df058c974ad0197c33efb0282d18d112e583a8be9b0",
+          "mk0_0.viamap.hex": "bca2d953c8364568e79e75ea21397d875cc4d1eca33df1365411cfb3c657d7f4"
+        }
+      }
+    },
+    {
+      "A": 1,
+      "row0": 32330,
+      "VALID_ROWS": 0,
+      "head": {
+        "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+        "released_and_padding_readback": true
+      },
+      "Markov": {
+        "schema": "opentallas.md6.markovweight-image.v1",
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "mtp.2.markov_head.head.weight",
+        "shard": "model-00046-of-00048.safetensors",
+        "header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            256
+          ],
+          "data_offsets": [
+            71470552,
+            137661912
+          ]
+        },
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "row0": 32330,
+        "VALID_ROWS": 0,
+        "released_rows_copied": 0,
+        "padded_rows": 32,
+        "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+        "ROM_ECC": false,
+        "images": {
+          "mk1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5"
+        }
+      }
+    },
+    {
+      "A": 2,
+      "row0": 32362,
+      "VALID_ROWS": 0,
+      "head": {
+        "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+        "released_and_padding_readback": true
+      },
+      "Markov": {
+        "schema": "opentallas.md6.markovweight-image.v1",
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "mtp.2.markov_head.head.weight",
+        "shard": "model-00046-of-00048.safetensors",
+        "header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            256
+          ],
+          "data_offsets": [
+            71470552,
+            137661912
+          ]
+        },
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "row0": 32362,
+        "VALID_ROWS": 0,
+        "released_rows_copied": 0,
+        "padded_rows": 32,
+        "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+        "ROM_ECC": false,
+        "images": {
+          "mk2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5"
+        }
+      }
+    },
+    {
+      "A": 3,
+      "row0": 32394,
+      "VALID_ROWS": 0,
+      "head": {
+        "payload_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90",
+        "released_and_padding_readback": true
+      },
+      "Markov": {
+        "schema": "opentallas.md6.markovweight-image.v1",
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "key": "mtp.2.markov_head.head.weight",
+        "shard": "model-00046-of-00048.safetensors",
+        "header": {
+          "dtype": "BF16",
+          "shape": [
+            129280,
+            256
+          ],
+          "data_offsets": [
+            71470552,
+            137661912
+          ]
+        },
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "row0": 32394,
+        "VALID_ROWS": 0,
+        "released_rows_copied": 0,
+        "padded_rows": 32,
+        "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+        "ROM_ECC": false,
+        "images": {
+          "mk3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+          "mk3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5"
+        }
+      }
+    }
+  ],
+  "B": {
+    "payload_sha256": "691c6fee3bbf0ab6b3a1d2b2553b7868bb07b52c8303b089ffa1ee23603193c7",
+    "released_and_padding_readback": true
+  },
+  "K_spans": {
+    "A": [
+      0,
+      4096
+    ],
+    "B": [
+      4096,
+      5120
+    ],
+    "Markov": [
+      0,
+      256
+    ]
+  },
+  "SK": 11,
+  "B_row_order": "n=4*k+q; global row=global_row0+32*q+k",
+  "released_payload_sha256": "dbaedbca56fa3744b8b36501493d55dbc58882c5e6ed836c35c88bf4f6fb1246",
+  "padding_rows": 106,
+  "padding": "zero image words; VALID_ROWS masks argmax; scheduled rows still consumed",
+  "ROM_ECC": false,
+  "images": {
+    "mk2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha0_1.viamap.hex": "a894248bec32a5643352575de08a945b363ce73f15b6a7162b2273e7eaab3054",
+    "mk2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha2_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha0_0.viamap.hex": "42a789beb2db7c1ec3b811a3b9fcaca8b71159748942adfd9882c00138be68ad",
+    "mk0_1.viamap.hex": "d247a2c284c56869ef431df058c974ad0197c33efb0282d18d112e583a8be9b0",
+    "hb_0.viamap.hex": "248e30afe45bea34cdf3fdd1a3c4b036dc24ef30e71d101419a9fee583b5e4fa",
+    "mk3_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "hb_1.viamap.hex": "2f746f770701e6e4ed1a5224a75d92be4e3191987f0acaf1684909c5ca68bf91",
+    "ha2_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "mk1_1.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "mk3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "mk1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha1_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "ha3_0.viamap.hex": "15063830a7c02938acfd7f0aad82b77991cdfcf20a6245a2c09c8df7cf1d9ab5",
+    "mk0_0.viamap.hex": "bca2d953c8364568e79e75ea21397d875cc4d1eca33df1365411cfb3c657d7f4"
+  }
+}

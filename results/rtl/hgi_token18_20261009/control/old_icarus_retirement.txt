@@ -1,0 +1,12 @@
+Fri Oct  9 12:58:36 UTC 2026
+    PID    PPID     ELAPSED     TIME   RSS COMMAND
+ 922109 1907836       05:14 00:00:00  3344 bash -c cd /srv/opentallas-scratch/codex/hgi-token18-6a63; tar -xf ../hgi-ctl-c451.tar; /srv/opentallas-scratch/admit.sh 1 -- bash physical/hbm_generic/token18/run_ctl_bench.sh ctl_low 0 0; /srv/opentallas-scratch/admit.sh 1 -- bash physical/hbm_generic/token18/run_ctl_bench.sh ctl_high 0 1; /srv/opentallas-scratch/admit.sh 1 -- bash physical/hbm_generic/token18/run_ctl_bench.sh ctl_mut 1 1; head -5 ctl_low/build.log; head -3 ctl_low/run.log; head -3 ctl_high/run.log; head -12 ctl_mut/run.log
+b5bf9ef0bfa4dd7409a627301bdf1c4b7a29df01f7bb5e3c00d00fe2c3d38c67  rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv
+16b1486fad40271afda7195b77ee5468c2280aff144d3364416056651e76d535  rtl/test/hbm_generic/tb_hgi_ctl18_lockstep.sv
+fb6b0ca32a8c6465ffbdd31333fc3101102814e77315da56b59f0390fef46146  ctl_low/build.log
+1c6a62fbe5badb1659c2ba25c38c064c062062accfdf70787741ebdc65f7747e  ctl_low/run.log
+Owner-root authorized invalid old-source Icarus bench retirement; Verilator qualified corrected source untouched
+    PID    PPID COMMAND
+    PID    PPID     ELAPSED     TIME   RSS COMMAND
+Correction: first Icarus finished rc1 (249647 cycles), not oscillator. Unconnected observation source invalid. Retiring follow-on identical old-source high run.
+    PID    PPID COMMAND

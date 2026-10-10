@@ -1,0 +1,227 @@
+{
+ "name": "md6_lookup_localcapture-loadfix-f083aa221-tc-cx",
+ "spec": {
+  "name": "md6_lookup_localcapture-loadfix-f083aa221-tc-cx",
+  "block": "ot_dsrom_markov_embed_localcapture_pair",
+  "owner": "Codex:mtp_rom_embed_port; Claude exclusive intake",
+  "purpose": "Authorized routine existingpair electricalfix beforeholdECO: restoreUNCHANGED3.898load toall258outputs afterbothss/ffscenecreation atplacement/CTS/GRT; once258BUFx24outputbuffers plus50%slewrepairmargin. Final250pslimit unchanged. PriceactualBUFx24 beforetrial112.8492um2; admittedrepairedplacementestimatedelectricalclean andactualPG/512row/directqD13.839/fp_lint57.9/58.1PASS. PreserveterminalpgfixTT+68.18/FF-8.63/DRC0/98slewFAIL. Same190x155/RTL086a45/+0cycles/clock/load; independentFINALTCelectrical/CTSleaf16/direct512/PG/TT>=0FF>=0DRC0 gate required, SSsensitivityonly.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+   "branch": "codex/md6-head-binding-20261009",
+   "commit": "f083aa221",
+   "extra_paths": [
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009"
+   ],
+   "required_files": [
+    "tools/run_abi3_physical.py",
+    "tools/orfs_hold_mm.py",
+    "tools/orfs_hold_mm.tcl",
+    "tools/orfs_allcorner_spef.py",
+    "tools/fp_margin_lint.py",
+    "tools/fp_margin_lint.tcl",
+    "tools/preroute_gate.tcl",
+    "tools/dsrom_markov_lookup_intake_check.py",
+    "tools/w18/corner_sta.py",
+    "tools/w18/export_view.py",
+    "physical/dsrom_markov_lookup_localcapture/route.sh",
+    "physical/dsrom_markov_lookup_localcapture/macro_place.tcl",
+    "physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl",
+    "physical/dsrom_markov_lookup_localcapture/sliver_block.tcl",
+    "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+    "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/gate_r1/verdict.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/capture_anchor_audit.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/offline_fp_lint.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/pg_fix_c2/verdict.json",
+    "physical/dsrom_markov_lookup_localcapture/electrical_env.tcl",
+    "physical/dsrom_markov_lookup_localcapture/pre_global_place.tcl",
+    "physical/dsrom_markov_lookup_localcapture/pre_repair.tcl",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/electrical_load_repair/preflight.log"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "set -e; python3 tools/dsrom_markov_lookup_intake_check.py; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC=physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc; CORES=8 bash physical/dsrom_markov_lookup_localcapture/route.sh pair {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 1
+   },
+   "route": {
+    "cmd": "set -e; python3 tools/dsrom_markov_lookup_intake_check.py; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC=physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc; CORES=8 bash physical/dsrom_markov_lookup_localcapture/route.sh pair {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 4
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp -r {RUN}/electrical {RUN}/record/electrical && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "TC_electrical_CTSleaf16_directlocal512captures_PG_actualrow",
+     "cmd": "python3 tools/dsrom_markov_lookup_intake_check.py --orfs {RUN}/routes/{LABEL}/work/orfs --out {RUN}/electrical"
+    }
+   ],
+   "post_sdc": [
+    "physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+   ]
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "allow_fresh_grt": false,
+   "reason": "Owner explicitly requires electricalfix first,thenFFholdECO. Existingflow hold_only requires allindependentchecksPASS beforelaunch; noECO ifTCelectrical/CTS/directqD/PGfails. TTsetupacceptance0/FFhold0/DRC0;SSsetupreportedonly. Existingmeasuredphaseadmission required.",
+   "hold_margin_ps": 18,
+   "setup_margin_ps": 40,
+   "setup_filter_ps": 40,
+   "resistance_aware": true,
+   "hold_cells": true,
+   "keep_clock": 1
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "New pair has no die budget sheet; existing explicit250psboundary/50pssenderhold with freshly sequentially calibrated TT/FFclockinsertion.190x155 modeledandactualofflinefit; full253groupselect/broadcastnotqualified."
+  },
+  "no_bench_reason": "Same qualified RTL SHA086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d as clean88557c82 gate160actualreleasedbeats: goldenPASS,genuinepayloadbitmutantFAIL; sourcebinding helper requires this exact hash and receipts beforecal/route and againatverdict. Gatef6b11ded4/sourcepin, routinef59 placement/coreunchanged, prerequisite0462b4fdb actualmapped512anchors/offlinefp_lintPASS. No duplicate expensivefull253 simulation. Routine c2PGorientationonly; same160beats golden+genuine mutant exactRTLhash086a45; prerequisite pg_fix_c2 binds correctedanchorSHA099383fe andactualVDD/VSS/row/directqD/fplint.",
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/route_loadfix_f083_tc_cx"
+   }
+  ],
+  "cycles_added": "0 beyond previouslypricedPP+1capturecycle; releasedminimumlookup412cycles unchanged,512captureFF+phaseFF priced; no newinterface or fullheadclaim.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "calibrate_parallel": false,
+  "admission_evidence": "Actual identical two4096x274macro predecessor f6869fa pair_physical_r1: cal/place3_3 peak740144KiB=.706GiB,CTS620860KiB=.592GiB; route5_2 peak3765040KiB=3.591GiB,report1945564KiB=1.855GiB. Current512capture(+256FF) sourcefloorplanSTOP8d5 measured321988KiB=.307GiB. Claims1GiBcal/4GiBroute reserve modest topology growth, not RSS/time caps.8cores same predecessor. Fleet must use current measuredheadroom/diskguard and update observed claims without restartingprogressingwork. No localhostcompute."
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/md6_lookup_localcapture-loadfix-f083aa221-tc-cx.json",
+ "created": "2026-10-09T04:59:44-07:00",
+ "status": "NEEDS_HUMAN",
+ "stage_idx": 0,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T04:59:44-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/md6_lookup_localcapture-loadfix-f083aa221-tc-cx.json",
+  "2026-10-09T05:03:10-07:00 source f083aa22187d synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-loadfix-f083aa221-tc-cx/src",
+  "2026-10-09T05:03:50-07:00 launched calibrate (attempt 1) on ot-epyc4",
+  "2026-10-09T05:05:48-07:00 calibrate crashed (rc=1; first error: md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]) -> retry once on the same host",
+  "2026-10-09T05:06:50-07:00 launched calibrate (attempt 2) on ot-epyc4",
+  "2026-10-09T05:08:54-07:00 NEEDS_HUMAN: calibrate crashed twice (rc=1; first error: md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]; resource=False)"
+ ],
+ "updated": "2026-10-09T05:08:54-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-loadfix-f083aa221-tc-cx",
+ "source_synced": true,
+ "commit_full": "f083aa22187dcdcae3e3419a33d579c1b2ee4810",
+ "source_archive": {
+  "commit": "f083aa22187dcdcae3e3419a33d579c1b2ee4810",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009"
+  ],
+  "required_sha256": {
+   "tools/run_abi3_physical.py": "9a8288a21396120eed6610eb60099d5ec5f1c11c57808d68a6d91ce504957e9f",
+   "tools/orfs_hold_mm.py": "46484eb629591fa31f69d5764cf68e8dd5392adefec0540560c763606efaa380",
+   "tools/orfs_hold_mm.tcl": "6c78272d03d7ce3716ebf69403266911b71e6065b0e111cfab5040b1b34df758",
+   "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+   "tools/fp_margin_lint.py": "7ae3851507a50ae3575587a0b46ceffb95969854ff04c999727c539957803357",
+   "tools/fp_margin_lint.tcl": "451b7f33e8200a21629596986520209b1629d3220d99a1bfea505101d8bc8496",
+   "tools/preroute_gate.tcl": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+   "tools/dsrom_markov_lookup_intake_check.py": "6e4c6b8c6fb7aebbc584cc70689832a4b19955e7d7473f25b7f1ec16b4e03521",
+   "tools/w18/corner_sta.py": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+   "tools/w18/export_view.py": "27c7daa9acacfd53e8de5b1dd8421ad9441915a89a400441dc85cf77cf3132f2",
+   "physical/dsrom_markov_lookup_localcapture/route.sh": "b19ebe8c3324d7d02e5a8aebe8c356bab453c1130394d90427d9aeefe00dba8c",
+   "physical/dsrom_markov_lookup_localcapture/macro_place.tcl": "a094ac88df6a2b0b940cddbb8a76d461d231c44eec285503a36a67f3320b798c",
+   "physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl": "099383fe67e07d05f29046db421801dc81c4a58f3aad742f2041b3f24b36acb1",
+   "physical/dsrom_markov_lookup_localcapture/sliver_block.tcl": "155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4",
+   "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc": "83b62ede4f44259742c2682fd79a02c48d0ad78ec186dfff39351bf53c75f009",
+   "physical/abi3/v41x_karb_repair_buffer_cap.tcl": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+   "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/gate_r1/verdict.json": "03e3ded9d22eb8ec5854118fd062c4e1648cfff2e3f0c3b8cb505ef1a4c38988",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/capture_anchor_audit.json": "e41abd4606f50b4fe70c9ebec02dfb00eccb017126bc940e7afd5bf3660dc984",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/offline_fp_lint.json": "32e8b45bd0138ac5630fe6d0139884e3db3d8c3efaec1ae2f8393961c8947581",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/pg_fix_c2/verdict.json": "68ee87ef2fa9010798e6f36a2160b533700a12e60d296196a47da42639e1133e",
+   "physical/dsrom_markov_lookup_localcapture/electrical_env.tcl": "42964ba584aa42fadb6cabb45e725844a2569c2a11460ec49d63d408ec9f51b1",
+   "physical/dsrom_markov_lookup_localcapture/pre_global_place.tcl": "d72d402c24b3b14da445be9d11e0d66448967c6a4aba45522767abda44898377",
+   "physical/dsrom_markov_lookup_localcapture/pre_repair.tcl": "4df7e80f71bc4507eee93f6a8ff612c6ecc7fc98d3975621ddc87b2580a4bd52",
+   "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/electrical_load_repair/preflight.log": "7dc0a1ea37e3c26eb0a8e08382fe38fced64c26318eccae4f746ed4386541df7"
+  },
+  "archive_sha256": "90385fec64446f14c2874be32c7e578ddf15581b3506d07c700720c34ced5c32",
+  "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+  "runtime_files_pending": []
+ },
+ "reason": "calibrate crashed twice (rc=1; first error: md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]; resource=False)",
+ "stage_key": "calibrate",
+ "stage_tag": "calibrate.a2",
+ "stage_started": "2026-10-09T05:06:50-07:00",
+ "wd_checked": 1791547486.6225235,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "crashes": [
+  {
+   "stage": "calibrate",
+   "host": "ot-epyc4",
+   "attempt": 1,
+   "why": "rc=1; first error: md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]",
+   "resource": false,
+   "tail": "hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added\nhold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)\n{\"passed\": true, \"RTL_sha256\": \"086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d\", \"checked_beats\": 160, \"genuine_mutant_rejected\": true, \"mapped_prerequisite\": \"b4bcf4837bea665912f5870bac2f83ecd8eca5f547aa5feaf3f1bdd00a9b2d5a\"}\n",
+   "first_error": "md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]"
+  },
+  {
+   "stage": "calibrate",
+   "host": "ot-epyc4",
+   "attempt": 2,
+   "why": "rc=1; first error: md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]",
+   "resource": false,
+   "tail": "hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)\nhold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)\n{\"passed\": true, \"RTL_sha256\": \"086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d\", \"checked_beats\": 160, \"genuine_mutant_rejected\": true, \"mapped_prerequisite\": \"b4bcf4837bea665912f5870bac2f83ecd8eca5f547aa5feaf3f1bdd00a9b2d5a\"}\n",
+   "first_error": "md6_lookup_localcapture_loadfix_f083aa221_tc_cx_cal/run.log: [ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance cap1\\[9\\]$_DFF_P_ [step do-4_1_cts]"
+  }
+ ]
+}

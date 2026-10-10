@@ -1,0 +1,305 @@
+{
+  "runtime_hosts_sha256": "bc346cc7136e2dee3a69556a7b5d61be38eb110f0cfad38030db453e9f23d359",
+  "source_main_hosts_sha256_before": "099f61aeef46a476fb1068592348fcbe6c833d21dde80a5833ac7f3d91fac868",
+  "policy": "Preserve operational measured-memory-only runtime behavior; runtime/main _fits both use request + 16 GiB and ignore external future growth; retain all external inventories as provenance without inventing reserves. EPYC2 old transient source disable removed only after actual headroom/disk/pause measurement. EPYC4 T1 200 GiB runtime measured phase inventory retained. No running jobs restarted.",
+  "measurements": [
+    {
+      "host": "ot-epyc3",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 128,
+        "mem_total_gib": 1133.063678741455,
+        "mem_available_gib": 177.41415405273438,
+        "load": [
+          147.30322265625,
+          130.43408203125,
+          120.00537109375
+        ],
+        "base_free_gib": 648.083625793457,
+        "external_jobs": [
+          {
+            "name": "qwen-quarter-fullshape-lint",
+            "pid": 1755537,
+            "peak_ram_gb": 128,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "qwen-fmt3-wide-calibration",
+            "pid": 1835875,
+            "peak_ram_gb": 64,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "qwen-fmt3-pipe-calibration",
+            "pid": 1855945,
+            "peak_ram_gb": 64,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "mtp-ring-dyn-fixed-simulation-positive",
+            "pid": 1855952,
+            "peak_ram_gb": 1,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "mtp-ring-dyn-fixed-simulation-negative",
+            "pid": 1855953,
+            "peak_ram_gb": 1,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "mtp-ring-dyn-same-source19-build-positive",
+            "pid": 1915153,
+            "peak_ram_gb": 1,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "mtp-ring-dyn-same-source19-build-negative",
+            "pid": 1915154,
+            "peak_ram_gb": 1,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "ot-epyc1tb",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 128,
+        "mem_total_gib": 1133.0636749267578,
+        "mem_available_gib": 243.83657836914062,
+        "load": [
+          227.84228515625,
+          222.34765625,
+          218.33544921875
+        ],
+        "base_free_gib": 235.0041732788086,
+        "external_jobs": [
+          {
+            "name": "hbm-hc64-physical",
+            "pid": 2938696,
+            "peak_ram_gb": 128,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-hc-epoch-physical",
+            "pid": 1366211,
+            "peak_ram_gb": 128,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-retry545-pipeline-physical",
+            "pid": 2706708,
+            "peak_ram_gb": 24,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-retry545-pipeline-guard-physical",
+            "pid": 1878057,
+            "peak_ram_gb": 24,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "ot-epyc2",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 128,
+        "mem_total_gib": 1133.0636825561523,
+        "mem_available_gib": 124.59672164916992,
+        "load": [
+          344.79638671875,
+          297.92333984375,
+          263.9208984375
+        ],
+        "base_free_gib": 681.2648658752441,
+        "external_jobs": [
+          {
+            "name": "hbm-indexer-deepcredit-exact",
+            "pid": 2153931,
+            "peak_ram_gb": 250,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-hc40-physical",
+            "pid": 1873433,
+            "peak_ram_gb": 128,
+            "identity_matches": true,
+            "rss_gib": 0.015216827392578125
+          },
+          {
+            "name": "hbm-retry545-compact",
+            "pid": 873659,
+            "peak_ram_gb": 24,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-retry545-wide",
+            "pid": 3630405,
+            "peak_ram_gb": 24,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-index-selector-la7-calibration",
+            "pid": 360589,
+            "peak_ram_gb": 120,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "ot-epyc4",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 128,
+        "mem_total_gib": 1133.0636825561523,
+        "mem_available_gib": 163.6732177734375,
+        "load": [
+          177.11376953125,
+          171.7880859375,
+          184.662109375
+        ],
+        "base_free_gib": 1871.990333557129,
+        "external_jobs": [
+          {
+            "name": "hbm-indexer-t1-exact",
+            "pid": 952687,
+            "peak_ram_gb": 200,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-indexer-nk4-synthesis",
+            "pid": 3252430,
+            "peak_ram_gb": 256,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "hbm-selector-native-qend-calibration",
+            "pid": 745294,
+            "peak_ram_gb": 120,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "ot-pve1",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 28,
+        "mem_total_gib": 235.94451141357422,
+        "mem_available_gib": 100.28054428100586,
+        "load": [
+          58.005859375,
+          58.32861328125,
+          54.02783203125
+        ],
+        "base_free_gib": 1298.138557434082,
+        "external_jobs": [
+          {
+            "name": "ha2-owner-opposite-phase-minimum-gate",
+            "pid": 299770,
+            "peak_ram_gb": 12,
+            "identity_matches": false,
+            "rss_gib": 0
+          },
+          {
+            "name": "s81-bf-input-holdseats-exact-gate",
+            "pid": 303289,
+            "peak_ram_gb": 40,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "ot-agidock128",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 64,
+        "mem_total_gib": 125.7047004699707,
+        "mem_available_gib": 18.742599487304688,
+        "load": [
+          19.87939453125,
+          27.81005859375,
+          25.712890625
+        ],
+        "base_free_gib": 96.48778915405273,
+        "external_jobs": [
+          {
+            "name": "hbm-native-full-publication-lint",
+            "pid": 2811687,
+            "peak_ram_gb": 24,
+            "identity_matches": false,
+            "rss_gib": 0
+          }
+        ],
+        "pause_files": []
+      }
+    },
+    {
+      "host": "localhost",
+      "result": {
+        "time_utc": "2026-10-10T12:26:18Z",
+        "cores": 32,
+        "mem_total_gib": 188.50510025024414,
+        "mem_available_gib": 176.93976593017578,
+        "load": [
+          4.6533203125,
+          6.3876953125,
+          9.72412109375
+        ],
+        "base_free_gib": 159.09830856323242,
+        "external_jobs": [],
+        "pause_files": []
+      }
+    }
+  ],
+  "actual_guard_boundary_check": {
+    "measured_epyc2": {
+      "mem_gb": 103,
+      "disks": {
+        "/srv/opentallas-data/claude/closure-loop": 681,
+        "/": 677,
+        "/srv/opentallas-scratch2": 1168
+      }
+    },
+    "max_requested_gib_tested": 87,
+    "equal_boundary_result": [
+      true,
+      "ok"
+    ],
+    "one_gib_over_result": [
+      false,
+      "EPYC2 MemAvailable 103 GB < 88+16"
+    ]
+  }
+}

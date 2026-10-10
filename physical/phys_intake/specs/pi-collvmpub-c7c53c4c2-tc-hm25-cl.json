@@ -1,0 +1,78 @@
+{
+ "name": "pi-collvmpub-c7c53c4c2-tc-hm25-cl",
+ "block": "ot_hbm_collective_vm_publication",
+ "element": "HBM full-quarter VM collective publication",
+ "owner": "Claude:phys-intake",
+ "purpose": "phys-intake 2026-10-09 (owner: start physical work on every 'implementation recorded (no physical job)' element; dual-track '-cl' line). Full 4096 FP32 collective VM publication, 24 x 128x256 SECDED replay SRAMs (in rule: SRAM payload), Qwen 74-bit owner (r25 runs Qwen, owner 10-09). The parent's VM read 'lease' is a static grant here (REVIEW S2: no lease hardware). Variant: TC route / option B (TT setup, FF hold, DRC 0), HM 25 ps. Exact bench + mutant: physical/phys_intake/bench.sh hbm_coll_vm_pub (pos PASS / mutant FAIL on this source).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/phys-intake-20261009",
+  "commit": "c7c53c4c21e03b3c37bc1c8a2ebd890e7e0f8df8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hbm_coll_vm_pub_exact",
+    "cmd": "bash physical/phys_intake/bench.sh hbm_coll_vm_pub pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "PHYSINTAKE_hbm_coll_vm_pub_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hbm_coll_vm_pub_mutant",
+    "cmd": "bash physical/phys_intake/bench.sh hbm_coll_vm_pub neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "PHYSINTAKE_hbm_coll_vm_pub_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_collective_vm_publication --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_vm_publication.sv --param ENABLE=1 --param OWNER_W=74 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 4 4 --die-area 0 0 520 480 --core-area 2.16 2.16 517.84 477.84",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_collective_vm_publication --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_vm_publication.sv --param ENABLE=1 --param OWNER_W=74 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 4 4 --die-area 0 0 520 480 --core-area 2.16 2.16 517.84 477.84 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 12,
+   "peak_ram_gb": 40
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (RTL as written)",
+ "merge_target": null
+}

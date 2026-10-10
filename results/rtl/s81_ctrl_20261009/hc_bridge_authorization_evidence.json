@@ -1,0 +1,30 @@
+{
+  "status": "HC_CAPTURE_NATIVE_SCHEMA_AND_JOB_AUTHORIZATION_COMPONENT_PASS",
+  "host": "ot-agidock128",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv": "ffe36c9b1ea797990817790849367926a3ab74708737ea31a6f26e36f109fdbe",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv": "8dd383dc4d491645d603566adcfe643a6c09e456062a1ab186984ed9c0e172c8",
+    "tools/s81_ctrl/native_descriptors.py": "63df665873472eb803001d585fe52e0685beca7985a01f487e9963cbcbeafbc4",
+    "tools/s81_ctrl/native_registry.json": "9a4620070c06f49eb31f96f96ccd18dd5ebaeb721b7c9960d99f35427364ec99"
+  },
+  "native_source_commit": "308a0500e",
+  "scope": "Compiler emits real named cmd_valid/capture2/user10/position21/epoch4 signals for ownercanonical L37/L38/L39.mtp.input_hc_capture jobs. Command tables are eligible for review, systemdispatch remains false pending VM input/actualDAG/physicalbinding.",
+  "authorization": "Default OP_MASK0 rejects everyjob. Only compilerassigned capture job IDs enabled peractualstage; componentfixture authorizes tags23/24/25 and rejects127. Masks are not physicaldieproductionconstants.",
+  "proof": {
+    "fullproducer_commands": 3,
+    "done": 3,
+    "frames": 120,
+    "cycles": 16609,
+    "unknown_job127": "rejected",
+    "orphan": "rejected",
+    "wrong_user": "rejected",
+    "capture3": "rejected"
+  },
+  "remote_artifacts": "/srv/opentallas-scratch/codex/ds-control/hc-bridge-test-v3",
+  "compiler_mechanism": "13checks full512payload/21position PASS, commandtable eligibility separated from systemdispatch readiness",
+  "remaining": [
+    "actual HC VM reader portownership",
+    "whole-tokenDAG3capturejob insertion andperstage OP_MASK",
+    "physicalSS/FFcontext closure"
+  ]
+}

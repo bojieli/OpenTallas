@@ -1,0 +1,12 @@
+{
+  "simulation_token_identical_after_preprocessing": true,
+  "historical_source_sha256": "909f88cbc522089e1b73fab1a4b1235780b28eb39acfc81c1c4fc153f7f1cb5e",
+  "candidate_source_sha256": "5391ede00ea1f308a8325c624b59d4f596ebcb95533e28e28cba4b60d365c8b0",
+  "exact_evidence": "results/rtl/qwen_system_20261008/crom/bench_summary.log",
+  "exact_vectors": 15980,
+  "lane_reads": 1011804,
+  "mismatches": 0,
+  "mutant_mismatches": 15820,
+  "yosys": "hierarchy check + proc + check successful; 48 ROM instances",
+  "synthesis_change": "omit simulation-only $sformatf INSTANCE annotation; hardware instance unchanged"
+}

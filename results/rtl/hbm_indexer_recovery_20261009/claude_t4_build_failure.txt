@@ -1,0 +1,37 @@
+%Error: /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv:98:10: Can't find definition of variable: 'KB'
+   98 |   reg [L*KB-1:0] bkey;
+      |          ^~
+%Error: /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv:117:89: Can't find definition of variable: 'mut_lane'
+  117 |       bkey[l*KB +: KB] <= empty_frame ? {KB{1'b0}} : lrd[(l/2)*1098 + 10 + (((l < 2) && mut_lane) ? 1 - (l%2) : (l%2))*KB +: KB];
+      |                                                                                         ^~~~~~~~
+%Error: /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv:123:31: Can't find definition of variable: 'mut_keep'
+  123 |       bkeep[l] <= !keep_en || mut_keep || (({1'b0, beat, 1'b0} + 11'((LANE0 + l) / 8)) < 11'd342 &&
+      |                               ^~~~~~~~
+%Error: /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv:148:67: Can't find definition of variable: 'mut_gid'
+  148 |         g0 <= IW'(768) * IW'(qp[17:7]) + IW'(8) * IW'(qp[6:0]) + (mut_gid ? IW'(8) : IW'(0));
+      |                                                                   ^~~~~~~
+%Error: Exiting due to 4 error(s)
+Command exited with non-zero status 1
+	Command being timed: "verilator --binary --timing -O2 -j 32 --output-split 20000 --output-split-cfuncs 20000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN --top-module tb_hfd_idx_die -GLEG=24 -GT=4 -Mdir obj /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hbm_accel/index/ot_hbm_accel_index_query.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_sel.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/v41/ot_hdc_actquant.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_fpu.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/proto/ot_fp32_add_rne_pipe.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv /srv/opentallas-scratch/claude/hbm-indexer/wt/physical/hbm_accel_die_views/index/tb/tb_hfd_idx_die.sv"
+	User time (seconds): 0.10
+	System time (seconds): 0.02
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.12
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 24788
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7209
+	Voluntary context switches: 41
+	Involuntary context switches: 30
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

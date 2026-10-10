@@ -1,0 +1,7 @@
+SCEN /srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_sram-5601e8881-tc-hm10/bench/control/golden/scen_length.hex plen=2 max=3 steps=4 completions=3
+BOOT sys_ready cycle 240
+CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=32 turn_max=97 turn_avg=78 step_cycles=789 CL=40 cycles=3346
+- rtl/test/qwen_system/tb_qfd_ctl_sys.sv:336: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3us; walltime 0.045 s; speed 359.112 us/s
+- Verilator: cpu 0.008 s on 1 threads; alloced 1018 MB

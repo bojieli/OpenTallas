@@ -1,0 +1,54 @@
+{
+  "source_rtl_commit": "b827340df",
+  "top": "ot_hgi_quant_decode",
+  "full_shape": {
+    "lanes": 32,
+    "input_bits": 1024,
+    "header_bits": 128,
+    "output_bits": 512,
+    "control_bits": 8
+  },
+  "slot_um": [
+    1800,
+    600
+  ],
+  "slot_mm2": 1.08,
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "input_bytes_per_cycle": 128,
+  "record_bytes_per_cycle": 16,
+  "output_bytes_per_cycle": 64,
+  "boundary_bits_per_cycle": 1664,
+  "latency_edges": 23,
+  "initiation_interval": 1,
+  "pin_plan": {
+    "left_x": 1024,
+    "right_y": 512,
+    "bottom_header": 128,
+    "top_controls": 8,
+    "vertical_layers": [
+      "M5",
+      "M7"
+    ],
+    "horizontal_layers": [
+      "M4",
+      "M6"
+    ],
+    "worst_face_bits_per_um_per_layer": 0.9142857142857143,
+    "channel_capacity_source": "standard ASAP7 route_master M2-M7; actual congestion validated in routing",
+    "track_cost": {
+      "input_tracks_per_vertical_layer": 512,
+      "output_tracks_per_vertical_layer": 256,
+      "header_tracks_per_horizontal_layer": 64
+    }
+  },
+  "area_status": "1.08mm2 floorplan envelope only; synthesized area and fit pending",
+  "io_contract": "standalone existing route_master 833.333ps signoff,60/25uncertainty,166.667ps outside boundary +150ps inter-region,measured clock reference,H1 hold; output80fF,input150ps; all ports timed. This is not an hfd_quant die-budget match; generic record boundary approval required before adoption",
+  "legacy_memory_claim_gib": 60,
+  "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak",
+  "exact_lockstep_bench_source": "4819023e0",
+  "vector_bench_source": "a1e6e53a7",
+  "boundary_vectors_source": "c852a6d6e",
+  "e4m3_added_edges": 15,
+  "boundary_lint_status": "local submit_lint implicitly invoked Yosys before discovered; not used as remote admission evidence; remote pinned repeat required"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.mtp_rollback_mr5_cost.v1",
+  "source_commit": "50ff9c62e",
+  "reduced_vehicle": {
+    "ar_persistent_elements": 10752,
+    "ring8_persistent_elements": 12288,
+    "extra_bytes_per_package": 6144,
+    "allocated_kv_source_rings": 4,
+    "ratio2_source_rings_required": 3,
+    "extra_bytes_required_for_ratio2_only": 4608,
+    "ring_records": 8,
+    "ar_records": 2,
+    "program_instructions_both": [
+      1927,
+      103,
+      125,
+      1869
+    ],
+    "extra_instructions": 0,
+    "extra_arithmetic_cycles": 0
+  },
+  "correction": "ring8_isa_clean_baseline.json originally reports4608B from three ratio2 sources; actual Layout also allocates unused SLOT20 for ratio1, so measured actual delta is6144B. Retain raw record; this correction governs.",
+  "production_model": "results/arch/mtp_rollback_20261008/state_inventory.json: MR-2 three HBM record rings,98304B/user, group-completion record read; ISA successor does not establish physical closure",
+  "rtl_qualification": false
+}

@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.hgi_adapters.sm_bench.v1",
+ "cases": [
+  {
+   "id": "idxd_expert_fetch_by_id",
+   "kind": "run",
+   "records": 2,
+   "refused": 0
+  },
+  {
+   "id": "idxd_out_of_range_faults",
+   "kind": "run",
+   "records": 2,
+   "refused": 0
+  },
+  {
+   "id": "qwen3_8b_token_sm_matvec",
+   "kind": "run",
+   "records": 145,
+   "refused": 0
+  },
+  {
+   "id": "ds_shapes_and_slots",
+   "kind": "run",
+   "records": 26,
+   "refused": 0
+  },
+  {
+   "id": "random_legal_48",
+   "kind": "run",
+   "records": 48,
+   "refused": 0
+  },
+  {
+   "id": "unit_not_sm",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "fmt_mismatch",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "b_in_vm",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "k_mismatch",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "b_unaligned",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "op_g_256",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "q_4096",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "p2_a_m1",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "no_o",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  },
+  {
+   "id": "m_zero",
+   "kind": "negative",
+   "records": 1,
+   "refused": 1
+  }
+ ]
+}

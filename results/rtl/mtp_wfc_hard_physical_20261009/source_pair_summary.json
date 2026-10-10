@@ -1,0 +1,186 @@
+{
+  "all_ok": true,
+  "source": "approved+1prompt cut matchedSOURCE metadata and current-user STAGE launch",
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv": "1ba3e5b87d960be20fec40c62bc1c1bf60185a9d91526038c08b28a9eb2667ad",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "20ac6d0044c0865a4af05bdc050c9597c2905429ea2b556f217e95ec7287b5a3",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv": "b23b3a831d014de7ad2f074a327c867c92200c4068bdfdb8ca98d0a22cf8fa65",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv": "39c00403bef7718855cdd89b7c0c1554a5e464b93dd44bbf7d7192e0caa013a7",
+    "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv": "9224e96d47d0cf92e1c1cb5f88135e40ea326469f62cd07bcf4f2c68018fe971",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": "3d9db273aaf792fcd060a5f5885e9e195c08a117456a927408f71b9aff0ea2f4",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv": "466f0e2eccd8eacc5583a36043762dbe98962adbe16a4d5d5e128d09f85cf178",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "4cdc0fe9c0a122db81dae32c34c9afe65185fc6673525c0caa644420b3ecf6e5",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "27ec0d2a5f4cbd79c0aef026699d2275c4286a1237c22f22266d5128bd39ac22",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "s0_tr_dspark/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "s0_tr_forced/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "s0_tr_forced_w16/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "s0_hash_u3/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "s0_hash_u1_fast/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "s0_neg_noepoch/tb.sv": "980d1c234e48d19a74262e5f5d6a2c76081ed72a2fb266991eb9a780ce6e9861",
+    "stg_vmnat/tb.sv": "b05ab3d6614d7e3f119e1793090bc2d8027fbb243e082160694b86cdc99fe189",
+    "stg_r1/tb.sv": "b05ab3d6614d7e3f119e1793090bc2d8027fbb243e082160694b86cdc99fe189",
+    "stg_lag1/tb.sv": "b05ab3d6614d7e3f119e1793090bc2d8027fbb243e082160694b86cdc99fe189",
+    "stg_neg_prevuser/tb.sv": "b05ab3d6614d7e3f119e1793090bc2d8027fbb243e082160694b86cdc99fe189"
+  },
+  "cases": [
+    {
+      "case": "s0_tr_dspark",
+      "expected": "pass",
+      "pass_": true,
+      "trace": {
+        "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_dspark.cfg.json",
+        "plen": 8,
+        "ngen": 16,
+        "passes": 15,
+        "drafter": "dspark",
+        "accepted": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "log": "s0_tr_dspark/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "s0_tr_forced",
+      "expected": "pass",
+      "pass_": true,
+      "trace": {
+        "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+        "plen": 8,
+        "ngen": 24,
+        "passes": 8,
+        "drafter": "forced",
+        "accepted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ]
+      },
+      "log": "s0_tr_forced/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "s0_tr_forced_w16",
+      "expected": "pass",
+      "pass_": true,
+      "trace": {
+        "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced_w16.cfg.json",
+        "plen": 8,
+        "ngen": 32,
+        "passes": 10,
+        "drafter": "forced",
+        "accepted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "log": "s0_tr_forced_w16/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "s0_hash_u3",
+      "expected": "pass",
+      "pass_": true,
+      "trace": null,
+      "log": "s0_hash_u3/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "s0_hash_u1_fast",
+      "expected": "pass",
+      "pass_": true,
+      "trace": null,
+      "log": "s0_hash_u1_fast/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "s0_neg_noepoch",
+      "expected": "fail",
+      "pass_": true,
+      "trace": {
+        "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+        "plen": 8,
+        "ngen": 24,
+        "passes": 8,
+        "drafter": "forced",
+        "accepted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          0,
+          1
+        ]
+      },
+      "log": "s0_neg_noepoch/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "stg_vmnat",
+      "expected": "pass",
+      "pass_": true,
+      "trace": null,
+      "log": "stg_vmnat/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "stg_r1",
+      "expected": "pass",
+      "pass_": true,
+      "trace": null,
+      "log": "stg_r1/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "stg_lag1",
+      "expected": "pass",
+      "pass_": true,
+      "trace": null,
+      "log": "stg_lag1/run.log",
+      "returncode": 0
+    },
+    {
+      "case": "stg_neg_prevuser",
+      "expected": "fail",
+      "pass_": true,
+      "trace": null,
+      "log": "stg_neg_prevuser/run.log",
+      "returncode": 0
+    }
+  ]
+}

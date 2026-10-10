@@ -1,0 +1,18 @@
+{
+  "source_commit": "c56a821770d6ba02e1e11ed07000e3eba4bff9e0",
+  "host": "ot-epyc4",
+  "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
+  "verdict": "PASS_COMPONENT",
+  "read_comparisons": 20480,
+  "data_mismatches": 0,
+  "ecc_cases": 2400,
+  "ecc_case_scope": "8token patterns:every24 single-bit flip and276same-codeword doubles, via DUT encode/decode functions",
+  "mutant": "MUT1 suppresses correction;144ECC mismatches,0normal-read mismatches",
+  "capacity": "all8192 tokens initialized and read, all1024rows and8masked32-bit slots covered",
+  "collision": "read-before-write sameaddress,simultaneous neighboring-slot writes",
+  "scope_limit": "Control full-context and route pending; sticky UE/package gating hardware injection not yet verified",
+  "logs": {
+    "exact.log": "98a5425a9a3ff713112117f6bc49e84e24faca3d434264220112278aea320fba",
+    "mutant.log": "bc388edbd45be1c67db475494b33af809d5accb6f67ac4888ec80e838e1224b8"
+  }
+}

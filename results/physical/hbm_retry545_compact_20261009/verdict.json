@@ -1,0 +1,16 @@
+{
+  "verdict": "FAIL_NOT_ADOPTED",
+  "scope": "PATHFINDING_GENERIC_IO_FULL545_REPLAY512",
+  "source_origin": "f106881b5",
+  "launcher": "fb7c0c710",
+  "source_storage": "b11e829d3",
+  "remote_work": "/srv/opentallas-data/codex/hbm-retry545-pathfinding-r3/work",
+  "real_macro_count": 16,
+  "TT_setup_ps": -459.18,
+  "SS_setup_ps": -892.71,
+  "SS_reg_to_reg_ps": -706.57,
+  "FF_hold_ps": -146.97,
+  "FF_reg_to_reg_ps": -16.75,
+  "actual_TU_boundary_budget_bound": false,
+  "next": "structural controller pipeline/partition and actual source/capture clock budgets; no route-settings rescue claim"
+}

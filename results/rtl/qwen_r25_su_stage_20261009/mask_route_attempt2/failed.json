@@ -1,0 +1,176 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T07:19:05.375644+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_qwen_r25_causal_mask_timing",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv",
+        "sha256": "c5e7e3d74be572a4c2b54f3e1546479a6abe54e7673b1e1f1e64fe487146214e",
+        "size_bytes": 2968
+      },
+      {
+        "path": "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_timing.sv",
+        "sha256": "7db318a422d3f05c7001376cfffe7ea4e1df8fde9ab48eb31674ae2bb503425a",
+        "size_bytes": 1897
+      }
+    ],
+    "top": "ot_qwen_r25_causal_mask_timing"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\n\n /----------------------------------------------------------------------------\\\n |  yosys -- Yosys Open SYnthesis Suite                                       |\n |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |\n |  Distributed under an ISC-like license, type \"license\" to see terms        |\n \\----------------------------------------------------------------------------/\n Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n\n-- Executing script file `/tmp/abi3-physical-979nikuq/synth.ys' --\n\n1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv' to AST representation.\nSuccessfully finished Verilog frontend.\n\n2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv' to AST representation.\n\n/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv:15: ERROR: syntax error, unexpected TOK_IMPORT\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:19:04.912365+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_r25_causal_mask_timing",
+      "--source",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask.sv",
+      "--source",
+      "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_timing.sv",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--false-path-io",
+      "--stages",
+      "synth,sta,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "200",
+      "200",
+      "--core-area",
+      "5",
+      "5",
+      "195",
+      "195",
+      "--orfs-corner",
+      "TC",
+      "--hold-corners",
+      "TC,BC",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--output",
+      "../route_attempt2.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "9a8288a21396120eed6610eb60099d5ec5f1c11c57808d68a6d91ce504957e9f",
+      "tree": "/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/qwen-r25-mask/337c94a5d/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "sta",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -1,0 +1,7 @@
+TUCFG seed=1 rank=0 NC=1 NOG=96 PF=1 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=0.833333 TOT=95
+TUDONE seed=1 rank=0 pf=1 lat_ns=494.562 lat_cyc=593.5 tx_first_ns=48.372 tx_last_ns=48.372 rx_first_ns=426.174 rx_last_ns=435.348 res_first_ns=-402.152 res_last_ns=-402.152 deliver_tail_ns=59.214 ndep=1 narr=95 nres=0 got=95 own_exact=0 mismatches=0 faults=0 credit_stall=0
+- rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv:276: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 912ns; walltime 0.016 s; speed 56.000 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 12 MB
+ga pos +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1

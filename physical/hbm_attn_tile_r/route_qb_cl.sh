@@ -4,6 +4,7 @@
 # env OUT (run dir), no admit (the loop admits).  The leaf view physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1 (LEF +
 # SS/FF/TT, from the lb_u45_m6 leaf route whose pins leaf_b froze) is installed by tools/tt_views/ttv_install.sh first.
 # Post-step: the quad view (LEF + SS/FF/TT ETM, quad_interface.sdc, leaf TT lib in the TT pass) -> $W/view.
+# GRTA (redesign-hbm 2026-10-09): GLOBAL_ROUTE_ARGS override (e.g. allow a residual gcell overflow for detail route to clear)
 # env: C (q4g12b) DW (514.89) DH (562.95) PD (0.50) HM (0.030) PER (0.770) CORES (16) CTSA (bd150) MCP (1) TPARAM SLEWM (60)
 lab=$1; shift
 C=${C:-q4g12b}; DW=${DW:-514.89}; DH=${DH:-562.95}
@@ -22,7 +23,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_attn_tile_m6h1q ${TPARA
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,3))") --place-density ${PD:-0.50} --routing-layers M2 M7 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_attn_tile_r/macro_placement_$C.tcl \
   --orfs-var PDN_TCL=/src/physical/hbm_attn_tile_r/pdn_q7.tcl --orfs-var IO_CONSTRAINTS=/src/physical/hbm_attn_tile_r/io_${C}.tcl --orfs-var MACRO_ROWS_HALO_X=5 --orfs-var MACRO_ROWS_HALO_Y=5 \
-  --orfs-var ADDER_MAP_FILE= --orfs-var "SYNTH_KEEP_MODULES=ot_attn_rp_reg" --orfs-var "CTS_ARGS=$CTSA" "$@" \
+  --orfs-var ADDER_MAP_FILE= --orfs-var "SYNTH_KEEP_MODULES=ot_attn_rp_reg" --orfs-var "CTS_ARGS=$CTSA" ${GRTA:+--orfs-var "GLOBAL_ROUTE_ARGS=$GRTA"} "$@" \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent ${SLEWM:-60} --hold-margin-ns ${HM:-0.030} --purpose signoff_target --nickname-tag qb_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1

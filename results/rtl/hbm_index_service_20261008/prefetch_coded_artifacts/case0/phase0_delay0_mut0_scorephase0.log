@@ -1,0 +1,7 @@
+IKS_PREFETCH rep=0 phase_ns=0 query_hold_ns=0 keyleg=24 code_mut=0 correction_seen=0 score_phase_ps=0 lines=1368 max_fifo=1 last_line_ns=475.226 exposed_after_query_ns=475.226
+IKS_PREFETCH rep=1 phase_ns=0 query_hold_ns=0 keyleg=24 code_mut=0 correction_seen=0 score_phase_ps=0 lines=1368 max_fifo=1 last_line_ns=401.922 exposed_after_query_ns=401.922
+PASS_HBM_SVC_IKS_PREFETCH
+- /srv/opentallas-scratch/codex/hbm-service-striped-20261008/prefetch-coded-r1/rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.120 s; speed 10.855 us/s
+- Verilator: cpu 0.120 s on 1 threads; allocated 8 MB

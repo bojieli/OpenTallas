@@ -1,0 +1,216 @@
+{
+  "name": "s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125",
+  "status": "NEEDS_RTL",
+  "created": "2026-10-08T21:41:03-07:00",
+  "updated": "2026-10-08T22:05:06-07:00",
+  "spec": {
+    "name": "s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125",
+    "block": "dsfd_colt_lane",
+    "owner": "Claude:drive-2125",
+    "purpose": "DRIVE-2125 colt_lane reroute on the FIXED mm FF flow (coordinator-approved 21:4x; 5941d6f0b/ee6bbfef0: route-time FF scene now measures the FF insertion). b06ecb986 routes were hold-repaired at the TT reference: ioref-rejudge STILL FF i2r -24.7..-42.5 (386 input pins) at the correct FF ref. TT side (c_in from g_hco_SW, -5..-28) is re-budgeted when hstnh_515 closes. Source d04574493 = b06ecb986 + template F floorplan fix (fp_lint sliver u_q.g_m[0]|g_m[1] gap 10.78 um), 0 cycles. Variant B (LVT sibling): macro pitch 184.896 -> gap 12.07 um (place_macros_tile_g12.tcl). | FILL-3 2026-10-08 (noncrit): OT_MULTI_VT=lvt (<=~2% cells; RVT default) variant of s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10; same RTL, same recipe, TC route + mm hold. | was: calib-corner 2026-10-08: orphan dsfd_colt_lane (S81 bank-collector lane, one master placed R0 + MY). Latest: 7345266ce-e-lbc(-tt) re-judged at the ROUTED reference TT -27.65 (input->reg, 3 pins; r2r +83, out +22) / FF -24.68 (input hold, 386 pins; r2r +19.6). Cause: route SDC SDCM io_vclk_m_517 = SS",
+    "hosts": [
+      "ot-epyc4",
+      "ot-epyc2",
+      "ot-epyc1tb",
+      "ot-agidock128",
+      "ot-epyc3"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "source": {
+      "branch": "claude/drive-2125-colt-sliver",
+      "commit": "d045744932eb5a6e24ddb24fcc3048f40e8de06a"
+    },
+    "stages": {
+      "bench": [],
+      "calibrate": {
+        "cmd": "export OT_MULTI_VT=lvt; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.01 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/link/ot_fifo_sram_fwft.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl SDCX=physical/s81_ph_views/tiles/colt_lane_mcp.sdc CLK=ck bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_colt_lane rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile_g12.tcl $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+        "threads": 16,
+        "peak_ram_gb": 40
+      },
+      "route": {
+        "cmd": "export OT_MULTI_VT=lvt; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && bash physical/s81_ph_views/common/make_io_vclk_margin.sh ${CK_SS_MEAN} >/dev/null && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.01 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/link/ot_fifo_sram_fwft.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl SDCX=physical/s81_ph_views/tiles/colt_lane_mcp.sdc CLK=ck bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_colt_lane rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile_g12.tcl $CL_STOP_AFTER",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        },
+        {
+          "name": "ttb_routed_at_TC",
+          "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+      ],
+      "post_sdc": [
+        "physical/s81_ph_views/common/signoff_unc60.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+      ],
+      "macros": [
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+      ]
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/variant_fill/s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10-f3-lvt/s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10"
+      }
+    ],
+    "cycles_added": 0,
+    "budget": {
+      "enabled": false,
+      "reason": "S81-PH tile sheet is grade 'target' (no calibration); the tiles' measured insertion (~250 ps) is far below it, so the sheet SDC would put vclk hundreds of ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json in the record for the sheet re-plan."
+    },
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.01,
+    "route_corner": "TC",
+    "merge_target": null,
+    "no_bench_reason": "pure re-route variant (OT_MULTI_VT=lvt (<=~2% cells; RVT default)) of s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10: RTL unchanged at b06ecb986; that line's benches gate adoption"
+  },
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/work/orfs/logs/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/base/5_2_route.json"
+    ],
+    "ff_ps": -1.26,
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/work/orfs",
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -165.3,
+    "ss_sensitivity_tns_ps": -73295.3,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/corner_sta.json",
+    "ss_ps": -3.49,
+    "ss_tns_ps": -120.2,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/work/orfs|0",
+      "at": "2026-10-08T22:04:11-07:00",
+      "available": true,
+      "tt": -3.49,
+      "ff": -1.26,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 338.4,
+            "min": 319.6,
+            "max": 356.7,
+            "n": 1035,
+            "kind": "boundary"
+          },
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 338.4,
+            "min": 319.6,
+            "max": 356.7,
+            "n": 1035,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 277.5,
+            "min": 258.9,
+            "max": 295.1,
+            "n": 1035,
+            "kind": "boundary"
+          },
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 277.5,
+            "min": 258.9,
+            "max": 295.1,
+            "n": 1035,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": -3.49,
+      "tt_out": 53.69,
+      "ff_i2r": 7.12,
+      "ff_out": 19.51,
+      "ff_r2r": -1.26,
+      "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/cl/routed_ioref.a1.json"
+    },
+    "route_sdc_clock": {
+      "ss_ps": -44.76,
+      "ff_ps": -82.95
+    }
+  },
+  "routed_ioref": {
+    "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/work/orfs|0",
+    "at": "2026-10-08T22:04:11-07:00",
+    "available": true,
+    "tt": -3.49,
+    "ff": -1.26,
+    "errors": [],
+    "ioref": {
+      "tt": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 338.4,
+          "min": 319.6,
+          "max": 356.7,
+          "n": 1035,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 338.4,
+          "min": 319.6,
+          "max": 356.7,
+          "n": 1035,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 277.5,
+          "min": 258.9,
+          "max": 295.1,
+          "n": 1035,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 277.5,
+          "min": 258.9,
+          "max": 295.1,
+          "n": 1035,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": -3.49,
+    "tt_out": 53.69,
+    "ff_i2r": 7.12,
+    "ff_out": 19.51,
+    "ff_r2r": -1.26,
+    "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/cl/routed_ioref.a1.json"
+  },
+  "reason": "SS -3.49 / FF -1.26 ps / DRC 0 (line SS >= +0 / FF >= +0 / DRC 0)"
+}

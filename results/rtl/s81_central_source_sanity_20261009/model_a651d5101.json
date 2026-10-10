@@ -1,0 +1,57 @@
+{
+  "source_commit": "a651d5101",
+  "input_root": "/srv/opentallas-scratch/claude/s81-dies/src_fe365cd13",
+  "restored_hook": "dsrom_head_input_staging_model",
+  "model": {
+    "schema": "opentallas.dsrom.head-input-staging.v1",
+    "default_enabled": false,
+    "adopted": false,
+    "source": "rtl/v41rom/ot_dsrom_head_bundle.sv and head_elem A input ABI",
+    "sizing": {
+      "head_dies": 12,
+      "bundles_per_die": 85,
+      "A_elements_per_die": 340,
+      "stages_per_A": 4,
+      "bits_per_stage": 307,
+      "registered_bits_per_die": 417520
+    },
+    "MACs_per_cycle_unchanged": true,
+    "compute_intensity_unchanged": true,
+    "ports_bytes_per_cycle": {
+      "x_per_A": 32,
+      "other_per_A": 6.375
+    },
+    "boundary_bits_per_cycle": {
+      "each_A": 307,
+      "per_bundle": 1228
+    },
+    "replicas": {
+      "A_input_pipeline": 340,
+      "stage_groups": 1360
+    },
+    "mux_demux_added": 0,
+    "fanout": {
+      "source_A_receivers_per_bundle": 4,
+      "purpose": "independent aligned landings beside actual A pin groups"
+    },
+    "routing": {
+      "per_A_tracks": 307,
+      "pin_segment_target_um": 100,
+      "capacity": "requires extracted A LEF faces and one-bundle route"
+    },
+    "area": {
+      "register_cell_floor_um2_per_die": 121748.83200000001,
+      "register_slot_floor_mm2_at_55pct": 0.22136151272727272,
+      "buffer_CTS_hold_area_unmeasured": true,
+      "floorplan_slot_fit": false
+    },
+    "latency": {
+      "added_cycles_per_head_pass": 4,
+      "added_verify_AR_us": 0.0033333333333333335,
+      "added_draft_5passes_us": 0.016666666666666666,
+      "added_verify_6pass_stage_busy_us": 0.02,
+      "II_effect": "price new head busy against actual stage limiter"
+    },
+    "qualification": "proposed structural budget; exactness and routed timing required"
+  }
+}

@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.mtp.vmx.physical.launch.v1",
+ "observed_at": "2026-10-09T06:39:34.229183+00:00",
+ "job": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+ "status": "RUNNING",
+ "source_commit": "a2f264c8b2075f2632d9bf014bcb26b54da3ba38",
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+ "events": [
+  "2026-10-08T23:37:06-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote.json",
+  "2026-10-08T23:37:53-07:00 source a2f264c8b207 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote/src",
+  "2026-10-08T23:38:20-07:00 launched calibrate (attempt 1) on ot-epyc1tb"
+ ],
+ "confirmed_live_process": "    PID    PPID ELAPSED STAT COMMAND\n4144455       1      73 Ss   bash /srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote/cl/run.sh calibrate.a1\n",
+ "remote_required": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "scope": "enlarged standalone VMX calibration; no terminal closure evidence yet; existing failure records retained"
+}

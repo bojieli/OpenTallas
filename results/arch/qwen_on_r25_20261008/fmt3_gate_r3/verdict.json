@@ -1,0 +1,66 @@
+{
+  "verdict": "PASS",
+  "scope": "exact conversion and finite protocol; production IL8 issuer; no physical qualification",
+  "contract": "128 INT8 codes pair consecutive issuer beats, low 64 then high 64; issue interleaves rows",
+  "precondition": "fmt3 operation has an even total count of real BF16 beats; all target Qwen shapes satisfy this",
+  "latency": "one registered adapter stage, 2 consecutive output beats per packed line; no arithmetic-order change",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv": "5cd2629df135fbe3807124a3f8ca5633c9b338dbd444d7c1d9526a38e96def16",
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "1fd8122a7ac2f77e92dcd601f1b13d0a4c1899a5ce3bfb3a6a19966c7ea5d7cd",
+    "rtl/test/tb_hbm_int8_line.sv": "01f622af41a31c3d604fe9b37900a5b4fbd5770233659842581e36d07bfe8abb",
+    "rtl/test/tb_hbm_int8_issue.sv": "137b2c6f5f693207c1c39b887c4f7b893d28ea2fc72c32d078e33304fdb4dc40",
+    "tools/uarch_model.py": "52e1bccddb6398be6dcccc2e7f06ade2792d954c9d80bda3ecb584941921e5d4",
+    "tools/qwen_r25_int8_gate.py": "8369b4116c84e646e86c960257da19093d55429c2c9240f6f0d1053557568976"
+  },
+  "model": {
+    "status": "proposal_not_physically_qualified",
+    "replicas": 32,
+    "macs_per_cycle": 0,
+    "compute_intensity": "conversion only",
+    "input_bytes_per_cycle_average": 64,
+    "input_burst_bytes": 136,
+    "output_bytes_per_cycle": 136,
+    "useful_output_bytes_per_cycle": 128,
+    "input_boundary_bits": 1088,
+    "output_boundary_bits": 1088,
+    "conversion_lanes": 64,
+    "held_high_codes_bits": 512,
+    "output_register_bits": 1088,
+    "control_register_bits": 2,
+    "half_mux_inputs_per_lane": 2,
+    "half_control_fanout": 64,
+    "estimated_area_mm2_die": 0.1,
+    "floorplan_slot": "existing open smh_front_c strip; fit unverified",
+    "routing_tracks_needed": 2176,
+    "routing_channel_capacity": null,
+    "routing_fit": "must measure in admitted context route",
+    "added_latency_cycles_per_dependent_sm_op": 1,
+    "added_token_cycles": 253,
+    "added_token_ns_at_1p2ghz": 210.83333333333334,
+    "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
+    "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0"
+  },
+  "tests": [
+    {
+      "name": "line",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "issue",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "negative_prefetch",
+      "returncode": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "negative_sign",
+      "returncode": 1,
+      "gate_pass": true
+    }
+  ]
+}

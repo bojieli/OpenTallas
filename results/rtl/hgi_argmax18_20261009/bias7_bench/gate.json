@@ -1,0 +1,15 @@
+{
+  "bench_source": "a70f70ca3",
+  "physical_rtl_source": "f6d441b6a",
+  "RTL_matches_live_route_source": true,
+  "host": "ot-pve1",
+  "run": "/srv/opentallas-scratch/codex/hgi-argmax18-bias7",
+  "rc": 0,
+  "rows": 7,
+  "cycles": 19061,
+  "extra_case": "DS biased row: 2.0+1.0 winner=3.0 exact FP32; default native17 cycle/index/NaN/fault lockstep; added row no physical source change",
+  "sha256": {
+    "sim.log": "27dfb88338d8a75af5fee183ad0574642555f801ba549d8c6e3ffaada19180f4",
+    "time.log": "3fc479ee1cdb69f96e638bbba5fe087fa34280b2a57d87f6d58a98a00c0147d9"
+  }
+}

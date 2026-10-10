@@ -1,0 +1,291 @@
+{
+ "die_um": [
+  23484.384,
+  32801.76
+ ],
+ "tree_top_slot": [
+  11418.6,
+  18344.9,
+  777.6,
+  3732.5
+ ],
+ "neighbours": {
+  "sp_vector_memory": [
+   11418.6,
+   12124.1,
+   777.6,
+   6220.8
+  ],
+  "sp_su64_sfu": [
+   11418.6,
+   10065.6,
+   777.6,
+   2058.5
+  ],
+  "sp_constants_sequencer": [
+   11418.6,
+   6287.8,
+   777.6,
+   2775.6
+  ],
+  "sp_band_lanes_0": [
+   10251.4,
+   3218.4,
+   777.6,
+   1131.8
+  ],
+  "io_collective": [
+   10396.9,
+   31216.3,
+   2302.1,
+   1563.8
+  ],
+  "io_xfifo": [
+   13128.0,
+   31216.3,
+   400.0,
+   1563.8
+  ],
+  "d2d_rom": [
+   11418.6,
+   801.4,
+   777.6,
+   518.4
+  ],
+  "clk_rx": [
+   10616.4,
+   15413.8,
+   412.5,
+   412.5
+  ]
+ },
+ "buses": [
+  {
+   "bus": "tt_lc0",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc0",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_band_lanes_0",
+   "relay_stages": 41
+  },
+  {
+   "bus": "tt_c0",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c0",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_0",
+   "relay_stages": 40
+  },
+  {
+   "bus": "tt_ty",
+   "cls": "tree_spine",
+   "bits": 1538,
+   "tt_port": "ty",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_band_lanes_0",
+   "relay_stages": 39
+  },
+  {
+   "bus": "tt_so",
+   "cls": "sequencer",
+   "bits": 97,
+   "tt_port": "so",
+   "tt_face": "E",
+   "dir": "out",
+   "peer": "sp_constants_sequencer",
+   "relay_stages": 34
+  },
+  {
+   "bus": "tt_c1",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c1",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_1",
+   "relay_stages": 30
+  },
+  {
+   "bus": "tt_lc1",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc1",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_band_lanes_1",
+   "relay_stages": 30
+  },
+  {
+   "bus": "tt_c2",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c2",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_2",
+   "relay_stages": 28
+  },
+  {
+   "bus": "tt_lc5",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc5",
+   "tt_face": "N",
+   "dir": "out",
+   "peer": "sp_band_lanes_5",
+   "relay_stages": 23
+  },
+  {
+   "bus": "tt_xd",
+   "cls": "tree_spine",
+   "bits": 53,
+   "tt_port": "xd",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_vector_memory",
+   "relay_stages": 21
+  },
+  {
+   "bus": "tt_c5",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c5",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_5",
+   "relay_stages": 17
+  },
+  {
+   "bus": "tt_mx",
+   "cls": "tree_spine",
+   "bits": 553,
+   "tt_port": "mx",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_vector_memory",
+   "relay_stages": 16
+  },
+  {
+   "bus": "tt_lc2",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc2",
+   "tt_face": "S",
+   "dir": "out",
+   "peer": "sp_band_lanes_2",
+   "relay_stages": 15
+  },
+  {
+   "bus": "tt_lc4",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc4",
+   "tt_face": "N",
+   "dir": "out",
+   "peer": "sp_band_lanes_4",
+   "relay_stages": 11
+  },
+  {
+   "bus": "tt_c3",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c3",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_3",
+   "relay_stages": 7
+  },
+  {
+   "bus": "tt_c4",
+   "cls": "tree_spine",
+   "bits": 343,
+   "tt_port": "c4",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_port_tiles_4",
+   "relay_stages": 7
+  },
+  {
+   "bus": "tt_lc3",
+   "cls": "tree_spine",
+   "bits": 28,
+   "tt_port": "lc3",
+   "tt_face": "W",
+   "dir": "out",
+   "peer": "sp_band_lanes_3",
+   "relay_stages": 5
+  },
+  {
+   "bus": "clk_r99",
+   "cls": "clock_trunk",
+   "bits": 1,
+   "tt_port": "ck",
+   "tt_face": "area",
+   "dir": "in",
+   "peer": "clk_rx",
+   "relay_stages": 0
+  },
+  {
+   "bus": "tt_land",
+   "cls": "spine_local",
+   "bits": 16,
+   "tt_port": "ld",
+   "tt_face": "S",
+   "dir": "in",
+   "peer": "sp_vector_memory",
+   "relay_stages": 0
+  }
+ ],
+ "schema": "opentallas.qwen-r22k.tree-top-die-env.v1",
+ "source": "tools/qwen_kv_die/rom_r22k.py r22k (spine relay channels W|M 129.6 + M|E 259.2), tools/qwen_rom_fulldie_b3r2.py relays at 430.56 um pitch; claude/kv-die-20261009",
+ "issue_status": {
+  "tt_si": {
+   "bits": 380,
+   "relay_stages": 35,
+   "from_": "sp_constants_sequencer.ti (W face, y ~ 8.9 mm)",
+   "to": "sp_tree_top.si (E face, y ~ 21.9 mm)"
+  },
+  "tt_so": {
+   "bits": 97,
+   "relay_stages": 34
+  },
+  "seq_su": {
+   "relay_stages": 5
+  },
+  "seq_sud": {
+   "relay_stages": 5
+  },
+  "crom_a": 3,
+  "crom_q": 3,
+  "note": "TP4 basis (die_relays_430um, 15,647 a token) prices bd / tree / tws / ord / link only: tt_si / tt_so / seq_su / crom are UNPRICED"
+ },
+ "channels": {
+  "W_M": {
+   "x_um": [
+    11029.0,
+    11418.6
+   ],
+   "width": 389.6
+  },
+  "M_E": {
+   "x_um": [
+    12196.2,
+    12455.4
+   ],
+   "width": 259.2
+  }
+ },
+ "constraints_for_new_tile": [
+  "slot: spine column M, 777.6 um wide (column pitch), above the VM; height free (the r21b slot is 3,732.48; die margin 87.7 mm2 under the reticle)",
+  "S face abuts the VM (12.12-18.34 mm): the VM words (xd 53 b, mx 553 b) and the ME issue / status should leave here or on the E face bottom, toward the SU (10.07-12.12 mm) and the sequencer (6.29-9.06 mm)",
+  "E face: the M|E relay channel (259.2 um); W face: band control c0-5 (343 b each) to the slab port tiles of the 6 bands (both spine side columns), today 7-40 relay stages",
+  "tt_ty (1,538 b) / lc0-5 (28 b) to the band lanes: band 0 is at the die bottom (3.2 mm), 39-41 stages from the tree top",
+  "every port registered at the pin; relays at <= 430.56 um; 2-track pin pitch on faces (die lint)",
+  "the instruction stream to an ME-side controller can ride the existing VM instruction broadcast (seq_ib, 382 b, 10 stages) or a new word; only the dependency status (SU progress / idle) must cross SU -> tree top (~6 mm, ~14 stages)"
+ ]
+}

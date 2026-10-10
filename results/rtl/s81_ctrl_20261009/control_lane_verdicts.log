@@ -1,0 +1,6 @@
+TB_S81_CONTROL_LANE mut=0 err=0 native=553 payload_bits=512 sent=641 got=641 errors=0 fault=0 linkfault=0 crc=0 replays=0 first=16 last=1020 PASS
+TB_S81_CONTROL_LANE mut=0 err=1 native=553 payload_bits=512 sent=641 got=641 errors=0 fault=0 linkfault=0 crc=17 replays=7 first=16 last=1020 PASS
+TB_S81_CONTROL_LANE neg=1 fault=1 rx=0 PASS
+TB_S81_CONTROL_LANE neg=2 fault=1 rx=0 PASS
+TB_S81_CONTROL_LANE mut=1 err=0 native=553 payload_bits=512 sent=641 got=641 errors=641 fault=0 linkfault=0 crc=0 replays=0 first=16 last=1020 FAIL
+TB_S81_CONTROL_LANE mut=2 err=0 native=553 payload_bits=512 sent=641 got=641 errors=1 fault=0 linkfault=0 crc=0 replays=0 first=16 last=1020 FAIL

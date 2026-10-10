@@ -623,9 +623,15 @@ def write_hex(path, arr):
 def cmd_run(a):
     need_env()
     import torch
-    if not torch.cuda.is_available():
-        raise SystemExit("--run executes on the local GPU only")
-    dev = torch.device("cuda")
+    # token-exact 2026-10-09 (owner: no GPU reset): --device cpu runs the SAME torch golden on a CPU host.  torch CPU
+    # elementwise add / mul are single IEEE binary32 RNE ops (no FMA contraction, no FTZ); the primitive self-test below
+    # checks every primitive bit for bit against tools/hdc_golden.py before any use, on whichever device runs.
+    if a.device == "cuda" and not torch.cuda.is_available():
+        raise SystemExit("--run --device cuda needs a CUDA device (use --device cpu on a CPU host)")
+    dev = torch.device(a.device)
+    if a.device == "cpu":
+        torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "32")))
+    devname = torch.cuda.get_device_name(0) if a.device == "cuda" else f"cpu ({torch.get_num_threads()} threads)"
     T = torch_golden(dev)
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -640,7 +646,7 @@ def cmd_run(a):
     nl = a.layers
     t0 = time.time()
     m = GpuTP(T, a.prep_dir, range(nl), head=a.head)
-    print(f"loaded {nl} layers{' + head' if a.head else ''} onto {torch.cuda.get_device_name(0)} in {time.time() - t0:.0f} s", flush=True)
+    print(f"loaded {nl} layers{' + head' if a.head else ''} onto {devname} in {time.time() - t0:.0f} s", flush=True)
     hprogs, hshas = head_programs(prep) if a.head else (None, None)
     z = np.load(a.embedding_npz)
     emb = {int(t): (sc, cd) for t, sc, cd in zip(z["tokens"], z["scales"], z["codes"])}
@@ -656,7 +662,8 @@ def cmd_run(a):
     X = m.VM["X"]
     record = {"schema": "opentallas.qwen-tp-position-oracle-gpu.v1", "status": "ISA_golden_only",
               "layers": nl, "head": bool(a.head), "tp": TP, "groups": m.GROUPS, "su_width_arith": 1024, "kv_format": "fp8",
-              "device": torch.cuda.get_device_name(0), "torch": torch.__version__,
+              "device": devname, "torch": torch.__version__,
+              "kv_history": str(a.kv_history) if a.kv_history else None,
               "tokens_sha256": sha(a.tokens), "tokens_used": tokens[:last + 1], "positions": rec_pos,
               "embedding_npz_sha256": sha(a.embedding_npz), "prep_sha256": sha(a.prep_dir / "prep.json"),
               "head_program_sha256": hshas, "primitive_selftest": st, "per_position": {},
@@ -667,7 +674,23 @@ def cmd_run(a):
                   "tools/hdc_qwen_fullshape_program_w12.py")},
               "claim_boundary": "ISA golden (GPU port, bit-checked against the CPU golden) over a real prompt: positions < P "
                                 "are the golden prefill (sequential decode), position P the token under test. Not an RTL verdict."}
-    for p in range(last + 1):
+    first = 0
+    if a.kv_history:
+        # history-seeded decode (measure-at-target-context: a layer is a pure function of its inputs, a synthetic
+        # format-valid KV history is admissible): every layer's K/V store = kv_history/L<n>_die<d>.bin (the u32 view of
+        # the fp32 store, the layout kv_pre/ records), and only the recorded positions >= the first one are decoded.
+        first = rec_pos[0]
+        for n in range(nl):
+            for d in range(TP):
+                h = np.fromfile(a.kv_history / f"L{n}_die{d}.bin", dtype="<u4")
+                if h.size != m.kv_elems:
+                    raise SystemExit(f"history L{n}_die{d}: {h.size} words != kv store {m.kv_elems}")
+                m.kv[n][d] = torch.from_numpy(h.view(np.float32).copy()).to(dev)
+        record["kv_history_sha256"] = {f"L{n}_die{d}": sha(a.kv_history / f"L{n}_die{d}.bin")
+                                       for n in range(nl) for d in range(TP)}
+        record["claim_boundary"] += (" History-seeded: positions < P are NOT decoded; the K/V history of every layer is "
+                                     "the given store (kv_history_sha256), so layer outputs at P are those of that history.")
+    for p in range(first, last + 1):
         tok = tokens[p]
         x = x_of(tok)
         vm = torch.zeros((TP, m.VM_ELEMS), dtype=torch.float32, device=dev)
@@ -745,6 +768,9 @@ def main():
     ap.add_argument("--embedding-npz", type=Path)
     ap.add_argument("--check-token0-preload", type=Path)
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--device", default="cuda", choices=("cuda", "cpu"), help="--run: torch device (cpu: remote CPU host)")
+    ap.add_argument("--kv-history", type=Path, help="--run: seed every layer's K/V store from L<n>_die<d>.bin (u32) "
+                    "and decode only the --positions (>= the first); default: the golden prefill from position 0")
     a = ap.parse_args()
     if a.prep:
         cmd_prep(a)

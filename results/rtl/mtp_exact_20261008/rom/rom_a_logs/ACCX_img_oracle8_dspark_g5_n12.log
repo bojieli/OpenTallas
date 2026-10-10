@@ -1,0 +1,36 @@
+ITER it=0 pos=8 in=3118 accepted=1 emitted=2 cycles=2492916 draft_cycles=198762 fault=0
+HEAD 14: 4040 logits differ
+HEAD 15: 4040 logits differ
+HEAD 16: 4040 logits differ
+HEAD 17: 4040 logits differ
+HEAD 18: 4040 logits differ
+ITER it=1 pos=10 in=4001 accepted=1 emitted=2 cycles=2553190 draft_cycles=200220 fault=0
+ITER it=2 pos=12 in=1771 accepted=1 emitted=2 cycles=2634182 draft_cycles=208460 fault=0
+ITER it=3 pos=14 in=1476 accepted=1 emitted=2 cycles=2695758 draft_cycles=209884 fault=0
+ITER it=4 pos=16 in=3742 accepted=1 emitted=2 cycles=2762070 draft_cycles=211340 fault=0
+ITER it=5 pos=18 in=2691 accepted=1 emitted=2 cycles=2811238 draft_cycles=212772 fault=0
+vm 0 rtl c0ee0000 expect c0580000
+vm 1 rtl c0870000 expect 3fbd0000
+vm 2 rtl bfb60000 expect 3fc50000
+vm 3 rtl 40510000 expect bfa80000
+vm 4 rtl c0440000 expect 3ed50000
+vm 5 rtl bf950000 expect befa0000
+vm 6 rtl be460000 expect bff50000
+vm 7 rtl 3f750000 expect 404d0000
+vm 8 rtl bf980000 expect 3eff0000
+vm 9 rtl 3f1f0000 expect 401e0000
+kv 9 rtl bf400000 expect 3fa00000
+kv 10 rtl 3e300000 expect bf800000
+kv 11 rtl be300000 expect 3e200000
+kv 12 rtl 3d900000 expect bea00000
+kv 13 rtl be300000 expect bed00000
+kv 14 rtl bf500000 expect 3f800000
+kv 15 rtl bf200000 expect bf100000
+kv 25 rtl bfd00000 expect 3fa00000
+kv 26 rtl 3f600000 expect bfa00000
+kv 27 rtl bde00000 expect bfd00000
+HDC41_MTP prompt=8 generated=13 iters=6 token_mismatches=10 accept_mismatches=6 heads=44 head_mismatches=30 prefill_cycles=2650679 iter_cycles=15949354 draft_cycles=1241438 vm_mismatch=101290 kv_mismatch=67184
+ACCEPT_HIST a0=0 a1=6 a2=0 a3=0 a4=0 a5=0
+UTIL me_busy=6216560 su_busy=6021534 qe_busy=2725046 xu_busy=1155687 he_busy=1978968
+FAIL
+- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish

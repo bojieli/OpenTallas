@@ -1,0 +1,9 @@
+{
+  "schema": "opentallas.hbm-write-source-pc-busy.v1",
+  "pass": true,
+  "scope": "Full32-PC sourcebusy status includes only issued writes awaiting physicalcompletion; pending upstreamwrites must be blocked/ordered independently when granting reads",
+  "input_sha256": {
+    "rtl/hbm_accel/ingest/ot_hbm_write_source_pc.sv": "0deeaac2785563acefcf591cc9f1ab5f440c46a9e7899a5f93984bc7c317420e",
+    "rtl/test/tb_hbm_write_source_pc.sv": "f76e313f0d2e95c8607f52612b28ec7bbfcde2af8e0646b82bf5e971327f19e2"
+  }
+}

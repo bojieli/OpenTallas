@@ -12,8 +12,9 @@
     "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
     "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
     "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
-    "rtl/test/tb_v41x_attn_desc_lifecycle.sv": "f20dc5a5621144e740d743b62fd1ef6c00d9dc3e8d23d29d5bf0cde235d93a3c"
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "13a25c4a9e0b3e05365a4053a8dc6688933c51d5aaaf6b3f672ce347d2f9c6ad",
+    "rtl/test/tb_v41x_attn_desc_lifecycle.sv": "f20dc5a5621144e740d743b62fd1ef6c00d9dc3e8d23d29d5bf0cde235d93a3c",
+    "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv": "d5859787a61f670d65a0137fc2a5e068e8db2f66479b3d9e04d5a34b3bdd26a1"
   },
   "status": "pass",
   "tests": {
@@ -31,5 +32,6 @@
     "qk_accepted_beats": 32,
     "staged_prefix_rows_pv": 4,
     "staged_prefix_rows_qk": 128
-  }
+  },
+  "source_repin_20261009": "mtp-lead: core re-pinned after the ring-DYN changes (aff63db74 / 3dea693b1 enable DYN25/26 for one-position cores; b03898cfe moves the DYN table verbatim into ot_hdc_v41x_dyn_unit, 0 cycles, campaign 14/15 cycle-identical). No attention/descriptor logic changed; the replay test of this record re-ran PASS on these sources."
 }

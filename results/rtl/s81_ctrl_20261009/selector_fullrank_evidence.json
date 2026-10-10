@@ -1,0 +1,50 @@
+{
+  "status": "SELECTOR_FULLRANK_EXACT_COMPONENT_PASS",
+  "host": "ot-agidock128",
+  "admission": "admit.sh4",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv": "a5d4f711a2e98fd72d5ad9428ba8faa5f120076ac16e223050aae37d02ac97fe",
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel_search_pipe.sv": "2b79ec653699810a376986d4a0ae79b8ce874386a50042fce918d27a3dee123d",
+    "rtl/dsrom_sys/s81_ph/test/run_selector_components.sh": "5ae5aa7af040c85b497b10f0a8628657b5bcfc389005f827a17ce28b8169f12c"
+  },
+  "shape": {
+    "tp_rank_scores": 262144,
+    "tp4_global_context_scores": 1048576,
+    "quarter_count": 4,
+    "beats_per_quarter": 4096,
+    "scores_per_beat": 16,
+    "k": 512,
+    "bubbles_percent": 0
+  },
+  "reference": "unchanged ot_hdc_v41x_sel; allselectedindices/quarter/lanevalid/ninf/last/count/replays/order exact",
+  "scope": "One native selector slab only; generated score input. No scorer/gather or releasedcheckpoint endtoend claim. Stage includes ingest, search, replay and native output packet completion.",
+  "families": {
+    "spread": {
+      "dut_cycles": 4317,
+      "replays": 0,
+      "selected": 512,
+      "output_beats": 34
+    },
+    "all_tie": {
+      "dut_cycles": 12503,
+      "replays": 2,
+      "selected": 512,
+      "output_beats": 35
+    },
+    "ascending": {
+      "dut_cycles": 12523,
+      "replays": 2,
+      "selected": 512,
+      "output_beats": 35
+    }
+  },
+  "search": {
+    "checks": 2028,
+    "errors": 0,
+    "QW": 21,
+    "added_alignment_edges": 7
+  },
+  "fix": "Rename reserved SystemVerilog keyword bins in search bench; pin real native selector and reference library/slice/adders inventory in reusable component runner. RTL unchanged.",
+  "remote_artifacts": "/srv/opentallas-scratch/codex/ds-control/selector-test-v5",
+  "remaining": "Price worst12523-cycle fullrank selector beside actualpacedscore producer and per-stage composition; do not substitute this isolated ingest rate for1M scorer service."
+}

@@ -1,0 +1,27 @@
+{
+  "shape": {
+    "NS": 8,
+    "DB": 64,
+    "RS": 42,
+    "CRB": 16,
+    "USE_MACRO": 1
+  },
+  "bursts": 360,
+  "beats": 1465,
+  "cycles": 12000,
+  "request_to_chain_cycles": 19,
+  "request_to_output_cycles": 21,
+  "positive": "PASS",
+  "negative": "FAIL data corruption mutant detected at beat1",
+  "rtl_sha256": "5ab5ae8629624a8df6389cf4c0f12653dcee66976c9184d49cd7ad91da407e8e",
+  "bench_sha256": "d0a341063182bd7347f97cdd9a9353244e91c690ac8fb16e7087543a165082c3",
+  "scope": "transaction-level element bench only; token composition and die integration pending; default remains legacy",
+  "conditions": [
+    "full real SRAM simulation models",
+    "64-row wrap",
+    "held valid while me_en disabled",
+    "up to42 stop edges",
+    "96-cycle credit withholding",
+    "ordered slot output including all-empty bursts"
+  ]
+}

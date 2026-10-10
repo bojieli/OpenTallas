@@ -1,0 +1,142 @@
+{
+ "id": "topk_k9_n128_m1_asc",
+ "row": "CF-TOPK",
+ "mode": "GENERIC",
+ "what": "IDX.TOPK k = 9 with order = 1 (ascending id) FAULTS with E_RANGE (status 3): order 1 is legal for k <= 8 only (G15, spec c80ed5d7c); the DS index top-512 is IDX.INDEX",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000009100020060080900100000000008000100000800000000000000000000000000000000000000000150000010000090010000009000000000000000000000000000000000000000001000002000009001000000900000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000910002006008090010000000000800010000080000000000000000000000000000000000000000015000001000009001000000900000000000000000000000000000000000000000100000200000900100000090000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "IDX",
+   "op": "TOPK",
+   "param": 4105,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 128,
+     "m": 1,
+     "stride": 128,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 65536,
+     "n": 9,
+     "m": 1,
+     "stride": 9,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 131072,
+     "n": 9,
+     "m": 1,
+     "stride": 9,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "8fd5133fd41504bee64a493e19df8dbd8371c53d6b5e774017aea03f61ad96bf61ca68bd6b5e7740d56c9ebf8314d6bfeb0db73fe0b38dbe622abb3fd56b95bf3cf0fcbe091df6bd004b32bed45503407b10923f2054d63fcf1a26bf5dbb21bfaa92563f66e732bfa618fb3d0269f93f4e20adbf637893be4086da3e62b7653fb459b63f5100423f42c0673e6d99aebf84ab713e8af9223e485968bf601a1b3fb656493f68db2fbf006bd6bfbe6bbfbfcc38903e9f63ac3e85c63cbfc0ab183ef140413f1ee1a83e7689783e5791b53f1cfd353c004695bfec0bab3f41843fbff9f7833f88e88ebe2497ea3f80ba883fbc92b1bef88a98bf965a5b3f470b363f010587bfa20b683ff040b23d93dbbdbfd8758abdfa69883cf9de2cc0275e523e2ff586bed3b80cc09b47b53ea2d8b23d6b76debe721b0340b4e84bbf8e42ecbe0a96733f69382c3f806079bf902dee3e7d93073f78c7a5beb026e0bf76dde63e90e7b43edc0ad43f956779bdfbe88e3e6b5e3740c143883fb16bd63d93c910bf8bbd0bbfb20bb2bf899e44bf8591fcbfeb33d3bea382f4bf46f41d3fdeae04bfeb3e653f35ae1bc05e3bd43f171a523ffd3693beb5e6183f4f56823fa0c4003f21bb293f67c2b23ffbf3d73ecbe1d7bd9a53863f33599ebf6453dcbff330d43e7984a93fa180e8becd6e243f122ec3bff6f984be555421bfaaadc4bf1299f9bd"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 3,
+  "dies": [],
+  "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+ },
+ "mutants": [
+  {
+   "name": "order_unchecked",
+   "defect": "order = 1 accepted for k > 8 (ascending ids written, status 0)",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "c6c495385d079213e0aa6f44243c872819664d4f76f163aad3689397fa7996f6"
+  }
+ ]
+}

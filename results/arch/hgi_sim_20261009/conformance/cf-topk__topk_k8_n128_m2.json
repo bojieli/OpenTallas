@@ -1,0 +1,161 @@
+{
+ "id": "topk_k8_n128_m2",
+ "row": "CF-TOPK",
+ "mode": "GENERIC",
+ "what": "IDX.TOPK k = 8 over 2 row(s) of 128; ties to the lowest index; ids by descending score",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000008000020060080900100000000008000200000800000000000000000000000000000000000000000150000010000080020000008000000000000000000000000000000000000000001000002000008002000000800000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000800002006008090010000000000800020000080000000000000000000000000000000000000000015000001000008002000000800000000000000000000000000000000000000000100000200000800200000080000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "IDX",
+   "op": "TOPK",
+   "param": 8,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 128,
+     "m": 2,
+     "stride": 128,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 65536,
+     "n": 8,
+     "m": 2,
+     "stride": 8,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 131072,
+     "n": 8,
+     "m": 2,
+     "stride": 8,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "02ce3b3fd322b8bfa66b99bf0d34b3beae28c43fc27d7140636fa5bce085e7be2c9c043cc27d7140338010bc22bf173fed25e6be24918ebe3ef053bf7261c9bec6c83a3fd08b56bf726cabbf9070df3eb10acc3e5f2c9f3f75d565be0b5e27beb6d59abf6beff4bf175512bf3d12813ff80ca73ef3291bbf01b4f2bfd302853ff5292cbf6779ab3e3f9084be66beccbfbba006bf89be7d3f5ff3a63e5d313ebf4b2493bf263b4b3f19916ebf9772ad3fedf42cbe6083c53e96afc9bf24ade5bd5cb8c9bd3713c5bf6f3978bf4f100ebd4f4926bef73c54be3d8590bfd41d27bed2cfb7bf971a01bff1dbb33e6920fabebb37a0bfb98f42bffb3e303d548932bfa7f0d03f532affbf9428353e49b2393f285db4bf684190bf3618b0bfd46b92be0c87313eb9482fbf5e1ccf3ee12d8abeb01afabf24fb44bf8ce5803cb3b14c3f35daab3dd4ee4f3d2ba540bf344fd43f2d47e9be2f4c50be15c6fbbffd6345bf3509083f44b5e3be54df7cbd307507bfcef40d408aa4f43e5835b8bf43de283f237ab33f0adc2dbedab3bf3ea055f93f90bfa4bea6a5523fcd52463ff03ac6bf1b66973ebff9b33ef3dc863fc27d3140535206c058c20abfdf2c1fbf3e45a1bf88055bbfdc6ec03f42314e3f2f136a3fa4f58a3cfaae7fbfa62977bdf6962d3fd91e0abf7b07bfbed393753ed2e8ce3f0d32453e372e553f8975743fc61c33bedc20ff3f52ed2e3e56af2dbe14ffa3be1e9f18bf28786d4032787a3f904c22be3e77f8bd28786d40eea7583e6941bbbf36ba94bf8d26ae3eed3c8d3fd3b502bc2bb3183e3bc6d43f70a5683ff97d6d3ed34641bf54fdb2bf3a107dbf2c9c01bf414c3cbe3d4f92be49ce293ea1e6a7bdaa9467bf683736bce58cc03e5bfa273ff568d13f5497ab3fefc8623ef4b128bd71c19b3fece2333fe3a0293ff51c8b3e6fe8493f95c8a9bfd72d8c3e00d1993d8ffc91bf616c843d1bd9e6be82e909c0520d263fae18cdbcfb2caabee50f93bf514b813f70a6fc3e026997be2b7247bf2169523e68e326bedc23a63feacc86bd08ff93bff683f5bef30b62bf43eafcbd246a043f0951d3befae61bbe7040bb3fad748ebfbe9474beaa8b8a3d9208323f665b173fe498223f6e7d81bdb700b23e7e64c43d51a0743ede920abfd55bbc3f4df0c9bf1eb2903eb54ab5bf22da2740ebbe943ff114763f53f80e3f00489f3f28782d40ebaeb5bf4907d13fc30e993fcc51f0bdf666343e1c44dd3d2d4cd63fd5f3d83e15c158be203f91bf4ac416c0b7c8853e8c5e9bbe6a75d5bda6fc8c3ffa7285bec9dd8d3fe421913df41000c02c081cbe62c0053fcca909bfcd2192bfba20333f87356fbe68ca86bfefae0abf7f33c3bfb05f783f0feaf2bf7291c93f744f85bf5f24f4bd5d0e94bfc29fa33d1b8325bf7822fabe009012be7e4e363d"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      65536,
+      "05000000090000006b0000005c0000006300000053000000400000007b00000005000000090000005800000053000000"
+     ],
+     [
+      65549,
+      "5f0000001100000020000000"
+     ],
+     [
+      131072,
+      "c27d7140c27d7140c27d3140cef40d40a055f93f344fd43fa7f0d03fd2e8ce3f28786d4028786d4028782d4022da2740dc20ff3f2d4cd63f3bc6d43ff568d13f"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "f6570a7daf20e9b3aa172b87a9bdb74a8d6362697f3ffbeb9832ea90a3e185ca"
+ },
+ "mutants": [
+  {
+   "name": "tie_high",
+   "defect": "ties resolved to the higher index",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "4fc6d6a95717654f6cb3aaea1701eeaf0e951b4baa775b5a5179ccb1981002c6"
+  }
+ ]
+}

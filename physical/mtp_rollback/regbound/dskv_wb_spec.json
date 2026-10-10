@@ -1,0 +1,5 @@
+{"src": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_spec.sv", "module": "ot_hbm_accel_dskv_wb_spec", "core": "ot_hbm_accel_dskv_wb_spec_core",
+ "clk": "clk", "reset": "rst_n",
+ "why": "mtp-lead 2026-10-09: submit lint WARN on 4584c6b12 (outputs combinational 34 levels, input->reg 62 levels): row (with pos) in and wq out through pin FIFOs, the rest flopped; with PIPE=1 the ownership divide runs from registers (S_OWN).",
+ "in_hs": [{"v": "row_v", "r": "row_r", "data": ["row_kind", "row_slot", "row_r2", "row_data", "pos"]}],
+ "out_hs": [{"v": "wq_v", "r": "wq_r", "data": ["wq_pc", "wq_bank", "wq_row", "wq_col", "wq_data"]}]}

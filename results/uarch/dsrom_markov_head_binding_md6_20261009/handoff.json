@@ -1,0 +1,15 @@
+{
+ "scope":"One actual32-row A component with real released embedding lookup, releasedK256 Markov dot, separate head addition, finite queues and post-Markov argmax; no full-shard or full-die closure",
+ "source_dependencies":{"base_binding":"caf38a801","row_PINREG1":"38f22c6d8","row_PINREG2":"8685c9cda","released_checkpoint":"dba1be0a40aa45a94ad051997016db3960a90277"},
+ "functional_evidence":{"PINREG1_CACHE0":"full_r6/verdict.json","PINREG1_mask":"mask_r1/verdict.json","PINREG2_CACHE1":"cache_full_r1/verdict.json","PINREG2_CACHE1_mask":"cache_mask_r1/verdict.json"},
+ "measured_head_to_join_cycles":184,"head_to_join_ns_at_1_2GHz":153.33333333333333,
+ "cache_staging_added_cycles":2,"external_A_transport_owned_elsewhere_cycles":4,
+ "physical_shape":{"head_bundles_per_die":85,"A_elements_per_die":340,"local_weight_macros_per_die":680,"embedding_cache_bytes_per_die":174080,"weight_macro_mapping":"local_word=16*localrow+beat; macro=local_word%2; addr=local_word//2"},
+ "baseline_context_synthesis":{"instances":168910,"stdcell_um2":24017.7,"macro_um2":15762.7,"macros":2},
+ "physical_qualification":"pending; initial route clock insertion500/300ps is pathfinding only and requires measured calibration before signoff claims",
+ "remote_host":"ot-epyc2",
+ "remote_root":"/srv/opentallas-data/claude/md6-head-driver-caf38a801",
+ "live_route_candidates":["route_r3 (PINREG1 CACHE0 600x600)","route_pinreg2_r1 (PINREG2 CACHE0 600x600)","route_cache2_compact_r1 (PINREG2 CACHE1 300x380)"],
+ "preserve_live_worktrees":true,
+ "remaining":["terminal contextual route results","calibrated SS/FF boundary timing with real macro views","full-shard shared lookup fanout and routed capacity","integrate Ainput4-cycle landing transport","mask ragged per-shard rows through VALID_ROWS and best_valid in die integration"]
+}

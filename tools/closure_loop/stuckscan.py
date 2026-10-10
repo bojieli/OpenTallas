@@ -8,9 +8,12 @@ its host (one ssh per host) and diagnoses:
              ODB size), or the step log is quiet > HUNG_QUIET_S while the processes still burn CPU
   hopeless   the early-fail gates (shared with the daemon, closure_loop.early_fail_gate):
                EARLY_FAIL_SETUP       post-CTS (else post-placement) TT setup far past what DRT/opt ever recovered
-               EARLY_FAIL_HOLD        FF hold repair flooded (> 20k endpoints in margin) or real WNS < -150 ps after 1 h
+               EARLY_FAIL_HOLD        FF hold repair NOT converging: buffers past a cap, WNS < 0 frozen over 2000 it, or
+                                      real WNS < -150 ps after 1 h with < 5 ps gained over 2000 it
                EARLY_FAIL_CONGESTION  GRT past extra iteration 20 with the congestion markers not decreasing
                EARLY_FAIL_DRC         DRT past iteration 20 with the violation count not decreasing over K iterations
+  hold_stop  a non-converging hold repair already within hold_nearmiss_ps (-15 ps) with the setup gate clear: NOT an
+             early fail; `closure_loop.py hold-stop` resumes the route from its checkpoint with the hold repair cut
   stalled    old-flow (no OT_HOLD_GUARD) hold repair with hold already >= 0 and WNS frozen for > 3 h (margin chase)
   redundant  the block already CLOSED (a counting, TT-era closure), or a newer descendant commit of the same variant of
              the same block is RUNNING
@@ -74,9 +77,26 @@ GATES = dict(
     setup_tns_ps=-1.0e6,         # ... or TNS beyond this (count-free bound)
     setup_place_ws_ps=-900.0,    # post-placement (ideal clocks) bound, used only before CTS finishes
     setup_place_count=2000,
-    hold_flood_ep=20000,         # endpoints in hold margin reported by the repair
+    # hold (drive-2140): the endpoint count in margin is NOT a gate; only a non-converging repair is (hold_verdict)
+    hold_buf_cap=100000,         # hold buffers inserted in the step (rx128: 146k -> DPL-0033) ...
+    hold_buf_frac=0.30,          # ... or this fraction of the placed instance count ...
+    hold_buf_min=20000,          # ... (never below this many buffers)
+    hold_buf_improve_dwns=5.0,   # real WNS < 0 gaining >= this over hold_stall_it iterations: improving, so the cap's
+    hold_buf_improve_frac=0.60,  # ... fraction and ...
+    hold_buf_improve_min=60000,  # ... floor are raised to these (drive-2155: never kill a converging repair on buffers)
+    hold_stall_it=2000,          # real WNS < 0 gaining < hold_stall_dwns ps over this many iterations: stalled
+    hold_stall_dwns=1.0,
+    hold_stall_tns_pct=2.0,      # ... AND hold TNS improving < this % over the same window (the flow guard's rule): a
+                                 # flat WNS with TNS falling is one stubborn endpoint, not a stall (drive-2155: su_full
+                                 # TNS -30.8k -> -2.9k, selt_c -12.7k -> -18 were killed on a flat WNS)
     hold_real_ws_ps=-150.0,      # real hold WNS still below this ...
-    hold_real_after_s=3600,      # ... after this long in repair
+    hold_real_after_s=3600,      # ... after this long in repair ...
+    hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
+    hold_deep_dwns=5.0,
+    hold_nearmiss_ps=-15.0,      # drive-resume (coordinator APPROVED 2026-10-09): a non-converging hold repair whose real
+                                 # WNS is already >= this, with the setup gate not firing, is HOLD_STOP (stop the hold
+                                 # repair, resume the route from its checkpoint; the post-route hold ECO fixes the residue),
+                                 # never EARLY_FAIL_HOLD.  qfd_tile_rp1p was killed at -3.6 after 8.7 h, tile_e at -7.8.
     grt_min_iter=20, grt_markers=1000, grt_flat=0.95,
     drt_min_iter=20, drt_k=8, drt_min_viol=100,
     stall_after_s=3 * 3600,
@@ -99,6 +119,9 @@ def rd(p, n=None):
 def mt(p):
     try: return os.stat(p).st_mtime
     except Exception: return None
+ASIDE_RE = re.compile(r"\.attempt\d+(\.\d+)?/")
+
+
 def bases(item):
     if item.get("orfs"):
         return sorted(glob.glob(item["orfs"] + "/logs/asap7/*/base"))
@@ -106,7 +129,10 @@ def bases(item):
     for pat in ("routes/*/work/orfs/logs/asap7/*/base", "routes/*/logs/asap7/*/base", "*/work/orfs/logs/asap7/*/base",
                 "routes/*/*/work/orfs/logs/asap7/*/base", "routes/*/*/logs/asap7/*/base"):
         out |= set(glob.glob(r + "/" + pat))
-    return sorted(out)
+    # ASIDE (drive-0849 2026-10-10): a retry moves the previous attempt to <dir>.attempt<N>[.<ts>] (retry_aside); its
+    # logs are evidence, not the running stage.  Globbing them early-failed the fresh attempt 2 of 9 requeued routes
+    # within 40 s on the OLD attempt's 4_1_cts hold series ("5.1 h in step" -> "7.9 h in step", same numbers).
+    return sorted(b for b in out if not ASIDE_RE.search(b[len(r):]))
 HOLD_ROW = re.compile(r"^\s*(\d+|final)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*([+-]?[\d.]+)%\s*\|\s*([-+\d.e]+)\s*\|\s*([-+\d.e]+)\s*\|", re.M)
 def worst_paths(rpt):
     t = rd(rpt)
@@ -123,6 +149,14 @@ def worst_paths(rpt):
         ek = re.search(r"Endpoint: \S+\s*\n?\s*\((.*?)\)", blk); ek = ek.group(1) if ek else ""
         grp = re.search(r"Path Group: (\S+)", blk); sl = re.search(r"([-\d.]+)\s+slack", blk)
         arr = blk.split("data arrival time")[0]
+        req = blk.split("data arrival time", 1)[1] if "data arrival time" in blk else ""
+        # the PORT side's clock latency: a virtual clock's ideal latency, or a real clock's propagated 0 at the port
+        # (retry545_cl2: IO on core_clk itself, "clock network delay (propagated) 0.00")
+        vl = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", arr) if "input port" in blk.split("\n", 2)[0] + blk.split("\n", 2)[1] else None
+        vc = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", req) if re.search(r"Endpoint: \S+\s*\n?\s*\(output port", blk) else None
+        side = req if vl else arr      # the register end of an IO path: capture side of in->reg, launch side of reg->out
+        ce = re.search(r"[-\d.]+\s+([-\d.]+)\s+clock \S+ \((?:rise|fall) edge\)", side)
+        ck = re.search(r"\s([-\d.]+)\s+[\^v]\s+\S+/(?:CLK|CK|CLKN|GCLK)\s", side)
         wire = cell = 0.0; fo = 0; after_net = started = False; scell = ecell = ""
         for ln in arr.split("\n"):
             if ln.rstrip().endswith("(net)"):
@@ -146,7 +180,9 @@ def worst_paths(rpt):
             ecell = c; after_net = False
         out.append(dict(group=grp.group(1) if grp else "?", start=sp, start_kind=sk, start_cell=scell.strip("()"),
                         end=ep, end_kind=ek, end_cell=ecell.strip("()"), slack_ps=float(sl.group(1)) if sl else None,
-                        wire_ps=round(wire, 1), cell_ps=round(cell, 1), max_fanout=fo))
+                        wire_ps=round(wire, 1), cell_ps=round(cell, 1), max_fanout=fo,
+                        vlat_launch=float(vl.group(1)) if vl else None, vlat_capture=float(vc.group(1)) if vc else None,
+                        flop_ck_ps=round(float(ck.group(1)) - float(ce.group(1)), 1) if (ck and ce) else None))
     return out
 def probe_base(b, live):
     root = b.rsplit("/logs/asap7/", 1)[0]; d = b.split("/logs/asap7/", 1)[1].split("/")[0]
@@ -193,6 +229,21 @@ def probe_base(b, live):
                     last_it = int(its[-1][0]); w_last = float(its[-1][5])
                     back = [r for r in its if int(r[0]) <= last_it - 1000]
                     if back: hold["dwns_1000"] = round(w_last - float(back[-1][5]), 3)
+            # whole-step convergence series [cumulative iteration, cumulative buffers, WNS] over every hold repair call of
+            # the step (the HM/stall guard runs chunks of 1000 iterations, each restarting the iteration / buffer columns)
+            ser = []; off = boff = 0; pit = pb = -1
+            for r in rows:
+                if r[0] == "final": continue
+                it_, b_ = int(r[0]), int(r[2])
+                if it_ < pit or (it_ == pit == 0):
+                    off += max(pit, 0); boff += max(pb, 0)
+                pit, pb = it_, b_
+                ser.append([off + it_, boff + b_, float(r[5]), float(r[6])])
+            if len(ser) > 400:
+                ser = [ser[int(i * (len(ser) - 1) / 399)] for i in range(400)]
+            hold["series"] = ser
+        hold["chunks"] = [[int(a), float(w), float(g)] for a, w, g in
+                          re.findall(r"OT_HOLD_GUARD chunk (\d+): hold ws ([-\d.]+) \([-+\d.]+\) tns [-\d.]+ \(([-+\d.]+)%\)", t)][-20:]
         o["hold"] = hold
         g = re.findall(r"Start extra iteration (\d+)/(\d+)", t)
         if g: o["grt_iter"] = [int(g[-1][0]), int(g[-1][1])]
@@ -440,6 +491,11 @@ def hopeless(b, j, now):
             g = dict(g, ws=w, raw_ws=min(p["slack_ps"] for p in r2r) if r2r else None, io_excluded=unt)
             if w is None:
                 g = None
+    if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")) and not g.get("io_excluded") and \
+            g["ws"] < GATES[f"setup_{st}_ws_ps"]:
+        adj = ioref_rejudge(b, j)
+        if adj is not None:
+            g = dict(g, ws=adj["ws"], ioref=adj)
     if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")):
         if g["ws"] < GATES[f"setup_{st}_ws_ps"] and (cnt > GATES[f"setup_{st}_count"] or
                                                      (g.get("tns") or 0) < GATES["setup_tns_ps"]):
@@ -448,22 +504,28 @@ def hopeless(b, j, now):
                                             f"{g.get('tns')}; gate WNS < {GATES[f'setup_{st}_ws_ps']:g} with > "
                                             f"{GATES[f'setup_{st}_count']} endpoints"
                                             + (f"; IO excluded, reg->reg/macro only ({g['io_excluded']})"
-                                               if g.get("io_excluded") else "")))
+                                               if g.get("io_excluded") else "")
+                                            + (f"; IO paths re-judged at the IO-reference insertion "
+                                               f"({g['ioref']['source']}{'' if g['ioref']['ref_ps'] != g['ioref']['ref_ps'] else ' %.0f ps' % g['ioref']['ref_ps']})"
+                                               if g.get("ioref") else "")))
     elapsed = now - step_start(b)
+    if stale_current_log(b, j):
+        # the running step's .tmp.log predates this launch: a resumed / relaunched stage has not written its own series
+        # yet, so the hold / GRT / DRT series below are the previous launch's (drive-1010: band_lanes_q4_a f6 hm25/hm40
+        # were EARLY_FAIL_HOLD 2-4 min after their HOLD-STOP resume on the identical pre-resume -11.4 ps series)
+        return out
     hd = b.get("hold") or {}
-    if hd.get("found") and cur.startswith(("4_1_cts", "5_1_grt")):
-        n = hd["found"][-1]
-        last = hd.get("cur_last")
-        if n > GATES["hold_flood_ep"] and not hd.get("hm_auto"):
-            sync = (hd.get("sync") or [[None, None]])[-1]
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} hold repair flooded: {n} endpoints in margin (> "
-                                           f"{GATES['hold_flood_ep']}), hold WNS now {last[2] if last else '?'} ps "
-                                           f"(start {sync[1]}), {elapsed / 3600:.1f} h in step, "
-                                           f"{'HM guard present' if hd.get('guard') else 'old flow without the HM/stall guard'}"))
-        elif last and last[2] < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"] and \
-                not (j and insertion_untrusted(j)):     # IO hold on a wrong insertion may be fake: let it run
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} real FF hold WNS {last[2]:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) "
-                                           f"after {elapsed / 3600:.1f} h of repair, {n} endpoints"))
+    if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
+        hv = hold_verdict(hd, b, elapsed, bool(j and insertion_untrusted(j)))
+        if hv:
+            plan = hold_stop_plan(b)
+            done = {x.get("stage") for x in (j or {}).get("hold_stop_log") or []}
+            if plan and plan["stage"] not in done and not any(v == "EARLY_FAIL_SETUP" for v, _ in out):
+                out.append(("HOLD_STOP", f"{cur[:-8]} near-miss hold stall (WNS {plan['ws']:+.1f} >= "
+                                         f"{GATES['hold_nearmiss_ps']:g} ps, setup gate clear): stop the {plan['stage']} "
+                                         f"hold repair at {plan['buffers']} buffers and continue to route; {hv}"))
+            else:
+                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
     gi = b.get("grt_iter")
     if cur.startswith("5_1_grt") and gi and gi[0] >= GATES["grt_min_iter"] and len(cg) >= 3:
@@ -484,6 +546,189 @@ def hopeless(b, j, now):
             out.append(("EARLY_FAIL_DRC", f"DRT iteration {dr[-1][0]}: {last[-1]} violations, no decrease over the "
                                           f"last {k} iterations (best before {min(before)}, since {min(last)})"))
     return out
+
+
+def ioref_insertion(j):
+    """(ps, source) of the IO-reference insertion: the measured route-corner boundary mean (calibrate CK_SS_MEAN, the
+    io_ref_routed.sdc definition), else None"""
+    env = ((j or {}).get("calibration") or {}).get("env") or {}
+    v = env.get("CK_SS_MEAN")
+    return (float(v), "calibrate CK_SS_MEAN") if isinstance(v, (int, float)) else None
+
+
+PORT_CLOCK_RE = re.compile(r"clocked by ([^\s)]+)")
+
+
+def port_clock(kind):
+    """the clock named in an STA start/end point kind ('(input port clocked by ot_lb_v_pclk)'), else None"""
+    m = PORT_CLOCK_RE.search(kind or "")
+    return m.group(1) if m else None
+
+
+def calibrated_clock(j):
+    """the clock whose insertion the calibrate measured (spec stages.calibrate.clock, default core_clk); None without a
+    calibrate stage"""
+    cal = (((j or {}).get("spec") or {}).get("stages") or {}).get("calibrate")
+    if not isinstance(cal, dict):
+        return "core_clk" if ioref_insertion(j) else None
+    return cal.get("clock") or "core_clk"
+
+
+def ioref_rejudge(b, j):
+    """DRV6 (review-0725, coordinator APPROVED 2026-10-09): the post-CTS setup gate judged IO paths against the virtual
+    clock's IDEAL latency (an assumed insertion), not the IO reference: hbm_coll_port2_rows hm0-bal was early-failed at
+    -491.6 (reg->out with ot_lb_v_core_clk at 1039.8 ps vs the measured 1221 ps tree).  Re-judge every reported path the
+    way io_ref_routed.sdc times it: the virtual clock moves to the IO-reference insertion M (measured boundary mean,
+    else the path's own register clock arrival), so reg->out slack += M - L_capture and in->reg slack -= M - L_launch
+    (in->out unchanged).  Returns {"ws" (normalised, worst over all reported paths), ref_ps, source, paths} or None when
+    no reported path carries an ideal virtual-clock latency."""
+    paths = [p for p in (b.get("worst") or {}).get("paths") or [] if p.get("slack_ps") is not None]
+    if not any(p.get("vlat_launch") is not None or p.get("vlat_capture") is not None for p in paths):
+        return None
+    ref = ioref_insertion(j)
+    cal = calibrated_clock(j)
+    out, refs = [], set()
+    for p in paths:
+        s = p["slack_ps"]
+        inp, outp = "input port" in (p.get("start_kind") or ""), "output port" in (p.get("end_kind") or "")
+        # TWO-CLOCK (cont-takeover 2026-10-10): the measured insertion is the CALIBRATED clock's (core_clk).  An IO path
+        # of another, uncalibrated clock group (the TU port's pclk IO) is judged at its own register clock arrival:
+        # re-timing it at the core insertion moved pclk IO to 72-81 ps instead of ~840 ps.
+        pclk = port_clock(p.get("start_kind") if inp else p.get("end_kind"))
+        own = ref is None or (pclk is not None and cal is not None and cal not in pclk)
+        m, src = (ref if not own else
+                  ((p.get("flop_ck_ps"), "path register clock arrival" + (f" ({pclk}: not the calibrated {cal})"
+                                                                          if ref is not None else ""))
+                   if p.get("flop_ck_ps") is not None else (None, None)))
+        if m is not None and inp != outp:
+            if outp and p.get("vlat_capture") is not None:
+                s = s + (m - p["vlat_capture"]); refs.add(src)
+            elif inp and p.get("vlat_launch") is not None:
+                s = s - (m - p["vlat_launch"]); refs.add(src)
+        out.append(dict(start=p.get("start"), end=p.get("end"), group=p.get("group"), raw_ps=p["slack_ps"],
+                        ioref_ps=round(s, 1)))
+    w = min(x["ioref_ps"] for x in out)
+    return dict(ws=norm_ws(w, b.get("period")), ref_ps=ref[0] if ref else float("nan"),
+                source=", ".join(sorted(refs)) or "no IO path moved", paths=out)
+
+
+def hold_gain(series, window):
+    """WNS gained (ps) over the last `window` cumulative hold-repair iterations of the step; None while the series
+    spans fewer iterations than the window."""
+    if not series:
+        return None
+    last = series[-1]
+    back = [p for p in series if p[0] <= last[0] - window]
+    return round(last[2] - back[-1][2], 3) if back else None
+
+
+def hold_tns_gain_pct(series, window):
+    """hold TNS improvement (% of |TNS| at the window start) over the last `window` cumulative iterations; None when the
+    series carries no TNS (older probe) or spans fewer iterations than the window."""
+    if not series or len(series[-1]) < 4:
+        return None
+    last = series[-1]
+    back = [p for p in series if p[0] <= last[0] - window]
+    if not back or len(back[-1]) < 4:
+        return None
+    t0 = back[-1][3]
+    return round(100.0 * (last[3] - t0) / abs(t0), 3) if t0 < 0 else 0.0
+
+
+def place_instances(b):
+    for k in ("3_5_place_dp", "3_4_place_resized", "3_3_place_gp"):
+        for kk, v in ((b.get("metrics") or {}).get(k) or {}).items():
+            if kk.endswith("design__instance__count") and isinstance(v, (int, float)):
+                return v
+    return None
+
+
+def hold_verdict(hd, b, elapsed, untrusted=False):
+    """EARLY_FAIL_HOLD only when the hold repair is NOT converging (drive-2140, 2026-10-08).  The endpoint count inside
+    the margin (RSZ-0046) is NOT a verdict: at HM 10-25 a big block routinely has 30k-70k endpoints in margin with real
+    WNS -20..-40 ps, and the repair converges (qfd_tile_rp1p / hbm_su_full / hbm_quant outline were killed at 10
+    iterations while improving).  NEVER fires once real hold WNS >= 0 (drive-2155, OWNER: the margin is a design target,
+    HM 0 allowed; hbm_su_ctlh vf-lvt was killed at +4.4 ps for filling toward HM): such a run proceeds (the flow's
+    MET-FIRST guard stops the chase on new routes).  Fires on
+      (1) buffers: hold buffers inserted in the step > hold_buf_cap, or > hold_buf_frac x placed instances (floor
+          hold_buf_min); while real WNS is improving (>= hold_buf_improve_dwns ps over hold_stall_it iterations) the
+          fraction / floor rise to hold_buf_improve_frac / hold_buf_improve_min;
+      (2) stall: real WNS < 0 and < hold_stall_dwns ps gained over the last hold_stall_it cumulative iterations;
+      (3) deep: real WNS < hold_real_ws_ps after hold_real_after_s with < hold_deep_dwns ps gained over the last
+          hold_deep_it iterations.
+    (2)/(3) are skipped on an untrusted clock insertion (IO hold may be fake there)."""
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    ws = ser[-1][2] if ser else (last[2] if last else None)
+    if ws is None or ws >= 0:
+        return None
+    its, bufs = (ser[-1][0], ser[-1][1]) if ser else (0, 0)
+    n = (hd.get("found") or [None])[-1]
+    start = ((hd.get("sync") or [[None, None]])[-1])[1]
+    ctx = (f"hold WNS now {ws:+.1f} ps (start {start}), {its} it / {bufs} buffers, {n} endpoints in margin, "
+           f"{elapsed / 3600:.1f} h in step, {'HM guard present' if hd.get('guard') else 'old flow without the HM/stall guard'}")
+    g = hold_gain(ser, GATES["hold_stall_it"])
+    cap = hold_buf_cap(place_instances(b), g)
+    if bufs > cap:
+        return f"hold repair past the buffer cap: {bufs} buffers > {cap:.0f} (cap {GATES['hold_buf_cap']}, " \
+               f"{place_instances(b)} instances, WNS gain {g} ps / {GATES['hold_stall_it']} it); {ctx}"
+    if untrusted:
+        return None
+    tg = hold_tns_gain_pct(ser, GATES["hold_stall_it"])
+    if g is not None and g < GATES["hold_stall_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]):
+        return f"hold repair not converging: WNS gained {g:+.2f} ps" \
+               + (f" and TNS {tg:+.1f}%" if tg is not None else "") + \
+               f" over the last {GATES['hold_stall_it']} iterations (< {GATES['hold_stall_dwns']:g} ps / " \
+               f"{GATES['hold_stall_tns_pct']:g}%); {ctx}"
+    if ws < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"]:
+        g = hold_gain(ser, GATES["hold_deep_it"])
+        tg = hold_tns_gain_pct(ser, GATES["hold_deep_it"])
+        if g is not None and g < GATES["hold_deep_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]):
+            return f"real FF hold WNS {ws:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) with no progress: {g:+.2f} ps over " \
+                   f"the last {GATES['hold_deep_it']} iterations (< {GATES['hold_deep_dwns']:g}); {ctx}"
+    return None
+
+
+def hold_stop_plan(b):
+    """HOLD-STOP plan of a live base whose hold repair is judged non-converging: {stage, buffers, ws} when the real hold
+    WNS is >= hold_nearmiss_ps, else None.  buffers = the buffer count at which the repair first reached (within
+    0.05 ps) its current WNS, +2% and +10 (the replay keeps the converging part, the flat tail is cut)."""
+    cur = (b.get("current") or "")
+    stage = "cts" if cur.startswith("4_1_cts") else "grt" if cur.startswith("5_1_grt") else None
+    hd = b.get("hold") or {}
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    ws = ser[-1][2] if ser else (last[2] if last else None)
+    if stage is None or ws is None or ws >= 0 or ws < GATES["hold_nearmiss_ps"]:
+        return None
+    first = next((p for p in ser if p[2] >= ws - 0.05), None)
+    n = int(first[1] * 1.02) + 10 if first and first[1] else 0
+    return dict(stage=stage, buffers=n, ws=ws)
+
+
+def hold_buf_cap(inst, gain):
+    """the hold-buffer cap of a step: min(hold_buf_cap, max(floor, frac x placed instances)); frac / floor are raised
+    while real WNS improves by >= hold_buf_improve_dwns over the last hold_stall_it iterations."""
+    improving = gain is not None and gain >= GATES["hold_buf_improve_dwns"]
+    frac = GATES["hold_buf_improve_frac" if improving else "hold_buf_frac"]
+    floor = GATES["hold_buf_improve_min" if improving else "hold_buf_min"]
+    cap = GATES["hold_buf_cap"]
+    return min(cap, max(floor, frac * inst)) if inst else cap
+
+
+def stale_current_log(b, j):
+    """True when the newest .tmp.log (the running step's log) was last written before the job's current stage launch
+    (j['stage_started']), i.e. it is a previous launch's log left in a reused run directory."""
+    cur = (b or {}).get("current")
+    started = (j or {}).get("stage_started")
+    if not cur or not started:
+        return False
+    mt = next((m for n, m, _ in b.get("logs") or [] if n == cur), None)
+    try:
+        t0 = dt.datetime.fromisoformat(started).timestamp()
+    except (TypeError, ValueError):
+        return False
+    return mt is not None and mt < t0
 
 
 def step_start(b):
@@ -525,6 +770,8 @@ def redundant(j, jobs, closed, any_variant=False):
     descendant commit makes it redundant (sure)."""
     blk = j["spec"].get("block")
     c = j.get("commit_full") or j["spec"]["source"].get("commit", "")
+    if cl.bf_exempt(j):
+        return None, False
     if blk in closed:
         rv = cl.revoked_closures()
         cj = [x for x in jobs if x["spec"].get("block") == blk and cl.closure_counts(x, rv)]
@@ -546,9 +793,26 @@ def redundant(j, jobs, closed, any_variant=False):
     return None, False
 
 
+# DIE-RUN EXEMPTION (drive-0849 2026-10-09, coordinator URGENT): die-level routes (full-die GRT/DRT, hours per congestion
+# iteration with one log line each) are never killed, cancelled or early-failed by this scan.  "hung" stays a CPU-tick
+# judgement (tree_cpu over 5 s, HUNG_CPU) -- log silence alone never kills.
+DIE_RUN_RE = re.compile(cl.DIE_CONTAINER_RE)
+DIE_RUN_MOUNT_RE = re.compile(cl.DIE_MOUNT_RE)
+
+
+def is_die_run(j):
+    sp = j.get("spec") or {}
+    return bool(sp.get("die_level")) or bool(DIE_RUN_RE.search(j.get("name", ""))) or \
+        bool(DIE_RUN_MOUNT_RE.search(j.get("run") or ""))
+
+
 def diagnose(j, o, hist, jobs, closed, now):
     d = dict(name=j["name"], host=j.get("host"), status=j["status"], stage=j.get("stage_key"),
              block=j["spec"].get("block"), owner=j["spec"].get("owner"), action="let_run", why=[])
+    if is_die_run(j):
+        d["why"].append("die-level run: exempt from stuck/hung/early-fail actions")
+        d["kind"] = "die_exempt"
+        return d
     if not o or o.get("error"):
         d["why"].append(f"probe failed: {(o or {}).get('error', 'no data')}")
         return d
@@ -594,6 +858,10 @@ def diagnose(j, o, hist, jobs, closed, now):
     # 2) hopeless (route stage only: calibrate is CTS-only with no repair)
     if b and j.get("stage_key") == "route" and j["status"] == "RUNNING":
         hp = hopeless(b, j, now)
+        if hp and hp[0][0] == "HOLD_STOP":
+            d.update(action="hold_stop", kind="hold_nearmiss", hold_stop=hold_stop_plan(b))
+            d["why"] += [w for _, w in hp]
+            return d
         if hp:
             d.update(action="early_fail", kind="hopeless", verdict=hp[0][0])
             d["why"] += [w for _, w in hp]
@@ -689,6 +957,9 @@ def apply(diags, log):
             cmd = ["early-fail", d["name"], "--verdict", d["verdict"], "--why", why, "--detail", str(det)]
         elif a == "kill_stage":
             cmd = ["kill-stage", d["name"], "--why", why]
+        elif a == "hold_stop":
+            cmd = ["hold-stop", d["name"], "--stage", d["hold_stop"]["stage"], "--buffers",
+                   str(d["hold_stop"]["buffers"]), "--why", why]
         else:
             continue
         r = cl.sh([sys.executable, str(HERE / "closure_loop.py"), *cmd], timeout=900)
@@ -723,7 +994,7 @@ def main():
             print(f"history refresh failed: {ex}", file=sys.stderr)
     diags = scan(a.only, cpu=not a.no_cpu)
     rep = dict(at=cl.now_iso(), gates=GATES, jobs=diags,
-               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "kill_stage", "let_run")})
+               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "hold_stop", "kill_stage", "let_run")})
     if a.apply:
         log = []
         rep["applied"] = apply(diags, log)

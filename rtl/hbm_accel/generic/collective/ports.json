@@ -1,0 +1,146 @@
+{
+  "module": "ot_hgi_coll_decode",
+  "source": "9ed547523",
+  "default_enable": 0,
+  "generic_enable": 1,
+  "ports": {
+    "clk": {
+      "width": 1,
+      "direction": "in",
+      "binding": "COLL production clock",
+      "must_not_tie": true
+    },
+    "rst_n": {
+      "width": 1,
+      "direction": "in",
+      "binding": "COLL reset",
+      "must_not_tie": true
+    },
+    "coll_group_size": {
+      "width": 8,
+      "direction": "in",
+      "binding": "active static config reset96 from Claude cfg receiver",
+      "must_not_tie": true
+    },
+    "die_id": {
+      "width": 8,
+      "direction": "in",
+      "binding": "physical die identity constant",
+      "must_not_tie": true
+    },
+    "cmd_v": {
+      "width": 1,
+      "direction": "in",
+      "binding": "Claude sequencer unit6 dispatch valid",
+      "must_not_tie": true
+    },
+    "cmd_r": {
+      "width": 1,
+      "direction": "out",
+      "binding": "sequencer dispatch ready",
+      "must_not_tie": true
+    },
+    "hdr": {
+      "width": 128,
+      "direction": "in",
+      "binding": "normative D_UOP_FIELDS header from sequencer",
+      "must_not_tie": true
+    },
+    "selected_count": {
+      "width": 32,
+      "direction": "in",
+      "binding": "indexed I count reader;0usesimm_a",
+      "must_not_tie": true
+    },
+    "backend_v": {
+      "width": 1,
+      "direction": "out",
+      "binding": "existing collective/gather launch valid",
+      "must_not_tie": true
+    },
+    "backend_r": {
+      "width": 1,
+      "direction": "in",
+      "binding": "existing collective/gather launch ready",
+      "must_not_tie": true
+    },
+    "backend_op": {
+      "width": 6,
+      "direction": "out",
+      "binding": "existing engine opdecode0..5",
+      "must_not_tie": true
+    },
+    "backend_gsz": {
+      "width": 4,
+      "direction": "out",
+      "binding": "PSG gsz Flegacy/0..3smallgroups",
+      "must_not_tie": true
+    },
+    "backend_group_size": {
+      "width": 8,
+      "direction": "out",
+      "binding": "selected payload group extent",
+      "must_not_tie": true
+    },
+    "backend_rank": {
+      "width": 8,
+      "direction": "out",
+      "binding": "rank in aligned group",
+      "must_not_tie": true
+    },
+    "backend_group": {
+      "width": 8,
+      "direction": "out",
+      "binding": "aligned group identity",
+      "must_not_tie": true
+    },
+    "backend_subgroup": {
+      "width": 8,
+      "direction": "out",
+      "binding": "GROUP_REDUCE_MCAST subgroup size",
+      "must_not_tie": true
+    },
+    "backend_owner_block": {
+      "width": 8,
+      "direction": "out",
+      "binding": "ROW_GATHER ownerblockB",
+      "must_not_tie": true
+    },
+    "backend_destinations": {
+      "width": 8,
+      "direction": "out",
+      "binding": "ROW_GATHER recipient rankcount",
+      "must_not_tie": true
+    },
+    "backend_row_count": {
+      "width": 21,
+      "direction": "out",
+      "binding": "ROW_GATHER selected k",
+      "must_not_tie": true
+    },
+    "error_v": {
+      "width": 1,
+      "direction": "out",
+      "binding": "explicit commandfault valid to engine completion/CP",
+      "must_not_tie": true
+    },
+    "error_r": {
+      "width": 1,
+      "direction": "in",
+      "binding": "CPfaultcompletion consumer ack",
+      "must_not_tie": true
+    },
+    "selected_count_valid": {
+      "width": 1,
+      "direction": "in",
+      "binding": "I-tablecountrowexists (false meansuseimm_a)",
+      "must_not_tie": true
+    }
+  },
+  "not_completion": "backend acceptance is not engine completion; retain existing result completion",
+  "open_binding": "ROW_GATHER backend binding and isolation gates remain pending; no fake tieoffs",
+  "dispatch_latency_cycles": 2,
+  "control_exact_source": "8d33d3b03",
+  "rows_fixture_evidence": "results/rtl/hgi_collective_row_20261009/ingress_8d33",
+  "manifest_scope": "RTL source9ed547523; currentconfigs/model4e9e838a2; independentfreshgatesrequired"
+}

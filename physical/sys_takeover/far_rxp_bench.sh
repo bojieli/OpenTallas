@@ -1,0 +1,33 @@
+#!/bin/bash
+# sys-takeover 2026-10-09: far92 RXP receive buffer gate.
+#   far_rxp_bench.sh pos OUT   : (1) tb_cdc_ch_rxp at the far92 shape (W 523, IBUF 128) with RXP=0 and RXP=1 (3,000 words,
+#                                random sends, backpressured receiver, order / values / faults), (2) the committed far-bus
+#                                gate rtl/test/emb_hbm/tb_emb_far_bus.sv with OT_QFD_FAR_RXP (+ AFW) -> FAR_RXP_PASS
+#   far_rxp_bench.sh neg OUT   : the staging-room mutant (OT_CDC_RXP_MUT_NOINFLIGHT: the 2 words in flight not counted)
+#                                must fail tb_cdc_ch_rxp -> FAR_RXP_NEG_DETECTED (rc 1)
+set -u
+m=$1; o=$2; mkdir -p "$o"
+C=(rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_reset_sync.sv)
+run_cdc() {   # tag rxp extra-defines...
+  local tag=$1 rxp=$2; shift 2
+  iverilog -g2012 "$@" -Ptb_cdc_ch_rxp.RXP=$rxp -s tb_cdc_ch_rxp -o "$o/$tag.vvp" rtl/test/sys_takeover/tb_cdc_ch_rxp.sv "${C[@]}" > "$o/$tag.build.log" 2>&1 || { cat "$o/$tag.build.log"; echo FAR_RXP_BENCH_ERROR; exit 2; }
+  vvp -n "$o/$tag.vvp" > "$o/$tag.log" 2>&1
+  grep CDC_RXP "$o/$tag.log"
+  grep -q '^CDC_RXP PASS' "$o/$tag.log"
+}
+if [[ $m == neg ]]; then
+  if run_cdc mut 1 -DOT_CDC_RXP_MUT_NOINFLIGHT; then echo FAR_RXP_NEG_MISSED; exit 0; fi
+  echo FAR_RXP_NEG_DETECTED; exit 1
+fi
+ok=1
+run_cdc rxp0 0 || ok=0
+run_cdc rxp1 1 || ok=0
+S=("${C[@]}" rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far_bus.sv rtl/test/emb_hbm/tb_emb_far_bus.sv)
+iverilog -g2012 -DOT_QFD_FAR_AFW -DOT_QFD_FAR_RXP -s tb_emb_far_bus -o "$o/bus.vvp" "${S[@]}" > "$o/bus.build.log" 2>&1 || { cat "$o/bus.build.log"; echo FAR_RXP_BENCH_ERROR; exit 2; }
+vvp -n "$o/bus.vvp" > "$o/bus.log" 2>&1; rc=$?; tail -1 "$o/bus.log"
+[[ $rc == 0 ]] && grep -q '^PASS far_bus' "$o/bus.log" || ok=0
+iverilog -g2012 -DOT_QFD_FAR_AFW -DOT_QFD_FAR_RXP -Ptb_emb_far_bus.NEG=1 -s tb_emb_far_bus -o "$o/busneg.vvp" "${S[@]}" > "$o/busneg.build.log" 2>&1
+vvp -n "$o/busneg.vvp" > "$o/busneg.log" 2>&1; rc=$?
+if [[ $rc == 0 ]] && ! grep -q FAIL "$o/busneg.log"; then echo "far-bus NEG escaped"; ok=0; fi
+[[ $ok == 1 ]] && { echo FAR_RXP_PASS; exit 0; }
+echo FAR_RXP_FAIL; exit 1

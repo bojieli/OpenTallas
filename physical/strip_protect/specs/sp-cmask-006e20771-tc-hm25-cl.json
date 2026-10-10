@@ -1,0 +1,78 @@
+{
+ "name": "sp-cmask-006e20771-tc-hm25-cl",
+ "block": "ot_qwen_r25_causal_mask",
+ "element": "ot_qwen_r25_causal_mask",
+ "owner": "Claude:strip-protect",
+ "purpose": "strip-protect 2026-10-09 ('-cl' line). Unprotected successor: SECDED8 on the six transient mask/context seats removed (U3/S4: flops, not SRAM); 384 seat flop bits vs 432. NOTE U3: the p4 (DSpark verify) mask itself waits for tau; route is pathfinding for that line. Variant: TC route / option B (TT setup, FF hold, DRC 0), mm hold HM 25 ps. Exact bench + mutant: physical/strip_protect/bench.py causal_mask (lock-step vs the original + the committed functional golden; the mutant must FAIL).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/strip-protect-20261009",
+  "commit": "006e20771365a930ec06714fb9d447418784f522"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "causal_mask_exact",
+    "cmd": "python3 physical/strip_protect/bench.py causal_mask pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "STRIP_causal_mask_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "causal_mask_mutant",
+    "cmd": "python3 physical/strip_protect/bench.py causal_mask neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "STRIP_causal_mask_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_qwen_r25_causal_mask --source rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_flat.sv --param ENABLE=1 --param CAPACITY=8224 --param PROTECT=0 --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_qwen_r25_causal_mask --source rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_flat.sv --param ENABLE=1 --param CAPACITY=8224 --param PROTECT=0 --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 8,
+   "peak_ram_gb": 12
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (protection stripped; TA15: same 3-edge release)",
+ "merge_target": null
+}

@@ -1,0 +1,52 @@
+{
+  "source_commit": "83fd85eec",
+  "host": "ot-epyc2",
+  "host_name": "climbing-locust",
+  "source_root": "/srv/opentallas-data/codex/hbm_selector_capture_83fd85eec/src",
+  "run_root": "/srv/opentallas-data/codex/hbm_selector_capture_83fd85eec",
+  "admission": {
+    "guard": "/srv/opentallas-scratch/admit.sh",
+    "reservation_gib": 16,
+    "available_gib_observed": 417,
+    "nvme_free_gib_observed": 2015,
+    "threads": 8
+  },
+  "peak_child_rss_kib": 508208,
+  "elapsed_seconds": 42.32,
+  "pass_gate": true,
+  "measured_component_deltas": {
+    "selector": [
+      {
+        "bubble": 0,
+        "stall": 0,
+        "baseline_cycles": 3977,
+        "captured_cycles": 3986,
+        "delta_cycles": 9
+      },
+      {
+        "bubble": 17,
+        "stall": 80,
+        "baseline_cycles": 5064,
+        "captured_cycles": 5064,
+        "delta_cycles": 0
+      }
+    ],
+    "candidate": [
+      {
+        "bubble": 0,
+        "stall": 0,
+        "baseline_cycles": 5463,
+        "captured_cycles": 5480,
+        "delta_cycles": 17
+      },
+      {
+        "bubble": 17,
+        "stall": 80,
+        "baseline_cycles": 11695,
+        "captured_cycles": 11698,
+        "delta_cycles": 3
+      }
+    ]
+  },
+  "physical_status": "not qualified; captured macro-output endpoint fixture passes; real R25I pins/budgets awaited"
+}

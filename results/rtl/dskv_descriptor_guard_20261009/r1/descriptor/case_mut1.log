@@ -1,0 +1,24 @@
+GUARD_CASE name=kind3 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=window40 fault=0 writes=0 reads=0 posts=15 verdict=FAIL
+GUARD_CASE name=window63 fault=0 writes=0 reads=0 posts=15 verdict=FAIL
+GUARD_CASE name=ckv8 fault=0 writes=0 reads=0 posts=9 verdict=FAIL
+GUARD_CASE name=ckv63 fault=0 writes=0 reads=0 posts=9 verdict=FAIL
+GUARD_CASE name=key8 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=key63 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=die96 fault=0 writes=0 reads=0 posts=15 verdict=FAIL
+GUARD_CASE name=die127 fault=0 writes=0 reads=0 posts=15 verdict=FAIL
+GUARD_CASE name=uninitialized0 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized1 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized2 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized3 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized4 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized5 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized6 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=uninitialized7 fault=1 writes=0 reads=1 posts=0 verdict=FAIL
+GUARD_CASE name=shadow_die96 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=shadow_die127 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_METRICS cases=19 positive_posts=3 positive_writes=20 positive_reads=3 bad=168
+GUARD_VERDICT FAIL
+[439824000] %Fatal: tb_hbm_accel_dskv_descriptor_guard.sv:70: Assertion failed in tb_hbm_accel_dskv_descriptor_guard: descriptor guards failed
+%Error: /srv/opentallas-data/codex/dskv-guard-gates-r1/source/rtl/test/hbm_accel/tb_hbm_accel_dskv_descriptor_guard.sv:70: Verilog $stop
+Aborting...

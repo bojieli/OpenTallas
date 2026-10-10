@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hbm_native_mtp_emit_queue",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Eight-entry finite native38-bit emitted-token sink and ordered host81-bit identity records",
+      "source": {
+        "commit": "ea4117432",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_emit_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/emit_r2_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/emit_r2_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_FRESH_CP_SOUTH_MASTER",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual host ready and native done/e_ready integration",
+        "atomic job admission with transaction guard",
+        "protected mutable output storage"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": []
+      }
+    }
+  ]
+}

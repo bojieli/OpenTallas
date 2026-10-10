@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.hgi_sim.qwen_proof.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T12:14:26Z",
+ "host": "ot-epyc1tb",
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218",
+ "stage": "token",
+ "layer": 0,
+ "position": 8191,
+ "runs": [
+  {
+   "stage": "token",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 45,
+   "image_bytes": 4656,
+   "executed_records": 1162,
+   "wall_s": 75.9,
+   "families": {
+    "embedding": {
+     "checks": 4,
+     "exact": 4
+    },
+    "layer": {
+     "checks": 144,
+     "exact": 144
+    },
+    "head+head_scale": {
+     "checks": 4,
+     "exact": 4
+    },
+    "argmax_local+argmax_merge+end": {
+     "checks": 1,
+     "exact": 1
+    }
+   },
+   "failures": [],
+   "record_families": [
+    "",
+    "all_reduce_down",
+    "all_reduce_o",
+    "argmax_local",
+    "argmax_merge",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "embedding",
+    "end",
+    "gu",
+    "head",
+    "head_scale",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 119419
+  }
+ ],
+ "spec": "HGI-1 v0.9 (024fa2af1)",
+ "source_sha256": {
+  "hgi_sim/records.py": "8298cd1462f892012d36c351ce05d04bfb6f20bc4d0c3600a64c68695ae9d565",
+  "hgi_sim/lib.py": "1bc52421ec043256a0005132f460be4dc0842fa7c2af683f47fc51667a3a504e",
+  "hgi_sim/machine.py": "5d96e6afc886efc924591ea40d0a32ac99618b1879d52a868af52e03dd8a1050",
+  "hgi_sim/qwen_compiler.py": "2b79721502b7228975f765fa79995a897f216024f16c03b9524d2bee442d97c9",
+  "hgi_sim/qwen_proof.py": "67cee56507d5ca5c0acbc278d6a985cd0bc97ca11cd5b1efdb9d1a1fe138179e",
+  "qwen_r25_golden.py": "d6feb1247e08708a6f15a8e63ef4e2376d316dc04cd8ba06e4f298f058412439",
+  "hbm_generic_iface.py": "02d82eeaecf6937d0504382e542de90b809639c6b236ac061b8df96a25d0b826"
+ }
+}

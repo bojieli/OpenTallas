@@ -14,7 +14,7 @@
 //   3 ar credit overflow: A's consumer returns credits it was never given -> cause[4] at A.
 //   4 x3 skid overflow: A's source ignores x3 credits -> cause[0] at A.
 module tb_qwen_link_fullrate;
- parameter integer HOPS=54, N=4096, NEG=0, CR=128, OD=8, XS=8, ARC=4, BP=0;
+ parameter integer HOPS=54, N=4096, NEG=0, CR=128, OD=8, XS=8, ARC=4, BP=0, RXAFW=0;
  reg ca=0,cb=0,por=1,go=0;
  always #5 ca=~ca;
  initial begin #1.3;forever #5 cb=~cb;end
@@ -37,9 +37,9 @@ module tb_qwen_link_fullrate;
  wire axcr,bxcr,aov,bov,af,bf;
  wire [5:0] afc,bfc;
  wire [511:0] aod,bod;
- ot_qwen_die_hub_fr #(.CR(CR),.OD(OD),.XS(XS),.ARC(ARC)) A(.ck(ca),.rst_n(por),.fck({{3{cb}},bc[0]}),.l_i({1584'b0,into_a}),.l_o(alo),
+ ot_qwen_die_hub_fr #(.CR(CR),.OD(OD),.XS(XS),.ARC(ARC),.RXAFW(RXAFW)) A(.ck(ca),.rst_n(por),.fck({{3{cb}},bc[0]}),.l_i({1584'b0,into_a}),.l_o(alo),
   .x3_v(av),.x3_d(ad),.x3_tag(atag),.x3_cr(axcr),.ar_v(aov),.ar_d(aod),.ar_cr(acr),.fault(af),.fault_cause(afc));
- ot_qwen_die_hub_fr #(.CR(CR),.OD(OD),.XS(XS),.ARC(ARC)) B(.ck(cb),.rst_n(por),.fck({{3{ca}},ac[HOPS]}),.l_i({1584'b0,ab[HOPS]}),.l_o(blo),
+ ot_qwen_die_hub_fr #(.CR(CR),.OD(OD),.XS(XS),.ARC(ARC),.RXAFW(RXAFW)) B(.ck(cb),.rst_n(por),.fck({{3{ca}},ac[HOPS]}),.l_i({1584'b0,ab[HOPS]}),.l_o(blo),
   .x3_v(bv),.x3_d(bd),.x3_tag(btag),.x3_cr(bxcr),.ar_v(bov),.ar_d(bod),.ar_cr(bcr),.fault(bf),.fault_cause(bfc));
  function automatic [511:0] word(input integer side,epoch,index);
   reg[511:0] x;reg[31:0] v;integer j;
@@ -122,7 +122,7 @@ module tb_qwen_link_fullrate;
     if(watchdog>N*200+20000)$fatal(1,"CONSERVATION_TIMEOUT sent=%0d/%0d received=%0d/%0d",asrc,bsrc,agot,bgot);
    end
    repeat(HOPS+8)@(negedge ca);
-   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || A.g_rx[0].u_rx.g_af.u_af.wr_bin!=A.g_rx[0].u_rx.g_af.u_af.rd_bin || B.g_rx[0].u_rx.g_af.u_af.wr_bin!=B.g_rx[0].u_rx.g_af.u_af.rd_bin || A.sne || B.sne || A.xv_q || B.xv_q || aov || bov || A.lne!=0 || B.lne!=0)$fatal(1,"LIVE_STATE_AT_DRAIN");
+   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || !A.g_rx[0].u_rx.af_drained || !B.g_rx[0].u_rx.af_drained || A.sne || B.sne || A.xv_q || B.xv_q || aov || bov || A.lne!=0 || B.lne!=0)$fatal(1,"LIVE_STATE_AT_DRAIN");
    if(asent!=N || bsent!=N || bpop!=N || apop!=N)$fatal(1,"DRAIN_INVARIANT");
    ra=(N-1)*1.0/(arx1-arx0);rb=(N-1)*1.0/(brx1-brx0);
    $display("EPOCH %0d hops=%0d CR=%0d delivered=%0d/%0d credit_rtt=%0d/%0d rate_milli=%0d/%0d span=%0d/%0d stalls=%0d/%0d max_inflight=%0d/%0d cycles=%0d",

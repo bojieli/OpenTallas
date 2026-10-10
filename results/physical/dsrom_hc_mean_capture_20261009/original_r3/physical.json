@@ -1,0 +1,208 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T08:22:15.652562+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_hc_mean_capture",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "SINGLE_CAPTURE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+        "sha256": "c70bdc51eaf92120f8404353fd423d4308d2432bb2a80f92dad63c9fd4485909",
+        "size_bytes": 8649
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+        "size_bytes": 15959
+      },
+      {
+        "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+        "sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+        "size_bytes": 10637
+      }
+    ],
+    "top": "ot_dsrom_hc_mean_capture"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n---------------------------------------------------------------\n\n[INFO GRT-0101] Running extra iterations to remove congestion.\n[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0102] Start extra iteration 2/30\n[INFO GRT-0102] Start extra iteration 3/30\n[INFO GRT-0102] Start extra iteration 4/30\n[INFO GRT-0102] Start extra iteration 5/30\n[INFO GRT-0102] Start extra iteration 6/30\n[INFO GRT-0102] Start extra iteration 7/30\n[INFO GRT-0102] Start extra iteration 8/30\n[INFO GRT-0102] Start extra iteration 9/30\n[INFO GRT-0102] Start extra iteration 10/30\n[INFO GRT-0102] Start extra iteration 11/30\n[INFO GRT-0102] Start extra iteration 12/30\n[INFO GRT-0102] Start extra iteration 13/30\n[INFO GRT-0102] Start extra iteration 14/30\n[INFO GRT-0102] Start extra iteration 15/30\n[INFO GRT-0102] Start extra iteration 16/30\n[INFO GRT-0102] Start extra iteration 17/30\n[INFO GRT-0102] Start extra iteration 18/30\n[INFO GRT-0102] Start extra iteration 19/30\n[INFO GRT-0102] Start extra iteration 20/30\n[INFO GRT-0102] Start extra iteration 21/30\n[INFO GRT-0102] Start extra iteration 22/30\n[INFO GRT-0102] Start extra iteration 23/30\n[INFO GRT-0102] Start extra iteration 24/30\n[INFO GRT-0102] Start extra iteration 25/30\n[INFO GRT-0102] Start extra iteration 26/30\n[INFO GRT-0102] Start extra iteration 27/30\n[INFO GRT-0102] Start extra iteration 28/30\n[INFO GRT-0102] Start extra iteration 29/30\n[INFO GRT-0102] Start extra iteration 30/30\n[INFO GRT-0197] Via related to pin nodes: 556377\n[INFO GRT-0198] Via related Steiner nodes: 15726\n[INFO GRT-0199] Via filling finished.\n[INFO GRT-0111] Final number of vias: 781925\n[INFO GRT-0112] Final usage 3D: 3878785\n\n[INFO GRT-0096] Final congestion report:\nLayer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion\n---------------------------------------------------------------------------------------\nM1                   0             0            0.00%             0 /  0 /  0\nM2            28575942        512487            1.79%             2 /  0 / 26\nM3            34152801        564495            1.65%             1 /  1 /  5\nM4            26242412         86427            0.33%             2 /  0 / 24\nM5            25491370        141696            0.56%             0 /  1 /  1\nM6            16367694        117339            0.72%             3 /  0 / 54\nM7            18453831        110566            0.60%             0 /  1 /  3\n---------------------------------------------------------------------------------------\nTotal        149284050       1533010            1.03%             8 /  3 / 113\n\n[INFO GRT-0018] Total wirelength: 1007735 um\n[INFO GRT-0014] Routed nets: 93758\n[WARNING GRT-0704] Try reduce the layer adjustment from 25% to 0%\n[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.\nwrite_db /work/results/asap7/opentallas_ot_dsrom_hc_mean_capture_asap7_dsrom_hc_mean_native/base/5_1_grt-failed.odb\nError: global_route.tcl, 175 GRT-0116\n\nElapsed time: 0:04.79[h:]min:sec. CPU time: user 4.58 sys 0.20 (99%). Peak memory: 454136KB.\nElapsed time: 0:41.18[h:]min:sec. CPU time: user 43.02 sys 1.12 (107%). Peak memory: 576060KB.\nElapsed time: 1:08.95[h:]min:sec. CPU time: user 85.76 sys 49.41 (196%). Peak memory: 1083808KB.\nElapsed time: 0:03.30[h:]min:sec. CPU time: user 3.12 sys 0.17 (99%). Peak memory: 398388KB.\nElapsed time: 0:20.54[h:]min:sec. CPU time: user 20.17 sys 0.36 (99%). Peak memory: 782652KB.\nElapsed time: 1:48.15[h:]min:sec. CPU time: user 328.22 sys 1.10 (304%). Peak memory: 1343792KB.\nElapsed time: 0:03.55[h:]min:sec. CPU time: user 3.27 sys 0.28 (99%). Peak memory: 624804KB.\nElapsed time: 3:40.32[h:]min:sec. CPU time: user 491.15 sys 13.58 (229%). Peak memory: 5862328KB.\nElapsed time: 0:46.89[h:]min:sec. CPU time: user 57.57 sys 3.23 (129%). Peak memory: 846856KB.\nElapsed time: 1:24.26[h:]min:sec. CPU time: user 92.13 sys 4.06 (114%). Peak memory: 4120016KB.\nElapsed time: 5:10.99[h:]min:sec. CPU time: user 383.84 sys 17.08 (128%). Peak memory: 4673976KB.\nElapsed time: 10:26.17[h:]min:sec. CPU time: user 909.14 sys 19.51 (148%). Peak memory: 9669148KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_dsrom_hc_mean_capture_asap7_dsrom_hc_mean_native/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:54:25.564608+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_hc_mean_capture",
+      "--param",
+      "SINGLE_CAPTURE=1",
+      "--source",
+      "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "--source",
+      "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+      "--macro-view",
+      "ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "TC",
+      "--hold-corners",
+      "TC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1000",
+      "1000",
+      "--core-area",
+      "5",
+      "5",
+      "995",
+      "995",
+      "--place-density",
+      "0.55",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--hold-margin-ns",
+      "0.025",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "dsrom_hc_mean_native",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/source-route-r3/work",
+      "--output",
+      "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/source-route-r3/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "00dc1c640f606e580a41b3ed7fc142bf24d776b426cfb5c9e14ec559e0ee2006",
+      "tree": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/src"
+    },
+    "orfs_num_cores": 12,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

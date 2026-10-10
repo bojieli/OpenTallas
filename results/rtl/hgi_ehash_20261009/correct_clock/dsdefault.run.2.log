@@ -1,0 +1,9 @@
+EHASH_CLOCK_PERIOD_PS 833.333
+EHASH_CYCLES layer=0 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=1 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=1 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=2 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=2 command_to_ready=42 first_row_wait=17
+FATAL: tb_hbm_idx_ehash_ds_verified.sv:45: EHASH mismatch case=6 col=0 got=13982181 ref=1313684
+       Time: 236666572 Scope: tb_hbm_idx_ehash_ds.send

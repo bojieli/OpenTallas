@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.physical.hcoll_port_interior_floorplan.v1",
+  "at": "2026-10-09T00:10:40.221074",
+  "source_commit": "da3b6c691d28f7dae83b488a7605ff6997f41d24",
+  "host": "ot-pve1",
+  "job": "hbm_coll_port_interior-da3b6c691-tc",
+  "scope": "Full PWT545 port floorplan/macro placement and IO placement; not route or timing closure",
+  "qualification": {
+    "floorplan_margin": "PASS",
+    "SS_setup": false,
+    "FF_hold": false,
+    "DRC0": false,
+    "die_context": false
+  },
+  "observations": {
+    "max_pin_density_bits_per_um_per_layer": 4.86,
+    "macro_edge_shadow": 0,
+    "slivers": 0,
+    "channel_demand": 560,
+    "channel_capacity": 4977,
+    "macros": 18,
+    "pins": 2736,
+    "die_um": [
+      480,
+      540
+    ],
+    "utilization": 0.2991,
+    "utilization_with_hold_allowance": 0.3029,
+    "unanchored_capture_outputs_warning": 2147
+  },
+  "latency_delta_cycles": 0,
+  "port_area_ratio_to_340x520": 1.4660633484162895,
+  "failed_sources": {
+    "source_8c9530096": "Wrong original SRAM height, caught by fail-closed dimension check",
+    "source_53e984933": "LOCKED automatic SRAM status blocked manual relocation",
+    "source_d0d2f876a": "Oversized contiguous pin groups fell back outside constrained intervals"
+  },
+  "files": {
+    "53e984933/failure/2_2_floorplan_macro.log": "bbe407f6d875f4da56d24b5b419d3f699c501149c654c283b58afb540d83f713",
+    "da3b6c691/floorplan/2_2_floorplan_macro.log": "5bccf12f0834761ebbb26e5dba644c2c39af0c6be08282d6ae45270a1ffc077b",
+    "da3b6c691/floorplan/fp_margin_lint.json": "0da6642b01c31c5cf663257946fdf48bf7b3548daca1ea4def39d38e31263d63",
+    "da3b6c691/floorplan/3_2_place_iop.log": "3dd140ebd0452f2a04c9f11d0d8be9057034fe1b6f6d39d7a604db1346b3c987",
+    "d0d2f876a/failure/3_2_place_iop.log": "d88d451a2c01d75e8cee95da136397ad245b0f4bb6fc274e12f70a3b4c6fa358",
+    "8c9530096/failure/2_2_floorplan_macro.log": "432441d844ed68dbc01e0f9493bb6c677700502b0d11cae56e7a99857dea93bc"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen_sys_rank_gate.v1",
+  "source_commit": "7fbcfce1b",
+  "core_source": "08ef6a8a8 byte-identical",
+  "host": "ot-agidock128",
+  "admission": "/srv/opentallas-scratch/admit.sh 4 -- bash /srv/opentallas-scratch/codex/seq-sys-rank4-v1/run.sh",
+  "ranks": 4,
+  "positions": [
+    0,
+    8191
+  ],
+  "stages": 304,
+  "ME_commands": 1760,
+  "SU_commands": 5792,
+  "collectives": 584,
+  "bad": 0,
+  "head_global_row_offsets": [
+    0,
+    37984,
+    75968,
+    113952
+  ],
+  "rank_tie_selected": 17,
+  "program_bounds_fail_closed_checks": 4,
+  "scope": "exactcontrol/address/tag fixture againsthostswappedcurrentISA,stubengine results; numerical native payload relocation gatepending"
+}

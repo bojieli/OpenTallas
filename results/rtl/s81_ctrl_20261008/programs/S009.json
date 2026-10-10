@@ -1,0 +1,31 @@
+{
+ "stage": "S009",
+ "kind": "stage",
+ "layers": [],
+ "comp_span": 1006.0,
+ "comp_crit_cycles": 1006.0,
+ "max_start_drift": 0.0,
+ "makespan": 1006,
+ "crit_end": 1006,
+ "n_nodes": 1,
+ "n_jobs": 1,
+ "max_fanin": 0,
+ "ports": [
+  "hop"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "L6.substage_hop1",
+   "eng": "hop",
+   "port": 7,
+   "dur": 1006,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 1006,
+   "comp_start": 0.0,
+   "comp_cycles": 1006.0
+  }
+ ]
+}

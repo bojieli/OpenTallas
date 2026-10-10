@@ -1,0 +1,971 @@
+{
+ "stage": "S034",
+ "kind": "stage",
+ "layers": [
+  "L23",
+  "L24"
+ ],
+ "comp_span": 20084.8,
+ "comp_crit_cycles": 20084.6,
+ "max_start_drift": 2.2000000000007276,
+ "makespan": 20087,
+ "crit_end": 20087,
+ "n_nodes": 71,
+ "n_jobs": 62,
+ "max_fanin": 4,
+ "ports": [
+  "col",
+  "coll",
+  "fld",
+  "hc",
+  "hop",
+  "sel",
+  "su",
+  "svc"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "L23.ffn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 9,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 9,
+   "comp_start": 0.0,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 1,
+   "id": "L23.ffn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 229,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 229,
+   "comp_start": 0.0,
+   "comp_cycles": 229.0
+  },
+  {
+   "op": 2,
+   "id": "L23.ffn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 254,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 254,
+   "comp_start": 0.0,
+   "comp_cycles": 253.6
+  },
+  {
+   "op": 3,
+   "id": "L23.ffn.norm.scale",
+   "eng": "su",
+   "port": 1,
+   "dur": 306,
+   "ext": 0,
+   "preds": [
+    0
+   ],
+   "start": 9,
+   "end": 315,
+   "comp_start": 9.0,
+   "comp_cycles": 306.0
+  },
+  {
+   "op": 4,
+   "id": "L23.ffn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    2
+   ],
+   "start": 254,
+   "end": 451,
+   "comp_start": 253.6,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 5,
+   "id": "L23.ffn.router",
+   "eng": "fld",
+   "port": 0,
+   "dur": 977,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 315,
+   "end": 1292,
+   "comp_start": 315.0,
+   "comp_cycles": 977.2
+  },
+  {
+   "op": 6,
+   "id": "L23.ffn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 19,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 315,
+   "end": 334,
+   "comp_start": 315.0,
+   "comp_cycles": 19.0
+  },
+  {
+   "op": 7,
+   "id": "L23.ffn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    1,
+    4
+   ],
+   "start": 451,
+   "end": 663,
+   "comp_start": 451.0,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 8,
+   "id": "L23.ffn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    7
+   ],
+   "start": 663,
+   "end": 1300,
+   "comp_start": 663.2,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 9,
+   "id": "L23.ffn.softplus_sqrt",
+   "eng": "su",
+   "port": 1,
+   "dur": 186,
+   "ext": 0,
+   "preds": [
+    5
+   ],
+   "start": 1292,
+   "end": 1478,
+   "comp_start": 1292.1,
+   "comp_cycles": 185.6
+  },
+  {
+   "op": 10,
+   "id": "L23.ffn.shared_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 634,
+   "ext": 0,
+   "preds": [
+    5,
+    6
+   ],
+   "start": 1292,
+   "end": 1926,
+   "comp_start": 1292.1,
+   "comp_cycles": 634.0
+  },
+  {
+   "op": 11,
+   "id": "L23.ffn.router_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 422,
+   "ext": 0,
+   "preds": [
+    9
+   ],
+   "start": 1478,
+   "end": 1900,
+   "comp_start": 1477.7,
+   "comp_cycles": 421.9
+  },
+  {
+   "op": 12,
+   "id": "L23.ffn.bias",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    11
+   ],
+   "start": 1900,
+   "end": 2018,
+   "comp_start": 1899.7,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 13,
+   "id": "L23.ffn.shared_swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 246,
+   "ext": 0,
+   "preds": [
+    10
+   ],
+   "start": 1926,
+   "end": 2172,
+   "comp_start": 1926.2,
+   "comp_cycles": 245.6
+  },
+  {
+   "op": 14,
+   "id": "L23.ffn.top6",
+   "eng": "sel",
+   "port": 5,
+   "dur": 9,
+   "ext": 0,
+   "preds": [
+    12
+   ],
+   "start": 2018,
+   "end": 2027,
+   "comp_start": 2017.3,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 15,
+   "id": "L23.ffn.top6_order",
+   "eng": "sel",
+   "port": 5,
+   "dur": 44,
+   "ext": 0,
+   "preds": [
+    14
+   ],
+   "start": 2027,
+   "end": 2071,
+   "comp_start": 2026.2,
+   "comp_cycles": 44.0
+  },
+  {
+   "op": 16,
+   "id": "L23.ffn.experts_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1239,
+   "ext": 0,
+   "preds": [
+    10,
+    15
+   ],
+   "start": 2071,
+   "end": 3310,
+   "comp_start": 2070.2,
+   "comp_cycles": 1238.9
+  },
+  {
+   "op": 17,
+   "id": "L23.ffn.weights",
+   "eng": "su",
+   "port": 1,
+   "dur": 259,
+   "ext": 0,
+   "preds": [
+    11,
+    15
+   ],
+   "start": 2071,
+   "end": 2330,
+   "comp_start": 2070.2,
+   "comp_cycles": 258.9
+  },
+  {
+   "op": 18,
+   "id": "L23.ffn.shared_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 95,
+   "ext": 0,
+   "preds": [
+    13
+   ],
+   "start": 2172,
+   "end": 2267,
+   "comp_start": 2171.8,
+   "comp_cycles": 94.7
+  },
+  {
+   "op": 19,
+   "id": "L23.ffn.swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    16
+   ],
+   "start": 3310,
+   "end": 3313,
+   "comp_start": 3309.1,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 20,
+   "id": "L23.ffn.route_w",
+   "eng": "su",
+   "port": 1,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    17,
+    19
+   ],
+   "start": 3313,
+   "end": 3319,
+   "comp_start": 3312.1,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 21,
+   "id": "L23.ffn.quant2",
+   "eng": "su",
+   "port": 1,
+   "dur": 191,
+   "ext": 0,
+   "preds": [
+    20
+   ],
+   "start": 3319,
+   "end": 3510,
+   "comp_start": 3318.0,
+   "comp_cycles": 191.0
+  },
+  {
+   "op": 22,
+   "id": "L23.ffn.down",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1516,
+   "ext": 0,
+   "preds": [
+    18,
+    21
+   ],
+   "start": 3510,
+   "end": 5026,
+   "comp_start": 3509.0,
+   "comp_cycles": 1516.3
+  },
+  {
+   "op": 23,
+   "id": "L23.ffn.combine_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    22
+   ],
+   "start": 5026,
+   "end": 5853,
+   "comp_start": 5025.3,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 24,
+   "id": "L23.ffn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 0,
+   "preds": [
+    8,
+    23
+   ],
+   "start": 5853,
+   "end": 5966,
+   "comp_start": 5852.3,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 25,
+   "id": "L24.attn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    7,
+    24
+   ],
+   "start": 5966,
+   "end": 5972,
+   "comp_start": 5965.2,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 26,
+   "id": "L24.attn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 237,
+   "ext": 0,
+   "preds": [
+    24
+   ],
+   "start": 5966,
+   "end": 6203,
+   "comp_start": 5965.2,
+   "comp_cycles": 237.0
+  },
+  {
+   "op": 27,
+   "id": "L24.attn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 251,
+   "ext": 0,
+   "preds": [
+    24
+   ],
+   "start": 5966,
+   "end": 6217,
+   "comp_start": 5965.2,
+   "comp_cycles": 250.6
+  },
+  {
+   "op": 28,
+   "id": "L24.attn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 324,
+   "ext": 0,
+   "preds": [
+    25
+   ],
+   "start": 5972,
+   "end": 6296,
+   "comp_start": 5971.1,
+   "comp_cycles": 324.0
+  },
+  {
+   "op": 29,
+   "id": "L24.attn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    27
+   ],
+   "start": 6217,
+   "end": 6414,
+   "comp_start": 6215.8,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 30,
+   "id": "L24.attn.a_proj",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1858,
+   "ext": 0,
+   "preds": [
+    28
+   ],
+   "start": 6296,
+   "end": 8154,
+   "comp_start": 6295.1,
+   "comp_cycles": 1858.1
+  },
+  {
+   "op": 31,
+   "id": "L24.attn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    26,
+    29
+   ],
+   "start": 6414,
+   "end": 6626,
+   "comp_start": 6413.1,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 32,
+   "id": "L24.attn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    31
+   ],
+   "start": 6626,
+   "end": 7263,
+   "comp_start": 6625.4,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 33,
+   "id": "L24.attn.a_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 434,
+   "ext": 0,
+   "preds": [
+    30
+   ],
+   "start": 8154,
+   "end": 8588,
+   "comp_start": 8153.2,
+   "comp_cycles": 434.0
+  },
+  {
+   "op": 34,
+   "id": "L24.attn.q_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    33
+   ],
+   "start": 8588,
+   "end": 8591,
+   "comp_start": 8587.2,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 35,
+   "id": "L24.attn.kv_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    33
+   ],
+   "start": 8588,
+   "end": 8591,
+   "comp_start": 8587.2,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 36,
+   "id": "L24.attn.q_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 288,
+   "ext": 0,
+   "preds": [
+    34
+   ],
+   "start": 8591,
+   "end": 8879,
+   "comp_start": 8590.2,
+   "comp_cycles": 288.0
+  },
+  {
+   "op": 37,
+   "id": "L24.attn.kv_rope_qdq",
+   "eng": "su",
+   "port": 1,
+   "dur": 283,
+   "ext": 0,
+   "preds": [
+    35
+   ],
+   "start": 8591,
+   "end": 8874,
+   "comp_start": 8590.2,
+   "comp_cycles": 283.0
+  },
+  {
+   "op": 38,
+   "id": "L24.attn.own_row_write",
+   "eng": "svc",
+   "port": 4,
+   "dur": 1130,
+   "ext": 0,
+   "preds": [
+    37
+   ],
+   "start": 8874,
+   "end": 10004,
+   "comp_start": 8873.2,
+   "comp_cycles": 1129.9
+  },
+  {
+   "op": 39,
+   "id": "L24.attn.wq_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1560,
+   "ext": 0,
+   "preds": [
+    36
+   ],
+   "start": 8879,
+   "end": 10439,
+   "comp_start": 8878.2,
+   "comp_cycles": 1559.6
+  },
+  {
+   "op": 40,
+   "id": "L24.attn.idx.q",
+   "eng": "fld",
+   "port": 0,
+   "dur": 93,
+   "ext": 0,
+   "preds": [
+    39
+   ],
+   "start": 10439,
+   "end": 10532,
+   "comp_start": 10437.9,
+   "comp_cycles": 93.0
+  },
+  {
+   "op": 41,
+   "id": "L24.attn.q_rope",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    39
+   ],
+   "start": 10439,
+   "end": 10557,
+   "comp_start": 10437.9,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 42,
+   "id": "L24.attn.idx.score",
+   "eng": "svc",
+   "port": 4,
+   "dur": 873,
+   "ext": 0,
+   "preds": [
+    33,
+    40
+   ],
+   "start": 10532,
+   "end": 11405,
+   "comp_start": 10530.9,
+   "comp_cycles": 873.0
+  },
+  {
+   "op": 43,
+   "id": "L24.attn.idx.topk_local",
+   "eng": "sel",
+   "port": 5,
+   "dur": 230,
+   "ext": 0,
+   "preds": [
+    42
+   ],
+   "start": 11405,
+   "end": 11635,
+   "comp_start": 11403.9,
+   "comp_cycles": 230.0
+  },
+  {
+   "op": 44,
+   "id": "L24.attn.idx.topk_merge",
+   "eng": "coll",
+   "port": 3,
+   "dur": 551,
+   "ext": 0,
+   "preds": [
+    43
+   ],
+   "start": 11635,
+   "end": 12186,
+   "comp_start": 11633.9,
+   "comp_cycles": 551.0
+  },
+  {
+   "op": 45,
+   "id": "L24.attn.idx.topk_final",
+   "eng": "sel",
+   "port": 5,
+   "dur": 178,
+   "ext": 0,
+   "preds": [
+    44
+   ],
+   "start": 12186,
+   "end": 12364,
+   "comp_start": 12184.9,
+   "comp_cycles": 178.0
+  },
+  {
+   "op": 46,
+   "id": "L24.attn.gather",
+   "eng": "col",
+   "port": 6,
+   "dur": 811,
+   "ext": 0,
+   "preds": [
+    45
+   ],
+   "start": 12364,
+   "end": 13175,
+   "comp_start": 12362.9,
+   "comp_cycles": 811.0
+  },
+  {
+   "op": 47,
+   "id": "L24.attn.window_load",
+   "eng": "svc",
+   "port": 4,
+   "dur": 207,
+   "ext": 0,
+   "preds": [
+    38,
+    41,
+    45
+   ],
+   "start": 12364,
+   "end": 12571,
+   "comp_start": 12362.9,
+   "comp_cycles": 207.1
+  },
+  {
+   "op": 48,
+   "id": "L24.attn.rows_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 1024,
+   "ext": 0,
+   "preds": [
+    46
+   ],
+   "start": 13175,
+   "end": 14199,
+   "comp_start": 13173.9,
+   "comp_cycles": 1024.0
+  },
+  {
+   "op": 49,
+   "id": "L24.attn.scores",
+   "eng": "svc",
+   "port": 4,
+   "dur": 50,
+   "ext": 0,
+   "preds": [
+    37,
+    41,
+    47,
+    48
+   ],
+   "start": 14199,
+   "end": 14249,
+   "comp_start": 14197.9,
+   "comp_cycles": 49.9
+  },
+  {
+   "op": 50,
+   "id": "L24.attn.max",
+   "eng": "su",
+   "port": 1,
+   "dur": 222,
+   "ext": 0,
+   "preds": [
+    49
+   ],
+   "start": 14249,
+   "end": 14471,
+   "comp_start": 14247.8,
+   "comp_cycles": 221.6
+  },
+  {
+   "op": 51,
+   "id": "L24.attn.exp",
+   "eng": "su",
+   "port": 1,
+   "dur": 290,
+   "ext": 0,
+   "preds": [
+    50
+   ],
+   "start": 14471,
+   "end": 14761,
+   "comp_start": 14469.4,
+   "comp_cycles": 289.7
+  },
+  {
+   "op": 52,
+   "id": "L24.attn.den",
+   "eng": "su",
+   "port": 1,
+   "dur": 88,
+   "ext": 0,
+   "preds": [
+    51
+   ],
+   "start": 14761,
+   "end": 14849,
+   "comp_start": 14759.1,
+   "comp_cycles": 88.0
+  },
+  {
+   "op": 53,
+   "id": "L24.attn.pv",
+   "eng": "svc",
+   "port": 4,
+   "dur": 272,
+   "ext": 0,
+   "preds": [
+    51
+   ],
+   "start": 14761,
+   "end": 15033,
+   "comp_start": 14759.1,
+   "comp_cycles": 271.9
+  },
+  {
+   "op": 54,
+   "id": "L24.attn.sink",
+   "eng": "su",
+   "port": 1,
+   "dur": 196,
+   "ext": 0,
+   "preds": [
+    50,
+    52
+   ],
+   "start": 14849,
+   "end": 15045,
+   "comp_start": 14847.1,
+   "comp_cycles": 196.0
+  },
+  {
+   "op": 55,
+   "id": "L24.attn.normalize",
+   "eng": "su",
+   "port": 1,
+   "dur": 245,
+   "ext": 0,
+   "preds": [
+    53,
+    54
+   ],
+   "start": 15045,
+   "end": 15290,
+   "comp_start": 15043.1,
+   "comp_cycles": 244.9
+  },
+  {
+   "op": 56,
+   "id": "L24.attn.wo_a",
+   "eng": "fld",
+   "port": 0,
+   "dur": 2222,
+   "ext": 0,
+   "preds": [
+    55
+   ],
+   "start": 15290,
+   "end": 17512,
+   "comp_start": 15288.0,
+   "comp_cycles": 2222.0
+  },
+  {
+   "op": 57,
+   "id": "L24.attn.z_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 80,
+   "ext": 0,
+   "preds": [
+    56
+   ],
+   "start": 17512,
+   "end": 17592,
+   "comp_start": 17510.0,
+   "comp_cycles": 80.0
+  },
+  {
+   "op": 58,
+   "id": "L24.attn.wo_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 549,
+   "ext": 0,
+   "preds": [
+    57
+   ],
+   "start": 17592,
+   "end": 18141,
+   "comp_start": 17590.0,
+   "comp_cycles": 548.9
+  },
+  {
+   "op": 59,
+   "id": "L24.attn.out_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    58
+   ],
+   "start": 18141,
+   "end": 18968,
+   "comp_start": 18138.9,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 60,
+   "id": "L24.attn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 0,
+   "preds": [
+    24,
+    32,
+    59
+   ],
+   "start": 18968,
+   "end": 19081,
+   "comp_start": 18965.9,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 61,
+   "id": "L24.substage_hop0",
+   "eng": "hop",
+   "port": 7,
+   "dur": 1006,
+   "ext": 0,
+   "preds": [
+    60
+   ],
+   "start": 19081,
+   "end": 20087,
+   "comp_start": 19078.8,
+   "comp_cycles": 1006.0
+  }
+ ]
+}

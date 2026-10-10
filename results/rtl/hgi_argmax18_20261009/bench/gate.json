@@ -1,0 +1,58 @@
+{
+  "source_commit": "37c24d8a4",
+  "host": "ot-pve1",
+  "run": "/srv/opentallas-scratch/codex/hgi-argmax18-37c24d8a4",
+  "positive_rc": 0,
+  "positive_rows": 6,
+  "cycles": 19056,
+  "mutants": {
+    "width17": {
+      "build_rc": 0,
+      "sim_rc": 1,
+      "observed": 20863,
+      "expected": 151935
+    },
+    "non_strict_tie": {
+      "build_rc": 0,
+      "sim_rc": 1,
+      "observed": 113971,
+      "expected": 113963
+    },
+    "offset_add_instead_mult": {
+      "build_rc": 0,
+      "sim_rc": 1,
+      "observed": 37998,
+      "expected": 113963
+    }
+  },
+  "peak_ram_kib": 315060,
+  "files_sha256": {
+    "results/rtl/hgi_argmax18_20261009/bench/mutant2.time.log": "4219815c1240b85d82a8cbb141ba9a602415b2ff414bf7780dbc8d725d65ce65",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant2.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant3.sim.log": "5aa8148b29320e914ea1bb8e8c3c879c2e4958e1e21b1666eb6369d57743992b",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant2.sim.log": "2df6f26b15425b597b5165ccef0f8f28a3dfec9cc8626b698f19bf236511edc2",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/bench/positive.time.log": "2a5e8b0654cf28953b884f174bc79c0e05224748fae3a18c1ffd0cd2253e2006",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant1.time.log": "0e139200f9ad77d54fac05329d5c4ef78332d580657b195c2a871776bb6c2252",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant1.sim.log": "86b77abec18e109edda8a89c145015394bbaa80d2a0b8c229506f6fe597ac911",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant3.time.log": "7bba35ddd0ba7d5119d7da3fe2582500b45468b23969e39395bd3ae9fb561230",
+    "results/rtl/hgi_argmax18_20261009/bench/mutant3.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/bench/positive.sim.log": "521cdc481db8d23a28ef40a4a76eeb49f0eb8779d7f9f6a6dfc5d55405b34c95"
+  },
+  "coverage": [
+    "CF-ARG high id151935",
+    "lowest-index tie",
+    "NaN first flag",
+    "signed zero",
+    "partial mask",
+    "rank*imm_a offset",
+    "back-to-back row config latching",
+    "overflow flag",
+    "DS nativeIW17 lockstep"
+  ],
+  "missing": [
+    "hbm-sim provider vector pin",
+    "winning-value operand binding outside native id-only interface",
+    "physical route closure"
+  ]
+}

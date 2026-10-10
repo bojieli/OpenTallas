@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.hbm.native_ar_token_join.rtl.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "qwen": false,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": -1,
+      "ngen": 12,
+      "first_pos": 1234,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=0 records=12 launches=24 stalls=371\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 460368000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": false,
+      "mutant": 1,
+      "owner17_truncation": false,
+      "start_token": -1,
+      "ngen": 12,
+      "first_pos": 1234,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:41: token/job/position corrupt\n       Time: 418251000  Scope: tb_hbm_native_ar_token_join\n",
+      "verdict": "FAIL"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": -1,
+      "ngen": 12,
+      "first_pos": 1234,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=12 launches=24 stalls=371\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 460368000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 1,
+      "owner17_truncation": false,
+      "start_token": -1,
+      "ngen": 12,
+      "first_pos": 1234,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:41: token/job/position corrupt\n       Time: 418251000  Scope: tb_hbm_native_ar_token_join\n",
+      "verdict": "FAIL"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": 131070,
+      "ngen": 2,
+      "first_pos": 524288,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=2 launches=4 stalls=0\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 422004000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": 131072,
+      "ngen": 1,
+      "first_pos": 524288,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=1 launches=2 stalls=0\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 421170000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": 151934,
+      "ngen": 1,
+      "first_pos": 524288,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=1 launches=2 stalls=0\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 421170000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 0,
+      "owner17_truncation": false,
+      "start_token": 151935,
+      "ngen": 1,
+      "first_pos": 524288,
+      "returncode": 0,
+      "output": "PASS native AR QWEN=1 records=1 launches=2 stalls=0\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:55: $finish called at 421170000 (1fs)\n",
+      "verdict": "PASS"
+    },
+    {
+      "qwen": true,
+      "mutant": 1,
+      "owner17_truncation": true,
+      "start_token": 131072,
+      "ngen": 1,
+      "first_pos": 524288,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv:29: producer owner width/identity\n       Time: 11259000  Scope: tb_hbm_native_ar_token_join\n",
+      "verdict": "FAIL"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "6a22b46233c8a9f5ccb79559f6920466e61f7a9dcc202285a9b811f36298c294",
+    "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv": "5863e0a79e1c30a47ac3b3af14f3caf0dbd3168cda6cdb6d22021f08d4257465",
+    "rtl/hbm_accel/qwen/r25/ot_qwen_r25_cmdproc18.sv": "bc1b7308d4968f4cf3330fb984fd551843cb0602256055a4a4b5972de0dd14af",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv": "3ead8ab1c680857a5be401f51a89e36cbd28d2872ba2fcdb1fd56169aafd1cab"
+  },
+  "scope": "real two-half32SM CP and token runtime; synthetic SM results; no arithmetic or full token datapath claim"
+}

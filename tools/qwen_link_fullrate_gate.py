@@ -10,7 +10,7 @@ import argparse, hashlib, json, os, re, shutil, subprocess, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HUB = ['rtl/physical/ot_qwen_die_hub_fr.sv', 'rtl/physical/ot_qwen_die_cdc_ch.sv', 'rtl/lib/ot_async_fifo.sv',
+HUB = ['rtl/physical/ot_qwen_die_hub_fr.sv', 'rtl/physical/ot_qwen_die_cdc_ch.sv', 'rtl/physical/ot_qwen_async_fifo_w.sv', 'rtl/lib/ot_async_fifo.sv',
        'rtl/lib/ot_reset_sync.sv']
 LINK = HUB + ['rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv']
 TB_LINK, TB_HUB = 'rtl/test/tb_qwen_link_fullrate.sv', 'rtl/test/tb_qwen_die_hub_fr.sv'
@@ -79,6 +79,7 @@ def main():
     ap.add_argument('--sim', default='both', choices=['verilator', 'iverilog', 'both'])
     ap.add_argument('--source-root', type=Path, default=ROOT)
     ap.add_argument('--only', nargs='*')
+    ap.add_argument('--param', action='append', default=[], help='K=V added to every link-bench case (e.g. RXAFW=1)')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     sims = ['verilator', 'iverilog'] if a.sim == 'both' else [a.sim]
@@ -87,6 +88,8 @@ def main():
         for c in cases(a.n):
             if a.only and c['case'] not in a.only:
                 continue
+            if c['tb'] == TB_LINK:
+                c['p'].update(kv.split('=', 1) for kv in a.param)
             for sim in sims:
                 if sim == 'iverilog' and c['kind'] == 'pos' and c['case'].startswith('sweep') and a.sim == 'both':
                     continue          # the sweep is a rate measurement; Verilator carries it

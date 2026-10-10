@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/tools/mtp_exact_wavefront2.py", line 363, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/tools/mtp_exact_wavefront2.py", line 355, in main
+    prepare(a.scratch, a.gold)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/tools/mtp_exact_wavefront2.py", line 79, in prepare
+    model = V.Model()
+  File "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/tools/hdc_golden_v41.py", line 671, in __init__
+    t = load_checkpoint(checkpoint)
+  File "/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/tools/hdc_golden_v41.py", line 255, in load_checkpoint
+    raw = Path(path).read_bytes()
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/codex/mtp-exact-ring14-cefb5aa18/src/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors'

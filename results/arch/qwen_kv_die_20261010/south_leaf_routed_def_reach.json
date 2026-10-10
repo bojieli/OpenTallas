@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.qwen-kv-south-leaf-routed-def-reach.v1",
+ "adopted": false,
+ "source_job": "qkd_kvwq_leaf_s-52115e3d5-tc-hm10",
+ "leaf_def_sha256": "68e74adc9d423f96ac3f3f509f5a4f8e28b9fe9464fc7ac354a251c1ad3f979e",
+ "leaf_geometry_um": [
+  86.4,
+  183.6
+ ],
+ "pin_binding": "actual routed DEF per RTL bit, same binding as forthcoming macro LEF",
+ "reach": {
+  "ready": true,
+  "bits": 38528,
+  "worst": {
+   "stack": "ES",
+   "pc": 0,
+   "port": "w",
+   "bit": 25,
+   "um": 60.06
+  },
+  "max_um": 60.06,
+  "over_100um": 0,
+  "over_SS_504um": 0
+ },
+ "cdc_view": {
+  "path": "physical/qwen_die_masters/views/qfd_cdc_eco_h1/qfd_cdc.lef",
+  "ready": true,
+  "sha256": "b64628094adc00393afee32ba615de02b4f585c6d16de059acc91bb921967438",
+  "size_um": [
+   183.72,
+   183.72
+  ],
+  "named_pins": 1204,
+  "mapped_shapes": 1202,
+  "timing_gate": "not implied by pin import"
+ },
+ "gate": "Pin centroid reach passes; final macro LEF mirror/access plus die-context timing and controller remain open"
+}

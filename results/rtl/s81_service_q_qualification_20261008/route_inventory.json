@@ -1,0 +1,38 @@
+{
+ "route_files_sha256": {
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918_lbc/base/6_final.v": "7b24fca709823d5e55d9ce8b377d942816cdea56a27ec6d8daca62c0275e9e08",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918_lbc/base/6_final.spef": "8cf3290099c9209c5fc9d26040dfaeb82266f7803aa2f420309ce8738e4eda11",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918_lbc/base/6_final.sdc": "35e63c7eb9a78bd2857421c39a390d6cded7b5874260513aef8bd1e1659890e7",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918_lbc/base/6_final.odb": "761273c85ccd96caa3db69c4581b9959f581d1869ddbc43a28a2a4dd8e642fca"
+ },
+ "route_drc": {
+  "detailedroute__route__net": 13651,
+  "detailedroute__route__net__special": 2,
+  "detailedroute__route__drc_errors__iter:0": 1132,
+  "detailedroute__route__wirelength__iter:0": 215491,
+  "detailedroute__route__drc_errors__iter:1": 76,
+  "detailedroute__route__wirelength__iter:1": 215431,
+  "detailedroute__route__drc_errors__iter:2": 49,
+  "detailedroute__route__wirelength__iter:2": 215411,
+  "detailedroute__route__drc_errors__iter:3": 8,
+  "detailedroute__route__wirelength__iter:3": 215411,
+  "detailedroute__route__drc_errors__iter:4": 8,
+  "detailedroute__route__wirelength__iter:4": 215411,
+  "detailedroute__route__drc_errors__iter:5": 0,
+  "detailedroute__route__wirelength__iter:5": 215411,
+  "detailedroute__route__drc_errors": 0,
+  "detailedroute__route__wirelength": 215411,
+  "detailedroute__route__vias": 94402,
+  "detailedroute__route__vias__singlecut": 94402,
+  "detailedroute__route__vias__multicut": 0,
+  "detailedroute__antenna_diodes_count": 0,
+  "detailedroute__antenna__violating__nets": 0,
+  "detailedroute__antenna__violating__pins": 0,
+  "detailedroute__flow__warnings__count": 23,
+  "detailedroute__flow__errors__count": 0,
+  "detailedroute__flow__warnings__count:GRT-0246": 1,
+  "detailedroute__flow__warnings__count:STA-0450": 2,
+  "detailedroute__flow__warnings__count:STA-1212": 1001,
+  "detailedroute__flow__warnings__type_count": 3
+ }
+}

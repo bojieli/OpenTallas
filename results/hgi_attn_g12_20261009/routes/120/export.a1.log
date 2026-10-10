@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "hgi_att_rows_g12_120",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi-att-g12-120-187a8471c-tc-cx/routes/hgi_att_g12_120_187a8471c_tc_cx/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/hgi_att_rows_g12_120.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-9.143397150523924e-11",
+  "ws_min": "3.8243935795989614e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "1.4918649648976157e-10",
+  "ws_min": "2.3678878302568762e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "2.1865925736719305e-10",
+  "ws_min": "1.0199757705109391e-12"
+ },
+ "files": {
+  "hgi_att_rows_g12_120.lef": "d0c04b0617f0420ec8ed3b6442970ae26aa9459b4fa6f086189fa4b99ab5c7d3",
+  "hgi_att_rows_g12_120_ff.lib": "103c37e9c41b56c4edcdff38addfa334189fefbf11abcb25a3ccaf0bde0da852",
+  "hgi_att_rows_g12_120_ss.lib": "9f19e7ad959d30d2706e99a5ecd8b6b6e1d3df3fe96665e19dab4cddbf75d441",
+  "hgi_att_rows_g12_120_tt.lib": "0578b038aa0a0d8484b1e7f56ed9c81b318d533bdfd5d520717768496051d7de"
+ }
+}
+	Command being timed: "python3 tools/w18/export_view.py --orfs-dir /srv/opentallas-scratch/claude/closure-loop/hgi-att-g12-120-187a8471c-tc-cx/routes/hgi_att_g12_120_187a8471c_tc_cx/work/orfs --name hgi_att_rows_g12_120 --post-sdc physical/qwen_die_masters/signoff/hgi_att_rows_g12_120.sdc --corners ss,tt,ff --out /srv/opentallas-scratch/claude/closure-loop/hgi-att-g12-120-187a8471c-tc-cx/export"
+	User time (seconds): 0.10
+	System time (seconds): 0.12
+	Percent of CPU this job got: 2%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 38688
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 25733
+	Voluntary context switches: 2100
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 64
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

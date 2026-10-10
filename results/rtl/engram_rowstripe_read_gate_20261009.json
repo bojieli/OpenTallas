@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.engram-rowstripe-read-gate.v1",
+ "boundary": "six reserved rows at64PC actual rd/rq faces, SECDED and transaction identity; no physical/die or shared arbitration credit",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "8b54008d8c5085c1209153cdf82c62e5340b689a614f8d5b0811be2931dc957b",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/test/tb_dsrom_engram_rowstripe_read.sv": "02bbd9b3b804bd8d9c57e9cf67cc9aa8ad2849cf5630e8ab7c18c6e3a11638dd",
+  "tools/uarch_model.py": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9",
+  "tools/engram_rowstripe_read_gate.py": "8c4511f911fd7116fc61aa5f9c92ed83d7bf5f4661b567efcde648cfb7fd5569"
+ },
+ "cases": {
+  "clean": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ PASS rows=6 atoms=54 concurrent_returns=6 stalled=1 inject=0\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:74: $finish called at 1616000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "single_corrected": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ PASS rows=6 atoms=54 concurrent_returns=6 stalled=1 inject=1\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:74: $finish called at 1616000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "double_rejected": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ ECC double caught\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:66: $finish called at 405000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "stale_generation": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ NEG mode=1 caught\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:62: $finish called at 405000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "swapped_pc": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ NEG mode=2 caught\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:62: $finish called at 405000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "duplicate_atom": {
+   "returncode": 0,
+   "stdout": "ENGRAM_READ NEG mode=3 caught\n/srv/opentallas-scratch/claude/engram/read-row-r2/rtl/test/tb_dsrom_engram_rowstripe_read.sv:62: $finish called at 405000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

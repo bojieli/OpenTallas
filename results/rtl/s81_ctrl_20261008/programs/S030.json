@@ -1,0 +1,919 @@
+{
+ "stage": "S030",
+ "kind": "stage",
+ "layers": [
+  "L20",
+  "L21"
+ ],
+ "comp_span": 23493.4,
+ "comp_crit_cycles": 15500.6,
+ "max_start_drift": 3.2000000000007276,
+ "makespan": 23497,
+ "crit_end": 23243,
+ "n_nodes": 68,
+ "n_jobs": 59,
+ "max_fanin": 4,
+ "ports": [
+  "coll",
+  "fld",
+  "hc",
+  "hop",
+  "sel",
+  "su",
+  "svc"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "L21.attn.rows_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 1024,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 1024,
+   "comp_start": 0.0,
+   "comp_cycles": 1024.0
+  },
+  {
+   "op": 1,
+   "id": "L20.ffn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 9,
+   "ext": 7739,
+   "preds": [],
+   "start": 7739,
+   "end": 7748,
+   "comp_start": 7738.9,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 2,
+   "id": "L20.ffn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 229,
+   "ext": 7739,
+   "preds": [],
+   "start": 7739,
+   "end": 7968,
+   "comp_start": 7738.9,
+   "comp_cycles": 229.0
+  },
+  {
+   "op": 3,
+   "id": "L20.ffn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 254,
+   "ext": 7739,
+   "preds": [],
+   "start": 7739,
+   "end": 7993,
+   "comp_start": 7738.9,
+   "comp_cycles": 253.6
+  },
+  {
+   "op": 4,
+   "id": "L20.ffn.norm.scale",
+   "eng": "su",
+   "port": 1,
+   "dur": 306,
+   "ext": 0,
+   "preds": [
+    1
+   ],
+   "start": 7748,
+   "end": 8054,
+   "comp_start": 7747.8,
+   "comp_cycles": 306.0
+  },
+  {
+   "op": 5,
+   "id": "L20.attn.cand.final",
+   "eng": "su",
+   "port": 1,
+   "dur": 355,
+   "ext": 7795,
+   "preds": [],
+   "start": 7795,
+   "end": 8150,
+   "comp_start": 7795.0,
+   "comp_cycles": 355.0
+  },
+  {
+   "op": 6,
+   "id": "L20.ffn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 7993,
+   "end": 8190,
+   "comp_start": 7992.5,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 7,
+   "id": "L20.ffn.router",
+   "eng": "fld",
+   "port": 0,
+   "dur": 977,
+   "ext": 0,
+   "preds": [
+    4
+   ],
+   "start": 8054,
+   "end": 9031,
+   "comp_start": 8053.8,
+   "comp_cycles": 977.2
+  },
+  {
+   "op": 8,
+   "id": "L20.ffn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 19,
+   "ext": 0,
+   "preds": [
+    4
+   ],
+   "start": 8054,
+   "end": 8073,
+   "comp_start": 8053.8,
+   "comp_cycles": 19.0
+  },
+  {
+   "op": 9,
+   "id": "L20.ffn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    2,
+    6
+   ],
+   "start": 8190,
+   "end": 8402,
+   "comp_start": 8189.8,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 10,
+   "id": "L20.ffn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    9
+   ],
+   "start": 8402,
+   "end": 9039,
+   "comp_start": 8402.1,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 11,
+   "id": "L20.ffn.softplus_sqrt",
+   "eng": "su",
+   "port": 1,
+   "dur": 186,
+   "ext": 0,
+   "preds": [
+    7
+   ],
+   "start": 9031,
+   "end": 9217,
+   "comp_start": 9031.0,
+   "comp_cycles": 185.6
+  },
+  {
+   "op": 12,
+   "id": "L20.ffn.shared_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 634,
+   "ext": 0,
+   "preds": [
+    7,
+    8
+   ],
+   "start": 9031,
+   "end": 9665,
+   "comp_start": 9031.0,
+   "comp_cycles": 634.0
+  },
+  {
+   "op": 13,
+   "id": "L20.ffn.router_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 422,
+   "ext": 0,
+   "preds": [
+    11
+   ],
+   "start": 9217,
+   "end": 9639,
+   "comp_start": 9216.6,
+   "comp_cycles": 421.9
+  },
+  {
+   "op": 14,
+   "id": "L20.ffn.bias",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    13
+   ],
+   "start": 9639,
+   "end": 9757,
+   "comp_start": 9638.6,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 15,
+   "id": "L20.ffn.shared_swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 246,
+   "ext": 0,
+   "preds": [
+    12
+   ],
+   "start": 9665,
+   "end": 9911,
+   "comp_start": 9665.0,
+   "comp_cycles": 245.6
+  },
+  {
+   "op": 16,
+   "id": "L20.ffn.top6",
+   "eng": "sel",
+   "port": 5,
+   "dur": 9,
+   "ext": 0,
+   "preds": [
+    14
+   ],
+   "start": 9757,
+   "end": 9766,
+   "comp_start": 9756.2,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 17,
+   "id": "L20.ffn.top6_order",
+   "eng": "sel",
+   "port": 5,
+   "dur": 44,
+   "ext": 0,
+   "preds": [
+    16
+   ],
+   "start": 9766,
+   "end": 9810,
+   "comp_start": 9765.1,
+   "comp_cycles": 44.0
+  },
+  {
+   "op": 18,
+   "id": "L20.ffn.experts_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1853,
+   "ext": 0,
+   "preds": [
+    12,
+    17
+   ],
+   "start": 9810,
+   "end": 11663,
+   "comp_start": 9809.1,
+   "comp_cycles": 1852.8
+  },
+  {
+   "op": 19,
+   "id": "L20.ffn.weights",
+   "eng": "su",
+   "port": 1,
+   "dur": 259,
+   "ext": 0,
+   "preds": [
+    13,
+    17
+   ],
+   "start": 9810,
+   "end": 10069,
+   "comp_start": 9809.1,
+   "comp_cycles": 258.9
+  },
+  {
+   "op": 20,
+   "id": "L20.ffn.shared_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 95,
+   "ext": 0,
+   "preds": [
+    15
+   ],
+   "start": 9911,
+   "end": 10006,
+   "comp_start": 9910.6,
+   "comp_cycles": 94.7
+  },
+  {
+   "op": 21,
+   "id": "L20.ffn.swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    18
+   ],
+   "start": 11663,
+   "end": 11666,
+   "comp_start": 11661.9,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 22,
+   "id": "L20.ffn.route_w",
+   "eng": "su",
+   "port": 1,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    19,
+    21
+   ],
+   "start": 11666,
+   "end": 11672,
+   "comp_start": 11664.9,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 23,
+   "id": "L20.ffn.quant2",
+   "eng": "su",
+   "port": 1,
+   "dur": 191,
+   "ext": 0,
+   "preds": [
+    22
+   ],
+   "start": 11672,
+   "end": 11863,
+   "comp_start": 11670.8,
+   "comp_cycles": 191.0
+  },
+  {
+   "op": 24,
+   "id": "L20.ffn.down",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1541,
+   "ext": 0,
+   "preds": [
+    20,
+    23
+   ],
+   "start": 11863,
+   "end": 13404,
+   "comp_start": 11861.8,
+   "comp_cycles": 1540.7
+  },
+  {
+   "op": 25,
+   "id": "L20.ffn.combine_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    24
+   ],
+   "start": 13404,
+   "end": 14231,
+   "comp_start": 13402.5,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 26,
+   "id": "L20.ffn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 7739,
+   "preds": [
+    10,
+    25
+   ],
+   "start": 14231,
+   "end": 14344,
+   "comp_start": 14229.5,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 27,
+   "id": "L21.attn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    9,
+    26
+   ],
+   "start": 14344,
+   "end": 14350,
+   "comp_start": 14342.4,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 28,
+   "id": "L21.attn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 237,
+   "ext": 0,
+   "preds": [
+    26
+   ],
+   "start": 14344,
+   "end": 14581,
+   "comp_start": 14342.4,
+   "comp_cycles": 237.0
+  },
+  {
+   "op": 29,
+   "id": "L21.attn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 251,
+   "ext": 0,
+   "preds": [
+    26
+   ],
+   "start": 14344,
+   "end": 14595,
+   "comp_start": 14342.4,
+   "comp_cycles": 250.6
+  },
+  {
+   "op": 30,
+   "id": "L21.attn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 324,
+   "ext": 0,
+   "preds": [
+    27
+   ],
+   "start": 14350,
+   "end": 14674,
+   "comp_start": 14348.4,
+   "comp_cycles": 324.0
+  },
+  {
+   "op": 31,
+   "id": "L21.attn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    29
+   ],
+   "start": 14595,
+   "end": 14792,
+   "comp_start": 14593.0,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 32,
+   "id": "L21.attn.a_proj",
+   "eng": "fld",
+   "port": 0,
+   "dur": 628,
+   "ext": 0,
+   "preds": [
+    30
+   ],
+   "start": 14674,
+   "end": 15302,
+   "comp_start": 14672.4,
+   "comp_cycles": 628.0
+  },
+  {
+   "op": 33,
+   "id": "L21.attn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    28,
+    31
+   ],
+   "start": 14792,
+   "end": 15004,
+   "comp_start": 14790.4,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 34,
+   "id": "L21.attn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    33
+   ],
+   "start": 15004,
+   "end": 15641,
+   "comp_start": 15002.7,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 35,
+   "id": "L21.attn.a_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 434,
+   "ext": 0,
+   "preds": [
+    32
+   ],
+   "start": 15302,
+   "end": 15736,
+   "comp_start": 15300.4,
+   "comp_cycles": 434.0
+  },
+  {
+   "op": 36,
+   "id": "L21.attn.q_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    35
+   ],
+   "start": 15736,
+   "end": 15739,
+   "comp_start": 15734.4,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 37,
+   "id": "L21.attn.kv_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    35
+   ],
+   "start": 15736,
+   "end": 15739,
+   "comp_start": 15734.4,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 38,
+   "id": "L21.attn.q_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 288,
+   "ext": 0,
+   "preds": [
+    36
+   ],
+   "start": 15739,
+   "end": 16027,
+   "comp_start": 15737.4,
+   "comp_cycles": 288.0
+  },
+  {
+   "op": 39,
+   "id": "L21.attn.kv_rope_qdq",
+   "eng": "su",
+   "port": 1,
+   "dur": 283,
+   "ext": 0,
+   "preds": [
+    37
+   ],
+   "start": 15739,
+   "end": 16022,
+   "comp_start": 15737.4,
+   "comp_cycles": 283.0
+  },
+  {
+   "op": 40,
+   "id": "L21.attn.own_row_write",
+   "eng": "svc",
+   "port": 4,
+   "dur": 650,
+   "ext": 0,
+   "preds": [
+    39
+   ],
+   "start": 16022,
+   "end": 16672,
+   "comp_start": 16020.4,
+   "comp_cycles": 649.8
+  },
+  {
+   "op": 41,
+   "id": "L21.attn.wq_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1040,
+   "ext": 0,
+   "preds": [
+    38
+   ],
+   "start": 16027,
+   "end": 17067,
+   "comp_start": 16025.4,
+   "comp_cycles": 1039.9
+  },
+  {
+   "op": 42,
+   "id": "L21.attn.q_rope",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    41
+   ],
+   "start": 17067,
+   "end": 17185,
+   "comp_start": 17065.3,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 43,
+   "id": "L21.attn.window_load",
+   "eng": "svc",
+   "port": 4,
+   "dur": 170,
+   "ext": 0,
+   "preds": [
+    40,
+    42
+   ],
+   "start": 17185,
+   "end": 17355,
+   "comp_start": 17182.9,
+   "comp_cycles": 169.9
+  },
+  {
+   "op": 44,
+   "id": "L21.attn.scores",
+   "eng": "svc",
+   "port": 4,
+   "dur": 50,
+   "ext": 0,
+   "preds": [
+    0,
+    39,
+    42,
+    43
+   ],
+   "start": 17355,
+   "end": 17405,
+   "comp_start": 17352.8,
+   "comp_cycles": 49.9
+  },
+  {
+   "op": 45,
+   "id": "L21.attn.max",
+   "eng": "su",
+   "port": 1,
+   "dur": 222,
+   "ext": 0,
+   "preds": [
+    44
+   ],
+   "start": 17405,
+   "end": 17627,
+   "comp_start": 17402.8,
+   "comp_cycles": 221.6
+  },
+  {
+   "op": 46,
+   "id": "L21.attn.exp",
+   "eng": "su",
+   "port": 1,
+   "dur": 290,
+   "ext": 0,
+   "preds": [
+    45
+   ],
+   "start": 17627,
+   "end": 17917,
+   "comp_start": 17624.4,
+   "comp_cycles": 289.7
+  },
+  {
+   "op": 47,
+   "id": "L21.attn.den",
+   "eng": "su",
+   "port": 1,
+   "dur": 88,
+   "ext": 0,
+   "preds": [
+    46
+   ],
+   "start": 17917,
+   "end": 18005,
+   "comp_start": 17914.0,
+   "comp_cycles": 88.0
+  },
+  {
+   "op": 48,
+   "id": "L21.attn.pv",
+   "eng": "svc",
+   "port": 4,
+   "dur": 272,
+   "ext": 0,
+   "preds": [
+    46
+   ],
+   "start": 17917,
+   "end": 18189,
+   "comp_start": 17914.0,
+   "comp_cycles": 271.9
+  },
+  {
+   "op": 49,
+   "id": "L21.attn.sink",
+   "eng": "su",
+   "port": 1,
+   "dur": 196,
+   "ext": 0,
+   "preds": [
+    45,
+    47
+   ],
+   "start": 18005,
+   "end": 18201,
+   "comp_start": 18002.0,
+   "comp_cycles": 196.0
+  },
+  {
+   "op": 50,
+   "id": "L21.attn.normalize",
+   "eng": "su",
+   "port": 1,
+   "dur": 245,
+   "ext": 0,
+   "preds": [
+    48,
+    49
+   ],
+   "start": 18201,
+   "end": 18446,
+   "comp_start": 18198.0,
+   "comp_cycles": 244.9
+  },
+  {
+   "op": 51,
+   "id": "L21.attn.wo_a",
+   "eng": "fld",
+   "port": 0,
+   "dur": 2222,
+   "ext": 0,
+   "preds": [
+    50
+   ],
+   "start": 18446,
+   "end": 20668,
+   "comp_start": 18443.0,
+   "comp_cycles": 2222.0
+  },
+  {
+   "op": 52,
+   "id": "L21.attn.z_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 80,
+   "ext": 0,
+   "preds": [
+    51
+   ],
+   "start": 20668,
+   "end": 20748,
+   "comp_start": 20665.0,
+   "comp_cycles": 80.0
+  },
+  {
+   "op": 53,
+   "id": "L21.attn.wo_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 549,
+   "ext": 0,
+   "preds": [
+    52
+   ],
+   "start": 20748,
+   "end": 21297,
+   "comp_start": 20745.0,
+   "comp_cycles": 548.9
+  },
+  {
+   "op": 54,
+   "id": "L21.attn.out_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    53
+   ],
+   "start": 21297,
+   "end": 22124,
+   "comp_start": 21293.9,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 55,
+   "id": "L21.attn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 0,
+   "preds": [
+    26,
+    34,
+    54
+   ],
+   "start": 22124,
+   "end": 22237,
+   "comp_start": 22120.9,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 56,
+   "id": "L21.substage_hop0",
+   "eng": "hop",
+   "port": 7,
+   "dur": 1006,
+   "ext": 0,
+   "preds": [
+    55
+   ],
+   "start": 22237,
+   "end": 23243,
+   "comp_start": 22233.8,
+   "comp_cycles": 1006.0
+  },
+  {
+   "op": 57,
+   "id": "L21.ffn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 254,
+   "ext": 0,
+   "preds": [
+    56
+   ],
+   "start": 23243,
+   "end": 23497,
+   "comp_start": 23239.8,
+   "comp_cycles": 253.6
+  },
+  {
+   "op": 58,
+   "id": "L21.ffn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 229,
+   "ext": 0,
+   "preds": [
+    56
+   ],
+   "start": 23243,
+   "end": 23472,
+   "comp_start": 23239.8,
+   "comp_cycles": 229.0
+  }
+ ]
+}

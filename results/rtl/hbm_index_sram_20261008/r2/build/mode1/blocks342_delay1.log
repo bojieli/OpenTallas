@@ -1,0 +1,7 @@
+SRAM_IKS rep=0 mode=1 lines=1368 last_line_ps=183872 cycles=221 ce_events=91
+SRAM_IKS rep=1 mode=1 lines=1368 last_line_ps=183872 cycles=221 ce_events=182
+PASS_HBM_INDEX_LINES_SRAM
+- /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/r2/src/rtl/test/hbm_accel/tb_hbm_index_lines_sram.sv:65: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 706ns; walltime 0.090 s; speed 7.854 us/s
+- Verilator: cpu 0.090 s on 1 threads; allocated 8 MB

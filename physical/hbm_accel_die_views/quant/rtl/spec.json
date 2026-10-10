@@ -56,5 +56,6 @@
   },
   "source": "qm2_pd55 3_3_place_gp core endpoint -> pin, max over bits (face_chain_place.tcl OT_FC_REPORT)",
   "qm5_update": "qm5_pd55 (buffers kept by timing-driven GP) and the qm5 3_3 re-walk with buffers removed: t_su_SE / t_su_NE core->pin up to 1,263 / 1,214 um -> ceil(d/380) = 4 (was 3); every t_su face now 4, the quant path latency (max over faces) unchanged"
- }
+ },
+ "replaced_when_hgi": "quant"
 }

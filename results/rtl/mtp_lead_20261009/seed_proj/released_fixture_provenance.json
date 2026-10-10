@@ -1,0 +1,37 @@
+{
+ "original_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+ "original_shard": "model-00044-of-00048.safetensors",
+ "original_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
+ "tensors": {
+  "mtp.0.main_proj.weight": {
+   "source_meta": {
+    "dtype": "F8_E4M3",
+    "shape": [
+     5120,
+     15360
+    ],
+    "data_offsets": [
+     309076440,
+     387719640
+    ]
+   },
+   "source_payload_sha256": "035bed16d39ff0238d58bdcd6a3fd1e523931a26e922b479c0cc33c771a82ebd"
+  },
+  "mtp.0.main_proj.scale": {
+   "source_meta": {
+    "dtype": "F8_E8M0",
+    "shape": [
+     160,
+     480
+    ],
+    "data_offsets": [
+     146994648,
+     147071448
+    ]
+   },
+   "source_payload_sha256": "36fe6ad9aaf8e44a1861f3044bceea65ad4da8aacc2c1f0aa3919b5a490bbacb"
+  }
+ },
+ "whole_released_tensor_shapes_preserved": true,
+ "fixture_header_is_derived": true
+}

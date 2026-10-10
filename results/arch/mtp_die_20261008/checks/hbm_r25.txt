@@ -1,0 +1,105 @@
+{
+ "instances": 562,
+ "overlaps": 0,
+ "overlap_examples": [],
+ "outside": 0,
+ "outside_examples": [],
+ "reserved_regions": 0,
+ "reserved_overlaps": 0,
+ "reserved_overlap_examples": []
+}
+{"generated_pin_clashes": 0, "examples": [], "k16_clashes": 0, "k16_examples": []}
+{
+ "weight": {
+  "paths": 32,
+  "max_um": 4227.0,
+  "max_stages_430": 14,
+  "max_stages_504": 9,
+  "worst": "weight_sm12",
+  "what": "HBM -> SM weight stream (stream service -> SM d face)"
+ },
+ "xbcast": {
+  "paths": 56,
+  "max_um": 18847.6,
+  "max_stages_430": 50,
+  "max_stages_504": 45,
+  "worst": "xbcast_sm4",
+  "what": "VM root -> SM activation multicast (x face)"
+ },
+ "result": {
+  "paths": 32,
+  "max_um": 17404.7,
+  "max_stages_430": 49,
+  "max_stages_504": 40,
+  "worst": "result_sm8",
+  "what": "SM -> SU result gather"
+ },
+ "control": {
+  "paths": 32,
+  "max_um": 20095.3,
+  "max_stages_430": 53,
+  "max_stages_504": 48,
+  "worst": "control_sm24",
+  "what": "cmdproc / issue -> SM control (start/op, arrive/release)"
+ },
+ "expert_req": {
+  "paths": 4,
+  "max_um": 20746.9,
+  "max_stages_430": 55,
+  "max_stages_504": 52,
+  "worst": "expert_req_NE",
+  "what": "router -> stream service (expert-fetch descriptor)"
+ },
+ "kv": {
+  "paths": 4,
+  "max_um": 8620.0,
+  "max_stages_430": 30,
+  "max_stages_504": 27,
+  "worst": "kv_SW",
+  "what": "stream service -> attention tiles (KV rows)"
+ },
+ "ik": {
+  "paths": 4,
+  "max_um": 10100.1,
+  "max_stages_430": 28,
+  "max_stages_504": 25,
+  "worst": "ik_SW",
+  "what": "stream service -> index (index keys)"
+ },
+ "attn_q": {
+  "paths": 4,
+  "max_um": 12016.1,
+  "max_stages_430": 38,
+  "max_stages_504": 35,
+  "worst": "attn_q_NW",
+  "what": "VM -> attention tiles (query operand, r15 attn_rtl: chain + packet hops to the farthest tile)"
+ },
+ "link": {
+  "paths": 9,
+  "max_um": 7693.7,
+  "max_stages_430": 22,
+  "max_stages_504": 20,
+  "worst": "link_lk_S2",
+  "what": "collective endpoint -> SerDes macro"
+ },
+ "host": {
+  "paths": 1,
+  "max_um": 20196.4,
+  "max_stages_430": 53,
+  "max_stages_504": 50,
+  "worst": "host",
+  "what": "loader -> host link"
+ }
+}
+{"die_mm2": 753.19, "W": 30590.352, "H": 24621.84, "notes": ["hub band 11407.0 um tall; scan quadrant 5529.6 um; W slack 242.8 um"], "power": 468.0}
+{
+ "margin_lint": {
+  "chains": 1236,
+  "reach_um": 504.0,
+  "reach_violations": 0,
+  "far_side_relays": 0,
+  "reach_examples": [],
+  "far_side_examples": [],
+  "verdict": "PASS"
+ }
+}

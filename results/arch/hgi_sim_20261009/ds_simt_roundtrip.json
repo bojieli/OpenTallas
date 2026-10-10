@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.hgi_sim.ds_simt_roundtrip.v1",
+ "status": "pass",
+ "spec": "HGI-1 v0.9 (024fa2af1) SIMT.RUN",
+ "host": "ot-epyc1tb",
+ "wall_s": 173.7,
+ "generated_utc": "2026-10-09T10:51:51Z",
+ "claim_boundary": "the committed reduced-shape DS OTG-1 program (2 dies x 2 SMs, reduced-v2) re-encoded as HGI-1 SIMT.RUN records: identical memories after every launch and identical tokens vs the cmdproc20 LAUNCH list, and golden tokens; functional (gpu_sys reference machine), no RTL cycles",
+ "result": {
+  "model_layers": 40,
+  "entries": {
+   "embed": 0,
+   "layer": 25,
+   "head": 4961
+  },
+  "cmd_words": 43,
+  "encoding": {
+   "rolled": {
+    "records": 6,
+    "image_bytes": 96,
+    "sha256": "aa3d5d0110fbd404dc4bb7ea745b27b5c483b10dd185be088ff0b31059676bef",
+    "roundtrip": true,
+    "pcs_match": true
+   },
+   "unrolled": {
+    "records": 43,
+    "image_bytes": 688,
+    "sha256": "57a5fe4d5d11ed3e7577173d438b330a1d88662ffa2c67d13ca4482cd2f0b6fe",
+    "roundtrip": true,
+    "pcs_match": true
+   }
+  },
+  "positions": [
+   {
+    "position": 0,
+    "input": 0,
+    "hgi_token": 2815,
+    "legacy_token": 2815,
+    "golden_token": 2815,
+    "launches": 42,
+    "memory_identical_after_every_record": true,
+    "first_diffs": [],
+    "verdict": "pass"
+   },
+   {
+    "position": 1,
+    "input": 3563,
+    "hgi_token": 3537,
+    "legacy_token": 3537,
+    "golden_token": 3537,
+    "launches": 42,
+    "memory_identical_after_every_record": true,
+    "first_diffs": [],
+    "verdict": "pass"
+   },
+   {
+    "position": 2,
+    "input": 3745,
+    "hgi_token": 2047,
+    "legacy_token": 2047,
+    "golden_token": 2047,
+    "launches": 42,
+    "memory_identical_after_every_record": true,
+    "first_diffs": [],
+    "verdict": "pass"
+   }
+  ]
+ },
+ "source_sha256": {
+  "hgi_sim/ds_simt.py": "09a20c695ae4984da12b8654dc3f7533e2c1b501104a285c756a2694560500cb",
+  "hgi_sim/records.py": "93974eaa31e62a45973a742ed0f261184381033ce060664e48c367644659b1f6",
+  "gpu_sys/v41_hbm.py": "69798a0034eaeaee91d30907fa4b34ac4848d757abfbe941398af2e80523b153",
+  "gpu_sys/machine.py": "cec01d7ddc0087eaee72e8e20b9fef37f2358584484447a243ecfcb29a363b82",
+  "gpu_sys/isa.py": "0554044c77d6e3da00cd159a46061f1c48c51778d2178871998f3dde4c392677",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "hbm_generic_iface.py": "02d82eeaecf6937d0504382e542de90b809639c6b236ac061b8df96a25d0b826"
+ }
+}

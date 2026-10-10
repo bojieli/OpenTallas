@@ -1,0 +1,65 @@
+{
+ "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs|0|budget_rb2",
+ "at": "2026-10-08T23:00:04-07:00",
+ "available": true,
+ "tt": 131.97,
+ "ff": 2.62,
+ "errors": [],
+ "ioref": {
+  "tt": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 172.7,
+    "min": 161.2,
+    "max": 191.9,
+    "n": 1030,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 172.7,
+    "min": 161.2,
+    "max": 191.9,
+    "n": 1030,
+    "kind": "boundary"
+   }
+  },
+  "ff": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 140.1,
+    "min": 129.6,
+    "max": 158.1,
+    "n": 1030,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 140.1,
+    "min": 129.6,
+    "max": 158.1,
+    "n": 1030,
+    "kind": "boundary"
+   }
+  }
+ },
+ "tt_i2r": 131.97,
+ "tt_out": 146.37,
+ "ff_i2r": 2.62,
+ "ff_out": 37.58,
+ "ff_r2r": 29.86,
+ "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/cl/routed_ioref.a1.budget_rb2.json",
+ "rebudget": "budget_rb2",
+ "schema": "opentallas.s81.service_q.current_boundary.v1",
+ "source_identity": "results/rtl/s81_service_q_qualification_20261008/source_identity.json",
+ "cycles": 3,
+ "cycles_added": 0,
+ "drc": 0,
+ "qualification_scope": "TT setup / FF hold under budget_rb2; SS sensitivity only",
+ "view_sha256": {
+  "dsfd_svcio_q_ff.lib": "b8539e6b4114f65aafd25a0ad52cb35244b477faf97a48aa413e46ae533657e6",
+  "dsfd_svcio_q_tt.lib": "98998cdca9c1318e4257026e0183850fda5c56550dcb72a5f7c4f86a39cc0ebf",
+  "dsfd_svcio_q.lef": "c8fca549586a1f5480b4c236e12cea11628d755a65fe0f6bbf0e54d814474296",
+  "dsfd_svcio_q_ss.lib": "d8ca380550db3e816e871e1330911eb69e615b83806c822cf6dc61b2cda510b3"
+ }
+}

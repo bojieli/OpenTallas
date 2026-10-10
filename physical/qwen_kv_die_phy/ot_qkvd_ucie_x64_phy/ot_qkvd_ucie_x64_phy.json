@@ -1,0 +1,127 @@
+{
+  "assumed": {
+    "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4",
+    "fdi_clock": "1.2 GHz, the local core clock of each die (both dies run off the KV-die PLL; the macro's receiver retimes the forwarded lane clock into it)",
+    "footprint": "777.6 x 777.6 um (0.60 mm2), as ot_qfd_ucie_x64_phy: two 388.8 um module widths of shoreline (bump field + D2D adapter); 777.6 um of die edge on each die",
+    "latency_worst": "9 cycles (7.5 ns): 2x the measured figure, covering a slower PHY / longer reach; a D2D retry (CRC NAK + replay, ~2 x 5 + 2 cycles) is an error event, not the latency budget"
+  },
+  "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+  "derived": {
+    "energy_pj_per_bit": 0.29,
+    "lanes": "one x64 advanced module, 64 TX + 64 RX lanes at 16 GT/s = 1,024 Gb/s each way; the 548-bit flit at 1.2 GHz is 657.6 Gb/s (64 % of raw, ~70 % after the UCIe flit-format overhead)",
+    "latency_best": "< 2 ns (CPMT 2022 spec bound) -> 3 cycles",
+    "latency_typical": "3.5 ns FDI-to-FDI (JSSC 2026) = 4.2 -> 5 cycles at 1.2 GHz"
+  },
+  "fdi": {
+    "clock_ghz": 1.2,
+    "flit_bits": 548,
+    "latency_fdi_cycles_one_way": {
+      "best": 3,
+      "typical": 5,
+      "worst": 9
+    }
+  },
+  "footprint": {
+    "area_mm2": 0.6047,
+    "edge_um": 777.6,
+    "height_um": 777.6,
+    "width_um": 777.6
+  },
+  "generator": "tools/qwen_kv_die/phy_gen.py",
+  "name": "ot_qkvd_ucie_x64_phy",
+  "pins": {
+    "pin_block_x_um": [
+      283.104,
+      494.496
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_pitch_um": 0.192,
+    "signal_pins": 1101
+  },
+  "published": [
+    {
+      "figure": "0.29 pJ/bit, 5.27 Tb/s/mm, 3.5 ns measured FDI-to-FDI latency, 16 Gb/s/pin",
+      "source": "UCIe advanced-package transceiver, 3 nm CoWoS, IEEE JSSC 2026 (doi:10.1109/JSSC.2026.3651425; registry sct:r-ucie-jssc26)"
+    },
+    {
+      "figure": "latency (Tx + Rx) < 2 ns including D2D adapter and PHY; advanced reach <= 2 mm; CRC + retry in the D2D adapter",
+      "source": "D. Das Sharma et al., UCIe, IEEE Trans. CPMT 12(9):1423, 2022, Table I (registry sct:r-ucie-tcpmt)"
+    },
+    {
+      "figure": "0.3-0.6 pJ/b at Adv 16-32 GT/s",
+      "source": "UCIe Consortium, Hot Chips 2023 tutorial (registry sct:r-ucie-hc23)"
+    }
+  ],
+  "schema": "opentallas.qwen-kv-die.link-phy-abstract.v1",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 666.6666666666667,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 158920.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 666.6666666666667,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 158920.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 666.6666666666667,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 158920.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "views": {
+    "ot_qkvd_ucie_x64_phy.lef": "4ad760c3320fb633d8328b33a965f2c6a29fe03e30a72a333ac8965d781b72f0",
+    "ot_qkvd_ucie_x64_phy_bb.v": "00c7d79bb1d9beefab7a38ff677e5f973942d3d3fe7aee0f8c8ecadabfcf5ca0",
+    "ot_qkvd_ucie_x64_phy_ff.lib": "c32388696b93aa202f6bf8f325af91e382b6b7ccf68d81bb27a456ade2d32904",
+    "ot_qkvd_ucie_x64_phy_model.sv": "ba8faac0351ac175dd105592d7ea662791e60557f5765c47cc8012df98d822c7",
+    "ot_qkvd_ucie_x64_phy_ss.lib": "da73aebf931295fef75d67b938f9e0504adbb97f32f16514dae0ff104e851a6c",
+    "ot_qkvd_ucie_x64_phy_tt.lib": "9dcf724f03b47139eeaae45ae183d72586ec8a5aed348ebd2d1c94f5ca5ab047"
+  }
+}

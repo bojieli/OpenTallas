@@ -1,0 +1,200 @@
+{
+  "master": "hfd_cmdproc_s_mtp_native_mx1",
+  "required_endpoints": {
+    "f_host": {
+      "bits": 216,
+      "direction": "input"
+    },
+    "t_host": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "f_provider": {
+      "bits": 179,
+      "direction": "input"
+    },
+    "f_backend": {
+      "bits": 73,
+      "direction": "input"
+    },
+    "t_backend": {
+      "bits": 271,
+      "direction": "output"
+    },
+    "t_mtp": {
+      "bits": 197,
+      "direction": "output"
+    },
+    "f_mtp": {
+      "bits": 517,
+      "direction": "input"
+    },
+    "t_emit": {
+      "bits": 38,
+      "direction": "output"
+    },
+    "t_provider": {
+      "bits": 43,
+      "direction": "output"
+    },
+    "f_emit_host": {
+      "bits": 2,
+      "direction": "input"
+    },
+    "t_emit_host": {
+      "bits": 100,
+      "direction": "output"
+    },
+    "t_abort": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "f_am": {
+      "bits": 18,
+      "direction": "input"
+    },
+    "t_drained": {
+      "bits": 1,
+      "direction": "output"
+    }
+  },
+  "source_sha256": "641a4133a7e641947e2faf398a778df53dccc4c853182aad374c1de1d722305c",
+  "old_closed_LEF_unchanged": true,
+  "north_unchanged": true,
+  "backend_translation_resolved": false,
+  "physical_qualified": false,
+  "reset_contract": "MX1_drained",
+  "control_storage": "plain flops; no epoch, SECDED, mirror, authentication or lease",
+  "f_backend71": "actual operation_backend_mx1.drained_ready AND real SM/service quiescence; not a tied constant",
+  "t_drained": "guard and queue drained_ready, backend71 high, native done81 high, native emit43/cmd82 low; coordinated reset follows",
+  "t_host0": "atomic guard and queue admission, backend command ready/quiescent, no old native emit/done/command; low throughout terminal held-DONE",
+  "e_ready_owner": "finite8 emit_queue_mx1 only; f_provider139 ignored",
+  "f_host_fields": {
+    "valid": [
+      0,
+      1
+    ],
+    "job": [
+      1,
+      32
+    ],
+    "generation": [
+      33,
+      4
+    ],
+    "config": [
+      37,
+      179
+    ]
+  },
+  "f_backend_fields": {
+    "cmd_ready": [
+      0,
+      1
+    ],
+    "completion_valid": [
+      1,
+      1
+    ],
+    "job": [
+      2,
+      32
+    ],
+    "generation": [
+      34,
+      4
+    ],
+    "sequence": [
+      38,
+      32
+    ],
+    "completion_fault": [
+      70,
+      1
+    ],
+    "drained_quiescent": [
+      71,
+      1
+    ],
+    "external_fault": [
+      72,
+      1
+    ]
+  },
+  "t_backend_fields": {
+    "cmd_valid": [
+      0,
+      1
+    ],
+    "command": [
+      1,
+      201
+    ],
+    "job": [
+      202,
+      32
+    ],
+    "generation": [
+      234,
+      4
+    ],
+    "sequence": [
+      238,
+      32
+    ],
+    "completion_ready": [
+      270,
+      1
+    ]
+  },
+  "t_emit_host_fields": {
+    "valid": [
+      0,
+      1
+    ],
+    "token": [
+      1,
+      17
+    ],
+    "generated_index": [
+      18,
+      20
+    ],
+    "job": [
+      38,
+      32
+    ],
+    "generation": [
+      70,
+      4
+    ],
+    "done_valid": [
+      74,
+      1
+    ],
+    "status": [
+      75,
+      3
+    ],
+    "count": [
+      78,
+      21
+    ],
+    "fault": [
+      99,
+      1
+    ]
+  },
+  "f_am_fields": {
+    "valid": [
+      0,
+      1
+    ],
+    "token": [
+      1,
+      17
+    ]
+  },
+  "peer_sources": "f7498a6b1",
+  "peer_actual_composition_evidence": "bf972bc00"
+}

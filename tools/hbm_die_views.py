@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import math
 import re
 import sys
@@ -39,11 +40,11 @@ S = L.S
 Q = L.Q
 VIEWS = 'physical/hbm_accel_die_views'
 KIND_OF = {      # master prefix -> view kind directory
-    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
+    'hfd_attn_tile': 'attn_tile', 'hfd_attn_half_': 'attn_half', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
-    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab'}
+    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab', 'hfd_mtp': 'mtp'}
 
 
 def kind_of(master):
@@ -120,6 +121,15 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    native_root = Path(os.environ.get('OT_NATIVE_PIN_CONTRACT_ROOT', ROOT / 'physical/hbm_accel_die_views/index/native'))
+    native = native_root / name / 'ports.json'
+    if native.exists():
+        return json.loads(native.read_text())
+    alt = os.environ.get('OT_SVC_SPLIT')      # hbm-forks 2026-10-09: route a svc successor split (e.g. split_ps)
+    if alt:
+        f = ROOT / 'physical/hbm_accel_die_views/svc' / alt / name / 'ports.json'
+        if f.exists():
+            return dict(json.loads(f.read_text()), _alt_split=alt)
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None
@@ -127,6 +137,14 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
+    if d is not None and d.get('schema') == 'opentallas.hbm_native_indexer_ports.v1':
+        # The same source-pinned native contract drives the first full-shape
+        # hardening and the opt-in R25I placement; never synthesize fake peers.
+        return d
+    if d is not None and d.get('_alt_split'):
+        # hbm-forks: an OT_SVC_SPLIT successor split (e.g. split_ps) is its own pin plan (wider ports than the legacy
+        # split the generator places): the committed record IS the expectation
+        return {k: v for k, v in d.items() if k != '_alt_split'}
     m, pw, M, real = model()
     if d is not None and name not in M:     # a split the generator does not place yet
         return d
@@ -136,8 +154,17 @@ def master_record(name):
     pdir, narrow = port_dirs()
     insts = [it for it in m['insts'] if it.master == name]
     ports = {}
+    # hgi-takeover 2026-10-09: a fixed 'rects' plan may name its pins after a closed view's raw ports (hfd_mtp: group
+    # bit i -> the controller pin, e.g. t_cmdproc bit 0 = cmd_v): map such names back to (port, bit)
+    alias = {}
+    for p_, sp_ in mst.ports.items():
+        if sp_ and sp_[0] == 'rects':
+            for i_, x_ in enumerate(sp_[1]):
+                if isinstance(x_, (list, tuple)) and isinstance(x_[0], str):
+                    alias[x_[0]] = (p_, i_)
     for nm, layer, r in rects:
-        base, idx = re.match(r'^(.*)\[(\d+)\]$', nm).groups()
+        mm = re.match(r'^(.*)\[(\d+)\]$', nm)
+        base, idx = alias[nm] if nm in alias else mm.groups()
         p = ports.setdefault(base, dict(bits=0, layer=layer, pins=[]))
         p['bits'] = max(p['bits'], int(idx) + 1)
         p['pins'].append([nm, layer] + [round(v, 4) for v in r])
@@ -162,11 +189,23 @@ def master_record(name):
                                round=H.FINAL_ROUND))
 
 
+def native_scalar_pin_name(rec, port, name):
+    """Exact native-qend scalar ABI; keep its historical physical record intact."""
+    if (rec.get('schema') == 'opentallas.hbm_native_indexer_ports.v1'
+            and rec['master'] == 'hfd_idx_sel_native_qend'
+            and rec['ports'][port]['bits'] == 1):
+        if name != f'{port}[0]':
+            raise ValueError(f'unexpected native scalar pin: {name}')
+        return port
+    return name
+
+
 def io_tcl(rec):
     L_ = [f"# {rec['master']}: every die pin at the generator's position (tools/hbm_die_views.py ports, "
           f"{rec['generator']['round']})"]
     for p in sorted(rec['ports']):
         for nm, layer, x0, y0, x1, y1 in rec['ports'][p]['pins']:
+            nm = native_scalar_pin_name(rec, p, nm)
             L_.append(f'place_pin -pin_name {{{nm}}} -layer {layer} -location {{{(x0 + x1) / 2:.4f} {(y0 + y1) / 2:.4f}}} '
                       f'-pin_size {{{x1 - x0:.4f} {y1 - y0:.4f}}}')
     return '\n'.join(L_) + '\n'
@@ -178,7 +217,12 @@ def svh(rec):
 
 
 def cmd_ports(a):
-    m, pw, M, real = model()
+    native_only = a.master and all((derived_record(n) or {}).get('schema') ==
+                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+    if native_only:
+        M = {}
+    else:
+        m, pw, M, real = model()
     names = a.master or sorted(n for n in M if n.startswith('hfd_') and n != 'hfd_sm' or n == 'hfd_sm')
     out = Path(a.out)
     summary = {}
@@ -260,6 +304,7 @@ def check_lef(master, lef, tol=0.0125, allow_extra=()):
     gen = {}
     for p, v in rec['ports'].items():
         for nm, layer, x0, y0, x1, y1 in v['pins']:
+            nm = native_scalar_pin_name(rec, p, nm)
             gen[nm] = (p, layer, (x0 + x1) / 2, (y0 + y1) / 2)
     missing = sorted(set(gen) - set(r['pins']))
     extra = sorted(set(r['pins']) - set(gen))
@@ -434,10 +479,15 @@ def cmd_index(a):
 
 
 # ------------------------------------------------------------------------------------------------ die with real views
-def real_views(index_path):
+def real_views(index_path, active_masters=None):
     idx = json.loads(Path(index_path).read_text())
     out = {}
     for n, v in idx['masters'].items():
+        # Candidate dies can replace a master by hardened halves while retaining
+        # the adopted view index.  Only installed candidate masters have a LEF
+        # to replace; an absent parent view must never stand in for its halves.
+        if active_masters is not None and n not in active_masters:
+            continue
         if v['status'] in ('closed', 'closed-below-margin', 'interim-not-closed', 'reservation') and v.get('lef'):
             out[n] = ROOT / v['dir'] / v['lef']
     return out
@@ -521,7 +571,8 @@ def sta_tcl(m, work, index):
     tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
     and checked inside the station views)."""
     idx = json.loads(Path(index).read_text())['masters']
-    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
+    active_masters = {it.master for it in m['insts']}
+    libs = {n: v for n, v in idx.items() if n in active_masters and v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
                                                                             'interim-not-closed')}
     run = (work / 'run.tcl').read_text()
     head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
@@ -728,7 +779,8 @@ def bundle_real_pins(macro_text, view, k):
 
 def cmd_die(a):
     m, pw, M, real = model()
-    views = real_views(a.index)
+    active_masters = {it.master for it in m['insts']}
+    views = real_views(a.index, active_masters)
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     gen_text = {}
@@ -835,6 +887,9 @@ def cmd_die(a):
             (work / 'run.tcl').write_text(t_)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
+    man['indexed_views_not_instantiated'] = sorted(set(real_views(a.index)) - active_masters)
+    man['generated_masters_without_real_view'] = sorted(n for n in active_masters
+                                                       if n.startswith('hfd_') and n not in views)
     if a.case in ('real', 'sta') and pads:
         man['mirror_pads'] = pads
     if a.case == 'grt':

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_bf_native",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:bf_closure",
+      "recorded_at": "2026-10-09T07:16:31.571659+00:00",
+      "description": "Full-rate BF QZE and CG0 successors: route I/O uses own-variant measured TT clock insertion; FF hold library/boundary model and 60ps setup/25ps hold uncertainty retained.",
+      "source": {
+        "commit": "e4272b562e347dae3ff9662519737fdd17c81c31",
+        "paths": [
+          "rtl/s81/ot_s81_bf_native.sv",
+          "physical/s81_native_bf/margin/route_var.sh",
+          "physical/s81_native_bf/margin/signoff_ref.sdc"
+        ]
+      },
+      "implementation": {
+        "status": "implemented; existing exact-gated source reused; no RTL changes",
+        "evidence": [
+          "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/recovery.json"
+        ]
+      },
+      "model": {
+        "status": "0 added cycles and area relative to prior variants; CG0 keeps previously priced +162 W/layer die idle clock cost. Final physical costs pending.",
+        "evidence": [
+          "tools/closure_loop/jobs/bfk_recut_qze_ttref_hm0_e4272b562.json",
+          "tools/closure_loop/jobs/bfk_recut_cg0_ttref_hm0_6e8f0b698.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS: unchanged QZE and CG0 full element transaction gates",
+          "evidence": [
+            "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/qze/terminal.json",
+            "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/cg0/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS: QZE four mutants detected; CG0 two mutants detected",
+          "evidence": [
+            "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/qze/terminal.json",
+            "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/cg0/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending own-variant CTS-only TT calibration and admitted full-rate routes; TT setup>=0, FF hold>=0, DRC0; SS sensitivity separately reported",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/bfk_recut_qze_ttref_hm0_e4272b562.json",
+          "tools/closure_loop/jobs/bfk_recut_cg0_ttref_hm0_6e8f0b698.json"
+        ]
+      },
+      "dependencies": [
+        "sender/receiver die boundary and clock-distribution qualification",
+        "terminal physical qualification; original failed verdicts remain historical"
+      ],
+      "integration": {
+        "status": "pending hardened-view integration and physical gate; standalone full element exactness proved",
+        "evidence": [
+          "results/rtl/s81_bf_icg_20261008/exact_gate_recovered/recovery.json"
+        ]
+      }
+    }
+  ]
+}

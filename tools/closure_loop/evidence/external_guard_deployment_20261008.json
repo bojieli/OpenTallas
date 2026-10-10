@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-08T23:53:51.909990-07:00",
+  "host": "ot-epyc4",
+  "action": "Bind actual host admission guard to same verified long-lived indexer/NK4 remaining peak claims as closure loop. Retained original admit_core.py on host. No memory/process caps or CPU gate introduced.",
+  "remaining_peak_gib_measured": 376.8605041503906,
+  "remote_tests": "EPYC2 admitted two external-claim identity/remaining-peak fixtures PASS; EPYC4 installed modules compile.",
+  "sha256_records": [
+    "a9474aaab9a4ea1f86b56ba9832e88cf25dfa8e5c8e130e741d38fe2e007557f  /srv/opentallas-scratch/admit_core.py",
+    "7a5f7b49d25bca9a61e1c78c7964b3ad63e67a6ec9dea4a58d82a75309176e4e  /srv/opentallas-scratch/admit.external_jobs.json",
+    "e4b620fa2f3ee9a61f1f1e0d8b2562d4700082999618e7bbf679a8a3533e067a  /srv/opentallas-scratch/external_reservations.py"
+  ]
+}

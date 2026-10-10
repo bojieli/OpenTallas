@@ -1,0 +1,47 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0366] port 'rst_n' not found.
+[WARNING STA-0471] no valid objects specified for -from.
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+OT_IOREF ot_lb_v_core_clk core_clk mean 648.3 min 630.1 max 700.1 n 7713 boundary
+OT_FH_REAL_BOUNDARY core_clk L 648.2500829184512 (630.093994..700.088501), retained setup 250 hold sender 50; 7713 boundary sinks
+OT_WS_MAX -5.333633534831961e-11 OT_WS_MIN 5.4821702732965605e-11
+Clock core_clk
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+ 610.17         network latency u_ep/g_distributed_check.u_guard.g_request_bank[49].u_bank/g_pipe.d1[30]$_DFF_P_/CLK
+         700.09 network latency u_ep/g_distributed_check.rep1[1119]$_DFF_P_/CLK
+---------------
+ 610.17  700.09 latency
+          89.92 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+ 704.54         network latency u_ep/g_distributed_check.u_guard.g_request_bank[49].u_bank/g_pipe.d1[30]$_DFF_P_/CLK
+         793.42 network latency u_ep/g_distributed_check.rep1[1119]$_DFF_P_/CLK
+---------------
+ 704.54  793.42 latency
+          88.88 skew
+
+
+Clock ot_lb_v_core_clk
+
+OT_EXPORT_DONE

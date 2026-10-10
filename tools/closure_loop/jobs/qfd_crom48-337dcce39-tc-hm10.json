@@ -1,0 +1,81 @@
+{
+ "name": "qfd_crom48-337dcce39-tc-hm10",
+ "block": "qfd_crom48",
+ "owner": "Codex:qwen-system-crom-control",
+ "purpose": "Physical-only CROM shared-face pin distribution:64lane windows, one89-bit request/response bundle per12.15um; same48macro grid, realcapturepin placement.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/qwen-crom-ctl-physical-20261009",
+  "commit": "337dcce39",
+  "extra_paths": [
+   "results/rtl/qwen_system_20261008/crom",
+   "results/rtl/qwen_system_20261009/physical"
+  ]
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_crom48.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_crom48 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_crom48 --post-sdc physical/qwen_die_masters/signoff/qfd_crom48.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_crom48 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_crom48.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "New master, full-shape top-down budget committed results/rtl/qwen_system_20261009/physical/crom48_budget.json; existing Qwen propagated die IO budgets used unchanged."
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_system_20261009/routes/qfd_crom48-337dcce39-tc-hm10"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "ZeroRTLcycles; exactlogicunchanged. Failure4a4c20.8bits/um100um preserved. All5696pins coveredexactlyonce; twoverticalpinlayersM5/M7. SUrepackmustmatchN/Ssharedface windows.",
+ "merge_target": null,
+ "no_bench_reason": "Pure physical implementation and SYNTHESIS-only omission of simulation INSTANCE annotation; token-identical simulation source verified in results/rtl/qwen_system_20261009/physical/crom48_preflight.json. Exact+mutant committed results/rtl/qwen_system_20261008/crom/bench_summary.log:15980 vectors,1011804 lane reads,0 mismatches;mutant15820 mismatches. Candidate simulation RTL unchanged from91e710eae."
+}

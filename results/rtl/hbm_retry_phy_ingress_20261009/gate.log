@@ -1,0 +1,4 @@
+PASS full545 protected ingress1300records, SRAMbankwrap,8reserved response slots, consumerstalls
+PASS actual no-ready pulse full256 capacity, excessoffer faults without overwrite
+PASS_ALL
+rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_phy_ingress.sv:28: $finish called at 1581691000 (1fs)

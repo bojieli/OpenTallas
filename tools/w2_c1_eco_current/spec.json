@@ -1,0 +1,78 @@
+{
+  "kind": "approved_existing_odb_hold_eco_intake",
+  "approval": "REVIEW_20261009 C1; root approved routine submission after dedupe",
+  "source_commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+  "helper_commit": "729bc9a09c372bdb4dafd8e38840be466325fbc8",
+  "helper_sha256": {
+    "tools/closure_loop/hold_eco.sh": "df0c248e673c46d78b3fb014770aa67fbb2e2647cb8c87e5aa462a0321fc3cea",
+    "tools/closure_loop/hold_eco.tcl": "6d2026113acc0aa0459bed78412e1a0e4b76a223e73f063039d07fa3dee1f17b",
+    "tools/closure_loop/hold_eco_corner.tcl": "549caa13cf4be6b08be160d72de3df1043ca582a94f722d2e9390963fd72dead",
+    "tools/closure_loop/hold_eco_window.tcl": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "tools/closure_loop/hold_eco_sdc.py": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "tools/closure_loop/eco_recovery.py": "e53c1b932e3c8b57d0056a205feb95eb7f47e041af55773673cdee38e085dbdf",
+    "tools/w18/corner_sta.py": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+    "tools/closure_loop/tt_resta.sh": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b"
+  },
+  "host": "ot-epyc4",
+  "original_run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc",
+  "route_base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base",
+  "odb_sha256": "e05d7c501b59f71fb4724d41bd93d8ed4d577c741720312cacc6b7ea7e5cafde",
+  "spef_sha256": "5fcc3924103802c6eb0a0d07eb29e191680994beceb97d310472cb7f7baa906c",
+  "reference_sdc": "/srv/opentallas-scratch2/scratch/codex/w2-baseline-fec1faadd-tt25-v16-r2/actual_tt_ref_25ps.sdc",
+  "sdc_sha256": "0b392970af0403ca530a88108ec6028ed2fd0f271ae597b7767ec7979d2f8f4f",
+  "reference": {
+    "tt_setup_ps": 48.49,
+    "ff_hold_ps": -5.94,
+    "ff_recovery_ps": 144.86,
+    "ff_removal_ps": 4.74,
+    "clock_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "env": {
+    "SETUP_LIB": "TT",
+    "ACC_SS": "0",
+    "ACC_FF": "0",
+    "ECO_RB_DB": "6_final.odb",
+    "SDC_NAME": "6_final.sdc",
+    "ECO_SESSION": "mm",
+    "THREADS": "8",
+    "HM": "0",
+    "SM": "40",
+    "FILT": "40",
+    "ALLOW": "12",
+    "PASSES": "2",
+    "MAXL": "M7"
+  },
+  "seed_contract": "Create NEW signoff seed directory with immutable actual TT25 SDC named6_final.sdc and actual matching SPEF; never overwrite original run or history. Source snapshot current helper commit separate from fixed RTL source. No RTL/synthesis.",
+  "admission": {
+    "measured_same_design_drt_peak_kib": 28292340,
+    "proposed_ram_reservation_gib": 32,
+    "is_process_limit": false,
+    "requires_current_fleet_guard": true,
+    "repair_peak_unknown": true,
+    "threads": 8
+  },
+  "gate_evidence": [
+    "original_exact_terminal.json",
+    "original_s3_mutant.run.log",
+    "live_readiness.json"
+  ],
+  "acceptance": {
+    "tt_setup_min_ps": 0,
+    "ff_hold_min_ps": 0,
+    "drc": 0,
+    "ss": "sensitivity only",
+    "reset": "retain recovery/removal reports"
+  },
+  "submission": "Await fleet current helper verification, family dedupe and exclusive watched submission; do not launch competing manual route.",
+  "preserve": [
+    "original UNKNOWN/FF50 failed history",
+    "candidate19 running S2 compiler",
+    "stopped route waiter2411731; do not resume"
+  ],
+  "not_adoption": true,
+  "exact_terminal_sha256": "c072f2c38dd4bd75a4fd41a3b3b779af26d36b62f630d408a2aff4aaf0a48197",
+  "mutant_run_sha256": "417efea92f557c7e709b2907e38f70ed433b546879e2390c5fd1d265bc4da8b4",
+  "mutant_tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f"
+}

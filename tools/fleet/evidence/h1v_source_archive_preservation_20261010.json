@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.source_archive_preserve.v1",
+  "host": "ot-epyc3",
+  "destination": "/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v",
+  "measured_capacity_before": {
+    "total": 3149225934848,
+    "used": 667744669696,
+    "free": 2321432899584
+  },
+  "files": [
+    {
+      "original": "/tmp/h1v/fb_hbm_stn_r38_88136dcd2_bud2.tar",
+      "bytes": 8725585920,
+      "sha256": "cc96b97a6b368aa962f67b69255bdae8b1c7a13aea3710d2cce7ff02216af7b8",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_stn_r38_88136dcd2_bud2.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_stn_r38_88136dcd2_bud2.tar /tmp/h1v/fb_hbm_stn_r38_88136dcd2_bud2.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar",
+      "bytes": 8559001600,
+      "sha256": "dcd587e18e6846affa5982f386fad0be39e8d97d6890243b97a3edbd3a9efe7e",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar /tmp/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar",
+      "bytes": 8725637120,
+      "sha256": "c7ea95832494810c94d1d816900108454c4b4921ef5390302f51ec06c0182aeb",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar /tmp/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar",
+      "bytes": 9440624640,
+      "sha256": "c64851ad4fbb3359cf82c5e79070b1ce5d0b0ea638f5addf186f4245a0794f55",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar /tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar",
+      "bytes": 8725637120,
+      "sha256": "c7ea95832494810c94d1d816900108454c4b4921ef5390302f51ec06c0182aeb",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar /tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar",
+      "bytes": 8559001600,
+      "sha256": "dcd587e18e6846affa5982f386fad0be39e8d97d6890243b97a3edbd3a9efe7e",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar /tmp/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar"
+    },
+    {
+      "original": "/tmp/h1v/fb_wcol128-m6-01a487c86.tar",
+      "bytes": 8449781760,
+      "sha256": "042f7bd987d9303e89192a0ca923dd5d1e4265ea31f5190d401ff0340c736701",
+      "new_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_wcol128-m6-01a487c86.tar",
+      "verified": true,
+      "local_removed": true,
+      "restore_command": "rsync -a -- ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_wcol128-m6-01a487c86.tar /tmp/h1v/fb_wcol128-m6-01a487c86.tar"
+    }
+  ],
+  "completed_utc": "2026-10-10T12:36:05.779668+00:00",
+  "source_pins": {
+    "preserve_helper": "052b6ec94",
+    "compressed_prestage_helper": "c712062d8"
+  },
+  "reclaimed_bytes": 61185269760,
+  "compressed_prestage": {
+    "completed_utc": "2026-10-10T12:28:13Z",
+    "files": [
+      {
+        "original": "/tmp/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar",
+        "bytes": 8559001600,
+        "original_sha256": "dcd587e18e6846affa5982f386fad0be39e8d97d6890243b97a3edbd3a9efe7e",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar.gz' > /tmp/h1v/fb_hbm_svc_SE_s6_41d574827_bud.tar"
+      },
+      {
+        "original": "/tmp/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar",
+        "bytes": 8725637120,
+        "original_sha256": "c7ea95832494810c94d1d816900108454c4b4921ef5390302f51ec06c0182aeb",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar.gz' > /tmp/h1v/fb_hbm_svc_SE_s7_9ffaeb8e2_r23.tar"
+      },
+      {
+        "original": "/tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar",
+        "bytes": 9440624640,
+        "original_sha256": "c64851ad4fbb3359cf82c5e79070b1ce5d0b0ea638f5addf186f4245a0794f55",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar.gz' > /tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23-lbc.tar"
+      },
+      {
+        "original": "/tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar",
+        "bytes": 8725637120,
+        "original_sha256": "c7ea95832494810c94d1d816900108454c4b4921ef5390302f51ec06c0182aeb",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar.gz' > /tmp/h1v/fb_hbm_svc_SE_s8_9ffaeb8e2_r23.tar"
+      },
+      {
+        "original": "/tmp/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar",
+        "bytes": 8559001600,
+        "original_sha256": "dcd587e18e6846affa5982f386fad0be39e8d97d6890243b97a3edbd3a9efe7e",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar.gz' > /tmp/h1v/fb_hbm_svc_SW_s4_41d574827_bud.tar"
+      },
+      {
+        "original": "/tmp/h1v/fb_wcol128-m6-01a487c86.tar",
+        "bytes": 8449781760,
+        "original_sha256": "042f7bd987d9303e89192a0ca923dd5d1e4265ea31f5190d401ff0340c736701",
+        "compressed_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_wcol128-m6-01a487c86.tar.gz",
+        "ordinary_tar_home": "ot-epyc3:/srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_wcol128-m6-01a487c86.tar",
+        "remote_decompressed_verified": true,
+        "local_deletion_owner": "preserve_h1v.py (existing unchanged verifier/remover)",
+        "restore_command": "ssh ot-epyc3 'gzip -dc -- /srv/opentallas-scratch/codex-takeover-20261010/local-archive-preserve/h1v/fb_wcol128-m6-01a487c86.tar.gz' > /tmp/h1v/fb_wcol128-m6-01a487c86.tar"
+      }
+    ]
+  },
+  "local_disk_after": "Filesystem         1B-blocks          Used    Available Use% Mounted on\n/dev/md0p1     4028851920896 3569857564672 254263353344  94% /"
+}

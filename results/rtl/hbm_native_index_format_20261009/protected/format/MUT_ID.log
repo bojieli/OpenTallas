@@ -1,0 +1,5 @@
+MISMATCH flit=5
+FORMAT_DONE packets=863 flits=118 cycles=2330 errors=1
+[1949000000] %Fatal: tb.sv:31: Assertion failed in tb: EXACT_MISMATCH
+%Error: /srv/opentallas-scratch/codex/hbm-native-index-protected-final/format/tb.sv:31: Verilog $stop
+Aborting...

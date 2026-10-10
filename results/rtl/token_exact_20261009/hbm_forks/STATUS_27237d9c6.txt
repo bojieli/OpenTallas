@@ -1,0 +1,7 @@
+cmdproc OT_HGI_MUT_CRC rc=1 HGI_CMDPROC FAIL 16
+cmdproc OT_HGI_MUT_SETTLE rc=1 HGI_CMDPROC FAIL 4
+cmdproc none rc=0 HGI_CMDPROC PASS cf0_cases=20 cf1_jobs=300 cf1_cycles=8320
+cmdproc OT_HGI_MUT_RANGE rc=1 HGI_CMDPROC FAIL 12
+seq none rc=0 HGI_SEQ PASS cases=36 dispatches=2580
+seq OT_HGI_SEQ_MUT_LOOP rc=1 HGI_SEQ FAIL 677
+seq OT_HGI_SEQ_MUT_WAIT rc=1 HGI_SEQ FAIL 8

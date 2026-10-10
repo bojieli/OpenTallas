@@ -1,0 +1,21 @@
+{
+  "exactness_gate": "PASS",
+  "host": "ot-epyc2",
+  "qualification": "MINIMUM_FULL545_PROTECTED_INGRESS",
+  "source_sha256": {
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_phy_ingress.sv": "060c191521f3a0edb04fa68970b16ef2ac343173eda29ac6db34c8337bd70b65",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_phy_ingress.sv": "2402efaf3a66259d5de18609b5dfb7055e6bd65c1fd0d4503056c928b5f018a9",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397"
+  },
+  "capacity": 256,
+  "real_sram_macros": 8,
+  "response_slots": 8,
+  "payload_bits": 545,
+  "physical_qualified": false,
+  "die_integrated": false,
+  "tests": [
+    "1300 records, bank wrap and stalls",
+    "full no-ready 256 pulse debt",
+    "257th offer faults without overwrite"
+  ]
+}

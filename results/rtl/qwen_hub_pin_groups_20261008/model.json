@@ -1,0 +1,49 @@
+{
+  "scope": "layout-only pin grouping for full-shape Qwen hub ps and psp",
+  "previous_failure_jobs": [
+    "qfd_hub_ps-be5b56d78-tc-pin2-hm10-d2140",
+    "qfd_hub_psp-be5b56d78-tc-pin2-hm10-d2140"
+  ],
+  "failure": "PPL-0107: large group exceeds individual layer interval capacity",
+  "candidate_group_max": [
+    16,
+    32
+  ],
+  "RTL_change": false,
+  "cycles_added": 0,
+  "area_change_um2": 0,
+  "die_outline_um": [
+    412.536,
+    412.536
+  ],
+  "pin_regions": "unchanged original face intervals",
+  "pin_layers": {
+    "horizontal": [
+      "M4",
+      "M6"
+    ],
+    "vertical": [
+      "M5",
+      "M7"
+    ]
+  },
+  "constraints": "unchanged TT setup/FF hold; SS setup sensitivity; 833.333 ps signoff; 60ps setup/25ps hold uncertainty",
+  "model_before_build": {
+    "mechanism": "split physical groups only; no register, port, wire boundary, latency or replica change",
+    "composed_latency_delta_cycles": 0,
+    "compute_and_communication_intensity_change": 0,
+    "memory_port_bandwidth_change": 0,
+    "boundary_bits_per_cycle_change": 0,
+    "replica_mux_fanout_change": 0,
+    "slot_fit": "unchanged frame"
+  },
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_hub.sv": "0b9f1af77a164d09d6c1d97170e363674b3df7256103778d9e4ec313ba0873b0",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/qwen_die_masters/cfg/qfd_hub_ps.env": "483fea4fb059fc696294c3caacdde2c71025dab90c394bc172919bea45050ef5",
+    "physical/qwen_die_masters/cfg/qfd_hub_psp.env": "8cf1b369f2dd63691555265488502ce705f5d86585a39af94ede83d193c3e7b3"
+  },
+  "default_behavior_check": "default Tcl constraints remain original byte-for-byte; exhaustive port-to-region check retained"
+}

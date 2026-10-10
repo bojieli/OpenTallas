@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.qwen-r25-gpu-availability.v1",
+  "observed_utc": "2026-10-09T06:00:17.189672+00:00",
+  "source_commit": "9cef95a868b1ba8e869d7d2299cf643f9d9cf668",
+  "verdict": "BLOCKED_GPU_UNAVAILABLE",
+  "scope": "actual single CUDA allocation, not GPU identification",
+  "torch_probe": {
+    "exit_code": 1,
+    "stdout": "torch 2.10.0+cu128 cuda_available False device_count 1\n",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/home/ubuntu/.local/lib/python3.10/site-packages/torch/cuda/__init__.py\", line 424, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No CUDA GPUs are available\n"
+  },
+  "nvidia_smi": {
+    "exit_code": 0,
+    "stdout": "Thu Oct  8 23:00:17 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.91.07              Driver Version: 595.91.07      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:01:00.0 N/A |                  N/A |\n|ERR!   34C    P5            N/A  /  N/A  |       1MiB /  97887MiB |     N/A      Default |\n|                                         |                        |                 ERR! |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+    "stderr": ""
+  },
+  "quality_failure_log_sha256": "28370650f0cdb97e5db824b50e6db9cd3621a89e992bcc5eac446e71873bc139",
+  "quality_failure_log": "Traceback (most recent call last):\n  File \"/home/ubuntu/qwen-r25-runs/src_9cef95a86/tools/qwen3_deployment_quality.py\", line 1528, in <module>\n    main()\n  File \"/home/ubuntu/qwen-r25-runs/src_9cef95a86/tools/qwen3_deployment_quality.py\", line 1474, in main\n    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=wsrc,\n  File \"/home/ubuntu/qwen-r25-runs/src_9cef95a86/tools/qwen3_deployment_quality.py\", line 665, in __init__\n    sd = load_state(path, self.device if self.wfile is None else \"cpu\")\n  File \"/home/ubuntu/qwen-r25-runs/src_9cef95a86/tools/qwen3_deployment_quality.py\", line 623, in load_state\n    sd[k] = h.get_tensor(k).to(BF16)\nRuntimeError: No CUDA GPUs are available\n",
+  "driver_reset_cause": "not re-established: kernel log access denied; original Xid175/154 report remains separate historical evidence",
+  "next_action": "resume pinned quality command when CUDA allocation succeeds; retain failed run"
+}

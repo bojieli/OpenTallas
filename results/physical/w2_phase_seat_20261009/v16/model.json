@@ -1,0 +1,42 @@
+{
+  "schema": "w2_phase_seat_v16",
+  "no": 2,
+  "frame_bits": 2328,
+  "bank_words": 52,
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": "unchanged frame/receipt metadata",
+  "memory_ports_bytes_per_cycle": 0,
+  "replica_count": 6,
+  "input_bits_per_cycle": 2858,
+  "output_bits_per_cycle": 4921,
+  "routing_tracks_required": 4921,
+  "routing_channel_capacity": "existing station pin reservation; physical lint required",
+  "phase_copies_flops": 208,
+  "local_phase_fault": "fanout replicas only; new per-copy equality check removed per binding V16; original enable checks unchanged",
+  "hold_seat": "eight real kept inverters on payload data pipeline connections and bank reset copies; logically identity; no falsepaths",
+  "delay_inverters": 72256,
+  "assumed_inverter_um2": 0.04374,
+  "added_area_um2_estimate": 3190.80384,
+  "core_um": [
+    480,
+    200
+  ],
+  "baseline_core_um": [
+    440,
+    160
+  ],
+  "core_area_delta_percent": 36.363636,
+  "slot_fit": "incremental estimate; fullshape mapped inventory and <=60percent physical lint gate",
+  "fanout": "local phase decode supplies each word; four nextphase nets fan out only to FFs; no new copy-check net",
+  "mux_demux_cost": "unchanged data/control muxing",
+  "latency_cycles_added": 0,
+  "assumed_hold_delay_ps_range": [
+    48,
+    120
+  ],
+  "reset_assertion_added_delay": "8 inverter propagation delays; recovery/removal measured at actual corners",
+  "adoption": false,
+  "physical_qualified": false,
+  "exact_gate": "full bank+quarter+crossbank veto and original fault negatives; copy-replica upset is not a new detection requirement"
+}

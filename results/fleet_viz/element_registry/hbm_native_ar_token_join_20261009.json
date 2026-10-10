@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_native_ar_token_join",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Real two16-SM CP halves joined to native on-die AR token loop, TOKEN18/TOKEN17 host records and checked completion identity",
+      "source": {
+        "commit": "92238de81",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv",
+          "rtl/hbm_accel/control/ot_hbm_token_loop.sv",
+          "tools/hbm_native_token_join_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv"
+        ]
+      },
+      "model": {
+        "status": "sized, physical slot and channel budget pending",
+        "evidence": [
+          "tools/hbm_native_token_join_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS runtime and finiteFIFO only, synthetic SM outputs",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/native_ar_r2_verdict.json",
+            "results/rtl/hbm_token_fifo_reservation_20261009/fault_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS wronghalf token and disconnectedfault rejected",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/native_ar_r2_verdict.json",
+            "results/rtl/hbm_token_fifo_reservation_20261009/fault_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending native CP/token-loop slot and boundary budget",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qwen native SU dispatcher binding",
+        "DeepSeek native full layer engine binding",
+        "actual two-half final argmax token broadcast",
+        "protected mutable command storage"
+      ],
+      "integration": {
+        "status": "real CP/token-loop connected; actual compute and MTP not yet connected",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_ar_token_join.sv"
+        ]
+      }
+    }
+  ]
+}

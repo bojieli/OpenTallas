@@ -124,6 +124,9 @@ CANDIDATES = [
 
 # CLAUDE s81-blocks 2026-10-07 structural closure candidates (routes in the closure loop; adopt on CLOSED)
 CANDIDATES += [
+    ("coll_core_oqpipe", "Existing collective core OQPIPE1 (3abd84e2c): +1 final output visibility edge per collective; "
+                         "pipeline II unchanged. The p4 footprint adds zero cycles; wider die boundary wires need separate composition. "
+                         "Candidate only, not physical adoption", [(k, 1, 0) for k in AR_ + AG_]),
     ("selector_pipe2", "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, "
                        "out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench "
                        "tail mean 153 vs 127 (+26 a segment over the +20 already priced)",

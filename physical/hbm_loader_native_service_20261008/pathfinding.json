@@ -1,0 +1,21 @@
+{
+ "scope": "single physical-PC native lease primitive; pathfinding only, actual service context budget absent",
+ "top": "ot_hbm_loader_pc_service_lease",
+ "parameters": {"ENABLE": 1},
+ "streaming_period_ns": 0.833333333,
+ "setup_uncertainty_ns": 0.060,
+ "hold_uncertainty_ns": 0.025,
+ "route_corner": "TC",
+ "hold_corners": ["TC", "BC"],
+ "outline_um": [100,100],
+ "target_utilization": 0.55,
+ "port_budget": "generic 20-percent IO delay pathfinding; never final service qualification",
+ "model": "tools/hbm_loader_native_service_model.py:production_read_lease",
+ "model_FF_per_PC": 316,
+ "physical_replicas_per_stack": 32,
+ "candidate_fits": "316 * unified DFF_UM2 0.2916 = 92.1456um2 before combinational/CTS/pin cost; 10000um2 frame is a conservative pathfinding slot, actual service placement pending",
+ "native_latency_cycles": {"request_capture":1,"reply_capture":1},
+ "normal_latency_cycles_added": 0,
+ "adopted": false,
+ "final_context_qualified": false
+}

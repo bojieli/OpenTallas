@@ -1,0 +1,37 @@
+EHASH_CLOCK_PERIOD_PS 833.333
+EHASH_CYCLES layer=0 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=1 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=1 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=2 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=2 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=1 slot=0 command_to_ready=42 first_row_wait=17
+EHASH_CYCLES layer=0 slot=0 command_to_ready=42 first_row_wait=17
+FATAL: tb_hbm_idx_ehash_ds_verified.sv:62: EHASH B mismatch was not rejected
+       Time: 368333186 Scope: tb_hbm_idx_ehash_ds
+Command exited with non-zero status 1
+	Command being timed: "vvp gate.verified.4"
+	User time (seconds): 5.30
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.32
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 12224
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2037
+	Voluntary context switches: 1
+	Involuntary context switches: 6
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

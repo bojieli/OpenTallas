@@ -1,0 +1,48 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "actual",
+      "verdict": "PASS",
+      "returncode": 0
+    },
+    {
+      "name": "job_pin_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    },
+    {
+      "name": "constant_ready_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    },
+    {
+      "name": "held_done_drain_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    },
+    {
+      "name": "AM_token16_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    }
+  ],
+  "native_CP_to_MTP_bits": 197,
+  "source_sha256": {
+    "physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv": "1c84be912e2e7b216286a0020ce191df042ce68998079585edd84895e66c3604",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv": "2e50a3e953abc9b1a669264f5c40cb99e30e327e01f1341f087009427292dfb6",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv": "184590a5f9a6038ca9ba02cf387dde23f681a6aafed7c8a91847589981eed5ca",
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv": "cdb3620d0c49c2e4879c4e3dff52a0c33485fbf4a14367406795867844a9be18",
+    "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv": "4369463ede4f68713baabd03cc9f61d154b2396095bc6a6856f9cf419787e7f6",
+    "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+    "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v": "76226bc1260ea5311e0c9ca2626f1f6b1ce1d5512753cc77b07b550253407664",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_mx1.sv": "b8cca732161fb47e599f099db73a6115c84cff67f9a546f319d518118687e1b1"
+  },
+  "reset_contract": "MX1_drained",
+  "actual_facade_RTL": true,
+  "actual_native_MTP_controller": false,
+  "backend_operation_translator_bound": false,
+  "physical_qualification": false,
+  "full_decode_executable": false
+}

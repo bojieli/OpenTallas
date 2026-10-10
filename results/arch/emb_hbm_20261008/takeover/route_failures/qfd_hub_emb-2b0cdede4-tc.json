@@ -1,0 +1,126 @@
+{
+  "name": "qfd_hub_emb-2b0cdede4-tc",
+  "spec": {
+    "name": "qfd_hub_emb-2b0cdede4-tc",
+    "block": "qfd_hub_emb",
+    "owner": "Codex:embedding-hbm",
+    "purpose": "Review-approved HBM embedding standalone closure vehicle; model and all9 exactness/negative variants committed. Actual clock: 1.2GHz stream. TT>=0/FF>=0/DRC0; SS sensitivity; no die slot/closure claim.",
+    "hosts": [
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-epyc1tb",
+      "ot-epyc4"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "source": {
+      "branch": "codex/emb-hbm-takeover-20261008",
+      "commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406"
+    },
+    "no_bench_reason": "Unchanged RTL from e48258ccd: 5positive and4negative full-shape variants harvested and hash-pinned in results/arch/emb_hbm_20261008/takeover/summary.json. Only physical frames and actual implemented clock binding change. No proof reruns.",
+    "stages": {
+      "bench": [],
+      "calibrate": {
+        "enabled": false,
+        "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+      },
+      "route": {
+        "cmd": "export CORNER=TC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_hub_emb.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_hub_emb {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "threads": 16,
+        "peak_ram_gb": 48,
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_hub_emb --out {RUN}/record/views/qfd_hub_emb --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/qfd_hub_emb.sdc"
+      ],
+      "checks": [
+        {
+          "name": "owner_TT_FF_nonnegative",
+          "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+        }
+      ],
+      "macros": []
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+    },
+    "record": [
+      {
+        "from": "{RUN}/record/views",
+        "to": "physical/qwen_die_masters/views"
+      },
+      {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/emb_hbm_closure_20261008/qfd_hub_emb-2b0cdede4-ss"
+      }
+    ],
+    "cycles_added": "Measured baseKV1 473mean/789max, full128PC shape; frame-only change adds0cycles. Qualified headline credit0 until die integration/reprice.",
+    "merge_target": null,
+    "route_corner": "TC",
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.05
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_hub_emb-2b0cdede4-tc.json",
+  "created": "2026-10-08T23:03:55-07:00",
+  "status": "NEEDS_HUMAN",
+  "stage_idx": 0,
+  "attempt": 2,
+  "retries_used": 1,
+  "benches": {},
+  "hosts_tried": [
+    "ot-epyc4"
+  ],
+  "events": [
+    "2026-10-08T23:03:55-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_hub_emb-2b0cdede4-tc.json",
+    "2026-10-08T23:04:21-07:00 waiting for capacity: EPYC4 MemAvailable 538-479 GB < 48+57; EPYC2 MemAvailable 80-20 GB < 48+57; EPYC1 MemAvailable 25-0 GB < 48+57; AGIdock MemAvailable 68-49 GB < 48+6; localhost loop threads 92+16 > 96; EPYC3 MemAvailable 166-104 GB < 48+57; PVE1 MemAvailable 122-97 GB < 48+16",
+    "2026-10-08T23:33:44-07:00 source 2b0cdede437c synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src",
+    "2026-10-08T23:34:18-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-08T23:35:19-07:00 route crashed (rc=1 ok-check failed;; first error: qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT) -> retry once on the same host",
+    "2026-10-08T23:36:25-07:00 launched route (attempt 2) on ot-epyc4",
+    "2026-10-08T23:37:19-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT; resource=False)"
+  ],
+  "updated": "2026-10-08T23:37:19-07:00",
+  "bench_par": false,
+  "wait": null,
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc",
+  "source_synced": true,
+  "commit_full": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT; resource=False)",
+  "stage_key": "route",
+  "stage_tag": "route.a2",
+  "stage_started": "2026-10-08T23:36:25-07:00",
+  "unreachable": 0,
+  "hm_auto_seen": [],
+  "crashes": [
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 1,
+      "why": "rc=1 ok-check failed;; first error: qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT",
+      "resource": false,
+      "tail": "Xenia Wolf <claire@yosyshq.com>         |\n |  Distributed under an ISC-like license, type \"license\" to see terms        |\n \\----------------------------------------------------------------------------/\n Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n\n-- Executing script file `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/routes/qfd_hub_emb_2b0cdede4_tc/work/synth.ys' --\n\n1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv' to AST representation.\nSuccessfully finished Verilog frontend.\n\n2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv' to AST representation.\n\n/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/routes/qfd_hub_emb_2b0cdede4_tc/physical.json\n",
+      "first_error": "qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT"
+    },
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 2,
+      "why": "rc=1 ok-check failed;; first error: qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT",
+      "resource": false,
+      "tail": "Xenia Wolf <claire@yosyshq.com>         |\n |  Distributed under an ISC-like license, type \"license\" to see terms        |\n \\----------------------------------------------------------------------------/\n Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n\n-- Executing script file `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/routes/qfd_hub_emb_2b0cdede4_tc/work/synth.ys' --\n\n1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv' to AST representation.\nSuccessfully finished Verilog frontend.\n\n2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv\nParsing SystemVerilog input from `/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv' to AST representation.\n\n/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/routes/qfd_hub_emb_2b0cdede4_tc/physical.json\n",
+      "first_error": "qfd_hub_emb_2b0cdede4_tc/flow.log: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv:51: ERROR: syntax error, unexpected TOK_IMPORT"
+    }
+  ]
+}

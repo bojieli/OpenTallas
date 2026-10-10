@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "HBM full-quarter VM collective publication",
+      "target": "HBM accelerator",
+      "owner": "hbm_system/link_retry",
+      "recorded_at": "2026-10-09T08:00:00Z",
+      "source": {
+        "commit": "bbe3787cb",
+        "paths": [
+          "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_vm_publication.sv"
+        ]
+      },
+      "description": "Actual4096 FP32 vector,512 tagged256b VM sectors,24 SECDED SRAM macros, two indexed512bit read lanes; Qwen74bit owner with legacy73 default.",
+      "implementation": {
+        "status": "implemented default-off",
+        "evidence": [
+          "bbe3787cb"
+        ]
+      },
+      "model": {
+        "status": "sized before RTL",
+        "evidence": [
+          "966eccd34 tools/uarch_model.py hbm_collective_vm_publication_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS",
+          "evidence": [
+            "results/rtl/hbm_collective_vm_publication_20261009/gate.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS expected wrong-QID failure",
+          "evidence": [
+            "results/rtl/hbm_collective_vm_publication_20261009/mutant.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "no publication SRAM SS/FF in-context route yet"
+        ]
+      },
+      "dependencies": [
+        "Actual TU descriptor opcode and producer writeACK/visibility read lease grant",
+        "Actual VM read arbitration and separate fault transport",
+        "Full native PFMAX256 indexed-return successor",
+        "Mutable descriptor and control-state protection"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "standalone minimum full-vector publication gate; no whole native/die binding"
+        ]
+      }
+    },
+    {
+      "element": "HBM protected TU PHY retry port",
+      "target": "HBM accelerator",
+      "owner": "hbm_system/link_retry",
+      "recorded_at": "2026-10-09T08:00:00Z",
+      "source": {
+        "commit": "ffedc1964",
+        "paths": [
+          "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_tu_retry_phy_port.sv",
+          "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_phy_ingress.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented default-off",
+        "evidence": [
+          "24 real SRAM macros/port, actual545bit payload and24bit session"
+        ]
+      },
+      "model": {
+        "status": "sized before RTL",
+        "evidence": [
+          "0382b3f4e tools/uarch_model.py hbm_tu_retry_phy_port_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS",
+          "evidence": [
+            "results/rtl/hbm_tu_retry_phy_port_20261009/gate.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS expected duplicate failure",
+          "evidence": [
+            "results/rtl/hbm_tu_retry_phy_port_20261009/mutant.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "full PHY/core leaf not routed; compact replay predecessor failed eef96581c"
+        ]
+      },
+      "dependencies": [
+        "Actual native64 credit window and PHYcandidate256 must compose",
+        "Actual R25I17\u201322 relay stations and measured capture/wire/FEC/ACK RTT",
+        "Actual protected landing, separate grant management and reset training"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "independent phase core/PHY digital gate only; native and die binding unqualified"
+        ]
+      }
+    }
+  ]
+}

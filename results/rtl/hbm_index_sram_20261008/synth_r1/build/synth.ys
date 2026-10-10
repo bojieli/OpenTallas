@@ -1,0 +1,9 @@
+read_verilog -sv -I/srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/src/rtl/common /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/src/rtl/common/ot_secded.sv /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv
+hierarchy -check -top ot_hbm_index_lines_sram -chparam ENABLE 1
+synth -top ot_hbm_index_lines_sram -flatten
+dfflibmap -liberty /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/build/combined.lib
+abc -liberty /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/build/combined.lib
+clean
+stat -liberty /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/build/combined.lib
+write_json /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/build/mapped.json
+write_verilog -noattr /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r1/build/mapped.v

@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.smh-result-valid-gate.v1",
+  "source_sha256": "689c9b98e06000f2891f6382e1457d67801b4382b188631fa27e0d691b0918d8",
+  "results": {
+    "good": {
+      "rc": 0,
+      "ok": true,
+      "source_sha256": "eab1d0084c20823861376b70766132520fe8e40f4ba20c111046476a2b24ff25"
+    },
+    "no_fault_valid_mask": {
+      "rc": 1,
+      "ok": true,
+      "source_sha256": "7c71f14d1be9a56485a7efd99c59cd0a75049ebc36365057f6018d6cb221ce4b"
+    },
+    "column0_retire": {
+      "rc": 1,
+      "ok": true,
+      "source_sha256": "82d7f26ba9c3e74f5ca247a8f0799495c4d6a6d16ddce6700a61b2da0d494142"
+    },
+    "no_coherence_fault": {
+      "rc": 1,
+      "ok": true,
+      "source_sha256": "f51aafbc8faf3150aaaead910a5f588e18fca343377645e057a4ca45756d04f7"
+    },
+    "front_s_integration": {
+      "rc": 0,
+      "ok": true
+    }
+  }
+}

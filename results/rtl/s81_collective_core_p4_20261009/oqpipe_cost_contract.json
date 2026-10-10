@@ -1,0 +1,45 @@
+{
+  "schema": "s81_collective_oqpipe_cost_contract.v1",
+  "candidate": "coll_core_oqpipe",
+  "nodes_cycles_frac": [
+    [
+      "*.attn.out_allreduce",
+      1,
+      0
+    ],
+    [
+      "*.ffn.combine_allreduce",
+      1,
+      0
+    ],
+    [
+      "*.attn.a_allgather",
+      1,
+      0
+    ],
+    [
+      "*.attn.idx.topk_merge",
+      1,
+      0
+    ],
+    [
+      "*.attn.cand.merge",
+      1,
+      0
+    ],
+    [
+      "*.attn.rows_allgather",
+      1,
+      0
+    ],
+    [
+      "*.ffn.router_allgather",
+      1,
+      0
+    ]
+  ],
+  "status": "SOURCE_COST_ROW_CHECK_PASS",
+  "correction": "Initial p4 model reference overstated existing OQPIPE pricing. This commit adds the missing candidate row, one final visibility edge per collective; unchanged pipeline II and p4 footprint zero new cycles. No selected rate regenerated or claimed.",
+  "validation": "Real uarch_model CLI generated unified_model.json under remote admission. Ledger row parsed from actual source; full selected headline generation belongs to unified composition owner.",
+  "host": "ot-epyc3"
+}

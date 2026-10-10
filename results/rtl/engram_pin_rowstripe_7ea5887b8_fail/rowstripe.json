@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.engram-rowstripe-gate.v1",
+ "boundary": "boot/loader mapping and capacity only; read service return stalls, shared controller arbitration and physical closure unqualified",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_path.sv": "a0f4a7f60bf5283e969147edba92214691cb3e2e26c7c1c2bdd50626445b8278",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_dispatch.sv": "06ee59aa5a7b3a822166b3f3686091434e1f42e3d906e28a462a75de5e35ca31",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "c7a59d41c293dcc23dc6f2a7b72f62bc52b8b47ce4d1c2ad0a4983fce10fda85",
+  "rtl/test/tb_dsrom_engram_boot_rowstripe.sv": "ac6fef3061386af6bf61b250b5993f790afa7cefb6417f6c93e19a62f798c66e",
+  "tools/engram_boot_image.py": "f6c96ee8bfb5d5d0a3fbe13f884c8f1182e7a8c0d9508786b281ebc32f7ee1b3",
+  "tests/test_engram_boot_image.py": "b75771180149a286568820e59ad29773e7cc4fded389b27e08ba97730f88551f",
+  "tools/uarch_model.py": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9",
+  "tools/engram_rowstripe_gate.py": "f45c7c658472724a20c8bb3011b49d110cc137764d2ff912b76ea133bff3c5a4"
+ },
+ "cases": {
+  "control": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/pin-row-7ea5887b8/rtl/test/tb_dsrom_engram_boot_rowstripe.sv:42: unexpected rowstripe fault\n       Time: 150000  Scope: tb_dsrom_engram_boot_rowstripe\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "wrong_pc": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/pin-row-7ea5887b8/rtl/test/tb_dsrom_engram_boot_rowstripe.sv:34: rowstripe PC/address identity\n       Time: 110000  Scope: tb_dsrom_engram_boot_rowstripe\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "loader": {
+   "returncode": 1,
+   "stdout": "...F                                                                     [100%]\n=================================== FAILURES ===================================\n_______________ test_rowstripe_payload_pc_identity_and_capacity ________________\n\n    def test_rowstripe_payload_pc_identity_and_capacity():\n>       import uarch_model as M\n\ntests/test_engram_boot_image.py:81: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntools/uarch_model.py:156: in <module>\n    import arch_budget_v41 as A  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntools/arch_budget_v41.py:64: in <module>\n    import decode_critical_path as D  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    #!/usr/bin/env python3\n    \"\"\"Bottom-up, per-operator critical-path latency of ONE decode token on the ROM machine.\n    \n    The analytical model (src/opentallas/roofline.py) prices a token as a bandwidth\n    sweep plus a flat per-layer floor (`layer_fixed_latency`: 4-5 dependent array\n    passes x ~36 ns + barrier + sequencer) plus two all-reduces per layer.  This\n    tool instead builds the operator dependency graph of every layer from the model\n    config and walks its longest path:\n    \n    * **Graph.**  One DAG per token: every operator of every layer, with its real\n      data dependencies.  Parallel branches take the max, serial ones add.  For\n      DeepSeek-V4.1-Flash the operators are those of the golden specification\n      (tools/hdc_golden_v41.py, docs/HDC_DEEPSEEK_V41_OPERATOR_INVENTORY.md):\n      hyper-connection mixes with the 20-iteration Sinkhorn (a side branch the\n      sublayer runs alongside -- the collapse consumes the PREVIOUS sublayer's pre\n      mix, so only hc_post waits for it), low-rank q/kv chains with their norms,\n      RoPE, the compressor and indexer on KV/index-source layers, top-k selection\n      (source vs reuse layers, candidate counts at the context), sparse attention\n      with sink, grouped o projection, router (sqrt-softplus, bias, top-6 of 384,\n      weight normalise), experts and shared expert, combine, Engram on layers 1\n      and 14, lm_head + argmax.\n    * **Pricing.**  Every node is priced with MEASURED depths of our own RTL:\n      tools/hdc_timing.py `K` (sequencer gap, matrix-engine latency and tree, the\n      stream unit's per-class depths, reducer tail) and the V4.1 units' pipeline\n      depths (rtl/hdc/v41/*.sv and their campaigns), at the slowest routed clock\n      among the units the token path uses (results/physical_abi3/asap7/hdc/).\n      The Sinkhorn is the routed latency-optimised unit ot_hdc_sinkhorn (one\n      normalisation per unit clock), run as a multicycle path of that clock.\n      Lane counts per die come from the analytical design's compute area divided\n      by our routed lane areas.  Matrix-vector occupancy is the analytical design's\n      own sweep (points.json component times) apportioned by bytes or MACs; that is\n      the only analytical input on the compute side.\n    * **Communication.**  Each collective the weight split requires is a node\n      where the data dependency needs the full vector, priced per event by a\n      `Fabric` (physical topology) and a reduction algorithm (logical topology):\n      latency = traversals x hop, bytes = the real payload (FP32 partials, the\n      4-copy hyper-connection residual on stage hops, forwarded compressed-KV rows\n      and selections, all x users per stage) over the link it crosses.  Link\n      constants: configs/hardware/technology.json `links`.\n    * **Control.**  seq_gap per issued instruction, plus idle_reg on a barrier;\n      chaining (the HDC `chase`) lets streamable consumers overlap their producer.\n    \n    `build()` validates the machinery on Taalas HC1 (Llama-3.1-8B, published\n    16,960 tok/s, no fitted constant), then prices Qwen3-8B on the same die and\n    DeepSeek-V4.1-Flash on the x188 array and the x12 wafer, and sweeps physical\n    topology x reduction algorithm x group size x dies per package at iso-area.\n    Output: results/roofline/critical_path/decode_critical_path.json.\n    \"\"\"\n    from __future__ import annotations\n    \n    import argparse\n    import json\n    import math\n    import random\n    import sys\n    from dataclasses import asdict, dataclass, field, replace\n    from pathlib import Path\n    \n    ROOT = Path(__file__).resolve().parents[1]\n    sys.path.insert(0, str(ROOT / \"tools\"))\n    sys.path.insert(0, str(ROOT / \"src\"))\n    \n    import hdc_isa as I  # noqa: E402\n>   from opentallas.critical_path import PackageLevel  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   ModuleNotFoundError: No module named 'opentallas'\n\ntools/decode_critical_path.py:64: ModuleNotFoundError\n=========================== short test summary info ============================\nFAILED tests/test_engram_boot_image.py::test_rowstripe_payload_pc_identity_and_capacity\n1 failed, 3 passed in 0.50s\n",
+   "stderr": "",
+   "expected_observed": false
+  }
+ },
+ "status": "fail"
+}

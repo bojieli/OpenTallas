@@ -1,0 +1,194 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_res_ctl-f46a68c8a-tc-hm0",
+ "block": "qfd_res_ctl",
+ "owner": "Codex:res-ser-tiles",
+ "source_branch": "codex/res-ser-tiles-20261010",
+ "record_branch": "codex/closure-record-qfd_res_ctl-f46a68c8a-tc-hm0",
+ "source_commit": "f46a68c8afbaab1986002d13b00bb660cbc062f8",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_res_ctl-f46a68c8a-tc-hm0",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 217.29,
+  "ff_ps": 22.16,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 133.47,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qfd_res_ctl-f46a68c8a-tc-hm0/routes/qfd_res_ctl_f46a68c8a_tc_hm0/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_res_ctl.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_res_ctl-f46a68c8a-tc-hm0/routes/qfd_res_ctl_f46a68c8a_tc_hm0/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_res_ctl-f46a68c8a-tc-hm0/routes/qfd_res_ctl_f46a68c8a_tc_hm0/work/orfs/logs/asap7/opentallas_ot_qfd_res_tiles_ctl_asap7_qdm_qfd_res_ctl_f46a68c8a_tc_hm0/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_fullshape": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55\n- rtl/test/res_tiles/tb_res_tiles.sv:56: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 120us; walltime 0.032 s; speed 3.711 ms/s\n- Verilator: cpu 0.032 s on 1 threads; allocated 10 MB\n",
+   "track": "parallel"
+  },
+  "bench_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "[330000] %Fatal: tb_res_tiles.sv:24: Assertion failed in tb_res_tiles.tick: MISMATCH beat=1 cycle=27 got row=1 end=0 nul=0 want row=1 end=0 nul=0\n%Error: rtl/test/res_tiles/tb_res_tiles.sv:24: Verilog $stop\nAborting...\nFAIL res_tiles mutant detected\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": "16 first-beat edges (21-cycle request/output); 8 requests/burst, finite16credits; no token rate claim pending integration",
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T05:34:33-07:00",
+ "job_spec": {
+  "name": "qfd_res_ctl-f46a68c8a-tc-hm0",
+  "block": "qfd_res_ctl",
+  "owner": "Codex:res-ser-tiles",
+  "purpose": "Structural Qwen result path: full NS8 DB64 RS42 CRB16 bench, true mutant; one actual SRAM slot hardened then replicated8/band, local pin seats+metadata, registered conveyor. No global data mux, no latency performance claim until composed. +16 firstbeat edges. No false paths. Refund inputs now behind local response pin seat; saturated ingress exact gate peak55/64 stored bursts.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "codex/res-ser-tiles-20261010",
+   "commit": "f46a68c8afbaab1986002d13b00bb660cbc062f8"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "fullshape",
+     "cmd": "bash physical/res_tiles/bench.sh {RUN}/bench/pos",
+     "expect": "pass",
+     "pass_regex": "^PASS res_tiles",
+     "threads": 8,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "mutant",
+     "cmd": "bash physical/res_tiles/bench.sh {RUN}/bench/neg 1",
+     "expect": "fail",
+     "fail_regex": "^FAIL res_tiles mutant detected",
+     "threads": 8,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Existing Qwen in-run median pin-flop clock-reference contract; source-latency/boundary arrival preserved"
+   },
+   "route": {
+    "cmd": "export OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl' OT_ORFS_CORNER_OVERRIDE=TC; HM=0 OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_res_ctl.sdc SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_res_ctl {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/; python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_res_ctl --post-sdc physical/qwen_die_masters/signoff/qfd_res_ctl.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_res_ctl > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_res_ctl.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "Fix true FF hold under actual IO insertion reference"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_res_tiles_20261010/qfd_res_ctl-f46a68c8a-tc-hm0"
+   }
+  ],
+  "cycles_added": "16 first-beat edges (21-cycle request/output); 8 requests/burst, finite16credits; no token rate claim pending integration",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0,
+  "route_corner": "TC",
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T19:30:25-07:00",
+   "est_as_configured": {
+    "W": 20.84,
+    "E": 4.52,
+    "N": 15.38,
+    "S": 6.23
+   },
+   "est_fix": {
+    "W": 0.68,
+    "E": 0.33,
+    "N": 0.99,
+    "S": 0.4
+   },
+   "why": "pin density > 12.0 b/um/layer as configured (W/M4 20.84 b/um (group ^(b_pw|b_pv|b_lf)(\\[|$) 3084 pins); N/M5 15.38 b/um (group ^(tt_ty|tt_use|tt_v)(\\[|$) 1538 pins)); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7') -> 0.99 b/um"
+  },
+  "registered_io": true
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

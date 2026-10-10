@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.hbm_index_service.lookahead_result.v1",
+  "source_commit": "7af59dadc",
+  "exact_gate": "PASS",
+  "descriptors_positive": 14,
+  "data_negative_rejected": true,
+  "candidate": {
+    "KNO": 31,
+    "IK_DEPTH": 128
+  },
+  "mean_TBps": 0.5843849166666667,
+  "min_TBps": 0.235996,
+  "max_TBps": 0.696121,
+  "mean_latency_ns": 352.5013333333333,
+  "bandwidth_90pct": "FAIL",
+  "fulltoken_baseline_stream_cycles": 699175.7,
+  "fulltoken_saved_stream_cycles": 433.15200000000004,
+  "fulltoken_rate_gain_fraction": 0.0006199021388346715,
+  "optional_adoption": "REJECT_BELOW_1_PERCENT",
+  "diagnostic": "Advance visibility reduces measured mean latency, but controller request queue backpressure appears, scheduled future column waits remain, and refresh-heavy cases still exhaust return retention. Return queue full cycles zero. No single-cause claim.",
+  "adopted": false,
+  "physical_qualified": false
+}

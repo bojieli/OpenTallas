@@ -1,0 +1,27 @@
+{
+  "nearest_job": "hbm_quant_e7c2e5b06-tt",
+  "host": "ot-epyc3",
+  "baseline_cells": 112153,
+  "baseline_area_um2": 16816.63032,
+  "baseline_outline_um": [
+    1399.656,
+    358.536
+  ],
+  "new_cells": 122121,
+  "new_area_um2": 18541.0944,
+  "new_outline_um": [
+    1800,
+    600
+  ],
+  "baseline_cal_cts_peak_kib": 3462408,
+  "baseline_drt_peak_kib": 18642752,
+  "formula": "actual baseline phase peak * max(cellratio,arearatio) * outlinearea ratio * 1.10growth, then conservative wholeGiB rounding",
+  "scale_without_growth": 2.3728269383289358,
+  "cal_estimate_gib_unrounded": 8.618607016824889,
+  "drt_estimate_gib_unrounded": 46.40543610115453,
+  "admission_estimate_gib": {
+    "calibrate": 10,
+    "route": 48
+  },
+  "status": "Estimates derived from measured sibling phase peaks, not measured G8 peaks or hard caps"
+}

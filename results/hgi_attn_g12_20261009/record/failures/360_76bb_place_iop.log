@@ -1,0 +1,165 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_att_record_adapter_asap7_qdm_hgi_att_record_g12_360_76bb97ff2_tc_cx/base/3_1_place_gp_skip_io.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_att_record_adapter_asap7_qdm_hgi_att_record_g12_360_76bb97ff2_tc_cx/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_att_record_adapter_asap7_qdm_hgi_att_record_g12_360_76bb97ff2_tc_cx/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_att_record_adapter_asap7_qdm_hgi_att_record_g12_360_76bb97ff2_tc_cx/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers "M4 M6" -ver_layers "M5 M7" -min_distance 2 -min_distance_in_tracks
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ rec_desc[0] rec_desc[1] rec_desc[2] rec_desc[3] rec_desc[4] ... ]
+[INFO PPL-0044] Pin group: [ att_desc[0] att_desc[1] att_desc[2] att_desc[3] att_desc[4] ... ]
+[INFO PPL-0044] Pin group: [ rec_b_count[0] rec_b_count[1] rec_b_count[2] rec_b_count[3] rec_b_count[4] ... ]
+[INFO PPL-0044] Pin group: [ att_done att_fault att_hdr[0] att_hdr[1] att_hdr[2] ... ]
+[INFO PPL-0044] Pin group: [ clk rst_n ]
+[INFO PPL-0067] Restrict pins [ rec_b_count[0] rec_b_count[10] rec_b_count[11] rec_b_count[12] rec_b_count[13] ... ] to region 4.00u-356.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ att_done att_fault att_hdr[0] att_hdr[100] att_hdr[101] ... ] to region 4.00u-356.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ clk rst_n ] to region 1.00u-2.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ rec_desc[0] rec_desc[1000] rec_desc[1001] rec_desc[1002] rec_desc[1003] ... ] to region 4.00u-356.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ att_desc[0] att_desc[1000] att_desc[1001] att_desc[1002] att_desc[1003] ... ] to region 4.00u-356.00u at the RIGHT edge.
+[INFO PPL-0001] Number of available slots 26132
+[INFO PPL-0002] Number of I/O             2745
+[INFO PPL-0003] Number of I/O w/sink      2489
+[INFO PPL-0004] Number of I/O w/o sink    256
+[INFO PPL-0006] Number of I/O Groups    5
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0100] Group of size 1024 placed during fallback mode.
+[INFO PPL-0100] Group of size 1024 placed during fallback mode.
+[INFO PPL-0100] Group of size 471 placed during fallback mode.
+[INFO PPL-0100] Group of size 224 placed during fallback mode.
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 781948.00 um.
+[WARNING PPL-0102] Pin att_desc[942] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[943] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[944] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[945] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[946] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[947] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[948] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[949] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[950] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[951] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[952] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[953] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[954] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[955] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[956] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[957] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[958] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[959] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[960] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[961] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[962] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[963] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[964] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[965] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[966] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[967] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[968] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[969] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[970] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[971] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[972] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[973] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[974] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[975] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[976] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[977] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[978] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[979] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[980] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[981] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[982] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[983] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[984] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[985] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[986] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[987] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[988] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[989] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[990] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[991] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[992] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[993] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[994] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[995] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[996] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[997] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[998] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin att_desc[999] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[24] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[25] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[26] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[27] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[28] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[29] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[30] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[31] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[32] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[33] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[34] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[35] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[36] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[37] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[38] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[39] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[40] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[41] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[42] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[43] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[44] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[45] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[46] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[47] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[48] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[49] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[50] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[51] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[52] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[53] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[54] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[55] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[56] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[57] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[58] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[59] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[60] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[61] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[62] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[63] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[64] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[65] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[66] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[67] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[68] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[69] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[70] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[71] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[72] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[73] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[74] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[75] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[76] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[77] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[78] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[79] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[80] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[81] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin rec_desc[82] is not placed in its constraint interval.
+[ERROR PPL-0107] Invalid pin placement.
+Error: io_placement.tcl, 21 PPL-0107
+Elapsed time: 0:02.86[h:]min:sec. CPU time: user 2.77 sys 0.09 (99%). Peak memory: 362944KB.

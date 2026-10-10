@@ -1,0 +1,6 @@
+Wide geometry generation succeeded for all three strip pin maps, source f8b8bd3c9.
+The first shell then attempted an optional Python import without PYTHONPATH:
+ModuleNotFoundError: No module named 'hbm_accel_smh_physical'
+This environment-only failure was retained. The subsequent independent full RTL
+elaboration used explicit PYTHONPATH and passed with no missing-module bypass.
+No physical route was launched by either build check.

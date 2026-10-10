@@ -1,0 +1,6275 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "hbm",
+ "top_fix": false,
+ "generator": "tools/hbm_accel_die_fp.py",
+ "generator_sha256": "0044134220c1940a13e5f7d5729977b57a210d7a6b444be0548b61193c1afcfd",
+ "generator_tag": {
+  "file": "tools/hbm_accel_die_fp.py",
+  "sha256": "0044134220c1940a13e5f7d5729977b57a210d7a6b444be0548b61193c1afcfd",
+  "tree_head": "e469ee6056149e9df7b6b6cfc59877352c782775",
+  "file_commit": "5f5a1b484b85c37212b2eaeaf5c6804321cb3bec"
+ },
+ "qwen_source": null,
+ "qwen_recipe": null,
+ "pin_fit_errors": {
+  "hfd_idx_score_native_grid": "exact physical pin rectangles require full width k=1: hfd_idx_score_native_grid/st",
+  "hfd_idx_sel_native_qend": "exact physical pin rectangles require full width k=1: hfd_idx_sel_native_qend/fs"
+ },
+ "lint_tool_sha256": "f9ae62219ff506f227b33e82a50063bdd1ea3fb502b86a9c78b37df9cd23bbf9",
+ "variant": {
+  "n_mirror_fix": true,
+  "x_chain": true,
+  "w_my": true,
+  "strip_d": 864.0,
+  "port_fix": true,
+  "ew_corridor": true,
+  "sm_xmid": true,
+  "lanes": true,
+  "spch": 1244.16,
+  "root_pins": true,
+  "serdes_mg": 250.56,
+  "orient_fix": true,
+  "clk_dom": true,
+  "sm_rtl_w": true,
+  "sm_desc": true,
+  "link_rtl": true,
+  "coll_rtl": true,
+  "attn_rtl": true,
+  "hub_io": true,
+  "fwd": true,
+  "rq_chain": true,
+  "stn_share": true,
+  "hub_h": 13210.431999999999,
+  "spine_h": 7500.0,
+  "spine_w": 1399.68,
+  "face_vm": 2000.0,
+  "attn_tile_w_um": 1778.544,
+  "attn_tile_h_um": 1488.24,
+  "face_fix": true,
+  "router_env": [
+   9338.688,
+   326.28
+  ],
+  "corner_rule": {
+   "hfd_stn_r26": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r11": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r19": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r21": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r23": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_meso_r1": {
+    "keep": 1.0,
+    "tail": 8
+   }
+  },
+  "pin_centre": {
+   "hfd_stn_r23|rst": 10.0,
+   "hfd_router|rst": 366.0253,
+   "hfd_router|ck": 612.5932,
+   "hfd_loader|rst": 366.0253,
+   "hfd_loader|ck": 612.5932
+  },
+  "split_masters": {
+   "hfd_index_q": "physical/hbm_accel_die_views/index_q/split/split.json",
+   "hfd_cmdproc": "physical/hbm_accel_die_views/cmdproc/split/split.json"
+  },
+  "split_lattice": {
+   "hfd_index_q": {
+    "hfd_index_q_b1:R0": 0.27,
+    "hfd_index_q_b4:R0": 1.62,
+    "hfd_index_q_b1:MX": 1.62,
+    "hfd_index_q_b0:R0": 0.0,
+    "hfd_index_q_b2:R0": 0.0,
+    "hfd_index_q_b3:R0": 0.0,
+    "hfd_index_q_b5:R0": 0.0,
+    "hfd_index_q_b0:MX": 0.0,
+    "hfd_index_q_b2:MX": 0.0,
+    "hfd_index_q_b3:MX": 0.0,
+    "hfd_index_q_b4:MX": 0.0,
+    "hfd_index_q_b5:MX": 0.0
+   }
+  },
+  "spine_slots": {
+   "su_red": [
+    1399.656,
+    218.136
+   ],
+   "su_full": [
+    346.008,
+    347.736
+   ]
+  },
+  "split_x_masters": "physical/hbm_accel_die_views/svc/split/split.json",
+  "host_bb": true,
+  "budget_stages": true,
+  "hub_stage_all": true,
+  "fwd_hub": true,
+  "spine_region": true,
+  "barrier_low": true,
+  "ck_centre": true,
+  "vm_split": true,
+  "pin_stage_roots": true,
+  "vm_ck_centre": true,
+  "iv_pin_stn": false,
+  "relay_all": true,
+  "hub_scale": 2.0,
+  "stable_roles": true,
+  "hub_pin_window": 1200.0,
+  "split_stations": [
+   "hfd_mcast_r6"
+  ],
+  "attn_tile_w0_um": 1349.136,
+  "attn_grow_mid": true,
+  "serdes_w_um": 2462.4,
+  "vm_cross_aligned": true,
+  "fix_station_pins": [
+   "hfd_cdist_r14",
+   "hfd_cdist_r15",
+   "hfd_gath_r10",
+   "hfd_gath_r24",
+   "hfd_gath_r25",
+   "hfd_gath_r8",
+   "hfd_gath_r9",
+   "hfd_meso_r28",
+   "hfd_meso_r32",
+   "hfd_stn_r2",
+   "hfd_stn_r34",
+   "hfd_stn_r18",
+   "hfd_stn_r20",
+   "hfd_stn_r31"
+  ],
+  "hub_ck_seg": 8,
+  "hub_pin_p4": true,
+  "vm_cross_2layer": true,
+  "hub_ports_file": "physical/hbm_accel_die_views/hub_ports_r24p.json",
+  "attn_split": "physical/hbm_attn_tile_r/half",
+  "hub_h_ref": 12100.0,
+  "cq_h": 5529.6,
+  "index_h": 5529.6,
+  "ld_mem": [
+   904,
+   624
+  ],
+  "split_x_new_ports": {
+   "lq": 904,
+   "lr": 624,
+   "ki0": 1099,
+   "ki1": 1099,
+   "ki2": 1099,
+   "ki3": 1099,
+   "ki4": 1099,
+   "ki5": 1099,
+   "ki6": 1099,
+   "ki7": 1099,
+   "kc0": 1,
+   "kc1": 1,
+   "kc2": 1,
+   "kc3": 1,
+   "kc4": 1,
+   "kc5": 1,
+   "kc6": 1,
+   "kc7": 1
+  },
+  "spine_slots_low": {
+   "mtp": [
+    466.56,
+    200.88
+   ]
+  },
+  "spine_slot_domains": {
+   "mtp": "stream_1p2"
+  },
+  "split_extra_ports": {
+   "hfd_cmdproc": {
+    "t_mtp": [
+     "hfd_cmdproc_s",
+     320,
+     "S",
+     "M5",
+     0.3,
+     2
+    ],
+    "f_mtp": [
+     "hfd_cmdproc_s",
+     126,
+     "S",
+     "M5",
+     0.7,
+     2
+    ]
+   }
+  },
+  "native_indexer": true,
+  "split_x_new_port_band": {
+   "ki0": 0,
+   "ki1": 1,
+   "ki2": 2,
+   "ki3": 3,
+   "ki4": 4,
+   "ki5": 5,
+   "ki6": 6,
+   "ki7": 7,
+   "kc0": 0,
+   "kc1": 1,
+   "kc2": 2,
+   "kc3": 3,
+   "kc4": 4,
+   "kc5": 5,
+   "kc6": 6,
+   "kc7": 7
+  },
+  "indexer_quarter_end": true,
+  "indexer_mirror_grid": true,
+  "sm_wh": [
+   3214.08,
+   1131.84
+  ],
+  "sm_physical_grid": [
+   3,
+   3
+  ],
+  "side_padding_um": 207.36,
+  "indexer_rebase": true,
+  "W": 31734.288,
+  "H": 25161.84
+ },
+ "census": {
+  "instances": 1066,
+  "buses": 1582,
+  "net_bits": 1256469,
+  "masters": 437,
+  "real_instances": 51,
+  "placeholder_instances": 1015
+ },
+ "real_blocks": {
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "file": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 4
+  },
+  "ot_pdie_serdes": {
+   "module": "ot_pdie_serdes",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 9
+  },
+  "ot_pdie_ucie": {
+   "module": "ot_pdie_ucie",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 0
+  },
+  "ot_hbm_host_phy": {
+   "module": "ot_hbm_host_phy",
+   "file": "physical/hbm_accel_die_views/phy_bb/ot_hbm_host_phy/ot_hbm_host_phy_bb.v",
+   "kind": "pin-accurate host PHY black box (tools/hbm_phy_bb.py)",
+   "params": {},
+   "instances": 1
+  },
+  "hfd_sm": {
+   "module": "ot_hbm_accel_sm_v",
+   "file": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "kind": "RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)",
+   "params": {
+    "ENABLE": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "NC": 8,
+    "RMAX": 4096,
+    "XD": 128,
+    "MAX_OUT": 512,
+    "DS": 3,
+    "DG": 3,
+    "DW": 4,
+    "PIO": 2
+   },
+   "instances": 32
+  },
+  "hfd_idx_score_native": {
+   "module": "hfd_idx_score_native",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native.sv",
+   "kind": "full-shape native index RTL",
+   "params": {},
+   "instances": 0
+  },
+  "hfd_idx_score_native_c2": {
+   "module": "hfd_idx_score_native_c2",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native.sv",
+   "kind": "full-shape native index RTL",
+   "params": {},
+   "instances": 0
+  },
+  "hfd_idx_score_native_grid": {
+   "module": "hfd_idx_score_native_grid",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native.sv",
+   "kind": "full-shape native index RTL",
+   "params": {},
+   "instances": 4
+  },
+  "hfd_idx_score_native_grid_c2": {
+   "module": "hfd_idx_score_native_grid_c2",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native.sv",
+   "kind": "full-shape native index RTL",
+   "params": {},
+   "instances": 0
+  },
+  "hfd_idx_sel_native_qend": {
+   "module": "hfd_idx_sel_native_qend",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel_native_qend.sv",
+   "kind": "full-shape native index RTL",
+   "params": {},
+   "instances": 1
+  },
+  "hfd_idx_sel": {
+   "module": "hfd_idx_sel",
+   "file": "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv",
+   "kind": "full-shape native index RTL",
+   "params": {
+    "T": 1,
+    "LA": 7,
+    "MEMV": 1,
+    "READLAT": 2
+   },
+   "instances": 0
+  }
+ },
+ "connectivity": [
+  {
+   "check": "multi_driven",
+   "cls": "host",
+   "signature": "hfd_meso_r32.b + ot_hbm_host_phy.iox",
+   "nets": 1,
+   "bits": 149,
+   "examples": [
+    "host_e"
+   ]
+  },
+  {
+   "check": "net_bits_without_rtl_pin",
+   "cls": "host",
+   "signature": "ot_hbm_host_phy.iox",
+   "nets": 1,
+   "bits": 131,
+   "examples": [
+    "host_e"
+   ]
+  },
+  {
+   "check": "undirected_bits",
+   "cls": "host",
+   "signature": "ot_hbm_host_phy.iox",
+   "nets": 1,
+   "bits": 131,
+   "examples": [
+    "host_e"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "host",
+   "signature": "hfd_meso_r32.b + ot_hbm_host_phy.iox",
+   "nets": 1,
+   "bits": 135,
+   "examples": [
+    "host_e"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_attn_half_hi.xp + hfd_attn_half_lo.xp",
+   "nets": 64,
+   "bits": 103616,
+   "examples": [
+    "at_SW_00_seam_xp",
+    "at_SW_01_seam_xp",
+    "at_SW_02_seam_xp"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_attn_half_hi.xr + hfd_attn_half_lo.xr",
+   "nets": 64,
+   "bits": 17408,
+   "examples": [
+    "at_SW_00_seam_xr",
+    "at_SW_01_seam_xr",
+    "at_SW_02_seam_xr"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_cmdproc_n.xb + hfd_cmdproc_s.xb",
+   "nets": 1,
+   "bits": 16,
+   "examples": [
+    "hb_cmdproc_x1"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_cmdproc_n.xl + hfd_cmdproc_s.xl",
+   "nets": 1,
+   "bits": 147,
+   "examples": [
+    "hb_cmdproc_x0"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_cmdproc_n.xt + hfd_cmdproc_s.xt",
+   "nets": 1,
+   "bits": 16,
+   "examples": [
+    "hb_cmdproc_x2"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b0.a0o + hfd_index_q_b1.a0i",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x5",
+    "hb_index_SE_x5",
+    "hb_index_NW_x5"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b0.kout + hfd_index_q_b1.kin",
+   "nets": 4,
+   "bits": 2052,
+   "examples": [
+    "hb_index_SW_x0",
+    "hb_index_SE_x0",
+    "hb_index_NW_x0"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b1.a0o + hfd_index_q_b2.a0i",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x6",
+    "hb_index_SE_x6",
+    "hb_index_NW_x6"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b1.kout + hfd_index_q_b2.kin",
+   "nets": 4,
+   "bits": 2052,
+   "examples": [
+    "hb_index_SW_x1",
+    "hb_index_SE_x1",
+    "hb_index_NW_x1"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b2.a2i + hfd_index_q_b3.a2o",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x10",
+    "hb_index_SE_x10",
+    "hb_index_NW_x10"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b2.a3i + hfd_index_q_b3.a3o",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x9",
+    "hb_index_SE_x9",
+    "hb_index_NW_x9"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b2.kout + hfd_index_q_b3.kin",
+   "nets": 4,
+   "bits": 2052,
+   "examples": [
+    "hb_index_SW_x2",
+    "hb_index_SE_x2",
+    "hb_index_NW_x2"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b3.a3i + hfd_index_q_b4.a3o",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x8",
+    "hb_index_SE_x8",
+    "hb_index_NW_x8"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b3.kout + hfd_index_q_b4.kin",
+   "nets": 4,
+   "bits": 2052,
+   "examples": [
+    "hb_index_SW_x3",
+    "hb_index_SE_x3",
+    "hb_index_NW_x3"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b4.a3i + hfd_index_q_b5.a3o",
+   "nets": 4,
+   "bits": 2116,
+   "examples": [
+    "hb_index_SW_x7",
+    "hb_index_SE_x7",
+    "hb_index_NW_x7"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_index_q_b4.kout + hfd_index_q_b5.kin",
+   "nets": 4,
+   "bits": 2052,
+   "examples": [
+    "hb_index_SW_x4",
+    "hb_index_SE_x4",
+    "hb_index_NW_x4"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s0.ei + hfd_svc_SE_s1.wo",
+   "nets": 2,
+   "bits": 2350,
+   "examples": [
+    "svc_SE_x15",
+    "svc_NE_x15"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s0.eo + hfd_svc_SE_s1.wi",
+   "nets": 2,
+   "bits": 1194,
+   "examples": [
+    "svc_SE_x14",
+    "svc_NE_x14"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s1.ei + hfd_svc_SE_s2.wo",
+   "nets": 2,
+   "bits": 1878,
+   "examples": [
+    "svc_SE_x17",
+    "svc_NE_x17"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s1.eo + hfd_svc_SE_s2.wi",
+   "nets": 2,
+   "bits": 2826,
+   "examples": [
+    "svc_SE_x16",
+    "svc_NE_x16"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s2.ei + hfd_svc_SE_s3.wo",
+   "nets": 2,
+   "bits": 1874,
+   "examples": [
+    "svc_SE_x19",
+    "svc_NE_x19"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s2.eo + hfd_svc_SE_s3.wi",
+   "nets": 2,
+   "bits": 2282,
+   "examples": [
+    "svc_SE_x18",
+    "svc_NE_x18"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s3.ei + hfd_svc_SE_s4.wo",
+   "nets": 2,
+   "bits": 1124,
+   "examples": [
+    "svc_SE_x21",
+    "svc_NE_x21"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s3.eo + hfd_svc_SE_s4.wi",
+   "nets": 2,
+   "bits": 1840,
+   "examples": [
+    "svc_SE_x20",
+    "svc_NE_x20"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s4.ei + hfd_svc_SE_s5.wo",
+   "nets": 2,
+   "bits": 1120,
+   "examples": [
+    "svc_SE_x23",
+    "svc_NE_x23"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s4.eo + hfd_svc_SE_s5.wi",
+   "nets": 2,
+   "bits": 1296,
+   "examples": [
+    "svc_SE_x22",
+    "svc_NE_x22"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s5.ei + hfd_svc_SE_s6.wo",
+   "nets": 2,
+   "bits": 1116,
+   "examples": [
+    "svc_SE_x25",
+    "svc_NE_x25"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s5.eo + hfd_svc_SE_s6.wi",
+   "nets": 2,
+   "bits": 752,
+   "examples": [
+    "svc_SE_x24",
+    "svc_NE_x24"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s6.ei + hfd_svc_SE_s7.wo",
+   "nets": 2,
+   "bits": 108,
+   "examples": [
+    "svc_SE_x27",
+    "svc_NE_x27"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s6.eo + hfd_svc_SE_s7.wi",
+   "nets": 2,
+   "bits": 1100,
+   "examples": [
+    "svc_SE_x26",
+    "svc_NE_x26"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s7.ei + hfd_svc_SE_s8.wo",
+   "nets": 2,
+   "bits": 556,
+   "examples": [
+    "svc_SE_x29",
+    "svc_NE_x29"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SE_s7.eo + hfd_svc_SE_s8.wi",
+   "nets": 2,
+   "bits": 104,
+   "examples": [
+    "svc_SE_x28",
+    "svc_NE_x28"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s0.ei + hfd_svc_SW_s1.wo",
+   "nets": 2,
+   "bits": 2350,
+   "examples": [
+    "svc_SW_x1",
+    "svc_NW_x1"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s0.eo + hfd_svc_SW_s1.wi",
+   "nets": 2,
+   "bits": 1194,
+   "examples": [
+    "svc_SW_x0",
+    "svc_NW_x0"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s1.ei + hfd_svc_SW_s2.wo",
+   "nets": 2,
+   "bits": 1960,
+   "examples": [
+    "svc_SW_x3",
+    "svc_NW_x3"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s1.eo + hfd_svc_SW_s2.wi",
+   "nets": 2,
+   "bits": 2834,
+   "examples": [
+    "svc_SW_x2",
+    "svc_NW_x2"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s2.ei + hfd_svc_SW_s3.wo",
+   "nets": 2,
+   "bits": 2038,
+   "examples": [
+    "svc_SW_x5",
+    "svc_NW_x5"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s2.eo + hfd_svc_SW_s3.wi",
+   "nets": 2,
+   "bits": 2290,
+   "examples": [
+    "svc_SW_x4",
+    "svc_NW_x4"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s3.ei + hfd_svc_SW_s4.wo",
+   "nets": 2,
+   "bits": 1788,
+   "examples": [
+    "svc_SW_x7",
+    "svc_NW_x7"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s3.eo + hfd_svc_SW_s4.wi",
+   "nets": 2,
+   "bits": 1734,
+   "examples": [
+    "svc_SW_x6",
+    "svc_NW_x6"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s4.ei + hfd_svc_SW_s5.wo",
+   "nets": 2,
+   "bits": 12,
+   "examples": [
+    "svc_SW_x9",
+    "svc_NW_x9"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s4.eo + hfd_svc_SW_s5.wi",
+   "nets": 2,
+   "bits": 1632,
+   "examples": [
+    "svc_SW_x8",
+    "svc_NW_x8"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s5.ei + hfd_svc_SW_s6.wo",
+   "nets": 2,
+   "bits": 8,
+   "examples": [
+    "svc_SW_x11",
+    "svc_NW_x11"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s5.eo + hfd_svc_SW_s6.wi",
+   "nets": 2,
+   "bits": 1088,
+   "examples": [
+    "svc_SW_x10",
+    "svc_NW_x10"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s6.ei + hfd_svc_SW_s7.wo",
+   "nets": 2,
+   "bits": 4,
+   "examples": [
+    "svc_SW_x13",
+    "svc_NW_x13"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "hub",
+   "signature": "hfd_svc_SW_s6.eo + hfd_svc_SW_s7.wi",
+   "nets": 2,
+   "bits": 544,
+   "examples": [
+    "svc_SW_x12",
+    "svc_NW_x12"
+   ]
+  },
+  {
+   "check": "unloaded",
+   "cls": "host",
+   "signature": "hfd_meso_r32.b + ot_hbm_host_phy.iox",
+   "nets": 1,
+   "bits": 149,
+   "examples": [
+    "host_e"
+   ]
+  }
+ ],
+ "unbound_real_pins": [
+  {
+   "master": "hfd_idx_score_native_grid",
+   "port": "st",
+   "insts": 4,
+   "bits": 16,
+   "dir": "output",
+   "width": 4
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "co",
+   "insts": 1,
+   "bits": 72,
+   "dir": "output",
+   "width": 72
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "co_quarter_last",
+   "insts": 1,
+   "bits": 1,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "coc",
+   "insts": 1,
+   "bits": 1,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "ev",
+   "insts": 1,
+   "bits": 2,
+   "dir": "output",
+   "width": 2
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "fs",
+   "insts": 1,
+   "bits": 90,
+   "dir": "input",
+   "width": 90
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "kin",
+   "insts": 1,
+   "bits": 345,
+   "dir": "input",
+   "width": 345
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "qb",
+   "insts": 1,
+   "bits": 1048,
+   "dir": "input",
+   "width": 1048
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "qbr",
+   "insts": 1,
+   "bits": 1,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "to",
+   "insts": 1,
+   "bits": 612,
+   "dir": "output",
+   "width": 612
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "port": "toc",
+   "insts": 1,
+   "bits": 1,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "rx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "output",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "tx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "input",
+   "width": 512
+  }
+ ],
+ "placeholder_port_direction_conflicts": {},
+ "clocking": [
+  {
+   "master": "hfd_attn_half_hi",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 64
+  },
+  {
+   "master": "hfd_attn_half_lo",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 64
+  },
+  {
+   "master": "hfd_barrier",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cdist_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "hfd_cmdproc_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cmdproc_s",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_coll",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_gath_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 16
+  },
+  {
+   "master": "hfd_hc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_host_slab",
+   "view": "placeholder",
+   "clock": "no_logic (reservation slab)",
+   "instances": 1
+  },
+  {
+   "master": "hfd_idx_score_native_grid",
+   "view": "real",
+   "clock": "no_clock_port",
+   "instances": 4
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "view": "real",
+   "clock": "no_clock_port",
+   "instances": 1
+  },
+  {
+   "master": "hfd_index_q_b0",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b2",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b3",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b4",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b5",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_loader",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_mcast_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "hfd_mcast_r6a",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "hfd_mcast_r6b",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "hfd_meso_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 103
+  },
+  {
+   "master": "hfd_mtp",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_quant",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_router",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_serdes_slab",
+   "view": "placeholder",
+   "clock": "no_logic (reservation slab)",
+   "instances": 2
+  },
+  {
+   "master": "hfd_sfu",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_sm",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 32
+  },
+  {
+   "master": "hfd_stn_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 91
+  },
+  {
+   "master": "hfd_stn_*",
+   "view": "placeholder",
+   "clock": "forwarded_clock",
+   "instances": 558
+  },
+  {
+   "master": "hfd_su",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_su_full",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_su_red",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SE_s0",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s2",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s3",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s4",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s5",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s6",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s7",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s8",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s0",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s2",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s3",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s4",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s5",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s6",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s7",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "hfd_vm_ne",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_nw",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_se",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_sw",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 4
+  },
+  {
+   "master": "ot_hbm_host_phy",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 1
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 9
+  }
+ ],
+ "clock_sources": {
+  "hb_coll": [
+   "pll_hbm",
+   "pll_link",
+   "pll_serial",
+   "pll_stream"
+  ]
+ },
+ "reset": [
+  {
+   "master": "hfd_attn_half_lo",
+   "net": "reset_tree",
+   "instances": 64
+  },
+  {
+   "master": "hfd_barrier",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cdist_*",
+   "net": "reset_tree",
+   "instances": 8
+  },
+  {
+   "master": "hfd_cmdproc_n",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cmdproc_s",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_gath_*",
+   "net": "reset_tree",
+   "instances": 16
+  },
+  {
+   "master": "hfd_hc",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_idx_score_native_grid",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_idx_sel_native_qend",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_index_q_b0",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b1",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b2",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b3",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b4",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q_b5",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_loader",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_mcast_*",
+   "net": "reset_tree",
+   "instances": 8
+  },
+  {
+   "master": "hfd_mcast_r6a",
+   "net": "reset_tree",
+   "instances": 8
+  },
+  {
+   "master": "hfd_mcast_r6b",
+   "net": "reset_tree",
+   "instances": 8
+  },
+  {
+   "master": "hfd_meso_*",
+   "net": "reset_tree",
+   "instances": 103
+  },
+  {
+   "master": "hfd_mtp",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_quant",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_router",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_sfu",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_sm",
+   "net": "reset_tree",
+   "instances": 32
+  },
+  {
+   "master": "hfd_stn_*",
+   "net": "reset_tree",
+   "instances": 649
+  },
+  {
+   "master": "hfd_su",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_su_full",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_su_red",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SE_s0",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s1",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s2",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s3",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s4",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s5",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s6",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s7",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SE_s8",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s0",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s1",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s2",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s3",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s4",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s5",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s6",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_svc_SW_s7",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "hfd_vm_ne",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_nw",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_se",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm_sw",
+   "net": "reset_tree",
+   "instances": 1
+  }
+ ],
+ "interfaces": {
+  "hfd_coll": {
+   "rtl": "ot_hbm_accel_tu_endpoint",
+   "links": 9,
+   "checks": {
+    "su_delivery_and_inject_request": {
+     "rtl": 2218,
+     "die": 2218,
+     "note": "4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd broadcast to every quarter",
+     "match": true
+    },
+    "su_inject_data": {
+     "rtl": 1024,
+     "die_per_quarter": [
+      1024
+     ],
+     "note": "each quarter drives inj_data; the fan-in inside the block selects one",
+     "match": true
+    },
+    "config_in": {
+     "rtl": 25,
+     "die": 25,
+     "match": true
+    },
+    "status_out": {
+     "rtl": 33,
+     "die": 33,
+     "match": true
+    },
+    "link_tx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "link_rx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "clocks": {
+     "rtl": "clk / rst_n / pclk / prst_n",
+     "die": [
+      "pll_hbm",
+      "pll_link",
+      "pll_serial",
+      "pll_stream",
+      "por_hbm",
+      "por_link",
+      "por_serial",
+      "por_stream"
+     ],
+     "match": true
+    },
+    "unmatched_die_ports": [
+     "f_mtp",
+     "t_mtp"
+    ]
+   },
+   "pass_": false
+  },
+  "hfd_attn_tile": {
+   "rtl": "ot_attn_tile_registered_parent",
+   "checks": {
+    "packet_ld": {
+     "rtl": 1038,
+     "die": null,
+     "match": false
+    },
+    "packet_query": {
+     "rtl": 580,
+     "die": null,
+     "match": false
+    },
+    "result": {
+     "rtl": 529,
+     "die": null,
+     "match": false
+    },
+    "wrapper_forward_ports": {},
+    "clocks": [],
+    "wrapper_note": ""
+   },
+   "pass_": false
+  }
+ },
+ "top_ports": 0,
+ "physical": {
+  "missing_pins": [
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ck",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ck (0/1) in clk_stream",
+     "idx_score_SE.ck (0/1) in clk_stream",
+     "idx_score_NW.ck (0/1) in clk_stream"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@0:1098",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@0:1098 (0/1099) in idx_key_SW_0_e",
+     "idx_score_SE.ik@0:1098 (0/1099) in idx_key_SE_0_e",
+     "idx_score_NW.ik@0:1098 (0/1099) in idx_key_NW_0_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@1099:2197",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@1099:2197 (0/1099) in idx_key_SW_1_e",
+     "idx_score_SE.ik@1099:2197 (0/1099) in idx_key_SE_1_e",
+     "idx_score_NW.ik@1099:2197 (0/1099) in idx_key_NW_1_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@2198:3296",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@2198:3296 (0/1099) in idx_key_SW_2_e",
+     "idx_score_SE.ik@2198:3296 (0/1099) in idx_key_SE_2_e",
+     "idx_score_NW.ik@2198:3296 (0/1099) in idx_key_NW_2_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@3297:4395",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@3297:4395 (0/1099) in idx_key_SW_3_e",
+     "idx_score_SE.ik@3297:4395 (0/1099) in idx_key_SE_3_e",
+     "idx_score_NW.ik@3297:4395 (0/1099) in idx_key_NW_3_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@4396:5494",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@4396:5494 (0/1099) in idx_key_SW_4_e",
+     "idx_score_SE.ik@4396:5494 (0/1099) in idx_key_SE_4_e",
+     "idx_score_NW.ik@4396:5494 (0/1099) in idx_key_NW_4_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@5495:6593",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@5495:6593 (0/1099) in idx_key_SW_5_e",
+     "idx_score_SE.ik@5495:6593 (0/1099) in idx_key_SE_5_e",
+     "idx_score_NW.ik@5495:6593 (0/1099) in idx_key_NW_5_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@6594:7692",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@6594:7692 (0/1099) in idx_key_SW_6_e",
+     "idx_score_SE.ik@6594:7692 (0/1099) in idx_key_SE_6_e",
+     "idx_score_NW.ik@6594:7692 (0/1099) in idx_key_NW_6_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ik@7693:8791",
+    "endpoints": 4,
+    "bits": 4396,
+    "examples": [
+     "idx_score_SW.ik@7693:8791 (0/1099) in idx_key_SW_7_e",
+     "idx_score_SE.ik@7693:8791 (0/1099) in idx_key_SE_7_e",
+     "idx_score_NW.ik@7693:8791 (0/1099) in idx_key_NW_7_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@0:0",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@0:0 (0/1) in idx_key_credit_SW_0_0",
+     "idx_score_SE.ikc@0:0 (0/1) in idx_key_credit_SE_0_0",
+     "idx_score_NW.ikc@0:0 (0/1) in idx_key_credit_NW_0_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@1:1",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@1:1 (0/1) in idx_key_credit_SW_1_0",
+     "idx_score_SE.ikc@1:1 (0/1) in idx_key_credit_SE_1_0",
+     "idx_score_NW.ikc@1:1 (0/1) in idx_key_credit_NW_1_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@2:2",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@2:2 (0/1) in idx_key_credit_SW_2_0",
+     "idx_score_SE.ikc@2:2 (0/1) in idx_key_credit_SE_2_0",
+     "idx_score_NW.ikc@2:2 (0/1) in idx_key_credit_NW_2_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@3:3",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@3:3 (0/1) in idx_key_credit_SW_3_0",
+     "idx_score_SE.ikc@3:3 (0/1) in idx_key_credit_SE_3_0",
+     "idx_score_NW.ikc@3:3 (0/1) in idx_key_credit_NW_3_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@4:4",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@4:4 (0/1) in idx_key_credit_SW_4_0",
+     "idx_score_SE.ikc@4:4 (0/1) in idx_key_credit_SE_4_0",
+     "idx_score_NW.ikc@4:4 (0/1) in idx_key_credit_NW_4_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@5:5",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@5:5 (0/1) in idx_key_credit_SW_5_0",
+     "idx_score_SE.ikc@5:5 (0/1) in idx_key_credit_SE_5_0",
+     "idx_score_NW.ikc@5:5 (0/1) in idx_key_credit_NW_5_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@6:6",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@6:6 (0/1) in idx_key_credit_SW_6_0",
+     "idx_score_SE.ikc@6:6 (0/1) in idx_key_credit_SE_6_0",
+     "idx_score_NW.ikc@6:6 (0/1) in idx_key_credit_NW_6_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "ikc@7:7",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.ikc@7:7 (0/1) in idx_key_credit_SW_7_0",
+     "idx_score_SE.ikc@7:7 (0/1) in idx_key_credit_SE_7_0",
+     "idx_score_NW.ikc@7:7 (0/1) in idx_key_credit_NW_7_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "q",
+    "endpoints": 4,
+    "bits": 2284,
+    "examples": [
+     "idx_score_SW.q (0/571) in idx_query_SW_e",
+     "idx_score_SE.q (0/571) in idx_query_SE_e",
+     "idx_score_NW.q (0/571) in idx_query_NW_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "rst",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.rst (0/1) in rst_stream",
+     "idx_score_SE.rst (0/1) in rst_stream",
+     "idx_score_NW.rst (0/1) in rst_stream"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "s",
+    "endpoints": 4,
+    "bits": 2440,
+    "examples": [
+     "idx_score_SW.s (0/610) in idx_score_SW_0",
+     "idx_score_SE.s (0/610) in idx_score_SE_0",
+     "idx_score_NW.s (0/610) in idx_score_NW_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_score_native_grid",
+    "port": "sc",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "idx_score_SW.sc (0/1) in idx_score_credit_SW_e",
+     "idx_score_SE.sc (0/1) in idx_score_credit_SE_e",
+     "idx_score_NW.sc (0/1) in idx_score_credit_NW_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "ck",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.ck (0/1) in clk_stream"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "qo@0:570",
+    "endpoints": 1,
+    "bits": 571,
+    "examples": [
+     "idx_selector.qo@0:570 (0/571) in idx_query_SW_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "qo@1142:1712",
+    "endpoints": 1,
+    "bits": 571,
+    "examples": [
+     "idx_selector.qo@1142:1712 (0/571) in idx_query_NW_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "qo@1713:2283",
+    "endpoints": 1,
+    "bits": 571,
+    "examples": [
+     "idx_selector.qo@1713:2283 (0/571) in idx_query_NE_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "qo@571:1141",
+    "endpoints": 1,
+    "bits": 571,
+    "examples": [
+     "idx_selector.qo@571:1141 (0/571) in idx_query_SE_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "rst",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.rst (0/1) in rst_stream"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "sc@0:0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.sc@0:0 (0/1) in idx_score_credit_SW_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "sc@1:1",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.sc@1:1 (0/1) in idx_score_credit_SE_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "sc@2:2",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.sc@2:2 (0/1) in idx_score_credit_NW_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "sc@3:3",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "idx_selector.sc@3:3 (0/1) in idx_score_credit_NE_0"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "si@0:609",
+    "endpoints": 1,
+    "bits": 610,
+    "examples": [
+     "idx_selector.si@0:609 (0/610) in idx_score_SW_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "si@1220:1829",
+    "endpoints": 1,
+    "bits": 610,
+    "examples": [
+     "idx_selector.si@1220:1829 (0/610) in idx_score_NW_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "si@1830:2439",
+    "endpoints": 1,
+    "bits": 610,
+    "examples": [
+     "idx_selector.si@1830:2439 (0/610) in idx_score_NE_e"
+    ]
+   },
+   {
+    "master": "hfd_idx_sel_native_qend",
+    "port": "si@610:1219",
+    "endpoints": 1,
+    "bits": 610,
+    "examples": [
+     "idx_selector.si@610:1219 (0/610) in idx_score_SE_e"
+    ]
+   },
+   {
+    "master": "hfd_mcast_r5",
+    "port": "b@0:1023,2063:2064",
+    "endpoints": 4,
+    "bits": 4104,
+    "examples": [
+     "w31_xmSW3.b@0:1023,2063:2064 (0/1026) in xh_SW_2a",
+     "w125_xmSE0.b@0:1023,2063:2064 (0/1026) in xh_SE_1a",
+     "w215_xmNW3.b@0:1023,2063:2064 (0/1026) in xh_NW_2a"
+    ]
+   },
+   {
+    "master": "hfd_mcast_r5",
+    "port": "b@1024:2062,2065:2067",
+    "endpoints": 4,
+    "bits": 4168,
+    "examples": [
+     "w31_xmSW3.b@1024:2062,2065:2067 (0/1042) in xh_SW_2b",
+     "w125_xmSE0.b@1024:2062,2065:2067 (0/1042) in xh_SE_1b",
+     "w215_xmNW3.b@1024:2062,2065:2067 (0/1042) in xh_NW_2b"
+    ]
+   },
+   {
+    "master": "hfd_mcast_r7",
+    "port": "a@0:1023,2063:2064",
+    "endpoints": 4,
+    "bits": 4104,
+    "examples": [
+     "w34_xmSW0.a@0:1023,2063:2064 (0/1026) in xh_SW_0a",
+     "w128_xmSE3.a@0:1023,2063:2064 (0/1026) in xh_SE_3a",
+     "w218_xmNW0.a@0:1023,2063:2064 (0/1026) in xh_NW_0a"
+    ]
+   },
+   {
+    "master": "hfd_mcast_r7",
+    "port": "a@1024:2062,2065:2067",
+    "endpoints": 4,
+    "bits": 4168,
+    "examples": [
+     "w34_xmSW0.a@1024:2062,2065:2067 (0/1042) in xh_SW_0b",
+     "w128_xmSE3.a@1024:2062,2065:2067 (0/1042) in xh_SE_3b",
+     "w218_xmNW0.a@1024:2062,2065:2067 (0/1042) in xh_NW_0b"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x@0:1023",
+    "endpoints": 16,
+    "bits": 16384,
+    "examples": [
+     "sm1.x@0:1023 (0/1024) in xl_sm1a",
+     "sm5.x@0:1023 (0/1024) in xl_sm5a",
+     "sm2.x@0:1023 (0/1024) in xl_sm2a"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x@1024:2062",
+    "endpoints": 16,
+    "bits": 16624,
+    "examples": [
+     "sm1.x@1024:2062 (0/1039) in xl_sm1b",
+     "sm5.x@1024:2062 (0/1039) in xl_sm5b",
+     "sm2.x@1024:2062 (0/1039) in xl_sm2b"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@0:3625",
+    "endpoints": 4,
+    "bits": 14504,
+    "examples": [
+     "phy_SW.dfi@0:3625 (0/3626) in dfi_SW_s0",
+     "phy_SE.dfi@0:3625 (0/3626) in dfi_SE_s0",
+     "phy_NW.dfi@0:3625 (0/3626) in dfi_NW_s0"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@10320:12907",
+    "endpoints": 2,
+    "bits": 5176,
+    "examples": [
+     "phy_SW.dfi@10320:12907 (0/2588) in dfi_SW_s3",
+     "phy_NW.dfi@10320:12907 (0/2588) in dfi_NW_s3"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@10320:13529",
+    "endpoints": 2,
+    "bits": 6420,
+    "examples": [
+     "phy_SE.dfi@10320:13529 (0/3210) in dfi_SE_s3",
+     "phy_NE.dfi@10320:13529 (0/3210) in dfi_NE_s3"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@12908:14773",
+    "endpoints": 2,
+    "bits": 3732,
+    "examples": [
+     "phy_SW.dfi@12908:14773 (0/1866) in dfi_SW_s4",
+     "phy_NW.dfi@12908:14773 (0/1866) in dfi_NW_s4"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@13530:16017",
+    "endpoints": 2,
+    "bits": 4976,
+    "examples": [
+     "phy_SE.dfi@13530:16017 (0/2488) in dfi_SE_s4",
+     "phy_NE.dfi@13530:16017 (0/2488) in dfi_NE_s4"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@14774:17261",
+    "endpoints": 2,
+    "bits": 4976,
+    "examples": [
+     "phy_SW.dfi@14774:17261 (0/2488) in dfi_SW_s5",
+     "phy_NW.dfi@14774:17261 (0/2488) in dfi_NW_s5"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@16018:18505",
+    "endpoints": 2,
+    "bits": 4976,
+    "examples": [
+     "phy_SE.dfi@16018:18505 (0/2488) in dfi_SE_s5",
+     "phy_NE.dfi@16018:18505 (0/2488) in dfi_NE_s5"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@17262:19749",
+    "endpoints": 2,
+    "bits": 4976,
+    "examples": [
+     "phy_SW.dfi@17262:19749 (0/2488) in dfi_SW_s6",
+     "phy_NW.dfi@17262:19749 (0/2488) in dfi_NW_s6"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@18506:20371",
+    "endpoints": 2,
+    "bits": 3732,
+    "examples": [
+     "phy_SE.dfi@18506:20371 (0/1866) in dfi_SE_s6",
+     "phy_NE.dfi@18506:20371 (0/1866) in dfi_NE_s6"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@19750:22237",
+    "endpoints": 2,
+    "bits": 4976,
+    "examples": [
+     "phy_SW.dfi@19750:22237 (0/2488) in dfi_SW_s7",
+     "phy_NW.dfi@19750:22237 (0/2488) in dfi_NW_s7"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@20372:21615",
+    "endpoints": 2,
+    "bits": 2488,
+    "examples": [
+     "phy_SE.dfi@20372:21615 (0/1244) in dfi_SE_s7",
+     "phy_NE.dfi@20372:21615 (0/1244) in dfi_NE_s7"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@21616:22237",
+    "endpoints": 2,
+    "bits": 1244,
+    "examples": [
+     "phy_SE.dfi@21616:22237 (0/622) in dfi_SE_s8",
+     "phy_NE.dfi@21616:22237 (0/622) in dfi_NE_s8"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@3626:7831",
+    "endpoints": 4,
+    "bits": 16824,
+    "examples": [
+     "phy_SW.dfi@3626:7831 (0/4206) in dfi_SW_s1",
+     "phy_SE.dfi@3626:7831 (0/4206) in dfi_SE_s1",
+     "phy_NW.dfi@3626:7831 (0/4206) in dfi_NW_s1"
+    ]
+   },
+   {
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi@7832:10319",
+    "endpoints": 4,
+    "bits": 9952,
+    "examples": [
+     "phy_SW.dfi@7832:10319 (0/2488) in dfi_SW_s2",
+     "phy_SE.dfi@7832:10319 (0/2488) in dfi_SE_s2",
+     "phy_NW.dfi@7832:10319 (0/2488) in dfi_NW_s2"
+    ]
+   },
+   {
+    "master": "ot_hbm_host_phy",
+    "port": "ck",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "lk_host.ck (0/1) in clk_link"
+    ]
+   },
+   {
+    "master": "ot_hbm_host_phy",
+    "port": "iox",
+    "endpoints": 1,
+    "bits": 512,
+    "examples": [
+     "lk_host.iox (0/512) in host_e"
+    ]
+   }
+  ],
+  "face_away": [
+   {
+    "master": "hfd_sm",
+    "port": "c",
+    "orient": "MX",
+    "endpoints": 1,
+    "bits": 103,
+    "examples": [
+     "sm27.c face S peer 1347 um behind (cl_sm27)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "c",
+    "orient": "MY",
+    "endpoints": 1,
+    "bits": 103,
+    "examples": [
+     "sm3.c face N peer 1609 um behind (cl_sm3)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "c",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 103,
+    "examples": [
+     "sm11.c face N peer 1609 um behind (cl_sm11)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "c",
+    "orient": "R180",
+    "endpoints": 3,
+    "bits": 309,
+    "examples": [
+     "sm19.c face S peer 1347 um behind (cl_sm19)",
+     "sm22.c face S peer 1364 um behind (cl_sm22)",
+     "sm23.c face S peer 1354 um behind (cl_sm23)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "r",
+    "orient": "MX",
+    "endpoints": 4,
+    "bits": 1080,
+    "examples": [
+     "sm28.r face E peer 4253 um behind (rl_sm28)",
+     "sm25.r face E peer 1662 um behind (rl_sm25)",
+     "sm29.r face E peer 5135 um behind (rl_sm29)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "r",
+    "orient": "MY",
+    "endpoints": 3,
+    "bits": 810,
+    "examples": [
+     "sm3.r face W peer 7726 um behind (rl_sm3)",
+     "sm7.r face W peer 4252 um behind (rl_sm7)",
+     "sm6.r face W peer 6917 um behind (rl_sm6)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "r",
+    "orient": "R0",
+    "endpoints": 4,
+    "bits": 1080,
+    "examples": [
+     "sm12.r face E peer 4253 um behind (rl_sm12)",
+     "sm9.r face E peer 1662 um behind (rl_sm9)",
+     "sm13.r face E peer 5135 um behind (rl_sm13)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "r",
+    "orient": "R180",
+    "endpoints": 3,
+    "bits": 810,
+    "examples": [
+     "sm19.r face W peer 7726 um behind (rl_sm19)",
+     "sm23.r face W peer 4252 um behind (rl_sm23)",
+     "sm22.r face W peer 5163 um behind (rl_sm22)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x",
+    "orient": "MX",
+    "endpoints": 2,
+    "bits": 4126,
+    "examples": [
+     "sm27.x face W peer 9453 um behind (xl_sm27)",
+     "sm31.x face W peer 5981 um behind (xl_sm31)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x",
+    "orient": "MY",
+    "endpoints": 2,
+    "bits": 4126,
+    "examples": [
+     "sm0.x face E peer 2508 um behind (xl_sm0)",
+     "sm4.x face E peer 5982 um behind (xl_sm4)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 4126,
+    "examples": [
+     "sm11.x face W peer 9453 um behind (xl_sm11)",
+     "sm15.x face W peer 5981 um behind (xl_sm15)"
+    ]
+   },
+   {
+    "master": "hfd_sm",
+    "port": "x",
+    "orient": "R180",
+    "endpoints": 2,
+    "bits": 4126,
+    "examples": [
+     "sm16.x face E peer 2508 um behind (xl_sm16)",
+     "sm20.x face E peer 5982 um behind (xl_sm20)"
+    ]
+   }
+  ],
+  "pin_spread": [
+   {
+    "bus": "lk_lk_S0_e",
+    "cls": "link",
+    "inst": "lk_S0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 578.4,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S1_e",
+    "cls": "link",
+    "inst": "lk_S1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1353.8,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S2_e",
+    "cls": "link",
+    "inst": "lk_S2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 563.3,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S3_e",
+    "cls": "link",
+    "inst": "lk_S3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1263.1,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S4_e",
+    "cls": "link",
+    "inst": "lk_S4",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1380.2,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N0_e",
+    "cls": "link",
+    "inst": "lk_N0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1508.1,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N1_e",
+    "cls": "link",
+    "inst": "lk_N1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 319.9,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N2_e",
+    "cls": "link",
+    "inst": "lk_N2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1363.2,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N3_e",
+    "cls": "link",
+    "inst": "lk_N3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 898.8,
+    "bits": 974
+   },
+   {
+    "bus": "at_SW_00_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_00_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_00_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_00_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_01_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_01_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_01_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_01_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_02_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_02_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_02_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_02_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_03_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_03_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_03_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_03_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_10_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_10_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_10_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_10_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_11_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_11_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_11_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_11_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_12_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_12_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_12_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_12_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_13_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_13_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_13_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_13_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_20_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_20_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_20_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_20_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_21_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_21_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_21_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_21_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_22_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_22_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_22_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_22_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_23_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_23_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_23_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_23_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_30_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_30_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_30_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_30_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_31_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_31_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_31_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_31_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_32_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_32_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_32_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_32_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_33_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_33_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SW_33_seam_xr",
+    "cls": "hub",
+    "inst": "at_SW_33_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_00_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_00_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_00_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_00_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_01_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_01_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_01_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_01_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_02_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_02_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_02_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_02_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_03_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_03_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_03_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_03_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_10_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_10_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_10_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_10_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_11_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_11_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_11_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_11_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_12_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_12_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_12_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_12_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_13_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_13_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_13_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_13_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_20_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_20_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_20_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_20_hi",
+    "master": "hfd_attn_half_hi",
+    "port": "xr",
+    "face": "S",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   },
+   {
+    "bus": "at_SE_21_seam_xr",
+    "cls": "hub",
+    "inst": "at_SE_21_lo",
+    "master": "hfd_attn_half_lo",
+    "port": "xr",
+    "face": "N",
+    "span_um": 1634.4,
+    "peer_manhattan_um": 0.2,
+    "bits": 272
+   }
+  ],
+  "pin_spread_count": 385,
+  "abut_without_channel": [
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s0",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm24 / svc_NE_s0 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s1",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm24 / svc_NE_s1 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s2",
+    "pairs": 2,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm24 / svc_NE_s2 gap 131.76 um",
+     "sm25 / svc_NE_s2 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s3",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm25 / svc_NE_s3 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s4",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm25 / svc_NE_s4 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s5",
+    "pairs": 2,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm25 / svc_NE_s5 gap 131.76 um",
+     "sm26 / svc_NE_s5 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s6",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm26 / svc_NE_s6 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s7",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm26 / svc_NE_s7 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE_s8",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm26 / svc_NE_s8 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s0",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm16 / svc_NW_s0 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s1",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm16 / svc_NW_s1 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s2",
+    "pairs": 2,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm16 / svc_NW_s2 gap 131.76 um",
+     "sm17 / svc_NW_s2 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s3",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm17 / svc_NW_s3 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s4",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm17 / svc_NW_s4 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s5",
+    "pairs": 2,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm17 / svc_NW_s5 gap 131.76 um",
+     "sm18 / svc_NW_s5 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s6",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm18 / svc_NW_s6 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW_s7",
+    "pairs": 1,
+    "min_gap_um": 131.76,
+    "examples": [
+     "sm18 / svc_NW_s7 gap 131.76 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s0",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm8 / svc_SE_s0 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s1",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm8 / svc_SE_s1 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s2",
+    "pairs": 2,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm8 / svc_SE_s2 gap 129.62 um",
+     "sm9 / svc_SE_s2 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s3",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm9 / svc_SE_s3 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s4",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm9 / svc_SE_s4 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s5",
+    "pairs": 2,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm9 / svc_SE_s5 gap 129.62 um",
+     "sm10 / svc_SE_s5 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s6",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm10 / svc_SE_s6 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s7",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm10 / svc_SE_s7 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE_s8",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm10 / svc_SE_s8 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s0",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm0 / svc_SW_s0 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s1",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm0 / svc_SW_s1 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s2",
+    "pairs": 2,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm0 / svc_SW_s2 gap 129.62 um",
+     "sm1 / svc_SW_s2 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s3",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm1 / svc_SW_s3 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s4",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm1 / svc_SW_s4 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s5",
+    "pairs": 2,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm1 / svc_SW_s5 gap 129.62 um",
+     "sm2 / svc_SW_s5 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s6",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm2 / svc_SW_s6 gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW_s7",
+    "pairs": 1,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm2 / svc_SW_s7 gap 129.62 um"
+    ]
+   }
+  ]
+ },
+ "meso_forwarded_gap": {
+  "waypoint_masters": {
+   "hfd_stn_r39": 28,
+   "hfd_meso_r1": 16,
+   "hfd_stn_r40": 16,
+   "hfd_stn_r41": 20,
+   "hfd_stn_r3": 8,
+   "hfd_stn_r4": 20,
+   "hfd_stn_r42": 8,
+   "hfd_mcast_r5": 4,
+   "hfd_mcast_r7": 4,
+   "hfd_gath_r8": 8,
+   "hfd_gath_r9": 2,
+   "hfd_gath_r10": 2,
+   "hfd_stn_r26": 4,
+   "hfd_stn_r11": 18,
+   "hfd_stn_r12": 18,
+   "hfd_stn_r13": 18,
+   "hfd_cdist_r14": 4,
+   "hfd_cdist_r15": 4,
+   "hfd_stn_r16": 26,
+   "hfd_stn_r17": 20,
+   "hfd_stn_r43": 24,
+   "hfd_stn_r44": 20,
+   "hfd_stn_r45": 24,
+   "hfd_stn_r46": 20,
+   "hfd_stn_r18": 8,
+   "hfd_stn_r19": 8,
+   "hfd_stn_r22": 16,
+   "hfd_stn_r23": 13,
+   "hfd_gath_r24": 2,
+   "hfd_gath_r25": 2,
+   "hfd_stn_r27": 27,
+   "hfd_meso_r28": 8,
+   "hfd_stn_r29": 2,
+   "hfd_meso_r47": 1,
+   "hfd_stn_r30": 3,
+   "hfd_stn_r31": 9,
+   "hfd_meso_r32": 1,
+   "hfd_stn_r33": 1,
+   "hfd_stn_r36": 1,
+   "hfd_meso_r37": 1,
+   "hfd_mcast_r6a": 8,
+   "hfd_mcast_r6b": 8,
+   "hfd_stn": 269,
+   "hfd_meso": 76
+  },
+  "waypoints": 800,
+  "forwarded_stage_bits": 2312332,
+  "ot_fwd_link_stage_W512_needed": 7032,
+  "fifo_placeholders": {},
+  "station_masters": 387,
+  "forwarded_segments_with_fclk": 739,
+  "forwarded_clock_wires": 1666,
+  "meso_fifo_W512_slices": {
+   "total": 345,
+   "in_stations": 311,
+   "in_receiving_blocks": 34,
+   "station_instances": 131
+  },
+  "clock_region_crossings": {
+   "phy_dfi|region": {
+    "buses": 34,
+    "bits": 88952
+   },
+   "weight|domain": {
+    "buses": 32,
+    "bits": 35216
+   },
+   "weight_req|domain": {
+    "buses": 32,
+    "bits": 1424
+   },
+   "weight|region": {
+    "buses": 20,
+    "bits": 22040
+   },
+   "weight_req|region": {
+    "buses": 36,
+    "bits": 1604
+   },
+   "x_trunk|region": {
+    "buses": 26,
+    "bits": 35172
+   },
+   "x_leaf|region": {
+    "buses": 39,
+    "bits": 54677
+   },
+   "result_leaf|region": {
+    "buses": 29,
+    "bits": 7830
+   },
+   "result_trunk|region": {
+    "buses": 13,
+    "bits": 15149
+   },
+   "result_trunk|domain": {
+    "buses": 4,
+    "bits": 8660
+   },
+   "control|region": {
+    "buses": 14,
+    "bits": 10339
+   },
+   "control_leaf|region": {
+    "buses": 26,
+    "bits": 2678
+   },
+   "expert_req|region": {
+    "buses": 18,
+    "bits": 2322
+   },
+   "expert_req|domain": {
+    "buses": 4,
+    "bits": 516
+   },
+   "loader_mem|region": {
+    "buses": 26,
+    "bits": 20196
+   },
+   "loader_mem|domain": {
+    "buses": 8,
+    "bits": 6128
+   },
+   "kv_rows|domain": {
+    "buses": 4,
+    "bits": 4164
+   },
+   "kv_rows|region": {
+    "buses": 8,
+    "bits": 8328
+   },
+   "attn_query|region": {
+    "buses": 12,
+    "bits": 6984
+   },
+   "attn_out|domain": {
+    "buses": 4,
+    "bits": 4232
+   },
+   "hub|region": {
+    "buses": 8,
+    "bits": 1616
+   },
+   "hub|domain": {
+    "buses": 17,
+    "bits": 18688
+   },
+   "link|region": {
+    "buses": 13,
+    "bits": 12688
+   },
+   "link|domain": {
+    "buses": 9,
+    "bits": 8766
+   },
+   "host|region": {
+    "buses": 2,
+    "bits": 1028
+   },
+   "host|domain": {
+    "buses": 1,
+    "bits": 512
+   },
+   "reset_tree|region": {
+    "buses": 2,
+    "bits": 2
+   },
+   "reset_tree|domain": {
+    "buses": 1,
+    "bits": 1
+   },
+   "index_native|domain": {
+    "buses": 64,
+    "bits": 35200
+   },
+   "index_native|region": {
+    "buses": 133,
+    "bits": 90518
+   }
+  },
+  "clock_domain_crossings": {
+   "unattributed": {},
+   "attributed_to_block_cdc": {
+    "weight|hbm->stream_1p2": {
+     "buses": 16,
+     "bits": 17584,
+     "examples": [
+      "wl_sm0",
+      "wl_sm1",
+      "wl_sm2"
+     ],
+     "cdc": "async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)"
+    },
+    "weight_req|stream_1p2->hbm": {
+     "buses": 16,
+     "bits": 704,
+     "examples": [
+      "rq_sm0",
+      "rq_sm1",
+      "rq_sm2"
+     ],
+     "cdc": "async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)"
+    },
+    "attn_out|stream_1p2->serial_0p9": {
+     "buses": 4,
+     "bits": 4232,
+     "examples": [
+      "ao_SW",
+      "ao_SE",
+      "ao_NW"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    },
+    "hub|stream_1p2->serial_0p9": {
+     "buses": 13,
+     "bits": 11792,
+     "examples": [
+      "hb_vm_quant",
+      "hb_vm_su_SW",
+      "hb_coll_su_SW"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    },
+    "hub|serial_0p9->stream_1p2": {
+     "buses": 13,
+     "bits": 13969,
+     "examples": [
+      "hb_su_red_mtp",
+      "hb_su_SW_vm",
+      "hb_su_SW_coll"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    }
+   }
+  }
+ },
+ "block_shape": {
+  "hfd_host_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  },
+  "hfd_index_q_b0": {
+   "in_bits": 6288,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_index_q_b1": {
+   "in_bits": 8340,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_index_q_b3": {
+   "in_bits": 12572,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_index_q_b4": {
+   "in_bits": 8340,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_index_q_b5": {
+   "in_bits": 6288,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
+  "hfd_serdes_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  },
+  "hfd_su_full": {
+   "in_bits": 1,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  }
+ },
+ "counterparts": {
+  "hfd_coll": {
+   "rtl": "ot_hbm_accel_tu_endpoint (rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv)",
+   "die_abstract_bits": 15394,
+   "rtl_in_bits": 5429,
+   "rtl_out_bits": 6627,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "pclk": "input 1",
+    "prst_n": "input 1",
+    "rank": "input 8",
+    "pf": "input 16",
+    "go": "input 1",
+    "inj_idx": "output 32",
+    "inj_rd": "output 2",
+    "inj_data": "input 1024",
+    "ph_tx_v": "output 8",
+    "ph_tx_flit": "output 4360",
+    "sw_cr_ret": "input 8",
+    "ph_rx_v": "input 8",
+    "ph_rx_flit": "input 4360",
+    "rx_credit": "output 8",
+    "del_valid": "output 4",
+    "del_flit": "output 2180",
+    "fault": "output 1",
+    "stat_credit_stall": "output 32"
+   },
+   "die_ports": {
+    "f_cmdproc": 25,
+    "f_mtp": 64,
+    "f_su_NE": 1024,
+    "f_su_NW": 1024,
+    "f_su_SE": 1024,
+    "f_su_SW": 1024,
+    "llk_N0": 976,
+    "llk_N1": 976,
+    "llk_N2": 976,
+    "llk_N3": 976,
+    "llk_S0": 976,
+    "llk_S1": 976,
+    "llk_S2": 976,
+    "llk_S3": 976,
+    "llk_S4": 976,
+    "pll_hbm": 1,
+    "pll_link": 1,
+    "pll_serial": 1,
+    "pll_stream": 1,
+    "por_hbm": 1,
+    "por_link": 1,
+    "por_serial": 1,
+    "por_stream": 1,
+    "t_cmdproc": 33,
+    "t_mtp": 64,
+    "t_su_NE": 580,
+    "t_su_NW": 580,
+    "t_su_SE": 580,
+    "t_su_SW": 580
+   }
+  },
+  "hfd_loader": {
+   "rtl": "ot_hbm_accel_loader_host (rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv)",
+   "die_abstract_bits": 6984,
+   "error": "interface not parsed: name 'ND' is not defined"
+  },
+  "hfd_index_q": {
+   "rtl": "ot_hbm_accel_index_path (rtl/hbm_accel/index/ot_hbm_accel_index_path.sv)",
+   "die_abstract_bits": 0,
+   "error": "interface not parsed: name 'NS' is not defined"
+  },
+  "hfd_attn_tile": {
+   "rtl": "ot_attn_tile_registered_parent (rtl/hbm_accel/ot_attn_tile_registered_parent.sv)",
+   "die_abstract_bits": 0,
+   "rtl_in_bits": 1620,
+   "rtl_out_bits": 529,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "ld_v": "input 1",
+    "ld_mode": "input 1",
+    "ld_bank": "input 3",
+    "ld_grp": "input 8",
+    "ld_w": "input 1024",
+    "ld_w2v": "input 1",
+    "iv": "input 1",
+    "ibank": "input 3",
+    "ib": "input 576",
+    "ov": "output 1",
+    "oy": "output 512",
+    "oflt": "output 16"
+   },
+   "die_ports": {}
+  },
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "margin_lint": {
+  "chains": 1826,
+  "reach_um": 504.0,
+  "reach_violations": 0,
+  "far_side_relays": 0,
+  "reach_examples": [],
+  "far_side_examples": [],
+  "verdict": "PASS"
+ },
+ "abstract_ports_without_net": {
+  "hfd_svc_SW_s1": [
+   "ik"
+  ],
+  "hfd_svc_SE_s3": [
+   "ik"
+  ],
+  "hfd_index_q_b0": [
+   "k"
+  ],
+  "hfd_index_q_b5": [
+   "t_vm"
+  ],
+  "hfd_idx_score_native_grid": [
+   "st"
+  ],
+  "hfd_idx_sel_native_qend": [
+   "fs",
+   "qb",
+   "qbr",
+   "kin",
+   "to",
+   "toc",
+   "co",
+   "coc",
+   "ev",
+   "co_quarter_last"
+  ]
+ },
+ "top_fixes": {},
+ "verilog": {
+  "top": "hbm_lint_top",
+  "stubs": 431,
+  "nc_wires": 450,
+  "filelist": "hbm_lint_top.f",
+  "rtl_files": 27,
+  "unresolved_modules": [
+   "hfd_idx_score_native",
+   "hfd_idx_score_native_c2",
+   "hfd_idx_score_native_grid",
+   "hfd_idx_score_native_grid_c2",
+   "hfd_idx_sel",
+   "hfd_idx_sel_native_qend"
+  ]
+ },
+ "wrapper_ledgers": {
+  "schema": "opentallas.hbm_wrapper_ledgers.v1",
+  "variant": "r25g",
+  "scope": "generic wrapper specs only; custom generators require their own audit",
+  "wrappers": [
+   {
+    "master": "hfd_barrier",
+    "spec": "physical/hbm_accel_die_views/barrier/rtl/spec.json",
+    "spec_sha256": "b28e5d936ce3dc4f37d523d7eb1576cd575b22158a69cc3287c41df582768d5b",
+    "wrapper_sha256": "0a264bf08e74019fdfeada874176b1e29cbea85ccb90332a6356534e36370504",
+    "ties": [
+     {
+      "where": "n0.up",
+      "kind": "open",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)",
+      "gap": null
+     },
+     {
+      "where": "n0.rel_in",
+      "kind": "expr",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)",
+      "gap": null
+     },
+     {
+      "where": "n1.up",
+      "kind": "open",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)",
+      "gap": null
+     },
+     {
+      "where": "n1.rel_in",
+      "kind": "expr",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)",
+      "gap": null
+     }
+    ],
+    "tied_off_bits": 0,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 4
+    },
+    "errors": [],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_cmdproc_n",
+    "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_n.json",
+    "spec_sha256": "43a57a1e0c226f7ff42bac68e0b2737e48b3e8e20870c83fcc3e38934bcd562d",
+    "wrapper_sha256": "b82136e6e22f13e409ef9d872f57eada6d502c7de7cb4b8c1aafd7f8989775ea",
+    "ties": [
+     {
+      "where": "cpN.db_rdy",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_position",
+      "kind": "fold",
+      "bits": 20,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_job",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_generation",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.sm_fault",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.res_v",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.res_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_v",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_rdy",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_token",
+      "kind": "fold",
+      "bits": 17,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_status",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_cycles",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpN.st_kernels",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpN.st_busy",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "die:cNE[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_barrier[32:64]",
+      "kind": "spare_die_input_dropped",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_coll[0:33]",
+      "kind": "spare_die_input_dropped",
+      "bits": 33,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_barrier[32:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_coll[0:25]",
+      "kind": "spare_die_output_const0",
+      "bits": 25,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_NE[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_NW[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1064,
+    "classed_tie_bits": {
+     "debug": 96,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "cpN.db_rdy: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_position: RTL output (20 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_job: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_generation: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_v: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_token: RTL output (17 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_status: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_cycles: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.st_kernels: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.st_busy: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.db_rdy: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_position: fold bind (20 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_job: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_generation: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.sm_fault: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.res_v: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.res_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_v: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_rdy: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_token: fold bind (17 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_status: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_barrier[32:64]: spare_die_input_dropped (32 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_coll[0:33]: spare_die_input_dropped (33 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_barrier[32:64]: spare_die_output_const0 (32 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_coll[0:25]: spare_die_output_const0 (25 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_NE[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_NW[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_cmdproc_s",
+    "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_s.json",
+    "spec_sha256": "ac4803d94ae7c5b79cd91a69207861e7f2af45e787a367066075ffc2a2e5b270",
+    "wrapper_sha256": "cdb3620d0c49c2e4879c4e3dff52a0c33485fbf4a14367406795867844a9be18",
+    "ties": [
+     {
+      "where": "cpS.db_rdy",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_position",
+      "kind": "fold",
+      "bits": 20,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_job",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_generation",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.sm_fault",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.res_v",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.res_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_v",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_rdy",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_token",
+      "kind": "fold",
+      "bits": 17,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_status",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_cycles",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpS.st_kernels",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpS.st_busy",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "die:cSE[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_loader[147:341]",
+      "kind": "spare_die_input_dropped",
+      "bits": 194,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_mtp[0:320]",
+      "kind": "spare_die_input_dropped",
+      "bits": 320,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_router[0:64]",
+      "kind": "spare_die_input_dropped",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_mtp[0:126]",
+      "kind": "spare_die_output_const0",
+      "bits": 126,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_SE[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_SW[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1646,
+    "classed_tie_bits": {
+     "debug": 96,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "cpS.db_rdy: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_position: RTL output (20 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_job: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_generation: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_v: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_token: RTL output (17 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_status: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_cycles: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.st_kernels: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.st_busy: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.db_rdy: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_position: fold bind (20 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_job: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_generation: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.sm_fault: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.res_v: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.res_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_v: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_rdy: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_token: fold bind (17 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_status: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_loader[147:341]: spare_die_input_dropped (194 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_mtp[0:320]: spare_die_input_dropped (320 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_router[0:64]: spare_die_input_dropped (64 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_mtp[0:126]: spare_die_output_const0 (126 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_SE[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_SW[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": false
+   },
+   {
+    "master": "hfd_coll",
+    "spec": "physical/hbm_accel_die_views/coll/rtl/spec.json",
+    "spec_sha256": "f40db80fbb1f9ea794bbd7b38bb34a1623edb7dedb138aababae6f68acea1a0e",
+    "wrapper_sha256": "84abcc65173f4caa8d5991527143cba52dc0c8d505235f60543f9f981e7ebdce",
+    "ties": [
+     {
+      "where": "die:f_mtp[0:64]",
+      "kind": "spare_die_input_dropped",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NE[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NW[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SE[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:llk_N3[967:974]",
+      "kind": "spare_die_input_dropped",
+      "bits": 7,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:llk_N3[480:487]",
+      "kind": "spare_die_output_const0",
+      "bits": 7,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_mtp[0:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 3214,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "die:f_mtp[0:64]: spare_die_input_dropped (64 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NE[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NW[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SE[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:llk_N3[967:974]: spare_die_input_dropped (7 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:llk_N3[480:487]: spare_die_output_const0 (7 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_mtp[0:64]: spare_die_output_const0 (64 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": false
+   },
+   {
+    "master": "hfd_loader",
+    "spec": "physical/hbm_accel_die_views/loader/rtl/spec.json",
+    "spec_sha256": "ece9fd2249f9fe1f84589c83796ab6396327cbe6fcfafb5ff23beac44df553e8",
+    "wrapper_sha256": "4f41387edbbac2d2b3da71dce81f19f51d7d039866547b04babb9881c0d80487",
+    "ties": [
+     {
+      "where": "ld.h_dma_wdata",
+      "kind": "cfg",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_araddr",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arlen",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arsize",
+      "kind": "fold",
+      "bits": 3,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rvalid",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rready",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rdata",
+      "kind": "cfg",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rresp",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rlast",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awaddr",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awlen",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awsize",
+      "kind": "fold",
+      "bits": 3,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wdata",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wstrb",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wlast",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bvalid",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bready",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bresp",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_v",
+      "kind": "open",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_rdy",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_we",
+      "kind": "fold",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_addr",
+      "kind": "open",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_wdata",
+      "kind": "open",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_wstrb",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_tag",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_v",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_rdy",
+      "kind": "fold",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_we",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_tag",
+      "kind": "cfg",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.irq",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.fault",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:h[499:512]",
+      "kind": "spare_die_input_dropped",
+      "bits": 13,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:rNE[0:624]",
+      "kind": "spare_die_input_dropped",
+      "bits": 624,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:rNW[0:624]",
+      "kind": "spare_die_input_dropped",
+      "bits": 624,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:rSE[0:624]",
+      "kind": "spare_die_input_dropped",
+      "bits": 624,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:rSW[0:624]",
+      "kind": "spare_die_input_dropped",
+      "bits": 624,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:h[176:256]",
+      "kind": "spare_die_output_const0",
+      "bits": 80,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:qNE[0:904]",
+      "kind": "spare_die_output_const0",
+      "bits": 904,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:qNW[0:904]",
+      "kind": "spare_die_output_const0",
+      "bits": 904,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:qSE[0:904]",
+      "kind": "spare_die_output_const0",
+      "bits": 904,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:qSW[0:904]",
+      "kind": "spare_die_output_const0",
+      "bits": 904,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_cmdproc[73:341]",
+      "kind": "spare_die_output_const0",
+      "bits": 268,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 8069,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "ld.h_dma_wdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_araddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rlast: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awaddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wdata: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wstrb: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wlast: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_v: open bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_rdy: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_we: fold bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_addr: open bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_wdata: open bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_wstrb: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_tag: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_v: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_rdy: fold bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_we: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_tag: cfg bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.irq: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.fault: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:h[499:512]: spare_die_input_dropped (13 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:rNE[0:624]: spare_die_input_dropped (624 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:rNW[0:624]: spare_die_input_dropped (624 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:rSE[0:624]: spare_die_input_dropped (624 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:rSW[0:624]: spare_die_input_dropped (624 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:h[176:256]: spare_die_output_const0 (80 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:qNE[0:904]: spare_die_output_const0 (904 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:qNW[0:904]: spare_die_output_const0 (904 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:qSE[0:904]: spare_die_output_const0 (904 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:qSW[0:904]: spare_die_output_const0 (904 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_cmdproc[73:341]: spare_die_output_const0 (268 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": false
+   },
+   {
+    "master": "hfd_quant",
+    "spec": "physical/hbm_accel_die_views/quant/rtl/spec.json",
+    "spec_sha256": "392753c6ae2ba3fef50ed89a74144582368f29e19dd3ba463864bd6eec728931",
+    "wrapper_sha256": "d755eb256917edee1cac2cd5ef3c9db15bc0467798d55b911965ec0b6263ad78",
+    "ties": [
+     {
+      "where": "aq.v",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.fp4",
+      "kind": "expr",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.vo",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.q",
+      "kind": "fold",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.e",
+      "kind": "fold",
+      "bits": 10,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.fault",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 270,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "aq.v: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.fp4: expr bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.vo: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.q: fold bind (256 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.e: fold bind (10 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.fault: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_router",
+    "spec": "physical/hbm_accel_die_views/router/rtl/spec.json",
+    "spec_sha256": "2077700b9137f4cc71623d21af9119fc412f22c614bd8a51447aaba19ccc0cb5",
+    "wrapper_sha256": "b5cd13bf4bebf6121bcd8c207f4b0656c93274af8ce188dd24b741d4768e4ab3",
+    "ties": [
+     {
+      "where": "die:f_mtp[0:78]",
+      "kind": "spare_die_input_dropped",
+      "bits": 78,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NE[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NW[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SE[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SW[2:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 254,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eNE[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eNW[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eSE[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eSW[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_cmdproc[55:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 9,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_mtp[0:8]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1409,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "die:f_mtp[0:78]: spare_die_input_dropped (78 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NE[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NW[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SE[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SW[2:256]: spare_die_input_dropped (254 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eNE[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eNW[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eSE[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eSW[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_cmdproc[55:64]: spare_die_output_const0 (9 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_mtp[0:8]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": false
+   }
+  ],
+  "tied_off_bits": 15672,
+  "generation_failures": 0,
+  "wrappers_with_errors": 6,
+  "wrappers_matching_spec": 3
+ }
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.hgi_mtp_native.gate.v1",
+  "verdict": "PASS",
+  "expectations": {
+    "A_connected_positive": true,
+    "A_connected_mutant_wrong_job": true,
+    "B_cp_result_k0_r0": true,
+    "B_cp_result_k0_r1": true,
+    "B_cp_result_k1_r0": true,
+    "B_cp_result_k1_r1": true,
+    "B_cp_result_k2_r0": true,
+    "B_cp_result_k2_r1": true
+  },
+  "cases": [
+    {
+      "case": "A_connected_positive",
+      "returncode": 0,
+      "output": "PASS MX1 drained reset twice native40layer pairedresults finitequeue cycles=25486\n../gate_work/tb_closed_control_hgi_mtp_native.sv:61: $finish called at 254970000 (1ps)\n"
+    },
+    {
+      "case": "A_connected_mutant_wrong_job",
+      "returncode": 1,
+      "output": "FATAL: ../gate_work/tb_closed_control_hgi_mtp_native.sv:41: composed control fault\n       Time: 765000  Scope: tb_hbm_native_mtp_cp_closed_control_mx1\n"
+    },
+    {
+      "case": "B_cp_result_k0_r0",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=826\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 688884000 (1fs)\n"
+    },
+    {
+      "case": "B_cp_result_k0_r1",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=0 tokens=4 n=5 cmds=126 cycles=1353\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 1128402000 (1fs)\n"
+    },
+    {
+      "case": "B_cp_result_k1_r0",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=826\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 688884000 (1fs)\n"
+    },
+    {
+      "case": "B_cp_result_k1_r1",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=1 tokens=4 n=5 cmds=126 cycles=1353\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 1128402000 (1fs)\n"
+    },
+    {
+      "case": "B_cp_result_k2_r0",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=811\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 676374000 (1fs)\n"
+    },
+    {
+      "case": "B_cp_result_k2_r1",
+      "returncode": 0,
+      "output": "PASS actualnativeMTP KIND=2 tokens=4 n=5 cmds=126 cycles=1338\n/srv/opentallas-scratch/claude/mtp-hbmdie/src/rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv:60: $finish called at 1115892000 (1fs)\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/hfd_mtp_x_cp_stop.sv": "98688dbb5b9c3d87f12c0ab45b6b7c7f9f9df1f16c4f3429245b428c3cd16e5e",
+    "rtl/hbm_accel/control/ot_hfd_mtp_core_cp_stop.sv": "9ee6deb0cf175432ace02e722d06b79411d1beedbafdaa714f07820b59decfda",
+    "physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv": "b69db5c9bbf5c9f3c6ac5be0f16d88ea4dc139e4787efb75f76ae24bb39556e3",
+    "rtl/hbm_accel/control/ot_dshbm_dspark_top_cp_stop.sv": "903299c0c5601235911042c816a969c7398239c06f22f82719c0c638bfc9e161",
+    "rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv": "07d668f1dfe6dee5e8665b8ef31484f97cceb0588ce5386c81e49c6e87128e5f",
+    "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv": "9deb1f20846b0e96a7e753166c1d7992d1967d901240074171ff33ba28813741",
+    "physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv": "81f5688e93762d8e8cad01bedc95e4e00688cebde8eb0fbcbed5de15ad6b761d",
+    "rtl/gpu/dshbm/ot_dshbm_accept_port.sv": "92f365a2785461459b2370f515c99a9c76d3ceafb6278aee6f8f66952d2381f2",
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state.sv": "b39964d19f984a10446175cc7dd34f451ab3a16306d473a374c89f483e75e411",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv": "d1bd8377283349e619fdd13dc53a9ab644178e898ff8745f273fedada8e82f33",
+    "rtl/gpu/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "rtl/gpu/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv": "7ba75538d2ef10775a8a26fb7af15d3a140ee4ffbbcfd43173c3c970437633e8",
+    "physical/hbm_mtp/rtl/hfd_mtp_native_cp_stop.sv": "0980e1f93b12c76e6e623d97a48189c6cc134d4ded5ca09f80e0dfb71494af6c",
+    "rtl/hbm_accel/generic/hgi_mtp_native.sv": "82531632d12c571a0cf293de7024735fcae1354ca4ee5062203b50ba01baeadf",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend_mx1.sv": "fd215a93c5f0e54fff912962cd12e4754e747ce3d9d88eefe1dd16d5b799d7ee",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv": "2e50a3e953abc9b1a669264f5c40cb99e30e327e01f1341f087009427292dfb6",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv": "184590a5f9a6038ca9ba02cf387dde23f681a6aafed7c8a91847589981eed5ca",
+    "rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control_mx1.sv": "33a31be2858c39c8a8c0f9e07822268a2ebc361d3c0e0eea30c4dbc75a360631",
+    "rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv": "95852b95b02029852469d829ef60c94440d0f7c343de159da157d9334276b7e4"
+  },
+  "scope": "generic-die MTP master facade in the MX1 connected closed control (synthetic SM arithmetic / kernel PCs, real controller + join + backend + queue) and the controller CP-result stop cases; no generic-sequencer backend, no full-tensor arithmetic claim"
+}

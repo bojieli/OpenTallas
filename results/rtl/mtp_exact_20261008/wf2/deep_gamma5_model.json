@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.mtp_exact_deep_wavefront_model.v1",
+ "compressor_ring_records": 8,
+ "legacy_ring_records": 2,
+ "allocated_slot_sources": 4,
+ "required_compressor_sources": 3,
+ "slot_words": 64,
+ "word_bytes": 4,
+ "added_persistent_bytes_per_package": 6144,
+ "added_isa_instructions": 0,
+ "added_arithmetic_cycles": 0,
+ "scope": "Reduced ISA/RTL vehicle allocation; full-target physical qualification remains separate",
+ "explanation": "Layout allocates SLOT storage for all four KV sources including the ratio-1 unused SLOT20; size the implemented allocation, not only three required compressor sources"
+}

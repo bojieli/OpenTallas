@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/eco/pass1/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hdc_v41_fh_ep_view\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 730.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\n",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 143.33,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 165.044083,
+  "worst_reg_to_reg_slack_ps": 205.03,
+  "worst_input_to_reg_slack_ps": 165.04,
+  "worst_output_port_slack_ps": 143.327576,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "e9d94b633f5527fb33cf800da376402d40f81543b5153dea6e85261bb62c837c",
+  "spef_sha256": "5a4562a762c4cfbdd455514f6f009015055bcdd46e366e86953334305592cd2c",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -54.92,
+  "tns_ps": -112.7,
+  "worst_register_d_slack_ps": -54.917404,
+  "worst_reg_to_reg_slack_ps": -54.92,
+  "worst_input_to_reg_slack_ps": 54.79,
+  "worst_output_port_slack_ps": 5.228817,
+  "violating_d_pins": 6,
+  "errors": [],
+  "odb_sha256": "e9d94b633f5527fb33cf800da376402d40f81543b5153dea6e85261bb62c837c",
+  "spef_sha256": "5a4562a762c4cfbdd455514f6f009015055bcdd46e366e86953334305592cd2c",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -8.89,
+  "tns_ps": -8.9,
+  "worst_register_d_slack_ps": 9.814066,
+  "worst_reg_to_reg_slack_ps": 13.88,
+  "worst_input_to_reg_slack_ps": 9.81,
+  "worst_output_port_slack_ps": -8.887058,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "e9d94b633f5527fb33cf800da376402d40f81543b5153dea6e85261bb62c837c",
+  "spef_sha256": "5a4562a762c4cfbdd455514f6f009015055bcdd46e366e86953334305592cd2c",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0"
+ },
+ "post_sdc": {
+  "physical/dsrom_fh_safe/gen/signoff_ep.sdc": "fc2bba13fced59f949255daac1168876d254968cc163a4da4895b9d95cd557b5",
+  "physical/common_flow/io_ref_routed.sdc": "057a888865bfecd436b81c91f7a43e2bc6fbcb49859de7bd5ed74f3714f582d0",
+  "physical/dsrom_fh_safe/routed_boundary.sdc": "f7e5e11a0dab9172bcb4787935d421ee3a36a8349da034844b15639f951a41a8"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": -54.92,
+ "closes_signoff": false
+}

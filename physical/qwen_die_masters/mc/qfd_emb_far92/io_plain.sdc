@@ -1,0 +1,6 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.667 -clock ck [get_ports {hub_i[*]}]
+set_input_delay 166.667 -clock lclk [get_ports {emb_i[*] kv_i[*]}]
+set_output_delay 166.667 -clock lclk [get_ports {hub_o[*] emb_o[*] kv_o[*] fault}]
+set_false_path -from [get_ports {rst_n}]

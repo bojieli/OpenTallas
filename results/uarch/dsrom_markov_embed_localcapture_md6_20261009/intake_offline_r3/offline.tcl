@@ -1,0 +1,6 @@
+read_db /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_8d5_floorplan/base/2_floorplan.odb
+source /src/physical/dsrom_markov_lookup_localcapture/sliver_block.tcl
+source /src/physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl
+source /src/tools/fp_margin_lint.tcl
+ot_fp_lint_dump /receipt/anchored_fp_dump.json
+write_db /receipt/anchored_floorplan.odb

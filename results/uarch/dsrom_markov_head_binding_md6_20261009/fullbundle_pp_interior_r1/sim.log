@@ -1,0 +1,6 @@
+BUNDLEMETRICS valid=128 headgo=34 firstB=297 lastB=8425 firstA=493 lastA=8429 firstjoin=690 lastjoin=8627 done=8630 Bfifo=1,1,1,1 Afifo=1,1,1,1 headqueue=1,1,1,1
+PASS actualB fourA fourMarkov sharedlookup staged4 maskedargmax valid=128
+- /srv/opentallas-scratch/claude/md6-bundle-source/fullbundle_pp_r1/d0_b83/tb.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 7us; walltime 16.038 s; speed 448.777 ns/s
+- Verilator: cpu 16.039 s on 1 threads; alloced 1096 MB

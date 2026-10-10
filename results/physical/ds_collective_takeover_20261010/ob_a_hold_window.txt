@@ -1,0 +1,41 @@
+OT_ECO pre_ws ss 49.496185 ff -5.49516
+OT_WIN pre endpoints_below_hm 16072 fixable 16072 tight 0 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)
+OT_WIN_CLASS fixable|pin:fault$_DFF_P_ -> port:fault n=1 worst_hold=21.3 worst_setup=129.6 best_window=150.9
+OT_WIN_CLASS fixable|pin:pending$_DFF_P_ -> port:pending n=1 worst_hold=21.0 worst_setup=128.2 best_window=149.1
+OT_WIN_CLASS fixable|pin:rq[*]$_DFF_P_ -> port:rq[*] n=341 worst_hold=-0.2 worst_setup=136.2 best_window=162.0
+OT_WIN_CLASS fixable|pin:src_done[*]$_DFF_P_ -> port:src_done[*] n=3 worst_hold=22.9 worst_setup=114.4 best_window=146.4
+OT_WIN_CLASS fixable|pin:src_rbeat[*]$_DFF_P_ -> port:src_rbeat[*] n=12 worst_hold=23.4 worst_setup=115.3 best_window=145.8
+OT_WIN_CLASS fixable|pin:src_rdata[*]$_DFF_P_ -> port:src_rdata[*] n=836 worst_hold=6.7 worst_setup=112.5 best_window=157.7
+OT_WIN_CLASS fixable|pin:src_rk[*]$_DFF_P_ -> port:src_rk[*] n=4 worst_hold=19.1 worst_setup=125.1 best_window=153.4
+OT_WIN_CLASS fixable|pin:src_rtag[*]$_DFF_P_ -> port:src_rtag[*] n=26 worst_hold=19.0 worst_setup=114.6 best_window=147.0
+OT_WIN_CLASS fixable|pin:src_rv[*]$_DFF_P_ -> port:src_rv[*] n=2 worst_hold=20.6 worst_setup=119.8 best_window=146.9
+OT_WIN_CLASS fixable|pin:src_wd[*]$_DFF_P_ -> port:src_wd[*] n=3 worst_hold=22.2 worst_setup=118.5 best_window=146.9
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.busy$_DFFE_PN0P_ -> pin:u_ib.u_core.g_on.busy$_DFFE_PN0P_/D n=1 worst_hold=28.2 worst_setup=226.5 best_window=254.7
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.count[*][*]$_DFFE_PN0P_ -> pin:u_ib.u_core.g_on.count[*][*]$_DFFE_PN0P_/D n=1 worst_hold=29.9 worst_setup=230.0 best_window=259.9
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.head[*]$_DFFE_PN_ -> pin:u_ib.u_core.g_on.head[*]$_DFFE_PN_/D n=218 worst_hold=11.4 worst_setup=63.8 best_window=314.4
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.head[*]$_DFFE_PN_ -> pin:u_ib.u_core.g_on.len[*]$_DFFE_PN0P_/D n=1 worst_hold=29.4 worst_setup=312.3 best_window=341.7
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.head[*]$_DFFE_PN_ -> pin:u_ib.u_core.g_on.tag[*]$_DFFE_PN0P_/D n=9 worst_hold=23.4 worst_setup=296.8 best_window=405.5
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.head[*]$_DFFE_PN_ -> pin:u_ib.u_core.rq[*]$_DFFE_PN0P_/D n=47 worst_hold=17.0 worst_setup=132.2 best_window=410.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.live_seen$_DFFE_PN0P_ -> pin:u_ib.u_core.g_on.live_seen$_DFFE_PN0P_/D n=1 worst_hold=28.2 worst_setup=564.9 best_window=593.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.queue[*][*]$_DFFE_PP_ -> pin:u_ib.u_core.g_on.hd_src[*][*]$_DFF_P_/D n=903 worst_hold=8.0 worst_setup=93.7 best_window=201.6
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.queue[*][*]$_DFFE_PP_ -> pin:u_ib.u_core.g_on.queue[*][*]$_DFFE_PP_/D n=10876 worst_hold=9.9 worst_setup=108.7 best_window=413.9
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.seen[*]$_DFFE_PN0P_ -> pin:u_ib.u_core.g_on.seen[*]$_DFFE_PN0P_/D n=11 worst_hold=14.4 worst_setup=246.6 best_window=452.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.g_on.tag[*]$_DFFE_PN0P_ -> pin:rq[*]$_DFF_P_/D n=2 worst_hold=12.0 worst_setup=637.7 best_window=659.2
+OT_WIN_CLASS fixable|pin:u_ib.u_core.rq[*]$_DFFE_PN0P_ -> pin:rq[*]$_DFF_P_/D n=212 worst_hold=-5.5 worst_setup=610.8 best_window=669.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_done[*]$_DFF_PN0_ -> pin:src_done[*]$_DFF_P_/D n=4 worst_hold=17.5 worst_setup=632.2 best_window=677.6
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rbeat[*]$_DFFE_PP_ -> pin:src_rbeat[*]$_DFF_P_/D n=16 worst_hold=12.4 worst_setup=652.3 best_window=699.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rdata[*]$_DFFE_PP_ -> pin:src_rdata[*]$_DFF_P_/D n=968 worst_hold=1.4 worst_setup=621.0 best_window=702.7
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rdata[*]$_DFFE_PP_ -> pin:u_ib.u_core.src_rdata[*]$_DFFE_PP_/D n=30 worst_hold=25.2 worst_setup=49.5 best_window=265.8
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rtag[*]$_DFFE_PP_ -> pin:src_rtag[*]$_DFF_P_/D n=67 worst_hold=5.2 worst_setup=644.2 best_window=693.8
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rtag[*]$_DFFE_PP_ -> pin:u_ib.u_core.src_rtag[*]$_DFFE_PP_/D n=3 worst_hold=28.3 worst_setup=210.4 best_window=277.6
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rv[*]$_DFF_PN0_ -> pin:src_rv[*]$_DFF_P_/D n=4 worst_hold=15.1 worst_setup=655.3 best_window=677.6
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_wd[*]$_DFF_PN0_ -> pin:src_wd[*]$_DFF_P_/D n=3 worst_hold=11.8 worst_setup=656.8 best_window=679.8
+OT_WIN_CLASS fixable|port:ctrl_live -> pin:u_ib.q_ctrl_live$_DFF_PN0_/D n=1 worst_hold=29.5 worst_setup=133.6 best_window=163.2
+OT_WIN_CLASS fixable|port:r_beat[*] -> pin:u_ib.q_r_beat[*]$_DFF_P_/D n=3 worst_hold=20.6 worst_setup=154.5 best_window=175.4
+OT_WIN_CLASS fixable|port:r_data[*] -> pin:u_ib.q_r_data[*]$_DFF_P_/D n=86 worst_hold=16.1 worst_setup=124.8 best_window=172.6
+OT_WIN_CLASS fixable|port:r_tag[*] -> pin:u_ib.q_r_tag[*]$_DFF_P_/D n=12 worst_hold=26.6 worst_setup=124.3 best_window=156.2
+OT_WIN_CLASS fixable|port:rk -> pin:u_ib.q_rk$_DFF_PN0_/D n=1 worst_hold=28.6 worst_setup=122.4 best_window=151.0
+OT_WIN_CLASS fixable|port:rv -> pin:u_ib.q_rv$_DFF_PN0_/D n=1 worst_hold=21.1 worst_setup=139.1 best_window=160.2
+OT_WIN_CLASS fixable|port:src_rq[*] -> pin:u_ib.q_src_rq[*]$_DFF_P_/D n=1361 worst_hold=4.4 worst_setup=133.5 best_window=182.1
+OT_WIN_CLASS fixable|port:wd -> pin:u_ib.q_wd$_DFF_PN0_/D n=1 worst_hold=27.4 worst_setup=131.9 best_window=159.3
+[INFO RSZ-0032] Inserted 15705 hold buffers.

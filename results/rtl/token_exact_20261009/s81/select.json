@@ -1,0 +1,24 @@
+{
+ "unit": "ot_hdc_v41x_sel (S81 dsfd_bk_selector core, unchanged)",
+ "params": {
+  "Q": 4,
+  "W": 16,
+  "IW": 20,
+  "K": 512,
+  "AW": 8
+ },
+ "n_keys": 1048576,
+ "k": 512,
+ "rtl_pass": true,
+ "errors": 0,
+ "unit_reference_equals_golden_lexsort": true,
+ "cycles": 16491,
+ "replays": 0,
+ "wall_s": 36.0,
+ "rtl_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "3716c56efe4dcd751d1dfa501de364b36b8357b03c4a10f0d93f9d6cb7971e6b",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf"
+ },
+ "exact": true
+}

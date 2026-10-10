@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.embedding_hbm_real_ports_gate.v1",
+  "timestamp_utc": "2026-10-09T08:02:44Z",
+  "model_before_RTL": "results/arch/emb_hbm_20261008/takeover/real_ports_binding_model.json",
+  "source_base_commit": "dbe4ee278",
+  "sources_sha256": {
+    "tools/emb_hbm_port_sources.py": "267e3811c76d11fbfe700628d5e134353582d75864c88bb8c9be6e59cff592ff",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv": "51e5289c6cad293096a52a1d73eb1645a37f349dc383fcf2417e36394067d3b5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip_bus.sv": "c8f3a0755a70cba8eefb98170d55e2c41906b3d0ad42fedb02d1c2287b3636ed",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc.sv": "be273f59525261fe3387424965e12237647559d43698ba0cc41e357ce000d1a5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc_bus.sv": "31b789e66cb321b7bf619ae2b68ee1a1e3981684b521ff120d974f2ce17c0cb2",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv": "a203e503786573378a44b3471f252b68a7370a9e9566d598c6b6e229be637fda",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv": "714487a068ea745f17ee742c9e57b630566004f7dcf6ad4bdb74f9ca77622cbc",
+    "rtl/test/emb_hbm/tb_emb_pc_bus.sv": "b3404f81754a9efddfba9d847de3f1d6fcfc6a491920918968d6558e1bc3acb8",
+    "rtl/test/emb_hbm/tb_emb_strip_bus.sv": "eb6b57cb70516099301b8781f6ae5db5b31f28c2fbbac9b5ffbda3b5a53c752b",
+    "rtl/test/emb_hbm/tb_emb_dram_pc.sv": "0820e641959de123cc1e1a497f295cc4212d5950ed5ede9ba0a57062ba8cfa6e"
+  },
+  "logs_sha256": {
+    "pc_positive.log": "bb0b198b7084b79abc02e6b47c131140959856ec6b339010bff93933cd026a78",
+    "strip_negative_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pc_negative_compile.log": "ed561659c584b6b580bff471416b68f4d7623e105f1354193b900dfe1df5b13c",
+    "pc_negative.log": "df1809fb72f6c7512a695a33ef72a3d9765028b121ebc520587ec390df11fab3",
+    "exits.txt": "64c8285431ac5c7d377add9e374dba3fb3a230c6ce9a76c5236d5ba639134ec1",
+    "pc_compile.log": "ed561659c584b6b580bff471416b68f4d7623e105f1354193b900dfe1df5b13c",
+    "strip_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "strip_negative.log": "fd5035c36bbb3d052a360201baf02e5b06c5fd509b131bf4321511298d6ca333",
+    "pc_compile_missing_reset.log": "2b483487f0a396f8e67332f72a664009d3c066bbbcfebef809f9423aa9b0b9f4",
+    "strip_positive.log": "0a308b7d29e94605c297f3e77f76bc9413efd70bb55cae383b446621c89f0746",
+    "run.sh": "80e8d61d0ad615cad364dba64753e2405e7db18080139128be23638a17b1ed96"
+  },
+  "tool": "Icarus Verilog 12.0 stable",
+  "admission_peak_GiB": 1,
+  "strip_positive_host": "ot-agidock128",
+  "PC_and_negative_host": "ot-epyc1tb",
+  "remote_workdir": "/srv/opentallas-scratch/codex/emb-real-ports-gate",
+  "functional_verdict": "PASS",
+  "strip": {
+    "NPC": 32,
+    "cycles": 1024,
+    "checks": [
+      "native strip output equivalence",
+      "every command and return pin mapping",
+      "default ENABLE=0 outputs zero"
+    ],
+    "negative": "lane 17 return data bit 0 changed; expected mapping FAIL"
+  },
+  "PC": {
+    "writes": 64,
+    "reads": 64,
+    "CE": 1,
+    "UE": 1,
+    "JEDEC_violations": 0,
+    "checks": [
+      "all native outputs versus unwrapped PC",
+      "exact golden data except injected corrected CE and fail-closed UE",
+      "default ENABLE=0 has no embedding credit or response"
+    ],
+    "negative": "command data bit 0 changed; expected native-output equivalence FAIL"
+  },
+  "period_ps": {
+    "core": 833.333334,
+    "HBM": 1024
+  },
+  "wrapper_latency_added_cycles": 0,
+  "new_registers": 0,
+  "original_sources_modified": false,
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0,
+  "preserved_setup_failure": "pc_compile_missing_reset.log: missing ot_reset_sync dependency; terminal elaboration failure preserved, then correct dependency provided",
+  "queue_move": "AGIdock second admission had only 18 GiB available and required 100 GiB floor; canceled waiting guard only, moved to EPYC1 with measured 404 GiB available",
+  "scope": "Wire-only additive wrappers. Full 32-PC strip mechanism and one native PC component; no whole die, new route, timing, area, pin buffer cost, or adoption claim."
+}

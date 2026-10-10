@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.engram-prefetch-macro-gate.v1",
+ "boundary": "1536words through18realSRAM behavioral macros, SECDED, bounds, read2cycles at1word/cycle; no SS/FF/physical or consumer slotready credit",
+ "predecessor_failure": "results/rtl/engram_prefetch_7abb78efd_fail.json",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_prefetch.sv": "5963e879420bc40d5727a11880e5dc0bc84572d2eac576de5496815e0aeea163",
+  "rtl/test/tb_dsrom_engram_prefetch.sv": "ce4b819d2c3affa713173a428ff41266f746e534169591e1f3da3e166ad73096",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+  "tools/uarch_model.py": "6e0df0ef446f6ac090dde6506b1c67d3dcb12e59bca8e709c722b768e5c0f926",
+  "tools/engram_prefetch_gate.py": "8c45e1b5c456570b985bd4cdcb1f206d91840dd96c9d9af6a5791d55fd7910f8"
+ },
+ "cases": {
+  "clean": {
+   "returncode": 0,
+   "stdout": "PREFETCH_FIRST_WRITE payload=0000000000000000 encoded=000000000000000000\nENGRAM_PREFETCH PASS words=1536 slots=8 banks=18 inject=0 bounds=1 read_latency=2 sustained=1\n/srv/opentallas-scratch/claude/engram/prefetch-gate/rtl/test/tb_dsrom_engram_prefetch.sv:64: $finish called at 30885000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "single_corrected": {
+   "returncode": 0,
+   "stdout": "PREFETCH_FIRST_WRITE payload=0000000000000000 encoded=000000000000000000\nENGRAM_PREFETCH PASS words=1536 slots=8 banks=18 inject=1 bounds=1 read_latency=2 sustained=1\n/srv/opentallas-scratch/claude/engram/prefetch-gate/rtl/test/tb_dsrom_engram_prefetch.sv:64: $finish called at 30885000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "double_rejected": {
+   "returncode": 0,
+   "stdout": "PREFETCH_FIRST_WRITE payload=0000000000000000 encoded=000000000000000000\nENGRAM_PREFETCH PASS words=1536 slots=8 banks=18 inject=3 bounds=1 read_latency=2 sustained=1\n/srv/opentallas-scratch/claude/engram/prefetch-gate/rtl/test/tb_dsrom_engram_prefetch.sv:64: $finish called at 30885000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

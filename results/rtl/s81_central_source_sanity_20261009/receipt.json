@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.s81.central-source-sanity.v1",
+  "remote_host": "ot-epyc1tb",
+  "generation_source_commit": "a651d5101",
+  "generator_modules": ["tools/dsrom_s81_fulldie.py", "tools/qwen_rom_fulldie.py", "tools/s81/s81_dies_recipe.py"],
+  "physical_input_root": "/srv/opentallas-scratch/claude/s81-dies/src_fe365cd13",
+  "generation_run": "/srv/opentallas-scratch/claude/s81-dies/central_a651d5101_generation",
+  "process_2856981": "terminal; absent after both floorplan records and log results completed",
+  "scan": {"fits": false, "failure": "hw_SW station 5 of 55"},
+  "headp2": {"fits": false, "failure": "hw_SW station 5 of 52"},
+  "HOST_defaults": "restored in tested central source; HOST_MM2=0.10",
+  "typed_inventory_source_commit": "212141533",
+  "corrected_inventory_model_commit": "e05bcd275",
+  "corrected_inventory": {"fields": 658, "BF": 338, "ordinary": 320, "BF_range": "0:338 half-open", "weight_ROMs_per_native_field_element": 4},
+  "typed_identity_gate": "PASS inventory, capacity identity, record restoration, invalid-range rejection and reset to legacy defaults",
+  "predecessor_696_receipt": "preserved as superseded proposal",
+  "scope": "generation checks use central Python sources with immutable fe365 physical inputs; identity test stubs only build/STA bodies; no native HOST binding or full head qualification",
+  "repair_status": "5efa fine-lattice and c21 return-first failed other full-shape paths independently; neither is validated by these HOST failures"
+}

@@ -1,0 +1,74 @@
+{
+  "name": "qfd_dspark_w1_dequant-a090cddb3-tc",
+  "block": "qfd_dspark_w1_dequant",
+  "owner": "Codex:review_qwen_token_path",
+  "purpose": "Actual64lane INT8*BF16 W1 native conversion to FP32, exact finite products including subnormals/canonicalpositive0, heldidentity, nonfinite/overflow quarantine; numericalall16,777,216 tuples gate running",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-q5-ecc-20261009",
+    "commit": "a090cddb3",
+    "required_files": [
+      "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+      "rtl/test/qwen_system/tb_qwen_dspark_w1_dequant.sv",
+      "tools/uarch_qwen_dspark_native_model.py",
+      "tools/qwen_system/w1_dequant_gate.py",
+      "physical/qwen_die_masters/cfg/qfd_dspark_w1_dequant.env",
+      "physical/qwen_die_masters/signoff/qfd_dspark_w1_dequant.sdc",
+      "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_dspark_w1_dequant {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_dspark_w1_dequant --out {RUN}/record/views/qfd_dspark_w1_dequant --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_dspark_w1_dequant.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "new HCLK leaf pathfinding only; preserve166.667ps outside+90ps clock skew+50ps hold; no parent adoption before model/control binding"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_dspark_native_20261009/qfd_dspark_w1_dequant-a090cddb3-tc"
+    },
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    }
+  ],
+  "cycles_added": "2serialedgesresponse, II3finiteonepacketlease;4quarters+4edgeROMread atmost16serialedges17.778ns; broadcast/bankmux/die price stillopen.",
+  "merge_target": "main",
+  "no_bench_reason": "Ownerapproved exact+routeparallel afterelaboration: EPYC1 actualIcaruscompilePASS, full16,777,216 INT8/BF16products currentlyrunning vvpPID391910, admitted4GiB Pythonparent391283. Independent structIEEEFP32goldenreceipt sourcepinned. Numericalexact/mutants gateadoption; no routeclaim untilterminal."
+}

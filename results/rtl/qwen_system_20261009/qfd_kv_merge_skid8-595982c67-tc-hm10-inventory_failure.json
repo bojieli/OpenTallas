@@ -1,0 +1,242 @@
+{
+  "name": "qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+  "spec": {
+    "name": "qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+    "block": "qfd_kv_merge_skid",
+    "owner": "Codex:qwen-system",
+    "purpose": "Q4 approved finite merge-side skid. Depth8 full512-bit payload/mask; credits reserved before row launch and freed only actual dequeue. Model prices1536copies15.73mm2,creditRTT78,2grosslandingedges per layer. Separate real tile-side slot and row-arbiter credit integration remain necessary; no adoption from standalone route. CLI parameter binding fixed; original failure preserved. Explicit immutable measured trace inventory repairs fixture-only missing-file failure; arithmetic and negative gates passed on prior source.",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "source": {
+      "branch": "codex/qwen-system-resume-20261009",
+      "commit": "595982c6780596b79df0ab3c451e92d21491ed55",
+      "extra_paths": [
+        "results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz"
+      ],
+      "required_files": [
+        "results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz",
+        "tools/qwen_system/skid_trace.py",
+        "rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv",
+        "physical/qwen_die_masters/cfg/qfd_kv_merge_skid8.env"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "skid_exact",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_kv_merge_skid  -o {RUN}/bench/exact rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv rtl/test/qwen_system/tb_qfd_kv_merge_skid.sv && vvp {RUN}/bench/exact  | tee {RUN}/bench/exact.log && grep -q '^PASS fullshape' {RUN}/bench/exact.log",
+          "expect": "pass",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "pass_regex": "^PASS fullshape"
+        },
+        {
+          "name": "skid_earlycredit_mutant",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_kv_merge_skid -Ptb_qfd_kv_merge_skid.MUT=1 -o {RUN}/bench/negative rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv rtl/test/qwen_system/tb_qfd_kv_merge_skid.sv && vvp {RUN}/bench/negative  | tee {RUN}/bench/negative.log && grep -q '^NEG_DETECTED' {RUN}/bench/negative.log && false",
+          "expect": "fail",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "fail_regex": "^NEG_DETECTED"
+        },
+        {
+          "name": "skid_measured_trace",
+          "cmd": "PYTHONPATH=tools python3 tools/qwen_system/skid_trace.py --trace results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz --out {RUN}/bench/trace_cost.json --vectors {RUN}/bench/trace_vectors.txt && mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_kv_merge_skid  -o {RUN}/bench/trace rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv rtl/test/qwen_system/tb_qfd_kv_merge_skid.sv && vvp {RUN}/bench/trace +trace={RUN}/bench/trace_vectors.txt | tee {RUN}/bench/trace.log && grep -q '^PASS fullshape' {RUN}/bench/trace.log",
+          "expect": "pass",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "pass_regex": "^PASS fullshape"
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+      },
+      "route": {
+        "cmd": "verilator --lint-only --top-module ot_qfd_kv_merge_skid rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_kv_merge_skid8.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_kv_merge_skid8 {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 8,
+        "peak_ram_gb": 32
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_kv_merge_skid8 --post-sdc physical/qwen_die_masters/signoff/qfd_kv_merge_skid8.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_kv_merge_skid8 > {RUN}/record/route/export.log 2>&1 && cp {RUN}/bench/*.json {RUN}/bench/*.log {RUN}/record/route/"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "ttb_routed_at_TC",
+          "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+      ],
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/qfd_kv_merge_skid8.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+      ],
+      "macros": []
+    },
+    "hold_eco": {
+      "enabled": true,
+      "session": "mm",
+      "reason": "current corrected FF hold flow"
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record/views",
+        "to": "physical/qwen_die_masters/views"
+      },
+      {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/qwen_system_20261009/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory"
+      }
+    ],
+    "cycles_added": 72,
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.01,
+    "route_corner": "TC",
+    "notes": "cycles added: 0",
+    "merge_target": "main"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory.json",
+  "created": "2026-10-08T23:50:26-07:00",
+  "status": "FLOORPLAN_MARGIN",
+  "stage_idx": 3,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_skid_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS fullshape DW512 credit RTT78 sent600 retired600 token-writes1447 exact128words\nPASS unreserved overflow suppresses releases\nrtl/test/qwen_system/tb_qfd_kv_merge_skid.sv:83: $finish called at 69790000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_skid_earlycredit_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "NEG_DETECTED credit-early fault at cycle121 sent16 seen0\nrtl/test/qwen_system/tb_qfd_kv_merge_skid.sv:67: $finish called at 1260000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_skid_measured_trace": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "dges_per_tile\": 8, \"offered_words\": 196592, \"tile_count\": 1536, \"busiest_tile_words\": 172, \"unconstrained_credit_fill_edges\": 1333, \"finite_credit_fill_edges\": 1437, \"added_credit_stall_edges_per_fill\": 104, \"composed_gross_token_added_cycles\": 3816, \"sum_offer_to_send_wait_edges\": 1085661, \"scope\": \"per-tile finite credits; row arbitration+PC atomic halves remain separate obligations\"}\nPASS fullshape DW512 credit RTT78 sent172 retired172 token-writes631 exact128words\nPASS unreserved overflow suppresses releases\nrtl/test/qwen_system/tb_qfd_kv_merge_skid.sv:83: $finish called at 23000000 (1ps)\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc2"
+  ],
+  "events": [
+    "2026-10-08T23:50:26-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory.json",
+    "2026-10-08T23:50:26-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-08T23:54:21-07:00 source 595982c67805 synced to ot-epyc2:/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory/src",
+    "2026-10-08T23:54:34-07:00 bench track: launched bench_skid_exact (bench_skid_exact.a1b1) beside None",
+    "2026-10-08T23:54:38-07:00 launched route (attempt 1) on ot-epyc2",
+    "2026-10-08T23:55:33-07:00 bench track: bench_skid_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-08T23:55:38-07:00 bench track: launched bench_skid_earlycredit_mutant (bench_skid_earlycredit_mutant.a1b1) beside route",
+    "2026-10-08T23:56:34-07:00 bench track: bench_skid_earlycredit_mutant FAIL as expected (rc=1) ",
+    "2026-10-08T23:56:38-07:00 bench track: launched bench_skid_measured_trace (bench_skid_measured_trace.a1b1) beside route",
+    "2026-10-08T23:57:33-07:00 bench track: bench_skid_measured_trace PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-08T23:57:38-07:00 FLOORPLAN_MARGIN: util: utilisation 71.9% > 60% (std 6672 + macro 0 um2 in 9286 um2): grow the outline to <= 55-60%"
+  ],
+  "updated": "2026-10-08T23:57:38-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_skid_exact": {
+      "state": "done",
+      "tag": "bench_skid_exact.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+      "n": 1,
+      "started": "2026-10-08T23:54:34-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory/bench_src_a1"
+    },
+    "bench_skid_earlycredit_mutant": {
+      "state": "done",
+      "tag": "bench_skid_earlycredit_mutant.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+      "n": 1,
+      "started": "2026-10-08T23:55:38-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory/bench_src_a1"
+    },
+    "bench_skid_measured_trace": {
+      "state": "done",
+      "tag": "bench_skid_measured_trace.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+      "n": 1,
+      "started": "2026-10-08T23:56:38-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+  "source_synced": true,
+  "commit_full": "595982c6780596b79df0ab3c451e92d21491ed55",
+  "source_archive": {
+    "commit": "595982c6780596b79df0ab3c451e92d21491ed55",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical",
+      "Makefile",
+      "results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz"
+    ],
+    "required_sha256": {
+      "results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz": "458317d2cca01a3a7825c9cacbde5235b82b731a6bea29e9a0fd16d4b89a2af7",
+      "tools/qwen_system/skid_trace.py": "64e06da54a1cd550208fbdfa315681edc1696f29aaa71aed94c6a10e83333ab8",
+      "rtl/qwen_sys/system_20261009/ot_qfd_kv_merge_skid.sv": "90f167b332bbd91d133dccfdc9a61284c6067c3abdc25694cef83edab1d0bf53",
+      "physical/qwen_die_masters/cfg/qfd_kv_merge_skid8.env": "64150694b55d8107937b9eace812a20da14423d18871bea5ebd967cb6421b571"
+    },
+    "archive_sha256": "e102d8a4c8e4a30d82219e1f87a5610a4dde2cf9d2dfb8e0a7710e4c53e47ac0",
+    "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+    "runtime_files_pending": []
+  },
+  "reason": "util: utilisation 71.9% > 60% (std 6672 + macro 0 um2 in 9286 um2): grow the outline to <= 55-60%",
+  "bench_location": {
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-data/claude/closure-loop/qfd_kv_merge_skid8-595982c67-tc-hm10-inventory",
+    "attempt": 1
+  },
+  "bwait": null,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-08T23:54:38-07:00",
+  "bench_work": {
+    "bench_skid_exact": "WARN: pass log has no count line (set min_count_regex)",
+    "bench_skid_measured_trace": "WARN: pass log has no count line (set min_count_regex)"
+  },
+  "wd_checked": 1791528939.0694003,
+  "ef_checked": 1791528939.0694113,
+  "unreachable": 0,
+  "hm_auto_seen": []
+}

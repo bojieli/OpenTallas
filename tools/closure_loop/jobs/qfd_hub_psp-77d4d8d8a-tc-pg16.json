@@ -1,0 +1,96 @@
+{
+ "name": "qfd_hub_psp-77d4d8d8a-tc-pg16",
+ "block": "qfd_hub",
+ "owner": "Codex:qwen-block-closure",
+ "purpose": "Full-shape unchanged hub; split original ordered pin groups into at most 16 pins to permit M4/M6 legal assignment within original intervals. Zero latency/area delta; sizing results/rtl/qwen_hub_pin_groups_20261008/model.json. Parent approved layout-only repair; previous PPL-0107 failure preserved. DRIVE-2140 reviewer DQ1: E/M4 16.3 b/um -> E face over M4+M6: pins on two layers (route_master PIN_H='M4 M6' PIN_V='M5 M7', be5b56d78), 0 cycles, same RTL; TT (TC) route at HM 10 on the current flow (new stuckscan flood rule bb9aea88d). Template qfd_hub_psp-216a06602mm-tt-d1956. | prior: drive-1956 2026-10-08: one-per-block requeue of qfd_hub_psp-216a06602mm-tt (old flow) on the loop's current flow: HM-guard, route-time FF hold at io_ref_routed (route-ff-ioref), CALIB-CORNER, early-fail gates. Killed by stuckscan 5_1_grt hold repair flooded: 20856 endpoints in margin, hold WNS +29.x (start +0.06), old flow; no live qfd_hub job launched after 19:05 (qfd_hub_ps-3d5ad2a4ftt is old-flow, 10-07 21:47). Same RTL, 0 new cycles. Prior purpose: TT-BATCH (owner option B, one large batch): qfd_hub_psp-216a06602mm re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 5",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/qwen-hub-pin-groups-20261008",
+  "commit": "77d4d8d8a3f9f52e580ec4786c6e9645b78dd43d"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hub_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb0 -P tb_qwen_die_hub.PS=1 -P tb_qwen_die_hub.CDCP=1 -P tb_qwen_die_hub.NEG=0 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb0 | tee {RUN}/bench/hb0.log && grep -q '^PASS' {RUN}/bench/hb0.log",
+    "expect": "pass",
+    "pass_regex": "^PASS hub",
+    "min_count_regex": "ar_words=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hub_neg",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb1 -P tb_qwen_die_hub.PS=1 -P tb_qwen_die_hub.CDCP=1 -P tb_qwen_die_hub.NEG=1 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb1 | tee {RUN}/bench/hb1.log && grep -q '^PASS' {RUN}/bench/hb1.log",
+    "expect": "fail",
+    "fail_regex": "^FAIL hub",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "export OT_PIN_GROUP_MAX=16; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; PIN_H='M4 M6' PIN_V='M5 M7' HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_hub_psp.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_hub_psp {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_hub --out {RUN}/record/views/qfd_hub --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_hub_psp.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_hub_pg_candidates/qfd_hub_psp-77d4d8d8a-tc-pg16/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_hub_pin_groups_20261008/qfd_hub_psp-77d4d8d8a-tc-pg16"
+  }
+ ],
+ "cycles_added": "as qfd_hub_ps + link receive +2 fck/+1 ck",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC"
+}

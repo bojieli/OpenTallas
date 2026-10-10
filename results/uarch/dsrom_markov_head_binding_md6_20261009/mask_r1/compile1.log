@@ -1,0 +1,240 @@
+make: Entering directory '/srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/obj1'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtbmask__pch.h -o Vtbmask__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtbmask__pch.h -o Vtbmask__pch.h.slow.gch
+echo "" > Vtbmask__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask.o Vtbmask.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask___024root__DepSet_h0fbcb6ec__0.o Vtbmask___024root__DepSet_h0fbcb6ec__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask___024root__DepSet_hde1407a7__0.o Vtbmask___024root__DepSet_hde1407a7__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_dsrom_bmul3__DepSet_hd4ca3547__0.o Vtbmask_ot_dsrom_bmul3__DepSet_hd4ca3547__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_dsrom_bmul3__DepSet_ha2aa8402__0.o Vtbmask_ot_dsrom_bmul3__DepSet_ha2aa8402__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__0.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__1.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__2.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__0.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__1.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.fast -c -o Vtbmask__main.o Vtbmask__main.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask__ConstPool_0.o Vtbmask__ConstPool_0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask___024root__Slow.o Vtbmask___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask___024root__DepSet_h0fbcb6ec__0__Slow.o Vtbmask___024root__DepSet_h0fbcb6ec__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask___024root__DepSet_hde1407a7__0__Slow.o Vtbmask___024root__DepSet_hde1407a7__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_dsrom_bmul3__Slow.o Vtbmask_ot_dsrom_bmul3__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_dsrom_bmul3__DepSet_hd4ca3547__0__Slow.o Vtbmask_ot_dsrom_bmul3__DepSet_hd4ca3547__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_dsrom_bmul3__DepSet_ha2aa8402__0__Slow.o Vtbmask_ot_dsrom_bmul3__DepSet_ha2aa8402__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_v41_fadd__Cz1_S1__Slow.o Vtbmask_ot_v41_fadd__Cz1_S1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__0__Slow.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__1__Slow.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__2__Slow.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_hb90bfac0__2__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__0__Slow.o Vtbmask_ot_v41_fadd__Cz1_S1__DepSet_h886ac383__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtbmask__pch.h.slow -c -o Vtbmask__Syms.o Vtbmask__Syms.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtbmask__ALL.a    -pthread -lpthread -latomic   -o Vtbmask
+rm Vtbmask__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/obj1'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.263 MB sources in 16 modules, into 5.254 MB in 24 C++ files needing 0.008 MB
+- Verilator: Walltime 7.879 s (elab=0.077, cvt=2.812, bld=4.913); cpu 3.077 s on 8 threads; alloced 247.758 MB
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:8:75: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHARDTAIL' generates 32 bits.
+                                                                                                     : ... note: In instance 'tbmask'
+    8 |  ot_dsrom_markov_head_driver #(.ENABLE(1),.PINREG(1),.VALID_ROWS(SHARDTAIL?6:32)) dut(.*);
+      |                                                                           ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:24: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:31: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:38: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:45: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:52: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:66: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:73: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:80: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:42:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PINREG' generates 32 bits.
+                                                                                                                                        : ... note: In instance 'tbmask.dut.dot'
+   42 |  generate if(PINREG) begin:g_pin
+      |           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:35: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:44: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:53: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:62: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:71: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:80: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:89: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:98: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:32:107: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                      : ... note: In instance 'tbmask.dut.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:191:5: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                    : ... note: In instance 'tbmask.dut.dot.u_join'
+  191 |     if (SPLIT9) begin : g_cy_copy
+      |     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:204:5: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                    : ... note: In instance 'tbmask.dut.dot.u_join'
+  204 |     if (SPLIT9) begin : g_s9
+      |     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_v41_fadd.sv:188:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                     : ... note: In instance 'tbmask.dut.dot.u_join'
+  188 |     initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
+      |                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/v41rom/ot_dsrom_bmul3.sv:25:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                        : ... note: In instance 'tbmask.dut.dot.g_mul[15].u_mul'
+   25 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:34:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+   34 |  assign in_ready=busy && !out_valid && count<WORDS && !fault;
+      |                                             ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:112:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUTANT_FOLD' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+  112 |   .valid_in(tv[LV]),.a(MUTANT_FOLD ? 32'b0 : head),.b(td[LV]),.y(jd),.valid_out(jv),.err(je));
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:121:22: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                                                                          : ... note: In instance 'tbmask.dut.dot'
+  121 |     if(!busy || count!=WORDS || out_valid || je!=0 || fault) begin fault<=1;out_valid<=0;end
+      |                      ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:129:18: Logical operator LOGOR expects 1 bit on the RHS, but RHS's MODDIVS generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+  129 |  initial if(K<16 || K%16 || (WORDS & (WORDS-1))) $fatal(1,"K must be16 times a power of two");
+      |                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:129:26: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tbmask.dut.dot'
+  129 |  initial if(K<16 || K%16 || (WORDS & (WORDS-1))) $fatal(1,"K must be16 times a power of two");
+      |                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:85:55: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'row0' generates 17 bits.
+                                                                                                                                            : ... note: In instance 'tbmask.dut'
+   85 |     begin busy<=1;valid_count<=row0>=129280?0:((129280-row0)<VALID_ROWS?129280-row0:VALID_ROWS);vector_ready<=0;embed_next<=0;identity<=transaction;base<=row0;
+      |                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:85:79: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'row0' generates 17 bits.
+                                                                                                                                            : ... note: In instance 'tbmask.dut'
+   85 |     begin busy<=1;valid_count<=row0>=129280?0:((129280-row0)<VALID_ROWS?129280-row0:VALID_ROWS);vector_ready<=0;embed_next<=0;identity<=transaction;base<=row0;
+      |                                                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:85:30: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                                           : ... note: In instance 'tbmask.dut'
+   85 |     begin busy<=1;valid_count<=row0>=129280?0:((129280-row0)<VALID_ROWS?129280-row0:VALID_ROWS);vector_ready<=0;embed_next<=0;identity<=transaction;base<=row0;
+      |                              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:90:22: Bit extraction of array[15:0] requires 4 bit index, not 5 bits.
+                                                                                                                                           : ... note: In instance 'tbmask.dut'
+   90 |     else begin vector[embed_next]<=embed_data;embed_next<=embed_next+1;
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:89:40: Operator NEQ expects 5 bits on the LHS, but LHS's VARREF 'embed_beat' generates 4 bits.
+                                                                                                                                            : ... note: In instance 'tbmask.dut'
+   89 |     if(embed_id!=identity || embed_beat!=embed_next || embed_last!=(embed_next==15))fault<=1;
+      |                                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:105:59: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tbmask.dut'
+  105 |      joined_valid<=1;joined_bits<=mk_bits;joined_row<=base+active_row;completed<=completed+1;active<=0;
+      |                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:107:62: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tbmask.dut'
+  107 |       have<=1;best_key<=key;best_bits<=mk_bits;best_row<=base+active_row;
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:106:50: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tbmask.dut'
+  106 |      if(!have||key>best_key||(key==best_key&&base+active_row<best_row))begin
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:14:30: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'joined_row' generates 17 bits.
+                                                                                                       : ... note: In instance 'tbmask'
+   14 |    if(got>=wanted||joined_row!=row0+got||joined_row>=129280||joined_bits!==gold[got])$fatal(1,"padded row reached join %0d %0d",got,joined_row);
+      |                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:14:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row0' generates 17 bits.
+                                                                                                       : ... note: In instance 'tbmask'
+   14 |    if(got>=wanted||joined_row!=row0+got||joined_row>=129280||joined_bits!==gold[got])$fatal(1,"padded row reached join %0d %0d",got,joined_row);
+      |                                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:23:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHARDTAIL' generates 32 bits.
+                                                                                                      : ... note: In instance 'tbmask'
+   23 |    row0=transaction_case==1?129280:(SHARDTAIL?21920:129264);
+      |                                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:24:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SHARDTAIL' generates 32 bits.
+                                                                                                      : ... note: In instance 'tbmask'
+   24 |    wanted=transaction_case==1?0:(SHARDTAIL?6:16);
+      |                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:25:12: Logical operator IF expects 1 bit on the If, but If's VARREF 'SHARDTAIL' generates 32 bits.
+                                                                                                      : ... note: In instance 'tbmask'
+   25 |    best=13;if(SHARDTAIL)best=0;
+      |            ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:28:81: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                                      : ... note: In instance 'tbmask'
+   28 |     while(!embed_ready)@(negedge clk);embed_valid=1;embed_data=vec[i];embed_beat=i;embed_last=i==15;@(negedge clk);
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:38:27: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'best_row' generates 17 bits.
+                                                                                                       : ... note: In instance 'tbmask'
+   38 |    if(wanted!=0&&(best_row!=row0+best||best_bits!==gold[best]||best_bits[31]!=1))$fatal(1,"zero padding won overnegative realrows");
+      |                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:38:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row0' generates 17 bits.
+                                                                                                       : ... note: In instance 'tbmask'
+   38 |    if(wanted!=0&&(best_row!=row0+best||best_bits!==gold[best]||best_bits[31]!=1))$fatal(1,"zero padding won overnegative realrows");
+      |                                 ^
+%Warning-UNOPTFLAT: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tbmask.dut.dot.g_mul[0].u_mul.u_ph.g'
+                                                                                                 : ... note: In instance 'tbmask.dut.dot.g_mul[0].u_mul'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:24:27:      Example path: tbmask.dut.dot.g_mul[0].u_mul.u_ph.g
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:24:27:      Example path: tbmask.dut.dot.g_mul[0].u_mul.u_ph.g
+%Warning-UNOPTFLAT: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tbmask.dut.dot.g_mul[0].u_mul.u_ph.p'
+                                                                                                 : ... note: In instance 'tbmask.dut.dot.g_mul[0].u_mul'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:25:27:      Example path: tbmask.dut.dot.g_mul[0].u_mul.u_ph.p
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:25:27:      Example path: tbmask.dut.dot.g_mul[0].u_mul.u_ph.p
+%Warning-UNOPTFLAT: /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'tbmask.dut.dot.u_pair.u_i8.t'
+                                                                                                 : ... note: In instance 'tbmask.dut.dot.u_pair'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:58:27:      Example path: tbmask.dut.dot.u_pair.u_i8.t
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:67:40:      Example path: ASSIGNW
+                    /srv/opentallas-data/claude/md6-head-binding-r6/rtl/common/ot_prefix.sv:58:27:      Example path: tbmask.dut.dot.u_pair.u_i8.t

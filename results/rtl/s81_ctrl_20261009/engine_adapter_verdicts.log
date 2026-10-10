@@ -1,0 +1,7 @@
+TB_S81_ENGINE_ADAPTER mut=0 same=0 cmd=64 start=64 done=64 errors=0 fault=0 maxout=8 maxactive=5 first_dispatch_after_input_stall=36 first_visibility=8 max_done_visibility=7 PASS
+TB_S81_ENGINE_ADAPTER mut=0 same=1 cmd=64 start=64 done=64 errors=0 fault=0 maxout=8 maxactive=5 first_dispatch_after_input_stall=36 first_visibility=7 max_done_visibility=6 PASS
+TB_S81_ENGINE_ADAPTER neg=orphan_done fault=1 done=0 PASS
+TB_S81_ENGINE_ADAPTER neg=ninth_credit fault=1 PASS
+TB_S81_ENGINE_ADAPTER neg=reset_epoch start=1 done=1 errors=0 fault=0 PASS
+TB_S81_ENGINE_ADAPTER mut=1 same=0 cmd=64 start=64 done=64 errors=64 fault=0 maxout=8 maxactive=5 first_dispatch_after_input_stall=36 first_visibility=8 max_done_visibility=7 FAIL
+TB_S81_ENGINE_ADAPTER mut=2 same=0 cmd=8 start=8 done=0 errors=1 fault=1 maxout=8 maxactive=4 first_dispatch_after_input_stall=36 first_visibility=8 max_done_visibility=0 FAIL

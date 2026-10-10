@@ -39,13 +39,16 @@ fleet sweeper deleted the originals on 2026-10-07; every file verified against t
 
 stage_src() {   # generator + verifier source on the bench hosts (tools only; pinned export)
   for h in $HOSTS; do
-    tar -C "$SRC" -c tools results/rtl/qwen_hbmacc_p8191_20261004 results/rtl/qwen_rom_combined_p0_20261005/linked_expected \
+    tar -C "$SRC" -c tools compiler/models/qwen3-8b results/rtl/qwen_hbmacc_p8191_20261004 results/rtl/qwen_rom_combined_p0_20261005/linked_expected \
       | ssh "$h" "rm -rf $F/gen-src.part && mkdir -p $F/gen-src.part && tar -x -C $F/gen-src.part && rm -rf $F/gen-src && mv $F/gen-src.part $F/gen-src && echo $COMMIT > $F/gen-src/SOURCE_COMMIT" \
       || die "stage gen-src on $h"
   done
 }
 
 inputs() {
+  # the head program (hdc_qwen_fullshape_placement_w12) reads compiler/models/qwen3-8b/config.json: a source export
+  # without it failed the 10-08 TP4/TP2 GPU goldens at the head (token-exact 2026-10-09)
+  [ -f "$SRC/compiler/models/qwen3-8b/config.json" ] || die "SRC export lacks compiler/models/qwen3-8b/config.json"
   cp -n /home/ubuntu/realmem-ctx8k/prompt_tokens_8192.txt "$TOK"
   cp -n /home/ubuntu/qwen-dspark-oracle-run/ref/realmem_gold/prompt_embedding.npz "$EMB"
   local t e

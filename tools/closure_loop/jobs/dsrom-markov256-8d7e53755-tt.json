@@ -1,0 +1,57 @@
+{
+ "name": "dsrom-markov256-8d7e53755-tt",
+ "block": "ot_dsrom_markov_row_K256",
+ "owner": "Codex:mtp-markov-route",
+ "purpose": "Standalone released fullK256 streaming Markov row pathfinding; excludes ROM ports, storage allocation, parent integration; no production performance credit",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "codex/markov-route-20261008",
+  "commit": "8d7e53755"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/dsrom_markov/route.sh markov256 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/dsrom_markov/route.sh markov256 {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "routed_at_TT",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/dsrom_markov/gen/signoff_markov256.sdc"
+  ],
+  "macros": []
+ },
+ "record": [],
+ "cycles_added": "first-result177cycles no stalls; full transaction239cycle upper bound; no parent adoption",
+ "merge_target": null,
+ "no_bench_reason": "Parent runs source-pinned tools/test_dsrom_markov.py in parallel. c9cf79ab8 exact48 fullK256 rows, mutation omitting separate logitadd fails; successor9fe83add5 fault bench mandatory before adoption. Route launched concurrently under ownerdirective8; arithmetic unchanged.",
+ "budget": {
+  "enabled": false,
+  "reason": "New standalone engine, no sheet exists. Explicit model600um slot and calibrated die-link 250ps obligation."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

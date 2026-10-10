@@ -433,6 +433,7 @@ def golden_token(ctx, layers, out_dir: Path, head=True, log=print, seed=SEED):
 
 # -- what blocks a full-shape layer on the adopted die (re-derived on every run) -----------------------------------
 CORE = ROOT / "rtl/hdc/v41x/ot_hdc_core_v41x.sv"
+DYNU = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv"   # the DYN table moved here (mtp-lead 2026-10-09)
 TILE = ROOT / "rtl/chip/ot_chip_v41x_tile.sv"
 DIE = ROOT / "rtl/chip/ot_chip_v41x_die.sv"
 
@@ -499,7 +500,7 @@ def blockers(contexts=(1048576, 200000)) -> dict:
         "A = 24 only needs the resident regions), or widen A to 32 where a field addresses them")
     row("dyn_count_width", "Codex (ISA N, core DYN table)",
         {c: v for c, v in dyn.items()}, f"N = {I.N} bits (max 65,535)",
-        _line(CORE, r"dyn\[db \+ 5\] <= p1"),
+        _line(DYNU, r"dyn\[db \+ 5\] <= p1"),
         "N >= 21 for counts derived from the position (NC1 = pos + 1 up to 1,048,576; per-die scan SC1 = 262,144 "
         "at 1M), or express the scan counts in tiles (rnds) so a 16-bit count covers them")
     row("token_and_position_width", "Codex (ot_hdc_core_v41x ports, ot_chip_v41x_tile NW)",
@@ -511,7 +512,7 @@ def blockers(contexts=(1048576, 200000)) -> dict:
         "DYN values of the shipped shape at one die of tp = 4: head dim 512 strides, per-ratio group counts, "
         "top-512 clamps, per-die scan selectors SC1 / SC2 / SCR / NSL1 / NSL2 / NSLR (hdc_replay_v41.dyn_values)",
         "b_tok * DIM, b_pos * 32 (head dim 32), n2 = p1 >> 1, ns = min(., TOPK = 16); no per-die scan selectors",
-        [_line(CORE, r"dyn\[db \+ 16\] <= b_pos \* 32"), _line(CORE, r"parameter integer TOPK = 16")],
+        [_line(DYNU, r"dyn\[db \+ 16\] <= b_pos \* 32"), _line(CORE, r"parameter integer TOPK = 16")],
         "parameterise the DYN table by the shape (HD, TOPK, ratios, tp) and add the six per-die scan selectors")
     row("attention_adapter_geometry", "Codex (ot_hdc_core_v41x g_att_x instance, ot_hdc_v41x_att_adapt)",
         {"head_dim": shp["hd"], "rows_per_job": f"window 128 + top-{shp['topk']} = {shp['t_max']}",

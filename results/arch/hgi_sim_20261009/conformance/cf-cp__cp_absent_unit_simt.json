@@ -1,0 +1,80 @@
+{
+ "id": "cp_absent_unit_simt",
+ "row": "CF-CP",
+ "mode": "QWEN",
+ "what": "a SIMT.RUN record on r25 (no SIMT unit) faults with status 3",
+ "cfg": {
+  "cp_vocab": 151936,
+  "cp_ctx_max": 40960,
+  "coll_group_size": 4
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000100000000000000000000b00000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "000000000100000000000000000000b0",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "SIMT",
+   "op": "RUN",
+   "param": 0,
+   "imm_a": 1,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {}
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "simt",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 3,
+  "dies": [],
+  "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+ },
+ "mutants": []
+}

@@ -1,0 +1,32 @@
+CALL G=1 B=8 K=7 W=32 destinations=1 badrow=-1 cycles=1136
+CALL G=1 B=8 K=512 W=32 destinations=1 badrow=-1 cycles=82946
+CALL G=1 B=8 K=2048 W=32 destinations=1 badrow=-1 cycles=331778
+CALL G=1 B=3 K=7 W=2 destinations=1 badrow=-1 cycles=366
+CALL G=1 B=255 K=7 W=2 destinations=1 badrow=-1 cycles=366
+CALL G=1 B=8 K=7 W=32 destinations=1 badrow=3 cycles=492
+CALL G=2 B=8 K=7 W=32 destinations=2 badrow=-1 cycles=1136
+CALL G=2 B=8 K=512 W=32 destinations=2 badrow=-1 cycles=82946
+CALL G=2 B=8 K=2048 W=32 destinations=2 badrow=-1 cycles=331778
+CALL G=2 B=3 K=7 W=2 destinations=2 badrow=-1 cycles=366
+CALL G=2 B=255 K=7 W=2 destinations=2 badrow=-1 cycles=366
+CALL G=2 B=8 K=7 W=32 destinations=2 badrow=3 cycles=492
+CALL G=4 B=8 K=7 W=32 destinations=4 badrow=-1 cycles=1136
+CALL G=4 B=8 K=512 W=32 destinations=4 badrow=-1 cycles=82946
+CALL G=4 B=8 K=2048 W=32 destinations=4 badrow=-1 cycles=331778
+CALL G=4 B=3 K=7 W=2 destinations=4 badrow=-1 cycles=366
+CALL G=4 B=255 K=7 W=2 destinations=4 badrow=-1 cycles=366
+CALL G=4 B=8 K=7 W=32 destinations=4 badrow=3 cycles=492
+CALL G=8 B=8 K=7 W=32 destinations=8 badrow=-1 cycles=1136
+CALL G=8 B=8 K=512 W=32 destinations=8 badrow=-1 cycles=82946
+CALL G=8 B=8 K=2048 W=32 destinations=8 badrow=-1 cycles=331778
+CALL G=8 B=3 K=7 W=2 destinations=8 badrow=-1 cycles=366
+CALL G=8 B=255 K=7 W=2 destinations=8 badrow=-1 cycles=366
+CALL G=8 B=8 K=7 W=32 destinations=8 badrow=3 cycles=492
+CALL G=96 B=8 K=7 W=32 destinations=96 badrow=-1 cycles=1136
+CALL G=96 B=8 K=512 W=32 destinations=96 badrow=-1 cycles=82946
+CALL G=96 B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=331778
+CALL G=96 B=3 K=7 W=2 destinations=96 badrow=-1 cycles=366
+CALL G=96 B=255 K=7 W=2 destinations=96 badrow=-1 cycles=366
+CALL G=96 B=8 K=7 W=32 destinations=96 badrow=3 cycles=492
+PASS HGI ROW_GATHER calls=30 rows=12925 words=411340 cycles=2085482 k7/512/2048 G1/2/4/8/96 B8/3/255 payloadorder/written/backpressure
+/srv/opentallas-scratch/codex/hgi-coll-lint-8d33d3b03/src/rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:73: $finish called at 20854820000 (1ps)

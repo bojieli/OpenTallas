@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_dsrom_hc_mean_capture",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T07:33:01.960570+00:00",
+      "description": "Full HC4 means for independent input layers37/38/39, TP4 rank1280d; three protected real SRAMs,120 ordered512b outputflits, stored-capture done pulse. Prior source32d007ee5 PASS4released ranks+CE/UE+5protocol negatives+2mutants. Native-reader successor gate active; actual VM owner and parent budgets pending.",
+      "source": {
+        "commit": "308a0500e",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "prior-source PASS; successor pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/r2/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "prior-source PASS; successor pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/r2/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "admission queued; characterization only",
+        "corners": {
+          "route": "TT",
+          "hold": "FF"
+        },
+        "evidence": [
+          "ot-epyc2:/srv/opentallas-scratch2/codex/dsrom-hc-mean-308a0500e/route-r2.pid:514091"
+        ]
+      },
+      "dependencies": [
+        "native pre-hc_pre H VM read adapter",
+        "L37/L38/L39 input capture dispatch",
+        "seed QX delivery"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_dsrom_hc_input_reader",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T07:33:01.960570+00:00",
+      "description": "Finite320 real512b VM reads/capture with actual rvalid and protected four-row registers; converts FP32-held BF16 to160eight-dimension HC4 beats. Existing native read-slot sharing/arbiter and actual rank-H mapping remain unbound.",
+      "source": {
+        "commit": "308a0500e",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_input_reader.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": [
+            "ot-agidock128:/srv/opentallas-scratch/codex-dsrom-hc-capture-308a0500e/gate-r3.pid:2776045"
+          ]
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": [
+            "ot-agidock128:/srv/opentallas-scratch/codex-dsrom-hc-capture-308a0500e/gate-r3.pid:2776045"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "native VM port owner arbiter",
+        "compiler-proven TP4 H row mapping",
+        "HC producer input join"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+PASS PP lookup actual160beats ROM744ps capture2edges stalls bounds IDs defaultoff creditmax=8 fullstop=96 cycles=412 pairintervalfault=1
+- /srv/opentallas-scratch/claude/md6-lookup-pp-source/lookup_gate_r1/tb.sv:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 348ns; walltime 14.114 s; speed 24.667 ns/s
+- Verilator: cpu 14.116 s on 1 threads; alloced 1089 MB

@@ -1,0 +1,24 @@
+{
+ "bench": "v41_mtp_hbm_rtl",
+ "exact": true,
+ "runs": {
+  "forced": {
+   "status": "pass",
+   "cycles": 598611
+  },
+  "forced_w16": {
+   "status": "pass",
+   "cycles": 710683
+  },
+  "mut1": {
+   "status": "pass",
+   "cycles": 188240
+  },
+  "accx": {
+   "status": "pass",
+   "cycles": 188241
+  }
+ },
+ "cycles": 598611,
+ "bench_wall_seconds": 1204.0
+}

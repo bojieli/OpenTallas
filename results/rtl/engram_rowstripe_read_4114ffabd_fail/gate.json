@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.engram-rowstripe-read-gate.v1",
+ "boundary": "six reserved rows at64PC actual rd/rq faces, SECDED and transaction identity; no physical/die or shared arbitration credit",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "8b54008d8c5085c1209153cdf82c62e5340b689a614f8d5b0811be2931dc957b",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/test/tb_dsrom_engram_rowstripe_read.sv": "dab597b3ad3c9f1be130d903c87b9304eff6b1f799ca10a251014f2853a635f3",
+  "tools/uarch_model.py": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9",
+  "tools/engram_rowstripe_read_gate.py": "8c4511f911fd7116fc61aa5f9c92ed83d7bf5f4661b567efcde648cfb7fd5569"
+ },
+ "cases": {
+  "clean": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "single_corrected": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "double_rejected": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "stale_generation": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "swapped_pc": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "duplicate_atom": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/read-row-r1/rtl/test/tb_dsrom_engram_rowstripe_read.sv:19: read adapter drain\n       Time: 10040000  Scope: tb_dsrom_engram_rowstripe_read\n",
+   "stderr": "",
+   "expected_observed": false
+  }
+ },
+ "status": "fail"
+}

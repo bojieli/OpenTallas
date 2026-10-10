@@ -1,0 +1,2015 @@
+{
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "3716c56efe4dcd751d1dfa501de364b36b8357b03c4a10f0d93f9d6cb7971e6b",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "0095d70919a7a3594757aab5f455e742f342285d0b7945a17782d279c4cfbd3c",
+    "rtl/test/tb_hdc_v41x_sel.sv": "f7dab313d9153a9e8978138e67a020206eabede53268c9558cd2181a411ad0ab",
+    "rtl/test/tb_hdc_v41x_sel_cand.sv": "496052a8d41e629f241ca8d8c723b6295f78c50c01205704a1f2bbc589e3fb29",
+    "rtl/test/hdc_v41x_sel_harness.cpp": "32e0872cc0b1beee5b41dfc9b7f05e174fa0a3b02f7baf07447dafc287452f69",
+    "rtl/test/hdc_v41x_sel_cand_harness.cpp": "af002f6e30d578847294bcc5de971de059b4354b314fb5f4faee56f8bfb94a08",
+    "tools/uarch_model.py": "469eb32e14ded5d5bd91daf2b00f35aca7a97efd75babf973dc0e123692f6034",
+    "tools/hbm_selector_capture_gate.py": "5f8a279db638a91a543ff6db708eeef9050ba409f03512e8e90648e161d9c224",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv": "2243d49fd196fbf55ad4711255ade75424e4a8f9b932be1cfa1ca02ce21e4ac0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "model": {
+    "read_latency_cycles": 2,
+    "extra_cycles_per_sweep": 1,
+    "token_extra_cycles_formula": "sum(measured_selector_cycle_deltas per token stage)",
+    "additional_credit_recycle_cycles": 1,
+    "nominal_drain_cycles_formula": "(gc_sweeps + pass2_sweeps + pass3_sweeps + emit_sweeps) * extra_cycles_per_sweep",
+    "token_gain_claim": false,
+    "macs_per_cycle": 0,
+    "replicas": 4,
+    "memory": {
+      "topk_bytes_per_cycle": 74,
+      "candidate_bytes_per_cycle": 8.5,
+      "topk_bits_per_cycle": 592,
+      "candidate_bits_per_cycle": 68
+    },
+    "capture_payload_bits": 2640,
+    "capture_metadata_bits": 32,
+    "mux_demux_added": 0,
+    "cross_boundary_bits_added": 0,
+    "routing_tracks_added": 0,
+    "reservations": {
+      "gc_lines": 8,
+      "output_beats": 4,
+      "policy": "issue counts outstanding until pack exit/output enqueue; capture included"
+    },
+    "area": {
+      "capture_flops": 2672,
+      "floorplan_fit": "requires real mapped area and pins; not physically qualified"
+    },
+    "latency_clock_ns": 0.8333333333333334,
+    "physical_status": "candidate; macro output must terminate at capture D pins"
+  },
+  "rows": [
+    {
+      "tag": "selector_r1_m1",
+      "negative_control": false,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1601,
+          "out_beats": 112,
+          "errors": 0,
+          "tail_min": 81,
+          "tail_max": 1635,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 3977,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 83,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 172,
+              "first": 136,
+              "last": 306,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                81,
+                81,
+                80,
+                82
+              ],
+              "n2": [
+                47,
+                44,
+                47,
+                46
+              ],
+              "n3": [
+                44,
+                41,
+                44,
+                43
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 118,
+              "first": 504,
+              "last": 1285,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                79,
+                82,
+                81,
+                81
+              ],
+              "n2": [
+                19,
+                19,
+                17,
+                18
+              ],
+              "n3": [
+                17,
+                18,
+                16,
+                18
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1635,
+              "first": 1429,
+              "last": 2210,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                32,
+                37,
+                44,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 81,
+              "first": 3871,
+              "last": 3871,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1601,
+          "out_beats": 112,
+          "errors": 0,
+          "tail_min": 81,
+          "tail_max": 2158,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 5064,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 83,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 264,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                74,
+                73,
+                78,
+                79
+              ],
+              "n2": [
+                29,
+                27,
+                30,
+                31
+              ],
+              "n3": [
+                28,
+                27,
+                29,
+                31
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 148,
+              "first": 675,
+              "last": 1617,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                77,
+                80,
+                75,
+                77
+              ],
+              "n2": [
+                17,
+                17,
+                16,
+                17
+              ],
+              "n3": [
+                17,
+                17,
+                15,
+                17
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 2158,
+              "first": 1804,
+              "last": 2760,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                31,
+                32,
+                41,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 81,
+              "first": 4950,
+              "last": 4952,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        }
+      ],
+      "pass_gate": true
+    },
+    {
+      "tag": "selector_r2_m2",
+      "negative_control": false,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1601,
+          "out_beats": 112,
+          "errors": 0,
+          "tail_min": 83,
+          "tail_max": 1635,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 3986,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 85,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 172,
+              "first": 138,
+              "last": 308,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                81,
+                81,
+                80,
+                82
+              ],
+              "n2": [
+                46,
+                43,
+                46,
+                45
+              ],
+              "n3": [
+                43,
+                40,
+                43,
+                42
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 123,
+              "first": 506,
+              "last": 1287,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                79,
+                82,
+                81,
+                81
+              ],
+              "n2": [
+                19,
+                19,
+                17,
+                18
+              ],
+              "n3": [
+                18,
+                18,
+                16,
+                17
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1635,
+              "first": 1436,
+              "last": 2217,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                32,
+                37,
+                44,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 83,
+              "first": 3878,
+              "last": 3878,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1601,
+          "out_beats": 112,
+          "errors": 0,
+          "tail_min": 83,
+          "tail_max": 2158,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 5064,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 85,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 264,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                74,
+                73,
+                78,
+                79
+              ],
+              "n2": [
+                29,
+                28,
+                32,
+                35
+              ],
+              "n3": [
+                28,
+                27,
+                31,
+                34
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 148,
+              "first": 675,
+              "last": 1617,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                77,
+                80,
+                75,
+                77
+              ],
+              "n2": [
+                17,
+                18,
+                15,
+                17
+              ],
+              "n3": [
+                16,
+                17,
+                15,
+                16
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 2158,
+              "first": 1804,
+              "last": 2760,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                31,
+                32,
+                41,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 83,
+              "first": 4950,
+              "last": 4952,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        }
+      ],
+      "pass_gate": true
+    },
+    {
+      "tag": "selector_r1_m2",
+      "negative_control": true,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1594,
+          "out_beats": 112,
+          "errors": 1023,
+          "tail_min": 81,
+          "tail_max": 1635,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 3971,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 81,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 170,
+              "first": 134,
+              "last": 304,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                81,
+                81,
+                80,
+                82
+              ],
+              "n2": [
+                46,
+                43,
+                46,
+                45
+              ],
+              "n3": [
+                43,
+                41,
+                43,
+                42
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 116,
+              "first": 500,
+              "last": 1281,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                79,
+                82,
+                81,
+                81
+              ],
+              "n2": [
+                18,
+                17,
+                17,
+                17
+              ],
+              "n3": [
+                17,
+                17,
+                17,
+                17
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1635,
+              "first": 1423,
+              "last": 2204,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                32,
+                37,
+                44,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 81,
+              "first": 3865,
+              "last": 3865,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": false,
+          "log": "E seg 0 q 3: 1 outputs missing\nE seg 1 q 0: got a5e/3fb9/0 want 0/3fb9/0\nE seg 1 q 0: got a68/3fb9/0 want 2/3fb9/0\nE seg 1 q 0: got a69/3fb9/0 want 10/3fb9/0\nE seg 1 q 0: got a6c/3fb9/0 want 17/3fb9/0\nE seg 1 q 0: got a6f/3fb9/0 want 1d/3fb9/0\nE seg 1 q 0: got a77/3fb9/0 want 24/3fb9/0\nE seg 1 q 0: got a86/3fb9/0 want 28/3fb9/0\nE seg 1 q 0: got a96/3fb9/0 want 29/3fb9/0\nE seg 1 q 0: got a98/3fb9/0 want 2e/3fb9/0\nE seg 1 q 0: got aa0/3fb9/0 want 36/3fb9/0\nE seg 1 q 0: got aa2/3fb9/0 want 3c/3fb9/0\nE seg 1 q 0: got aa5/3fb9/0 want 3e/3fb9/0\nE seg 1 q 0: got aa7/3fb9/0 want 4d/3fb9/0\nE seg 1 q 0: got aa8/3fb9/0 want 51/3fb9/0\nE seg 1 q 0: got aab/3fb9/0 want 55/3fb9/0\nE seg 1 q 0: got 93d/3fb9/0 want 5d/3fb9/0\nE seg 1 q 1: got 1553/3fb9/0 want ab3/3fb9/0\nE seg 1 q 1: got 1559/3fb9/0 want acc/3fb9/0"
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6948,
+          "elements": 111009,
+          "outputs": 1598,
+          "out_beats": 113,
+          "errors": 1465,
+          "tail_min": 81,
+          "tail_max": 2160,
+          "ovf_segments": 2,
+          "stall_cycles": 0,
+          "cycles": 5046,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 81,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 257,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                74,
+                73,
+                78,
+                79
+              ],
+              "n2": [
+                29,
+                26,
+                29,
+                30
+              ],
+              "n3": [
+                28,
+                26,
+                28,
+                30
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 154,
+              "first": 666,
+              "last": 1607,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                75,
+                79,
+                76,
+                76
+              ],
+              "n2": [
+                17,
+                18,
+                16,
+                16
+              ],
+              "n3": [
+                16,
+                17,
+                16,
+                16
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 2160,
+              "first": 1790,
+              "last": 2747,
+              "ovf": 1,
+              "replays": 2,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                27,
+                31,
+                43,
+                256
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 81,
+              "first": 4934,
+              "last": 4935,
+              "ovf": 1,
+              "replays": 0,
+              "stall": 0,
+              "k": 512,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": false,
+          "log": "E seg 0 q 3: 1 outputs missing\nE seg 1 q 0: got aa8/3fb9/0 want 0/3fb9/0\nE seg 1 q 0: got aab/3fb9/0 want 2/3fb9/0\nE seg 1 q 0: got 61f/3fb9/0 want 10/3fb9/0\nE seg 1 q 0: got 621/3fb9/0 want 17/3fb9/0\nE seg 1 q 0: got 62c/3fb9/0 want 1d/3fb9/0\nE seg 1 q 0: got 62d/3fb9/0 want 24/3fb9/0\nE seg 1 q 0: got 63f/3fb9/0 want 28/3fb9/0\nE seg 1 q 0: got 641/3fb9/0 want 29/3fb9/0\nE seg 1 q 0: got 64a/3fb9/0 want 2e/3fb9/0\nE seg 1 q 0: got 64e/3fb9/0 want 36/3fb9/0\nE seg 1 q 0: got 653/3fb9/0 want 3c/3fb9/0\nE seg 1 q 0: got 660/3fb9/0 want 3e/3fb9/0\nE seg 1 q 0: got 66d/3fb9/0 want 4d/3fb9/0\nE seg 1 q 0: got 67b/3fb9/0 want 51/3fb9/0\nE seg 1 q 0: got 67e/3fb9/0 want 55/3fb9/0\nE seg 1 q 0: got 686/3fb9/0 want 5d/3fb9/0\nE seg 1 q 1: got 1502/3fb9/0 want ab3/3fb9/0\nE seg 1 q 1: got 150a/3fb9/0 want acc/3fb9/0\nE seg 1 q 0: short non-last beat\nE seg 2 q 2: short non-last beat\nE seg 2 q 0: short non-last beat\nE seg 2 q 3: short non-last beat\nE seg 2 q 1: short non-last beat\nE seg 3 q 3: short non-last beat"
+        }
+      ],
+      "pass_gate": true
+    },
+    {
+      "tag": "candidate_r1_m1",
+      "negative_control": false,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5469,
+          "out_beats": 2744,
+          "errors": 0,
+          "tail_min": 82,
+          "tail_max": 1646,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 5463,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 84,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 422,
+              "first": 137,
+              "last": 307,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n3": [
+                171,
+                171,
+                171,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 1341,
+              "first": 755,
+              "last": 1536,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                667,
+                667,
+                686,
+                684
+              ],
+              "n2": [
+                616,
+                610,
+                633,
+                630
+              ],
+              "n3": [
+                606,
+                604,
+                626,
+                623
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1646,
+              "first": 2903,
+              "last": 3684,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                424,
+                533,
+                781,
+                782
+              ],
+              "n2": [
+                166,
+                354,
+                781,
+                782
+              ],
+              "n3": [
+                0,
+                0,
+                615,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 82,
+              "first": 5356,
+              "last": 5356,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5469,
+          "out_beats": 2744,
+          "errors": 0,
+          "tail_min": 82,
+          "tail_max": 5279,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 11695,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 84,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 1235,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n3": [
+                171,
+                171,
+                171,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 2676,
+              "first": 1654,
+              "last": 2612,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                669,
+                661,
+                685,
+                678
+              ],
+              "n2": [
+                585,
+                588,
+                608,
+                599
+              ],
+              "n3": [
+                581,
+                584,
+                603,
+                594
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 5279,
+              "first": 5315,
+              "last": 6270,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                413,
+                538,
+                781,
+                782
+              ],
+              "n2": [
+                86,
+                227,
+                751,
+                782
+              ],
+              "n3": [
+                0,
+                0,
+                615,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 82,
+              "first": 11576,
+              "last": 11577,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        }
+      ],
+      "pass_gate": true
+    },
+    {
+      "tag": "candidate_r2_m2",
+      "negative_control": false,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5469,
+          "out_beats": 2744,
+          "errors": 0,
+          "tail_min": 84,
+          "tail_max": 1648,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 5480,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 86,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 424,
+              "first": 139,
+              "last": 309,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n3": [
+                171,
+                171,
+                171,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 1350,
+              "first": 759,
+              "last": 1540,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                667,
+                667,
+                686,
+                684
+              ],
+              "n2": [
+                619,
+                612,
+                637,
+                631
+              ],
+              "n3": [
+                609,
+                606,
+                629,
+                624
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1648,
+              "first": 2916,
+              "last": 3697,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                424,
+                533,
+                781,
+                782
+              ],
+              "n2": [
+                186,
+                368,
+                781,
+                782
+              ],
+              "n3": [
+                0,
+                0,
+                615,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 84,
+              "first": 5371,
+              "last": 5371,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5469,
+          "out_beats": 2744,
+          "errors": 0,
+          "tail_min": 84,
+          "tail_max": 5286,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 11698,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 86,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 1232,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n3": [
+                171,
+                171,
+                171,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 2683,
+              "first": 1637,
+              "last": 2596,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                669,
+                660,
+                686,
+                678
+              ],
+              "n2": [
+                585,
+                591,
+                614,
+                602
+              ],
+              "n3": [
+                582,
+                586,
+                609,
+                598
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 5286,
+              "first": 5312,
+              "last": 6266,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                412,
+                537,
+                781,
+                782
+              ],
+              "n2": [
+                104,
+                254,
+                749,
+                782
+              ],
+              "n3": [
+                0,
+                0,
+                615,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 84,
+              "first": 11580,
+              "last": 11580,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": true,
+          "log": ""
+        }
+      ],
+      "pass_gate": true
+    },
+    {
+      "tag": "candidate_r1_m2",
+      "negative_control": true,
+      "runs": [
+        {
+          "bubble": 0,
+          "stall": 0,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5459,
+          "out_beats": 2739,
+          "errors": 5048,
+          "tail_min": 82,
+          "tail_max": 1646,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 5461,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 82,
+              "first": 27,
+              "last": 27,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 422,
+              "first": 135,
+              "last": 305,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                170,
+                170,
+                170,
+                171
+              ],
+              "n3": [
+                170,
+                170,
+                170,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 1341,
+              "first": 753,
+              "last": 1534,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                667,
+                667,
+                686,
+                684
+              ],
+              "n2": [
+                615,
+                610,
+                634,
+                631
+              ],
+              "n3": [
+                606,
+                605,
+                627,
+                624
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 1646,
+              "first": 2901,
+              "last": 3682,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                424,
+                533,
+                781,
+                782
+              ],
+              "n2": [
+                166,
+                354,
+                781,
+                782
+              ],
+              "n3": [
+                1,
+                1,
+                614,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 82,
+              "first": 5354,
+              "last": 5354,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": false,
+          "log": "E seg 0 q 3: 1 outputs missing\nE seg 1 q 0: got 154 want 0\nE seg 1 q 0: got 155 want 1\nE seg 1 q 1: got 2aa want 156\nE seg 1 q 1: got 2ab want 157\nE seg 1 q 2: got 400 want 2ac\nE seg 1 q 2: got 401 want 2ad\nE seg 1 q 3: got 556 want 402\nE seg 1 q 3: got 557 want 403\nE seg 1 q 0: got 10 want 2\nE seg 1 q 0: got 11 want 3\nE seg 1 q 1: got 166 want 158\nE seg 1 q 1: got 167 want 159\nE seg 1 q 2: got 2bc want 2ae\nE seg 1 q 2: got 2bd want 2af\nE seg 1 q 3: got 412 want 404\nE seg 1 q 3: got 413 want 405\nE seg 1 q 0: got 0 want 4\nE seg 1 q 0: got 1 want 5"
+        },
+        {
+          "bubble": 17,
+          "stall": 80,
+          "exit": 0,
+          "segments": 5,
+          "beats": 6944,
+          "elements": 111009,
+          "outputs": 5456,
+          "out_beats": 2738,
+          "errors": 5438,
+          "tail_min": 82,
+          "tail_max": 5269,
+          "ovf_segments": 0,
+          "stall_cycles": 0,
+          "cycles": 11664,
+          "per_segment": [
+            {
+              "seg": 0,
+              "tail": 82,
+              "first": 27,
+              "last": 28,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n2": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "n3": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "seg": 1,
+              "tail": 1232,
+              "first": 159,
+              "last": 377,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                171,
+                171,
+                171,
+                171
+              ],
+              "n2": [
+                170,
+                170,
+                170,
+                171
+              ],
+              "n3": [
+                170,
+                170,
+                170,
+                171
+              ]
+            },
+            {
+              "seg": 2,
+              "tail": 2664,
+              "first": 1637,
+              "last": 2596,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                669,
+                660,
+                686,
+                678
+              ],
+              "n2": [
+                584,
+                587,
+                608,
+                598
+              ],
+              "n3": [
+                581,
+                583,
+                603,
+                593
+              ]
+            },
+            {
+              "seg": 3,
+              "tail": 5269,
+              "first": 5289,
+              "last": 6244,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                409,
+                534,
+                781,
+                782
+              ],
+              "n2": [
+                84,
+                216,
+                754,
+                782
+              ],
+              "n3": [
+                1,
+                1,
+                615,
+                782
+              ]
+            },
+            {
+              "seg": 4,
+              "tail": 82,
+              "first": 11540,
+              "last": 11543,
+              "ovf": 0,
+              "replays": 0,
+              "stall": 0,
+              "k": 2048,
+              "nhead": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n2": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "n3": [
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "pass": false,
+          "log": "E seg 0 q 3: 1 outputs missing\nE seg 1 q 3: got 556 want 402\nE seg 1 q 3: got 557 want 403\nE seg 1 q 0: got 154 want 0\nE seg 1 q 0: got 155 want 1\nE seg 1 q 1: got 2aa want 156\nE seg 1 q 1: got 2ab want 157\nE seg 1 q 1: got 1b8 want 158\nE seg 1 q 1: got 1b9 want 159\nE seg 1 q 0: got 56 want 2\nE seg 1 q 0: got 57 want 3\nE seg 1 q 0: got 8 want 4\nE seg 1 q 0: got 9 want 5\nE seg 1 q 1: got 156 want 15a\nE seg 1 q 1: got 157 want 15b\nE seg 1 q 2: got 400 want 2ac\nE seg 1 q 2: got 401 want 2ad\nE seg 1 q 2: got 308 want 2ae\nE seg 1 q 2: got 309 want 2af"
+        }
+      ],
+      "pass_gate": true
+    }
+  ],
+  "pass_gate": true,
+  "scope": "full-shape isolated selector/candidate; actual generated SRAM models and capture; not physical timing or die closure"
+}

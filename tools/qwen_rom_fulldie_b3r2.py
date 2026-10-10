@@ -45,6 +45,12 @@ CLOCKING = 'results/uarch/rom_die_clocking_decision_20261003.json @ d99237f66'
 FIFO_MM2_PER_BIT = 2.53 / 3332608
 TAP_FIFO_BITS = 509 * 4            # one per tile tap (1,536)
 BW_FIFO_BITS = 512 * 4             # one per block word (96)
+# sys-takeover 2026-10-09 (registry qfd_native_collective_binding, opt-in --native-coll): the sequencer <-> collective
+# path at the production engine widths through io_xfifo NCOLL (rtl/physical/ot_qwen_die_io_xfifo.sv): forward
+# {tag32, mode, last, data512} 546 b + valid + credit = 548 b (seq_coll), return {err, rank2, last, data512} 516 b +
+# valid + credit = 518 b (coll_seq).  Default off: the 64 + 2 descriptor word of r18-r21.
+NATIVE_COLL = False
+SEQ_COLL_BITS = (64 + 2, 546 + 2, 516 + 2)        # (r18-r21 descriptor, native forward, native return)
 STRIP_FIFO_BITS = 544 * 4          # one per strip return (4)
 # F2 station storage: 388 corridor flops + 379 assembly + one extra 190-bit beat entry, against 637 before
 F2_STATION_EXTRA_BITS = 388 + 379 + 190 - 637
@@ -72,7 +78,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -189,6 +195,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 rx.setdefault(slab, {})[int(pin[2:])] = by[root].x + by[root].w / 2
         m['b3r8_root_y'] = ry
         m['b3r8_root_x'] = rx
+    m['strict_ports'] = bool(strict_ports)
+    m['rtl_bound_masters'] = rtl_bound_masters
+    m['port_exemptions'] = port_exemptions or {}
     m['clock_regions'] = clock_regions(v, m)
     m['die']['budget_mm2'] = 858
     m['die']['margin_mm2'] = round(858 - m['die']['mm2'], 3)
@@ -235,6 +244,16 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if vm_me:
         _vm_me(v, m)          # before the relays (the result / lane words get their relay chains)
     m['b3r2']['r21m_vm_me'] = vm_me
+    if emb_hbm:
+        _emb_hbm(v, m)        # before the relays: the SU <-> hub embedding words get their relay chains
+    m['b3r2']['r21c_emb_hbm'] = emb_hbm
+    if before_relays is not None:
+        # Opt-in system composition: actual slots/ports precede relay discovery.
+        # Default recipes retain their existing geometry and master contracts.
+        before_relays(v, m)
+    if seam_free:
+        _seam_free(v, m)      # after every pin-plan rule, before the relays (they are derived from the moved pins)
+    m['b3r2']['r22ks_seam_free'] = seam_free
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -373,7 +392,7 @@ def _rtl_finish(v, m):
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
         tt, vm, sq, su, em = (o['qfd_sp_tree_top'], o['qfd_sp_vector_memory'], o['qfd_sp_constants_sequencer'],
-                              o['qfd_sp_su64_sfu'], o['qfd_io_embedding_rom'])
+                              o['qfd_sp_su64_sfu'], o.get('qfd_io_embedding_rom'))   # r21c: no embedding ROM
         for M_, gone in ((tt, ('md',)), (vm, ('em',)), (sq, ('ea', 'md'))):
             for pn in gone:
                 if pn in M_.ports:
@@ -397,11 +416,12 @@ def _rtl_finish(v, m):
         su.face('ea', EMB_REQ_BITS, 'W', 'M4', 1500.0, 2)
         su.face('ecr', 1, 'W', 'M4', 1520.0, 2)
         su.face('eq', EMB_RSP_BITS, 'W', 'M4', 1300.0, 1)
-        if 'a' in em.ports:
-            em.ports['a'] = em.ports['a'][:1] + (EMB_REQ_BITS,) + em.ports['a'][2:]
-        if 'o' in em.ports:
-            em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
-        em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
+        if em is not None:
+            if 'a' in em.ports:
+                em.ports['a'] = em.ports['a'][:1] + (EMB_REQ_BITS,) + em.ports['a'][2:]
+            if 'o' in em.ports:
+                em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
+            em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
         for b in range(6):
             mn = f'qfd_port_tiles_{b}'
             if mn in o:
@@ -724,6 +744,89 @@ def _io_south(v):
     v.masters = masters
 
 
+# r21c (emb-hbm 2026-10-08, OWNER DECISION 2026-10-08 ~21:00 PT): the Qwen3-8B input embedding moves out of the on-die
+# ROM into each die's attached HBM (rtl/qwen_sys/emb_hbm_20261008, design review REVIEW_QUEUE.md "EMB-HBM").
+#   * the IO-band embedding ROM element (io_embedding_rom, qfd_io_embedding_rom: the r21b 11.046 mm2 placeholder for a
+#     root + taps + 2,374 code / 3 scale bank parents) is removed with its die words (emb_a 26 b, emb 513 b, emb_cr) and
+#     their relay chains (r21b: 54 relays on emb_a alone) and its clock leaf;
+#   * the SU's embedding face (ea / ecr / eq, unchanged: ot_qfd_su_embed_pf) now talks to the HUB (qfd_hub_emb:
+#     ot_qwen_die_hub_emb_top = the full-rate hub + the embedding gateway ot_qfd_emb_gw); the rows come over the
+#     existing hub <-> stack links (EMB link class), no new wide die bus;
+#   * the strip / controller additions sit inside existing frames: the per-stack embedding engine (ot_qfd_emb_strip,
+#     core clock) beside the strip-end link endpoint in the qfd_kvc frame, the static-row port in every PC controller
+#     (qfd_ctrl_emb_<pc>: ot_qwen_ctrl_pc_emb) and the per-PC ECC / class port (ot_qfd_emb_pcport) in the controller
+#     band; their area is recorded in m['r21c'] against those frames.
+# The IO band keeps its depth (the die outline does not change); the freed band length is recorded as slack.
+# area estimates of the in-frame additions (flops x 0.32 um2 ASAP7 DFF / 0.55 util x 1.6 logic) -- the review sizes them
+EMB_STRIP_FLOPS = 32 * 4 * 258 + 4 * 523 + 4 * 523 + 516 + 400 + 32 * 4 + 200     # rx FIFOs, in/tx queues, packer, credits
+EMB_PCPORT_FLOPS = 32 + 4 * 288 + 288 + 32 + 288 + 258 + 64                         # class FIFO, write FIFO, decode pipe
+# sys-takeover 2026-10-09 (coordinator: adopt the HBM ECC side-band on KV writes, registry qfd_hbm_ecc_provider): the
+# per-PC port runs KVW = 2 -- the KV write data is the per-PC STREAM4 CDC's completion entry (h_cv / h_cdata, already on
+# the cdho_<st>_<p> hbm_cdc bus into the controller element, CDC_HO), encoded into the side-band; every WR's PHY write
+# data leaves two HCLK edges after its column.  No new die bus (kw_v / kw_d = h_cv / h_cdata inside qfd_ctrl);
+# +2 x 288 + 2 flops a PC.  (KVW = 1, the closed view views/qfd_emb_pcport_kvw, expects the data before the column and
+# faults at this timing: physical/sys_takeover/kvw2_path_bench.sh neg 'kvw1'.)
+EMB_PCPORT_KVW = 2
+EMB_PCPORT_FLOPS += 2 * 288 + 2 if EMB_PCPORT_KVW == 2 else 0
+EMB_GW_FLOPS = 32 * 25 + 4 * 523 + 512 + 26 + 512 + 160 + 4 * 8 * 11                 # request FIFO, slots, eq, pins, tags
+
+
+def _emb_hbm(v, m):
+    """r21c: drop the embedding ROM, terminate the SU's embedding words at the hub (see the r21c comment above)."""
+    gone = 'io_embedding_rom'
+    ins = [i for i in m['insts'] if i.name == gone]
+    if len(ins) != 1:
+        raise ValueError('r21c builds on r21f+ (io_embedding_rom present once)')
+    rom = ins[0]
+    m['insts'] = [i for i in m['insts'] if i.name != gone]
+    m['io'] = {k: it for k, it in m['io'].items() if it.name != gone}
+    B, dropped = [], []
+    for bid, cl, bits, eps in m['buses']:
+        if bid == 'emb_a':
+            eps = [('sp_su64_sfu', 'ea'), ('hub_el', 'ea')]
+        elif bid == 'emb':
+            eps = [('hub_el', 'eq'), ('sp_su64_sfu', 'eq')]
+        elif bid == 'emb_cr':
+            eps = [('hub_el', 'ecr'), ('sp_su64_sfu', 'ecr')]
+        elif any(e[0] == gone for e in eps):
+            eps = [e for e in eps if e[0] != gone]
+            if len(eps) < 2:
+                dropped.append(bid)
+                continue
+        B.append((bid, cl, bits, eps))
+    m['buses'] = B
+    for r in m.get('regions', []):
+        pass
+    gw_mm2 = EMB_GW_FLOPS * 0.32 * 1.6 / 0.55 / 1e6
+    m['r21c'] = dict(
+        removed=dict(instance=gone, master=rom.master, rect_um=[round(rom.x, 3), round(rom.y, 3), round(rom.w, 3), round(rom.h, 3)],
+                     mm2=round(rom.w * rom.h / 1e6, 3), buses_dropped=dropped,
+                     note='the r21b placeholder; the RTL-sized full replica (2,374 code + 3 scale bank parents + 2,376 taps + '
+                          'root) would need ~88.1 mm2 (EMB_HBM_FEASIBILITY.md)'),
+        rerouted=['emb_a (26 b) sp_su64_sfu.ea -> hub_el.ea', 'emb (513 b) hub_el.eq -> sp_su64_sfu.eq',
+                  'emb_cr (1 b) hub_el.ecr -> sp_su64_sfu.ecr'],
+        rtl={'qfd_hub': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv ot_qwen_die_hub_emb_top (+ ot_qfd_emb_gw)',
+             'qfd_ctrl (per PC)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv (ot_hbm_r14_stream_pc_srow SROW 1) '
+                                  '+ ot_qfd_emb_pcport.sv (KVW 2: KV write side-band from the CDC completion h_cv / h_cdata)',
+             'qfd_kvc (strip end)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv + ot_qfd_link_far.sv (class split)'},
+        in_frame_mm2=dict(gateway_in_hub=round(gw_mm2, 4),
+                          strip_engine_per_stack=round(EMB_STRIP_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 4),
+                          pcport_per_pc=round(EMB_PCPORT_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 5)),
+        io_band_slack_um=round(rom.w + v.SHAVE, 3))
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        o.pop('qfd_io_embedding_rom', None)
+        hb = o['qfd_hub']
+        # W face: x3 / ar sit at h/2 -+ 60 (2-pitch, ~49 um each); the embedding words below and above them
+        hb.face('ea', EMB_REQ_BITS, 'W', 'M4', 40.0, 2)
+        hb.face('ecr', 1, 'W', 'M4', 50.0, 2)
+        hb.face('eq', EMB_RSP_BITS, 'W', 'M4', hb.h - 40.0, 1)
+        return o
+    v.masters = masters
+
+
 # ------------------------------------------------------------------------------------------------ r21 die relays
 RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi')
 RELAY_V_H = 30.24      # relay frame height with N/S faces only (vertical run): 512 flops + clock leaf, M1-M3
@@ -837,6 +940,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             xc = cx_list[min(cs, key=lambda c: load(c, Pf[1], Po[1]) + abs(cx_list[c] - Po[0]) / 2000.0)]
             path = [Pf, (xc, Pf[1]), (xc, Po[1]), Po]
             return path if f0 else path[::-1]
+        chx = getattr(v, 'SPINE_CHANNEL_X', None)
+        if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
+                and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0:
+            # r22k (kv-die KV2): a long vertical spine word runs in the spine relay channel nearest its two pins (the
+            # spine columns abut blocks end to end: a leg over them has no relay site)
+            xc = min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0]))
+            return [P0, (xc, P0[1]), (xc, P1[1]), P1]
         return [P0, (P0[0], P1[1]), P1]
 
     def candidates(path):
@@ -1435,6 +1545,14 @@ def _r18_masters(v, m):
         byname = {i.name: i for i in model['insts']}
         for inst, ps in used.items():
             mst_used.setdefault(byname[inst].master, set()).update(ps)
+        from qwen_system.port_guard import audit_dropped_ports, PortBindingError
+        try:
+            model['q14_dropped'] = audit_dropped_ports(
+                out, mst_used, strict=model.get('strict_ports', False),
+                bound_masters=model.get('rtl_bound_masters'), exemptions=model.get('port_exemptions'))
+        except PortBindingError as exc:
+            model['q14_dropped'] = exc.ledger
+            raise
         mirrored_x = {i.master for i in model['insts'] if i.orient in ('MX', 'R180')}
         for mn, M in out.items():
             # Q14: drop abstract ports no die net reaches
@@ -1899,7 +2017,11 @@ def _spine_buses(v, m, gm):
     B.append(('seq_su', 'sequencer', total - me_bits + 2, [(seq, 'su'), ('sp_su64_sfu', 'si')]))
     B.append(('seq_done', 'sequencer', 2, [('sp_tree_top', 'md'), (seq, 'md')]))
     B.append(('seq_sud', 'sequencer', 2, [('sp_su64_sfu', 'sd'), (seq, 'sd')]))
-    B.append(('seq_coll', 'sequencer', 64 + 2, [(seq, 'cd'), ('io_collective', 'sd')]))
+    if NATIVE_COLL:
+        B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[1], [(seq, 'cd'), ('io_collective', 'sd')]))
+        B.append(('coll_seq', 'sequencer', SEQ_COLL_BITS[2], [('io_collective', 'cs'), (seq, 'cc')]))
+    else:
+        B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[0], [(seq, 'cd'), ('io_collective', 'sd')]))
     B.append(('crom_a', 'crom', CROM_IN, [('sp_su64_sfu', 'ca'), (seq, 'ca')]))
     B.append(('crom_q', 'crom', CROM_OUT, [(seq, 'cq'), ('sp_su64_sfu', 'cq')]))
     m['buses'] = B
@@ -2082,6 +2204,129 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
             M.face(port, nb, face, layer, centre, 1)
         return out
     v.masters = masters
+
+
+def _abutter(model, me, face, gap=2.0, frac=0.5):
+    """name of the block (not a relay) whose edge lies within `gap` um of `me`'s `face` over at least `frac` of that
+    face, or None."""
+    for o in model['insts']:
+        if o is me or o.name.startswith('rly_'):
+            continue
+        if face in 'NS':
+            d = (o.y - (me.y + me.h)) if face == 'N' else (me.y - (o.y + o.h))
+            ov = min(me.x + me.w, o.x + o.w) - max(me.x, o.x)
+            L = me.w
+        else:
+            d = (o.x - (me.x + me.w)) if face == 'E' else (me.x - (o.x + o.w))
+            ov = min(me.y + me.h, o.y + o.h) - max(me.y, o.y)
+            L = me.h
+        if -0.5 <= d <= gap and ov >= frac * L:
+            return o.name
+    return None
+
+
+OPP = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}
+
+
+def _seam_free(v, m):
+    """r22ks (qwen-1010/d 2026-10-10, opt-in): no word leaves a block through a face that another block abuts, unless
+    it is an abutted pair (the peer is that block, on its facing face).  r22k4's full-die GRT put all of its 159,448
+    overflow in one 90 x 60 um window: the tree top's ty (1,538 b) on its S face and the VM's rb3-rb5 (3 x 551 b) on
+    its N face sat on the zero-width tree-top / VM seam, under both blocks' M1-M7 obstructions, so every wire escaped
+    by an M8 / M9 via stack at the seam.  A violating word moves to the face on the other axis toward its peer (or
+    the peer's side when the peer is the abutting block), at the end of that face nearer the peer, clear of the pins
+    already there.  Single-instance blocks only (a shared master's faces serve every instance); clock / reset nets
+    are built by the die clock tree.  The decision is taken once, on the pre-relay buses, and then held (after the
+    relays a word's peer is its first relay, which was placed for the moved pin)."""
+    base = v.masters
+    cache = {}
+    moves = m.setdefault('r22ks_seam_moves', {})
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        insts = [i for i in model['insts'] if not i.name.startswith('rly_')]
+        n_of = {}
+        for i in insts:
+            n_of[i.master] = n_of.get(i.master, 0) + 1
+        by = {i.name: i for i in model['insts']}
+        if True:
+            peers = {}
+            for bid, cl, nb, eps in model['buses']:
+                if cl in ('clock_trunk', 'reset'):
+                    continue
+                for j, (inst, port) in enumerate(eps):
+                    peers.setdefault((inst, port.lstrip('*')), []).extend(
+                        (e[0], e[1].lstrip('*'), nb) for q, e in enumerate(eps) if q != j)
+            for it in insts:
+                M_ = out.get(it.master)
+                if M_ is None or n_of.get(it.master) != 1:
+                    continue
+                for pn, sp in list(M_.ports.items()):
+                    if sp[0] != 'face' or (it.name, pn) not in peers or (it.master, pn) in cache:
+                        continue
+                    if any(q[0].startswith('rly_') for q in peers[(it.name, pn)]):
+                        continue           # after the relays: only the pre-relay decisions hold
+                    f = sp[2]
+                    ab = _abutter(model, it, f)
+                    if ab is None:
+                        continue
+                    pp = peers[(it.name, pn)]
+                    paired = all(q[0] == ab for q in pp) and all(
+                        (out[by[ab].master].ports.get(q[1]) or ('',))[0] == 'face'
+                        and out[by[ab].master].ports[q[1]][2] == OPP[f] for q in pp)
+                    if paired:
+                        continue
+                    o = by[pp[0][0]]
+                    osp = out[o.master].ports.get(pp[0][1]) if o.master in out else None
+                    if f in 'NS':
+                        nf = 'E' if o.cx > it.cx + 1.0 else 'W' if o.cx < it.cx - 1.0 else None
+                    else:
+                        nf = 'N' if o.cy > it.cy + 1.0 else 'S' if o.cy < it.cy - 1.0 else None
+                    if nf is None and osp is not None and osp[0] == 'face' and osp[2] != OPP[f]:
+                        nf = osp[2]        # the peer straight across the seam: leave on the side of its pin
+                    cands = [x for x in ((nf,) if nf else ()) + tuple('NSEW') if x != f]
+                    nf = next((x for x in cands if _abutter(model, it, x) is None), None)
+                    if nf is None:
+                        raise ValueError(f'r22ks: {it.name}.{pn}: every other face is abutted')
+                    low = (o.cx < it.cx) if nf in 'NS' else (o.cy < it.cy)
+                    cache[(it.master, pn)] = (nf, low, sum(q[2] for q in pp), ab)
+        for (mn, pn), (nf, low, nb, ab) in cache.items():
+            M_ = out[mn]
+            sp = M_.ports[pn]
+            if sp[0] == 'face' and sp[2] == nf:
+                continue
+            w_ = sp[1]
+            layer = 'M5' if nf in 'NS' else 'M4'
+            along = M_.w if nf in 'NS' else M_.h
+            n = max(1, math.ceil(w_ / k)) if k > 1 else w_
+            span = n * F.TRK[layer][1] * k
+            M_.ports.pop(pn)
+            used = sorted(_face_used(M_, nf, k))
+            a_ = 4.0 if low else along - 4.0 - span - 2.0
+            for _ in range(len(used) + 1):
+                hit = [u for u in used if u[0] < a_ + span + 2.0 and u[1] > a_]
+                if not hit:
+                    break
+                a_ = max(u[1] for u in hit) if low else min(u[0] for u in hit) - span - 2.0
+            if a_ < 1.0 or a_ + span + 2.0 > along - 1.0 or hit:
+                raise ValueError(f'r22ks: {mn}.{pn} ({w_} b) does not fit the {nf} face')
+            M_.ports[pn] = ('face', w_, nf, layer, a_ + 1.0 + span / 2, 1)
+            if k == 1:
+                moves[f'{mn}.{pn}'] = dict(face=f'{sp[2]}->{nf}', bits=w_, seam_with=ab)
+        # pin plan frozen at its pre-relay state: the default face rule re-derives a block's pins from its CURRENT
+        # buses, so after the relay pass a word's pin turned toward its last relay (r22k: VM rb3 W face at pitch 4,
+        # where its relays were planned, became an N-face seam pin) -- pins first, relays from the pins, never back
+        if k in snap:
+            for (mn, pn), sp in snap[k].items():
+                if mn in out and pn in out[mn].ports:
+                    out[mn].ports[pn] = sp
+        else:
+            snap[k] = {(i.master, pn): sp for i in insts if n_of.get(i.master) == 1 and i.master in out
+                       for pn, sp in out[i.master].ports.items()}
+        return out
+    snap = {}
+    v.masters = masters
+    masters(m, 1)             # decide on the pre-relay buses (the relay pass rewrites them as it goes)
 
 
 def _face_used(M, face, k):
@@ -2984,6 +3229,8 @@ def main(argv=None):
                     'at the near edge, spread over the slab width')
     ap.add_argument('--bw-edge-inner', action='store_true', help='b3r12: edge-entry words climb inside the slab')
     ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
+    ap.add_argument('--native-coll', action='store_true', help='sys-takeover: full-width sequencer <-> collective '
+                    '(548-b forward, 518-b return through io_xfifo NCOLL); default the 66-b descriptor word')
     ap.add_argument('--bw-sp', type=float, default=100.0, help='b3r13: root-row block-word pin spacing in a slab (um)')
     ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
     ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
@@ -3036,6 +3283,8 @@ def main(argv=None):
     ap.add_argument('--recipe', default=None, help='die_top_lint Qwen recipe (e.g. r21b): selects the die from the '
                     'recipe dict (incl. vm_me / tt_h / bl_h, which have no flag) instead of the per-feature flags')
     a = ap.parse_args(argv)
+    global NATIVE_COLL
+    NATIVE_COLL = bool(a.native_coll)
     if a.mode == 'summary':
         print(json.dumps(summarize(a.work), indent=1))
         return 0

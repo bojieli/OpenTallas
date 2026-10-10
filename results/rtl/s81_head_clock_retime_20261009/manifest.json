@@ -1,0 +1,15 @@
+{
+  "scope": "Retrospective STA kit with measured clock-plan deltas; preserve original evidence.\n\nThe same die netlist, views, SPEF, block insertion offsets, uncertainties and\nclock periods are retained. This diagnoses timing under a successor clock plan;\nit does not implement the die clock tree or qualify another die configuration.\n",
+  "original_kit": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/kit",
+  "original_grt": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/grt",
+  "old_clock_plan": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/clock/plan.json",
+  "new_clock_plan": "/srv/opentallas-scratch/claude/s81-dies/clockfamily_gather/plan.json",
+  "source_commit": "0544fca2c",
+  "latency_pins_updated": {
+    "ss": 17721,
+    "ff": 17721,
+    "tt": 17721
+  },
+  "alias_policy": "exact clock pin, or all clock pins of instance have identical delta",
+  "adoption": "diagnostic only; die clock implementation and head631 remain unqualified"
+}

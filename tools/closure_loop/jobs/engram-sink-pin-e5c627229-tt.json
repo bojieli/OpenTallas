@@ -1,0 +1,77 @@
+{
+ "name": "engram-sink-pin-e5c627229-tt",
+ "block": "dsfd_engram_sink",
+ "owner": "Codex:engram",
+ "purpose": "Opt-in PIN_CAPTURE=1: full four-source eight-slot sink with unconditional payload pin registers, four-entry source queues and two-beat acceptance reservation. +1 input capture cycle, default unchanged. Historical scalar sink TT -28.93ps retained; this is a measured structural candidate, no adoption claim.",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/engram-resume-20261009",
+  "commit": "e5c6272290a1b951e961d8222e70d2b4d10aaa61",
+  "extra_paths": [
+   "rtl/test/tb_dsrom_engram_sink_pin.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "pin_fullshape_and_overflow",
+    "cmd": "python3 tools/engram_sink_pin_gate.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.05 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/hdc/v41/ot_hdc_engram_gather.sv rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_sink rtl/dsrom_sys/engram/dsfd_engram_sink.sv --param PIN_CAPTURE=1 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 12,
+   "peak_ram_gb": 32
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.05 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/hdc/v41/ot_hdc_engram_gather.sv rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_sink rtl/dsrom_sys/engram/dsfd_engram_sink.sv --param PIN_CAPTURE=1 $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_engram_sink"
+  }
+ ],
+ "cycles_added": 1,
+ "cycles_note": "One additional input capture cycle before existing rowsink grant/decode; all1536 beats preserved. No steady-state rate or adoption credit until measured.",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "no_bench_reason": "The source-pinned pin_fullshape_and_overflow campaign checks both positive1536beat fullshape and expected failing overflow-reservation mutant in one PASS-returning command; immutable evidence results/rtl/engram_sink_pin_gate_20261009.json at5c57c599d."
+}

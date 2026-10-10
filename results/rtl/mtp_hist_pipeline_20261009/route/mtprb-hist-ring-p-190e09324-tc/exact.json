@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.mtp_hist_pipeline_exact.v1",
+  "shape": {
+    "TR": 16,
+    "NG": 4,
+    "TW": 17,
+    "PW": 32,
+    "window": 128
+  },
+  "stimulus": {
+    "window": 128,
+    "gamma": 5,
+    "ng": 4,
+    "nst": 3,
+    "prompt": 24,
+    "steps": 170,
+    "seed": 1,
+    "positions": 590,
+    "emitted": 567,
+    "accept_hist": {
+      "0": 33,
+      "1": 27,
+      "2": 35,
+      "3": 25,
+      "4": 26,
+      "5": 24
+    },
+    "g_hist": {
+      "1": 6,
+      "2": 1,
+      "3": 7,
+      "4": 7,
+      "5": 149
+    },
+    "spec_equals_greedy": true,
+    "stim_sha256": "27f6edbe448f92e78053da33d5e281764d5f1b5b8b5022bd2dfbb83658850b2e"
+  },
+  "runs": [
+    {
+      "name": "hist_p_good",
+      "backend": "rom",
+      "mutant": null,
+      "spec_state": "as_built",
+      "params": {
+        "W": 128,
+        "WRR": 256,
+        "DRR": 256,
+        "TAGCHK": 1,
+        "MUT_OPEN_REG": 0,
+        "MUT_APPEND": 0,
+        "MUT_OFF": 0,
+        "WINSL": 256,
+        "SSR": 16,
+        "STR": 16,
+        "MUT_SHRELOAD": 0,
+        "SH_LOCK": 1
+      },
+      "verdict": "PASS",
+      "expect": "PASS",
+      "ok": true,
+      "first_mismatches": [],
+      "wall_s": 4.2,
+      "steps": "194",
+      "mism": "0",
+      "err": "0",
+      "corrupt": "0",
+      "cycles": "699197"
+    },
+    {
+      "name": "hist_p_append_negative",
+      "backend": "rom",
+      "mutant": "rom_engram_hist_no_restore",
+      "spec_state": "as_built",
+      "params": {
+        "W": 128,
+        "WRR": 256,
+        "DRR": 256,
+        "TAGCHK": 1,
+        "MUT_OPEN_REG": 0,
+        "MUT_APPEND": 1,
+        "MUT_OFF": 0,
+        "WINSL": 256,
+        "SSR": 16,
+        "STR": 16,
+        "MUT_SHRELOAD": 0,
+        "SH_LOCK": 1
+      },
+      "verdict": "FAIL",
+      "expect": "FAIL",
+      "ok": true,
+      "first_mismatches": [
+        "MISMATCH step=25 target_t0 got=00000e32 exp=000005dd",
+        "MISMATCH step=25 target_t1 got=00000072 exp=00000e0d",
+        "MISMATCH step=25 target_t2 got=0000054e exp=00000060"
+      ],
+      "wall_s": 4.1,
+      "steps": "28",
+      "mism": "59",
+      "err": "0",
+      "corrupt": "0",
+      "cycles": "8032"
+    }
+  ],
+  "exact": true,
+  "source_sha256": {
+    "rtl/mtp/rollback/ot_mtp_hist_ring_p.sv": "79cf318bb4fe35b9f465cd67ceafc9dd81fb20ef3dbac89f4e7b24eba56a196f",
+    "rtl/test/mtp_rollback/tb_mtp_rollback.sv": "d6bc155a386b0c1140dc4b28da6514f25a578f53ed866850109c86eb3eadfcd0",
+    "tools/mtp_rollback_bench.py": "723b8106dd4c08a0580288eb3ae4092c8cc3cf6e782187d6308bc5942acccdd3",
+    "tools/mtp_hist_pipeline_bench.py": "9565de108c953622916781a23ccff29fa71307301a9d2cfeec8522107c716c52"
+  },
+  "generated_bench_sha256": "487be7f92494387bba63448cd684e4a2079cfa98580d0a2ca0bae01796e1c61d"
+}

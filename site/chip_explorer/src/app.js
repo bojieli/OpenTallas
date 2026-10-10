@@ -31,7 +31,7 @@ function lsSet(k, v){ try { localStorage.setItem('otx.' + k, v); } catch (e) {} 
 const DESIGNS = {
   qwen: { short: 'Qwen ROM', title: ['Qwen3-8B', 'ROM accelerator'], ctx: '8K context, position 8,191',
     lede: 'Weights are hard-wired in ROM beside the multipliers, so a decode step never fetches a weight. The per-user KV cache streams from four attached HBM3E stacks (STREAM4). The design runs plain decoding: speculation measured below plain decoding on this compute-balanced datapath.',
-    dies: ['qwen_rom'] },
+    dies: ['qwen_kvdie', 'qwen_rom'] },
   ds: { short: 'DeepSeek ROM array', title: ['DeepSeek-V4.1', 'ROM array'], ctx: '1M context, position 1,048,575',
     lede: `An ${val(DATA.ds_system.stages)}-stage pipeline of ROM dies. Each layer is spread over a TP4 group of rank dies whose fields of ROM element pairs hold the weights; the token walks the pipeline over die-to-die links and its KV comes from HBM beside every die. MTP speculation fills idle stages with a wavefront of draft positions.`,
     dies: ['ds_s81_layer'] },
@@ -39,10 +39,11 @@ const DESIGNS = {
     lede: 'The comparator is a GPU-like die: 32 SM compute elements fed by four HBM3E stacks on the long edges, a hub band of serial vector, special-function, hyper-connection and index units, 64 attention tiles and a centre spine. Weights stream from HBM every token; speculation shares that weight stream across the verified positions.',
     dies: ['hbm_ds', 'hbm_qwen'] },
 };
-const state = { design: lsGet('design', 'ds'), compare: false, hbmModel: lsGet('hbmModel', 'ds'), colorBy: 'kind', zoom: 1,
+const state = { design: lsGet('design', 'ds'), compare: false, hbmModel: lsGet('hbmModel', 'ds'), qwenModel: lsGet('qwenModel', 'pair'), colorBy: 'kind', zoom: 1,
   hidden: new Set(), dieCtx: null, showWire: true, showClock: false, showIR: false, sel: null, arraySel: null, arrayZoom: 'system', cbFilter: 'all' };
 if (!DESIGNS[state.design]) state.design = 'ds';
-function dieKey(){ return state.design === 'hbm' ? (state.hbmModel === 'qwen' ? 'hbm_qwen' : 'hbm_ds') : DESIGNS[state.design].dies[0]; }
+function dieKey(){ if (state.design === 'qwen') return (state.qwenModel === 'r17b' || !DATA.dies.qwen_kvdie) ? 'qwen_rom' : 'qwen_kvdie';
+  return state.design === 'hbm' ? (state.hbmModel === 'qwen' ? 'hbm_qwen' : 'hbm_ds') : DESIGNS[state.design].dies[0]; }
 
 /* ---------------------------------------------------------------- block grouping and colour */
 function groupOf(dk, kind, name){
@@ -56,7 +57,7 @@ function catOf(dk, g, name){
   if (dk === 'ds_s81_layer' && g === 'hub'){
     if (/su_/.test(name)) return 'su'; if (/hc/.test(name)) return 'hc'; if (/gather/.test(name)) return 'attn'; if (/collective/.test(name)) return 'link'; return 'ctrl';
   }
-  if (dk === 'qwen_rom' && g === 'spine'){
+  if ((dk === 'qwen_rom' || dk === 'qwen_kvdie') && g === 'spine'){
     if (/su64/.test(name)) return 'su'; if (/tree/.test(name)) return 'tree'; return 'ctrl';
   }
   const M = { sm:'field', tile:'field', q:'field', bf:'field', node:'tree', col_head:'tree', head:'tree',
@@ -64,7 +65,7 @@ function catOf(dk, g, name){
     cmdproc:'ctrl', vm:'ctrl', barrier:'ctrl', router:'ctrl', quant:'ctrl', loader:'ctrl', spine:'ctrl', band_slab:'ctrl',
     phy:'hbm', svc: dk === 'ds_s81_layer' ? 'attn' : 'hbmsvc', ctrl:'hbmsvc', hbm_ctrl:'hbmsvc', cdc:'hbmsvc',
     coll:'link', link:'link', serdes:'link', host:'link', io:'link', link_fifo:'link', serdes_slab:'link', host_slab:'link',
-    hub: dk === 'qwen_rom' ? 'ctrl' : 'link',
+    hub: (dk === 'qwen_rom' || dk === 'qwen_kvdie') ? 'ctrl' : 'link',
     waypoint:'wire', station:'wire', link_station:'wire', fifo_blk:'wire', hub_fifo:'wire' };
   return M[g] || 'res';
 }
@@ -684,13 +685,14 @@ function dieTools(){
   const dk = dieKey(); const G = geo(dk); const D = DATA.dies[dk];
   const cats = [...new Set(G.items.map(i => i.cat))];
   const hasClock = dk === 'hbm_ds'; const hasIR = dk === 'hbm_ds' || dk === 'qwen_rom';
-  const dieSel = state.design === 'hbm' ? `<div class="seg" role="group" aria-label="Die"><button type="button" data-hm="ds" aria-pressed="${state.hbmModel === 'ds'}">DS die</button><button type="button" data-hm="qwen" aria-pressed="${state.hbmModel === 'qwen'}">Qwen tile die</button></div>` : '';
+  const dieSel = state.design === 'qwen' && DATA.dies.qwen_kvdie ? `<div class="seg" role="group" aria-label="Die"><button type="button" data-qm="pair" aria-pressed="${state.qwenModel !== 'r17b'}">ROM + KV die</button><button type="button" data-qm="r17b" aria-pressed="${state.qwenModel === 'r17b'}">r17b ROM die</button></div>` : state.design === 'hbm' ? `<div class="seg" role="group" aria-label="Die"><button type="button" data-hm="ds" aria-pressed="${state.hbmModel === 'ds'}">DS die</button><button type="button" data-hm="qwen" aria-pressed="${state.hbmModel === 'qwen'}">Qwen tile die</button></div>` : '';
   $('dieTools').innerHTML = `${dieSel}<div class="seg" role="group" aria-label="Colour by"><button type="button" data-cb="kind" aria-pressed="${state.colorBy === 'kind'}">Block kind</button><button type="button" data-cb="closure" aria-pressed="${state.colorBy === 'closure'}">Closure</button></div>
     <button type="button" class="chip" data-ly="wire" aria-pressed="${state.showWire}">Wire stations</button>
     ${hasClock ? `<button type="button" class="chip" data-ly="clock" aria-pressed="${state.showClock}">Clock regions</button>` : ''}
     ${hasIR ? `<button type="button" class="chip" data-ly="ir" aria-pressed="${state.showIR}">IR drop windows</button>` : ''}
     <div class="seg" role="group" aria-label="Zoom" style="margin-left:auto"><button type="button" data-z="1" aria-pressed="${state.zoom === 1}">1×</button><button type="button" data-z="2" aria-pressed="${state.zoom === 2}">2×</button><button type="button" data-z="4" aria-pressed="${state.zoom === 4}">4×</button></div>`;
   $('dieTools').querySelectorAll('[data-hm]').forEach(b => b.onclick = () => { state.hbmModel = b.dataset.hm; lsSet('hbmModel', state.hbmModel); state.sel = null; renderAll(); });
+  $('dieTools').querySelectorAll('[data-qm]').forEach(b => b.onclick = () => { state.qwenModel = b.dataset.qm; lsSet('qwenModel', state.qwenModel); state.sel = null; renderAll(); });
   $('dieTools').querySelectorAll('[data-cb]').forEach(b => b.onclick = () => { state.colorBy = b.dataset.cb; dieTools(); drawDie(); });
   $('dieTools').querySelectorAll('[data-z]').forEach(b => b.onclick = () => { state.zoom = +b.dataset.z; dieTools(); drawDie(); });
   $('dieTools').querySelectorAll('[data-ly]').forEach(b => b.onclick = () => { const k = b.dataset.ly; if (k === 'wire') state.showWire = !state.showWire; if (k === 'clock') state.showClock = !state.showClock; if (k === 'ir') state.showIR = !state.showIR; dieTools(); drawDie(); });
@@ -701,7 +703,8 @@ function dieTools(){
   } else {
     $('dieLegend').innerHTML = Object.keys(CLOSVAR).map(c => `<span><i class="sw" style="background:${c === 'reservation' ? 'transparent' : 'var(' + CLOSVAR[c] + ')'};${c === 'reservation' ? 'border:1.5px dashed var(--s-res)' : ''}"></i>${esc(CLOSURE_LABEL[c])}</span>`).join('');
   }
-  const lede = { qwen_rom: 'The r17b Qwen ROM die drawn from its placement: 1,536 ROM tiles in four quadrants with a corridor station beside each, a centre spine of vector, sequencing and band slabs, HBM3E PHYs on the east and west edges with their controller bands and the 128-frame CDC column.',
+  const lede = { qwen_kvdie: 'Owner decision 2026-10-09: the Qwen3-8B ROM die (r22k, top) and its KV die (below), drawn in one frame. The KV die carries the four HBM3E PHYs and controllers, the 128 CDC frames, the KV landings with their merges, and the near-HBM attention (row engines, stack aggregators, hub). It also holds the embedding gateway, the host link and the PLL. The two UCIe macros face each other under the ROM die\'s spine. Only q, the new K/V and the attention output cross; the KV never does.',
+    qwen_rom: 'The r17b Qwen ROM die drawn from its placement: 1,536 ROM tiles in four quadrants with a corridor station beside each, a centre spine of vector, sequencing and band slabs, HBM3E PHYs on the east and west edges with their controller bands and the 128-frame CDC column.',
     ds_s81_layer: 'One S81 layer die drawn from the generator: 128 column frames of ROM element pairs (blue; each pair sits over its row of seven configuration ROMs, drawn as texture) with their ragged return trees, a 2.6 mm centre spine, and HBM3E bands on the north and south edges.',
     hbm_ds: 'The r14b HBM accelerator die: four stacks on the long edges, each feeding a group of eight SMs; the hub band carries the SU, SFU, HC and index quarters and four quadrants of 16 attention tiles; the centre spine carries control, collectives and the multicast root. SerDes sit at the north and south edge centres.',
     hbm_qwen: 'The Qwen3-8B tile die of the HBM accelerator: 96 columns × 16 rows of W12 matrix tiles with column heads, a centre spine of core, scale and port slices, and four HBM3E PHYs.' }[dk];

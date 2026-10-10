@@ -1,0 +1,93 @@
+{
+  "name": "hfd-mtp-x-stop-4386513e4-tc",
+  "block": "hfd_mtp_x_stop",
+  "owner": "Codex:review_hbm_token_path",
+  "purpose": "Full native40-layer gamma5 STOP-aware MTP, PW20/CW21/FW23, EOS/LEN/MAX effective prefix and finite accepted-output skid. PATHFINDING until widened facade and actual region pin budgets are integrated. Existing MTP466.56x200.88 candidate slot; legacy hfd_mtp_x routes preserved. Arithmetic and whole-token datapath credit remain blocked.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 24,
+  "peak_ram_gb": 60,
+  "source": {
+    "branch": "codex/review-hbm-token-fifo-20261009",
+    "commit": "4386513e4",
+    "extra_paths": [
+      "rtl/hbm_accel/control/hfd_mtp_x_stop.sv",
+      "rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv",
+      "physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv",
+      "rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv",
+      "rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv",
+      "rtl/gpu/dshbm/ot_dshbm_accept_port.sv",
+      "rtl/hdc/ot_hdc_accept.sv",
+      "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+      "rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv",
+      "rtl/gpu/ot_gpu_router_topk.sv",
+      "rtl/gpu/ot_gpu_router_topk_f.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv",
+      "tools/hbm_native_mtp_stop_model.py",
+      "tools/hbm_native_mtp_core_stop_gate.py",
+      "rtl/test/hbm_accel/tb_hfd_mtp_x_stop.sv",
+      "results/rtl/hbm_token_fifo_reservation_20261009/native_mtp_sources.json"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=24 UTIL=45 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} hfd_mtp_x_stop --source rtl/hbm_accel/control/hfd_mtp_x_stop.sv --source rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv --source rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv --source rtl/gpu/dshbm/ot_dshbm_accept_port.sv --source rtl/hdc/ot_hdc_accept.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv --die-area 0 0 466.56 200.88 --core-area 1.08 1.08 465.48 199.8 $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 24,
+      "peak_ram_gb": 60
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=24 UTIL=45 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} hfd_mtp_x_stop --source rtl/hbm_accel/control/hfd_mtp_x_stop.sv --source rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv --source rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv --source rtl/gpu/dshbm/ot_dshbm_accept_port.sv --source rtl/hdc/ot_hdc_accept.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state.sv --source rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv --die-area 0 0 466.56 200.88 --core-area 1.08 1.08 465.48 199.8 ",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hbm_token_fifo_reservation_20261009/routes/hfd-mtp-x-stop-4386513e4-tc"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 7,
+  "notes": "Output ACK adds one cycle per accepted token, <=6 per verify batch; skid adds one pin-boundary cycle. Actual stall occupancy is measured; no speculative rate credit. Width and endpoint budgets remain explicit qualification obligations.",
+  "no_bench_reason": "Remote controller EOS/LEN/MAX and PRL2 gates source-pinned; actual nativecore exactness runs in parallel, adoption gated by PASS and source hashes."
+}

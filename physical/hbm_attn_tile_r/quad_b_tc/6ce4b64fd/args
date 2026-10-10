@@ -1,1 +1,1 @@
-TPARAM= CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 C=q4g12b DW=514.89 DH=562.95 PD=0.50 HM=0.05 MCP=1 
+TPARAM=CG=1 CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 C=q4g12b DW=514.89 DH=562.95 PD=0.50 HM=0.010 MCP=1 --source rtl/hdc/ot_hdc_cg.sv --source rtl/hbm_accel/cg/ot_cg_tile.sv

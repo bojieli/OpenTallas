@@ -1,0 +1,469 @@
+{
+  "observed_utc": "2026-10-09T13:09:21.065283+00:00",
+  "verdict": "S8_NONTERMINATING_INCONCLUSIVE; no overallterminal",
+  "gate_cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --out /tmp/claude-1000/w2gate_safe",
+  "processes": {
+    "2015263": {
+      "cwd": "/home/ubuntu/wt-tk-hbm-w2",
+      "cmd": "python3 tools/w2_station_rb_gate.py --safe --skip-legacy --out /tmp/claude-1000/w2gate_safe ",
+      "status": "Name:\tpython3\nUmask:\t0002\nState:\tS (sleeping)\nTgid:\t2015263\nNgid:\t0\nPid:\t2015263\nPPid:\t1\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t64\nGroups:\t4 24 27 30 44 46 108 109 110 998 999 1000 \nNStgid:\t2015263\nNSpid:\t2015263\nNSpgid:\t2015262\nNSsid:\t2015256\nKthread:\t0\nVmPeak:\t   26132 kB\nVmSize:\t   26132 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   16384 kB\nVmRSS:\t    2444 kB\nRssAnon:\t       8 kB\nRssFile:\t    2436 kB\nRssShmem:\t       0 kB\nVmData:\t    9040 kB\nVmStk:\t     136 kB\nVmExe:\t    2776 kB\nVmLib:\t    5156 kB\nVmPTE:\t      96 kB\nVmSwap:\t    7744 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t0/770777\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000000000002\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff\nCpus_allowed_list:\t0-31\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t73\nnonvoluntary_ctxt_switches:\t2\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+      "stat": "2015263 (python3) S 1 2015262 2015256 0 -1 4194304 2231 260794 0 0 2 0 7225 34 25 5 1 0 355045887 26759168 1728 18446744073709551615 107331118342144 107331121182221 140722735844656 0 0 0 0 16781312 2 1 0 0 17 6 0 0 0 0 0 107331123554352 107331123838424 107331554992128 140722735853118 140722735853210 140722735853210 140722735857639 0\n"
+    },
+    "2019079": {
+      "cwd": "/home/ubuntu/wt-tk-hbm-w2",
+      "cmd": "vvp /tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed.vvp ",
+      "status": "Name:\tvvp\nUmask:\t0002\nState:\tR (running)\nTgid:\t2019079\nNgid:\t0\nPid:\t2019079\nPPid:\t2015263\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t64\nGroups:\t4 24 27 30 44 46 108 109 110 998 999 1000 \nNStgid:\t2019079\nNSpid:\t2019079\nNSpgid:\t2015262\nNSsid:\t2015256\nKthread:\t0\nVmPeak:\t   47432 kB\nVmSize:\t   47432 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   39424 kB\nVmRSS:\t   19492 kB\nRssAnon:\t   16400 kB\nRssFile:\t    3092 kB\nRssShmem:\t       0 kB\nVmData:\t   39080 kB\nVmStk:\t     136 kB\nVmExe:\t     604 kB\nVmLib:\t    4180 kB\nVmPTE:\t     128 kB\nVmSwap:\t   18168 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t0/770777\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000000000\nSigCgt:\t0000000000004003\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff\nCpus_allowed_list:\t0-31\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5423\nnonvoluntary_ctxt_switches:\t1215849\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+      "stat": "2019079 (vvp) R 2015263 2015262 2015256 0 -1 4194304 10882 0 1167 0 20370469 5132 0 0 25 5 1 0 355053155 48570368 5184 18446744073709551615 108007373238272 108007373855873 140734399906016 0 0 0 0 0 16387 0 0 0 17 7 0 0 0 0 0 108007374165864 108007374221512 108007643717632 140734399913563 140734399913630 140734399913630 140734399918059 0\n"
+    }
+  },
+  "outputs": {
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0_red0.run.log": {
+      "sha256": "639a6718d34102a3596cd9e965e0b6ec42b766a6cf3c91f51016f88ea1bd1d3c",
+      "bytes": 228,
+      "mtime": 1791345612.9180582
+    },
+    "/tmp/claude-1000/w2gate_safe/veto_rb.vvp": {
+      "sha256": "ea2018e8da2a504cb10dcf4b531e399735372b70b5bc053dd1e78d9e48205439",
+      "bytes": 1267047,
+      "mtime": 1791345628.9443707
+    },
+    "/tmp/claude-1000/w2gate_safe/quarter_rb_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345615.9071167
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0.run.log": {
+      "sha256": "3cb3b2f1460e2171caeb53f3541e81ce41b00569c34001a90803c8bbbb34aab9",
+      "bytes": 228,
+      "mtime": 1791345609.1599848
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B1_live_q_no_alignment.vvp": {
+      "sha256": "39a4e2b77ec21bb374650eb261238698e24426686e338eec27bba854a40339f9",
+      "bytes": 680194,
+      "mtime": 1791345630.860408
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345674.9902663
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B3_controller_check_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345634.353476
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S3_frame_check_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345648.0117419
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S2_parent_ack_mask_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345639.2875721
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S1_sm_duplicate_mask_removed_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345636.5425186
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B2_copy_check_removed.run.log": {
+      "sha256": "f4201564d10e94cf7d4bbf38f4141fb2f475d704cdd7e858950010b2d11dbe56",
+      "bytes": 212,
+      "mtime": 1791345634.3524761
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1_red0.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345612.9180582
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S3_frame_check_removed.run.log": {
+      "sha256": "3873f109e7a204562419c85b66ce4d7028c3a1bd043cc956b49e7a93eeca6a01",
+      "bytes": 349,
+      "mtime": 1791345660.9959946
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B4_red_data_not_delayed.vvp": {
+      "sha256": "ab9b239260c5f49e5e0098630ab5e871a177682214d5a8dd564bb73652080dae",
+      "bytes": 680833,
+      "mtime": 1791345636.2625132
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S2_parent_ack_mask_removed.vvp": {
+      "sha256": "67c452f17e7a36002b5361b36ab73985e5e3a975ff9ba947ccfffd212a8567f2",
+      "bytes": 8578102,
+      "mtime": 1791345639.5375772
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B1_live_q_no_alignment.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345630.8214073
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S1_sm_duplicate_mask_removed.vvp": {
+      "sha256": "94bd2017df680ce48610f20d9e7f4f8d5e7e7594332bc0b0d45abc532b3f3aad",
+      "bytes": 8572488,
+      "mtime": 1791345636.7965236
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S4_held_release_ignored.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345660.9979944
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B4_red_data_not_delayed.run.log": {
+      "sha256": "134981f70e1bf40ca025c832256f0dca67bcf5defb15f59442bac03a318332e8",
+      "bytes": 184,
+      "mtime": 1791345636.5395186
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B3_controller_check_removed.run.log": {
+      "sha256": "45041cc3d16e70b068b0c43e301285b136bd64d44b4f097e4849db33c528e438",
+      "bytes": 204,
+      "mtime": 1791345636.2375128
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S4_held_release_ignored.vvp": {
+      "sha256": "491f2d8b803eba64e922169f5dc9a2e7cfbdab8d7bbdd93a14d877f38f69aca4",
+      "bytes": 8578056,
+      "mtime": 1791345661.2599995
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S2_parent_ack_mask_removed_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345639.2875721
+    },
+    "/tmp/claude-1000/w2gate_safe/quarter_rb.vvp": {
+      "sha256": "6faf0aaee663a61d79dc35b689b725ac8787a72b963cbebdc0a49d2c7f014d56",
+      "bytes": 8578651,
+      "mtime": 1791345616.1651216
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S7_ack_frame_stage_skipped.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345670.2061734
+    },
+    "/tmp/claude-1000/w2gate_safe/veto_rb.run.log": {
+      "sha256": "4e08234adc2839e9f9a5f6005b665d5e838bb36134a5c17d08a74fddc63d16de",
+      "bytes": 49,
+      "mtime": 1791345630.8214073
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S4_held_release_ignored_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345660.9979944
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1_red0.run.log": {
+      "sha256": "176295c15bf0c061ea0c09bbe6c403279de32e8107bbf2f77db1df3ea245a010",
+      "bytes": 228,
+      "mtime": 1791345615.9061165
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed.vvp": {
+      "sha256": "525576b739a9a0b6d7df88b540b69e0da88b410686d8c487b09510386d4f756e",
+      "bytes": 8578410,
+      "mtime": 1791345675.2462714
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1.run.log": {
+      "sha256": "95591ade1e7692e3e767292b7a3648edcb35560fb451b6f8932a3de0b2897899",
+      "bytes": 228,
+      "mtime": 1791345605.6939173
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0_red0.vvp": {
+      "sha256": "13538c69e691dd78c176ea1a45f3f228e417a8f341ec7e168df3d324df893fc2",
+      "bytes": 666302,
+      "mtime": 1791345609.1839855
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0.vvp": {
+      "sha256": "d853926f5211d67c27e56be5887f70472d6d59affe61e8564a5f4a50773d2775",
+      "bytes": 678683,
+      "mtime": 1791345605.7199178
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S3_frame_check_removed_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345648.0117419
+    },
+    "/tmp/claude-1000/w2gate_safe/quarter_rb.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345615.9071167
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1_red0.vvp": {
+      "sha256": "d0cc7aec554779a6e8af08132437801f71304e294e42ed0ca198e58f384e7d10",
+      "bytes": 665322,
+      "mtime": 1791345612.9400587
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S4_held_release_ignored.run.log": {
+      "sha256": "090a97cabbcf7675ad8aed947ae80ca7ceed621b19e39625a2300e97b5d550cd",
+      "bytes": 274,
+      "mtime": 1791345669.303156
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed.run.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345675.2492714
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345602.5938568
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B3_controller_check_removed.vvp": {
+      "sha256": "7036fa4e66ab4aadb6bc2acb9eef54efcaab169e3eb069ee8af2f0985bed3652",
+      "bytes": 677681,
+      "mtime": 1791345634.3794765
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B1_live_q_no_alignment.run.log": {
+      "sha256": "fa66056acf0baab4b517bf388235cdefd11cbe0c5ff17e93b677cb32320f098f",
+      "bytes": 184,
+      "mtime": 1791345631.1384134
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B4_red_data_not_delayed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345636.2375128
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S1_sm_duplicate_mask_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345636.5425186
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345674.9902663
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s0d1.vvp": {
+      "sha256": "a377f1767c58e851d68b9a8e902bfb8629b9c6b03d15482c9cf6215eb765fd29",
+      "bytes": 677703,
+      "mtime": 1791345602.6188571
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S3_frame_check_removed.vvp": {
+      "sha256": "120f9420f1145c6541e3fa9e6e4b43139a8ff0b0bcf241c46d9bcb7791bc4fa7",
+      "bytes": 8575906,
+      "mtime": 1791345648.270747
+    },
+    "/tmp/claude-1000/w2gate_safe/quarter_rb.run.log": {
+      "sha256": "4ca73a3ef895d99567db430583c71216af850ed8ae8ef29b5224fe3cea988db5",
+      "bytes": 360,
+      "mtime": 1791345628.90637
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S7_ack_frame_stage_skipped_tb.sv": {
+      "sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "bytes": 11424,
+      "mtime": 1791345670.2061734
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S6_cross_bank_veto_removed.run.log": {
+      "sha256": "efc071d55b8af26dde7ba5f9b8e31b14977ef5ba1c186b5964c541386567897f",
+      "bytes": 211,
+      "mtime": 1791345670.2051735
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0_red0.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345609.160985
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S6_cross_bank_veto_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345669.305156
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S6_cross_bank_veto_removed.vvp": {
+      "sha256": "be773aad2860ff1521126e7099dc391a16af9e311dbaa81d0dcd9f03c87d2444",
+      "bytes": 1267094,
+      "mtime": 1791345669.3441567
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B2_copy_check_removed.vvp": {
+      "sha256": "d60fe0dd79c7d6a7e398bd6bae382c2f1b32ab8410f9a1d0df7d2a1345c3032b",
+      "bytes": 677664,
+      "mtime": 1791345631.158414
+    },
+    "/tmp/claude-1000/w2gate_safe/veto_rb.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345628.91037
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S7_ack_frame_stage_skipped.run.log": {
+      "sha256": "6d77905f8592309673cd1cca64e0212f7f0b4dfb46e103b7949a1c3b99d046d6",
+      "bytes": 219,
+      "mtime": 1791345674.9882662
+    },
+    "/tmp/claude-1000/w2gate_safe/bank_s1d0.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345605.6949172
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S1_sm_duplicate_mask_removed.run.log": {
+      "sha256": "cbc5e39dd5ddc17e680486c1455e11fb337424a93d1cc6da8f265f3dc6a4b4ff",
+      "bytes": 225,
+      "mtime": 1791345639.280572
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_B2_copy_check_removed.compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1791345631.1384134
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S2_parent_ack_mask_removed.run.log": {
+      "sha256": "4db35519be6ca88459f75a077431f9affba7acf47ac5fd67f08cc368c6ca5ed3",
+      "bytes": 317,
+      "mtime": 1791345648.010742
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S7_ack_frame_stage_skipped.vvp": {
+      "sha256": "b68bb30cd140ed9a9172e6ebcbd343a9cfdcfaa6a3afd1362f6df7b56c3677bd",
+      "bytes": 8578671,
+      "mtime": 1791345670.4641786
+    },
+    "/tmp/claude-1000/w2gate_safe/B4_red_data_not_delayed/ot_hbm_w2_protected_bank_veto.sv": {
+      "sha256": "e593ca48f55853827eb1afe8b175483086bd6abecab172e891377c041586b8f7",
+      "bytes": 12722,
+      "mtime": 1791345636.2375128
+    },
+    "/tmp/claude-1000/w2gate_safe/S3_frame_check_removed/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "56a154139ada6b4a5eef46cd6f3136f6eb90e1c4b7efaff2934cad2539463f73",
+      "bytes": 16220,
+      "mtime": 1791345648.0117419
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_9d1c1b18/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "3cbeddf32ea0bf2913cf50cf2bd5c78ccb33b1bca5d739b54a3079fc33a60bdc",
+      "bytes": 16217,
+      "mtime": 1791345674.9902663
+    },
+    "/tmp/claude-1000/w2gate_safe/S2_parent_ack_mask_removed/ot_hbm_native_quarter_chain_rb.sv": {
+      "sha256": "c3e015c9f2af7a275e321f4234c9e3ba93de4d95c0c0b40f6a2ef9aabd972c7c",
+      "bytes": 4030,
+      "mtime": 1791345639.2865722
+    },
+    "/tmp/claude-1000/w2gate_safe/S4_held_release_ignored/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "7be0d4d4053f53fc0adc03c34eae642ffad521b2c9af21264d26a94428fa7563",
+      "bytes": 16227,
+      "mtime": 1791345660.9979944
+    },
+    "/tmp/claude-1000/w2gate_safe/S8_rel_q_decision_removed/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "d15dc10e2180d18f84f946c4043c57d0cbbfdca4c3869f93f9c57bff3d2cf786",
+      "bytes": 16217,
+      "mtime": 1791345674.9902663
+    },
+    "/tmp/claude-1000/w2gate_safe/S7_ack_frame_stage_skipped/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "d80cbd75af76fdff3833072ac76f7d091cc437237b171462c9c4eba9d88e2b47",
+      "bytes": 16237,
+      "mtime": 1791345670.2061734
+    },
+    "/tmp/claude-1000/w2gate_safe/S1_sm_duplicate_mask_removed/ot_hbm_native_quarter_chain_rb.sv": {
+      "sha256": "35aa383e678b2543c60e9f6675377d2bce2fc91eddc1e2828ed9f2e465c724f6",
+      "bytes": 4022,
+      "mtime": 1791345636.5405188
+    },
+    "/tmp/claude-1000/w2gate_safe/B1_live_q_no_alignment/ot_hbm_w2_protected_bank_veto.sv": {
+      "sha256": "3e670e6163486d3f4df4fe680f139e8b7d3a67c9f754ba125343fbf110fe250b",
+      "bytes": 12742,
+      "mtime": 1791345630.8214073
+    },
+    "/tmp/claude-1000/w2gate_safe/B2_copy_check_removed/ot_hbm_w2_protected_bank_veto.sv": {
+      "sha256": "7e1c8a1fb5da5efab5e3d8fefe75682e9dafe9fa7a92442466840d72c589a9dc",
+      "bytes": 12730,
+      "mtime": 1791345631.1384134
+    },
+    "/tmp/claude-1000/w2gate_safe/B3_controller_check_removed/ot_hbm_w2_protected_bank_veto.sv": {
+      "sha256": "bb3cd87e53d8660f0143080710a1113d17efe845a81d0c4c42df95173c976601",
+      "bytes": 12731,
+      "mtime": 1791345634.353476
+    },
+    "/tmp/claude-1000/w2gate_safe/S6_cross_bank_veto_removed/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "80901bfa3249309e95a8c3a0d440d3a3a94953aefe8614bee8291a90f5fba146",
+      "bytes": 16232,
+      "mtime": 1791345669.305156
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_5b518356/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "e41bad3f8430d1d0cb3c65cd68f17c13a245a00383dc2c5bd4f26fd0ca9e6e72",
+      "bytes": 16227,
+      "mtime": 1791345660.9979944
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_492c7be6/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "7240e1e441f41e715b1ba041c00dbba6cff6b0b4cd01342820d0fd7e7b56c8f1",
+      "bytes": 16220,
+      "mtime": 1791345648.0117419
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_e0dbf198/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "57abaf16e6c2adfbfc62dc5eb16b8cd819c952d272ba56b2e66fefee52d7d40d",
+      "bytes": 16235,
+      "mtime": 1791345639.2865722
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_c49f1009/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "abe599e38e257138feafa0fbebff9d9eed0ad6fe5636b97c45f503cae0bd2042",
+      "bytes": 16237,
+      "mtime": 1791345670.2061734
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_a686727f/ot_hbm_native_frame_station_rb.sv": {
+      "sha256": "9db41cf812b9402263edefa219d1b7276cf58d2bb39f3308a7ea9dbc63a7ecfb",
+      "bytes": 16232,
+      "mtime": 1791345669.305156
+    }
+  },
+  "compiled_S8_sources": {
+    "/home/ubuntu/wt-tk-hbm-w2/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "sha256_current": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "mtime": 1791302871.5643868,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": {
+      "sha256_current": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "mtime": 1791302871.568387,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/tmp/claude-1000/w2gate_safe/neg_S8_rel_q_decision_removed_tb.sv": {
+      "sha256_current": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+      "mtime": 1791345674.9902663,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": {
+      "sha256_current": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "mtime": 1791374601.561191,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/tmp/claude-1000/w2gate_safe/relreg_9d1c1b18/ot_hbm_native_frame_station_rb.sv": {
+      "sha256_current": "3cbeddf32ea0bf2913cf50cf2bd5c78ccb33b1bca5d739b54a3079fc33a60bdc",
+      "mtime": 1791345674.9902663,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": {
+      "sha256_current": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "mtime": 1791318910.2949953,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/rtl/common/ot_fwd_link_stage.sv": {
+      "sha256_current": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "mtime": 1791302871.5443866,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": {
+      "sha256_current": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "mtime": 1791302841.3347363,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": {
+      "sha256_current": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "mtime": 1791302871.565387,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": {
+      "sha256_current": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "mtime": 1791302841.359737,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+      "sha256_current": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "mtime": 1791302841.136732,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": {
+      "sha256_current": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "mtime": 1791302841.359737,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    },
+    "/home/ubuntu/wt-tk-hbm-w2/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": {
+      "sha256_current": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "mtime": 1791302841.1377323,
+      "capture_note": "current file; VVP exact executable separately preserved; source may have changed after compilation"
+    }
+  },
+  "runtime_watchdog": "none effective in live loaded parent; current source3600s addition postdates run",
+  "clock": "1ps/1fs #416.666 ->833.332ps; historical",
+  "current_harness": {
+    "sha256": "ebf39b1c347c41fed084645c7f99a9e53ddd169c1ade7ef7c7aeb2f51c6a75a8",
+    "mtime": 1791375764.9391074
+  }
+}

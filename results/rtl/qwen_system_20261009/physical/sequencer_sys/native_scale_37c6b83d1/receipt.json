@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen_sys_native_scale_control_gate.v1",
+  "generator_source": "37c6b83d1",
+  "host": "ot-agidock128",
+  "admission": "/srv/opentallas-scratch/admit.sh 4 -- bash /srv/opentallas-scratch/codex/seq-sys-native-scale-37c6b83d1/run.sh",
+  "code_bases": [
+    0,
+    64,
+    112,
+    368
+  ],
+  "scale_bases": [
+    0,
+    96,
+    384,
+    768
+  ],
+  "code_layer_stride": 512,
+  "scale_layer_stride": 1056,
+  "stage_count": 38,
+  "ranks": 4,
+  "positions": [
+    0,
+    8191
+  ],
+  "total_control_stages": 304,
+  "ME_commands": 1760,
+  "SU_commands": 5792,
+  "collectives": 584,
+  "mismatches": 0,
+  "bounds_faults_detected": 4,
+  "base_fold_mutant_mismatches": 576,
+  "reference": "separategolden program/descriptorhex files from compiler artifacts; noDUTROMfunction used by reference",
+  "pending": "parent all148releasedstage payload/permutation gate and source-matched physical closure"
+}

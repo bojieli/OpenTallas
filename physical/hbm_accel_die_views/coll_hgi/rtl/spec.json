@@ -1,0 +1,117 @@
+{
+ "master": "hfd_coll",
+ "clock": "refclk",
+ "rst": "por",
+ "extra_inputs": [
+  "refclk",
+  "por"
+ ],
+ "clock_out_ports": [
+  "pll_stream",
+  "pll_link",
+  "pll_serial",
+  "pll_hbm"
+ ],
+ "note": "HGI-1 collective view (hgi-takeover 2026-10-09): ot_hgi_coll_ep (PSG endpoint + ot_hgi_coll_record + config station rx) with the legacy die binding plus the HGI record / config / row-formatter / VM-address pins. INTERIM, REDUCED: unchanged ot_hbm_accel_tu_endpoint with FIFO depths RXAW = QAW = TXAW = 4 (16 entries); at the RTL defaults (RXAW 8, QAW 6, TXAW 6) its flop FIFOs hold ~2.5 Mb, more std-cell area than the 1.96 mm2 slot: the endpoint needs SRAM FIFOs before a full-depth view exists. pclk = clk (the PHY clock is the link clock region outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.",
+ "instances": [
+  {
+   "name": "ep",
+   "module": "ot_hgi_coll_ep",
+   "file": "rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv",
+   "params": {
+    "ENABLE": 1,
+    "RXAW": 4,
+    "QAW": 4,
+    "TXAW": 4
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "pclk": "clk",
+    "prst_n": "rst_n",
+    "rank": "die:f_cmdproc[0:8]",
+    "pf": "die:f_cmdproc[8:24]",
+    "go": "die:f_cmdproc[24:25]",
+    "fault": "die:t_cmdproc[0:1]",
+    "stat_credit_stall": "die:t_cmdproc[1:33]",
+    "ph_tx_v": "die:llk_S0[0:8]",
+    "ph_tx_flit": "die:llk_S0[8:487]+llk_S1[0:487]+llk_S2[0:487]+llk_S3[0:487]+llk_S4[0:487]+llk_N0[0:487]+llk_N1[0:487]+llk_N2[0:487]+llk_N3[0:472]",
+    "rx_credit": "die:llk_N3[472:480]",
+    "ph_rx_v": "die:llk_S0[487:495]",
+    "ph_rx_flit": "die:llk_S0[495:974]+llk_S1[487:974]+llk_S2[487:974]+llk_S3[487:974]+llk_S4[487:974]+llk_N0[487:974]+llk_N1[487:974]+llk_N2[487:974]+llk_N3[487:959]",
+    "sw_cr_ret": "die:llk_N3[959:967]",
+    "del_flit": "die:t_su_SW[0:545]+t_su_NW[0:545]+t_su_SE[0:545]+t_su_NE[0:545]",
+    "del_valid": "die:t_su_SW[545:546]+t_su_NW[545:546]+t_su_SE[545:546]+t_su_NE[545:546]",
+    "inj_idx": [
+     "die:t_su_SW[546:578]",
+     "die:t_su_NW[546:578]",
+     "die:t_su_SE[546:578]",
+     "die:t_su_NE[546:578]"
+    ],
+    "inj_rd": [
+     "die:t_su_SW[578:580]",
+     "die:t_su_NW[578:580]",
+     "die:t_su_SE[578:580]",
+     "die:t_su_NE[578:580]"
+    ],
+    "hgi_rec": "die:f_hgi_cmdproc[0:968]",
+    "hgi_ret": "die:t_hgi_cmdproc[0:3]",
+    "hgi_cfg": "die:f_hgi_cfg[0:40]",
+    "hgi_rowfmt_o": "fold",
+    "hgi_rowfmt_i": "cfg",
+    "hgi_vmaddr": [
+     "die:t_hgi_vmaddr_SW[0:80]",
+     "die:t_hgi_vmaddr_NW[0:80]",
+     "die:t_hgi_vmaddr_SE[0:80]",
+     "die:t_hgi_vmaddr_NE[0:80]"
+    ],
+    "inj_q": "die:f_su_SW[0:1024]+f_su_NW[0:1024]+f_su_SE[0:1024]+f_su_NE[0:1024]"
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "por_stream",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_link",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_serial",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_hbm",
+   0,
+   1,
+   "rst_s[1]"
+  ]
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5,
+ "contracts": {
+  "ep.inj_q": "SU-quarter ownership (hgi-takeover 2026-10-09, defined by the die-integration owner): inject flit i (inj_idx, broadcast to all four quarters on t_su_q[546:580]) is owned by quarter i mod 4 in the order SW, NW, SE, NE; the owner drives its 1024-bit f_su_q (hfd_su t_coll), the other three drive 0, so the OR (inside ot_hgi_coll_ep) is the owner data; two or more non-zero quarters in a cycle set the sticky multi-driver fault (review-1149, zero cycles on the data path). The functional SU inject gate is one AND per quarter (the physical envelope hfd_su has no inject select); "
+ },
+ "ties": {
+  "die:llk_N3[967:974]": {
+   "class": "by_design",
+   "reason": "spare RX lanes: 9 x 487 b uniform stripes hold 4,376 b"
+  },
+  "die:llk_N3[480:487]": {
+   "class": "by_design",
+   "reason": "spare TX lanes: 9 x 487 b uniform stripes hold 4,376 b"
+  }
+ },
+ "hgi_unit": "coll",
+ "open_items": [
+  "ROW_GATHER datapath: the row formatter needs an HBM row reader (svc native read client, as ot_hfd_loader_kport) and an inject source into the endpoint; until it exists hgi_rowfmt_o / hgi_rowfmt_i are unbound (visible TIED_OFF 97 b)"
+ ]
+}

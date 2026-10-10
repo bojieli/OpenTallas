@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qfd_dspark_argmax_gather",
+      "target": "Qwen ROM",
+      "owner": "Codex:review_qwen_token_path",
+      "description": "Real four-rank vocabulary winner collection with finite source credits, cohort64/sequence8, global rank bounds, registered pair merge and exact lowest-ID signed-zero ties. Protected link/state and production SU binding pending.",
+      "source": {
+        "commit": "bc6dafa13",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_argmax_gather.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_argmax_gather.sv"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py:argmax_gather"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/gather_exact/run.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/gather_exact/mut_run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias.json"
+        ]
+      },
+      "dependencies": [
+        "qfd_dspark_biased_amax",
+        "qfd_dspark_s7_control",
+        "qfd_actual_collective_547_518"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "Protected cross-die result transport, mutable collector state protection and actual MKV_GATHER backend binding remain open; local exactness is not numerical backend proof."
+        ]
+      }
+    }
+  ]
+}

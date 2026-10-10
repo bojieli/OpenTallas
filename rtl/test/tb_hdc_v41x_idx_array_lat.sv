@@ -22,6 +22,7 @@ module tb_hdc_v41x_idx_array #(
     parameter integer FPL = 3,              // element arithmetic latencies (3/3/3 = as built)
     parameter integer FML = 3,
     parameter integer QL = 3,
+    parameter integer SAFE_QUERY_GATE = 0,
     parameter integer MAXT = 64,
     parameter integer MAXS = 1 << 17
 ) (input wire clk);
@@ -72,8 +73,9 @@ module tb_hdc_v41x_idx_array #(
     wire [W*16-1:0]  o_score;
     wire [W*IW-1:0]  o_index;
     wire             protocol_fault;
-    ot_hdc_v41x_idx_array_l #(.NS(NS), .NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL)) dut (
-        .clk(clk), .rst_n(rst_n), .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(ql_head),
+    wire [7:0] query_head_for_dut = ($test$plusargs("MUT_QUERY_HEAD") && ql_head == 8'd7) ? 8'd8 : ql_head;
+    ot_hdc_v41x_idx_array_l #(.NS(NS), .NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL), .SAFE_QUERY_GATE(SAFE_QUERY_GATE)) dut (
+        .clk(clk), .rst_n(rst_n), .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(query_head_for_dut),
         .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
         .i_valid(i_valid), .i_ready(i_ready), .i_last(i_last), .i_kv(i_kv), .i_ref(i_ref),
         .i_keep(i_keep), .i_index(i_index), .i_key(i_key),

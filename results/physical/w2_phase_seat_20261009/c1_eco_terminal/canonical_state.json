@@ -1,0 +1,273 @@
+{
+ "name": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+ "spec": {
+  "name": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+  "block": "ot_hbm_native_frame_station_rb",
+  "owner": "Codex:expert_steering C1 routine approved existing-ODB",
+  "purpose": "C1 approved hold-only repair of immutable fec1faadd final ODB with frozen actual TT60/FF25 reference; no RTL, synthesis, calibration or seat variant. Preserve original UNKNOWN/FF50 history. Current helper729 bytes pinned in source bundle.",
+  "hosts": [
+   "ot-epyc4"
+  ],
+  "host_require": [
+   "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "codex/w2-phase-seat-20261009",
+   "commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+   "required_files": [
+    "tools/w2_c1_eco_current/run.py",
+    "tools/w2_c1_eco_current/spec.json"
+   ],
+   "extra_paths": [
+    "tools/w2_c1_eco_current"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "immutable_exact_and_genuine_S3_binding",
+     "cmd": "python3 tools/w2_c1_eco_current/run.py --check-only --run {RUN}/binding",
+     "expect": "pass",
+     "pass_regex": "C1_IMMUTABLE_GATE_BOUND",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Existing extracted ODB and actual propagated TT25 reference already validated; new calibration would duplicate completed compute."
+   },
+   "route": {
+    "cmd": "python3 tools/w2_c1_eco_current/run.py --run {RUN}/c1",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "logs": [
+     "{RUN}/c1/eco/eco.log"
+    ],
+    "ok": "test -s {RUN}/c1/eco/corner_sta.json"
+   }
+  },
+  "no_bench_reason": "Pure existing-ODB ECO. Immutable exact gate full37word4x44, quarter19, crossbank7 and genuine runtime S3 FATAL are hash-bound by preflight; no recompilation. Evidence source22c48cdf8 c1_eco_readiness.",
+  "verdict": {
+   "corner_sta": "{RUN}/c1/eco/corner_sta.json",
+   "drc_metrics": "{RUN}/c1/eco_drc_metrics.json",
+   "post_sdc": [],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": false,
+   "reason": "This job itself performs the approved hold ECO; never recurse."
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "Routine C1 existing standalone failed baseline; no adoption or boundary change."
+  },
+  "fp_lint": false,
+  "merge_target": null,
+  "resource_proof": {
+   "same_source_drt_peak_kib": 28292340,
+   "reservation_gib": 32,
+   "reservation_is_measured": false,
+   "reservation_is_process_limit": false,
+   "reason": "Measured original DRT26.98GiB plus explicit conservative capacity allowance; repair growth peak unknown and must track actual phase HWM."
+  },
+  "cycles_added": 0
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/w2-c1-fec1faadd-tt25-existing-odb-eco.json",
+ "created": "2026-10-09T04:13:10-07:00",
+ "status": "CLOSED",
+ "stage_idx": 3,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {
+  "bench_immutable_exact_and_genuine_S3_binding": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "C1_IMMUTABLE_GATE_BOUND\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T04:13:10-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/w2-c1-fec1faadd-tt25-existing-odb-eco.json",
+  "2026-10-09T04:13:11-07:00 benches run in parallel with calibrate/route (1 benches; spec bench_first opts out)",
+  "2026-10-09T04:15:32-07:00 source fac2006f5898 synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/src",
+  "2026-10-09T04:16:16-07:00 bench track: launched bench_immutable_exact_and_genuine_S3_binding (bench_immutable_exact_and_genuine_S3_binding.a1b1) beside None",
+  "2026-10-09T04:16:19-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-09T04:17:21-07:00 bench track: bench_immutable_exact_and_genuine_S3_binding PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-09T05:13:52-07:00 route done (rc=0)",
+  "2026-10-09T05:14:47-07:00 verdict TT +48.74 / FF +5.65 / DRC 0 / checks failed [] -> CLOSED",
+  "2026-10-09T05:17:33-07:00 routed-insertion IO re-STA: TT setup +48.74 / FF hold +5.65 (route SDC 48.74 / 5.65); routed reference TT [none] FF [none]",
+  "2026-10-09T05:17:33-07:00 verdict at the ROUTED insertion: TT +48.74 / FF +5.65 -> CLOSED",
+  "2026-10-09T05:17:54-07:00 CLOSED: CLOSED TT +48.74 / FF +5.65 ps DRC 0; SS sensitivity -178.61 ps | record codex/w2-phase-seat-20261009 4ed2c6bde (1 files) | no merge target"
+ ],
+ "updated": "2026-10-09T05:17:54-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_immutable_exact_and_genuine_S3_binding": {
+   "state": "done",
+   "tag": "bench_immutable_exact_and_genuine_S3_binding.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco",
+   "n": 1,
+   "started": "2026-10-09T04:16:16-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco",
+ "source_synced": true,
+ "commit_full": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+ "source_archive": {
+  "commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile",
+   "tools/w2_c1_eco_current"
+  ],
+  "required_sha256": {
+   "tools/w2_c1_eco_current/run.py": "f18b2bd2406f9df7f2f87aba81cb7dc5cbf807046c9918b6a7114ce91b7354f3",
+   "tools/w2_c1_eco_current/spec.json": "dcd9f099d35ab03824be89f66a490ce8186e3150856a2bd82668ac0a3afeddc7"
+  },
+  "archive_sha256": "9fcc1fcfa9196d90af95e099021e146b184fbe3bbff4d98df949c9138b8a02f6",
+  "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+  "runtime_files_pending": []
+ },
+ "reason": "CLOSED TT +48.74 / FF +5.65 ps DRC 0; SS sensitivity -178.61 ps | record codex/w2-phase-seat-20261009 4ed2c6bde (1 files) | no merge target",
+ "bench_location": {
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "commit",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-09T04:16:19-07:00",
+ "bench_work": {
+  "bench_immutable_exact_and_genuine_S3_binding": "WARN: pass log has no count line (set min_count_regex)"
+ },
+ "wd_checked": 1791546450.3078215,
+ "ef_checked": 1791547427.7865705,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco_drc_metrics.json"
+  ],
+  "ff_ps": 5.65,
+  "clock_periods_ps": {},
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco/pass1/orfs",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "sdc_name": "6_final.sdc",
+  "setup_post_sdc": [],
+  "ss_sensitivity_ps": -178.61,
+  "ss_sensitivity_tns_ps": -305961.5,
+  "setup_corner": "tt",
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco/corner_sta.json",
+  "ss_ps": 48.74,
+  "ss_tns_ps": 0.0,
+  "errors": [],
+  "drc": 0,
+  "routed_ioref": {
+   "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco/pass1/orfs|0|ae0410",
+   "at": "2026-10-09T05:14:47-07:00",
+   "available": true,
+   "ioref_edge": {
+    "tt": {
+     "clk_sm": {
+      "boundary": 7832,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    },
+    "ff": {
+     "clk_sm": {
+      "boundary": 7832,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    }
+   },
+   "tt": 48.74,
+   "ff": 5.65,
+   "errors": [],
+   "ioref": {
+    "tt": {},
+    "ff": {}
+   },
+   "tt_i2r": 81.11,
+   "tt_out": -1679.8,
+   "ff_i2r": 10.23,
+   "ff_out": 109.25,
+   "ff_r2r": 5.65,
+   "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/cl/routed_ioref.a1.json",
+   "tt_resta_raw": 48.74,
+   "ff_resta_raw": 5.65
+  },
+  "route_sdc_clock": {
+   "ss_ps": 48.74,
+   "ff_ps": 5.65
+  }
+ },
+ "checks": {},
+ "failed_checks": [],
+ "routed_ioref": {
+  "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/c1/eco/pass1/orfs|0|ae0410",
+  "at": "2026-10-09T05:14:47-07:00",
+  "available": true,
+  "ioref_edge": {
+   "tt": {
+    "clk_sm": {
+     "boundary": 7832,
+     "negedge": 0,
+     "noarc": 0,
+     "inverted": 0
+    }
+   },
+   "ff": {
+    "clk_sm": {
+     "boundary": 7832,
+     "negedge": 0,
+     "noarc": 0,
+     "inverted": 0
+    }
+   }
+  },
+  "tt": 48.74,
+  "ff": 5.65,
+  "errors": [],
+  "ioref": {
+   "tt": {},
+   "ff": {}
+  },
+  "tt_i2r": 81.11,
+  "tt_out": -1679.8,
+  "ff_i2r": 10.23,
+  "ff_out": 109.25,
+  "ff_r2r": 5.65,
+  "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-c1-fec1faadd-tt25-existing-odb-eco/cl/routed_ioref.a1.json",
+  "tt_resta_raw": 48.74,
+  "ff_resta_raw": 5.65
+ },
+ "publish": {
+  "record_branch": "codex/closure-record-w2-c1-fec1faadd-tt25-existing-odb-eco",
+  "branch_commit": "4ed2c6bde86bba41e99098932d40303b2be353a9",
+  "files": 1,
+  "merge": "no merge target"
+ }
+}

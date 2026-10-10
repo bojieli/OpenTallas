@@ -1,0 +1,44 @@
+{
+  "source_commit": "98ed29ce40dc0cb55f512fadca77c8c96210c4a7",
+  "status": "NEEDS_RTL",
+  "events": [
+    "2026-10-08T23:39:07-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_kv_merge_skid8-98ed29ce4-tc-hm10.json",
+    "2026-10-08T23:39:07-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-08T23:39:46-07:00 source 98ed29ce40dc synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_kv_merge_skid8-98ed29ce4-tc-hm10/src",
+    "2026-10-08T23:40:18-07:00 bench track: launched bench_skid_exact (bench_skid_exact.a1b1) beside None",
+    "2026-10-08T23:40:21-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-08T23:41:14-07:00 bench track: bench_skid_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-08T23:41:18-07:00 bench track: launched bench_skid_earlycredit_mutant (bench_skid_earlycredit_mutant.a1b1) beside route",
+    "2026-10-08T23:41:23-07:00 route crashed (rc=1 ok-check failed;; first error: qfd_kv_merge_skid8_98ed29ce4_tc_hm10/flow.log: run_abi3_physical.py: error: unrecognized arguments: DEPTH=8 AW=7 DW=512) -> retry once on the same host",
+    "2026-10-08T23:42:14-07:00 bench track: bench_skid_earlycredit_mutant FAIL as expected (rc=1) ",
+    "2026-10-08T23:42:18-07:00 bench track: launched bench_skid_measured_trace (bench_skid_measured_trace.a1b1) beside route",
+    "2026-10-08T23:42:21-07:00 launched route (attempt 2) on ot-epyc4",
+    "2026-10-08T23:43:16-07:00 bench failed: stopped route (route.a2)",
+    "2026-10-08T23:43:16-07:00 NEEDS_RTL: bench_skid_measured_trace expected PASS but rc=1"
+  ],
+  "benches": {
+    "bench_skid_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS fullshape DW512 credit RTT78 sent600 retired600 token-writes1447 exact128words\nPASS unreserved overflow suppresses releases\nrtl/test/qwen_system/tb_qfd_kv_merge_skid.sv:83: $finish called at 69790000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_skid_earlycredit_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "NEG_DETECTED credit-early fault at cycle121 sent16 seen0\nrtl/test/qwen_system/tb_qfd_kv_merge_skid.sv:67: $finish called at 1260000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_skid_measured_trace": {
+      "expect": "pass",
+      "rc": 1,
+      "ok": false,
+      "tail": "ge_skid8-98ed29ce4-tc-hm10/bench_src_a1/tools/qwen_system/skid_trace.py\", line 10, in run\n    with gzip.open(trace,'rt') as f:\n         ~~~~~~~~~^^^^^^^^^^^^\n  File \"/usr/lib/python3.14/gzip.py\", line 66, in open\n    binary_file = GzipFile(filename, gz_mode, compresslevel)\n  File \"/usr/lib/python3.14/gzip.py\", line 208, in __init__\n    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')\n                               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz'\n",
+      "track": "parallel"
+    }
+  },
+  "reason": "CLI PARAMS needs repeated --param flags, not bare key=value tokens",
+  "verdict": "PHYSICAL_FLOW_FAIL_PRESERVED"
+}

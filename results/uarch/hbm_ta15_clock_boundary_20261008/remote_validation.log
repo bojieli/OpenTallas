@@ -1,0 +1,16 @@
+Fri Oct  9 06:40:54 UTC 2026
+MemTotal:       1188103384 kB
+MemFree:        329647692 kB
+MemAvailable:   431436328 kB
+Buffers:          493496 kB
+Cached:         117053868 kB
+Filesystem     1G-blocks  Used Available Use% Mounted on
+/dev/nvme2n1       2933G  920G     2014G  32% /srv/opentallas-data
+...                                                                      [100%]
+3 passed in 0.06s
+b56ae9fff7924b92d5bb78f1c678ad9c573f9be77b1d5db0d7650c0ef61b7b23  rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv
+339f860cbe517c382c2c651efb0b04678fc3b206349436c778086b8c76ccd0c1  rtl/hbm_accel/control/ot_hbm_pll_bb.sv
+b930a255caa1574c6937082e403940c13586d030b81fe3a3a9c9a5d1669989bf  rtl/hbm_accel/control/ot_hbm_reset_seq.sv
+bce24d0c863aea6c821f638253d45deba647f696fe6cdcc74f51b49cfd12445d  tests/rtl/tb_hbm_clock_reset_boundary.sv
+a449c9b85eb0ff9674ffd5361d41faf3a36213e5e5abe463afef0aa7b545c0e3  tests/test_hbm_clock_reset_boundary.py
+8908d2e728c27fe152a15805cf58e57da10268cbe6d3068d44ab95fd7f40fc19  tools/hbm_ta15_clock_boundary_model.py

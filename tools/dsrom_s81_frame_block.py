@@ -176,7 +176,8 @@ def emit(a):
             hi = max(bits_)
             cat = ", ".join(bits_.get(j, "1'b0") for j in range(hi, -1, -1))
             parts.append(f".{esc(base)}({{{cat}}})")
-        V.append(f"  {it.master} {it.name} (" + ", ".join(parts) + ");")
+        prm = " #(.PQ(1))" if it.master == "ot_s81_cfg7_seq" and S.q_pq() else ""   # TA-10: PQ loader + op tag
+        V.append(f"  {it.master}{prm} {it.name} (" + ", ".join(parts) + ");")
     PX = []
     for it, ei, eo, k in pqx:
         ni, no = len(ei), len(eo)

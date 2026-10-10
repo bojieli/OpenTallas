@@ -36,5 +36,23 @@
   }
  ],
  "kept_out_regs": true,
- "face_stages": 3
+ "face_stages": 3,
+ "ties": {
+  "n0.rel_in": {
+   "class": "by_design",
+   "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)"
+  },
+  "n0.up": {
+   "class": "by_design",
+   "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)"
+  },
+  "n1.rel_in": {
+   "class": "by_design",
+   "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)"
+  },
+  "n1.up": {
+   "class": "by_design",
+   "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)"
+  }
+ }
 }

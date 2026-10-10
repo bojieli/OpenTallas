@@ -1,0 +1,558 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "qkd_d2d",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "KV-die end of the ROM <-> KV link: ot_qkvd_kv_end (ot_qkvd_d2d NT 3 / NR 4) + forwarded clock / reset bumps; CONTRACT.md classes, credits, sequence check",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+     "physical/qwen_die_masters/cfg/qkd_d2d_a.env",
+     "physical/qwen_die_masters/cfg/qkd_d2d_b.env"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv, rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv, rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv, physical/qwen_die_masters/cfg/qkd_d2d_a.env, physical/qwen_die_masters/cfg/qkd_d2d_b.env"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qfd_d2d_rom",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "ROM-die end of the link: ot_qkvd_rom_end = the r21c hub SU / VM / sequencer faces (x3, ar 519 b, ea, eq, dc, dh) over ot_qkvd_d2d",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv",
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+     "physical/qwen_die_masters/cfg/qfd_d2d_rom_a.env",
+     "physical/qwen_die_masters/cfg/qfd_d2d_rom_b.env"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv, rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv, physical/qwen_die_masters/cfg/qfd_d2d_rom_a.env, physical/qwen_die_masters/cfg/qfd_d2d_rom_b.env"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/rom_r22k.json (r22k 757.576 mm2, legal); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_r22k"
+   }
+  },
+  {
+   "element": "qkd_seq",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "KV-die sequencer ot_qkvd_kv_seq: CTL / Q / KVN / EMBQ in, RES / EMBD / HCTL out, attention start, KVN posted rows, gateway / host bridges",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv",
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv, rtl/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_land",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "KV landing (qfd_kvc successor): 32 CDC core sides -> R = 8 row engines, KV merge slices (ot_qkvd_kv_merge), posted KVN write, embedding strip",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "results/arch/qwen_kv_die_20261009/bench.json: attention layer step through the link bit-exact on 14 runs (7 contexts x stall 0/1), mutants mut1 CAUGHT, mut2 CAUGHT, mut3 CAUGHT"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [
+    "landing crossbar RTL (32 PC -> 8 engines) owed",
+    "ot_qfd_emb_strip"
+   ],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_reng",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "near-HBM row engine (512 lanes): ot_qwen_nearhbm_row_engine_p, R = 8 a stack (32 a die)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "results/uarch/qwen_nearhbm_attn_rtl_20261003/gate_hd128_r8_dpi.json + results/arch/qwen_kv_die_20261009/bench.json"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "results/uarch/qwen_nearhbm_attn_rtl_20261003/gate_hd128_r8_dpi.json + results/arch/qwen_kv_die_20261009/bench.json"
+    }
+   },
+   "physical": {
+    "status": "failed",
+    "evidence": "results/uarch/qwen_nearhbm_attn_rtl_20261003/pnr/retry_20261004/verdict.json (DROP 10-04: never reached CTS in 6 h; 1 M instances, 34 k IO bits) -- re-cut owed"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_astk",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "stack aggregator (ot_qwen_nearhbm_attn_stack_p minus its engines: q registers, exp quads, Z / P.V trees); frame ASSUMED 777.6 um x 4 engines tall",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "inside the stack gates above"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "inside the stack gates above"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [
+    "element cut owed"
+   ],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_ahub",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "near-HBM attention hub ot_qwen_nearhbm_attn_hub_p (max exchange, Z levels 5-10, P.V 8-9, reciprocal, x 1/Z)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "gate_hd128_r8_dpi.json + results/arch/qwen_kv_die_20261009/bench.json"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "gate_hd128_r8_dpi.json + results/arch/qwen_kv_die_20261009/bench.json"
+    }
+   },
+   "physical": {
+    "status": "failed",
+    "evidence": "hub_r9 post-CTS SS -88.95 ps (10-04, 6 h budget); J2 SRAM chain = fallback"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_embgw",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "embedding gateway ot_qfd_emb_gw moved from the r21c hub to the KV die",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_host",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "host link + prefill KV ingest on the KV die (qfd_io_host successor) with the 112G SerDes host PHY macro",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": []
+   },
+   "implementation": {
+    "status": "missing",
+    "evidence": ""
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [
+    "hing_qfd ingest",
+    "ot_qfd_link_adapter"
+   ],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_pll",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "PLL + reset sequencer of the package (clock forwarded to the ROM die)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": []
+   },
+   "implementation": {
+    "status": "missing",
+    "evidence": ""
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [
+    "vendor PLL abstract (MISSING_HW)",
+    "ot_qwen_sys_rst_seq"
+   ],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_ctrl",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "HBM controller band on the KV die = the qfd_ctrl element (unchanged)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": []
+   },
+   "implementation": {
+    "status": "missing",
+    "evidence": ""
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qkd_cdc",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "per-PC CDC on the KV die = ot_qwen_stream4_cdc_pc (unchanged)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/kv_die/plan.json (legal: 0 overlaps / 0 outside; strict ports ok; relay margin lint in results/arch/qwen_kv_die_20261009/kv_die/lint.json); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_kv"
+   }
+  },
+  {
+   "element": "qfd_clkrx",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "ROM-die clock root at the old hub slot: forwarded KV-die PLL clock, the 121 region trunks, reset synchroniser",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": []
+   },
+   "implementation": {
+    "status": "missing",
+    "evidence": ""
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/rom_r22k.json (r22k 757.576 mm2, legal); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_r22k"
+   }
+  },
+  {
+   "element": "qfd_tile_nk",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "ROM tile without the KV slice / landing hop (attention moved to the KV die): ot_qwen_rom_tile_die minus li / lo and the two ot_sram_1r1w_128x256 macros",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "rtl/physical/ot_qwen_rom_tile_die.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "rtl/physical/ot_qwen_rom_tile_die.sv"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending",
+     "evidence": "element bench owed"
+    },
+    "negative": {
+     "status": "pending",
+     "evidence": "element mutant owed"
+    }
+   },
+   "physical": {
+    "status": "missing",
+    "evidence": "no element route yet (route specs queued: see kv-die.log COLLECT)"
+   },
+   "dependencies": [
+    "no-KV tile variant RTL + route owed (tile closure stream)"
+   ],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/rom_r22k.json (r22k 757.576 mm2, legal); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_r22k"
+   }
+  },
+  {
+   "element": "ot_qkvd_ucie_x64_phy",
+   "target": "Qwen ROM",
+   "recorded_at": "2026-10-09T05:00:00-07:00",
+   "owner": "Claude:kv-die",
+   "description": "UCIe-A x64 PHY + D2D adapter abstract (licensed IP, FDI 548 b at 1.2 GHz, 3 / 5 / 9 cycles)",
+   "source": {
+    "commit": "f2323fd3b",
+    "paths": [
+     "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.json"
+    ]
+   },
+   "implementation": {
+    "status": "implemented",
+    "evidence": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.json"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pass",
+     "evidence": "cycle model in results/arch/qwen_kv_die_20261009/bench.json"
+    },
+    "negative": {
+     "status": "pass",
+     "evidence": "cycle model in results/arch/qwen_kv_die_20261009/bench.json"
+    }
+   },
+   "physical": {
+    "status": "abstract",
+    "evidence": "vendor IP abstract; footprint / timing ASSUMED as stated"
+   },
+   "dependencies": [],
+   "integration": {
+    "status": "pending",
+    "evidence": "results/arch/qwen_kv_die_20261009/rom_r22k.json (r22k 757.576 mm2, legal); die GRT / STA chain on EPYC1 /srv/opentallas-scratch/claude/kv-die/die_r22k"
+   }
+  }
+ ]
+}

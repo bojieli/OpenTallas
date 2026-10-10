@@ -1,0 +1,15 @@
+{
+  "previous_model": "model.json",
+  "replacement_model": "model_r2.json",
+  "raw_accept_to_output_cycles": 24,
+  "request_register_to_output_cycles": 21,
+  "raw_accept_to_request_register_cycles": 3,
+  "legacy_raw_accept_to_output_cycles": 5,
+  "added_cycles": 19,
+  "reason": "Earlier +16 compared different latency reference edges; corrected using same raw burst acceptance edge. No RTL change.",
+  "physical_jobs_unchanged": [
+    "qfd_res_slot-3eb23e910-tc-hm0",
+    "qfd_res_ctl-f46a68c8a-tc-hm0"
+  ],
+  "bench_sha256": "a62f9880ff65eca7fd5dfd97bd2ff2d51bc833a0fc6180f6de03098da2ff1261"
+}

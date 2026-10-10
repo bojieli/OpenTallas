@@ -1,0 +1,1947 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "qwen_rom",
+ "top_fix": false,
+ "generator": "tools/qwen_rom_fulldie_b3r2.py",
+ "generator_sha256": "6e0e423b402e7f824fbed4bb378efea0815e57aca7b24dfc6062549cf56c173e",
+ "generator_tag": {
+  "file": "tools/qwen_rom_fulldie_b3r2.py",
+  "sha256": "6e0e423b402e7f824fbed4bb378efea0815e57aca7b24dfc6062549cf56c173e",
+  "tree_head": "fd79a0aed75bc08f7c3d6986ddbf0be3249f52e1",
+  "file_commit": "b56bfee54fbcfd8a3bfed17563e60738b671ae8f"
+ },
+ "qwen_source": {
+  "root": "/home/ubuntu/wt-claude-kv-die",
+  "ref": "None",
+  "commit": "fd79a0aed75bc08f7c3d6986ddbf0be3249f52e1",
+  "overlay": "[]"
+ },
+ "qwen_recipe": {
+  "b3r3": true,
+  "b3r6": true,
+  "tree_cols": 6,
+  "bw_align": true,
+  "bw_edge": true,
+  "io_faces": true,
+  "bw_edge_inner": true,
+  "bw_sp": 200,
+  "m6_strip": 40,
+  "slab_group_h": 455.76,
+  "cdc": "183.048,183.048",
+  "r19": true,
+  "tree_interleave": true,
+  "slab_bw_m8": true,
+  "relay_pitch": 430.56,
+  "su_vm_abut": true,
+  "rtl_finish": true,
+  "su_core_clock": true,
+  "vm_me": true,
+  "tt_h": 3732.48,
+  "emb_hbm": true,
+  "before_relays": "<function surgery at 0x738bbaaad6c0>"
+ },
+ "pin_fit_errors": {},
+ "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
+ "variant": null,
+ "census": {
+  "instances": 12902,
+  "buses": 16064,
+  "net_bits": 6705097,
+  "masters": 164,
+  "real_instances": 1,
+  "placeholder_instances": 12901
+ },
+ "real_blocks": {
+  "ot_qkvd_ucie_x64_phy": {
+   "module": "ot_qkvd_ucie_x64_phy",
+   "file": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+   "kind": "hard macro black box (licensed link PHY, FDI side)",
+   "params": {},
+   "instances": 1
+  }
+ },
+ "connectivity": [],
+ "unbound_real_pins": [],
+ "placeholder_port_direction_conflicts": {},
+ "clocking": [
+  {
+   "master": "ot_qkvd_ucie_x64_phy",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 1
+  },
+  {
+   "master": "qfd_chead_e",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 32
+  },
+  {
+   "master": "qfd_chead_w",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 32
+  },
+  {
+   "master": "qfd_ckbump",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_clkrx",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_cst_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 768
+  },
+  {
+   "master": "qfd_cst_s",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 768
+  },
+  {
+   "master": "qfd_d2d_rom",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_io_collective",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_io_serdes",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_io_ucie",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_io_xfifo",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_0",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_0_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_1_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_2",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_2_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_3",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_3_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_4",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_4_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_5",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_port_tiles_5_f1",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1024_EW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 20
+  },
+  {
+   "master": "qfd_rly_1024_WE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 19
+  },
+  {
+   "master": "qfd_rly_107_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_107_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_107_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 23
+  },
+  {
+   "master": "qfd_rly_107_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_107_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 97
+  },
+  {
+   "master": "qfd_rly_107_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_107_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_107_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_107_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_1538_EN_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_EW_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_NS_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 34
+  },
+  {
+   "master": "qfd_rly_1538_NW_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_SE_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_WS_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1600_NS_81x82",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_1_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "qfd_rly_1_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 7
+  },
+  {
+   "master": "qfd_rly_1_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 9
+  },
+  {
+   "master": "qfd_rly_1_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 13
+  },
+  {
+   "master": "qfd_rly_1_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 129
+  },
+  {
+   "master": "qfd_rly_1_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "qfd_rly_1_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 12
+  },
+  {
+   "master": "qfd_rly_1_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 171
+  },
+  {
+   "master": "qfd_rly_1_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 6
+  },
+  {
+   "master": "qfd_rly_1_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 26
+  },
+  {
+   "master": "qfd_rly_1_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 11
+  },
+  {
+   "master": "qfd_rly_1_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 5
+  },
+  {
+   "master": "qfd_rly_26_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 25
+  },
+  {
+   "master": "qfd_rly_28_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_28_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 7
+  },
+  {
+   "master": "qfd_rly_28_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 18
+  },
+  {
+   "master": "qfd_rly_28_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_28_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 66
+  },
+  {
+   "master": "qfd_rly_28_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "qfd_rly_28_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_28_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 23
+  },
+  {
+   "master": "qfd_rly_28_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_28_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_2_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_2_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_2_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_2_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_323_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_323_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_323_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_323_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_bits_in_data_bundle",
+   "instances": 74
+  },
+  {
+   "master": "qfd_rly_323_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1467
+  },
+  {
+   "master": "qfd_rly_323_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_323_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_bits_in_data_bundle",
+   "instances": 74
+  },
+  {
+   "master": "qfd_rly_323_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1474
+  },
+  {
+   "master": "qfd_rly_323_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_323_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_343_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_343_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 90
+  },
+  {
+   "master": "qfd_rly_343_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 23
+  },
+  {
+   "master": "qfd_rly_343_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_343_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_343_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_380_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_380_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 30
+  },
+  {
+   "master": "qfd_rly_380_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_380_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_380_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_382_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_382_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "qfd_rly_4096_SN_201x201",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_492_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_492_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_492_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_492_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_512_EN_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_512_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 66
+  },
+  {
+   "master": "qfd_rly_512_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 5
+  },
+  {
+   "master": "qfd_rly_512_EW_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 7
+  },
+  {
+   "master": "qfd_rly_512_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 936
+  },
+  {
+   "master": "qfd_rly_512_NE_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_512_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 128
+  },
+  {
+   "master": "qfd_rly_512_NS_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 75
+  },
+  {
+   "master": "qfd_rly_512_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1644
+  },
+  {
+   "master": "qfd_rly_512_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 11
+  },
+  {
+   "master": "qfd_rly_512_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 45
+  },
+  {
+   "master": "qfd_rly_512_SN_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 49
+  },
+  {
+   "master": "qfd_rly_512_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1026
+  },
+  {
+   "master": "qfd_rly_512_SW_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 10
+  },
+  {
+   "master": "qfd_rly_512_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 261
+  },
+  {
+   "master": "qfd_rly_512_WE_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 13
+  },
+  {
+   "master": "qfd_rly_512_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 855
+  },
+  {
+   "master": "qfd_rly_512_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 26
+  },
+  {
+   "master": "qfd_rly_512_WS_53x30",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_512_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 63
+  },
+  {
+   "master": "qfd_rly_513_EN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 5
+  },
+  {
+   "master": "qfd_rly_513_ES_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_513_NE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_513_NS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 30
+  },
+  {
+   "master": "qfd_rly_513_SE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 5
+  },
+  {
+   "master": "qfd_rly_513_SN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 95
+  },
+  {
+   "master": "qfd_rly_513_SW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_513_WE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 7
+  },
+  {
+   "master": "qfd_rly_513_WN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_513_WS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_519_EN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_519_SN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 27
+  },
+  {
+   "master": "qfd_rly_530_NE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_530_NS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 10
+  },
+  {
+   "master": "qfd_rly_530_SN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 11
+  },
+  {
+   "master": "qfd_rly_530_SW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_530_WN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_530_WS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_53_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 9
+  },
+  {
+   "master": "qfd_rly_53_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_53_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 9
+  },
+  {
+   "master": "qfd_rly_53_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_53_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_551_ES_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_551_NE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 6
+  },
+  {
+   "master": "qfd_rly_551_NS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 28
+  },
+  {
+   "master": "qfd_rly_551_NW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_551_SE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_551_SN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 43
+  },
+  {
+   "master": "qfd_rly_551_WE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 11
+  },
+  {
+   "master": "qfd_rly_551_WN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 5
+  },
+  {
+   "master": "qfd_rly_551_WS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_553_ES_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_553_NE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_553_NS_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 14
+  },
+  {
+   "master": "qfd_rly_66_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_66_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 60
+  },
+  {
+   "master": "qfd_rly_66_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_66_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_97_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_97_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_97_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 31
+  },
+  {
+   "master": "qfd_rly_97_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_9_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_9_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 11
+  },
+  {
+   "master": "qfd_rly_9_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_sp_band_lanes",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 6
+  },
+  {
+   "master": "qfd_sp_constants_sequencer",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_sp_res_ser",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 6
+  },
+  {
+   "master": "qfd_sp_su64_sfu",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_sp_tree_top",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_sp_vector_memory",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_tile_nk",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1536
+  }
+ ],
+ "clock_sources": {
+  "clk_rx": [
+   "pll_d2d",
+   "pll_fwd",
+   "pll_r0",
+   "pll_r1",
+   "pll_r10",
+   "pll_r100",
+   "pll_r101",
+   "pll_r11",
+   "pll_r12",
+   "pll_r120",
+   "pll_r13",
+   "pll_r14",
+   "pll_r15",
+   "pll_r16",
+   "pll_r17",
+   "pll_r18",
+   "pll_r19",
+   "pll_r2",
+   "pll_r20",
+   "pll_r21",
+   "pll_r22",
+   "pll_r23",
+   "pll_r24",
+   "pll_r25",
+   "pll_r26",
+   "pll_r27",
+   "pll_r28",
+   "pll_r29",
+   "pll_r3",
+   "pll_r30",
+   "pll_r31",
+   "pll_r32",
+   "pll_r33",
+   "pll_r34",
+   "pll_r35",
+   "pll_r36",
+   "pll_r37",
+   "pll_r38",
+   "pll_r39",
+   "pll_r4",
+   "pll_r40",
+   "pll_r41",
+   "pll_r42",
+   "pll_r43",
+   "pll_r44",
+   "pll_r45",
+   "pll_r46",
+   "pll_r47",
+   "pll_r48",
+   "pll_r49",
+   "pll_r5",
+   "pll_r50",
+   "pll_r51",
+   "pll_r52",
+   "pll_r53",
+   "pll_r54",
+   "pll_r55",
+   "pll_r56",
+   "pll_r57",
+   "pll_r58",
+   "pll_r59",
+   "pll_r6",
+   "pll_r60",
+   "pll_r61",
+   "pll_r62",
+   "pll_r63",
+   "pll_r64",
+   "pll_r65",
+   "pll_r66",
+   "pll_r67",
+   "pll_r68",
+   "pll_r69",
+   "pll_r7",
+   "pll_r70",
+   "pll_r71",
+   "pll_r72",
+   "pll_r73",
+   "pll_r74",
+   "pll_r75",
+   "pll_r76",
+   "pll_r77",
+   "pll_r78",
+   "pll_r79",
+   "pll_r8",
+   "pll_r80",
+   "pll_r81",
+   "pll_r82",
+   "pll_r83",
+   "pll_r84",
+   "pll_r85",
+   "pll_r86",
+   "pll_r87",
+   "pll_r88",
+   "pll_r89",
+   "pll_r9",
+   "pll_r90",
+   "pll_r91",
+   "pll_r92",
+   "pll_r93",
+   "pll_r94",
+   "pll_r95",
+   "pll_r96",
+   "pll_r97",
+   "pll_r98",
+   "pll_r99",
+   "pll_root"
+  ],
+  "io_collective": [
+   "pll_serdes",
+   "pll_serial",
+   "pll_stream",
+   "pll_ucie"
+  ],
+  "ckb_rom": [
+   "pll_ck"
+  ]
+ },
+ "reset": [],
+ "interfaces": {},
+ "top_ports": 0,
+ "physical": {
+  "missing_pins": [],
+  "face_away": [
+   {
+    "master": "qfd_chead_w",
+    "port": "e",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 323,
+    "examples": [
+     "h_31.e face E peer 320 um behind (head_31__r5)"
+    ]
+   }
+  ],
+  "pin_spread": [
+   {
+    "bus": "su_vm_q",
+    "cls": "spine_local",
+    "inst": "sp_vector_memory",
+    "master": "qfd_sp_vector_memory",
+    "port": "sq",
+    "face": "S",
+    "span_um": 294.9,
+    "peer_manhattan_um": 0.2,
+    "bits": 6144
+   },
+   {
+    "bus": "su_vm_q",
+    "cls": "spine_local",
+    "inst": "sp_su64_sfu",
+    "master": "qfd_sp_su64_sfu",
+    "port": "vq",
+    "face": "N",
+    "span_um": 294.9,
+    "peer_manhattan_um": 0.2,
+    "bits": 6144
+   }
+  ],
+  "pin_spread_count": 2,
+  "abut_without_channel": [
+   {
+    "compute": "tile",
+    "hub_kind": "io",
+    "hub": "io_serdes",
+    "pairs": 9,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_53_23 / io_serdes gap 0.02 um",
+     "t_54_23 / io_serdes gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "io",
+    "hub": "io_ucie",
+    "pairs": 21,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_33_23 / io_ucie gap 0.02 um",
+     "t_34_23 / io_ucie gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_0",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_2 / sp_band_lanes_0 gap 52.73 um",
+     "t_31_3 / sp_band_lanes_0 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_1",
+    "pairs": 1,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_6 / sp_band_lanes_1 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_2",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_10 / sp_band_lanes_2 gap 52.73 um",
+     "t_31_11 / sp_band_lanes_2 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_3",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_14 / sp_band_lanes_3 gap 52.73 um",
+     "t_31_15 / sp_band_lanes_3 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_4",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_18 / sp_band_lanes_4 gap 52.73 um",
+     "t_31_19 / sp_band_lanes_4 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_band_lanes_5",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_22 / sp_band_lanes_5 gap 52.73 um",
+     "t_31_23 / sp_band_lanes_5 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_0",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_1 / sp_port_tiles_0 gap 52.73 um",
+     "t_31_2 / sp_port_tiles_0 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_0_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_1 / sp_port_tiles_0_f1 gap 0.02 um",
+     "t_32_2 / sp_port_tiles_0_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_1",
+    "pairs": 3,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_4 / sp_port_tiles_1 gap 52.73 um",
+     "t_31_5 / sp_port_tiles_1 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_1_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_5 / sp_port_tiles_1_f1 gap 0.02 um",
+     "t_32_6 / sp_port_tiles_1_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_2",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_9 / sp_port_tiles_2 gap 52.73 um",
+     "t_31_10 / sp_port_tiles_2 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_2_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_9 / sp_port_tiles_2_f1 gap 0.02 um",
+     "t_32_10 / sp_port_tiles_2_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_3",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_13 / sp_port_tiles_3 gap 52.73 um",
+     "t_31_14 / sp_port_tiles_3 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_3_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_13 / sp_port_tiles_3_f1 gap 0.02 um",
+     "t_32_14 / sp_port_tiles_3_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_4",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_17 / sp_port_tiles_4 gap 52.73 um",
+     "t_31_18 / sp_port_tiles_4 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_4_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_17 / sp_port_tiles_4_f1 gap 0.02 um",
+     "t_32_18 / sp_port_tiles_4_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_5",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_21 / sp_port_tiles_5 gap 52.73 um",
+     "t_31_22 / sp_port_tiles_5 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_port_tiles_5_f1",
+    "pairs": 2,
+    "min_gap_um": 0.024,
+    "examples": [
+     "t_32_21 / sp_port_tiles_5_f1 gap 0.02 um",
+     "t_32_22 / sp_port_tiles_5_f1 gap 0.02 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_0",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_0 / sp_res_ser_0 gap 52.73 um",
+     "t_31_1 / sp_res_ser_0 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_1",
+    "pairs": 1,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_4 / sp_res_ser_1 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_2",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_8 / sp_res_ser_2 gap 52.73 um",
+     "t_31_9 / sp_res_ser_2 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_3",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_12 / sp_res_ser_3 gap 52.73 um",
+     "t_31_13 / sp_res_ser_3 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_4",
+    "pairs": 1,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_17 / sp_res_ser_4 gap 52.73 um"
+    ]
+   },
+   {
+    "compute": "tile",
+    "hub_kind": "spine_block",
+    "hub": "sp_res_ser_5",
+    "pairs": 2,
+    "min_gap_um": 52.728,
+    "examples": [
+     "t_31_20 / sp_res_ser_5 gap 52.73 um",
+     "t_31_21 / sp_res_ser_5 gap 52.73 um"
+    ]
+   }
+  ]
+ },
+ "meso_forwarded_gap": {
+  "waypoint_masters": {},
+  "waypoints": 0,
+  "forwarded_stage_bits": 0,
+  "ot_fwd_link_stage_W512_needed": 0,
+  "fifo_placeholders": {},
+  "decision_C_fifo_slots": {
+   "tile_tap": {
+    "count": 1536,
+    "bits_each": 2036,
+    "mm2": 2.3741,
+    "slot": "inside the station frame (station height + extra, with the F2 storage)",
+    "instantiated": 0
+   },
+   "block_word": {
+    "count": 96,
+    "bits_each": 2048,
+    "mm2": 0.1493,
+    "slot": "port_tiles slab area",
+    "instantiated": 0
+   },
+   "strip_return": {
+    "count": 4,
+    "bits_each": 2176,
+    "mm2": 0.0066,
+    "slot": "strip FIFO frame height",
+    "instantiated": 0
+   },
+   "stream4_cdc": {
+    "count": 0,
+    "slot": "qfd_cdc frames",
+    "instantiated": "as RTL-bound frames (qfd_cdc = ot_qwen_stream4_cdc_pc)"
+   },
+   "note": "tile-tap / block-word / strip-return FIFO slots are AREA inside placeholder frames (station frame height, port slab area, strip FIFO frame); no FIFO instance or FIFO port exists in the die netlist"
+  },
+  "corridor_stations": {
+   "count": 1536,
+   "heads": 64,
+   "note": "one registered corridor station per tile (placeholder qfd_cst)"
+  },
+  "clock_region_crossings": {
+   "corridor|region": {
+    "buses": 461,
+    "bits": 148903
+   },
+   "tap|region": {
+    "buses": 76,
+    "bits": 24548
+   },
+   "head_chain|region": {
+    "buses": 20,
+    "bits": 6460
+   },
+   "tree_block|region": {
+    "buses": 150,
+    "bits": 76800
+   },
+   "spine_local|region": {
+    "buses": 17,
+    "bits": 4156
+   },
+   "io|region": {
+    "buses": 34,
+    "bits": 19056
+   },
+   "io|domain": {
+    "buses": 10,
+    "bits": 9216
+   },
+   "tree_spine|region": {
+    "buses": 569,
+    "bits": 241094
+   },
+   "sequencer|region": {
+    "buses": 25,
+    "bits": 6886
+   },
+   "sequencer|domain": {
+    "buses": 2,
+    "bits": 132
+   },
+   "crom|region": {
+    "buses": 2,
+    "bits": 5696
+   },
+   "reset|region": {
+    "buses": 1,
+    "bits": 1
+   }
+  },
+  "clock_domain_crossings": {}
+ },
+ "block_shape": {
+  "qfd_ckbump": {
+   "in_bits": 0,
+   "out_bits": 1,
+   "shape": "source: no input net"
+  }
+ },
+ "counterparts": {
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "margin_lint": {
+  "chains": 2676,
+  "reach_um": 504.0,
+  "reach_violations": 4,
+  "far_side_relays": 35,
+  "reach_examples": [
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "seg": "rly_coll_tx_4->rly_coll_tx_5",
+    "um": 1559.6,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
+    "um": 1029.9,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "seg": "rly_tt_ty_0->rly_tt_ty_1",
+    "um": 966.4,
+    "hops": 1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "seg": "rly_coll_tx_5->rly_coll_tx_6",
+    "um": 671.4,
+    "hops": 1
+   }
+  ],
+  "far_side_examples": [
+   {
+    "chain": "sp_vector_memory->sp_tree_top",
+    "relay": "rly_tt_xr_21",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_1->sp_port_tiles_0",
+    "relay": "rly_bword_42_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_17->sp_port_tiles_4",
+    "relay": "rly_bword_46_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_21->sp_port_tiles_5",
+    "relay": "rly_bword_47_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "sp_constants_sequencer->sp_tree_top",
+    "relay": "rly_tt_si_33",
+    "back_um": 410.4
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_3",
+    "relay": "rly_tt_c3_6",
+    "back_um": 324.0
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_2",
+    "relay": "rly_tt_c2_27",
+    "back_um": 302.4
+   },
+   {
+    "chain": "t_27_17->sp_port_tiles_4",
+    "relay": "rly_bword_40_6",
+    "back_um": 291.6
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "relay": "rly_tt_lc2_4",
+    "back_um": 278.6
+   },
+   {
+    "chain": "t_63_9->sp_port_tiles_2_f1",
+    "relay": "rly_bword_92_31",
+    "back_um": 259.2
+   },
+   {
+    "chain": "t_63_21->sp_port_tiles_5_f1",
+    "relay": "rly_bword_95_31",
+    "back_um": 259.2
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_1",
+    "relay": "rly_tt_c1_29",
+    "back_um": 244.1
+   },
+   {
+    "chain": "t_63_1->sp_port_tiles_0_f1",
+    "relay": "rly_bword_90_31",
+    "back_um": 226.8
+   },
+   {
+    "chain": "sp_tree_top->sp_port_tiles_0",
+    "relay": "rly_tt_c0_39",
+    "back_um": 222.5
+   },
+   {
+    "chain": "sp_tree_top->sp_vector_memory",
+    "relay": "rly_tt_mx_15",
+    "back_um": 151.2
+   },
+   {
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "relay": "rly_pword_2_19",
+    "back_um": 108.0
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_4",
+    "back_um": 102.4
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_6",
+    "back_um": 88.1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_3",
+    "back_um": 69.1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "relay": "rly_tt_ty_2",
+    "back_um": 68.3
+   }
+  ],
+  "slivers": 23136,
+  "sliver_examples": [
+   [
+    "t_0_0",
+    "t_0_1",
+    0.02
+   ],
+   [
+    "t_0_0",
+    "s_0_0",
+    0.02
+   ],
+   [
+    "t_0_0",
+    "rly_tree_0_1_0b_2",
+    0.02
+   ],
+   [
+    "t_0_0",
+    "rly_cor_0_0_1",
+    0.02
+   ],
+   [
+    "t_0_0",
+    "rly_tree_0_1_0b_1",
+    0.02
+   ],
+   [
+    "s_0_0",
+    "t_1_0",
+    0.02
+   ],
+   [
+    "t_1_0",
+    "rly_tree_0_1_0b_2",
+    0.02
+   ],
+   [
+    "t_1_0",
+    "rly_cor_0_0_1",
+    0.02
+   ],
+   [
+    "t_1_0",
+    "rly_tree_0_1_0b_1",
+    0.02
+   ],
+   [
+    "t_1_0",
+    "t_1_1",
+    0.02
+   ],
+   [
+    "t_0_1",
+    "t_0_2",
+    0.02
+   ],
+   [
+    "t_0_1",
+    "rly_cor_0_0_0",
+    0.02
+   ],
+   [
+    "t_0_1",
+    "rly_tree_0_1_0b_0",
+    0.02
+   ],
+   [
+    "t_0_1",
+    "s_0_1",
+    0.02
+   ],
+   [
+    "t_0_1",
+    "rly_cor_0_1_1",
+    0.02
+   ],
+   [
+    "t_1_1",
+    "rly_cor_0_0_0",
+    0.02
+   ],
+   [
+    "t_1_1",
+    "rly_tree_0_1_0b_0",
+    0.02
+   ],
+   [
+    "s_0_1",
+    "t_1_1",
+    0.02
+   ],
+   [
+    "t_1_1",
+    "rly_cor_0_1_1",
+    0.02
+   ],
+   [
+    "t_1_1",
+    "t_1_2",
+    0.02
+   ]
+  ],
+  "verdict": "FAIL"
+ },
+ "abstract_ports_without_net": {},
+ "top_fixes": {},
+ "verilog": {
+  "top": "qwen_rom_lint_top",
+  "stubs": 163,
+  "nc_wires": 0,
+  "filelist": "qwen_rom_lint_top.f",
+  "rtl_files": 0,
+  "unresolved_modules": []
+ }
+}

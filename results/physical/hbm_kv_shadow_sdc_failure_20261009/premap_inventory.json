@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_hub_premap_inventory.v1",
+  "scope": "Canonical full shape inventory, mapped cell area still pending",
+  "input_sha256": "2bfedb15f5f08d84622f421732248ac35b5aa93e5a62da88908f805b77e93f5a",
+  "top": "ot_hbm_kvwb_hub_sram",
+  "retained_macros": [
+    "on.u_wb.on.shadow_store.on.bank0",
+    "on.u_wb.on.shadow_store.on.bank1"
+  ],
+  "sequential_bits_before_memory_map": 11224,
+  "memories_before_mapping": [
+    {
+      "name": "on.rf",
+      "width": 257,
+      "words": 32,
+      "bits": 8224
+    },
+    {
+      "name": "on.so_p",
+      "width": 291,
+      "words": 4,
+      "bits": 1164
+    },
+    {
+      "name": "on.u_wb.on.shadow_store.on.checkbits",
+      "width": 10,
+      "words": 136,
+      "bits": 1360
+    }
+  ],
+  "port_bits": {
+    "clk": 1,
+    "rst_n": 1,
+    "die": 7,
+    "ri_v": 1,
+    "ri_hdr": 1,
+    "ri_d": 256,
+    "ri_cr": 1,
+    "so_d": 1168,
+    "si_g": 64,
+    "fence_ok": 1,
+    "issued": 16,
+    "acked": 16,
+    "map_fault": 1
+  }
+}

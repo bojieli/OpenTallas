@@ -1,0 +1,387 @@
+{
+ "stage": "S057",
+ "kind": "stage",
+ "layers": [
+  "L39"
+ ],
+ "comp_span": 69620.3,
+ "comp_crit_cycles": 6971.1,
+ "max_start_drift": 1.099999999999909,
+ "makespan": 69620,
+ "crit_end": 69620,
+ "n_nodes": 26,
+ "n_jobs": 24,
+ "max_fanin": 2,
+ "ports": [
+  "coll",
+  "fld",
+  "hc",
+  "hop",
+  "sel",
+  "su"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "L39.ffn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 9,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 9,
+   "comp_start": 0.0,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 1,
+   "id": "L39.ffn.norm.scale",
+   "eng": "su",
+   "port": 1,
+   "dur": 306,
+   "ext": 0,
+   "preds": [
+    0
+   ],
+   "start": 9,
+   "end": 315,
+   "comp_start": 8.9,
+   "comp_cycles": 306.0
+  },
+  {
+   "op": 2,
+   "id": "L39.ffn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 254,
+   "preds": [],
+   "start": 254,
+   "end": 451,
+   "comp_start": 253.6,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 3,
+   "id": "L39.ffn.router",
+   "eng": "fld",
+   "port": 0,
+   "dur": 977,
+   "ext": 0,
+   "preds": [
+    1
+   ],
+   "start": 315,
+   "end": 1292,
+   "comp_start": 314.9,
+   "comp_cycles": 977.2
+  },
+  {
+   "op": 4,
+   "id": "L39.ffn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 19,
+   "ext": 0,
+   "preds": [
+    1
+   ],
+   "start": 315,
+   "end": 334,
+   "comp_start": 314.9,
+   "comp_cycles": 19.0
+  },
+  {
+   "op": 5,
+   "id": "L39.ffn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 229,
+   "preds": [
+    2
+   ],
+   "start": 451,
+   "end": 663,
+   "comp_start": 450.9,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 6,
+   "id": "L39.ffn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    5
+   ],
+   "start": 663,
+   "end": 1300,
+   "comp_start": 663.2,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 7,
+   "id": "L39.ffn.softplus_sqrt",
+   "eng": "su",
+   "port": 1,
+   "dur": 186,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 1292,
+   "end": 1478,
+   "comp_start": 1292.1,
+   "comp_cycles": 185.6
+  },
+  {
+   "op": 8,
+   "id": "L39.ffn.shared_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 634,
+   "ext": 0,
+   "preds": [
+    3,
+    4
+   ],
+   "start": 1292,
+   "end": 1926,
+   "comp_start": 1292.1,
+   "comp_cycles": 634.0
+  },
+  {
+   "op": 9,
+   "id": "L39.ffn.router_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 422,
+   "ext": 0,
+   "preds": [
+    7
+   ],
+   "start": 1478,
+   "end": 1900,
+   "comp_start": 1477.7,
+   "comp_cycles": 421.9
+  },
+  {
+   "op": 10,
+   "id": "L39.ffn.bias",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    9
+   ],
+   "start": 1900,
+   "end": 2018,
+   "comp_start": 1899.6,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 11,
+   "id": "L39.ffn.shared_swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 246,
+   "ext": 0,
+   "preds": [
+    8
+   ],
+   "start": 1926,
+   "end": 2172,
+   "comp_start": 1926.1,
+   "comp_cycles": 245.6
+  },
+  {
+   "op": 12,
+   "id": "L39.ffn.top6",
+   "eng": "sel",
+   "port": 5,
+   "dur": 9,
+   "ext": 0,
+   "preds": [
+    10
+   ],
+   "start": 2018,
+   "end": 2027,
+   "comp_start": 2017.2,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 13,
+   "id": "L39.ffn.top6_order",
+   "eng": "sel",
+   "port": 5,
+   "dur": 44,
+   "ext": 0,
+   "preds": [
+    12
+   ],
+   "start": 2027,
+   "end": 2071,
+   "comp_start": 2026.1,
+   "comp_cycles": 44.0
+  },
+  {
+   "op": 14,
+   "id": "L39.ffn.experts_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1239,
+   "ext": 0,
+   "preds": [
+    8,
+    13
+   ],
+   "start": 2071,
+   "end": 3310,
+   "comp_start": 2070.2,
+   "comp_cycles": 1238.9
+  },
+  {
+   "op": 15,
+   "id": "L39.ffn.weights",
+   "eng": "su",
+   "port": 1,
+   "dur": 259,
+   "ext": 0,
+   "preds": [
+    9,
+    13
+   ],
+   "start": 2071,
+   "end": 2330,
+   "comp_start": 2070.2,
+   "comp_cycles": 258.9
+  },
+  {
+   "op": 16,
+   "id": "L39.ffn.shared_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 95,
+   "ext": 0,
+   "preds": [
+    11
+   ],
+   "start": 2172,
+   "end": 2267,
+   "comp_start": 2171.7,
+   "comp_cycles": 94.7
+  },
+  {
+   "op": 17,
+   "id": "L39.ffn.swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    14
+   ],
+   "start": 3310,
+   "end": 3313,
+   "comp_start": 3309.0,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 18,
+   "id": "L39.ffn.route_w",
+   "eng": "su",
+   "port": 1,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    15,
+    17
+   ],
+   "start": 3313,
+   "end": 3319,
+   "comp_start": 3312.0,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 19,
+   "id": "L39.ffn.quant2",
+   "eng": "su",
+   "port": 1,
+   "dur": 191,
+   "ext": 0,
+   "preds": [
+    18
+   ],
+   "start": 3319,
+   "end": 3510,
+   "comp_start": 3317.9,
+   "comp_cycles": 191.0
+  },
+  {
+   "op": 20,
+   "id": "L39.ffn.down",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1516,
+   "ext": 0,
+   "preds": [
+    16,
+    19
+   ],
+   "start": 3510,
+   "end": 5026,
+   "comp_start": 3508.9,
+   "comp_cycles": 1516.3
+  },
+  {
+   "op": 21,
+   "id": "L39.ffn.combine_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    20
+   ],
+   "start": 5026,
+   "end": 5853,
+   "comp_start": 5025.2,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 22,
+   "id": "L39.ffn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 0,
+   "preds": [
+    6,
+    21
+   ],
+   "start": 5853,
+   "end": 5966,
+   "comp_start": 5852.2,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 23,
+   "id": "head.hop",
+   "eng": "hop",
+   "port": 7,
+   "dur": 1006,
+   "ext": 68614,
+   "preds": [
+    22
+   ],
+   "start": 68614,
+   "end": 69620,
+   "comp_start": 68614.3,
+   "comp_cycles": 1006.0
+  }
+ ]
+}

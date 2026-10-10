@@ -1,0 +1,157 @@
+{
+ "id": "topk_k8_n128_m1_asc",
+ "row": "CF-TOPK",
+ "mode": "GENERIC",
+ "what": "IDX.TOPK k = 8 over 1 row(s) of 128; ties to the lowest index; ids in ASCENDING ID order (param[12] order = 1, legal for k <= 8: the DS router top-6, G15)",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000008100020060080900100000000008000100000800000000000000000000000000000000000000000150000010000080010000008000000000000000000000000000000000000000001000002000008001000000800000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000810002006008090010000000000800010000080000000000000000000000000000000000000000015000001000008001000000800000000000000000000000000000000000000000100000200000800100000080000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "IDX",
+   "op": "TOPK",
+   "param": 4104,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 128,
+     "m": 1,
+     "stride": 128,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 65536,
+     "n": 8,
+     "m": 1,
+     "stride": 8,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 131072,
+     "n": 8,
+     "m": 1,
+     "stride": 8,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "cb8834bf58af99be824c4e3fae83ba3ee91f5e3f8ee682404f9940bf99a4f9bf8a56febf8ee682409b6688bf53007fbd5fdc31bef3dc2dbd7237803f4c00b13fc0fa013f3a86e83dede73cbfb232853ea36015bf71e1e5be0f92cebfe1b3eb3e3b689cbf518c323f5c98763f70fa56bfbcfe85be08c443bfb7712cbf88a2083fd99ca7bdb96d0abf7a38c6bf2cce80bf79d37cbf7f8ce6bfb212833fb68a813fc8c681bf02cd1b3e9cf322be6e558bbe9ada7dbd805e82bea7987cbc59dd6f3e32e840becbd0b1be7161083f7494973fd1e9b1be6499063f5c5822beb99e0540abd1873ee9b781bf24bdc53e8b4b82beb5fb0d3d4a4421bf91603bbff84703bf3d4d87be12e757bf841098bf3ccc27bf048425bfd18b8e3f8e130ebe13617ebf189625bd080142bddc94b0be873acb3c9309d4bd67e738bdc634e3bf380980bf362243bfd87288be853409c08e99a7bfa7a8a93e07f9193f3986b23fa391c3bf21108f3f90a385bede7f1b3e76653dbf2c89023f721fad3fb93bdd3ea19256bf925e2abffe9b6e3f06ba76be1094b2bebb28313fddd065bdd028133f916412be1e72f53e7ed5d1bd21dd643f0be84fbfc79cf3bf91b7e43ecf4133bfb0ab003fc2b4debf4597f0be8ad4bc3ee7c68dbf5e3bd6bde29b8a3ff5d613be55bfaa3f0ecae93c16fe5b3f5440bd3e9867dbbf8ccb813f2d148d3de7eb64bf1bcd4540"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      65536,
+      "05000000090000000f00000037000000560000005d000000770000007f000000"
+     ],
+     [
+      131072,
+      "8ee682408ee682404c00b13fb99e05403986b23f721fad3f55bfaa3f1bcd4540"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "6a4e895b992aa917bef77d56519157f0c692b01944057535d95885d69af11e5b"
+ },
+ "mutants": [
+  {
+   "name": "tie_high",
+   "defect": "ties resolved to the higher index",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "9d9d4d16d0527d84c5126c38050374ca353cb0d78feb489709150c923dfc3d2d"
+  }
+ ]
+}

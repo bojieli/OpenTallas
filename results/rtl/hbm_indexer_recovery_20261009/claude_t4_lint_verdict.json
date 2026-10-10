@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_RESOURCE_OR_EXTERNAL_SIGNAL",
+  "source": "Claude restored header remote snapshot",
+  "reason": "Verilator signal 9; causal OOM versus external kill not independently established",
+  "exit_observation": "outer pipeline printed lint_done and exited 0, which masks Verilator failure",
+  "authoritative_process_check": "EPYC1 PID3918649 absent after previously verified125GBRSS",
+  "adoption": "ineligible; no completed elaboration or exact bench"
+}

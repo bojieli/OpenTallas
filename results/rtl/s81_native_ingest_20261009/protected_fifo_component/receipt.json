@@ -1,0 +1,11 @@
+{
+  "source_commit": "9d8fe75bc",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/s81-afifo-fixed",
+  "positive": "PASS largest514bit payload32words, base and single-bit corrected",
+  "negative": "PASS double-bit head masked, zero payload escapes, sticky writer fault",
+  "limitations": "Pointer/control state protection remains separate",
+  "sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv": "5a9642a12351d85d31c44fcc25012ff0baa1f53736c0a16fe7f937c754748c15",
+    "rtl/test/s81_native_ingest/tb_s81_ingest_afifo.sv": "f8da2a5853eb3c7564f485038f0fa83efb74ddef7dfb5116a32f872a4d791763"
+  }
+}

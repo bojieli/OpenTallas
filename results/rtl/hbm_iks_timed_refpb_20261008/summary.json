@@ -1,0 +1,24 @@
+{
+  "source_commit": "5035646c6",
+  "timed_controller_gate": "PASS",
+  "positive_descriptors": 14,
+  "negative_control": "single-bit PC5 controller response corruption rejected at line1 byte24",
+  "logical_bytes_per_descriptor": 186048,
+  "physical_read_bytes_per_descriptor": 188416,
+  "normal_credit_last_line_ns": {
+    "min": 287.808,
+    "max": 954.24,
+    "mean": 397.6213333333333
+  },
+  "normal_credit_logical_TBs": {
+    "min": 0.19497,
+    "max": 0.646431,
+    "mean": 0.52773525
+  },
+  "controller_peak_TBs": 1.0,
+  "meets_90percent_peak": false,
+  "physical_qualification": false,
+  "adoption": false,
+  "credit_note": "All emitted lines return one credit. Repeated descriptors share restored initial credits; drain_ns is final credit sampling edge, with 200cycle subsequent fault observation guard excluded.",
+  "r1_note": "Preserved r1 historical PASS used incorrect drain_ns observation-guard timestamp; its last-line metric remains valid. r2 corrects that label."
+}

@@ -1,0 +1,46 @@
+{
+  "source_commit": "5e957d4ec",
+  "host": "ot-pve1",
+  "admission": "/srv/opentallas-scratch/admit.sh 2 -- bash gate.sh SOURCE OUT",
+  "launcher_pid": 292793,
+  "terminal": "PASS; launcher absent after completion",
+  "completed_at": "2026-10-09T02:16:19-07:00",
+  "iverilog_version": "11.0 stable",
+  "source_tar_sha256": "66a142012f9b3b0b7354d7f235302a7e741b86811f24cf125c0568e93fa3e5ad",
+  "shape": {
+    "lanes": 88,
+    "chains": 2,
+    "groups": 11,
+    "WI": 1024,
+    "WO": 1024
+  },
+  "positive_arms": 6,
+  "negative": "freeze acc_0_7 rejects all six vectors, rc1",
+  "scope": "Connectivity of physical envelope using committed independent Plan.model vectors and registered lane sim stub; not numeric HC, actual PLL/CDC, or stream transaction proof",
+  "clock_stimulus": "Forward same periodic source through 0/20/40/60/80/100/120/140ps per-pin delays, and reverse; separate zero-phase arm. All eight edge counters verified.",
+  "settle_cycles": {
+    "disabled_common": 27,
+    "enabled_common": 27,
+    "disabled_staggered": 24,
+    "enabled_staggered": 26
+  },
+  "latency_limit": "No extra data pipeline stages, but phase mapping changes fixture settle by +2 cycles in staggered arms; no zero-delay production claim. Native producer/full-frame contract unavailable.",
+  "hashes": {
+    "e1_p2.log": "4e7b6bc4bcd02b59ba2bf7c7f9c39be5a665b0dce43634fc2f1d6594d0a179c4",
+    "e1_p0.log": "ba35a7bb51cd4e6c8b5f82ee4d9ece2cebaf1ad5f8486fbb498031d12275e0fc",
+    "e0_p2.log": "14a183af3b288dc40eb8bf3cfc112f298dd2055777f7960e6f1ccdfe265ed0aa",
+    "e0_p0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant.log": "063796404a931a041f5a211e40d01fc96e5567371e5052215d53d78b673827d0",
+    "verdict.txt": "908eb5254095c6cd8b1c611cc5af3648ae6fd5c108f2b551dd64738230093db0",
+    "e1_p2.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "e0_p1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "e1_p0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "e0_p0.log": "ba5f03348672bae8f76749b7c989948a32d975d8976f8a458e233a93980d527f",
+    "e1_p1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "e0_p2.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch.log": "2e80ec3249522d84ebfd0f2c43207e94d60ee458a049b2ed7c44facca7f001c6",
+    "e0_p1.log": "3a1c58c957cf6533558834e6767fba79a07284ce9eb5cef9694abeb81afb5ddf",
+    "e1_p1.log": "baac14b51f07da584ca6d1e8463e95e648321d7af1eda3fb4c4b30e7af6a77cc"
+  }
+}

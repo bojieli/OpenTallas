@@ -1,0 +1,7 @@
+case 0: n 300, stream -> scale -> argmax in 684 cycles
+case 1: n 1001, stream -> scale -> argmax in 1650 cycles
+ERR case 2: pub fault
+ERR case 2: argmax done 0 su done 0 faults 0
+ERR case 2 id 114129 expected 84508
+case 2: n 37984, stream -> scale -> argmax in 2039069 cycles
+HGI_PUB_STREAM FAIL errors=3

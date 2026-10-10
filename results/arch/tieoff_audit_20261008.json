@@ -1,0 +1,780 @@
+{
+ "schema": "opentallas.tieoff_audit.v1",
+ "date": "2026-10-08",
+ "stream": "tieoff-audit",
+ "source_commit": "132866cd1",
+ "owner_rule": "OWNER 2026-10-08: build every path end-to-end on the die; no functional port may be a placeholder in a die view; debug/test-only ports may stay tied (no DFT)",
+ "scope": {
+  "hbm": {
+   "round": "r25 (adopted) and r25s (attn-split)",
+   "wrappers": "physical/hbm_accel_die_views/*/rtl/spec*.json via tools/hbm_die_wrap.py; hub quarters tools/hbm_hub_quarter_gen.py; svc gen_svc.py; index_q, attn_tile hand views; vm tiles make_vm_tiles.py",
+   "die_netlist": "tools/die_top_lint.py lint --die hbm --variant r25 / r25s (abstract_ports_without_net = 0; connectivity: host_e defects + split-master direction-model artefacts)"
+  },
+  "s81": {
+   "die": "m221pq layer1 r3 (ot-epyc3 m221pq_r3/a_real/die.v, 56,142 instances, 145 masters) -- pins_nonet against a_real/*.lef",
+   "not_auditable": "scan die (layer, 4 stacks) and head die on the m221pq options: the generator asserts (layer: sp_su_s outside the spine band; head: --pq-place layer-only / mixed slots exceed the field) -- no die netlist exists; die_top_lint s81r8_layer1 needs results/rtl/dsrom_s81_fulldie_20261004/r9m215khdcxsgjpw/dsfd_glue.sv (not generated)"
+  },
+  "qwen": {
+   "die": "r21b (ot-epyc3 cases/r21b_pdn/die.v, 13,220 instances, 176 masters) -- pins_nonet against elements.lef + phy_ew.lef; r21c not on main (emb-hbm-impl branch)",
+   "rtl_vs_die": "spine masters: RTL port lists vs die bundles (die_top_lint.load_qwen r21b); no per-port map exists, so TA-11/16 are by elimination"
+  }
+ },
+ "systemic": [
+  {
+   "id": "SYS-1",
+   "what": "tools/hbm_die_wrap.py binds every RTL port not named in a spec to the cfg shift chain (inputs) or the XOR fold / sink (outputs), drives every unclaimed die output bit 0 and ignores every unclaimed die input bit; nothing fails. This is how TA-01/02/03/13 were created silently.",
+   "fix": "fail closed: a cfg / fold / const / open / spare bind must carry an explicit class (debug|test|by_design) and a reason; functional ports may not use them; the wrapper writes its ledger rows (coverage gap class TIED_OFF)"
+  },
+  {
+   "id": "SYS-2",
+   "what": "tools/qwen_rom_fulldie_b3r2.py Q14 drops abstract ports no die net reaches, and the spine masters have no die-view wrapper, so an RTL port without a die bus disappears instead of failing",
+   "fix": "record dropped ports per master in the generator output and the coverage ledger; build die-view wrappers with explicit per-port binds"
+  },
+  {
+   "id": "SYS-3",
+   "what": "die_top_lint binds placeholder masters as stubs and split masters by a direction model; its \"undriven\" rows for hfd_index_q_b*/hfd_svc_*_s*/hfd_cmdproc_n<->s x*/hfd_attn_half_* seams come from the direction model (both ends of a derived split master unknown): verified as artefacts for cmdproc xl/xb/xt (driven by extra_out in the S/N wrappers); the svc / index_q / attn-half seams are the same class but not checked bit by bit. The lint cannot see wrapper-internal ties",
+   "fix": "add the wrapper ledgers (SYS-1) to the lint input"
+  }
+ ],
+ "wrapper_ledgers_hbm": {
+  "hfd_barrier": {
+   "spec": "physical/hbm_accel_die_views/barrier/rtl/spec.json",
+   "cfg_chain_inputs": [],
+   "folded_or_sunk_outputs": [],
+   "open_outputs": [
+    "up[1]",
+    "up[1]"
+   ],
+   "const_inputs": [],
+   "expr_inputs": [
+    "rel_in=expr:w_n0_up",
+    "rel_in=expr:w_n1_up"
+   ],
+   "die_ports_partially_used": {}
+  },
+  "hfd_cmdproc_n": {
+   "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_n.json",
+   "cfg_chain_inputs": [
+    "sm_fault[16]",
+    "res_v[16]",
+    "res_data[512]"
+   ],
+   "folded_or_sunk_outputs": [
+    "db_rdy[1]",
+    "cpl_position[20]",
+    "cpl_job[32]",
+    "cpl_generation[4]",
+    "cpl_v[1]",
+    "cpl_token[17]",
+    "cpl_status[4]",
+    "cpl_cycles[32]",
+    "st_kernels[32]",
+    "st_busy[32]"
+   ],
+   "open_outputs": [],
+   "const_inputs": [
+    "cpl_rdy=const:1"
+   ],
+   "expr_inputs": [],
+   "die_ports_partially_used": {
+    "cNE": {
+     "in_bits": 33,
+     "in_used": 9,
+     "out_bits": 794,
+     "out_driven": 698
+    },
+    "cNW": {
+     "in_bits": 33,
+     "in_used": 9,
+     "out_bits": 794,
+     "out_driven": 698
+    },
+    "t_su_NE": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 17
+    },
+    "t_su_NW": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 17
+    },
+    "f_barrier": {
+     "in_bits": 64,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "f_coll": {
+     "in_bits": 33,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "t_barrier": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 32
+    },
+    "t_coll": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 25,
+     "out_driven": 0
+    },
+    "xt": {
+     "in_bits": 16,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    }
+   }
+  },
+  "hfd_cmdproc_s": {
+   "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_s.json",
+   "cfg_chain_inputs": [
+    "sm_fault[16]",
+    "res_v[16]",
+    "res_data[512]"
+   ],
+   "folded_or_sunk_outputs": [
+    "db_rdy[1]",
+    "cpl_position[20]",
+    "cpl_job[32]",
+    "cpl_generation[4]",
+    "cpl_v[1]",
+    "cpl_token[17]",
+    "cpl_status[4]",
+    "cpl_cycles[32]",
+    "st_kernels[32]",
+    "st_busy[32]"
+   ],
+   "open_outputs": [],
+   "const_inputs": [
+    "cpl_rdy=const:1"
+   ],
+   "expr_inputs": [],
+   "die_ports_partially_used": {
+    "cSE": {
+     "in_bits": 33,
+     "in_used": 9,
+     "out_bits": 794,
+     "out_driven": 698
+    },
+    "cSW": {
+     "in_bits": 33,
+     "in_used": 9,
+     "out_bits": 794,
+     "out_driven": 698
+    },
+    "t_su_SE": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 17
+    },
+    "t_su_SW": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 17
+    },
+    "f_loader": {
+     "in_bits": 341,
+     "in_used": 147,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "f_router": {
+     "in_bits": 64,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "xb": {
+     "in_bits": 16,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    }
+   }
+  },
+  "hfd_coll": {
+   "spec": "physical/hbm_accel_die_views/coll/rtl/spec.json",
+   "cfg_chain_inputs": [],
+   "folded_or_sunk_outputs": [],
+   "open_outputs": [],
+   "const_inputs": [],
+   "expr_inputs": [],
+   "die_ports_partially_used": {
+    "pll_stream": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 1,
+     "out_driven": 0
+    },
+    "f_su_NW": {
+     "in_bits": 1024,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "f_su_SE": {
+     "in_bits": 1024,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "pll_link": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 1,
+     "out_driven": 0
+    },
+    "pll_hbm": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 1,
+     "out_driven": 0
+    },
+    "llk_N3": {
+     "in_bits": 488,
+     "in_used": 481,
+     "out_bits": 488,
+     "out_driven": 481
+    },
+    "f_su_NE": {
+     "in_bits": 1024,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "pll_serial": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 1,
+     "out_driven": 0
+    }
+   }
+  },
+  "hfd_loader": {
+   "spec": "physical/hbm_accel_die_views/loader/rtl/spec.json",
+   "cfg_chain_inputs": [
+    "h_dma_wdata[64]",
+    "m_arready[1]",
+    "m_rvalid[1]",
+    "m_rdata[64]",
+    "m_rresp[2]",
+    "m_rlast[1]",
+    "m_awready[1]",
+    "m_wready[1]",
+    "m_bvalid[1]",
+    "m_bresp[2]",
+    "req_rdy[2]",
+    "rsp_v[2]",
+    "rsp_we[2]",
+    "rsp_tag[32]",
+    "rsp_data[512]"
+   ],
+   "folded_or_sunk_outputs": [
+    "m_arvalid[1]",
+    "m_araddr[64]",
+    "m_arlen[8]",
+    "m_arsize[3]",
+    "m_rready[1]",
+    "m_awvalid[1]",
+    "m_awaddr[64]",
+    "m_awlen[8]",
+    "m_awsize[3]",
+    "m_wvalid[1]",
+    "m_wdata[64]",
+    "m_wstrb[8]",
+    "m_wlast[1]",
+    "m_bready[1]",
+    "req_we[2]",
+    "req_wstrb[64]",
+    "req_tag[32]",
+    "rsp_rdy[2]",
+    "irq[1]",
+    "fault[1]"
+   ],
+   "open_outputs": [
+    "req_v[2]",
+    "req_addr[64]",
+    "req_wdata[512]"
+   ],
+   "const_inputs": [],
+   "expr_inputs": [],
+   "die_ports_partially_used": {
+    "t_cmdproc": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 341,
+     "out_driven": 73
+    },
+    "h": {
+     "in_bits": 257,
+     "in_used": 244,
+     "out_bits": 257,
+     "out_driven": 177
+    }
+   }
+  },
+  "hfd_quant": {
+   "spec": "physical/hbm_accel_die_views/quant/rtl/spec.json",
+   "cfg_chain_inputs": [],
+   "folded_or_sunk_outputs": [
+    "vo[1]",
+    "q[256]",
+    "e[10]",
+    "fault[1]"
+   ],
+   "open_outputs": [],
+   "const_inputs": [
+    "v=const:1"
+   ],
+   "expr_inputs": [
+    "fp4=expr:tgl"
+   ],
+   "die_ports_partially_used": {}
+  },
+  "hfd_router": {
+   "spec": "physical/hbm_accel_die_views/router/rtl/spec.json",
+   "cfg_chain_inputs": [],
+   "folded_or_sunk_outputs": [],
+   "open_outputs": [],
+   "const_inputs": [],
+   "expr_inputs": [],
+   "die_ports_partially_used": {
+    "eSW": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 129,
+     "out_driven": 56
+    },
+    "f_su_SW": {
+     "in_bits": 256,
+     "in_used": 2,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "eNW": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 129,
+     "out_driven": 56
+    },
+    "f_su_NW": {
+     "in_bits": 256,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "eSE": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 129,
+     "out_driven": 56
+    },
+    "f_su_SE": {
+     "in_bits": 256,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "eNE": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 129,
+     "out_driven": 56
+    },
+    "f_su_NE": {
+     "in_bits": 256,
+     "in_used": 0,
+     "out_bits": 0,
+     "out_driven": 0
+    },
+    "t_cmdproc": {
+     "in_bits": 0,
+     "in_used": 0,
+     "out_bits": 64,
+     "out_driven": 55
+    }
+   }
+  }
+ },
+ "findings": [
+  {
+   "id": "TA-01",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_cmdproc_n -> hfd_coll",
+   "ports": "cmdproc_n.t_coll[24:0] (die net n_hb_cmdproc_coll -> hb_coll.f_cmdproc = endpoint rank[7:0] / pf[15:0] / go); cmdproc_n.f_coll[32:0] (coll fault + stat_credit_stall); coll.f_su_NW/SE/NE[1023:0]",
+   "kind": "die net driven constant 0 by the wrapper (t_coll 0 of 25 bits driven: spare-output rule); die inputs with no sink (f_coll 0/33 used; coll f_su_NW/SE/NE 0/1024 used each)",
+   "must_connect": "cmdproc collective-launch descriptor (rank / pf / go per collective op) -> TU endpoint config; endpoint fault/credit-stall -> cmdproc; the four SU quarters' all-reduce inject data -> endpoint inj_data (the endpoint takes ONE 1024-b inject from f_su_SW only)",
+   "why": "hbm_die_wrap.py: ot_hfd_cmdproc20_m has no collective port, so the generator-side t_coll / f_coll bits fall to the spare rule (outputs driven 0, inputs unused); coll spec binds inj_data to f_su_SW only (960e69130 interim coll wrapper, \"INTERIM, REDUCED\")",
+   "relevance": "TOKEN PATH: every TP all-reduce / all-gather of the HBM die (2+ per layer). As wired the endpoint's go is stuck 0: no collective ever starts on the die; 3 of 4 SU quarters cannot inject",
+   "evidence": [
+    "physical/hbm_accel_die_views/cmdproc/rtl/spec_n.json",
+    "physical/hbm_accel_die_views/coll/rtl/spec.json",
+    "lint top /tmp/tieoff-audit/lint/hbm_r25 (n_hb_cmdproc_coll 25 b)"
+   ],
+   "owner": "mtp-die (HBM die generator) (cmdproc collective descriptor port + coll inject mux)",
+   "fix_class": "RTL port + wrapper bind"
+  },
+  {
+   "id": "TA-02",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_cmdproc_n / hfd_cmdproc_s (ot_hfd_cmdproc20_m x2)",
+   "ports": "inputs on the 544-b cfg shift chain per band: res_v[15:0], res_data[511:0], sm_fault[15:0]; outputs folded to sink flops: cpl_v, cpl_token[16:0], cpl_position[19:0], cpl_job[31:0], cpl_generation[3:0], cpl_status[3:0], db_rdy; cpl_rdy const 1; f_router[63:0] (cmdproc_s) unused",
+   "kind": "cfg shift chain (from die input cNE[42] / cSE[42]) + fold/sink + constant",
+   "must_connect": "SM result / fault words (die nets c* from the 32 SMs, which already carry start/done) -> res_*/sm_fault; completion stream (cpl_*: the finished token, position, job, generation, status) -> loader/host (and next-token issue); doorbell ready db_rdy -> loader backpressure; router top-k ids (f_router, die net n_hb_router_cmdproc 64 b) -> cmdproc expert dispatch",
+   "why": "the r16g generator gave the cmdproc no SM-result / completion / router die ports; hbm_die_wrap.py default bind (input -> cfg, output -> fold) (754f1774b / 70dce332a)",
+   "relevance": "TOKEN PATH: the token completion (cpl_token) never leaves the die and the cmdproc never sees SM results or router selections; doorbell backpressure absent. HOST: completion ring",
+   "evidence": [
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_{n,s}_wrap.json"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "generator ports + wrapper bind"
+  },
+  {
+   "id": "TA-03",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_vm_{sw,nw,se,ne} (r19 tiles; monolithic hfd_vm)",
+   "ports": "multicast root tap_ACK_v[3:0] + tap_ACK_owner[767:0] on a 772-b cfg chain; tap_ready = const 15; t_router[511:0], t_su_*[2047:0], q*[581:0] faces = placeholder pass-through of f_su_* bits (one register stage, \"no VM function behind them\")",
+   "kind": "cfg shift chain + constant + placeholder pass-through",
+   "must_connect": "x-face consumers' (attention tiles / SMs) tap acknowledgements and ready -> root; VM row read -> router logits (t_router), SU publication / tile query (q faces) from the real VM row store",
+   "why": "\"no VM RTL exists\" (hfd_vm spec note, c64b44682 / b8b0a3578): only the multicast root is real; the tiles keep the monolithic wrapper's placeholder bit maps",
+   "relevance": "TOKEN PATH: activation staging / query / router-logit paths of every layer; tap backpressure absent (ready forced 1)",
+   "evidence": [
+    "physical/hbm_accel_die_views/vm/rtl/spec.json",
+    "physical/hbm_accel_die_views/vm/tiles/make_vm_tiles.py",
+    "physical/hbm_accel_die_views/vm/tiles/hfd_vm_sw.sv:38"
+   ],
+   "owner": "mtp-die (HBM die generator) (VM RTL)",
+   "fix_class": "missing RTL behind die ports"
+  },
+  {
+   "id": "TA-04",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_quant (ot_hfd_actquant_m)",
+   "ports": "v = const 1; fp4 = free-running wrapper toggle; q[255:0], e[9:0], vo, fault -> kept sink flops (no die net)",
+   "kind": "constant + toggle + sink",
+   "must_connect": "valid / format select from the VM or cmdproc (per-op FP8/FP4); quantised codes q + scale exponent e + valid -> the SM operand path; fault -> cmdproc",
+   "why": "\"The die interface carries no valid / format bit ... q / e / vo / fault have no die net (generator-side width defect)\" (quant spec note, 0041dfda7)",
+   "relevance": "TOKEN PATH: activation quantisation of every FP8/FP4 matmul input; only the dequantised y reaches the SU",
+   "evidence": [
+    "physical/hbm_accel_die_views/quant/rtl/spec.json"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "generator widths + wrapper bind"
+  },
+  {
+   "id": "TA-05",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_router (ot_gpu_router_topk_ps)",
+   "ports": "in_valid / in_last ride f_su_SW[1:0] of a placeholder SU bus; f_su_NW/SE/NE[255:0] and f_su_SW[255:2] unused; e{SW,NW,SE,NE}[128:55] driven 0 (55 of 129 b); t_cmdproc[63:55] driven 0; router -> cmdproc ids unused at cmdproc (TA-02)",
+   "kind": "spare die bits driven 0 / unused; valid carried on a placeholder bus",
+   "must_connect": "logit-stream valid/last from the VM/SU producer; expert-fetch descriptor fields (workgroup steering, 74 b) -> stream services",
+   "why": "\"the expert workgroup steering is not built\" (router spec note, c22f7d0aa)",
+   "relevance": "TOKEN PATH: MoE expert selection -> expert weight fetch",
+   "evidence": [
+    "physical/hbm_accel_die_views/router/rtl/spec.json"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "missing RTL (steering) + bind"
+  },
+  {
+   "id": "TA-06",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_index_q_b0..b5 (INTERIM index-quarter shell)",
+   "ports": "t_vm[511:0] = PLACEHOLDER key[511:0] ^ key[1023:512] (no scoring / top-k); a0..a3 -> t_su round-robin merge; index RTL ports (64-lane 34,816-b key edge, VM query read/response, selector and candidate memories) have no die nets",
+   "kind": "placeholder logic behind die ports",
+   "must_connect": "ot_hbm_accel_index_path: keys from svc ik, query from VM, top-k result -> VM / attention",
+   "why": "index RTL scorer ~5.9 mm2/quarter does not fit the 5.14 mm2 slot (hfd_index_q.sv header, d0f7f65d9)",
+   "relevance": "TOKEN PATH: V4.1 sparse-attention index selection (every layer at 1M)",
+   "evidence": [
+    "physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "missing RTL behind die ports"
+  },
+  {
+   "id": "TA-07",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_su / hfd_sfu / hfd_hc (hub-quarter physical envelopes)",
+   "ports": "every die port: inputs map onto closed lane pins by a fixed broadcast / lane-rotation rule, outputs are XOR-accumulate chains of lane outputs",
+   "kind": "placeholder function (all pins have die nets, none carries the protocol)",
+   "must_connect": "SU controller (CTL12) + die-port protocol of SU / SFU / HC (norms, RoPE, softmax, SwiGLU, Sinkhorn)",
+   "why": "\"PHYSICAL ENVELOPE ... It is NOT the SU / SFU / HC function: the SU controller (CTL12) and the die-port protocol of these blocks are not built\" (tools/hbm_hub_quarter_gen.py docstring)",
+   "relevance": "TOKEN PATH: all vector math of the HBM die",
+   "evidence": [
+    "tools/hbm_hub_quarter_gen.py"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "missing RTL behind die ports"
+  },
+  {
+   "id": "TA-08",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_attn_tile (64)",
+   "ports": "k[1040:1038] / q[581:580] forwarded clocks end on a capture flop (no credit-return die net); result chain i -> o drops a same-cycle arriving word (owner merge input ot_attn_tile_registered_parent not built); role-unbound k/q/ci/ri/i must be tied 0 at the die",
+   "kind": "interim contract: missing credit return + lossy merge; role ties",
+   "must_connect": "meso-FIFO credit return per forwarded segment (tile -> svc / VM); the registered merge of the parent",
+   "why": "view.json defects (37942079c)",
+   "relevance": "TOKEN PATH: attention results can be dropped; no flow control on the KV / query streams",
+   "evidence": [
+    "physical/hbm_accel_die_views/attn_tile/view.json"
+   ],
+   "owner": "mtp-die (HBM die generator) (HBM-ATTN)",
+   "fix_class": "RTL + die nets"
+  },
+  {
+   "id": "TA-09",
+   "rank_class": "token_path",
+   "die": "HBM r25/r25s",
+   "master": "hfd_svc_{SW,SE,NW,NE} (ot_hbm_svc_core + PHY bind)",
+   "ports": "PHY outputs k_wr_done[31:0], k_oor, w_oor, refreshes[63:0], w_reads[31:0] declared UNUSED (\"PHY status: no die consumer\"); e[127:55] (router descriptor) arrives 0 (TA-05)",
+   "kind": "outputs left unconnected",
+   "must_connect": "k_wr_done -> KV-append completion / ordering (cmdproc or SM); k_oor / w_oor -> fault to cmdproc; refreshes / w_reads -> telemetry (may stay)",
+   "why": "gen_svc.py UNUSED tuple (fdc144870)",
+   "relevance": "TOKEN PATH (KV write completion, MTP rollback ordering) / fault; refreshes + w_reads are test-telemetry",
+   "evidence": [
+    "physical/hbm_accel_die_views/svc/gen_svc.py:22"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "die nets"
+  },
+  {
+   "id": "TA-10",
+   "rank_class": "token_path",
+   "die": "S81 layer1 m221pq (r3 a_real die.v)",
+   "master": "ot_v41_rom_elem_q_qxpq_w10 (1,280 instances)",
+   "ports": "go_tag[1:0] (input), walking, bank_free, sh_free (outputs): no die net on any of the 1,280 q elements (die.v); go_tag floats",
+   "kind": "instance pins without nets (floating inputs, unloaded outputs)",
+   "must_connect": "PQ field spine: the op tag per go (go_tag) from the column/cfg sequencer; walking / bank_free / sh_free -> the field spine issue control that admits the next op",
+   "why": "tools/dsrom_s81_frame_block.py:128 \"q-element pins the generator does not bind ... no die consumer yet: owner PQ q-element\"; the die generator never got PQ spine nets",
+   "relevance": "TOKEN PATH: PQ (up to 4 ops in flight, ADOPTED +26% AR, levers/qelem_pq.json) cannot function; with go_tag floating every partial row carries an undefined op tag",
+   "evidence": [
+    "ot-epyc3:/srv/opentallas-scratch/claude/s81-die/m221pq_r3/a_real/die.v (pins_nonet: 2,560 + 3 x 1,280 pin-bits)",
+    "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv header"
+   ],
+   "owner": "s81-die-2 / s81-dies",
+   "fix_class": "generator nets + PQ spine RTL"
+  },
+  {
+   "id": "TA-11",
+   "rank_class": "token_path",
+   "die": "Qwen ROM r21b",
+   "master": "qfd_sp_su64_sfu -> hub_el (x3) / qfd_sp_constants_sequencer",
+   "ports": "SU KV write kv_we[63:0] + kv_waddr[1535:0] + kv_wdata[2047:0] (3,648 b) vs the only SU -> hub die bus x3 (512 b); sequencer kvd_* KV descriptor (~300 b), c_valid/c_data[511:0]/c_last/c_mode/c_tag and r_valid/r_data[511:0]/r_last/r_rank/r_err vs the 66-b seq_coll bus; kv_write_drained / kv_ok / me_mem_ok inputs with no bus",
+   "kind": "RTL ports with no matching die bus (die buses are width-sized bundles; every spine master is a stub in the lint: 13,088 of 13,220 instances placeholder)",
+   "must_connect": "KV append path SU -> qfd_ctrl / HBM; sequencer <-> collective payload / descriptor; KV status back to the sequencer",
+   "why": "tools/qwen_rom_fulldie_b3r2.py sizes buses by bundle (x3 = IO_BITS 512, seq_coll 64+2) and Q14 drops abstract ports no die net reaches; no RTL-port -> die-bit map exists for the spine masters",
+   "relevance": "TOKEN PATH (KV append, TP4 all-reduce sequencing) -- SUSPECT: needs the port map to confirm; may be carried by another bundle",
+   "evidence": [
+    "/tmp audit qwen_rtl_vs_die (tools/die_top_lint.load_qwen r21b + parse_module)",
+    "tools/qwen_rom_fulldie_b3r2.py:1897-1904, tools/qwen_rom_fulldie.py:639-642, :1440 (Q14)"
+   ],
+   "owner": "emb-hbm-impl / safe-qwen",
+   "fix_class": "die-view wrapper with explicit per-port bind (as hbm_die_wrap) + ledger"
+  },
+  {
+   "id": "TA-12",
+   "rank_class": "token_path",
+   "die": "all three",
+   "master": "interim placeholder masters (S81: 114 of 145 masters interim -- VM, SU, HC, gather, capture, collective, selector, collector, scan service, controller, BF, NV5; HBM: 28 missing + 2 interim of 87; Qwen: 13,088 placeholder instances)",
+   "ports": "every port has a die net, the master is a registered stub (STA / lint) with no function",
+   "kind": "placeholder master",
+   "must_connect": "the real RTL views (COMPLETENESS_AUDIT sections 1-3)",
+   "why": "\"Owner-block interfaces ... stay placeholders with the port lists below\" (tools/dsrom_s81_fulldie.py:2185)",
+   "relevance": "TOKEN PATH (function gaps; covered by COMPLETENESS_AUDIT / coverage ledger, listed here so the tie-off ledger is complete)",
+   "evidence": [
+    "results/rtl/s81_die_view_index_20261008/index.json counts",
+    "physical/hbm_accel_die_views/index.json counts",
+    "lint census"
+   ],
+   "owner": "per block (COMPLETENESS_AUDIT)",
+   "fix_class": "missing RTL views"
+  },
+  {
+   "id": "TA-13",
+   "rank_class": "host_boot",
+   "die": "HBM r25/r25s",
+   "master": "hfd_loader (ot_hfd_loader_half / loader_host_m)",
+   "ports": "memory AXI: m_arready, m_rvalid, m_rdata[63:0], m_rresp, m_rlast, m_awready, m_wready, m_bvalid, m_bresp on the 688-b cfg chain; m_ar*/m_aw*/m_w*/m_rready/m_bready folded; store/load slot: req_rdy[1:0], rsp_v/we/tag/data[511:0] on cfg; req_we/wstrb/tag, rsp_rdy folded; req slot 1 open; host DMA write data h_dma_wdata[63:0] on cfg; irq, fault folded; h outputs 177 of 257 b driven",
+   "kind": "cfg shift chain (from die input h[499]) + fold/sink + open",
+   "must_connect": "m_* -> the HBM stream service write/read port (loader -> HBM weight / KV image path); req/rsp slots -> cmdproc program store (slot 0, only addr[7:0] + wdata[63:0] wired) and the second store; h_dma_wdata from the host PHY; irq / fault -> host",
+   "why": "\"memory AXI m_* and rsp_* have no die net (cfg chain / folded)\" (loader spec note, 754f1774b)",
+   "relevance": "HOST/BOOT: no physical loader -> HBM path (weights, embeddings, KV image cannot be loaded); host DMA writes carry no data; cmdproc program store handshake (req_rdy) never returns -- IN PROGRESS by mtp-die",
+   "evidence": [
+    "physical/hbm_accel_die_views/loader/rtl/hfd_loader_wrap.json"
+   ],
+   "owner": "mtp-die (in progress)",
+   "fix_class": "generator ports + wrapper bind"
+  },
+  {
+   "id": "TA-14",
+   "rank_class": "host_boot",
+   "die": "HBM r25/r25s",
+   "master": "host_e die net (hfd_meso_r32.b <-> ot_hbm_host_phy.iox)",
+   "ports": "149 bits multi-driven, 135 undriven, 131 bits with no RTL pin on the PHY (die_top_lint connectivity, r25 and r25s)",
+   "kind": "die net direction / width defect",
+   "must_connect": "host PHY rx -> station chain -> loader h, loader h -> PHY tx (381 of 512 b used)",
+   "why": "the host station chain and the host PHY black box disagree on per-bit direction",
+   "relevance": "HOST/BOOT: the host link itself",
+   "evidence": [
+    "/tmp/tieoff-audit/lint/hbm_r25/hbm_r25_lint_top_lint.json connectivity"
+   ],
+   "owner": "mtp-die (HBM die generator)",
+   "fix_class": "generator bus directions"
+  },
+  {
+   "id": "TA-15",
+   "rank_class": "host_boot",
+   "die": "HBM r25/r25s and Qwen ROM r21b",
+   "master": "die top (clock / reset sources)",
+   "ports": "HBM: hfd_coll wrapper clock = refclk, reset = por: \"NOT A GENERATOR PORT\" -> no die net; the die top has 0 ports, so every pll_* clock net is an inverted unconnected pin. Qwen: 0 die top ports; clocks from pll_* outputs of placeholder io_collective / hub_el / qfd_ctrl",
+   "kind": "missing die top ports / unconnected clock reference",
+   "must_connect": "package refclk + POR pins -> PLL owner block (S81 has refclk / por_n top ports and is the template)",
+   "why": "coll spec \"the die has no clock / reset input for its PLL owner\" (960e69130); Qwen PLL inside placeholders (COMPLETENESS_AUDIT row \"Clock generation\")",
+   "relevance": "BOOT: clock / reset of the whole die",
+   "evidence": [
+    "lint top_ports = 0 (hbm_r25, qwen_r21b)",
+    "physical/hbm_accel_die_views/coll/rtl/spec.json extra_inputs"
+   ],
+   "owner": "mtp-die (HBM die generator) ; emb-hbm-impl / safe-qwen",
+   "fix_class": "generator top ports"
+  },
+  {
+   "id": "TA-16",
+   "rank_class": "host_boot",
+   "die": "Qwen ROM r21b",
+   "master": "qfd_sp_constants_sequencer",
+   "ports": "h_start, tp_token[17:0], tp_pos[17:0] (host token / start), pw_v/pw_addr[9:0]/pw_data[63:0] and dw_v/dw_addr[2:0]/dw_data[63:0] (program / data store write): no die bus",
+   "kind": "RTL inputs with no die net (stub abstract drops them, Q14)",
+   "must_connect": "host interface qfd_io_host (RQ-ING-1, r21c) -> start / token / position and program + data store load",
+   "why": "no host / loader block on the Qwen die (COMPLETENESS finding 6)",
+   "relevance": "HOST/BOOT: program load, first token, token I/O",
+   "evidence": [
+    "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv:22-40",
+    "review_queue/ingest.md RQ-ING-1"
+   ],
+   "owner": "emb-hbm-impl / safe-qwen (with ingest)",
+   "fix_class": "new master + die nets"
+  },
+  {
+   "id": "TA-17",
+   "rank_class": "host_boot",
+   "die": "S81 layer / layer1 / head",
+   "master": "dsfd_host (none on m221pq)",
+   "ports": "host CSR / ingest / token I/O: no block, no die port (COMPLETENESS 2a, ingest RQ-ING-1)",
+   "kind": "missing master",
+   "must_connect": "dsfd_host on the spine + HOST traffic class on the board-SerDes rx endpoint + host-write port on dsfd_ctrl",
+   "why": "never placed",
+   "relevance": "HOST/BOOT",
+   "evidence": [
+    "review_queue/ingest.md RQ-ING-1",
+    "s81-dies.log 21:40"
+   ],
+   "owner": "s81-die-2 / s81-dies",
+   "fix_class": "new master + die nets"
+  },
+  {
+   "id": "TA-18",
+   "rank_class": "test_or_benign",
+   "die": "Qwen ROM r21b",
+   "master": "chain-end / role pins",
+   "ports": "qfd_tile & qfd_tile_e n_a/n_b/n_y (48 of 768 each, column tops), lo (24 of 768, last row); qfd_cst_n.a / qfd_cst_s.b (64 of 768); qfd_chead_e.e / chead_w.w (1 of 32); qfd_lst_c_split e/w/fck_e/fck_w (1 of 2); qfd_sp_band_lanes.tt (5 of 6: band 0 hosts the tree-top upper)",
+   "kind": "instance pins without nets at array boundaries (die.v vs LEF)",
+   "must_connect": "nothing functional; floating INPUTS need a tie cell in the die netlist (not a token-path gap)",
+   "why": "replicated master at a chain end",
+   "relevance": "none (physical hygiene: tie floating inputs)",
+   "evidence": [
+    "ot-epyc3:/srv/opentallas-scratch/claude/qwen-die-r20/cases/r21b_pdn/die.v"
+   ],
+   "owner": "emb-hbm-impl / safe-qwen",
+   "fix_class": "tie cells in die.v"
+  },
+  {
+   "id": "TA-19",
+   "rank_class": "test_or_benign",
+   "die": "HBM r25/r25s",
+   "master": "debug / telemetry outputs",
+   "ports": "cmdproc cpl_cycles, st_kernels, st_busy (folded); svc refreshes / w_reads; barrier root rel_in = own up, up open (root of the tree: by design)",
+   "kind": "fold / open",
+   "must_connect": "may stay tied (owner: no DFT); cpl_cycles rides the completion word if TA-02 wires it",
+   "why": "debug counters",
+   "relevance": "test",
+   "evidence": [
+    "*_wrap.json"
+   ],
+   "owner": "-",
+   "fix_class": "none"
+  },
+  {
+   "id": "TA-20",
+   "rank_class": "test_or_benign",
+   "die": "S81 m221pq / HBM stations",
+   "master": "ot_meso_fifo in glue / ot_hbm_stn_lib",
+   "ports": "w_rdy unconnected, r_rdy tied 1 (and w_v tied 1 on the first slice FIFOs) in dsfd_glue.sv / ot_hbm_stn_lib.sv",
+   "kind": "constant flow control (NOBP)",
+   "must_connect": "nothing if the NOBP argument holds (FIFO depth >= round-trip skew, consumer always ready)",
+   "why": "\"the FIFO's r_rdy is tied 1'b1 (ot_meso_fifo NOBP comment has the argument)\"",
+   "relevance": "design choice; becomes a gap only if a consumer can stall",
+   "evidence": [
+    "results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv:183",
+    "physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv:105"
+   ],
+   "owner": "-",
+   "fix_class": "none"
+  },
+  {
+   "id": "TA-21",
+   "rank_class": "test_or_benign",
+   "die": "S81 m221pq",
+   "master": "dsfd_stnv_256x1 (24)",
+   "ports": "fo0 open on 12 of 24 (paired 256-b slices share the other slice's forwarded clock)",
+   "kind": "open output",
+   "must_connect": "nothing",
+   "why": "shared forwarded clock",
+   "relevance": "none",
+   "evidence": [
+    "m221pq_r3/a_real/die.v f_KW*txs_0 / rxs_0"
+   ],
+   "owner": "-",
+   "fix_class": "none"
+  },
+  {
+   "id": "TA-22",
+   "rank_class": "test_or_benign",
+   "die": "S81 head",
+   "master": "ot_dsrom_head_elem_A / _B",
+   "ports": "A o_v/o_d/l_v/l_d; B l_v/l_d/done/best_*/b_v/b_d (UNUSED_BY_DESIGN)",
+   "kind": "open outputs",
+   "must_connect": "nothing: ot_dsrom_head_bundle reads none of them",
+   "why": "tools/dsrom_s81_fulldie.py:2407",
+   "relevance": "none",
+   "evidence": [
+    "tools/dsrom_s81_fulldie.py:2407"
+   ],
+   "owner": "-",
+   "fix_class": "none"
+  }
+ ],
+ "counts": {
+  "token_path": 12,
+  "host_boot": 5,
+  "test_or_benign": 5
+ }
+}

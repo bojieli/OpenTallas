@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+ "block": "ot_hgi_coll_decode",
+ "owner": "Codex:generic_collective approvedHGI-1",
+ "source_branch": "codex/hgi-decoder-electrical-20261009",
+ "record_branch": "codex/closure-record-hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+ "source_commit": "d261d43c709465a01516b903009e5765f611422b",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 81.08,
+  "ff_ps": 1.88,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -150.07,
+  "ss_sensitivity_tns_ps": -10591.9,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx/routes/hgi_coll_decode_a_pinanchor_d261d43c7_tc_cx/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx/routes/hgi_coll_decode_a_pinanchor_d261d43c7_tc_cx/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx/routes/hgi_coll_decode_a_pinanchor_d261d43c7_tc_cx/work/orfs/logs/asap7/opentallas_ot_hgi_coll_decode_asap7_qdm_hgi_coll_decode_a_pinanchor_d261d43c7_tc_cx/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_GOLDEN": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS HGI-COLL decode cases=16654 DSreset96 allgroups/allranks k7/512/2048 hold/isolation/reserved\nrtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv:73: $finish called at 1119360000 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_MUT_GROUP": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv:34: group isolation rank=0 expected=1\n       Time: 210820000  Scope: tb_hgi_coll_decode.issue\n",
+   "track": "parallel"
+  },
+  "bench_MUT_ROW_BLOCK": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv:37: owner block mismatch\n       Time: 450000  Scope: tb_hgi_coll_decode.issue\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "FINAL_ELECTRICAL_ZERO": {
+   "ok": true,
+   "out": "{\"verdict\": \"PASS\", \"fails\": []}\n"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T07:34:12-07:00",
+ "job_spec": {
+  "name": "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+  "block": "ot_hgi_coll_decode",
+  "owner": "Codex:generic_collective approvedHGI-1",
+  "purpose": "Config-only existing-buffer pin-side placement repair, no RTL or clock/IO/transition changes. Read-only original3_3ODB geometry preflight PASS with fixed taps/endcaps excluded. Exact golden+consuming mutants required; TT>=0 FF>=0 DRC0 and explicit zero electrical violations mandatory; SS sensitivity only.",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-epyc2",
+   "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+   "branch": "codex/hgi-decoder-electrical-20261009",
+   "commit": "d261d43c7",
+   "paths": [
+    "rtl/hbm_accel/generic/collective",
+    "tools",
+    "physical/qwen_die_masters",
+    "physical/abi3",
+    "physical/common_flow",
+    "configs",
+    "Makefile",
+    "physical/hgi_collective"
+   ],
+   "required_files": [
+    "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv",
+    "rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv",
+    "physical/qwen_die_masters/cfg/hgi_coll_decode_a.env",
+    "physical/qwen_die_masters/signoff/hgi_coll_decode_a.sdc",
+    "physical/qwen_die_masters/jobs/route_master.sh",
+    "tools/uarch_model_hgi_collective_decode.py",
+    "physical/hgi_collective/anchor_input_buffers.tcl",
+    "tools/hgi_collective_electrical_gate.py"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "GOLDEN",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/GOLDEN.vvp 2>&1 | tee {RUN}/bench/GOLDEN.log",
+     "expect": "pass",
+     "pass_regex": "PASS HGI",
+     "min_count_regex": "cases=(\\d+)",
+     "logs": [
+      "{RUN}/bench/GOLDEN.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_GROUP",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_GROUP=1 -o {RUN}/bench/MUT_GROUP.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_GROUP.vvp 2>&1 | tee {RUN}/bench/MUT_GROUP.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_GROUP.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_ROW_BLOCK",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_ROW_BLOCK=1 -o {RUN}/bench/MUT_ROW_BLOCK.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_ROW_BLOCK.vvp 2>&1 | tee {RUN}/bench/MUT_ROW_BLOCK.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_ROW_BLOCK.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Current route_master directly measures boundary clock arrival afterCTS forTTreference andMMFF; no guessed insertion calibration"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} HM=0.01 bash physical/qwen_die_masters/jobs/route_master.sh hgi_coll_decode_a {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log",
+     "{RUN}/routes/{LABEL}/sta.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 4
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/ && cp {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/hgi_coll_decode_a.sdc"
+   ],
+   "macros": [],
+   "checks": [
+    {
+     "name": "FINAL_ELECTRICAL_ZERO",
+     "cmd": "python3 {SRC}/tools/hgi_collective_electrical_gate.py {RUN}/routes/{LABEL}/physical.json"
+    }
+   ]
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ExistingapprovedholdECO path; finalTT/FF/DRCrequired"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/hgi_collective_decode_20261009/routes/hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx"
+   }
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 2,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Newleaf currentlocal IO90/150 and realrouted reference; finaldie composition/wiring pending, no dieadoption before binding"
+  },
+  "bench_first": false
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

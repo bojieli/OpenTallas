@@ -1,0 +1,20 @@
+{
+ "status":"PREBUILD_MODEL_NOT_ADOPTED",
+ "block":"S81 hop VM response-valid integration",
+ "model_before_build":true,
+ "memory_source":"rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv",
+ "native_memory_latency_cycles":"QD+6 (standalone), QD+14 (tiled aggregate), plus real request/return stations",
+ "macs_per_cycle":0,
+ "replicas_per_die":1,
+ "ports_bytes_per_cycle":{"write":64,"read_request_row_bits":14,"read_return":64},
+ "ports_bits_per_cycle":{"write_request":543,"read_request":15,"read_response":513},
+ "control_outputqueue_depth":32,
+ "output_storage_bits":16416,
+ "last_flag_queue_bits":32,
+ "native_map":"Two real VM request slots:writeport0/readport1. Writes precede reads on the same edge under the VM golden order. Both slots must be reserved in native VM wrapper inventory; no synthetic extra ports.",
+ "flow":"Every issued read reserves one outputqueue flit until ordered actual read-return arrives; outputqueue occupancy plus outstanding reads bounded32. No assumed1-cycle return.",
+ "latency":"Actual return-valid governs handoff; minimum mechanism bench will measure payload completion against memory latency1/10/18 and stalls. Existing1-cycle controller cost historical for this binding until composed. No decode rate credit before measurement.",
+ "area_slot":"Default4-flit legacy queue grows by28x513 bits in qualified return-valid variant. Actual synthesized area required for final controller slot eligibility; extra adapter emits nativeport bits only.",
+ "routing":"543-bit write request,15-bit read request,513-bit response must use real configured die relay counts; generator manifest must expose vm_rvalid and reserve nativeVM slots.",
+ "eligibility":"Opt-in until exact native width data/order/tag/backpressure gate passes, then SS/FF in context. All validation admitted remote."
+}

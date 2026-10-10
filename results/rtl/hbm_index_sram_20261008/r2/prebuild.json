@@ -1,0 +1,188 @@
+{
+  "schema": "opentallas.hbm_index_sram_model.v1",
+  "status": "PREBUILD_NOT_QUALIFIED",
+  "base_model": {
+    "schema": "opentallas.hbm_index_service.v1",
+    "status": "PREBUILD_NOT_QUALIFIED",
+    "source_sha256": {
+      "tools/uarch_model.py": "423b7f3bd023610b2bab8edcbccdecebbf083c28b930864f0b6b50539f55b0e5"
+    },
+    "geometry": {
+      "TP": 96,
+      "stack_count": 4,
+      "PCs_per_stack": 32,
+      "blocks_per_stack": 342,
+      "keys_per_block": 8,
+      "key_bytes": 68,
+      "placement": "stack=floor(owned_block_ordinal/342); stack_sector=17*(owned_block_ordinal%342)+sector_in_block; pc=stack_sector%32; j=stack_sector//32"
+    },
+    "compute": {
+      "MACs_per_cycle": 0,
+      "communication_bytes_per_cycle": 1024,
+      "bytes_per_PC_per_cycle": 32
+    },
+    "boundaries": {
+      "index_ports_per_stack": 8,
+      "line_bits": 1088,
+      "tag_bits": 10,
+      "valid_bits": 1,
+      "tracks_per_stack": 8792,
+      "reverse_credit_bits": 8,
+      "routing_channel_capacity": null,
+      "fit": "REQUIRES_R25I_CHANNEL_CHECK"
+    },
+    "buffering": {
+      "scorer_port_depth": 16,
+      "line_payload_bytes": 17408,
+      "service_return_reservation": "Reserve line capacity before each read; never depend on response backpressure",
+      "service_reassembly": "32-byte sectors cross 136-byte lines; tag and out-of-order reassembly mandatory",
+      "service_return_words": 2048,
+      "service_payload_bytes": 65536,
+      "service_SECDED_check_bits": 20480,
+      "service_SECDED_read_cycles": 2,
+      "service_SECDED_write_cycles": 1,
+      "valid_scoreboard_bits": 2048,
+      "protection_implemented": false,
+      "service_reassembly_area": null,
+      "physical_macro_inventory": null
+    },
+    "replicas": {
+      "services_per_die": 4,
+      "PC_engines_per_die": 128,
+      "output_ports_per_die": 32,
+      "descriptor_fanout_per_stack": 32,
+      "mux_demux": "sector byte fragments to 8 line ports; not a free wire"
+    },
+    "latency": {
+      "stack_bytes_max": 186048,
+      "HBM_lower_bound_cycles_1p2GHz_at_1TBps": 223.2576,
+      "scorer_min_ingest_cycles": 171,
+      "write_mapping_added_cycles": 0,
+      "measured_service_cycles": null,
+      "token_composition": "8 index layers; old one-PC kind2 path remains unqualified against full-stack price"
+    },
+    "write_mapping": {
+      "default_off": true,
+      "window_CKV_unchanged": true,
+      "arithmetic_unchanged": true,
+      "shadow_sector_index": "retain die-global block-relative offset; placement affects addresses only"
+    },
+    "signoff": {
+      "SS_setup_ps": 15,
+      "FF_hold_ps": 15,
+      "DRC": 0,
+      "qualified": false
+    },
+    "adopted": false
+  },
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87"
+  },
+  "geometry": {
+    "PCs": 32,
+    "banks_per_PC": 2,
+    "logical_slots_per_bank": 32,
+    "bank": "j[0]",
+    "address": "j[5:1]",
+    "native_macro_words": 128,
+    "unused_native_words_per_macro": 96,
+    "macros": 64,
+    "width_um": 94.824,
+    "height_um": 41.04
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "input_bytes_per_cycle": 1024,
+    "output_bytes_per_cycle": 1088,
+    "read_sectors_per_group": 34,
+    "read_bytes_per_bank_per_cycle": 32,
+    "write_bytes_per_bank_per_cycle": 32,
+    "read_write_ports": "independent native 1R1W; at most one read and one write per bank"
+  },
+  "protection": {
+    "data": "K256 R10 SECDED",
+    "encoders": 32,
+    "decoders": 64,
+    "check_sidecar": "32x10 FF each bank; captured synchronously beside macro word",
+    "valid": "duplicate complement scoreboard; compare continuously and fail closed",
+    "control": "complement duplicate group/counters/credit registers; fail closed",
+    "uncorrectable": "suppress group output, sticky fault; captured sectors may retire but no incorrect bytes escape",
+    "check_sidecar_bits": 20480
+  },
+  "area": {
+    "macros_mm2": 0.24906092544,
+    "sidecar_DFF_mm2": 0.005971968000000001,
+    "explicit_register_bits": {
+      "checks": 20480,
+      "duplicated_valid": 4096,
+      "write_metadata": 832,
+      "macro_capture": 17024,
+      "decoded_data": 16384,
+      "read_metadata_pipeline": 6752,
+      "credit_state": 112,
+      "group_state": 46
+    },
+    "explicit_register_lower_bound_mm2": 0.0191657016,
+    "alternative_64x512_macro_mm2": 0.852,
+    "codec_logic_area": "synthesis measurement pending; lower bound does not include codec XOR/compare and remap muxes",
+    "region_utilization": 0.55,
+    "outline_fit": "requires HBM wiring owner r25I bank placement; no P&R launched until fit"
+  },
+  "timing": {
+    "corners": {
+      "ff": {
+        "clk_to_q_ps": 286.10773919130247,
+        "min_period_ps": 272.8743932705856,
+        "setup_ps": 24.694771075555558,
+        "hold_ps": 19.67222053777778
+      },
+      "ss": {
+        "clk_to_q_ps": 455.3205489475797,
+        "min_period_ps": 435.17450020501155,
+        "setup_ps": 39.800541169166664,
+        "hold_ps": 30.074020584583334
+      },
+      "tt": {
+        "clk_to_q_ps": 351.7716962013416,
+        "min_period_ps": 335.7271623292945,
+        "setup_ps": 28.256178771111113,
+        "hold_ps": 21.600259385555557
+      }
+    },
+    "streaming_period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "SS_macro_capture_remaining_ps": 317.6794510524203,
+    "read_issue_to_output_cycles": 5,
+    "stages": [
+      "native SRAM synchronous edge",
+      "explicit data/check capture",
+      "SECDED syndrome",
+      "SECDED correction",
+      "remap/output"
+    ],
+    "encoder_write_cycles": 1,
+    "valid_visible": "after encoded macro write edge",
+    "retirement": "after explicit capture, never at issue",
+    "initiation_interval_cycles": 1,
+    "credits": "reserved for all8lanes at issue; final returned credits retained"
+  },
+  "boundaries": {
+    "captured_read_bits_per_cycle": 9044,
+    "output_bits_per_cycle": 8792,
+    "reverse_credit_bits": 8,
+    "descriptor_fanout": 32,
+    "routing_tracks_lower_bound": 8800,
+    "channel_capacity": "pending r25I floorplan",
+    "routing_check": "NOT QUALIFIED"
+  },
+  "latency": {
+    "added_read_pipeline_cycles": 5,
+    "added_write_encoder_cycles": 1,
+    "ideal_fullframe_issue_cycles": 171,
+    "theoretical_fullframe_drain_cycles": 176,
+    "added_seconds_per_descriptor_at1p2GHz": 5e-09,
+    "token_composition": "8 index layers; descriptor delay and sustained bandwidth measured in actual controller bench, no speculative gain"
+  },
+  "adopted": false,
+  "physical_qualified": false
+}

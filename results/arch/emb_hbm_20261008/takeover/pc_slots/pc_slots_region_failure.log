@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-geometry-grid92/pc_slots.py", line 14, in <module>
+    r=plan_slots(v,m)
+  File "/srv/opentallas-scratch/codex/emb-geometry-grid92/src/tools/qwen_system/embedding_pc_slots.py", line 24, in plan_slots
+    region = next(r for r in model['regions'] if r['name'] == f'ctrl_{stack}')
+StopIteration

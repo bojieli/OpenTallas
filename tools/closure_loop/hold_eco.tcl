@@ -232,6 +232,19 @@ if {$session in {two mm} && [envd OT_SETUP_GUARD 1]} {
   } else { puts "OT_ECO setup_guard: no ECO cell on an SS path under $sm ps" }
   puts "OT_ECO after_guard ss [ws max ss] ff [ws min ff]"
 }
+# ---- opt-in DRV repair (OT_REPAIR_DRV=1; default OFF, so the default ECO is unchanged).  mtp-lead 2026-10-09: a route
+# whose only misses are FF hold and a few max-slew pins (WFC SOURCE: long rec-SRAM read-data repeater segments and tie
+# nets) never reached this ECO, and the ECO had no DRV repair.  Runs inside the same incremental GRT round as the hold
+# repair, so the new buffers get guides and are re-routed with the rest; placement-estimated parasitics (the session's
+# SPEF predates the repair); the sign-off corner_sta + the job's electrical check judge the result.
+if {[envd OT_REPAIR_DRV 0]} {
+  estimate_parasitics -placement
+  set drv_args [list -slew_margin [envd OT_DRV_SLEW_MARGIN 30] -cap_margin [envd OT_DRV_CAP_MARGIN 20]]
+  if {[envd OT_DRV_MAX_WIRE 0] > 0} { lappend drv_args -max_wire_length [envd OT_DRV_MAX_WIRE 0] }
+  set nd0 [llength [get_cells *]]
+  repair_design -verbose {*}$drv_args
+  puts "OT_ECO repair_drv args $drv_args cells_added [expr {[llength [get_cells *]] - $nd0}]"
+}
 puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
 detailed_placement
 check_placement -verbose
@@ -306,7 +319,11 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
-filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
+# MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
+# "No fillers found for LVTN" (dshead-ep-r6-60f5a0a90-tt-lvt hold ECO, drive-2041)
+set ot_fill {}
+foreach vt [envd OT_VT RVT] { set t [string map {SLVT SL LVT L RVT R} $vt]; lappend ot_fill FILLERxp5_ASAP7_75t_$t FILLER_ASAP7_75t_$t }
+filler_placement $ot_fill
 check_placement -verbose
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef

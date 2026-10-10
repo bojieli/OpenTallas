@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/engram/lead-d5be779cf/tools/engram_lead_gate.py", line 22, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/srv/opentallas-scratch/claude/engram/lead-d5be779cf/tools/engram_lead_gate.py", line 16, in main
+    if build.returncode:raise RuntimeError(build.stderr[-3000:])
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: %Error-NEEDTIMINGOPT: /srv/opentallas-scratch/claude/engram/lead-d5be779cf/rtl/test/tb_dsrom_engram_lead.sv:20:22: Use --timing or --no-timing to specify how event controls should be handled
+                                                                                                                 : ... note: In instance 'tb_dsrom_engram_lead'
+   20 |     task step; begin @(negedge clk); end endtask
+      |                      ^
+                      ... For error description see https://verilator.org/warn/NEEDTIMINGOPT?v=5.032
+%Error-NEEDTIMINGOPT: /srv/opentallas-scratch/claude/engram/lead-d5be779cf/rtl/test/tb_dsrom_engram_lead.sv:53:9: Use --timing or --no-timing to specify how forks should be handled
+                                                                                                                : ... note: In instance 'tb_dsrom_engram_lead'
+   53 |         fork
+      |         ^~~~
+%Error: Exiting due to 2 error(s)
+

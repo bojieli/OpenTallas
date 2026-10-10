@@ -1,0 +1,354 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_mtp_x_stop",
+ "kind": "mtp_hfd",
+ "status": "closed",
+ "lef": "hfd_mtp_x_stop.lef",
+ "lib": {
+  "ss": "hfd_mtp_x_stop_ss.lib",
+  "ff": "hfd_mtp_x_stop_ff.lib",
+  "tt": "hfd_mtp_x_stop_tt.lib"
+ },
+ "files_sha256": {
+  "hfd_mtp_x_stop.lef": "efeeeb4dc3ed898b2bed2446968407b5698f4081497d9782b6cac2fe72930017",
+  "hfd_mtp_x_stop_ss.lib": "1a3b191e43ffdca7020a501619b3e6cceaad11c0c5cee3df606d3c966bc35d49",
+  "hfd_mtp_x_stop_ff.lib": "e8074af96a7b3a654954a329922070460fb9a52fa804d85e3fa5227df0adbccd",
+  "hfd_mtp_x_stop_tt.lib": "6cba7cbb98408ff31718c73d067cb1abbc6602a9c3a3990758cf532ae9701350"
+ },
+ "check": {
+  "macro": "hfd_mtp_x_stop",
+  "size_um": [
+   466.56,
+   200.88
+  ],
+  "ports": {
+   "am_fault": {
+    "dir": "output",
+    "bits": 1
+   },
+   "am_idx": {
+    "dir": "output",
+    "bits": 17
+   },
+   "am_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "cfg_eos": {
+    "dir": "input",
+    "bits": 17
+   },
+   "cfg_eos_en": {
+    "dir": "input",
+    "bits": 1
+   },
+   "cfg_force": {
+    "dir": "input",
+    "bits": 1
+   },
+   "cfg_gamma": {
+    "dir": "input",
+    "bits": 4
+   },
+   "cfg_maxpos": {
+    "dir": "input",
+    "bits": 21
+   },
+   "cfg_ngen": {
+    "dir": "input",
+    "bits": 21
+   },
+   "cfg_plen": {
+    "dir": "input",
+    "bits": 21
+   },
+   "clk": {
+    "dir": "input",
+    "bits": 1
+   },
+   "cmd_idx": {
+    "dir": "output",
+    "bits": 8
+   },
+   "cmd_ncol": {
+    "dir": "output",
+    "bits": 4
+   },
+   "cmd_op": {
+    "dir": "output",
+    "bits": 4
+   },
+   "cmd_pos": {
+    "dir": "output",
+    "bits": 32
+   },
+   "cmd_ready": {
+    "dir": "input",
+    "bits": 1
+   },
+   "cmd_tok1": {
+    "dir": "output",
+    "bits": 17
+   },
+   "cmd_toks": {
+    "dir": "output",
+    "bits": 136
+   },
+   "cmd_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "cyc_engine": {
+    "dir": "output",
+    "bits": 32
+   },
+   "cyc_markov": {
+    "dir": "output",
+    "bits": 32
+   },
+   "cyc_total": {
+    "dir": "output",
+    "bits": 32
+   },
+   "done": {
+    "dir": "output",
+    "bits": 1
+   },
+   "e_idx": {
+    "dir": "output",
+    "bits": 20
+   },
+   "e_ready": {
+    "dir": "input",
+    "bits": 1
+   },
+   "e_tok": {
+    "dir": "output",
+    "bits": 17
+   },
+   "e_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "eng_done": {
+    "dir": "input",
+    "bits": 1
+   },
+   "f_addr": {
+    "dir": "output",
+    "bits": 23
+   },
+   "f_tok": {
+    "dir": "input",
+    "bits": 17
+   },
+   "lg_bias": {
+    "dir": "input",
+    "bits": 256
+   },
+   "lg_bias_en": {
+    "dir": "input",
+    "bits": 1
+   },
+   "lg_last": {
+    "dir": "input",
+    "bits": 1
+   },
+   "lg_mask": {
+    "dir": "input",
+    "bits": 8
+   },
+   "lg_v": {
+    "dir": "input",
+    "bits": 1
+   },
+   "lg_vals": {
+    "dir": "input",
+    "bits": 256
+   },
+   "n_committed": {
+    "dir": "output",
+    "bits": 32
+   },
+   "p_addr": {
+    "dir": "output",
+    "bits": 20
+   },
+   "p_tok": {
+    "dir": "input",
+    "bits": 17
+   },
+   "rst_n": {
+    "dir": "input",
+    "bits": 1
+   },
+   "sa_addr": {
+    "dir": "output",
+    "bits": 32
+   },
+   "sa_err": {
+    "dir": "output",
+    "bits": 1
+   },
+   "sa_last": {
+    "dir": "output",
+    "bits": 1
+   },
+   "sa_pad": {
+    "dir": "output",
+    "bits": 1
+   },
+   "sa_tok": {
+    "dir": "output",
+    "bits": 17
+   },
+   "sa_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "sr_idx": {
+    "dir": "input",
+    "bits": 16
+   },
+   "sr_kind": {
+    "dir": "input",
+    "bits": 4
+   },
+   "sr_pos": {
+    "dir": "input",
+    "bits": 32
+   },
+   "sr_ready": {
+    "dir": "output",
+    "bits": 1
+   },
+   "sr_v": {
+    "dir": "input",
+    "bits": 1
+   },
+   "start": {
+    "dir": "input",
+    "bits": 1
+   },
+   "step_a": {
+    "dir": "output",
+    "bits": 3
+   },
+   "step_g": {
+    "dir": "output",
+    "bits": 4
+   },
+   "step_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "steps": {
+    "dir": "output",
+    "bits": 21
+   },
+   "stop_status": {
+    "dir": "output",
+    "bits": 3
+   },
+   "t_col": {
+    "dir": "output",
+    "bits": 3
+   },
+   "t_ids": {
+    "dir": "output",
+    "bits": 54
+   },
+   "t_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "u_clr": {
+    "dir": "input",
+    "bits": 1
+   },
+   "u_flush": {
+    "dir": "input",
+    "bits": 1
+   },
+   "u_id": {
+    "dir": "output",
+    "bits": 9
+   },
+   "u_last": {
+    "dir": "output",
+    "bits": 1
+   },
+   "u_mask": {
+    "dir": "output",
+    "bits": 8
+   },
+   "u_ready": {
+    "dir": "input",
+    "bits": 1
+   },
+   "u_v": {
+    "dir": "output",
+    "bits": 1
+   },
+   "x_col": {
+    "dir": "input",
+    "bits": 3
+   },
+   "x_draft": {
+    "dir": "input",
+    "bits": 1
+   },
+   "x_ids": {
+    "dir": "input",
+    "bits": 54
+   },
+   "x_v": {
+    "dir": "input",
+    "bits": 1
+   }
+  },
+  "lef_pin_bits": 1358,
+  "netlist_bits": 1358,
+  "missing": [],
+  "n_missing": 0,
+  "extra": [],
+  "n_extra": 0,
+  "verdict": "MATCH",
+  "scope": "LEF vs routed netlist ports"
+ },
+ "size_um": [
+  466.56,
+  200.88
+ ],
+ "source": {
+  "job": "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+  "host": "ot-epyc2",
+  "installed_base": "/srv/opentallas-data/claude/closure-loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc/routes/hfd_mtp_x_stop_nreg_hm10_7bebe74b7_tc/work/orfs/results/asap7/opentallas_hfd_mtp_x_stop_asap7_mtp_hfd_mtp_x_stop_nreg_hm10_7bebe74b7_tc/base",
+  "record_commit": "867da6c5f",
+  "merged_main": "0c6d1d0c4",
+  "installed_inputs_sha256": {
+   "6_final.odb": "696aef85ea0b4983bc354b0ff5e939078dd4b623114251f9d74cce4f3552c7d6",
+   "6_final.sdc": "d1ce92c423f34c20e45bb29607ff7c310bf743c32b3137f36f793ba96e3d44a1",
+   "6_final.spef": "21291be37f3eabdfec3ac00e62dccba062979a1053f325ae0cb2f81f3c17a301"
+  },
+  "eco": "installed 2026-10-09T16:40:32-07:00 (post-route hold ECO cl/eco); exported from the installed 6_final.odb (sha256 696aef85ea0b..., the db the CLOSED corner_sta timed)"
+ },
+ "signoff_833": {
+  "tt_setup_ps": 17.39,
+  "ff_hold_ps": 8.65,
+  "ss_sensitivity_ps": -283.2,
+  "drc": 0
+ },
+ "die_binding": {
+  "variant": "r25m / r25i (MTP_SLOT 466.56 x 200.88, slot master \"hfd_mtp\")",
+  "status": "SIZE MATCH, PIN MISMATCH by design: `hbm_die_views.py --variant r25m check --master hfd_mtp` -> macro name hfd_mtp_x_stop != hfd_mtp; 1,319 generated pins missing / 1,358 view pins extra. The generator's hfd_mtp is a placeholder with MTP_HUB_LINKS bus pins (126/320/657/64/64/78/8); the closed block has its own MD-7 port set. Binding = MD-7 die integration: slot master -> hfd_mtp_x_stop with the view's pins (spine_slot_masters + a ports.json from this LEF) and the peer ECO pins (cmdproc_s t/f_mtp, su_red, router, coll)",
+  "ports": "1,358 pin bits (port_check.json)"
+ },
+ "note": "ADOPTED HBM die MTP master (drive-0849 round 6).",
+ "export": {
+  "tool": "physical/hbm_mtp/views/run_export.sh + mk_export.py (openroad/orfs:asap7lock)",
+  "sdc": "6_final.sdc of the installed database (the timing models carry the block SDC; sign-off numbers below are the loop corner_sta with its post-SDCs)",
+  "libraries": "ASAP7 RVT + LVT/SLVT twins (ECO / LVT cells present)"
+ },
+ "port_check": "port_check.json: abstract LEF pins == routed 6_final.v top ports, bit for bit"
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.emb_hbm_payload_accounting.v1",
+  "source": "results/arch/emb_hbm_20261008/full_table.json",
+  "preserve_original_record": true,
+  "original_table_bytes": 622633728,
+  "code_bytes": 622329856,
+  "scale_bytes": 303872,
+  "payload_bytes": 622633728,
+  "sector_count_bytes": 622633728,
+  "consistent": true,
+  "reason": "The historical full_table.json table_bytes is already the correct total payload: 622329856 code bytes plus303872 scale bytes. Explicit shape and measured sector count agree. The original package header alone misstates code bytes; pinned source/checksum remain unchanged.",
+  "correction": "Earlier takeover prose incorrectly called historical table_bytes code-only; arithmetic fields were and remain correct."
+}

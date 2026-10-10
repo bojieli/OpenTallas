@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "hbm_router_r23_kneg_b-h1c-cb5ab3e10",
+ "block": "hfd_router",
+ "die": "hbm_r25",
+ "die_master": "hfd_router",
+ "tile": null,
+ "host": "ot-epyc2",
+ "run": "/srv/opentallas-data/claude/closure-loop/hbm_router_r23_kneg_b-h1c-cb5ab3e10",
+ "orfs": "/srv/opentallas-data/claude/closure-loop/hbm_router_r23_kneg_b-h1c-cb5ab3e10/routes/hbm_router_r23_kneg_b_h1c_cb5ab3e10/work/orfs",
+ "measured_at": "2026-10-08T20:35:33-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 580.9,
+    "T": 833.0
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 485.5,
+    "T": 833.0
+   }
+  }
+ },
+ "r2r": {
+  "tt": 1373.93,
+  "ff": 103.81
+ },
+ "errors": [],
+ "ports": {
+  "f_su_NE": {
+   "dir": "in",
+   "bits": 256,
+   "clock": null,
+   "T": null
+  },
+  "f_su_NW": {
+   "dir": "in",
+   "bits": 256,
+   "clock": null,
+   "T": null
+  },
+  "f_su_SE": {
+   "dir": "in",
+   "bits": 256,
+   "clock": null,
+   "T": null
+  },
+  "f_su_SW": {
+   "dir": "in",
+   "bits": 256,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 1413.9,
+   "h": -47.4
+  },
+  "f_vm": {
+   "dir": "in",
+   "bits": 512,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 118.1,
+   "h": -18.5
+  },
+  "eNE": {
+   "dir": "out",
+   "bits": 129,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 181.8,
+   "smin": 88.8
+  },
+  "eNW": {
+   "dir": "out",
+   "bits": 129,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 407.2,
+   "smin": 182.3
+  },
+  "eSE": {
+   "dir": "out",
+   "bits": 129,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 254.3,
+   "smin": 146.2
+  },
+  "eSW": {
+   "dir": "out",
+   "bits": 129,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 365.4,
+   "smin": 143.6
+  },
+  "t_cmdproc": {
+   "dir": "out",
+   "bits": 64,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 404.1,
+   "smin": 201.8
+  }
+ },
+ "fwd": {},
+ "internal_ok": true
+}

@@ -1,0 +1,109 @@
+{
+ "name": "mtp-wfc-src-hard-binding-tc-cx",
+ "block": "ot_dsrom_wfc_tokpipe_src",
+ "owner": "Codex:mtp-rom/WFCbinding",
+ "purpose": "Confirmed review0512 AB3: existing matched SOURCE implementation from4b13388a5, explicit PROMPT_EXTRA=2. Four actual SRAM macros, retained833/60/25 signoff and all4 incontext/reg2reg/region/die150 IO contracts; SS sensitivity. Independent actual TT/FF electrical gate. No new architecture. HARD +3 edges against original, SOURCE adds2 matching metadata stages/74FF; source forced41423cycles unchanged. Resource reservation32GiB derives exact same-provider SOURCE DRT21702448KiB=20.697GiB plus54.6% headroom for74 added metadataFF, not a measured64GiB claim.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 32,
+ "bench_first": true,
+ "source": {
+  "branch": "codex/mtp-tokpipe-verdict-20261009",
+  "commit": "PENDING",
+  "extra_paths": [
+   "results/rtl/dshbm_dspark_rtl_20261003/traces"
+  ],
+  "required_files": [
+   "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv",
+   "physical/dsrom_wfc_tokpipe/src_basis.json",
+   "tools/dsrom_wfc_source_scope_check.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "source_hard_all10",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/bench --hard-token",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKPIPE_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "source_noepoch_negative",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/negative --hard-token --case s0_neg_noepoch --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst src --case {RUN}/cal --src {SRC} --cores 12 --need 32 && WFC_TARGET=cts bash {RUN}/cal/run.sh",
+   "base": "{RUN}/cal/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+   "threads": 12,
+   "peak_ram_gb": 32
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst src --case {RUN}/route --src {SRC} --cores 12 --need 32 && bash {RUN}/route/run.sh && python3 tools/w18/corner_sta.py --orfs-dir {RUN}/route --macro physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 --post-sdc physical/dsrom_wfc_tokpipe/eco_scope/source_region_die150_union.sdc --output {RUN}/route/wfc_source_corner_sta.json",
+   "ok": "grep -q '^flow_rc=0' {RUN}/route/status && grep -q '^sta_rc=0' {RUN}/route/status",
+   "logs": [
+    "{RUN}/route/flow.log",
+    "{RUN}/route/sta.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/case.json {RUN}/route/config.mk {RUN}/route/constraint.sdc {RUN}/route/signoff.sdc {RUN}/route/wf_sta.json {RUN}/route/wf_drv.json {RUN}/route/check.json {RUN}/route/wfc_source_corner_sta.json {RUN}/route/wf_drv_TT.json {RUN}/record/ && B=$(ls -d {RUN}/route/results/asap7/*/base | tail -1) && cp \"$B/6_final.odb\" \"$B/6_final.def\" \"$B/6_final.v\" \"$B/6_final.sdc\" \"$B/6_final.spef\" {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "checks": [
+   {
+    "name": "SOURCE_four_mode_and_TC_electrical_eligibility",
+    "cmd": "python3 tools/dsrom_wfc_source_scope_check.py --case {RUN}/route"
+   }
+  ],
+  "corner_sta": "{RUN}/route/wfc_source_corner_sta.json",
+  "drc_metrics": "{RUN}/route/logs/asap7/wfc_src_route/base/5_2_route.json",
+  "post_sdc": [
+   "physical/dsrom_wfc_tokpipe/eco_scope/source_region_die150_union.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src"
+  }
+ ],
+ "cycles_added": 3,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "Retained SOURCE signoff with core540/io480..600 and all4 measured boundary contracts, not STG350. Union equivalence must match before ECO; actual TC electrical clean mandatory. No generic routed_ioref override."
+ },
+ "hold_eco": {
+  "reexport": "[ -f {RUN}/route/wf_sta.json.pre_eco ] || cp {RUN}/route/wf_sta.json {RUN}/route/wf_sta.json.pre_eco\n[ -f {RUN}/route/wf_drv.json.pre_eco ] || cp {RUN}/route/wf_drv.json {RUN}/route/wf_drv.json.pre_eco\npython3 tools/dsrom_wfc_tokpipe_physical.py sta --inst src --case {RUN}/route\npython3 tools/w18/corner_sta.py --orfs-dir {RUN}/route --macro physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 --post-sdc physical/dsrom_wfc_tokpipe/eco_scope/source_region_die150_union.sdc --output {RUN}/route/wfc_source_corner_sta.json"
+ },
+ "routed_ioref": false
+}

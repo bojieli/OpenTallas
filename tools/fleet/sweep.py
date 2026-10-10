@@ -38,7 +38,8 @@ def used(d):
     return None
 def has_status(d):   # a stream's run registry: any STATUS.md inside marks a registered run root
     if not os.path.isdir(d): return ''
-    _,o=sh(f"find '{d}' -maxdepth 4 -name STATUS.md -print -quit 2>/dev/null"); return o
+    # token-exact 2026-10-09: a .keep marker (exactness fixtures) anywhere inside also keeps the root
+    _,o=sh(f"find '{d}' -maxdepth 4 \\( -name STATUS.md -o -name .keep \\) -print -quit 2>/dev/null"); return o
 def live_sibling(d):  # src-*/ beside a live route: keep while any sibling is touched <24h or in use
     import re as _re
     if not _re.match(r'^src([-_.].*)?$',os.path.basename(d)): return ''
@@ -47,6 +48,33 @@ def live_sibling(d):  # src-*/ beside a live route: keep while any sibling is to
     except Exception: return ''
     for x in sibs:
         if used(x) or (os.path.isdir(x) and recent(x)): return x
+    return ''
+# NEAR-MISS RETENTION (merge-eco 2026-10-09): a unit holding a non-closed route with TT >= -100 ps and FF >= -100 ps
+# (any corner_sta*.json: setup_tt, else setup_ss; hold_ff) is kept until its element closes -- its current_design is
+# in SWEEP_CLOSED (closed blocks of the closure loop, one per line).  eco-sweep ES-1..8: near-miss routes had been
+# swept or pruned and could not be ECO'd or re-timed.
+NEAR_MISS_PS=-100.0
+try: CLOSED=set(l.strip() for l in open(os.environ['SWEEP_CLOSED']) if l.strip())
+except Exception: CLOSED=set()
+def near_miss_unit(d):
+    import re as _re
+    if not os.path.isdir(d): return ''
+    for dp,dn,fn in os.walk(d):
+        rel=dp[len(d):]
+        dn[:]=[] if rel.count('/')>=9 else [x for x in dn if x not in ('objects','.git','src')]
+        for f in fn:
+            if not (f.startswith('corner_sta') and f.endswith('.json')): continue
+            try:
+                j=json.load(open(os.path.join(dp,f)))
+                su=j.get('setup_tt') or j.get('setup_ss') or {}
+                tt,ff=su.get('worst_slack_ps'),(j.get('hold_ff') or {}).get('worst_slack_ps')
+                m=_re.search(r'current_design\s+(\S+)',j.get('sdc') or '')
+            except Exception: continue
+            num=lambda v: isinstance(v,(int,float)) and not isinstance(v,bool)
+            if num(tt) and num(ff) and tt>=NEAR_MISS_PS and ff>=NEAR_MISS_PS and not (tt>=0 and ff>=0):
+                top=m.group(1) if m else ''
+                if top and top in CLOSED: continue
+                return f'{os.path.join(dp,f)} TT {tt} FF {ff} design {top or "?"}'
     return ''
 def recent(d):
     _,o=sh(f"find '{d}' \\( -newermt '-24 hours' -o -newerct '-24 hours' \\) -print -quit 2>/dev/null"); return o
@@ -76,6 +104,8 @@ def visit(d,depth):
     if st_: log(f'KEEP {d}: registered run (STATUS.md {st_})'); return
     ls_=live_sibling(d)
     if ls_: log(f'KEEP {d}: source region beside live {ls_}'); return
+    nm=near_miss_unit(d)
+    if nm: log(f'KEEP {d}: near-miss route retained until its element closes ({nm})'); return
     g=gitdirty(d) if os.path.isdir(d) else ''
     if g:
         log(f'KEEP {d}: contains git checkout {g} (handled by worktree pass)'); return

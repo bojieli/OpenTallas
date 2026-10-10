@@ -1,0 +1,21 @@
+{
+  "source": "f6d441b6a",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd55-tc-cx",
+  "calibration_rc": 0,
+  "TT_mean_ps": 218,
+  "FF_mean_ps": 178,
+  "SS_sensitivity_mean_ps": 285,
+  "phase_peak_kib": 1128560,
+  "original_mutant_stage_rc": 1,
+  "original_mutant_stdout_empty": true,
+  "diagnosis": "runner errexit skips cat on expected genuine vvp failure; actual sim.log proves consuming width mismatch",
+  "failure_evidence_preserved": true,
+  "files_sha256": {
+    "mutant1.actual.sim.log": "0511fc412617d497c4c214e268bd3617e250b069e1f377f0eb16dc857b5dacc4",
+    "calibrate.a1.log": "3f32a3490fb0a7c94c4a080f2661b71382132105aa174b2596a37f6576d0cc82",
+    "calibrate.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bench_mutant_1.a1b1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "calib.env": "bc9dd34755e18388d37cce31a20428a73d513772db88f999cba66239a31e0917"
+  }
+}

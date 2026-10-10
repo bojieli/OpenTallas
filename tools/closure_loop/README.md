@@ -63,6 +63,23 @@ Spec `"fp_lint": false` opts out; `"fp_lint": {"set": {"util_max": 0.62}, "warn_
 Offline: `openroad` `read_db X.odb; source tools/fp_margin_lint.tcl; ot_fp_lint_dump d.json`, then
 `python3 tools/fp_margin_lint.py check d.json` (calibration and thresholds in that file's docstring).
 
+### Lint at submit (2026-10-09): pin density / utilisation before any compute
+`validate` and intake run `submit_lint.py` on route_master.sh jobs: the cfg outline, `--pin-region` plan, top-module port
+widths (ANSI header, parameters resolved, no synthesis) and IO placer settings give a LOWER BOUND on the flow lint's pin
+density per face/layer (a region is one ordered group packed on one layer at PIN_MIN_TRACKS x pitch; a face averages at
+least T/(layers x max(L, 100 um))).  Fails as configured -> the first APPROVED automatic fix whose estimate passes
+(coordinator 2026-10-09, layout only, 0 cycles), in order: 1. `pin_balance` OT_PIN_GROUP_MAX=32 + OT_PIN_BALANCE_H 'M4 M6'
+/ _V 'M5 M7' (uniform over the region, layers alternating per 32-pin chunk; needs span/pins >= the layer pitch);
+2. `pin_tracks2_spread` PIN_MIN_TRACKS=2 + PIN_H 'M4 M6' / PIN_V 'M5 M7' (the group must fit the face).  The settings go
+inline on the `bash ...route_master.sh` invocation and are recorded in `spec.submit_lint` (submitted spec kept in
+`spec_submitted`); no fix passes -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." saying why each fix does not.  Utilisation
+is estimated only from an earlier FLOORPLAN_MARGIN util measurement of the same synthesis input (STATE/submit_lint_util.json).
+A setting counts only when the job's SOURCE COMMIT's flow reads it (drive-0212: OT_PIN_GROUP_MAX / OT_PIN_BALANCE_* exist in
+run_abi3_physical.py since dde873a8e, PIN_MIN_TRACKS in route_master.sh since main; on an older source the fix is not
+applied and the job is REFUSED "rebase the source").  Balanced regions add only where their ranges overlap (densest 100 um
+window).  `"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
+FLOORPLAN_MARGIN jobs without a live successor.
+
 ## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
 The daemon probes every RUNNING route every 15 min (`early_fail_gate`, one ssh; spec `"early_fail": false` opts out) and
 stops a hopeless run at once with a terminal verdict, its diagnosis in `{CL}/early_fail.json`,
@@ -83,8 +100,13 @@ with a live sibling; an old-flow hold flood is a `flow` item: re-route under the
   the assumption, or the assumption came from another variant and is not measured yet) has its setup gate judged on
   reg->reg/macro paths only (IO slack is fake on a wrong insertion; bfh_halfphl started on the full-rate SS 1169 / FF 714
   vs its real 1546 / 875), and the real-hold-WNS gate does not apply to it.
-- `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, > 20,000 endpoints in margin (RSZ-0046) unless the HM guard
-  already auto-reduced the margin, or real hold WNS < -150 ps after 1 h of repair.
+- `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, only when the repair is NOT converging (drive-2140; the endpoint
+  count in margin is not a verdict -- 30k-70k endpoints at HM 10-25 with WNS -20..-40 converge): hold buffers inserted
+  in the step > 100k (or > 0.30 x placed instances, floor 20k; 0.60 x / floor 60k while real WNS gains >= 5 ps over
+  2,000 iterations); real WNS < 0 gaining < 1 ps AND hold TNS improving < 2 % over the last 2,000 cumulative iterations (guard chunks summed; a flat WNS with falling TNS is one stubborn endpoint, drive-2155); or
+  real WNS < -150 ps after 1 h gaining < 5 ps over 2,000 iterations.  NEVER once real hold WNS >= 0 (drive-2155: the
+  margin is a design target, HM 0 allowed); the flow's MET-FIRST guard (orfs_hold_mm.tcl) repairs a margin flood at
+  HM 0 and stops once met (OT_HOLD_FLOOD_MET_FIRST=0 disables it).
 - `EARLY_FAIL_CONGESTION`: GRT past extra iteration 20 with > 1,000 markers in the latest congestion-N.rpt and no new
   best (by 5%) over the last two reports (10 iterations).
 - `EARLY_FAIL_DRC`: DRT past iteration 20 with > 100 violations and no new best over the last 8 iterations.
@@ -101,6 +123,49 @@ retries the stage once under the guarded flow; cancelled instead when a newer co
 `STATE/stuckscan_hist.json`) / `quiet_busy` notes. `--apply` executes them through `closure_loop.py cancel --why`,
 `early-fail <job> --verdict V --why W --detail F` and `kill-stage <job> --why W [--orfs DIR]`, and logs to
 `claude-takeover-20261007/stuckscan.log`. Report: `STATE/stuckscan_last.json`.
+
+## Auto-react, READY_NEXT deep queue and host-down requeue (LOOP-AUTO 2026-10-10)
+
+Session limits stall design work for hours, so the loop reacts to known failure classes on its own. A recovery pass
+(`auto_react`, every tick, background thread) judges every failure verdict (NEEDS_RTL, NEEDS_HUMAN, EARLY_FAIL_*,
+FLOORPLAN_MARGIN, PREROUTE_MARGIN) once per finish (`finished_at`, stamped by `finish()`), within 6 h of it, and only
+when the block has no other live or closed job. Spec `"auto_react": false` opts out.
+
+| class | trigger | action |
+|---|---|---|
+| a | hold-only miss within 30 ps: TT >= 0, -30 <= FF < 0, DRC 0, checks and benches clean, no installed ECO | the same job re-opens at its verdict; the hold ECO runs with `KEEPWIRES=1` (untouched nets keep their wires). This also covers a route that crashed or was requeued and never reached an ECO |
+| b | thin TT and FF miss (`combo_eligible`: TT in [-45, 0), FF in [-30, 0)) with no combo ECO run yet | the same job re-opens at its verdict, where the combo ECO fires (the verdict already launches it inline; this covers the crash and requeue paths) |
+| c | EARLY_FAIL_HOLD, RTL boundary PASS (`rtl_boundary_verdict`, recorded at submit), route ran without the pin-flop IO reference | successor `<job>-arc`, same commit, `pinflop_ref: true` |
+| d | FLOORPLAN_MARGIN whose only failing lint check is `sliver` | successor `<job>-ard` with `"sliver_block": true`. The launch exports `OT_SLIVER_BLOCK=1`; `orfs_hold_mm.py` hooks `physical/common_flow/macro_sliver_block.tcl` and `edge_sliver_block.tcl` at PRE GLOBAL_PLACE, before the lint (shipped into older snapshots). The parent's route key is released |
+| e | DRT-0073 (no access point) in the reason or crash tails | successor `<job>-are` with the recipe's pin knob exported (`DRT_RECIPES`: `route_lane.sh` gets `PINKO=1`; the Qwen die generators get `OT_MINW_PINS=1`, minimum-width pins). It is used only when the job's commit honours the knob |
+
+Rules:
+- No action loosens a constraint: no clock, uncertainty, margin, SDC or hold-margin change.
+- Each job gets at most one action per class (`j.auto_react = {class: successor | "in-place"}`).
+- A successor (spec `auto_react_parent`) gets no new-job successor of its own.
+- A successor is a spec dropped into the drop dir, so intake (validate, route key, submit lint) applies as for any job.
+- In-place classes need the route products, so they are skipped after a bulk or deep release.
+- Anything else, including a class already used, adds one line to the owner's stream log in `$CL_TAKEOVER` (owner
+  `<stream>-1010` if that log exists, else by keyword: hgi / mtp-wfc / qwen / ds / hbm-phys, else drive-1010.log):
+  `<ts> [loop auto-react] <job>: <verdict> <reason> -- <why>; structural fix needed`.
+
+**READY_NEXT deep queue.**
+- **File format.** `$CL_READY_NEXT_DIR` (default `$CL_TAKEOVER/READY_NEXT`) holds `<element>.json`: a JSON list of 1-2
+  full job specs (the `jobs/*.json` schema), each with an extra `"after": "<block or job-name prefix>"`.
+- **Trigger.** A job of the element ends in a failure verdict, no auto-react action was taken, and the element has no
+  other live job and no spec waiting in the drop dir.
+- **Action.** The first spec goes to the drop dir (normal intake; `after` removed, `ready_next_from` added), and a copy
+  goes to `READY_NEXT/done/<element>.<name>.json`. The file keeps the rest; when it is empty, it moves to `done/`.
+- **Logging.** The trigger job gets an event and a ledger line, and its owner-log line names the ingested spec.
+- **Validation.** Files are validated on read (list of 1-2 specs, `after` present, `validate()` clean). A bad file is
+  logged once per content and skipped.
+
+**Host down.** Every admission probe and stage poll records success or failure per host (`HOST_DOWN`, in memory). A host
+whose probes have all failed for more than 30 min is treated as smoke_only: no new job or bench offload goes there, and
+`hosts.json` is untouched. Its RUNNING calibrate / route / bench jobs are requeued from scratch (QUEUED, host and run
+None, stage 0, attempt + 1, `source_synced` false, resume, checkpoint and track state dropped, event and ledger line).
+ECO / ECO_INSTALL / SUMMARY jobs wait up to 6 h for the host before the same requeue; the abandoned ECO is kept in
+`eco_history`. The first successful probe clears the state.
 
 ## Rules the daemon enforces
 - Load cap (OWNER_RULE_LOAD_CAP): launch only if `load1 + own launches of the last 5 min + threads <= cap`
@@ -147,6 +212,9 @@ overrides, `--param K=V`, other `--flags`; hold margin, paths and labels exclude
 on an assumed insertion ONLY from the same variant (old block entries count when the measuring job's JSON gives the same
 key); otherwise the job calibrates first (CTS-only) and routes on the measurement. bfh_halfphl_a730 had started on
 bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured 1546 / 875.
+At daemon start `backfill_variants()` adds every job's calibrate measurement taken before the table existed
+(newest per variant; existing variant entries are never replaced), so a re-route of an older variant (e.g.
+bfh2_recut_lvt, SS 951 / FF 556) starts on its own value instead of calibrating again.
 
 ## Hold margin and automatic hold ECO (2026-10-06)
 - Jobs created from 2026-10-07 04:17 get `HM=0.010` (10 ps; coordinator: 35 ps + the 50 ps FF IO hold uncertainty
@@ -166,6 +234,16 @@ bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured 1546 / 875.
   - only a missed ECO goes NEEDS_RTL
   - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
+
+### Automatic VT-swap setup ECO (2026-10-09, merge-eco)
+- A route whose only miss is a THIN TT setup miss -- TT in [-45, 0), FF >= 0, DRC 0, no failed check / bench / metric
+  error -- runs `vtswap_eco.sh` / `vtswap_eco.tcl` (eco-sweep e494ff8ac) as its ECO stage before NEEDS_RTL: RVT->LVT
+  master swaps on the worst TT paths, band-limited, prospective <= 2 % LVT cap, FF hold guard, no re-route (ASAP7 R/L
+  footprints are identical, so the route DRC stands). Same stage tag / output layout as the hold ECO: the ECO completion
+  installs, re-verdicts at the routed insertion and records it unchanged.
+- Targets 10 ps, then (on a miss) once more at 5 ps (fewer swaps under the cap); then NEEDS_RTL. Each run keeps its own
+  output (`cl/eco-vtswap-t<target>[-r<n>]`) and stage tag. Spec `hold_eco: {vtswap: false}` turns it off;
+  `vtswap_targets`, `vtswap_cap_pct` override. `vtswap_launch.py` remains the manual launcher for an already NEEDS_RTL job.
 
 ### Hold ECO rev 2 (2026-10-07): the "ECO buffers destroy setup" class
 Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Causes found, and what rev 2 does:

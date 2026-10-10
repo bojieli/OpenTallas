@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS",
+  "source_sha256": "f20d81ac28d19345692cca53b1a5b33b0bf81600949607f4ca72fe427eabc5be",
+  "packets": 863,
+  "flits": 118,
+  "runs": [
+    {
+      "name": "base",
+      "exit": 0,
+      "pass_gate": true
+    },
+    {
+      "name": "MUT_ID",
+      "exit": -6,
+      "pass_gate": true
+    },
+    {
+      "name": "MUT_QLAST",
+      "exit": -6,
+      "pass_gate": true
+    },
+    {
+      "name": "MUT_FIFO",
+      "exit": -6,
+      "pass_gate": true
+    }
+  ],
+  "scope": "lossless literal slots, quarter partial, actual33bit header, finite8credits,90percent TU stalls; no physical credit"
+}

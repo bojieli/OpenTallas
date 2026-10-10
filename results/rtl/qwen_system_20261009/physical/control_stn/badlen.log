@@ -1,0 +1,7 @@
+SCEN ../bench/golden/scen_badlen.hex plen=2 max=8192 steps=0 completions=1
+BOOT sys_ready cycle 245
+CTL_RESULT pass=1 steps=0 trace_events=0 trace_bad=0 cq=1/1 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=1073741824 turn_max=0 turn_avg=0 step_cycles=0 CL=40 cycles=368
+- rtl/test/qwen_system/tb_qfd_ctl_stn.sv:336: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 308ns; walltime 0.007 s; speed 41.864 us/s
+- Verilator: cpu 0.007 s on 1 threads; alloced 505 MB

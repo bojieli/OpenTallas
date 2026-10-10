@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.hbm.dspark_ctl_stop_nreg.gate.v1",
+ "change": "ot_dshbm_dspark_ctl_stop NREG=1 (commit 7bebe74b7): q = n-1, g_new and the stop room (maxpos - n) from registers; S_STEP waits one cycle when n_set was high the previous cycle (nd_ok)",
+ "why": "hfd-mtp-x-stop-hm0-628000701-tc TT -76.79 / SS -506: all top setup classes u_core.u_top.g_state1.u_state.n[*] -> u_ctl.{cmd_tok1, cmd_idx, cmd_op, cmd_pos, cmd_ncol, am_need, am_got, done_seen}, 23-24 levels; hgi_mtp_native-b-901c33a67-tc TT -77.62 same controller",
+ "cycles_added": "+1 per MTP step after the first (exactly steps-1 in every multi-step case); 0 for single-step runs and the STOP-mode prefill path",
+ "existing_gates_new_vs_old": {
+  "host": "ot-epyc4 /srv/opentallas-scratch/claude/mtp-lead/hfdpipe (old = origin/main ctl_stop)",
+  "hbm_native_mtp_stop_gate": "PASS both; 6 positives identical cycles (550/550/541/564/564/549), 4 mutants FAIL in both",
+  "hbm_native_mtp_core_stop_gate": "PASS both; 6 cases identical cycles (942/1497/942/1497/889/1444)",
+  "hbm_native_mtp_cp_result_gate": "PASS both; 6 cases identical cycles (826/1353/826/1353/811/1338)",
+  "hbm_native_mtp_cp_closed_mx1_gate": "PASS both; positive 25,486 cycles both, wrong-job mutant FAIL both",
+  "hgi_mtp_native_gate": "PASS both; connected 25,486 cycles, mutant FAIL, CP-result 6/6 identical",
+  "note": "these benches stop inside the first MTP step (EOS / ngen 4 / maxpos 5), so the post-commit S_STEP path is not exercised; hence the multi-step differential bench below",
+  "files": [
+   "gates_new/",
+   "gates_old/",
+   "compare.json"
+  ]
+ },
+ "multistep_differential": {
+  "bench": "rtl/test/hbm_accel/tb_ctl_stop_multistep.sv (command/handshake-driven engine and emit models; logs every CMD, EMIT, NSET, TW, STEP)",
+  "script": "multistep/diff_ms.sh (old vs new transaction logs must be byte-identical)",
+  "verdict": "MULTISTEP_EQUIV PASS",
+  "cases": [
+   "ngen40 forced PRL0: 34 steps, 40 tokens, 6928 -> 6961 (+33)",
+   "ngen40 forced PRL2: 34 steps, 7272 -> 7305 (+33)",
+   "ngen40 forced EOS 113 enabled: 34 steps, +33",
+   "ngen60 forced maxpos 17 (stop at maxpos via rem_r): 10 steps, 2251 -> 2260 (+9)",
+   "ngen60 forced maxpos 23 PRL2: 16 steps, 3543 -> 3558 (+15)",
+   "ngen20 EOS 102: 1 step, 550 -> 550",
+   "ngen6: 1 step, 557 -> 557",
+   "ngen40 drafted (DSTAGE/DHEAD/MARKOV issued, q_r on cmd_pos): 9 steps, 2510 -> 2518 (+8)",
+   "ngen60 drafted maxpos 19 PRL2: 5 steps, 1520 -> 1524 (+4)",
+   "ngen40 drafted EOS 104: 3 steps, 1054 -> 1056 (+2)"
+  ],
+  "mutant": "S_STEP without the nd_ok wait (stale registered n after a commit): DETECTED in 3 of 4 runs (forced maxpos 17, drafted ngen40, drafted maxpos 19); undetected only in forced drafts away from maxpos, where neither q nor a non-gamma g_new is consumed (multistep/mut.sh)"
+ },
+ "merged_tree_gates": {
+  "source": "eaea6da41 (NREG + main's MX1 REGB c26cf27d7, hgi_mtp_native PRL 4)",
+  "host": "ot-epyc4 .../hfdpipe/merged",
+  "hgi_mtp_native_gate": "PASS: connected 25,511 cycles (+25 vs 25,486 = main's PRL 4 / REGB, not NREG), wrong-job mutant FAIL, CP-result 6/6 (826/1353/826/1353/811/1338)",
+  "hbm_native_mtp_cp_closed_mx1_gate": "PASS 25,486, mutant FAIL",
+  "hbm_native_mtp_cp_result_gate": "PASS 6/6 identical",
+  "files": [
+   "gates_merged/"
+  ]
+ },
+ "routes": {
+  "queued": [
+   "hfd-mtp-x-stop-nreg-hm0-7bebe74b7-tc",
+   "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+   "hgi_mtp_native-nreg-a-eaea6da41-tc",
+   "hgi_mtp_native-nreg-b-eaea6da41-tc"
+  ],
+  "cancelled_before_start": [
+   "hgi_mtp_native-nreg-a-7bebe74b7-tc",
+   "hgi_mtp_native-nreg-b-7bebe74b7-tc (stale PRL 2 vs main's PRL 4)"
+  ]
+ }
+}

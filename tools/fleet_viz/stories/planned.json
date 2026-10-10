@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.explorer.stories.v1",
+ "note": "Tier-2 hooks: planned stories. A card with the same id in any other stories/*.json file replaces the hook.",
+ "cards": [
+  {
+   "id": "hbm-attn-split",
+   "target": "hbm",
+   "element": "hfd_attn_tile",
+   "title": "The attention tile cut in two",
+   "status": "planned",
+   "attach": [
+    "hfd_attn_tile",
+    "hfd_attn_half_lo",
+    "hfd_attn_half_hi",
+    "hfd_attn_tile_b"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "hbm-su-full",
+   "target": "hbm",
+   "element": "hfd_su_full",
+   "title": "The full SU lane in its spine slot",
+   "status": "planned",
+   "attach": [
+    "hfd_su_full",
+    "ot_su12_full",
+    "ot_su64_full64"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "hbm-vm-banks",
+   "target": "hbm",
+   "element": "hfd_vm_*",
+   "title": "The vector memory split by quadrant",
+   "status": "planned",
+   "attach": [
+    "hfd_vm",
+    "hfd_vm_sw_n",
+    "hfd_vm_ne_s"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "hbm-index-split",
+   "target": "hbm",
+   "element": "hfd_index_q_b*",
+   "title": "The index unit cut into bands",
+   "status": "planned",
+   "attach": [
+    "hfd_index_q_b0",
+    "hfd_index_q_b1",
+    "hfd_index_q"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "hbm-cmdproc-split",
+   "target": "hbm",
+   "element": "hfd_cmdproc_n / _s",
+   "title": "The command processor split north / south",
+   "status": "planned",
+   "attach": [
+    "hfd_cmdproc_n",
+    "hfd_cmdproc_s",
+    "hfd_cmdproc"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "qwen-tree-top",
+   "target": "qwen",
+   "element": "qfd_sp_tree_top",
+   "title": "The band-integrated tree top",
+   "status": "planned",
+   "attach": [
+    "qfd_sp_tree_top",
+    "qfd_sp_tree_top_b",
+    "qfd_sp_band_lanes"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "qwen-fwd-station",
+   "target": "qwen",
+   "element": "ot_qwen_link_fwd_cx_station",
+   "title": "The forwarded-clock link station",
+   "status": "planned",
+   "attach": [
+    "ot_qwen_link_fwd_cx_station"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "qwen-embed",
+   "target": "qwen",
+   "element": "qfd_embed_code_bank",
+   "title": "The embedding code bank",
+   "status": "planned",
+   "attach": [
+    "qfd_embed_code_bank"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "qwen-ucie",
+   "target": "qwen",
+   "element": "qfd_io_ucie",
+   "title": "The UCIe IO block",
+   "status": "planned",
+   "attach": [
+    "qfd_io_ucie"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-cfifo",
+   "target": "ds",
+   "element": "dsfd_cfifo",
+   "title": "The column FIFO and its clock source",
+   "status": "planned",
+   "attach": [
+    "dsfd_cfifo"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-svc-stations",
+   "target": "ds",
+   "element": "dsfd_svc / dsfd_svc_stn",
+   "title": "Service-chain stations at 180 um pitch",
+   "status": "planned",
+   "attach": [
+    "dsfd_svc",
+    "dsfd_svc_stn",
+    "dsfd_svcio_od"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-capture",
+   "target": "ds",
+   "element": "dsfd_capt_ctl / dsfd_capt_grp",
+   "title": "The capture controller one stage earlier",
+   "status": "planned",
+   "attach": [
+    "dsfd_capt_ctl",
+    "dsfd_capt_grp",
+    "dsfd_sp_capture"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-collector",
+   "target": "ds",
+   "element": "dsfd_bk_collector",
+   "title": "The assembled bank collector",
+   "status": "planned",
+   "attach": [
+    "dsfd_bk_collector",
+    "dsfd_colt_lane",
+    "dsfd_colt_mrg"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-selector",
+   "target": "ds",
+   "element": "dsfd_bk_selector",
+   "title": "The partitioned bank selector",
+   "status": "planned",
+   "attach": [
+    "dsfd_bk_selector",
+    "dsfd_selt_q",
+    "dsfd_selt_c"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  },
+  {
+   "id": "ds-window",
+   "target": "ds",
+   "element": "ot_dsrom_window_column_128",
+   "title": "The window column",
+   "status": "planned",
+   "attach": [
+    "ot_dsrom_window_column_128"
+   ],
+   "summary": "Story planned (stream: explorer stories). Fill this card in stories/planned.json or add a file stories/<id>.json with the full card shape of stories/curated.json; the element card links here automatically."
+  }
+ ]
+}

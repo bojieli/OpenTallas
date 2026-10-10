@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.fleet.memory_admission_receipt.v1",
+ "at": "2026-10-09T07:46:55.393254+00:00",
+ "policy": "No new localhostcompute. EPYC2 NEWadmission paused foractualpressure whilefuturepeak audit retainsadvancingjobs. EPYC3 guardnewprocesses canonical5percent measuredcapacity reserve. No CPU/deadline/processcap introduced.",
+ "external_inventory": "Source-pinned hosts.json plus actual remote admit.external_jobs.json; stablelauncher claims conservatively reserve wholedeclaredpeak minus launcherRSS untilterminal. Nativeworker claims subtract observedRSS. Phase workers/lifecycles must be refreshedbyowners.",
+ "epyc2_pause": {
+  "marker": "/srv/opentallas-scratch/admit.pause_new.json",
+  "verified_new_1GiB_refused": true,
+  "stopped_only": "admit_core.py observerwaiters; no compute",
+  "release_condition": "Measuredavailablememory exceeds allactivefutureclaims pluscapacityreserve andnextjobreservation"
+ },
+ "runtime_backups": [
+  "/srv/opentallas-scratch/admit_core.before-deepcredit-20261009.py onEPYC2",
+  "/srv/opentallas-scratch/admit_core.before-memorypause-20261009.py onEPYC2",
+  "/srv/opentallas-scratch/admit_core.before-hc64-20261009.py onEPYC1",
+  "/srv/opentallas-scratch/admit_core.before-fivepercent-20261009.py onEPYC3"
+ ],
+ "jobs": {
+  "hbm_coll_srcdc3-acdfa3ab1-tc": {
+   "status": "RUNNING",
+   "host": "ot-epyc1tb",
+   "run": "/home/ubuntu/closure-loop-local/hbm_coll_srcdc3-acdfa3ab1-tc",
+   "commit_full": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+   "stage_tag": "calibrate.a2",
+   "updated": "2026-10-09T00:46:18-07:00"
+  },
+  "s81-dsfd-cfifo-colck-a6ca75fbe-tt-lvt-srcfix": {
+   "status": "EARLY_FAIL_HOLD",
+   "host": "ot-epyc2",
+   "run": "/home/ubuntu/closure-loop-local/s81-dsfd-cfifo-colck-a6ca75fbe-tt-lvt-srcfix",
+   "commit_full": "a6ca75fbe7b6d124c46f260c9c12cf1fcf737d32",
+   "stage_tag": "route.a2",
+   "updated": "2026-10-09T00:41:28-07:00"
+  },
+  "qfd_q5_landing_ecc-facfb2167-tc": {
+   "status": "NEEDS_HUMAN",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_q5_landing_ecc-facfb2167-tc",
+   "commit_full": "facfb216701dfe66327a0a485bc46fddeee71fbd",
+   "stage_tag": "route.a2",
+   "updated": "2026-10-09T00:27:06-07:00"
+  },
+  "engram-sink-pin-e5c627229-tt": {
+   "status": "RUNNING",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt",
+   "commit_full": "e5c6272290a1b951e961d8222e70d2b4d10aaa61",
+   "stage_tag": "calibrate.a1",
+   "updated": "2026-10-09T00:46:16-07:00"
+  },
+  "qfd_dspark_biased_amax-e96b4354c-tc": {
+   "status": "NEEDS_HUMAN",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_biased_amax-e96b4354c-tc",
+   "commit_full": "e96b4354c1f82a608619191f40a12687c09d89a2",
+   "stage_tag": "route.a2",
+   "updated": "2026-10-09T00:37:30-07:00"
+  },
+  "qfd_dspark_w1_bank-1e16ab97d-tc": {
+   "status": "NEEDS_HUMAN",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_w1_bank-1e16ab97d-tc",
+   "commit_full": "1e16ab97de3b04d8eab146a3b80b0e7086fdff00",
+   "stage_tag": "route.a2",
+   "updated": "2026-10-09T00:45:22-07:00"
+  },
+  "qfd_dspark_s7_control-ce667d01f-tc": {
+   "status": "QUEUED",
+   "host": null,
+   "run": null,
+   "commit_full": null,
+   "stage_tag": null,
+   "updated": "2026-10-09T00:44:21-07:00"
+  }
+ },
+ "evidence_sha256": {
+  "epyc2_pause_waiters.json": "9ed9d602cea5395da202cf434f656c5af61b91a8c5e0107d23bb684f5f1eea7f",
+  "epyc2_future_inventory.json": "765105bd93911605c3a7ebcd0da74866a0d735aebb3edf99dabb7ac0210ef347",
+  "epyc2_resident_snapshot.json": "97cbdef72c3fb63bc4d79044cd5dd6071991cf7d059e928363c9529d0e3c37ea",
+  "epyc1_future_inventory.json": "8ec602afe014f7234cdb04138d0d47be06a946263eecead11105d273425f631f"
+ }
+}

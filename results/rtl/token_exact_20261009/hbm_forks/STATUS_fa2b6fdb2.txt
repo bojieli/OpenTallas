@@ -1,0 +1,20 @@
+seq rc=1 HGI_SEQ FAIL no-summary
+cmdproc_mut_crc rc=1 HGI_CMDPROC FAIL no-summary
+seq_mut_wait rc=1 HGI_SEQ FAIL no-summary
+seq_mut_loop rc=1 HGI_SEQ FAIL no-summary
+cmdproc_mut_range rc=1 HGI_CMDPROC FAIL no-summary
+cmdproc rc=1 HGI_CMDPROC FAIL no-summary
+coll_gsz rc=0 COLL_GSZ PASS runs=62 negatives=4 caught
+cmdproc (rel) rc=0 HGI_CMDPROC PASS cf0_cases=18 cf1_jobs=300 cf1_cycles=8320
+cmdproc_mut_crc (rel) rc=0 HGI_CMDPROC PASS cf0_cases=18 cf1_jobs=300 cf1_cycles=8320
+cmdproc_mut_range (rel) rc=0 HGI_CMDPROC PASS cf0_cases=18 cf1_jobs=300 cf1_cycles=8320
+seq_mut_wait (rel) rc=0 HGI_SEQ PASS cases=29 dispatches=2573
+seq_mut_loop (rel) rc=0 HGI_SEQ PASS cases=29 dispatches=2573
+seq (rel) rc=0 HGI_SEQ PASS cases=29 dispatches=2573
+done2
+attn_ldk rc=0 ATTN_LDK PASS
+done
+OT_HGI_MUT_CRC (cmdproc, must FAIL) rc=0 HGI_CMDPROC PASS cf0_cases=18 cf1_jobs=300 cf1_cycles=8320
+OT_HGI_MUT_RANGE (cmdproc, must FAIL) rc=1 HGI_CMDPROC FAIL 5
+OT_HGI_SEQ_MUT_LOOP (seq, must FAIL) rc=1 HGI_SEQ FAIL 677
+OT_HGI_SEQ_MUT_WAIT (seq, must FAIL) rc=1 HGI_SEQ FAIL 8

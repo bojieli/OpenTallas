@@ -1,0 +1,876 @@
+{
+ "stage": "S027",
+ "kind": "stage",
+ "layers": [
+  "L18",
+  "L19"
+ ],
+ "comp_span": 101270.5,
+ "comp_crit_cycles": 18884.2,
+ "max_start_drift": 3.5,
+ "makespan": 101274,
+ "crit_end": 101274,
+ "n_nodes": 65,
+ "n_jobs": 56,
+ "max_fanin": 4,
+ "ports": [
+  "coll",
+  "fld",
+  "hc",
+  "hop",
+  "sel",
+  "su",
+  "svc"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "L19.attn.rows_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 1024,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 1024,
+   "comp_start": 0.0,
+   "comp_cycles": 1024.0
+  },
+  {
+   "op": 1,
+   "id": "L18.ffn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 9,
+   "ext": 82386,
+   "preds": [],
+   "start": 82386,
+   "end": 82395,
+   "comp_start": 82386.0,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 2,
+   "id": "L18.ffn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 229,
+   "ext": 82386,
+   "preds": [],
+   "start": 82386,
+   "end": 82615,
+   "comp_start": 82386.0,
+   "comp_cycles": 229.0
+  },
+  {
+   "op": 3,
+   "id": "L18.ffn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 254,
+   "ext": 82386,
+   "preds": [],
+   "start": 82386,
+   "end": 82640,
+   "comp_start": 82386.0,
+   "comp_cycles": 253.6
+  },
+  {
+   "op": 4,
+   "id": "L18.ffn.norm.scale",
+   "eng": "su",
+   "port": 1,
+   "dur": 306,
+   "ext": 0,
+   "preds": [
+    1
+   ],
+   "start": 82395,
+   "end": 82701,
+   "comp_start": 82394.9,
+   "comp_cycles": 306.0
+  },
+  {
+   "op": 5,
+   "id": "L18.ffn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 82640,
+   "end": 82837,
+   "comp_start": 82639.6,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 6,
+   "id": "L18.ffn.router",
+   "eng": "fld",
+   "port": 0,
+   "dur": 977,
+   "ext": 0,
+   "preds": [
+    4
+   ],
+   "start": 82701,
+   "end": 83678,
+   "comp_start": 82700.9,
+   "comp_cycles": 977.2
+  },
+  {
+   "op": 7,
+   "id": "L18.ffn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 19,
+   "ext": 0,
+   "preds": [
+    4
+   ],
+   "start": 82701,
+   "end": 82720,
+   "comp_start": 82700.9,
+   "comp_cycles": 19.0
+  },
+  {
+   "op": 8,
+   "id": "L18.ffn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    2,
+    5
+   ],
+   "start": 82837,
+   "end": 83049,
+   "comp_start": 82836.9,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 9,
+   "id": "L18.ffn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    8
+   ],
+   "start": 83049,
+   "end": 83686,
+   "comp_start": 83049.2,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 10,
+   "id": "L18.ffn.softplus_sqrt",
+   "eng": "su",
+   "port": 1,
+   "dur": 186,
+   "ext": 0,
+   "preds": [
+    6
+   ],
+   "start": 83678,
+   "end": 83864,
+   "comp_start": 83678.1,
+   "comp_cycles": 185.6
+  },
+  {
+   "op": 11,
+   "id": "L18.ffn.shared_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 634,
+   "ext": 0,
+   "preds": [
+    6,
+    7
+   ],
+   "start": 83678,
+   "end": 84312,
+   "comp_start": 83678.1,
+   "comp_cycles": 634.0
+  },
+  {
+   "op": 12,
+   "id": "L18.ffn.router_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 422,
+   "ext": 0,
+   "preds": [
+    10
+   ],
+   "start": 83864,
+   "end": 84286,
+   "comp_start": 83863.7,
+   "comp_cycles": 421.9
+  },
+  {
+   "op": 13,
+   "id": "L18.ffn.bias",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    12
+   ],
+   "start": 84286,
+   "end": 84404,
+   "comp_start": 84285.7,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 14,
+   "id": "L18.ffn.shared_swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 246,
+   "ext": 0,
+   "preds": [
+    11
+   ],
+   "start": 84312,
+   "end": 84558,
+   "comp_start": 84312.1,
+   "comp_cycles": 245.6
+  },
+  {
+   "op": 15,
+   "id": "L18.ffn.top6",
+   "eng": "sel",
+   "port": 5,
+   "dur": 9,
+   "ext": 0,
+   "preds": [
+    13
+   ],
+   "start": 84404,
+   "end": 84413,
+   "comp_start": 84403.3,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 16,
+   "id": "L18.ffn.top6_order",
+   "eng": "sel",
+   "port": 5,
+   "dur": 44,
+   "ext": 0,
+   "preds": [
+    15
+   ],
+   "start": 84413,
+   "end": 84457,
+   "comp_start": 84412.2,
+   "comp_cycles": 44.0
+  },
+  {
+   "op": 17,
+   "id": "L18.ffn.experts_gu",
+   "eng": "fld",
+   "port": 0,
+   "dur": 3706,
+   "ext": 0,
+   "preds": [
+    11,
+    16
+   ],
+   "start": 84457,
+   "end": 88163,
+   "comp_start": 84456.2,
+   "comp_cycles": 3705.6
+  },
+  {
+   "op": 18,
+   "id": "L18.ffn.weights",
+   "eng": "su",
+   "port": 1,
+   "dur": 259,
+   "ext": 0,
+   "preds": [
+    12,
+    16
+   ],
+   "start": 84457,
+   "end": 84716,
+   "comp_start": 84456.2,
+   "comp_cycles": 258.9
+  },
+  {
+   "op": 19,
+   "id": "L18.ffn.shared_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 95,
+   "ext": 0,
+   "preds": [
+    14
+   ],
+   "start": 84558,
+   "end": 84653,
+   "comp_start": 84557.7,
+   "comp_cycles": 94.7
+  },
+  {
+   "op": 20,
+   "id": "L18.ffn.swiglu",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    17
+   ],
+   "start": 88163,
+   "end": 88166,
+   "comp_start": 88161.8,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 21,
+   "id": "L18.ffn.route_w",
+   "eng": "su",
+   "port": 1,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    18,
+    20
+   ],
+   "start": 88166,
+   "end": 88172,
+   "comp_start": 88164.8,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 22,
+   "id": "L18.ffn.quant2",
+   "eng": "su",
+   "port": 1,
+   "dur": 191,
+   "ext": 0,
+   "preds": [
+    21
+   ],
+   "start": 88172,
+   "end": 88363,
+   "comp_start": 88170.8,
+   "comp_cycles": 191.0
+  },
+  {
+   "op": 23,
+   "id": "L18.ffn.down",
+   "eng": "fld",
+   "port": 0,
+   "dur": 3072,
+   "ext": 0,
+   "preds": [
+    19,
+    22
+   ],
+   "start": 88363,
+   "end": 91435,
+   "comp_start": 88361.8,
+   "comp_cycles": 3071.5
+  },
+  {
+   "op": 24,
+   "id": "L18.ffn.combine_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    23
+   ],
+   "start": 91435,
+   "end": 92262,
+   "comp_start": 91433.3,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 25,
+   "id": "L18.ffn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 82386,
+   "preds": [
+    9,
+    24
+   ],
+   "start": 92262,
+   "end": 92375,
+   "comp_start": 92260.3,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 26,
+   "id": "L19.attn.hc_pre",
+   "eng": "hc",
+   "port": 2,
+   "dur": 6,
+   "ext": 0,
+   "preds": [
+    8,
+    25
+   ],
+   "start": 92375,
+   "end": 92381,
+   "comp_start": 92373.2,
+   "comp_cycles": 5.9
+  },
+  {
+   "op": 27,
+   "id": "L19.attn.hc.fn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 237,
+   "ext": 0,
+   "preds": [
+    25
+   ],
+   "start": 92375,
+   "end": 92612,
+   "comp_start": 92373.2,
+   "comp_cycles": 237.0
+  },
+  {
+   "op": 28,
+   "id": "L19.attn.hc.sumsq",
+   "eng": "hc",
+   "port": 2,
+   "dur": 251,
+   "ext": 0,
+   "preds": [
+    25
+   ],
+   "start": 92375,
+   "end": 92626,
+   "comp_start": 92373.2,
+   "comp_cycles": 250.6
+  },
+  {
+   "op": 29,
+   "id": "L19.attn.quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 324,
+   "ext": 0,
+   "preds": [
+    26
+   ],
+   "start": 92381,
+   "end": 92705,
+   "comp_start": 92379.1,
+   "comp_cycles": 324.0
+  },
+  {
+   "op": 30,
+   "id": "L19.attn.hc.rsqrt",
+   "eng": "hc",
+   "port": 2,
+   "dur": 197,
+   "ext": 0,
+   "preds": [
+    28
+   ],
+   "start": 92626,
+   "end": 92823,
+   "comp_start": 92623.8,
+   "comp_cycles": 197.3
+  },
+  {
+   "op": 31,
+   "id": "L19.attn.a_proj",
+   "eng": "fld",
+   "port": 0,
+   "dur": 628,
+   "ext": 0,
+   "preds": [
+    29
+   ],
+   "start": 92705,
+   "end": 93333,
+   "comp_start": 92703.1,
+   "comp_cycles": 628.0
+  },
+  {
+   "op": 32,
+   "id": "L19.attn.hc.pre_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 212,
+   "ext": 0,
+   "preds": [
+    27,
+    30
+   ],
+   "start": 92823,
+   "end": 93035,
+   "comp_start": 92821.1,
+   "comp_cycles": 212.3
+  },
+  {
+   "op": 33,
+   "id": "L19.attn.hc.sinkhorn",
+   "eng": "hc",
+   "port": 2,
+   "dur": 637,
+   "ext": 0,
+   "preds": [
+    32
+   ],
+   "start": 93035,
+   "end": 93672,
+   "comp_start": 93033.4,
+   "comp_cycles": 637.2
+  },
+  {
+   "op": 34,
+   "id": "L19.attn.a_allgather",
+   "eng": "coll",
+   "port": 3,
+   "dur": 434,
+   "ext": 0,
+   "preds": [
+    31
+   ],
+   "start": 93333,
+   "end": 93767,
+   "comp_start": 93331.2,
+   "comp_cycles": 434.0
+  },
+  {
+   "op": 35,
+   "id": "L19.attn.q_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    34
+   ],
+   "start": 93767,
+   "end": 93770,
+   "comp_start": 93765.2,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 36,
+   "id": "L19.attn.kv_norm.sumsq",
+   "eng": "su",
+   "port": 1,
+   "dur": 3,
+   "ext": 0,
+   "preds": [
+    34
+   ],
+   "start": 93767,
+   "end": 93770,
+   "comp_start": 93765.2,
+   "comp_cycles": 3.0
+  },
+  {
+   "op": 37,
+   "id": "L19.attn.q_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 288,
+   "ext": 0,
+   "preds": [
+    35
+   ],
+   "start": 93770,
+   "end": 94058,
+   "comp_start": 93768.2,
+   "comp_cycles": 288.0
+  },
+  {
+   "op": 38,
+   "id": "L19.attn.kv_rope_qdq",
+   "eng": "su",
+   "port": 1,
+   "dur": 283,
+   "ext": 0,
+   "preds": [
+    36
+   ],
+   "start": 93770,
+   "end": 94053,
+   "comp_start": 93768.2,
+   "comp_cycles": 283.0
+  },
+  {
+   "op": 39,
+   "id": "L19.attn.own_row_write",
+   "eng": "svc",
+   "port": 4,
+   "dur": 650,
+   "ext": 0,
+   "preds": [
+    38
+   ],
+   "start": 94053,
+   "end": 94703,
+   "comp_start": 94051.2,
+   "comp_cycles": 649.8
+  },
+  {
+   "op": 40,
+   "id": "L19.attn.wq_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 1040,
+   "ext": 0,
+   "preds": [
+    37
+   ],
+   "start": 94058,
+   "end": 95098,
+   "comp_start": 94056.2,
+   "comp_cycles": 1039.9
+  },
+  {
+   "op": 41,
+   "id": "L19.attn.q_rope",
+   "eng": "su",
+   "port": 1,
+   "dur": 118,
+   "ext": 0,
+   "preds": [
+    40
+   ],
+   "start": 95098,
+   "end": 95216,
+   "comp_start": 95096.0,
+   "comp_cycles": 117.6
+  },
+  {
+   "op": 42,
+   "id": "L19.attn.window_load",
+   "eng": "svc",
+   "port": 4,
+   "dur": 170,
+   "ext": 0,
+   "preds": [
+    39,
+    41
+   ],
+   "start": 95216,
+   "end": 95386,
+   "comp_start": 95213.7,
+   "comp_cycles": 169.9
+  },
+  {
+   "op": 43,
+   "id": "L19.attn.scores",
+   "eng": "svc",
+   "port": 4,
+   "dur": 50,
+   "ext": 0,
+   "preds": [
+    0,
+    38,
+    41,
+    42
+   ],
+   "start": 95386,
+   "end": 95436,
+   "comp_start": 95383.6,
+   "comp_cycles": 49.9
+  },
+  {
+   "op": 44,
+   "id": "L19.attn.max",
+   "eng": "su",
+   "port": 1,
+   "dur": 222,
+   "ext": 0,
+   "preds": [
+    43
+   ],
+   "start": 95436,
+   "end": 95658,
+   "comp_start": 95433.5,
+   "comp_cycles": 221.6
+  },
+  {
+   "op": 45,
+   "id": "L19.attn.exp",
+   "eng": "su",
+   "port": 1,
+   "dur": 290,
+   "ext": 0,
+   "preds": [
+    44
+   ],
+   "start": 95658,
+   "end": 95948,
+   "comp_start": 95655.1,
+   "comp_cycles": 289.7
+  },
+  {
+   "op": 46,
+   "id": "L19.attn.den",
+   "eng": "su",
+   "port": 1,
+   "dur": 88,
+   "ext": 0,
+   "preds": [
+    45
+   ],
+   "start": 95948,
+   "end": 96036,
+   "comp_start": 95944.8,
+   "comp_cycles": 88.0
+  },
+  {
+   "op": 47,
+   "id": "L19.attn.pv",
+   "eng": "svc",
+   "port": 4,
+   "dur": 272,
+   "ext": 0,
+   "preds": [
+    45
+   ],
+   "start": 95948,
+   "end": 96220,
+   "comp_start": 95944.8,
+   "comp_cycles": 271.9
+  },
+  {
+   "op": 48,
+   "id": "L19.attn.sink",
+   "eng": "su",
+   "port": 1,
+   "dur": 196,
+   "ext": 0,
+   "preds": [
+    44,
+    46
+   ],
+   "start": 96036,
+   "end": 96232,
+   "comp_start": 96032.8,
+   "comp_cycles": 196.0
+  },
+  {
+   "op": 49,
+   "id": "L19.attn.normalize",
+   "eng": "su",
+   "port": 1,
+   "dur": 245,
+   "ext": 0,
+   "preds": [
+    47,
+    48
+   ],
+   "start": 96232,
+   "end": 96477,
+   "comp_start": 96228.8,
+   "comp_cycles": 244.9
+  },
+  {
+   "op": 50,
+   "id": "L19.attn.wo_a",
+   "eng": "fld",
+   "port": 0,
+   "dur": 2222,
+   "ext": 0,
+   "preds": [
+    49
+   ],
+   "start": 96477,
+   "end": 98699,
+   "comp_start": 96473.7,
+   "comp_cycles": 2222.0
+  },
+  {
+   "op": 51,
+   "id": "L19.attn.z_quant",
+   "eng": "su",
+   "port": 1,
+   "dur": 80,
+   "ext": 0,
+   "preds": [
+    50
+   ],
+   "start": 98699,
+   "end": 98779,
+   "comp_start": 98695.7,
+   "comp_cycles": 80.0
+  },
+  {
+   "op": 52,
+   "id": "L19.attn.wo_b",
+   "eng": "fld",
+   "port": 0,
+   "dur": 549,
+   "ext": 0,
+   "preds": [
+    51
+   ],
+   "start": 98779,
+   "end": 99328,
+   "comp_start": 98775.7,
+   "comp_cycles": 548.9
+  },
+  {
+   "op": 53,
+   "id": "L19.attn.out_allreduce",
+   "eng": "coll",
+   "port": 3,
+   "dur": 827,
+   "ext": 0,
+   "preds": [
+    52
+   ],
+   "start": 99328,
+   "end": 100155,
+   "comp_start": 99324.6,
+   "comp_cycles": 827.0
+  },
+  {
+   "op": 54,
+   "id": "L19.attn.hc_post",
+   "eng": "hc",
+   "port": 2,
+   "dur": 113,
+   "ext": 0,
+   "preds": [
+    25,
+    33,
+    53
+   ],
+   "start": 100155,
+   "end": 100268,
+   "comp_start": 100151.6,
+   "comp_cycles": 112.9
+  },
+  {
+   "op": 55,
+   "id": "L19.substage_hop0",
+   "eng": "hop",
+   "port": 7,
+   "dur": 1006,
+   "ext": 0,
+   "preds": [
+    54
+   ],
+   "start": 100268,
+   "end": 101274,
+   "comp_start": 100264.5,
+   "comp_cycles": 1006.0
+  }
+ ]
+}

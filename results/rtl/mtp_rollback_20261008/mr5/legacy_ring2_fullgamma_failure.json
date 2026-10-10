@@ -1,0 +1,150 @@
+{
+  "compressor_records": 2,
+  "jobs": [
+    [
+      0,
+      0
+    ],
+    [
+      3563,
+      1
+    ],
+    [
+      3537,
+      2
+    ],
+    [
+      2333,
+      3
+    ],
+    [
+      3332,
+      4
+    ],
+    [
+      3753,
+      5
+    ],
+    [
+      179,
+      6
+    ],
+    [
+      34,
+      7
+    ],
+    [
+      568,
+      8
+    ],
+    [
+      2332,
+      3
+    ],
+    [
+      3332,
+      4
+    ],
+    [
+      3753,
+      5
+    ],
+    [
+      179,
+      6
+    ],
+    [
+      34,
+      7
+    ],
+    [
+      568,
+      8
+    ],
+    [
+      1852,
+      9
+    ],
+    [
+      2358,
+      10
+    ],
+    [
+      244,
+      11
+    ]
+  ],
+  "corrected_positions": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "corrected_logits_exact": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "final_raw_kv_equal": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "final_raw_persistent_vm_equal": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "kv_words_differing": [
+    11779,
+    852,
+    1351,
+    21721
+  ],
+  "persistent_words_differing": [
+    577,
+    151,
+    287,
+    287
+  ],
+  "program_instructions": [
+    1927,
+    103,
+    125,
+    1869
+  ],
+  "persistent_region_elements": 10752,
+  "compressor_ring_extra_bytes": 0,
+  "compressor_ring_added_isa_instructions": 0,
+  "compressor_ring_added_arithmetic_cycles": 0,
+  "physical_storage_qualification": false,
+  "schema": "opentallas.mtp_rollback_mr5_isa.v1",
+  "scope": "Reduced V4.1 exact ISA, all four packages, up to five successors squashed, corrected logits 3..11",
+  "rtl_qualification": false,
+  "elapsed_seconds": 140.12,
+  "sequence_sha256": "be49bebd8cb02ca220982eb56f9f97e56f8a9a0f58430db0a0bad19aec68e298",
+  "source_sha256": {
+    "tools/mtp_rollback_isa_probe.py": "23c6dad88058f437df8774d577f7202f830cd521f363c66182b1a7983f60c0ca",
+    "tools/hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+    "tools/hdc_program_v41_array.py": "5b55bbd879596532781722341681c0290cf3d968bf7435837a2a0482e438b7b7",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d",
+  "config_sha256": "3981625600c458d98afefb214cf374b9fcd73982e1da3dcb95025431cae1a90d",
+  "exact": false
+}

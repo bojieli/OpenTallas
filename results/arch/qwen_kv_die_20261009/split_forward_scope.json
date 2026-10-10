@@ -1,0 +1,116 @@
+{
+ "boundaries": [
+  {
+   "op": 2,
+   "prev": 0,
+   "wait": "wait_su",
+   "deps": [
+    "a<-reduction"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 3,
+   "prev": 2,
+   "wait": "barrier",
+   "deps": [
+    "b<-elementwise"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 5,
+   "prev": 4,
+   "wait": "wait_su",
+   "deps": [
+    "a<-reduction"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 6,
+   "prev": 5,
+   "wait": "wait_su",
+   "deps": [
+    "b<-reshaped"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 7,
+   "prev": 6,
+   "wait": "wait_su",
+   "deps": [
+    "a<-elementwise"
+   ],
+   "class_change": false
+  },
+  {
+   "op": 14,
+   "prev": 12,
+   "wait": "wait_su",
+   "deps": [
+    "a<-reduction"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 15,
+   "prev": 14,
+   "wait": "barrier",
+   "deps": [
+    "b<-reshaped"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 18,
+   "prev": 15,
+   "wait": "barrier",
+   "deps": [
+    "(older op / other unit)"
+   ],
+   "class_change": false
+  },
+  {
+   "op": 21,
+   "prev": 19,
+   "wait": "wait_su",
+   "deps": [
+    "a<-reduction"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 22,
+   "prev": 21,
+   "wait": "barrier",
+   "deps": [
+    "b<-elementwise"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 23,
+   "prev": 22,
+   "wait": "wait_su",
+   "deps": [
+    "a<-reshaped",
+    "c<-reshaped"
+   ],
+   "class_change": true
+  },
+  {
+   "op": 26,
+   "prev": 23,
+   "wait": "barrier",
+   "deps": [
+    "(older op / other unit)"
+   ],
+   "class_change": true
+  }
+ ],
+ "forwardable": [
+  7
+ ]
+}

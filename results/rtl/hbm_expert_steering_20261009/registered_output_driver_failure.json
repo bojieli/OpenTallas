@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "scope": "intermediate registered-output bench driver",
+  "log": "FATAL tb.sv:46 backpressure lost at Time360; driver retained ret_v after its accepted transfer, producing duplicate row. Corrected driver deasserts after acceptance; RTL unchanged for fix."
+}

@@ -1,0 +1,143 @@
+%Warning-WIDTHTRUNC: rtl/hbm_accel/index/ot_hbm_accel_index_query.sv:15:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                          : ... note: In instance 'hfd_idx_sel.u_index_q'
+   15 | generate if(!ENABLE)begin:off
+      |             ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:476:57: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ga' generates 4 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl.u_fs'
+  476 |         acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:476:57: Operator ADD expects 32 bits on the RHS, but RHS's CONST '4'h1' generates 4 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl.u_fs'
+  476 |         acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:531:55: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'bb' generates 4 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl.u_fs'
+  531 |         aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:531:55: Operator ADD expects 32 bits on the RHS, but RHS's CONST '4'h1' generates 4 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl.u_fs'
+  531 |         aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:536:49: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl.u_fs'
+  536 |             res_eq[CB*s +: CB] <= bs_r[CB*(16*s + res_b[3:0]) +: CB];
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:274:32: Operator COND expects 2 bits on the Conditional False, but Conditional False's VARREF 's1_v' generates 1 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  274 |             cr_v  <= (NCR > 1) ? {cr_v[(NCR > 1 ? NCR-2 : 0):0], s1_v} : s1_v;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:274:19: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's COND generates 2 bits.
+                                                               : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  274 |             cr_v  <= (NCR > 1) ? {cr_v[(NCR > 1 ? NCR-2 : 0):0], s1_v} : s1_v;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:275:32: Operator COND expects 2 bits on the Conditional False, but Conditional False's VARREF 's1_fl' generates 1 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  275 |             cr_fl <= (NCR > 1) ? {cr_fl[(NCR > 1 ? NCR-2 : 0):0], s1_fl} : s1_fl;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:275:19: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's COND generates 2 bits.
+                                                               : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  275 |             cr_fl <= (NCR > 1) ? {cr_fl[(NCR > 1 ? NCR-2 : 0):0], s1_fl} : s1_fl;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:321:32: Operator COND expects 2 bits on the Conditional False, but Conditional False's VARREF 'cp_v' generates 1 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  321 |             ro_v  <= (NCR > 1) ? {ro_v[(NCR > 1 ? NCR-2 : 0):0], cp_v} : cp_v;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:321:19: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's COND generates 2 bits.
+                                                               : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  321 |             ro_v  <= (NCR > 1) ? {ro_v[(NCR > 1 ? NCR-2 : 0):0], cp_v} : cp_v;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:322:32: Operator COND expects 2 bits on the Conditional False, but Conditional False's VARREF 'cp_fl' generates 1 bits.
+                                                                : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  322 |             ro_fl <= (NCR > 1) ? {ro_fl[(NCR > 1 ? NCR-2 : 0):0], cp_fl} : cp_fl;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv:322:19: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's COND generates 2 bits.
+                                                               : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s.u_ps'
+  322 |             ro_fl <= (NCR > 1) ? {ro_fl[(NCR > 1 ? NCR-2 : 0):0], cp_fl} : cp_fl;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel.sv:281:68: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'HOLD' generates 32 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl'
+  281 |                             c_Bt <= cres_b; c_fclr <= 1'b1; hold_f <= HOLD; qf <= QINV;
+      |                                                                    ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel.sv:291:77: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'WAIT' generates 32 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl'
+  291 |                     if ((&st_hfin) && !hf_seen) begin hf_seen <= 1'b1; wcnt <= WAIT; end
+      |                                                                             ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sel.sv:301:59: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.u_ctl'
+  301 |                     if (&st_done2) begin st <= C_W2; wcnt <= WAIT + 1; end    
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:302:37: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fwp' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  302 |             if (f_push) fwp <= (fwp == DG - 1) ? {FW{1'b0}} : fwp + 1'b1;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:303:37: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'frp' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  303 |             if (f_pop)  frp <= (frp == DG - 1) ? {FW{1'b0}} : frp + 1'b1;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:319:65: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 5 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  319 |     wire credit    = (sw_k != K_GC) || (({{(4-FW){1'b0}}, fcnt} + infl) < DG);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:319:65: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'infl' generates 5 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  319 |     wire credit    = (sw_k != K_GC) || (({{(4-FW){1'b0}}, fcnt} + infl) < DG);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:346:46: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 8 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  346 |                     ({{(8-OCW){1'b0}}, ocnt} + {5'd0, e_infl} < OD);
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:346:46: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 8 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  346 |                     ({{(8-OCW){1'b0}}, ocnt} + {5'd0, e_infl} < OD);
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:464:47: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ocnt' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  464 |             if (ph == P_EM && e_empty && ocnt < OD) begin e_empty <= 1'b0; e_go <= 1'b0; end
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:493:39: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ocnt' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  493 |     wire           d_room     = (ocnt < OD);
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:498:79: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ocnt' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  498 |     wire           o_push = (rt_v && rt_em) || (ph == P_EM && e_empty && ocnt < OD) || d_push;
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:511:42: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'ocnt' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  511 |                 if (o_push && oi == ocnt - 1) ofq[oi] <= o_in;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:513:39: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'ocnt' generates 3 bits.
+                                                                  : ... note: In instance 'hfd_idx_sel.u_cand.enabled.u_sel.g_s[3].u_s'
+  513 |             end else if (o_push && oi == ocnt) ofq[oi] <= o_in;
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:243:37: Operator ADD expects 12 bits on the RHS, but RHS's ARRAYSEL generates 5 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_index_q.on.u_quant'
+  243 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:243:78: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_index_q.on.u_quant'
+  243 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:245:28: Operator SUB expects 12 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_index_q.on.u_quant'
+  245 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:245:58: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                           : ... note: In instance 'hfd_idx_sel.u_index_q.on.u_quant'
+  245 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                                                          ^
+%Warning-WIDTHEXPAND: physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv:87:18: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'n' generates 14 bits.
+                                                                                 : ... note: In instance 'hfd_idx_sel'
+   87 |       nq_of = (n <= lo) ? 12'd0 : ((n - lo >= 2736) ? 12'd2736 : 12'(n - lo)); end
+      |                  ^~
+%Warning-WIDTHEXPAND: physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv:87:39: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'n' generates 14 bits.
+                                                                                 : ... note: In instance 'hfd_idx_sel'
+   87 |       nq_of = (n <= lo) ? 12'd0 : ((n - lo >= 2736) ? 12'd2736 : 12'(n - lo)); end
+      |                                       ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.931 MB sources in 48 modules, into 18.973 MB in 25 C++ files needing 0.000 MB
+- Verilator: Walltime 9.102 s (elab=0.568, cvt=8.062, bld=0.000); cpu 9.102 s on 1 threads; allocated 630.047 MB

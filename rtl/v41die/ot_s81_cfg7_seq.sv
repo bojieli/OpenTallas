@@ -15,12 +15,20 @@
 // q element's cfg pin order (cfg_a, cfg_d, cfg_v); go_e gates the element's go (W17 class-valid gate); st = {fault,
 // ld_busy}.  fault is the reference loader's (constant 0 at PQ = 0: the q element exposes no shadow-free signals, so the
 // die runs the pinned PQ = 0 loader).
-// Exact gate: rtl/v41die/test/tb_ot_s81_cfg7_seq.sv (cycle lockstep against ot_v41_pair_pq_ld_frontend PHW 10).
+// PQ = 1 (s81-die-2 2026-10-08, tie-off audit TA-10: the adopted PQ q element ot_v41_rom_elem_q_qxpq_w10 had go_tag /
+// bank_free / sh_free floating on the die): the loader of ot_v41_pair_pq_ld_frontend PQ = 1 -- a broadcast that finds
+// the element's configuration shadow full or the output-tag bank it would write still draining (ef = {bank_free,
+// sh_free}) is held (pending) and loaded when both clear; a second broadcast before the load, or a go before the load
+// finished, is a FAULT.  go_tag = the op tag of ot_v41_spine_pq_w17w10 (bt_tag = ist, which advances by one on every
+// go broadcast, from 0 at reset): a 2-bit count of the broadcast gos this pair has seen (lc[0], before the class gate),
+// so no tag wires leave the hub.  PQ = 0: go_tag = 0, ef ignored, cycle-identical to the pinned loader.
+// Exact gate: rtl/v41die/test/tb_ot_s81_cfg7_seq.sv (cycle lockstep against ot_v41_pair_pq_ld_frontend PHW 10, PQ 0 and 1).
 // ---------------------------------------------------------------------------
 module ot_s81_cfg7_seq #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
     parameter integer NROM = 7,
+    parameter integer PQ = 0,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
 ) (
@@ -32,7 +40,9 @@ module ot_s81_cfg7_seq #(
     input  wire [47:0]         q0, q1, q2, q3, q4, q5, q6,
     output wire [53:0]         cfg,
     output wire [0:0]          go_e,
-    output wire [1:0]          st
+    output wire [1:0]          st,
+    input  wire [1:0]          ef,          // PQ: {bank_free, sh_free} of the element
+    output wire [1:0]          go_tag       // PQ: the op tag that rides with go
 );
     initial begin
         if (NROM != 7) $fatal(1, "ot_s81_cfg7_seq: the port list is written for NROM = 7");
@@ -51,9 +61,14 @@ module ot_s81_cfg7_seq #(
     reg [4:0]   c_a;
     reg [47:0]  c_d;
     reg         fault;
-    wire        ld_start = cfg_go;
+    reg         pend;
+    reg [PHW-1:0] pend_ph;
+    reg [2:0]   pend_np;
+    reg [1:0]   tag;
+    wire        ld_ok = (PQ == 0) || (ef[0] && ef[1]);
+    wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
     // same-edge lookahead of the reference's combinational cm_a = ld_a: read ld_a's word one edge early
-    wire [AW-1:0] ra = ld_start ? AW'(cfg_ph) * AW'(CW) : ld_a + 1'b1;
+    wire [AW-1:0] ra = ld_start ? AW'(cfg_go ? cfg_ph : pend_ph) * AW'(CW) : ld_a + 1'b1;
     wire          rce = rst_n[0] && (ld_start || (ld_run && ld_k < 5'(CW - 1)));
     wire [AW-13:0] rbank = ra[AW-1:12];
     reg  [AW-13:0] bank_q;
@@ -85,18 +100,28 @@ module ot_s81_cfg7_seq #(
     end
     always @(posedge clk[0] or negedge rst_n[0]) begin
         if (!rst_n[0]) begin
-            ld_run <= 1'b0; ld_k <= 5'd0; c_v <= 1'b0; fault <= 1'b0;
+            ld_run <= 1'b0; ld_k <= 5'd0; c_v <= 1'b0; fault <= 1'b0; pend <= 1'b0; tag <= 2'd0;
         end else begin
             fault <= fault;
+            pend <= pend;
             c_v <= ld_run;
+            if (PQ != 0) begin
+                if (cfg_go && !ld_ok) begin pend <= 1'b1; pend_ph <= cfg_ph; pend_np <= cfg_np; end
+                else if (ld_start) pend <= 1'b0;
+`ifndef OT_S81_CFG7_MUT_NOFAULT
+                if (cfg_go && (pend || ld_run)) fault <= 1'b1;               // a second broadcast before the load
+`endif
+                if (go && (pend || ld_run || c_v || cfg_go)) fault <= 1'b1;  // go before the load finished
+                if (go) tag <= tag + 2'd1;
+            end
             if (ld_start) begin
                 ld_run <= 1'b1; ld_k <= 5'd0;
 `ifdef OT_S81_CFG7_MUT_STRIDE
                 ld_a <= AW'(cfg_ph) * AW'(CW + 1);   // negative control: wrong phase stride
 `else
-                ld_a <= AW'(cfg_ph) * AW'(CW);
+                ld_a <= AW'(cfg_go ? cfg_ph : pend_ph) * AW'(CW);
 `endif
-                ld_np <= cfg_np;
+                ld_np <= cfg_go ? cfg_np : pend_np;
             end else if (ld_run) begin
                 ld_k <= ld_k + 5'd1;
                 ld_a <= ld_a + 1'b1;
@@ -116,5 +141,15 @@ module ot_s81_cfg7_seq #(
     end
     assign go_e = go && act;
     assign cfg = {c_v, c_d, c_a};
-    assign st = {fault, ld_run || c_v};
+`ifdef OT_S81_CFG7_MUT_NOHOLD
+    wire ld_busy = ld_run || c_v;              // negative control: pending load not reported busy
+`else
+    wire ld_busy = ld_run || c_v || pend;
+`endif
+    assign st = {fault, ld_busy};
+`ifdef OT_S81_CFG7_MUT_TAG
+    assign go_tag = (PQ != 0) ? tag + 2'd1 : 2'd0;   // negative control: tag one op ahead
+`else
+    assign go_tag = (PQ != 0) ? tag : 2'd0;
+`endif
 endmodule

@@ -1,0 +1,90 @@
+{
+ "master": "hfd_attn_half_hi",
+ "kind": "attn_half",
+ "w_um": 1778.52,
+ "h_um": 689.04,
+ "obs_top": 7,
+ "parent": "hfd_attn_tile",
+ "half": "hi",
+ "generator": "tools/hbm_attn_half_tile_place.py",
+ "ports": {
+  "xp": {
+   "bits": 1619,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    733.932,
+    1050.732
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "xr": {
+   "bits": 272,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    30.396,
+    1664.844
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "cf": {
+   "bits": 1618,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    733.932,
+    1050.54
+   ],
+   "y": [
+    688.944,
+    688.944
+   ]
+  },
+  "i": {
+   "bits": 529,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    2.412,
+    103.788
+   ]
+  },
+  "o": {
+   "bits": 529,
+   "direction": "output",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    2.412,
+    103.788
+   ]
+  },
+  "ck": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    399.996,
+    399.996
+   ]
+  }
+ }
+}

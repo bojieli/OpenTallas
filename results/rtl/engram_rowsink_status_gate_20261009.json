@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.engram-status-directed.v1",
+ "supplements": "results/rtl/engram_lookup_recovered_07189f858/campaign.json",
+ "boundary": "minimum full-shape rowsink status/data ordering; no whole-die/route credit",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv": "b334bf1bf6d561125cfef90707938273760960be271508b4139536cd2e0cde2c",
+  "rtl/test/tb_dsrom_engram_status_order.sv": "9c5abe8a3d187b52223da568edeec0548c87764a106927e209c0f4cb0c945183",
+  "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989"
+ },
+ "cases": {
+  "control": {
+   "returncode": 0,
+   "stdout": "ENGRAM_STATUS PASS beats=192 statuses=24 delayed=1 poison=1 release=1\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "statuses_not_awaited": {
+   "returncode": 1,
+   "stdout": "FATAL: /home/ubuntu/wt-codex-engram-resume/rtl/test/tb_dsrom_engram_status_order.sv:37: premature ready before delayed statuses\n       Time: 3945000 Scope: tb_dsrom_engram_status_order\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

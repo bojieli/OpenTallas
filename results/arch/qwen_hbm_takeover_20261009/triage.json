@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.qwen_hbm_takeover.triage.v1",
+ "date": "2026-10-09",
+ "spec": "docs/HBM_GENERIC_INTERFACE.md (HGI-1, owner-approved)",
+ "streams": {
+  "qwen_hbm_unify": {
+   "worktree": "wt-codex-qwen-r25",
+   "branch": "codex/qwen-r25-continuation-20261009",
+   "head": "a8e675abd",
+   "verdict": "RETIRED",
+   "retired": [
+    "ot_qwen_r25_su_quarter (N256/M64 native690, OWNER_W74; on main 822ca7b65/5449dfcc4/1f65b2bcc)",
+    "ot_qwen_r25_cp_native_launch + qwen_native_cp_map (unmerged 4eb90c27d/0dbaac359)",
+    "query-release / VM ownership",
+    "native program binding (CP32 0x5355xxxx)"
+   ],
+   "why": "HGI-1 2.2-2.4, 4.2: every unit is reached by records from the CP sequencer (ot_hgi_seq); SU work is SUT templates on hfd_su/su_red/su_full; VM is compiler-allocated with wait/FENCE ordering; END token 18-bit in cmdproc. Program binding = hgi_sim/qwen_compiler.py + ot_hgi_seq bench.",
+   "kept": [
+    "qwen_r25 golden (main 9cef95a86) -> hbm-sim",
+    "tau shards -> mtp-lead",
+    "INT8 image packer tools/qwen_r25_int8_image.py (fmt3 lines; equal to this stream's bench packing)"
+   ]
+  },
+  "qwen_hbm_unify/stage_harness": {
+   "worktree": "qwen-r25-stage",
+   "branch": "codex/qwen-r25-stage",
+   "head": "da2efdccd",
+   "verdict": "RETIRED",
+   "why": "composes the retired quarter/dispatcher/p4 mask/CP interception; superseded by HGI L1 simulator proofs (qwen_proof layer/head/token) + block conformance (8.3/8.4)",
+   "stopped_jobs": [
+    "EPYC4 run_qwen_r25_quarter_ar 2626636 + Vtb 554409 (source 89a8ac363), SIGTERM 2026-10-09 07:24 PDT"
+   ]
+  },
+  "qwen_hbm_unify/fmt3": {
+   "worktree": "wt-qwen-fmt3",
+   "branch": "codex/qwen-fmt3-20261008",
+   "head": "139b037ed",
+   "verdict": "KEPT (CF-SM smh_front_c format 3)",
+   "routes": "hbm-forks hgi_smh_front_c_int8-bf44b3032-tc-{hm10,hm25}-cl (same SM RTL as the bench)",
+   "bench": "tools/qwen_r25_smh_fmt3_bench.py on hbm-sim Qwen vectors (this stream)",
+   "preserved_jobs": [
+    "EPYC2 nominal ec8174332 drv 3549079",
+    "EPYC3 wide 2831b78d5 drv 1835875",
+    "EPYC3 pipe 77ec33a0e drv 1855945"
+   ],
+   "merge": "evidence-only merge after the three terminal verdicts; branch RTL is superseded by hbm-forks' copy (do not merge RTL)"
+  },
+  "review_qwen_token_path": {
+   "worktree": "wt-codex-qwen-q5-20261009",
+   "branch": "codex/qwen-q5-ecc-20261009",
+   "head": "c13cc153c",
+   "verdict": "NOT r25: Qwen ROM elements",
+   "retired": [
+    "qfd_dspark_s7_control",
+    "qfd_dspark_w1_bank/dequant/lookup",
+    "qfd_dspark_transient_kv",
+    "qfd_dspark_argmax_gather",
+    "qfd_dspark_biased_amax",
+    "qfd_dspark_accept_commit",
+    "qfd_dspark_drafter_production",
+    "qfd_dspark_tail_window_positions"
+   ],
+   "why": "owner 2026-10-09 08:46Z Qwen ROM is AR-only (REVIEW Q9); on r25 the functions are SM fmt3, DMA/KV region, COLL ARGMAX_MERGE (+argmax18), ATT + offline RoPE permutation (7.2)",
+   "handed_off": [
+    "qfd_q5_landing_ecc (CLOSED TT +7.19/FF +11.00, Qwen ROM/KV-die AR) -> kv-die",
+    "qfd_kv_merge_skid (CLOSED) -> kv-die",
+    "qfd_io_collective pin placement (live -cl/-cx/-f5) -> its owners"
+   ]
+  }
+ }
+}

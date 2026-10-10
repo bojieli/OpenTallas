@@ -1,0 +1,8 @@
+Fresh re-STA, 2026-10-08 23:00 PDT: original full-shape 515-bit input / 2060-bit output dsfd_svcio_q route.
+Current budget_rb2 and routed boundary clock references, TT setup +131.97ps; FF hold +2.62ps; DRC0.
+TT internal +577.15ps, input +131.97ps, output +146.37ps. FF internal +29.86ps, input +2.62ps, output +37.58ps.
+Acceptance: owner option B TT>=0/FF>=0/DRC0 used by closure loop. This is not SS setup sign-off.
+Current default OSTG=0 matches routed source exactly at 3 cycles. No new hardware or latency added.
+The failed OSTG1 predecessor reports remain historical. They do not describe this default master at current budget.
+Selected view files now come from this qualified lbc route; TT ETM freshly extracted from that same immutable DB/SPEF.
+The low FF input margin is reported, not rounded away. Only q_q has a linked rb2 budget; q retains original current boundary obligations.

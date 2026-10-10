@@ -1,0 +1,106 @@
+{
+  "timestamp_utc": "2026-10-09T14:08:26.840385+00:00",
+  "owner": "Claude takeover; Codex stops design/build/routes",
+  "worktree": "/home/ubuntu/wt/codex-hgi-quant-vm",
+  "branch": "codex/hgi-quant-vm-transport-20261010",
+  "source_HEAD": "f71022804550ca36a39e0082181db0603621a487",
+  "dirty_files": [],
+  "RTL": "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv",
+  "core_source": "b827340df",
+  "sequencer_source": "3fae1571d",
+  "ABI_manifest": "results/hgi_generic/quant_vm_transport/port_manifest.json",
+  "model_hook": "tools/uarch_model.py:hgi_quant_vm_transport_model(depth=32,vm_rtt=4)",
+  "completed_gates": {
+    "exact_source": "2cb556822",
+    "positive_cases": 458,
+    "FP32_words": 10768,
+    "golden_beats": 184,
+    "compiled_mutants": {
+      "drop_result": 134,
+      "early_done": 134,
+      "credit_overflow": 134
+    },
+    "coverage": [
+      "multirow",
+      "innerstride",
+      "unalignedbase",
+      "inputbroadcast",
+      "samegeometryinplace",
+      "E4n16/n48 tails",
+      "CPread/write stalls anddelayedACK",
+      "fault/tagmismatch drain",
+      "NaN/+Inf/-Inf",
+      "idle coldreset",
+      "255invalidE4params faultbeforeallocation"
+    ],
+    "boundary": {
+      "source": "a63e77167",
+      "current_RTL_byte_identical": true,
+      "input_to_reg": 12,
+      "reg_to_out": 4,
+      "input_to_output": 0,
+      "strict": "PASS"
+    },
+    "synth": {
+      "source": "2cb556822",
+      "actual_cells": 200951,
+      "actual_area_um2": 29130.81084,
+      "sequential_area_um2": 15587.94456,
+      "corner": "TT sizing; NOTtimingclosure",
+      "rc": 0,
+      "outline_um": [
+        1800,
+        275.6
+      ],
+      "fits_current_generator_quant_um": [
+        1814.376,
+        276.456
+      ],
+      "pd50_fit": true,
+      "pd55_fit": true
+    }
+  },
+  "actual_physical_closures": [],
+  "owned_inflight": [],
+  "owned_pid_check": "all recordedownedcomputePIDs absent;E3pscheckedafterboth2cbdrivers exited0",
+  "routes_submitted": [],
+  "prepared_proposals": [
+    "physical/hgi_quant_vm_20261009/pd50.draft.json",
+    "physical/hgi_quant_vm_20261009/pd55.draft.json"
+  ],
+  "proposals_status": "CURRENTplaceholders, never dropped towatchedqueue; priorrequesttofleetretracted",
+  "admission": {
+    "calibrate_estimate_GiB": 8,
+    "route_estimate_GiB": 36,
+    "basis": "baselinehbm_quant_e7c2e5b06 actualCTS3462408KiB/DRT18642752KiB scaledbyactualcell/arearatio andoutlinearea,1.10growth,next4GiB rounding;NOThardcaps"
+  },
+  "remote_outputs": {
+    "current": "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822",
+    "boundary": "/srv/opentallas-scratch/codex/hgi-quant-vm-laneseat",
+    "failures": [
+      "/srv/opentallas-scratch/codex/hgi-quant-vm-layout-boundary",
+      "/srv/opentallas-scratch/codex/hgi-quant-vm-rspseat",
+      "/srv/opentallas-scratch/codex/hgi-quant-vm-rspseat-trace"
+    ]
+  },
+  "blockers": [
+    "partialA/Ooverlap andsamegeometryaliasedrows normativepolicy unresolved;faultedcurrentcomponent,NOTfullconformance",
+    "actualVMrootproducer/protectioncontractClaudeGH-d outstanding; nofakeendpointtie",
+    "stream1p2 opt-inmaster needsTT>=0/FF>=0/DRC0 actualroute; legacyserial0p9 unchanged; noCDCwaiver",
+    "die halo/rails/rotatedpinbinding andrecordunit4op4..6 demux needClaudeintegration"
+  ],
+  "next_steps": [
+    "Claude determinesaliaspolicy/compilerlowering; extend onlyClaude-owned",
+    "Claude pins preparedCURRENTsource/name andrunsremotepinlint,thenatomicfamilydedupedtwo currentflowdensityroutes",
+    "collectTT/FF/DRCverdict andelectrical gates",
+    "bindactualVMroot andcorrectFUSEDdispatch; priceallCPsectorRTT/response relay/captureedges before adoption"
+  ],
+  "ABI_findings": [
+    "record1409={O256,C256,B256,A256,SUT256,UOP128,valid1}",
+    "CP337={WRITE1,byteaddr32,data256,byteMask32,tag16};rsp273={tag16,WRITE_ECHO1,data256};providerfault separate",
+    "VM MDESCbase isFP32wordaddress;requestaddr=wordaddr<<2 alignedsector;VM BF16results expanded{BF16,zero16}",
+    "coreaccepts32FP32beat,II1,nonelastic23edgeBF16output;32reservations includeassembly+pipeline+queue+actualwriteACK debt",
+    "E4M3 blockparam16only;UE Nmultiple32/E4 Nmultiple16; currentpartialoverlap explicitlyrejected",
+    "singlependingCPpath cannotfeedcoreII1;packed8sectorhandshakes/fullbeat,stridedup64sectorhandshakes,2recordcapturevalidateedges,1request+1response relayedge/sector;noinventedoverlap"
+  ]
+}

@@ -1,0 +1,10 @@
+# base
+TB_S81_BOOT_SECDED mut=0 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=1024/1024 mismatch=0 ce=40/40 ue=6/6 hbm_fault=1 sram_single=576/576 sram_double=2556/2556 sram_err=0 PASS
+# badsum
+TB_S81_BOOT_SECDED neg=badsum boot_ok=0 fault=1 code=2 PASS
+# short
+TB_S81_BOOT_SECDED neg= short boot_ok=0 fault=1 code=1 PASS
+# MUT1 decoder never corrects (expect FAIL)
+TB_S81_BOOT_SECDED mut=1 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=988/1024 mismatch=36 ce=40/40 ue=6/6 hbm_fault=1 sram_single=64/576 sram_double=2556/2556 sram_err=512 FAIL
+# MUT2 encoder drops overall parity (expect FAIL)
+TB_S81_BOOT_SECDED mut=2 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=1022/1024 mismatch=2 ce=932/40 ue=27/6 hbm_fault=1 sram_single=576/576 sram_double=2556/2556 sram_err=34 FAIL

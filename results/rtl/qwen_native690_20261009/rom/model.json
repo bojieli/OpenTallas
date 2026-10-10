@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen.native690.quarters.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "quarters": 4,
+  "lanes_per_quarter": 256,
+  "sfu_lanes_per_quarter": 64,
+  "rom_bits": 11304960,
+  "metadata_bits": 172032,
+  "rom_ECC": false,
+  "rom_read_bits_per_request": 2760,
+  "vm_words": 262144,
+  "score_capacity_rows": 8224,
+  "query_slots": 4,
+  "query_execution": "serial replay; one score/exp/publication slot",
+  "rmsnorm": {
+    "exact_sum_replicas": 4,
+    "square_elements": 16384,
+    "extra_square_elements": 12288,
+    "rsqrt_replicas": 4,
+    "output_elements": 4096,
+    "order": "full chunk8/padded tree duplicated; no cross-quarter sum"
+  },
+  "softmax": {
+    "heads_per_quarter": 2,
+    "full_windows": 4,
+    "window_rows": 2048,
+    "tail_rows": 32,
+    "max_lv_span": 5,
+    "partial_tree": "8 leaves:four complete2048 trees, tail chunk8,3zero leaves; explicit pairwise adds",
+    "empty_tail": "prezero sums/exp/publication; finite minimum initializes maxpartials"
+  },
+  "clock": "actual c12 production constraints unchanged; no new timing claim",
+  "latency_cycles": null,
+  "area": "uses existing four-quarter/ROM/provider design; no synthesized area claim",
+  "boundary": "native690\u00d74+metadata42; VMword24; dispatcherROM_PC12",
+  "adoption": "requires actual quarter arithmetic/finite-provider RTL gate and physical qualification"
+}

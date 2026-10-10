@@ -1,0 +1,7 @@
+{
+ "schema": "opentallas.safe_qwen.a6_token_gate.v1",
+ "gate": "REVIEW_20261008 addendum ~21:20: one-layer token run exercising ME ops before adopting the sequencer FQ_HEAD (fqh / fqs)",
+ "run": "Qwen ROM TP4 L0 from the golden entry, stream4 real-mem driver (tools/qwen_rom_rt_token_stream4_w12.py), oracle realmem-ctx8k P8191; fqh1 = emitted core at FQ_HEAD=1 via tools/safe_qwen/fqh_token.py, fqh0 = control; source claude/safe-qwen-20261008 af21e62e0 (rtl/tools snapshot) on ot-epyc1tb",
+ "result": "BOTH PASS: L0 exit x bit-exact on all 4 dies (sha b952d27c165b..., 0 mismatches each), identical between FQ_HEAD=1 and 0; stage cycles 6,470 (FQ_HEAD=1) vs 6,468 (control), +2 cycles for the layer (the FIFO ran dry twice)",
+ "caveat": "scratch-only: rtl/hdc/ot_qwen_kv_map_m.svh copied from rtl/hdc/kv into the snapshot (main's stream4 driver lacks -Irtl/hdc/kv); stage images re-linked to the surviving /srv/opentallas/scratch-overflow copies (NOTE, stages.txt)"
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hbm_svc.write_source.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "case": "source_ack",
+      "returncode": 0,
+      "verdict": "PASS",
+      "output": "PASS 64 source-tagged core writes with reversed PC completions\n/srv/opentallas-data/codex/hbm-source-core/adf5e21d4/src/rtl/test/hbm_accel/tb_hbm_svc_write_source.sv:35: $finish called at 8296000000 (1fs)\n",
+      "compiler": ""
+    },
+    {
+      "case": "legacy_ack",
+      "returncode": 0,
+      "verdict": "PASS",
+      "output": "PASS 64 source-tagged core writes with reversed PC completions\n/srv/opentallas-data/codex/hbm-source-core/adf5e21d4/src/rtl/test/hbm_accel/tb_hbm_svc_write_source.sv:35: $finish called at 8296000000 (1fs)\n",
+      "compiler": "/srv/opentallas-data/codex/hbm-source-core/adf5e21d4/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:439: warning: @* found no sensitivities so it will never trigger.\n"
+    },
+    {
+      "case": "negative_source_dropped",
+      "returncode": 1,
+      "verdict": "FAIL",
+      "output": "FATAL: /srv/opentallas-data/codex/hbm-source-core/adf5e21d4/src/rtl/test/hbm_accel/tb_hbm_svc_write_source.sv:32: source ACK attribution 0 got64 expected21\n       Time: 8296000000  Scope: tb_hbm_svc_write_source\n",
+      "compiler": ""
+    }
+  ],
+  "input_sha256": {
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "ade896dc9ddc9a045c5f623f698d26bd7dac8467085e794bca781f924e41dad0",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "rtl/hbm_accel/ingest/ot_hbm_write_source_pc.sv": "0deeaac2785563acefcf591cc9f1ab5f440c46a9e7899a5f93984bc7c317420e",
+    "rtl/test/hbm_accel/tb_hbm_svc_write_source.sv": "ea05636ee09f643c7ed4c38069bd2cd80cfac8951a7904ababb54584c767059d",
+    "tools/hbm_svc_write_source_bench.py": "06b9408c850f8b000237f52a969d7ab25f07ccb075b602113f3f4d833d1c821c"
+  },
+  "scope": "Actual core forwarded source transport and accepted per-PC completion identity; no native read-lease integration or physical signoff",
+  "obligations": [
+    "Native read hazard must include outer queued and forwarded producer debt",
+    "SourceGray counters need actual die crossing collars and endpoints",
+    "SS/FF and SRAM protection remain open"
+  ]
+}

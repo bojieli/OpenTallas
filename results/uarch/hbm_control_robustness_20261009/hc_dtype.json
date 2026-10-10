@@ -1,0 +1,1090 @@
+{
+  "schema": "opentallas.hbm_hc.dtype.v1",
+  "verdict": "PASS",
+  "headers_sha256": {
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00003-of-00048.safetensors.header.json": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00004-of-00048.safetensors.header.json": "a18996c1e8f291117f9a2b638ffbd24c0b60babafd44db75bedfab1bec3a3f4a",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00005-of-00048.safetensors.header.json": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00006-of-00048.safetensors.header.json": "b6fd1a38fb53430098d46487db546c012d38ac14ac91b22e9af6983ea4290189",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00007-of-00048.safetensors.header.json": "3dcfa5cba8e7e80fb684a3166f34164bb1b8ec95a802763b1e2eebb19b2a6ba5",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00008-of-00048.safetensors.header.json": "fde260ef12e8bc6737afaf29d58799d1f2dcf206a126746a22f61ebff9cb9a87",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00009-of-00048.safetensors.header.json": "139eeea4664aba161a4b4cb82a60a86a2429467601ee6584a887825f8137adfd",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00010-of-00048.safetensors.header.json": "f60d4a2f55d70b668be2c7a61883ed9e2ba7d2cace06f40c3429da073dca64f2",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00011-of-00048.safetensors.header.json": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00012-of-00048.safetensors.header.json": "ec5434239be33e6d35218d2ed1d4ee522bb02357669280ef6dfe86ce44873e0c",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00013-of-00048.safetensors.header.json": "e9246f9e946c8b771d95640635c0cc01d295a312fc374fd87f7d0d67e9c7f0fc",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00014-of-00048.safetensors.header.json": "e2871f3474228510b968b237f9836898a5c9707add5cb1cad51401318dfb5311",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00015-of-00048.safetensors.header.json": "4184d16248ac775f7ab002039b2e9a43b98d51f24913cc9b19ceb85c3726ed59",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00016-of-00048.safetensors.header.json": "fcdcfd73f87aa514e2c8e3a742104def5a051acd47cd54b0b2bee2033d495edb",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00017-of-00048.safetensors.header.json": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00018-of-00048.safetensors.header.json": "0ad32850738558e9df1239b284abc748e42e01745eec180cd30815e21a67af55",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00019-of-00048.safetensors.header.json": "efaa20b2c111c875904e0f83623206f3414652353413e9051ba02e60ab7a085f",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00020-of-00048.safetensors.header.json": "6cc297397ef39dc77747d5fbba93a8a299caf4dfb4952886ca9c2d478d517f0c",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00021-of-00048.safetensors.header.json": "ef8537770773e4006d36e1b5de0082407afe1abeb2309d4efac0e8ffcdc39040",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00022-of-00048.safetensors.header.json": "6f1df707004fd8f06f44e4a1e79677102037a414862d1550a7ac6a175961fa72",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00023-of-00048.safetensors.header.json": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00024-of-00048.safetensors.header.json": "190ff387c34f3b0a55277993b798b26adf528de28125361495fa30a050ed106c",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00025-of-00048.safetensors.header.json": "ee80ffddf8ddeca1b934f2e32c14b7f4856b2e747088fbdc9fc80dcc27377891",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00026-of-00048.safetensors.header.json": "ed25fdc55bb96b2101ac8cff12a235a7ea54412050c792b4e72377ae417a9a66",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00027-of-00048.safetensors.header.json": "babf9e26761c97df06490e96368e40e3cc916770abe2afffa9b3a45a5734742b",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00028-of-00048.safetensors.header.json": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00029-of-00048.safetensors.header.json": "611e9ea2b143014df6037e285a3e1a865676e0954091dcbf95b3f57ec825336b",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00030-of-00048.safetensors.header.json": "5a5bf5cbd36e27c13c6dcbd6969db9796e9219e928e69b86fd5704131be598ea",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00031-of-00048.safetensors.header.json": "50ac0885851fd0c5f9c2436858fbcecec347dd4efd39557ec68723b224d2985d",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00032-of-00048.safetensors.header.json": "105e2bffb58a83dd3ca1502ecfbcf14759b1a16f705ca0eac52284053684007f",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00033-of-00048.safetensors.header.json": "2b3caec06921b098107c3757f81e6b5bd0c401809b19fa65e24ef27ca9eb505e",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00034-of-00048.safetensors.header.json": "08a8b7c04834ea2ca2b3efcebe2bd5b934e165154a7c3d11004242e2a1b438c4",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00035-of-00048.safetensors.header.json": "18a61fbf3d94a454137e1d6fc8f19b7ddfe12954f32c47337c8921069d5de193",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00036-of-00048.safetensors.header.json": "32ef9284ffa83282248f59443f2c3b4daaf57e305d02a07dad3b493a05d68752",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00037-of-00048.safetensors.header.json": "7b3daaa3d09fc52c64153c5a81fcd3c4984e6c3dcc6981c95ae840c8928ad1d5",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00038-of-00048.safetensors.header.json": "33f706f0d8727ac9aa2154eb56b76f76d5396ea5c9bd94248c7378f086fddc2b",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00039-of-00048.safetensors.header.json": "e5e55c1f73de87075da7717c9319f30d32078ba2f1be641e8cd6127d4c273987",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00040-of-00048.safetensors.header.json": "e8a1a6448644f70d3aa897fba81c2cf2245125851aacdf377c97ef3ce959981e",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00041-of-00048.safetensors.header.json": "3fde0cd4e3167cc5a1117e055b052d20f4a3d8ea013bfc54764abb07d09351c1",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00042-of-00048.safetensors.header.json": "5ca433405c1b16b8776486a174583e7ff2641889b292d70952da7a339687a70c",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00045-of-00048.safetensors.header.json": "c8f2cad66c6387793b335cbc10231661b61f2ec7a8c814bccb8d6ae418200675",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+  },
+  "tensors": [
+    {
+      "tensor": "layers.0.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.0.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.1.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.1.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.2.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.2.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.3.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.3.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.4.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.4.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.5.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.5.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.6.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.6.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.7.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.7.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.8.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.8.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.9.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.9.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.10.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.10.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.11.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.11.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.12.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.12.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.13.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.13.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.14.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.14.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.15.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.15.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.16.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.16.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.17.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.17.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.18.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.18.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.19.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.19.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.20.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.20.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.21.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.21.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.22.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.22.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.23.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.23.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.24.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.24.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.25.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.25.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.26.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.26.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.27.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.27.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.28.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.28.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.29.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.29.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.30.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.30.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.31.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.31.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.32.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.32.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.33.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.33.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.34.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.34.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.35.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.35.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.36.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.36.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.37.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.37.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.38.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.38.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "layers.39.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    {
+      "tensor": "layers.39.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1969612,
+        3935692
+      ]
+    },
+    {
+      "tensor": "mtp.0.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1376,
+        1967456
+      ]
+    },
+    {
+      "tensor": "mtp.0.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1967564,
+        3933644
+      ]
+    },
+    {
+      "tensor": "mtp.1.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1376,
+        1967456
+      ]
+    },
+    {
+      "tensor": "mtp.1.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1967564,
+        3933644
+      ]
+    },
+    {
+      "tensor": "mtp.2.hc_attn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1376,
+        1967456
+      ]
+    },
+    {
+      "tensor": "mtp.2.hc_ffn_fn",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        1967564,
+        3933644
+      ]
+    }
+  ],
+  "body_sublayers": 80,
+  "mtp_sublayers": 6,
+  "row_bytes": 81920,
+  "body_bytes_per_token": 157286400,
+  "body_sharded_bytes_per_token_per_die": 1638400,
+  "supply_obligation": "HCP W32 requires 8x32x32=8192 weight bits/cycle. A 256-bit svc lane needs a row-prefetch buffer or wider stripe; direct 16-bit fn lanes are invalid.",
+  "physical_qualification": false
+}

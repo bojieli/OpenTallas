@@ -1,0 +1,189 @@
+{
+  "name": "qfd_su_kv624-a732a1d76-tc-hm10",
+  "spec": {
+    "name": "qfd_su_kv624-a732a1d76-tc-hm10",
+    "block": "qfd_su_kv624",
+    "owner": "Codex:qwen-system",
+    "purpose": "Q3 approved full64-lane624-bitKV descriptor, exact already-roundedFP8packing; input capture+validated two bases+packet output3edges. Addresseschecked fixedKstride16,Vstride1,sparse masks. Fullshape511vectors plus offgrid and invalidaddressfailclosed, mutant; no reorder/roundingchange. Dieintegration and realSUwrite-address contract observation outstanding. Successor expands actual frame to fix immutable floorplan failure; skid uses measured6672um2 cell bound and160x112frame, KV624384x64 inputface. RTL unchanged.",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "source": {
+      "branch": "codex/qwen-system-resume-20261009",
+      "commit": "a732a1d76"
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "kv624_exact",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_su_kv624 -Ptb_qfd_su_kv624.MUT=0 -o {RUN}/bench/exact rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv rtl/test/qwen_system/tb_qfd_su_kv624.sv && vvp {RUN}/bench/exact | tee {RUN}/bench/exact.log && grep -q '^PASS KV624' {RUN}/bench/exact.log",
+          "expect": "pass",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "pass_regex": "^PASS KV624"
+        },
+        {
+          "name": "kv624_negative",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_su_kv624 -Ptb_qfd_su_kv624.MUT=1 -o {RUN}/bench/negative rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv rtl/test/qwen_system/tb_qfd_su_kv624.sv && vvp {RUN}/bench/negative | tee {RUN}/bench/negative.log && grep -q '^NEG_DETECTED' {RUN}/bench/negative.log && false",
+          "expect": "fail",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "fail_regex": "^NEG_DETECTED"
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+      },
+      "route": {
+        "cmd": "verilator --lint-only -Wno-fatal --top-module ot_qfd_su_kv624 rtl/qwen_sys/system_20261009/ot_qfd_su_kv624.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_su_kv624.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_su_kv624 {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 8,
+        "peak_ram_gb": 32
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_su_kv624 --post-sdc physical/qwen_die_masters/signoff/qfd_su_kv624.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_su_kv624 > {RUN}/record/route/export.log 2>&1 && cp {RUN}/bench/*.log {RUN}/record/route/"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "ttb_routed_at_TC",
+          "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+      ],
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/qfd_su_kv624.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+      ],
+      "macros": []
+    },
+    "hold_eco": {
+      "enabled": true,
+      "session": "mm",
+      "reason": "current corrected FF hold flow"
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record/views",
+        "to": "physical/qwen_die_masters/views"
+      },
+      {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/qwen_system_20261009/qfd_su_kv624-a732a1d76-tc-hm10"
+      }
+    ],
+    "cycles_added": 864,
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.01,
+    "route_corner": "TC",
+    "notes": "RTL unchanged; prior exact and negative gates passed; physical geometry successor.",
+    "merge_target": "main"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_su_kv624-a732a1d76-tc-hm10.json",
+  "created": "2026-10-09T00:03:42-07:00",
+  "status": "FLOORPLAN_MARGIN",
+  "stage_idx": 2,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_kv624_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS KV624 vectors512 active_lane_codes17096 all256codes K/V sparse/full masks; off-grid fail-closed\nPASS KV624 nonrepresentable address fail-closed\nrtl/test/qwen_system/tb_qfd_su_kv624.sv:46: $finish called at 20620000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_kv624_negative": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "NEG_DETECTED KV624 address mutation\nrtl/test/qwen_system/tb_qfd_su_kv624.sv:32: $finish called at 80000 (1ps)\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-agidock128",
+    "ot-epyc1tb"
+  ],
+  "events": [
+    "2026-10-09T00:03:42-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_su_kv624-a732a1d76-tc-hm10.json",
+    "2026-10-09T00:03:45-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+    "2026-10-09T00:04:05-07:00 source a732a1d76501 synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10/src",
+    "2026-10-09T00:04:43-07:00 bench track: launched bench_kv624_exact (bench_kv624_exact.a1b1) beside None",
+    "2026-10-09T00:04:43-07:00 route waiting for capacity: AGIdock MemAvailable 68-39 GB < 32+6",
+    "2026-10-09T00:05:42-07:00 bench track: bench_kv624_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-09T00:05:43-07:00 bench track: launched bench_kv624_negative (bench_kv624_negative.a1b1) beside route",
+    "2026-10-09T00:05:43-07:00 route waiting for capacity: AGIdock MemAvailable 74-41 GB < 32+6",
+    "2026-10-09T00:06:44-07:00 bench track: bench_kv624_negative FAIL as expected (rc=1) ",
+    "2026-10-09T00:06:49-07:00 route cannot start on AGIdock (AGIdock MemAvailable 73-43 GB < 32+6); moving to EPYC1",
+    "2026-10-09T00:08:55-07:00 source a732a1d76501 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10/src",
+    "2026-10-09T00:09:49-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-09T00:16:10-07:00 FLOORPLAN_MARGIN: pin_density: pin density > 12.0 bits/um/layer over 100 um: N/M5 20.8 b/um @1: spread over the face (target <= 6.0) / more layers / a longer edge"
+  ],
+  "updated": "2026-10-09T00:16:10-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_kv624_exact": {
+      "state": "done",
+      "tag": "bench_kv624_exact.a1b1",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10",
+      "n": 1,
+      "started": "2026-10-09T00:04:43-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10/bench_src_a1"
+    },
+    "bench_kv624_negative": {
+      "state": "done",
+      "tag": "bench_kv624_negative.a1b1",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10",
+      "n": 1,
+      "started": "2026-10-09T00:05:43-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10",
+  "source_synced": true,
+  "commit_full": "a732a1d76501e0ee043185144c9264b3c647a6e5",
+  "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: N/M5 20.8 b/um @1: spread over the face (target <= 6.0) / more layers / a longer edge",
+  "bench_location": {
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_su_kv624-a732a1d76-tc-hm10",
+    "attempt": 1
+  },
+  "bwait": null,
+  "stage_key": "route",
+  "bench_work": {
+    "bench_kv624_exact": "WARN: pass log has no count line (set min_count_regex)"
+  },
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-09T00:09:49-07:00",
+  "wd_checked": 1791529847.508461,
+  "ef_checked": 1791529847.5084739,
+  "unreachable": 0,
+  "hm_auto_seen": []
+}

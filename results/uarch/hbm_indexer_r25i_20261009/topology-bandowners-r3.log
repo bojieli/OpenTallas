@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys;sys.path.insert(0,"tools");import hbm_accel_die_fp as f;m=f.build(f.R25I);print("NATIVE_BUSES",len([b for b in m["buses"] if b[1]=="index_native"]));print("PATHS",[(p,len(v)) for p,v in m["paths"].items() if p.startswith("idx_")])
+                                                                         ~~~~~~~^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 837, in build
+    m['buses'], m['paths'] = buses(m)
+                             ~~~~~^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 2532, in buses
+    networks(m, sys.modules[__name__], B, P, chain)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_die_topology.py", line 110, in networks
+    route(f'idx_key_credit_{st}_{p}',1,(score.name,f'ikc@{p}:{p}'),
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          (svc.name,f'kc{p}'),[c,(outer,c[1]),(outer,gutter),a])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_die_topology.py", line 78, in route
+    chain(cid,'index_native',bits,src,dst,jogged,path=cid,fc=(bits,),
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          local_src=True,meso_end=True,dom='stream')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1952, in chain
+    st = station(x, y, cid, bits, fa, fb, hor, kind='meso' if last else 'stn',
+                 fifo_bits=(fc[0] if fc else bits) if last else 0, dom=dom)
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1911, in station
+    raise RuntimeError(f'no room for station of {chain} near ({cx:.0f}, {cy:.0f})')
+RuntimeError: no room for station of idx_key_credit_SE_6 near (27305, 1496)

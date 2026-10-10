@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.s81_collective_admission.v2",
+  "supersedes": "resource_model.json initial8GB estimate",
+  "observed_peak_kb": 14533068,
+  "observed_vehicle": "exactW/GFMT1/EPPIPE2/345.6x340.2 detailed-route5_2_route.log",
+  "observed_host": "ot-agidock128",
+  "route_peak_reservation_gb": 20,
+  "calibrate_peak_reservation_gb": 8,
+  "address_space_limit": null,
+  "added_cycles": 0,
+  "new_hardware": false,
+  "remote_only": "explicit host_require plus owner global localhost admissiondisabled",
+  "original_job": "s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25",
+  "original_terminal": "CANCELLED before stage launch,00:01:05",
+  "successor": "s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25-r20"
+}

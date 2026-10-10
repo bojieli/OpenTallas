@@ -85,21 +85,22 @@ set_clock_uncertainty -hold 0.025 [all_clocks]
     path.write_text(text)
 
 
-def export(out):
+def export(out, variant='r25iqg', context_only=False):
     import hashlib
     import json
     from pathlib import Path
     import hbm_accel_die_fp as H
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
-    m=apply(H.build(H.R24SM3,network_probe=True))
-    H.write_netlist(m,1,out/'die.v')
-    H.write_def_floorplan(m,out/'floorplan.def')
+    m=apply(H.build(H.variant_arg(variant)))
+    if not context_only:
+        H.write_netlist(m,1,out/'die.v')
+        H.write_def_floorplan(m,out/'floorplan.def')
     write_sdc(m,out/'clock_inputs.sdc')
     c=m['hub']['coll'];reference=[c.x+c.w/2,c.y+c.h/2]
     inputs={name:dict(pin,manhattan_to_collective_centroid_um=
               abs(pin['center_um'][0]-reference[0])+abs(pin['center_um'][1]-reference[1]))
             for name,pin in m['top_input_ports'].items()}
-    report=dict(contract=m['external_clock_inputs'],ports=inputs,
+    report=dict(variant=variant,contract=m['external_clock_inputs'],ports=inputs,
         clock_consumers={bid:eps[1:] for bid,cls,bits,eps in m['buses'] if cls=='clock_trunk'},
         prior_reference='geometric collective centroid only, not a measured PLL location',
         collective_centroid_um=reference,
@@ -116,4 +117,7 @@ def export(out):
 if __name__=='__main__':
     import argparse
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True)
-    export(ap.parse_args().out)
+    ap.add_argument('--variant',default='r25iqg',help='Actual selected topology; historical presets remain explicitly selectable')
+    ap.add_argument('--context-only',action='store_true',help='Export consumer/source obligations without claiming a bound collective netlist')
+    args=ap.parse_args()
+    export(args.out,args.variant,args.context_only)

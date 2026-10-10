@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_dsrom_hc_secded_pipe",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T08:26:49.478250+00:00",
+      "description": "Opt-in two-cycle protected HC output decoder: balanced syndrome register then correction/output register; structural successor to measured held_code to out_data TT timing failure. Added two cycles per frame and 1168 register bits per source/join priced before RTL.",
+      "source": {
+        "commit": "42e7e301d",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented opt-in ECC_PIPE default0",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS capture/distributed/join; new reader encoding gate positive19653cycles and remaining released/negative gates running",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_capture_r6/terminal.json",
+            "results/rtl/dsrom_hc_mean_capture_20261009/reader_r7_fail/terminal.json",
+            "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_distributed_r6/terminal.json",
+            "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_join_r2/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS capture CE120/UE no disclosure and order/address mutations; reader successor pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_capture_r6/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "source/join successors progressing; reader successor submitted after positive elaborated fullshape gate",
+        "corners": {
+          "route": "TT",
+          "hold": "FF"
+        },
+        "evidence": [
+          "ot-epyc1tb:/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f/source-route-r4:pid4058991",
+          "ot-epyc1tb:/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f/join-route-r2:pid4058992",
+          "results/physical/dsrom_hc_mean_capture_20261009/original_r3/timing_path_observation.json",
+          "results/physical/dsrom_hc_mean_capture_20261009/original_r3/physical.json",
+          "ot-epyc1tb:/srv/opentallas-scratch/codex-dsrom-hc-reader-42e7e301d/route-r3:pid2941982"
+        ]
+      },
+      "dependencies": [
+        "actual selected stage_join homes",
+        "native VM owner arbiter",
+        "MT_SEED5 registered source-authenticated link"
+      ],
+      "integration": {
+        "status": "unbound; default off",
+        "evidence": []
+      }
+    }
+  ]
+}

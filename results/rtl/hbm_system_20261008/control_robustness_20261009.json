@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hbm_control_robustness.rtl.v1",
+  "verdict": "PASS",
+  "scope": "minimum integrated control components; no physical or die-wiring signoff",
+  "input_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_reset_seq.sv": "b930a255caa1574c6937082e403940c13586d030b81fe3a3a9c9a5d1669989bf",
+    "rtl/hbm_accel/control/ot_hbm_fault_agg.sv": "d932c308e3fef7fd8f8ecc117e00341c2d414007539d744a0448a50f5db6e534",
+    "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "81f6b2dd4527df8f82f1c5b47762cd69c7dd727b814f7d7faec9bc1d0c98c252",
+    "rtl/test/hbm_accel/tb_hbm_control_robustness.sv": "5c090f50858a1d65f243bc9c360fd530be7d1be2f3896dc2f59797ff4b77c550",
+    "tools/hbm_control_robustness_bench.py": "cac634b71ec75d07623eb0f64dafb7355565273e32640d737c86f40889684945",
+    "tools/hbm_control_robustness_model.py": "fbe97a670a99e307f66b9c15c6b1ca1d41e6591bb1248f9e0cceb5b9c51edf0b"
+  },
+  "cases": [
+    {
+      "case": "none",
+      "returncode": 0,
+      "output": "PASS reset/fault/token abort",
+      "verdict": "PASS"
+    },
+    {
+      "case": "fault_disconnected",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/.local/state/hbm-system-resume/control/fault_disconnected.sv:36: fault abort without completion\n       Time: 896000000 Scope: tb_hbm_control_robustness",
+      "verdict": "FAIL"
+    },
+    {
+      "case": "reset_before_bist",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-codex-hbm-system-resume/rtl/test/hbm_accel/tb_hbm_control_robustness.sv:27: BIST stage\n       Time: 356000000 Scope: tb_hbm_control_robustness",
+      "verdict": "FAIL"
+    }
+  ],
+  "limitations": [
+    "Per-region asynchronous event transport and die wiring are not qualified",
+    "SS/FF routes pending",
+    "Other production SRAMs still need SECDED integration"
+  ]
+}

@@ -1,0 +1,7 @@
+CALL G=1 B=8 K=7 W=32 destinations=1 badrow=-1 cycles=1135
+CALL G=1 B=8 K=512 W=32 destinations=1 badrow=-1 cycles=82945
+CALL G=1 B=8 K=2048 W=32 destinations=1 badrow=-1 cycles=331777
+CALL G=1 B=3 K=7 W=2 destinations=1 badrow=-1 cycles=365
+CALL G=1 B=255 K=7 W=2 destinations=1 badrow=-1 cycles=365
+FATAL: /srv/opentallas-scratch/codex/hgi-row-42ee27e47/src/rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:42: unwritten row leaked instead of fault
+       Time: 4170910000  Scope: tb_hgi_coll_row_formatter.call

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_pin_gate.py", line 78, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_pin_gate.py", line 52, in main
+    selected=F.build(F.variant_arg(args.variant))
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 865, in build
+    apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1616, in apply_splits
+    assert port in owner, (parent, port)
+           ^^^^^^^^^^^^^
+AssertionError: ('hfd_cmdproc', 't_mtp')

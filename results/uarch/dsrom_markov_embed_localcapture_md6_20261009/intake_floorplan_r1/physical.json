@@ -1,0 +1,237 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T10:20:34.491487+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_markov_embed_localcapture_pair",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.45,
+    "core_input_delay_min_ns": 0.12,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+          "sha256": "83b62ede4f44259742c2682fd79a02c48d0ad78ec186dfff39351bf53c75f009"
+        }
+      ],
+      "lines": [
+        "set_multicycle_path -setup 2 -from [get_cells -hierarchical m?]",
+        "set_multicycle_path -hold 1 -from [get_cells -hierarchical m?]"
+      ]
+    },
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.05,
+    "output_delay_min_ns": -0.17,
+    "parameters": {
+      "BANK": 0,
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+        "sha256": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+        "size_bytes": 5982
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_dsrom_markov_embed_localcapture_pair"
+  },
+  "error": "FlowError: ORFS place-and-route through floorplan failed with exit 2:\n Memory/MB sha1sum result [0:20)\n2_1_floorplan             .odb            3            313 28f754851b3214b7680d\n2_1_floorplan             .sdc                             b582dd4aa18af2f9881a\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place\nRunning macro_place.tcl, stage 2_2_floorplan_macro\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib\nread_db /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_1_floorplan.odb\nread_sdc /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nsource /src/physical/dsrom_markov_lookup_localcapture/macro_place.tcl\nMD6_LOCALCAP bank=0 origin=15.984,10.8 direct_captures=256\nMD6_LOCALCAP bank=1 origin=15.984,82.08 direct_captures=256\nrtl_macro_placer -max_num_level 2 -halo_width 3 -halo_height 3 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55\n[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.\n[INFO MPL-0062] Found fixed macro m0.\n[INFO MPL-0062] Found fixed macro m1.\n[ERROR MPL-0050] Found fixed non-macro instance cap0\\[0\\]$_DFF_P_ inside the macro placement area.\nError: macro_place.tcl, 6 MPL-0050\n\nElapsed time: 0:03.63[h:]min:sec. CPU time: user 3.44 sys 0.13 (98%). Peak memory: 300188KB.\nElapsed time: 0:03.80[h:]min:sec. CPU time: user 3.61 sys 0.20 (100%). Peak memory: 321496KB.\nElapsed time: 0:03.85[h:]min:sec. CPU time: user 3.69 sys 0.15 (99%). Peak memory: 301472KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_2_floorplan_macro.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T10:20:13.537073+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/source",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_markov_embed_localcapture_pair",
+      "--source",
+      "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "BANK=0",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/dsrom_markov_lookup_localcapture/macro_place.tcl",
+      "--orfs-var",
+      "CTS_CLUSTER_SIZE=12",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--orfs-var",
+      "SYNTH_SLANG_ARGS=--unroll-limit 8192",
+      "--die-area",
+      "0",
+      "0",
+      "190",
+      "155",
+      "--core-area",
+      "2",
+      "2",
+      "188",
+      "153",
+      "--core-utilization",
+      "55",
+      "--max-fanout",
+      "16",
+      "--routing-layers",
+      "M2",
+      "M6",
+      "--pin-region",
+      "^(re|addr.*)$=left:30-125",
+      "--pin-region",
+      "^(clk|rst_n)$=bottom:30-160",
+      "--pin-region",
+      "^captured_data.*=right:30-125",
+      "--pin-region",
+      "^(captured_valid|fault)$=top:30-160",
+      "--pin-regions-exhaustive",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--false-path-from",
+      "rst_n",
+      "--core-input-delay-min-ns",
+      ".12000000000000000000",
+      "--core-input-delay-max-ns",
+      ".45000000000000000000",
+      "--output-delay-min-ns",
+      "-.17000000000000000000",
+      "--output-delay-max-ns",
+      ".05000000000000000000",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--place-density",
+      "0.55",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--max-transition-ns",
+      "0.25",
+      "--hold-margin-ns",
+      "0.035",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--sdc-append",
+      "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/floorplan_r1/work",
+      "--nickname-tag",
+      "md6_z7_cd9_floorplan",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/floorplan_r1/physical.json",
+      "--pnr-stop-after",
+      "floorplan"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/source/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "9a8288a21396120eed6610eb60099d5ec5f1c11c57808d68a6d91ce504957e9f",
+      "tree": "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/source"
+    },
+    "orfs_num_cores": 8,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/source"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far.sv unchanged",
+  "enabled_by_default": false,
+  "MACs_per_cycle": 0,
+  "replicas": 4,
+  "clocks": {
+    "forwarded_core_ps": 833.333,
+    "local_core_ps": 833.333,
+    "hold_uncertainty_ps": 25,
+    "setup_uncertainty_ps": 60
+  },
+  "memory_ports": {
+    "rx_capture_bytes_per_cycle": 65.375,
+    "rx_fifo_bytes_per_cycle": 65.375,
+    "shared_tx_bytes_per_cycle": 65.375,
+    "engine_class_bytes_per_cycle": 65.375,
+    "KV_class_bytes_per_cycle": 65.375
+  },
+  "finite_flow": {
+    "receive_prepaid_credit_words": 128,
+    "rx_output_depth": 8,
+    "rx_async_depth": 8,
+    "engine_class_credits": 4,
+    "KV_class_credits": 4,
+    "each_class_tx_depth": 4,
+    "shared_link_credits": 128,
+    "arbitration": "round_robin; only shared1word/cycle; no simultaneous2word capacity claim"
+  },
+  "state_sizing": {
+    "rx_capture_bits": 523,
+    "rx_ingress_bits": 66944,
+    "rx_async_bits": 4184,
+    "rx_output_bits": 523,
+    "class_split_FIFO_bits": 4184,
+    "class_TX_FIFO_bits": 4184,
+    "class_output_register_bits": 1046,
+    "link_output_bits": 528,
+    "data_subtotal_bits": 82116,
+    "control_allowance_bits": 256,
+    "flop_proxy_um2_per_bit": 0.32,
+    "flop_proxy_um2": 26359.04,
+    "mux_decode_clock_repair_cost": "measured routed area pending; no zero-area assumption"
+  },
+  "frame": {
+    "width_um": 92.016,
+    "height_um": 1401.84,
+    "area_um2": 128991.70944,
+    "flop_proxy_utilization": 0.2043467763504662,
+    "replicated_area_mm2": 0.5159668377600001,
+    "slot": "separate vertical slot in added engine shoreline column; real occupancy/overlap gate pending"
+  },
+  "boundaries": {
+    "hub_rx_bits": 528,
+    "hub_tx_bits": 528,
+    "engine_RX_plus_TX_bits": 1050,
+    "KV_RX_plus_TX_bits": 1050,
+    "planned_top_bottom_capacity_tracks": 1437,
+    "planned_left_right_capacity_tracks": 21903,
+    "pin_implementation": "two layers each orientation with2track minspacing; measured density pending"
+  },
+  "latency": {
+    "wrapper_added_registers": 0,
+    "wrapper_added_cycles": 0,
+    "original_endpoint_latency": "already included in original full128PC bench; no speed credit",
+    "extra_relay_edges": "engine/PC two edges pending actual RTL measurement",
+    "adoption_credit": 0
+  },
+  "protection": "Mutable SRAM/link/control policy retained. RealHBM ECC32 sideband provider remains OPEN. No ROM ECC reinstated.",
+  "physical_closed": false,
+  "full_die_bound": false
+}

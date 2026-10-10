@@ -1,0 +1,169 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_idxq_b2_tc_4aadc92bc-vf-lvt",
+ "block": "hfd_index_q_b2",
+ "owner": "Claude:variant-fill",
+ "source_branch": "claude/multivt-20261007-vf4aadc92bc",
+ "source_commit": "0555dea8a06e03aede2e977cbf4d2e7082107ad3",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/hbm_idxq_b2_tc_4aadc92bc-vf-lvt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 15.96,
+  "ff_ps": 22.13,
+  "drc": 0,
+  "ss_tns_ps": -140978.8,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+   "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/hbm_idxq_b2_tc_4aadc92bc-vf-lvt/routes/hbm_idxq_b2_tc_4aadc92bc_vf_lvt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/hbm_idxq_b2_tc_4aadc92bc-vf-lvt/routes/hbm_idxq_b2_tc_4aadc92bc_vf_lvt/work/orfs/logs/asap7/opentallas_hfd_index_q_b2_asap7_hv_hbm_idxq_b2_tc_4aadc92bc_vf_lvt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "pure re-route variant (OT_MULTI_VT=lvt on a flow-overlay child commit (main run_abi3_physical/corner_sta/export_view VT-aware)) of hbm_idxq_b2_tc_4aadc92bc: RTL unchanged at 4aadc92bc; that job's benches gate adoption",
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 4200,
+    "mean": 1325.9,
+    "min": 1290.4,
+    "max": 1485.5
+   },
+   "all": {
+    "n": 21637,
+    "mean": 1319.4,
+    "min": 1290.4,
+    "max": 1498.6
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 4200,
+    "mean": 843.5,
+    "min": 812.9,
+    "max": 963.2
+   },
+   "all": {
+    "n": 21637,
+    "mean": 837.6,
+    "min": 812.9,
+    "max": 973.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 1326,
+   "CK_SS_ALL_MEAN": 1319,
+   "CK_SS_MIN": 1290,
+   "CK_SS_ALL_MIN": 1290,
+   "CK_SS_MAX": 1486,
+   "CK_SS_ALL_MAX": 1499,
+   "CK_FF_MEAN": 844,
+   "CK_FF_ALL_MEAN": 838,
+   "CK_FF_MIN": 813,
+   "CK_FF_ALL_MIN": 813,
+   "CK_FF_MAX": 963,
+   "CK_FF_ALL_MAX": 974
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T22:03:15-07:00",
+ "job_spec": {
+  "name": "hbm_idxq_b2_tc_4aadc92bc-vf-lvt",
+  "block": "hfd_index_q_b2",
+  "owner": "Claude:variant-fill",
+  "purpose": "VARIANT-FILL 2026-10-08: OT_MULTI_VT=lvt on a flow-overlay child commit (main run_abi3_physical/corner_sta/export_view VT-aware) variant of hbm_idxq_b2_tc_4aadc92bc; same RTL, same recipe, TC route + mm hold. | was: OPTION B (setup repair at TT, hold at FF): hfd_index_q_b2 RTL unchanged on the r22 main sheets (9f9f77562)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/multivt-20261007-vf4aadc92bc",
+   "commit": "0555dea8a06e03aede2e977cbf4d2e7082107ad3",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b2 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b2.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b2 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b2.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_index_q_b2.lef {RUN}/routes/{NAME}/view/hfd_index_q_b2_ss.lib {RUN}/routes/{NAME}/view/hfd_index_q_b2_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+    "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/variant_fill/hbm_idxq_b2_tc_4aadc92bc-vf-lvt/hfd_index_q_b2_tt"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "master": "hfd_index_q_b2",
+   "clock": "core_clk"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "no_bench_reason": "pure re-route variant (OT_MULTI_VT=lvt on a flow-overlay child commit (main run_abi3_physical/corner_sta/export_view VT-aware)) of hbm_idxq_b2_tc_4aadc92bc: RTL unchanged at 4aadc92bc; that job's benches gate adoption"
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

@@ -1,0 +1,1863 @@
+[
+ {
+  "id": "T3-B01",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Weight image load into HBM (all backbone + MTP weights, TP-96 row shards, at boot)",
+  "model_ref": "checkpoint tensors (load_checkpoint); W19 HBM layout tools/w19_hbm_tp96_isa.py",
+  "hw_element": "hfd_loader = ot_hfd_loader_host_m (ot_hbm_accel_loader_host, CRC-pipelined) + hfd_host_slab + ot_hbm_host_phy",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_loader x1 view=missing; hfd_host_slab x1 view=reservation",
+  "rtl": "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv; physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_half.sv",
+  "exact_bench": "physical/hbm_accel_die_views/loader/rtl (tb_loader_m_equiv: exact vs the unchanged host); results/rtl/w19_payload_loader_gate_20261001.json",
+  "closure": "FAILED | hfd_loader: failed, re-running TT -363.78 / FF 14.6 (hbm_loader_half_4d30522ee); host SS -3,672 ps (tapeout_hbm_loader_20261004), not adopted",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "Off the token path. The host link is a 10 mm2 model reservation (UCIe/PCIe); the DMA is 64 b wide, and no boot-time load duration or bandwidth is priced. The closure ledger line closure_17 (loader ck/2) is 0 by construction."
+ },
+ {
+  "id": "T3-B02",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Engram hash tables load into HBM (layers 1, 14; ~2.1 GB a die)",
+  "model_ref": "layers.{1,14}.engram.embed.weight / .scale (EngramTables)",
+  "hw_element": "hfd_loader (as T3-B01)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_loader x1 view=missing",
+  "rtl": "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_loader: failed, re-running TT -363.78 / FF 14.6 (hbm_loader_half_4d30522ee)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED",
+   "NOT_EXACT"
+  ],
+  "notes": "Capacity checked in COMPLETENESS_AUDIT (\"HBM Engram tables fit in HBM (2.1 GB a die)\"). No load bench of the table image and no owner-die (id mod 96) placement check located."
+ },
+ {
+  "id": "T3-B03",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Command program load (per-die captured decode-step command list) + configuration",
+  "model_ref": "w19 program (results/rtl/w19_hbm_tp96_program_oreduce.json)",
+  "hw_element": "hfd_loader request slot 0 -> hfd_cmdproc_n/_s program store (ot_ds_hbm_cmdproc20, 256 x 64 in ot_sram_2rw_512x64) + wrapper cfg chains",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_cmdproc_n x1 view=closed; hfd_cmdproc_s x1 view=closed; hfd_loader x1 view=missing",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv; physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3); hfd_cmdproc_s: revoked, re-running TT 87.08 / FF -46.57 (hbm_cmdproc_s_ac6ef1af3); hfd_loader: failed, re-running TT -363.78 / FF 14.6 (hbm_loader_half_4d30522ee)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "No bench loads the full DS decode-step program into the die cmdproc and runs it; the w19 program is ISA-level only. Per-die configuration (rank id, owner-die maps for sharded CKV / index keys, expert placement, HBM bases) rides the wrapper cfg chains; no configuration-sequencing RTL or bench was found."
+ },
+ {
+  "id": "T3-B04",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Clock generation (PLL) and die clock distribution",
+  "model_ref": "n/a (implementation)",
+  "hw_element": "PLL ports on hfd_coll (placeholder); no PLL macro",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE | unified ledger gate die_clock_plan = gated-unknown (results/uarch/hbm_die_clock_inputs_20261007/model.json)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW"
+  ],
+  "notes": "COMPLETENESS_AUDIT: \"Qwen and HBM carry their PLLs only as ports on placeholder blocks\". The DS ROM has a closed PLL element (dsfd_coll_ck); the HBM die does not."
+ },
+ {
+  "id": "T3-B05",
+  "phase": "boot",
+  "plane": "control",
+  "function": "Reset sequencing (power-on, per-region release, link bring-up order)",
+  "model_ref": "n/a",
+  "hw_element": "per-block 2-flop reset synchronisers in every wrapper; no die reset sequencer",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96)",
+  "rtl": "rtl/ot_power_reset_controller.sv (generic, not on the HBM die)",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "Reset arrives as a raw die net at each master. No ordered bring-up (PHY training -> HBM init -> link training -> cmdproc enable) block or bench exists for the HBM die."
+ },
+ {
+  "id": "T3-H01",
+  "phase": "host",
+  "plane": "control",
+  "function": "Request in: per-step doorbell {token, position, job} to each of the 96 dies",
+  "model_ref": "Model.decode_token(token, pos) / generate loop",
+  "hw_element": "ot_ds_hbm_cmdproc20 db_v/db_token/db_pos (host-driven) via hfd_loader host link",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_cmdproc_n x1 view=closed; hfd_cmdproc_s x1 view=closed",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3); hfd_cmdproc_s: revoked, re-running TT 87.08 / FF -46.57 (hbm_cmdproc_s_ac6ef1af3)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED",
+   "NOT_EXACT"
+  ],
+  "notes": "In AR the position comes from the host doorbell every token, so the next token waits on completion -> host -> doorbell to all 96 dies. That turnaround is not a node of the token path. No broadcast/fan-out of the doorbell to 96 dies is designed (each die has its own host port slot)."
+ },
+ {
+  "id": "T3-H02",
+  "phase": "host",
+  "plane": "control",
+  "function": "Token out: completion (token, position, status) to the host",
+  "model_ref": "generate(): out.append(argmax)",
+  "hw_element": "ot_ds_hbm_cmdproc20 cpl_* -> host link",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_cmdproc_n x1 view=closed; hfd_loader x1 view=missing",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3); hfd_cmdproc_s: revoked, re-running TT 87.08 / FF -46.57 (hbm_cmdproc_s_ac6ef1af3)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_PRICED"
+  ],
+  "notes": "Only one die needs to post the token (all hold the merged argmax); the completion path to the host is not priced."
+ },
+ {
+  "id": "T3-H03",
+  "phase": "prefill",
+  "plane": "control",
+  "function": "Prompt / prefill handoff: GPU-prefilled KV ingest into the decode HBM (window rows x40 layers, sharded compressed KV + index keys, compressor open groups, token history, DSpark window rows)",
+  "model_ref": "owner rule (memory kv-lives-in-hbm): prefill on GPUs, decode-bit-exact-given-ingested-KV; golden state = Model.new_state / forward_positions(prompt)",
+  "hw_element": "hfd_loader DMA (generic 64-b AXI) only; no DS KV-ingest formatter that writes the dskv_wb layout (ring slot pos mod W, CKV/IK owner die (n/8) mod 96, open key-block shadow)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_loader x1 view=missing; hfd_host_slab x1 view=reservation",
+  "rtl": "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv (generic)",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_loader: failed, re-running TT -363.78 / FF 14.6 (hbm_loader_half_4d30522ee)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED",
+   "NOT_CLOSED"
+  ],
+  "notes": "At 1M context a user brings ~0.9 GB of compressed KV + index keys (sharded ~10 MB a die) plus window rows. The ingest time and bandwidth are unpriced. The DSpark ctl only implements on-chip prefill \"one position a pass\" (golden order), which at 583 us a position is not a viable route for 1M prompts."
+ },
+ {
+  "id": "T3-H04",
+  "phase": "host",
+  "plane": "control",
+  "function": "Multi-user / batching",
+  "model_ref": "n/a",
+  "hw_element": "not claimed",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96)",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [],
+  "notes": "The T3 headline (1,716.3 AR / 3,700.3 MTP tok/s) is a single-user, single-sequence rate. No batch, session table or KV isolation hardware is claimed. Listed so the explorer does not read the omission as coverage."
+ },
+ {
+  "id": "T3-D01",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Token embedding row fetch (10,240 B BF16 row), replicated to the 4 hyper-connection copies",
+  "model_ref": "forward_positions: h = repeat(embed.weight[t], hc)",
+  "hw_element": "stream service (svc) + HBM PHY; VM broadcast",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/composition.json path[0] (embedding_row_post_at_go: 64 phases)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": "hbm_ds:n0000 (x1)",
+  "cycles": 407.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "SE_s6 and SW_s4 revoked (FF hold); 13 of 17 segment masters have no r25 view yet although most are closed in the loop."
+ },
+ {
+  "id": "T3-D02",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram n-gram hashing of the token history (layers 1, 14)",
+  "model_ref": "Model.engram_layer: EngramTables.hashes(history, li)",
+  "hw_element": "ot_hdc_engram_hash_shipped (HDC core only)",
+  "die": "none on the HBM die",
+  "rtl": "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv, ot_hdc_engram_tables_shipped_pkg.sv",
+  "exact_bench": "results/rtl/hdc_v41_decode_campaign.json (reduced v2 on ot_hdc_core_v41; tools/exactness v41_reduced_hdc)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_PRICED"
+  ],
+  "notes": "The token path prices du:engram_fetch at 0 RTL cycles because the hashes depend only on the history (issued at token start). No HBM-die block computes the hashes, though. Their latency must still be hidden behind embed + layer 0, and that is not shown."
+ },
+ {
+  "id": "T3-D03",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Token-history ring (last NG=4 tokens; Engram hashes, MTP verify)",
+  "model_ref": "state[\"tokens\"]; spec_state TOK ring (TR >= NG + PMAX)",
+  "hw_element": "ot_dshbm_spec_state TOK_RD (MTP block only)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "AR has no history holder on the die either; the only RTL is inside the un-placed MTP block."
+ },
+ {
+  "id": "T3-D04",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram table row read from HBM (owner die = id mod 96)",
+  "model_ref": "decode_engram_rows(codes, sc, ids)",
+  "hw_element": "svc read (W-port / KV kind) + PHY",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json (engram_1row_notice 74 ns)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": "hbm_ds:n0052 (x2)",
+  "cycles": 20.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Charged 10 cycles a layer as \"off path\" (issued at token start). The FP8 code+scale decode of the rows is not a separate node."
+ },
+ {
+  "id": "T3-D05",
+  "phase": "decode",
+  "plane": "data",
+  "function": "engram.rows_gather collective (owner dies -> all)",
+  "model_ref": "w19 ISA: gather eg_rows (6,144 x BF16)",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/w19_hbm_tp96_isa_oreduce.json (ISA level only)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED",
+   "NOT_CLOSED"
+  ],
+  "notes": "Absent from the token path: dshbm_1m_allmeasured \"Engram/candidate-merge collectives: off the critical path (model judgement)\", 0 us. Plausibly hideable (the rows depend only on the history), but nothing shows it."
+ },
+ {
+  "id": "T3-D06",
+  "phase": "decode",
+  "plane": "data",
+  "function": "engram.wkv matvec (FP8, 25,600 x 6,144)",
+  "model_ref": "linear_q(engram.wkv, rows)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0054 (x2)",
+  "cycles": 1003.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D07",
+  "phase": "decode",
+  "plane": "data",
+  "function": "engram.kv_gather collective",
+  "model_ref": "w19 ISA: gather eg_kv",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/w19_hbm_tp96_isa_oreduce.json (ISA level only)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED",
+   "NOT_CLOSED"
+  ],
+  "notes": "Absent from the token path, as T3-D05."
+ },
+ {
+  "id": "T3-D08",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Engram mix (per copy: rstd(h) x rstd(k), weighted dot, sign-sqrt, sigmoid gate, h + gate x value)",
+  "model_ref": "Model.engram_layer",
+  "hw_element": "SU lanes (hfd_su) + SFU",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "SU chain N1024/M256 (rtl/hdc/v41x/ot_hdc_v41x_vec*.sv)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json L1.engram_mix (dpi_beh: DPI FP stand-ins)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0056 (x2)",
+  "cycles": 1286.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Exactness rests on the DPI FP stand-in vehicle (RTL vs DPI equivalence checked at N64)."
+ },
+ {
+  "id": "T3-D09",
+  "phase": "decode",
+  "plane": "data",
+  "function": "hc_mixes projection (hc_fn 24 x 20,480 matvec + rsqrt + sigmoid pre/post + comb), attn and ffn, 80 a token",
+  "model_ref": "Model.hc_mixes (mixes = matvec_c(fn, flat) x r)",
+  "hw_element": "ot_hdc_v41x_hcp (HCP, W256)",
+  "die": "none on the HBM die: hfd_hc holds only 88 ot_dsrom_su_hcpost_lane lanes; the generator charges hc as a 6.087 mm2 model area",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "exact_bench": "results/rtl/hdc_v41x_hcp_campaign.json benches.spec_w256 (golden-exact, DPI FP stand-ins)",
+  "closure": "NONE",
+  "in_token_path": "hbm_ds:hcp000 (x80)",
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "Drawn beside the layer body: 80 parallel nodes of 951.6 cycles (76,128 in all), with 0 exposed (0.793 us beside a 4.97-5.28 us body). They include Sinkhorn (T3-D10) and the SU pre/post."
+ },
+ {
+  "id": "T3-D10",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Sinkhorn normalisation of comb (row softmax, then 20 x column/row normalise), 80 a token",
+  "model_ref": "Model.hc_mixes (sinkhorn_iters 20)",
+  "hw_element": "ot_hdc_sinkhorn",
+  "die": "none on the HBM die (model area \"sinkhorn_select_engram 0.103 mm2\" inside the hc ledger line)",
+  "rtl": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+  "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/su.json attn.hc.sinkhorn (41 clocks at routed 151.9 MHz, ROM record)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "Charged inside T3-D09 at the DS-ROM measured 0.528 us. That figure was measured at 151.9 MHz on the ROM hub; there is no HBM-die instance or 1.2 GHz route."
+ },
+ {
+  "id": "T3-D11",
+  "phase": "decode",
+  "plane": "data",
+  "function": "hc_pre collapse + RMSNorm (attn_norm / ffn_norm) + FP8 activation quant, fused (80 a token)",
+  "model_ref": "Model.layer: rmsnorm_fold(hc_pre(h, pre), attn_norm|ffn_norm)",
+  "hw_element": "fused SU chain ot_dsrom_su_norm (N1024 D5120 HC1 QUANT1); die: hfd_su / norm split groups ot_hbm_norm_grp8/16",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/su_fused/norm_run_hc.json (236 cyc, exact)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0001 (x80)",
+  "cycles": 19040.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D12",
+  "phase": "decode",
+  "plane": "data",
+  "function": "x-broadcast of the activation to the SMs (VM multicast, every matvec)",
+  "model_ref": "operand delivery for every mv",
+  "hw_element": "hfd_vm quadrants / VM8 sub-tiles (ot_hbm_die_vm_multicast_root) + mcast/meso stations",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_vm_ne x1 view=missing; hfd_vm_nw x1 view=missing; hfd_vm_se x1 view=missing; hfd_vm_sw x1 view=missing",
+  "rtl": "physical/hbm_accel_die_views/vm/rtl/ot_hbm_die_vm_multicast_root.sv",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005 (ot_hbm_accel_sm_v ENABLE=1 sequence bench)",
+  "closure": "FAILED | hfd_vm_ne_n: failed, re-running (hbm_vm8_nen_spcb_hm25_f6bc7c10b-tt); hfd_vm_ne_s: failed, re-running TT 18.27 / FF -51.96 (hbm_vm8_nes_sp_hm10_a5b5873d9-tt); hfd_vm_nw_n: failed, re-running (hbm_vm8_nwn_spc_hm25_c47843849-tt); hfd_vm_nw_s: failed, re-running TT -41.19 / FF -59.26 (hbm_vm8_nws_sp_hm25_a5b5873d9-tt); hfd_vm_se_n: failed, re-running (hbm_vm8_sen_spcb_hm25_f6bc7c10b-tt-f3-hm10); hfd_vm_se_s: failed, re-running (hbm_vm8_ses_spcb_hm25_f6bc7c10b-tt-f3-hm10); hfd_vm_sw_n: failed, re-running (hbm_vm8_swn_seatp_hm25_79315a431-tt); hfd_vm_sw_s: first trial in flight (hbm_vm8_sws_spcb_hm25_f6bc7c10b-tt-f3-hm10)",
+  "in_token_path": "hbm_ds:n0002 (x343)",
+  "cycles": 47768.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Gate vm_alignment (VM write alignment / real publication path) is gated-unknown in the unified ledger. The joint PQ/XMAP lever credits -36.4 us AR against this class."
+ },
+ {
+  "id": "T3-D13",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wq_a matvec (FP8, 1,280 x 5,120)",
+  "model_ref": "attention: linear_q(attn.wq_a, x)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0003 (x40)",
+  "cycles": 4736.1,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D14",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wkv matvec (FP8, 512 x 5,120)",
+  "model_ref": "attention: linear_q(attn.wkv, x)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0006 (x40)",
+  "cycles": 4736.2,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D15",
+  "phase": "decode",
+  "plane": "data",
+  "function": "compressor.wkv|wgate matvec (BF16, KV source layers 2/8/14/20)",
+  "model_ref": "Model.compressor: mv([wkv; wgate], x)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0116 (x4)",
+  "cycles": 802.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D16",
+  "phase": "decode",
+  "plane": "data",
+  "function": "indexer.weights_proj matvec (BF16, 32 x 5,120, 8 index layers)",
+  "model_ref": "Model.indexer: linear_bf16(weights_proj, x)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0119 (x8)",
+  "cycles": 1602.9,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D17",
+  "phase": "decode",
+  "plane": "data",
+  "function": "x_projections all-gather (qa, kvraw, cmp, iwr)",
+  "model_ref": "w19 ISA gather x_projections_gather",
+  "hw_element": "TU endpoint + Tomahawk Ultra switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0008 (x80)",
+  "cycles": 42607.7,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": "Endpoint RTL cycles + TU vendor budget 377.6 ns + modelled switch striping tail 0.15 us; full FEC priced separately (+29.89 us AR)."
+ },
+ {
+  "id": "T3-D18",
+  "phase": "decode",
+  "plane": "data",
+  "function": "q_norm (fold) + kv_norm + RoPE tail + FP8 QDQ -> new window KV row",
+  "model_ref": "Model.attention: qr, kv = qdq_fp8(rope_tail(kv_norm(...)))",
+  "hw_element": "fused SU chain (two norm units + RoPE + FP8 quant)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/su_fused (norm q || norm kv, exact)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0010 (x40)",
+  "cycles": 8480.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D19",
+  "phase": "decode",
+  "plane": "control",
+  "function": "RoPE cos/sin at the position (plain theta 1e4 for window-only layers, YaRN theta 1.6e5 for compressed; group position pos+1-r for compressed rows)",
+  "model_ref": "rope_cs(freqs_plain|freqs_yarn, pos)",
+  "hw_element": "none found: ot_dsrom_su_norm takes cos_t/sin_t as an input \"RoPE table (constants of the position)\"",
+  "die": "none",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "No producer of the per-position table was located on the HBM die (generator, or HBM table + fetch). Four tables are needed per token: plain at pos, YaRN at pos, YaRN at pos+1-r, YaRN for indexer q. A search of rtl/ and tools/ found no rope table source for the HBM design; this should be verified."
+ },
+ {
+  "id": "T3-D20",
+  "phase": "decode",
+  "plane": "data",
+  "function": "KV append: new window row write-back to HBM (every layer, every die, ring slot pos mod 128, 17 sectors)",
+  "model_ref": "state[\"win\"][L].append(kv)",
+  "hw_element": "ot_hbm_accel_dskv_wb kind 0 (+ ot_hbm_accel_stream_pc_wb)",
+  "die": "none: the die stream service has no write command (svc core: kind 3 \"reserved, dropped\"; e-port kinds are reads only)",
+  "rtl": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv",
+  "exact_bench": "results/rtl/dshbm_kv_writeback_1m_20261004/kv_writeback_rtl.json (768/768 PASS incl. DRAM timing; negatives FAIL)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "The write-back is priced at 0 (posted, hidden). Worst stream interference is 2.03 us/stack and the serial upper bound 2.37 us/token, neither charged. The fence slack is 4.38 us. HBM bandwidth audit row \"KV write-back\" still reads \"no 1M-addressable DS write path RTL\"; the dskv_wb record (10-04) supersedes it."
+ },
+ {
+  "id": "T3-D21",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wq_b matvec (FP8, head-aligned: head h on die h, 64 head dies)",
+  "model_ref": "linear_q(attn.wq_b, qr)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0012 (x40)",
+  "cycles": 11896.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D22",
+  "phase": "decode",
+  "plane": "data",
+  "function": "q RoPE (own head)",
+  "model_ref": "rope_tail(q, cs)",
+  "hw_element": "SU chain",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0014 (x40)",
+  "cycles": 2936.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D23",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Compressor pooling on the owner die (softmax over r slots, weighted sum, RMSNorm) + indexer.wk (BF16 128x512) + k_norm + YaRN RoPE + FP4 QDQ (ik E8M0, ckv E4M3/16)",
+  "model_ref": "Model.compressor + attention(): ik/ckv append",
+  "hw_element": "SU / SFU / quant (assumed by the w19 \"local\" op); no HBM-die bench",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing; hfd_quant x1 view=missing",
+  "rtl": null,
+  "exact_bench": "results/rtl/w19_hbm_tp96_isa_oreduce.json (ISA level only)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED",
+   "NOT_EXACT",
+   "NOT_CLOSED"
+  ],
+  "notes": "Absent from the token path (\"compressor ... off the critical path (model judgement)\", 0 us). The indexer.wk matvec is a real matvec (not drawn). The next index layer reads the key this pass writes only on the next token, so hiding is plausible, but the owner die does this extra work on top of its own body."
+ },
+ {
+  "id": "T3-D24",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Compressor open-group slot state (r-1 pending slots per KV source)",
+  "model_ref": "state[\"slots\"], state[\"slotrec\"]",
+  "hw_element": "spec_state SLOT ring (MTP block only)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "No AR holder of the open group on the die either."
+ },
+ {
+  "id": "T3-D25",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Compressed-KV row (288 B) + index key (68 B, open key-block shadow) append to HBM on the owner die",
+  "model_ref": "state[\"ckv\"][L].append, state[\"ik\"][L].append",
+  "hw_element": "ot_hbm_accel_dskv_wb kinds 1/2",
+  "die": "none (no write path in svc; as T3-D20)",
+  "rtl": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv",
+  "exact_bench": "results/rtl/dshbm_kv_writeback_1m_20261004/kv_writeback_rtl.json",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D26",
+  "phase": "decode",
+  "plane": "data",
+  "function": "indexer.wq_b matvec (FP8, 4,096 x 1,280) + indexer.q_gather",
+  "model_ref": "Model.indexer: linear_q(indexer.wq_b, qr)",
+  "hw_element": "SM array + TU endpoint",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0129 (x24)",
+  "cycles": 9511.4,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D27",
+  "phase": "decode",
+  "plane": "data",
+  "function": "index_q: indexer q YaRN RoPE + FP4 QDQ (E8M0) + weights scale",
+  "model_ref": "Model.indexer",
+  "hw_element": "SU chain + ot_hdc_actquant (fp4)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing; hfd_quant x1 view=missing",
+  "rtl": "rtl/hdc/v41/ot_hdc_actquant.sv; physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json L2.index_q + quant.json",
+  "closure": "FAILED | hfd_quant: closed (TT era) TT 40.61 / FF 18.57 (hbm_quant_tc_4aadc92bc); hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt)",
+  "in_token_path": "hbm_ds:n0133 (x8)",
+  "cycles": 2220.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D28",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Index scores over the die's own keys (HBM key stream, FP4 dots, relu x weight, row reduce)",
+  "model_ref": "Model.indexer: dots_q4, reduce_rows",
+  "hw_element": "ot_hdc_v41x_idx_array (W11) / rtl/hbm_accel/index/ot_hbm_accel_index_path",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_index_q_b0 x4 view=missing; hfd_index_q_b1 x4 view=closed; hfd_index_q_b2 x4 view=missing; hfd_index_q_b3 x4 view=missing; hfd_index_q_b4 x4 view=closed; hfd_index_q_b5 x4 view=missing -- the bands are an INTERIM SHELL \"NOT the indexer\" (physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv: pipes + placeholder t_vm = key[511:0]^key[1023:512], no scoring); no die master holds the index path",
+  "rtl": "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv; rtl/hdc/v41x/ot_hdc_v41x_idx_array.sv",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json (idx array RTL 170 cyc, NS2/NK4 x 8 slot windows)",
+  "closure": "FAILED | hfd_index_q_b0: closed (TT era) TT 109.28 / FF 34.19 (hbm_idxq_b0_tc_4aadc92bc); hfd_index_q_b1: closed (TT era) TT 316.14 / FF 25.03 (hbm_idxq_b1_tc_4aadc92bc); hfd_index_q_b2: failed, re-running TT -192.86 / FF -149.79 (hbm_idxq_b2_2ec0ab4f9_r22); hfd_index_q_b3: closed (TT era) TT 262.78 / FF 24.42 (hbm_idxq_b3_841beb3ab_we-cgfix-tt); hfd_index_q_b5: closed (TT era) TT 225.67 / FF 38.06 (hbm_idxq_b5_841beb3ab_we-cgfix-tt); these close the INTERIM SHELL bands, not the indexer",
+  "in_token_path": "hbm_ds:n0134 (x8)",
+  "cycles": 2578.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "The index_q view header says the real index path \"cannot be placed in this slot\": the scorer is ~5.9 mm2 of cells a quarter against a 5.14 mm2 slot, and its 34,816-bit key edge has no die nets. The closed index bands are pipes. The indexer is missing from the die even though 4 bands read \"closed\"."
+ },
+ {
+  "id": "T3-D29",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Index-key read stream from HBM (scan of the die's shard)",
+  "model_ref": "state[\"ik\"][src][:n]",
+  "hw_element": "svc kind 2 (index-key read) + PHY",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/hbm_path_bandwidth_audit_20261004/summary.json (L20-type 94 %, L2-type 88.8 %, subsumed by the static stream at 96.2 %)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Charged inside du:index_scores (\"HBM key stream 132.4 ns binds\")."
+ },
+ {
+  "id": "T3-D30",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Candidate blocks at layer 20 (block max, pin newest block, local top-2048)",
+  "model_ref": "Model.candidate_blocks",
+  "hw_element": "index path (sel_cand)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_index_q_b0 x4 view=missing; hfd_index_q_b1 x4 view=closed; hfd_index_q_b2 x4 view=missing; hfd_index_q_b3 x4 view=missing; hfd_index_q_b4 x4 view=closed; hfd_index_q_b5 x4 view=missing -- the bands are an INTERIM SHELL \"NOT the indexer\" (physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv: pipes + placeholder t_vm = key[511:0]^key[1023:512], no scoring); no die master holds the index path",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv; rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json cand_local",
+  "closure": "FAILED | hfd_index_q_b0: closed (TT era) TT 109.28 / FF 34.19 (hbm_idxq_b0_tc_4aadc92bc); hfd_index_q_b1: closed (TT era) TT 316.14 / FF 25.03 (hbm_idxq_b1_tc_4aadc92bc); hfd_index_q_b2: failed, re-running TT -192.86 / FF -149.79 (hbm_idxq_b2_2ec0ab4f9_r22); hfd_index_q_b3: closed (TT era) TT 262.78 / FF 24.42 (hbm_idxq_b3_841beb3ab_we-cgfix-tt); hfd_index_q_b5: closed (TT era) TT 225.67 / FF 38.06 (hbm_idxq_b5_841beb3ab_we-cgfix-tt); these close the INTERIM SHELL bands, not the indexer",
+  "in_token_path": "hbm_ds:n1118 (x1)",
+  "cycles": 433.7,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D31",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Candidate merge collective (96 x 2,048) + cand_apply (sharded keep flags)",
+  "model_ref": "w19 ISA topk_merge cand + local cand_apply",
+  "hw_element": "TU endpoint + index path",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/w19_hbm_tp96_isa_oreduce.json (ISA level only)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED",
+   "NOT_ON_DIE"
+  ],
+  "notes": "Absent from the token path (model judgement \"off the critical path\"). Layer 24 needs the flags, and only 3 layers separate them."
+ },
+ {
+  "id": "T3-D32",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Candidate mask on the die's own scores (layers 24..36)",
+  "model_ref": "indexer: s = where(cand, s, -inf)",
+  "hw_element": "index path",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_index_q_b0 x4 view=missing; hfd_index_q_b1 x4 view=closed; hfd_index_q_b2 x4 view=missing; hfd_index_q_b3 x4 view=missing; hfd_index_q_b4 x4 view=closed; hfd_index_q_b5 x4 view=missing -- the bands are an INTERIM SHELL \"NOT the indexer\" (physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv: pipes + placeholder t_vm = key[511:0]^key[1023:512], no scoring); no die master holds the index path",
+  "rtl": null,
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json cand_mask",
+  "closure": "FAILED | hfd_index_q_b0: closed (TT era) TT 109.28 / FF 34.19 (hbm_idxq_b0_tc_4aadc92bc); hfd_index_q_b1: closed (TT era) TT 316.14 / FF 25.03 (hbm_idxq_b1_tc_4aadc92bc); hfd_index_q_b2: failed, re-running TT -192.86 / FF -149.79 (hbm_idxq_b2_2ec0ab4f9_r22); hfd_index_q_b3: closed (TT era) TT 262.78 / FF 24.42 (hbm_idxq_b3_841beb3ab_we-cgfix-tt); hfd_index_q_b5: closed (TT era) TT 225.67 / FF 38.06 (hbm_idxq_b5_841beb3ab_we-cgfix-tt); these close the INTERIM SHELL bands, not the indexer",
+  "in_token_path": "hbm_ds:n1340 (x4)",
+  "cycles": 37.1,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D33",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Local top-512 of the index scores",
+  "model_ref": "topk_lowest_index(s, 512)",
+  "hw_element": "index path (tselect)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_index_q_b0 x4 view=missing; hfd_index_q_b1 x4 view=closed; hfd_index_q_b2 x4 view=missing; hfd_index_q_b3 x4 view=missing; hfd_index_q_b4 x4 view=closed; hfd_index_q_b5 x4 view=missing -- the bands are an INTERIM SHELL \"NOT the indexer\" (physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv: pipes + placeholder t_vm = key[511:0]^key[1023:512], no scoring); no die master holds the index path",
+  "rtl": "rtl/hdc/v41/ot_hdc_tselect.sv",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json topk_local",
+  "closure": "FAILED | hfd_index_q_b0: closed (TT era) TT 109.28 / FF 34.19 (hbm_idxq_b0_tc_4aadc92bc); hfd_index_q_b1: closed (TT era) TT 316.14 / FF 25.03 (hbm_idxq_b1_tc_4aadc92bc); hfd_index_q_b2: failed, re-running TT -192.86 / FF -149.79 (hbm_idxq_b2_2ec0ab4f9_r22); hfd_index_q_b3: closed (TT era) TT 262.78 / FF 24.42 (hbm_idxq_b3_841beb3ab_we-cgfix-tt); hfd_index_q_b5: closed (TT era) TT 225.67 / FF 38.06 (hbm_idxq_b5_841beb3ab_we-cgfix-tt); these close the INTERIM SHELL bands, not the indexer",
+  "in_token_path": "hbm_ds:n0135 (x8)",
+  "cycles": 2353.1,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D34",
+  "phase": "decode",
+  "plane": "data",
+  "function": "96 x 512 index merge (select + topk_merge collective)",
+  "model_ref": "w19 ISA topk_merge sel; global top-512",
+  "hw_element": "l20_index_topk selector + TU endpoint",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_index_q_b0 x4 view=missing; hfd_index_q_b1 x4 view=closed; hfd_index_q_b2 x4 view=missing; hfd_index_q_b3 x4 view=missing; hfd_index_q_b4 x4 view=closed; hfd_index_q_b5 x4 view=missing -- the bands are an INTERIM SHELL \"NOT the indexer\" (physical/hbm_accel_die_views/index_q/rtl/hfd_index_q.sv: pipes + placeholder t_vm = key[511:0]^key[1023:512], no scoring); no die master holds the index path; HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_sel.sv; rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "l20_index_topk RTL 419 cyc exact (results/rtl/dshbm_1m_allmeasured_20261004/local.json)",
+  "closure": "FAILED | hfd_index_q_b0: closed (TT era) TT 109.28 / FF 34.19 (hbm_idxq_b0_tc_4aadc92bc); hfd_index_q_b1: closed (TT era) TT 316.14 / FF 25.03 (hbm_idxq_b1_tc_4aadc92bc); hfd_index_q_b2: failed, re-running TT -192.86 / FF -149.79 (hbm_idxq_b2_2ec0ab4f9_r22); hfd_index_q_b3: closed (TT era) TT 262.78 / FF 24.42 (hbm_idxq_b3_841beb3ab_we-cgfix-tt); hfd_index_q_b5: closed (TT era) TT 225.67 / FF 38.06 (hbm_idxq_b5_841beb3ab_we-cgfix-tt); these close the INTERIM SHELL bands, not the indexer || FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0136 (x24)",
+  "cycles": 23905.1,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "The selector has no die master (same as the index path)."
+ },
+ {
+  "id": "T3-D35",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Selected compressed-KV source row reads (owner dies) + kv_gather to the 64 head dies",
+  "model_ref": "rows += ckv[src][sel]",
+  "hw_element": "svc kind 1 + TU endpoint",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract); HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json gather_7rows_as_built; results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq) || FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0139 (x24)",
+  "cycles": 16589.3,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D36",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Window rows read (128 rows of the layer)",
+  "model_ref": "rows = win[L][-window:]",
+  "hw_element": "svc kind 1 + PHY",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json window_notice (64 phases)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": "hbm_ds:n0015 (x40)",
+  "cycles": 3861.7,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D37",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Attention: scores, two-pass softmax, sink, P x V, inverse RoPE (window + selected rows)",
+  "model_ref": "Model.attend",
+  "hw_element": "near-HBM attention tiles (ot_hdc_v41x_attn_die_tile_b; halves lo/hi under R25S) + su:attend",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_attn_tile x64 view=interim-not-closed",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv, ot_hdc_v41x_attn_die_half_b.sv",
+  "exact_bench": "results/rtl/v41_full_attention_numeric (tile RTL 225/609 cyc, exact)",
+  "closure": "FAILED | hfd_attn_tile_b: failed, re-running (hbm_attn_tile_r23h_sl12_0b66c6dd2-tt); hfd_attn_half_lo: first trial in flight (hbm_attn_half_lo_sl12_021f55db2-tt-f3-lvt); hfd_attn_half_hi: failed, re-running (hbm_attn_half_hi_sl12_rowfrag_79315a431-tt); ot_attn_tile_m6h1q: closed (TT era) TT n/a / FF n/a (hbm_attn_quad_qb1_tc_6ce4b64fd); ot_attn_bank_ew544: closed (TT era) TT n/a / FF n/a (hbm_attn_bank_ew544_tc_e1f264030); ot_attn_bank_sn544: closed (TT era) TT n/a / FF n/a (hbm_attn_bank_sn544_tc_e1f264030); hfd_attn_tile die view interim-not-closed post-CTS SS -2,032 ps, size MISMATCH vs slot",
+  "in_token_path": "hbm_ds:n0016 (x80)",
+  "cycles": 43635.9,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "The tile is interim at SS -2,032 ps, and closing it will likely add pipeline stages the composition does not carry. The R25A taller tile does not fit the 26 mm die height; R25S (split halves) is flag-off."
+ },
+ {
+  "id": "T3-D38",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wo_a grouped (K-split: the die's head against its o-group's 1,024 rows) + o-group tree all-reduce (8) + multicast",
+  "model_ref": "attend(): grouped wo_a; w19 variant oreduce all_reduce",
+  "hw_element": "SM array + TU endpoint",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed; HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s); rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json); results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB) || FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0019 (x120)",
+  "cycles": 81998.0,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D39",
+  "phase": "decode",
+  "plane": "data",
+  "function": "wo_b matvec (FP8, 5,120 x 8,192) + attn_out all-gather",
+  "model_ref": "linear_q(attn.wo_b, z)",
+  "hw_element": "SM array + TU endpoint",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed; HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB) || FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0024 (x120)",
+  "cycles": 50717.7,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D40",
+  "phase": "decode",
+  "plane": "data",
+  "function": "hc_post (attn and ffn): post x y + comb-mix of the 4 residual copies, BF16 (80 a token)",
+  "model_ref": "Model.hc_post",
+  "hw_element": "hcpost lanes ot_dsrom_su_hcpost_lane (hfd_hc quarter, 88 lanes)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_hc x4 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv; physical/hbm_accel_die_views/hc/rtl/hfd_hc.sv",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/su_fused (hc_post NG256 M5A4, 57 cyc, exact)",
+  "closure": "FAILED | hfd_hc: failed, re-running TT -3474.02 / FF -2442.18 (hbm_hc_quarter_01353018a-tt)",
+  "in_token_path": "hbm_ds:n0028 (x80)",
+  "cycles": 4560.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "The hfd_hc quarter is at TT -3,474 ps. safe-hbm C1 (lane input pin register, +1 cycle) is queued."
+ },
+ {
+  "id": "T3-D41",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Router gate matvec (BF16, 384 x 5,120, FP32 out)",
+  "model_ref": "moe: mv(ffn.gate, x)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0031 (x40)",
+  "cycles": 8015.5,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D42",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Router activation sqrt(softplus(.)) on own rows",
+  "model_ref": "moe: sqrt(softplus(scores))",
+  "hw_element": "SU + SFU (ot_hdc_softplus / spsqrt)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing; hfd_sfu x4 view=missing",
+  "rtl": "rtl/hdc/v41/ot_hdc_softplus.sv; rtl/hdc/v41x/ot_dsrom_su_spsqrt.sv",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); hfd_sfu: failed, re-running (hbm_sfu_quarter_r24p_pinko_8de4473c4-tc-pd40-hm25-meas); ot_su12_sfu: failed, re-running TT 247.34 / FF -12.6 (hbm_sfu_lane_ring3_aa5dd28d5)",
+  "in_token_path": "hbm_ds:n0033 (x40)",
+  "cycles": 12588.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D43",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Router score all-gather (384 FP32)",
+  "model_ref": "w19 router_gather",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0034 (x80)",
+  "cycles": 42537.8,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D44",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Routing: top-6 of (score + bias), weights score_i / sum x route_scale (replicated)",
+  "model_ref": "moe: topk_lowest_index, div, mul",
+  "hw_element": "hfd_router (ot_gpu_router_topk_ps N384 P16) + SU",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_router x1 view=closed",
+  "rtl": "rtl/gpu/ot_gpu_router_topk_ps.sv; physical/hbm_accel_die_views/router/rtl/hfd_router.sv",
+  "exact_bench": "physical/hbm_accel_die_views/router/rtl/tb_hfd_router.sv; router top-6 RTL 47 cyc",
+  "closure": "FAILED | hfd_router: revoked, re-running TT 43.52 / FF -69.28 (hbm_router_r23_kneg_94fab53cc_b)",
+  "in_token_path": "hbm_ds:n0036 (x80)",
+  "cycles": 11375.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "hfd_router is revoked at FF -69.28 ps and re-running."
+ },
+ {
+  "id": "T3-D45",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Expert dispatch: routed-expert descriptors -> HBM fetch into SM staging (6 experts, FP4)",
+  "model_ref": "w19 expert_fetch (B2)",
+  "hw_element": "svc expert fetch R5a-LA (ot_hbm_accel_expert_fetch_stream_la) + expert workgroup steering (ot_hbm_accel_expert_fetch_stream_wg, additive candidate)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv, _wg.sv",
+  "exact_bench": "results/rtl/dshbm_expert_fetch90_20261004; results/rtl/dshbm_expert_workgroup_20261005/runtime_r2_PASS",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": "hbm_ds:n0038 (x40)",
+  "cycles": 7345.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "The gate row \"corrected+wg\" credits expert workgroup steering, but the die generator lists its descriptor/steering logic as \"est 0.1 mm2 (lever L1, not built)\". Routed-expert fetch reaches 86.0 % of peak against the owner rule of >= 90 % (bandwidth audit)."
+ },
+ {
+  "id": "T3-D46",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Expert w1/w3 matvecs (6 routed FP4 + 1 shared FP8)",
+  "model_ref": "Model.expert: linear_q(w1|w3, x)",
+  "hw_element": "SM array (workgroup)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0041 (x40)",
+  "cycles": 26655.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D47",
+  "phase": "decode",
+  "plane": "data",
+  "function": "SwiGLU (clip +-10, silu(g) x u, x route weight) + FP8 quant",
+  "model_ref": "Model.expert",
+  "hw_element": "fused SU chain ot_dsrom_su_swiglu",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/su_fused (W1024 ROUTED1 133 cyc, exact)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0039 (x40)",
+  "cycles": 5320.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D48",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Expert intermediate all-gather",
+  "model_ref": "w19 expert_intermediate_gather",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0043 (x80)",
+  "cycles": 47261.7,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D49",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Expert w2 matvecs (7 slots)",
+  "model_ref": "Model.expert: linear_q(w2, a)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n0046 (x40)",
+  "cycles": 37095.1,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D50",
+  "phase": "decode",
+  "plane": "data",
+  "function": "MoE combine: expert sum in id order, then shared expert",
+  "model_ref": "moe: seqsum",
+  "hw_element": "SU chain",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n0048 (x40)",
+  "cycles": 5408.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D51",
+  "phase": "decode",
+  "plane": "data",
+  "function": "ffn_out all-gather",
+  "model_ref": "w19 ffn_out_gather",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n0049 (x80)",
+  "cycles": 43461.5,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-D52",
+  "phase": "decode",
+  "plane": "data",
+  "function": "SM -> SU result gather + supply barrier (every matvec)",
+  "model_ref": "operand return for every mv",
+  "hw_element": "hfd_barrier (ot_gpu_barrier_node K32) + gather stations + hfd_result_relay64 + hfd_su_result_ingress",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_barrier x1 view=closed; hfd_gath_r9 x2 view=closed; hfd_gath_r25 x2 view=closed",
+  "rtl": "rtl/gpu/ot_gpu_barrier_node.sv",
+  "exact_bench": "results/rtl/hbm_accel_fmax_inventory_20261004/sm/closure.json (barrier 62 cyc)",
+  "closure": "FAILED | hfd_gath_r25: closed (TT era) TT 67.5 / FF 18.76 (hbm_stn_gath_r25_336e4655e_kw-sttt); hfd_gath_r9: closed (TT re-verified) TT 112.49 / FF 23.2 (hbm_stn_gath_r9_pa_fbf6b0da5); hfd_su_result_ingress: closed (TT era) TT 29.93 / FF 25.27 (hbm_su_rin_b-36399d734); hfd_result_relay64_ew: failed, re-running TT 44.17 / FF 15.66 (hbm_result_relay64_ew_screen_5588e3440-tt); hfd_result_relay64_ns: failed, re-running TT 84.34 / FF 15.8 (hbm_result_relay64_ns_screen_5588e3440-tt)",
+  "in_token_path": "hbm_ds:n0004 (x343)",
+  "cycles": 57404.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Gate sm_su_result_edge_native is gated-unknown: the published 343 cycles a token is \"hidden wire + stations gather a2 +1\". The proposed native edge costs 1,029 cycles a token."
+ },
+ {
+  "id": "T3-S01",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Final hc_pre + RMSNorm",
+  "model_ref": "forward_positions: rmsnorm_fold(hc_pre(h, pre), norm.weight)",
+  "hw_element": "fused SU chain",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_matched_reference_20261005/su_fused",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n2204 (x1)",
+  "cycles": 238.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-S02",
+  "phase": "decode",
+  "plane": "data",
+  "function": "LM head matvec (BF16, 129,280 x 5,120, row-split over 96 dies, FP32 logits)",
+  "model_ref": "mv(head.weight, xf)",
+  "hw_element": "SM array",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops.json + results/rtl/dshbm_matched_reference_20261005/composition.json (warm stream, bit-exact); tools/exactness hbm_ds_joint_p1 (results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds:n2206 (x1)",
+  "cycles": 3530.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-S03",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Local argmax (lowest id on ties)",
+  "model_ref": "int(np.argmax(logits))",
+  "hw_element": "SU chain",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": "rtl/hdc/v41x/ot_dsrom_su_norm.sv, ot_dsrom_su_swiglu.sv, ot_dsrom_su_hcpost.sv; rtl/hbm_accel/su/*; hub quarter physical/hbm_accel_die_views/su/rtl/hfd_su.sv (192 ot_su12_light lanes)",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/local.json",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": "hbm_ds:n2208 (x1)",
+  "cycles": 149.6,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-S04",
+  "phase": "decode",
+  "plane": "data",
+  "function": "96-die argmax merge",
+  "model_ref": "w19 topk_merge argmax",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json (TU endpoint RTL, 6-10 exact runs a collective kind)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds:n2209 (x2)",
+  "cycles": 1063.1,
+  "cycles_source": "vendor",
+  "gap": [
+   "NOT_CLOSED",
+   "MODELLED_ONLY"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-S05",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Stop condition (EOS id / max length / max_seq_len)",
+  "model_ref": "generate(n) / generate_spec: positions < max_seq_len",
+  "hw_element": "none on die: cmdproc END only; ot_dshbm_dspark_ctl caps cfg_ngen and MAXPOS but compares no EOS",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96)",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv (MAXPOS cap)",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_PRICED"
+  ],
+  "notes": "Host-side by implication; no record states it. Under MTP an EOS inside an accepted prefix must truncate the emitted tokens, which needs a compare in accept/commit or in the host."
+ },
+ {
+  "id": "T3-S06",
+  "phase": "decode",
+  "plane": "data",
+  "function": "Sampling other than greedy (temperature / top-p)",
+  "model_ref": "n/a (golden and \u03c4 are greedy)",
+  "hw_element": "not built, not claimed",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96)",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [],
+  "notes": "Greedy only, consistent with the golden and the greedy \u03c4."
+ },
+ {
+  "id": "T3-C01",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Command processor: stream-ordered kernel LAUNCH to the SMs / units, completion, fault abort (layer loop of one step)",
+  "model_ref": "w19 program op order",
+  "hw_element": "hfd_cmdproc_n / _s (2 x ot_ds_hbm_cmdproc20, NSM 16)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_cmdproc_n x1 view=closed; hfd_cmdproc_s x1 view=closed",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3); hfd_cmdproc_s: revoked, re-running TT 87.08 / FF -46.57 (hbm_cmdproc_s_ac6ef1af3)",
+  "in_token_path": null,
+  "cycles": 1716.0,
+  "cycles_source": "priced",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Priced as closure_09 (issue faces +2, 0.572 us) + closure_16 (+3 a command, 0.858 us); its LAUNCH-wait semantics are inside the measured walk. Both halves are revoked (mm route session used TT insertion for the FF vclk), with the rerun armed by safe-hbm R-a. No bench runs the DS program on the cmdproc."
+ },
+ {
+  "id": "T3-C02",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Position counter / step sequencing (AR)",
+  "model_ref": "decode_token(tok, pos)",
+  "hw_element": "host doorbell db_pos per step; no on-die AR position counter",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96)",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED"
+  ],
+  "notes": "Under MTP the counter n lives in ot_dshbm_spec_state / dspark_ctl (not on the die). See T3-H01 for the host turnaround."
+ },
+ {
+  "id": "T3-C03",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Inter-die sequencing: arrival-counted collectives, true-credit flow control, barriers",
+  "model_ref": "w19 collectives (fixed order)",
+  "hw_element": "TU endpoint (owner reduce, HA2 true-credit), credit producer, idle-TX pacer, packet SRAM II=1",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*; rtl/hbm_accel/collective_credit_20261007",
+  "exact_bench": "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit*.sv; results/uarch/ha2_truecredit* (+8 cycles a transaction)",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": null,
+  "cycles": 2120.4,
+  "cycles_source": "priced",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Unified ledger gates still gated-unknown: cdc_refill_ss_timing, cdc_frequency_lock, packet_sram_ii3_rate_cap, credit_producer_native."
+ },
+ {
+  "id": "T3-C04",
+  "phase": "decode",
+  "plane": "control",
+  "function": "KV / index-key address generation, cache-length tracking, window and causal extent (n = (pos+1)//r, window min(pos+1,128), owner die (n/8) mod 96)",
+  "model_ref": "Model.attention / indexer / truncate",
+  "hw_element": "read side: svc + stream_pc + ot_hdc_v41x_idx_shard_addr; write side: dskv_wb",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract); write side none",
+  "rtl": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv; rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+  "exact_bench": "results/rtl/dshbm_kv_writeback_1m_20261004 (write + read-back same addresses)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_EXACT"
+  ],
+  "notes": "Addressing is exact in the write-back bench, but its producer of pos/n on the die is the host doorbell. The index-shard address unit has no die master (it belongs to the index path, T3-D28)."
+ },
+ {
+  "id": "T3-C05",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Collective fabric: SerDes + Tomahawk Ultra switch tier (all-gather / all-reduce / top-k merge / kv-gather), 96 dies",
+  "model_ref": "w19 collectives",
+  "hw_element": "ot_pdie_serdes x9 + hfd_serdes_slab (18 mm2 model reservation) + off-die Tomahawk Ultra (vendor)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": null,
+  "exact_bench": "H100 NVLS measured (results/measured/h100_nvls_20261004) calibrates the default; TU protocol case derived",
+  "closure": "NONE | vendor switch; SerDes slab is a reservation",
+  "in_token_path": "hbm_ds:n0009 (x265)",
+  "cycles": 47700.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "MODELLED_ONLY"
+  ],
+  "notes": "Switch-tier cycles: 28.7 % of the AR token on vendor TU budgets, plus 6.8 % on the modelled striping tail (the cycles listed here). Memory collective-latency-is-measured: the TU protocol case is derived, not measured."
+ },
+ {
+  "id": "T3-C06",
+  "phase": "decode",
+  "plane": "control",
+  "function": "Link FEC and link-level retry / replay on switch crossings",
+  "model_ref": "n/a",
+  "hw_element": "FEC inside the vendor Ethernet PHY (RS(544,514) priced); no retry/replay RTL found",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv (\"serializer (Ethernet PHY/FEC, cable, switch) is OUTSIDE this module\")",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 35868.0,
+  "cycles_source": "priced",
+  "gap": [
+   "MISSING_HW"
+  ],
+  "notes": "Full FEC is priced (+29.89 us AR) but not charged on the 23 draft crossings (T3-P15). An uncorrectable frame has no recovery path: no replay buffer and no collective re-issue."
+ },
+ {
+  "id": "T3-C07",
+  "phase": "decode",
+  "plane": "control",
+  "function": "HBM controller + PHY (scheduling, refresh REFpb, 4 stacks a die)",
+  "model_ref": "n/a",
+  "hw_element": "ot_hbm3e_phy_v41x_aw30_e8p5 x4 (\"PHY + controller\", request-level ports)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): 4 x HBM3E PHY macro (40 mm2)",
+  "rtl": null,
+  "exact_bench": "REFpb-timed HBM3E model in every measured HBM path (hbm_streams.json)",
+  "closure": "NONE | vendor macro, assumed boundary timing",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "vendor",
+  "gap": [
+   "MODELLED_ONLY"
+  ],
+  "notes": "Vendor IP by design (PHY = vendor). Its boundary timing is assumed and its controller behaviour modelled."
+ },
+ {
+  "id": "T3-C08",
+  "phase": "decode",
+  "plane": "data",
+  "function": "HBM static weight stream (all non-routed weights, index keys, window/CKV rows in consumption order)",
+  "model_ref": "every mv weight operand",
+  "hw_element": "svc + SM weight requests (credit FIFOs, closure_23)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_svc_SE_s0..s8 / SW_s0..s7 (x2 each; r25 view index: 13 of 17 segment masters have no view) + ot_hbm3e_phy_v41x_aw30_e8p5 x4 (vendor PHY + controller abstract)",
+  "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv (+ rtl/hbm_accel/service/ot_hbm_accel_stream_pc*.sv, expert_fetch_stream_la.sv)",
+  "exact_bench": "results/rtl/hbm_path_bandwidth_audit_20261004/summary.json (96.2 % of peak, >= 90 % rule met)",
+  "closure": "FAILED | hfd_svc_SE_s0: closed (TT era) TT 25.56 / FF 23.35 (hbm_svc_SE_s0_e8b5132fb_r18b); hfd_svc_SE_s1: closed (TT era) TT 42.68 / FF 3.34 (hbm_svc_SE_s1_tt_c10b5fc9a); hfd_svc_SE_s2: closed (TT era) TT 55.55 / FF 21.34 (hbm_svc_SE_s2_tc_4aadc92bc); hfd_svc_SE_s3: closed (TT era) TT 51.9 / FF 13.98 (hbm_svc_SE_s3_tt_c10b5fc9a); hfd_svc_SE_s4: closed (TT era) TT 47.65 / FF 19.6 (hbm_svc_SE_s4_tc_4aadc92bc); hfd_svc_SE_s5: closed (TT era) TT 53.49 / FF 15.98 (hbm_svc_SE_s5_tc_4aadc92bc); hfd_svc_SE_s6: revoked, re-running TT 190.22 / FF -8.55 (hbm_svc_SE_s6_70a27c406); hfd_svc_SE_s7: closed (TT era) TT 167.36 / FF 9.87 (hbm_svc_SE_s7_8afc53d4a_s3); hfd_svc_SE_s8: closed (TT era) TT 116.28 / FF 25.94 (hbm_svc_SE_s8_9ffaeb8e2_r23-lbc-tt); hfd_svc_SW_s0: closed (TT era) TT 129.29 / FF 22.96 (hbm_svc_SW_s0_312bf36c8_s4); hfd_svc_SW_s1: closed (TT era) TT 59.47 / FF 6.86 (hbm_svc_SW_s1_tc_4aadc92bc); hfd_svc_SW_s2: closed (TT era) TT 52.65 / FF 11.04 (hbm_svc_SW_s2_d6f9d25a1_bud-cgfix); hfd_svc_SW_s3: closed (TT era) TT 79.93 / FF 22.88 (hbm_svc_SW_s3_tc_hm25_d4441ee39); hfd_svc_SW_s4: revoked, re-running TT 38.63 / FF -42.43 (hbm_svc_SW_s4_70a27c406); hfd_svc_SW_s5: closed (TT era) TT 56.33 / FF 21.46 (hbm_svc_SW_s5_tt_c10b5fc9a); hfd_svc_SW_s6: closed (TT era) TT 82.44 / FF 16.65 (hbm_svc_SW_s6_tc_4aadc92bc); hfd_svc_SW_s7: closed (TT era) TT 71.08 / FF 20.91 (hbm_svc_SW_s7_312bf36c8_s4-mmq)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Inside the measured SM operator cycles (warm stream)."
+ },
+ {
+  "id": "T3-F01",
+  "phase": "fault",
+  "plane": "control",
+  "function": "HBM ECC / poison",
+  "model_ref": "n/a",
+  "hw_element": "vendor HBM3E controller (assumed)",
+  "die": "PHY macro",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MODELLED_ONLY"
+  ],
+  "notes": "No die-side ECC check or poison propagation on the svc read path is shown. rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv exists, but no r25 master uses it."
+ },
+ {
+  "id": "T3-F02",
+  "phase": "fault",
+  "plane": "control",
+  "function": "On-die SRAM protection (collective packet SRAM, SM serial command/record path)",
+  "model_ref": "n/a",
+  "hw_element": "protected packet SRAM candidate (default off, +2 queue cycles); SM serial command path protected successor (selected=false)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/collective_h2_ecc_20261007/ot_hbm_h2_ecc_column.sv",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": 530.4,
+  "cycles_source": "priced",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "Unified ledger no_ecc_inventory: \"GAP until selected and physically integrated\"."
+ },
+ {
+  "id": "T3-F03",
+  "phase": "fault",
+  "plane": "control",
+  "function": "Link fault / timeout / protected ingress on collectives",
+  "model_ref": "n/a",
+  "hw_element": "ot_hbm_collective_protected_ingress",
+  "die": "none (not in hfd_coll)",
+  "rtl": "rtl/hbm_accel/collective_ingress_20261007/ot_hbm_collective_protected_ingress.sv",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-F04",
+  "phase": "fault",
+  "plane": "control",
+  "function": "Fault reporting / abort (SM fault, bad command, loader fault/irq)",
+  "model_ref": "n/a",
+  "hw_element": "cmdproc status (1 SM fault, 3 bad command, abort list); loader fault/irq",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_cmdproc_n x1 view=closed; hfd_loader x1 view=missing",
+  "rtl": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "exact_bench": null,
+  "closure": "FAILED | hfd_cmdproc_n: revoked, re-running TT 97.48 / FF -54.19 (hbm_cmdproc_n_ac6ef1af3); hfd_loader: failed, re-running TT -363.78 / FF 14.6 (hbm_loader_half_4d30522ee)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "There is no system-level fault bench and no overflow/NaN trap path from the SU/SFU to the cmdproc. HDC SU chains carry flt flags; it is not shown that the HBM wrappers forward them."
+ },
+ {
+  "id": "T3-P01",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "DSpark seed capture: main hidden part (mean of the 4 residual copies at the inputs of layers 37, 38, 39)",
+  "model_ref": "Model.layer: ctx[\"mh\"].append(main_hidden_part(h)) for L in dspark_target_layer_ids",
+  "hw_element": "SU (sequential sum x 1/4, BF16) + VM",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_su x4 view=missing; hfd_su_full x1 view=missing; hfd_su_red x1 view=missing",
+  "rtl": null,
+  "exact_bench": "results/rtl/dshbm_dspark_draft_20261004/composition.json (seed)",
+  "closure": "FAILED | hfd_su: failed, re-running (hbm_su_quarter_r24p_nrd_mmcg_4d90ba1cc-tt); ot_su12_full: failed, re-running TT 90.82 / FF -34.2 (hbm_su_full_a8cdcbe79); ot_hbm_norm_grp8: failed, re-running (hbm-norm-grp8-b-x1hm0-79315a431-tc); ot_hbm_norm_grp16: failed, re-running (hbm-norm-grp16-26f2e4ed2-tc-d1956-f3-lvt); ot_hdc_v41x_vred_top1024: failed, re-running TT 75.34 / FF -25.58 (hbm_su_red_top_6f2d14e36_b)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED",
+   "NOT_EXACT"
+  ],
+  "notes": "No node of the verify walk taps the 3 layer inputs; the seed record starts from main_x."
+ },
+ {
+  "id": "T3-P02",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Seed: main_proj (6 columns), main_x gather, main_norm, 3 stages' wkv + kv_norm + RoPE + FP8 -> DSpark window rows",
+  "model_ref": "Model.dspark_seed / dspark_row",
+  "hw_element": "SM + SU + TU endpoint (AR-path hardware)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/dshbm_dspark_draft_20261004/fullshape.json + chain.json",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds_mtp:accept.sm (x4)",
+  "cycles": 4220.4,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "The collective share (855.6 cycles) is apportioned, not measured."
+ },
+ {
+  "id": "T3-P03",
+  "phase": "mtp_draft",
+  "plane": "control",
+  "function": "DSpark window-row write into the DSK ring (per stage, slot p mod WR)",
+  "model_ref": "state[\"dsk\"][st].append",
+  "hw_element": "ot_dshbm_spec_state DSK_WR + an HBM write path",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed); HBM write side none",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_PRICED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-P04",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Draft compute: embed y + 4 noise rows; 3 DSpark stages (hc mixes, window attention over DSK ring + block rows, MoE 128 experts top-3) at 5 columns; batched LM head; 5-step Markov chain (Markov embed row, rank-256 matvec, bias add, full-vocab argmax, die merge, 96-die select)",
+  "model_ref": "Model.draft / dspark_stage / dspark_attention",
+  "hw_element": "SM array (5 columns) + SU + ot_dshbm_argmax epilogue + ot_dshbm_dspark_ctl; drafter top-3/128 router (ot_gpu_router_topk instance 2)",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed; none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s); rtl/gpu/dshbm/{ot_dshbm_dspark_top,_dspark_ctl,_spec_state,_accept_port,_argmax,_expert_union}.sv (default-off; die block physical/hbm_mtp/rtl on claude/mtp-hbm-20261008)",
+  "exact_bench": "results/rtl/dshbm_dspark_draft_20261004/fullshape.json + chain.json (exact, released weights)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB) || FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": "hbm_ds_mtp:draft.compute (x1)",
+  "cycles": 32482.8,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "Composed from 5-column SM element runs, the measured chain step (1.212 us, 52 % merge transport) and SU \"local\" terms. The argmax epilogue and DSpark ctl are not on the die. The drafter router (topk over 128) is mtp_topk_f384, first trial in flight."
+ },
+ {
+  "id": "T3-P05",
+  "phase": "mtp_draft",
+  "plane": "data",
+  "function": "Draft collectives (18 stage collectives + 5 chain argmax merges)",
+  "model_ref": "w19 draft program",
+  "hw_element": "TU endpoint + switch",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv (die wrapper physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv), rtl/hbm_accel/ha2_ar/*",
+  "exact_bench": "results/rtl/dshbm_dspark_draft_20261004/composition.json collective_count",
+  "closure": "FAILED | hfd_coll: failed, re-running (hbm_coll_hy-6f2cc51ae-tc); hfd_coll_credit_prod: closed (TT era) TT 220.93 / FF 25.91 (hbm_credit-444859f1d-x); hfd_coll_idle_tx: closed (TT era) TT 234.52 / FF 33.83 (hbm_idle-39113d2d0-x); hfd_coll_pkt_fifo_ii1: closed (TT era) TT 12.05 / FF 17.31 (hbm_pkt_ii1rw-8a9a669df-tc); ot_ha2_truecredit_rx_phys: failed, re-running TT -158.49 / FF 1.79 (ha2_tcrxp_hm50b_398750b79); ot_ha2_truecredit_tx_phys: closed (TT era) TT 2.17 / FF 6.77 (ha2_truecredit_tx_reg_tt_90356ef04); ot_ha2_tu_owner_banked_half: failed, re-running TT None / FF -540.3 (ha2_h2_fixedpins_ca0d6a5a2-tt)",
+  "in_token_path": "hbm_ds_mtp:draft.transport (x1)",
+  "cycles": 21853.2,
+  "cycles_source": "modelled",
+  "gap": [
+   "MODELLED_ONLY",
+   "NOT_PRICED"
+  ],
+  "notes": "The o-group tree reduce + multicast is extrapolated (record flag), and full FEC is not charged on these 23 crossings."
+ },
+ {
+  "id": "T3-P06",
+  "phase": "mtp_verify",
+  "plane": "control",
+  "function": "Verify-batch formation: write y, d1..d5 to the history ring at n..n+5; issue the 40 layers with 6 MMA columns (layer-major)",
+  "model_ref": "generate_spec: forward_positions([y]+drafts, q+1)",
+  "hw_element": "ot_dshbm_dspark_ctl (VLAYER g+1 columns) + spec_state TOK ring; SM NC 8 >= 6 (confirmed, mtp-hbm 21:23)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/{ot_dshbm_dspark_top,_dspark_ctl,_spec_state,_accept_port,_argmax,_expert_union}.sv (default-off; die block physical/hbm_mtp/rtl on claude/mtp-hbm-20261008)",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": "hbm_ds_mtp:v0000 (x2404)",
+  "cycles": 1192130.3,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": "The cycles listed are the whole verify walk (P=6 replay of the measured operators, tools/dshbm_matched_reference.py mtp()). Every AR operator gap above applies to it at 6 positions."
+ },
+ {
+  "id": "T3-P07",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Verify walk: all AR layer operators at P=6 (attention, indexer, MoE, HC, collectives) + 6 head argmaxes",
+  "model_ref": "forward_positions (layer-major, P = 6)",
+  "hw_element": "AR-path hardware at 6 columns",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_sm x32 view=interim-not-closed",
+  "rtl": "rtl/gpu/ot_gpu_sm_v.sv (smh pieces: ot_hbm_accel_smh_tile_e/_w/_front_c/_n/_s)",
+  "exact_bench": "results/rtl/w19_sm_real_ops_mtp.json (197/197 at NC 1/2/3/6); results/rtl/w19_hbm_tp96_isa_mtp_oreduce.json (ISA)",
+  "closure": "FAILED | ot_hbm_accel_smh_tile_e: failed, re-running TT 57.22 / FF -33.13 (hbm_smh_tile_e_m3_fb560676a_c2-tt); ot_hbm_accel_smh_tile_w: failed, re-running TT 62.36 / FF -49.61 (hbm_smh_tile_w_m3f_f7f1a0ee4); ot_hbm_accel_smh_front_c: failed, re-running (hbm_smh_front_c_m3f_f7f1a0ee4-tt-hm10-d2056); ot_hbm_accel_smh_front_n: closed (TT era) TT 91.92 / FF 12.58 (hbm_smh_front_n_tt_f170efb96); ot_hbm_accel_smh_front_s: closed (TT era) TT 100.17 / FF 22.38 (hbm_smh_front_s_m3g_e40b3d6c7-tt); hfd_sm die view interim-not-closed (post-CTS, no whole-SM routed DB)",
+  "in_token_path": "hbm_ds_mtp:v2324 (x8)",
+  "cycles": 6584.9,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_CLOSED"
+  ],
+  "notes": "Listed cycles are the V.head group only; the layer walk is under T3-P06. No RTL run of a whole P=6 layer exists (no connected bench)."
+ },
+ {
+  "id": "T3-P08",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Routed-expert union across the 6 positions (extra expert SM work + extra expert fetch)",
+  "model_ref": "moe() per position; union of selections",
+  "hw_element": "ot_dshbm_expert_union (union_f3)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_expert_union.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected) (union 8 cases)",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": "hbm_ds_mtp:union.sm (x2)",
+  "cycles": 91428.0,
+  "cycles_source": "modelled",
+  "gap": [
+   "NOT_ON_DIE",
+   "MODELLED_ONLY"
+  ],
+  "notes": "W19 model increment (VERIFY_PARTS[6] - [1]), an HBM-favourable lower bound with no RTL walk; 91,428 cycles = 6.8 % of the step."
+ },
+ {
+  "id": "T3-P09",
+  "phase": "mtp_verify",
+  "plane": "data",
+  "function": "Verify-pass KV append for 6 positions (window rows x40 layers, CKV/IK at group closes, compressor slots, DSpark rows)",
+  "model_ref": "forward_positions writes state for every position",
+  "hw_element": "dskv_wb (AR, pos mod 128) + spec_state address stream (WR = 136)",
+  "die": "none (as T3-D20)",
+  "rtl": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv; rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_PRICED",
+   "MISSING_HW"
+  ],
+  "notes": "6x the AR write traffic per step, not charged in the MTP view. The write-back unit addresses a 128-slot ring, so it cannot serve the 136-slot rollback ring without a change (see T3-P12)."
+ },
+ {
+  "id": "T3-P10",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Accept: longest prefix with d_{i+1} == t_i; bonus token t_a",
+  "model_ref": "generate_spec accept loop",
+  "hw_element": "ot_hdc_accept via ot_dshbm_accept_port (in dspark_ctl)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/hdc/ot_hdc_accept.sv; rtl/gpu/dshbm/ot_dshbm_accept_port.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "RUNNING | ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); accept_a0 SS-era +55.3 / +14.0; re-STA TT -125.5 (link split) -> requeued TC",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-P11",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Commit: n <- n + 1 + a; emit t_0..t_a (cap cfg_ngen); y <- t_a; next anchor q = n - 1",
+  "model_ref": "generate_spec: q, y = q+1+a, tg[a]",
+  "hw_element": "ot_dshbm_dspark_ctl (ctl_f2) + spec_state n register",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/{ot_dshbm_dspark_top,_dspark_ctl,_spec_state,_accept_port,_argmax,_expert_union}.sv (default-off; die block physical/hbm_mtp/rtl on claude/mtp-hbm-20261008)",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected)",
+  "closure": "RUNNING | ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ctl_f2 SS-era +1.25 / +10.1; re-STA TT -364.0 (out cmd_toks feedthrough) -> requeued TC",
+  "in_token_path": "hbm_ds_mtp:accept.commit (x1)",
+  "cycles": 60.0,
+  "cycles_source": "measured",
+  "gap": [
+   "NOT_ON_DIE"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-P12",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "KV ROLLBACK of rejected positions (window rows, compressor open group, CKV/IK groups, token history, DSpark rows)",
+  "model_ref": "Model.truncate(state, q+2+a)",
+  "hw_element": "ot_dshbm_spec_state: rollback = one register write of n; rings WR >= W+PMAX (136), SR >= r+PMAX, TR >= NG+PMAX; CKV/IK linear",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+  "exact_bench": "results/rtl/dshbm_dspark_rtl_20261003/dshbm_dspark_rtl.json (control plane bit-exact vs generate_spec, forced drafter accepts 0..5, mutants detected) (spec3_s8: 2 mismatches; spec_state_f fix in flight on mtp-exact)",
+  "closure": "RUNNING | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); spec_state blocked: spec3_s8 2 mismatches; spec_a0 re-STA TT r2r -377.5 (internal); TOKEN_EDGE_FIX1 SS +28.4 not adopted",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "MISSING_HW",
+   "NOT_EXACT",
+   "NOT_ON_DIE",
+   "NOT_PRICED"
+  ],
+  "notes": "The rollback scheme is exact only if every HBM writer and reader uses the 136-slot ring. The as-built window write-back (dskv_wb) and read stream use ring slot pos mod 128. So a rejected row at position r overwrites the row of r-128, and the next committed position p (r-5 <= p < r) still reads that row (window p-127..p). No bench connects spec_state to the HBM write-back/read path, and the dskv_wb ring cannot express it as built. The compressor open group (SR ring) and token-history ring exist only in the un-placed MTP block."
+ },
+ {
+  "id": "T3-P13",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Visibility fence: the verify pass's writes visible before the next pass reads",
+  "model_ref": "implicit in golden order",
+  "hw_element": "ot_gpu_rf_visibility_fence / _p (pipeline cut, +2 cycles capture->write)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/ot_gpu_rf_visibility_fence.sv; physical/hbm_mtp/rtl (fence_p)",
+  "exact_bench": "tb_fence_p 4 seeds PASS, MUT1 FAIL (mtp-hbm 21:23)",
+  "closure": "RUNNING | ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": "fence_a1: TT -613.6 in->out feedthrough (structural)."
+ },
+ {
+  "id": "T3-P14",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Scratch service (draft/verify scratch rows)",
+  "model_ref": "n/a",
+  "hw_element": "ot_gpu_scratch_service (scratch_c2)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "rtl/gpu/ot_gpu_scratch_service.sv",
+  "exact_bench": null,
+  "closure": "FAILED | ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc); scratch_c2 SS-era +80.2 / +18.6",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED"
+  ],
+  "notes": ""
+ },
+ {
+  "id": "T3-P15",
+  "phase": "mtp_draft",
+  "plane": "control",
+  "function": "Full FEC on the 23 draft crossings + x-broadcast depth in the draft",
+  "model_ref": "n/a",
+  "hw_element": "vendor PHY FEC",
+  "die": "HBM DS die r25 (tools/hbm_accel_die_fp.py ADOPTED=R25; 1 of 96, TP-96): hfd_coll x1 view=missing; hfd_serdes_slab x2 view=reservation; ot_pdie_serdes x9 pin macros; off-die: Tomahawk Ultra switch tier (vendor, ~8 switch chips)",
+  "rtl": null,
+  "exact_bench": null,
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_PRICED"
+  ],
+  "notes": "MTP_AUDIT section 3: modelled or HBM-favourable terms."
+ },
+ {
+  "id": "T3-P16",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "MTP control block on the die (dspark_top_m: ctl FAST + accept, spec_state_f, argmax FAST, union FAST, 2 x topk_f, registered pins)",
+  "model_ref": "generate_spec control loop",
+  "hw_element": "hfd_mtp / hfd_mtp_x (new die masters)",
+  "die": "none in r25 (no hfd_mtp master; hfd_mtp / hfd_mtp_x first route in flight on claude/mtp-hbm-20261008 d71a24143; die placement owned by stream mtp-die, not committed)",
+  "rtl": "physical/hbm_mtp/rtl (claude/mtp-hbm-20261008 d30fa5f39)",
+  "exact_bench": "golden-trace benches running EPYC1 (/srv/opentallas-scratch/claude/mtp-hbm/bench); mtp-exact HBM connected closed top (3 exact + 8 mutants) launched 21:21",
+  "closure": "FAILED | hfd_mtp: first trial in flight (hfd_mtp-d30fa5f39-tc); hfd_mtp_x: first trial in flight (hfd_mtp_x-d30fa5f39-tc); ot_dshbm_dspark_ctl: first trial in flight (mtp_ctl_f2-d30fa5f39-tc); ot_hdc_accept: first trial in flight (mtp_accept_a0-d30fa5f39-tc); ot_dshbm_argmax_m: first trial in flight (mtp_argmax_f1-d30fa5f39-tc); ot_dshbm_expert_union_m: first trial in flight (mtp_union_f3-d30fa5f39-tc); mtp_topk_f384: first trial in flight (mtp_topk_f384-d30fa5f39-tc); ot_gpu_rf_visibility_fence: first trial in flight (mtp_fence_a1_lvt-fc1b8a377-tc); ot_gpu_rf_visibility_fence_p: first trial in flight (mtp_fence_p-d30fa5f39-tc); ot_gpu_scratch_service_m: flow failure (no live job) (mtp_scratch_c2-d30fa5f39-tc)",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [
+   "NOT_ON_DIE",
+   "NOT_CLOSED",
+   "NOT_EXACT"
+  ],
+  "notes": "Estimated 0.3-0.6 mm2, ~+2 cycles per command round trip; not in the r25 recipe."
+ },
+ {
+  "id": "T3-P17",
+  "phase": "mtp_accept",
+  "plane": "control",
+  "function": "Acceptance rate \u03c4 = 4.159 (6-class owner blend, greedy, \u03b3 5)",
+  "model_ref": "generate_spec (software on GPU, released weights)",
+  "hw_element": "n/a",
+  "die": "n/a",
+  "rtl": null,
+  "exact_bench": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; exactness v41_mtp_isa (spec == greedy, ISA level)",
+  "closure": "NONE",
+  "in_token_path": null,
+  "cycles": null,
+  "cycles_source": "none",
+  "gap": [],
+  "notes": "Not an RTL quantity. Sensitivity: published 3.8879 (3.43-4.32)."
+ }
+]

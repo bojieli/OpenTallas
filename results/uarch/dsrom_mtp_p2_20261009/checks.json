@@ -1,0 +1,20 @@
+{
+ "source_sha256": "72e9aa5dc5e5b25a958f57218f7f59eec46122110b7a9a8adbcce11b45f4906c",
+ "records_sha256": {
+  "allocation.json": "47901675376357dc1249f0430188366d17223e7ffd0cdc43dc82aa566adba84c",
+  "allocation_B_rank3.json": "99bac56c1b20d01d41483792363d9f46a33f30ddd75aeff3fa67b899b5f7b30d"
+ },
+ "checks": {
+  "A_complete_disjoint_spans": "PASS",
+  "A_mtp2_expert_split": "PASS",
+  "B_complete_disjoint_spans": "PASS",
+  "B_mtp2_expert_split": "PASS",
+  "overlap": "REJECTED_AS_REQUIRED",
+  "rank_bounds": "REJECTED_AS_REQUIRED",
+  "overwrite": "REJECTED_AS_REQUIRED"
+ },
+ "total_released_block_checks": 246560,
+ "complete_expert_storage": true,
+ "primary_physical_allocation_complete": false,
+ "field_schedule_qualified": false
+}

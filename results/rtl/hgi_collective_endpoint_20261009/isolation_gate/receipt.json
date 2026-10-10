@@ -1,0 +1,660 @@
+{
+  "source": "292b4fb50",
+  "verdict": "FAIL",
+  "total_cases": 81,
+  "positive_passes": 58,
+  "failed_positive_cases": 16,
+  "consuming_mutants_caught": 3,
+  "classification": "n1 PF16 out-of-U2 capacity, subsequent legalPF8 alsofailed (separate committedlog); n2/4/8 everyrank golden+pad+isolation mechanism gatespass",
+  "reserved_raw_mode_gate": "NOT RUN because groupsoverallfailed before separate modebuilds",
+  "runs": [
+    {
+      "artifact": "out/gsz/t/run_1.log",
+      "binding": "ar pos +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "ar",
+      "qualified": true,
+      "sha256": "2211a0c78bac16f11419f5a934cf70960556f485d16b4cd5ac37db8fcc3cb25e"
+    },
+    {
+      "artifact": "out/gsz/t/run_10.log",
+      "binding": "arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=1",
+      "kind": "pos",
+      "case_family": "arblk",
+      "qualified": true,
+      "sha256": "7a878da2c61f842f242762971f1d3a239690b99feac26f1bbbe25d793fabf4dd"
+    },
+    {
+      "artifact": "out/gsz/t/run_11.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "5f96b64b56e6e1bac77e252d8783fcffe12a5ef1de5b9a5255aae9614764ee8d"
+    },
+    {
+      "artifact": "out/gsz/t/run_12.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=0 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "ca4c513598ac5c1cbc5f0bd12ebc86d3393e738eb815f8fad682aca284933cdf"
+    },
+    {
+      "artifact": "out/gsz/t/run_13.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=1 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "1aa4b0e03dc4fd2facca664c0ca2e8cd111ec15d9ef55873f67b8ed8e74ec1ac"
+    },
+    {
+      "artifact": "out/gsz/t/run_14.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=1 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "d21859423b36dd94a0e7f1fab6dbbc2d5f68d9cb47429f2845f2fb789132fde6"
+    },
+    {
+      "artifact": "out/gsz/t/run_15.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=2 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "d8ec6634d6bc8d557dffdeb155a6c57214bfc05d8506fd6a58098572f25050e1"
+    },
+    {
+      "artifact": "out/gsz/t/run_16.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=2 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "9101d949de276462cd14207f49d1fa7e04760ea48a41cc77d068c6903fbec35a"
+    },
+    {
+      "artifact": "out/gsz/t/run_17.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=3 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "b85766fd694e6360afee14e3d0715c7664311dc88c2e810326223278853affed"
+    },
+    {
+      "artifact": "out/gsz/t/run_18.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=3 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "daab9aaf0626cea349c14134e0e96a23d25c205a48fe9f45e90a5a5acbb80d5b"
+    },
+    {
+      "artifact": "out/gsz/t/run_19.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=4 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "268335f96275c0ce58db428abff7ee865af2ab9c30c303e19da0f8e6db2bb6a3"
+    },
+    {
+      "artifact": "out/gsz/t/run_2.log",
+      "binding": "ar pos +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=1",
+      "kind": "pos",
+      "case_family": "ar",
+      "qualified": true,
+      "sha256": "50b5f50d1e01a8915293af66b07800d0ea764ff8981ef50329389ad1996ce9f7"
+    },
+    {
+      "artifact": "out/gsz/t/run_20.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=4 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "1875f87dbf89155ea7d5e5e63b03a6bb77f4e4927e5e7a85117a982a54dfa932"
+    },
+    {
+      "artifact": "out/gsz/t/run_21.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=5 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "9a5c266d06e392c8670d5ce4539d9193fe8481fd4f38b5843d1b5594e03d171f"
+    },
+    {
+      "artifact": "out/gsz/t/run_22.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=5 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "34896b67d30ec6a82c4e943f59649a0cc2fc8a9e4eaab17c8037eb6f266d2f62"
+    },
+    {
+      "artifact": "out/gsz/t/run_23.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=6 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "1be7aa06e035e8b27f056a1e8a142c5b43d2da8c1229e2705e5bce86f34c40f6"
+    },
+    {
+      "artifact": "out/gsz/t/run_24.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=6 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "e1adeaadc2ade1102b08b585db7626f076f16efbd104fc8c7e7ddeb202b4a023"
+    },
+    {
+      "artifact": "out/gsz/t/run_25.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=7 +SEED=1",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "51ed9fb8e2e43b7893380fae46cb49d78f95aecb878f19c28be956dfd3250095"
+    },
+    {
+      "artifact": "out/gsz/t/run_26.log",
+      "binding": "g1 pos +VEC=fx/g1 +PF=16 +RANK=7 +SEED=2",
+      "kind": "pos",
+      "case_family": "g1",
+      "qualified": false,
+      "sha256": "dc1ed9b2490d20a43d85399060a9f9f520576f751608c01976e55c0cac0fad19"
+    },
+    {
+      "artifact": "out/gsz/t/run_27.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "8114762f58581a0d2cc5935f6608f63f17d95c368c0875955ed36d9427ce7c5b"
+    },
+    {
+      "artifact": "out/gsz/t/run_28.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=0 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "05657be2be89ac6aad64e652cb6c1bb2d9d0f25de63509dc4975206d9fa0e0dc"
+    },
+    {
+      "artifact": "out/gsz/t/run_29.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=1 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "312d1951647d95d66a59a7afc26f4b58c0e11b18b34c8c5bc498d78f163d7715"
+    },
+    {
+      "artifact": "out/gsz/t/run_3.log",
+      "binding": "ar pos +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1",
+      "kind": "pos",
+      "case_family": "ar",
+      "qualified": true,
+      "sha256": "143864892069fe3f65889d79d5b5532aa829bc48c927b49b7b4a3c2b237fd80b"
+    },
+    {
+      "artifact": "out/gsz/t/run_30.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=1 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "1431d9b911ccac8137dd54cd4b112f8243ab91fac01c075aafcd69458c7ecad4"
+    },
+    {
+      "artifact": "out/gsz/t/run_31.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=2 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "a89801acc13c1b5dc5d48aec094d8930c58e745564f2fa83d3a624b350ff17fb"
+    },
+    {
+      "artifact": "out/gsz/t/run_32.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=2 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "5852d22c13c7d8e5226b8e4f62f1cc29156e69f61cc4c9d04f7de67a9c72cc4b"
+    },
+    {
+      "artifact": "out/gsz/t/run_33.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=3 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "6b1ba7d585538482c00c19648744bb4653965bc5c284478fec8be6a4e489bef5"
+    },
+    {
+      "artifact": "out/gsz/t/run_34.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=3 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "e19a49ffac5f11399923c6aab3c29e1dbbd1d11e6141b01d00f77305b085e032"
+    },
+    {
+      "artifact": "out/gsz/t/run_35.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=4 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "9ba247bd47bca5cac360fa11e9ebc6b8bfd57f596667d0c910d8588650c0e186"
+    },
+    {
+      "artifact": "out/gsz/t/run_36.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=4 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "9ec6c7ac4b6828c1b37a0d975b632ad55521ade4d8f8480dcf62df1d6706c597"
+    },
+    {
+      "artifact": "out/gsz/t/run_37.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=5 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "cf2f7cf1ab793555872c0b1f5ca8e873878f41e3807188f565779f666d6a32cd"
+    },
+    {
+      "artifact": "out/gsz/t/run_38.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=5 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "3211f3580ee5a75cb2d110afa23557de965f5c148a9d2d63d2b678ef27df9c94"
+    },
+    {
+      "artifact": "out/gsz/t/run_39.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=6 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "aded84dd3c28600706fd24609defb9b0677ec9a9ebbe3396cd1038849c605ea1"
+    },
+    {
+      "artifact": "out/gsz/t/run_4.log",
+      "binding": "ar pos +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1 +SAMECOL=1",
+      "kind": "pos",
+      "case_family": "ar",
+      "qualified": true,
+      "sha256": "344540027c94ffd95cd0a294f7091c1e6752ff760b74968aa0e1caab2d00d795"
+    },
+    {
+      "artifact": "out/gsz/t/run_40.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=6 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "c55a544759b6b0deee4b2877abce43bb2ec7b866f77e2ea16242fb6b0030f4cd"
+    },
+    {
+      "artifact": "out/gsz/t/run_41.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=7 +SEED=1",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "7442e0bd550308cb3025581d679efd3d49b4d5a6a3f9fb23eee83b3d136df944"
+    },
+    {
+      "artifact": "out/gsz/t/run_42.log",
+      "binding": "g2 pos +VEC=fx/g2 +PF=16 +RANK=7 +SEED=2",
+      "kind": "pos",
+      "case_family": "g2",
+      "qualified": true,
+      "sha256": "c184972bd3bc0eb5417402414f4e4ae4336e68335d21a66cb59e8df694632a08"
+    },
+    {
+      "artifact": "out/gsz/t/run_43.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "d4e9d36844b61bc822e053154a7565e40d674976e6de42d2c6ad3b4e46a35096"
+    },
+    {
+      "artifact": "out/gsz/t/run_44.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=0 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "c9b5d227256b524c16cbd5aeeda02bd763d32b959cc2535ff9eaaca6913d5948"
+    },
+    {
+      "artifact": "out/gsz/t/run_45.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=1 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "df7f1f5fec6781adaa7c04c74e01e6e63de87d60588cdc556a89190de07b21d4"
+    },
+    {
+      "artifact": "out/gsz/t/run_46.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=1 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "2bf98482958d32a62822392c16ade976d80527bbb11c356466db7224e1c2b586"
+    },
+    {
+      "artifact": "out/gsz/t/run_47.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=2 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "fdec878383556b033e1e263a3b0bc698db6e9660991ccc5f4db24b1c4ec3e5e1"
+    },
+    {
+      "artifact": "out/gsz/t/run_48.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=2 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "e7f4b73c59da6762ff3a3c9a782858e3f3914177b6a3e1bd4837fb49456ef222"
+    },
+    {
+      "artifact": "out/gsz/t/run_49.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=3 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "ca553bd6edb1ea28afc285347ef1eb6e04c2804ff16d3092b6bcca02506ebf44"
+    },
+    {
+      "artifact": "out/gsz/t/run_5.log",
+      "binding": "ga pos +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "ga",
+      "qualified": true,
+      "sha256": "f66ed41401e6022b7006d28ccf8d676e3c601fb74e3d1c89f992888224107b41"
+    },
+    {
+      "artifact": "out/gsz/t/run_50.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=3 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "4f72794b5282fd8bc3cd1794ee6f5a16eeabbfaec12c8e1661f0d74b11932f11"
+    },
+    {
+      "artifact": "out/gsz/t/run_51.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=4 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "8cef41dfa27f2a155836c19f6b91f042dc055f1268166769fe6eb7c201d56aea"
+    },
+    {
+      "artifact": "out/gsz/t/run_52.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=4 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "38de32e1a53e134d47fe87a6297b6e7527dc65bca87a4f2cfe80e962ad8d335e"
+    },
+    {
+      "artifact": "out/gsz/t/run_53.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=5 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "a3afebb4a90d57b5ed70bc1ec0d114ab2fbedd984fb0d22d22f42c46d201daff"
+    },
+    {
+      "artifact": "out/gsz/t/run_54.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=5 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "93b1670588ef9158358d39692b0f2cfd0044da17b6128a955e62fa8e123f0c20"
+    },
+    {
+      "artifact": "out/gsz/t/run_55.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=6 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "aa971c5b8d9e66142c78c4a5dfdae1e618acd13c63e459481063a8ed5a4472d0"
+    },
+    {
+      "artifact": "out/gsz/t/run_56.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=6 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "609a8a4b4d2b46b6085b67dd894a7b7cfa471ae2254cb8f550d231dcbb9947a0"
+    },
+    {
+      "artifact": "out/gsz/t/run_57.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=7 +SEED=1",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "2cc0667e1bd341eba0ffb363975f5eea4e9e184ebfc529e19f151cf8f89bafa6"
+    },
+    {
+      "artifact": "out/gsz/t/run_58.log",
+      "binding": "g4 pos +VEC=fx/g4 +PF=16 +RANK=7 +SEED=2",
+      "kind": "pos",
+      "case_family": "g4",
+      "qualified": true,
+      "sha256": "3bc035320563c7eb39fc1dc23bc79de2cb4b84ac34a4994ce7c7ef8289ef17e7"
+    },
+    {
+      "artifact": "out/gsz/t/run_59.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "1f2cb2754506aa52ceb0e422f9d8ec38dcd4573f18d368becd0f68ea0696b98b"
+    },
+    {
+      "artifact": "out/gsz/t/run_6.log",
+      "binding": "ga pos +VEC=fx/gather_pf1 +PF=1 +RANK=95 +SEED=1",
+      "kind": "pos",
+      "case_family": "ga",
+      "qualified": true,
+      "sha256": "84ef5da6b8dbcd5b53e019eccf6dd353f77ffb71b703bf3e63ab9890cd0059b5"
+    },
+    {
+      "artifact": "out/gsz/t/run_60.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=0 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "ea9b6ebe14ed40acb0ae294d514658e9a7d6d8f5e1bf4004b619aeb0e34b8093"
+    },
+    {
+      "artifact": "out/gsz/t/run_61.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=1 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "523732f290d76360dab55b28cf2e22ecc90e7859d366ca12591b3f3f3114991a"
+    },
+    {
+      "artifact": "out/gsz/t/run_62.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=1 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "937fa8e7db5043a20f8e0ce2cd58b743dab9059c026c8314d2b1fae0d15b5b8e"
+    },
+    {
+      "artifact": "out/gsz/t/run_63.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=2 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "2f47ea4592a28eaafcb9aeb8d68dfd4f79a7ce50d0ec16bbb0bff7138354ed2a"
+    },
+    {
+      "artifact": "out/gsz/t/run_64.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=2 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "a7697fb7f78afe740951093f92bef4c72ee8488a22c852f50eea6b08df5c461b"
+    },
+    {
+      "artifact": "out/gsz/t/run_65.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=3 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "51cf3bb439a9236e595a216eb10d311d2a1d330a4737fd106e8116ac93fcf392"
+    },
+    {
+      "artifact": "out/gsz/t/run_66.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=3 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "9c8217dd0a0b2b0ae29c6b8792cbca68166e61e1c271d96fd8b0286a2827923a"
+    },
+    {
+      "artifact": "out/gsz/t/run_67.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=4 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "145f26cca9c407b1b578d843e781e71962b0da7ffec4cfb60a491cee8246bbac"
+    },
+    {
+      "artifact": "out/gsz/t/run_68.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=4 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "a3b472c844526529f72c87d2d9003de12dc70bb45db9040ca9645202176ce1bc"
+    },
+    {
+      "artifact": "out/gsz/t/run_69.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=5 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "b16de268731dbcb9308d8f1e0c6302dc7977f3037d6e57a9ef407f70f946651c"
+    },
+    {
+      "artifact": "out/gsz/t/run_7.log",
+      "binding": "ga pos +VEC=fx/gather_pf64 +PF=64 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "ga",
+      "qualified": true,
+      "sha256": "10bbf5a36d3fe4fb99650ae13300840db40d6cc8a6200a2478b3d9ead7bd1202"
+    },
+    {
+      "artifact": "out/gsz/t/run_70.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=5 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "179f97d0e01b72bbba1562a488193b38588130f14090ca1abce0fa5326e86f78"
+    },
+    {
+      "artifact": "out/gsz/t/run_71.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=6 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "f495db9915a3868ef4bca253f828e434b33a456ac682e0dfb477dfc653d9bd0a"
+    },
+    {
+      "artifact": "out/gsz/t/run_72.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=6 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "43e8619573775947581ed06649ed36a4350a974bc0f04d7a8bf26c0ffc3aa5c3"
+    },
+    {
+      "artifact": "out/gsz/t/run_73.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=7 +SEED=1",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "8bde5542075ecac2ac65450df8d530808de96861ba05e6f234f2114a06b4867b"
+    },
+    {
+      "artifact": "out/gsz/t/run_74.log",
+      "binding": "g8 pos +VEC=fx/g8 +PF=16 +RANK=7 +SEED=2",
+      "kind": "pos",
+      "case_family": "g8",
+      "qualified": true,
+      "sha256": "f7a27bd815f04f1414a94842df53e98e35708cd86a843b93647fecb1cc93c54c"
+    },
+    {
+      "artifact": "out/gsz/t/run_75.log",
+      "binding": "m2 neg +VEC=fx/g2 +PF=16 +RANK=0 +SEED=1",
+      "kind": "neg",
+      "case_family": "m2",
+      "qualified": false,
+      "sha256": "5387b410ca5069a39dcd1fc35c486bdeb1a3ec0f0092d453f4993935b492736d"
+    },
+    {
+      "artifact": "out/gsz/t/run_76.log",
+      "binding": "m2 neg +VEC=fx/g2 +PF=16 +RANK=1 +SEED=1",
+      "kind": "neg",
+      "case_family": "m2",
+      "qualified": false,
+      "sha256": "def7b16de8af328015c1685b1dc3c1c64d1f9ad318f6602358d6c7da2e378cc7"
+    },
+    {
+      "artifact": "out/gsz/t/run_77.log",
+      "binding": "m4 neg +VEC=fx/g4 +PF=16 +RANK=0 +SEED=1",
+      "kind": "neg",
+      "case_family": "m4",
+      "qualified": false,
+      "sha256": "a600517d96b7efcd4e7b392d408697fcea5ba34624c96ab16c853b9aaf829bac"
+    },
+    {
+      "artifact": "out/gsz/t/run_78.log",
+      "binding": "m4 neg +VEC=fx/g4 +PF=16 +RANK=1 +SEED=1",
+      "kind": "neg",
+      "case_family": "m4",
+      "qualified": false,
+      "sha256": "e5c055191b2545b4417a017a98d9f6f6a014e51361209408bf19a3a6ee916cbc"
+    },
+    {
+      "artifact": "out/gsz/t/run_79.log",
+      "binding": "leak neg +VEC=fx/g2 +PF=16 +RANK=0 +SEED=1",
+      "kind": "neg",
+      "case_family": "leak",
+      "qualified": true,
+      "sha256": "d83ca5a33163816433b47307a05461c8deee31de988526249c9e75330791a73c"
+    },
+    {
+      "artifact": "out/gsz/t/run_8.log",
+      "binding": "ga pos +VEC=fx/gather_pf64 +PF=64 +RANK=95 +SEED=1",
+      "kind": "pos",
+      "case_family": "ga",
+      "qualified": true,
+      "sha256": "3d287432e000a250487a027dc2e4a8c67d719e22462ec904b3948b36432e2e86"
+    },
+    {
+      "artifact": "out/gsz/t/run_80.log",
+      "binding": "leak neg +VEC=fx/g2 +PF=16 +RANK=3 +SEED=1",
+      "kind": "neg",
+      "case_family": "leak",
+      "qualified": true,
+      "sha256": "37f51ede4efa9e39515db39fe3949a20c595b22e38b40433f8fa00a72ca18d8d"
+    },
+    {
+      "artifact": "out/gsz/t/run_81.log",
+      "binding": "leak neg +VEC=fx/g2 +PF=16 +RANK=7 +SEED=1",
+      "kind": "neg",
+      "case_family": "leak",
+      "qualified": true,
+      "sha256": "e8f0676e2202ede6c1a30ebedd44282899e176f342c0380421a0a00971b2d067"
+    },
+    {
+      "artifact": "out/gsz/t/run_9.log",
+      "binding": "arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=1",
+      "kind": "pos",
+      "case_family": "arblk",
+      "qualified": true,
+      "sha256": "b7c588e4f521fca611e3cec40c41085b08931b4af8413749ba71709be5e98bde"
+    }
+  ]
+}

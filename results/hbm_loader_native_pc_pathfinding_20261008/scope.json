@@ -1,0 +1,23 @@
+{
+ "scope":"single actual-PC native service lease primitive; generic20percentIO pathfinding only",
+ "source_commit":"95294ff259ddac009a4e17ebb96b855d431a7eb0",
+ "source_sha256":"199c65f8d6864bbf9dea2abc02815a23dd2c28b616c0c2bdd92ee7dd0858fc46",
+ "route_recipe_commit":"6cbd228fd",
+ "remote_host":"ot-epyc2",
+ "remote_dir":"/srv/opentallas-data/codex/loader-read/95294ff25/pathfinding-r1",
+ "clock_period_ns":0.833333333,
+ "uncertainty_setup_ps":60,"uncertainty_hold_ps":25,
+ "TT_setup_ps":93.4464,"FF_hold_ps":32.29,"SS_setup_sensitivity_ps":-151.89,
+ "DRC":0,"DRV":0,
+ "actual_FF":316,"routed_cell_area_um2":397.888,"outline_um":[100,100],
+ "cell_area_per_stack32_PC_um2":12732.416,
+ "cell_area_per_four_stack_die_um2":50929.664,
+ "reserved_station_footprint_per_stack_mm2":0.32,
+ "reserved_station_footprint_per_four_stack_die_mm2":1.28,
+ "station_coordinate_plan":"slot-plan.json (actual recordedPCcoordinates; no station mutualoverlap)",
+ "actual_existing_service_occupancy_checked":false,
+ "normal_native_loaded_clock_IO_budget_qualified":false,
+ "native_dispatcher_wire_relay_qualified":false,
+ "legacy_corner_SS_failure_preserved":true,
+ "headline_closed":false,"adopted":false
+}

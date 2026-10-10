@@ -1,0 +1,19 @@
+{
+  "time": "2026-10-10T05:25:23.903658-07:00",
+  "host": "ot-epyc3",
+  "request_gb": 32,
+  "threads": 8,
+  "probe": {
+    "load1": 135.29,
+    "mem_gb": 178,
+    "disk_gb": 653,
+    "roots_gb": {
+      "/": 814,
+      "/srv/opentallas-scratch": 2145
+    },
+    "external_jobs": [],
+    "external_remaining_gb": 0
+  },
+  "admitted": true,
+  "reason": "ok"
+}

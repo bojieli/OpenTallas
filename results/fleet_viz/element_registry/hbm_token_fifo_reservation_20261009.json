@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_token_loop",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Native AR and MTP on-die token loop, stopping rules and finite host-record FIFO with registered-push reservation",
+      "source": {
+        "commit": "97740d865",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_token_loop.sv",
+          "tools/hbm_token_loop_bench.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_token_loop.sv"
+        ]
+      },
+      "model": {
+        "status": "missing token-loop floorplan and production port budget",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "not launched: physical slot and interface budget missing",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "production token-loop/CP binding",
+        "native MTP commit and EOS truncation agreement",
+        "host output boundary"
+      ],
+      "integration": {
+        "status": "missing: only bench instances found in central tracked RTL",
+        "evidence": []
+      }
+    }
+  ]
+}

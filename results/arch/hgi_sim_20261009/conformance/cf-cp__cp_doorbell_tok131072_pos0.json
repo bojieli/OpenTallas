@@ -1,0 +1,18 @@
+{
+ "id": "cp_doorbell_tok131072_pos0",
+ "row": "CF-CP",
+ "mode": "QWEN",
+ "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+ "cfg": {
+  "cp_vocab": 151936,
+  "cp_ctx_max": 40960,
+  "coll_group_size": 4
+ },
+ "doorbell": {
+  "token": 131072,
+  "pos": 0
+ },
+ "expect": {
+  "status": 0
+ }
+}

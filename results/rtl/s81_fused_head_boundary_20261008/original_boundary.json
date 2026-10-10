@@ -1,0 +1,51 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r6-60f5a0a90-tt/cl/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": 3.14,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 224.98,
+  "worst_input_to_reg_slack_ps": 3.14,
+  "worst_output_port_slack_ps": 403.17,
+  "violating_d_pins": "0",
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 491.7,
+    "min": 475.9,
+    "max": 544.6,
+    "n": 7713,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "34438944eeba6101267575cc4d1dbc0cb173343fe7c247a6d48b33a24c063c45"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -82.55,
+  "tns_ps": -191431.35,
+  "worst_reg_to_reg_slack_ps": -4.25,
+  "worst_input_to_reg_slack_ps": 61.52,
+  "worst_output_port_slack_ps": -82.55,
+  "violating_d_pins": "4",
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 397.2,
+    "min": 382.6,
+    "max": 446.7,
+    "n": 7713,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "fd1cee6d6ce3f6b005cf283343b015e4e6bbeeedf101c088100bcb8c875b9040"
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-tau.v1",
+ "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+ "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+ "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+ "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+ "max_new_tokens": 512,
+ "mode": "non-thinking chat template, greedy",
+ "compute_dtype": "float32",
+ "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
+ "samples": [
+  {
+   "class": "agentic",
+   "workload": "agentic_mind2web",
+   "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+   "thinking": false,
+   "prompt_index": 48,
+   "prompt_tokens": 3209,
+   "generated": 66,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.7105263157894737,
+   "tau_bf16_S7_B3": 2.2413793103448274,
+   "tau_bf16_S7_B4": 2.6,
+   "tau_bf16_S7_B5": 2.8260869565217392,
+   "tau_bf16_S7_B6": 2.8260869565217392,
+   "tau_bf16_S7_B7": 2.8260869565217392,
+   "tau_bf16_S7_B8": 2.8260869565217392,
+   "tau_bf16_S3_B4": 2.5,
+   "tau_bf16_S1_B2": 1.6666666666666667,
+   "seconds": 977.4
+  }
+ ],
+ "fp32_greedy_check": null,
+ "device": "cpu",
+ "prompts_jsonl": {
+  "path": "src/prompts.jsonl.gz",
+  "sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+  "class_map": {
+   "chat": [
+    "chat_mt_bench"
+   ],
+   "reasoning": [
+    "reasoning_math500"
+   ],
+   "coding": [
+    "reasoning_humaneval"
+   ],
+   "agentic": [
+    "agentic_swe_agent",
+    "agentic_tau_bench",
+    "agentic_mind2web"
+   ],
+   "assistant_fc": [
+    "agentic_bfcl",
+    "agentic_json_mode"
+   ]
+  }
+ }
+}

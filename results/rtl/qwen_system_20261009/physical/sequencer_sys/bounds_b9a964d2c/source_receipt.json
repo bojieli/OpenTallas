@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.remote_fixture_source_receipt.v1",
+  "source_commit": "b9a964d2c",
+  "host": "ot-agidock128",
+  "admission": "/srv/opentallas-scratch/admit.sh 4 -- bash /srv/opentallas-scratch/codex/seq-sys-bounds-v1/run.sh",
+  "artifact_src_sha256": "541e8e15f09d5990b1a93532d18566da46be198cdb4a6907a15a441596e49362",
+  "generator_sha256": "f9ff1387174eadd5bfeb095cf5200451681e42d01bb7861cab94488261c1e49e",
+  "terminal_rc": 0,
+  "metadata_erratum": "Copied runner terminal generator_source label79abaa962 is stale; actual gitarchive sourceb9a964d2c and source.sha256 identify selected generator+RTL. Preserved terminal unmodified.",
+  "normal_pass": true,
+  "program_bounds_fault_code": 2,
+  "base_fold_mutant_mismatches": 576
+}

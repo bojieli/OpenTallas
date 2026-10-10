@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.qwen_r25_golden_check.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T10:22:52Z",
+ "host": "ot-epyc1tb",
+ "layers": 2,
+ "tokens": [
+  151644,
+  872,
+  198,
+  785,
+  6722,
+  315,
+  9625,
+  374,
+  12095,
+  13,
+  3555,
+  374,
+  279,
+  6722,
+  315,
+  9856
+ ],
+ "golden_s": 101.2,
+ "wall_s": 164.6,
+ "harness_mode": "r25_prenorm_full_w8 (Qwen3(order='r25', prenorm=True), w8, fp8 KV), CPU reference kernels",
+ "negative_control": "harness r25 order with tp=1 (o/down K not split over the 4 dies, so no die-partial tree) must differ",
+ "result": {
+  "r25": {
+   "hidden_bit_exact_per_position": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "all_hidden_exact": true,
+   "logits": {
+    "14": {
+     "bit_exact": true,
+     "argmax_harness": 111498,
+     "argmax_golden": 111498,
+     "first_diff": null
+    },
+    "15": {
+     "bit_exact": true,
+     "argmax_harness": 91486,
+     "argmax_golden": 91486,
+     "first_diff": null
+    }
+   },
+   "max_abs_hidden_diff": 0.0
+  },
+  "r25_tp1": {
+   "hidden_bit_exact_per_position": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "all_hidden_exact": false,
+   "logits": {},
+   "max_abs_hidden_diff": 7.62939453125e-06
+  }
+ },
+ "source_sha256": {
+  "qwen_r25_golden.py": "370a2d3ac076b49709d3a201375b9d5525350ffc1342f249efe8bf1df7569333",
+  "qwen_r25_golden_check.py": "3f3997e3607b32d83887cea810ddeb03daf872d7e6fb5068ec3614cdd69d8fe1",
+  "qwen3_deployment_quality.py": "e2a5c25a05d8bd88e63cb14f10e2e2010c49d517053381ba5c6a9e90b5c70634",
+  "hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ },
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218"
+}

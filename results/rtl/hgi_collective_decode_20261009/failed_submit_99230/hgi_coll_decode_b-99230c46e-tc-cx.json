@@ -1,0 +1,30 @@
+{
+  "cfg": "hgi_coll_decode_b",
+  "pins": 250,
+  "die_um": [
+    300.0,
+    160.0
+  ],
+  "layers": {
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+  },
+  "tracks": 1.0,
+  "limit": 12.0,
+  "est": {
+    "W": 1.67,
+    "E": 0.81,
+    "S": 0.02
+  },
+  "verdict": "REFUSE",
+  "message": "pin density within limits (estimate) || rtl_boundary ot_hgi_coll_decode (registered_io): input->register 25 gate levels > 16 (spec registered_io: true): register the boundary (pin flops / registered outputs) or drop the claim",
+  "rtl_boundary": {
+    "verdict": "REFUSE",
+    "message": "rtl_boundary ot_hgi_coll_decode (registered_io): input->register 25 gate levels > 16",
+    "in_to_out_bits": 0,
+    "in_to_reg_max": 25,
+    "reg_to_out_max": 1,
+    "levels": 16,
+    "strict": true
+  }
+}

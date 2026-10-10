@@ -1,0 +1,110 @@
+{
+ "stage": "S058",
+ "kind": "head",
+ "layers": [
+  "head"
+ ],
+ "comp_span": 11334.5,
+ "comp_crit_cycles": 11334.4,
+ "max_start_drift": 0.5,
+ "makespan": 11335,
+ "crit_end": 11335,
+ "n_nodes": 8,
+ "n_jobs": 6,
+ "max_fanin": 1,
+ "ports": [
+  "coll",
+  "head",
+  "hop"
+ ],
+ "ops": [
+  {
+   "op": 0,
+   "id": "head.hc_pre",
+   "eng": "head",
+   "port": 8,
+   "dur": 9,
+   "ext": 0,
+   "preds": [],
+   "start": 0,
+   "end": 9,
+   "comp_start": 0.0,
+   "comp_cycles": 8.9
+  },
+  {
+   "op": 1,
+   "id": "head.norm.scale",
+   "eng": "head",
+   "port": 8,
+   "dur": 306,
+   "ext": 0,
+   "preds": [
+    0
+   ],
+   "start": 9,
+   "end": 315,
+   "comp_start": 9.0,
+   "comp_cycles": 306.0
+  },
+  {
+   "op": 2,
+   "id": "head.lm_head",
+   "eng": "head",
+   "port": 8,
+   "dur": 8429,
+   "ext": 0,
+   "preds": [
+    1
+   ],
+   "start": 315,
+   "end": 8744,
+   "comp_start": 315.0,
+   "comp_cycles": 8429.0
+  },
+  {
+   "op": 3,
+   "id": "head.argmax",
+   "eng": "head",
+   "port": 8,
+   "dur": 22,
+   "ext": 0,
+   "preds": [
+    2
+   ],
+   "start": 8744,
+   "end": 8766,
+   "comp_start": 8744.0,
+   "comp_cycles": 21.6
+  },
+  {
+   "op": 4,
+   "id": "head.argmax_merge",
+   "eng": "coll",
+   "port": 3,
+   "dur": 375,
+   "ext": 0,
+   "preds": [
+    3
+   ],
+   "start": 8766,
+   "end": 9141,
+   "comp_start": 8765.6,
+   "comp_cycles": 374.9
+  },
+  {
+   "op": 5,
+   "id": "token.return",
+   "eng": "hop",
+   "port": 7,
+   "dur": 2194,
+   "ext": 0,
+   "preds": [
+    4
+   ],
+   "start": 9141,
+   "end": 11335,
+   "comp_start": 9140.5,
+   "comp_cycles": 2194.0
+  }
+ ]
+}

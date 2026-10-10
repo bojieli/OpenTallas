@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.engram-canonical-boot-gate.v1",
+ "boundary": "576 real write completions from actual two32PC timing models, payload/PC/canonical address/exclusive limits/scoped marker; fixture region conditional, no physical or installed capacity credit",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_path.sv": "e5603e78f29c7de7d1a9e1fcac6d71ce9b58d3361d51dc1b5cf3938e60b5d874",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_dispatch.sv": "06ee59aa5a7b3a822166b3f3686091434e1f42e3d906e28a462a75de5e35ca31",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "ab65abfc0426b3ddec2d09b45d2f0e8494d7cbc0001cc6da9fe2a651d26987c8",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+  "rtl/test/tb_dsrom_engram_canonical_boot.sv": "b452ae5dd90bddf499f5cca2d86a2193ef774cb1e6dfb49445643e450c5ad51a",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "31d66b27759c3383d00ba4da4c6c601cba15bb3d82cd5b503b88041178988f51",
+  "tools/engram_canonical_boot_gate.py": "7508978f96604b434f6745dcf2a76b1db7bd1c30017c02bc81dad5404b4867fe"
+ },
+ "cases": {
+  "mutant0_mode0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_BOOT PASS sectors=576 PCs=64 actual_wd=576 actual_PHY=1 marker=1 cycles=6199\n- /srv/opentallas-scratch/claude/engram/canonical-boot-r1/rtl/test/tb_dsrom_engram_canonical_boot.sv:68: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "mutant0_mode1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_BOOT NEG exclusive end caught\n- /srv/opentallas-scratch/claude/engram/canonical-boot-r1/rtl/test/tb_dsrom_engram_canonical_boot.sv:40: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "mutant1_mode2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_BOOT NEG zero-count noops caught\n- /srv/opentallas-scratch/claude/engram/canonical-boot-r1/rtl/test/tb_dsrom_engram_canonical_boot.sv:43: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "retained_objects": "/tmp/engram-canonical-boot-yh7qzmsf",
+ "status": "pass"
+}

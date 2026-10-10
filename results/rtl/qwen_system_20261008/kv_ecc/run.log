@@ -1,0 +1,3 @@
+KV_ECC_RESULT pass=1 sectors=6 clean=6 corrected=2112 (1,728 single-bit over all 288 stored bits + 384 two-word doubles) double_same_word=61344 bad=0 silent_wrong=0 ue_fault=1 ce_count=2112 mut=0
+KV_ECC_RESULT pass=0 ... bad=1920 mut=1 (mutant detected)
+host ot-epyc2, Verilator 5.032; rtl/test/qwen_system/tb_qfd_kv_ecc.sv NS=6

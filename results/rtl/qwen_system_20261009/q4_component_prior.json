@@ -1,0 +1,9 @@
+{
+  "schema": "opentallas.qwen-system.q4-prior-execution.v1",
+  "scope": "Full 512-bit data and mask component with finite credits; prior to measured trace replay extension",
+  "positive": "PASS fullshape DW512 credit RTT78 sent600 retired600 token-writes1447 exact128words",
+  "overflow": "PASS unreserved overflow suppresses releases",
+  "negative": "NEG_DETECTED credit-early fault at cycle121 sent16 seen0",
+  "physical_closed": false,
+  "notes": "Executed before owner prohibited new localhost computation. Final source rerun and measured trace campaign must run remotely through admission. These prior results do not qualify final trace extension."
+}

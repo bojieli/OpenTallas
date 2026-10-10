@@ -1,0 +1,8 @@
+PASS full545 1300 records, ring wrap, paced admission, independent stalls
+PASS UE, coalesced NAK, duplicate removal, golden payload order
+PASS stale, duplicate, bad-FEC, future ACK and session filtering
+PASS bounded retries retain debt
+PASS actual full512 retention and duplicate/reordered feedback
+PASS real replay SRAM double-error poison blocks launch
+PASS_ALL
+/srv/opentallas-scratch/codex/hbm-retry-pipeline-20261009-r1/rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv:94: $finish called at 24235673000 (1fs)

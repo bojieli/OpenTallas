@@ -1,0 +1,73 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM reference pin _3636_/CLK clock arrival max 107.861221 min 100.589287 skew 90 hold 50
+[WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
+[WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
+[WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
+OT_IO_INTER 122 inputs 51 outputs at 150 ps
+OT_WS_MAX 1.4918649648976157e-10 OT_WS_MIN 2.3678878302568762e-11
+Clock core_clk
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  95.55         network latency id_fifo[1][14]$_SDFFCE_PN0P_/CLK
+         122.28 network latency c_n_q[15]$_SDFFE_PN0P_/CLK
+---------------
+  95.55  122.28 latency
+          26.73 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+ 102.26         network latency id_fifo[1][14]$_SDFFCE_PN0P_/CLK
+         130.49 network latency c_n_q[15]$_SDFFE_PN0P_/CLK
+---------------
+ 102.26  130.49 latency
+          28.24 skew
+
+
+Clock ot_lb_v_core_clk
+
+OT_ELECTRICAL_BEGIN
+OT_ELECTRICAL_END
+OT_DB_FANOUT max_all=32 clock_nets=32 max_clock_net_inputs=16
+OT_AUDIT_DONE
+	Command being timed: "docker run --rm -v /srv/opentallas-scratch/claude/closure-loop/hgi-att-g12-120-187a8471c-tc-cx/routes/hgi_att_g12_120_187a8471c_tc_cx/work/orfs:/work -v /srv/opentallas-scratch/claude/closure-loop/hgi-att-g12-120-187a8471c-tc-cx/src:/src:ro openroad/orfs:latest bash -lc /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/cx_electrical_tt.tcl"
+	User time (seconds): 0.01
+	System time (seconds): 0.02
+	Percent of CPU this job got: 1%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.95
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 26660
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3026
+	Voluntary context switches: 690
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

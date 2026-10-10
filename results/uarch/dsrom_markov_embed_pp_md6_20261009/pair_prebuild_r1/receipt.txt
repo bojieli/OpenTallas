@@ -1,0 +1,12 @@
+source_commit=878a81d
+candidate_source=6bc32587a
+recipe_source=e28bb9e59
+host=ot-epyc1tb
+source_root=/srv/opentallas-scratch/claude/md6-lookup-pair-route-wt
+output=/srv/opentallas-scratch/claude/md6-lookup-pp-source/pair_route_r1
+START=2026-10-09T01:45:05-07:00
+END=2026-10-09T01:45:05-07:00
+exit=2
+failure=python3: can't open file '/srv/opentallas-scratch/claude/md6-lookup-pair-route-wt/tools/run_abi3_physical.py': [Errno 2] No such file or directory
+inspection=no continuing pair process; no compile/P&R began
+policy=no new pair launch until Claude review; preserve staged source and failure

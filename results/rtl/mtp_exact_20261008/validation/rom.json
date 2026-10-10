@@ -1,0 +1,41 @@
+{
+ "bench": "v41_mtp_rom_rtl",
+ "exact": true,
+ "runs": {
+  "img_gold4_forced_g5_n12": {
+   "pass_": true,
+   "cycles": 11387277,
+   "iters": 4,
+   "generated": 13
+  },
+  "img_oracle3_forced_g5_n12": {
+   "pass_": true,
+   "cycles": 8333009,
+   "iters": 3,
+   "generated": 13
+  },
+  "img_oracle5_forced_g5_n12": {
+   "pass_": true,
+   "cycles": 9255693,
+   "iters": 3,
+   "generated": 12
+  },
+  "img_gold4_dspark_g5_n12": {
+   "pass_": true,
+   "cycles": 29049215,
+   "iters": 11,
+   "generated": 12
+  }
+ },
+ "mutants_detected": [
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "cycles": 11387277,
+ "returncode": 0,
+ "wall_seconds": 4977.3,
+ "bench_wall_seconds": 4977.3
+}

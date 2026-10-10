@@ -1,0 +1,4036 @@
+{
+ "schema": "opentallas.hgi_sim.ds_native.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-10T04:13:36Z",
+ "host": "known-grouse",
+ "context": 1048576,
+ "position": 1048575,
+ "layers": "0-39",
+ "head": true,
+ "results": [
+  {
+   "layer": 0,
+   "kind": "sliding",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L0.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1019392,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 26934.0,
+    "list_alpha": 1.0,
+    "moves": 11,
+    "output_cycles": 23578.9,
+    "rounds": [
+     23988.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 0
+   },
+   "row_gather": [],
+   "wall_s": 516.3
+  },
+  {
+   "layer": 1,
+   "kind": "engram+sliding",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L1.engram",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win1",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block1",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre1",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L1.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 154,
+   "image_bytes_all_dies": 1705984,
+   "unit_ops": {
+    "DMA.LOAD": 56,
+    "SU.VOP": 43,
+    "COLL.ALL_GATHER": 14,
+    "SM.MATVEC": 28,
+    "FUSED.HC_PRE_NORM": 2,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 31633.4,
+    "list_alpha": 1.0,
+    "moves": 11,
+    "output_cycles": 27563.3,
+    "rounds": [
+     27972.8
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 1
+   },
+   "row_gather": [],
+   "wall_s": 2643.3
+  },
+  {
+   "layer": 2,
+   "kind": "ratio2+compressor+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L2.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win2",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L2.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L2.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L2.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L2.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block2",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre2",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "ckv2",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik2",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L2.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L2.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L2.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 130,
+   "image_bytes_all_dies": 1181376,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 29,
+    "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "HC.HC_MIX": 2,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40595.3,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 35422.8,
+    "rounds": [
+     35488.4
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 2
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 13,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1283.1
+  },
+  {
+   "layer": 3,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L3.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win3",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L3.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L3.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L3.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L3.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block3",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre3",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L3.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 530.1
+  },
+  {
+   "layer": 4,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L4.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win4",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L4.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L4.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L4.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L4.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block4",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre4",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L4.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 16.7
+  },
+  {
+   "layer": 5,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L5.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win5",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L5.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L5.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L5.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L5.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block5",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre5",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L5.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.5
+  },
+  {
+   "layer": 6,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L6.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win6",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L6.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L6.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L6.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L6.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block6",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre6",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L6.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.6
+  },
+  {
+   "layer": 7,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L7.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win7",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L7.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L7.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L7.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L7.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block7",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre7",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L7.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 3,
+    "reused_from_layer": 3
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 8,
+   "kind": "ratio2+compressor+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L8.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win8",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L8.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L8.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L8.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L8.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block8",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre8",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "ckv8",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik8",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L8.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L8.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L8.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 130,
+   "image_bytes_all_dies": 1181376,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 29,
+    "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "HC.HC_MIX": 2,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40595.3,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 35422.8,
+    "rounds": [
+     35488.4
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 8
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 13,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1331.0
+  },
+  {
+   "layer": 9,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L9.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win9",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L9.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L9.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L9.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L9.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block9",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre9",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L9.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 551.3
+  },
+  {
+   "layer": 10,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L10.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win10",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L10.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L10.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L10.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L10.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block10",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre10",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L10.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.3
+  },
+  {
+   "layer": 11,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L11.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win11",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L11.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L11.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L11.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L11.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block11",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre11",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L11.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 12,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L12.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win12",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L12.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L12.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L12.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L12.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block12",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre12",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L12.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.3
+  },
+  {
+   "layer": 13,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L13.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win13",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L13.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L13.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L13.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L13.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block13",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre13",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L13.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 9,
+    "reused_from_layer": 9
+   },
+   "row_gather": [],
+   "wall_s": 10.8
+  },
+  {
+   "layer": 14,
+   "kind": "engram+ratio2+compressor+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L14.engram",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L14.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win14",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L14.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L14.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L14.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L14.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block14",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre14",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "ckv14",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik14",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L14.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L14.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L14.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 193,
+   "image_bytes_all_dies": 1867968,
+   "unit_ops": {
+    "CTL.NOP": 29,
+    "DMA.LOAD": 56,
+    "SU.VOP": 45,
+    "COLL.ALL_GATHER": 17,
+    "SM.MATVEC": 30,
+    "FUSED.HC_PRE_NORM": 2,
+    "HC.HC_MIX": 2,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 45304.7,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 39497.6,
+    "rounds": [
+     39643.6
+    ],
+    "seed": "given",
+    "ils_moves": 2,
+    "layer": 14
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 9,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 5196.2
+  },
+  {
+   "layer": 15,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L15.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win15",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L15.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L15.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L15.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L15.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block15",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre15",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L15.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 494.7
+  },
+  {
+   "layer": 16,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L16.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win16",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L16.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L16.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L16.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L16.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block16",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre16",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L16.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.8
+  },
+  {
+   "layer": 17,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L17.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win17",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L17.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L17.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L17.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L17.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block17",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre17",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L17.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.8
+  },
+  {
+   "layer": 18,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L18.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win18",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L18.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L18.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L18.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L18.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block18",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre18",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L18.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 12.3
+  },
+  {
+   "layer": 19,
+   "kind": "ratio2",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L19.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win19",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L19.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L19.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L19.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L19.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block19",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre19",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L19.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 15,
+    "reused_from_layer": 15
+   },
+   "row_gather": [],
+   "wall_s": 10.3
+  },
+  {
+   "layer": 20,
+   "kind": "ratio1+compressor+indexer+candidates",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L20.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "ckv20",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik20",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L20.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L20.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L20.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 120,
+   "image_bytes_all_dies": 1180288,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 18,
+    "COLL.ALL_GATHER": 15,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 2,
+    "HC.HC_MIX": 2,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 41536.8,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 36439.4,
+    "rounds": [
+     36505.0
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 20
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 1341.7
+  },
+  {
+   "layer": 21,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L21.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win21",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L21.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L21.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L21.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L21.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block21",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre21",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L21.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 544.5
+  },
+  {
+   "layer": 22,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L22.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win22",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L22.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L22.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L22.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L22.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block22",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre22",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L22.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 23,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L23.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win23",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L23.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L23.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L23.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L23.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block23",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre23",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L23.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 11.0
+  },
+  {
+   "layer": 24,
+   "kind": "ratio1+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L24.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win24",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L24.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L24.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L24.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L24.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block24",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre24",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L24.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L24.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L24.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 1,
+    "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 1,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 883.6
+  },
+  {
+   "layer": 25,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L25.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win25",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L25.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L25.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L25.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L25.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block25",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre25",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L25.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.6
+  },
+  {
+   "layer": 26,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L26.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win26",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L26.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L26.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L26.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L26.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block26",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre26",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L26.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.2
+  },
+  {
+   "layer": 27,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L27.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win27",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L27.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L27.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L27.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L27.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block27",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre27",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L27.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.8
+  },
+  {
+   "layer": 28,
+   "kind": "ratio1+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L28.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win28",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L28.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L28.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L28.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L28.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block28",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre28",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L28.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L28.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L28.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 1,
+    "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 1,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 18,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 47.0
+  },
+  {
+   "layer": 29,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L29.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win29",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L29.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L29.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L29.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L29.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block29",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre29",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L29.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.5
+  },
+  {
+   "layer": 30,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L30.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win30",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L30.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L30.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L30.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L30.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block30",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre30",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L30.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.6
+  },
+  {
+   "layer": 31,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L31.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win31",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L31.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L31.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L31.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L31.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block31",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre31",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L31.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.8
+  },
+  {
+   "layer": 32,
+   "kind": "ratio1+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L32.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win32",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L32.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L32.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L32.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L32.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block32",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre32",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L32.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L32.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L32.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 1,
+    "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 1,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 66.2
+  },
+  {
+   "layer": 33,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L33.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win33",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L33.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L33.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L33.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L33.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block33",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre33",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L33.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 34,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L34.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win34",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L34.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L34.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L34.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L34.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block34",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre34",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L34.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 35,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L35.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win35",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L35.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L35.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L35.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L35.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block35",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre35",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L35.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
+  },
+  {
+   "layer": 36,
+   "kind": "ratio1+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L36.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win36",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L36.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L36.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L36.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L36.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block36",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre36",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L36.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L36.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L36.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 100,
+   "image_bytes_all_dies": 1120256,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 6,
+    "CTL.NOP": 1,
+    "COLL.ALL_GATHER": 14,
+    "SU.VOP": 35,
+    "SM.MATVEC": 28,
+    "HC.HC_MIX": 2,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 1,
+    "COLL.ROW_GATHER": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 40680.8,
+    "list_alpha": 0.05,
+    "moves": 16,
+    "output_cycles": 36272.3,
+    "rounds": [
+     36384.3
+    ],
+    "seed": "given",
+    "ils_moves": 1,
+    "layer": 24,
+    "reused_from_layer": 24
+   },
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 96,
+     "max_owned": 14,
+     "mean_owned": 5.333
+    }
+   ],
+   "wall_s": 49.8
+  },
+  {
+   "layer": 37,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L37.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win37",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L37.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L37.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L37.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L37.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block37",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre37",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L37.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.7
+  },
+  {
+   "layer": 38,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L38.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win38",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L38.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L38.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L38.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L38.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block38",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre38",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L38.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
+  },
+  {
+   "layer": 39,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L39.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 91,
+   "image_bytes_all_dies": 1023488,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "SU.VOP": 33,
+    "DMA.LOAD": 6,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "HC.HC_MIX": 2,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1,
+    "DMA.FENCE": 1
+   },
+   "schedule": {
+    "input_cycles": 27554.3,
+    "list_alpha": 1.0,
+    "moves": 10,
+    "output_cycles": 24422.9,
+    "rounds": [
+     24832.4
+    ],
+    "seed": "given",
+    "ils_moves": 4,
+    "layer": 21,
+    "reused_from_layer": 21
+   },
+   "row_gather": [],
+   "wall_s": 10.9
+  },
+  {
+   "layer": "head",
+   "verdict": "pass",
+   "fault": null,
+   "next_token": 21946,
+   "reference_next_token": 21946,
+   "logits_sha256": "241c577cb0e19ef9ffa7efb0e08c6d6004ef21827101ebfe21276582acf49ec2",
+   "reference_logits_sha256": "241c577cb0e19ef9ffa7efb0e08c6d6004ef21827101ebfe21276582acf49ec2",
+   "tokens_agree_all_dies": true,
+   "records_per_die": 4,
+   "wall_s": 8.4
+  }
+ ],
+ "spec": "HGI-1 1.0 (owner-approved encoding; records.py decodes from hbm_generic_iface D_* tables)",
+ "open_items": [
+  "G15 IDX.TOPK ascending-id order (param[12], provisional reading)",
+  "G16 DS indexer engines' operands / fields (engine-internal buffers)",
+  "G17 DS head uniform 1,347-row shards for ARGMAX imm_a",
+  "Engram ids host-provided (IDX.EHASH not modelled: G13 bring-up path)",
+  "program images compiled for the token's position (compressor append address, selection count), as the w19 compiler emits them",
+  "compressed KV rows stored as FP32 values on the FP4 grid (the shipped 9-channel FP4 layout is the gather readers' concern, spec 6.10)"
+ ],
+ "wall_s": 15933.4,
+ "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "source_sha256": {
+  "hgi_sim/ds_native.py": "7fcc4725f1cc01c0641b28d8528c5b8ae99ce9438d120c55480428bfda6f6ebe",
+  "hgi_sim/machine.py": "043dca7cfbd0a9f7a23f05c5575ba5c475f5e1db2cf4682e2a0fb576cab7eed2",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ }
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.embedding_hbm_far_bus_model.v1",
+  "model_before_RTL": true,
+  "MAC_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "rx_write": 65.375,
+    "rx_read": 65.375,
+    "emb_tx_write": 65.375,
+    "KV_tx_write": 65.375,
+    "shared_tx_read": 65.375
+  },
+  "boundary_bits_per_cycle": {
+    "hub_each_direction": 528,
+    "engine_each_direction": 525,
+    "KV_each_direction": 525
+  },
+  "replicas": 4,
+  "mux_demux": {
+    "tx_select": 2,
+    "rx_classes": 2,
+    "selected_width_bits": 523
+  },
+  "inventory_bits": {
+    "rx_IBUF": 66944,
+    "async_FIFO": 4184,
+    "out_FIFO": 4184,
+    "embedding_TQ": 2092,
+    "KV_TQ": 2092,
+    "rx_capture": 523,
+    "rx_output": 523,
+    "class_output_registers": 1046,
+    "hub_output": 528,
+    "data_total": 82116,
+    "control_budget": 256
+  },
+  "finite_flow": {
+    "CR": 128,
+    "OD": 8,
+    "AD": 8,
+    "ECR": 4,
+    "KCR": 4,
+    "TQ_each_class": 4,
+    "credit_rules": "Each input pulse consumes one reserved slot; returned pulse restores one. Gray count across ck/lclk is modulo16, synchronized. Simultaneous class queues round-robin share one hub word/cycle."
+  },
+  "clock_period_ps": {
+    "forwarded_ck": 833.333334,
+    "local_lclk": 833.333334
+  },
+  "frame_um": [
+    92.016,
+    1401.84
+  ],
+  "frame_area_um2": 128991.70944,
+  "routing": {
+    "left_hub_tracks": 528,
+    "right_hub_tracks": 528,
+    "top_engine_tracks": 1050,
+    "bottom_KV_tracks": 1050,
+    "pin_layers": 2,
+    "spacing_um": 0.096,
+    "usable_fraction": 0.75,
+    "horizontal_capacity_tracks": 1437,
+    "vertical_capacity_tracks": 21903,
+    "physical_pin_fit": "planned only; actual routed access remains open"
+  },
+  "floorplan_slot_fit": "proposed shoreline frame, no actual die placement claim",
+  "wrapper_latency_added_cycles": 0,
+  "wrapper_new_registers": 0,
+  "latency_contribution": "unchanged original endpoint queues and CDC; wrapper has no new cycles; system path still requires measured composition",
+  "ECC_provider": "OPEN: raw PHY supplies protected HBM words; wrapper does not establish provider",
+  "adopted": false,
+  "physical_closed": false,
+  "area_buffer_cost": "OPEN: route validates IO load and buffers",
+  "energy": "OPEN: activity and clock inventory needed"
+}

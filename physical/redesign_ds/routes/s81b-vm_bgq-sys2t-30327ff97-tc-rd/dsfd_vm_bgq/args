@@ -1,0 +1,1 @@
+SRC=/srv/opentallas-scratch/claude/closure-loop/s81b-vm_bgq-sys2t-30327ff97-tc-rd/src die=contract_vmh_t master=dsfd_vm_bgq top=rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv DW=253.794 DH=750.06 PD=0.40 MAXL=M7 SRCS= CLK=ck SDCX=physical/s81_ph_views/vm_mem/vm_tile.sdc CTSA= --param NSTG=2 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/redesign_ds/vm_sys/place_macros_vmsys.tcl

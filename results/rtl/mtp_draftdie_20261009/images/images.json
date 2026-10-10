@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.dsrom-mtp-draft-images.v1",
+ "source_sha256": "59fa7723767ed275ad0edd814d2b5a1b403ddefd70372139e763c9394b765f75",
+ "rowpack_sha256": "61e6aa56e390d6159d827eecc78f6e4fc39a465098042c498cea92ed1989a724",
+ "snapshot": "snap_dba1be0a40aa45a94ad051997016db3960a90277",
+ "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+ "images": {
+  "A0": {
+   "file": "draft_A_rank0.bin",
+   "sha256": "4ed38302a4ae0c80fa1a0d94ed9e2e37890e3a39c567aa550e8b0339c87096d5",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 6.3
+  },
+  "A1": {
+   "file": "draft_A_rank1.bin",
+   "sha256": "701d61d7fa32888814cd39d565a7a65acc59922c34f54268b36e0f54f4b5760a",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 6.8
+  },
+  "A2": {
+   "file": "draft_A_rank2.bin",
+   "sha256": "217944175fd927409174b6d990321610583624aa990c3154256f465f90a6b5cd",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.9
+  },
+  "A3": {
+   "file": "draft_A_rank3.bin",
+   "sha256": "5a03a651959ef3f11dc5936d271cd0ce9722b5449502867aa1450ad4b90d56f1",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.6
+  },
+  "B0": {
+   "file": "draft_B_rank0.bin",
+   "sha256": "4c84f4aa5e63be5f5d28b59e8f241a480d64891f36322222cd82a69842c0b277",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.3
+  },
+  "B1": {
+   "file": "draft_B_rank1.bin",
+   "sha256": "224da9f75b911556398608a42d8f23acac15d5fb4f44e2ba36d7dfa66e50d7be",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.2
+  },
+  "B2": {
+   "file": "draft_B_rank2.bin",
+   "sha256": "52e86e19701a612f83591e43105a7de66b764721bd85dc1c283e3f2b32a4c063",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.3
+  },
+  "B3": {
+   "file": "draft_B_rank3.bin",
+   "sha256": "8edb8cb1f5a97825202918183d192f5b770b42ba6249e7c7eca5ccd2ca127d4d",
+   "bytes": 998244480,
+   "words": 13762560,
+   "released_blocks": 53084160,
+   "seconds": 5.3
+  }
+ },
+ "tensors": 1152,
+ "words_per_side": {
+  "A": 13762560,
+  "B": 13762560
+ }
+}

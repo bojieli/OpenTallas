@@ -1,0 +1,11 @@
+import ast,json,os,pathlib,re,shlex
+base=pathlib.Path('/srv/opentallas-scratch2/scratch/codex/qwen-pin-balance/propagate')
+s=(base/'run_abi3_physical.py').read_text();compile(s,'run_abi3_physical.py','exec');fn=next(n for n in ast.parse(s).body if isinstance(n,ast.FunctionDef) and n.name=='io_constraints_tcl');ns={'os':os,'re':re};exec(compile(ast.Module(body=[fn],type_ignores=[]),'run_abi3_physical.py','exec'),ns)
+os.environ.update(OT_PIN_GROUP_MAX='32',OT_PIN_BALANCE_H='M4 M6',OT_PIN_BALANCE_V='M5 M7')
+for cfg in ['qfd_sp_constants_sequencer_fqh','qfd_sp_res_ser_tsr','qfd_sp_res_ser_tsr41']:
+ run=pathlib.Path('/srv/opentallas-scratch2/scratch/claude/closure-loop')/(cfg+'-942f13c8atc');text=(run/'src/physical/qwen_die_masters/cfg'/(cfg+'.env')).read_text();fw=float(re.search(r'^FW=(.+)$',text,re.M).group(1));fh=float(re.search(r'^FH=(.+)$',text,re.M).group(1));args=shlex.split(re.search(r'^PINS=\((.+)\)$',text,re.M).group(1));regions=[]
+ for arg in args[1::2]:
+  regex,region=arg.rsplit('=',1);edge,sep,span=region.partition(':');r={'regex':regex,'edge':edge}
+  if sep:r['range_um']=list(map(float,span.split('-')))
+  regions.append(r)
+ roots=list((run/'routes').glob('*/work/orfs'));work=next(x for x in roots if '.attempt' not in str(x));odb=next((work/'results').glob('asap7/*/base/1_synth.odb'));out=base/cfg;out.mkdir(exist_ok=True);tcl='read_db /work/'+str(odb.relative_to(work))+'\n'+f'initialize_floorplan -die_area {{0 0 {fw} {fh}}} -core_area {{2.16 2.16 {fw-2.16} {fh-2.16}}} -site asap7sc7p5t\nsource /evidence/make_tracks.tcl\n'+ns['io_constraints_tcl'](regions,True,[0,0,fw,fh])+'\nplace_pins -hor_layers {M4 M6} -ver_layers {M5 M7} -min_distance 1 -min_distance_in_tracks\n';tcl+='set out [open /evidence/pins.tsv w]\nforeach t [[ord::get_db_block] getBTerms] {foreach p [$t getBPins] {foreach b [$p getBoxes] {puts $out "[$t getName] [[$b getTechLayer] getName] [$b xMin] [$b yMin] [$b xMax] [$b yMax]"}}}\nclose $out\nputs PIN_BALANCE_PASS\n';(out/'check.tcl').write_text(tcl);(out/'vehicle.json').write_text(json.dumps({'cfg':cfg,'work':str(work),'fw':fw,'fh':fh,'regions':regions},indent=2)+'\n');(out/'make_tracks.tcl').write_text((base.parent/'make_tracks.tcl').read_text());print(cfg,work)

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/hbm-native-format-protected/src/tools/hbm_index_native_format_gate.py", line 73, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/srv/opentallas-scratch/codex/hbm-native-format-protected/src/tools/hbm_index_native_format_gate.py", line 61, in main
+    with (w/'build.log').open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
+  File "/usr/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/usr/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'verilator'

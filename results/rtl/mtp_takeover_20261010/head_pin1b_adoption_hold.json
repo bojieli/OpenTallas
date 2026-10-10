@@ -1,0 +1,7 @@
+{
+  "name": "mtp-head340-mkdrv-pin1b-b0bd92a8e-tc",
+  "reason": "Shared IO anchoring hook can execute in 3_1_place_gp_skip_io before BPin placement. D23 actual run demonstrates false origin anchoring/congestion. Preserve live calibration as diagnostic; actual placed-pin guarded successor and corner boundary evidence required before adoption.",
+  "created_utc": "2026-10-10T12:30:34.972574+00:00",
+  "operator": "codex-mtp-takeover",
+  "replacement": "pending guarded pin-anchor successor"
+}

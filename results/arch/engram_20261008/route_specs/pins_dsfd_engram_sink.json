@@ -1,0 +1,11 @@
+{"master": "dsfd_engram_sink", "w_um": 360.0, "h_um": 135.0, "domain": "stream_1p2",
+ "ports": [
+  ["ck", 1, "input", "W", "M4", 1, 0.5], ["rst_n", 1, "input", "W", "M4", 1, 0.45],
+  ["rel_v", 1, "input", "W", "M4", 1, 0.30], ["rel_slot", 3, "input", "W", "M4", 2, 0.25],
+  ["rdy", 8, "output", "W", "M4", 2, 0.70], ["perr", 8, "output", "W", "M4", 2, 0.80],
+  ["in_v", 4, "input", "N", "M5", 2, 0.03], ["in_r", 4, "output", "N", "M5", 2, 0.05], ["in_col", 20, "input", "N", "M5", 1, 0.08],
+  ["in_beat", 12, "input", "N", "M5", 1, 0.10], ["in_slot", 12, "input", "N", "M5", 1, 0.12],
+  ["in_d", 1056, "input", "N", "M5", 4, 0.55],
+  ["st_v", 4, "input", "N", "M5", 1, 0.955], ["st_slot", 12, "input", "N", "M5", 1, 0.97], ["st_bad", 4, "input", "N", "M5", 1, 0.99],
+  ["wr_en", 1, "output", "S", "M5", 1, 0.08], ["wr_addr", 11, "output", "S", "M5", 2, 0.12], ["wr_data", 512, "output", "S", "M5", 4, 0.55]
+ ]}

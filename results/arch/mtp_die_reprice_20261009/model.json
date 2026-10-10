@@ -1,0 +1,478 @@
+{
+  "schema": "opentallas.mtp_die_reprice.v1",
+  "status": "STORAGE_SIZED_TIMING_AND_RTL_INCOMPLETE",
+  "released_markov": {
+    "embed": {
+      "tensor": "mtp.2.markov_head.embed.weight",
+      "shape": [
+        129280,
+        256
+      ],
+      "bytes": 66191360,
+      "dtype": "BF16",
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json"
+    },
+    "head": {
+      "tensor": "mtp.2.markov_head.head.weight",
+      "shape": [
+        129280,
+        256
+      ],
+      "bytes": 66191360,
+      "dtype": "BF16",
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json"
+    }
+  },
+  "released_seed": {
+    "weight": {
+      "tensor": "mtp.0.main_proj.weight",
+      "shape": [
+        5120,
+        15360
+      ],
+      "dtype": "F8_E4M3",
+      "bytes": 78643200,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    },
+    "scale": {
+      "tensor": "mtp.0.main_proj.scale",
+      "shape": [
+        160,
+        480
+      ],
+      "dtype": "F8_E8M0",
+      "bytes": 76800,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    },
+    "norm": {
+      "tensor": "mtp.0.main_norm.weight",
+      "shape": [
+        5120
+      ],
+      "dtype": "BF16",
+      "bytes": 10240,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    }
+  },
+  "storage": {
+    "head_dies": 12,
+    "allocation_pair_bytes": 524288,
+    "allocation_pair_ROM4096_macros": 4,
+    "historical_reduced_K": 32,
+    "released_K": 256,
+    "historical_markov_pairs_per_head": 18,
+    "released_embed_pairs_per_head": 127,
+    "released_head_pairs_per_head": 11,
+    "released_markov_pairs_per_head": 138,
+    "historical_total_pairs_per_head": 511,
+    "released_total_pairs_per_head": 631,
+    "added_pairs_per_head": 120,
+    "all_12_heads_have_primary_reservation": true,
+    "successor_element_pair_bytes": 262144,
+    "successor_element_pair_ROM4096_macros": 2,
+    "successor_embed_pairs_per_head": 253,
+    "successor_head_pairs_per_head": 22
+  },
+  "seed_allocation": {
+    "previous_primary_block_pairs": 282,
+    "original_seed_slices": null,
+    "original_seed_counted_in_primary_capacity": false,
+    "bytes_global": 78730240,
+    "bytes_per_TP4_rank": 19682560,
+    "additional_storage_pairs_per_primary_rank_lower_bound": 38,
+    "primary_block_plus_seed_pairs_lower_bound": 320,
+    "head_dense_storage_with_seed_pairs_lower_bound": 669,
+    "qualification": "payload bound; bank/port allocation and main_proj RTL timing required"
+  },
+  "markov_ports": {
+    "logical_minimum_row_engines": 337,
+    "actual_head_bundles": 85,
+    "actual_A_elements": 340,
+    "row_engines": 340,
+    "weight_ROM4096_macros": 680,
+    "weight_macro_outline_um": [
+      125.28,
+      62.91
+    ],
+    "raw_weight_macro_area_mm2": 5.359328064,
+    "weight_read_bytes_per_cycle_per_engine": 32,
+    "aggregate_weight_read_bytes_per_cycle": 10880,
+    "staged_embedding_bytes_per_engine": 512,
+    "replicated_embedding_bytes": 174080,
+    "embedding_broadcast_bits_per_beat": 256,
+    "embedding_broadcast_beats": 16,
+    "local_weight_words_per_macro": 256,
+    "macro_used_fraction": 0.0625,
+    "row_launch_interval_cycles": 256,
+    "measured_component_cycles_after_first_beat": 177,
+    "integrated_join_cycles": 184,
+    "measured_driver_head_to_join_ns": 153.33333333333334,
+    "driver_source": "caf38a801",
+    "added_embedding_cache_warmup_cycles": 2,
+    "reason_two_macros": "real SS macro clkq needs two-edge capture; alternating banks preserve q",
+    "row_engine_route_area_mm2": null,
+    "physical_slot_fit": false
+  },
+  "typed_head_inventory": {
+    "field_slots": 658,
+    "regular_NB2_four_ROM_slots": 320,
+    "BF_double_four_ROM_slots": 338,
+    "non_lm_head_global_BF_double_slots": 211,
+    "Markov_embed_BF_double_slots": 127,
+    "primary_block_regular_slots": 282,
+    "seed_regular_slots": 38,
+    "seed_two_ROM_row_bank_units": 76,
+    "seed_weight_two_ROM_row_bank_units": 75,
+    "seed_norm_words_per_rank": 80,
+    "seed_scale_carrier_bits": 18,
+    "seed_scale_packing_qualification": "proposed repeated scale in carrier; packed proof required",
+    "field_ROM4096_macros": 2632,
+    "lm_head_bundles": 85,
+    "lm_head_ROM4096_macros": 850,
+    "local_Markov_ROM4096_macros": 680,
+    "total_ROM4096_macros": 4162,
+    "configuration_ROM4096x72_per_field_slot": 7,
+    "configuration_ROM4096x72_macros": 4606,
+    "total_all_ROM_macro_types": 8768,
+    "weight_ROM_inventory_excludes_configuration": true,
+    "native_pair_ROM4096_macros": 4,
+    "native_pair_inventory_sources": [
+      "tools/dsrom_s81_component_word_server.py:61",
+      "tools/dsrom_s81_expert_placement_sweep.py:85",
+      "tools/dsrom_head_source_binding.py:112"
+    ],
+    "BF_double_additional_ROM4096_macros": 0,
+    "supersedes_proposed_inventory": {
+      "field_slots": 696,
+      "total_ROM4096_macros": 3598,
+      "reason": "two-ROM row-bank units were incorrectly treated as native NB2 pairs"
+    },
+    "dense_Markov_head_storage_slots_removed": 11,
+    "generator_BF_map_must_be_explicit": true,
+    "floorplan_slot_fit": false,
+    "qualification": "typed proposed inventory; not equivalent to --pairs631 with heuristic BF ratio"
+  },
+  "aligned_head_input_staging": {
+    "schema": "opentallas.dsrom.head-input-staging.v1",
+    "default_enabled": false,
+    "adopted": false,
+    "source": "rtl/v41rom/ot_dsrom_head_bundle.sv and head_elem A input ABI",
+    "sizing": {
+      "head_dies": 12,
+      "bundles_per_die": 85,
+      "A_elements_per_die": 340,
+      "stages_per_A": 4,
+      "bits_per_stage": 307,
+      "registered_bits_per_die": 417520
+    },
+    "MACs_per_cycle_unchanged": true,
+    "compute_intensity_unchanged": true,
+    "ports_bytes_per_cycle": {
+      "x_per_A": 32,
+      "other_per_A": 6.375
+    },
+    "boundary_bits_per_cycle": {
+      "each_A": 307,
+      "per_bundle": 1228
+    },
+    "replicas": {
+      "A_input_pipeline": 340,
+      "stage_groups": 1360
+    },
+    "mux_demux_added": 0,
+    "fanout": {
+      "source_A_receivers_per_bundle": 4,
+      "purpose": "independent aligned landings beside actual A pin groups"
+    },
+    "routing": {
+      "per_A_tracks": 307,
+      "pin_segment_target_um": 100,
+      "capacity": "requires extracted A LEF faces and one-bundle route"
+    },
+    "area": {
+      "register_cell_floor_um2_per_die": 121748.83200000001,
+      "register_slot_floor_mm2_at_55pct": 0.22136151272727272,
+      "buffer_CTS_hold_area_unmeasured": true,
+      "floorplan_slot_fit": false
+    },
+    "latency": {
+      "added_cycles_per_head_pass": 4,
+      "added_verify_AR_us": 0.0033333333333333335,
+      "added_draft_5passes_us": 0.016666666666666666,
+      "added_verify_6pass_stage_busy_us": 0.02,
+      "II_effect": "price new head busy against actual stage limiter"
+    },
+    "qualification": "proposed structural budget; exactness and routed timing required"
+  },
+  "exact_P2_expert_transport": {
+    "schema": "opentallas.dsrom.mtp-p2-transport.v1",
+    "adopted": false,
+    "source": "tools/hdc_golden_v41.py dspark expert sum; released width5120 TP4",
+    "arithmetic": "FP32 zero then each expert FP32 output in sorted expert-id order, then shared FP32, then BF16",
+    "shape": {
+      "rows_parallel": 5,
+      "ranks": 4,
+      "packages": 20,
+      "stages": 3,
+      "selected_experts_per_row": 3,
+      "rank_output_values": 1280
+    },
+    "MACs_per_cycle_unchanged": true,
+    "compute_intensity_unchanged": true,
+    "ports": {
+      "UCIe_bits_per_cycle": 512,
+      "UCIe_bytes_per_cycle": 64,
+      "primary_request_BF16_vector_bytes": 10240,
+      "per_expert_return_FP32_bytes": 5120,
+      "per_expert_return_flits": 80
+    },
+    "boundaries": {
+      "individual_expert_payload_bits_per_cycle": 512,
+      "identity_header_bits": "actual transaction, position and expert-id format required"
+    },
+    "replicas": {
+      "A_die": 20,
+      "B_die": 20,
+      "UCIe_pairs": 20
+    },
+    "mux_demux_fanout": {
+      "A_sorted_expert_merge_inputs": 3,
+      "B_return_selection_inputs": 3,
+      "A_adder_order": "must stall until next golden expert arrives; no B pre-sum"
+    },
+    "storage": {
+      "A_individual_expert_row_bytes_upper": 15360,
+      "B_pending_expert_row_bytes_upper": 15360,
+      "pair_row_buffer_bytes_upper": 30720,
+      "array_row_buffer_bytes_upper": 614400,
+      "actual_minimum_FIFO_implementation_required": true
+    },
+    "routing": {
+      "tracks": 512,
+      "channel_capacity": null
+    },
+    "area": {
+      "buffer_macro_inventory": null,
+      "finite_merge_cell_area": null,
+      "floorplan_slot_fit": false
+    },
+    "stages": [
+      {
+        "stage": 0,
+        "B_experts": 0,
+        "B_return_flits": 0
+      },
+      {
+        "stage": 1,
+        "B_experts": 3,
+        "B_return_flits": 240
+      },
+      {
+        "stage": 2,
+        "B_experts_range": [
+          0,
+          3
+        ],
+        "B_return_flits_upper": 240
+      }
+    ],
+    "latency": {
+      "clock_GHz": 1.2,
+      "old_summed_return_flits": 80,
+      "stage1_additional_return_flits": 160,
+      "stage2_additional_return_flits_upper": 160,
+      "stage1_extra_serialization_us": 0.13333333333333333,
+      "stage2_extra_serialization_us_upper": 0.13333333333333333,
+      "critical_row_extra_serialization_us_upper": 0.26666666666666666,
+      "multiply_by_5_parallel_rows": false,
+      "headers_endpoint_credit_and_ordering_stalls_unmeasured": true,
+      "historical_P2_point2us_budget_qualified": false
+    },
+    "qualification": "model-before-build; full-shape output ordering and finite transport gates required"
+  },
+  "main_hidden_transport": {
+    "hidden_dimension": 5120,
+    "captures": 3,
+    "bytes_per_value": 2,
+    "global_bytes_per_position": 30720,
+    "bytes_per_TP4_rank_per_position": 7680,
+    "link_bits": 512,
+    "link_bytes_per_cycle": 64,
+    "global_flits_if_single_lane": 480,
+    "flits_per_rank_with_TP4_lanes": 120,
+    "flits_per_capture_per_rank": 40,
+    "rank_lane_tail_us": 0.1,
+    "rank_lane_occupancy_pct_of_historical_II": 0.36017864860971044,
+    "RTL_capture_and_identity_qualified": false,
+    "note": "SEND_HIDDEN sends ordinary core output; independent HC-mean capture and typed forwarding absent"
+  },
+  "latency": {
+    "historical_budget": {
+      "basis": "today's HALF_PHL re-price (results/arch/reprice_20261008: 4,351.6 tok/s, tau 4.159); draft / seed terms from the recovery composition (dsrom_recovery_20261004/composition.json MTP) + the re-price head SAFE adder (195 cycles); verify = step - draft - seed (DERIVED); II = (verify - AR) / 5 (DERIVED)",
+      "step_us": 955.74,
+      "verify_us": 829.572,
+      "draft_us": 122.95,
+      "seed_commit_us": 3.217,
+      "AR_us": 690.751,
+      "II_us": 27.764,
+      "phases": [
+        {
+          "phase": "verify",
+          "us": 829.572,
+          "rule": "AR + 5 x II (6 positions through the 120-stage wavefront)",
+          "blocks": [
+            {
+              "block": "WFC (ot_rom_pkg_ctrl_wfc src/stg) every stage",
+              "budget": "handoff <= 49 cycles a position a stage (measured 49, ref 46); hop delta <= 13 cycles a stage hop (measured)",
+              "class_": "measured"
+            },
+            {
+              "block": "WFC shims (dsfd_wfc_vmx VM 1.2/0.9 GHz 3:4 crossing, _lnk, _tok, _cep)",
+              "budget": "<= 5 cycles each way on the VM crossing (meso_d4 class), <= 2 cycles on link / token / core endpoint pin flops; total shim adder <= 14 cycles a stage a position",
+              "class_": "budget"
+            },
+            {
+              "block": "worst stage (II limiter)",
+              "budget": "II <= 27.76 us: stage busy x (1 + 0.004347) + hop + cable; the MTP shims may add <= 0.1 % to II (<= 28 ns)",
+              "class_": "derived"
+            },
+            {
+              "block": "head dies (verify lm_head, 6 positions)",
+              "budget": "6.9892 us a position (head stage occupancy, inside the head stage busy)",
+              "class_": "measured"
+            }
+          ]
+        },
+        {
+          "phase": "accept",
+          "us": null,
+          "rule": "inside seed_commit: accept + acc_n / squash broadcast",
+          "blocks": [
+            {
+              "block": "ot_dsrom_mtp_seq accept (ot_hdc_accept NSLOT 8 / NW 17) on head die h0",
+              "budget": "<= 3 cycles compare + 2 pin-flop cycles; the 12-die argmax merge result arrives through the head collective (existing)",
+              "class_": "budget"
+            },
+            {
+              "block": "acc_n / bonus / squash / epoch word",
+              "budget": "rides the existing token-return hop (head -> S0, 1,008 cycles full KP4 + 4 flight); +1 field (16 b) in the token word; the squash of in-flight wavefront positions is the WFC kill on the next stage boundary (no extra hop)",
+              "class_": "budget"
+            }
+          ]
+        },
+        {
+          "phase": "draft",
+          "us": 122.95,
+          "rule": "3 DSpark blocks + 5 serial head steps (lm_head sweep + Markov row + bias + argmax) + closure adders",
+          "blocks": [
+            {
+              "block": "DSpark blocks mtp.0 / mtp.1 / mtp.2 (DP1 primary on head dies h0..h3, experts on the draft row packages)",
+              "budget": "[29.925, 27.033, 27.033] us (measured element RTL on the S81 L0 graph) + full-FEC delta 3.577 us; package-pair fan-out (UCIe crossings for mtp.1 and half of mtp.2) <= 0.2 us a step",
+              "class_": "measured + budget"
+            },
+            {
+              "block": "draft link (primary -> row package A die, per row)",
+              "budget": "x_row 10,240 B + ids 64 B + weights 64 B out, ret_row 5,120 B back a block a row; 512 b / cycle a direction (S81 link chain): 160 + 80 cycles serialisation, hop 1,008 cycles full KP4 (measured hops x_row 0.3567 / ret_row 0.29 us incl. serialisation)",
+              "class_": "measured"
+            },
+            {
+              "block": "UCIe A <-> B (in package)",
+              "budget": "<= 10 ns + 2 x 8 cycles endpoint, cut-through; 512 b / cycle",
+              "class_": "budget"
+            },
+            {
+              "block": "draft head step x 5 (head bundles, fused bias + argmax)",
+              "budget": "6.9892 us sweep x (1 + r_markov 0.00781) + 39 cycles bias/argmax SAFE adder a sweep",
+              "class_": "measured"
+            },
+            {
+              "block": "Markov head (markov_head.embed 129,280 x 32 lookup + markov_head.head 129,280 x 32 matvec a draft row)",
+              "budget": "<= 54.6 ns a draft row (r_markov share of the sweep) + the 64 B embed-row broadcast to the 12 head dies <= 24 cycles: NO RTL (gap MTP-G1, review_queue/mtp-die.md)",
+              "class_": "model-only"
+            },
+            {
+              "block": "ot_dsrom_mtp_seq chain FSM",
+              "budget": "<= 4 cycles issue a head step; seed dispatch to the primary is die-local on h0 (primary on head dies): the head -> draft board hop is removed from the seed path",
+              "class_": "budget"
+            }
+          ]
+        },
+        {
+          "phase": "seed_commit",
+          "us": 3.217,
+          "rule": "measured seed_commit_over_verify ratio x verify (reduced vehicle)",
+          "blocks": []
+        }
+      ],
+      "link_widths": {
+        "stage_link": "512 b / cycle each way (ot_dsrom_link_rt, S81 link chains tx / rx)",
+        "draft_row_link": "512 b / cycle each way, 1 SerDes a row package a primary rank die",
+        "ucie_pair": "512 b / cycle each way (in-package UCIe, ot_pdie_ucie)",
+        "token_return": "existing word + 16 b acc_n / squash / epoch field"
+      }
+    },
+    "historical_budget_qualification": "reduced Markov32, cannot support released Markov256 claims",
+    "adopted_full_shape_MTP_tok_s": null,
+    "requirements": [
+      "separate 256-term dot with golden order and logits add",
+      "released embed lookup and 512-byte broadcast",
+      "measure successor exactness, accumulation cycles, and join",
+      "compose additional cycles and qualify SS/FF interfaces"
+    ]
+  },
+  "physical": {
+    "historical_head_case": "511-pair headmtp, source0544fca2c",
+    "released_head_case_required": true,
+    "routing_or_clock_closure_credit": false,
+    "vmx_fallback": {
+      "source_commit": "a2f264c8b",
+      "outline_um": [
+        291.6,
+        280.8
+      ],
+      "gross_um2": 81881.28,
+      "prior_gross_um2": 60092.928,
+      "added_gross_um2": 21788.352,
+      "historical_cells_um2": 38438,
+      "estimated_gross_utilization": 0.46943574892820433,
+      "added_cycles": 0,
+      "status": "sized_from_prior_cells_route_pending"
+    }
+  },
+  "loader": {
+    "historical_svc_bits": [
+      904,
+      624
+    ],
+    "native_svc_bits": [
+      344,
+      275
+    ],
+    "per_die_native_targets": 1,
+    "historical_two_die_target_bits": [
+      688,
+      550
+    ],
+    "native_address_bits": 37,
+    "physical_stacks": 4,
+    "external_host_AXI_bits": [
+      226,
+      74
+    ],
+    "additional_host_DMA_write_data_bits": 64,
+    "host_minimum_out_bits": 404,
+    "host_minimum_in_bits": 381,
+    "host_physical_bits_with_forwarded_clocks": 787,
+    "status": "protocol endpoint RTL and revised chain area remain required"
+  },
+  "inputs": {
+    "results/arch/mtp_die_20261008/plan.json": "caf363a23f6fa5ef72a093ec8ac6881a02ba142d7e545707fec90e3cdeee86a5",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+    "tools/dsrom_head_input_staging_model.py": "7e340a91444cf61a987a1b11cea17d9dc17648732bf96997f007779470f13963",
+    "tools/dsrom_mtp_p2_transport_model.py": "ba92f2f7abd0b476ccd4fba4b6f3da25fcef4a9b56011e97ca232387c415d504",
+    "tools/uarch_model.py": "5e90e8269d690d9b6490c3db4fad15f992f6c8d3665a132dc1b6b365676de090"
+  }
+}

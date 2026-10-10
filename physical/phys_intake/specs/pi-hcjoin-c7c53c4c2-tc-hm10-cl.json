@@ -1,0 +1,78 @@
+{
+ "name": "pi-hcjoin-c7c53c4c2-tc-hm10-cl",
+ "block": "ot_dsrom_hc_seed_join",
+ "element": "ot_dsrom_hc_seed_join",
+ "owner": "Claude:phys-intake",
+ "purpose": "phys-intake 2026-10-09 (owner: start physical work on every 'implementation recorded (no physical job)' element; dual-track '-cl' line). DS-ROM head-rank HC seed join, three real 256x256 SRAMs with SECDED72 (in rule: HC SRAM payload), ECC_PIPE=1 registered decoder (Codex c5dfa5e7f successor; its ad-hoc TC route join-route-r2 was NOT_MET TNS -254 ps, no loop job). REVIEW D6: no lease; epoch checks kept only as identity fields. Variant: TC route / option B (TT setup, FF hold, DRC 0), HM 10 ps. Exact bench + mutant: physical/phys_intake/bench.sh hc_seed_join (pos PASS / mutant FAIL on this source).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/phys-intake-20261009",
+  "commit": "c7c53c4c21e03b3c37bc1c8a2ebd890e7e0f8df8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hc_seed_join_exact",
+    "cmd": "bash physical/phys_intake/bench.sh hc_seed_join pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "PHYSINTAKE_hc_seed_join_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hc_seed_join_mutant",
+    "cmd": "bash physical/phys_intake/bench.sh hc_seed_join neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "PHYSINTAKE_hc_seed_join_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_dsrom_hc_seed_join --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_seed_join.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv --param ECC_PIPE=1 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 5 5 --die-area 0 0 500 500 --core-area 2.16 2.16 497.84 497.84",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_dsrom_hc_seed_join --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_seed_join.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv --param ECC_PIPE=1 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 5 5 --die-area 0 0 500 500 --core-area 2.16 2.16 497.84 497.84 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 12,
+   "peak_ram_gb": 32
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (RTL as written)",
+ "merge_target": null
+}

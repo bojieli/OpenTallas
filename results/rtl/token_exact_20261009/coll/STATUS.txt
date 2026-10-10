@@ -1,0 +1,6 @@
+mos expect=fail 
+done
+oqp expect=pass TB_S81PH_COLL_SYS PASS
+mos expect=fail TB_S81PH_COLL_SYS FAIL
+mnr expect=fail TB_S81PH_COLL_SYS FAIL
+done

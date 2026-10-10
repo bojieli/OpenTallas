@@ -1,0 +1,155 @@
+{
+ "schema": "opentallas.hgi_sim.gdn.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T13:57:21Z",
+ "host": "ubuntu",
+ "wall_s": 6.4,
+ "result": {
+  "config": {
+   "hidden": 2048,
+   "nk": 16,
+   "nv": 32,
+   "dk": 128,
+   "dv": 128,
+   "conv": 4,
+   "eps": 1e-06
+  },
+  "model": "Qwen3-Next-80B-A3B linear-attention layer dims (synthetic BF16 weights / state)",
+  "hf_agreement": {
+   "mixer_out": {
+    "max_abs": 0.0019476711750030518,
+    "max_rel": 117.85614776611328,
+    "rms_rel": 0.0016191795002669096
+   },
+   "mixer_out_before_bf16_rounding": {
+    "max_abs": 8.195638656616211e-07,
+    "max_rel": 0.020687531679868698,
+    "rms_rel": 5.792444426333532e-07
+   },
+   "o_gated_vs_core": null,
+   "state": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 0.001544805709272623,
+    "rms_rel": 2.086318886540539e-07
+   },
+   "conv_ring": {
+    "max_abs": 5.364418029785156e-07,
+    "max_rel": 0.003780459053814411,
+    "rms_rel": 1.1002245514646347e-07
+   },
+   "note": "transformers 4.57 torch_causal_conv1d_update + torch_recurrent_gated_delta_rule + Qwen3NextRMSNormGated (FP32 module, same BF16-valued weights); reductions in torch order"
+  },
+  "sim": {
+   "pass_": true,
+   "records": 55,
+   "image_bytes": 6320,
+   "families": {
+    "in_proj": {
+     "checks": 4,
+     "exact": 4
+    },
+    "conv": {
+     "checks": 8,
+     "exact": 8
+    },
+    "l2norm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "gates": {
+     "checks": 8,
+     "exact": 8
+    },
+    "softplus": {
+     "checks": 4,
+     "exact": 4
+    },
+    "delta_rule": {
+     "checks": 4,
+     "exact": 4
+    },
+    "gated_norm": {
+     "checks": 4,
+     "exact": 4
+    },
+    "state_io": {
+     "checks": 4,
+     "exact": 4
+    },
+    "out_proj+all_reduce+residual": {
+     "checks": 4,
+     "exact": 4
+    }
+   },
+   "failures": []
+  },
+  "mutant_gqa_map_fails": true,
+  "timing": {
+   "S2_cycles": 14795.0,
+   "S0_cycles": 14040.0,
+   "records": 79,
+   "family_unit_cycles": {
+    "in_proj": 4611.5,
+    "delta_rule": 3964.0,
+    "out_proj": 1583.5,
+    "all_reduce_out": 1350.0,
+    "softplus": 1129.0,
+    "conv": 639.8,
+    "gates": 439.0,
+    "l2norm": 403.0,
+    "gated_norm": 309.0,
+    "state_io": 299.6,
+    "prenorm": 175.0,
+    "residual": 61.0,
+    "end": 1.0
+   },
+   "state_bytes_per_token_per_die": 1097728,
+   "state_bytes_per_token_per_layer_all_dies": 4390912,
+   "per_unit": {
+    "FUSED": {
+     "busy": 300.0,
+     "idle_true_dep": 11013.5,
+     "idle_issue": 207.0,
+     "records": 2
+    },
+    "SM": {
+     "busy": 6195.0,
+     "idle_true_dep": 7093.0,
+     "idle_issue": 48.0,
+     "records": 3
+    },
+    "DMA": {
+     "busy": 545.3,
+     "idle_true_dep": 8383.2,
+     "idle_issue": 2521.0,
+     "records": 5
+    },
+    "SU": {
+     "busy": 6574.0,
+     "idle_true_dep": 7745.0,
+     "idle_issue": 476.0,
+     "records": 67
+    },
+    "COLL": {
+     "busy": 1350.0,
+     "idle_true_dep": 13336.0,
+     "idle_issue": 24.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 0.0,
+     "idle_issue": 14735.0,
+     "records": 1
+    }
+   }
+  }
+ },
+ "source_sha256": {
+  "hgi_sim/gdn.py": "9092c387de4c2a64468e68f73d6f69a8f90af9278035efa3cb6c96f0b55e6703",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "hgi_sim/machine.py": "fda6ac1ac11d692dec443690cdb438213c5701f9a3f91b9d0c9f4d1c25b5eeae",
+  "hgi_sim/timing.py": "ce31fe48cc6acbc26fb929e8124fe41ec19be761c257dbaece23f577df7d983b",
+  "hgi_sim/records.py": "b19a0301076521589a2d60bb2fce9e97ccf3fd4028c80a7d4be0c44fc9a49a73"
+ }
+}

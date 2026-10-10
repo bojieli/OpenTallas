@@ -1,0 +1,23 @@
+	Command being timed: "yosys -p read_verilog -sv /srv/opentallas-scratch/codex/ds-control/ot_s81_hc_cmd_bridge.sv /srv/opentallas-scratch/codex/ds-control/dsfd_sp_hc_cmd_bridge_pf.sv; hierarchy -top dsfd_sp_hc_cmd_bridge_pf; synth -top dsfd_sp_hc_cmd_bridge_pf; stat"
+	User time (seconds): 0.17
+	System time (seconds): 0.01
+	Percent of CPU this job got: 74%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.24
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 18412
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 130
+	Minor (reclaiming a frame) page faults: 3984
+	Voluntary context switches: 154
+	Involuntary context switches: 13
+	Swaps: 0
+	File system inputs: 17720
+	File system outputs: 80
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

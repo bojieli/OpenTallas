@@ -1,0 +1,242 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "dsrom-qelem-qs5f-e1fbc25c1",
+ "block": "ot_v41_rom_elem_q_qxpq_w10",
+ "die": "s81_r3",
+ "die_master": "ot_v41_rom_elem_q_qxpq_w10",
+ "tile": null,
+ "host": "ot-pve1",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-e1fbc25c1",
+ "orfs": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-e1fbc25c1/routes/jobs/dsrom_qelem_qs5f_e1fbc25c1/work/orfs",
+ "measured_at": "2026-10-08T20:43:54-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 420.5,
+    "T": 833.0
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 335.0,
+    "T": 833.0
+   }
+  }
+ },
+ "r2r": {
+  "tt": 408.51,
+  "ff": 4.03
+ },
+ "errors": [],
+ "ports": {
+  "cfg_a": {
+   "dir": "in",
+   "bits": 5,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 258.8,
+   "h": -137.0
+  },
+  "cfg_d": {
+   "dir": "in",
+   "bits": 48,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 1253.5,
+   "h": -148.9
+  },
+  "cfg_v": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 269.3,
+   "h": -155.3
+  },
+  "go": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 300.8,
+   "h": -152.3
+  },
+  "go_tag": {
+   "dir": "in",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 317.8,
+   "h": -158.2
+  },
+  "xs_b": {
+   "dir": "in",
+   "bits": 3,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 305.3,
+   "h": -174.1
+  },
+  "xs_e0": {
+   "dir": "in",
+   "bits": 10,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 311.2,
+   "h": -175.6
+  },
+  "xs_e1": {
+   "dir": "in",
+   "bits": 10,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 312.9,
+   "h": -173.3
+  },
+  "xs_p": {
+   "dir": "in",
+   "bits": 8,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 309.7,
+   "h": -157.8
+  },
+  "xs_pos": {
+   "dir": "in",
+   "bits": 3,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 303.5,
+   "h": -176.4
+  },
+  "xs_q0": {
+   "dir": "in",
+   "bits": 256,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 375.7,
+   "h": -161.6
+  },
+  "xs_q1": {
+   "dir": "in",
+   "bits": 256,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 379.0,
+   "h": -157.8
+  },
+  "xs_sv": {
+   "dir": "in",
+   "bits": 2,
+   "clock": null,
+   "T": null
+  },
+  "xs_v": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "R": 349.0,
+   "h": -211.1
+  },
+  "bank_free": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 148.1,
+   "smin": 85.1
+  },
+  "busy": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 149.1,
+   "smin": 85.9
+  },
+  "fault": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 128.5,
+   "smin": 70.8
+  },
+  "perr": {
+   "dir": "out",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 111.5,
+   "smin": 56.5
+  },
+  "pnseg": {
+   "dir": "out",
+   "bits": 10,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 162.8,
+   "smin": 65.7
+  },
+  "ppos": {
+   "dir": "out",
+   "bits": 6,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 122.7,
+   "smin": 41.3
+  },
+  "prow": {
+   "dir": "out",
+   "bits": 32,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 166.8,
+   "smin": 41.7
+  },
+  "pseg": {
+   "dir": "out",
+   "bits": 10,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 170.0,
+   "smin": 73.8
+  },
+  "pv": {
+   "dir": "out",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 157.1,
+   "smin": 61.1
+  },
+  "pval": {
+   "dir": "out",
+   "bits": 64,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 149.6,
+   "smin": 40.0
+  },
+  "sh_free": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 143.0,
+   "smin": 81.9
+  },
+  "walking": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.0,
+   "S": 151.1,
+   "smin": 87.5
+  }
+ },
+ "fwd": {},
+ "internal_ok": true
+}

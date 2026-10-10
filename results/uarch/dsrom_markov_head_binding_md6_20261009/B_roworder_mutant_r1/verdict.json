@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "expected": "FAIL actual B root/row order",
+  "exit": -6,
+  "mutation": "cyclic shift n=4*k+q by one row in actual released B image, same SK11",
+  "images": {
+    "hb_0.viamap.hex": "2ebc677e147ba42ef65951c679a0f4d2db02fc140958c17146dddeb698f83be7",
+    "hb_1.viamap.hex": "c843b398659d4f9cb5e44ba3e0289c298ae7987a9e0ee679fe096d83ddab83a6"
+  },
+  "executable_sha256": "d18cfc0461758f5a951bc04bcf70a9afda430f64a38bed51f4013a589a214ec8",
+  "physical_qualified": false
+}

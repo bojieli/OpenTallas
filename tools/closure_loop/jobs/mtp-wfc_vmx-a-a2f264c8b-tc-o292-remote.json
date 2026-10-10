@@ -1,0 +1,75 @@
+{
+ "name": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+ "block": "dsfd_wfc_vmx",
+ "owner": "Claude:mtp-rom (requeued by drive-2155, DR6)",
+ "purpose": "Enlarged standalone VMX fallback from measured38438um2 cells,291.6x280.8 outline and regenerated2336pins. Zero RTL/cycle change; previous o248 variants continue; actual floorplan/TT/FF/DRC qualification required.; owner latest directive: no localhost compute",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/mtp-vmx-route-20261008",
+  "commit": "a2f264c8b"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_ABC_NO_DCH=1; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_wfc_vmx rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv  $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "route": {
+   "cmd": "export OT_ABC_NO_DCH=1; export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_wfc_vmx rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_wfc_vmx_a"
+  }
+ ],
+ "cycles_added": 94,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "new MTP element: no budget sheet yet (stream mtp-die owns the MTP die/array budget); routed on the calibrated measured insertion (standard S81-PH flow)"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.0,
+ "no_bench_reason": "Source16c0b3533 unchanged RTL, benches on mtp-wfc_vmx-a-16c0b3533-tc-o248 and prior fullbenches passed. This change only floorplan and port coordinates; no arithmetic or protocol logic modified.",
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ]
+}

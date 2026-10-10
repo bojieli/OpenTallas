@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_dsrom_markov_embed_pp_pair",
+ "orfs_dir": "/srv/opentallas-scratch/claude/md6-lookup-pp-source/pair_physical_r1/work/orfs",
+ "post_sdc": "physical/dsrom_markov_lookup_pair/gen/signoff_pair.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "1.304206742602787e-10",
+  "ws_min": "-2.028192891412317e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "2.643599228413507e-10",
+  "ws_min": "3.031984385781783e-11"
+ },
+ "files": {
+  "ot_dsrom_markov_embed_pp_pair.lef": "10a206dc8bc61b1ae2e7b6ca92dac1911d2e64ec8b05b2d82fd097563a0703a5",
+  "ot_dsrom_markov_embed_pp_pair_ff.lib": "ce4eb02e5287610e3a1d1ec13a8f061977fc7a7aae56d9c8b6724d559a3182a4",
+  "ot_dsrom_markov_embed_pp_pair_ss.lib": "892356d2f19f55a22406fc58d85ae1be9a515e22e961a902ee1cd6d898c40317"
+ }
+}

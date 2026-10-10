@@ -74,6 +74,7 @@ module ot_hdc_v41x_sel #(
     parameter integer K  = 512,       // largest runtime k
     parameter integer AW = 8,         // line-memory address width per quarter
     parameter integer DG = 8,         // GC write-back queue per quarter
+    parameter integer READLAT = 1,   // external line memory latency (1 baseline, 2 captured)
     parameter integer OD = 4,         // output FIFO per quarter
     parameter integer KW = $clog2(K + 1)
 ) (
@@ -128,7 +129,7 @@ module ot_hdc_v41x_sel #(
     genvar gq;
     generate
         for (gq = 0; gq < Q; gq = gq + 1) begin : g_s
-            ot_hdc_v41x_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(DG), .OD(OD), .KW(KW), .CB(CB)) u_s (
+            ot_hdc_v41x_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(DG), .OD(OD), .READLAT(READLAT), .KW(KW), .CB(CB)) u_s (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[gq]), .in_ready(in_ready[gq]), .in_last(in_last[gq]),
                 .in_lv(in_lv[W*gq +: W]), .in_val(in_val[W*16*gq +: W*16]), .in_idx(in_idx[W*IW*gq +: W*IW]),

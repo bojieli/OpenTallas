@@ -1,0 +1,26 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes TC,BC (SS setup + FF hold), FF SDCs [/src/physical/qwen_die_masters/signoff/qfd_ctrl_emb_00.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: pre-route gate hook patched
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+cp /src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00/plain.sdc /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_2_yosys.sdc
+touch -r /src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00/plain.sdc /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/objects/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+Error: synth_odb.tcl, 4 OT_HOLD_MM: WC_LIB_FILES missing (route with --hold-corners WC,BC)
+
+Elapsed time: 0:00.14[h:]min:sec. CPU time: user 0.10 sys 0.03 (94%). Peak memory: 94872KB.
+make[1]: *** [Makefile:445: do-1_synth] Error 1
+make: *** [Makefile:445: /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_synth.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/routes/qfd_ctrl_emb_00_2b0cdede4_tc/physical.json

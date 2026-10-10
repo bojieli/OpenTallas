@@ -1,0 +1,20 @@
+{
+  "source_commit": "64831e7e1",
+  "source_sha256": "6ea5cd53f8d4255d12abf0eaa001c30dd3f6cef2357f671dc4c52d22d713acd6",
+  "bench_sha256": "79bc6f84d6e38653d0bbb5e9419cb1f572af0a4b95a3d5607414b5ae8654941d",
+  "positive": {
+    "passed": true,
+    "cycles": 1966899,
+    "backpressure": "output ready once per five edges; read handshakes and responses delayed"
+  },
+  "wrong_rank": {
+    "passed": true
+  },
+  "wrong_order": {
+    "compile_returncode": 0,
+    "run_returncode": 1,
+    "passed": true
+  },
+  "scope": "Full96 protected head seats and seven comparison levels,131072 literal candidates including score bits and192 explicit invalid provider slots. Actual TU publication store, global top2048 selector and full production AR/MTP remain unbound.",
+  "passed": true
+}

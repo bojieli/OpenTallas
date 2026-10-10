@@ -1,0 +1,19 @@
+built twin_kv2
+built twin_kv1
+built mut_gate
+built base_kv2
+built base_kv1
+built mut_scale
+built mut_ecc
+built base_kv0
+built mut_row
+twin_kv1 PASS emb_hbm_e2e TWIN=1 KVMODE=1 tokens=160
+base_kv1 PASS emb_hbm_e2e TWIN=0 KVMODE=1 tokens=160
+mut_scale FAIL emb_hbm_e2e errors=158 MUT_STRIP=2 MUT_GW=0
+mut_ecc FAIL emb_hbm_e2e errors=3 MUT_STRIP=3 MUT_GW=0
+base_kv0 PASS emb_hbm_e2e TWIN=0 KVMODE=0 tokens=160
+twin_kv2 PASS emb_hbm_e2e TWIN=1 KVMODE=2 tokens=160
+mut_row FAIL emb_hbm_e2e errors=161 MUT_STRIP=1 MUT_GW=0
+base_kv2 PASS emb_hbm_e2e TWIN=0 KVMODE=2 tokens=160
+mut_gate FAIL emb_hbm_e2e errors=2 MUT_STRIP=0 MUT_GW=4
+ALLDONE

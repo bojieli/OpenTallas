@@ -1,0 +1,34 @@
+{
+ "fifo_reservation_negative": [
+  "job 1000 records [(0, 0, 1000, 11, 3), (0, 0, 1000, 12, 4), (0, 0, 1000, 13, 5)] vs [(0, 0, 1000, 11, 3), (0, 0, 1000, 12, 4), (0, 0, 1000, 13, 5)]",
+  "job 1002 records [(0, 0, 1002, 11, 3), (0, 0, 1002, 12, 4), (0, 0, 1002, 13, 5)] vs [(0, 0, 1002, 11, 3), (0, 0, 1002, 12, 4), (0, 0, 1002, 13, 5)]"
+ ],
+ "schema": "opentallas.hbm_system.token_loop.v1",
+ "source_sha256": {
+  "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "57e74b9dab63d9ee83d1ee963b6cb79e3b3f4f5397d0be86e914a07642adbab6",
+  "rtl/test/hbm_accel/tb_hbm_token_loop.sv": "59af7ff0a1d771295bd20e9fa91fdebd3f589925a0953d9a3d09e8eabb24778c",
+  "tools/hbm_token_loop_bench.py": "639dc34cf50f13b28d5bbe5e4c72e0fbecec8bd27ff8278e1b8b29a54c3b70e8"
+ },
+ "jobs": 68,
+ "records": 866,
+ "final_status_counts": {
+  "1": 31,
+  "2": 28,
+  "3": 3,
+  "5": 6
+ },
+ "positive": {
+  "verdict": "PASS",
+  "problems": []
+ },
+ "negative_mut1_no_eos": {
+  "verdict": "FAIL",
+  "problems": [
+   "job 2 doorbells",
+   "job 4 records [(0, 0, 4, 1941, 39293), (0, 0, 4, 1942, 14145), (0, 0, 4, 1943, 1)] vs [(0, 0, 4, 1941, 39293), (0, 0, 4, 1942, 14145), (1, 1, 4, 1943, 1)]",
+   "job 10 doorbells"
+  ]
+ },
+ "verdict": "PASS",
+ "loop_turnaround_cycles": "cpl accepted -> next doorbell valid: 1 (record) + DB_LAT 2 + 1 (L_DB) = 4 clk_stream cycles; no host round trip, no inter-die message"
+}

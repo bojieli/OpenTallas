@@ -185,7 +185,7 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
         d_reps = 0; rr = 0; d_done = 0; dix = 0; done_w = 0;
         for (int q = 0; q < Q; q++) rqq[q].delete();
         r_reps = 0; r_lastq = 0; dw.delete(); dcyc.delete();
-        bub_pct = $urandom % 3 == 0 ? 0 : $urandom % 25;
+        bub_pct = $test$plusargs("full_rank_1m") ? 0 : ($urandom % 3 == 0 ? 0 : $urandom % 25);
         t0 = cyc;
         fork drive_ref(); drive_dut(0, 0, 0); join
         // replays
@@ -236,6 +236,7 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
                 $display("seg %0d %s k %0d sel %0d beats %0d reps %0d tail_slab_minus_ref %0d cyc %0d", segs, name, seg_k, cnt, rl.size(), r_reps, lat, cyc); $fflush; end
             reps_total += r_reps;
         end
+        $display("SEL_STAGE_MEASURE name=%s elapsed=%0d dut_elapsed=%0d bubbles_pct=%0d score_beats_per_quarter=%0d/%0d/%0d/%0d", name,cyc-t0,dcyc.size()?dcyc[dcyc.size()-1]-t0:-1,bub_pct,it[0].size(),it[1].size(),it[2].size(),it[3].size());
         segs++;
         repeat (20) @(posedge clk);
     endtask
@@ -278,6 +279,23 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
         end
         if (!$test$plusargs("rand_only")) begin
         // directed
+        if ($test$plusargs("full_rank_1m")) begin
+            int family = 4;
+            void'($value$plusargs("full_rank_family=%d",family));
+            // A 1M-context TP4 rank owns262144 scores, quartered overQ4xW16.
+            // Exactly4096 beats/quarter: every score valid, no random truncation.
+            for (int q=0;q<Q;q++)begin
+                it[q].delete();perm[q]=q;hdr_base[q]=q*65536;
+                for(int b=0;b<4096;b++)begin
+                    item_t e;e.reb=0;e.pos=q*65536+b*16;e.lv=16'hffff;e.last=(b==4095);
+                    for(int l=0;l<16;l++)e.val[16*l+:16]=rbf(family,e.pos+l);
+                    it[q].push_back(e);
+                end
+            end
+            seg_k=512;seg_tag=17;run_seg("full_rank_1m");
+            $display("RESULT %s full_rank_scores=262144 segments=%0d errors=%0d",errors==0?"PASS":"FAIL",segs,errors);
+            if(errors)$fatal(1,"full rank selector exactness");$finish;
+        end
         make_seg(0, 3000, 512, 1, 1); run_seg("uniform_k512");
         make_seg(1, 2000, 300, 0, 0); run_seg("ties");
         make_seg(2, 2000, 512, 1, 0); run_seg("neginf");

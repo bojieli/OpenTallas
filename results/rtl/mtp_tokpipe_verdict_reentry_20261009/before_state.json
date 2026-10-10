@@ -1,0 +1,963 @@
+{
+ "name": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "spec": {
+  "name": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "block": "ot_dsrom_wfc_tokpipe_stg",
+  "owner": "Codex:mtp-rom/WFCbinding",
+  "purpose": "Separate full-shape stg hardened successor of closed SOURCEr24/STGr11. +1SOURCEprompt cycle, +0R6 current-user launch cycles. Retain770ps route/833ps signoff,60/25 uncertainty,150ps dieclock IO obligation and90ps regional/50ps IOhold policy. Exact/negative gates run remotely beside admitted physical; no inherited closedview. Owner continuation acceptance TT setup>=0/FF hold>=0/DRC0; SS sensitivity.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 64,
+  "bench_first": false,
+  "source": {
+   "branch": "codex/mtp-wfc-token-r3-route-20261009",
+   "commit": "9f7a7f35e",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ],
+   "required_files": [
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv",
+    "physical/dsrom_wfc_tokpipe/stg_basis.json"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_stg",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/bench --case stg_r1",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "negative_stg",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/negative --case stg_neg_prevuser --raw-negative",
+     "expect": "fail",
+     "fail_regex": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "stg_vmnat",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_vmnat --case stg_vmnat",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "stg_lag1",
+     "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_lag1 --case stg_lag1",
+     "expect": "pass",
+     "pass_regex": "WFC_TOKPIPE_GATE PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/cal --src {SRC} --cores 12 --need 64 && WFC_TARGET=cts bash {RUN}/cal/run.sh",
+    "base": "{RUN}/cal/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+    "threads": 12,
+    "peak_ram_gb": 64
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/route --src {SRC} --cores 12 --need 64 && bash {RUN}/route/run.sh",
+    "ok": "grep -q '^flow_rc=0' {RUN}/route/status && grep -q '^sta_rc=0' {RUN}/route/status",
+    "logs": [
+     "{RUN}/route/flow.log",
+     "{RUN}/route/sta.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/case.json {RUN}/route/config.mk {RUN}/route/constraint.sdc {RUN}/route/signoff.sdc {RUN}/route/wf_sta.json {RUN}/route/wf_drv.json {RUN}/route/check.json {RUN}/record/ && B=$(ls -d {RUN}/route/results/asap7/*/base | tail -1) && cp \"$B/6_final.odb\" \"$B/6_final.def\" \"$B/6_final.v\" \"$B/6_final.sdc\" \"$B/6_final.spef\" {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "metrics_cmd": "python3 tools/dsrom_wfc_tokpipe_metrics.py --case {RUN}/route",
+   "checks": [
+    {
+     "name": "TT_FF0_DRC0_region_die150",
+     "cmd": "python3 tools/dsrom_wfc_tokpipe_metrics.py --case {RUN}/route --check"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_stg"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Retained source-pinned full shape and IO boundary budgets; owner continuation TT/FF0/DRC0 with SS sensitivity."
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/mtp-wfc-stg-tokpipe-9f7a7f35e-tc.json",
+ "created": "2026-10-09T00:17:03-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 6,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {
+  "bench_exact_stg": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_r1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_r1/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_negative_stg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED [{\"case\": \"stg_neg_prevuser\", \"expected\": \"fail\", \"pass_\": true, \"trace\": null, \"log\": \"stg_neg_prevuser/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_stg_vmnat": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_vmnat\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_vmnat/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  },
+  "bench_stg_lag1": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_lag1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_lag1/run.log\", \"returncode\": 0}]\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc2",
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-09T00:26:16-07:00 bench track: bench_stg_lag1 waiting for capacity on artifact host ot-epyc2: job 2 thr / 4 GB exceeds EPYC2 per-job limit",
+  "2026-10-09T00:48:20-07:00 calibrate done (rc=0)",
+  "2026-10-09T00:48:21-07:00 calibrated insertion CK_SS_MEAN=294 CK_SS_MIN=284 CK_SS_MAX=303 CK_TT_MEAN=294 CK_TT_MIN=284 CK_TT_MAX=303 CK_FF_MEAN=240 CK_FF_MIN=230 CK_FF_MAX=248 CK_SSLIB_MEAN=385 CK_SSLIB_MIN=372 CK_SSLIB_MAX=395 CK_ROUTE_REF=TT",
+  "2026-10-09T00:49:18-07:00 route waiting for capacity: job 12 thr / 64 GB exceeds EPYC2 per-job limit",
+  "2026-10-09T00:54:20-07:00 route cannot start on EPYC2 (job 12 thr / 64 GB exceeds EPYC2 per-job limit); moving to EPYC1",
+  "2026-10-09T00:58:16-07:00 source 9f7a7f35e94a synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/src",
+  "2026-10-09T00:58:23-07:00 calibrate in PARALLEL: route starts now on the assumed insertion (measured_insertion.json TT (calibrate, mtp-wfc-stg-tokpipe-9f7a7f35e-tc, 2026-10-09T00:48:21-07:00): SS 294 / FF 240); the measurement is checked at the verdict",
+  "2026-10-09T00:59:21-07:00 route waiting for capacity: EPYC1 MemAvailable 395-220 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:00:29-07:00 parallel calibrate launched (calibrate.a1c1) beside route",
+  "2026-10-09T01:00:29-07:00 route waiting for capacity: EPYC1 MemAvailable 396-156 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:01:22-07:00 route waiting for capacity: EPYC1 MemAvailable 401-204 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:02:22-07:00 route waiting for capacity: EPYC1 MemAvailable 403-204 GB - reserve 127.99638366699219 < 64+57",
+  "2026-10-09T01:03:29-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-09T01:25:44-07:00 parallel calibrate: measured SS 300 / FF 243 vs assumed 294 / 240 (max delta 6 ps)",
+  "2026-10-09T01:49:38-07:00 bench track: launched bench_stg_lag1 (bench_stg_lag1.a1b1) beside route",
+  "2026-10-09T01:50:37-07:00 bench track: bench_stg_lag1 PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-09T02:13:15-07:00 stage route.a1 killed by stuckscan (stuckscan: no write for 48 min and -1.05 cores busy: hung (the loop retries the stage once)); the loop retries it once",
+  "2026-10-09T02:13:37-07:00 route crashed (LOST: stage wrapper gone without an rc file); resource-related but no other host fits now -> retry on the same host",
+  "2026-10-09T02:14:21-07:00 route waiting for capacity: EPYC1 MemAvailable 426-59 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:15:21-07:00 route waiting for capacity: EPYC1 MemAvailable 422-40 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:16:14-07:00 route waiting for capacity: EPYC1 MemAvailable 415-61 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:17:13-07:00 route waiting for capacity: EPYC1 MemAvailable 407-61 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:18:18-07:00 route waiting for capacity: EPYC1 MemAvailable 400-62 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:18:57-07:00 route waiting for capacity: EPYC1 MemAvailable 398-32 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:20:00-07:00 route waiting for capacity: EPYC1 MemAvailable 393-52 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:22:15-07:00 route waiting for capacity: EPYC1 MemAvailable 393-32 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:23:06-07:00 route waiting for capacity: EPYC1 MemAvailable 396-32 GB - reserve 303.93151473999023 < 64+57",
+  "2026-10-09T02:24:09-07:00 route waiting for capacity: EPYC1 MemAvailable 402-60 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:25:06-07:00 route waiting for capacity: EPYC1 MemAvailable 405-60 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:26:00-07:00 route waiting for capacity: EPYC1 MemAvailable 418-72 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:26:54-07:00 route waiting for capacity: EPYC1 MemAvailable 419-74 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:27:59-07:00 route waiting for capacity: EPYC1 MemAvailable 436-92 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:28:54-07:00 route waiting for capacity: EPYC1 MemAvailable 429-98 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:29:54-07:00 route waiting for capacity: EPYC1 MemAvailable 425-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:30:56-07:00 route waiting for capacity: EPYC1 MemAvailable 423-102 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:31:56-07:00 route waiting for capacity: EPYC1 MemAvailable 418-75 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:32:55-07:00 route waiting for capacity: EPYC1 MemAvailable 414-81 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:33:58-07:00 route waiting for capacity: EPYC1 MemAvailable 421-78 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:35:07-07:00 route waiting for capacity: EPYC1 MemAvailable 437-96 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:35:58-07:00 route waiting for capacity: EPYC1 MemAvailable 429-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:36:59-07:00 route waiting for capacity: EPYC1 MemAvailable 439-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:37:58-07:00 route waiting for capacity: EPYC1 MemAvailable 435-100 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:39:04-07:00 route waiting for capacity: EPYC1 MemAvailable 446-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:39:58-07:00 route waiting for capacity: EPYC1 MemAvailable 445-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:41:04-07:00 route waiting for capacity: EPYC1 MemAvailable 446-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:42:07-07:00 route waiting for capacity: EPYC1 MemAvailable 445-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:42:59-07:00 route waiting for capacity: EPYC1 MemAvailable 447-110 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:43:59-07:00 route waiting for capacity: EPYC1 MemAvailable 443-108 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:45:01-07:00 route waiting for capacity: EPYC1 MemAvailable 441-102 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:46:00-07:00 route waiting for capacity: EPYC1 MemAvailable 439-96 GB - reserve 279.9582328796387 < 64+57",
+  "2026-10-09T02:47:03-07:00 route waiting for capacity: EPYC1 MemAvailable 444-126 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:47:59-07:00 route waiting for capacity: EPYC1 MemAvailable 448-130 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:48:59-07:00 route waiting for capacity: EPYC1 MemAvailable 447-134 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:49:59-07:00 route waiting for capacity: EPYC1 MemAvailable 442-132 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:51:00-07:00 route waiting for capacity: EPYC1 MemAvailable 440-114 GB - reserve 255.99273681640625 < 64+57",
+  "2026-10-09T02:51:47-07:00 launched route (attempt 2) on ot-epyc1tb",
+  "2026-10-09T04:15:16-07:00 route done (rc=0)",
+  "2026-10-09T04:16:15-07:00 verdict TT +127.40 / FF -8.20 / DRC 0 / checks failed ['TT_FF0_DRC0_region_die150'] -> NOT CLOSED",
+  "2026-10-09T04:17:13-07:00 routed-insertion IO re-STA: unavailable: re-STA incomplete (TT None / FF None; ['no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ss.tcl', 'no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ff.tcl'])",
+  "2026-10-09T04:17:21-07:00 NEEDS_RTL: TT 127.4 / FF -8.2 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); checks failed: TT_FF0_DRC0_region_die150"
+ ],
+ "updated": "2026-10-09T04:17:21-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_exact_stg": {
+   "state": "done",
+   "tag": "bench_exact_stg.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T00:21:08-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  },
+  "bench_negative_stg": {
+   "state": "done",
+   "tag": "bench_negative_stg.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T00:22:07-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  },
+  "bench_stg_vmnat": {
+   "state": "done",
+   "tag": "bench_stg_vmnat.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T00:25:03-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  },
+  "bench_stg_lag1": {
+   "state": "done",
+   "tag": "bench_stg_lag1.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+   "n": 1,
+   "started": "2026-10-09T01:49:38-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "source_synced": true,
+ "commit_full": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+ "source_archive": {
+  "commit": "9f7a7f35e94a806b15136099f64eb7068f02279e",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile",
+   "results/rtl/dshbm_dspark_rtl_20261003/traces"
+  ],
+  "required_sha256": {
+   "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+   "physical/dsrom_wfc_tokpipe/stg_basis.json": "81d2b5873f943b2a3e9f5d4ae4193e599e1640aa161d62285000e83c5e165ec2"
+  },
+  "archive_sha256": "cbe04e3253eca6c24d6fc332ba6f3b610b2353a6b43e590158ecad3586a45706",
+  "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+  "runtime_files_pending": []
+ },
+ "reason": "TT 127.4 / FF -8.2 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); checks failed: TT_FF0_DRC0_region_die150",
+ "bench_location": {
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "summary",
+ "stage_tag": "summary.a2",
+ "stage_started": "2026-10-09T04:17:16-07:00",
+ "bench_work": {
+  "bench_exact_stg": "WARN: pass log has no count line (set min_count_regex)",
+  "bench_stg_vmnat": "WARN: pass log has no count line (set min_count_regex)",
+  "bench_stg_lag1": "WARN: pass log has no count line (set min_count_regex)"
+ },
+ "wd_checked": 1791543178.7709584,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3732,
+    "mean": 393.2,
+    "min": 380.5,
+    "max": 404.0
+   },
+   "all": {
+    "n": 26782,
+    "mean": 389.7,
+    "min": 377.7,
+    "max": 404.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3732,
+    "mean": 243.3,
+    "min": 234.2,
+    "max": 254.7
+   },
+   "all": {
+    "n": 26782,
+    "mean": 240.6,
+    "min": 231.3,
+    "max": 254.7
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 300,
+   "CK_SS_ALL_MEAN": 296,
+   "CK_SS_MIN": 289,
+   "CK_SS_ALL_MIN": 286,
+   "CK_SS_MAX": 311,
+   "CK_SS_ALL_MAX": 311,
+   "CK_TT_MEAN": 300,
+   "CK_TT_ALL_MEAN": 296,
+   "CK_TT_MIN": 289,
+   "CK_TT_ALL_MIN": 286,
+   "CK_TT_MAX": 311,
+   "CK_TT_ALL_MAX": 311,
+   "CK_FF_MEAN": 243,
+   "CK_FF_ALL_MEAN": 241,
+   "CK_FF_MIN": 234,
+   "CK_FF_ALL_MIN": 231,
+   "CK_FF_MAX": 255,
+   "CK_FF_ALL_MAX": 255,
+   "CK_SSLIB_MEAN": 393,
+   "CK_SSLIB_MIN": 380,
+   "CK_SSLIB_MAX": 404,
+   "CK_SSLIB_ALL_MEAN": 390,
+   "CK_SSLIB_ALL_MIN": 378,
+   "CK_SSLIB_ALL_MAX": 404,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ctrack": {
+  "state": "done",
+  "assumed": {
+   "CK_SS_MEAN": 294,
+   "CK_SS_ALL_MEAN": 294,
+   "CK_TT_MEAN": 294,
+   "CK_TT_ALL_MEAN": 294,
+   "CK_FF_MEAN": 240,
+   "CK_FF_ALL_MEAN": 240,
+   "CK_SSLIB_MEAN": 385,
+   "CK_SS_MIN": 284,
+   "CK_SS_ALL_MIN": 284,
+   "CK_TT_MIN": 284,
+   "CK_TT_ALL_MIN": 284,
+   "CK_FF_MIN": 230,
+   "CK_FF_ALL_MIN": 230,
+   "CK_SSLIB_MIN": 372,
+   "CK_SS_MAX": 303,
+   "CK_SS_ALL_MAX": 303,
+   "CK_TT_MAX": 303,
+   "CK_TT_ALL_MAX": 303,
+   "CK_FF_MAX": 248,
+   "CK_FF_ALL_MAX": 248,
+   "CK_SSLIB_MAX": 395,
+   "CK_ROUTE_REF": "TT"
+  },
+  "source": "measured_insertion.json TT (calibrate, mtp-wfc-stg-tokpipe-9f7a7f35e-tc, 2026-10-09T00:48:21-07:00)",
+  "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+  "n": 1,
+  "stage_idx": 4,
+  "tag": "calibrate.a1c1",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "started": "2026-10-09T01:00:29-07:00",
+  "measured": {
+   "CK_SS_MEAN": 300,
+   "CK_TT_MEAN": 300,
+   "CK_FF_MEAN": 243,
+   "CK_SSLIB_MEAN": 393,
+   "CK_SS_MIN": 289,
+   "CK_TT_MIN": 289,
+   "CK_FF_MIN": 234,
+   "CK_SSLIB_MIN": 380,
+   "CK_SS_MAX": 311,
+   "CK_TT_MAX": 311,
+   "CK_FF_MAX": 255,
+   "CK_SSLIB_MAX": 404,
+   "CK_ROUTE_REF": "TT"
+  },
+  "delta_ps": 6.0
+ },
+ "ef_checked": 1791544212.2578542,
+ "stuck_kill": {
+  "at": "2026-10-09T02:13:15-07:00",
+  "why": "stuckscan: no write for 48 min and -1.05 cores busy: hung (the loop retries the stage once)",
+  "tag": "route.a1"
+ },
+ "crashes": [
+  {
+   "stage": "route",
+   "host": "ot-epyc1tb",
+   "attempt": 1,
+   "why": "LOST: stage wrapper gone without an rc file",
+   "resource": true,
+   "tail": "/5_route.sdc /work/results/asap7/wfc_stg_route/base/6_1_fill.sdc\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 6_report final_report\nRunning final_report.tcl, stage 6_report\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/wfc_stg_route/base/6_1_fill.odb\n",
+   "first_error": ""
+  }
+ ],
+ "metrics": {
+  "ss_ps": 127.4,
+  "ff_ps": -8.2,
+  "drc": 0,
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base",
+  "setup_corner": "TT",
+  "clock_periods_ps": null,
+  "ss_sensitivity_ps": -185.0,
+  "raw": {
+   "ss_ps": 127.4,
+   "tt_setup_ps": 127.4,
+   "ss_sensitivity_ps": -185.0,
+   "ff_ps": -8.2,
+   "drc": 0,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base",
+   "setup_corner": "TT",
+   "accepted": false,
+   "case": {
+    "inst": "stg",
+    "route_period_ps": 770,
+    "die_skew_ps": 150,
+    "accepted_40_15_die150": false,
+    "accepted_15_15_region": false,
+    "margin_closed": false,
+    "util": 50,
+    "params": {
+     "WAVE": 1,
+     "WIN": 6,
+     "FLIT": 512,
+     "NW": 21,
+     "AW": 30,
+     "VWA": 15,
+     "USER_W": 10,
+     "MAXU": 866,
+     "KVW": 32768,
+     "SEND_HIDDEN": 1,
+     "HID_DEST": 1,
+     "FWD_TOKEN": 1,
+     "SOURCE": 0,
+     "XWORDS": 46,
+     "RXWORDS": 41,
+     "UPOS_LWR": 1,
+     "CONTROL_PIPE": 1,
+     "PRECOMP": 1,
+     "IN_DEC": 1,
+     "TXQ_SLICE": 1,
+     "RDY_LT": 1,
+     "FANOUT_COPY": 1,
+     "MARGIN": 1,
+     "LINK_REG": 1,
+     "LINK_SEL": 1,
+     "VM_REG": 1,
+     "SLEW_COPY": 1
+    },
+    "orfs_var": [
+     "SLEW_MARGIN=30",
+     "CAP_MARGIN=20",
+     "HOLD_SLACK_MARGIN=28"
+    ],
+    "source_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/src",
+    "ctrl_sha256": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "insertion_ps": {
+     "SS": [
+      317.0,
+      360.5
+     ],
+     "FF": [
+      190.6,
+      222.4
+     ]
+    },
+    "timing": {
+     "block": {
+      "ss_setup_ps": -185.0,
+      "ss_hold_ps": 81.9,
+      "ff_setup_ps": 293.8,
+      "ff_hold_ps": 18.3,
+      "ss_failing": [
+       2150,
+       0
+      ],
+      "ff_failing": [
+       0,
+       0
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ]
+     },
+     "incontext": {
+      "ss_setup_ps": -185.0,
+      "ss_hold_ps": 81.9,
+      "ff_setup_ps": 307.7,
+      "ff_hold_ps": 18.9,
+      "ss_failing": [
+       2150,
+       0
+      ],
+      "ff_failing": [
+       0,
+       0
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ]
+     },
+     "die150": {
+      "ss_setup_ps": -185.0,
+      "ss_hold_ps": 11.9,
+      "ff_setup_ps": 307.0,
+      "ff_hold_ps": -8.2,
+      "ss_failing": [
+       2150,
+       0
+      ],
+      "ff_failing": [
+       0,
+       400
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ]
+     },
+     "region": {
+      "ss_setup_ps": -185.0,
+      "ss_hold_ps": 11.9,
+      "ff_setup_ps": 307.7,
+      "ff_hold_ps": -8.2,
+      "ss_failing": [
+       2150,
+       0
+      ],
+      "ff_failing": [
+       0,
+       167
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ]
+     },
+     "reg2reg": {
+      "ss_setup_ps": -185.0,
+      "ss_hold_ps": 81.9,
+      "ff_setup_ps": 307.7,
+      "ff_hold_ps": 18.9,
+      "ss_failing": [
+       2150,
+       0
+      ],
+      "ff_failing": [
+       0,
+       0
+      ],
+      "ss_worst_setup_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ]
+     }
+    },
+    "drv": {
+     "SS": {
+      "done": true,
+      "violators": {
+       "slew": 943,
+       "capacitance": 0,
+       "fanout": 0
+      }
+     },
+     "FF": {
+      "done": true,
+      "violators": {
+       "slew": 0,
+       "capacitance": 0,
+       "fanout": 0
+      }
+     }
+    },
+    "drc_errors": 0,
+    "antenna_violating_nets": 0,
+    "stdcell_area_um2": 19702.3,
+    "macro_area_um2": 0,
+    "die_area_um2": 36256,
+    "utilization": 0.568322,
+    "artifacts_sha256": {
+     "6_final.odb": "2e7c2d0947a0ab2167a92801941f6eaf489f204dee42a9588e560f39a5451a99",
+     "6_final.sdc": "1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26",
+     "6_final.spef": "36f7ea2a981cfc139c10009da95ff259d93226829959240a5d93360c09a0ea94"
+    },
+    "closed": false
+   },
+   "corners": {
+    "SS": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      317.0,
+      360.5
+     ],
+     "block": {
+      "setup_wns_ps": -185.0,
+      "hold_wns_ps": 81.9,
+      "failing_setup": 2150,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": -185.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[21]$_DFF_P_",
+       "u_wfc.g_link_reg.u_rx.q[1][21]$_DFFE_PP_"
+      ],
+      "worst_min_path_slack_ps": 81.9,
+      "worst_min_path_group": "core_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": -185.0,
+      "hold_wns_ps": 81.9,
+      "failing_setup": 2150,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": -185.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[21]$_DFF_P_",
+       "u_wfc.g_link_reg.u_rx.q[1][21]$_DFFE_PP_"
+      ],
+      "worst_min_path_slack_ps": 81.9,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": -185.0,
+      "hold_wns_ps": 11.9,
+      "failing_setup": 2150,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": -185.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[502]",
+       "u_wfc.g_link_reg.u_rx.pd[502]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 11.9,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": -185.0,
+      "hold_wns_ps": 11.9,
+      "failing_setup": 2150,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": -185.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[502]",
+       "u_wfc.g_link_reg.u_rx.pd[502]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 11.9,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": -185.0,
+      "hold_wns_ps": 81.9,
+      "failing_setup": 2150,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[12]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": -185.0,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[21]$_DFF_P_",
+       "u_wfc.g_link_reg.u_rx.q[1][21]$_DFFE_PP_"
+      ],
+      "worst_min_path_slack_ps": 81.9,
+      "worst_min_path_group": "core_clk"
+     }
+    },
+    "TT": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      237.8,
+      273.4
+     ],
+     "block": {
+      "setup_wns_ps": 127.4,
+      "hold_wns_ps": 45.1,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[2]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 127.4,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[284]$_DFF_P_",
+       "u_wfc.g_vm_reg.wd_q[284]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 45.1,
+      "worst_min_path_group": "core_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": 127.4,
+      "hold_wns_ps": 45.1,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[2]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 127.4,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[284]$_DFF_P_",
+       "u_wfc.g_vm_reg.wd_q[284]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 45.1,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": 127.4,
+      "hold_wns_ps": 1.2,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[2]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 127.4,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[440]",
+       "u_wfc.g_link_reg.u_rx.pd[440]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 1.2,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": 127.4,
+      "hold_wns_ps": 1.2,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[2]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 127.4,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[440]",
+       "u_wfc.g_link_reg.u_rx.pd[440]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 1.2,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": 127.4,
+      "hold_wns_ps": 45.1,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[25].ug/lo_r[3]$_DFF_P_",
+       "u_wfc.g_upos[25].ug/part[2]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 127.4,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_rx.pd[284]$_DFF_P_",
+       "u_wfc.g_vm_reg.wd_q[284]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 45.1,
+      "worst_min_path_group": "core_clk"
+     }
+    },
+    "FF": {
+     "exit": 0,
+     "done": true,
+     "insertion_ps": [
+      190.6,
+      222.4
+     ],
+     "block": {
+      "setup_wns_ps": 293.8,
+      "hold_wns_ps": 18.3,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "vm_rq[63]",
+       "u_wfc.g_txq_slice.g_s[1].qd[1][31]$_DFFE_PP_"
+      ],
+      "worst_max_path_slack_ps": 293.8,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_link_reg.u_tx.d[435]$_DFF_P_",
+       "out_data[435]"
+      ],
+      "worst_min_path_slack_ps": 18.3,
+      "worst_min_path_group": "io_clk"
+     },
+     "incontext": {
+      "setup_wns_ps": 307.7,
+      "hold_wns_ps": 18.9,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[10].ug/lo_r[1]$_DFF_P_",
+       "u_wfc.g_upos[10].ug/part[11]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 307.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_txq_slice.g_s[7].qd[3][15]$_DFFE_PP_",
+       "u_wfc.g_link_reg.u_tx.d[239]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 18.9,
+      "worst_min_path_group": "core_clk"
+     },
+     "die150": {
+      "setup_wns_ps": 307.0,
+      "hold_wns_ps": -8.2,
+      "failing_setup": 0,
+      "failing_hold": 400,
+      "worst_max_path": [
+       "u_wfc.g_control_launch.kv_q[23]$_DFFE_PP_",
+       "core_user[8]"
+      ],
+      "worst_max_path_slack_ps": 307.0,
+      "worst_max_path_group": "vclk",
+      "worst_min_path": [
+       "in_data[440]",
+       "u_wfc.g_link_reg.u_rx.pd[440]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -8.2,
+      "worst_min_path_group": "core_clk"
+     },
+     "region": {
+      "setup_wns_ps": 307.7,
+      "hold_wns_ps": -8.2,
+      "failing_setup": 0,
+      "failing_hold": 167,
+      "worst_max_path": [
+       "u_wfc.g_upos[10].ug/lo_r[1]$_DFF_P_",
+       "u_wfc.g_upos[10].ug/part[11]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 307.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "in_data[440]",
+       "u_wfc.g_link_reg.u_rx.pd[440]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": -8.2,
+      "worst_min_path_group": "core_clk"
+     },
+     "reg2reg": {
+      "setup_wns_ps": 307.7,
+      "hold_wns_ps": 18.9,
+      "failing_setup": 0,
+      "failing_hold": 0,
+      "worst_max_path": [
+       "u_wfc.g_upos[10].ug/lo_r[1]$_DFF_P_",
+       "u_wfc.g_upos[10].ug/part[11]$_SDFFCE_PN0P_"
+      ],
+      "worst_max_path_slack_ps": 307.7,
+      "worst_max_path_group": "core_clk",
+      "worst_min_path": [
+       "u_wfc.g_txq_slice.g_s[7].qd[3][15]$_DFFE_PP_",
+       "u_wfc.g_link_reg.u_tx.d[239]$_DFF_P_"
+      ],
+      "worst_min_path_slack_ps": 18.9,
+      "worst_min_path_group": "core_clk"
+     }
+    }
+   },
+   "closure_rule": "TT setup >=0; FF hold >=0; DRC0; SS sensitivity; retained region/die150 IO budgets"
+  }
+ },
+ "checks": {
+  "TT_FF0_DRC0_region_die150": {
+   "ok": false,
+   "out": "ax_path_group\":\"core_clk\",\"worst_min_path\":[\"u_wfc.g_txq_slice.g_s[7].qd[3][15]$_DFFE_PP_\",\"u_wfc.g_link_reg.u_tx.d[239]$_DFF_P_\"],\"worst_min_path_slack_ps\":18.9,\"worst_min_path_group\":\"core_clk\"}}},\"closure_rule\":\"TT setup >=0; FF hold >=0; DRC0; SS sensitivity; retained region/die150 IO budgets\"}\n"
+  }
+ },
+ "failed_checks": [
+  "TT_FF0_DRC0_region_die150"
+ ],
+ "routed_ioref": {
+  "key": "2|/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base|0|ae0410",
+  "at": "2026-10-09T04:16:15-07:00",
+  "available": false,
+  "ioref_edge": {
+   "tt": {},
+   "ff": {}
+  },
+  "tt": null,
+  "ff": null,
+  "errors": [
+   "no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ss.tcl",
+   "no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ff.tcl"
+  ],
+  "ioref": {
+   "tt": {},
+   "ff": {}
+  },
+  "tt_i2r": null,
+  "tt_out": null,
+  "ff_i2r": null,
+  "ff_out": null,
+  "ff_r2r": null,
+  "json": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/cl/routed_ioref.a2.json",
+  "why": "re-STA incomplete (TT None / FF None; ['no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ss.tcl', 'no /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route/results/asap7/wfc_stg_route/base/w18_sta_ff.tcl'])"
+ }
+}

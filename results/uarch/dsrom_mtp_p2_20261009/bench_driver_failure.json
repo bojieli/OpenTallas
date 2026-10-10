@@ -1,0 +1,5 @@
+{
+ "verdict": "DRIVER_FAIL",
+ "source_sha256": "2123353fe3812b3ae11a83ae08603cdb55bd23335b42bfa36b5f034c908e83ee",
+ "reason": "golden_phase returns dictionary; expected row comparator iterated its keys. RTL simulation completed; fix comparator without rebuilding."
+}

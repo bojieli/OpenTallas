@@ -1,0 +1,26 @@
+GUARD_CASE name=kind3 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=window40 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=window63 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=ckv8 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=ckv63 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=key8 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=key63 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=die96 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=die127 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized0 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized1 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized2 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized3 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized4 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized5 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized6 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=uninitialized7 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=shadow_die96 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=shadow_die127 fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_CASE name=initialized_mask_flip fault=1 writes=0 reads=0 posts=0 verdict=PASS
+GUARD_METRICS cases=20 positive_posts=3 positive_writes=20 positive_reads=3 nonowner_drop=1 bad=0
+GUARD_VERDICT PASS
+- /srv/opentallas-data/codex/dskv-guard-gates-r2/source/rtl/test/hbm_accel/tb_hbm_accel_dskv_descriptor_guard.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 476ns; walltime 0.001 s; speed 428.300 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

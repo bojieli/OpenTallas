@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm-write-source-pc.v1",
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "expected_verdict_observed": true
+    },
+    {
+      "name": "wrong_owner",
+      "returncode": 1,
+      "expected_verdict_observed": true
+    },
+    {
+      "name": "wrong_pc",
+      "returncode": 1,
+      "expected_verdict_observed": true
+    }
+  ],
+  "inputs": {
+    "rtl/hbm_accel/ingest/ot_hbm_write_source_pc.sv": "227940c596a377759e37e38765d5b7185b57bd5d5167db0018ab0c37cddb2e21",
+    "rtl/test/tb_hbm_write_source_pc.sv": "b3a9f9c6153649058707c1af9e40352e78d7c48213b0efd6ed90adae1ed4e4e7",
+    "tools/hbm_write_merge_model.py": "4bef1548a01d45cd63e270615cc4fda33d84e02971dc055c24c0bfaabd4b2268"
+  },
+  "scope": "Full32PC depth8 independent ownership ledger; source0WB1ingest2loader, reversePC and burst32completion; no complete svc/physical qualification",
+  "pass_": true
+}

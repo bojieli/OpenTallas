@@ -1,0 +1,946 @@
+{
+ "schema": "opentallas.die_evidence.qwen_r22k_compact_seq.v1",
+ "date": "2026-10-09",
+ "owner": "Claude:die-evidence-2",
+ "request": "struct-close -> die-evidence-2 12:50 PT: adopt the CLOSED compact qfd_sp_constants_sequencer_sys (259.2 x 333.36) in the r22k Qwen ROM die plan",
+ "closed_route": {
+  "job": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+  "verdict": "results/closure_loop/qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl/verdict.json",
+  "cfg": "physical/qwen_die_masters/cfg/qfd_sp_constants_sequencer_sys_icut_t.env",
+  "outline_um": [
+   259.2,
+   333.36
+  ],
+  "tt_ps": 12.32,
+  "ff_ps": 4.69,
+  "drc": 0,
+  "setup_corner": "TT",
+  "pin_plan": "cfg PINS: clk/rst_n top; inputs (pi_/d_start/d_token/d_pos/d_gen/kv_/me_mem/vm_rq/c_ready/r_) left; outputs right"
+ },
+ "source": {
+  "base_commit": "0ba892bd16154c57f96401077f4d77ebb44e9ed8",
+  "tools": [
+   "tools/qwen_kv_die/rom_r22k.py (surgery_cs / _compact_seq, opt-in)",
+   "tools/die_top_lint.py (--qwen-recipe r22kcs)"
+  ],
+  "rom_r22k_sha256": "95feb856df6c26affc30bee2ed22a2e54ab6e617e9c0f90563586e1b6b588ef0",
+  "die_top_lint_sha256": "a596d20da903c6393a5e22c19cd9abe4e9d010f324f0ae9f254a5cd2ea8b4a78",
+  "commands": [
+   "python3 tools/die_top_lint.py lint --die qwen_rom --qwen-recipe r22k --out <dir>",
+   "python3 tools/die_top_lint.py lint --die qwen_rom --qwen-recipe r22kcs --out <dir>",
+   "per-bus relays: qwen_rom_fulldie_b3r2.selected() m[\"r21_stage_of\"] (pitch 430.56 um) after the before_relays hook; study: OT_R22KCS_ARRANGE=top:SE"
+  ],
+  "default_unchanged": "r22k recipe byte-identical behaviour (compact_seq=False default); r22kcs is a new opt-in recipe name"
+ },
+ "finding_reservation": {
+  "old_instance": {
+   "name": "sp_constants_sequencer",
+   "master": "qfd_sp_constants_sequencer",
+   "x": 11418.624,
+   "y": 6287.76,
+   "w": 777.576,
+   "h": 2775.576,
+   "orient": "R0",
+   "kind": "spine_block",
+   "region": "hub",
+   "domain": "stream_1p2"
+  },
+  "note": "In r22k the die instance sp_constants_sequencer is the r21m constants+sequencer RESERVATION 777.576 x 2,775.576 um (SPINE_BLOCKS constants_sequencer 2.157 mm2: constant ROM + program + sequencer), not a 777.6 x 1,000 sequencer slot. Its ca / cq ports (crom_a 1,600 b / crom_q 4,096 b to the SU) belong to the constant ROM (ot_qfd_crom, 48 ot_rom_4096x266_m8, cfg qfd_crom48 777.6 x 1,000), which the compact sequencer cannot hold. r22kcs splits the reservation: sp_crom (qfd_crom 777.576 x 1,000.056) + the compact sequencer, both inside the old rectangle; the old reservation pins spanned 2.78 mm of height (dc/dh on S at y 6,287.8, su/ib on N at y 9,063.3), distance the compact block now has to carry on die wires."
+ },
+ "arrangement": {
+  "method": "bit-weighted Manhattan pin-to-neighbour distance over every 2-endpoint bus of the sequencer and the constant ROM; constant ROM at top / bottom of the reservation x sequencer in each corner of the remainder",
+  "candidates": [
+   {
+    "crom": "top",
+    "seq_corner": "SW",
+    "bit_um": 25210298.0
+   },
+   {
+    "crom": "top",
+    "seq_corner": "SE",
+    "bit_um": 24896720.0
+   },
+   {
+    "crom": "top",
+    "seq_corner": "NW",
+    "bit_um": 24688808.0
+   },
+   {
+    "crom": "top",
+    "seq_corner": "NE",
+    "bit_um": 24375099.0
+   },
+   {
+    "crom": "bottom",
+    "seq_corner": "SW",
+    "bit_um": 34959737.0
+   },
+   {
+    "crom": "bottom",
+    "seq_corner": "SE",
+    "bit_um": 34646166.0
+   },
+   {
+    "crom": "bottom",
+    "seq_corner": "NW",
+    "bit_um": 34467018.0
+   },
+   {
+    "crom": "bottom",
+    "seq_corner": "NE",
+    "bit_um": 34153440.0
+   }
+  ],
+  "chosen": {
+   "crom": "top",
+   "seq_corner": "NE",
+   "bit_um": 24375099.0,
+   "seq_xy": [
+    11936.592,
+    7728.48
+   ],
+   "crom_xy": [
+    11418.624,
+    8063.28
+   ]
+  },
+  "seq_instance": {
+   "name": "sp_constants_sequencer",
+   "master": "qfd_sp_constants_sequencer_cs",
+   "x": 11936.592,
+   "y": 7728.48,
+   "w": 259.2,
+   "h": 333.36,
+   "orient": "R0",
+   "kind": "spine_block",
+   "region": "hub",
+   "domain": "stream_1p2"
+  },
+  "crom_instance": {
+   "name": "sp_crom",
+   "master": "qfd_crom",
+   "x": 11418.624,
+   "y": 8063.28,
+   "w": 777.576,
+   "h": 1000.056,
+   "orient": "R0",
+   "kind": "spine_block",
+   "region": "hub",
+   "domain": "stream_1p2"
+  },
+  "pin_plan_die": {
+   "E": [
+    "dc",
+    "su",
+    "ib",
+    "ti",
+    "cd",
+    "cc",
+    "cst"
+   ],
+   "W": [
+    "dh",
+    "dflt",
+    "cflt",
+    "sd",
+    "md",
+    "mo",
+    "ts"
+   ],
+   "N": [
+    "rsi"
+   ],
+   "area": [
+    "ck"
+   ]
+  },
+  "vacated_um2": 1294194.8,
+  "vacated_use": "the 777.6 x 1,775.5 um region below the constant ROM less the 259.2 x 333.36 sequencer (1.29 mm2) is left empty; the relay placer may use it as relay sites, and it can take a spine block or the spine relay channel widening later",
+  "why_not_S_corner": "the requested S corner (nearest d2d_rom) keeps the d2d words at baseline stages (14/14/14) but costs +3..+7 stages on the SU / VM / tree-top words (study_top_SE column), 24.90 M bit-um vs 24.38 M at NE; the constant ROM must stay on top (its 5,696-b SU bus outweighs everything: bottom placements 34.2-35.0 M bit-um)"
+ },
+ "buses": [
+  {
+   "bus": "crom_a",
+   "cls": "crom",
+   "bits": 1600,
+   "endpoints_compact": [
+    [
+     "sp_su64_sfu",
+     "ca"
+    ],
+    [
+     "sp_crom",
+     "ca"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_su64_sfu",
+     "ca"
+    ],
+    [
+     "sp_constants_sequencer",
+     "ca"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 1002.5,
+    "compact": 1002.5,
+    "study_top_SE": 1002.5
+   },
+   "stages": {
+    "baseline": 3,
+    "compact": 3,
+    "study_top_SE": 3
+   },
+   "added_stages": 0,
+   "note": null
+  },
+  {
+   "bus": "crom_flt",
+   "cls": "spine_local",
+   "bits": 3,
+   "endpoints_compact": [
+    [
+     "sp_crom",
+     "flt"
+    ],
+    [
+     "sp_constants_sequencer",
+     "cflt"
+    ]
+   ],
+   "endpoints_baseline": null,
+   "pin_dist_um": {
+    "baseline": null,
+    "compact": 387.6,
+    "study_top_SE": 1828.3
+   },
+   "stages": {
+    "baseline": null,
+    "compact": 1,
+    "study_top_SE": 7
+   },
+   "added_stages": null,
+   "note": "new inter-instance word: was inside the old reservation (sequencer <-> constant ROM)"
+  },
+  {
+   "bus": "crom_q",
+   "cls": "crom",
+   "bits": 4096,
+   "endpoints_compact": [
+    [
+     "sp_crom",
+     "cq"
+    ],
+    [
+     "sp_su64_sfu",
+     "cq"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "cq"
+    ],
+    [
+     "sp_su64_sfu",
+     "cq"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 1002.5,
+    "compact": 1002.5,
+    "study_top_SE": 1002.5
+   },
+   "stages": {
+    "baseline": 3,
+    "compact": 3,
+    "study_top_SE": 3
+   },
+   "added_stages": 0,
+   "note": null
+  },
+  {
+   "bus": "crom_st",
+   "cls": "sequencer",
+   "bits": 7,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "cst"
+    ],
+    [
+     "sp_crom",
+     "st"
+    ]
+   ],
+   "endpoints_baseline": null,
+   "pin_dist_um": {
+    "baseline": null,
+    "compact": 604.7,
+    "study_top_SE": 2045.4
+   },
+   "stages": {
+    "baseline": null,
+    "compact": 2,
+    "study_top_SE": 6
+   },
+   "added_stages": null,
+   "note": "new inter-instance word: was inside the old reservation (sequencer <-> constant ROM)"
+  },
+  {
+   "bus": "d2d_flt",
+   "cls": "spine_local",
+   "bits": 9,
+   "endpoints_compact": [
+    [
+     "d2d_rom",
+     "flt"
+    ],
+    [
+     "sp_constants_sequencer",
+     "dflt"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "d2d_rom",
+     "flt"
+    ],
+    [
+     "sp_constants_sequencer",
+     "dflt"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 5335.8,
+    "compact": 6911.3,
+    "study_top_SE": 5470.6
+   },
+   "stages": {
+    "baseline": 14,
+    "compact": 18,
+    "study_top_SE": 14
+   },
+   "added_stages": 4,
+   "note": null
+  },
+  {
+   "bus": "d2d_seq",
+   "cls": "sequencer",
+   "bits": 530,
+   "endpoints_compact": [
+    [
+     "d2d_rom",
+     "dh"
+    ],
+    [
+     "sp_constants_sequencer",
+     "dh"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "d2d_rom",
+     "dh"
+    ],
+    [
+     "sp_constants_sequencer",
+     "dh"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 5104.9,
+    "compact": 6712.9,
+    "study_top_SE": 5272.2
+   },
+   "stages": {
+    "baseline": 14,
+    "compact": 17,
+    "study_top_SE": 14
+   },
+   "added_stages": 3,
+   "note": null
+  },
+  {
+   "bus": "rst_seq",
+   "cls": "spine_local",
+   "bits": 1,
+   "endpoints_compact": [
+    [
+     "clk_rx",
+     "rso_seq"
+    ],
+    [
+     "sp_constants_sequencer",
+     "rsi"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "clk_rx",
+     "rso_seq"
+    ],
+    [
+     "sp_constants_sequencer",
+     "rsi"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 8914.0,
+    "compact": 8802.3,
+    "study_top_SE": 10243.1
+   },
+   "stages": {
+    "baseline": 22,
+    "compact": 22,
+    "study_top_SE": 25
+   },
+   "added_stages": 0,
+   "note": null
+  },
+  {
+   "bus": "seq_coll",
+   "cls": "sequencer",
+   "bits": 66,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "cd"
+    ],
+    [
+     "io_xfifo",
+     "i_seq_coll"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "cd"
+    ],
+    [
+     "io_xfifo",
+     "i_seq_coll"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 23786.6,
+    "compact": 24458.0,
+    "study_top_SE": 25898.7
+   },
+   "stages": {
+    "baseline": 66,
+    "compact": 60,
+    "study_top_SE": 64
+   },
+   "added_stages": -6,
+   "note": null
+  },
+  {
+   "bus": "seq_d2d",
+   "cls": "sequencer",
+   "bits": 530,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "dc"
+    ],
+    [
+     "d2d_rom",
+     "dc"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "dc"
+    ],
+    [
+     "d2d_rom",
+     "dc"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 5267.9,
+    "compact": 6714.8,
+    "study_top_SE": 5274.1
+   },
+   "stages": {
+    "baseline": 13,
+    "compact": 17,
+    "study_top_SE": 14
+   },
+   "added_stages": 4,
+   "note": null
+  },
+  {
+   "bus": "seq_ib",
+   "cls": "sequencer",
+   "bits": 382,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "ib"
+    ],
+    [
+     "sp_vector_memory",
+     "ib"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "ib"
+    ],
+    [
+     "sp_vector_memory",
+     "ib"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 3627.6,
+    "compact": 5067.5,
+    "study_top_SE": 6508.2
+   },
+   "stages": {
+    "baseline": 10,
+    "compact": 13,
+    "study_top_SE": 17
+   },
+   "added_stages": 3,
+   "note": null
+  },
+  {
+   "bus": "seq_su",
+   "cls": "sequencer",
+   "bits": 492,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "su"
+    ],
+    [
+     "sp_su64_sfu",
+     "si"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "su"
+    ],
+    [
+     "sp_su64_sfu",
+     "si"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 1029.0,
+    "compact": 2514.9,
+    "study_top_SE": 3955.7
+   },
+   "stages": {
+    "baseline": 5,
+    "compact": 7,
+    "study_top_SE": 10
+   },
+   "added_stages": 2,
+   "note": null
+  },
+  {
+   "bus": "seq_sud",
+   "cls": "sequencer",
+   "bits": 2,
+   "endpoints_compact": [
+    [
+     "sp_su64_sfu",
+     "sd"
+    ],
+    [
+     "sp_constants_sequencer",
+     "sd"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_su64_sfu",
+     "sd"
+    ],
+    [
+     "sp_constants_sequencer",
+     "sd"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 1025.0,
+    "compact": 2147.5,
+    "study_top_SE": 3588.3
+   },
+   "stages": {
+    "baseline": 5,
+    "compact": 7,
+    "study_top_SE": 11
+   },
+   "added_stages": 2,
+   "note": null
+  },
+  {
+   "bus": "tt_si",
+   "cls": "sequencer",
+   "bits": 380,
+   "endpoints_compact": [
+    [
+     "sp_constants_sequencer",
+     "ti"
+    ],
+    [
+     "sp_tree_top",
+     "si"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_constants_sequencer",
+     "ti"
+    ],
+    [
+     "sp_tree_top",
+     "si"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 13817.0,
+    "compact": 13927.4,
+    "study_top_SE": 15368.2
+   },
+   "stages": {
+    "baseline": 35,
+    "compact": 35,
+    "study_top_SE": 39
+   },
+   "added_stages": 0,
+   "note": null
+  },
+  {
+   "bus": "tt_so",
+   "cls": "sequencer",
+   "bits": 97,
+   "endpoints_compact": [
+    [
+     "sp_tree_top",
+     "so"
+    ],
+    [
+     "sp_constants_sequencer",
+     "ts"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_tree_top",
+     "so"
+    ],
+    [
+     "sp_constants_sequencer",
+     "ts"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 13807.0,
+    "compact": 14257.1,
+    "study_top_SE": 15697.8
+   },
+   "stages": {
+    "baseline": 35,
+    "compact": 35,
+    "study_top_SE": 38
+   },
+   "added_stages": 0,
+   "note": null
+  },
+  {
+   "bus": "vm_meok",
+   "cls": "spine_local",
+   "bits": 1,
+   "endpoints_compact": [
+    [
+     "sp_vector_memory",
+     "mo"
+    ],
+    [
+     "sp_constants_sequencer",
+     "mo"
+    ]
+   ],
+   "endpoints_baseline": [
+    [
+     "sp_vector_memory",
+     "mo"
+    ],
+    [
+     "sp_constants_sequencer",
+     "mo"
+    ]
+   ],
+   "pin_dist_um": {
+    "baseline": 3617.8,
+    "compact": 4788.8,
+    "study_top_SE": 6229.5
+   },
+   "stages": {
+    "baseline": 10,
+    "compact": 13,
+    "study_top_SE": 16
+   },
+   "added_stages": 3,
+   "note": null
+  }
+ ],
+ "added_stages_chosen": {
+  "crom_a": 0,
+  "crom_q": 0,
+  "d2d_flt": 4,
+  "d2d_seq": 3,
+  "rst_seq": 0,
+  "seq_coll": -6,
+  "seq_d2d": 4,
+  "seq_ib": 3,
+  "seq_su": 2,
+  "seq_sud": 2,
+  "tt_si": 0,
+  "tt_so": 0,
+  "vm_meok": 3
+ },
+ "relays": {
+  "baseline": {
+   "count": 9730,
+   "pitch_um": 430.56,
+   "max_um": 430.56,
+   "relays": 9730,
+   "repaired": 363,
+   "unrepaired": [
+    "coll_tx (start 0, visited 0, sites 207039, D 430)",
+    "serdes_tx_x (start 26, visited 132466, sites 150042, D 426)",
+    "pword_1 (start 0, visited 0, sites 203552, D 426)",
+    "pword_4 (start 0, visited 0, sites 203552, D 426)",
+    "serdes_rx (start 0, visited 0, sites 150042, D 426)",
+    "tt_mx (start 0, visited 0, sites 203552, D 426)",
+    "tt_lc2 (start 0, visited 0, sites 207039, D 430)",
+    "tt_lf2 (start 9, visited 178980, sites 207039, D 430)",
+    "tt_ty (start 10, visited 121634, sites 146439, D 417)"
+   ],
+   "relay_flop_bits": 4048468,
+   "relay_area_mm2": 16.332
+  },
+  "compact": {
+   "count": 9734,
+   "pitch_um": 430.56,
+   "max_um": 430.56,
+   "relays": 9734,
+   "repaired": 360,
+   "unrepaired": [
+    "coll_tx (start 0, visited 0, sites 209945, D 430)",
+    "serdes_tx_x (start 26, visited 135457, sites 152948, D 426)",
+    "pword_1 (start 0, visited 0, sites 206458, D 426)",
+    "pword_4 (start 0, visited 0, sites 206458, D 426)",
+    "serdes_rx (start 0, visited 0, sites 152948, D 426)",
+    "tt_mx (start 0, visited 0, sites 206458, D 426)",
+    "tt_lf1 (start 3, visited 181460, sites 209945, D 430)",
+    "tt_lc2 (start 0, visited 0, sites 209945, D 430)",
+    "tt_lf2 (start 9, visited 181325, sites 209945, D 430)",
+    "tt_ty (start 9, visited 123800, sites 149412, D 417)"
+   ],
+   "relay_flop_bits": 4049816,
+   "relay_area_mm2": 16.347
+  },
+  "study_top_SE": {
+   "count": 9762
+  }
+ },
+ "lint": {
+  "baseline": {
+   "census": {
+    "instances": 12902,
+    "buses": 16064,
+    "net_bits": 6705097,
+    "masters": 164,
+    "real_instances": 1,
+    "placeholder_instances": 12901
+   },
+   "connectivity_findings": 0,
+   "unbound_real_pins": 0,
+   "pin_fit_errors": 0,
+   "placeholder_port_direction_conflicts": 0,
+   "unresolved_modules": [],
+   "margin_lint": {
+    "verdict": "FAIL",
+    "mode": "chains",
+    "chains": 2676,
+    "reach_um": 504.0,
+    "reach_violations": 4,
+    "far_side_relays": 35,
+    "reach_examples": [
+     {
+      "chain": "sp_vector_memory->io_xfifo",
+      "seg": "rly_coll_tx_4->rly_coll_tx_5",
+      "um": 1559.6,
+      "hops": 1
+     },
+     {
+      "chain": "sp_tree_top->sp_band_lanes_2",
+      "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
+      "um": 1029.9,
+      "hops": 1
+     },
+     {
+      "chain": "sp_tree_top->sp_band_lanes_0",
+      "seg": "rly_tt_ty_0->rly_tt_ty_1",
+      "um": 966.4,
+      "hops": 1
+     },
+     {
+      "chain": "sp_vector_memory->io_xfifo",
+      "seg": "rly_coll_tx_5->rly_coll_tx_6",
+      "um": 671.4,
+      "hops": 1
+     }
+    ]
+   },
+   "physical": {
+    "missing_pins": 0,
+    "face_away": [
+     {
+      "master": "qfd_chead_w",
+      "port": "e",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 323,
+      "examples": [
+       "h_31.e face E peer 320 um behind (head_31__r5)"
+      ]
+     }
+    ],
+    "pin_spread_count": 2,
+    "abut_without_channel": 26
+   },
+   "generator_sha256": "9d345b6f85c445f49eb0bb38c5dea644cb7ac3f3dec128429e8904ce45d56c88",
+   "lint_tool_sha256": "a689d622f59260d3598f346a62e171e8d20aa08843aec4fe655f39c5099cbd7e"
+  },
+  "compact": {
+   "census": {
+    "instances": 12907,
+    "buses": 16070,
+    "net_bits": 6706455,
+    "masters": 154,
+    "real_instances": 1,
+    "placeholder_instances": 12906
+   },
+   "connectivity_findings": 0,
+   "unbound_real_pins": 0,
+   "pin_fit_errors": 0,
+   "placeholder_port_direction_conflicts": 0,
+   "unresolved_modules": [],
+   "margin_lint": {
+    "verdict": "FAIL",
+    "mode": "chains",
+    "chains": 2677,
+    "reach_um": 504.0,
+    "reach_violations": 4,
+    "far_side_relays": 35,
+    "reach_examples": [
+     {
+      "chain": "sp_vector_memory->io_xfifo",
+      "seg": "rly_coll_tx_4->rly_coll_tx_5",
+      "um": 1559.6,
+      "hops": 1
+     },
+     {
+      "chain": "sp_tree_top->sp_band_lanes_2",
+      "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
+      "um": 1029.9,
+      "hops": 1
+     },
+     {
+      "chain": "sp_tree_top->sp_band_lanes_0",
+      "seg": "rly_tt_ty_0->rly_tt_ty_1",
+      "um": 966.4,
+      "hops": 1
+     },
+     {
+      "chain": "sp_vector_memory->io_xfifo",
+      "seg": "rly_coll_tx_5->rly_coll_tx_6",
+      "um": 671.4,
+      "hops": 1
+     }
+    ]
+   },
+   "physical": {
+    "missing_pins": 0,
+    "face_away": [
+     {
+      "master": "qfd_chead_w",
+      "port": "e",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 323,
+      "examples": [
+       "h_31.e face E peer 320 um behind (head_31__r5)"
+      ]
+     },
+     {
+      "master": "qfd_sp_constants_sequencer_cs",
+      "port": "cst",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 7,
+      "examples": [
+       "sp_constants_sequencer.cst face E peer 376 um behind (crom_st)"
+      ]
+     },
+     {
+      "master": "qfd_sp_constants_sequencer_cs",
+      "port": "dflt",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 9,
+      "examples": [
+       "sp_constants_sequencer.dflt face W peer 260 um behind (d2d_flt__r17)"
+      ]
+     },
+     {
+      "master": "qfd_sp_constants_sequencer_cs",
+      "port": "sd",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 2,
+      "examples": [
+       "sp_constants_sequencer.sd face W peer 362 um behind (seq_sud__r6)"
+      ]
+     },
+     {
+      "master": "qfd_sp_constants_sequencer_cs",
+      "port": "ts",
+      "orient": "R0",
+      "endpoints": 1,
+      "bits": 97,
+      "examples": [
+       "sp_constants_sequencer.ts face W peer 260 um behind (tt_so__r34)"
+      ]
+     }
+    ],
+    "pin_spread_count": 2,
+    "abut_without_channel": 26
+   },
+   "generator_sha256": "9d345b6f85c445f49eb0bb38c5dea644cb7ac3f3dec128429e8904ce45d56c88",
+   "lint_tool_sha256": "a596d20da903c6393a5e22c19cd9abe4e9d010f324f0ae9f254a5cd2ea8b4a78"
+  }
+ },
+ "verdict": {
+  "connectivity": "0 -> 0 findings, unbound real pins 0 -> 0, pin-fit errors 0 -> 0, unresolved modules none",
+  "margin_lint": "FAIL -> FAIL (pre-existing): reach violations 4 -> 4 (the same coll_tx / tt_lc2 / tt_ty segments, none on a sequencer bus), far-side relays 35 -> 35, chains 2,676 -> 2,677 (+crom_st)",
+  "face_away": "1 -> 5: the route pin plan puts inputs W / outputs E while every neighbour is N / S of the spine column; cst, dflt, sd, ts reach their first relay behind the face (260-376 um). A re-pin of the route with the d2d / SU words on S / N would clear them (layout-only)",
+  "generator_unrepaired": "tt_lf1 newly unrepaired by the relay BFS (relay-site competition near the sequencer); margin_lint finds no reach violation on it",
+  "adoption": "NOT a free swap: the compact outline costs +2..+4 relay stages on 8 sequencer words (d2d CTL words +3/+4, VM issue +3, SU +2) and +1 relay on the new crom stage-select word; seq_coll -6 (relay path re-solved). Price the cycles in the model before adopting r22kcs."
+ }
+}

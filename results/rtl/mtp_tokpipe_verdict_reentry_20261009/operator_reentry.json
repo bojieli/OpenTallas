@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-09T11:49:24.431432+00:00",
+  "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "status": "READY",
+  "stage_idx": 6,
+  "stage_key": "verdict",
+  "overlay_commit": "f9a53cc88",
+  "source_unchanged": "9f7a7f35e",
+  "normal_parser": {
+    "ss_ps": 127.38,
+    "ff_ps": -8.17,
+    "drc": 0,
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc/route",
+    "post_sdc": [
+      "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "errors": []
+  },
+  "before_snapshot": "/home/ubuntu/.local/state/closure_loop/operator_actions/mtp-wfc-stg-tokpipe-9f7a7f35e-tc.tokpipe-reentry/before_state.json",
+  "process_action": "none; existing ODB reused"
+}

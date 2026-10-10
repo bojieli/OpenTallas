@@ -1,0 +1,124 @@
+[
+  {
+    "at_utc": "2026-10-09T09:55:47.403434+00:00",
+    "container": "dfb9e0b2d4cc0354cf4ca0085208dffcf850dcdf4caea48cf68395afb1391ef1",
+    "container_root": 1407312,
+    "mounts": [
+      "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_epoch_c3b3f94c8/source",
+      "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_epoch_c3b3f94c8/work/orfs"
+    ],
+    "cgroup": "/system.slice/docker-dfb9e0b2d4cc0354cf4ca0085208dffcf850dcdf4caea48cf68395afb1391ef1.scope",
+    "memory": {
+      "memory.current": "15434604544",
+      "memory.peak": "15577276416",
+      "memory.max": "max",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+    },
+    "processes": [
+      {
+        "pid": 1407312,
+        "rss_kib": 3088,
+        "hwm_kib": 3088,
+        "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=32 /work/results/asap7/opentallas_ot_hbm_hc_row_private_epoch_asap7_hc_row64_epoch900_pathfinding/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_hbm_hc_row_private_epoch_asap7_hc_row64_epoch900_pathfinding/base/1_2_yosys.v "
+      },
+      {
+        "pid": 1411125,
+        "rss_kib": 2624,
+        "hwm_kib": 2624,
+        "cmd": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=32 /work/results/asap7/opentallas_ot_hbm_hc_row_private_epoch_asap7_hc_row64_epoch900_pathfinding/base/1_2_yosys.v "
+      },
+      {
+        "pid": 1568425,
+        "rss_kib": 2612,
+        "hwm_kib": 2612,
+        "cmd": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=32 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-yosys "
+      },
+      {
+        "pid": 1578764,
+        "rss_kib": 3352,
+        "hwm_kib": 3352,
+        "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/opentallas_ot_hbm_hc_row_private_epoch_asap7_hc_row64_epoch900_pathfinding/base/1_2_yosys.log "
+      },
+      {
+        "pid": 1579381,
+        "rss_kib": 11328,
+        "hwm_kib": 11328,
+        "cmd": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hbm_hc_row_private_epoch_asap7_hc_row64_epoch900_pathfinding/base/1_2_yosys.log --append --tee -- /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+      },
+      {
+        "pid": 1579383,
+        "rss_kib": 15051336,
+        "hwm_kib": 15134892,
+        "cmd": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+      }
+    ],
+    "total_rss_kib": 15074340,
+    "stage": "Yosys 3.15 SHARE",
+    "future_phase_peak": "UNKNOWN: no matching completed synth/PNR time-v/phase peak identified",
+    "time_v": "not available before process completes",
+    "historical_128GiB_claim": "unmeasured placeholder rejected; do not use as measured admission claim",
+    "terminal": false,
+    "stable_launcher": 1366211
+  },
+  {
+    "at_utc": "2026-10-09T09:55:47.438304+00:00",
+    "container": "85ce5340a0b368da10d3be7b379c8ddcf94b1a9355e2ec41c65ed66c03dd6f80",
+    "container_root": 2938827,
+    "mounts": [
+      "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_private64/source",
+      "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_private64/work/orfs"
+    ],
+    "cgroup": "/system.slice/docker-85ce5340a0b368da10d3be7b379c8ddcf94b1a9355e2ec41c65ed66c03dd6f80.scope",
+    "memory": {
+      "memory.current": "15339098112",
+      "memory.peak": "15482122240",
+      "memory.max": "max",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+    },
+    "processes": [
+      {
+        "pid": 2938827,
+        "rss_kib": 3132,
+        "hwm_kib": 3132,
+        "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=32 /work/results/asap7/opentallas_ot_hbm_hc_row_private_asap7_hc_row64_private900_pathfinding/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_hbm_hc_row_private_asap7_hc_row64_private900_pathfinding/base/1_2_yosys.v "
+      },
+      {
+        "pid": 2939089,
+        "rss_kib": 2616,
+        "hwm_kib": 2616,
+        "cmd": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=32 /work/results/asap7/opentallas_ot_hbm_hc_row_private_asap7_hc_row64_private900_pathfinding/base/1_2_yosys.v "
+      },
+      {
+        "pid": 2939264,
+        "rss_kib": 2628,
+        "hwm_kib": 2628,
+        "cmd": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=32 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-yosys "
+      },
+      {
+        "pid": 2939280,
+        "rss_kib": 3340,
+        "hwm_kib": 3340,
+        "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/opentallas_ot_hbm_hc_row_private_asap7_hc_row64_private900_pathfinding/base/1_2_yosys.log "
+      },
+      {
+        "pid": 2939286,
+        "rss_kib": 11320,
+        "hwm_kib": 11320,
+        "cmd": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hbm_hc_row_private_asap7_hc_row64_private900_pathfinding/base/1_2_yosys.log --append --tee -- /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+      },
+      {
+        "pid": 2939287,
+        "rss_kib": 14964672,
+        "hwm_kib": 15052780,
+        "cmd": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+      }
+    ],
+    "total_rss_kib": 14987708,
+    "stage": "Yosys 3.15 SHARE",
+    "future_phase_peak": "UNKNOWN: no matching completed synth/PNR time-v/phase peak identified",
+    "time_v": "not available before process completes",
+    "historical_128GiB_claim": "unmeasured placeholder rejected; do not use as measured admission claim",
+    "terminal": false,
+    "stable_launcher": 2938696
+  }
+]

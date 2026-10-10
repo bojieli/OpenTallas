@@ -1,0 +1,33 @@
+{
+  "candidate": "sfu_rstpipe3",
+  "lane_count_per_quarter": 32,
+  "lane_um": [
+    159.84,
+    450.36
+  ],
+  "lane_core_um": [
+    157.68,
+    449.28
+  ],
+  "prior_lane_um": [
+    159.84,
+    330.48
+  ],
+  "lane_area_um2": 71985.5424,
+  "quarter_lane_area_delta_um2": 613171.8144,
+  "measured_prior_std_area_um2": 34909,
+  "estimated_reset_registers": 62,
+  "estimated_util": 0.49276937694143425,
+  "reset_admission_cycles": 3,
+  "data_cycles_added": 0,
+  "reset_pin_fanout": 1,
+  "reset_bank_fanout_max": 8,
+  "reset_leaf_consumers": 53,
+  "reset_bits_per_cycle": 1,
+  "macs_per_cycle_change": 0,
+  "memory_bytes_per_cycle_change": 0,
+  "boundary_bits_per_cycle_change": 0,
+  "pin_bits_per_um": 4.998223643307576,
+  "physical_qualified": false,
+  "qualification": "route full lane with normal one-cycle reset arcs; then grow quarter for 32 taller lanes"
+}

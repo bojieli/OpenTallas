@@ -1,0 +1,1172 @@
+{
+ "schema": "opentallas.s81-ctrl.stage-programs.v1",
+ "tool": "tools/s81_ctrl/stage_programs.py",
+ "source": "results/arch/token_path_20261008/ds_rom.json",
+ "source_sha256": "e17293741b16419d959ceaa4c68f4892dc147fb67ef7b00a550bb70890b58b27",
+ "composition_asap_mismatches": 0,
+ "engine_ports": {
+  "fld": 0,
+  "su": 1,
+  "hc": 2,
+  "coll": 3,
+  "svc": 4,
+  "sel": 5,
+  "col": 6,
+  "hop": 7,
+  "head": 8,
+  "emb": 9,
+  "eng": 10,
+  "spare": 11
+ },
+ "npred": 8,
+ "max_jobs": 75,
+ "max_fanin": 4,
+ "stages": [
+  {
+   "stage": "S000",
+   "kind": "embed",
+   "n_jobs": 32,
+   "n_nodes": 39,
+   "makespan": 10050,
+   "crit_end": 10050,
+   "comp_span": 10049.7,
+   "delta": 0.3,
+   "max_start_drift": 0.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "emb",
+    "fld",
+    "hc",
+    "hop",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S001",
+   "kind": "stage",
+   "n_jobs": 60,
+   "n_nodes": 69,
+   "makespan": 15820,
+   "crit_end": 15820,
+   "comp_span": 15817.1,
+   "delta": 2.9,
+   "max_start_drift": 3.0,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "eng",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S002",
+   "kind": "stage",
+   "n_jobs": 73,
+   "n_nodes": 82,
+   "makespan": 26481,
+   "crit_end": 26481,
+   "comp_span": 26478.9,
+   "delta": 2.1,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S003",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S004",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 24729,
+   "crit_end": 24729,
+   "comp_span": 24726.5,
+   "delta": 2.5,
+   "max_start_drift": 2.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S005",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 43615,
+   "crit_end": 43615,
+   "comp_span": 43611.0,
+   "delta": 4.0,
+   "max_start_drift": 4.0,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S006",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S007",
+   "kind": "stage",
+   "n_jobs": 58,
+   "n_nodes": 67,
+   "makespan": 63759,
+   "crit_end": 63505,
+   "comp_span": 63755.2,
+   "delta": -250.2,
+   "max_start_drift": 3.4,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S008",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 82390,
+   "crit_end": 82390,
+   "comp_span": 82386.1,
+   "delta": 3.9,
+   "max_start_drift": 3.9,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S009",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S010",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 102280,
+   "crit_end": 102280,
+   "comp_span": 102276.6,
+   "delta": 3.4,
+   "max_start_drift": 3.4,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S011",
+   "kind": "stage",
+   "n_jobs": 73,
+   "n_nodes": 82,
+   "makespan": 29386,
+   "crit_end": 29386,
+   "comp_span": 29383.0,
+   "delta": 3.0,
+   "max_start_drift": 3.1,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S012",
+   "kind": "stage",
+   "n_jobs": 3,
+   "n_nodes": 3,
+   "makespan": 1260,
+   "crit_end": 1006,
+   "comp_span": 1259.6,
+   "delta": -253.6,
+   "max_start_drift": 0.0,
+   "max_fanin": 1,
+   "ports": [
+    "hc",
+    "hop"
+   ]
+  },
+  {
+   "stage": "S013",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 24983,
+   "crit_end": 24729,
+   "comp_span": 24980.1,
+   "delta": -251.1,
+   "max_start_drift": 2.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S014",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 43869,
+   "crit_end": 43615,
+   "comp_span": 43864.6,
+   "delta": -249.6,
+   "max_start_drift": 4.0,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S015",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 62499,
+   "crit_end": 62499,
+   "comp_span": 62495.5,
+   "delta": 3.5,
+   "max_start_drift": 3.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S016",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S017",
+   "kind": "stage",
+   "n_jobs": 58,
+   "n_nodes": 67,
+   "makespan": 82644,
+   "crit_end": 82390,
+   "comp_span": 82639.7,
+   "delta": -249.7,
+   "max_start_drift": 3.9,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S018",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 101274,
+   "crit_end": 101274,
+   "comp_span": 101270.6,
+   "delta": 3.4,
+   "max_start_drift": 3.4,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S019",
+   "kind": "stage",
+   "n_jobs": 3,
+   "n_nodes": 3,
+   "makespan": 1260,
+   "crit_end": 1006,
+   "comp_span": 1259.6,
+   "delta": -253.6,
+   "max_start_drift": 0.0,
+   "max_fanin": 1,
+   "ports": [
+    "hc",
+    "hop"
+   ]
+  },
+  {
+   "stage": "S020",
+   "kind": "stage",
+   "n_jobs": 75,
+   "n_nodes": 84,
+   "makespan": 30244,
+   "crit_end": 30244,
+   "comp_span": 30240.1,
+   "delta": 3.9,
+   "max_start_drift": 4.0,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "eng",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S021",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 23723,
+   "crit_end": 23723,
+   "comp_span": 23720.4,
+   "delta": 2.6,
+   "max_start_drift": 2.6,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S022",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S023",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 43614,
+   "crit_end": 43614,
+   "comp_span": 43610.9,
+   "delta": 3.1,
+   "max_start_drift": 3.1,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S024",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 62499,
+   "crit_end": 62499,
+   "comp_span": 62495.5,
+   "delta": 3.5,
+   "max_start_drift": 3.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S025",
+   "kind": "stage",
+   "n_jobs": 3,
+   "n_nodes": 3,
+   "makespan": 1260,
+   "crit_end": 1006,
+   "comp_span": 1259.6,
+   "delta": -253.6,
+   "max_start_drift": 0.0,
+   "max_fanin": 1,
+   "ports": [
+    "hc",
+    "hop"
+   ]
+  },
+  {
+   "stage": "S026",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 82390,
+   "crit_end": 82390,
+   "comp_span": 82386.0,
+   "delta": 4.0,
+   "max_start_drift": 4.0,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S027",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 101274,
+   "crit_end": 101274,
+   "comp_span": 101270.5,
+   "delta": 3.5,
+   "max_start_drift": 3.5,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S028",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S029",
+   "kind": "stage",
+   "n_jobs": 74,
+   "n_nodes": 83,
+   "makespan": 33242,
+   "crit_end": 33187,
+   "comp_span": 33240.0,
+   "delta": -53.0,
+   "max_start_drift": 3.1,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S030",
+   "kind": "stage",
+   "n_jobs": 59,
+   "n_nodes": 68,
+   "makespan": 23497,
+   "crit_end": 23243,
+   "comp_span": 23493.4,
+   "delta": -250.4,
+   "max_start_drift": 3.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S031",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 38105,
+   "crit_end": 38105,
+   "comp_span": 38102.3,
+   "delta": 2.7,
+   "max_start_drift": 2.7,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S032",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S033",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 53973,
+   "crit_end": 53973,
+   "comp_span": 53970.8,
+   "delta": 2.2,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S034",
+   "kind": "stage",
+   "n_jobs": 62,
+   "n_nodes": 71,
+   "makespan": 20087,
+   "crit_end": 20087,
+   "comp_span": 20084.8,
+   "delta": 2.2,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S035",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S036",
+   "kind": "stage",
+   "n_jobs": 58,
+   "n_nodes": 67,
+   "makespan": 25614,
+   "crit_end": 25360,
+   "comp_span": 25610.4,
+   "delta": -250.4,
+   "max_start_drift": 3.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S037",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 40222,
+   "crit_end": 40222,
+   "comp_span": 40219.3,
+   "delta": 2.7,
+   "max_start_drift": 2.7,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S038",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S039",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 56090,
+   "crit_end": 56090,
+   "comp_span": 56087.8,
+   "delta": 2.2,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S040",
+   "kind": "stage",
+   "n_jobs": 62,
+   "n_nodes": 71,
+   "makespan": 20119,
+   "crit_end": 20119,
+   "comp_span": 20116.9,
+   "delta": 2.1,
+   "max_start_drift": 2.1,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S041",
+   "kind": "stage",
+   "n_jobs": 3,
+   "n_nodes": 3,
+   "makespan": 1260,
+   "crit_end": 1006,
+   "comp_span": 1259.6,
+   "delta": -253.6,
+   "max_start_drift": 0.0,
+   "max_fanin": 1,
+   "ports": [
+    "hc",
+    "hop"
+   ]
+  },
+  {
+   "stage": "S042",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 25360,
+   "crit_end": 25360,
+   "comp_span": 25356.8,
+   "delta": 3.2,
+   "max_start_drift": 3.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S043",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 40222,
+   "crit_end": 40222,
+   "comp_span": 40219.3,
+   "delta": 2.7,
+   "max_start_drift": 2.7,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S044",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 55084,
+   "crit_end": 55084,
+   "comp_span": 55081.8,
+   "delta": 2.2,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S045",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S046",
+   "kind": "stage",
+   "n_jobs": 64,
+   "n_nodes": 73,
+   "makespan": 20373,
+   "crit_end": 20119,
+   "comp_span": 20370.5,
+   "delta": -251.5,
+   "max_start_drift": 2.1,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S047",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 24354,
+   "crit_end": 24354,
+   "comp_span": 24350.8,
+   "delta": 3.2,
+   "max_start_drift": 3.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S048",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S049",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 40222,
+   "crit_end": 40222,
+   "comp_span": 40219.3,
+   "delta": 2.7,
+   "max_start_drift": 2.7,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S050",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 55084,
+   "crit_end": 55084,
+   "comp_span": 55081.8,
+   "delta": 2.2,
+   "max_start_drift": 2.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S051",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S052",
+   "kind": "stage",
+   "n_jobs": 64,
+   "n_nodes": 73,
+   "makespan": 20373,
+   "crit_end": 20119,
+   "comp_span": 20370.5,
+   "delta": -251.5,
+   "max_start_drift": 2.1,
+   "max_fanin": 4,
+   "ports": [
+    "col",
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S053",
+   "kind": "stage",
+   "n_jobs": 54,
+   "n_nodes": 63,
+   "makespan": 24354,
+   "crit_end": 24354,
+   "comp_span": 24350.8,
+   "delta": 3.2,
+   "max_start_drift": 3.2,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S054",
+   "kind": "stage",
+   "n_jobs": 1,
+   "n_nodes": 1,
+   "makespan": 1006,
+   "crit_end": 1006,
+   "comp_span": 1006.0,
+   "delta": 0.0,
+   "max_start_drift": 0.0,
+   "max_fanin": 0,
+   "ports": [
+    "hop"
+   ]
+  },
+  {
+   "stage": "S055",
+   "kind": "stage",
+   "n_jobs": 56,
+   "n_nodes": 65,
+   "makespan": 40222,
+   "crit_end": 40222,
+   "comp_span": 40219.3,
+   "delta": 2.7,
+   "max_start_drift": 2.7,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S056",
+   "kind": "stage",
+   "n_jobs": 58,
+   "n_nodes": 67,
+   "makespan": 55338,
+   "crit_end": 55084,
+   "comp_span": 55335.5,
+   "delta": -251.5,
+   "max_start_drift": 2.1,
+   "max_fanin": 4,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su",
+    "svc"
+   ]
+  },
+  {
+   "stage": "S057",
+   "kind": "stage",
+   "n_jobs": 24,
+   "n_nodes": 26,
+   "makespan": 69620,
+   "crit_end": 69620,
+   "comp_span": 69620.3,
+   "delta": -0.3,
+   "max_start_drift": 1.1,
+   "max_fanin": 2,
+   "ports": [
+    "coll",
+    "fld",
+    "hc",
+    "hop",
+    "sel",
+    "su"
+   ]
+  },
+  {
+   "stage": "S058",
+   "kind": "head",
+   "n_jobs": 6,
+   "n_nodes": 8,
+   "makespan": 11335,
+   "crit_end": 11335,
+   "comp_span": 11334.5,
+   "delta": 0.5,
+   "max_start_drift": 0.5,
+   "max_fanin": 1,
+   "ports": [
+    "coll",
+    "head",
+    "hop"
+   ]
+  }
+ ]
+}

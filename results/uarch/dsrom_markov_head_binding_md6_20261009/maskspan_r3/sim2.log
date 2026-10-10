@@ -1,0 +1,8 @@
+MASKMETRICS case=0 valid=0 firsthead=28 lasthead=7964 firstjoin=-1 lastjoin=-1 argmax=7966 queuehigh=0 headfull=0
+PASS paddedmask shardtail=2 row0=21920 valid=0 skipped=32 bestvalid=0
+MASKMETRICS case=1 valid=0 firsthead=8248 lasthead=16184 firstjoin=-1 lastjoin=-1 argmax=16186 queuehigh=0 headfull=0
+PASS paddedmask shardtail=2 row0=129280 valid=0 skipped=32 bestvalid=0
+- /srv/opentallas-scratch/claude/md6-mask-r3/maskspan_r3/tb_mask.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 14us; walltime 0.380 s; speed 36.343 us/s
+- Verilator: cpu 0.377 s on 1 threads; alloced 1018 MB

@@ -1,0 +1,996 @@
+{
+ "config": "compiler/models/qwen3-8b/config.json",
+ "config_sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+ "globals": {
+  "head_rows_per_die": 37984,
+  "hidden": 4096,
+  "kv_fmt": "FP8E4M3",
+  "rope_scaling": null,
+  "rope_theta": 1000000,
+  "softmax_scale": "FP32(head_dim^-0.5) = 0x3db504f3",
+  "tp_size": 4,
+  "vocab": 151936,
+  "weight_fmt": "INT8 per-row BF16 scale"
+ },
+ "layers": [
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 0,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 1,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 2,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 3,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 4,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 5,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 6,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 7,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 8,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 9,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 10,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 11,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 12,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 13,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 14,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 15,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 16,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 17,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 18,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 19,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 20,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 21,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 22,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 23,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 24,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 25,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 26,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 27,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 28,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 29,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 30,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 31,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 32,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 33,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 34,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  },
+  {
+   "engram": false,
+   "ffn": {
+    "inter": 12288,
+    "kind": "dense"
+   },
+   "hc": false,
+   "idx": 35,
+   "mixer": {
+    "head_dim": 128,
+    "kind": "gqa",
+    "kv_heads": 8,
+    "q_heads": 32,
+    "rope": {
+     "dims": 128,
+     "offset": 0,
+     "pairing_in_weights": "split_half_permuted_to_adjacent",
+     "table": "plain"
+    },
+    "window": 0
+   },
+   "norm": {
+    "eps": 1e-06,
+    "kind": "rms",
+    "qk_norm": true
+   }
+  }
+ ],
+ "mixer_kinds_supported": [
+  "gqa",
+  "dsa_mla",
+  "gated_deltanet (software, see linear_attention)"
+ ],
+ "model": "qwen3_8b",
+ "schema": "opentallas.hgi_model_manifest.v1"
+}

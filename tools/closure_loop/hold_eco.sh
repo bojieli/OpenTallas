@@ -34,6 +34,12 @@ IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
 [ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
 if [ -n "${ECO_GUARD:-}" ]; then python3 "$CLD/eco_recovery.py" verify "$ECO_GUARD"; fi
 mkdir -p "$OUT"
+# mtp-lead 2026-10-09: per-job opt-in knobs in <run>/hold_eco_opts.env (CLD = <run>/cl), e.g. REPAIR_DRV=1 DRV_SLEW_MARGIN=50.
+# Only REPAIR_DRV / DRV_SLEW_MARGIN / DRV_CAP_MARGIN / DRV_MAX_WIRE are read from it; absent file = default ECO, unchanged.
+if [ -f "$CLD/../hold_eco_opts.env" ]; then
+  while IFS='=' read -r k v; do case "$k" in REPAIR_DRV|DRV_SLEW_MARGIN|DRV_CAP_MARGIN|DRV_MAX_WIRE) [[ "$v" =~ ^[0-9.]+$ ]] && export "$k=$v" ;; esac; done < "$CLD/../hold_eco_opts.env"
+  echo "OT_ECO job opts: REPAIR_DRV=${REPAIR_DRV:-0} DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20} DRV_MAX_WIRE=${DRV_MAX_WIRE:-0}" | tee "$OUT/job_opts.log"
+fi
 DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6_final.odb: stacked ECO on an installed ECO (drive-1243)
 # (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
@@ -46,7 +52,11 @@ ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
 export SDC_NAME=${SDC_NAME:-6_final.sdc}
 [ -f "$OB/$SDC_NAME" ] || { echo "sign-off SDC $OB/$SDC_NAME missing"; exit 2; }
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
-SN=""; grep -q -- "--sdc-name" tools/w18/corner_sta.py && SN="--sdc-name $SDC_NAME"
+# CORNER-STA (drive-1010 2026-10-10): a pre option-B source snapshot has a corner_sta.py without setup_tt; the ECO then
+# failed every time ("corner_sta without setup_tt", vtswap exit 8 -> combo "no vtswap base" rc=3, selt_q r6 cx-f5-hm0).
+# Sign-off STA is the loop's, like the verdict re-STA: use the shipped helper copy when the snapshot's lacks setup_tt.
+CSTA=tools/w18/corner_sta.py; grep -q setup_tt "$CSTA" 2>/dev/null || { [ -f "$(dirname "$0")/corner_sta.py" ] && CSTA="$(cd "$(dirname "$0")" && pwd)/corner_sta.py"; }
+SN=""; grep -q -- "--sdc-name" "$CSTA" && SN="--sdc-name $SDC_NAME"
 seed_sdc() {  # the ECO base carries the sign-off SDC (also as 6_final.sdc: a corner_sta.py without --sdc-name reads it)
   cp "$OB/$SDC_NAME" "$EB/6_final.sdc"; [ "$SDC_NAME" = 6_final.sdc ] || cp "$OB/$SDC_NAME" "$EB/$SDC_NAME"
 }
@@ -86,7 +96,9 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
            -e OT_RES_AWARE=${RESAWARE:-1} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8}
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
-           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0})
+           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0}
+           -e OT_REPAIR_DRV=${REPAIR_DRV:-0} -e OT_DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} -e OT_DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20}
+           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0})
   # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
   # Legacy merged-corner selection remains an explicit request.
   SESSION=ff
@@ -131,10 +143,10 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
   grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
   seed_sdc   # the ECO may have rewritten the base's SDC
-  python3 tools/w18/corner_sta.py $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
+  python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
   if [ -n "${SETUP_POST_SDC:-}" ]; then   # setup corners re-timed with the measured neighbour clock (the route's own merge)
-    python3 tools/w18/corner_sta.py $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
+    python3 $CSTA $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
       --orfs-dir $P/orfs --output $P/corner_sta_setup_post.json > $P/corner_setup_post.log 2>&1 \
       || { echo "setup post-SDC corner_sta failed"; tail $P/corner_setup_post.log; exit 8; }
     cp $P/corner_sta.json $P/corner_sta_hold_model.json

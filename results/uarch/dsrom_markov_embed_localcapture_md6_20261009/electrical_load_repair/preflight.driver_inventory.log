@@ -1,0 +1,1335 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /evidence/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 18 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+MD6_ELECTRICAL_ENV protected_direct_capture_nets=512
+MD6_ELECTRICAL_ENV mode=ss output_load=3.898 max_transition=250 max_fanout=16
+MD6_ELECTRICAL_ENV mode=ff output_load=3.898 max_transition=250 max_fanout=16
+OT_OUTPUTS_BEGIN ss
+OT_OUTPUT captured_data[0]
+OT_OUTPUT captured_data[100]
+OT_OUTPUT captured_data[101]
+OT_OUTPUT captured_data[102]
+OT_OUTPUT captured_data[103]
+OT_OUTPUT captured_data[104]
+OT_OUTPUT captured_data[105]
+OT_OUTPUT captured_data[106]
+OT_OUTPUT captured_data[107]
+OT_OUTPUT captured_data[108]
+OT_OUTPUT captured_data[109]
+OT_OUTPUT captured_data[10]
+OT_OUTPUT captured_data[110]
+OT_OUTPUT captured_data[111]
+OT_OUTPUT captured_data[112]
+OT_OUTPUT captured_data[113]
+OT_OUTPUT captured_data[114]
+OT_OUTPUT captured_data[115]
+OT_OUTPUT captured_data[116]
+OT_OUTPUT captured_data[117]
+OT_OUTPUT captured_data[118]
+OT_OUTPUT captured_data[119]
+OT_OUTPUT captured_data[11]
+OT_OUTPUT captured_data[120]
+OT_OUTPUT captured_data[121]
+OT_OUTPUT captured_data[122]
+OT_OUTPUT captured_data[123]
+OT_OUTPUT captured_data[124]
+OT_OUTPUT captured_data[125]
+OT_OUTPUT captured_data[126]
+OT_OUTPUT captured_data[127]
+OT_OUTPUT captured_data[128]
+OT_OUTPUT captured_data[129]
+OT_OUTPUT captured_data[12]
+OT_OUTPUT captured_data[130]
+OT_OUTPUT captured_data[131]
+OT_OUTPUT captured_data[132]
+OT_OUTPUT captured_data[133]
+OT_OUTPUT captured_data[134]
+OT_OUTPUT captured_data[135]
+OT_OUTPUT captured_data[136]
+OT_OUTPUT captured_data[137]
+OT_OUTPUT captured_data[138]
+OT_OUTPUT captured_data[139]
+OT_OUTPUT captured_data[13]
+OT_OUTPUT captured_data[140]
+OT_OUTPUT captured_data[141]
+OT_OUTPUT captured_data[142]
+OT_OUTPUT captured_data[143]
+OT_OUTPUT captured_data[144]
+OT_OUTPUT captured_data[145]
+OT_OUTPUT captured_data[146]
+OT_OUTPUT captured_data[147]
+OT_OUTPUT captured_data[148]
+OT_OUTPUT captured_data[149]
+OT_OUTPUT captured_data[14]
+OT_OUTPUT captured_data[150]
+OT_OUTPUT captured_data[151]
+OT_OUTPUT captured_data[152]
+OT_OUTPUT captured_data[153]
+OT_OUTPUT captured_data[154]
+OT_OUTPUT captured_data[155]
+OT_OUTPUT captured_data[156]
+OT_OUTPUT captured_data[157]
+OT_OUTPUT captured_data[158]
+OT_OUTPUT captured_data[159]
+OT_OUTPUT captured_data[15]
+OT_OUTPUT captured_data[160]
+OT_OUTPUT captured_data[161]
+OT_OUTPUT captured_data[162]
+OT_OUTPUT captured_data[163]
+OT_OUTPUT captured_data[164]
+OT_OUTPUT captured_data[165]
+OT_OUTPUT captured_data[166]
+OT_OUTPUT captured_data[167]
+OT_OUTPUT captured_data[168]
+OT_OUTPUT captured_data[169]
+OT_OUTPUT captured_data[16]
+OT_OUTPUT captured_data[170]
+OT_OUTPUT captured_data[171]
+OT_OUTPUT captured_data[172]
+OT_OUTPUT captured_data[173]
+OT_OUTPUT captured_data[174]
+OT_OUTPUT captured_data[175]
+OT_OUTPUT captured_data[176]
+OT_OUTPUT captured_data[177]
+OT_OUTPUT captured_data[178]
+OT_OUTPUT captured_data[179]
+OT_OUTPUT captured_data[17]
+OT_OUTPUT captured_data[180]
+OT_OUTPUT captured_data[181]
+OT_OUTPUT captured_data[182]
+OT_OUTPUT captured_data[183]
+OT_OUTPUT captured_data[184]
+OT_OUTPUT captured_data[185]
+OT_OUTPUT captured_data[186]
+OT_OUTPUT captured_data[187]
+OT_OUTPUT captured_data[188]
+OT_OUTPUT captured_data[189]
+OT_OUTPUT captured_data[18]
+OT_OUTPUT captured_data[190]
+OT_OUTPUT captured_data[191]
+OT_OUTPUT captured_data[192]
+OT_OUTPUT captured_data[193]
+OT_OUTPUT captured_data[194]
+OT_OUTPUT captured_data[195]
+OT_OUTPUT captured_data[196]
+OT_OUTPUT captured_data[197]
+OT_OUTPUT captured_data[198]
+OT_OUTPUT captured_data[199]
+OT_OUTPUT captured_data[19]
+OT_OUTPUT captured_data[1]
+OT_OUTPUT captured_data[200]
+OT_OUTPUT captured_data[201]
+OT_OUTPUT captured_data[202]
+OT_OUTPUT captured_data[203]
+OT_OUTPUT captured_data[204]
+OT_OUTPUT captured_data[205]
+OT_OUTPUT captured_data[206]
+OT_OUTPUT captured_data[207]
+OT_OUTPUT captured_data[208]
+OT_OUTPUT captured_data[209]
+OT_OUTPUT captured_data[20]
+OT_OUTPUT captured_data[210]
+OT_OUTPUT captured_data[211]
+OT_OUTPUT captured_data[212]
+OT_OUTPUT captured_data[213]
+OT_OUTPUT captured_data[214]
+OT_OUTPUT captured_data[215]
+OT_OUTPUT captured_data[216]
+OT_OUTPUT captured_data[217]
+OT_OUTPUT captured_data[218]
+OT_OUTPUT captured_data[219]
+OT_OUTPUT captured_data[21]
+OT_OUTPUT captured_data[220]
+OT_OUTPUT captured_data[221]
+OT_OUTPUT captured_data[222]
+OT_OUTPUT captured_data[223]
+OT_OUTPUT captured_data[224]
+OT_OUTPUT captured_data[225]
+OT_OUTPUT captured_data[226]
+OT_OUTPUT captured_data[227]
+OT_OUTPUT captured_data[228]
+OT_OUTPUT captured_data[229]
+OT_OUTPUT captured_data[22]
+OT_OUTPUT captured_data[230]
+OT_OUTPUT captured_data[231]
+OT_OUTPUT captured_data[232]
+OT_OUTPUT captured_data[233]
+OT_OUTPUT captured_data[234]
+OT_OUTPUT captured_data[235]
+OT_OUTPUT captured_data[236]
+OT_OUTPUT captured_data[237]
+OT_OUTPUT captured_data[238]
+OT_OUTPUT captured_data[239]
+OT_OUTPUT captured_data[23]
+OT_OUTPUT captured_data[240]
+OT_OUTPUT captured_data[241]
+OT_OUTPUT captured_data[242]
+OT_OUTPUT captured_data[243]
+OT_OUTPUT captured_data[244]
+OT_OUTPUT captured_data[245]
+OT_OUTPUT captured_data[246]
+OT_OUTPUT captured_data[247]
+OT_OUTPUT captured_data[248]
+OT_OUTPUT captured_data[249]
+OT_OUTPUT captured_data[24]
+OT_OUTPUT captured_data[250]
+OT_OUTPUT captured_data[251]
+OT_OUTPUT captured_data[252]
+OT_OUTPUT captured_data[253]
+OT_OUTPUT captured_data[254]
+OT_OUTPUT captured_data[255]
+OT_OUTPUT captured_data[25]
+OT_OUTPUT captured_data[26]
+OT_OUTPUT captured_data[27]
+OT_OUTPUT captured_data[28]
+OT_OUTPUT captured_data[29]
+OT_OUTPUT captured_data[2]
+OT_OUTPUT captured_data[30]
+OT_OUTPUT captured_data[31]
+OT_OUTPUT captured_data[32]
+OT_OUTPUT captured_data[33]
+OT_OUTPUT captured_data[34]
+OT_OUTPUT captured_data[35]
+OT_OUTPUT captured_data[36]
+OT_OUTPUT captured_data[37]
+OT_OUTPUT captured_data[38]
+OT_OUTPUT captured_data[39]
+OT_OUTPUT captured_data[3]
+OT_OUTPUT captured_data[40]
+OT_OUTPUT captured_data[41]
+OT_OUTPUT captured_data[42]
+OT_OUTPUT captured_data[43]
+OT_OUTPUT captured_data[44]
+OT_OUTPUT captured_data[45]
+OT_OUTPUT captured_data[46]
+OT_OUTPUT captured_data[47]
+OT_OUTPUT captured_data[48]
+OT_OUTPUT captured_data[49]
+OT_OUTPUT captured_data[4]
+OT_OUTPUT captured_data[50]
+OT_OUTPUT captured_data[51]
+OT_OUTPUT captured_data[52]
+OT_OUTPUT captured_data[53]
+OT_OUTPUT captured_data[54]
+OT_OUTPUT captured_data[55]
+OT_OUTPUT captured_data[56]
+OT_OUTPUT captured_data[57]
+OT_OUTPUT captured_data[58]
+OT_OUTPUT captured_data[59]
+OT_OUTPUT captured_data[5]
+OT_OUTPUT captured_data[60]
+OT_OUTPUT captured_data[61]
+OT_OUTPUT captured_data[62]
+OT_OUTPUT captured_data[63]
+OT_OUTPUT captured_data[64]
+OT_OUTPUT captured_data[65]
+OT_OUTPUT captured_data[66]
+OT_OUTPUT captured_data[67]
+OT_OUTPUT captured_data[68]
+OT_OUTPUT captured_data[69]
+OT_OUTPUT captured_data[6]
+OT_OUTPUT captured_data[70]
+OT_OUTPUT captured_data[71]
+OT_OUTPUT captured_data[72]
+OT_OUTPUT captured_data[73]
+OT_OUTPUT captured_data[74]
+OT_OUTPUT captured_data[75]
+OT_OUTPUT captured_data[76]
+OT_OUTPUT captured_data[77]
+OT_OUTPUT captured_data[78]
+OT_OUTPUT captured_data[79]
+OT_OUTPUT captured_data[7]
+OT_OUTPUT captured_data[80]
+OT_OUTPUT captured_data[81]
+OT_OUTPUT captured_data[82]
+OT_OUTPUT captured_data[83]
+OT_OUTPUT captured_data[84]
+OT_OUTPUT captured_data[85]
+OT_OUTPUT captured_data[86]
+OT_OUTPUT captured_data[87]
+OT_OUTPUT captured_data[88]
+OT_OUTPUT captured_data[89]
+OT_OUTPUT captured_data[8]
+OT_OUTPUT captured_data[90]
+OT_OUTPUT captured_data[91]
+OT_OUTPUT captured_data[92]
+OT_OUTPUT captured_data[93]
+OT_OUTPUT captured_data[94]
+OT_OUTPUT captured_data[95]
+OT_OUTPUT captured_data[96]
+OT_OUTPUT captured_data[97]
+OT_OUTPUT captured_data[98]
+OT_OUTPUT captured_data[99]
+OT_OUTPUT captured_data[9]
+OT_OUTPUT captured_valid
+OT_OUTPUT fault
+OT_OUTPUTS_END ss
+OT_OUTPUTS_BEGIN ff
+OT_OUTPUT captured_data[0]
+OT_OUTPUT captured_data[100]
+OT_OUTPUT captured_data[101]
+OT_OUTPUT captured_data[102]
+OT_OUTPUT captured_data[103]
+OT_OUTPUT captured_data[104]
+OT_OUTPUT captured_data[105]
+OT_OUTPUT captured_data[106]
+OT_OUTPUT captured_data[107]
+OT_OUTPUT captured_data[108]
+OT_OUTPUT captured_data[109]
+OT_OUTPUT captured_data[10]
+OT_OUTPUT captured_data[110]
+OT_OUTPUT captured_data[111]
+OT_OUTPUT captured_data[112]
+OT_OUTPUT captured_data[113]
+OT_OUTPUT captured_data[114]
+OT_OUTPUT captured_data[115]
+OT_OUTPUT captured_data[116]
+OT_OUTPUT captured_data[117]
+OT_OUTPUT captured_data[118]
+OT_OUTPUT captured_data[119]
+OT_OUTPUT captured_data[11]
+OT_OUTPUT captured_data[120]
+OT_OUTPUT captured_data[121]
+OT_OUTPUT captured_data[122]
+OT_OUTPUT captured_data[123]
+OT_OUTPUT captured_data[124]
+OT_OUTPUT captured_data[125]
+OT_OUTPUT captured_data[126]
+OT_OUTPUT captured_data[127]
+OT_OUTPUT captured_data[128]
+OT_OUTPUT captured_data[129]
+OT_OUTPUT captured_data[12]
+OT_OUTPUT captured_data[130]
+OT_OUTPUT captured_data[131]
+OT_OUTPUT captured_data[132]
+OT_OUTPUT captured_data[133]
+OT_OUTPUT captured_data[134]
+OT_OUTPUT captured_data[135]
+OT_OUTPUT captured_data[136]
+OT_OUTPUT captured_data[137]
+OT_OUTPUT captured_data[138]
+OT_OUTPUT captured_data[139]
+OT_OUTPUT captured_data[13]
+OT_OUTPUT captured_data[140]
+OT_OUTPUT captured_data[141]
+OT_OUTPUT captured_data[142]
+OT_OUTPUT captured_data[143]
+OT_OUTPUT captured_data[144]
+OT_OUTPUT captured_data[145]
+OT_OUTPUT captured_data[146]
+OT_OUTPUT captured_data[147]
+OT_OUTPUT captured_data[148]
+OT_OUTPUT captured_data[149]
+OT_OUTPUT captured_data[14]
+OT_OUTPUT captured_data[150]
+OT_OUTPUT captured_data[151]
+OT_OUTPUT captured_data[152]
+OT_OUTPUT captured_data[153]
+OT_OUTPUT captured_data[154]
+OT_OUTPUT captured_data[155]
+OT_OUTPUT captured_data[156]
+OT_OUTPUT captured_data[157]
+OT_OUTPUT captured_data[158]
+OT_OUTPUT captured_data[159]
+OT_OUTPUT captured_data[15]
+OT_OUTPUT captured_data[160]
+OT_OUTPUT captured_data[161]
+OT_OUTPUT captured_data[162]
+OT_OUTPUT captured_data[163]
+OT_OUTPUT captured_data[164]
+OT_OUTPUT captured_data[165]
+OT_OUTPUT captured_data[166]
+OT_OUTPUT captured_data[167]
+OT_OUTPUT captured_data[168]
+OT_OUTPUT captured_data[169]
+OT_OUTPUT captured_data[16]
+OT_OUTPUT captured_data[170]
+OT_OUTPUT captured_data[171]
+OT_OUTPUT captured_data[172]
+OT_OUTPUT captured_data[173]
+OT_OUTPUT captured_data[174]
+OT_OUTPUT captured_data[175]
+OT_OUTPUT captured_data[176]
+OT_OUTPUT captured_data[177]
+OT_OUTPUT captured_data[178]
+OT_OUTPUT captured_data[179]
+OT_OUTPUT captured_data[17]
+OT_OUTPUT captured_data[180]
+OT_OUTPUT captured_data[181]
+OT_OUTPUT captured_data[182]
+OT_OUTPUT captured_data[183]
+OT_OUTPUT captured_data[184]
+OT_OUTPUT captured_data[185]
+OT_OUTPUT captured_data[186]
+OT_OUTPUT captured_data[187]
+OT_OUTPUT captured_data[188]
+OT_OUTPUT captured_data[189]
+OT_OUTPUT captured_data[18]
+OT_OUTPUT captured_data[190]
+OT_OUTPUT captured_data[191]
+OT_OUTPUT captured_data[192]
+OT_OUTPUT captured_data[193]
+OT_OUTPUT captured_data[194]
+OT_OUTPUT captured_data[195]
+OT_OUTPUT captured_data[196]
+OT_OUTPUT captured_data[197]
+OT_OUTPUT captured_data[198]
+OT_OUTPUT captured_data[199]
+OT_OUTPUT captured_data[19]
+OT_OUTPUT captured_data[1]
+OT_OUTPUT captured_data[200]
+OT_OUTPUT captured_data[201]
+OT_OUTPUT captured_data[202]
+OT_OUTPUT captured_data[203]
+OT_OUTPUT captured_data[204]
+OT_OUTPUT captured_data[205]
+OT_OUTPUT captured_data[206]
+OT_OUTPUT captured_data[207]
+OT_OUTPUT captured_data[208]
+OT_OUTPUT captured_data[209]
+OT_OUTPUT captured_data[20]
+OT_OUTPUT captured_data[210]
+OT_OUTPUT captured_data[211]
+OT_OUTPUT captured_data[212]
+OT_OUTPUT captured_data[213]
+OT_OUTPUT captured_data[214]
+OT_OUTPUT captured_data[215]
+OT_OUTPUT captured_data[216]
+OT_OUTPUT captured_data[217]
+OT_OUTPUT captured_data[218]
+OT_OUTPUT captured_data[219]
+OT_OUTPUT captured_data[21]
+OT_OUTPUT captured_data[220]
+OT_OUTPUT captured_data[221]
+OT_OUTPUT captured_data[222]
+OT_OUTPUT captured_data[223]
+OT_OUTPUT captured_data[224]
+OT_OUTPUT captured_data[225]
+OT_OUTPUT captured_data[226]
+OT_OUTPUT captured_data[227]
+OT_OUTPUT captured_data[228]
+OT_OUTPUT captured_data[229]
+OT_OUTPUT captured_data[22]
+OT_OUTPUT captured_data[230]
+OT_OUTPUT captured_data[231]
+OT_OUTPUT captured_data[232]
+OT_OUTPUT captured_data[233]
+OT_OUTPUT captured_data[234]
+OT_OUTPUT captured_data[235]
+OT_OUTPUT captured_data[236]
+OT_OUTPUT captured_data[237]
+OT_OUTPUT captured_data[238]
+OT_OUTPUT captured_data[239]
+OT_OUTPUT captured_data[23]
+OT_OUTPUT captured_data[240]
+OT_OUTPUT captured_data[241]
+OT_OUTPUT captured_data[242]
+OT_OUTPUT captured_data[243]
+OT_OUTPUT captured_data[244]
+OT_OUTPUT captured_data[245]
+OT_OUTPUT captured_data[246]
+OT_OUTPUT captured_data[247]
+OT_OUTPUT captured_data[248]
+OT_OUTPUT captured_data[249]
+OT_OUTPUT captured_data[24]
+OT_OUTPUT captured_data[250]
+OT_OUTPUT captured_data[251]
+OT_OUTPUT captured_data[252]
+OT_OUTPUT captured_data[253]
+OT_OUTPUT captured_data[254]
+OT_OUTPUT captured_data[255]
+OT_OUTPUT captured_data[25]
+OT_OUTPUT captured_data[26]
+OT_OUTPUT captured_data[27]
+OT_OUTPUT captured_data[28]
+OT_OUTPUT captured_data[29]
+OT_OUTPUT captured_data[2]
+OT_OUTPUT captured_data[30]
+OT_OUTPUT captured_data[31]
+OT_OUTPUT captured_data[32]
+OT_OUTPUT captured_data[33]
+OT_OUTPUT captured_data[34]
+OT_OUTPUT captured_data[35]
+OT_OUTPUT captured_data[36]
+OT_OUTPUT captured_data[37]
+OT_OUTPUT captured_data[38]
+OT_OUTPUT captured_data[39]
+OT_OUTPUT captured_data[3]
+OT_OUTPUT captured_data[40]
+OT_OUTPUT captured_data[41]
+OT_OUTPUT captured_data[42]
+OT_OUTPUT captured_data[43]
+OT_OUTPUT captured_data[44]
+OT_OUTPUT captured_data[45]
+OT_OUTPUT captured_data[46]
+OT_OUTPUT captured_data[47]
+OT_OUTPUT captured_data[48]
+OT_OUTPUT captured_data[49]
+OT_OUTPUT captured_data[4]
+OT_OUTPUT captured_data[50]
+OT_OUTPUT captured_data[51]
+OT_OUTPUT captured_data[52]
+OT_OUTPUT captured_data[53]
+OT_OUTPUT captured_data[54]
+OT_OUTPUT captured_data[55]
+OT_OUTPUT captured_data[56]
+OT_OUTPUT captured_data[57]
+OT_OUTPUT captured_data[58]
+OT_OUTPUT captured_data[59]
+OT_OUTPUT captured_data[5]
+OT_OUTPUT captured_data[60]
+OT_OUTPUT captured_data[61]
+OT_OUTPUT captured_data[62]
+OT_OUTPUT captured_data[63]
+OT_OUTPUT captured_data[64]
+OT_OUTPUT captured_data[65]
+OT_OUTPUT captured_data[66]
+OT_OUTPUT captured_data[67]
+OT_OUTPUT captured_data[68]
+OT_OUTPUT captured_data[69]
+OT_OUTPUT captured_data[6]
+OT_OUTPUT captured_data[70]
+OT_OUTPUT captured_data[71]
+OT_OUTPUT captured_data[72]
+OT_OUTPUT captured_data[73]
+OT_OUTPUT captured_data[74]
+OT_OUTPUT captured_data[75]
+OT_OUTPUT captured_data[76]
+OT_OUTPUT captured_data[77]
+OT_OUTPUT captured_data[78]
+OT_OUTPUT captured_data[79]
+OT_OUTPUT captured_data[7]
+OT_OUTPUT captured_data[80]
+OT_OUTPUT captured_data[81]
+OT_OUTPUT captured_data[82]
+OT_OUTPUT captured_data[83]
+OT_OUTPUT captured_data[84]
+OT_OUTPUT captured_data[85]
+OT_OUTPUT captured_data[86]
+OT_OUTPUT captured_data[87]
+OT_OUTPUT captured_data[88]
+OT_OUTPUT captured_data[89]
+OT_OUTPUT captured_data[8]
+OT_OUTPUT captured_data[90]
+OT_OUTPUT captured_data[91]
+OT_OUTPUT captured_data[92]
+OT_OUTPUT captured_data[93]
+OT_OUTPUT captured_data[94]
+OT_OUTPUT captured_data[95]
+OT_OUTPUT captured_data[96]
+OT_OUTPUT captured_data[97]
+OT_OUTPUT captured_data[98]
+OT_OUTPUT captured_data[99]
+OT_OUTPUT captured_data[9]
+OT_OUTPUT captured_valid
+OT_OUTPUT fault
+OT_OUTPUTS_END ff
+OT_ELECTRICAL_BEFORE_REPAIR
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+captured_data[89]                     250.00  510.66 -260.66 (VIOLATED)
+captured_data[53]                     250.00  505.13 -255.13 (VIOLATED)
+captured_data[36]                     250.00  473.43 -223.43 (VIOLATED)
+wire372/A                             250.00  456.10 -206.10 (VIOLATED)
+captured_data[33]                     250.00  454.13 -204.13 (VIOLATED)
+captured_data[93]                     250.00  445.18 -195.18 (VIOLATED)
+captured_data[80]                     250.00  427.06 -177.06 (VIOLATED)
+captured_data[100]                    250.00  425.23 -175.23 (VIOLATED)
+captured_data[41]                     250.00  424.44 -174.44 (VIOLATED)
+captured_data[21]                     250.00  418.09 -168.09 (VIOLATED)
+captured_data[37]                     250.00  417.63 -167.63 (VIOLATED)
+captured_data[92]                     250.00  410.78 -160.78 (VIOLATED)
+captured_data[61]                     250.00  407.85 -157.85 (VIOLATED)
+captured_data[12]                     250.00  402.65 -152.65 (VIOLATED)
+captured_data[64]                     250.00  393.89 -143.89 (VIOLATED)
+captured_data[88]                     250.00  393.35 -143.35 (VIOLATED)
+wire383/A                             250.00  390.77 -140.77 (VIOLATED)
+captured_data[40]                     250.00  388.88 -138.88 (VIOLATED)
+captured_data[116]                    250.00  387.41 -137.41 (VIOLATED)
+captured_data[48]                     250.00  387.07 -137.07 (VIOLATED)
+captured_data[104]                    250.00  384.70 -134.70 (VIOLATED)
+captured_data[57]                     250.00  381.02 -131.02 (VIOLATED)
+captured_data[113]                    250.00  380.89 -130.89 (VIOLATED)
+wire403/A                             250.00  377.05 -127.05 (VIOLATED)
+wire409/A                             250.00  373.37 -123.37 (VIOLATED)
+wire408/A                             250.00  371.18 -121.18 (VIOLATED)
+captured_data[13]                     250.00  367.72 -117.72 (VIOLATED)
+wire389/A                             250.00  366.08 -116.08 (VIOLATED)
+wire375/A                             250.00  363.99 -113.99 (VIOLATED)
+captured_data[49]                     250.00  362.89 -112.89 (VIOLATED)
+captured_data[65]                     250.00  361.75 -111.75 (VIOLATED)
+captured_data[77]                     250.00  360.65 -110.65 (VIOLATED)
+wire411/A                             250.00  357.39 -107.39 (VIOLATED)
+captured_data[69]                     250.00  356.87 -106.87 (VIOLATED)
+captured_data[24]                     250.00  355.83 -105.83 (VIOLATED)
+captured_data[32]                     250.00  353.44 -103.44 (VIOLATED)
+captured_data[25]                     250.00  350.09 -100.09 (VIOLATED)
+captured_data[72]                     250.00  349.62  -99.62 (VIOLATED)
+captured_data[85]                     250.00  348.37  -98.37 (VIOLATED)
+captured_data[128]                    250.00  346.58  -96.58 (VIOLATED)
+captured_data[16]                     250.00  346.54  -96.54 (VIOLATED)
+wire398/A                             250.00  346.18  -96.18 (VIOLATED)
+captured_data[125]                    250.00  343.97  -93.97 (VIOLATED)
+captured_data[44]                     250.00  343.18  -93.18 (VIOLATED)
+wire412/A                             250.00  343.03  -93.03 (VIOLATED)
+wire396/A                             250.00  341.05  -91.05 (VIOLATED)
+captured_data[60]                     250.00  340.64  -90.64 (VIOLATED)
+captured_data[52]                     250.00  332.24  -82.24 (VIOLATED)
+captured_data[76]                     250.00  330.93  -80.93 (VIOLATED)
+wire391/A                             250.00  330.02  -80.02 (VIOLATED)
+captured_data[121]                    250.00  329.62  -79.62 (VIOLATED)
+captured_data[97]                     250.00  328.32  -78.32 (VIOLATED)
+wire393/A                             250.00  325.37  -75.37 (VIOLATED)
+captured_data[105]                    250.00  324.01  -74.01 (VIOLATED)
+captured_data[20]                     250.00  316.84  -66.84 (VIOLATED)
+wire402/A                             250.00  312.75  -62.75 (VIOLATED)
+captured_data[120]                    250.00  311.74  -61.74 (VIOLATED)
+captured_data[81]                     250.00  311.14  -61.14 (VIOLATED)
+wire377/A                             250.00  306.09  -56.09 (VIOLATED)
+wire415/A                             250.00  304.45  -54.45 (VIOLATED)
+wire367/A                             250.00  304.43  -54.43 (VIOLATED)
+captured_data[8]                      250.00  301.51  -51.51 (VIOLATED)
+captured_data[109]                    250.00  299.17  -49.17 (VIOLATED)
+wire385/A                             250.00  296.97  -46.97 (VIOLATED)
+wire371/A                             250.00  293.52  -43.52 (VIOLATED)
+captured_data[117]                    250.00  293.28  -43.28 (VIOLATED)
+captured_data[124]                    250.00  291.88  -41.88 (VIOLATED)
+wire422/A                             250.00  291.88  -41.88 (VIOLATED)
+wire397/A                             250.00  287.96  -37.96 (VIOLATED)
+wire407/A                             250.00  287.62  -37.62 (VIOLATED)
+wire418/A                             250.00  287.58  -37.58 (VIOLATED)
+captured_data[5]                      250.00  286.05  -36.05 (VIOLATED)
+output24/Y                            250.00  286.02  -36.02 (VIOLATED)
+wire400/A                             250.00  285.94  -35.94 (VIOLATED)
+wire381/A                             250.00  285.76  -35.76 (VIOLATED)
+captured_data[45]                     250.00  285.51  -35.51 (VIOLATED)
+wire392/A                             250.00  284.11  -34.11 (VIOLATED)
+captured_data[68]                     250.00  283.76  -33.76 (VIOLATED)
+wire370/A                             250.00  282.90  -32.90 (VIOLATED)
+output270/Y                           250.00  281.69  -31.69 (VIOLATED)
+captured_data[29]                     250.00  278.02  -28.02 (VIOLATED)
+wire376/A                             250.00  277.28  -27.28 (VIOLATED)
+wire369/A                             250.00  274.64  -24.64 (VIOLATED)
+wire384/A                             250.00  269.48  -19.48 (VIOLATED)
+wire394/A                             250.00  269.26  -19.26 (VIOLATED)
+output266/Y                           250.00  267.52  -17.52 (VIOLATED)
+captured_data[9]                      250.00  266.95  -16.95 (VIOLATED)
+wire421/A                             250.00  266.52  -16.52 (VIOLATED)
+captured_data[28]                     250.00  263.50  -13.50 (VIOLATED)
+wire379/A                             250.00  262.75  -12.75 (VIOLATED)
+output227/Y                           250.00  262.45  -12.45 (VIOLATED)
+captured_data[84]                     250.00  260.65  -10.65 (VIOLATED)
+wire364/A                             250.00  260.50  -10.50 (VIOLATED)
+wire414/A                             250.00  259.63   -9.63 (VIOLATED)
+wire419/A                             250.00  259.00   -9.00 (VIOLATED)
+wire420/A                             250.00  258.64   -8.64 (VIOLATED)
+wire374/A                             250.00  256.99   -6.99 (VIOLATED)
+output28/Y                            250.00  256.76   -6.76 (VIOLATED)
+
+OUTPUT_DRIVER captured_data[0] output23 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[100] output24 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[101] output25 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[102] wire386 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[103] wire380 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[104] output28 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[105] output29 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[106] wire375 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[107] wire374 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[108] output32 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[109] output33 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[10] wire373 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[110] wire372 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[111] wire371 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[112] output37 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[113] output38 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[114] wire370 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[115] wire369 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[116] output41 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[117] output42 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[118] wire368 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[119] wire367 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[11] wire366 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[120] output46 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[121] output47 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[122] wire365 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[123] wire364 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[124] output50 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[125] output51 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[126] wire363 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[127] wire362 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[128] output54 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[129] output55 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[12] output56 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[130] hold526 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[131] hold490 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[132] hold534 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[133] hold578 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[134] hold494 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[135] hold546 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[136] hold506 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[137] hold594 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[138] hold502 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[139] hold554 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[13] output67 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[140] hold550 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[141] hold498 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[142] hold522 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[143] hold530 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[144] hold518 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[145] hold482 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[146] hold514 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[147] hold558 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[148] hold570 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[149] hold586 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[14] wire361 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[150] hold582 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[151] hold566 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[152] hold538 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[153] hold598 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[154] hold966 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[155] hold562 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[156] hold510 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[157] hold486 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[158] hold882 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[159] hold542 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[15] wire360 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[160] hold574 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[161] hold590 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[162] hold902 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[163] hold786 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[164] hold762 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[165] hold862 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[166] hold886 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[167] hold754 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[168] hold686 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[169] hold774 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[16] output100 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[170] hold866 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[171] hold758 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[172] hold662 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[173] hold738 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[174] hold850 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[175] hold802 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[176] hold706 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[177] hold814 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[178] hold926 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[179] hold826 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[17] output111 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[180] hold726 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[181] hold870 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[182] hold830 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[183] hold730 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[184] hold790 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[185] hold658 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[186] hold782 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[187] hold714 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[188] hold734 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[189] hold670 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[18] wire423 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[190] hold806 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[191] hold746 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[192] hold718 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[193] hold954 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[194] hold778 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[195] hold722 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[196] hold974 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[197] hold958 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[198] hold962 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[199] hold770 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[19] wire422 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[1] output134 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[200] hold710 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[201] hold906 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[202] hold922 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[203] hold982 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[204] hold690 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[205] hold914 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[206] hold946 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[207] hold978 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[208] hold694 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[209] hold858 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[20] output145 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[210] hold878 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[211] hold834 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[212] hold614 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[213] hold890 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[214] hold702 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[215] hold818 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[216] hold650 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[217] hold838 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[218] hold698 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[219] hold942 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[21] output156 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[220] hold610 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[221] hold854 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[222] hold678 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[223] hold918 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[224] hold646 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[225] hold894 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[226] hold654 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[227] hold874 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[228] hold638 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[229] hold798 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[22] wire421 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[230] hold630 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[231] hold970 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[232] hold682 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[233] hold822 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[234] hold634 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[235] hold898 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[236] hold842 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[237] hold750 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[238] hold666 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[239] hold934 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[23] wire420 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[240] hold674 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[241] hold766 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[242] hold622 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[243] hold930 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[244] hold642 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[245] hold794 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[246] hold618 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[247] hold950 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[248] hold626 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[249] hold810 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[24] output189 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[250] hold606 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[251] hold938 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[252] hold846 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[253] hold742 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[254] hold602 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[255] hold910 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[25] output196 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[26] wire419 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[27] wire418 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[28] output199 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[29] output200 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[2] wire417 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[30] wire416 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[31] wire415 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[32] output204 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[33] output205 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[34] wire414 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[35] wire413 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[36] output208 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[37] output209 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[38] wire412 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[39] wire411 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[3] wire410 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[40] output213 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[41] output214 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[42] wire409 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[43] wire408 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[44] output217 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[45] output218 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[46] wire407 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[47] wire406 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[48] output221 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[49] output222 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[4] output223 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[50] wire405 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[51] wire404 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[52] output226 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[53] output227 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[54] wire403 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[55] wire402 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[56] output230 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[57] output231 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[58] wire401 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[59] wire400 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[5] output234 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[60] output235 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[61] output236 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[62] wire399 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[63] wire398 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[64] output239 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[65] output240 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[66] wire397 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[67] wire396 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[68] output243 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[69] output244 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[6] wire395 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[70] wire394 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[71] wire393 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[72] output248 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[73] output249 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[74] wire392 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[75] wire391 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[76] output252 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[77] output253 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[78] wire390 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[79] wire389 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[7] wire388 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[80] output257 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[81] output258 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[82] wire387 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[83] wire385 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[84] output261 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[85] output262 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[86] wire384 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[87] wire383 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[88] output265 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[89] output266 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[8] output267 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[90] wire382 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[91] wire381 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[92] output270 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[93] output271 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[94] wire379 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[95] wire378 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[96] output274 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[97] output275 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[98] wire377 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[99] wire376 BUFx6f_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_data[9] output278 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER captured_valid hold1030 BUFx2_ASAP7_75t_R status=PLACED
+OUTPUT_DRIVER fault output280 BUFx2_ASAP7_75t_R status=PLACED
+BUFFER_MODEL master=BUFx24_ASAP7_75t_R width=1620 height=270 outputs=258
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      2891
+       10 |     +0.0% |       0 |       0 |             0 |      2881
+       20 |     +0.0% |       0 |       0 |             0 |      2871
+       30 |     +0.0% |       0 |       0 |             0 |      2861
+       40 |     +0.0% |       0 |       0 |             0 |      2851
+       50 |     +0.0% |       0 |       0 |             0 |      2841
+       60 |     +0.0% |       0 |       0 |             0 |      2831
+       70 |     +0.0% |       0 |       0 |             0 |      2821
+       80 |     +0.0% |       0 |       0 |             0 |      2811
+       90 |     +0.0% |       0 |       0 |             0 |      2801
+      100 |     +0.0% |       0 |       0 |             0 |      2791
+      110 |     +0.0% |       0 |       0 |             0 |      2781
+      120 |     +0.0% |       0 |       0 |             0 |      2771
+      130 |     +0.0% |       0 |       0 |             0 |      2761
+      140 |     +0.0% |       0 |       0 |             0 |      2751
+      150 |     +0.0% |       0 |       0 |             0 |      2741
+      160 |     +0.0% |       0 |       0 |             0 |      2731
+      170 |     +0.0% |       0 |       0 |             0 |      2721
+      180 |     +0.0% |       0 |       0 |             0 |      2711
+      190 |     +0.0% |       0 |       0 |             0 |      2701
+      200 |     +0.0% |       0 |       0 |             0 |      2691
+      210 |     +0.0% |       0 |       0 |             0 |      2681
+      220 |     +0.0% |       0 |       0 |             0 |      2671
+      230 |     +0.0% |       0 |       0 |             0 |      2661
+      240 |     +0.0% |       0 |       0 |             0 |      2651
+      250 |     +0.0% |       0 |       0 |             0 |      2641
+      260 |     +0.0% |       0 |       0 |             0 |      2631
+      270 |     +0.0% |       0 |       0 |             0 |      2621
+      280 |     +0.0% |       0 |       0 |             0 |      2611
+      290 |     +0.0% |       0 |       0 |             0 |      2601
+      300 |     +0.0% |       0 |       0 |             0 |      2591
+      310 |     +0.0% |       0 |       0 |             0 |      2581
+      320 |     +0.0% |       0 |       0 |             0 |      2571
+      330 |     +0.0% |       0 |       0 |             0 |      2561
+      340 |     +0.0% |       0 |       0 |             0 |      2551
+      350 |     +0.0% |       0 |       0 |             0 |      2541
+      360 |     +0.0% |       0 |       0 |             0 |      2531
+      370 |     +0.0% |       0 |       0 |             0 |      2521
+      380 |     +0.0% |       0 |       0 |             0 |      2511
+      390 |     +0.0% |       0 |       0 |             0 |      2501
+      400 |     +0.0% |       0 |       0 |             0 |      2491
+      410 |     +0.0% |       0 |       0 |             0 |      2481
+      420 |     +0.0% |       0 |       0 |             0 |      2471
+      430 |     +0.0% |       0 |       0 |             0 |      2461
+      440 |     +0.0% |       0 |       0 |             0 |      2451
+      450 |     +0.0% |       0 |       0 |             0 |      2441
+      460 |     +0.0% |       0 |       0 |             0 |      2431
+      470 |     +0.0% |       0 |       0 |             0 |      2421
+      480 |     +0.0% |       0 |       0 |             0 |      2411
+      490 |     +0.0% |       0 |       0 |             0 |      2401
+      500 |     +0.0% |       0 |       0 |             0 |      2391
+      510 |     +0.0% |       0 |       0 |             0 |      2381
+      520 |     +0.0% |       0 |       0 |             0 |      2371
+      530 |     +0.0% |       0 |       0 |             0 |      2361
+      540 |     +0.0% |       0 |       0 |             0 |      2351
+      550 |     +0.0% |       0 |       0 |             0 |      2341
+      560 |     +0.0% |       0 |       0 |             0 |      2331
+      570 |     +0.0% |       0 |       0 |            10 |      2321
+      580 |     +0.0% |       0 |       0 |            20 |      2311
+      590 |     +0.0% |       0 |       0 |            29 |      2301
+      600 |     +0.0% |       0 |       0 |            29 |      2291
+      610 |     +0.0% |       0 |       0 |            29 |      2281
+      620 |     +0.0% |       0 |       0 |            29 |      2271
+      630 |     +0.0% |       0 |       0 |            29 |      2261
+      640 |     +0.0% |       0 |       0 |            29 |      2251
+      650 |     +0.0% |       0 |       0 |            29 |      2241
+      660 |     +0.0% |       0 |       0 |            29 |      2231
+      670 |     +0.0% |       0 |       0 |            29 |      2221
+      680 |     +0.0% |       0 |       0 |            29 |      2211
+      690 |     +0.0% |       0 |       0 |            29 |      2201
+      700 |     +0.0% |       0 |       0 |            29 |      2191
+      710 |     +0.0% |       0 |       0 |            29 |      2181
+      720 |     +0.0% |       0 |       0 |            29 |      2171
+      730 |     +0.0% |       0 |       0 |            29 |      2161
+      740 |     +0.0% |       0 |       0 |            29 |      2151
+      750 |     +0.0% |       0 |       0 |            29 |      2141
+      760 |     +0.0% |       0 |       0 |            29 |      2131
+      770 |     +0.0% |       0 |       0 |            30 |      2121
+      780 |     +0.0% |       0 |       0 |            40 |      2111
+      790 |     +0.0% |       0 |       0 |            50 |      2101
+      800 |     +0.0% |       0 |       0 |            60 |      2091
+      810 |     +0.0% |       0 |       0 |            64 |      2081
+      820 |     +0.0% |       0 |       0 |            64 |      2071
+      830 |     +0.0% |       0 |       0 |            64 |      2061
+      840 |     +0.0% |       0 |       0 |            64 |      2051
+      850 |     +0.0% |       0 |       0 |            64 |      2041
+      860 |     +0.0% |       0 |       0 |            64 |      2031
+      870 |     +0.0% |       0 |       0 |            64 |      2021
+      880 |     +0.0% |       0 |       0 |            64 |      2011
+      890 |     +0.0% |       0 |       0 |            64 |      2001
+      900 |     +0.0% |       0 |       0 |            64 |      1991
+      910 |     +0.0% |       0 |       0 |            64 |      1981
+      920 |     +0.0% |       0 |       0 |            64 |      1971
+      930 |     +0.0% |       0 |       0 |            64 |      1961
+      940 |     +0.0% |       0 |       0 |            65 |      1951
+      950 |     +0.0% |       0 |       0 |            66 |      1941
+      960 |     +0.0% |       0 |       0 |            66 |      1931
+      970 |     +0.0% |       0 |       0 |            66 |      1921
+      980 |     +0.0% |       0 |       0 |            66 |      1911
+      990 |     +0.0% |       0 |       0 |            66 |      1901
+     1000 |     +0.0% |       0 |       0 |            66 |      1891
+     1010 |     +0.0% |       0 |       0 |            66 |      1881
+     1020 |     +0.0% |       0 |       0 |            66 |      1871
+     1030 |     +0.0% |       0 |       0 |            66 |      1861
+     1040 |     +0.0% |       0 |       0 |            66 |      1851
+     1050 |     +0.0% |       0 |       0 |            66 |      1841
+     1060 |     +0.0% |       0 |       0 |            66 |      1831
+     1070 |     +0.0% |       0 |       0 |            66 |      1821
+     1080 |     +0.0% |       0 |       0 |            66 |      1811
+     1090 |     +0.0% |       0 |       0 |            66 |      1801
+     1100 |     +0.0% |       0 |       0 |            66 |      1791
+     1110 |     +0.0% |       0 |       0 |            66 |      1781
+     1120 |     +0.0% |       0 |       0 |            66 |      1771
+     1130 |     +0.0% |       0 |       0 |            66 |      1761
+     1140 |     +0.0% |       0 |       0 |            66 |      1751
+     1150 |     +0.0% |       0 |       0 |            66 |      1741
+     1160 |     +0.0% |       0 |       0 |            66 |      1731
+     1170 |     +0.0% |       0 |       0 |            66 |      1721
+     1180 |     +0.0% |       0 |       0 |            66 |      1711
+     1190 |     +0.0% |       0 |       0 |            66 |      1701
+     1200 |     +0.0% |       0 |       0 |            66 |      1691
+     1210 |     +0.0% |       0 |       0 |            66 |      1681
+     1220 |     +0.0% |       0 |       0 |            66 |      1671
+     1230 |     +0.0% |       0 |       0 |            66 |      1661
+     1240 |     +0.0% |       0 |       0 |            66 |      1651
+     1250 |     +0.0% |       0 |       0 |            66 |      1641
+     1260 |     +0.0% |       0 |       0 |            66 |      1631
+     1270 |     +0.0% |       0 |       0 |            66 |      1621
+     1280 |     +0.0% |       0 |       0 |            66 |      1611
+     1290 |     +0.0% |       0 |       0 |            66 |      1601
+     1300 |     +0.0% |       0 |       0 |            66 |      1591
+     1310 |     +0.0% |       0 |       0 |            66 |      1581
+     1320 |     +0.0% |       0 |       0 |            66 |      1571
+     1330 |     +0.0% |       0 |       0 |            66 |      1561
+     1340 |     +0.0% |       0 |       0 |            66 |      1551
+     1350 |     +0.0% |       0 |       0 |            66 |      1541
+     1360 |     +0.0% |       0 |       0 |            66 |      1531
+     1370 |     +0.0% |       0 |       0 |            66 |      1521
+     1380 |     +0.0% |       0 |       0 |            66 |      1511
+     1390 |     +0.0% |       0 |       0 |            66 |      1501
+     1400 |     +0.0% |       0 |       0 |            66 |      1491
+     1410 |     +0.0% |       0 |       0 |            66 |      1481
+     1420 |     +0.0% |       0 |       0 |            66 |      1471
+     1430 |     +0.0% |       0 |       0 |            66 |      1461
+     1440 |     +0.0% |       0 |       0 |            66 |      1451
+     1450 |     +0.0% |       0 |       0 |            66 |      1441
+     1460 |     +0.0% |       0 |       0 |            66 |      1431
+     1470 |     +0.0% |       0 |       0 |            66 |      1421
+     1480 |     +0.0% |       0 |       0 |            66 |      1411
+     1490 |     +0.0% |       0 |       0 |            66 |      1401
+     1500 |     +0.0% |       0 |       0 |            66 |      1391
+     1510 |     +0.0% |       0 |       0 |            66 |      1381
+     1520 |     +0.0% |       0 |       0 |            66 |      1371
+     1530 |     +0.0% |       0 |       0 |            66 |      1361
+     1540 |     +0.0% |       0 |       0 |            66 |      1351
+     1550 |     +0.0% |       0 |       0 |            66 |      1341
+     1560 |     +0.0% |       0 |       0 |            66 |      1331
+     1570 |     +0.0% |       0 |       0 |            66 |      1321
+     1580 |     +0.0% |       0 |       0 |            66 |      1311
+     1590 |     +0.0% |       0 |       0 |            66 |      1301
+     1600 |     +0.0% |       0 |       0 |            66 |      1291
+     1610 |     +0.0% |       0 |       0 |            66 |      1281
+     1620 |     +0.0% |       0 |       0 |            66 |      1271
+     1630 |     +0.0% |       0 |       0 |            66 |      1261
+     1640 |     +0.0% |       0 |       0 |            66 |      1251
+     1650 |     +0.0% |       0 |       0 |            66 |      1241
+     1660 |     +0.0% |       0 |       0 |            66 |      1231
+     1670 |     +0.0% |       0 |       0 |            66 |      1221
+     1680 |     +0.0% |       0 |       0 |            66 |      1211
+     1690 |     +0.0% |       0 |       0 |            66 |      1201
+     1700 |     +0.0% |       0 |       0 |            66 |      1191
+     1710 |     +0.0% |       0 |       0 |            66 |      1181
+     1720 |     +0.0% |       0 |       0 |            66 |      1171
+     1730 |     +0.0% |       0 |       0 |            66 |      1161
+     1740 |     +0.0% |       0 |       0 |            66 |      1151
+     1750 |     +0.0% |       0 |       0 |            66 |      1141
+     1760 |     +0.0% |       0 |       0 |            66 |      1131
+     1770 |     +0.0% |       0 |       0 |            66 |      1121
+     1780 |     +0.0% |       0 |       0 |            66 |      1111
+     1790 |     +0.0% |       0 |       0 |            66 |      1101
+     1800 |     +0.0% |       0 |       0 |            66 |      1091
+     1810 |     +0.0% |       0 |       0 |            66 |      1081
+     1820 |     +0.0% |       0 |       0 |            66 |      1071
+     1830 |     +0.0% |       0 |       0 |            66 |      1061
+     1840 |     +0.0% |       0 |       0 |            66 |      1051
+     1850 |     +0.0% |       0 |       0 |            66 |      1041
+     1860 |     +0.0% |       0 |       0 |            66 |      1031
+     1870 |     +0.0% |       0 |       0 |            66 |      1021
+     1880 |     +0.0% |       0 |       0 |            66 |      1011
+     1890 |     +0.0% |       0 |       0 |            66 |      1001
+     1900 |     +0.0% |       0 |       0 |            66 |       991
+     1910 |     +0.0% |       0 |       0 |            66 |       981
+     1920 |     +0.0% |       0 |       0 |            66 |       971
+     1930 |     +0.0% |       0 |       0 |            66 |       961
+     1940 |     +0.0% |       0 |       0 |            66 |       951
+     1950 |     +0.0% |       0 |       0 |            66 |       941
+     1960 |     +0.0% |       0 |       0 |            66 |       931
+     1970 |     +0.0% |       0 |       0 |            66 |       921
+     1980 |     +0.0% |       0 |       0 |            66 |       911
+     1990 |     +0.0% |       0 |       0 |            66 |       901
+     2000 |     +0.0% |       0 |       0 |            66 |       891
+     2010 |     +0.0% |       0 |       0 |            66 |       881
+     2020 |     +0.0% |       0 |       0 |            66 |       871
+     2030 |     +0.0% |       0 |       0 |            66 |       861
+     2040 |     +0.0% |       0 |       0 |            66 |       851
+     2050 |     +0.0% |       0 |       0 |            66 |       841
+     2060 |     +0.0% |       0 |       0 |            66 |       831
+     2070 |     +0.0% |       0 |       0 |            66 |       821
+     2080 |     +0.0% |       0 |       0 |            66 |       811
+     2090 |     +0.0% |       0 |       0 |            66 |       801
+     2100 |     +0.0% |       0 |       0 |            66 |       791
+     2110 |     +0.0% |       0 |       0 |            66 |       781
+     2120 |     +0.0% |       0 |       0 |            66 |       771
+     2130 |     +0.0% |       0 |       0 |            66 |       761
+     2140 |     +0.0% |       0 |       0 |            66 |       751
+     2150 |     +0.0% |       0 |       0 |            66 |       741
+     2160 |     +0.0% |       0 |       0 |            66 |       731
+     2170 |     +0.0% |       0 |       0 |            66 |       721
+     2180 |     +0.0% |       0 |       0 |            66 |       711
+     2190 |     +0.0% |       0 |       0 |            66 |       701
+     2200 |     +0.0% |       0 |       0 |            66 |       691
+     2210 |     +0.0% |       0 |       0 |            66 |       681
+     2220 |     +0.0% |       0 |       0 |            66 |       671
+     2230 |     +0.0% |       0 |       0 |            66 |       661
+     2240 |     +0.0% |       0 |       0 |            66 |       651
+     2250 |     +0.0% |       0 |       0 |            66 |       641
+     2260 |     +0.0% |       0 |       0 |            66 |       631
+     2270 |     +0.0% |       0 |       0 |            66 |       621
+     2280 |     +0.0% |       0 |       0 |            66 |       611
+     2290 |     +0.0% |       0 |       0 |            66 |       601
+     2300 |     +0.0% |       0 |       0 |            66 |       591
+     2310 |     +0.0% |       0 |       0 |            66 |       581
+     2320 |     +0.0% |       0 |       0 |            66 |       571
+     2330 |     +0.0% |       0 |       0 |            66 |       561
+     2340 |     +0.0% |       0 |       0 |            66 |       551
+     2350 |     +0.0% |       0 |       0 |            66 |       541
+     2360 |     +0.0% |       0 |       0 |            66 |       531
+     2370 |     +0.0% |       0 |       0 |            66 |       521
+     2380 |     +0.0% |       0 |       0 |            66 |       511
+     2390 |     +0.0% |       0 |       0 |            66 |       501
+     2400 |     +0.0% |       0 |       0 |            66 |       491
+     2410 |     +0.0% |       0 |       0 |            66 |       481
+     2420 |     +0.0% |       0 |       0 |            66 |       471
+     2430 |     +0.0% |       0 |       0 |            66 |       461
+     2440 |     +0.0% |       0 |       0 |            66 |       451
+     2450 |     +0.0% |       0 |       0 |            66 |       441
+     2460 |     +0.0% |       0 |       0 |            66 |       431
+     2470 |     +0.0% |       0 |       0 |            66 |       421
+     2480 |     +0.0% |       0 |       0 |            66 |       411
+     2490 |     +0.0% |       0 |       0 |            66 |       401
+     2500 |     +0.0% |       0 |       0 |            66 |       391
+     2510 |     +0.0% |       0 |       0 |            66 |       381
+     2520 |     +0.0% |       0 |       0 |            66 |       371
+     2530 |     +0.0% |       0 |       0 |            66 |       361
+     2540 |     +0.0% |       0 |       0 |            66 |       351
+     2550 |     +0.0% |       0 |       0 |            66 |       341
+     2560 |     +0.0% |       0 |       0 |            66 |       331
+     2570 |     +0.0% |       0 |       0 |            66 |       321
+     2580 |     +0.0% |       0 |       0 |            66 |       311
+     2590 |     +0.0% |       0 |       0 |            66 |       301
+     2600 |     +0.0% |       0 |       0 |            66 |       291
+     2610 |     +0.0% |       0 |       0 |            66 |       281
+     2620 |     +0.0% |       0 |       0 |            66 |       271
+     2630 |     +0.0% |       0 |       0 |            66 |       261
+     2640 |     +0.0% |       0 |       0 |            66 |       251
+     2650 |     +0.0% |       0 |       0 |            66 |       241
+     2660 |     +0.0% |       0 |       0 |            66 |       231
+     2670 |     +0.0% |       0 |       0 |            66 |       221
+     2680 |     +0.0% |       0 |       0 |            66 |       211
+     2690 |     +0.0% |       0 |       0 |            66 |       201
+     2700 |     +0.0% |       0 |       0 |            66 |       191
+     2710 |     +0.0% |       0 |       0 |            66 |       181
+     2720 |     +0.0% |       0 |       0 |            66 |       171
+     2730 |     +0.0% |       0 |       0 |            66 |       161
+     2740 |     +0.0% |       0 |       0 |            66 |       151
+     2750 |     +0.0% |       0 |       0 |            66 |       141
+     2760 |     +0.0% |       0 |       0 |            66 |       131
+     2770 |     +0.0% |       0 |       0 |            66 |       121
+     2780 |     +0.0% |       0 |       0 |            66 |       111
+     2790 |     +0.0% |       0 |       0 |            66 |       101
+     2800 |     +0.0% |       0 |       0 |            66 |        91
+     2810 |     +0.0% |       0 |       0 |            66 |        81
+     2820 |     +0.0% |       0 |       0 |            66 |        71
+     2830 |     +0.0% |       0 |       0 |            66 |        61
+     2840 |     +0.0% |       0 |       0 |            66 |        51
+     2850 |     +0.0% |       0 |       0 |            66 |        41
+     2860 |     +0.0% |       0 |       0 |            66 |        31
+     2870 |     +0.0% |       0 |       0 |            66 |        21
+     2880 |     +0.0% |       0 |       0 |            66 |        11
+     2890 |     +0.0% |       0 |       0 |            66 |         1
+    final |     +0.0% |       0 |       0 |            66 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 66 slew violations.
+[INFO RSZ-0504] Runtime: 0.51s
+[INFO DPL-0006] Core area: 28011.01 um^2
+[INFO DPL-0007] Movable instances area: 173.74 um^2
+[INFO DPL-0008] Fixed instances area within core: 15985.25 um^2
+[INFO DPL-0009] Utilization: 57.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 4838 cells
+[INFO DPL-0393]   height 233 row(s): 2 cells
+[INFO DPL-0500] Runtime: 0.23s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL           57953.7 u
+legalized HPWL          57953.7 u
+delta HPWL                    0 %
+
+OT_ELECTRICAL_AFTER_REPAIR_BEFORE_WRITE
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+captured_data[105]                    250.00  304.14  -54.14 (VIOLATED)
+captured_data[129]                    250.00  304.06  -54.06 (VIOLATED)
+captured_data[100]                    250.00  303.50  -53.50 (VIOLATED)
+captured_data[104]                    250.00  303.36  -53.36 (VIOLATED)
+captured_data[125]                    250.00  302.19  -52.19 (VIOLATED)
+captured_data[120]                    250.00  302.18  -52.18 (VIOLATED)
+captured_data[92]                     250.00  301.88  -51.88 (VIOLATED)
+captured_data[101]                    250.00  301.53  -51.53 (VIOLATED)
+captured_data[121]                    250.00  301.33  -51.33 (VIOLATED)
+captured_data[112]                    250.00  300.96  -50.96 (VIOLATED)
+captured_data[128]                    250.00  300.90  -50.90 (VIOLATED)
+captured_data[108]                    250.00  300.44  -50.44 (VIOLATED)
+captured_data[117]                    250.00  300.35  -50.35 (VIOLATED)
+captured_data[124]                    250.00  299.92  -49.92 (VIOLATED)
+captured_data[96]                     250.00  299.89  -49.90 (VIOLATED)
+captured_data[113]                    250.00  299.25  -49.25 (VIOLATED)
+captured_data[116]                    250.00  299.20  -49.20 (VIOLATED)
+captured_data[93]                     250.00  298.07  -48.07 (VIOLATED)
+captured_data[109]                    250.00  297.77  -47.77 (VIOLATED)
+captured_data[84]                     250.00  297.58  -47.58 (VIOLATED)
+captured_data[97]                     250.00  297.26  -47.26 (VIOLATED)
+captured_data[80]                     250.00  295.49  -45.49 (VIOLATED)
+captured_data[88]                     250.00  293.93  -43.93 (VIOLATED)
+captured_data[89]                     250.00  279.80  -29.80 (VIOLATED)
+captured_data[9]                      250.00  279.78  -29.78 (VIOLATED)
+captured_data[5]                      250.00  279.52  -29.52 (VIOLATED)
+captured_data[13]                     250.00  279.19  -29.19 (VIOLATED)
+captured_data[33]                     250.00  279.14  -29.14 (VIOLATED)
+captured_data[45]                     250.00  279.06  -29.06 (VIOLATED)
+captured_data[37]                     250.00  278.79  -28.79 (VIOLATED)
+captured_data[85]                     250.00  278.59  -28.59 (VIOLATED)
+captured_data[52]                     250.00  278.57  -28.57 (VIOLATED)
+captured_data[73]                     250.00  278.29  -28.29 (VIOLATED)
+captured_data[21]                     250.00  278.14  -28.14 (VIOLATED)
+captured_data[72]                     250.00  277.91  -27.91 (VIOLATED)
+captured_data[17]                     250.00  277.89  -27.89 (VIOLATED)
+captured_data[29]                     250.00  277.81  -27.81 (VIOLATED)
+captured_data[65]                     250.00  277.60  -27.60 (VIOLATED)
+captured_data[24]                     250.00  277.58  -27.58 (VIOLATED)
+captured_data[49]                     250.00  277.41  -27.41 (VIOLATED)
+captured_data[1]                      250.00  277.24  -27.24 (VIOLATED)
+captured_data[41]                     250.00  277.20  -27.20 (VIOLATED)
+captured_data[76]                     250.00  277.06  -27.06 (VIOLATED)
+captured_data[40]                     250.00  276.93  -26.93 (VIOLATED)
+captured_data[81]                     250.00  276.79  -26.79 (VIOLATED)
+captured_data[69]                     250.00  276.75  -26.75 (VIOLATED)
+captured_data[53]                     250.00  276.58  -26.58 (VIOLATED)
+captured_data[56]                     250.00  276.38  -26.38 (VIOLATED)
+captured_data[12]                     250.00  276.23  -26.23 (VIOLATED)
+captured_data[48]                     250.00  276.07  -26.07 (VIOLATED)
+captured_data[20]                     250.00  276.05  -26.05 (VIOLATED)
+captured_data[36]                     250.00  275.99  -25.99 (VIOLATED)
+captured_data[32]                     250.00  275.89  -25.89 (VIOLATED)
+captured_data[57]                     250.00  275.88  -25.88 (VIOLATED)
+captured_data[25]                     250.00  275.77  -25.77 (VIOLATED)
+captured_data[64]                     250.00  275.69  -25.69 (VIOLATED)
+captured_data[44]                     250.00  275.49  -25.49 (VIOLATED)
+captured_data[4]                      250.00  275.49  -25.49 (VIOLATED)
+captured_data[61]                     250.00  275.47  -25.47 (VIOLATED)
+captured_data[60]                     250.00  275.44  -25.44 (VIOLATED)
+captured_data[8]                      250.00  275.37  -25.37 (VIOLATED)
+captured_data[28]                     250.00  275.31  -25.31 (VIOLATED)
+captured_data[0]                      250.00  275.24  -25.24 (VIOLATED)
+captured_data[68]                     250.00  275.17  -25.17 (VIOLATED)
+captured_data[16]                     250.00  274.87  -24.87 (VIOLATED)
+captured_data[77]                     250.00  274.87  -24.87 (VIOLATED)
+
+OT_PREFLIGHT_DONE

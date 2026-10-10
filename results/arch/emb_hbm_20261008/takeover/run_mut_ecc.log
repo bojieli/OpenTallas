@@ -1,0 +1,11 @@
+BOOT sent 20633 sectors at ck 41317
+BOOT ready=1 fault=0 code=00 at ck 41540
+FAIL token 511 (ix 5): 4 mismatches
+FAIL CE token 511: corrected 0 < 2
+FAIL UE token 71998 not failed closed (fault 0 code 00 have 1)
+STATS ntok=159 lat_min=434 lat_mean=473 lat_max=789 (core cycles go->fill, excl. first) static_wait_max=320 hclk wait_mean_x100=4118 boot_ready_ck=41540 early_rsp=0 dram_viol=0 ce=0 ue_seen=0 hub_fault=0 far=0000 strip=0000 fc=00/00/00/00 gwfc=00 su_fault=0
+FAIL emb_hbm_e2e errors=3 MUT_STRIP=3 MUT_GW=0
+- rtl/test/emb_hbm/tb_emb_hbm_e2e.sv:322: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 129us; walltime 190.199 s; speed 689.031 ns/s
+- Verilator: cpu 187.347 s on 1 threads; alloced 1054 MB

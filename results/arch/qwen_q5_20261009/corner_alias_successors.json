@@ -1,0 +1,18 @@
+{
+  "configuration_commit": "ab9c785e9",
+  "precedents": [
+    "tools/run_abi3_physical.py OT_ORFS_CORNER_OVERRIDE=TC",
+    "9f7a7f35e WFC recipe",
+    "f42e102ca embedding recipe"
+  ],
+  "jobs": [
+    "tools/closure_loop/jobs/qfd_q5_landing_ecc-ab9c785e9-wc-ttalias.json",
+    "tools/closure_loop/jobs/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias.json",
+    "tools/closure_loop/jobs/qfd_dspark_w1_bank-ab9c785e9-wc-ttalias.json",
+    "tools/closure_loop/jobs/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json",
+    "tools/closure_loop/jobs/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias.json"
+  ],
+  "numerical_reruns": 0,
+  "clock_or_uncertainty_relaxation": false,
+  "running_handles": "pendingfleetadmission"
+}

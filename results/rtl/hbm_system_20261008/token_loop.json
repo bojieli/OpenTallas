@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm_system.token_loop.v1",
+ "source_sha256": {
+  "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "bd2a08db66addb217744ab14e757d522797bb988007f7853d9b67b69983579bc",
+  "rtl/test/hbm_accel/tb_hbm_token_loop.sv": "8c8ee16c31a1a21810d4975dc6d0d7c57702b8955d7e4f7164612c04dc26f377",
+  "tools/hbm_token_loop_bench.py": "8298b5fa80e143fe95de7fc5bc919d7b62146aab64af0dd8840e697dfdccccb1"
+ },
+ "jobs": 65,
+ "records": 820,
+ "final_status_counts": {
+  "1": 30,
+  "2": 26,
+  "3": 3,
+  "5": 6
+ },
+ "positive": {
+  "verdict": "PASS",
+  "problems": []
+ },
+ "negative_mut1_no_eos": {
+  "verdict": "FAIL",
+  "problems": [
+   "job 2 doorbells",
+   "job 4 records [(0, 0, 4, 1941, 39293), (0, 0, 4, 1942, 14145), (0, 0, 4, 1943, 1)] vs [(0, 0, 4, 1941, 39293), (0, 0, 4, 1942, 14145), (1, 1, 4, 1943, 1)]",
+   "job 10 doorbells"
+  ]
+ },
+ "verdict": "PASS",
+ "loop_turnaround_cycles": "cpl accepted -> next doorbell valid: 1 (record) + DB_LAT 2 + 1 (L_DB) = 4 clk_stream cycles; no host round trip, no inter-die message"
+}

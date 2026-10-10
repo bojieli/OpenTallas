@@ -1,0 +1,37 @@
+F..
+======================================================================
+FAIL: test_actual_forward_projects_explicit_norm_at_input_rounding (__main__.PrenormGraphTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qwen-r25-prenorm-6d7369801/tests/test_qwen_r25_prenorm.py", line 72, in test_actual_forward_projects_explicit_norm_at_input_rounding
+    self.assertTrue(np.array_equal(calls[0][0].numpy().view(np.uint32), norm.view(np.uint32)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.036s
+
+FAILED (failures=1)
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas-scratch/claude/qwen-hbm-unify/venv/bin/python tests/test_qwen_r25_prenorm.py"
+	User time (seconds): 4.95
+	System time (seconds): 0.11
+	Percent of CPU this job got: 324%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.56
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 233492
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 65
+	Minor (reclaiming a frame) page faults: 39822
+	Voluntary context switches: 1106
+	Involuntary context switches: 567
+	Swaps: 0
+	File system inputs: 40544
+	File system outputs: 328
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

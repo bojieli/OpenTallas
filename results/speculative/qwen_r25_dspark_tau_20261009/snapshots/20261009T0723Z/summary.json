@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.qwen-r25-tau-blend.v1",
+  "status": "INCOMPLETE",
+  "primary_key": "tau_bf16_S7_B4",
+  "source_pins": {
+    "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+    "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+    "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+    "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+    "compute_dtype": "float32",
+    "max_new_tokens": 512,
+    "device": "cpu",
+    "prompts_sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+    "class_map": {
+      "chat": [
+        "chat_mt_bench"
+      ],
+      "reasoning": [
+        "reasoning_math500"
+      ],
+      "coding": [
+        "reasoning_humaneval"
+      ],
+      "agentic": [
+        "agentic_swe_agent",
+        "agentic_tau_bench",
+        "agentic_mind2web"
+      ],
+      "assistant_fc": [
+        "agentic_bfcl",
+        "agentic_json_mode"
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag0.json",
+      "sha256": "e834861b0169f3e3b364a4344d1a57583b8045cec9965aae97f5fcb9b38ae900"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag1.json",
+      "sha256": "832c6dc00595781f616ec176dcb89120dfb11c66bd728005bb8caa780af58244"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag2.json",
+      "sha256": "50f2bdc36e79d1fd92fd9d5219e3ee0927799519444fb78cd9be6cb2a1afdf09"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag3.json",
+      "sha256": "0afd6badc963712a7f2b6976e85d491de979f6af1be1e8aae928707779d84731"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag4.json",
+      "sha256": "786bf06a6edb0effce1f0d371c7e06fefb856b25bd8c582c7db9b4100f68a41c"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ag5.json",
+      "sha256": "9cfc97114286a7b0c20f51283679f7212f9aa21ba6b88607832ab3c82340c5c9"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/as0.json",
+      "sha256": "0e12f680e0083d5db584b87f1e28d44a05a0f479112af23712b9d56cb3fa131b"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/as1.json",
+      "sha256": "241ec4c2b4e0e900e11daf099a26998a9007d93b5db99b9318c1466ffb9a90f7"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/as2.json",
+      "sha256": "e5b07c8df2476a08a9ba550a9a2b21cb7051a28b2dbfce72b46ace91b35a35dc"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/as3.json",
+      "sha256": "2cf4b76e2b1b25582d3b3b905d833e527c8d9c587b01ff19ce494a47bfa8a795"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/re0.json",
+      "sha256": "5be6dd93932eae97f46201ce5a00dd3f61db1e977e22892f870fa5fca3710276"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/re1.json",
+      "sha256": "8035aec3564ab741c12708d7cc2b045606c440f29f5fdcd652e06a8aaa64cd9e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/co0.json",
+      "sha256": "1911428c22e4e01fc765ecbc2ff4df3317e440919730c6f44e7d833694de2ae8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/co1.json",
+      "sha256": "2224105ed5de8cd6155e21556c384ba61675aef6961202351ca6b7a1ef911bdb"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/ch0.json",
+      "sha256": "fba7341caaae99f37e756a2acf224d87b428814166429fbd018d7f4843e760d7"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/qwen-tau-harvest/20261009T0723Z/raw/cr0.json",
+      "sha256": "a3784fa4fa6b1983d905ea94415d6c82c009ff5ab7c36bbf94506d5b97d87d81"
+    }
+  ],
+  "errors": [],
+  "missing_shards": [],
+  "classes": {
+    "chat": {
+      "samples": 5,
+      "expected": 12,
+      "complete": false,
+      "median": 2.6894736842105265,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "reasoning": {
+      "samples": 2,
+      "expected": 24,
+      "complete": false,
+      "median": 3.008754394430275,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "coding": {
+      "samples": 6,
+      "expected": 24,
+      "complete": false,
+      "median": 2.8209580474773848,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "agentic": {
+      "samples": 56,
+      "expected": 72,
+      "complete": false,
+      "median": 2.94375,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "assistant_fc": {
+      "samples": 29,
+      "expected": 48,
+      "complete": false,
+      "median": 3.5454545454545454,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    },
+    "creative": {
+      "samples": 3,
+      "expected": 3,
+      "complete": true,
+      "median": 2.262295081967213,
+      "pooled_tau": null,
+      "pooled_reason": "legacy run does not record accepted-token and replay-step counts"
+    }
+  },
+  "blend_owner6": null,
+  "envelope": null,
+  "deployment_qualified": false,
+  "limitations": [
+    "FP32-upcast released BF16 target, not the r25 INT8 target",
+    "released drafter weights are unchanged but computation is FP32, not BF16",
+    "drafter reference comparison covers the first step of each prompt only",
+    "quality and RTL accept/rollback gates remain separate"
+  ]
+}

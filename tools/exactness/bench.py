@@ -196,7 +196,119 @@ def s81_token(work):
                            returncode=rc, wall_seconds=sec))
 
 
+# -- DSpark MTP in RTL (mtp-exact 2026-10-08; records results/rtl/mtp_exact_20261008) ---------------------------------
+# fixtures: GPU-host goldens (ROM MTP images, the 2-stage wavefront images, HBM golden traces) kept with STATUS.md
+MTPX = S / "claude/exactness/fixtures/mtp_exact"
+V5050 = dict(os.environ, PATH=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin") + ":" +
+             os.environ.get("PATH", ""))      # the pinned Verilator (5.032 hits an internal V3Delayed error on the array bench)
+MTPX_ROM = ("img_gold4_forced_g5_n12", "img_oracle3_forced_g5_n12", "img_oracle5_forced_g5_n12", "img_gold4_dspark_g5_n12")
+# accept lengths: gold4 forced 3,1,3,1; oracle3 forced 2,5,2; oracle5 forced 4,3,1; gold4 dspark 0 x 11: every 0 .. 5
+
+
+def mtp_rom(work):
+    """DS ROM: multi-step speculative greedy == plain greedy on the as-built V4.1 core (NSLOT 8, m = 1, XU/Sinkhorn
+    handshake successor), plus the restore-slot+1 and accept-one-extra mutants (each must be detected)."""
+    argv = [HPY, TOOLS / "dsrom_dspark_cached_rtl_v41.py", "--part", "v41_mtp_rom_rtl", "--sink-handshake", "--mutate",
+            "--mutate-accept", "--run-dir", work / "rt"]
+    for n in MTPX_ROM:
+        argv += ["--image", MTPX / "rom_img" / n]
+    rc, sec = run(argv, work, "rom", env=V5050)
+    d = json.loads((work / "rt/part.json").read_text()) if (work / "rt/part.json").exists() else {}
+    runs = {Path(r["image"]).name: dict(pass_=r["pass"], cycles=r["rtl"].get("prefill_cycles", 0) + r["rtl"].get("iter_cycles", 0),
+                                        iters=r["rtl"].get("iters"), generated=r["rtl"].get("generated"))
+            for r in d.get("runs", [])}
+    muts = [d.get("mutation_rtl_restore_slot_plus_1", {})] + d.get("mutation_rtl_accept_extra", [])
+    exact = bool(rc == 0 and d.get("pass") and len(runs) == len(MTPX_ROM) and all(m.get("detected") for m in muts))
+    return save(work, dict(bench="v41_mtp_rom_rtl", exact=exact, runs=runs, mutants_detected=[m.get("detected") for m in muts],
+                           cycles=runs.get(MTPX_ROM[0], {}).get("cycles"), returncode=rc, wall_seconds=sec))
+
+
+def mtp_wf2(work):
+    """DS ROM: 2-stage pipelined verify (L19 -> L20) with the closed WFC; squash + re-issue rewinds both stages;
+    WAVE = 0 reference controller is the negative control."""
+    sc = work / "wf2"
+    sc.mkdir()
+    for f in ("prepare_stage2.json", "stage2_cfg.svh"):
+        shutil.copy(MTPX / "wf2" / f, sc / f)
+    for d in ("cfg_stage2", "roms"):
+        (sc / d).symlink_to(MTPX / "wf2" / d)
+    rcs = []
+    for ctrl, wave in (("wfc", 1), ("wf", 0)):
+        rc, sec = run([PY, TOOLS / "mtp_exact_wavefront2.py", "run", "--scratch", sc, "--ctrl", ctrl, "--wave", wave,
+                       "--jobs", 16], work, f"wf2_{ctrl}_w{wave}", env=V5050)
+        rcs.append(rc)
+    rc, sec = run([PY, TOOLS / "mtp_exact_wavefront2.py", "record", "--scratch", sc, "--output", work / "wf2.json"], work, "record")
+    d = json.loads((work / "wf2.json").read_text()) if (work / "wf2.json").exists() else {}
+    w1 = (d.get("runs") or {}).get("stage2_wfc_w1", {})
+    return save(work, dict(bench="v41_mtp_rom_wf2", exact=bool(d.get("pass")), cycles=w1.get("total_cycles"),
+                           negative_detected=d.get("negative_control_wave0_detected"),
+                           overlapping_job_pairs=w1.get("overlapping_job_pairs"), returncode=rc))
+
+
+def mtp_hbm(work):
+    """HBM: the connected closed control plane (ctl_f2, accept_a0, argmax_f1, union_f3, spec_state token-edge,
+    scratch_c2) against the golden speculative decode, plus control / ring / accept mutants (each must FAIL)."""
+    import concurrent.futures as cf
+    cases = {"forced": ["--trace", MTPX / "hbm/tr_forced"], "forced_w16": ["--trace", MTPX / "hbm/tr_forced_w16"],
+             "mut1": ["--trace", MTPX / "hbm/tr_forced_w16", "--mut", 1],
+             "accx": ["--trace", MTPX / "hbm/tr_forced_w16", "--accx"]}
+
+    def one(item):
+        k, args = item
+        rc, sec = run([PY, TOOLS / "mtp_exact_hbm_connected.py", "--workdir", work / "w", *args, "--out", work / f"{k}.json"], work, k)
+        f = work / f"{k}.json"
+        return k, json.loads(f.read_text()) if f.exists() else {}
+    with cf.ThreadPoolExecutor(len(cases)) as ex:
+        res = dict(ex.map(one, cases.items()))
+    runs = {k: dict(status=v.get("status"), cycles=(v.get("summary") or {}).get("cyc_total")) for k, v in res.items()}
+    exact = all(v.get("status") == "pass" for v in res.values()) and len(res) == len(cases)
+    return save(work, dict(bench="v41_mtp_hbm_rtl", exact=exact, runs=runs, cycles=runs["forced"]["cycles"]))
+
+
+def mtp_rollback(work):
+    """Minimum ROM/HBM storage mechanism: 33 positive/mutant runs, W128/W8 wrap,
+    golden truncate, commit pointer, prefix accept and prefetch; mixed arithmetic is synthetic."""
+    out = work / "rollback.json"
+    rc, sec = run([PY, TOOLS / "mtp_rollback_bench.py", "campaign", "--out", work / "rt",
+                   "--record", out, "--jobs", 4], work, "rollback", env=V5050)
+    d = json.loads(out.read_text()) if out.exists() else {}
+    rows = d.get("results", [])
+    exact = bool(rc == 0 and d.get("all_good_pass_all_mutants_fail") and len(rows) == 33
+                 and all(r.get("ok") and not r.get("timeout") for r in rows))
+    return save(work, dict(bench="v41_mtp_rollback_rtl", exact=exact, cycles=None,
+                          runs={r["config"] + ":" + r["name"]: dict(verdict=r.get("verdict"),
+                                expect=r.get("expect"), ok=r.get("ok")) for r in rows},
+                          returncode=rc, wall_seconds=sec))
+
+
+def spec_state(work):
+    """HBM spec_state successor (token-edge TOKEN_EDGE_FIX = 1) in cycle lockstep with the as-built rings: the
+    original seed-8 bench (reset with a token write in flight) and seeds 1..8 of the drained bench."""
+    src = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+           "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"]
+    jobs = {"seed8_undrained": (src + ["rtl/test/ctl_spec_seed8_20261005/tb_spec_seed8_fixed.sv"], 8, None)}
+    for sd in range(1, 9):
+        jobs[f"drained_s{sd}"] = (src + ["rtl/test/mtp_exact/ot_dshbm_spec_state_f_tefix1.sv",
+                                         "rtl/test/hbm_fmax_ctl/tb_spec_state_lockstep.sv"], sd, 1)
+    runs, ok = {}, True
+    for k, (files, sd, drain) in jobs.items():
+        nreq = 3000 if k == "seed8_undrained" else 20000
+        ps = [f"-Ptb_spec_state_lockstep.NREQ={nreq}", f"-Ptb_spec_state_lockstep.SEED={sd}"] + \
+            ([f"-Ptb_spec_state_lockstep.DRAIN={drain}"] if drain is not None else [])
+        rc, _ = run(["iverilog", "-g2012", "-s", "tb_spec_state_lockstep", *ps, "-o", work / f"{k}.vvp", *files], work, f"{k}_build")
+        rc2, sec = run(["vvp", "-n", work / f"{k}.vvp"], work, k)
+        m = re.search(r"LOCKSTEP spec_state .*mismatches=(\d+)", (work / f"{k}.log").read_text())
+        runs[k] = dict(mismatches=int(m.group(1)) if m else None, cycles=None)
+        ok &= rc == 0 and rc2 == 0 and m is not None and int(m.group(1)) == 0
+    return save(work, dict(bench="hbm_spec_state_lockstep", exact=bool(ok), cycles=None, runs=runs))
+
+
 BENCHES = {
+    "v41_mtp_rom_rtl": mtp_rom,
+    "v41_mtp_rom_wf2": mtp_wf2,
+    "v41_mtp_hbm_rtl": mtp_hbm,
+    "hbm_spec_state_lockstep": spec_state,
+    "v41_mtp_rollback_rtl": mtp_rollback,
     "s81_token_l20": s81_token,
     "qwen_rom_L0": lambda w: qwen_rom(w, "L0"),
     "qwen_rom_full": lambda w: qwen_rom(w, "full"),

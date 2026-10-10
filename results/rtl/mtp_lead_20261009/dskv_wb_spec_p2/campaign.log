@@ -1,0 +1,35 @@
+w128  rom_good                           PASS       expect PASS ok  194 0 0
+w128  rom_win_ring_eq_W                  FAIL       expect FAIL ok  55 61 1
+w128  rom_win_ring_eq_W_notag            FAIL       expect FAIL ok  55 61 0
+w128  rom_open_slot_no_restore           FAIL       expect FAIL ok  28 60 0
+w128  rom_engram_hist_no_restore         FAIL       expect FAIL ok  28 59 0
+w128  rom_dsk_ring_eq_W                  FAIL       expect FAIL ok  62 45 1
+w128  rom_commit_off_by_one              FAIL       expect FAIL ok  1 1 0
+w128  hbm_good                           PASS       expect PASS ok  194 0 0
+w128  hbm_good_specf                     PASS       expect PASS ok  194 0 0
+w128  hbm_mr6_lock_ignores_reload        PASS       expect PASS ok  194 0 0
+w128  hbm_win_mod_W_asbuilt              FAIL       expect FAIL ok  54 46 0
+w128  hbm_slot_ring_eq_r                 FAIL       expect FAIL ok  28 60 1
+w128  hbm_tok_ring_eq_NG                 FAIL       expect FAIL ok  27 55 0
+w128  hbm_commit_off_by_one              FAIL       expect FAIL ok  1 1 0
+w128  hbm_key_shadow_reload_on_block_open FAIL       expect FAIL ok  72 41 0
+w8    rom_good                           PASS       expect PASS ok  66 0 0
+w8    rom_win_ring_eq_W                  FAIL       expect FAIL ok  9 45 1
+w8    rom_win_ring_eq_W_notag            FAIL       expect FAIL ok  9 45 0
+w8    rom_open_slot_no_restore           FAIL       expect FAIL ok  9 41 0
+w8    rom_engram_hist_no_restore         FAIL       expect FAIL ok  9 41 0
+w8    rom_dsk_ring_eq_W                  FAIL       expect FAIL ok  16 45 1
+w8    rom_commit_off_by_one              FAIL       expect FAIL ok  1 1 0
+w8    hbm_good                           PASS       expect PASS ok  66 0 0
+w8    hbm_good_specf                     PASS       expect PASS ok  66 0 0
+w8    hbm_mr6_lock_ignores_reload        PASS       expect PASS ok  66 0 0
+w8    hbm_win_mod_W_asbuilt              FAIL       expect FAIL ok  9 51 0
+w8    hbm_slot_ring_eq_r                 FAIL       expect FAIL ok  9 42 1
+w8    hbm_tok_ring_eq_NG                 FAIL       expect FAIL ok  9 60 0
+w8    hbm_commit_off_by_one              FAIL       expect FAIL ok  1 1 0
+w8    hbm_key_shadow_reload_on_block_open FAIL       expect FAIL ok  48 41 0
+prefetch rom_prefetch_r256_c1               PASS       expect PASS ok  120 0 0
+prefetch rom_prefetch_r256_c8               PASS       expect PASS ok  120 0 0
+prefetch rom_prefetch_asbuilt128_c1         FAIL       expect FAIL ok  27 51 1
+ALL OK
+rc=0

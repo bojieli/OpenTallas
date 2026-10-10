@@ -1,0 +1,279 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+ "block": "ot_hgi_coll_row_formatter",
+ "owner": "Claude:hgi-takeover",
+ "source_branch": "claude/hgi-rowfmt-pipe-20261009",
+ "record_branch": "codex/closure-record-hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+ "source_commit": "264ff331a3cf3e11c4f1df80785e33268001def5",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 92.22,
+  "ff_ps": 19.99,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -249.34,
+  "ss_sensitivity_tns_ps": -17861.8,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_row_formatter_c130-264ff331a-tc-cl/routes/hgi_coll_row_formatter_c130_264ff331a_tc_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/hgi_coll_row_formatter_c130.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_row_formatter_c130-264ff331a-tc-cl/routes/hgi_coll_row_formatter_c130_264ff331a_tc_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_coll_row_formatter_c130-264ff331a-tc-cl/routes/hgi_coll_row_formatter_c130_264ff331a_tc_cl/work/orfs/logs/asap7/opentallas_ot_hgi_coll_row_formatter_asap7_qdm_hgi_coll_row_formatter_c130_264ff331a_tc_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_GOLDEN": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=333826\nCALL G=96 B=3 K=7 W=2 destinations=96 badrow=-1 cycles=380\nCALL G=96 B=255 K=7 W=2 destinations=96 badrow=-1 cycles=380\nCALL G=96 B=8 K=7 W=32 destinations=96 badrow=3 cycles=496\nCALL G=96 B=8 K=1 W=257 destinations=96 badrow=-1 cycles=1290\nCALL G=96 B=8 K=1 W=65535 destinations=96 badrow=-1 cycles=327680\nPASS HGI ROW_GATHER calls=32 rows=12927 words=477132 cycles=2427465 k7/512/2048 G1/2/4/8/96 B8/3/255 payloadorder/written/backpressure\nrtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:99: $finish called at 24274650000 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_MUT_OWNER": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "32 destinations=1 badrow=-1 cycles=333826\nCALL G=1 B=3 K=7 W=2 destinations=1 badrow=-1 cycles=380\nCALL G=1 B=255 K=7 W=2 destinations=1 badrow=-1 cycles=380\nCALL G=1 B=8 K=7 W=32 destinations=1 badrow=3 cycles=496\nCALL G=2 B=8 K=7 W=32 destinations=2 badrow=-1 cycles=1143\nCALL G=2 B=8 K=512 W=32 destinations=2 badrow=-1 cycles=83458\nCALL G=2 B=8 K=2048 W=32 destinations=2 badrow=-1 cycles=333826\nFATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:50: owner/local/word mismatch g2 b3 idx2 got0/983/0 expected1/983/0\n       Time: 8382850000  Scope: tb_hgi_coll_row_formatter.call\n",
+   "track": "parallel"
+  },
+  "bench_MUT_ORDER": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:60: payload/list-order/count mismatch\n       Time: 100000  Scope: tb_hgi_coll_row_formatter.call\n",
+   "track": "parallel"
+  },
+  "bench_MUT_WRITTEN": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "CALL G=1 B=8 K=7 W=32 destinations=1 badrow=-1 cycles=1143\nCALL G=1 B=8 K=512 W=32 destinations=1 badrow=-1 cycles=83458\nCALL G=1 B=8 K=2048 W=32 destinations=1 badrow=-1 cycles=333826\nCALL G=1 B=3 K=7 W=2 destinations=1 badrow=-1 cycles=380\nCALL G=1 B=255 K=7 W=2 destinations=1 badrow=-1 cycles=380\nFATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:57: unwritten row leaked instead of fault\n       Time: 4196960000  Scope: tb_hgi_coll_row_formatter.call\n",
+   "track": "parallel"
+  },
+  "bench_MUT_ID_BOUND": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "32 destinations=96 badrow=-1 cycles=83458\nCALL G=96 B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=333826\nCALL G=96 B=3 K=7 W=2 destinations=96 badrow=-1 cycles=380\nCALL G=96 B=255 K=7 W=2 destinations=96 badrow=-1 cycles=380\nCALL G=96 B=8 K=7 W=32 destinations=96 badrow=3 cycles=496\nCALL G=96 B=8 K=1 W=257 destinations=96 badrow=-1 cycles=1290\nCALL G=96 B=8 K=1 W=65535 destinations=96 badrow=-1 cycles=327680\nFATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:81: U32 rowid/context bound leaked reader request\n       Time: 24274570000  Scope: tb_hgi_coll_row_formatter.bad_id\n",
+   "track": "parallel"
+  },
+  "bench_MUT_PROGRESS": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv:66: progress mutant retired row before its last word was consumed\n       Time: 130000  Scope: tb_hgi_coll_row_formatter.call\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ZERO_ELECTRICAL": {
+   "ok": true,
+   "out": "{\"verdict\": \"PASS\", \"fails\": []}\n"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 3,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T11:13:45-07:00",
+ "job_spec": {
+  "name": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+  "block": "ot_hgi_coll_row_formatter",
+  "owner": "Claude:hgi-takeover",
+  "purpose": "hgi-takeover: row formatter PRE (bound + /3 %3 registered) and MUL (q*B+r) edges for drive-0849 TT -83/-115; PPL fix kept.",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-epyc2",
+   "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+   "branch": "claude/hgi-rowfmt-pipe-20261009",
+   "commit": "264ff331a"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "GOLDEN",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/GOLDEN.vvp 2>&1 | tee {RUN}/bench/GOLDEN.log",
+     "expect": "pass",
+     "pass_regex": "PASS HGI",
+     "min_count_regex": "words=(\\d+)",
+     "logs": [
+      "{RUN}/bench/GOLDEN.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_OWNER",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_OWNER=1 -o {RUN}/bench/MUT_OWNER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_OWNER.vvp 2>&1 | tee {RUN}/bench/MUT_OWNER.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_OWNER.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_ORDER",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_ORDER=1 -o {RUN}/bench/MUT_ORDER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_ORDER.vvp 2>&1 | tee {RUN}/bench/MUT_ORDER.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_ORDER.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_WRITTEN",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_WRITTEN=1 -o {RUN}/bench/MUT_WRITTEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_WRITTEN.vvp 2>&1 | tee {RUN}/bench/MUT_WRITTEN.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_WRITTEN.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_ID_BOUND",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_ID_BOUND=1 -o {RUN}/bench/MUT_ID_BOUND.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_ID_BOUND.vvp 2>&1 | tee {RUN}/bench/MUT_ID_BOUND.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_ID_BOUND.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "MUT_PROGRESS",
+     "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_PROGRESS=1 -o {RUN}/bench/MUT_PROGRESS.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_PROGRESS.vvp 2>&1 | tee {RUN}/bench/MUT_PROGRESS.log",
+     "expect": "fail",
+     "fail_regex": "FATAL:",
+     "logs": [
+      "{RUN}/bench/MUT_PROGRESS.log"
+     ],
+     "threads": 1,
+     "peak_ram_gb": 0.1,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Current route_master directly measures boundary clock arrival afterCTS forTTreference andMMFF; no guessed insertion calibration"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} HM=0.01 OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh hgi_coll_row_formatter_c130 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log",
+     "{RUN}/routes/{LABEL}/sta.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 4
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/hgi_coll_row_formatter_c130.sdc"
+   ],
+   "macros": [],
+   "checks": [
+    {
+     "name": "ZERO_ELECTRICAL",
+     "cmd": "python3 {SRC}/tools/hgi_collective_electrical_gate.py {RUN}/routes/{LABEL}/physical.json"
+    }
+   ]
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ExistingapprovedholdECO path; finalTT/FF/DRCrequired"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/hgi_collective_decode_20261009/routes/hgi_coll_row_formatter_counter_a-c0c8382da-tc-cx_c130"
+   }
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 3,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Newleaf currentlocal IO90/150 and realrouted reference; finaldie composition/wiring pending, no dieadoption before binding"
+  },
+  "bench_first": false,
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T10:45:13-07:00",
+   "est_as_configured": {
+    "W": 6.44,
+    "E": 6.07,
+    "S": 0.02
+   },
+   "est_fix": {
+    "W": 3.16,
+    "E": 2.98,
+    "S": 0.01
+   },
+   "why": "ordered pin group(s) > 200 pins (^(start_v|group_size|owner_block|destinations|row_count|row_words|context_rows|id_v|id|read_r|response_v|response_data|response_written|out_r|done_r)(\\[|$) 644, ^(start_r|id_r|read_v|read_owner|read_local_row|read_word|response_r|out_v|out_data|out_index|out_word|out_destinations|done_v|fault)(\\[|$) 607) fall back in the IO placer (PPL-0107) || measured pin-density"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

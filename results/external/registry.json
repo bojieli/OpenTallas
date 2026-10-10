@@ -13,8 +13,8 @@
   }
  ],
  "counts": {
-  "total": 121,
-  "new": 13
+  "total": 125,
+  "new": 17
  },
  "entries": [
   {
@@ -393,6 +393,7 @@
    "harvested_from": "results/arch/sync_cost_table.json references.r-keller",
    "new": false,
    "used_by": [
+    "docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md",
     "docs/RESEARCH_PROVENANCE.md",
     "results/arch/sync_cost_table.json",
     "tools/sync_cost_table.py"
@@ -408,6 +409,7 @@
    "harvested_from": "results/arch/sync_cost_table.json references.r-sc25",
    "new": false,
    "used_by": [
+    "docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md",
     "docs/RESEARCH_PROVENANCE.md",
     "results/arch/sync_cost_table.json",
     "tools/sync_cost_table.py"
@@ -479,6 +481,7 @@
    "harvested_from": "results/arch/sync_cost_table.json references.r-oconnor",
    "new": false,
    "used_by": [
+    "docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md",
     "results/arch/sync_cost_table.json",
     "tools/sync_cost_table.py"
    ]
@@ -1487,6 +1490,7 @@
    "harvested_from": "results/arch/v41_rack.json physical_constants.hbm3e_footprint_mm",
    "new": false,
    "used_by": [
+    "docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md",
     "results/arch/v41_rack.json",
     "tools/v41_rack_design.py"
    ]
@@ -1502,6 +1506,7 @@
    "harvested_from": "results/arch/v41_rack.json physical_constants.hbm3e_stack_GB",
    "new": false,
    "used_by": [
+    "docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md",
     "results/arch/v41_rack.json",
     "tools/v41_rack_design.py"
    ]
@@ -2127,6 +2132,170 @@
    },
    "quote": "At 222 tok/s/user (higher concurrency): B200 3,996 tok/s/chip ... B300 3,702 tok/s/chip; agentic inference metrics from the AgentX scenario where context grows iteratively, most requests served from cache",
    "note": "V4-Pro (49B active), not V4.1-Flash; agentic cached contexts, not a 1M single-sequence decode.",
+   "new": true,
+   "used_by": []
+  },
+  {
+   "id": "new:sglang_v41flash_gb300_bs1",
+   "topic": "gpu baseline",
+   "title": "SGLang blog, DeepSeek-V4.1 Flash on SGLang: from 35 to 873 tokens/s (4 x GB300, batch 1, DSpark)",
+   "url": "https://www.sglang.io/blog/deepseek-v4.1-flash-kernel-optimization",
+   "date": "undated post (fetched 2026-10-09)",
+   "date_fetched": "2026-10-09",
+   "cls": "third-party engine blog",
+   "value": {
+    "dspark_tok_s": 873.63,
+    "dspark_ep4_tok_s": 854.64,
+    "plain_tok_s": 203,
+    "plain_4k1k_ep4_tok_s": 223.5,
+    "accept_length_simulated": 5.5,
+    "accept_length_measured": 5.505,
+    "block": 5,
+    "gpus": "4 x GB300",
+    "attention": "TP4",
+    "moe": "TP4 (EP1)",
+    "input_tokens": 4096,
+    "output_tokens": 1024
+   },
+   "quote": "On 4x GB300, plain decode at BS=1 went from 35 tokens/s on our first working build to 203 tokens/s | attention TP4, MoE TP4 (EP1), 4,096 random input tokens, 1,024 output tokens, with the simulated accept length fixed at 5.5, reaches 873.63 tokens/s at BS=1 | We fix the block size at 5",
+   "note": "Best published per-user (batch 1) V4.1-Flash GPU decode found 2026-10-09. Acceptance is SIMULATED at 5.5 (measured 5.505), above the owner tau 4.159 our designs use, so it is GPU-favourable; 4K/1K random workload, throughput excludes prefill.",
+   "new": true,
+   "used_by": []
+  },
+  {
+   "id": "new:infx_v41flash_b200_agentx",
+   "topic": "gpu baseline",
+   "title": "SemiAnalysis InferenceX PR #3346, [B200][SGLang][AgentX] Improve DeepSeek V4.1 Flash performance (merged 2026-09-22)",
+   "url": "https://github.com/SemiAnalysisAI/InferenceX/pull/3346",
+   "date": "2026-09-22",
+   "date_fetched": "2026-10-09",
+   "cls": "third-party benchmark",
+   "value": {
+    "metric": "total tok/s/GPU and p90 interactivity (tok/s per user)",
+    "dspark": true,
+    "golden_accept_length": 3.51,
+    "tp4_ep4": {
+     "1": [
+      6834.69,
+      484.75
+     ],
+     "2": [
+      6888.43,
+      458.92
+     ],
+     "4": [
+      9205.8,
+      433.72
+     ],
+     "8": [
+      15656.91,
+      333.4
+     ],
+     "16": [
+      28203.42,
+      205.87
+     ],
+     "32": [
+      53603.75,
+      142.85
+     ],
+     "64": [
+      61922.44,
+      97.47
+     ]
+    },
+    "tp2_ep2": {
+     "1": [
+      11686.19,
+      364.35
+     ],
+     "4": [
+      16571.51,
+      302.55
+     ],
+     "8": [
+      29578.3,
+      219.42
+     ]
+    }
+   },
+   "quote": "every point uses shipped-default DSpark precision, interval 16, and the committed five-token golden AL 3.51 | TP4/EP4 concurrency 1: 6,834.69 / 484.75 ... concurrency 64: 61,922.44 / 97.47 (tok/s/GPU / p90 interactivity)",
+   "note": "V4.1-Flash, B200, AgentX agentic workload; [throughput per GPU, p90 interactivity] by concurrency. TP4 C128 (4,775 / 180.67) omitted as an outlier; TP2 C2 lacks a qualified power result.",
+   "new": true,
+   "used_by": []
+  },
+  {
+   "id": "new:openrouter_v41flash_20261009",
+   "topic": "served throughput",
+   "title": "OpenRouter, DeepSeek V4.1 Flash providers page (deepseek/deepseek-v4.1-flash), P50 throughput over 1 week, snapshot 2026-10-09",
+   "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash/providers",
+   "date": "2026-10-09",
+   "date_fetched": "2026-10-09",
+   "cls": "third-party served measurement",
+   "value": {
+    "median_tok_s": 88.5,
+    "best_standard_routed_tok_s": 214,
+    "best_standard_routed_provider": "Together",
+    "best_any_tok_s": 300,
+    "best_any_provider": "Fireworks (not used in standard routing)",
+    "page_headline_p50_best_tok_s": 306,
+    "providers_standard_routed": 30,
+    "p50_tok_s": {
+     "Relace": 93,
+     "Wafer": 95,
+     "inference.net": 71,
+     "Morph": 59,
+     "Sail Research": 49,
+     "Decart": 49,
+     "DekaLLM": 89,
+     "DeepInfra": 49,
+     "StreamLake": 114,
+     "DeepSeek": 152,
+     "GMICloud": 85,
+     "NovitaAI": 88,
+     "Phala": 67,
+     "DigitalOcean": 192,
+     "Makora": 87,
+     "Crusoe": 67,
+     "Baidu Qianfan": 146,
+     "AtlasCloud": 97,
+     "Baseten": 173,
+     "Together": 214,
+     "Modal": 111,
+     "Baseten (2)": 146,
+     "Parasail": 97,
+     "Fireworks": 70,
+     "Venice": 139,
+     "Open Inference": 23,
+     "CoreWeave": 201,
+     "Alibaba Cloud Int.": 28,
+     "SiliconFlow": 69,
+     "Ionstream": 39
+    }
+   },
+   "quote": "Latency / throughput P50 ... Together $0.30 $1.20 $0.006 0.45s 214 tps ... DeepSeek $0.15 $0.60 $0.003 1.16s 152 tps ... Not used in Standard routing: Fireworks $0.45 $1.80 $0.009 0.35s 300 tps | THROUGHPUT 306tok/s P50, best across providers",
+   "note": "What users get today: served throughput including network, queueing and provider load; a snapshot, not a hardware measurement.",
+   "new": true,
+   "used_by": []
+  },
+  {
+   "id": "new:openrouter_qwen3_8b_20261009",
+   "topic": "served throughput",
+   "title": "OpenRouter, Qwen3 8B providers page (qwen/qwen3-8b), P50 throughput over 1 week, snapshot 2026-10-09",
+   "url": "https://openrouter.ai/qwen/qwen3-8b/providers",
+   "date": "2026-10-09",
+   "date_fetched": "2026-10-09",
+   "cls": "third-party served measurement",
+   "value": {
+    "median_tok_s": 55,
+    "best_tok_s": 55,
+    "provider": "Alibaba Cloud Int.",
+    "providers": 1,
+    "p50_avg_1w_tok_s": 50,
+    "p90_avg_1w_tok_s": 65
+   },
+   "quote": "This model is hosted by one provider ... Alibaba Cloud Int. $0.117 $0.455 0.61s 55 tps | Throughput P90 Avg 65 tok/s ... P50 Avg 50 tok/s",
+   "note": "Single provider; OpenRouter lists the model as deprecated on 2026-10-09. Served throughput including network and load; a snapshot.",
    "new": true,
    "used_by": []
   },

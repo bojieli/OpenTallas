@@ -1,0 +1,24 @@
+{
+  "source": "d045744932eb5a6e24ddb24fcc3048f40e8de06a",
+  "parent_model": "tools/uarch_model.py, tools/dsrom_closure_cost_ledger.py collector +2 job cycles",
+  "scope": "dsfd_colt_lane queue OBD=4 W=512 DEPTH=256",
+  "variant": "opt-in circular output buffer",
+  "compute_macs_cycle": 0,
+  "sram_macros": 2,
+  "sram_port_bytes_cycle": 64,
+  "sram_read_issue_cycles": 2,
+  "boundary_bits_cycle": {
+    "input": 515,
+    "output": 513,
+    "credit": 1,
+    "fault": 4
+  },
+  "output_register_bits": 2048,
+  "ring_pointer_bits": 4,
+  "removed_shift_register_movements_bits_cycle": 1536,
+  "replicas_per_die": 4,
+  "latency_added_cycles": 0,
+  "port_and_outline_change": false,
+  "latency_composition": "Existing collector cost of +2 per attention gather job unchanged; no throughput credit before RTL measurement",
+  "routing": "Same pin count, macro placement, tracks, footprint; internal wide shift fanout removed, 4 state bits added. Route admission and final floorplan margin still gate adoption."
+}

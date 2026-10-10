@@ -1,0 +1,7 @@
+FAULT_CASE clean_rope ok fault=0 code=0
+FAULT_CASE out_of_range ok fault=1 code=1
+FAULT_CASE head_out_of_range ok fault=1 code=1
+FAULT_CASE misaligned ok fault=1 code=2
+FAULT_CASE rows_disagree ok fault=1 code=3
+FAULT_CASE stage_out_of_range ok fault=1 code=1
+CROM_RESULT pass=1 vectors=15980 lanes=1011804 mismatches=0 cycles=19374 mut=0

@@ -169,7 +169,7 @@
    "sectors_written": 32768,
    "seed": 1,
    "timeout": false,
-   "wall_s": 0.6
+   "wall_s": 0.4
   },
   "raw": {
    "active_cycles": 301,
@@ -220,7 +220,7 @@
     "DECBASE": 64512,
     "DECLEN": 1024
    },
-   "record_decode_equals_golden_qdq_fp4_e4m3": false,
+   "record_decode_equals_golden_qdq_fp4_e4m3": true,
    "ring": 0,
    "row_bytes": 288,
    "rows": 1000,
@@ -230,7 +230,7 @@
    "seed": 1,
    "stacks": 4,
    "timeout": false,
-   "wall_s": 0.4
+   "wall_s": 0.2
   },
   "v41_ikey": {
    "active_cycles": 12751,
@@ -262,7 +262,7 @@
    "seed": 1,
    "stacks": 4,
    "timeout": false,
-   "wall_s": 0.4
+   "wall_s": 0.3
   },
   "v41_win": {
    "active_cycles": 3401,
@@ -299,11 +299,11 @@
    "wall_s": 0.0
   }
  },
- "git_head": "4e3be67a1806df8384188f95a9cc146bc101af88",
+ "git_head": "d14c1955ca3fbd819864b189656b0e1922649335",
  "input_sha256": {
   "rtl/hdc/ingest/ot_hdc_ingest_arb.sv": "cceb819fcb2375b62a7feed1dcf482bbcc63a1abb69e76484793fa462abc3484",
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
-  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "0fd87c4aac20f74fea1eba39c6ffd1f002cd0f806790302c3cf6593109581c1d",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a72e50fbeb1376b52b0156d7b8b822957380b991ca7c8ec5c578a39b28241e71",
   "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
   "rtl/test/tb_hdc_kv_ingest.sv": "6dee2700de45bf0c3956d3d28a8be8090714dc7ed490cfc27e6b57e2ca556f38",
   "tools/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
@@ -396,7 +396,7 @@
     "seed": 114,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.0
+    "wall_s": 0.6
    },
    {
     "active_cycles": 1156,
@@ -429,7 +429,7 @@
     "seed": 154,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.0
+    "wall_s": 1.8
    },
    {
     "active_cycles": 1163,
@@ -462,7 +462,7 @@
     "seed": 174,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.0
+    "wall_s": 0.6
    },
    {
     "active_cycles": 1551,
@@ -495,7 +495,7 @@
     "seed": 164,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.0
+    "wall_s": 0.3
    },
    {
     "active_cycles": 3087,
@@ -528,7 +528,7 @@
     "seed": 132,
     "share_x256": 32,
     "timeout": false,
-    "wall_s": 0.0
+    "wall_s": 0.4
    }
   ],
   "qwen_shipped_geom": [
@@ -563,7 +563,7 @@
     "seed": 64,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.6
+    "wall_s": 0.5
    },
    {
     "active_cycles": 53519,
@@ -596,7 +596,7 @@
     "seed": 114,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.6
+    "wall_s": 1.0
    },
    {
     "active_cycles": 97758,
@@ -662,7 +662,7 @@
     "seed": 174,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.7
+    "wall_s": 0.5
    },
    {
     "active_cycles": 131858,
@@ -695,7 +695,7 @@
     "seed": 164,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.7
+    "wall_s": 1.0
    },
    {
     "active_cycles": 262674,
@@ -728,7 +728,7 @@
     "seed": 132,
     "share_x256": 32,
     "timeout": false,
-    "wall_s": 0.8
+    "wall_s": 1.0
    }
   ],
   "v41_ikey": [
@@ -763,7 +763,7 @@
     "seed": 64,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.5
    },
    {
     "active_cycles": 12793,
@@ -796,7 +796,7 @@
     "seed": 114,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 1.1
    },
    {
     "active_cycles": 12793,
@@ -829,7 +829,7 @@
     "seed": 154,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.5
    },
    {
     "active_cycles": 13367,
@@ -862,7 +862,7 @@
     "seed": 174,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.5
    },
    {
     "active_cycles": 12793,
@@ -895,7 +895,7 @@
     "seed": 164,
     "share_x256": 64,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.6
    },
    {
     "active_cycles": 17521,
@@ -928,7 +928,7 @@
     "seed": 132,
     "share_x256": 32,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.2
    }
   ]
  }

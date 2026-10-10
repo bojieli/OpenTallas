@@ -1,0 +1,54 @@
+{
+ "name": "hing_qfd_C_div2_hm25",
+ "block": "qfd_io_host",
+ "owner": "Claude:ingest",
+ "purpose": "Qwen qfd_io_host: C = A with util 30 % / PD 0.45 (more area for the 131k-flop corner-turn banks) and HM 25 | DRAFT (review_queue/ingest.md RQ-ING-3): NOT queued until the reviewer approves.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 48,
+ "route_hold_margin_ns": 0.025,
+ "source": {
+  "branch": "claude/ingest-20261008",
+  "commit": "PENDING_COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hing_e2e_exact",
+    "cmd": "python3 tools/rtl_rom_host_ingest_bench.py --quick --no-model --work /tmp/hing_{NAME} --output {RUN}/bench/bench.json > {RUN}/bench.txt 2>&1; grep -q '^pass: True' {RUN}/bench.txt && echo HING_PASS",
+    "expect": "pass",
+    "pass_regex": "HING_PASS",
+    "threads": 2,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hing_neg",
+    "cmd": "grep -q 'mutant payload_bit_flip_in_cdc detected' {RUN}/bench.txt && grep -q 'mutant done_tag_plus_one detected' {RUN}/bench.txt && echo HING_NEG_FAIL && exit 1; exit 0",
+    "expect": "fail",
+    "fail_regex": "HING_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "new master, no die generator ports yet: block-internal closure at the generic 20 % IO first (die-face budget after placement in r21c / S81 r5)"
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" DIV=\"2\" UTIL=\"30\" PD=\"0.45\" HM=\"0.025\" NEED=\"48\" bash physical/rom_host_ingest/route.sh {LABEL} qfd_io_host",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+ }
+}

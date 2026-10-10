@@ -1,0 +1,8 @@
+# base
+TB_S81_CTRL_CHAIN mut=0 forge=0 cycles=5027 dones=2 boot_refused=1 payloads=44 sides=22 desc_err=0 cpl_err=0 faults=000 fvec=0000,0000,0000 guard1=0 crc_err=107,108,39 replays=28,28,1 jobs=22,22,22 tokens=22 PASS
+# forge
+TB_S81_CTRL_CHAIN mut=0 forge=1 cycles=5038 dones=2 boot_refused=1 payloads=44 sides=22 desc_err=0 cpl_err=0 faults=010 fvec=0000,0002,0000 guard1=2 crc_err=107,108,39 replays=28,28,1 jobs=22,22,22 tokens=22 PASS
+# MUT1 (expect FAIL)
+TB_S81_CTRL_CHAIN TIMEOUT cyc=400001 dones=0 FAIL
+# NOSRC +forge (expect FAIL)
+TB_S81_CTRL_CHAIN mut=0 forge=1 cycles=5038 dones=2 boot_refused=1 payloads=44 sides=22 desc_err=0 cpl_err=0 faults=010 fvec=0000,0004,0000 guard1=4 crc_err=107,108,39 replays=28,28,1 jobs=22,22,22 tokens=22 FAIL

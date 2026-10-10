@@ -1,0 +1,352 @@
+{
+ "schema": "opentallas.qwen_r25_smh_fmt3_vectors.v1",
+ "generated_utc": "2026-10-09T14:20:44Z",
+ "host": "ot-epyc1tb",
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218",
+ "layer": 0,
+ "position": 8191,
+ "proofs": [
+  {
+   "stage": "layer",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 34,
+   "image_bytes": 3712,
+   "executed_records": 33,
+   "wall_s": 2.1,
+   "families": {
+    "prenorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "qkv+row_scale_qkv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "qknorm": {
+     "checks": 8,
+     "exact": 8
+    },
+    "rope": {
+     "checks": 4,
+     "exact": 4
+    },
+    "round_q": {
+     "checks": 4,
+     "exact": 4
+    },
+    "kv_append": {
+     "checks": 16,
+     "exact": 16
+    },
+    "attention_qk": {
+     "checks": 4,
+     "exact": 4
+    },
+    "softmax": {
+     "checks": 4,
+     "exact": 4
+    },
+    "attention_pv": {
+     "checks": 4,
+     "exact": 4
+    },
+    "pv_normalize": {
+     "checks": 4,
+     "exact": 4
+    },
+    "o": {
+     "checks": 4,
+     "exact": 4
+    },
+    "all_reduce_o+row_scale_o+residual": {
+     "checks": 4,
+     "exact": 4
+    },
+    "gu+row_scale_gu": {
+     "checks": 4,
+     "exact": 4
+    },
+    "swiglu": {
+     "checks": 4,
+     "exact": 4
+    },
+    "down": {
+     "checks": 4,
+     "exact": 4
+    },
+    "all_reduce_down+row_scale_down+residual": {
+     "checks": 4,
+     "exact": 4
+    }
+   },
+   "record_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "end",
+    "gu",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ],
+   "token": 0,
+   "failures": []
+  },
+  {
+   "stage": "head",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 7,
+   "image_bytes": 656,
+   "executed_records": 6,
+   "wall_s": 3.7,
+   "families": {
+    "head+head_scale": {
+     "checks": 4,
+     "exact": 4
+    }
+   },
+   "record_families": [
+    "argmax_local",
+    "argmax_merge",
+    "end",
+    "head",
+    "head_scale",
+    "prenorm"
+   ],
+   "token": 46335,
+   "failures": []
+  }
+ ],
+ "proofs_pass": true,
+ "ops": [
+  {
+   "key": "head:head.L0.d0.sm0",
+   "tag": "head",
+   "rows": [
+    0,
+    1187
+   ],
+   "total_rows": 37984,
+   "K": 4096
+  },
+  {
+   "key": "head:head.L0.d1.sm13",
+   "tag": "head",
+   "rows": [
+    15431,
+    16618
+   ],
+   "total_rows": 37984,
+   "K": 4096
+  },
+  {
+   "key": "head:head.L0.d2.sm22",
+   "tag": "head",
+   "rows": [
+    26114,
+    27301
+   ],
+   "total_rows": 37984,
+   "K": 4096
+  },
+  {
+   "key": "head:head.L0.d3.sm31",
+   "tag": "head",
+   "rows": [
+    36797,
+    37984
+   ],
+   "total_rows": 37984,
+   "K": 4096
+  },
+  {
+   "key": "layer:down.L0.d0.sm0",
+   "tag": "down",
+   "rows": [
+    0,
+    128
+   ],
+   "total_rows": 4096,
+   "K": 3072
+  },
+  {
+   "key": "layer:down.L0.d1.sm13",
+   "tag": "down",
+   "rows": [
+    1664,
+    1792
+   ],
+   "total_rows": 4096,
+   "K": 3072
+  },
+  {
+   "key": "layer:down.L0.d2.sm22",
+   "tag": "down",
+   "rows": [
+    2816,
+    2944
+   ],
+   "total_rows": 4096,
+   "K": 3072
+  },
+  {
+   "key": "layer:down.L0.d3.sm31",
+   "tag": "down",
+   "rows": [
+    3968,
+    4096
+   ],
+   "total_rows": 4096,
+   "K": 3072
+  },
+  {
+   "key": "layer:gu.L0.d0.sm0",
+   "tag": "gu",
+   "rows": [
+    0,
+    192
+   ],
+   "total_rows": 6144,
+   "K": 4096
+  },
+  {
+   "key": "layer:gu.L0.d1.sm13",
+   "tag": "gu",
+   "rows": [
+    2496,
+    2688
+   ],
+   "total_rows": 6144,
+   "K": 4096
+  },
+  {
+   "key": "layer:gu.L0.d2.sm22",
+   "tag": "gu",
+   "rows": [
+    4224,
+    4416
+   ],
+   "total_rows": 6144,
+   "K": 4096
+  },
+  {
+   "key": "layer:gu.L0.d3.sm31",
+   "tag": "gu",
+   "rows": [
+    5952,
+    6144
+   ],
+   "total_rows": 6144,
+   "K": 4096
+  },
+  {
+   "key": "layer:o.L0.d0.sm0",
+   "tag": "o",
+   "rows": [
+    0,
+    128
+   ],
+   "total_rows": 4096,
+   "K": 1024
+  },
+  {
+   "key": "layer:o.L0.d1.sm13",
+   "tag": "o",
+   "rows": [
+    1664,
+    1792
+   ],
+   "total_rows": 4096,
+   "K": 1024
+  },
+  {
+   "key": "layer:o.L0.d2.sm22",
+   "tag": "o",
+   "rows": [
+    2816,
+    2944
+   ],
+   "total_rows": 4096,
+   "K": 1024
+  },
+  {
+   "key": "layer:o.L0.d3.sm31",
+   "tag": "o",
+   "rows": [
+    3968,
+    4096
+   ],
+   "total_rows": 4096,
+   "K": 1024
+  },
+  {
+   "key": "layer:qkv.L0.d0.sm0",
+   "tag": "qkv",
+   "rows": [
+    0,
+    48
+   ],
+   "total_rows": 1536,
+   "K": 4096
+  },
+  {
+   "key": "layer:qkv.L0.d1.sm13",
+   "tag": "qkv",
+   "rows": [
+    624,
+    672
+   ],
+   "total_rows": 1536,
+   "K": 4096
+  },
+  {
+   "key": "layer:qkv.L0.d2.sm22",
+   "tag": "qkv",
+   "rows": [
+    1056,
+    1104
+   ],
+   "total_rows": 1536,
+   "K": 4096
+  },
+  {
+   "key": "layer:qkv.L0.d3.sm31",
+   "tag": "qkv",
+   "rows": [
+    1488,
+    1536
+   ],
+   "total_rows": 1536,
+   "K": 4096
+  }
+ ],
+ "sm_split": "rows split over 32 SMs in equal contiguous ranges (row share = round(s*R/32)..)",
+ "sim_source_sha256": {
+  "hgi_sim/lib.py": "1bc52421ec043256a0005132f460be4dc0842fa7c2af683f47fc51667a3a504e",
+  "hgi_sim/machine.py": "5d96e6afc886efc924591ea40d0a32ac99618b1879d52a868af52e03dd8a1050",
+  "hgi_sim/qwen_compiler.py": "2b79721502b7228975f765fa79995a897f216024f16c03b9524d2bee442d97c9",
+  "hgi_sim/qwen_proof.py": "08f6ed1a3fead4693c479298adfb7e455ea0d9045e0f6a7c52280a79f895e423",
+  "hgi_sim/records.py": "8298cd1462f892012d36c351ce05d04bfb6f20bc4d0c3600a64c68695ae9d565",
+  "qwen_r25_golden.py": "d6feb1247e08708a6f15a8e63ef4e2376d316dc04cd8ba06e4f298f058412439"
+ }
+}

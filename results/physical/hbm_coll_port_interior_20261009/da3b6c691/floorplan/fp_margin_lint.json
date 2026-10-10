@@ -1,0 +1,69 @@
+{
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  {
+   "check": "capture",
+   "msg": "2147 macro outputs are captured by a single flop the placer may put far from the pin (qfd_tile rp1 class): anchor them at the pins (rom_cap_at_pins.tcl)"
+  }
+ ],
+ "metrics": {
+  "core_um2": 256975.6,
+  "std_um2": 6823.5,
+  "macro_um2": 70048.4,
+  "flops": 13303,
+  "hold_allow_um2": 969.8,
+  "util": 0.2991,
+  "util_hold": 0.3029,
+  "n_macros": 18,
+  "n_pins": 2736,
+  "pin_density_max": 4.86,
+  "pin_density_at": "W M4 @102.5 um (486 pins / 100 um, 603 on the face)",
+  "pin_width_illegal": 0,
+  "pin_width_offtable_accessible": 0,
+  "pin_pdn_near": 0,
+  "pin_pdn_near_sparse": 0,
+  "pin_pdn_min_um": {
+   "M3": 1.02,
+   "M6": 1.011,
+   "M5": 0.973,
+   "M4": 1.236
+  },
+  "macro_edge_shadow": 0,
+  "bank_far": 0,
+  "slivers": 0,
+  "channel_worst": {
+   "axis": "y",
+   "at": 258.05,
+   "demand": 560,
+   "cap": 4977.0,
+   "ratio": 0.113
+  },
+  "capture_unanchored": 2147
+ },
+ "thresholds": {
+  "util_max": 0.6,
+  "util_hold_max": 0.65,
+  "hold_buf_per_flop": 1.0,
+  "pin_density_max": 12.0,
+  "pin_density_target": 6.0,
+  "pin_density_window_um": 100.0,
+  "pin_density_min_pins": 1,
+  "pin_pdn_tracks": 1.0,
+  "pin_pdn_fail": 0.0,
+  "pin_width_access_pitches": 1.0,
+  "pin_pdn_full_frac": 0.9,
+  "channel_usable": 0.5,
+  "channel_min_layer": 4,
+  "macro_edge_um": 10.0,
+  "macro_edge_pins": 32,
+  "sliver_um": 12.0,
+  "sliver_min_row_area_um2": 2.0,
+  "sliver_blocked_frac": 0.9,
+  "bank_dist_um": 100.0,
+  "bank_min_pins": 8,
+  "capture_warn_um": 50.0,
+  "capture_warn_count": 256
+ },
+ "dump": "/work/reports/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/fp_margin_lint_dump.json"
+}

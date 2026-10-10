@@ -1,0 +1,1 @@
+SRC=/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/src die=contract master=dsfd_engram_sink top=rtl/dsrom_sys/engram/dsfd_engram_sink.sv DW=360.0 DH=135.0 PD=0.45 MAXL=M7 SRCS=rtl/hdc/v41/ot_hdc_engram_gather.sv rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv CLK=ck SDCX= CTSA= --param PIN_CAPTURE=1

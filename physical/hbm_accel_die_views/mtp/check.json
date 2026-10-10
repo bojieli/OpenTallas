@@ -1,0 +1,177 @@
+{
+ "master": "hfd_mtp",
+ "lef": "physical/hbm_accel_die_views/mtp/hfd_mtp.lef",
+ "macro": "hfd_mtp",
+ "size_view": [
+  466.56,
+  200.88
+ ],
+ "size_gen": [
+  466.56,
+  200.88
+ ],
+ "gen_pins": 1319,
+ "view_pins": 1358,
+ "missing": 1319,
+ "extra": 1358,
+ "die_top_io_pins": [],
+ "moved": 0,
+ "wrong_layer": 0,
+ "wrong_face": 0,
+ "wrong_face_examples": [],
+ "missing_examples": [
+  "ck[0]",
+  "f_cmdproc[0]",
+  "f_cmdproc[100]",
+  "f_cmdproc[101]",
+  "f_cmdproc[102]",
+  "f_cmdproc[103]",
+  "f_cmdproc[104]",
+  "f_cmdproc[105]"
+ ],
+ "extra_examples": [
+  "am_fault",
+  "am_idx[0]",
+  "am_idx[10]",
+  "am_idx[11]",
+  "am_idx[12]",
+  "am_idx[13]",
+  "am_idx[14]",
+  "am_idx[15]"
+ ],
+ "moved_examples": [],
+ "wrong_layer_examples": [],
+ "pg_pins": {
+  "VDD": [
+   "M6"
+  ],
+  "VSS": [
+   "M6"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [],
+ "positions": "exact",
+ "problems": [
+  "pins: 1319 missing, 1358 extra, 0 wrong face, 0 wrong layer"
+ ],
+ "verdict": "MISMATCH",
+ "variant": "r25g",
+ "findings": {
+  "summary": "the closed block is the bare controller hfd_mtp_x_stop (RTL port names, tool-placed pins on all four faces); the r25g generator master hfd_mtp is a bundled-bus facade (ck/rst + f_*/t_* groups, all 1,319 pins on the N face, M5). No pin name in common: the view cannot bind the die netlist without a die wrapper/facade named hfd_mtp around it, and the generator group widths (legacy MTP_HUB_LINKS) differ from the routed RTL ABI.",
+  "view_faces": {
+   "S": 795,
+   "N": 294,
+   "E": 153,
+   "W": 116
+  },
+  "view_layers": {
+   "M5": 1089,
+   "M4": 269
+  },
+  "view_pin_shapes": [
+   [
+    "M5",
+    0.024,
+    0.084,
+    1089
+   ],
+   [
+    "M4",
+    0.084,
+    0.024,
+    269
+   ]
+  ],
+  "gen_faces": {
+   "N": 1319
+  },
+  "gen_pin_shapes": [
+   [
+    "M5",
+    0.024,
+    0.192,
+    1319
+   ]
+  ],
+  "gen_port_bits": {
+   "f_cmdproc": 126,
+   "f_coll": 64,
+   "f_router": 8,
+   "f_su_red": 657,
+   "t_cmdproc": 320,
+   "t_coll": 64,
+   "t_router": 78,
+   "rst": 1,
+   "ck": 1
+  },
+  "view_ports_by_native_stop_group": {
+   "f_cmdproc": 179,
+   "t_cmdproc": 517,
+   "f_su_red": 523,
+   "f_router": 59,
+   "t_router": 58,
+   "t_coll": 19,
+   "f_coll": 1,
+   "clk": 1,
+   "rst_n": 1
+  },
+  "native_stop_contract": "tools/hbm_mtp_native_contract.py stop_model (peer grouping of the hfd_mtp_x_stop ports)",
+  "group_bit_deltas": {
+   "clk": {
+    "gen": 1,
+    "view": 1
+   },
+   "f_cmdproc": {
+    "gen": 126,
+    "view": 179
+   },
+   "f_coll": {
+    "gen": 64,
+    "view": 1
+   },
+   "f_router": {
+    "gen": 8,
+    "view": 59
+   },
+   "f_su_red": {
+    "gen": 657,
+    "view": 523
+   },
+   "rst_n": {
+    "gen": 1,
+    "view": 1
+   },
+   "t_cmdproc": {
+    "gen": 320,
+    "view": 517
+   },
+   "t_coll": {
+    "gen": 64,
+    "view": 19
+   },
+   "t_router": {
+    "gen": 78,
+    "view": 58
+   }
+  },
+  "pg_pins_view": {
+   "VDD": [
+    "M6"
+   ],
+   "VSS": [
+    "M6"
+   ]
+  }
+ }
+}

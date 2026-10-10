@@ -117,7 +117,7 @@ def pin_tcl(pins):
     return "\n".join(out) + "\n"
 
 
-def tile_pins(w, h, variant):
+def tile_pins(w, h, variant, cg=False):
     ys = tile_edge_slots(h)
     xin, xout = (0.0, w) if variant == "toE" else (w, 0.0)
     pins = []
@@ -134,7 +134,7 @@ def tile_pins(w, h, variant):
     xs = sorted(gx.values())
     k = 0
     others = (bits("xs_a1", P["RPT"] * P["A1B"]) + bits("xs_g1", P["RPT"] * 5) + bits("xs_a2", P["RPT"] * P["A2B"])
-              + bits("xs_g2", P["RPT"] * 5) + ["rst_n"])
+              + bits("xs_g2", P["RPT"] * 5) + ["rst_n"] + (["cgi", "cgo"] if cg else []))
     xo = round(xs[-1] + 2.0, 3)
     for nme in others:
         pins.append((nme, "M5", "", round(xo + k * 0.48, 3), h)); k += 1
@@ -142,7 +142,7 @@ def tile_pins(w, h, variant):
     return pins
 
 
-def be_pins(w, h, variant):
+def be_pins(w, h, variant, cg=False):
     gx = lane_slots(w, P["SUB"], P["GLW"])
     pins = [(f"gin[{ln * P['GLW'] + i}]", "M5", "", x, h) for (ln, i), x in gx.items()]
     ys = be_edge_slots(h, P["NH"], P["QLW"])
@@ -153,6 +153,9 @@ def be_pins(w, h, variant):
             pins.append((f"qin[{ln * P['QLW'] + i}]", "M4", "", xin, y))
     xs = sorted(gx.values())
     pins.append(("rst_n", "M5", "", round(xs[-1] + 2.0, 3), h))
+    if cg:                                          # redesign-hbm --cg: the wake pins beside rst_n
+        pins.append(("cgi", "M5", "", round(xs[-1] + 2.48, 3), h))
+        pins.append(("cgo", "M5", "", round(xs[-1] + 2.96, 3), h))
     pins.append(("clk", "M5", "", round(xs[0] - 4.008, 3), h))
     return pins
 
@@ -446,7 +449,13 @@ def config_mk(name, nick, die, macros, extra):
     lib_ff = " ".join(f"/src/{m}/{Path(m).name}_ff.lib" for m in macros)
     # OPTION B (2026-10-07): OT_SMH_CORNER=TC routes with setup repair at TT (macro _tt.lib), hold corner BC unchanged
     _SC = os.environ.get("OT_SMH_CORNER", "WC").strip().upper() or "WC"
-    lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)
+    # LOOP-CORNER (2026-10-10): the closure loop's option-B route env (OT_ORFS_CORNER=TC, or a recipe's
+    # OT_ORFS_CORNER_OVERRIDE=TC) is honoured as well: corner WC keeps its NAME (the loop's mm hold session builds scene
+    # WC) and reads the TT std-cell + macro liberties.  Before this, a recipe that set only the override routed at SS.
+    _OC = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper()
+    _TT = _SC != "WC" or _OC in ("TC", "TT")
+    lib_su = " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros) if _TT else lib_ss
+    _SL = "TC" if (_TT and _SC == "WC") else _SC
     lefs = " ".join(f"/src/{m}/{Path(m).name}.lef" for m in macros)
     lines = [f"export DESIGN_NICKNAME = {nick}", f"export DESIGN_NAME = {name}", "export PLATFORM = asap7",
              "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in RTL),
@@ -456,7 +465,7 @@ def config_mk(name, nick, die, macros, extra):
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
              "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
              f"export CORNER = {_SC}", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
-             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}",
+             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SL}_NLDM_LIB_FILES) {lib_su}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
              "export IO_CONSTRAINTS = /work/pins.tcl", "export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)"]
     if macros:
@@ -464,6 +473,9 @@ def config_mk(name, nick, die, macros, extra):
                   "export SYNTH_BLACKBOXES = " + " ".join(Path(m).name for m in macros),
                   "export MACRO_PLACEMENT_TCL = /work/macros.tcl"]
     lines += [f"export {k} = {v}" for k, v in extra.items()]
+    # FLOW-FIX-0410: (* keep *) register copies survive yosys opt_merge (physical/common_flow/ot_keep_regs.tcl)
+    if os.environ.get("OT_KEEP_REGS", "1").strip() != "0" and "SYNTH_CANONICALIZE_TCL" not in extra:
+        lines.append("export SYNTH_CANONICALIZE_TCL = /src/physical/common_flow/ot_keep_regs.tcl")
     return "\n".join(lines) + "\n"
 
 
@@ -1106,9 +1118,9 @@ def cmd_block(a):
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
-        pins = tile_pins(w, h, a.variant)
+        pins = tile_pins(w, h, a.variant, cg=a.cg)
         macros = [SRAM_X]
-        name = "ot_hbm_accel_smh_tile_" + ("e" if a.variant == "toE" else "w")
+        name = "ot_hbm_accel_smh_tile_" + ("e" if a.variant == "toE" else "w") + ("g" if a.cg else "")
         # the 2 x 4 x-store macros: leaf 0 upper half, leaf 1 lower half, a 2 x 2 block each, centred
         mw, mh = 94.824, 41.04
         xs = [round(w / 2 - mw - 2.16, 3), round(w / 2 + 2.16, 3)]
@@ -1129,15 +1141,16 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref,
+                        nbr_in="rin* bin* gin*" + (" cgi" if a.cg else ""))
     elif a.piece == "be":
         w, h = g.get("be_w", g["tile_w"]), g["be_h"]
-        pins = be_pins(w, h, a.variant)
+        pins = be_pins(w, h, a.variant, cg=a.cg)
         macros = []
-        name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
+        name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w") + ("g" if a.cg else "")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*" + (" cgi" if a.cg else ""), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     elif a.piece in STRIPS:
         pos, die, hcore = floorplan(g)
         pins, h = strip_pins(g, hcore, a.piece)
@@ -1148,7 +1161,7 @@ def cmd_block(a):
         if a.piece == "front_c":
             macros = [SRAM_R]
             mw, mh = 96.552, 69.66
-            ch = 120.0
+            ch = float(g.get("front_channel_um", 120.0))
             xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
             y0 = qd(h / 2 - 2.5 * (mh + 4.32))
             tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
@@ -1160,7 +1173,27 @@ def cmd_block(a):
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
-        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
+        hops = STRIP_HOPS[a.piece]
+        if g.get("front_channel_um", 120.0) != 120.0:
+            if a.piece == "front_c":
+                shift = w - 432.0
+                channel = float(g["front_channel_um"])
+                def widen_hop(match):
+                    prefix, xlo, xhi, suffix = match.groups()
+                    xlo, xhi = float(xlo), float(xhi)
+                    if "g_bs" in prefix and "1" in prefix or "g_h" in prefix and ("2" in prefix or "3" in prefix):
+                        xlo += shift; xhi += shift
+                    elif xlo >= 152 and xhi <= 272:
+                        xlo = w / 2 + (xlo - 212) * channel / 120
+                        xhi = w / 2 + (xhi - 212) * channel / 120
+                    elif "u_prd" in prefix:
+                        xhi += shift
+                    return f"{prefix} {xlo:g} {xhi:g}{suffix}"
+                hops = re.sub(r"^(ot_place \{[^\n]*?\}) ([0-9.]+) ([0-9.]+)( [0-9.]+ [0-9.]+)$", widen_hop, hops, flags=re.M)
+                # Converter register stations beside skid/issue, in the enlarged
+                # macro corridor. Pin-facing register placement remains literal.
+                hops += f"ot_place {{^g_int8\\.}} {w/2-channel/2:g} {w/2+channel/2:g} 100 140\n"
+        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + hops)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
         pos, die, hcore = floorplan(g)
@@ -1171,7 +1204,7 @@ def cmd_block(a):
         mw, mh = 96.552, 69.66
         # the 2 x 5 ring macros: slice mb in row mb, group 0 left (MY: pins on its right edge) and group 1 right (R0:
         # pins on its left edge), both facing a central channel where the bulk copy's queue and control sit
-        ch = 120.0
+        ch = float(g.get("front_channel_um", 120.0))
         xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
         y0 = qd(h / 2 - 2.5 * (mh + 4.32))
         tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
@@ -1204,6 +1237,27 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv\n"
                     "export VERILOG_DEFINES += -DOT_SMH_RCH_NONEMPTY\n")
+    if getattr(a, "cg", False):
+        if a.piece not in ("tile", "be"):
+            raise ValueError("--cg applies to tile / be")
+        pre = ["# redesign-hbm --cg: ICG push-down (one clone per sink cluster) before CTS"]
+        if "PRE_CTS_TCL" in extra:
+            pre.append("source " + extra["PRE_CTS_TCL"])
+        if not getattr(a, "cg_nopush", False):
+            pre.append("source /src/physical/common_flow/cg_pushdown.tcl")
+        (work / "pre_cts_cg.tcl").write_text("\n".join(pre) + "\n")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
+                    "export PRE_CTS_TCL = /work/pre_cts_cg.tcl\n")
+    int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
+    if int8_enabled:
+        if a.piece != "front_c":
+            raise ValueError("ENABLE_INT8 belongs to the central strip candidate")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv\n")
+    if getattr(a, "hold_mm", False):
+        with (work / "config.mk").open("a") as f:
+            f.write("export OT_HOLD_MM = 1\n")
     write_abstract(work, name, macros, name)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
@@ -1214,6 +1268,14 @@ def cmd_block(a):
            make_extra=(mx + " ") if mx else "")
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
+    if getattr(a, "hold_mm", False):
+        script = work / "run.sh"
+        content = script.read_text()
+        hook = "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts; "
+        token = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make"
+        if content.count(token) != 1:
+            raise ValueError("multi-mode container patch anchor missing")
+        script.write_text(content.replace(token, hook + token))
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
 
 
@@ -1330,7 +1392,13 @@ def main(argv=None):
     b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
                    "loop does its own admission)")
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
+    b.add_argument("--hold-mm", action="store_true", help="opt-in SS setup/FF hold multi-mode flow repair")
     b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
+    b.add_argument("--cg", action="store_true", help="tile / be: the COARSE CLOCK-GATED master (redesign-hbm 2026-10-09): "
+                   "ot_hbm_accel_smh_{tile,be}_{w,e}g = the same netlist on one ICG (ot_cg_tile) + wake pins cgi / cgo; "
+                   "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
+    b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
+                   "the back end's CTS segfaulted with the push-down hook)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)

@@ -1,0 +1,67 @@
+{
+  "cases": [
+    {
+      "name": "wait_snapshot",
+      "dispatches": 4,
+      "status": 0
+    },
+    {
+      "name": "65535_accepted",
+      "dispatches": 0,
+      "status": 0
+    },
+    {
+      "name": "one",
+      "dispatches": 1,
+      "status": 0
+    },
+    {
+      "name": "nested_levels",
+      "dispatches": 4,
+      "status": 0
+    },
+    {
+      "name": "zero",
+      "dispatches": 0,
+      "status": 3
+    },
+    {
+      "name": "65536",
+      "dispatches": 0,
+      "status": 3
+    },
+    {
+      "name": "all_bits",
+      "dispatches": 0,
+      "status": 3
+    },
+    {
+      "name": "address_range",
+      "dispatches": 0,
+      "status": 3
+    },
+    {
+      "name": "last_address",
+      "dispatches": 2,
+      "status": 0
+    }
+  ],
+  "runs": [
+    {
+      "mutant": false,
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "mutant": true,
+      "passed": false,
+      "returncode": 0
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/ot_hgi_seq.sv": "1e43520ba9070603e60e6bd59b055e07afa43260991593aa49d1e4d4747c22bb",
+    "tools/run_hgi_seq_g24.py": "625f505a5f69ae86eb02c112fe8b46832aee6a55843469aac9b381b0c4bf59db",
+    "tools/hgi_seq_vectors.py": "25627d2a7dedb1a44c56ef4f3a2b0cd01269adf824ffe3e260f916f859f6c660"
+  },
+  "rtl_commit": "821b9247a10f9e5a7771804dd18ee9a539f6aab1"
+}

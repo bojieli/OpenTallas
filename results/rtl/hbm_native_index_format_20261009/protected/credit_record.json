@@ -1,0 +1,48 @@
+{
+  "verdict": "PASS",
+  "runs": [
+    {
+      "component": "query",
+      "test": "base",
+      "exit": 0,
+      "pass_gate": true,
+      "source_sha256": "f8ee81b31eb51a183addf074bc3cd5272a823439098d4b6c1eee7bec2632f7c0"
+    },
+    {
+      "component": "query",
+      "test": "MUT_OWNER",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "f8ee81b31eb51a183addf074bc3cd5272a823439098d4b6c1eee7bec2632f7c0"
+    },
+    {
+      "component": "query",
+      "test": "MUT_QB",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "f8ee81b31eb51a183addf074bc3cd5272a823439098d4b6c1eee7bec2632f7c0"
+    },
+    {
+      "component": "parse",
+      "test": "base",
+      "exit": 0,
+      "pass_gate": true,
+      "source_sha256": "32811e54191008ab293b84534edc6d2388ea3e63d2c70a087a3560f4daf68463"
+    },
+    {
+      "component": "parse",
+      "test": "MUT_RESERVED",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "32811e54191008ab293b84534edc6d2388ea3e63d2c70a087a3560f4daf68463"
+    },
+    {
+      "component": "parse",
+      "test": "MUT_PAYLOAD",
+      "exit": -6,
+      "pass_gate": true,
+      "source_sha256": "32811e54191008ab293b84534edc6d2388ea3e63d2c70a087a3560f4daf68463"
+    }
+  ],
+  "scope": "query128blocks twoframes cold4credits delayedreturns; actual15slot TU parser backpressure/negative reservedbit; no physical credit"
+}

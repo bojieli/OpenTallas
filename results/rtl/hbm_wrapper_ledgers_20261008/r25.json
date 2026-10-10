@@ -1,0 +1,2238 @@
+{
+ "schema": "opentallas.hbm_wrapper_ledger_audit.v1",
+ "source_base_commit": "bcbdac5f5227b3e6bcf323d9000cdb9f528fa464",
+ "source_deltas": {
+  "tools/die_top_lint.py": "3a62da8de16d967614865bf241af89510c4a1e4670bae59403719eb53d6c43ca",
+  "tools/hbm_die_wrap.py": "cdc967e81c5976ae196d6b1f30d5e3cd24c78ed07d16e573750df176ce68bcb6",
+  "tests/test_hbm_wrapper_ledger_lint.py": "a3d046d1a8113859c705b5ec36e434069c9e3bdc693ea6d4591ffceef21b688e"
+ },
+ "command": "python3 tools/die_top_lint.py lint --die hbm --variant r25 --out /tmp/hbm-wiring-r25-ledger-20261008",
+ "census": {
+  "instances": 562,
+  "buses": 937,
+  "net_bits": 839741,
+  "masters": 87,
+  "real_instances": 46,
+  "placeholder_instances": 516
+ },
+ "wrapper_ledgers": {
+  "schema": "opentallas.hbm_wrapper_ledgers.v1",
+  "variant": "r25",
+  "scope": "generic wrapper specs only; custom generators require their own audit",
+  "wrappers": [
+   {
+    "master": "hfd_barrier",
+    "spec": "physical/hbm_accel_die_views/barrier/rtl/spec.json",
+    "spec_sha256": "b28e5d936ce3dc4f37d523d7eb1576cd575b22158a69cc3287c41df582768d5b",
+    "wrapper_sha256": "0a264bf08e74019fdfeada874176b1e29cbea85ccb90332a6356534e36370504",
+    "ties": [
+     {
+      "where": "n0.up",
+      "kind": "open",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)",
+      "gap": null
+     },
+     {
+      "where": "n0.rel_in",
+      "kind": "expr",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)",
+      "gap": null
+     },
+     {
+      "where": "n1.up",
+      "kind": "open",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: up feeds only its own rel_in (no parent level on the die)",
+      "gap": null
+     },
+     {
+      "where": "n1.rel_in",
+      "kind": "expr",
+      "bits": 1,
+      "cls": "by_design",
+      "reason": "K32 barrier ROOT: no parent node, so the release input is the node's own up (TA-19, audit: rel_in=up by design)",
+      "gap": null
+     }
+    ],
+    "tied_off_bits": 0,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 4
+    },
+    "errors": [],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_cmdproc_n",
+    "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_n.json",
+    "spec_sha256": "43a57a1e0c226f7ff42bac68e0b2737e48b3e8e20870c83fcc3e38934bcd562d",
+    "wrapper_sha256": "b82136e6e22f13e409ef9d872f57eada6d502c7de7cb4b8c1aafd7f8989775ea",
+    "ties": [
+     {
+      "where": "cpN.db_rdy",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_position",
+      "kind": "fold",
+      "bits": 20,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_job",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_generation",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.sm_fault",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.res_v",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.res_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_v",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_rdy",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_token",
+      "kind": "fold",
+      "bits": 17,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_status",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpN.cpl_cycles",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpN.st_kernels",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpN.st_busy",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "die:cNE[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_barrier[32:64]",
+      "kind": "spare_die_input_dropped",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_coll[0:33]",
+      "kind": "spare_die_input_dropped",
+      "bits": 33,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNE[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cNW[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_barrier[32:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_coll[0:25]",
+      "kind": "spare_die_output_const0",
+      "bits": 25,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_NE[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_NW[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1064,
+    "classed_tie_bits": {
+     "debug": 96,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "cpN.db_rdy: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_position: RTL output (20 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_job: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_generation: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_v: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_token: RTL output (17 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_status: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.cpl_cycles: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.st_kernels: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.st_busy: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpN.db_rdy: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_position: fold bind (20 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_job: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_generation: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.sm_fault: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.res_v: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.res_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_v: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_rdy: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_token: fold bind (17 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpN.cpl_status: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_barrier[32:64]: spare_die_input_dropped (32 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_coll[0:33]: spare_die_input_dropped (33 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNE[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cNW[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_barrier[32:64]: spare_die_output_const0 (32 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_coll[0:25]: spare_die_output_const0 (25 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_NE[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_NW[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_cmdproc_s",
+    "spec": "physical/hbm_accel_die_views/cmdproc/rtl/spec_s.json",
+    "spec_sha256": "ac4803d94ae7c5b79cd91a69207861e7f2af45e787a367066075ffc2a2e5b270",
+    "wrapper_sha256": "cdb3620d0c49c2e4879c4e3dff52a0c33485fbf4a14367406795867844a9be18",
+    "ties": [
+     {
+      "where": "cpS.db_rdy",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_position",
+      "kind": "fold",
+      "bits": 20,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_job",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_generation",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.sm_fault",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.res_v",
+      "kind": "cfg",
+      "bits": 16,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.res_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_v",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_rdy",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_token",
+      "kind": "fold",
+      "bits": 17,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_status",
+      "kind": "fold",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "cpS.cpl_cycles",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpS.st_kernels",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "cpS.st_busy",
+      "kind": "fold",
+      "bits": 32,
+      "cls": "debug",
+      "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live",
+      "gap": null
+     },
+     {
+      "where": "die:cSE[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[42:43]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[102:103]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[145:146]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[205:206]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[248:249]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[308:309]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[351:352]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[411:412]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[454:455]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[514:515]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[557:558]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[617:618]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[660:661]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[720:721]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[763:764]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[823:824]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_loader[147:341]",
+      "kind": "spare_die_input_dropped",
+      "bits": 194,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_router[0:64]",
+      "kind": "spare_die_input_dropped",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSE[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[33:41]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[98:102]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[136:144]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[201:205]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[239:247]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[304:308]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[342:350]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[407:411]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[445:453]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[510:514]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[548:556]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[613:617]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[651:659]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[716:720]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[754:762]",
+      "kind": "spare_die_output_const0",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:cSW[819:823]",
+      "kind": "spare_die_output_const0",
+      "bits": 4,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_SE[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_su_SW[17:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 47,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1200,
+    "classed_tie_bits": {
+     "debug": 96,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "cpS.db_rdy: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_position: RTL output (20 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_job: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_generation: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_v: RTL output (1 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_token: RTL output (17 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_status: RTL output (4 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.cpl_cycles: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.st_kernels: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.st_busy: RTL output (32 b) not named in bind (an unnamed port is never silently put on the cfg chain / fold)",
+     "cpS.db_rdy: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_position: fold bind (20 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_job: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_generation: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.sm_fault: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.res_v: cfg bind (16 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.res_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_v: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_rdy: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_token: fold bind (17 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "cpS.cpl_status: fold bind (4 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[42:43]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[102:103]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[145:146]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[205:206]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[248:249]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[308:309]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[351:352]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[411:412]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[454:455]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[514:515]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[557:558]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[617:618]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[660:661]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[720:721]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[763:764]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[823:824]: spare_die_input_dropped (1 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_loader[147:341]: spare_die_input_dropped (194 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_router[0:64]: spare_die_input_dropped (64 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSE[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[33:41]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[98:102]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[136:144]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[201:205]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[239:247]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[304:308]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[342:350]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[407:411]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[445:453]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[510:514]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[548:556]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[613:617]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[651:659]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[716:720]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[754:762]: spare_die_output_const0 (8 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:cSW[819:823]: spare_die_output_const0 (4 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_SE[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_su_SW[17:64]: spare_die_output_const0 (47 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_coll",
+    "spec": "physical/hbm_accel_die_views/coll/rtl/spec.json",
+    "spec_sha256": "f40db80fbb1f9ea794bbd7b38bb34a1623edb7dedb138aababae6f68acea1a0e",
+    "wrapper_sha256": "84abcc65173f4caa8d5991527143cba52dc0c8d505235f60543f9f981e7ebdce",
+    "ties": [
+     {
+      "where": "die:f_su_NE[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NW[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SE[0:1024]",
+      "kind": "spare_die_input_dropped",
+      "bits": 1024,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:llk_N3[967:974]",
+      "kind": "spare_die_input_dropped",
+      "bits": 7,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:llk_N3[480:487]",
+      "kind": "spare_die_output_const0",
+      "bits": 7,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 3086,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "die:f_su_NE[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NW[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SE[0:1024]: spare_die_input_dropped (1024 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:llk_N3[967:974]: spare_die_input_dropped (7 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:llk_N3[480:487]: spare_die_output_const0 (7 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_loader",
+    "spec": "physical/hbm_accel_die_views/loader/rtl/spec.json",
+    "spec_sha256": "ece9fd2249f9fe1f84589c83796ab6396327cbe6fcfafb5ff23beac44df553e8",
+    "wrapper_sha256": "4f41387edbbac2d2b3da71dce81f19f51d7d039866547b04babb9881c0d80487",
+    "ties": [
+     {
+      "where": "ld.h_dma_wdata",
+      "kind": "cfg",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_araddr",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arlen",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_arsize",
+      "kind": "fold",
+      "bits": 3,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rvalid",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rready",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rdata",
+      "kind": "cfg",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rresp",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_rlast",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awaddr",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awlen",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_awsize",
+      "kind": "fold",
+      "bits": 3,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wvalid",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wready",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wdata",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wstrb",
+      "kind": "fold",
+      "bits": 8,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_wlast",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bvalid",
+      "kind": "cfg",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bready",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.m_bresp",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_v",
+      "kind": "open",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_rdy",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_we",
+      "kind": "fold",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_addr",
+      "kind": "open",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_wdata",
+      "kind": "open",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_wstrb",
+      "kind": "fold",
+      "bits": 64,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.req_tag",
+      "kind": "fold",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_v",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_rdy",
+      "kind": "fold",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_we",
+      "kind": "cfg",
+      "bits": 2,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_tag",
+      "kind": "cfg",
+      "bits": 32,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.rsp_data",
+      "kind": "cfg",
+      "bits": 512,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.irq",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "ld.fault",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:h[499:512]",
+      "kind": "spare_die_input_dropped",
+      "bits": 13,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:h[176:256]",
+      "kind": "spare_die_output_const0",
+      "bits": 80,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_cmdproc[73:341]",
+      "kind": "spare_die_output_const0",
+      "bits": 268,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1957,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "ld.h_dma_wdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_araddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_arsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rdata: cfg bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_rlast: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awaddr: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awlen: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_awsize: fold bind (3 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wvalid: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wready: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wdata: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wstrb: fold bind (8 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_wlast: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bvalid: cfg bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bready: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.m_bresp: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_v: open bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_rdy: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_we: fold bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_addr: open bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_wdata: open bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_wstrb: fold bind (64 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.req_tag: fold bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_v: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_rdy: fold bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_we: cfg bind (2 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_tag: cfg bind (32 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.rsp_data: cfg bind (512 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.irq: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "ld.fault: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:h[499:512]: spare_die_input_dropped (13 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:h[176:256]: spare_die_output_const0 (80 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_cmdproc[73:341]: spare_die_output_const0 (268 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_quant",
+    "spec": "physical/hbm_accel_die_views/quant/rtl/spec.json",
+    "spec_sha256": "392753c6ae2ba3fef50ed89a74144582368f29e19dd3ba463864bd6eec728931",
+    "wrapper_sha256": "d755eb256917edee1cac2cd5ef3c9db15bc0467798d55b911965ec0b6263ad78",
+    "ties": [
+     {
+      "where": "aq.v",
+      "kind": "const",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.fp4",
+      "kind": "expr",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.vo",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.q",
+      "kind": "fold",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.e",
+      "kind": "fold",
+      "bits": 10,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "aq.fault",
+      "kind": "fold",
+      "bits": 1,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 270,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "aq.v: const bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.fp4: expr bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.vo: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.q: fold bind (256 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.e: fold bind (10 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "aq.fault: fold bind (1 b) on an RTL port -- wire it to its die net, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": true
+   },
+   {
+    "master": "hfd_router",
+    "spec": "physical/hbm_accel_die_views/router/rtl/spec.json",
+    "spec_sha256": "2077700b9137f4cc71623d21af9119fc412f22c614bd8a51447aaba19ccc0cb5",
+    "wrapper_sha256": "b5cd13bf4bebf6121bcd8c207f4b0656c93274af8ce188dd24b741d4768e4ab3",
+    "ties": [
+     {
+      "where": "die:f_su_NE[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_NW[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SE[0:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 256,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:f_su_SW[2:256]",
+      "kind": "spare_die_input_dropped",
+      "bits": 254,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eNE[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eNW[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eSE[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:eSW[55:128]",
+      "kind": "spare_die_output_const0",
+      "bits": 73,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     },
+     {
+      "where": "die:t_cmdproc[55:64]",
+      "kind": "spare_die_output_const0",
+      "bits": 9,
+      "cls": null,
+      "reason": null,
+      "gap": "TIED_OFF"
+     }
+    ],
+    "tied_off_bits": 1323,
+    "classed_tie_bits": {
+     "debug": 0,
+     "test": 0,
+     "by_design": 0
+    },
+    "errors": [
+     "die:f_su_NE[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_NW[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SE[0:256]: spare_die_input_dropped (256 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:f_su_SW[2:256]: spare_die_input_dropped (254 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eNE[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eNW[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eSE[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:eSW[55:128]: spare_die_output_const0 (73 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]",
+     "die:t_cmdproc[55:64]: spare_die_output_const0 (9 b) -- bind it to its RTL port, or class it debug|test|by_design with a reason in spec[\"ties\"]"
+    ],
+    "wrapper_matches_spec": false
+   }
+  ],
+  "tied_off_bits": 8900,
+  "generation_failures": 0,
+  "wrappers_with_errors": 6,
+  "wrappers_matching_spec": 6
+ },
+ "scope": "Current r25 generic wrapper sources, not functional closure or a physical timing verdict. Custom generators remain outside this ledger.",
+ "tests": "13 passed (tests/test_hbm_wrapper_ledger_lint.py + tests/test_hbm_die_wrap_failclosed.py)"
+}

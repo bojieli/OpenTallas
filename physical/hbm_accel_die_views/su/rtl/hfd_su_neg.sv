@@ -18,6 +18,7 @@ module hfd_su (
     input  wire [1023:0] f_su_ew,
     input  wire [1023:0] f_su_ns,
     input  wire [2047:0] f_vm,
+    input  wire [1:0] qid,
     input  wire [2164:0] r,
     input  wire [0:0] rst,
     output wire [1023:0] t_coll,
@@ -51,15 +52,15 @@ module hfd_su (
     (* keep *) reg [579:0] f_coll_i2;  always @(posedge clk5) f_coll_i2 <= f_coll_i1;
     (* keep *) reg [579:0] f_coll_i3;  always @(posedge clk4) f_coll_i3 <= f_coll_i2;
     (* keep *) reg [579:0] f_coll_i4;  always @(posedge clk4) f_coll_i4 <= f_coll_i3;
-    (* keep *) reg [511:0] f_quant_i0;  always @(posedge clk6) f_quant_i0 <= f_quant;
+    (* keep *) reg [511:0] f_quant_i0;  always @(posedge clk7) f_quant_i0 <= f_quant;
     (* keep *) reg [511:0] f_quant_i1;  always @(posedge clk6) f_quant_i1 <= f_quant_i0;
-    (* keep *) reg [511:0] f_quant_i2;  always @(posedge clk5) f_quant_i2 <= f_quant_i1;
+    (* keep *) reg [511:0] f_quant_i2;  always @(posedge clk6) f_quant_i2 <= f_quant_i1;
     (* keep *) reg [511:0] f_quant_i3;  always @(posedge clk5) f_quant_i3 <= f_quant_i2;
-    (* keep *) reg [511:0] f_quant_i4;  always @(posedge clk4) f_quant_i4 <= f_quant_i3;
+    (* keep *) reg [511:0] f_quant_i4;  always @(posedge clk5) f_quant_i4 <= f_quant_i3;
     (* keep *) reg [511:0] f_quant_i5;  always @(posedge clk4) f_quant_i5 <= f_quant_i4;
     (* keep *) reg [1023:0] f_sfu_i0;  always @(posedge clk3) f_sfu_i0 <= f_sfu;
     (* keep *) reg [1023:0] f_sfu_i1;  always @(posedge clk3) f_sfu_i1 <= f_sfu_i0;
-    (* keep *) reg [1023:0] f_su_ew_i0;  always @(posedge clk6) f_su_ew_i0 <= f_su_ew;
+    (* keep *) reg [1023:0] f_su_ew_i0;  always @(posedge clk5) f_su_ew_i0 <= f_su_ew;
     (* keep *) reg [1023:0] f_su_ew_i1;  always @(posedge clk5) f_su_ew_i1 <= f_su_ew_i0;
     (* keep *) reg [1023:0] f_su_ew_i2;  always @(posedge clk5) f_su_ew_i2 <= f_su_ew_i1;
     (* keep *) reg [1023:0] f_su_ew_i3;  always @(posedge clk4) f_su_ew_i3 <= f_su_ew_i2;
@@ -45547,7 +45548,23 @@ module hfd_su (
     assign nx_5_0[895] = acc_5_1[895] ^ lq_162[41];
     (* keep *) reg [895:0] acc_5_0;  always @(posedge clk4) acc_5_0 <= nx_5_0;
     wire [5375:0] heads = {acc_5_0, acc_4_0, acc_3_0, acc_2_0, acc_1_0, acc_0_0};
-    (* keep *) reg [1023:0] t_coll_o0;  always @(posedge clk4) t_coll_o0 <= heads[1023:0];
+    // coll inject ownership gate (see the generator's QUARTERS su inj_gate): quarter qid drives t_coll half h
+    // only when it owns inject flit inj_idx_h (inj_idx_h mod 4 == qid and inj_rd[h]); every other quarter drives 0
+    (* keep *) reg [1:0] qid_q;  always @(posedge clk4) qid_q <= qid;
+`ifdef OT_HFD_SU_MUT_NOGATE
+    wire own_0 = 1'b1;                       // NEGATIVE CONTROL: every quarter drives
+`else
+    wire own_0 = f_coll_i4[578] & (f_coll_i4[547:546] == qid_q);
+`endif
+    (* keep *) reg [15:0] own_r0;  always @(posedge clk4) own_r0 <= {16{own_0}};
+`ifdef OT_HFD_SU_MUT_NOGATE
+    wire own_1 = 1'b1;                       // NEGATIVE CONTROL: every quarter drives
+`else
+    wire own_1 = f_coll_i4[579] & (f_coll_i4[563:562] == qid_q);
+`endif
+    (* keep *) reg [15:0] own_r1;  always @(posedge clk4) own_r1 <= {16{own_1}};
+    wire [1023:0] t_coll_own = {{32{own_r1[15]}}, {32{own_r1[14]}}, {32{own_r1[13]}}, {32{own_r1[12]}}, {32{own_r1[11]}}, {32{own_r1[10]}}, {32{own_r1[9]}}, {32{own_r1[8]}}, {32{own_r1[7]}}, {32{own_r1[6]}}, {32{own_r1[5]}}, {32{own_r1[4]}}, {32{own_r1[3]}}, {32{own_r1[2]}}, {32{own_r1[1]}}, {32{own_r1[0]}}, {32{own_r0[15]}}, {32{own_r0[14]}}, {32{own_r0[13]}}, {32{own_r0[12]}}, {32{own_r0[11]}}, {32{own_r0[10]}}, {32{own_r0[9]}}, {32{own_r0[8]}}, {32{own_r0[7]}}, {32{own_r0[6]}}, {32{own_r0[5]}}, {32{own_r0[4]}}, {32{own_r0[3]}}, {32{own_r0[2]}}, {32{own_r0[1]}}, {32{own_r0[0]}}};
+    (* keep *) reg [1023:0] t_coll_o0;  always @(posedge clk4) t_coll_o0 <= (heads[1023:0] & t_coll_own);
     (* keep *) reg [1023:0] t_coll_o1;  always @(posedge clk4) t_coll_o1 <= t_coll_o0;
     (* keep *) reg [1023:0] t_coll_o2;  always @(posedge clk5) t_coll_o2 <= t_coll_o1;
     (* keep *) reg [1023:0] t_coll_o3;  always @(posedge clk5) t_coll_o3 <= t_coll_o2;
@@ -45557,7 +45574,7 @@ module hfd_su (
     (* keep *) reg [255:0] t_router_o1;  always @(posedge clk4) t_router_o1 <= t_router_o0;
     (* keep *) reg [255:0] t_router_o2;  always @(posedge clk5) t_router_o2 <= t_router_o1;
     (* keep *) reg [255:0] t_router_o3;  always @(posedge clk5) t_router_o3 <= t_router_o2;
-    (* keep *) reg [255:0] t_router_o4;  always @(posedge clk6) t_router_o4 <= t_router_o3;
+    (* keep *) reg [255:0] t_router_o4;  always @(posedge clk5) t_router_o4 <= t_router_o3;
     assign t_router = t_router_o4;
     (* keep *) reg [1023:0] t_sfu_o0;  always @(posedge clk4) t_sfu_o0 <= heads[2303:1280];
     (* keep *) reg [1023:0] t_sfu_o1;  always @(posedge clk4) t_sfu_o1 <= t_sfu_o0;

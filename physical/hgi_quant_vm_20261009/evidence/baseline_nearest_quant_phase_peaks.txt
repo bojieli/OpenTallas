@@ -1,0 +1,12 @@
+[INFO ANT-0001] Found 0 pin violations.
+Design area 24735 um^2 5% utilization.
+write_db /work/results/asap7/opentallas_hfd_quant_asap7_hv_hbm_quant_e7c2e5b06_tt/base/5_2_route.odb
+Elapsed time: 36:52.65[h:]min:sec. CPU time: user 15099.04 sys 133.27 (688%). Peak memory: 18642752KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_2_route                 .odb         2212          18205 6a269487a04a7f239a55
+ot_vclk_from_insertion: no BC scene latency; output hold unchanged
+write_db /work/results/asap7/opentallas_hfd_quant_asap7_hv_hbm_quant_e7c2e5b06_tt_cal/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_hfd_quant_asap7_hv_hbm_quant_e7c2e5b06_tt_cal/base/4_cts.sdc
+Elapsed time: 1:30:39.86[h:]min:sec. CPU time: user 4769.40 sys 5.45 (87%). Peak memory: 3462408KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         5439           3381 833ef1a6a3cb3a7c035d

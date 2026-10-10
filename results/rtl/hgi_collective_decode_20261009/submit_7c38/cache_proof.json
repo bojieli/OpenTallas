@@ -1,0 +1,134 @@
+{
+  "hgi_coll_row_formatter_b-7c38e6508-tc-cx": {
+    "source": "7c38e6508",
+    "key": "e5dab439ced9b7e55453a3f7",
+    "recipe": {
+      "top": "ot_hgi_coll_row_formatter",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+      ],
+      "params": {
+        "ENABLE": "1"
+      },
+      "incdirs": [
+        "rtl/common"
+      ]
+    },
+    "levels": 16,
+    "result": {
+      "in_to_out_bits": 0,
+      "in_to_out_max": -1,
+      "in_to_out_example": [],
+      "in_to_reg_max": 8,
+      "reg_to_out_max": 3,
+      "reg_to_out_example": "response_r",
+      "cells": 74408,
+      "ctrl_ports": [
+        "clk",
+        "rst_n"
+      ]
+    },
+    "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  },
+  "hgi_coll_decode_a-7c38e6508-tc-cx": {
+    "source": "7c38e6508",
+    "key": "75b4913cdeb1620dc82bfb92",
+    "recipe": {
+      "top": "ot_hgi_coll_decode",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+      ],
+      "params": {
+        "ENABLE": "1"
+      },
+      "incdirs": [
+        "rtl/common"
+      ]
+    },
+    "levels": 16,
+    "result": {
+      "in_to_out_bits": 0,
+      "in_to_out_max": -1,
+      "in_to_out_example": [],
+      "in_to_reg_max": 4,
+      "reg_to_out_max": 2,
+      "reg_to_out_example": "cmd_r",
+      "cells": 4462,
+      "ctrl_ports": [
+        "clk",
+        "rst_n"
+      ]
+    },
+    "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  },
+  "hgi_coll_decode_b-7c38e6508-tc-cx": {
+    "source": "7c38e6508",
+    "key": "75b4913cdeb1620dc82bfb92",
+    "recipe": {
+      "top": "ot_hgi_coll_decode",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+      ],
+      "params": {
+        "ENABLE": "1"
+      },
+      "incdirs": [
+        "rtl/common"
+      ]
+    },
+    "levels": 16,
+    "result": {
+      "in_to_out_bits": 0,
+      "in_to_out_max": -1,
+      "in_to_out_example": [],
+      "in_to_reg_max": 4,
+      "reg_to_out_max": 2,
+      "reg_to_out_example": "cmd_r",
+      "cells": 4462,
+      "ctrl_ports": [
+        "clk",
+        "rst_n"
+      ]
+    },
+    "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  },
+  "hgi_coll_row_formatter_a-7c38e6508-tc-cx": {
+    "source": "7c38e6508",
+    "key": "e5dab439ced9b7e55453a3f7",
+    "recipe": {
+      "top": "ot_hgi_coll_row_formatter",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+      ],
+      "params": {
+        "ENABLE": "1"
+      },
+      "incdirs": [
+        "rtl/common"
+      ]
+    },
+    "levels": 16,
+    "result": {
+      "in_to_out_bits": 0,
+      "in_to_out_max": -1,
+      "in_to_out_example": [],
+      "in_to_reg_max": 8,
+      "reg_to_out_max": 3,
+      "reg_to_out_example": "response_r",
+      "cells": 74408,
+      "ctrl_ports": [
+        "clk",
+        "rst_n"
+      ]
+    },
+    "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  }
+}

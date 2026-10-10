@@ -2,16 +2,16 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_router",
  "kind": "router",
- "status": "interim-not-closed",
+ "status": "closed",
  "lef": "hfd_router.lef",
  "lib": {
   "ss": "hfd_router_ss.lib",
   "ff": "hfd_router_ff.lib"
  },
  "files_sha256": {
-  "hfd_router.lef": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
-  "hfd_router_ss.lib": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
-  "hfd_router_ff.lib": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c"
+  "hfd_router.lef": "2b9c58fe3fee854e9253d62dfeaa087cfd73639da2d59123ae7f5f6dce0883d4",
+  "hfd_router_ss.lib": "b128170bdbc8286c903485ec48d0568dc7139588cbfd708f1d3f62fc05bf7708",
+  "hfd_router_ff.lib": "f370b8c00445c8b8004207bdf8eae09fdcf2c0892947f95e7def9456452323bc"
  },
  "check": {
   "verdict": "MATCH",
@@ -161,5 +161,12 @@
    "ff_hold": -8.62
   },
   "successor_accepted": false
+ },
+ "closure": {
+  "job": "hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0",
+  "verdict": "CLOSED TT +7.87 / FF +18.13 ps DRC 0 (TC, routed insertion)",
+  "record": "results/closure_loop/hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0/verdict.json",
+  "source_commit": "586ee122f (route-key child of a75cb556b)",
+  "adopted_by": "drive-0849 2026-10-09 (coordinator): live view swapped from the dv10_ih60 interim; same LEF SIZE and pin set (2120 PIN records); 'ss' lib is the TC-route WC-name (TT-overlay) lib; hfd_router_tt.lib in this dir is the OLD interim's and is not part of the view"
  }
 }

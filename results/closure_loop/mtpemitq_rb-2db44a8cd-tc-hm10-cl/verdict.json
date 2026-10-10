@@ -1,0 +1,211 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "mtpemitq_rb-2db44a8cd-tc-hm10-cl",
+ "block": "ot_hbm_native_mtp_emit_queue",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/struct-close-20261009",
+ "record_branch": "codex/closure-record-mtpemitq_rb-2db44a8cd-tc-hm10-cl",
+ "source_commit": "2db44a8cd0d195c33c8b1844cf90b58444832434",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 20.99,
+  "ff_ps": 7.23,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -118.85,
+  "ss_sensitivity_tns_ps": -49385.3,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl/routes/mtpemitq_rb_2db44a8cd_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl/routes/mtpemitq_rb_2db44a8cd_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl/routes/mtpemitq_rb_2db44a8cd_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_hbm_native_mtp_emit_queue_asap7_mtp_mtpemitq_rb_2db44a8cd_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_rb_mtp_emit_queue_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS finite8 fullpressure40 ordered commits plus bad index\n/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl/bench_pos/tb.sv:26: $finish called at 2080000000 (1fs)\n\nRB_mtp_emit_queue_PASS\n",
+   "track": "parallel"
+  },
+  "bench_rb_mtp_emit_queue_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "PASS finite8 fullpressure40 ordered commits plus bad index\n/srv/opentallas-scratch2/scratch/claude/closure-loop/mtpemitq_rb-2db44a8cd-tc-hm10-cl/bench_neg/tb.sv:26: $finish called at 2080000000 (1fs)\n\nRB_mtp_emit_queue_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1130,
+    "mean": 199.6,
+    "min": 193.2,
+    "max": 207.0
+   },
+   "all": {
+    "n": 1130,
+    "mean": 199.6,
+    "min": 193.2,
+    "max": 207.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1130,
+    "mean": 125.5,
+    "min": 120.9,
+    "max": 131.0
+   },
+   "all": {
+    "n": 1130,
+    "mean": 125.5,
+    "min": 120.9,
+    "max": 131.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 154,
+   "CK_SS_ALL_MEAN": 154,
+   "CK_SS_MIN": 148,
+   "CK_SS_ALL_MIN": 148,
+   "CK_SS_MAX": 160,
+   "CK_SS_ALL_MAX": 160,
+   "CK_TT_MEAN": 154,
+   "CK_TT_ALL_MEAN": 154,
+   "CK_TT_MIN": 148,
+   "CK_TT_ALL_MIN": 148,
+   "CK_TT_MAX": 160,
+   "CK_TT_ALL_MAX": 160,
+   "CK_FF_MEAN": 126,
+   "CK_FF_ALL_MEAN": 126,
+   "CK_FF_MIN": 121,
+   "CK_FF_ALL_MIN": 121,
+   "CK_FF_MAX": 131,
+   "CK_FF_ALL_MAX": 131,
+   "CK_SSLIB_MEAN": 200,
+   "CK_SSLIB_MIN": 193,
+   "CK_SSLIB_MAX": 207,
+   "CK_SSLIB_ALL_MEAN": 200,
+   "CK_SSLIB_ALL_MIN": 193,
+   "CK_SSLIB_ALL_MAX": 207,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T04:36:35-07:00",
+ "job_spec": {
+  "name": "mtpemitq_rb-2db44a8cd-tc-hm10-cl",
+  "block": "ot_hbm_native_mtp_emit_queue",
+  "element": "hbm_native_mtp_emit_queue",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 registered-boundary batch 2 ('-cl'; drive-0212 0342 (1)): pi-mtpemitq TT -369.7: unregistered boundary, reg2reg passes. Generated wrapper (tools/struct_close/gen_regbound.py): pin flop on level inputs, flop on outputs, 2-entry pin FIFO on each valid/ready pair; +1 in / +1 out. Bench regbound mtp_emit_queue (committed golden on the wrapper + mutant).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "2db44a8cd0d195c33c8b1844cf90b58444832434"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "rb_mtp_emit_queue_exact",
+     "cmd": "python3 physical/struct_close/regbound/bench.py mtp_emit_queue pos {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "RB_mtp_emit_queue_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "rb_mtp_emit_queue_mutant",
+     "cmd": "python3 physical/struct_close/regbound/bench.py mtp_emit_queue neg {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "RB_mtp_emit_queue_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_native_mtp_emit_queue --source physical/struct_close/regbound/ot_hbm_native_mtp_emit_queue_rb.sv --source rtl/common/ot_sc_pfifo.sv --param ENABLE=1 --clock-port clk --die-area 0 0 110 110 --core-area 1.08 1.08 108.92 108.92",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_native_mtp_emit_queue --source physical/struct_close/regbound/ot_hbm_native_mtp_emit_queue_rb.sv --source rtl/common/ot_sc_pfifo.sv --param ENABLE=1 --clock-port clk --die-area 0 0 110 110 --core-area 1.08 1.08 108.92 108.92 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 12
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 2,
+  "notes": "cycles added: 0 (RTL as written)",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

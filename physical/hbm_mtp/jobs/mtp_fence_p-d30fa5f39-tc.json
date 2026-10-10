@@ -1,0 +1,81 @@
+{
+ "name": "mtp_fence_p-d30fa5f39-tc",
+ "block": "ot_gpu_rf_visibility_fence_p",
+ "owner": "Claude:mtp-hbm",
+ "purpose": "mtp-hbm 2026-10-08 fence (owner: pipeline-cut variant + LVT variant). fence_a1 re-STA TT -613.6 = in->out feedthrough cap_addr -> cap_legal -> host_wr_valid (and 4,096-bit cap_data -> host_wdata wire); r2r +258.3. PIPELINE CUT (template D): the unmodified fence between registered skid slices / pin flops; exact vs the original (tb_fence_p, 4 seeds, mutant detected). Die-boundary block: link budget on.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/mtp-hbm-20261008",
+  "commit": "d30fa5f390491bf8059e4af8d7d7ea7ce383d33a"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "fence_p_exact",
+    "cmd": "bash physical/hbm_mtp/run_fence_bench.sh {RUN}/bench 0",
+    "expect": "pass",
+    "pass_regex": "seed 29: FENCE_P PASS",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "fence_p_mutant",
+    "cmd": "bash physical/hbm_mtp/run_fence_bench.sh {RUN}/bench_neg 1 7",
+    "expect": "fail",
+    "fail_regex": "FENCE_P FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_gpu_rf_visibility_fence_p --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_p.sv   --die-area 0 0 300 300 --core-area 6 6 294 294  $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_gpu_rf_visibility_fence_p --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_p.sv   --die-area 0 0 300 300 --core-area 6 6 294 294 ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/hbm_mtp_20261008/routes/mtp_fence_p-d30fa5f39-tc"
+  }
+ ],
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 2,
+ "notes": "cycles added: 2"
+}

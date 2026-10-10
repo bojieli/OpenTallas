@@ -1,0 +1,2619 @@
+{
+ "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+ "spec": {
+  "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+  "block": "ot_hgi_argmax18_m",
+  "owner": "Codex:generic_token18/argmax18",
+  "purpose": "Owner-approved HGI-1 CF-ARG width18 + row-bound rank*imm_a offset; qualified FAST1 native leaf; DS default off. Two physical alternatives.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "codex/hgi-argmax18-20261009",
+   "commit": "f6d441b6a"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_cf_arg_ds_lockstep",
+     "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
+     "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
+     "peak_ram_gb": 1,
+     "expect": "pass",
+     "min_count_regex": "rows=([0-9]+)",
+     "min_count": 6
+    },
+    {
+     "name": "mutant_1",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1 || bench_rc=$?; cat {RUN}/bench_mut1/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_2",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2 || bench_rc=$?; cat {RUN}/bench_mut2/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_3",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3 || bench_rc=$?; cat {RUN}/bench_mut3/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_value_zero",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4 || bench_rc=$?; cat {RUN}/bench_mut4/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    },
+    {
+     "name": "mutant_nan_payload",
+     "cmd": "bench_rc=0; bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5 || bench_rc=$?; cat {RUN}/bench_mut5/sim.log; exit \"$bench_rc\"",
+     "peak_ram_gb": 1,
+     "expect": "fail"
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes cts",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 2
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/hgi_argmax18_20261009/u35"
+   }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "Memory claim16GiB conservative ceil2x measured nearest native LP8/FLAT7/FAST1 DRT7956564KiB(7.588GiB); calibration2GiB based native CTS884264KiB and GP937244KiB, new winner/index/offset flop overhead. These are admission claims, not generic measured peaks or hard caps. Own synth mapped area required <=11918um2 before continuing physical adoption. Corrected source own synthesis mapped area=5767.945um\u00b2 <=11918um\u00b2, exact6rows +5compiledmutants PASS; actual remote boundary PASS12/1 levels. Native sibling16GiB route reservation remains conservative.",
+  "registered_io": true,
+  "rtl_boundary": {
+   "levels": 16
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/hgi_argmax18-f6d441b6a-pd48-tc-cx.json",
+ "created": "2026-10-09T06:16:24-07:00",
+ "status": "EARLY_FAIL_HOLD",
+ "stage_idx": 7,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {
+  "bench_exact_cf_arg_ds_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "HGI_ARGMAX18 PASS rows=6 cycles=19056 DS_LOCKSTEP=1\nphysical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:56: $finish called at 15896040 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_mutant_1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=20863 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_2": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=113971 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_3": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=1 idx=37998 exp=113963 nan=0 range=0\n       Time: 15867277  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_value_zero": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=0 idx=151935 exp=151935 nan=0 range=0\n       Time: 15853933  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  },
+  "bench_mutant_nan_payload": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv:21: ARGMAX row=2 idx=75972 exp=75972 nan=1 range=0\n       Time: 15869779  Scope: tb_hgi_argmax18\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T06:16:24-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hgi_argmax18-f6d441b6a-pd48-tc-cx.json",
+  "2026-10-09T06:16:24-07:00 submit lint PASS (estimate {'W': 5.12, 'E': 0.53, 'N': 0.13, 'S': 0.25} b/um, limit 12.0); PASS rtl_boundary ot_hgi_argmax18_m: registered boundary (in->reg 12, reg->out 1 levels)",
+  "2026-10-09T06:16:31-07:00 benches run in parallel with calibrate/route (6 benches; spec bench_first opts out)",
+  "2026-10-09T06:17:42-07:00 source f6d441b6ae5e synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/src",
+  "2026-10-09T06:18:31-07:00 bench track: launched bench_exact_cf_arg_ds_lockstep (bench_exact_cf_arg_ds_lockstep.a1b1) beside None",
+  "2026-10-09T06:18:36-07:00 launched calibrate (attempt 1) on ot-epyc4",
+  "2026-10-09T06:19:32-07:00 bench track: bench_exact_cf_arg_ds_lockstep PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-09T06:19:34-07:00 bench track: launched bench_mutant_1 (bench_mutant_1.a1b1) beside calibrate",
+  "2026-10-09T06:32:35-07:00 bench track: bench_mutant_1 FAIL as expected (rc=1) ",
+  "2026-10-09T06:32:37-07:00 bench track: launched bench_mutant_2 (bench_mutant_2.a1b1) beside calibrate",
+  "2026-10-09T06:32:38-07:00 calibrate done (rc=0)",
+  "2026-10-09T06:32:39-07:00 calibrated insertion CK_SS_MEAN=218 CK_SS_MIN=206 CK_SS_MAX=226 CK_TT_MEAN=218 CK_TT_MIN=206 CK_TT_MAX=226 CK_FF_MEAN=178 CK_FF_MIN=167 CK_FF_MAX=185 CK_SSLIB_MEAN=285 CK_SSLIB_MIN=271 CK_SSLIB_MAX=294 CK_ROUTE_REF=TT",
+  "2026-10-09T06:33:30-07:00 bench track: bench_mutant_2 FAIL as expected (rc=1) ",
+  "2026-10-09T06:33:32-07:00 bench track: launched bench_mutant_3 (bench_mutant_3.a1b1) beside calibrate",
+  "2026-10-09T06:33:37-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-09T06:34:29-07:00 bench track: bench_mutant_3 FAIL as expected (rc=1) ",
+  "2026-10-09T06:34:31-07:00 bench track: launched bench_mutant_value_zero (bench_mutant_value_zero.a1b1) beside route",
+  "2026-10-09T06:35:30-07:00 bench track: bench_mutant_value_zero FAIL as expected (rc=1) ",
+  "2026-10-09T06:35:32-07:00 bench track: launched bench_mutant_nan_payload (bench_mutant_nan_payload.a1b1) beside route",
+  "2026-10-09T06:36:33-07:00 bench track: bench_mutant_nan_payload FAIL as expected (rc=1) ",
+  "2026-10-09T06:50:48-07:00 EARLY_FAIL_HOLD: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -2.2 ps (start -27.13), 3580 it / 7100 buffers, 7721 endpoints in margin, 0.2 h in step, HM guard present"
+ ],
+ "updated": "2026-10-09T06:50:48-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_exact_cf_arg_ds_lockstep": {
+   "state": "done",
+   "tag": "bench_exact_cf_arg_ds_lockstep.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:18:31-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  },
+  "bench_mutant_1": {
+   "state": "done",
+   "tag": "bench_mutant_1.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:19:34-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  },
+  "bench_mutant_2": {
+   "state": "done",
+   "tag": "bench_mutant_2.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:32:37-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  },
+  "bench_mutant_3": {
+   "state": "done",
+   "tag": "bench_mutant_3.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:33:32-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  },
+  "bench_mutant_value_zero": {
+   "state": "done",
+   "tag": "bench_mutant_value_zero.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:34:31-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  },
+  "bench_mutant_nan_payload": {
+   "state": "done",
+   "tag": "bench_mutant_nan_payload.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "n": 1,
+   "started": "2026-10-09T06:35:32-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+ "source_synced": true,
+ "commit_full": "f6d441b6ae5ec8f6e79cfd46290a086103fed4b8",
+ "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -2.2 ps (start -27.13), 3580 it / 7100 buffers, 7721 endpoints in margin, 0.2 h in step, HM guard present",
+ "bench_location": {
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-09T06:33:37-07:00",
+ "bench_work": {
+  "bench_exact_cf_arg_ds_lockstep": "WARN: pass log has no count line (set min_count_regex)"
+ },
+ "wd_checked": 1791553844.7519953,
+ "errors": [
+  "2026-10-09T06:21:32-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+  "2026-10-09T06:23:33-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+  "2026-10-09T06:25:31-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+  "2026-10-09T06:27:34-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+  "2026-10-09T06:29:32-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+  "2026-10-09T06:31:32-07:00 RuntimeError: bench log unreadable on ot-epyc4: /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log"
+ ],
+ "operator_events": [
+  {
+   "at": "2026-10-09T13:31:57.877025+00:00",
+   "action": "classifier_output_recovery",
+   "proof": {
+    "actual": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/bench_mut1/sim.log",
+    "actual_sha256": "0511fc412617d497c4c214e268bd3617e250b069e1f377f0eb16dc857b5dacc4",
+    "stage_log": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/cl/bench_mutant_1.a1b1.log",
+    "original_rc": "1",
+    "action": "Recovered actual consuming mutant output into previously empty collector log; no simulation or verdict edited."
+   },
+   "metadata_commit": "9fd345b5a",
+   "commands_only_future_bench_stdout": true
+  }
+ ],
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 4818,
+    "mean": 284.7,
+    "min": 271.1,
+    "max": 294.3
+   },
+   "all": {
+    "n": 9613,
+    "mean": 284.4,
+    "min": 271.1,
+    "max": 294.6
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 4818,
+    "mean": 177.8,
+    "min": 167.0,
+    "max": 185.4
+   },
+   "all": {
+    "n": 9613,
+    "mean": 177.5,
+    "min": 167.0,
+    "max": 185.7
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 218,
+   "CK_SS_ALL_MEAN": 218,
+   "CK_SS_MIN": 206,
+   "CK_SS_ALL_MIN": 206,
+   "CK_SS_MAX": 226,
+   "CK_SS_ALL_MAX": 227,
+   "CK_TT_MEAN": 218,
+   "CK_TT_ALL_MEAN": 218,
+   "CK_TT_MIN": 206,
+   "CK_TT_ALL_MIN": 206,
+   "CK_TT_MAX": 226,
+   "CK_TT_ALL_MAX": 227,
+   "CK_FF_MEAN": 178,
+   "CK_FF_ALL_MEAN": 178,
+   "CK_FF_MIN": 167,
+   "CK_FF_ALL_MIN": 167,
+   "CK_FF_MAX": 185,
+   "CK_FF_ALL_MAX": 186,
+   "CK_SSLIB_MEAN": 285,
+   "CK_SSLIB_MIN": 271,
+   "CK_SSLIB_MAX": 294,
+   "CK_SSLIB_ALL_MEAN": 284,
+   "CK_SSLIB_ALL_MIN": 271,
+   "CK_SSLIB_ALL_MAX": 295,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ef_checked": 1791553844.7520092,
+ "early_fail": {
+  "verdict": "EARLY_FAIL_HOLD",
+  "why": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -2.2 ps (start -27.13), 3580 it / 7100 buffers, 7721 endpoints in margin, 0.2 h in step, HM guard present",
+  "at": "2026-10-09T06:50:47-07:00",
+  "detail": {
+   "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+   "verdict": "EARLY_FAIL_HOLD",
+   "why": [
+    "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -2.2 ps (start -27.13), 3580 it / 7100 buffers, 7721 endpoints in margin, 0.2 h in step, HM guard present"
+   ],
+   "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_argmax18-f6d441b6a-pd48-tc-cx/routes/hgi_argmax18_f6d441b6a_pd48_tc_cx/work/orfs",
+   "corner": "TT",
+   "step": "4_1_cts",
+   "setup": {
+    "stage": "place",
+    "ws": 93.04479999999997,
+    "raw_ws": 29.7118,
+    "period": 770.0,
+    "count": 0,
+    "tns": 0
+   },
+   "hold": {
+    "found": [
+     7721
+    ],
+    "guard": true,
+    "hm_auto": [],
+    "sync": [
+     [
+      "-85.66",
+      "-27.13"
+     ]
+    ],
+    "stall": false,
+    "rows": 359,
+    "first": [
+     "0",
+     0,
+     -27.131,
+     -1908.743
+    ],
+    "cur_first": [
+     "0",
+     0,
+     -27.131,
+     -1908.743
+    ],
+    "cur_last": [
+     "3580",
+     7100,
+     -2.225,
+     -2.225
+    ],
+    "dwns_1000": 0.0,
+    "series": [
+     [
+      0,
+      0,
+      -27.131,
+      -1908.743
+     ],
+     [
+      10,
+      27,
+      -25.349,
+      -1671.477
+     ],
+     [
+      20,
+      57,
+      -24.596,
+      -1420.779
+     ],
+     [
+      30,
+      87,
+      -23.368,
+      -1180.027
+     ],
+     [
+      40,
+      117,
+      -21.505,
+      -950.722
+     ],
+     [
+      50,
+      147,
+      -13.876,
+      -777.979
+     ],
+     [
+      60,
+      170,
+      -12.186,
+      -649.469
+     ],
+     [
+      70,
+      190,
+      -10.99,
+      -532.468
+     ],
+     [
+      80,
+      208,
+      -7.147,
+      -431.715
+     ],
+     [
+      90,
+      227,
+      -5.1,
+      -377.25
+     ],
+     [
+      100,
+      247,
+      -4.298,
+      -329.357
+     ],
+     [
+      110,
+      267,
+      -3.78,
+      -289.372
+     ],
+     [
+      120,
+      287,
+      -3.388,
+      -253.332
+     ],
+     [
+      130,
+      306,
+      -3.089,
+      -218.71
+     ],
+     [
+      140,
+      326,
+      -2.907,
+      -188.659
+     ],
+     [
+      150,
+      346,
+      -2.607,
+      -160.35
+     ],
+     [
+      160,
+      366,
+      -2.423,
+      -135.094
+     ],
+     [
+      170,
+      384,
+      -2.225,
+      -114.392
+     ],
+     [
+      180,
+      404,
+      -2.225,
+      -95.369
+     ],
+     [
+      190,
+      424,
+      -2.225,
+      -78.584
+     ],
+     [
+      200,
+      444,
+      -2.225,
+      -63.765
+     ],
+     [
+      210,
+      462,
+      -2.225,
+      -50.587
+     ],
+     [
+      220,
+      482,
+      -2.225,
+      -38.886
+     ],
+     [
+      230,
+      502,
+      -2.225,
+      -28.62
+     ],
+     [
+      240,
+      521,
+      -2.225,
+      -20.79
+     ],
+     [
+      250,
+      541,
+      -2.225,
+      -13.702
+     ],
+     [
+      260,
+      561,
+      -2.225,
+      -8.669
+     ],
+     [
+      270,
+      581,
+      -2.225,
+      -5.333
+     ],
+     [
+      280,
+      601,
+      -2.225,
+      -3.162
+     ],
+     [
+      290,
+      621,
+      -2.225,
+      -2.233
+     ],
+     [
+      300,
+      641,
+      -2.225,
+      -2.225
+     ],
+     [
+      310,
+      661,
+      -2.225,
+      -2.225
+     ],
+     [
+      320,
+      681,
+      -2.225,
+      -2.225
+     ],
+     [
+      330,
+      701,
+      -2.225,
+      -2.225
+     ],
+     [
+      340,
+      719,
+      -2.225,
+      -2.225
+     ],
+     [
+      350,
+      738,
+      -2.225,
+      -2.225
+     ],
+     [
+      360,
+      758,
+      -2.225,
+      -2.225
+     ],
+     [
+      370,
+      778,
+      -2.225,
+      -2.225
+     ],
+     [
+      380,
+      797,
+      -2.225,
+      -2.225
+     ],
+     [
+      390,
+      817,
+      -2.225,
+      -2.225
+     ],
+     [
+      400,
+      837,
+      -2.225,
+      -2.225
+     ],
+     [
+      410,
+      857,
+      -2.225,
+      -2.225
+     ],
+     [
+      420,
+      877,
+      -2.225,
+      -2.225
+     ],
+     [
+      430,
+      897,
+      -2.225,
+      -2.225
+     ],
+     [
+      440,
+      916,
+      -2.225,
+      -2.225
+     ],
+     [
+      450,
+      934,
+      -2.225,
+      -2.225
+     ],
+     [
+      460,
+      953,
+      -2.225,
+      -2.225
+     ],
+     [
+      470,
+      971,
+      -2.225,
+      -2.225
+     ],
+     [
+      480,
+      991,
+      -2.225,
+      -2.225
+     ],
+     [
+      490,
+      1008,
+      -2.225,
+      -2.225
+     ],
+     [
+      500,
+      1027,
+      -2.225,
+      -2.225
+     ],
+     [
+      510,
+      1047,
+      -2.225,
+      -2.225
+     ],
+     [
+      520,
+      1067,
+      -2.225,
+      -2.225
+     ],
+     [
+      530,
+      1087,
+      -2.225,
+      -2.225
+     ],
+     [
+      540,
+      1106,
+      -2.225,
+      -2.225
+     ],
+     [
+      550,
+      1126,
+      -2.225,
+      -2.225
+     ],
+     [
+      560,
+      1146,
+      -2.225,
+      -2.225
+     ],
+     [
+      570,
+      1166,
+      -2.225,
+      -2.225
+     ],
+     [
+      580,
+      1186,
+      -2.225,
+      -2.225
+     ],
+     [
+      590,
+      1206,
+      -2.225,
+      -2.225
+     ],
+     [
+      600,
+      1226,
+      -2.225,
+      -2.225
+     ],
+     [
+      610,
+      1246,
+      -2.225,
+      -2.225
+     ],
+     [
+      620,
+      1266,
+      -2.225,
+      -2.225
+     ],
+     [
+      630,
+      1285,
+      -2.225,
+      -2.225
+     ],
+     [
+      640,
+      1306,
+      -2.225,
+      -2.225
+     ],
+     [
+      650,
+      1325,
+      -2.225,
+      -2.225
+     ],
+     [
+      660,
+      1345,
+      -2.225,
+      -2.225
+     ],
+     [
+      670,
+      1365,
+      -2.225,
+      -2.225
+     ],
+     [
+      680,
+      1385,
+      -2.225,
+      -2.225
+     ],
+     [
+      690,
+      1405,
+      -2.225,
+      -2.225
+     ],
+     [
+      700,
+      1425,
+      -2.225,
+      -2.225
+     ],
+     [
+      710,
+      1444,
+      -2.225,
+      -2.225
+     ],
+     [
+      720,
+      1464,
+      -2.225,
+      -2.225
+     ],
+     [
+      730,
+      1484,
+      -2.225,
+      -2.225
+     ],
+     [
+      740,
+      1504,
+      -2.225,
+      -2.225
+     ],
+     [
+      750,
+      1524,
+      -2.225,
+      -2.225
+     ],
+     [
+      760,
+      1544,
+      -2.225,
+      -2.225
+     ],
+     [
+      770,
+      1564,
+      -2.225,
+      -2.225
+     ],
+     [
+      780,
+      1584,
+      -2.225,
+      -2.225
+     ],
+     [
+      790,
+      1604,
+      -2.225,
+      -2.225
+     ],
+     [
+      800,
+      1624,
+      -2.225,
+      -2.225
+     ],
+     [
+      810,
+      1644,
+      -2.225,
+      -2.225
+     ],
+     [
+      820,
+      1664,
+      -2.225,
+      -2.225
+     ],
+     [
+      830,
+      1684,
+      -2.225,
+      -2.225
+     ],
+     [
+      840,
+      1704,
+      -2.225,
+      -2.225
+     ],
+     [
+      850,
+      1724,
+      -2.225,
+      -2.225
+     ],
+     [
+      860,
+      1744,
+      -2.225,
+      -2.225
+     ],
+     [
+      870,
+      1764,
+      -2.225,
+      -2.225
+     ],
+     [
+      880,
+      1784,
+      -2.225,
+      -2.225
+     ],
+     [
+      890,
+      1804,
+      -2.225,
+      -2.225
+     ],
+     [
+      900,
+      1824,
+      -2.225,
+      -2.225
+     ],
+     [
+      910,
+      1844,
+      -2.225,
+      -2.225
+     ],
+     [
+      920,
+      1864,
+      -2.225,
+      -2.225
+     ],
+     [
+      930,
+      1884,
+      -2.225,
+      -2.225
+     ],
+     [
+      940,
+      1904,
+      -2.225,
+      -2.225
+     ],
+     [
+      950,
+      1924,
+      -2.225,
+      -2.225
+     ],
+     [
+      960,
+      1944,
+      -2.225,
+      -2.225
+     ],
+     [
+      970,
+      1964,
+      -2.225,
+      -2.225
+     ],
+     [
+      980,
+      1983,
+      -2.225,
+      -2.225
+     ],
+     [
+      990,
+      2003,
+      -2.225,
+      -2.225
+     ],
+     [
+      1000,
+      2023,
+      -2.225,
+      -2.225
+     ],
+     [
+      1010,
+      2043,
+      -2.225,
+      -2.225
+     ],
+     [
+      1020,
+      2063,
+      -2.225,
+      -2.225
+     ],
+     [
+      1030,
+      2083,
+      -2.225,
+      -2.225
+     ],
+     [
+      1040,
+      2103,
+      -2.225,
+      -2.225
+     ],
+     [
+      1050,
+      2123,
+      -2.225,
+      -2.225
+     ],
+     [
+      1060,
+      2143,
+      -2.225,
+      -2.225
+     ],
+     [
+      1070,
+      2163,
+      -2.225,
+      -2.225
+     ],
+     [
+      1080,
+      2183,
+      -2.225,
+      -2.225
+     ],
+     [
+      1090,
+      2203,
+      -2.225,
+      -2.225
+     ],
+     [
+      1100,
+      2223,
+      -2.225,
+      -2.225
+     ],
+     [
+      1110,
+      2243,
+      -2.225,
+      -2.225
+     ],
+     [
+      1120,
+      2263,
+      -2.225,
+      -2.225
+     ],
+     [
+      1130,
+      2282,
+      -2.225,
+      -2.225
+     ],
+     [
+      1140,
+      2302,
+      -2.225,
+      -2.225
+     ],
+     [
+      1150,
+      2322,
+      -2.225,
+      -2.225
+     ],
+     [
+      1160,
+      2342,
+      -2.225,
+      -2.225
+     ],
+     [
+      1170,
+      2362,
+      -2.225,
+      -2.225
+     ],
+     [
+      1180,
+      2382,
+      -2.225,
+      -2.225
+     ],
+     [
+      1190,
+      2402,
+      -2.225,
+      -2.225
+     ],
+     [
+      1200,
+      2422,
+      -2.225,
+      -2.225
+     ],
+     [
+      1210,
+      2442,
+      -2.225,
+      -2.225
+     ],
+     [
+      1220,
+      2462,
+      -2.225,
+      -2.225
+     ],
+     [
+      1230,
+      2482,
+      -2.225,
+      -2.225
+     ],
+     [
+      1240,
+      2502,
+      -2.225,
+      -2.225
+     ],
+     [
+      1250,
+      2522,
+      -2.225,
+      -2.225
+     ],
+     [
+      1260,
+      2542,
+      -2.225,
+      -2.225
+     ],
+     [
+      1270,
+      2562,
+      -2.225,
+      -2.225
+     ],
+     [
+      1280,
+      2582,
+      -2.225,
+      -2.225
+     ],
+     [
+      1290,
+      2602,
+      -2.225,
+      -2.225
+     ],
+     [
+      1300,
+      2622,
+      -2.225,
+      -2.225
+     ],
+     [
+      1310,
+      2642,
+      -2.225,
+      -2.225
+     ],
+     [
+      1320,
+      2662,
+      -2.225,
+      -2.225
+     ],
+     [
+      1330,
+      2682,
+      -2.225,
+      -2.225
+     ],
+     [
+      1340,
+      2702,
+      -2.225,
+      -2.225
+     ],
+     [
+      1350,
+      2722,
+      -2.225,
+      -2.225
+     ],
+     [
+      1360,
+      2742,
+      -2.225,
+      -2.225
+     ],
+     [
+      1370,
+      2762,
+      -2.225,
+      -2.225
+     ],
+     [
+      1380,
+      2782,
+      -2.225,
+      -2.225
+     ],
+     [
+      1390,
+      2802,
+      -2.225,
+      -2.225
+     ],
+     [
+      1400,
+      2822,
+      -2.225,
+      -2.225
+     ],
+     [
+      1410,
+      2842,
+      -2.225,
+      -2.225
+     ],
+     [
+      1420,
+      2862,
+      -2.225,
+      -2.225
+     ],
+     [
+      1430,
+      2882,
+      -2.225,
+      -2.225
+     ],
+     [
+      1440,
+      2902,
+      -2.225,
+      -2.225
+     ],
+     [
+      1450,
+      2922,
+      -2.225,
+      -2.225
+     ],
+     [
+      1460,
+      2942,
+      -2.225,
+      -2.225
+     ],
+     [
+      1470,
+      2962,
+      -2.225,
+      -2.225
+     ],
+     [
+      1480,
+      2982,
+      -2.225,
+      -2.225
+     ],
+     [
+      1490,
+      3002,
+      -2.225,
+      -2.225
+     ],
+     [
+      1500,
+      3022,
+      -2.225,
+      -2.225
+     ],
+     [
+      1510,
+      3042,
+      -2.225,
+      -2.225
+     ],
+     [
+      1520,
+      3062,
+      -2.225,
+      -2.225
+     ],
+     [
+      1530,
+      3082,
+      -2.225,
+      -2.225
+     ],
+     [
+      1540,
+      3102,
+      -2.225,
+      -2.225
+     ],
+     [
+      1550,
+      3122,
+      -2.225,
+      -2.225
+     ],
+     [
+      1560,
+      3141,
+      -2.225,
+      -2.225
+     ],
+     [
+      1570,
+      3161,
+      -2.225,
+      -2.225
+     ],
+     [
+      1580,
+      3181,
+      -2.225,
+      -2.225
+     ],
+     [
+      1590,
+      3201,
+      -2.225,
+      -2.225
+     ],
+     [
+      1600,
+      3221,
+      -2.225,
+      -2.225
+     ],
+     [
+      1610,
+      3241,
+      -2.225,
+      -2.225
+     ],
+     [
+      1620,
+      3261,
+      -2.225,
+      -2.225
+     ],
+     [
+      1630,
+      3281,
+      -2.225,
+      -2.225
+     ],
+     [
+      1640,
+      3301,
+      -2.225,
+      -2.225
+     ],
+     [
+      1650,
+      3320,
+      -2.225,
+      -2.225
+     ],
+     [
+      1660,
+      3340,
+      -2.225,
+      -2.225
+     ],
+     [
+      1670,
+      3360,
+      -2.225,
+      -2.225
+     ],
+     [
+      1680,
+      3380,
+      -2.225,
+      -2.225
+     ],
+     [
+      1690,
+      3400,
+      -2.225,
+      -2.225
+     ],
+     [
+      1700,
+      3420,
+      -2.225,
+      -2.225
+     ],
+     [
+      1710,
+      3440,
+      -2.225,
+      -2.225
+     ],
+     [
+      1720,
+      3460,
+      -2.225,
+      -2.225
+     ],
+     [
+      1730,
+      3480,
+      -2.225,
+      -2.225
+     ],
+     [
+      1740,
+      3500,
+      -2.225,
+      -2.225
+     ],
+     [
+      1750,
+      3520,
+      -2.225,
+      -2.225
+     ],
+     [
+      1760,
+      3540,
+      -2.225,
+      -2.225
+     ],
+     [
+      1770,
+      3560,
+      -2.225,
+      -2.225
+     ],
+     [
+      1780,
+      3580,
+      -2.225,
+      -2.225
+     ],
+     [
+      1790,
+      3600,
+      -2.225,
+      -2.225
+     ],
+     [
+      1800,
+      3620,
+      -2.225,
+      -2.225
+     ],
+     [
+      1810,
+      3640,
+      -2.225,
+      -2.225
+     ],
+     [
+      1820,
+      3660,
+      -2.225,
+      -2.225
+     ],
+     [
+      1830,
+      3680,
+      -2.225,
+      -2.225
+     ],
+     [
+      1840,
+      3700,
+      -2.225,
+      -2.225
+     ],
+     [
+      1850,
+      3720,
+      -2.225,
+      -2.225
+     ],
+     [
+      1860,
+      3739,
+      -2.225,
+      -2.225
+     ],
+     [
+      1870,
+      3759,
+      -2.225,
+      -2.225
+     ],
+     [
+      1880,
+      3779,
+      -2.225,
+      -2.225
+     ],
+     [
+      1890,
+      3799,
+      -2.225,
+      -2.225
+     ],
+     [
+      1900,
+      3819,
+      -2.225,
+      -2.225
+     ],
+     [
+      1910,
+      3839,
+      -2.225,
+      -2.225
+     ],
+     [
+      1920,
+      3859,
+      -2.225,
+      -2.225
+     ],
+     [
+      1930,
+      3879,
+      -2.225,
+      -2.225
+     ],
+     [
+      1940,
+      3899,
+      -2.225,
+      -2.225
+     ],
+     [
+      1950,
+      3919,
+      -2.225,
+      -2.225
+     ],
+     [
+      1960,
+      3937,
+      -2.225,
+      -2.225
+     ],
+     [
+      1970,
+      3956,
+      -2.225,
+      -2.225
+     ],
+     [
+      1980,
+      3976,
+      -2.225,
+      -2.225
+     ],
+     [
+      1990,
+      3996,
+      -2.225,
+      -2.225
+     ],
+     [
+      2000,
+      4016,
+      -2.225,
+      -2.225
+     ],
+     [
+      2010,
+      4036,
+      -2.225,
+      -2.225
+     ],
+     [
+      2020,
+      4056,
+      -2.225,
+      -2.225
+     ],
+     [
+      2030,
+      4076,
+      -2.225,
+      -2.225
+     ],
+     [
+      2040,
+      4095,
+      -2.225,
+      -2.225
+     ],
+     [
+      2050,
+      4115,
+      -2.225,
+      -2.225
+     ],
+     [
+      2060,
+      4134,
+      -2.225,
+      -2.225
+     ],
+     [
+      2070,
+      4154,
+      -2.225,
+      -2.225
+     ],
+     [
+      2080,
+      4174,
+      -2.225,
+      -2.225
+     ],
+     [
+      2090,
+      4194,
+      -2.225,
+      -2.225
+     ],
+     [
+      2100,
+      4213,
+      -2.225,
+      -2.225
+     ],
+     [
+      2110,
+      4232,
+      -2.225,
+      -2.225
+     ],
+     [
+      2120,
+      4252,
+      -2.225,
+      -2.225
+     ],
+     [
+      2130,
+      4272,
+      -2.225,
+      -2.225
+     ],
+     [
+      2140,
+      4292,
+      -2.225,
+      -2.225
+     ],
+     [
+      2150,
+      4312,
+      -2.225,
+      -2.225
+     ],
+     [
+      2160,
+      4331,
+      -2.225,
+      -2.225
+     ],
+     [
+      2170,
+      4351,
+      -2.225,
+      -2.225
+     ],
+     [
+      2180,
+      4371,
+      -2.225,
+      -2.225
+     ],
+     [
+      2190,
+      4391,
+      -2.225,
+      -2.225
+     ],
+     [
+      2200,
+      4410,
+      -2.225,
+      -2.225
+     ],
+     [
+      2210,
+      4430,
+      -2.225,
+      -2.225
+     ],
+     [
+      2220,
+      4450,
+      -2.225,
+      -2.225
+     ],
+     [
+      2230,
+      4470,
+      -2.225,
+      -2.225
+     ],
+     [
+      2240,
+      4490,
+      -2.225,
+      -2.225
+     ],
+     [
+      2250,
+      4509,
+      -2.225,
+      -2.225
+     ],
+     [
+      2260,
+      4529,
+      -2.225,
+      -2.225
+     ],
+     [
+      2270,
+      4549,
+      -2.225,
+      -2.225
+     ],
+     [
+      2280,
+      4569,
+      -2.225,
+      -2.225
+     ],
+     [
+      2290,
+      4589,
+      -2.225,
+      -2.225
+     ],
+     [
+      2300,
+      4608,
+      -2.225,
+      -2.225
+     ],
+     [
+      2310,
+      4628,
+      -2.225,
+      -2.225
+     ],
+     [
+      2320,
+      4648,
+      -2.225,
+      -2.225
+     ],
+     [
+      2330,
+      4668,
+      -2.225,
+      -2.225
+     ],
+     [
+      2340,
+      4687,
+      -2.225,
+      -2.225
+     ],
+     [
+      2350,
+      4707,
+      -2.225,
+      -2.225
+     ],
+     [
+      2360,
+      4727,
+      -2.225,
+      -2.225
+     ],
+     [
+      2370,
+      4747,
+      -2.225,
+      -2.225
+     ],
+     [
+      2380,
+      4768,
+      -2.225,
+      -2.225
+     ],
+     [
+      2390,
+      4789,
+      -2.225,
+      -2.225
+     ],
+     [
+      2400,
+      4809,
+      -2.225,
+      -2.225
+     ],
+     [
+      2410,
+      4829,
+      -2.225,
+      -2.225
+     ],
+     [
+      2420,
+      4849,
+      -2.225,
+      -2.225
+     ],
+     [
+      2430,
+      4868,
+      -2.225,
+      -2.225
+     ],
+     [
+      2440,
+      4886,
+      -2.225,
+      -2.225
+     ],
+     [
+      2450,
+      4906,
+      -2.225,
+      -2.225
+     ],
+     [
+      2460,
+      4926,
+      -2.225,
+      -2.225
+     ],
+     [
+      2470,
+      4945,
+      -2.225,
+      -2.225
+     ],
+     [
+      2480,
+      4965,
+      -2.225,
+      -2.225
+     ],
+     [
+      2490,
+      4985,
+      -2.225,
+      -2.225
+     ],
+     [
+      2500,
+      5005,
+      -2.225,
+      -2.225
+     ],
+     [
+      2510,
+      5025,
+      -2.225,
+      -2.225
+     ],
+     [
+      2520,
+      5045,
+      -2.225,
+      -2.225
+     ],
+     [
+      2530,
+      5065,
+      -2.225,
+      -2.225
+     ],
+     [
+      2540,
+      5085,
+      -2.225,
+      -2.225
+     ],
+     [
+      2550,
+      5105,
+      -2.225,
+      -2.225
+     ],
+     [
+      2560,
+      5125,
+      -2.225,
+      -2.225
+     ],
+     [
+      2570,
+      5145,
+      -2.225,
+      -2.225
+     ],
+     [
+      2580,
+      5165,
+      -2.225,
+      -2.225
+     ],
+     [
+      2590,
+      5185,
+      -2.225,
+      -2.225
+     ],
+     [
+      2600,
+      5204,
+      -2.225,
+      -2.225
+     ],
+     [
+      2610,
+      5224,
+      -2.225,
+      -2.225
+     ],
+     [
+      2620,
+      5244,
+      -2.225,
+      -2.225
+     ],
+     [
+      2630,
+      5264,
+      -2.225,
+      -2.225
+     ],
+     [
+      2640,
+      5283,
+      -2.225,
+      -2.225
+     ],
+     [
+      2650,
+      5301,
+      -2.225,
+      -2.225
+     ],
+     [
+      2660,
+      5320,
+      -2.225,
+      -2.225
+     ],
+     [
+      2670,
+      5339,
+      -2.225,
+      -2.225
+     ],
+     [
+      2680,
+      5359,
+      -2.225,
+      -2.225
+     ],
+     [
+      2690,
+      5379,
+      -2.225,
+      -2.225
+     ],
+     [
+      2700,
+      5399,
+      -2.225,
+      -2.225
+     ],
+     [
+      2710,
+      5418,
+      -2.225,
+      -2.225
+     ],
+     [
+      2720,
+      5438,
+      -2.225,
+      -2.225
+     ],
+     [
+      2730,
+      5458,
+      -2.225,
+      -2.225
+     ],
+     [
+      2740,
+      5474,
+      -2.225,
+      -2.225
+     ],
+     [
+      2750,
+      5494,
+      -2.225,
+      -2.225
+     ],
+     [
+      2760,
+      5514,
+      -2.225,
+      -2.225
+     ],
+     [
+      2770,
+      5533,
+      -2.225,
+      -2.225
+     ],
+     [
+      2780,
+      5553,
+      -2.225,
+      -2.225
+     ],
+     [
+      2790,
+      5573,
+      -2.225,
+      -2.225
+     ],
+     [
+      2800,
+      5593,
+      -2.225,
+      -2.225
+     ],
+     [
+      2810,
+      5613,
+      -2.225,
+      -2.225
+     ],
+     [
+      2820,
+      5632,
+      -2.225,
+      -2.225
+     ],
+     [
+      2830,
+      5649,
+      -2.225,
+      -2.225
+     ],
+     [
+      2840,
+      5668,
+      -2.225,
+      -2.225
+     ],
+     [
+      2850,
+      5687,
+      -2.225,
+      -2.225
+     ],
+     [
+      2860,
+      5706,
+      -2.225,
+      -2.225
+     ],
+     [
+      2870,
+      5725,
+      -2.225,
+      -2.225
+     ],
+     [
+      2880,
+      5744,
+      -2.225,
+      -2.225
+     ],
+     [
+      2890,
+      5763,
+      -2.225,
+      -2.225
+     ],
+     [
+      2900,
+      5782,
+      -2.225,
+      -2.225
+     ],
+     [
+      2910,
+      5801,
+      -2.225,
+      -2.225
+     ],
+     [
+      2920,
+      5821,
+      -2.225,
+      -2.225
+     ],
+     [
+      2930,
+      5839,
+      -2.225,
+      -2.225
+     ],
+     [
+      2940,
+      5858,
+      -2.225,
+      -2.225
+     ],
+     [
+      2950,
+      5877,
+      -2.225,
+      -2.225
+     ],
+     [
+      2960,
+      5895,
+      -2.225,
+      -2.225
+     ],
+     [
+      2970,
+      5914,
+      -2.225,
+      -2.225
+     ],
+     [
+      2980,
+      5934,
+      -2.225,
+      -2.225
+     ],
+     [
+      2990,
+      5953,
+      -2.225,
+      -2.225
+     ],
+     [
+      3000,
+      5969,
+      -2.225,
+      -2.225
+     ],
+     [
+      3010,
+      5987,
+      -2.225,
+      -2.225
+     ],
+     [
+      3020,
+      6005,
+      -2.225,
+      -2.225
+     ],
+     [
+      3030,
+      6025,
+      -2.225,
+      -2.225
+     ],
+     [
+      3040,
+      6045,
+      -2.225,
+      -2.225
+     ],
+     [
+      3050,
+      6065,
+      -2.225,
+      -2.225
+     ],
+     [
+      3060,
+      6085,
+      -2.225,
+      -2.225
+     ],
+     [
+      3070,
+      6105,
+      -2.225,
+      -2.225
+     ],
+     [
+      3080,
+      6124,
+      -2.225,
+      -2.225
+     ],
+     [
+      3090,
+      6144,
+      -2.225,
+      -2.225
+     ],
+     [
+      3100,
+      6164,
+      -2.225,
+      -2.225
+     ],
+     [
+      3110,
+      6184,
+      -2.225,
+      -2.225
+     ],
+     [
+      3120,
+      6203,
+      -2.225,
+      -2.225
+     ],
+     [
+      3130,
+      6221,
+      -2.225,
+      -2.225
+     ],
+     [
+      3140,
+      6239,
+      -2.225,
+      -2.225
+     ],
+     [
+      3150,
+      6259,
+      -2.225,
+      -2.225
+     ],
+     [
+      3160,
+      6279,
+      -2.225,
+      -2.225
+     ],
+     [
+      3170,
+      6296,
+      -2.225,
+      -2.225
+     ],
+     [
+      3180,
+      6314,
+      -2.225,
+      -2.225
+     ],
+     [
+      3190,
+      6331,
+      -2.225,
+      -2.225
+     ],
+     [
+      3200,
+      6351,
+      -2.225,
+      -2.225
+     ],
+     [
+      3210,
+      6371,
+      -2.225,
+      -2.225
+     ],
+     [
+      3220,
+      6391,
+      -2.225,
+      -2.225
+     ],
+     [
+      3230,
+      6411,
+      -2.225,
+      -2.225
+     ],
+     [
+      3240,
+      6430,
+      -2.225,
+      -2.225
+     ],
+     [
+      3250,
+      6449,
+      -2.225,
+      -2.225
+     ],
+     [
+      3260,
+      6470,
+      -2.225,
+      -2.225
+     ],
+     [
+      3270,
+      6489,
+      -2.225,
+      -2.225
+     ],
+     [
+      3280,
+      6510,
+      -2.225,
+      -2.225
+     ],
+     [
+      3290,
+      6529,
+      -2.225,
+      -2.225
+     ],
+     [
+      3300,
+      6549,
+      -2.225,
+      -2.225
+     ],
+     [
+      3310,
+      6568,
+      -2.225,
+      -2.225
+     ],
+     [
+      3320,
+      6589,
+      -2.225,
+      -2.225
+     ],
+     [
+      3330,
+      6609,
+      -2.225,
+      -2.225
+     ],
+     [
+      3340,
+      6628,
+      -2.225,
+      -2.225
+     ],
+     [
+      3350,
+      6648,
+      -2.225,
+      -2.225
+     ],
+     [
+      3360,
+      6667,
+      -2.225,
+      -2.225
+     ],
+     [
+      3370,
+      6687,
+      -2.225,
+      -2.225
+     ],
+     [
+      3380,
+      6706,
+      -2.225,
+      -2.225
+     ],
+     [
+      3390,
+      6726,
+      -2.225,
+      -2.225
+     ],
+     [
+      3400,
+      6746,
+      -2.225,
+      -2.225
+     ],
+     [
+      3410,
+      6766,
+      -2.225,
+      -2.225
+     ],
+     [
+      3420,
+      6786,
+      -2.225,
+      -2.225
+     ],
+     [
+      3430,
+      6805,
+      -2.225,
+      -2.225
+     ],
+     [
+      3440,
+      6824,
+      -2.225,
+      -2.225
+     ],
+     [
+      3450,
+      6843,
+      -2.225,
+      -2.225
+     ],
+     [
+      3460,
+      6863,
+      -2.225,
+      -2.225
+     ],
+     [
+      3470,
+      6883,
+      -2.225,
+      -2.225
+     ],
+     [
+      3480,
+      6903,
+      -2.225,
+      -2.225
+     ],
+     [
+      3490,
+      6922,
+      -2.225,
+      -2.225
+     ],
+     [
+      3500,
+      6942,
+      -2.225,
+      -2.225
+     ],
+     [
+      3510,
+      6962,
+      -2.225,
+      -2.225
+     ],
+     [
+      3520,
+      6981,
+      -2.225,
+      -2.225
+     ],
+     [
+      3530,
+      7001,
+      -2.225,
+      -2.225
+     ],
+     [
+      3540,
+      7021,
+      -2.225,
+      -2.225
+     ],
+     [
+      3550,
+      7041,
+      -2.225,
+      -2.225
+     ],
+     [
+      3560,
+      7061,
+      -2.225,
+      -2.225
+     ],
+     [
+      3570,
+      7080,
+      -2.225,
+      -2.225
+     ],
+     [
+      3580,
+      7100,
+      -2.225,
+      -2.225
+     ]
+    ],
+    "chunks": []
+   },
+   "congestion": [],
+   "drt": [],
+   "paths": [
+    {
+     "cls": "reg->reg",
+     "slack_ps": 29.71,
+     "group": "core_clk",
+     "dominated": "logic",
+     "wire_ps": 5.0,
+     "cell_ps": 656.4,
+     "max_fanout": 15,
+     "start": "g_generic.rank_q[1]$_DFFE_PN0P_",
+     "end": "g_generic.offset_pipe[0][22]$_DFF_PN0_",
+     "check": "rising edge-triggered flip-flop clocked by core_clk"
+    },
+    {
+     "cls": "input->reg",
+     "slack_ps": 107.09,
+     "group": "asynchronous",
+     "dominated": "logic",
+     "wire_ps": 57.2,
+     "cell_ps": 397.4,
+     "max_fanout": 32,
+     "start": "rst_n",
+     "end": "g_value_leaf.u_native.g_add[0].u_add.u.u_ca.q[4]$_DFF_PN0_",
+     "check": "recovery check against rising-edge clock core_clk"
+    }
+   ],
+   "block": "ot_hgi_argmax18_m",
+   "owner": "Codex:generic_token18/argmax18",
+   "gates": {
+    "setup_cts_ws_ps": -400.0,
+    "setup_cts_count": 500,
+    "setup_tns_ps": -1000000.0,
+    "setup_place_ws_ps": -900.0,
+    "setup_place_count": 2000,
+    "hold_buf_cap": 100000,
+    "hold_buf_frac": 0.3,
+    "hold_buf_min": 20000,
+    "hold_buf_improve_dwns": 5.0,
+    "hold_buf_improve_frac": 0.6,
+    "hold_buf_improve_min": 60000,
+    "hold_stall_it": 2000,
+    "hold_stall_dwns": 1.0,
+    "hold_stall_tns_pct": 2.0,
+    "hold_real_ws_ps": -150.0,
+    "hold_real_after_s": 3600,
+    "hold_deep_it": 2000,
+    "hold_deep_dwns": 5.0,
+    "grt_min_iter": 20,
+    "grt_markers": 1000,
+    "grt_flat": 0.95,
+    "drt_min_iter": 20,
+    "drt_k": 8,
+    "drt_min_viol": 100,
+    "stall_after_s": 10800
+   }
+  }
+ }
+}

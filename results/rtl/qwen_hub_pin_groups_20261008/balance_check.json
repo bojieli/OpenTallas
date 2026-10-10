@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS",
+  "signal_pins": 5270,
+  "duplicates": 0,
+  "outside_original_intervals": 0,
+  "overlapping_pin_boxes": 0,
+  "max_density_bits_per_um_over_100um": {
+    "E/M4": 8.02,
+    "E/M6": 7.68,
+    "N/M5": 0.04
+  },
+  "layer_counts": {
+    "M4": 2703,
+    "M6": 2560,
+    "M5": 7
+  },
+  "source": "run_abi3_physical.py actual io_constraints_tcl generator",
+  "source_vehicle": "qfd_hub_psp-be5b56d78-tc-pin2-hm10-d2140 full-shape 1_synth.odb",
+  "host": "ot-epyc4",
+  "scope": "legal balanced pin assignment only; route still mandatory",
+  "cycles_added": 0,
+  "frame_delta_um2": 0
+}

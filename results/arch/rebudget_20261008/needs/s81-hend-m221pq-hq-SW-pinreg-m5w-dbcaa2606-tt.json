@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt",
+ "block": "dsfd_l2r_vr_512x1__hq_SW",
+ "die": "s81_r3",
+ "die_master": "dsfd_l2r_vr_512x1__hq_SW",
+ "tile": null,
+ "host": "ot-agidock128",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt",
+ "orfs": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt/routes/s81_hend_m221pq_hq_SW_pinreg_m5w_dbcaa2606_tt/work/orfs",
+ "measured_at": "2026-10-08T20:34:36-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 122.5,
+    "T": 1111.108
+   },
+   "w_cks": {
+    "L": 124.3,
+    "T": 833.331
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 96.9,
+    "T": 1111.108
+   },
+   "w_cks": {
+    "L": 98.5,
+    "T": 833.331
+   }
+  }
+ },
+ "r2r": {
+  "tt": 57.89,
+  "ff": 17.18
+ },
+ "errors": [],
+ "ports": {
+  "i": {
+   "dir": "in",
+   "bits": 513,
+   "clock": "core_clk",
+   "T": 1111.108,
+   "R": 120.0,
+   "h": -33.3
+  },
+  "fo": {
+   "dir": "out",
+   "bits": 1,
+   "clock": null,
+   "T": null
+  },
+  "od": {
+   "dir": "out",
+   "bits": 514,
+   "clock": "w_cks",
+   "T": 833.331,
+   "S": 264.8,
+   "smin": 126.8
+  },
+  "st": {
+   "dir": "out",
+   "bits": 3,
+   "clock": "core_clk",
+   "T": 1111.108,
+   "S": 132.8,
+   "smin": 72.2
+  }
+ },
+ "fwd": {
+  "fo": {
+   "clock": "w_cks",
+   "A": 17.4,
+   "A_min": 20.6
+  }
+ },
+ "internal_ok": true
+}

@@ -1,0 +1,75 @@
+{
+  "name": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+  "block": "ot_hbm_native_frame_station_rb",
+  "owner": "Codex:expert_steering C1 routine approved existing-ODB",
+  "purpose": "C1 approved hold-only repair of immutable fec1faadd final ODB with frozen actual TT60/FF25 reference; no RTL, synthesis, calibration or seat variant. Preserve original UNKNOWN/FF50 history. Current helper729 bytes pinned in source bundle.",
+  "hosts": [
+    "ot-epyc4"
+  ],
+  "host_require": [
+    "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/w2-phase-seat-20261009",
+    "commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+    "required_files": [
+      "tools/w2_c1_eco_current/run.py",
+      "tools/w2_c1_eco_current/spec.json"
+    ],
+    "extra_paths": [
+      "tools/w2_c1_eco_current"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "immutable_exact_and_genuine_S3_binding",
+        "cmd": "python3 tools/w2_c1_eco_current/run.py --check-only --run {RUN}/binding",
+        "expect": "pass",
+        "pass_regex": "C1_IMMUTABLE_GATE_BOUND",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Existing extracted ODB and actual propagated TT25 reference already validated; new calibration would duplicate completed compute."
+    },
+    "route": {
+      "cmd": "python3 tools/w2_c1_eco_current/run.py --run {RUN}/c1",
+      "threads": 8,
+      "peak_ram_gb": 32,
+      "logs": [
+        "{RUN}/c1/eco/eco.log"
+      ],
+      "ok": "test -s {RUN}/c1/eco/corner_sta.json"
+    }
+  },
+  "no_bench_reason": "Pure existing-ODB ECO. Immutable exact gate full37word4x44, quarter19, crossbank7 and genuine runtime S3 FATAL are hash-bound by preflight; no recompilation. Evidence source22c48cdf8 c1_eco_readiness.",
+  "verdict": {
+    "corner_sta": "{RUN}/c1/eco/corner_sta.json",
+    "drc_metrics": "{RUN}/c1/eco_drc_metrics.json",
+    "post_sdc": [],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "This job itself performs the approved hold ECO; never recurse."
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Routine C1 existing standalone failed baseline; no adoption or boundary change."
+  },
+  "fp_lint": false,
+  "merge_target": null,
+  "resource_proof": {
+    "same_source_drt_peak_kib": 28292340,
+    "reservation_gib": 32,
+    "reservation_is_measured": false,
+    "reservation_is_process_limit": false,
+    "reason": "Measured original DRT26.98GiB plus explicit conservative capacity allowance; repair growth peak unknown and must track actual phase HWM."
+  },
+  "cycles_added": 0
+}

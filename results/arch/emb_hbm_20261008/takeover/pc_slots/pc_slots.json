@@ -1,0 +1,3993 @@
+{
+  "schema": "opentallas.embedding_PC_slots.v1",
+  "slots": [
+    {
+      "name": "emb_pc_WS_0",
+      "stack": "WS",
+      "pc": 0,
+      "rect_um": [
+        854.064,
+        3043.44,
+        1101.6,
+        3413.88
+      ],
+      "native_KV_CDC": "cdc_WS_0",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3405.24,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_1",
+      "stack": "WS",
+      "pc": 1,
+      "rect_um": [
+        854.064,
+        3421.44,
+        1101.6,
+        3791.88
+      ],
+      "native_KV_CDC": "cdc_WS_1",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3027.24,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_2",
+      "stack": "WS",
+      "pc": 2,
+      "rect_um": [
+        854.064,
+        3799.44,
+        1101.6,
+        4169.88
+      ],
+      "native_KV_CDC": "cdc_WS_2",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2649.24,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_3",
+      "stack": "WS",
+      "pc": 3,
+      "rect_um": [
+        854.064,
+        4177.4400000000005,
+        1101.6,
+        4547.88
+      ],
+      "native_KV_CDC": "cdc_WS_3",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2271.24,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_4",
+      "stack": "WS",
+      "pc": 4,
+      "rect_um": [
+        854.064,
+        4555.4400000000005,
+        1101.6,
+        4925.88
+      ],
+      "native_KV_CDC": "cdc_WS_4",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1893.24,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_5",
+      "stack": "WS",
+      "pc": 5,
+      "rect_um": [
+        854.064,
+        4933.4400000000005,
+        1101.6,
+        5303.88
+      ],
+      "native_KV_CDC": "cdc_WS_5",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1515.24,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_6",
+      "stack": "WS",
+      "pc": 6,
+      "rect_um": [
+        854.064,
+        5311.4400000000005,
+        1101.6,
+        5681.88
+      ],
+      "native_KV_CDC": "cdc_WS_6",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1137.24,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_7",
+      "stack": "WS",
+      "pc": 7,
+      "rect_um": [
+        854.064,
+        5689.4400000000005,
+        1101.6,
+        6059.88
+      ],
+      "native_KV_CDC": "cdc_WS_7",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 759.24,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_8",
+      "stack": "WS",
+      "pc": 8,
+      "rect_um": [
+        854.064,
+        6067.4400000000005,
+        1101.6,
+        6437.88
+      ],
+      "native_KV_CDC": "cdc_WS_8",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 381.24,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_9",
+      "stack": "WS",
+      "pc": 9,
+      "rect_um": [
+        854.064,
+        6445.4400000000005,
+        1101.6,
+        6815.88
+      ],
+      "native_KV_CDC": "cdc_WS_9",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3.24,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_10",
+      "stack": "WS",
+      "pc": 10,
+      "rect_um": [
+        854.064,
+        6823.4400000000005,
+        1101.6,
+        7193.88
+      ],
+      "native_KV_CDC": "cdc_WS_10",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_11",
+      "stack": "WS",
+      "pc": 11,
+      "rect_um": [
+        854.064,
+        7201.4400000000005,
+        1101.6,
+        7571.88
+      ],
+      "native_KV_CDC": "cdc_WS_11",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_12",
+      "stack": "WS",
+      "pc": 12,
+      "rect_um": [
+        854.064,
+        7579.4400000000005,
+        1101.6,
+        7949.88
+      ],
+      "native_KV_CDC": "cdc_WS_12",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_13",
+      "stack": "WS",
+      "pc": 13,
+      "rect_um": [
+        854.064,
+        7957.4400000000005,
+        1101.6,
+        8327.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_13",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_14",
+      "stack": "WS",
+      "pc": 14,
+      "rect_um": [
+        854.064,
+        8335.44,
+        1101.6,
+        8705.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_14",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_15",
+      "stack": "WS",
+      "pc": 15,
+      "rect_um": [
+        854.064,
+        8713.44,
+        1101.6,
+        9083.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_15",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_16",
+      "stack": "WS",
+      "pc": 16,
+      "rect_um": [
+        854.064,
+        9091.44,
+        1101.6,
+        9461.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_16",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 272.16,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_17",
+      "stack": "WS",
+      "pc": 17,
+      "rect_um": [
+        854.064,
+        9469.44,
+        1101.6,
+        9839.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_17",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 650.16,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_18",
+      "stack": "WS",
+      "pc": 18,
+      "rect_um": [
+        854.064,
+        9847.44,
+        1101.6,
+        10217.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_18",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1028.16,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_19",
+      "stack": "WS",
+      "pc": 19,
+      "rect_um": [
+        854.064,
+        10225.44,
+        1101.6,
+        10595.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_19",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1406.16,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_20",
+      "stack": "WS",
+      "pc": 20,
+      "rect_um": [
+        854.064,
+        10603.44,
+        1101.6,
+        10973.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_20",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1784.16,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_21",
+      "stack": "WS",
+      "pc": 21,
+      "rect_um": [
+        854.064,
+        10981.44,
+        1101.6,
+        11351.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_21",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2162.16,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_22",
+      "stack": "WS",
+      "pc": 22,
+      "rect_um": [
+        854.064,
+        11359.44,
+        1101.6,
+        11729.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_22",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2540.16,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_23",
+      "stack": "WS",
+      "pc": 23,
+      "rect_um": [
+        854.064,
+        11737.44,
+        1101.6,
+        12107.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_23",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2918.16,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_24",
+      "stack": "WS",
+      "pc": 24,
+      "rect_um": [
+        854.064,
+        12115.44,
+        1101.6,
+        12485.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_24",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3296.16,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_25",
+      "stack": "WS",
+      "pc": 25,
+      "rect_um": [
+        854.064,
+        12493.44,
+        1101.6,
+        12863.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_25",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3674.16,
+      "minimum_350um_segments": 11,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_26",
+      "stack": "WS",
+      "pc": 26,
+      "rect_um": [
+        854.064,
+        12871.44,
+        1101.6,
+        13241.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_26",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4052.16,
+      "minimum_350um_segments": 12,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_27",
+      "stack": "WS",
+      "pc": 27,
+      "rect_um": [
+        854.064,
+        13249.44,
+        1101.6,
+        13619.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_27",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4430.16,
+      "minimum_350um_segments": 13,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_28",
+      "stack": "WS",
+      "pc": 28,
+      "rect_um": [
+        854.064,
+        13627.44,
+        1101.6,
+        13997.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_28",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4808.16,
+      "minimum_350um_segments": 14,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_29",
+      "stack": "WS",
+      "pc": 29,
+      "rect_um": [
+        854.064,
+        14005.44,
+        1101.6,
+        14375.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_29",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5186.16,
+      "minimum_350um_segments": 15,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_30",
+      "stack": "WS",
+      "pc": 30,
+      "rect_um": [
+        854.064,
+        14383.44,
+        1101.6,
+        14753.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_30",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5564.16,
+      "minimum_350um_segments": 16,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WS_31",
+      "stack": "WS",
+      "pc": 31,
+      "rect_um": [
+        854.064,
+        14761.44,
+        1101.6,
+        15131.880000000001
+      ],
+      "native_KV_CDC": "cdc_WS_31",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5942.16,
+      "minimum_350um_segments": 17,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_0",
+      "stack": "WN",
+      "pc": 0,
+      "rect_um": [
+        854.064,
+        16057.44,
+        1101.6,
+        16427.88
+      ],
+      "native_KV_CDC": "cdc_WN_0",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5988.6,
+      "minimum_350um_segments": 18,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_1",
+      "stack": "WN",
+      "pc": 1,
+      "rect_um": [
+        854.064,
+        16435.44,
+        1101.6,
+        16805.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_1",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5610.6,
+      "minimum_350um_segments": 17,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_2",
+      "stack": "WN",
+      "pc": 2,
+      "rect_um": [
+        854.064,
+        16813.44,
+        1101.6,
+        17183.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_2",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5232.6,
+      "minimum_350um_segments": 15,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_3",
+      "stack": "WN",
+      "pc": 3,
+      "rect_um": [
+        854.064,
+        17191.44,
+        1101.6,
+        17561.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_3",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4854.6,
+      "minimum_350um_segments": 14,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_4",
+      "stack": "WN",
+      "pc": 4,
+      "rect_um": [
+        854.064,
+        17569.44,
+        1101.6,
+        17939.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_4",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4476.6,
+      "minimum_350um_segments": 13,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_5",
+      "stack": "WN",
+      "pc": 5,
+      "rect_um": [
+        854.064,
+        17947.44,
+        1101.6,
+        18317.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_5",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4098.6,
+      "minimum_350um_segments": 12,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_6",
+      "stack": "WN",
+      "pc": 6,
+      "rect_um": [
+        854.064,
+        18325.44,
+        1101.6,
+        18695.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_6",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3720.6,
+      "minimum_350um_segments": 11,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_7",
+      "stack": "WN",
+      "pc": 7,
+      "rect_um": [
+        854.064,
+        18703.44,
+        1101.6,
+        19073.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_7",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3342.6,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_8",
+      "stack": "WN",
+      "pc": 8,
+      "rect_um": [
+        854.064,
+        19081.44,
+        1101.6,
+        19451.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_8",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2964.6,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_9",
+      "stack": "WN",
+      "pc": 9,
+      "rect_um": [
+        854.064,
+        19459.44,
+        1101.6,
+        19829.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_9",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2586.6,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_10",
+      "stack": "WN",
+      "pc": 10,
+      "rect_um": [
+        854.064,
+        19837.44,
+        1101.6,
+        20207.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_10",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2208.6,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_11",
+      "stack": "WN",
+      "pc": 11,
+      "rect_um": [
+        854.064,
+        20215.44,
+        1101.6,
+        20585.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_11",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1830.6,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_12",
+      "stack": "WN",
+      "pc": 12,
+      "rect_um": [
+        854.064,
+        20593.44,
+        1101.6,
+        20963.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_12",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1452.6,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_13",
+      "stack": "WN",
+      "pc": 13,
+      "rect_um": [
+        854.064,
+        20971.44,
+        1101.6,
+        21341.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_13",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1074.6,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_14",
+      "stack": "WN",
+      "pc": 14,
+      "rect_um": [
+        854.064,
+        21349.44,
+        1101.6,
+        21719.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_14",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 696.6,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_15",
+      "stack": "WN",
+      "pc": 15,
+      "rect_um": [
+        854.064,
+        21727.44,
+        1101.6,
+        22097.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_15",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 318.6,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_16",
+      "stack": "WN",
+      "pc": 16,
+      "rect_um": [
+        854.064,
+        22105.44,
+        1101.6,
+        22475.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_16",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_17",
+      "stack": "WN",
+      "pc": 17,
+      "rect_um": [
+        854.064,
+        22483.44,
+        1101.6,
+        22853.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_17",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_18",
+      "stack": "WN",
+      "pc": 18,
+      "rect_um": [
+        854.064,
+        22861.44,
+        1101.6,
+        23231.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_18",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_19",
+      "stack": "WN",
+      "pc": 19,
+      "rect_um": [
+        854.064,
+        23239.44,
+        1101.6,
+        23609.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_19",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_20",
+      "stack": "WN",
+      "pc": 20,
+      "rect_um": [
+        854.064,
+        23617.44,
+        1101.6,
+        23987.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_20",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_21",
+      "stack": "WN",
+      "pc": 21,
+      "rect_um": [
+        854.064,
+        23995.44,
+        1101.6,
+        24365.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_21",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_22",
+      "stack": "WN",
+      "pc": 22,
+      "rect_um": [
+        854.064,
+        24373.44,
+        1101.6,
+        24743.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_22",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_23",
+      "stack": "WN",
+      "pc": 23,
+      "rect_um": [
+        854.064,
+        24751.44,
+        1101.6,
+        25121.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_23",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 334.8,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_24",
+      "stack": "WN",
+      "pc": 24,
+      "rect_um": [
+        854.064,
+        25129.44,
+        1101.6,
+        25499.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_24",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 712.8,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_25",
+      "stack": "WN",
+      "pc": 25,
+      "rect_um": [
+        854.064,
+        25507.44,
+        1101.6,
+        25877.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_25",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1090.8,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_26",
+      "stack": "WN",
+      "pc": 26,
+      "rect_um": [
+        854.064,
+        25885.44,
+        1101.6,
+        26255.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_26",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1468.8,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_27",
+      "stack": "WN",
+      "pc": 27,
+      "rect_um": [
+        854.064,
+        26263.44,
+        1101.6,
+        26633.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_27",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1846.8,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_28",
+      "stack": "WN",
+      "pc": 28,
+      "rect_um": [
+        854.064,
+        26641.44,
+        1101.6,
+        27011.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_28",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2224.8,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_29",
+      "stack": "WN",
+      "pc": 29,
+      "rect_um": [
+        854.064,
+        27019.44,
+        1101.6,
+        27389.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_29",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2602.8,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_30",
+      "stack": "WN",
+      "pc": 30,
+      "rect_um": [
+        854.064,
+        27397.44,
+        1101.6,
+        27767.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_30",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2980.8,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_WN_31",
+      "stack": "WN",
+      "pc": 31,
+      "rect_um": [
+        854.064,
+        27775.44,
+        1101.6,
+        28145.879999999997
+      ],
+      "native_KV_CDC": "cdc_WN_31",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3358.8,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_0",
+      "stack": "ES",
+      "pc": 0,
+      "rect_um": [
+        24897.888,
+        3043.44,
+        25145.424,
+        3413.88
+      ],
+      "native_KV_CDC": "cdc_ES_0",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3405.24,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_1",
+      "stack": "ES",
+      "pc": 1,
+      "rect_um": [
+        24897.888,
+        3421.44,
+        25145.424,
+        3791.88
+      ],
+      "native_KV_CDC": "cdc_ES_1",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3027.24,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_2",
+      "stack": "ES",
+      "pc": 2,
+      "rect_um": [
+        24897.888,
+        3799.44,
+        25145.424,
+        4169.88
+      ],
+      "native_KV_CDC": "cdc_ES_2",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2649.24,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_3",
+      "stack": "ES",
+      "pc": 3,
+      "rect_um": [
+        24897.888,
+        4177.4400000000005,
+        25145.424,
+        4547.88
+      ],
+      "native_KV_CDC": "cdc_ES_3",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2271.24,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_4",
+      "stack": "ES",
+      "pc": 4,
+      "rect_um": [
+        24897.888,
+        4555.4400000000005,
+        25145.424,
+        4925.88
+      ],
+      "native_KV_CDC": "cdc_ES_4",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1893.24,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_5",
+      "stack": "ES",
+      "pc": 5,
+      "rect_um": [
+        24897.888,
+        4933.4400000000005,
+        25145.424,
+        5303.88
+      ],
+      "native_KV_CDC": "cdc_ES_5",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1515.24,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_6",
+      "stack": "ES",
+      "pc": 6,
+      "rect_um": [
+        24897.888,
+        5311.4400000000005,
+        25145.424,
+        5681.88
+      ],
+      "native_KV_CDC": "cdc_ES_6",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1137.24,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_7",
+      "stack": "ES",
+      "pc": 7,
+      "rect_um": [
+        24897.888,
+        5689.4400000000005,
+        25145.424,
+        6059.88
+      ],
+      "native_KV_CDC": "cdc_ES_7",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 759.24,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_8",
+      "stack": "ES",
+      "pc": 8,
+      "rect_um": [
+        24897.888,
+        6067.4400000000005,
+        25145.424,
+        6437.88
+      ],
+      "native_KV_CDC": "cdc_ES_8",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 381.24,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_9",
+      "stack": "ES",
+      "pc": 9,
+      "rect_um": [
+        24897.888,
+        6445.4400000000005,
+        25145.424,
+        6815.88
+      ],
+      "native_KV_CDC": "cdc_ES_9",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3.24,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_10",
+      "stack": "ES",
+      "pc": 10,
+      "rect_um": [
+        24897.888,
+        6823.4400000000005,
+        25145.424,
+        7193.88
+      ],
+      "native_KV_CDC": "cdc_ES_10",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_11",
+      "stack": "ES",
+      "pc": 11,
+      "rect_um": [
+        24897.888,
+        7201.4400000000005,
+        25145.424,
+        7571.88
+      ],
+      "native_KV_CDC": "cdc_ES_11",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_12",
+      "stack": "ES",
+      "pc": 12,
+      "rect_um": [
+        24897.888,
+        7579.4400000000005,
+        25145.424,
+        7949.88
+      ],
+      "native_KV_CDC": "cdc_ES_12",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_13",
+      "stack": "ES",
+      "pc": 13,
+      "rect_um": [
+        24897.888,
+        7957.4400000000005,
+        25145.424,
+        8327.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_13",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_14",
+      "stack": "ES",
+      "pc": 14,
+      "rect_um": [
+        24897.888,
+        8335.44,
+        25145.424,
+        8705.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_14",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_15",
+      "stack": "ES",
+      "pc": 15,
+      "rect_um": [
+        24897.888,
+        8713.44,
+        25145.424,
+        9083.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_15",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_16",
+      "stack": "ES",
+      "pc": 16,
+      "rect_um": [
+        24897.888,
+        9091.44,
+        25145.424,
+        9461.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_16",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 272.16,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_17",
+      "stack": "ES",
+      "pc": 17,
+      "rect_um": [
+        24897.888,
+        9469.44,
+        25145.424,
+        9839.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_17",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 650.16,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_18",
+      "stack": "ES",
+      "pc": 18,
+      "rect_um": [
+        24897.888,
+        9847.44,
+        25145.424,
+        10217.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_18",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1028.16,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_19",
+      "stack": "ES",
+      "pc": 19,
+      "rect_um": [
+        24897.888,
+        10225.44,
+        25145.424,
+        10595.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_19",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1406.16,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_20",
+      "stack": "ES",
+      "pc": 20,
+      "rect_um": [
+        24897.888,
+        10603.44,
+        25145.424,
+        10973.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_20",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1784.16,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_21",
+      "stack": "ES",
+      "pc": 21,
+      "rect_um": [
+        24897.888,
+        10981.44,
+        25145.424,
+        11351.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_21",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2162.16,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_22",
+      "stack": "ES",
+      "pc": 22,
+      "rect_um": [
+        24897.888,
+        11359.44,
+        25145.424,
+        11729.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_22",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2540.16,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_23",
+      "stack": "ES",
+      "pc": 23,
+      "rect_um": [
+        24897.888,
+        11737.44,
+        25145.424,
+        12107.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_23",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2918.16,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_24",
+      "stack": "ES",
+      "pc": 24,
+      "rect_um": [
+        24897.888,
+        12115.44,
+        25145.424,
+        12485.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_24",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3296.16,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_25",
+      "stack": "ES",
+      "pc": 25,
+      "rect_um": [
+        24897.888,
+        12493.44,
+        25145.424,
+        12863.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_25",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3674.16,
+      "minimum_350um_segments": 11,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_26",
+      "stack": "ES",
+      "pc": 26,
+      "rect_um": [
+        24897.888,
+        12871.44,
+        25145.424,
+        13241.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_26",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4052.16,
+      "minimum_350um_segments": 12,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_27",
+      "stack": "ES",
+      "pc": 27,
+      "rect_um": [
+        24897.888,
+        13249.44,
+        25145.424,
+        13619.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_27",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4430.16,
+      "minimum_350um_segments": 13,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_28",
+      "stack": "ES",
+      "pc": 28,
+      "rect_um": [
+        24897.888,
+        13627.44,
+        25145.424,
+        13997.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_28",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4808.16,
+      "minimum_350um_segments": 14,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_29",
+      "stack": "ES",
+      "pc": 29,
+      "rect_um": [
+        24897.888,
+        14005.44,
+        25145.424,
+        14375.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_29",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5186.16,
+      "minimum_350um_segments": 15,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_30",
+      "stack": "ES",
+      "pc": 30,
+      "rect_um": [
+        24897.888,
+        14383.44,
+        25145.424,
+        14753.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_30",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5564.16,
+      "minimum_350um_segments": 16,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_ES_31",
+      "stack": "ES",
+      "pc": 31,
+      "rect_um": [
+        24897.888,
+        14761.44,
+        25145.424,
+        15131.880000000001
+      ],
+      "native_KV_CDC": "cdc_ES_31",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5942.16,
+      "minimum_350um_segments": 17,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_0",
+      "stack": "EN",
+      "pc": 0,
+      "rect_um": [
+        24897.888,
+        16057.44,
+        25145.424,
+        16427.88
+      ],
+      "native_KV_CDC": "cdc_EN_0",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5988.6,
+      "minimum_350um_segments": 18,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_1",
+      "stack": "EN",
+      "pc": 1,
+      "rect_um": [
+        24897.888,
+        16435.44,
+        25145.424,
+        16805.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_1",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5610.6,
+      "minimum_350um_segments": 17,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_2",
+      "stack": "EN",
+      "pc": 2,
+      "rect_um": [
+        24897.888,
+        16813.44,
+        25145.424,
+        17183.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_2",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 5232.6,
+      "minimum_350um_segments": 15,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_3",
+      "stack": "EN",
+      "pc": 3,
+      "rect_um": [
+        24897.888,
+        17191.44,
+        25145.424,
+        17561.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_3",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4854.6,
+      "minimum_350um_segments": 14,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_4",
+      "stack": "EN",
+      "pc": 4,
+      "rect_um": [
+        24897.888,
+        17569.44,
+        25145.424,
+        17939.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_4",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4476.6,
+      "minimum_350um_segments": 13,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_5",
+      "stack": "EN",
+      "pc": 5,
+      "rect_um": [
+        24897.888,
+        17947.44,
+        25145.424,
+        18317.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_5",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 4098.6,
+      "minimum_350um_segments": 12,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_6",
+      "stack": "EN",
+      "pc": 6,
+      "rect_um": [
+        24897.888,
+        18325.44,
+        25145.424,
+        18695.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_6",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3720.6,
+      "minimum_350um_segments": 11,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_7",
+      "stack": "EN",
+      "pc": 7,
+      "rect_um": [
+        24897.888,
+        18703.44,
+        25145.424,
+        19073.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_7",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3342.6,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_8",
+      "stack": "EN",
+      "pc": 8,
+      "rect_um": [
+        24897.888,
+        19081.44,
+        25145.424,
+        19451.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_8",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2964.6,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_9",
+      "stack": "EN",
+      "pc": 9,
+      "rect_um": [
+        24897.888,
+        19459.44,
+        25145.424,
+        19829.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_9",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2586.6,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_10",
+      "stack": "EN",
+      "pc": 10,
+      "rect_um": [
+        24897.888,
+        19837.44,
+        25145.424,
+        20207.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_10",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2208.6,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_11",
+      "stack": "EN",
+      "pc": 11,
+      "rect_um": [
+        24897.888,
+        20215.44,
+        25145.424,
+        20585.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_11",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1830.6,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_12",
+      "stack": "EN",
+      "pc": 12,
+      "rect_um": [
+        24897.888,
+        20593.44,
+        25145.424,
+        20963.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_12",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1452.6,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_13",
+      "stack": "EN",
+      "pc": 13,
+      "rect_um": [
+        24897.888,
+        20971.44,
+        25145.424,
+        21341.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_13",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1074.6,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_14",
+      "stack": "EN",
+      "pc": 14,
+      "rect_um": [
+        24897.888,
+        21349.44,
+        25145.424,
+        21719.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_14",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 696.6,
+      "minimum_350um_segments": 2,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_15",
+      "stack": "EN",
+      "pc": 15,
+      "rect_um": [
+        24897.888,
+        21727.44,
+        25145.424,
+        22097.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_15",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 318.6,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_16",
+      "stack": "EN",
+      "pc": 16,
+      "rect_um": [
+        24897.888,
+        22105.44,
+        25145.424,
+        22475.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_16",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_17",
+      "stack": "EN",
+      "pc": 17,
+      "rect_um": [
+        24897.888,
+        22483.44,
+        25145.424,
+        22853.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_17",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_18",
+      "stack": "EN",
+      "pc": 18,
+      "rect_um": [
+        24897.888,
+        22861.44,
+        25145.424,
+        23231.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_18",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_19",
+      "stack": "EN",
+      "pc": 19,
+      "rect_um": [
+        24897.888,
+        23239.44,
+        25145.424,
+        23609.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_19",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_20",
+      "stack": "EN",
+      "pc": 20,
+      "rect_um": [
+        24897.888,
+        23617.44,
+        25145.424,
+        23987.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_20",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_21",
+      "stack": "EN",
+      "pc": 21,
+      "rect_um": [
+        24897.888,
+        23995.44,
+        25145.424,
+        24365.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_21",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_22",
+      "stack": "EN",
+      "pc": 22,
+      "rect_um": [
+        24897.888,
+        24373.44,
+        25145.424,
+        24743.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_22",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 0.0,
+      "minimum_350um_segments": 0,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_23",
+      "stack": "EN",
+      "pc": 23,
+      "rect_um": [
+        24897.888,
+        24751.44,
+        25145.424,
+        25121.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_23",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 334.8,
+      "minimum_350um_segments": 1,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_24",
+      "stack": "EN",
+      "pc": 24,
+      "rect_um": [
+        24897.888,
+        25129.44,
+        25145.424,
+        25499.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_24",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 712.8,
+      "minimum_350um_segments": 3,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_25",
+      "stack": "EN",
+      "pc": 25,
+      "rect_um": [
+        24897.888,
+        25507.44,
+        25145.424,
+        25877.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_25",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1090.8,
+      "minimum_350um_segments": 4,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_26",
+      "stack": "EN",
+      "pc": 26,
+      "rect_um": [
+        24897.888,
+        25885.44,
+        25145.424,
+        26255.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_26",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1468.8,
+      "minimum_350um_segments": 5,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_27",
+      "stack": "EN",
+      "pc": 27,
+      "rect_um": [
+        24897.888,
+        26263.44,
+        25145.424,
+        26633.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_27",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 1846.8,
+      "minimum_350um_segments": 6,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_28",
+      "stack": "EN",
+      "pc": 28,
+      "rect_um": [
+        24897.888,
+        26641.44,
+        25145.424,
+        27011.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_28",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2224.8,
+      "minimum_350um_segments": 7,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_29",
+      "stack": "EN",
+      "pc": 29,
+      "rect_um": [
+        24897.888,
+        27019.44,
+        25145.424,
+        27389.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_29",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2602.8,
+      "minimum_350um_segments": 8,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_30",
+      "stack": "EN",
+      "pc": 30,
+      "rect_um": [
+        24897.888,
+        27397.44,
+        25145.424,
+        27767.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_30",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 2980.8,
+      "minimum_350um_segments": 9,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    },
+    {
+      "name": "emb_pc_EN_31",
+      "stack": "EN",
+      "pc": 31,
+      "rect_um": [
+        24897.888,
+        27775.44,
+        25145.424,
+        28145.879999999997
+      ],
+      "native_KV_CDC": "cdc_EN_31",
+      "cmd_bits": 288,
+      "return_bits": 260,
+      "reserved_frame_um": [
+        247.536,
+        371.52
+      ],
+      "actual_clock_domains": [
+        "core833.333ps",
+        "HBM1024ps"
+      ],
+      "minimum_vertical_wire_um": 3358.8,
+      "minimum_350um_segments": 10,
+      "required_providers": [
+        "nativecmd32/readcredit3",
+        "qualified288bprotectedPHYsector",
+        "actualKVlandingmetadata",
+        "JEDECcommand/writepayloadPHYbinding"
+      ],
+      "physical_pin_binding": false
+    }
+  ],
+  "replica_count": 128,
+  "old_controller_parents_retained": true,
+  "native_KV_CDC_retained": true,
+  "actual_frames_only": true,
+  "two_edge_station_estimate_is_not_qualification": true,
+  "adoption_credit": 0,
+  "physical_closed": false,
+  "die": {
+    "w": 25999.488,
+    "h": 32801.76,
+    "mm2": 852.828965,
+    "budget_mm2": 858,
+    "margin_mm2": 5.171035
+  },
+  "source_sha256": {
+    "tools/qwen_rom_fulldie_b3r2.py": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0",
+    "tools/qwen_system/embedding_columns.py": "f4f62a9c56111736d458f0b9d44ad1ce1280170da2d2c19aeca68e44235fbe87",
+    "tools/die_top_lint.py": "c1cd1c5e553a21cacb946c550afa98bf162d87802b73b2aeb7b0b3e49802691d",
+    "tools/qwen_system/embedding_pc_slots.py": "8a0fc257178798a452e7c2e4bba25d9aff06a41e72d990a2b885a2f91361c023"
+  }
+}

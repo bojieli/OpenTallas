@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.hbm_index_service.collector_before_segmented_rtl.v1",
+  "status": "CAPACITY_UNQUALIFIED_NO_SEGMENTED_BUILD",
+  "geometry": {"stack_band_um": [8500, 259.176], "central_gather_reserved_um": [500, 259.176], "central_x_um": 4250, "reservation": "inside service band; actual legacy and gather cell occupancy required"},
+  "communication": {"MACs_per_cycle": 0, "PCs_per_stack": 32, "PC_storage_banks": 2, "ordinary_sector_data_bits": 256, "sector_identity_and_valid_bits": 13, "SECDED_check_bits": 10, "protected_sector_bits": 279, "group_bytes": 1088, "group_sectors": 34, "output_bits_per_cycle": 8792, "output_credit_bits": 8},
+  "collector_cut": {"ordinary_PC_count": 16, "ordinary_protected_forward_bits": 4464, "extra_sector_count_worst_case": 2, "extra_protected_forward_bits": 558, "reverse_pop_bits": 32, "packed_candidate_total_tracks": 5054, "naive_both_bank_data_only_forward_tracks": 8192, "M4_M6_aggregate_track_estimate": 5354, "candidate_remaining_before_legacy_control_clock_shield": 300, "pitch_um": 0.096},
+  "packing_candidate": "Select the first required parity-bank sector locally at each PC; gather the two extra adjacent-j sectors through two explicitly routed protected side buses. Two physical bank buses from every PC do not fit the proposed collector.",
+  "latency": {"wire_hop_limit_um": 380, "farthest_PC_to_central_horizontal_hops_lower_bound": 12, "actual_relay_cycles": null, "read_command_and_capture_alignment": "must reserve and carry group identity across all forward and reverse relay stages", "token_composition": "8 index layers; no latency overlap or improvement credited"},
+  "replicas_per_die": 4,
+  "costs_still_required": ["local first-bank selectors", "extra-sector sidebus muxes and relay FF", "protected transaction identity in every stage", "descriptor/read-command broadcast", "existing legacy crossnet track inventory", "actual gather decoder and codec mapped area", "whole-band legacy cell occupancy", "loaded clock and pin budgets"],
+  "physical_fit": false,
+  "adopted": false
+}

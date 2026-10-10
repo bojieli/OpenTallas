@@ -1,0 +1,39 @@
+
+-- Running command `read_verilog -sv ot_qfd_emb_pcport.sv ot_qfd_emb_gw.sv ot_qfd_emb_strip.sv ot_qwen_die_hub_emb.sv' --
+
+1. Executing Verilog-2005 frontend: ot_qfd_emb_pcport.sv
+Parsing SystemVerilog input from `ot_qfd_emb_pcport.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_emb_pcport'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: ot_qfd_emb_gw.sv
+Parsing SystemVerilog input from `ot_qfd_emb_gw.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_emb_gw'.
+Warning: Replacing memory \sd with list of registers. See ot_qfd_emb_gw.sv:183
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ot_qfd_emb_strip.sv
+Parsing SystemVerilog input from `ot_qfd_emb_strip.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_emb_strip'.
+Warning: Replacing memory \txq with list of registers. See ot_qfd_emb_strip.sv:341
+Warning: Replacing memory \rfr with list of registers. See ot_qfd_emb_strip.sv:312
+Warning: Replacing memory \rfw with list of registers. See ot_qfd_emb_strip.sv:360, ot_qfd_emb_strip.sv:312
+Warning: Replacing memory \tq_spc with list of registers. See ot_qfd_emb_strip.sv:230
+Warning: Replacing memory \tq_sh with list of registers. See ot_qfd_emb_strip.sv:229
+Warning: Replacing memory \tq_seq with list of registers. See ot_qfd_emb_strip.sv:229
+Warning: Replacing memory \tq_t with list of registers. See ot_qfd_emb_strip.sv:229
+Warning: Replacing memory \cred with list of registers. See ot_qfd_emb_strip.sv:213
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ot_qwen_die_hub_emb.sv
+Parsing SystemVerilog input from `ot_qwen_die_hub_emb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_die_hub_emb'.
+Warning: Replacing memory \rcnt with list of registers. See ot_qwen_die_hub_emb.sv:193
+Warning: Replacing memory \rcg with list of registers. See ot_qwen_die_hub_emb.sv:190
+Warning: Replacing memory \lseen with list of registers. See ot_qwen_die_hub_emb.sv:286
+Warning: Replacing memory \lc with list of registers. See ot_qwen_die_hub_emb.sv:286
+Warning: Replacing memory \lc_n with list of registers. See ot_qwen_die_hub_emb.sv:277
+Warning: Replacing memory \lfr with list of registers. See ot_qwen_die_hub_emb.sv:227
+Warning: Replacing memory \lfw with list of registers. See ot_qwen_die_hub_emb.sv:243, ot_qwen_die_hub_emb.sv:227
+Generating RTLIL representation for module `\ot_qwen_die_hub_emb_top'.
+Successfully finished Verilog frontend.

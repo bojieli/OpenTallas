@@ -1,0 +1,9 @@
+MACRO_TRACK_GATE PASS macros=1 hooks=0 warnings=1
+view=asap7 corner=TT block=ot_hbm_link_retry_sram top=ot_hbm_link_retry_sram purpose=characterization
+  pnr:   wirelength=1019851 um vias=468389 DRC=0 antenna_nets=0 Fmax=579.36 MHz
+  drv:   max_slew=15 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  macro: ot_sram_1r1w_128x256_m1_r2c2 32768 bits (94.824 x 41.04 um) lef=ot_sram_1r1w_128x256_m1_r2c2.lef lib=ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+  halo:  4 4 um (command line); placed macros=16
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-data/codex/hbm-retry545-pathfinding-r3/physical.json

@@ -1,0 +1,11 @@
+{
+ "source_commit_remote": "88557c82e52532f4017e5402f318ccbc58c03b07",
+ "source_worktree_remote": "/srv/opentallas-scratch/claude/md6-localcapture-gate-wt",
+ "output_remote": "/srv/opentallas-scratch/claude/md6-localcapture-gate-r1/gate",
+ "admission": {"host": "ot-epyc1tb", "memory_gib": 8, "build_cores": 8},
+ "physical_qualified": false,
+ "selected_physical_top": "ot_dsrom_markov_embed_localcapture_pair",
+ "interface_scope": "Pair ABI unchanged. Full lookup test harness is unselected and does not change any existing head/bundle interface. No new interface integration authorized or implemented.",
+ "timing_scope": "160 released lookup beats;412cycles, creditmax8/fullstop96; zero extra cycles over historical PP gate. This is not a new full-bundle/tail timing receipt.",
+ "route_scope": "Fresh pair through Claude intake only. No full253 route. Existing electrical-failure receipt immutable."
+}

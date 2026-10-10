@@ -85,7 +85,7 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                  "ot_hdc_v41x_idx_hbm", "ot_hdc_v41x_idx_adapt",
                                                   "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
                                                   "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
-                                                  "ot_hdc_core_v41x")] +
+                                                  "ot_hdc_v41x_dyn_unit", "ot_hdc_core_v41x")] +
        [ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/"
                "ot_sram_1r1w_256x256_m2_r2c2.v"])
 FASTFP = ROOT / "rtl/hdc/ot_hdc_fastfp.sv"

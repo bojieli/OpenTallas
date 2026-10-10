@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.hbm.digital_boundary_physical.v1",
+ "top": "ot_hbm_clock_reset_collars",
+ "source_commit": "d707730d07151d29c5837b766baf49d97e0695f1",
+ "dependency_commit": "bddc33a0e",
+ "sources": ["rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv", "rtl/hbm_accel/control/ot_hbm_reset_seq.sv"],
+ "parameters": {"LINK_PORTS": 9},
+ "model": "results/uarch/hbm_ta15_clock_boundary_20261008/model.json",
+ "collar_count": 17,
+ "flop_count": 51,
+ "FF_area_floor_um2": 14.8716,
+ "outline_um": [100.224, 99.36],
+ "outline_status": "Isolated reservation pending mapped gates/CTS, no die area credit",
+ "clock_ports": {"clk_stream": 0.833333333, "clk_serial": 1.111111111, "clk_hbm": 1.024, "clk_link": 0.833333333},
+ "constraints": "physical/hbm_accel_die_views/clock_boundary/isolated.sdc",
+ "setup_corner": "SS", "hold_corner": "FF",
+ "setup_uncertainty_ns": 0.060, "hold_uncertainty_ns": 0.025,
+ "status": "REMOTE_ADMISSION_REQUESTED_ISOLATED_PATHFINDING",
+ "exactness": "Existing admitted EPYC2 3PASS d707730d0; no rerun requested",
+ "physical_closed": false, "adopted": false,
+ "required_reports": ["setup", "hold", "recovery", "removal", "DRC", "clock insertion", "cell area"],
+ "external_obligations": ["Analog PLL macro and lock specification", "AON source arrivals", "Real die reset fanout and wire load", "Asynchronous reset recovery/removal coverage in mapped library"]
+}

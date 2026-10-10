@@ -1,0 +1,22 @@
+ORACLE phase=1 positions=1 active_segments=8 nseg=1 cumulative_public_rows=16 value_assertions=32
+ORACLE phase=2 positions=1 active_segments=8 nseg=1 cumulative_public_rows=32 value_assertions=64
+ORACLE phase=3 positions=1 active_segments=8 nseg=1 cumulative_public_rows=48 value_assertions=96
+ORACLE phase=4 positions=1 active_segments=8 nseg=1 cumulative_public_rows=56 value_assertions=112
+ORACLE phase=5 positions=6 active_segments=8 nseg=1 cumulative_public_rows=152 value_assertions=304
+ORACLE phase=6 positions=6 active_segments=4 nseg=1 cumulative_public_rows=200 value_assertions=400
+ORACLE phase=7 positions=6 active_segments=4 nseg=1 cumulative_public_rows=248 value_assertions=496
+ORACLE phase=8 positions=6 active_segments=4 nseg=1 cumulative_public_rows=296 value_assertions=592
+ORACLE phase=9 positions=6 active_segments=4 nseg=2 cumulative_public_rows=344 value_assertions=688
+ORACLE phase=10 positions=6 active_segments=4 nseg=2 cumulative_public_rows=392 value_assertions=784
+ORACLE phase=11 positions=6 active_segments=4 nseg=2 cumulative_public_rows=440 value_assertions=880
+ORACLE phase=3 positions=1 active_segments=8 nseg=1 cumulative_public_rows=456 value_assertions=912
+PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448
+PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350
+PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418
+- tb_dsrom_actual_element_rne_wake.sv:334: Verilog $finish
+TXN LAG ns min=3.332 max=12.495 mean=6.591 n=456
+TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0
+TXN MATCH
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 104us; walltime 16.674 s; speed 6.216 us/s
+- Verilator: cpu 16.674 s on 1 threads; allocated 22 MB

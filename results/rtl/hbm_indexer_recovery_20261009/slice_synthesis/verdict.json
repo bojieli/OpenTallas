@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL_EXTERNAL_SIGNAL_OR_RESOURCE",
+  "scope": "Original Claude detached NK1/NK2/NK4 yosys -noshare area synthesis on EPYC1",
+  "observed_exit_codes": {
+    "NK1": 137,
+    "NK2": 137,
+    "NK4": 137
+  },
+  "authoritative_state": "All corresponding yosys process handles missing; exit files report 137",
+  "area_qualification": "No completed mapped-area results. Published bottom-up slice area remains an estimate.",
+  "cause": "Exit137 observed; external kill versus capacity failure not independently established. Outer time footer reports0 and is not accepted as success.",
+  "bulk_output": "Retained at /srv/opentallas-scratch/claude/hbm-indexer/synth/slice_nk{1,2,4}/"
+}

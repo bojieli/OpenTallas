@@ -1,0 +1,440 @@
+{
+ "at": 1791530800.264965,
+ "memory_kib": {
+  "MemAvailable": 240747576,
+  "SwapTotal": 8388604,
+  "SwapFree": 16
+ },
+ "resident_processes": [
+  {
+   "pid": 2153931,
+   "parent": 2153239,
+   "rss_gib": 118.943,
+   "command": "/usr/bin/verilator_bin --binary --timing -O2 -j 32 --output-split 20000 --output-split-cfuncs 20000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN --top-module tb_hfd_idx_die -GLEG=32 -GT=1 -GFA=6 -GKEYLEG=24 -GLA=7 -GCRED=128 -Mdir obj /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hbm_accel/index/ot_hbm_accel_index_query.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/v41/ot_hdc_actquant.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_fpu.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/proto/ot_fp32_add_rne_pipe.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv /srv/opentallas-scratch2/codex/hbm-indexer-2f27cb363/src/physical/hbm_accel_die_views/index/tb/tb_hfd_idx_die.sv"
+  },
+  {
+   "pid": 1020662,
+   "parent": 1020661,
+   "rss_gib": 62.327,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_hfd_su_asap7_hv_hbm_su_quarter_r23_5b48044bf_tt_cal/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 3323123,
+   "parent": 3323116,
+   "rss_gib": 53.505,
+   "command": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /srv/opentallas-data/claude/closure-loop/qfd_sp_su64_sfu_bv_s2-d95c2ebddtt/routes/qfd_sp_su64_sfu_bv_s2_d95c2ebddtt/work/synth.ys"
+  },
+  {
+   "pid": 3051000,
+   "parent": 3050999,
+   "rss_gib": 45.877,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/final_report.tcl -metrics /work/logs/asap7/opentallas_hfd_cmdproc_s_asap7_hv_hbm_cmdproc_s_orph2_a75cb556b_ttref_hm25_ioreffix/base/6_report.json"
+  },
+  {
+   "pid": 3072668,
+   "parent": 1,
+   "rss_gib": 42.008,
+   "command": "venv/bin/python src/qwen_rom_dspark_tau.py --deepspec DeepSpec --draft /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--deepseek-ai--dspark_qwen3_8b_block7/snapshots/03326e5043815da1f81b109078b2889737c26017 --target /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --device cpu --dtype float32 --threads 24 --drafts bf16 --max-new 512 --prompts-jsonl src/prompts.jsonl.gz --class-map chat=chat_mt_bench,reasoning=reasoning_math500,coding=reasoning_humaneval,agentic=agentic_swe_agent+agentic_tau_bench+agentic_mind2web,assistant_fc=agentic_bfcl+agentic_json_mode --classes coding --first 0 --limit 12 --out tau/co0.json"
+  },
+  {
+   "pid": 3072669,
+   "parent": 1,
+   "rss_gib": 41.665,
+   "command": "venv/bin/python src/qwen_rom_dspark_tau.py --deepspec DeepSpec --draft /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--deepseek-ai--dspark_qwen3_8b_block7/snapshots/03326e5043815da1f81b109078b2889737c26017 --target /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --device cpu --dtype float32 --threads 24 --drafts bf16 --max-new 512 --prompts-jsonl src/prompts.jsonl.gz --class-map chat=chat_mt_bench,reasoning=reasoning_math500,coding=reasoning_humaneval,agentic=agentic_swe_agent+agentic_tau_bench+agentic_mind2web,assistant_fc=agentic_bfcl+agentic_json_mode --classes coding --first 12 --limit 12 --out tau/co1.json"
+  },
+  {
+   "pid": 3072670,
+   "parent": 1,
+   "rss_gib": 41.393,
+   "command": "venv/bin/python src/qwen_rom_dspark_tau.py --deepspec DeepSpec --draft /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--deepseek-ai--dspark_qwen3_8b_block7/snapshots/03326e5043815da1f81b109078b2889737c26017 --target /srv/opentallas-scratch/claude/qwen-hbm-unify/hfhome/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --device cpu --dtype float32 --threads 24 --drafts bf16 --max-new 512 --prompts-jsonl src/prompts.jsonl.gz --class-map chat=chat_mt_bench,reasoning=reasoning_math500,coding=reasoning_humaneval,agentic=agentic_swe_agent+agentic_tau_bench+agentic_mind2web,assistant_fc=agentic_bfcl+agentic_json_mode --classes chat --first 0 --limit 12 --out tau/ch0.json"
+  },
+  {
+   "pid": 3024235,
+   "parent": 3024233,
+   "rss_gib": 39.825,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/final_report.tcl -metrics /work/logs/asap7/opentallas_hfd_cmdproc_n_asap7_hv_hbm_cmdproc_n_orph2_a75cb556b_ttref_hm25_ioreffix/base/6_report.json"
+  },
+  {
+   "pid": 3547568,
+   "parent": 3547567,
+   "rss_gib": 39.673,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_rom_core_asap7_qcc_core_pu_dcd132755tt_kh2/base/2_1_floorplan.json"
+  },
+  {
+   "pid": 3072280,
+   "parent": 3072277,
+   "rss_gib": 31.163,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_s81_bf_native_asap7_bfh2_deep4_hm0_6cd23db2b/base/5_2_route.json"
+  },
+  {
+   "pid": 3406423,
+   "parent": 3406334,
+   "rss_gib": 27.669,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_ha2_truecredit_rx_c_phys_asap7_ha2_tcc_rx/base/5_2_route.json"
+  },
+  {
+   "pid": 3981081,
+   "parent": 3981080,
+   "rss_gib": 21.217,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_attn_tile_b_asap7_dt_hbm_attn_tile_r23hq_sl12_0b66c6dd2_tt/base/5_1_grt.json"
+  },
+  {
+   "pid": 931438,
+   "parent": 929909,
+   "rss_gib": 21.15,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_attn_tile_b_asap7_dt_hbm_attn_tile_r23h_sl12_0b66c6dd2_tt/base/5_1_grt.json"
+  },
+  {
+   "pid": 2110333,
+   "parent": 2110310,
+   "rss_gib": 18.939,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/hold_eco.tcl"
+  },
+  {
+   "pid": 1799481,
+   "parent": 1799424,
+   "rss_gib": 16.626,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl"
+  },
+  {
+   "pid": 358075,
+   "parent": 358013,
+   "rss_gib": 11.383,
+   "command": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /srv/opentallas-scratch2/codex/hbm-index-sram-20261008/synth-r2/build/synth.ys"
+  },
+  {
+   "pid": 3431410,
+   "parent": 3431409,
+   "rss_gib": 10.988,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_s81fs_h1_r16_u35/base/5_1_grt.json"
+  },
+  {
+   "pid": 3392784,
+   "parent": 3392783,
+   "rss_gib": 10.985,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_s81fs_h1_r16_u35/base/5_1_grt.json"
+  },
+  {
+   "pid": 1874796,
+   "parent": 1874795,
+   "rss_gib": 9.685,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl"
+  },
+  {
+   "pid": 3765888,
+   "parent": 3765887,
+   "rss_gib": 9.445,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl20p_021f55db2_tt_f3_lvt/base/5_1_grt.json"
+  },
+  {
+   "pid": 410749,
+   "parent": 410748,
+   "rss_gib": 9.431,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl"
+  },
+  {
+   "pid": 3485115,
+   "parent": 3485114,
+   "rss_gib": 9.164,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl20p_021f55db2_tt_f3_hm10/base/5_1_grt.json"
+  },
+  {
+   "pid": 356782,
+   "parent": 356764,
+   "rss_gib": 8.745,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_qfd_sp_constants_sequencer_asap7_qdm_qfd_sp_constants_sequencer_fqh_a66978536_tc_bal32/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 360562,
+   "parent": 360561,
+   "rss_gib": 8.689,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_qfd_sp_constants_sequencer_asap7_qdm_qfd_sp_constants_sequencer_fqs_a66978536_tc_bal32/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 3045152,
+   "parent": 3045151,
+   "rss_gib": 8.624,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_loader_asap7_hv_hbm_loader_halfsk_tc_ab988d26c_hm10_d2125/base/5_1_grt.json"
+  },
+  {
+   "pid": 356332,
+   "parent": 356331,
+   "rss_gib": 7.96,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl"
+  },
+  {
+   "pid": 1740810,
+   "parent": 1740809,
+   "rss_gib": 7.232,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_rom_tile_die_asap7_qdm_qfd_tile_e_rp2np_1ee48d600tc/base/4_1_cts.json"
+  },
+  {
+   "pid": 3197620,
+   "parent": 3197619,
+   "rss_gib": 7.189,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_s81_bf_native_asap7_bfh2_deep4_hm0_6cd23db2b_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 3226372,
+   "parent": 3226361,
+   "rss_gib": 7.188,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_s81fs_h1_r128_x550/base/4_1_cts.json"
+  },
+  {
+   "pid": 3022896,
+   "parent": 3022895,
+   "rss_gib": 6.41,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsfd_selt_q2_asap7_s81ph_s81b_selt_q2_sq_mm2_9ac26e269_tt/base/5_1_grt.json"
+  },
+  {
+   "pid": 2849020,
+   "parent": 2849019,
+   "rss_gib": 6.405,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_s81_bf_native_asap7_bfh2_recutcgl50_hm10_8db5411e3/base/4_1_cts.json"
+  },
+  {
+   "pid": 3592410,
+   "parent": 3592409,
+   "rss_gib": 6.368,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_norm_grp8_asap7_nsp_hbm_norm_grp8_b_26f2e4ed2_tc_d1956_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 3867921,
+   "parent": 3867920,
+   "rss_gib": 6.324,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/smh_front_c_one_hbm_smh_front_c_nrd_tt_f170efb96/base/5_1_grt.json"
+  },
+  {
+   "pid": 288845,
+   "parent": 287821,
+   "rss_gib": 6.282,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_su12_full_asap7_su_red_hbm_su_full_tc_4aadc92bc_vf_lvt/base/5_1_grt.json"
+  },
+  {
+   "pid": 2978846,
+   "parent": 2978845,
+   "rss_gib": 6.138,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_vm_nw_s_asap7_hv_hbm_vm8_nws_spl_hm10_c47843849_tt/base/5_1_grt.json"
+  },
+  {
+   "pid": 1709131,
+   "parent": 1709128,
+   "rss_gib": 5.682,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_hfd_vm_sw_s_asap7_hv_hbm_vm8_sws_spcb_hm25_f6bc7c10b_tt/base/5_1_grt.json"
+  },
+  {
+   "pid": 472486,
+   "parent": 472485,
+   "rss_gib": 5.226,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_hfd_hc_asap7_hv_hbm_hc_quarter_hcp_79315a431_tt/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 435734,
+   "parent": 435733,
+   "rss_gib": 5.102,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hdc_v41x_vred_top1024_c12h_asap7_su_red_hbm_su_redh_top_cae10b8fb_cgfix_tt_pf_d1956_f4_hm10_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 3791063,
+   "parent": 3791062,
+   "rss_gib": 4.688,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/5_1_grt.json"
+  },
+  {
+   "pid": 2936451,
+   "parent": 2936450,
+   "rss_gib": 4.534,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsfd_vm_bgq_asap7_s81ph_s81b_vm_bgq_tc_50bf09d54_hm10_d2056/base/5_1_grt.json"
+  },
+  {
+   "pid": 23137,
+   "parent": 23026,
+   "rss_gib": 3.937,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab_tt_d1956_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 3967303,
+   "parent": 3967288,
+   "rss_gib": 3.855,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab_tt_d1956_f3_hm10_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 405872,
+   "parent": 405871,
+   "rss_gib": 3.762,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_caf38a801_r3/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 430788,
+   "parent": 430787,
+   "rss_gib": 3.639,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_caf38a801_p2/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 361738,
+   "parent": 361731,
+   "rss_gib": 3.309,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /src/physical/s81_native_bf/synth.tcl"
+  },
+  {
+   "pid": 382903,
+   "parent": 382901,
+   "rss_gib": 3.274,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /src/physical/s81_native_bf/synth.tcl"
+  },
+  {
+   "pid": 472699,
+   "parent": 472698,
+   "rss_gib": 3.168,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_link_retry_sram_asap7_hbm_retry545_pathfinding_wide/base/5_1_grt.json"
+  },
+  {
+   "pid": 2533195,
+   "parent": 2531730,
+   "rss_gib": 3.154,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_rom_tile_die_asap7_qdm_qfd_tile_rp1p_1ee48d600tc_f3_lvt/base/2_1_floorplan.json"
+  },
+  {
+   "pid": 453557,
+   "parent": 453556,
+   "rss_gib": 2.636,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_place.tcl -metrics /work/logs/asap7/opentallas_ot_qfd_res_ser_asap7_qdm_qfd_sp_res_ser_tsr_a66978536_tc_bal32/base/3_5_place_dp.json"
+  },
+  {
+   "pid": 471953,
+   "parent": 471952,
+   "rss_gib": 2.49,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/smh_front_c_one_qwen_fmt3_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 367874,
+   "parent": 367852,
+   "rss_gib": 2.441,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_link_retry_sram_asap7_hbm_retry545_pathfinding/base/5_1_grt.json"
+  },
+  {
+   "pid": 1923782,
+   "parent": 1923781,
+   "rss_gib": 2.269,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_colck_a6ca75fbe_tt_srcfix/base/5_1_grt.json"
+  },
+  {
+   "pid": 1662639,
+   "parent": 1662603,
+   "rss_gib": 2.061,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_hfd_su_asap7_hv_hbm_su_quarter_r23_5b48044bf_tt/base/2_1_floorplan.json"
+  },
+  {
+   "pid": 3323116,
+   "parent": 3323110,
+   "rss_gib": 1.866,
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_qfd_sp_su64_sfu_bv --source rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv --source rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv --source rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv --source rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_sfu_q.sv --source rtl/hdc/ot_hdc_vstream_lane.sv --source rtl/hdc/ot_hdc_vreduce.sv --source rtl/hdc/ot_hdc_vstream.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --param IS=2 --param OS=2 --param VL=7 --die-area 0 0 777.6 2058.48 --core-area 2.16 2.16 775.44 2056.32 --pin-region ^(clk|rst_n)$=left --pin-region ^(i_\\w+|go|a_src|tok|ready|idle|obs_\\w+|progress|progress_rows|fault|wrom_fault|crom_\\w+|ea_\\w+|eq_\\w+|kv_\\w+)(\\[|$)=left --pin-region ^(s_\\w+|sw_\\w+|red_\\w+)(\\[|$)=top --pin-regions-exhaustive --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --place-density 0.45 --hold-margin-ns 0.05 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var SDC_FILE=/src/physical/qwen_die_masters/die_p770.sdc --orfs-var QDM_SDC_DIR=/src/physical/qwen_die_masters --orfs-var PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl --orfs-var CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var OT_REF_GLOB=* --orfs-var OT_IO_INTER=* --orfs-var OT_IO_SKEW_INTER=150 --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_qfd_sp_su64_sfu_bv_s2_d95c2ebddtt --keep-workdir /srv/opentallas-data/claude/closure-loop/qfd_sp_su64_sfu_bv_s2-d95c2ebddtt/routes/qfd_sp_su64_sfu_bv_s2_d95c2ebddtt/work --force --output /srv/opentallas-data/claude/closure-loop/qfd_sp_su64_sfu_bv_s2-d95c2ebddtt/routes/qfd_sp_su64_sfu_bv_s2_d95c2ebddtt/physical.json"
+  },
+  {
+   "pid": 366152,
+   "parent": 366141,
+   "rss_gib": 1.34,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_s81ph_s81ph_dsfd_coll_lane_w_mirrorref_8dcf713ff_tc_hm25_r20_cal/base/4_1_cts.json"
+  },
+  {
+   "pid": 497573,
+   "parent": 497572,
+   "rss_gib": 1.252,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_place.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_die_hub_top_asap7_qdm_qfd_hub_psp_77d4d8d8a_tc_pg16/base/3_5_place_dp.json"
+  },
+  {
+   "pid": 3612185,
+   "parent": 3612184,
+   "rss_gib": 1.185,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl"
+  },
+  {
+   "pid": 1974269,
+   "parent": 1974268,
+   "rss_gib": 1.185,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl"
+  },
+  {
+   "pid": 494379,
+   "parent": 494360,
+   "rss_gib": 0.862,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 12 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/wfc_stg_cal/base/2_1_floorplan.json"
+  },
+  {
+   "pid": 497813,
+   "parent": 497812,
+   "rss_gib": 0.781,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_dsrom_window_source_ctl_asap7_s81b_wsrc_m2_tc_3ee14f399_hm10_d2056_f3_lvt_cal/base/3_3_place_gp.json"
+  },
+  {
+   "pid": 496958,
+   "parent": 496957,
+   "rss_gib": 0.665,
+   "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/final_report.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base/6_report.json"
+  },
+  {
+   "pid": 470881,
+   "parent": 382903,
+   "rss_gib": 0.566,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc -s"
+  },
+  {
+   "pid": 462871,
+   "parent": 361738,
+   "rss_gib": 0.517,
+   "command": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc -s"
+  }
+ ],
+ "external_jobs": [
+  {
+   "name": "hbm-indexer-deepcredit-exact",
+   "pid": 2153931,
+   "command_match": "hbm-indexer-2f27cb363/src",
+   "peak_ram_gb": 250,
+   "owner": "Codex:hbm_continuation",
+   "reason": "Admitted full connected FA6 KEYLEG24 SCORE32 LA7 CRED128 gate; expected250GiB; persistent remaining peak until actualworker exit"
+  }
+ ],
+ "recent_admissions": [
+  [
+   1791530673.40929,
+   4294967296
+  ],
+  [
+   1791530673.8637874,
+   1073741824
+  ],
+  [
+   1791530674.3596952,
+   42949672960
+  ],
+  [
+   1791530675.7364004,
+   8589934592
+  ],
+  [
+   1791530676.6423202,
+   2147483648
+  ],
+  [
+   1791530676.9649968,
+   1073741824
+  ],
+  [
+   1791530680.5285213,
+   8589934592
+  ],
+  [
+   1791530680.8823187,
+   8589934592
+  ],
+  [
+   1791530681.2212846,
+   1073741824
+  ],
+  [
+   1791530683.9321358,
+   68719476736
+  ]
+ ]
+}

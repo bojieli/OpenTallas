@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.mtp_exact_rom_terminal_interpretation.v1",
+ "status": "original_campaign_gate_failed_preserved",
+ "evidence": "rom_a_part.json",
+ "normal_runs_pass": 7,
+ "restore_mutant_detected": true,
+ "inert_accept_extra_control": "img_spread6_forced_g5_n12",
+ "inert_reason": "Both steps accept all five drafts. The accept-extra mutant has no rejecting edge to alter and is behaviorally identical on this input.",
+ "scope": "As-built reduced V4.1 core, sink handshake successor, seven ROM multi-step runs; no full-target physical qualification",
+ "next_gate": "New pinned harness campaign v41_mtp_rom_rtl excludes inert images from accept-extra control coverage and remains live; do not convert the preserved original failed verdict to PASS."
+}

@@ -118,8 +118,20 @@ module dsfd_svcio_x (
     ot_fwd_clk_inv u_xf (.a(ck[0]), .y(xf[0]));
 endmodule
 
+// s81-die-2 2026-10-08: the od tile's fault flop -> ad tile fi hop is 430 um across the IO hub (die glue TT_bal -34.7):
+// FSTN = 1 puts one common-clock station (the die's dsfd_stnh_512x1 view, 1 bit used) at its midpoint.  bad is sticky in
+// ot_s81ph_fmerge and fault is sticky in dsfd_svcio_ad, so the only effect is fault +1 cycle (status only; data unchanged).
+// S81PH_SVC_MUT_FSTN_DROP (bench mutant): the station never passes the fault.
+module dsfd_svcio_fstn (input wire ck, input wire d, output reg q);
+`ifdef S81PH_SVC_MUT_FSTN_DROP
+    always @(posedge ck) q <= 1'b0;
+`else
+    always @(posedge ck) q <= d;
+`endif
+endmodule
+
 // composition (same ports as ot_s81ph_svc_io NQ 4 + the forwarded clocks)
-module ot_s81ph_svc_io_t (
+module ot_s81ph_svc_io_t #(parameter integer FSTN = 1) (
     input  wire ck, rst, input wire [514:0] q,
     output wire [513:0] od, output wire [513:0] xd, output wire [1025:0] ad, output wire fault,
     output wire [2059:0] q_q,
@@ -128,10 +140,15 @@ module ot_s81ph_svc_io_t (
     input  wire a1_v, input wire [511:0] a1_d, output wire a1_r,
     input  wire x_v, input wire [511:0] x_d, output wire x_r,
     output wire of, output wire xf, output wire af);
-    wire bad_od;
+    wire bad_od, bad_fi;
+    generate if (FSTN != 0) begin : g_fs
+        dsfd_svcio_fstn u_fs (.ck(ck), .d(bad_od), .q(bad_fi));
+    end else begin : g_nofs
+        assign bad_fi = bad_od;
+    end endgenerate
     dsfd_svcio_q  u_q  (.ck(ck), .rst(rst), .q(q), .q_q(q_q));
     dsfd_svcio_od u_od (.ck(ck), .rst(rst), .od_v(od_v), .od_d(od_d), .od_r(od_r), .od(od), .of(of), .bad(bad_od));
     dsfd_svcio_ad u_ad (.ck(ck), .rst(rst), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
-        .fi(bad_od), .ad(ad), .af(af), .fault(fault));
+        .fi(bad_fi), .ad(ad), .af(af), .fault(fault));
     dsfd_svcio_x  u_x  (.ck(ck), .rst(rst), .x_v(x_v), .x_d(x_d), .x_r(x_r), .xd(xd), .xf(xf));
 endmodule

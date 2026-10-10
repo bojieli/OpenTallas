@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_ingest_afifo",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
+      "source": {
+        "commit": "7abf5cd22",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/protected_cdc_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_fifo_component/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_fifo_component/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "originalFIFO pointer/controlprotection separateobligation",
+        "legacyhostdescriptor/controlregister protection",
+        "sourceownedphysicalcommitfence"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_rom_host_ingest_protected",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
+      "source": {
+        "commit": "7abf5cd22",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/protected_cdc_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "originalFIFO pointer/controlprotection separateobligation",
+        "legacyhostdescriptor/controlregister protection",
+        "sourceownedphysicalcommitfence"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_s81_engram_aperture",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Protected explicit usable-capacity and deployed region installation, no address-width capacity inference",
+      "source": {
+        "commit": "e492b5f52",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/aperture_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/aperture_component/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/aperture_component/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual inventory producer including key/window/CKV",
+        "two-stack Engram backend lease",
+        "four-stack RoPE coverage remains separate"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsfd_host_protected",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
+      "source": {
+        "commit": "adcd3e0ee",
+        "paths": [
+          "physical/rom_host_ingest/rtl/dsfd_host_protected.sv",
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "implementation": {
+        "status": "Remote elaboration PASS",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/protected_cdc_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS minimum golden host campaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS mutants and failclosed invalid formats",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "queued SS/FF characterization successor",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/s81-host-protected-adcd3e0ee-ss.json"
+        ]
+      },
+      "dependencies": [
+        "originalFIFO pointer/controlprotection separateobligation",
+        "legacyhostdescriptor/controlregister protection",
+        "sourceownedphysicalcommitfence"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hfd_mtp_x_stop",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Actual full-context nativeMTP EOS/length/context stop-aware control, effective accepted prefix and registered finite accepted-output skid",
+      "source": {
+        "commit": "96f8dee27",
+        "paths": [
+          "rtl/hbm_accel/control/hfd_mtp_x_stop.sv",
+          "rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv",
+          "rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv",
+          "rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv",
+          "results/rtl/hbm_token_fifo_reservation_20261009/native_mtp_sources.json"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin actual native fullshape core, legacy sources unchanged",
+        "evidence": [
+          "rtl/hbm_accel/control/hfd_mtp_x_stop.sv"
+        ]
+      },
+      "model": {
+        "status": "sized; proposed existing MTP466.56x200.88 slot awaits actual fit and widened facade budget",
+        "evidence": [
+          "tools/hbm_native_mtp_stop_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "controller PASS, actual native core gate RUNNING",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/mtp_stop_r4_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "controller commit-too-many and out-of-context verify rejected; native core fault/reset/tag gates pending",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/mtp_stop_r4_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending route job with new native source/port inventory",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "mtp_die widened native facade and actual CP endpoint",
+        "tagged engine/argmax completion integration",
+        "protected mutable state",
+        "native MTP HBM window/source transport",
+        "Qwen generic SU and perquery verification causal mask"
+      ],
+      "integration": {
+        "status": "actual ctl/accept/argmax/specstate/skid bound; full compute/service and engine transaction endpoint remain incomplete",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/native_mtp_sources.json"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "source_commit": "1a56ad7b9",
+  "stage": "detailed placement; not final route verdict",
+  "corner": "TT",
+  "setup_wns_ns": -0.3177,
+  "path": "held_code[138] -> SECDED syndrome/correction -> out_data[111]",
+  "arrival_ns": 0.92436,
+  "required_ns": 0.60667,
+  "reset_recovery_slack_ns": -0.04984,
+  "evidence": "3_detailed_place.rpt",
+  "structural_successor": "c5dfa5e7f ECC_PIPE=1; model before build; adds2cycles/frame; no clock/uncertainty relaxation"
+}

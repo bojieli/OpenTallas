@@ -1,0 +1,23 @@
+{
+  "actual_TT_setup_ps": 48.49,
+  "actual_FF_hold_ps": -5.94,
+  "SS_setup_sensitivity_ps": -181.48,
+  "reset_path_reports_ps": {
+    "TT": {
+      "recovery": 206.32,
+      "removal": -38.24
+    },
+    "FF": {
+      "recovery": 144.86,
+      "removal": 4.74
+    },
+    "SS": {
+      "recovery": 237.51,
+      "removal": -144.37
+    }
+  },
+  "verdict": "FAIL_FF_HOLD",
+  "failed_path": "_259339_/QN -> _147493_/Y -> _262094_/D",
+  "mapping": "payload q_d1[1][1] -> RED q_m[1][1]",
+  "slot_fit": "UNBOUND480x200 selected native station parent; no route or adoption"
+}

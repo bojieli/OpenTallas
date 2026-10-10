@@ -1,0 +1,25 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "source_base": "961688ad8",
+  "files": {
+    "rtl/hbm_accel/qwen/r25/tb_qwen_r25_cmdproc18_split.sv": "79d6e3bdacb45ca24ee70ce0e4e0e277a7209eac5abb815e6377955c8694956b",
+    "rtl/hbm_accel/qwen/r25/ot_qwen_r25_cmdproc18.sv": "bc1b7308d4968f4cf3330fb984fd551843cb0602256055a4a4b5972de0dd14af",
+    "rtl/hbm_accel/qwen/r25/hfd_cmdproc_n_qwen18.sv": "2176286ae0a8a68328225f05935e6ffb39dd811797f57c8c3eb007b62e1342f1",
+    "rtl/hbm_accel/qwen/r25/hfd_cmdproc_s_qwen18.sv": "1cfbfa147dc4f32b030eaff6880c4432c4256ab615bcfdd743f3e996217c3119",
+    "rtl/hbm_accel/qwen/r25/tb_qwen_r25_cmdproc18.sv": "499395c5e6782c0c83e41784b5c08c65b3dcc1fe8c1ded157cc710b53709facb",
+    "rtl/hbm_accel/qwen/r25/ot_qwen_r25_cmdproc18_m.sv": "024ae3abf9f2ddecd286f8f4c16eb2d0f5e26b32dcf920e13423971b8334d371",
+    "tools/qwen_r25_cmdproc_program.py": "a0aa76c1d017c3afae0b2b33be2d221a6fc4db42693f166cc339e18fc44fd82e",
+    "tools/uarch_model_qwen_cmdproc18.py": "74b479bb737f2253346f286353d06b1f313b9748786d95e9d333db55f24f0004",
+    "tools/qwen_r25_cmdproc18_gate.py": "0f526b598fb08ccff12aa2d706e94a9821a88a2ecd7c22cbc03099b30c46c2e6"
+  },
+  "unchanged_legacy": {
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv": "4369463ede4f68713baabd03cc9f61d154b2396095bc6a6856f9cf419787e7f6",
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_n.sv": "b82136e6e22f13e409ef9d872f57eada6d502c7de7cb4b8c1aafd7f8989775ea",
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv": "cdb3620d0c49c2e4879c4e3dff52a0c33485fbf4a14367406795867844a9be18"
+  },
+  "actual_RTL_executed": true,
+  "physical_qualification": false,
+  "full_qwen_graph": false,
+  "negative_control": "token17_mutant.log exit1 at token131072"
+}

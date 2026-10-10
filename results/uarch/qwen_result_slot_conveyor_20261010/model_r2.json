@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.qwen_result_slot_conveyor.v1",
+  "adopted": false,
+  "default_off": true,
+  "models": [
+    "Qwen3-8B ROM"
+  ],
+  "MACs_per_cycle": 0,
+  "compute_intensity_MACs_per_byte": 0,
+  "replicas": {
+    "bands": 6,
+    "slots_per_band": 8,
+    "total_slot_macros": 48
+  },
+  "memory": {
+    "bytes_per_write_cycle": 64,
+    "bytes_per_read_cycle": 64,
+    "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+    "depth": 64
+  },
+  "boundary": {
+    "request_bits_per_cycle": 10,
+    "response_bits_per_cycle": 551,
+    "producer_bits_per_slot": 557,
+    "credit_bits_per_cycle": 1
+  },
+  "routing": {
+    "estimated_tracks": 561,
+    "available_tracks": 7087,
+    "pin_layers": [
+      "M4",
+      "M6",
+      "M5",
+      "M7"
+    ]
+  },
+  "replicas_cost": {
+    "global_data_mux_inputs": 0,
+    "local_response_mux_inputs": 2,
+    "metadata_read_mux_levels": [
+      8,
+      8
+    ],
+    "control_fanout": "local pin seat per slot"
+  },
+  "area": {
+    "slot_um": [
+      259.2,
+      324.0
+    ],
+    "slot_area_um2": 83980.8,
+    "macro_area_um2": 13319.354880000003,
+    "estimated_FF": 5599,
+    "FF_area_proxy_um2": 1632.6684000000002,
+    "controller_slot_um": [
+      216,
+      216
+    ],
+    "band_area_um2": 718502.4,
+    "physical_fit": false
+  },
+  "latency": {
+    "request_to_response_cycles": 21,
+    "burst_issue_cycles": 8,
+    "worst_full_burst_response_cycles": 28,
+    "ingress_to_request_cycles": 3,
+    "ingress_to_first_output_cycles": 24,
+    "baseline_first_beat_cycles": 5,
+    "added_first_beat_cycles": 19,
+    "token_cost": "+19 edges per serially exposed burst; measured landed token bench required",
+    "stall_budget_edges": 42,
+    "store_headroom_bursts": 5,
+    "ready_threshold": 17
+  },
+  "capacity": {
+    "credits": 16,
+    "reserve_per_request": 1,
+    "disabled_slot_refund": true
+  },
+  "exact_gate": "full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants"
+}

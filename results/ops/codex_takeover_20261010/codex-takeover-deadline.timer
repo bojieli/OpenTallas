@@ -1,0 +1,8 @@
+[Unit]
+Description=Owner-authorized Codex takeover deadline cadence
+[Timer]
+OnCalendar=2026-10-10 09:00:00 America/Los_Angeles
+Persistent=true
+AccuracySec=1s
+[Install]
+WantedBy=timers.target

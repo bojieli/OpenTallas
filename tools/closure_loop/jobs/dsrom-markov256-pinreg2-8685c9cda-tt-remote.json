@@ -1,0 +1,90 @@
+{
+ "name": "dsrom-markov256-pinreg2-8685c9cda-tt-remote",
+ "block": "ot_dsrom_markov_row_K256_PINREG2",
+ "owner": "Codex:mtp-markov-route",
+ "purpose": "Default-off PINREG2 structural alternative: unconditional512b payloadcapture removes in_valid/fire from512mux-enable cones; accepted-valid flop selects consumption. Same513FF/+1cycle. Extra invalidcycle payloadswitching <=512bit transitions/cycle; no energy credit. Newfaulty invalidpayload stress, full48K256 exactness/faults/mutant, admittedremotephysical alongside PINREG1 anddirect variants.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "codex/markov-pinreg-20261008",
+  "commit": "8685c9cda",
+  "extra_paths": [
+   "results/rtl/dsrom_markov_row_20261008"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_pinreg",
+    "cmd": "python3 tools/dsrom_markov_row_bench.py --pinreg 2 --vectors results/rtl/dsrom_markov_row_20261008 --source-commit {COMMIT} --out {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "\"faultcases\": 3",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "\"faultcases\": (\\d+)"
+   },
+   {
+    "name": "negative_separate_add",
+    "cmd": "vvp {RUN}/bench/bench_1.vvp +DIR={RUN}/bench",
+    "expect": "fail",
+    "fail_regex": "nonexact",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; PINREG=2 bash physical/dsrom_markov/route.sh markov256 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; PINREG=2 bash physical/dsrom_markov/route.sh markov256 {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "routed_at_TT",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/dsrom_markov/gen/signoff_markov256.sdc"
+  ],
+  "macros": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/bench",
+   "to": "results/rtl/dsrom_markov_pinreg2_20261008"
+  }
+ ],
+ "cycles_added": "PINREG2 +1 accepted-beat stage,513FF payload+valid; expected first178cycles, invalidpayload switching priced separately",
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "New standalone engine, no sheet exists. Explicit model600um slot and calibrated die-link 250ps obligation."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ]
+}

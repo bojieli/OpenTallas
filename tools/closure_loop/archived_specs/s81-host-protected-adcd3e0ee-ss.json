@@ -1,0 +1,50 @@
+{
+  "name": "s81-host-protected-adcd3e0ee-ss",
+  "block": "dsfd_host_protected",
+  "owner": "Codex:ingest",
+  "purpose": "Actual three-clock S81 host successor: mutable FIFO payload SECDED, original formats/rounding, real native290 sector face. SS/FF characterization; descriptor and pointer state protection still separate.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-agidock128",
+    "ot-epyc1tb"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "codex/s81-native-ingest",
+    "commit": "adcd3e0ee",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical",
+      "Makefile"
+    ],
+    "extra_paths": [
+      "results/rtl/s81_native_ingest_20261009"
+    ]
+  },
+  "no_bench_reason": "Source-pinned238c238fb protected generic host remote PASS five golden cases7156sectors, zero mismatches; payload/tag mutants detected, disabledQKV/RMW failclosed. Identical generic source; actual dsfd_host_protected parameters elaborated remotely rc0. Immutable protected_host_component receipt. No whole-die claim.",
+  "stages": {
+    "calibrate": {
+      "enabled": false,
+      "reason": "Explicit nativeadjacentrelay budget0.316667nsmax/0.050nsmin; standalonepathfinding prior to extracted die clockarrival. No timing signoff adoption until contextbudget; sourceowned queues/credits measured first."
+    },
+    "route": {
+      "cmd": "unset OT_ORFS_CORNER_OVERRIDE; export OT_CTS_FIX_HOOKS='physical/common_flow/clk_net_protect.tcl'; SRC={SRC} OUT={RUN}/routes CORES=12 NEED=48 DIV=2 bash physical/s81_native_ingest/route_host_protected.sh {LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "cycles_added": 0,
+  "cycles_note": "SECDED payload wrapper combin encode/decode adds no pipeline cycles; actual three-clock queue visibility measured. New source timing must close.",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "WC"
+}

@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.engram-rowstripe-service-gate.v1",
+ "boundary": "six queued same-PC reads at actual controller face, eight producer credits and overflow failclose; no physical/die/shared arbitration credit",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_service.sv": "7ca0b2b3babc0f2542ea38aaae3b6daf518ae557ce4902e0d6d7a188818a5e0d",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "8b54008d8c5085c1209153cdf82c62e5340b689a614f8d5b0811be2931dc957b",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/test/tb_dsrom_engram_rowstripe_service.sv": "88c3310a360e92851b3f594e37afbdda10bb41f4ef44dd7d2ac69a639f1debd0",
+  "tools/uarch_model.py": "781cea6a31cdb092bfb506fb287b7320ba32bfae206eae9467d97a4e98971186",
+  "tools/engram_rowstripe_service_gate.py": "505a5bb9908ed871db601a92dfe7d2a7779cd26b513f62181dae153cc12539ba"
+ },
+ "cases": {
+  "same_pc_queued": {
+   "returncode": 0,
+   "stdout": "ENGRAM_SERVICE PASS queued=6 same_pc=1 atoms=54 credit=6 delayed=1\n/srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_service.sv:49: $finish called at 2365000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "overcredit": {
+   "returncode": 0,
+   "stdout": "ENGRAM_SERVICE NEG overcredit caught\n/srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_service.sv:45: $finish called at 345000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

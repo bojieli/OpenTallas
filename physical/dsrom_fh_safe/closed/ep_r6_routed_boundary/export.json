@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.fh.current_boundary_export.v1",
+  "name": "ot_hdc_v41_fh_ep_view",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/stack_fresh/pass1/orfs",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "post_sdc": "physical/dsrom_fh_safe/export_boundary.sdc",
+  "route_files_sha256": {
+    "6_final.odb": "f5230597105ac3b7822e23d38633d3ce48786b5ac273bcaff10443e8c8366dec",
+    "6_final.spef": "384c3de40f8fbfc157ae8a65e410901d2fd9b2b6402a1ffc403fb07076587f47",
+    "6_final.sdc": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0",
+    "6_final.v": "9309495664f32b6e76dd6ab33072caae6c4330f4686512c8ddf095196b42bb4a"
+  },
+  "ss": {
+    "done": true,
+    "exit_code": 0,
+    "ws_max": "-5.333633534831961e-11",
+    "ws_min": "5.4821702732965605e-11"
+  },
+  "ff": {
+    "done": true,
+    "exit_code": 0,
+    "ws_max": "1.6175216721592278e-10",
+    "ws_min": "5.784261958297066e-14"
+  },
+  "tt": {
+    "done": true,
+    "exit_code": 0,
+    "ws_max": "9.102307796382547e-11",
+    "ws_min": "2.5959900895600185e-11"
+  },
+  "files": {
+    "export_ff.tcl": "52cbeac041e849fce9ee36e996eddb6c2bd76523c686894af669dc66e086eaf4",
+    "export_ss.tcl": "d090ad51deee47b302ebeae1413a3f4e4830a5efa7acc6824cbeedc49450552a",
+    "export_tt.tcl": "4b8c9ae9d14f7eed50571ee03e85a131bd86ac432e5a146e9013b7c8c02de97f",
+    "ot_hdc_v41_fh_ep_view.lef": "9c1872f520c4797380c622ab540ad9369cd37f3c3fc575503ad78e1e88034d1f",
+    "ot_hdc_v41_fh_ep_view_ff.lib": "8785cb7d98d5a4d9d10add809c158ab25fdfd8f0307ba3b977e2b8fb05e534fe",
+    "ot_hdc_v41_fh_ep_view_ss.lib": "c9de85f9553e4592f1b369926228a0bf9a933c591d619a5fa4479828fd141f6f",
+    "ot_hdc_v41_fh_ep_view_tt.lib": "021c88e22e1db37a554bdb6af208efc5989a4e91a4910139c38bee76b0e48140"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "taps_per_stack": 4,
+  "lanes_per_tap": 4,
+  "stacks": 4,
+  "MACs_per_stack_cycle": 65536,
+  "tap_payload_bits": 153,
+  "tap_landing_depth": 128,
+  "landing_bits_per_stack": 78336,
+  "landing_FF_floor_um2_per_stack": 22842.7776,
+  "output_payload_bits": 609,
+  "output_credits": 128,
+  "bits_per_cycle": {
+    "tap_inputs": 616,
+    "output": 610,
+    "tap_credits": 4,
+    "output_credit": 1
+  },
+  "tap_slot_um": [
+    1400,
+    1250
+  ],
+  "grid_slot_um": [
+    2800,
+    2500
+  ],
+  "grid_outline_mm2_per_stack": 7.0,
+  "historical_native_outline_mm2_per_stack": 6.0010080422400005,
+  "added_grid_outline_mm2_per_die": 3.995967831039998,
+  "join_slot_um": [
+    420,
+    360
+  ],
+  "join_slot_um2": 151200,
+  "join_outline_status": "Separate hardened join required; mapped area and actual routing tracks unmeasured",
+  "query_latency_extra_cycles_per_tap": 3,
+  "join_latency_min_cycles": 2,
+  "token_latency_status": "Must measure tap/query/join/backpressure and compose8index layers; no rate credit",
+  "acceptance": "Atomic lane order and last agreement with finite credits; arbitrary tap skew and stalled downstream; dropped credit and lane swap negatives rejected; actual four-tap arithmetic exact gate and physical views remain required"
+}

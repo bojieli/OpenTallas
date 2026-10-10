@@ -1,0 +1,6 @@
+PASS real545 two-clock full256 landing debt, ACK alone returns no sourcecredit
+PASS 1300 full545 protected ingress/replay records, phase-shifted core pops, cumulative wrap
+PASS FECUE replay delivers once and returns one core credit per actual pop
+PASS coordinated reset/linkdown and stale24bit session; defaultoff has no storage/outputs
+PASS_ALL
+rtl/tu/tb_hbm_tu_retry_phy_port.sv:79: $finish called at 2850215000 (1fs)

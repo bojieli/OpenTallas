@@ -1,0 +1,110 @@
+{
+ "scope": "prebuild estimate; no exactness, physical closure or service bandwidth credit",
+ "source": "physical/hbm_accel_die_views/index/DESIGN.md; eb67c5c57",
+ "arithmetic": {
+  "keys_per_stack_cycle": 16,
+  "slices_NK4_per_stack": 4,
+  "MACs_per_stack_cycle": 65536,
+  "MACs_per_key_byte": 60.23529411764706,
+  "compute_issue_cycles_at_2736_keys": 171
+ },
+ "service": {
+  "required_keys_per_stack_cycle": 12.254901960784315,
+  "required_bytes_per_stack_cycle": 833.3333333333334,
+  "line_ports_per_stack": 8,
+  "line_payload_bytes": 136,
+  "provided_bytes_per_stack_cycle": 1088,
+  "contiguous_blocks_per_stack": 342,
+  "PCs_per_stack": 32,
+  "caveat": "kind2 single-PC service must be replaced by admitted striped credit reassembly"
+ },
+ "boundaries_per_stack": {
+  "key_input_bits_per_cycle": 8792,
+  "query_bus_bits": 571,
+  "score_bits_per_cycle": 610,
+  "input_credit_bits": 8,
+  "output_credit_bits": 1
+ },
+ "replication": {
+  "stacks": 4,
+  "scorer_instances": 4,
+  "slices_NK4_per_die": 16,
+  "selector_instances": 1,
+  "query_fanout_per_slice": 32,
+  "score_quarter_mux_inputs": 4,
+  "selector_lane_join": 1
+ },
+ "storage": {
+  "line_landing_bits_per_stack": 562176,
+  "score_landing_bits_per_die": 311808
+ },
+ "floorplan": {
+  "scorer_cells_um2_estimate_per_stack": 3050000,
+  "scorer_slot_um2_per_stack": 5600000,
+  "scorer_slot_capacity_um2": 3080000.0000000005,
+  "selector_cells_and_macros_um2_estimate": 400000,
+  "selector_slot_um2_estimate": 727272.7272727272,
+  "utilisation": 0.55,
+  "routing_track_demand_per_stack": 9982,
+  "routing_capacity_status": "unqualified: requires R25I real pins and global route corridors"
+ },
+ "latency": {
+  "relay_stages_one_way": 32,
+  "interface_lower_bound_cycles_per_layer": 66,
+  "interface_lower_bound_cycles_per_token_8_index_layers": 528,
+  "tap_query_extra_hops": 0,
+  "benchmark_required": "base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"
+ },
+ "default_enabled": false,
+ "adopted": false,
+ "physical_params": {
+  "L": 16,
+  "FA": 6,
+  "CRED": 128,
+  "T": 1,
+  "LA": 7,
+  "MEMV": 1,
+  "READLAT": 2
+ },
+ "credit_admission": {
+  "key_one_way_hops": 24,
+  "key_return_hops": 24,
+  "key_capture_and_return_edges": 4,
+  "line_credits_per_port": 64,
+  "score_one_way_hops": 32,
+  "score_return_hops": 32,
+  "score_capture_and_return_edges": 4,
+  "score_credits_per_stack": 128
+ },
+ "fifo_area_delta_floor_um2": {
+  "key_per_stack": 122947.89120000001,
+  "score_per_die": 45461.606400000004
+ },
+ "native_slots": {
+  "score_primary_um": [
+   2000.16,
+   3000.24
+  ],
+  "score_parallel_fallback_um": [
+   2000.16,
+   3402.0
+  ],
+  "selector_um": [
+   1399.656,
+   844.56
+  ],
+  "placement": "four side-band scorers; selector above SU-full in the spine"
+ },
+ "routing_capacity": {
+  "track_pitch_um": 0.048,
+  "key_lines_per_stack": 8,
+  "key_tracks": 8792,
+  "preferred_key_corridors": {
+   "SM_interrow_lines": 5,
+   "service_gap_lines": 2,
+   "hub_edge_lines": 1
+  },
+  "qualification": "capacity reservations only; exact station paths and GRT still required"
+ },
+ "acceptance": "full-shape exactness/negative controls plus admitted physical context; no rate credit yet"
+}

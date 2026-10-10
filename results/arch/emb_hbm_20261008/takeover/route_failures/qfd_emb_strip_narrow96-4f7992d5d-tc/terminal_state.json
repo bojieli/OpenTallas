@@ -1,0 +1,109 @@
+{
+ "name": "qfd_emb_strip_narrow96-4f7992d5d-tc",
+ "spec": {
+  "name": "qfd_emb_strip_narrow96-4f7992d5d-tc",
+  "block": "qfd_emb_strip_narrow96",
+  "owner": "Codex:embedding-hbm",
+  "purpose": "Narrow/tall embedding strip structural alternative:96.768x2000um matches actual concentrator width; modeled8288 return pins<=31250 planned tracks and1050 bottom pins<=1512. +0.086173mm\u00b2 across4 over original414.72square. Occupancy and die relay hops OPEN. Existing w600 route preserved; identical RTL and previous exactness/package gates retained. TTsetup>=0 FFhold>=0 DRC0.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "codex/emb-hbm-takeover-20261008",
+   "commit": "4f7992d5dedfa857249dc0c0025c9069ecd5a322"
+  },
+  "no_bench_reason": "Unchanged RTL from e48258ccd: 5positive and4negative full-shape variants harvested and hash-pinned in results/arch/emb_hbm_20261008/takeover/summary.json. Only physical frames and actual implemented clock binding change. No proof reruns. Package expansion separately proven in committedtakeover/package_inline_gate.json; nativeYosysparseall4modulesPASS.",
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+   },
+   "route": {
+    "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_emb_strip_narrow96.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_emb_strip_narrow96 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_emb_strip_narrow96 --out {RUN}/record/views/qfd_emb_strip_narrow96 --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_emb_strip_narrow96.sdc"
+   ],
+   "checks": [
+    {
+     "name": "owner_TT_FF_nonnegative",
+     "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+    },
+    {
+     "name": "route_WC_scene_reads_TT",
+     "cmd": "grep -q 'corner WC reads the TT' {RUN}/routes/{LABEL}/flow.log"
+    }
+   ],
+   "macros": []
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/emb_hbm_closure_20261008/qfd_emb_strip_narrow96-4f7992d5d-tc"
+   }
+  ],
+  "cycles_added": "Measured baseKV1 473mean/789max, full128PC shape; frame-only change adds0cycles. Qualified headline credit0 until die integration/reprice.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_emb_strip_narrow96-4f7992d5d-tc.json",
+ "created": "2026-10-08T23:48:26-07:00",
+ "status": "FLOORPLAN_MARGIN",
+ "stage_idx": 0,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-08T23:48:26-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_emb_strip_narrow96-4f7992d5d-tc.json",
+  "2026-10-08T23:49:09-07:00 source 4f7992d5dedf synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc/src",
+  "2026-10-08T23:49:36-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-09T00:08:51-07:00 FLOORPLAN_MARGIN: pin_density: pin density > 12.0 bits/um/layer over 100 um: W/M4 20.8 b/um @801: spread over the face (target <= 6.0) / more layers / a longer edge"
+ ],
+ "updated": "2026-10-09T00:08:51-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc",
+ "source_synced": true,
+ "commit_full": "4f7992d5dedfa857249dc0c0025c9069ecd5a322",
+ "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: W/M4 20.8 b/um @801: spread over the face (target <= 6.0) / more layers / a longer edge",
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-08T23:49:36-07:00",
+ "wd_checked": 1791528628.8712995,
+ "ef_checked": 1791529545.8553107,
+ "unreachable": 0,
+ "hm_auto_seen": []
+}

@@ -1,0 +1,99 @@
+{
+  "name": "s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25",
+  "block": "dsfd_coll_lane_w",
+  "owner": "Codex:s81-slab-continuation",
+  "purpose": "Approved W/MY collective implementation at both W and retired E positions. Current routed-reference re-STA refutes historical W closure: TT17.91,FF-25.67 on505 input holds (TT398.4ps/FF322.4ps boundary clocks). Fresh TC calibration/route with current per-corner MMFF reference and HM25. Same native GFMT1/EPPIPE2 hardware,345.6x340.2 footprint,10SRAM macros,zero new cycles. Global localhost admission disabled by owner.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 8,
+  "source": {
+    "branch": "codex/s81-collective-mirror-20261009",
+    "commit": "8dcf713ff",
+    "extra_paths": [
+      "results/rtl/s81_collective_mirror_20261009/mirror_audit.json",
+      "results/rtl/s81_collective_mirror_20261009/retired_master.json"
+    ]
+  },
+  "stages": {
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.025 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 NEED=8 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 16,
+      "peak_ram_gb": 8
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.025 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=8 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+    },
+    "bench": [
+      {
+        "name": "exact_coll_tp4",
+        "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench f1p2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 12
+      },
+      {
+        "name": "neg_noreorder",
+        "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench mut +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_MUT_NOREORDER",
+        "expect": "fail",
+        "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+        "threads": 8,
+        "peak_ram_gb": 12
+      }
+    ]
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/variant_fill/s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25/dsfd_coll_lane_w"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_margin_ns": 0.025,
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "host_require": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "enabled": false,
+  "disabled_reason": "Owner admission correction: W detailed-route measured14,533,068KB, exceeds initial8GB estimate; cancelled before any stage launch. Superseded by-r20 reservation20GB."
+}

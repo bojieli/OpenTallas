@@ -1,0 +1,7 @@
+heads launched 2026-10-09 18:28:30
+cpu_gold_tp4_vs_committed_L0-2 {'layer_x_sha256': True, 'kv_pre_sha256': True, 'kv_at_P_sha256': True, 'x_preload': True}
+cpu_gold_tp2_vs_verified_tp2_l3 {'layer_x_sha256': True, 'kv_pre_sha256': True, 'kv_at_P_sha256': True}
+qwen_rom head base rc=0 {"mode": "head", "exact": true, "cycles": 3006, "next_token": 24, "winning_logit_bits": "41962749", "layer_x_mismatches": 0, "kv_mismatches": 0}
+qwen_rom head s22ml7 rc=0 {"mode": "head", "exact": true, "cycles": 3055, "next_token": 24, "winning_logit_bits": "41962749", "layer_x_mismatches": 0, "kv_mismatches": 0}
+hbm_qwen head rc=0 "status":"pass","rtl_token":24,"oracle_token":24,
+done

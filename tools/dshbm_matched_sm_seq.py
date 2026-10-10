@@ -82,10 +82,22 @@ def gen_op(fmt, R, K, NC, rng, X=None, *, released_fp4=None):
     if X is None:                                    # a reused context passes the resident op's x
         X = [rng.standard_normal(K).astype(F) * F(rng.choice([0.1, 1.0, 8.0])) for _ in range(NC)]
     c = 8
+    int8 = fmt == "v41_int8"                         # hbm-forks CF-SM: signed INT8 codes; the fmt0 image = their BF16
+    if int8:
+        fmt = "v41_bf16"
     if fmt == "v41_bf16":
         C = -(-K // 8)
         LA = LF
-        w = G.to_bf16(rng.standard_normal((R, K)).astype(F) * F(0.02))
+        if int8:
+            codes8 = rng.integers(-128, 128, size=(R, K))
+            codes8[0, :] = -128                      # CF-SM rows: -128, 127, 0
+            if R > 1:
+                codes8[1, :] = 127
+            if R > 2:
+                codes8[2, :] = 0
+            w = codes8.astype(F)
+        else:
+            w = G.to_bf16(rng.standard_normal((R, K)).astype(F) * F(0.02))
         gold = [V.csum(G.mul(w, G.to_bf16(x)[None, :])) for x in X]
         wb = S.bf16_bits(w).astype(np.int64)
         xb = [S.bf16_bits(x) for x in X]
@@ -169,8 +181,18 @@ def gen_op(fmt, R, K, NC, rng, X=None, *, released_fp4=None):
                         f |= (int(xe[b]) & 0x3FF) << 256
                         word |= f << (n * XC + 266 * j)
         xw.append(word)
-    return dict(R=R, c=c, Gn=Gn, fmt={"v41_bf16": 0, "v41_fp8": 1, "v41_fp4": 2}[fmt], lines=lines, xw=xw, gold=gold,
-                X=X)
+    if int8:                                         # fmt3 line = two consecutive BF16 beats' lanes as INT8 codes
+        assert len(lines) % 2 == 0, "fmt3 needs an even BF16 beat count"
+        def codes(word):
+            out = 0
+            for j in range(64):
+                b = (word >> (16 * j)) & 0xFFFF
+                v = int(np.array([b << 16], dtype=np.uint32).view(np.float32)[0])
+                out |= (v & 0xFF) << (8 * j)
+            return out
+        lines = [codes(lines[2 * i]) | (codes(lines[2 * i + 1]) << 512) for i in range(len(lines) // 2)]
+    return dict(R=R, c=c, Gn=Gn, fmt=3 if int8 else {"v41_bf16": 0, "v41_fp8": 1, "v41_fp4": 2}[fmt], lines=lines,
+                xw=xw, gold=gold, X=X)
 
 
 def compile_bench(sim, params, outdir, jobs):

@@ -1,0 +1,19 @@
+{
+ "status":"PREBUILD_MODEL_NOT_ADOPTED",
+ "block":"ot_s81_ctrl_lane_adapter",
+ "replicas_per_die":1,
+ "macs_per_cycle":0,
+ "source":"rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv pass-through lanes3..7 explicitly reserved for stage-hop/token/draft",
+ "policy":"Dedicate one configured existing pass-through lane3..7 to stage-control messages. No arbitrary552-bit payload classifier; legacy core use of this reserved lane faults and is not accepted.",
+ "ports_bits_per_cycle":{"controller_tx":513,"controller_rx":513,"existing_reliable_lane_tx":553,"existing_reliable_lane_rx":553},
+ "mapping":"Native553bus={last,40zero padding,512bit stageflit}; reliable endpoint CRC/replay covers the entire552-bit payload and last flag.",
+ "storage_bits":2052,
+ "register_queues":"Two depth2 skids width513, one eachdirection; registeredready and data. Existing core and reliable lane IP remain unchanged.",
+ "latency_cycles_per_direction":1,
+ "token_latency_added_cycles_per_handoff":2,
+ "conservative_121_handoffs_cycles":242,
+ "model_scope":"Additional to existing controller input/output skids and physical station costs. Source/receiver compose this once per stage hop; no extra bandwidth credit.",
+ "floorplan":"Adapter beside selected lane tile; fixed existing553-bit native boundaries plus real513-bit controller buses. Size from2052flop bits+skidcontrol then measure synthesized area and SS/FF setup/hold with actual interface budgets.",
+ "network_eligibility":"Generator must reserve the same lane at both true peer endpoints and preserve GFMT1/EPPIPE2 selected lane-IP contracts. Other pass-through lane programs and TP4 lanes0..2 remain unchanged. No new unqualified link layer.",
+ "validation":"Native640payload512-bit message over FLIT_BYTES69/CREDITS512 reliable endpoint with flow stalls and CRC replay on admittedremote; malformedpadding/corecollision faults and payload/last mutants gate exactness."
+}

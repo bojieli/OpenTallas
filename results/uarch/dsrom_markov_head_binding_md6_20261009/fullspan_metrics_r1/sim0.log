@@ -1,0 +1,6 @@
+METRICS query=9 headgo=33 firstroot=488 lastroot=8424 firsthead=501 lasthead=8437 firstjoin=685 lastjoin=8621 argmax=8622 joinIImin=256 joinIImax=256 headstall=0 headwait=0 queuehigh=1
+PASS actualAroot lookup256dot separatejoin argmax roots=32 rows=32 firsttail=184 lasttail=184 headqueuehighwater=1
+- /srv/opentallas-data/claude/md6-head-driver-caf38a801/fullspan_metrics_r1/tb.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 7us; walltime 13.560 s; speed 530.382 ns/s
+- Verilator: cpu 13.558 s on 1 threads; alloced 1090 MB

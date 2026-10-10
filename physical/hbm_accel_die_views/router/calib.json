@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_r23_kneg_94fab53cc_b/routes/hbm_router_r23_kneg_94fab53cc_b_cal/work/orfs/results/asap7/opentallas_hfd_router_asap7_hv_hbm_router_r23_kneg_94fab53cc_b_cal/base",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0/routes/hbm_router_kneg_orph2_a75cb556b_ttref_hm15_f5_lvt_hm0_cal/work/orfs/results/asap7/opentallas_hfd_router_asap7_hv_hbm_router_kneg_orph2_a75cb556b_ttref_hm15_f5_lvt_hm0_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
@@ -8,45 +8,74 @@
  "ss": {
   "boundary": {
    "n": 1091,
-   "mean": 861.5,
-   "min": 688.5,
-   "max": 1175.0
+   "mean": 919.5,
+   "min": 756.4,
+   "max": 1227.1
   },
   "all": {
    "n": 14844,
-   "mean": 756.9,
-   "min": 658.1,
-   "max": 1206.3
+   "mean": 833.2,
+   "min": 734.9,
+   "max": 1228.6
+  },
+  "errors": []
+ },
+ "tt": {
+  "boundary": {
+   "n": 1091,
+   "mean": 747.8,
+   "min": 605.0,
+   "max": 1005.2
+  },
+  "all": {
+   "n": 14844,
+   "mean": 672.1,
+   "min": 582.1,
+   "max": 1006.2
   },
   "errors": []
  },
  "ff": {
   "boundary": {
    "n": 1091,
-   "mean": 593.3,
-   "min": 459.9,
-   "max": 838.2
+   "mean": 634.8,
+   "min": 508.1,
+   "max": 857.2
   },
   "all": {
    "n": 14844,
-   "mean": 514.5,
-   "min": 440.8,
-   "max": 844.3
+   "mean": 567.5,
+   "min": 485.5,
+   "max": 857.9
   },
   "errors": []
  },
+ "route_corner": "TC",
  "env": {
-  "CK_SS_MEAN": 862,
-  "CK_SS_ALL_MEAN": 757,
-  "CK_SS_MIN": 688,
-  "CK_SS_ALL_MIN": 658,
-  "CK_SS_MAX": 1175,
-  "CK_SS_ALL_MAX": 1206,
-  "CK_FF_MEAN": 593,
-  "CK_FF_ALL_MEAN": 514,
-  "CK_FF_MIN": 460,
-  "CK_FF_ALL_MIN": 441,
-  "CK_FF_MAX": 838,
-  "CK_FF_ALL_MAX": 844
+  "CK_SS_MEAN": 748,
+  "CK_SS_ALL_MEAN": 672,
+  "CK_SS_MIN": 605,
+  "CK_SS_ALL_MIN": 582,
+  "CK_SS_MAX": 1005,
+  "CK_SS_ALL_MAX": 1006,
+  "CK_TT_MEAN": 748,
+  "CK_TT_ALL_MEAN": 672,
+  "CK_TT_MIN": 605,
+  "CK_TT_ALL_MIN": 582,
+  "CK_TT_MAX": 1005,
+  "CK_TT_ALL_MAX": 1006,
+  "CK_FF_MEAN": 635,
+  "CK_FF_ALL_MEAN": 568,
+  "CK_FF_MIN": 508,
+  "CK_FF_ALL_MIN": 486,
+  "CK_FF_MAX": 857,
+  "CK_FF_ALL_MAX": 858,
+  "CK_SSLIB_MEAN": 920,
+  "CK_SSLIB_MIN": 756,
+  "CK_SSLIB_MAX": 1227,
+  "CK_SSLIB_ALL_MEAN": 833,
+  "CK_SSLIB_ALL_MIN": 735,
+  "CK_SSLIB_ALL_MAX": 1229,
+  "CK_ROUTE_REF": "TT"
  }
 }

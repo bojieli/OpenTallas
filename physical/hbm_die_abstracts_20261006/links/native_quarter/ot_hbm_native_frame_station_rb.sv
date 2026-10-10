@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1,LOCAL_PHASE=0,HOLD_SEAT=0,RESET_SEAT=0)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -80,11 +80,17 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   wire [1:0] rs;
   ot_hbm_w2_keep_reg #(.W(1)) u_rs0(.clk(clk_sm),.rst_n(por_n),.d(1'b1),.q(rs[0]));
   ot_hbm_w2_keep_reg #(.W(1)) u_rs1(.clk(clk_sm),.rst_n(por_n),.d(rs[0]),.q(rs[1]));
-  wire rst_n=rs[1];
+  wire rst_n;
+  if(RESET_SEAT)begin:rst_delay
+   ot_hbm_w2_hold_seat #(.W(1)) u_rst(.a(rs[1]),.y(rst_n));
+  end else assign rst_n=rs[1];
   // Kept per-bank release copies (same rs[0] source: same release edge).
-  wire [NO+5:0] rsc;
+  wire [NO+5:0] rsc,rsc_raw;
   for(genvar k=0;k<NO+6;k=k+1)begin:rsc_copy
-   ot_hbm_w2_keep_reg #(.W(1)) u_rsc(.clk(clk_sm),.rst_n(rs[0]),.d(rs[0]),.q(rsc[k]));
+   ot_hbm_w2_keep_reg #(.W(1)) u_rsc(.clk(clk_sm),.rst_n(rs[0]),.d(rs[0]),.q(rsc_raw[k]));
+   if(RESET_SEAT)begin:rst_delay
+    ot_hbm_w2_hold_seat #(.W(1)) u_rst(.a(rsc_raw[k]),.y(rsc[k]));
+   end else assign rsc[k]=rsc_raw[k];
   end
   wire rst_p=rsc[0],rst_c=rsc[1],rst_g=rsc[2],rst_r=rsc[3],rst_s=rsc[4],rst_e=rsc[5];
   // ---------------- input pin capture (no logic before the flop) ----------
@@ -145,7 +151,7 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   wire quiesce=!receipt_room||!G_normal||fault_any;
   wire receipt_capacity=&A_in_r;
   assign P_in_v=E_v&&!cons[0]&&!cons[1]&&!quiesce&&!fault_any&&receipt_capacity;
-  ot_hbm_w2_protected_cut_veto_on #(.W(PW),.PREENC(0),.DIST(1)) u_payload(
+  ot_hbm_w2_protected_cut_veto_on #(.W(PW),.PREENC(0),.DIST(1),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_payload(
    .clk(clk_sm),.por_n(rst_p),.in_v(P_in_v),.in_r(P_in_r),.in_d({PW{1'b0}}),.in_codes(E),
    .out_v(P_out_v),.out_r(P_out_r),.out_d(P_d),.empty(P_empty),.fault(P_fault));
   wire cv=P_out_v;
@@ -164,7 +170,7 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   for(genvar t=0;t<NO;t=t+1)begin:receipts
    assign frame_bad[t]=ackv_q[t]&&fne_q[t];
    assign A_in_v[t]=ackv_q[t]&&!fault_any&&!frame_bad[t];
-   ot_hbm_w2_protected_cut_veto_on #(.W(192),.PREENC(1),.DIST(0)) u_ack(
+   ot_hbm_w2_protected_cut_veto_on #(.W(192),.PREENC(1),.DIST(0),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_ack(
     .clk(clk_sm),.por_n(rsc[6+t]),.in_v(A_in_v[t]),.in_r(A_in_r[t]),.in_d(acko_q[t*192+:192]),
     .in_codes({4*72{1'b0}}),.out_v(A_out_v[t]),.out_r(ack_consume),.out_d(A_d[t*192+:192]),
     .empty(A_empty[t]),.fault(A_fault[t]));
@@ -226,17 +232,17 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   wire illegal=ack_bad||(|arr_bad);
   reg illegal_q;
   always @(posedge clk_sm or negedge rst_n)if(!rst_n)illegal_q<=0;else illegal_q<=illegal;
-  ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0)) u_permissions(
+  ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_permissions(
    .clk(clk_sm),.por_n(rst_c),.load(C_load),.load_sel(1'b1),.fatal(illegal_q),
    .encoded_d(encode64(C_next)),.q(C_q),.normal(C_normal),.fault(C_fault),.repairing(C_rep));
-  ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0)) u_frame_guard(
+  ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_frame_guard(
    .clk(clk_sm),.por_n(rst_g),.load(1'b0),.load_sel(1'b0),.fatal(|frame_bad_q),
    .encoded_d(72'b0),.q(),.normal(G_normal),.fault(G_fault),.repairing(G_rep));
   assign R_in_v=release_all&&!fault_any;
   wire rv,rv_d,rel_pend,rel_learned;wire rv_bad,rp_bad;
   assign rel_learned=rv_d&&rr_p;
   assign R_out_r=rel_learned||rel_pend;
-  ot_hbm_w2_protected_cut_veto_on #(.W(RW),.PREENC(1),.DIST(0)) u_receipt(
+  ot_hbm_w2_protected_cut_veto_on #(.W(RW),.PREENC(1),.DIST(0),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_receipt(
    .clk(clk_sm),.por_n(rst_r),.in_v(R_in_v),.in_r(R_in_r),.in_d({frame0,owner0}),
    .in_codes({5*72{1'b0}}),.out_v(R_out_v),.out_r(R_out_r),.out_d(R_d),
    .empty(R_empty),.fault(R_fault));

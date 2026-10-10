@@ -1,0 +1,10 @@
+REQ0 jt=0 addr=7d31044 cycle=26
+REQ0 jt=1 addr=7d310c0 cycle=29
+REQ0 jt=2 addr=7d3114c cycle=32
+REQ0 jt=3 addr=7d311c8 cycle=35
+REQ0 jt=3 addr=7d311c8 cycle=37
+REQ0 jt=5 addr=7d312d0 cycle=40
+REQ0 jt=6 addr=7d3135c cycle=43
+REQ0 jt=7 addr=7d313d8 cycle=46
+FATAL: rtl/test/hbm_accel/tb_hbm_svc_iks.sv:55: svc fault got=104
+       Time: 53248000 Scope: tb_hbm_svc_iks

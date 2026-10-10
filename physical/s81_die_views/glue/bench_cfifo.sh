@@ -46,6 +46,12 @@ module tb;
   end
 endmodule
 EOT
+# s81-die-2 2026-10-08: a --cfifo-colck master (input cr = its column tree's return) runs with cr = ck delayed by the
+# column tree (290 ps, sta_v6: co 264 + tree 186 - cfifo-internal ~160) and the scoreboard samples on cr
+if grep -q 'input wire \[0:0\] cr' $G; then
+  sed -i 's/dsfd_cfifo dut(.cc(cc), .ck(ck), .co(co),/wire cr; assign #290 cr = ck;\n  dsfd_cfifo dut(.cc(cc), .ck(ck), .co(co), .cr(cr),/; s/always @(posedge ck) if (rs) begin/always @(posedge cr) if (rs) begin/' $O/tb.sv
+  grep -q 'posedge cr) if (rs)' $O/tb.sv || { echo 'colck tb edit failed'; exit 2; }
+fi
 S="rtl/common/ot_meso_fifo.sv rtl/common/ot_fwd_link_stage.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/v41die/ot_v41_retn_w17w10.sv rtl/v41rom/ot_v41_ret.sv"
 # Verilator (2-state, random initial values): the meso ring counter is never reset by design, so a 4-state simulator
 # keeps it X forever (Icarus) -- the same reason tools/meso_fifo_campaign.py runs Verilator

@@ -1,0 +1,5 @@
+{"src": "rtl/hbm_accel/index/ot_hbm_native_candidate_parse.sv", "module": "ot_hbm_native_candidate_parse", "core": "ot_hbm_native_candidate_parse_core",
+ "clk": "clk", "reset": "por_n",
+ "why": "sp-candparse-006e20771 TT -502.8 (reg2reg +315): owner_frame -> held_owner compare -> tuple_v (in->out) and -> held load enables (in->reg).",
+ "in_hs": [{"v": "flit_v", "r": "flit_r", "data": ["flit", "flit_owner"]}],
+ "out_hs": [{"v": "tuple_v", "r": "tuple_r", "data": ["tuple", "tuple_src", "tuple_index", "tuple_slot", "quarter_last", "tuple_owner"]}]}

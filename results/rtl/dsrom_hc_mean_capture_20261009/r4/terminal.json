@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "source_commit": "523b8b43c",
+  "scope": "actual H4x5120 resident per rank, copy320row stride, rank80row offset; single outstanding variable-rvalid facade plus full1280d HC mean captures",
+  "logs": {
+    "rank3.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16835 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:123: $finish called at 168350000 (1ps)\n",
+    "rank0.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16835 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:123: $finish called at 168350000 (1ps)\n",
+    "negative_7.log": "FATAL: rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:60: native H reader fault\n       Time: 70000  Scope: tb_hc_mean_capture\n",
+    "reader.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16835 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:123: $finish called at 168350000 (1ps)\n",
+    "negative_8.log": "FATAL: rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:60: native H reader fault\n       Time: 70000  Scope: tb_hc_mean_capture\n",
+    "rank2.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16835 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:123: $finish called at 168350000 (1ps)\n",
+    "negative_6.log": "FATAL: rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:60: native H reader fault\n       Time: 190000  Scope: tb_hc_mean_capture\n",
+    "rank1.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16835 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:123: $finish called at 168350000 (1ps)\n"
+  },
+  "native_port_arbiter_qualified": false,
+  "integration_qualified": false,
+  "physical_qualified": false
+}

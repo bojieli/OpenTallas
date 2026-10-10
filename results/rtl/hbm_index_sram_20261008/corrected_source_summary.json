@@ -1,0 +1,23 @@
+{
+  "corrected_source_commit": "41e25f6e4",
+  "gate": "PASS",
+  "source_hash_match": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": true,
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": true,
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": true,
+    "rtl/test/hbm_accel/ot_hbm_index_lines_sram_binding.sv": true,
+    "rtl/common/ot_secded.sv": true,
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": true,
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": true,
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": true,
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv": true,
+    "tools/hbm_svc_iks_sram_timed_bench.py": true,
+    "rtl/common/ot_secded_cols.svh": true,
+    "results/uarch/hbm_index_sram_20261008/prebuild_r2.json": true
+  },
+  "all_measured_cases_identical_to_preserved_integrated_r1": true,
+  "scope": "Corrected per-process loop temporaries remove synthesis driver conflicts; actual full342block controller cases unchanged",
+  "physical_qualification": false,
+  "synthesis_status": "live admitted sourceccf038104, terminal pending",
+  "band_fit": "native rectangles contained/nonoverlap; legacy occupancy and routing unproved"
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_shadow_sram_gate.v1",
+  "source_commit": "238a54e71",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv": "06b555e5c5ffbdaae6045860d84b130ef59a99a06ca484806a74ab018091dbd9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_shadow_sram.sv": "13609663a5273ab4c099308fc027417d44b28b543e0da2d44b88f14405bf5a46",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_accel_dskv_shadow_sram_gate.py": "aef58e2fe45dceacffc8d71005956f35c23c9ba5f1dd0f1fc2b79b852da8829a"
+  },
+  "host": "climbing-locust",
+  "admission_peak_gb": 2.0,
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "clock_ns": 0.833,
+  "sources": [
+    "rtl/common/ot_secded.sv",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_shadow_sram.sv"
+  ],
+  "cases": [
+    {
+      "mut": 0,
+      "returncode": 0,
+      "verdict": "PASS",
+      "metrics": {
+        "transactions": 694,
+        "reads": 415,
+        "writes": 279,
+        "full_reads": 272,
+        "stall_cycles": 1417,
+        "max_response_cycles": 4,
+        "bad": 0,
+        "mut": 0
+      }
+    },
+    {
+      "mut": 1,
+      "returncode": 1,
+      "verdict": "FAIL",
+      "metrics": {
+        "transactions": 694,
+        "reads": 415,
+        "writes": 279,
+        "full_reads": 272,
+        "stall_cycles": 1417,
+        "max_response_cycles": 4,
+        "bad": 2,
+        "mut": 1
+      }
+    },
+    {
+      "mut": 2,
+      "returncode": 1,
+      "verdict": "FAIL",
+      "metrics": {
+        "transactions": 694,
+        "reads": 415,
+        "writes": 279,
+        "full_reads": 272,
+        "stall_cycles": 1417,
+        "max_response_cycles": 4,
+        "bad": 2,
+        "mut": 2
+      }
+    }
+  ],
+  "verdict": "PASS",
+  "build_returncode": 0,
+  "build_max_rss_kib": 318356,
+  "input_unchanged": true
+}

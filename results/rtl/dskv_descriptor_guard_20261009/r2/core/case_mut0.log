@@ -1,0 +1,6 @@
+WB_SRAM_METRICS posts=218 issued=218 acked=218 key2=0 key3=64 stall_cycles=340 max_row_cycles=41 max_preload_cycles=69 bad=0 mutant=0
+WB_SRAM_VERDICT PASS
+- /srv/opentallas-data/codex/dskv-guard-gates-r2/source/rtl/test/hbm_accel/tb_hbm_accel_dskv_wb_sram.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.011 s; speed 254.702 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

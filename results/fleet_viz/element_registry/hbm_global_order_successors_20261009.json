@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_index_global_order",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T08:00:51.280320+00:00",
+      "owner": "/root/hbm_system",
+      "source": {
+        "commit": "64831e7e1",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_index_global_order.sv",
+          "tools/hbm_index_global_order_model.py",
+          "rtl/test/hbm_accel/tb_hbm_index_global_order.sv"
+        ]
+      },
+      "description": "Full96 protected heads and seven registered minimum-ID comparison levels; lossless actual TU payload15x34 plus explicit quarter-last, header33 retained.",
+      "implementation": {
+        "status": "implemented_component_exact",
+        "evidence": [
+          "64831e7e1; explicit invalid/padded slot ordinals retained; full73 provider identity checked"
+        ]
+      },
+      "model": {
+        "status": "priced",
+        "evidence": [
+          "tools/hbm_index_global_order_model.py:92flits/rank,8832allrankflits,138payload-only macros; at least9compare/emit edges per tuple plus real source refill"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass_component",
+          "evidence": [
+            "results/rtl/hbm_index_global_order_20261009/tournament_64831e7e1/record.json",
+            "131072tuples/131264actualreads,1966899cycles with80%outputstalls"
+          ]
+        },
+        "negative": {
+          "status": "pass_expected_rejection",
+          "evidence": [
+            "results/rtl/hbm_index_global_order_20261009/tournament_64831e7e1/wrong_rank.log",
+            "results/rtl/hbm_index_global_order_20261009/tournament_64831e7e1/wrong_order.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "No actualSS/FF/context closure. Component gate alone has no rate credit."
+        ]
+      },
+      "dependencies": [
+          "missing",
+          "Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"
+        ],
+      "integration": {
+        "status": "incomplete",
+        "evidence": [
+          "Provider read interface is real finite control contract but production store is unbound; full AR/MTP token path remains incomplete"
+        ]
+      }
+    },
+    {
+      "element": "ot_hbm_index_global_order_scan",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T08:00:51.280334+00:00",
+      "owner": "/root/hbm_system",
+      "source": {
+        "commit": "8f0086ccb",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_index_global_order.sv",
+          "tools/hbm_index_global_order_model.py"
+        ]
+      },
+      "description": "Default-off STATIC_SCAN successor retains actual96protected sparse heads and scans literal global IDs with one comparison instead of seven tournament levels.",
+      "implementation": {
+        "status": "implemented_not_gated_not_integrated",
+        "evidence": [
+          "Source8f0086ccb contains retained-position bounds check; parentb846c0d2f gate stilllive immutable"
+        ]
+      },
+      "model": {
+        "status": "priced",
+        "evidence": [
+          "tools/uarch_model.py:hbm_index_global_order_scan_model",
+          "Minimum2compare/emit edges per presenttuple,1 per missingID, actual refill delay additive; no overlap claim"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "running_ancestor_only",
+          "evidence": [
+            "ot-agidock128:/srv/opentallas-scratch/codex/hbm-index-global-scan-r1/scan-positive.log sourceb846c0d2f PID2799251"
+          ]
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": [
+            "Bounds guard8f0086ccb and scan-specific ordering/identity negatives pending"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "Actual selectedR25I slots/budgets and SS/FF unknown"
+        ]
+      },
+      "dependencies": [
+          "missing",
+          "Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"
+        ],
+      "integration": {
+        "status": "incomplete",
+        "evidence": [
+          "Actual allgather publication store and globaltop2048selector binding absent; no AR/MTP integration credit"
+        ]
+      }
+    }
+  ]
+}

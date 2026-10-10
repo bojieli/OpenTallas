@@ -1,0 +1,16 @@
+{
+  "original_record_commit": "fb12301e5",
+  "reason": "closure spec shared tile_e destinations; preserve ungated and sibling records",
+  "byte_identical_relocations": {
+    "physical/hbm_accel_smh_views/ot_hbm_accel_smh_tile_e/ot_hbm_accel_smh_be_wg.lef": "physical/hbm_accel_smh_views/cg/80412d770_np_r2/be_wg/ot_hbm_accel_smh_be_wg.lef",
+    "physical/hbm_accel_smh_views/ot_hbm_accel_smh_tile_e/ot_hbm_accel_smh_be_wg_ff.lib": "physical/hbm_accel_smh_views/cg/80412d770_np_r2/be_wg/ot_hbm_accel_smh_be_wg_ff.lib",
+    "physical/hbm_accel_smh_views/ot_hbm_accel_smh_tile_e/ot_hbm_accel_smh_be_wg_ss.lib": "physical/hbm_accel_smh_views/cg/80412d770_np_r2/be_wg/ot_hbm_accel_smh_be_wg_ss.lib",
+    "results/closure_loop/hbm_smh_be_wg_cg-80412d770-tc-np-cl-r2/verdict.json": "results/closure_loop/hbm_smh_be_wg_cg-80412d770-tc-np-cl-r2/verdict.json",
+    "results/rtl/hbm_sm_structure_20261005/routes_m3/tile_e/calib.json": "results/rtl/hbm_sm_structure_20261005/routes_cg/80412d770_np_r2/be_wg/calib.json",
+    "results/rtl/hbm_sm_structure_20261005/routes_m3/tile_e/config.mk": "results/rtl/hbm_sm_structure_20261005/routes_cg/80412d770_np_r2/be_wg/config.mk",
+    "results/rtl/hbm_sm_structure_20261005/routes_m3/tile_e/constraint.sdc": "results/rtl/hbm_sm_structure_20261005/routes_cg/80412d770_np_r2/be_wg/constraint.sdc",
+    "results/rtl/hbm_sm_structure_20261005/routes_m3/tile_e/corner_sta.json": "results/rtl/hbm_sm_structure_20261005/routes_cg/80412d770_np_r2/be_wg/corner_sta.json",
+    "results/rtl/hbm_sm_structure_20261005/routes_m3/tile_e/geometry.json": "results/rtl/hbm_sm_structure_20261005/routes_cg/80412d770_np_r2/be_wg/geometry.json"
+  },
+  "bench_binding": "results/arch/redesign_hbm_cg_20261009/smcg4_adoption"
+}

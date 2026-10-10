@@ -1,0 +1,122 @@
+{
+  "observed_utc": "2026-10-09T11:07:04.055252+00:00",
+  "source_commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+  "passed": true,
+  "source_binding": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": {
+      "expected": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "route": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "bench": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e"
+    },
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": {
+      "expected": "e418d1f148803f05a1b9a76b50453878d534585b2cc17ad9c206cd3042261e2b",
+      "route": "e418d1f148803f05a1b9a76b50453878d534585b2cc17ad9c206cd3042261e2b",
+      "bench": "e418d1f148803f05a1b9a76b50453878d534585b2cc17ad9c206cd3042261e2b"
+    },
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": {
+      "expected": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "route": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "bench": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4"
+    },
+    "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv": {
+      "expected": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+      "route": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+      "bench": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a"
+    },
+    "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv": {
+      "expected": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+      "route": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+      "bench": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191"
+    },
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": {
+      "expected": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+      "route": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+      "bench": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f"
+    },
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "expected": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "route": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "bench": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": {
+      "expected": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "route": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "bench": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9"
+    }
+  },
+  "phase_peaks": [
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/5_1_grt.log",
+      "sha256": "1308fc968b15135873a90d45e6fe99833b31f71bf7c5c30a7228cf712c988780",
+      "peak_lines": [
+        "Elapsed time: 1:25:21.98[h:]min:sec. CPU time: user 8602.49 sys 32.74 (168%). Peak memory: 4232816KB."
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/6_report.log",
+      "sha256": "da80f45f0ab1cdf607dd4fc69c26dae1820d5f0543ba65a15066e130ef104865",
+      "peak_lines": [
+        "Elapsed time: 8:36.05[h:]min:sec. CPU time: user 559.08 sys 13.44 (110%). Peak memory: 6422136KB."
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/5_2_route.log",
+      "sha256": "b265a097e747c70711614c480d56729136fe2b19dab4905452723c79c79d617c",
+      "peak_lines": [
+        "Elapsed time: 23:06.85[h:]min:sec. CPU time: user 14860.39 sys 77.74 (1077%). Peak memory: 28292340KB."
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/4_1_cts.log",
+      "sha256": "4c1ef36dbf6754641e6ec43b0b07f6b9f913fc11ac607ed0710a137ee4f0c75c",
+      "peak_lines": [
+        "Elapsed time: 11:16.99[h:]min:sec. CPU time: user 798.35 sys 20.06 (120%). Peak memory: 2730944KB."
+      ]
+    }
+  ],
+  "candidate19": {
+    "2409628": {
+      "status": [
+        "Name:\tpython3",
+        "State:\tS (sleeping)",
+        "VmRSS:\t   22108 kB"
+      ],
+      "cmd": "python3 tools/w2_station_rb_gate.py --safe --phase-seat --skip-legacy --out /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate ",
+      "stat": "2409628 (python3) S 1 2409625 2409625 0 -1 4194304 3642 2970498 2 0 10 4 650176 706 20 0 1 0 8587537 34496512 5451 18446744073709551615 4333568 8024065 140734184893264 0 0 0 0 16781319 0 1 0 0 17 98 0 0 0 0 0 11038136 11672456 810377216 140734184897844 140734184897988 140734184897988 140734184898535 0\n"
+    },
+    "3919534": {
+      "status": [
+        "Name:\tiverilog",
+        "State:\tS (sleeping)",
+        "VmRSS:\t    2132 kB"
+      ],
+      "cmd": "iverilog -g2012 -s tb_native_quarter_publication -o /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S2_parent_ack_mask_removed.vvp /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/rtl/common/ot_fwd_link_stage.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/src/physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/seats_8ce1017a/ot_hbm_w2_protected_bank_veto.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/seats_dabb5e1c/ot_hbm_native_frame_station_rb.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/S2_parent_ack_mask_removed/ot_hbm_native_quarter_chain_rb.sv /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/gate/neg_S2_parent_ack_mask_removed_tb.sv ",
+      "stat": "3919534 (iverilog) S 2409628 2409625 2409625 0 -1 4194304 72 0 0 0 0 0 0 0 20 0 1 0 9238505 2891776 266 18446744073709551615 94315682484224 94315682512633 140723359338128 0 0 0 65536 7 0 1 0 0 17 71 0 0 0 0 0 94315682528296 94315682529432 94315937955840 140723359339893 140723359342019 140723359342019 140723359342566 0\n"
+    },
+    "3919537": {
+      "status": [
+        "Name:\tivl",
+        "State:\tR (running)",
+        "VmRSS:\t 2098120 kB"
+      ],
+      "cmd": "/usr/lib/x86_64-linux-gnu/ivl/ivl -C/tmp/ivrlh37fac356 -C/usr/lib/x86_64-linux-gnu/ivl/vvp.conf -- - ",
+      "stat": "3919537 (ivl) R 3919535 2409625 2409625 0 -1 4194304 523258 0 0 0 268158 143 0 0 20 0 1 0 9238506 2151800832 515355 18446744073709551615 108648079650816 108648081410597 140736114436848 0 0 0 0 7 0 0 0 0 17 35 0 0 0 0 0 108648082060104 108648082137272 108648732901376 140736114445646 140736114445747 140736114445747 140736114446294 0\n"
+    },
+    "2411731": {
+      "status": [
+        "Name:\tpython3",
+        "State:\tT (stopped)",
+        "VmRSS:\t   12956 kB"
+      ],
+      "cmd": "python3 /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-19a1b52dc/continue.py ",
+      "stat": "2411731 (python3) T 1 2411730 2411730 0 -1 4194304 2350 2914 0 0 1 1 3 1 20 0 1 0 8597464 22593536 2850 18446744073709551615 4333568 8024065 140724368239360 0 0 0 0 16781319 0 1 0 0 17 55 0 0 0 0 0 11038136 11672456 483115008 140724368240059 140724368240142 140724368240142 140724368240615 19\n"
+    },
+    "terminal_exists": false
+  },
+  "mutant": {
+    "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/neg_s3/neg_only.run.log",
+    "run_sha256": "417efea92f557c7e709b2907e38f70ed433b546879e2390c5fd1d265bc4da8b4",
+    "tb_sha256": "6deec9845157bbbb141fd7a5458753e30cdab25045eea90c500de948cabee59f",
+    "fatal": "wrong full73 receipt fabricated retirement"
+  }
+}

@@ -1,0 +1,13 @@
+%Error: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv:35:29: syntax error, unexpected context, expecting IDENTIFIER or do or final or randomize
+   35 |   reg [71:0] state,owner_lo,context;
+      |                             ^~~~~~~
+%Error: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv:37:68: syntax error, unexpected context, expecting ')'
+   37 |   wire [65:0] sd=decode64(state),od=decode64(owner_lo),xd=decode64(context);
+      |                                                                    ^~~~~~~
+%Error: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv:116:46: syntax error, unexpected context
+  116 |     state<=encode64(0);owner_lo<=encode64(0);context<=encode64(0);
+      |                                              ^~~~~~~
+%Error: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv:122:6: syntax error, unexpected context
+  122 |      context<=encode64({22'd0,launch_count,launch_position,launch_owner[72:64]});
+      |      ^~~~~~~
+%Error: Exiting due to 4 error(s)

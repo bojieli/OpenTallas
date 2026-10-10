@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.fh.routed_boundary_pass1_failure.v1",
+ "parent_source_record": "results/rtl/s81_fused_head_boundary_20261008/source_pin.json",
+ "route_files_sha256": {
+  "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/eco/pass1/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.v": "0c4b83962927251b2542ffddbfd97af3503c885381f7a78b8261470bae1c185b",
+  "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/eco/pass1/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.spef": "5a4562a762c4cfbdd455514f6f009015055bcdd46e366e86953334305592cd2c",
+  "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/eco/pass1/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.sdc": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0",
+  "/srv/opentallas-scratch2/scratch/codex-fh-routed-boundary-20261008/eco/pass1/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.odb": "e9d94b633f5527fb33cf800da376402d40f81543b5153dea6e85261bb62c837c"
+ },
+ "failure_class": "single output hold",
+ "endpoint": "captured_request[2183]",
+ "clock_period_ps": 833.333,
+ "cycles_added": 0,
+ "added_hold_buffers": 22469,
+ "cell_area_increase_percent": 8.9,
+ "routed_outline_um": [
+  480,
+  480
+ ],
+ "followups": {
+  "global_pass2": "pre-authorized original-source reroute, unchanged script",
+  "stack_ep2183": "admitted full-shape pass1 DB/SPEF, goal12ps HM0+ALLOW12, same signoff budgets"
+ }
+}

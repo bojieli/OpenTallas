@@ -1,0 +1,44 @@
+{
+  "status": "PASS_LOWERING_AND_HOST_PROTOCOL_ONLY",
+  "actual_RTL_executed": false,
+  "host": {
+    "token": 151935,
+    "processors": 8,
+    "cycles": 11
+  },
+  "negative_controls": {
+    "stale": "stale completion identity",
+    "truncate": "TP4 global token mismatch"
+  },
+  "missing_entries": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "argmax_gather",
+    "argmax_local",
+    "argmax_merge",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "embedding",
+    "gu",
+    "head",
+    "head_scale",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "residual",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+  ],
+  "peak_rss_kib": 75220
+}

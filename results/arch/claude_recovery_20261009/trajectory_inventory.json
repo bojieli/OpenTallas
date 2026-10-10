@@ -1,0 +1,2213 @@
+{
+ "schema": "opentallas.claude-trajectory-recovery.v1",
+ "root_path": "/home/ubuntu/.claude/projects/-home-ubuntu-OpenTallas/528876d6-b73d-44f4-be27-5d8ea084692b.jsonl",
+ "root_sha256": "3768116c421a02292d77180e2776644b681db401d3014efb661b2fbeb96bc101",
+ "subagent_count": 313,
+ "subagent_records": 161904,
+ "subagents": [
+  {
+   "agent": "agent-a00710276e04e2d99",
+   "sha256": "74f5dacc5b605398b53c503d33396dbfbb68e3521d00ed918a4c80bf0c45e04a",
+   "records": 332,
+   "last_timestamp": "2026-10-09T04:54:21.892Z",
+   "description": "Drive 2140: failures + flood gate fix"
+  },
+  {
+   "agent": "agent-a0100758ede5e73cc",
+   "sha256": "0309d4d68310752b4a3065b5422be00d56bd945999a0c9cd54bee101cd613f4d",
+   "records": 196,
+   "last_timestamp": "2026-10-07T13:29:01.098Z",
+   "description": "Audit: final-closure checklist per target"
+  },
+  {
+   "agent": "agent-a013698dd04b41326",
+   "sha256": "ec196912180044510d9ad6fd25e9acc79f48a6b749ba2ce2dece53ccfcc67f13",
+   "records": 482,
+   "last_timestamp": "2026-10-09T05:37:53.753Z",
+   "description": "MTP KV rollback: multi-step proof"
+  },
+  {
+   "agent": "agent-a0149fc884a78d7e5",
+   "sha256": "c17998633bc036478542d92e19f4bdc3bfc6c74e6fd675f0112af25e86e6f37c",
+   "records": 123,
+   "last_timestamp": "2026-10-09T02:30:54.105Z",
+   "description": "svcio_q + loop revoked-closure bug + merge"
+  },
+  {
+   "agent": "agent-a022dfc718e49f41f",
+   "sha256": "59bf6a3f8d9dcb6302b05cd262eca118fc9decf8583af80773a10442b924031a",
+   "records": 100,
+   "last_timestamp": "2026-10-08T23:20:52.060Z",
+   "description": "Sweep stale ideal-clock signoff SDCs"
+  },
+  {
+   "agent": "agent-a023263f7349726da",
+   "sha256": "d4892fd560299e502438256d8c9ff3f6fec59c2466b09c019de3bacec7731d81",
+   "records": 403,
+   "last_timestamp": "2026-10-08T14:25:35.599Z",
+   "description": "Verify five unchanged H1 SDC families"
+  },
+  {
+   "agent": "agent-a026c929c911cffd1",
+   "sha256": "f9de27f8c8fe95f1c9d73f77dc22e736c4d880b7dda9ca103aff93563c7fa9eb",
+   "records": 71,
+   "last_timestamp": "2026-10-06T16:20:38.514Z",
+   "description": "Re-run DS combined/L20 bench with CHECK_PIPE"
+  },
+  {
+   "agent": "agent-a02ed512aaaf51e5f",
+   "sha256": "b03c94568aff170067edd3d763de55186b95cbbd60cffcfdff71cb40e518493d",
+   "records": 184,
+   "last_timestamp": "2026-10-09T04:58:59.013Z",
+   "description": "Merge: hcp lane closure"
+  },
+  {
+   "agent": "agent-a035a7498c36e586f",
+   "sha256": "d21bc6bcae0215fed78c97ca0ac1a7c26a15cb3fca145bb4c7393cd917c89f39",
+   "records": 344,
+   "last_timestamp": "2026-10-09T04:41:11.984Z",
+   "description": "Drive 2125: 13 new failures"
+  },
+  {
+   "agent": "agent-a036b07432c9d33d9",
+   "sha256": "490882a6202786cfa8838dff9ae14b91296644ffe4fe99b91381cbafb38251bb",
+   "records": 719,
+   "last_timestamp": "2026-10-09T05:47:15.884Z",
+   "description": "MTP exactness campaigns (ROM + HBM)"
+  },
+  {
+   "agent": "agent-a046c9e2e475e9b86",
+   "sha256": "04e63846ce3d554f6a21633acae268c2c6ea332e3a4d6513e473ccce6f2f278b",
+   "records": 577,
+   "last_timestamp": "2026-10-06T22:28:57.246Z",
+   "description": "HBM views: stations + svc/idx"
+  },
+  {
+   "agent": "agent-a0516185ea056b5a8",
+   "sha256": "d684686c5ecafd5e4f2b70d085a1048124c9165f36ba90da558d71382b8342d4",
+   "records": 155,
+   "last_timestamp": "2026-10-08T23:48:57.990Z",
+   "description": "Drive 1643: DeepSeek head quad family"
+  },
+  {
+   "agent": "agent-a055fccc47d23a08b",
+   "sha256": "b6d66fbc89aa260bfd65213550869c489d7fe149ee7b843862ebaf546b1f67f1",
+   "records": 1224,
+   "last_timestamp": "2026-10-08T05:44:06.070Z",
+   "description": "S81 die-top + 1792 die plan"
+  },
+  {
+   "agent": "agent-a059fedf4b78c9a9c",
+   "sha256": "e0cbf328c752d6defcd6453b881da4fae8d81e2aaa3ab3b456db28b4fce8a667",
+   "records": 233,
+   "last_timestamp": "2026-10-09T01:13:15.001Z",
+   "description": "Qwen ROM tile closure (88% of die)"
+  },
+  {
+   "agent": "agent-a05f6b893d1d14359",
+   "sha256": "e56b7e345362898cc368195771a7fe6743c2ed362886df00edc41b82c6c1ce0a",
+   "records": 1437,
+   "last_timestamp": "2026-10-08T05:32:13.323Z",
+   "description": "Unified composition + publication stream"
+  },
+  {
+   "agent": "agent-a062e3c9c5ba2d5b6",
+   "sha256": "25bad932d57662bcf2360eea8998238accf4a3943c93334f686c67e1f2a80090",
+   "records": 1590,
+   "last_timestamp": "2026-10-06T17:14:47.217Z",
+   "description": "Resume: HBM views stations"
+  },
+  {
+   "agent": "agent-a071f781621d43ef0",
+   "sha256": "993a4f652fae72bd9eb081445cdeb9b7880de256a6636b4428d8d48921e06836",
+   "records": 381,
+   "last_timestamp": "2026-10-06T22:28:48.114Z",
+   "description": "HBM W2 + integration harvest"
+  },
+  {
+   "agent": "agent-a079706e517ba9a14",
+   "sha256": "5d4edb6a76f8c7dbe844d6ccc7489732e2fdddff4d525630bcd9926ef42512ee",
+   "records": 429,
+   "last_timestamp": "2026-10-06T22:28:42.691Z",
+   "description": "DS head/glue/softmax/harvest"
+  },
+  {
+   "agent": "agent-a07a16681156050c6",
+   "sha256": "964dc2e68d46cce7051d88dcc378a0bda88cde46db1382003055eed820e418ad",
+   "records": 266,
+   "last_timestamp": "2026-10-07T15:14:02.872Z",
+   "description": "Closure loop owner phase 2"
+  },
+  {
+   "agent": "agent-a07c2b8e6a311ff87",
+   "sha256": "46cee47478a3e70b2574744e2ddbd0150b3ccde33ffdcaa707f7b3d05a33d5ea",
+   "records": 447,
+   "last_timestamp": "2026-10-07T03:42:19.547Z",
+   "description": "Publish Chip Explorer + Atlas"
+  },
+  {
+   "agent": "agent-a084b38d242772075",
+   "sha256": "5a18eed465fbd568173663f77d0cff1b07061ae973457bfd0aeb1642a24aa3c7",
+   "records": 196,
+   "last_timestamp": "2026-10-08T22:08:54.489Z",
+   "description": "PQ root CAM round 2"
+  },
+  {
+   "agent": "agent-a09261d1b346659ae",
+   "sha256": "76d59e4d9eb5b85cf0c41efe5735b99b54981fe718370c27dd2fc6a55176dd74",
+   "records": 618,
+   "last_timestamp": "2026-10-07T19:44:01.993Z",
+   "description": "S81 full-shape PQ architecture design"
+  },
+  {
+   "agent": "agent-a0ab69fd9d08501f5",
+   "sha256": "2299f03fc0cacbb7372f1ed7cd899713c5c47725a8224a2bc1c5ed2cfd2d9d28",
+   "records": 190,
+   "last_timestamp": "2026-10-09T03:51:29.240Z",
+   "description": "Localhost disk cleanup (98% full)"
+  },
+  {
+   "agent": "agent-a0b58a04f9c4c1436",
+   "sha256": "3d9fe0f13f9feec26124550e76b2f3bef06e079307bfb77931d1f14823d95bdc",
+   "records": 530,
+   "last_timestamp": "2026-10-08T18:00:18.176Z",
+   "description": "Drive 1013 flow: 17 resurfaced failures"
+  },
+  {
+   "agent": "agent-a0bb55e7d41f59043",
+   "sha256": "5d6b0bf5f78e56dc641d410ee9f4d001becd672813bbe5b52a07fc2e71f919dc",
+   "records": 423,
+   "last_timestamp": "2026-10-06T22:30:16.244Z",
+   "description": "Qwen die + element margin"
+  },
+  {
+   "agent": "agent-a0c60bad674a62458",
+   "sha256": "e43c6a202f6a6ccb58936c5e31ab55b89195566a6b0922be071d0561f90807d8",
+   "records": 187,
+   "last_timestamp": "2026-10-08T13:39:49.632Z",
+   "description": "Re-route old-SDC stuck jobs; attn fixes"
+  },
+  {
+   "agent": "agent-a0d7adfb77596e5ed",
+   "sha256": "f80925ddc937aecbf887c5794289d836041a123787b61a4b5a2be1a09d7ea672",
+   "records": 227,
+   "last_timestamp": "2026-10-06T22:30:47.752Z",
+   "description": "DS softmax fusion stream"
+  },
+  {
+   "agent": "agent-a0dece552603f4df5",
+   "sha256": "517cfc45d7aa9ae658499ade280ff89a106ad87dc46437a28f923bee9423405f",
+   "records": 160,
+   "last_timestamp": "2026-10-08T01:20:16.352Z",
+   "description": "Audit: DS ROM S81 status"
+  },
+  {
+   "agent": "agent-a0e9a48df6e651fa4",
+   "sha256": "579a87135c21c8435ec30bc810e8f04a774c1f0bfb57f939d6be9fd20aefed23",
+   "records": 264,
+   "last_timestamp": "2026-10-06T20:39:18.667Z",
+   "description": "SU CP admit requalify"
+  },
+  {
+   "agent": "agent-a10b81a332e222de0",
+   "sha256": "1335767cb299b958b0976a9f6e3d759579ea731b6b72b9967c417e0dcd8889ea",
+   "records": 366,
+   "last_timestamp": "2026-10-09T01:29:39.880Z",
+   "description": "HBM coll fallback: fewer ports/slice"
+  },
+  {
+   "agent": "agent-a112dbee9eb40439e",
+   "sha256": "664af96e1b6199bedfde0bb973d48982c83d111c83fb1cd0d22499e1a3dd4e1f",
+   "records": 287,
+   "last_timestamp": "2026-10-08T10:25:12.463Z",
+   "description": "Qwen per-band lane block RTL"
+  },
+  {
+   "agent": "agent-a120b213ddbb91496",
+   "sha256": "9dae9fcb9351a262e326b15ef268222f95a43d6aef2cb0b0bd2e548f7b7efb99",
+   "records": 354,
+   "last_timestamp": "2026-10-08T22:42:27.232Z",
+   "description": "Drive 1443: HBM coll calibrate + ha2_h2"
+  },
+  {
+   "agent": "agent-a1216f056fb70c3d1",
+   "sha256": "8e1c84545232985a83d55e6b26422d0753b0ef93d8f6e3aaffda67cdead27bf9",
+   "records": 206,
+   "last_timestamp": "2026-10-09T04:09:35.629Z",
+   "description": "Fill fleet: pass 3 + idle capacity"
+  },
+  {
+   "agent": "agent-a123d8e228e384714",
+   "sha256": "4859762b645e0112daf076fd4481d175fc1e68cd074740b25090dc663ab7b4ab",
+   "records": 224,
+   "last_timestamp": "2026-10-08T10:22:37.622Z",
+   "description": "Hourly redesign: 21 timing fails"
+  },
+  {
+   "agent": "agent-a124da75c3f3bc92f",
+   "sha256": "7e7de216724386424f863b66bec2ba0e8ccc8e4e6e14dc976b9e392b613074f3",
+   "records": 245,
+   "last_timestamp": "2026-10-07T03:11:21.251Z",
+   "description": "Chip Explorer + energy tool update"
+  },
+  {
+   "agent": "agent-a12bd58346628fc97",
+   "sha256": "622821472dd852d3d806e3bbe199f8a597630a89c3a96e23e1d93175dae09adc",
+   "records": 1597,
+   "last_timestamp": "2026-10-07T15:28:37.406Z",
+   "description": "DS head/softmax/code-pair/harvest"
+  },
+  {
+   "agent": "agent-a14a9fc898421af98",
+   "sha256": "632d4cf258b090afc3bf31585d88b5a55bd0c6571e4aa9d107f8efba64d99208",
+   "records": 663,
+   "last_timestamp": "2026-10-06T22:28:42.112Z",
+   "description": "WINDOW source leaf margin"
+  },
+  {
+   "agent": "agent-a15cd95080cc3b461",
+   "sha256": "5ba2be82d263550fb70ff9d7839b7caee6c13846ff16e1f2a5aad25b1ec0e407",
+   "records": 216,
+   "last_timestamp": "2026-10-09T03:57:04.726Z",
+   "description": "MTP audit + build plan (DS ROM, HBM)"
+  },
+  {
+   "agent": "agent-a163a6885929e76cd",
+   "sha256": "b24a5ee8f99a03b920deb1a403af39fbc3e8df82fc9634435ba5cbc1b4d5c685",
+   "records": 133,
+   "last_timestamp": "2026-10-08T14:06:31.958Z",
+   "description": "Drive 0702 timing: slab m3_m8 + S81 hend"
+  },
+  {
+   "agent": "agent-a176672bccafe1fa0",
+   "sha256": "b0ada77750b5a4d6bdc2f2babefb5638ba930410170118a3d38f3bcd0c611eaf",
+   "records": 338,
+   "last_timestamp": "2026-10-06T17:17:56.866Z",
+   "description": "HBM hub views phase 2"
+  },
+  {
+   "agent": "agent-a186b17d416a02544",
+   "sha256": "690aca5539df6a6e2d6db1383caa8ece3ae9f031c3bd1229219c388d37c31712",
+   "records": 686,
+   "last_timestamp": "2026-10-07T12:23:28.947Z",
+   "description": "DS BF element structural pass"
+  },
+  {
+   "agent": "agent-a186cc26aa742dff3",
+   "sha256": "4515eccf1db94e03224ac4a2d5caaa40e7a4f3ae628cacf38e862da44d7920b9",
+   "records": 98,
+   "last_timestamp": "2026-10-08T14:12:23.663Z",
+   "description": "Qwen band slab bench failure"
+  },
+  {
+   "agent": "agent-a18e37dde83bac3ea",
+   "sha256": "51b4b9a5afc954d233f72782daf03ee1e41805b4d8f79e65c5cc1557f998ff2e",
+   "records": 211,
+   "last_timestamp": "2026-10-08T14:13:10.048Z",
+   "description": "Drive 0702 flow: attn tile route crash"
+  },
+  {
+   "agent": "agent-a1baabf4fc88a200a",
+   "sha256": "fa61f70d9de7e0b359f887c55c4ef8f5fea2b4d3b335ebdff19cd3ed0348e400",
+   "records": 319,
+   "last_timestamp": "2026-10-07T19:25:59.346Z",
+   "description": "HBM SM\u2192SU result contract audit"
+  },
+  {
+   "agent": "agent-a1d29e9e1bcaed1b5",
+   "sha256": "0c391fd00e51b87da8ff226ce79ae64d534ea1b390bbe83a0e15d4ecba0cf1e5",
+   "records": 407,
+   "last_timestamp": "2026-10-06T22:30:56.887Z",
+   "description": "Qwen die-top region pilot"
+  },
+  {
+   "agent": "agent-a1d66b3f0bf566a21",
+   "sha256": "068e60636457052f0567e2486ae03141128b3e0e46257b08658c6a0f8121596c",
+   "records": 543,
+   "last_timestamp": "2026-10-08T23:43:28.312Z",
+   "description": "Fill idle capacity: die-level evidence"
+  },
+  {
+   "agent": "agent-a1dbf0e0d70ef5c39",
+   "sha256": "4659f9fc22ca3ac868c3fb9554c03abe409919fa5ab62dd9bbd218d74ba17002",
+   "records": 249,
+   "last_timestamp": "2026-10-08T09:21:04.256Z",
+   "description": "Redesign pass: Qwen open blocks"
+  },
+  {
+   "agent": "agent-a1e486f03c90a0c53",
+   "sha256": "a9b21f86177cf52fa7aefa7f4aaacafe123aa331349e1f5e18d0e4ee03ad8327",
+   "records": 373,
+   "last_timestamp": "2026-10-08T02:23:47.686Z",
+   "description": "Fleet disk recovery (safe)"
+  },
+  {
+   "agent": "agent-a1f5c92f56f0bbe07",
+   "sha256": "fb7ae206dbe9d1d12595998070f5fc324503e8405bebe2470fa01a61cc9aa370",
+   "records": 123,
+   "last_timestamp": "2026-10-09T03:52:50.275Z",
+   "description": "fp-lint false positives + test fix"
+  },
+  {
+   "agent": "agent-a23c39437e802f4b2",
+   "sha256": "05b7a42a1f72a6c77eb64431997985dd2526d9f5075c3fbff17583e25e563f8b",
+   "records": 153,
+   "last_timestamp": "2026-10-08T10:19:27.784Z",
+   "description": "Hourly flow triage: 6 flow fails"
+  },
+  {
+   "agent": "agent-a2529d56c4b10401e",
+   "sha256": "6fa96f8c74c5d2d57c868a9c956651688f15a7955eaaf76d81cf1963166c5543",
+   "records": 1617,
+   "last_timestamp": "2026-10-07T15:19:46.023Z",
+   "description": "S81 die integration phase 2"
+  },
+  {
+   "agent": "agent-a2553ec13d8da8a1e",
+   "sha256": "1ae68100307932851b795b73464b7c3c5d76c7c437cf22c6e11911b55dbf314d",
+   "records": 668,
+   "last_timestamp": "2026-10-06T17:13:37.999Z",
+   "description": "HBM spine views phase 2"
+  },
+  {
+   "agent": "agent-a25e9c721716b6662",
+   "sha256": "5b532d561ad4789fd94598bfd7ffe709c727688d8b2b8dcefd3a9f3d987923be",
+   "records": 271,
+   "last_timestamp": "2026-10-07T15:17:30.155Z",
+   "description": "HBM VM tiles fallback: 8-way split"
+  },
+  {
+   "agent": "agent-a27b55120ef8ea59b",
+   "sha256": "7f3339845abe31616375b1be966db32a52595c278eaee0739571f1280e399f1a",
+   "records": 477,
+   "last_timestamp": "2026-10-06T20:56:29.841Z",
+   "description": "WINDOW stage parent margin"
+  },
+  {
+   "agent": "agent-a27c2f34e543157a8",
+   "sha256": "4a572b45d81d4d492f58cbed420d96eb8fad627701ef82617659be2f2b545452",
+   "records": 505,
+   "last_timestamp": "2026-10-07T15:14:39.669Z",
+   "description": "HBM die coordinator phase 2"
+  },
+  {
+   "agent": "agent-a290dd97c25223971",
+   "sha256": "f41dad623742aecec65236e09048f209614847a5d2bfd3e06219dd82041e426a",
+   "records": 407,
+   "last_timestamp": "2026-10-09T05:00:31.073Z",
+   "description": "Completeness audit: all three dies"
+  },
+  {
+   "agent": "agent-a29ed8a6edf1165b9",
+   "sha256": "4dbb9927c3a98b3fdf3b67b2f80cefc7c7329f12fee8a5a0b27803fd5368d2b2",
+   "records": 200,
+   "last_timestamp": "2026-10-08T18:02:11.627Z",
+   "description": "S81 PQ root CAM redesign"
+  },
+  {
+   "agent": "agent-a29f3b92fd513db98",
+   "sha256": "abb01c1e20158fba0057b67f4b63fbbf7d2c1d894070be2d24ed75fc7e6fdf24",
+   "records": 167,
+   "last_timestamp": "2026-10-08T13:16:17.749Z",
+   "description": "Fleet viz: per-element status table"
+  },
+  {
+   "agent": "agent-a2ce7369b4cfb8c13",
+   "sha256": "1a347518c91543b4244d28dec07df7f5eaf49c0e3f32647f1828079a1c2ce419",
+   "records": 823,
+   "last_timestamp": "2026-10-07T08:55:25.461Z",
+   "description": "DS PQ q-element + spine close"
+  },
+  {
+   "agent": "agent-a2deeb8167cb117c4",
+   "sha256": "554e9d68446474c2f5f81a5e0ebbb8077123edeebf207b0f3d7bdcff2deb5275",
+   "records": 270,
+   "last_timestamp": "2026-10-08T17:51:39.685Z",
+   "description": "Drive 1043 flow triage"
+  },
+  {
+   "agent": "agent-a2e50f82216dcd8bd",
+   "sha256": "11464c1e1a6aa46f88bde30fd1635069dc4a5074387c2a9408f311b863849591",
+   "records": 440,
+   "last_timestamp": "2026-10-06T22:31:01.870Z",
+   "description": "DS WFC phase 2 continue"
+  },
+  {
+   "agent": "agent-a2fd54050fcaeb2e2",
+   "sha256": "c13ed977218b4340af351af9d7a99b53cde56e0b1b8c918642d47c9df3d747e8",
+   "records": 133,
+   "last_timestamp": "2026-10-06T16:04:16.845Z",
+   "description": "Survey svc/selector/collector RTL"
+  },
+  {
+   "agent": "agent-a2fff31ded6c5e424",
+   "sha256": "f46f0e4553f7acf31e5cd8312653f084f2aa62bc2208c729257e9a8e15370911",
+   "records": 186,
+   "last_timestamp": "2026-10-09T05:38:05.599Z",
+   "description": "Fill pass 4: saturate EPYC2/AGIdock"
+  },
+  {
+   "agent": "agent-a31f5bcae9fd08c46",
+   "sha256": "fa691e7f322a7a639a8a808f3f005f3365fe299ce3c7212d6e12ff4304e916b0",
+   "records": 449,
+   "last_timestamp": "2026-10-08T12:49:18.551Z",
+   "description": "Triage NEEDS_HUMAN flow failures"
+  },
+  {
+   "agent": "agent-a34862270b6aa0524",
+   "sha256": "133bec0e21d52fc75d0114dd61077d116a4300bc7071c8240bc4c6e476c81605",
+   "records": 1928,
+   "last_timestamp": "2026-10-06T17:09:18.541Z",
+   "description": "Resume: Qwen ROM physical + die"
+  },
+  {
+   "agent": "agent-a35ae19843c4d12b7",
+   "sha256": "1a9de933fd2cf200da8c4e76a407bb0e32e025ab294f0ee21b696db06952e108",
+   "records": 285,
+   "last_timestamp": "2026-10-08T12:12:11.435Z",
+   "description": "Drive 0502: 13 fails (flow+bench)"
+  },
+  {
+   "agent": "agent-a35c29d43122d2669",
+   "sha256": "165196dcc4098df40118c588c0d4cce6f08ffdd751fd90d42a35afb458e3cdf8",
+   "records": 136,
+   "last_timestamp": "2026-10-08T01:19:50.856Z",
+   "description": "Audit: HBM accelerator status"
+  },
+  {
+   "agent": "agent-a366fc3af74ca4fde",
+   "sha256": "3dfcfcb3e89e884c4a90846bd8665de02181418e630497dd2960883bed357bc6",
+   "records": 777,
+   "last_timestamp": "2026-10-07T04:29:09.200Z",
+   "description": "S81 tiles: selector/collector/capture"
+  },
+  {
+   "agent": "agent-a37e5f1c90d4dd5ae",
+   "sha256": "712638f321199f35ab078bde23481f5cd0db143188b558323656fbbeb7296ec8",
+   "records": 112,
+   "last_timestamp": "2026-10-08T16:31:57.341Z",
+   "description": "Drive 0928: Qwen emb_root \u22125 ps"
+  },
+  {
+   "agent": "agent-a389648a31e295d81",
+   "sha256": "4016de48f15338402934db0fcde4cebbadca5db42cf34c942ce4c2a71c94c4d5",
+   "records": 356,
+   "last_timestamp": "2026-10-09T01:59:07.312Z",
+   "description": "BF: ICG enable retime + no-gate cost"
+  },
+  {
+   "agent": "agent-a38f3c88790a1c314",
+   "sha256": "2743cfdf0756e23407816975d7c6c0590c71031db2a88467a530b8796b814afc",
+   "records": 371,
+   "last_timestamp": "2026-10-09T05:15:53.761Z",
+   "description": "Consolidate coverage into plan + view"
+  },
+  {
+   "agent": "agent-a3b878e8774b15231",
+   "sha256": "6142d8dbc5f1fdb89a89b79e84a7578c32d175645eb848e1cb2cf5b99b9c3f15",
+   "records": 287,
+   "last_timestamp": "2026-10-09T03:31:08.056Z",
+   "description": "RESUME: drive-1956 flow + crashes"
+  },
+  {
+   "agent": "agent-a3bee0184e73660ec",
+   "sha256": "99716f707d0fb23973b89b08aa4b81c14c16e2bd845c3a941ccee987af71c6c7",
+   "records": 912,
+   "last_timestamp": "2026-10-08T05:42:07.820Z",
+   "description": "End-to-end exactness regression"
+  },
+  {
+   "agent": "agent-a3cc8eb57468d0f63",
+   "sha256": "841442fc21970194d4dca0a03944d0dad9cdcc577ef057a9d1541ef6bd29c6d9",
+   "records": 279,
+   "last_timestamp": "2026-10-09T04:27:47.510Z",
+   "description": "Investigate 1.2\u00d7 insertion in mm FF scene"
+  },
+  {
+   "agent": "agent-a3d83c5c4d7be4893",
+   "sha256": "390d3e9b380b69c25fa349986d3617c477447315d5749aaf399dde92c762c190",
+   "records": 831,
+   "last_timestamp": "2026-10-07T04:40:42.535Z",
+   "description": "Build scripted closure loop"
+  },
+  {
+   "agent": "agent-a3db977e27d38a44d",
+   "sha256": "9dab5c97e64bae6fd6fac8817405359f8fc2765c409d38ae2d552b40a4f3fba6",
+   "records": 779,
+   "last_timestamp": "2026-10-09T05:38:21.261Z",
+   "description": "MTP die-level planning + floorplans"
+  },
+  {
+   "agent": "agent-a3e8c28f14f488bd8",
+   "sha256": "0b26c18c9aad8a413c2cf45c80481601ab534be75e86560f401f19c3cf7ca80e",
+   "records": 2139,
+   "last_timestamp": "2026-10-07T18:35:49.125Z",
+   "description": "HBM die coord + all views"
+  },
+  {
+   "agent": "agent-a3fb549c460f7b321",
+   "sha256": "d07096214bb993539969075f6b9a2d8c12b1bd16d90e42e92189c30b402a9771",
+   "records": 602,
+   "last_timestamp": "2026-10-09T05:38:24.044Z",
+   "description": "DS ROM Engram table dies: design"
+  },
+  {
+   "agent": "agent-a40208a3ed7a35714",
+   "sha256": "38da6a345889669b4851f921109d3d56b8a89667451a89696dffd931e7de2624",
+   "records": 343,
+   "last_timestamp": "2026-10-09T04:48:23.649Z",
+   "description": "Coverage T4: Qwen on HBM accel"
+  },
+  {
+   "agent": "agent-a404a5c4cfac05bfa",
+   "sha256": "f6215d19504fab7170f0f672a855e4b78c0e9277d867f2279713c85baa9b2fc3",
+   "records": 231,
+   "last_timestamp": "2026-10-08T18:37:04.568Z",
+   "description": "Drive 1128: HBM VM8 nws + Qwen serdes"
+  },
+  {
+   "agent": "agent-a406f08c2606a11e4",
+   "sha256": "15c0d6634da433ed5ec282bb74a3df4fc1edf350b634fc38ced10785ad0d5700",
+   "records": 608,
+   "last_timestamp": "2026-10-06T22:30:02.326Z",
+   "description": "HBM SM element continue"
+  },
+  {
+   "agent": "agent-a4132a3805acb2fc7",
+   "sha256": "dea7b6a06a7244329ad70ca5ad827169ed42f2072eac6becca1e21bb0f65a05f",
+   "records": 301,
+   "last_timestamp": "2026-10-09T05:31:31.488Z",
+   "description": "Fleet re-judge: inflated clock refs"
+  },
+  {
+   "agent": "agent-a416f8e2881edec32",
+   "sha256": "83c18a45c4a484b04c1c1ecca007cd3e3a62d86a55cc1975ea76af1494011e68",
+   "records": 462,
+   "last_timestamp": "2026-10-09T05:00:35.986Z",
+   "description": "DS ROM unowned real misses"
+  },
+  {
+   "agent": "agent-a4279150d2faf9cf2",
+   "sha256": "8b3fb479a6bdfc9a956b8dfd0cca5b30a39cacc32e9427701d28391719790eb2",
+   "records": 1773,
+   "last_timestamp": "2026-10-08T04:48:15.545Z",
+   "description": "Qwen blocks: RTL walls + crashes"
+  },
+  {
+   "agent": "agent-a43af71cde23cad4c",
+   "sha256": "7e6ab0ab3742c457d8c715eda8847c3e27dfbb56d377b6e71a3ba857940326ee",
+   "records": 738,
+   "last_timestamp": "2026-10-07T03:50:52.582Z",
+   "description": "Harvest Codex HBM jobs"
+  },
+  {
+   "agent": "agent-a43d4f4171af50ea4",
+   "sha256": "44aced292d935069c1b316b5e22ec21a51ef653229d7bd049f578762b4cf70d7",
+   "records": 475,
+   "last_timestamp": "2026-10-09T05:40:01.824Z",
+   "description": "S81 scan/head dies for 1,792 + rack"
+  },
+  {
+   "agent": "agent-a443076f7c8710d24",
+   "sha256": "e8dce9b7d517351e94852cf6fd6d4244d41f1892bc510884f84f36c04026315a",
+   "records": 528,
+   "last_timestamp": "2026-10-06T22:28:13.817Z",
+   "description": "S81-PH collective+selector+collector"
+  },
+  {
+   "agent": "agent-a4452b12bdbb223d6",
+   "sha256": "870fa1e7d6ff262c809c11b51fbeec882f8b198b6217dd0bcd241985e869cf9e",
+   "records": 250,
+   "last_timestamp": "2026-10-09T03:31:48.450Z",
+   "description": "RESUME: BF variant-key insertion fix"
+  },
+  {
+   "agent": "agent-a462eebb3d3b021b2",
+   "sha256": "065eb92520978e7eed563317d1cdf32006f3ebb9a48d46782178ba32db15f21e",
+   "records": 495,
+   "last_timestamp": "2026-10-06T22:35:03.688Z",
+   "description": "DS S81 placeholder slabs"
+  },
+  {
+   "agent": "agent-a4649202a85580933",
+   "sha256": "cebdd253713c3889201c94856e19e7d89b63a517427b4a71c25c78a621c8d9c8",
+   "records": 1676,
+   "last_timestamp": "2026-10-07T13:35:32.965Z",
+   "description": "HBM SM + SU + attn + router"
+  },
+  {
+   "agent": "agent-a464cb8418e00807f",
+   "sha256": "ecb88f762240c3ff9bbcfb28c085314ed311b5ac734710f04059c56d31ede409",
+   "records": 155,
+   "last_timestamp": "2026-10-09T01:43:13.101Z",
+   "description": "Fix hbm_die_views index on main"
+  },
+  {
+   "agent": "agent-a478668312f483245",
+   "sha256": "0ee5830b25fe89a5dbc5916193de7f57a844e8aefbf2e1b75145461af0222a45",
+   "records": 688,
+   "last_timestamp": "2026-10-06T22:34:08.455Z",
+   "description": "svcidx stream continuation"
+  },
+  {
+   "agent": "agent-a47d8f0e032962931",
+   "sha256": "add634086e57a23f6475bea64e6e5f1ae0112b4c50e955bcbb6a9830128e1ac4",
+   "records": 1258,
+   "last_timestamp": "2026-10-07T15:17:43.224Z",
+   "description": "HBM views phase 4"
+  },
+  {
+   "agent": "agent-a4848b8c4cd892f2f",
+   "sha256": "ddd74cdce2f9de9e49ab9cbf752d4015745f1edc51bf0444283528ff95903f17",
+   "records": 90,
+   "last_timestamp": "2026-10-09T00:00:45.362Z",
+   "description": "Merge 2 new closures"
+  },
+  {
+   "agent": "agent-a4964caef0aabe48f",
+   "sha256": "d5b06c9706cfd6169d10b65b5f11738a4c29ddf8458b24a606b506dfc1a9452e",
+   "records": 865,
+   "last_timestamp": "2026-10-06T17:13:39.676Z",
+   "description": "Resume: DS field spine v11"
+  },
+  {
+   "agent": "agent-a4a14dc66555159d0",
+   "sha256": "a7497fc063b6e89f7be5ca6c89d6adab96196cf28d1c5568707155acd3a80b55",
+   "records": 85,
+   "last_timestamp": "2026-10-06T20:25:50.254Z",
+   "description": "Find svc leaf margin views"
+  },
+  {
+   "agent": "agent-a4bf75b54a1369741",
+   "sha256": "1e4057bb767e046f1e6bf3bca2571b4dc611afdb1a6bbd8322eb3795036c121d",
+   "records": 412,
+   "last_timestamp": "2026-10-07T02:43:36.654Z",
+   "description": "Finalize Qwen ROM docs + atlas"
+  },
+  {
+   "agent": "agent-a4c150e9be03042eb",
+   "sha256": "243bc039fe11f60cf0ac809c82e2eaa94d2ba420e5b1c9cfdce3142f34b27f63",
+   "records": 563,
+   "last_timestamp": "2026-10-06T17:09:17.031Z",
+   "description": "Close HBM MoE router topk_f3"
+  },
+  {
+   "agent": "agent-a4c24f52397ecc9b4",
+   "sha256": "cc6e3984621cbd542cb0629b11acd91ce3fc83ef8aa06ae56683279d412c92a2",
+   "records": 950,
+   "last_timestamp": "2026-10-07T15:14:07.102Z",
+   "description": "Qwen ROM element final closure"
+  },
+  {
+   "agent": "agent-a4c7082dbec3f09d1",
+   "sha256": "5447071b5f76347a8cb847d1b7e2bfff24afaeac73c3d0de72ac5125cbbf5f37",
+   "records": 89,
+   "last_timestamp": "2026-10-08T14:01:47.440Z",
+   "description": "Fleet viz: stop verdict panel flicker"
+  },
+  {
+   "agent": "agent-a4c915a979d2fe30c",
+   "sha256": "4f996d8ce5548b3e76256ec829c13ea64293e1f8e9ef4a36b57a7fc8e438e849",
+   "records": 1701,
+   "last_timestamp": "2026-10-06T17:09:23.033Z",
+   "description": "Resume: HBM SU ctl + attn tile"
+  },
+  {
+   "agent": "agent-a4d1a7e4cacf6dff8",
+   "sha256": "45ca9d3e29d524f16e6ecec935402cd4f79d51d7ea5d8c50387925027b7702dc",
+   "records": 198,
+   "last_timestamp": "2026-10-08T21:20:34.730Z",
+   "description": "Drive 1413: Qwen core_p hold + flows"
+  },
+  {
+   "agent": "agent-a4d64ec61c9f80642",
+   "sha256": "fdde97f748f8500368ca3925630897b6bb3b7646c9eed4a6fa0608fd47698d9c",
+   "records": 723,
+   "last_timestamp": "2026-10-09T05:37:50.971Z",
+   "description": "MTP HBM: die block + re-checks"
+  },
+  {
+   "agent": "agent-a4d6b55d60bfdf5d1",
+   "sha256": "18d6c59261f8e055394f68dae6699ce449cebee0ddea5f77f93da8acea10e314",
+   "records": 1879,
+   "last_timestamp": "2026-10-07T18:00:43.824Z",
+   "description": "S81 tiles: collective/ctrl/vm/svc"
+  },
+  {
+   "agent": "agent-a4f05c4c6e935acf5",
+   "sha256": "616b1b8c191f232c934b3a3e6235aa7eabb25ecfcea284535e4f3096d21df1d7",
+   "records": 2501,
+   "last_timestamp": "2026-10-08T05:33:52.767Z",
+   "description": "HBM blocks: SU/SM/svc/etc"
+  },
+  {
+   "agent": "agent-a4f142b3ec906fe77",
+   "sha256": "6a420f276cedb706c323740b6b90f9053221a53c4e186564190c6a8175ba6c64",
+   "records": 118,
+   "last_timestamp": "2026-10-06T16:03:43.349Z",
+   "description": "Survey SU/HC RTL"
+  },
+  {
+   "agent": "agent-a4f6affc9e41b76fe",
+   "sha256": "658cbe7133cf4794f6f81908143b67ab89fe6acbc0a65616b14c7976e53d8020",
+   "records": 266,
+   "last_timestamp": "2026-10-08T15:49:38.642Z",
+   "description": "Fix Qwen pin-region regex family"
+  },
+  {
+   "agent": "agent-a4f93ebd53e445d3e",
+   "sha256": "31963c264208935d21d11e6e83242a7d373091d143f901247a13c4eaa88615e6",
+   "records": 136,
+   "last_timestamp": "2026-10-09T04:03:42.679Z",
+   "description": "URGENT: BF routes stopped by fp-lint"
+  },
+  {
+   "agent": "agent-a5088fb08ff1d2ca0",
+   "sha256": "4c5d19011965b5be49cf20f5d54b1eac500f67221a99a8e59e5396566510bc92",
+   "records": 390,
+   "last_timestamp": "2026-10-07T11:50:12.872Z",
+   "description": "Qwen DSpark re-price with relays"
+  },
+  {
+   "agent": "agent-a509545c53ffebcfd",
+   "sha256": "70f04aafc6125a1924f5665bccd93bfc44999a26902cc73008b664980ddb123d",
+   "records": 232,
+   "last_timestamp": "2026-10-08T17:53:16.291Z",
+   "description": "Drive 1043 timing redesign"
+  },
+  {
+   "agent": "agent-a51458f8cf02363e3",
+   "sha256": "14c361f9ab7a6b855e7711f2ee85b50e55dea3712588e51b349e5646cccdf1d5",
+   "records": 835,
+   "last_timestamp": "2026-10-06T15:48:30.145Z",
+   "description": "Resume: DS wavefront controller"
+  },
+  {
+   "agent": "agent-a51ac4206e13286d2",
+   "sha256": "f372aca736f984a2654392432f797897b18b78c1c0cab8501310b2c9e6d5a960",
+   "records": 673,
+   "last_timestamp": "2026-10-06T17:10:46.360Z",
+   "description": "WFC phase 2: registered boundary"
+  },
+  {
+   "agent": "agent-a51b1341ce1daf061",
+   "sha256": "0f8c56576d280844bc2b8fe3ad3943ff8d2c35f2b13e651952a155aad7ae4d4b",
+   "records": 212,
+   "last_timestamp": "2026-10-09T03:30:34.014Z",
+   "description": "RESUME: pre-route gate (fast-only)"
+  },
+  {
+   "agent": "agent-a53052e58f67f5330",
+   "sha256": "2bb05228f9d4847b70bdcd7e8349dc4ac35f36a5b2314bfe4458b4e20b5191e9",
+   "records": 298,
+   "last_timestamp": "2026-10-06T22:27:59.432Z",
+   "description": "CP binder into SU block"
+  },
+  {
+   "agent": "agent-a538b95127ed7c398",
+   "sha256": "979457e81fcc399b0cac0e077903fccc6e6d6c96ba945061bd5f6bbc19bc0b76",
+   "records": 158,
+   "last_timestamp": "2026-10-08T10:53:19.799Z",
+   "description": "Fix verdict feed live updates + badges"
+  },
+  {
+   "agent": "agent-a53c2ec31e0e8cd9c",
+   "sha256": "f083a4fb4b308c2aee47cdcdd96f9e99a2eca652034bc40dfdaaefa5e73c8786",
+   "records": 95,
+   "last_timestamp": "2026-10-08T21:00:49.083Z",
+   "description": "Drive 1358: Qwen link rx128 DPL-0033"
+  },
+  {
+   "agent": "agent-a5499fe285a066480",
+   "sha256": "e8d6b779e95dc2c6202e84a0675bcc96db98730285a39c920ed96549090d1373",
+   "records": 279,
+   "last_timestamp": "2026-10-09T04:50:45.689Z",
+   "description": "Coverage T2: DeepSeek ROM"
+  },
+  {
+   "agent": "agent-a54d7e9cb94739e62",
+   "sha256": "3c70010f535264e6a954d0b83a7b953ee9de3e1abf834e249b5cf9c927903a95",
+   "records": 1419,
+   "last_timestamp": "2026-10-06T17:14:03.212Z",
+   "description": "Resume: S81 die re-run r9"
+  },
+  {
+   "agent": "agent-a5552afd197b8cc03",
+   "sha256": "1b36803f14a29a8918f2b4984898c3bc8e2d44df8285cdb1947bcadd6290d7ba",
+   "records": 289,
+   "last_timestamp": "2026-10-07T15:14:20.136Z",
+   "description": "HBM norm engine MEM=1 SRAM variant"
+  },
+  {
+   "agent": "agent-a5666e1207d215dfd",
+   "sha256": "a4ad734f18fa66165fb53fd79eaf9881bc32fdb0f5506858996e841ac78ea1c3",
+   "records": 1279,
+   "last_timestamp": "2026-10-08T05:37:14.628Z",
+   "description": "Setup-wall triage + CTS fixes"
+  },
+  {
+   "agent": "agent-a571dedb1aec5f46c",
+   "sha256": "cebfdd51713efb9995f4daaffe42d311b24db980dc14bea46540ec734e7c8fd5",
+   "records": 703,
+   "last_timestamp": "2026-10-07T15:21:03.155Z",
+   "description": "DS orphan streams: WINDOW, reindex, swiglu"
+  },
+  {
+   "agent": "agent-a5783df27f67629e2",
+   "sha256": "72de27a81a3a12eabcbba13e4b71a568a81743518ecfe0d5046360fc0f42c161",
+   "records": 73,
+   "last_timestamp": "2026-10-06T16:03:34.332Z",
+   "description": "Survey ctrl/collective RTL"
+  },
+  {
+   "agent": "agent-a57e807c5e928ec0e",
+   "sha256": "7ae440f4a86280761d3a443ef9e1afaeb4810b3d662f93b73ff34696ccfef51c",
+   "records": 361,
+   "last_timestamp": "2026-10-09T04:50:59.645Z",
+   "description": "Coverage T3: DeepSeek on HBM"
+  },
+  {
+   "agent": "agent-a59b91b493f00f31d",
+   "sha256": "6f0cbc243a01e42284bb549a115ce67323aa86b8cec32ad0b219d6b7f10d62d6",
+   "records": 478,
+   "last_timestamp": "2026-10-09T03:06:08.257Z",
+   "description": "Pre-route floorplan margin lint"
+  },
+  {
+   "agent": "agent-a59bc7cc4f7100846",
+   "sha256": "7d93bda406b04de42a9d1856aab70d71b754c79dda62485ce3e6ed0b0139b9dd",
+   "records": 343,
+   "last_timestamp": "2026-10-09T03:44:57.614Z",
+   "description": "Safe variants (reviewed): DeepSeek ROM"
+  },
+  {
+   "agent": "agent-a59e723a52f4117d5",
+   "sha256": "5fc141c2ac96522f9c2b7cf41edfb95ec0554411edbecbf7949955c4dbb86224",
+   "records": 294,
+   "last_timestamp": "2026-10-07T19:00:29.799Z",
+   "description": "HBM protected collective CDC design"
+  },
+  {
+   "agent": "agent-a5ae8a22d2a65fa0a",
+   "sha256": "aef6927f7926d0e4b3e698e5bf5a5488cc122f984ed6ea0d781c3c57c0a67bf9",
+   "records": 994,
+   "last_timestamp": "2026-10-07T18:00:44.580Z",
+   "description": "Resume: HBM views hub SU/SFU/HC"
+  },
+  {
+   "agent": "agent-a5c4ff6365960f179",
+   "sha256": "c936e255ff39d410234960dbf4a144bfb9390e1df9abb58ae14bef268bbc6237",
+   "records": 736,
+   "last_timestamp": "2026-10-07T01:27:00.438Z",
+   "description": "Code pair margin"
+  },
+  {
+   "agent": "agent-a5d06264e1fa17620",
+   "sha256": "c8b16fabe84c76aba9d7fef09532f548fafc29968e9ccd321ab3e98e4dc506f5",
+   "records": 204,
+   "last_timestamp": "2026-10-06T22:28:42.400Z",
+   "description": "Codex DS harvest list"
+  },
+  {
+   "agent": "agent-a5da9b5187c608951",
+   "sha256": "98c68d6991a4bf4c3608639bfbc0dd8e05eea0cd52ca071b5da2d24144eb821c",
+   "records": 786,
+   "last_timestamp": "2026-10-08T05:32:13.757Z",
+   "description": "Multi-Vt (LVT/SLVT) closure experiment"
+  },
+  {
+   "agent": "agent-a5e7ad83521b75d6b",
+   "sha256": "bafa2e01ea640de97e3e4b3852d7ced3c4a5a7057dd5896f4d74719e5c7be433",
+   "records": 254,
+   "last_timestamp": "2026-10-08T09:57:04.233Z",
+   "description": "Redesign pass: 18 unprocessed timing fails"
+  },
+  {
+   "agent": "agent-a5f0adddc93eb2c81",
+   "sha256": "f7b5d139b9c12d7f7094889ff9cbc4330fa1ca13d70f1cfb851bfa059eafdc14",
+   "records": 1401,
+   "last_timestamp": "2026-10-07T11:11:16.373Z",
+   "description": "DS fused head redesign"
+  },
+  {
+   "agent": "agent-a5fc92875d4784f0b",
+   "sha256": "1a6225886839ca2da8c10fa4239cdfcacb9dbf62693a46f7b7d9accc8442acc9",
+   "records": 109,
+   "last_timestamp": "2026-10-08T01:18:37.921Z",
+   "description": "Audit: Qwen ROM status"
+  },
+  {
+   "agent": "agent-a604a9f059524a6f4",
+   "sha256": "b8128dc1ebad9b56a3ba72e81f356265591004e96da629c4e6ddf2e8aba248ef",
+   "records": 488,
+   "last_timestamp": "2026-10-07T18:00:43.695Z",
+   "description": "Resume: HBM views attn tile"
+  },
+  {
+   "agent": "agent-a60c559684168f71f",
+   "sha256": "9de4d6cf3199ec5bfb377fe31c6d04026e33265a12645225847d1ea4a34d2406",
+   "records": 2382,
+   "last_timestamp": "2026-10-08T07:46:42.430Z",
+   "description": "Integration: merge, commit, daemon"
+  },
+  {
+   "agent": "agent-a61ddb2fe25bc77a1",
+   "sha256": "d8c436170ab0704261830cf9e028f585bd329a5bf406cd6bcba294cf1cd811ee",
+   "records": 112,
+   "last_timestamp": "2026-10-08T09:12:15.350Z",
+   "description": "Fleet viz layout revision"
+  },
+  {
+   "agent": "agent-a632c91b6eadad2e3",
+   "sha256": "6b4ee44cfcaeb38bbdc6463e45d156b9302065fb4bd245aa60538ff42f62c3c1",
+   "records": 960,
+   "last_timestamp": "2026-10-08T06:47:00.824Z",
+   "description": "HBM contracts RTL: credit/edge/refill"
+  },
+  {
+   "agent": "agent-a635895f3e354fd62",
+   "sha256": "806beb0725c1f3deb979943ecdf0bd90e9a03e5e43ff01e4d7a356e498e970d9",
+   "records": 311,
+   "last_timestamp": "2026-10-08T08:40:06.380Z",
+   "description": "Redesign pass: S81 open blocks"
+  },
+  {
+   "agent": "agent-a65cdf302200be9bd",
+   "sha256": "ee66194667d3a1471c301a912cc0b490b465466ad195d60edbb5c862ed7bafe1",
+   "records": 454,
+   "last_timestamp": "2026-10-08T03:16:43.367Z",
+   "description": "Chip Explorer element stories"
+  },
+  {
+   "agent": "agent-a675e48f09cc98917",
+   "sha256": "cc50318881540b72d2c6c1f3802fc994613a1ccebde7402132bbfce717f36b46",
+   "records": 291,
+   "last_timestamp": "2026-10-08T10:18:02.215Z",
+   "description": "Redesign: fwd TMR pair + VM8 faces"
+  },
+  {
+   "agent": "agent-a683c45e84384909c",
+   "sha256": "88a04a5ab74113c90b1ec805b7fd9c1086394d5f9678c9a9a37fe6169d29774a",
+   "records": 617,
+   "last_timestamp": "2026-10-09T05:00:29.538Z",
+   "description": "Host/ingest/loader blocks on ROM dies"
+  },
+  {
+   "agent": "agent-a68be61c4aa26b150",
+   "sha256": "b5a4fdc0b80e24a5c9c5a6bd5fb76777fd9ced2cff47e539c5a169dcb7086b65",
+   "records": 190,
+   "last_timestamp": "2026-10-06T16:38:09.920Z",
+   "description": "Inventory routed Qwen die element closures"
+  },
+  {
+   "agent": "agent-a68c3e2b7c77008a0",
+   "sha256": "d8b5ec7fa16d562f9361456f442b05bbc1e252b382f3774e18ab0d0da3870ade",
+   "records": 276,
+   "last_timestamp": "2026-10-09T03:02:23.707Z",
+   "description": "URGENT BF half-rate: wrong assumed insertion"
+  },
+  {
+   "agent": "agent-a69246e94e4b5a6a0",
+   "sha256": "3c1a9d9292f721fdb367c987d8949fad6e6eb773787a9412a9a2a390ea51f3f9",
+   "records": 150,
+   "last_timestamp": "2026-10-09T04:22:11.324Z",
+   "description": "Merge backlog pass (READY_TO_MERGE)"
+  },
+  {
+   "agent": "agent-a698d8d71ab2f5b9f",
+   "sha256": "1372ed896df459fcfb6d1569c6037cf93298c423316d7fd7fa9afc7ce98e727e",
+   "records": 204,
+   "last_timestamp": "2026-10-08T15:07:26.068Z",
+   "description": "Drive 0758: HBM packet SRAM redesign"
+  },
+  {
+   "agent": "agent-a6a02c2874507aa3b",
+   "sha256": "849b1a6b727a428ea598f73891f56c4730d1bb78b10ad233ede9c90d6401a500",
+   "records": 113,
+   "last_timestamp": "2026-10-07T18:01:33.649Z",
+   "description": "Takeover: Codex DS ROM streams"
+  },
+  {
+   "agent": "agent-a6a546481181a607f",
+   "sha256": "39cf3c9fbcd69780cbeedfec79b0bb6e178ede3935975c01e7dd481844a1b4ee",
+   "records": 511,
+   "last_timestamp": "2026-10-06T22:27:47.799Z",
+   "description": "HBM router continue"
+  },
+  {
+   "agent": "agent-a6b890ef34c862a08",
+   "sha256": "40e46229396d38c95f6efd789b20ccac697b4b97def6fae49b01f5ba16852b5d",
+   "records": 1193,
+   "last_timestamp": "2026-10-08T09:54:25.246Z",
+   "description": "Qwen VM/ME finish + die repack"
+  },
+  {
+   "agent": "agent-a6c702f21ec69dc03",
+   "sha256": "be91c20bc972c8dda9cd58f8565b3fff1a29521bb01357bad224ed396e7f2cb5",
+   "records": 542,
+   "last_timestamp": "2026-10-09T05:37:48.754Z",
+   "description": "DS ROM control plane on S81 dies"
+  },
+  {
+   "agent": "agent-a6da3db67151a205a",
+   "sha256": "171f4de77d990f780852d2804192cf8888cc4206f6db0ce41675625341e3946d",
+   "records": 186,
+   "last_timestamp": "2026-10-09T03:32:00.273Z",
+   "description": "RESUME: token critical-path views"
+  },
+  {
+   "agent": "agent-a6e6cb0cc821fb88a",
+   "sha256": "d8374d503c78062398a22d316b6d8e6014d3ef4a64f0bcc66a2e2ec3de93813a",
+   "records": 2124,
+   "last_timestamp": "2026-10-07T15:26:31.075Z",
+   "description": "Fix hold/setup ECO conflict class"
+  },
+  {
+   "agent": "agent-a6f0e35276952ebb4",
+   "sha256": "a87411302b7043b326b7e33a346bb0b7a2cd6025467286a1a26b6be7fc59a56f",
+   "records": 1166,
+   "last_timestamp": "2026-10-06T22:35:41.408Z",
+   "description": "HBM views: spine + hub"
+  },
+  {
+   "agent": "agent-a6f18bb9e0285e145",
+   "sha256": "bce4944825f8963be8a1cb3602b2c485a26cd22848132e4ff710518cc564c68e",
+   "records": 890,
+   "last_timestamp": "2026-10-08T07:26:39.392Z",
+   "description": "Qwen RTL: tree_top, VM, embed IO"
+  },
+  {
+   "agent": "agent-a6f745e2d7a3c346a",
+   "sha256": "92a4f8c7a807662b70ab9bd9b784e2db1af22a3870bc03882b336f28ba9e7398",
+   "records": 637,
+   "last_timestamp": "2026-10-06T16:54:52.930Z",
+   "description": "Close HBM command processor (CP)"
+  },
+  {
+   "agent": "agent-a6fb04597b4dab251",
+   "sha256": "f1f720e2ad949200a3019aa4624386591d91071296ebb1316ca894f800850cea",
+   "records": 178,
+   "last_timestamp": "2026-10-08T10:28:06.402Z",
+   "description": "Fix 4 systemic loop/flow gaps"
+  },
+  {
+   "agent": "agent-a702db4e27ca67f1d",
+   "sha256": "4a3f5543873ca60d1daf13b4ec1b90c5885e96ffa39c74db3e05e4d08fa3b485",
+   "records": 932,
+   "last_timestamp": "2026-10-06T17:10:37.144Z",
+   "description": "Resume: HBM views svc and index"
+  },
+  {
+   "agent": "agent-a7086b108d81685df",
+   "sha256": "ccac482c595e3af7850e1893f74ed2ba663e42d0d697762a36800bac2fbbea7b",
+   "records": 649,
+   "last_timestamp": "2026-10-08T15:23:22.998Z",
+   "description": "Synthesis blow-ups + measured re-STA"
+  },
+  {
+   "agent": "agent-a726ef587d289f5cd",
+   "sha256": "42d0504534c70728f20926f79c5392abbd921f2fa7c6c599c433420ed5d3368d",
+   "records": 186,
+   "last_timestamp": "2026-10-09T03:02:47.616Z",
+   "description": "Drive 1956: relaunch hold floods, crashes"
+  },
+  {
+   "agent": "agent-a728bad802c62afa7",
+   "sha256": "d49eec7f7795a48e30ceacbcb0c16bcbf7a23f309611ee631daf28b2e08ee791",
+   "records": 820,
+   "last_timestamp": "2026-10-06T22:28:48.269Z",
+   "description": "S81-PH vm + gather + capture"
+  },
+  {
+   "agent": "agent-a72ead3ef2c222f54",
+   "sha256": "dc288bc8833895b7abf136a5621521149cd276540e17fa771c09419ed540ec98",
+   "records": 234,
+   "last_timestamp": "2026-10-08T15:32:16.479Z",
+   "description": "Flow: stale calibrate hold reference"
+  },
+  {
+   "agent": "agent-a752e5f3e29fdc72f",
+   "sha256": "5a5ed397afe9821c676acffa0745e7c24802db647b7279411f29ff313b9c1ac2",
+   "records": 75,
+   "last_timestamp": "2026-10-09T03:02:48.733Z",
+   "description": "Feasibility: Qwen embedding ROM\u2192HBM"
+  },
+  {
+   "agent": "agent-a75c9e98c9156c0f2",
+   "sha256": "c5f3a27c83fb37cb565db7c19899a726bfd8e2c7b69f066755ee215179abd77e",
+   "records": 197,
+   "last_timestamp": "2026-10-08T10:53:21.864Z",
+   "description": "Redesign 0348 (23 timing/bench fails)"
+  },
+  {
+   "agent": "agent-a76c5d5a52dd1360a",
+   "sha256": "5746488064e506b536cd3b5e13cba0ba0067bd0199e04adf758f96170987b0ff",
+   "records": 820,
+   "last_timestamp": "2026-10-07T15:27:05.260Z",
+   "description": "DS fused head takeover from Codex"
+  },
+  {
+   "agent": "agent-a7745c742fc874e29",
+   "sha256": "eb4796e09f544bc95a091077f9cbb042d0028ff85a51c57dac5adc3548f9c06d",
+   "records": 527,
+   "last_timestamp": "2026-10-09T05:42:31.673Z",
+   "description": "HBM die: real indexer design"
+  },
+  {
+   "agent": "agent-a775245bc758855b8",
+   "sha256": "6f2d250d2ff90d86767048bd29b50e0cc8db6e8567bfcd2c7c8122b4d637595e",
+   "records": 279,
+   "last_timestamp": "2026-10-09T04:46:51.562Z",
+   "description": "Coverage T1: Qwen ROM"
+  },
+  {
+   "agent": "agent-a77890519ecc28c4b",
+   "sha256": "bd5e966a238c2ff03a7dff7119294ff66f168138a560f7973775974e83bda984",
+   "records": 595,
+   "last_timestamp": "2026-10-06T22:28:20.397Z",
+   "description": "Qwen core margin redesign m3"
+  },
+  {
+   "agent": "agent-a77f5b4a18c6c1913",
+   "sha256": "54e0f8093c483af0f894adb81066a39e82cd6543eb9ce7191a379f9f91e64b33",
+   "records": 102,
+   "last_timestamp": "2026-10-08T08:36:11.586Z",
+   "description": "Prepare EPYC4 onboarding script"
+  },
+  {
+   "agent": "agent-a78063713c8d9068b",
+   "sha256": "497abf6b099d98d50a98fd66bb4a25f4107911e0f2848df0b65ed492e542f481",
+   "records": 772,
+   "last_timestamp": "2026-10-07T01:51:05.660Z",
+   "description": "DS S81 die + placeholders"
+  },
+  {
+   "agent": "agent-a78d660870b927158",
+   "sha256": "c4a9c00f2fd7339215b3f78fe029918cc67d2141a110029dfe443d1286d28e80",
+   "records": 237,
+   "last_timestamp": "2026-10-06T17:09:24.580Z",
+   "description": "Takeover: Codex Qwen streams"
+  },
+  {
+   "agent": "agent-a79b95b7469337fc9",
+   "sha256": "2e65cda77bb0a3279cf28e72be4da728501bcfe894eb6a6fb595275f138180ea",
+   "records": 1446,
+   "last_timestamp": "2026-10-07T15:14:10.916Z",
+   "description": "Qwen die-top detailed route"
+  },
+  {
+   "agent": "agent-a7b4311da59e1a385",
+   "sha256": "139e199a025903807a872c1a3e0f927b6604da98e2f499fa2a5d61b6d93500a6",
+   "records": 193,
+   "last_timestamp": "2026-10-08T17:21:27.827Z",
+   "description": "Attention tile r23h/r23hq placement failure"
+  },
+  {
+   "agent": "agent-a7cdd11d6941f4136",
+   "sha256": "94287eaf1fa4e7bded4d4ef6c0f53249bec41ed1fe330843e9523594f1554735",
+   "records": 233,
+   "last_timestamp": "2026-10-09T04:10:33.295Z",
+   "description": "Token-path views: add MTP mode"
+  },
+  {
+   "agent": "agent-a7d61030abbdfcb1b",
+   "sha256": "9f69477a093f09576fe22ed08ccc208de4f3d56251522de870d7775234ef1f4c",
+   "records": 525,
+   "last_timestamp": "2026-10-08T13:07:19.415Z",
+   "description": "Integrate band lanes into Qwen spine"
+  },
+  {
+   "agent": "agent-a7e38f55b4d1ecebe",
+   "sha256": "3e12711d37dd73a66d6eacda2114642faf40e091e07c2a77174e9dc145b9a5d5",
+   "records": 274,
+   "last_timestamp": "2026-10-08T13:29:39.652Z",
+   "description": "BF: fix input-pin hold window, relaunch"
+  },
+  {
+   "agent": "agent-a7ea86201c05c65c0",
+   "sha256": "f60d49ba1d0c9673b461b35202e8354f762c42987985172d610ee785a032791a",
+   "records": 1065,
+   "last_timestamp": "2026-10-06T17:10:42.166Z",
+   "description": "Resume: HBM SM element redesign"
+  },
+  {
+   "agent": "agent-a7ee43372d5f88d1d",
+   "sha256": "627b67d663766c669b43b4d590c0e3c0adfe7a0e89658b5437919e1ce225ea28",
+   "records": 397,
+   "last_timestamp": "2026-10-09T00:59:16.698Z",
+   "description": "S81 assembled views for split masters"
+  },
+  {
+   "agent": "agent-a7f619779e6fe183a",
+   "sha256": "617c74ed0865ceeabf1757b964744861c1da17acc9487828d7a5e6dc98169f45",
+   "records": 540,
+   "last_timestamp": "2026-10-08T21:43:13.369Z",
+   "description": "HBM collective: SRAM FIFOs redesign"
+  },
+  {
+   "agent": "agent-a80bf4ca9a896026f",
+   "sha256": "c2917ef84d4254fecc45c1f079be51560299a8e5f1bfd0414950e35801798407",
+   "records": 128,
+   "last_timestamp": "2026-10-08T17:02:24.299Z",
+   "description": "Drive 0958: merge emb_root, hq-SW DRC"
+  },
+  {
+   "agent": "agent-a831285d48aea5504",
+   "sha256": "682deadd530b4b8338ec71214ebebb25fad5a066e274fe38992c3e0f5779709a",
+   "records": 270,
+   "last_timestamp": "2026-10-09T03:02:46.115Z",
+   "description": "Dossier: all big misses + proposed fixes"
+  },
+  {
+   "agent": "agent-a83bd44bd2d99de4f",
+   "sha256": "01a4488e7077f3c41c189b6f9b5742b1b753a8a20d6d4fa1c9c2a9eba822be1d",
+   "records": 192,
+   "last_timestamp": "2026-10-09T01:47:08.012Z",
+   "description": "Fill idle fleet with parallel variants"
+  },
+  {
+   "agent": "agent-a8415da5b96b62ed0",
+   "sha256": "5e6afcf20b3ed8049d4b2e5e7d8cb36f584d9eadd2cce6a188d91364af903cf0",
+   "records": 723,
+   "last_timestamp": "2026-10-09T05:36:31.089Z",
+   "description": "RESUME: S81 die generator + cfifo"
+  },
+  {
+   "agent": "agent-a843bd2f5fe926953",
+   "sha256": "992b15799b123d4335f1ad5a0004d87f7aada2f4c4eee324833e971a5047f279",
+   "records": 479,
+   "last_timestamp": "2026-10-09T04:32:28.095Z",
+   "description": "Explorer: Qwen mapping + curated stories"
+  },
+  {
+   "agent": "agent-a85096bdf7a3ca4d9",
+   "sha256": "dcd079463a9c46b417d6586a34cfc02be79d474efd1fc9a36d4c0b216d84ee1b",
+   "records": 352,
+   "last_timestamp": "2026-10-06T17:14:09.438Z",
+   "description": "Build S81 die placeholder blocks"
+  },
+  {
+   "agent": "agent-a8531f3708d961d8e",
+   "sha256": "6ed2e4a7327f598190f77fb3c6a3a89ae588c174fdd8683007d1e1cf56c05f89",
+   "records": 126,
+   "last_timestamp": "2026-10-09T00:48:52.277Z",
+   "description": "HBM coll port slice congestion"
+  },
+  {
+   "agent": "agent-a8546380bcf78adba",
+   "sha256": "31b8a87ca4db89b0062e02c11d1e329d01ea97a3ce1f4ad1c09c0c1d80e6a0f7",
+   "records": 293,
+   "last_timestamp": "2026-10-07T01:15:56.786Z",
+   "description": "Qwen die + elements + token"
+  },
+  {
+   "agent": "agent-a856d87da234b0eec",
+   "sha256": "21d49c9b45eedec0d0a5e9464972d8e9a3b57397882fbebe75ee494af244685b",
+   "records": 460,
+   "last_timestamp": "2026-10-08T11:00:11.451Z",
+   "description": "Flow triage 0348 (15 flow fails)"
+  },
+  {
+   "agent": "agent-a856f4904f22a66d5",
+   "sha256": "9efba5a68be46f902dc7476060da5b7589f38ebf419ab22a66e09101ed853efa",
+   "records": 1473,
+   "last_timestamp": "2026-10-06T17:09:16.314Z",
+   "description": "Resume: HBM die block abstracts"
+  },
+  {
+   "agent": "agent-a85cd0b44836fac92",
+   "sha256": "c7b299fb49a4e855e7444a46f0367b9d3fff4ec42c8ad725c8005a87dfc81c3c",
+   "records": 191,
+   "last_timestamp": "2026-10-08T15:36:56.376Z",
+   "description": "Drive 0828: core_kv + merge ii1rw"
+  },
+  {
+   "agent": "agent-a8698ccbc07af79bd",
+   "sha256": "bf4d610ae546c4113830eeda6807591a144cf01b5dd133d6d471c411d48727e5",
+   "records": 198,
+   "last_timestamp": "2026-10-09T04:00:27.434Z",
+   "description": "Loop fix: OT_MM_FF_SDC override drops ioref"
+  },
+  {
+   "agent": "agent-a86b88377c7d9a11b",
+   "sha256": "3cdbff342de3dcda038375525e4e8ab925b8e21b64f12220cf37019df19ae75a",
+   "records": 155,
+   "last_timestamp": "2026-10-08T23:16:56.481Z",
+   "description": "Drive 1613: S81 swiglu esum"
+  },
+  {
+   "agent": "agent-a881d4594cbc68576",
+   "sha256": "a887a0a9059882e0a7e98d032a57e3e6157b7de81bb77201088f1583209d78ca",
+   "records": 600,
+   "last_timestamp": "2026-10-08T09:58:47.633Z",
+   "description": "Unowned design gaps"
+  },
+  {
+   "agent": "agent-a899d9492f6fbb04f",
+   "sha256": "3d48ea8f138b83ed6a892faa143c3b91ad34413ce1e7cd7a54cba5f03792831a",
+   "records": 631,
+   "last_timestamp": "2026-10-06T17:17:43.055Z",
+   "description": "Fork: collective slab"
+  },
+  {
+   "agent": "agent-a8c7c222a921871cb",
+   "sha256": "e32e6c7678545c85cba57c8ae24e9e6e199578fd7061c8ac7f7d44e12a9cfd35",
+   "records": 183,
+   "last_timestamp": "2026-10-08T18:52:27.800Z",
+   "description": "BF half-rate CTS crash + serdes"
+  },
+  {
+   "agent": "agent-a8d3a3cc2ba3350ec",
+   "sha256": "cdd6b0b2dac63f50d62cad3f5dd80cfdc9c3a8dff3375e0a3ad5a5cf6ca50286",
+   "records": 575,
+   "last_timestamp": "2026-10-06T17:13:48.876Z",
+   "description": "Fork: HBM ctrl slab"
+  },
+  {
+   "agent": "agent-a8decc26afa445daf",
+   "sha256": "49d305b2492e9ad1aa0f8ecd3cc86f51e414c7b9b9578343221402528ea83278",
+   "records": 280,
+   "last_timestamp": "2026-10-09T03:02:25.920Z",
+   "description": "Triage 14 recent flow crashes"
+  },
+  {
+   "agent": "agent-a8e9fe56a8b86e8ef",
+   "sha256": "c501b07c275bb5ac8f9ae8c4f760a102ddf33cb655e79e4af0a5d7994d730c54",
+   "records": 372,
+   "last_timestamp": "2026-10-08T06:13:27.142Z",
+   "description": "TT views + launch 23 awaiting"
+  },
+  {
+   "agent": "agent-a8f08ee25c26219d9",
+   "sha256": "fdbc71cfe16d62263130a204cf28929da737d524942243eaf406e299a6c106a6",
+   "records": 842,
+   "last_timestamp": "2026-10-07T15:23:41.897Z",
+   "description": "DS PQ adoption finisher"
+  },
+  {
+   "agent": "agent-a8f6ad0c889c1eb49",
+   "sha256": "5d0c9d485360a6901a2ac17758993da96636bf3b93ba2101456b0fa1ecf7367a",
+   "records": 205,
+   "last_timestamp": "2026-10-06T17:15:36.733Z",
+   "description": "Takeover: Codex HBM streams"
+  },
+  {
+   "agent": "agent-a911166c2180b2e44",
+   "sha256": "027c23628964f97a799bba11e7f8ef8bcd5ddfbd35ddf898c020be6405620761",
+   "records": 156,
+   "last_timestamp": "2026-10-06T20:57:21.239Z",
+   "description": "Margin CP with provider adapter"
+  },
+  {
+   "agent": "agent-a916e3f475e4d7ff2",
+   "sha256": "016292154d1ada0194193d5bf8a2a6145033f6eb8a8eea3af8f00314cff831be",
+   "records": 1298,
+   "last_timestamp": "2026-10-07T16:00:05.927Z",
+   "description": "HBM W2 + integration"
+  },
+  {
+   "agent": "agent-a9292b5b1ba0487a9",
+   "sha256": "65f3f68052a1416a5d4dd9885564793715b067f915013a71c41f4f7e368046e7",
+   "records": 421,
+   "last_timestamp": "2026-10-06T22:36:15.612Z",
+   "description": "S81-PH ctrl + svc"
+  },
+  {
+   "agent": "agent-a9314d98b8aa12eec",
+   "sha256": "081ae0ddd0b953e1f1550bc855e26c17ea9e290082b59fc56d25c01b469d5584",
+   "records": 95,
+   "last_timestamp": "2026-10-08T19:01:16.334Z",
+   "description": "Merge Qwen cx station closures"
+  },
+  {
+   "agent": "agent-a94007e8cef00e7b3",
+   "sha256": "222d41470a83ac0fea8b8ff8d381da586213f4351d1b5c194517b93e7742919d",
+   "records": 674,
+   "last_timestamp": "2026-10-07T03:00:25.242Z",
+   "description": "Top-down budgets + die clock plan"
+  },
+  {
+   "agent": "agent-a94595d532f6fc4f3",
+   "sha256": "6c17ba3e3f1c66c2ea9eb01a4cb98cd7d59a13da38752fbaad6fa08ad472e350",
+   "records": 72,
+   "last_timestamp": "2026-10-08T01:19:20.843Z",
+   "description": "Audit: Codex streams, fleet, loop"
+  },
+  {
+   "agent": "agent-a9459ab57adc9a19b",
+   "sha256": "74264b29fbfc731e994dcc49969f6b997a242fea071e52459431f2d825e52632",
+   "records": 276,
+   "last_timestamp": "2026-10-08T18:27:29.719Z",
+   "description": "Drive 1113: HBM svc SW_s3 + cx station"
+  },
+  {
+   "agent": "agent-a953b54e0162e75dc",
+   "sha256": "54a553839f9e7dcb55a8c2268a5d8de76e1f80b66d4e774337667fc800d4beab",
+   "records": 710,
+   "last_timestamp": "2026-10-08T06:47:06.355Z",
+   "description": "Flow: systemic FF hold fix"
+  },
+  {
+   "agent": "agent-a95f3539780ecabca",
+   "sha256": "16ae33284941cb74f0852b81561faf3cb7a3868b9576bb22b1ea5e1bdb71ec14",
+   "records": 861,
+   "last_timestamp": "2026-10-06T22:42:24.341Z",
+   "description": "DS PQ spine + q-element"
+  },
+  {
+   "agent": "agent-a9602f033135ad734",
+   "sha256": "5016937def76de6d3f6823827b0f041bbf9a57818e4d7add6b23f8b822ee078e",
+   "records": 739,
+   "last_timestamp": "2026-10-08T03:03:59.576Z",
+   "description": "Qwen contracts: credits/VM/KV"
+  },
+  {
+   "agent": "agent-a968037e04854f40e",
+   "sha256": "1161329bfe08559ebb8e32a610905ba9bf0c7f96a2cebbfb001ef8e99cf6b222",
+   "records": 875,
+   "last_timestamp": "2026-10-09T05:37:57.403Z",
+   "description": "Qwen die: control plane + const ROM"
+  },
+  {
+   "agent": "agent-a976a17068076e939",
+   "sha256": "ab0e1013136c5f22120745272a99f6b3d62108514f63770bec0072fffcc6c619",
+   "records": 1034,
+   "last_timestamp": "2026-10-08T03:33:15.004Z",
+   "description": "S81 BF native structural fix"
+  },
+  {
+   "agent": "agent-a979d079288ca076a",
+   "sha256": "434fd7332981b30fc60dcdb585b0ed3cb3f951bee1c3427805370d378e8e4841",
+   "records": 155,
+   "last_timestamp": "2026-10-08T19:52:10.425Z",
+   "description": "Drive 1243: S81 capt_grp hold"
+  },
+  {
+   "agent": "agent-a99fd270a24f29145",
+   "sha256": "6f737491257e66c122742ca0fdd075354b7e2859352464ba8efff78499ec860c",
+   "records": 558,
+   "last_timestamp": "2026-10-06T17:12:41.973Z",
+   "description": "Fork: gather+capture slabs"
+  },
+  {
+   "agent": "agent-a9aebd5db7504fb4f",
+   "sha256": "4c5688ba51ba01c652b50d5e560110f683e2bcf23738c73011ddb5851d299c26",
+   "records": 385,
+   "last_timestamp": "2026-10-07T03:41:12.154Z",
+   "description": "Fix DS rack 85 stages + energy"
+  },
+  {
+   "agent": "agent-a9bb397d8ced62b7b",
+   "sha256": "12cc60de9e7c62be8dfe58aa85718f8ec7c0ad42a9eb7cb5e43b8314b89ddf88",
+   "records": 477,
+   "last_timestamp": "2026-10-06T22:06:03.623Z",
+   "description": "HBM die coordinator continue"
+  },
+  {
+   "agent": "agent-a9bca02bcab58967a",
+   "sha256": "66d5b67007b89e31a62d5ab05827cd480ef85c19102f099ad3be8d3cda93b5b1",
+   "records": 90,
+   "last_timestamp": "2026-10-08T13:26:25.160Z",
+   "description": "Fleet viz: rename + remove floating bar"
+  },
+  {
+   "agent": "agent-a9c45b2f33272c9ea",
+   "sha256": "a02c69926a2f97885bfb0e3a23bb2b7b9ce5cd2261e77f803d480962ba3a0c99",
+   "records": 534,
+   "last_timestamp": "2026-10-08T15:28:08.904Z",
+   "description": "Triage 12 route-crashed-twice jobs"
+  },
+  {
+   "agent": "agent-a9ef7205aa48872a7",
+   "sha256": "3ee30dcd9ce53ecbd209388c0a9b3a84fe755fd32d6101da59b367cf6850e9cf",
+   "records": 684,
+   "last_timestamp": "2026-10-08T07:46:12.487Z",
+   "description": "Fix TT-batch failures and requeue"
+  },
+  {
+   "agent": "agent-aa00443384cc0cc17",
+   "sha256": "11e258db62c58e0ba07499184dd22dbed985a0864b27c5e9a74416dca619fb95",
+   "records": 386,
+   "last_timestamp": "2026-10-07T18:00:46.399Z",
+   "description": "Fix S81 collective slab defects"
+  },
+  {
+   "agent": "agent-aa01deb91bc3483e6",
+   "sha256": "2e266cc2cb1ca7dd70649cd5eb97245c17773422af481b3b2ecf212f462e55c9",
+   "records": 304,
+   "last_timestamp": "2026-10-08T06:00:37.991Z",
+   "description": "Qwen split: latency comp + SU-VM bus"
+  },
+  {
+   "agent": "agent-aa03897c8609b204e",
+   "sha256": "317348ea6e63e4bf260690591a6a7ba50ef84c168eb2812fdc55e40d0cf4ca23",
+   "records": 947,
+   "last_timestamp": "2026-10-08T05:32:24.135Z",
+   "description": "S81 field spine + measured phases"
+  },
+  {
+   "agent": "agent-aa2f03c0098690654",
+   "sha256": "f006116d14c4f2482753125942de032a429fc4734ba4e3b625f453245122a6cf",
+   "records": 1214,
+   "last_timestamp": "2026-10-06T15:50:43.575Z",
+   "description": "Resume: HBM views spine blocks"
+  },
+  {
+   "agent": "agent-aa336cf3b48781e4e",
+   "sha256": "dadf18b26fe680d4e28da6ff59958519a755b87ee91312ce109a3049174e942e",
+   "records": 435,
+   "last_timestamp": "2026-10-07T18:00:40.103Z",
+   "description": "Reindex parent margin"
+  },
+  {
+   "agent": "agent-aa562f326b58ff84a",
+   "sha256": "dc45892e35468a4ee4c4253c4b1a1a87992658031677b4f9a2a3edb54238f4ef",
+   "records": 512,
+   "last_timestamp": "2026-10-08T14:49:25.348Z",
+   "description": "Qwen: merge chain + r21m repack"
+  },
+  {
+   "agent": "agent-aa59cbe2ee11de6e1",
+   "sha256": "770078e043190a62a86d4a574a1498d3ed5789cf04eea910f41e642b1404930e",
+   "records": 53,
+   "last_timestamp": "2026-10-08T14:17:13.119Z",
+   "description": "Elements table: H1 revocations"
+  },
+  {
+   "agent": "agent-aa5c555a05ea72e60",
+   "sha256": "e739689e9daf1af61ea66e997af0cd4bc76256b6173378adea1cfe89d487d2f4",
+   "records": 126,
+   "last_timestamp": "2026-10-08T14:22:16.065Z",
+   "description": "Re-queue HBM router on H1 child commit"
+  },
+  {
+   "agent": "agent-aa5e49499f724d6af",
+   "sha256": "dce79bfef928cbcaeee2c91ebcd6f680fe7db7ec6dcb7be873fb6546f9c9ce49",
+   "records": 394,
+   "last_timestamp": "2026-10-09T01:35:53.109Z",
+   "description": "HBM attn tile split into two halves"
+  },
+  {
+   "agent": "agent-aaa35861e3142b45b",
+   "sha256": "638a6ebc27e2cac4a9bdf1a350fcf0de1dbe7b4078bec888f2c53156e1164bc0",
+   "records": 263,
+   "last_timestamp": "2026-10-09T01:15:11.171Z",
+   "description": "Credit-based ready: rx + norm"
+  },
+  {
+   "agent": "agent-aac44fbaebde53196",
+   "sha256": "95f86c84d78e2e33d4449658fb650977a04ee3009e6b0b743d628bdf68ea58a6",
+   "records": 123,
+   "last_timestamp": "2026-10-08T17:30:53.876Z",
+   "description": "Drive 1028: hq-SW \u221210 ps after strap fix"
+  },
+  {
+   "agent": "agent-aad80a1781970969a",
+   "sha256": "0c50d41854da946b3c5b9e7135d3c7462c99ae05fad71e6d2670486c4dd91275",
+   "records": 117,
+   "last_timestamp": "2026-10-08T21:04:58.906Z",
+   "description": "Loop: auto-reduce hold margin on flooding"
+  },
+  {
+   "agent": "agent-aad8a8198c1176186",
+   "sha256": "b4fbc05c6883f09b572b05679a23db77b930f534b4fb71cc7d77d2ff275633dc",
+   "records": 584,
+   "last_timestamp": "2026-10-06T17:09:19.323Z",
+   "description": "Close HBM W2 parent"
+  },
+  {
+   "agent": "agent-aadaf46c992258a35",
+   "sha256": "753cbbfd84cc4fe436d105fcc99d4a00beeea96de961122fb524cc8c25a59bad",
+   "records": 428,
+   "last_timestamp": "2026-10-09T03:04:24.904Z",
+   "description": "Hierarchical re-budgeting from real models"
+  },
+  {
+   "agent": "agent-ab0d51c4ef91fe6aa",
+   "sha256": "aeb14164a74d684beea94b5eb8e3f8ea3565825af870d78642e4404c086ac391",
+   "records": 288,
+   "last_timestamp": "2026-10-08T12:49:33.300Z",
+   "description": "Drive 0532: BF speedup + pkt SRAM redesign"
+  },
+  {
+   "agent": "agent-ab29da2c98b19c0d7",
+   "sha256": "aa21505e05bdc68ed96ec3844e8c350b9b8feefd138686f455acec16162f8c14",
+   "records": 163,
+   "last_timestamp": "2026-10-09T03:02:19.291Z",
+   "description": "Fast pre-route timing gate"
+  },
+  {
+   "agent": "agent-ab60a7b6637f63c96",
+   "sha256": "4312f007aea9aa28f80d4f17924f6fb8884b323fd747e4448a36cd900411de3f",
+   "records": 280,
+   "last_timestamp": "2026-10-09T01:58:35.964Z",
+   "description": "Orphan revoked/redesign elements"
+  },
+  {
+   "agent": "agent-abaf17b5407cd1954",
+   "sha256": "2920db0cd497d1c63d8ca976001682891614f1e45331a7c6c49349fa71ddf654",
+   "records": 333,
+   "last_timestamp": "2026-10-07T03:26:00.828Z",
+   "description": "Fix DS rate + stale Qwen paragraph"
+  },
+  {
+   "agent": "agent-abcbc8558274acb30",
+   "sha256": "ea319ca38767156068046d79a2c65228c57a1bd61435d183ac5f47d8daa7e37b",
+   "records": 443,
+   "last_timestamp": "2026-10-08T13:24:03.369Z",
+   "description": "Unstick 138 long-running jobs systemically"
+  },
+  {
+   "agent": "agent-abf41020298be7a88",
+   "sha256": "adda5f9e913437859c4f217f49366677df88075f35864bbe0ec354ed88f4a021",
+   "records": 1024,
+   "last_timestamp": "2026-10-07T15:19:32.462Z",
+   "description": "HBM SM front + tileW redesign"
+  },
+  {
+   "agent": "agent-abf73c3c8e69f01e0",
+   "sha256": "23e778120130b741e808e6a3363ad82a6810ca610fa97b54841635ce73c7c2e2",
+   "records": 871,
+   "last_timestamp": "2026-10-07T11:08:43.369Z",
+   "description": "DS BF rowfix + WFC src"
+  },
+  {
+   "agent": "agent-abf78496ac448c22b",
+   "sha256": "67acf91c56920db0eb342f9f973b26eec6d31d0e3ec75034804617e75f2b95d9",
+   "records": 60,
+   "last_timestamp": "2026-10-08T08:41:09.343Z",
+   "description": "Fleet inventory doc"
+  },
+  {
+   "agent": "agent-ac0fd55a17fa67b94",
+   "sha256": "8b5ac0a13dba336b4af413e649fa43ccb1b03825f6475cffefcd62f208c95e57",
+   "records": 536,
+   "last_timestamp": "2026-10-06T21:56:32.293Z",
+   "description": "Qwen slab margin m3 redesign"
+  },
+  {
+   "agent": "agent-ac10aaa299d1bbaef",
+   "sha256": "3912b1afd8f741844dfa2d72162802b1b7d76caa04ddfac4ecfe8bbd90ec1e0e",
+   "records": 532,
+   "last_timestamp": "2026-10-06T17:10:08.871Z",
+   "description": "Fork: selector slab"
+  },
+  {
+   "agent": "agent-ac15a9234a852fb54",
+   "sha256": "f00369427f2522b8879a4e41f6e8c7a224ce0a34d31082778aa9e5f601bed7ba",
+   "records": 1327,
+   "last_timestamp": "2026-10-06T17:09:53.416Z",
+   "description": "Resume: DS q-element PQ/Z22"
+  },
+  {
+   "agent": "agent-ac24d9ef87844fb2d",
+   "sha256": "80bed6778f7b6de5b95ff1a435e4ff454baa12cf950522c397b8b3f2a3fe16c8",
+   "records": 1435,
+   "last_timestamp": "2026-10-07T15:26:05.117Z",
+   "description": "HBM SU/router/attn/hub phase 2"
+  },
+  {
+   "agent": "agent-ac2756820caddf392",
+   "sha256": "4bd06cf11ebaf41e92ddb6c05b52a868ae36cd015109e8296257b3df5b9364fa",
+   "records": 279,
+   "last_timestamp": "2026-10-08T09:16:07.509Z",
+   "description": "Unowned flow/die gaps"
+  },
+  {
+   "agent": "agent-ac336279c3aa1467b",
+   "sha256": "a2095ce55399b51064c7d9ae3453e167d3a44645596acd731a4def57cb2f4107",
+   "records": 216,
+   "last_timestamp": "2026-10-09T03:02:10.064Z",
+   "description": "Redesign large setup misses (HBM hc/loader, rx)"
+  },
+  {
+   "agent": "agent-ac45d2ca8043d4fbc",
+   "sha256": "e46f813d9c1f67e920eef70c96a833cc12bffc81c1e823869185cb7bb5656ad1",
+   "records": 243,
+   "last_timestamp": "2026-10-08T13:55:22.072Z",
+   "description": "HBM attention tile: drop r23, fix r23h"
+  },
+  {
+   "agent": "agent-ac658879c9f9583a3",
+   "sha256": "da1f255aa5f38007712707dffe8082022c80e5756f485601cfbff8e50eb3c887",
+   "records": 212,
+   "last_timestamp": "2026-10-07T15:23:53.284Z",
+   "description": "S81 tiles phase 2"
+  },
+  {
+   "agent": "agent-ac6dc03f69b44d262",
+   "sha256": "db7fd1224ef6a60c5c9f8d84f2ea264eb476daf639cc46f32a76ae153cfb128e",
+   "records": 295,
+   "last_timestamp": "2026-10-07T11:32:49.461Z",
+   "description": "Publish Qwen 430um numbers"
+  },
+  {
+   "agent": "agent-ac73016bd0b96f7c3",
+   "sha256": "80f41dd09b2c80a8746ebf4e349931d0c66d5d889900d1e74bcd4f79daf1769e",
+   "records": 238,
+   "last_timestamp": "2026-10-09T03:30:25.485Z",
+   "description": "RESUME: embedding ROM\u2192HBM feasibility"
+  },
+  {
+   "agent": "agent-ac789f5ed6030a589",
+   "sha256": "2af958cc276fcb493dc5d6a770b9da1af5de864d7d426bee07ffa14636122b6f",
+   "records": 173,
+   "last_timestamp": "2026-10-09T03:31:19.568Z",
+   "description": "RESUME: Chip Explorer core on 8765"
+  },
+  {
+   "agent": "agent-ac79b5d90c69aa99e",
+   "sha256": "6be829eba75d6cb7f480242ef0f83749293ddce993849fcc8abd34105a9ebebd",
+   "records": 481,
+   "last_timestamp": "2026-10-09T05:38:02.364Z",
+   "description": "Qwen-on-r25 unification study"
+  },
+  {
+   "agent": "agent-ac7c778068f3c544d",
+   "sha256": "dc9bf232e8a9719b534568ca1a361362152eacea46be27c3b56375e510aa6924",
+   "records": 202,
+   "last_timestamp": "2026-10-08T19:59:59.288Z",
+   "description": "Qwen core_kv: hold ECO broke setup"
+  },
+  {
+   "agent": "agent-ac842c84af5540868",
+   "sha256": "4bfd77621445888bd9e6b3644498c17f8bb34febf48d8d1d0c80e2b815b54116",
+   "records": 295,
+   "last_timestamp": "2026-10-09T03:02:35.380Z",
+   "description": "Token critical-path flow data + views"
+  },
+  {
+   "agent": "agent-acaac02663744e339",
+   "sha256": "2f54713b7b334546b0cd303e0f7ff567c34a2fc14f33b299b2c906a8c888c769",
+   "records": 531,
+   "last_timestamp": "2026-10-06T15:04:36.056Z",
+   "description": "Margin quantiser aq12m"
+  },
+  {
+   "agent": "agent-acb21301f6a826d5c",
+   "sha256": "1da7bcfa41ab920cfb209757eb25130d4ea7c5fb96342ede0d372508b4292223",
+   "records": 309,
+   "last_timestamp": "2026-10-09T02:52:48.457Z",
+   "description": "Early-fail gates + stuck-job scanner"
+  },
+  {
+   "agent": "agent-accc3af2fd479ca5c",
+   "sha256": "cb9f1eddd79d75f1ec1ec55ed2c324066a1e626beddff6c5d2845b9f80ce660e",
+   "records": 1164,
+   "last_timestamp": "2026-10-09T05:36:49.089Z",
+   "description": "Safe variants (reviewed): Qwen"
+  },
+  {
+   "agent": "agent-ace46ec0d87cb2c94",
+   "sha256": "446fe11eb3a81d4b32c6210de2acbe1b176955bab7af484f8ddca2b58c9aa441",
+   "records": 495,
+   "last_timestamp": "2026-10-06T17:18:35.122Z",
+   "description": "Fork: VM memory subsystem"
+  },
+  {
+   "agent": "agent-aced190c32fd4ef1a",
+   "sha256": "5a0ef4a0bfa3c246f1fc7f9e53d4659c3ec72a5ca6ef0844ded3851a0a5f6c17",
+   "records": 321,
+   "last_timestamp": "2026-10-08T08:49:53.656Z",
+   "description": "Redesign pass: HBM open blocks"
+  },
+  {
+   "agent": "agent-acf333bec758af88c",
+   "sha256": "3527b4837b71c3de6701265187be5221d505d5e05baa3d9a38a2a2727d29f385",
+   "records": 528,
+   "last_timestamp": "2026-10-09T04:07:34.434Z",
+   "description": "Die evidence gaps: S81/HBM/Qwen fixes"
+  },
+  {
+   "agent": "agent-acf595a3959f270a3",
+   "sha256": "2bad159b08f155233294247682f2170179d151e5cc4ffa92d9cbdb0cea16aa7a",
+   "records": 635,
+   "last_timestamp": "2026-10-07T14:38:42.003Z",
+   "description": "Full-system RTL exactness re-run"
+  },
+  {
+   "agent": "agent-ad183a1a603528ab4",
+   "sha256": "19ddfd8884ceb52f38e1861e508ac84ddfe29582538f235e8606482f8bffe9eb",
+   "records": 794,
+   "last_timestamp": "2026-10-09T05:37:58.199Z",
+   "description": "Drive 2155: 22 failures + gate fix"
+  },
+  {
+   "agent": "agent-ad22801618315df72",
+   "sha256": "f668fbd3c3d38589b66f5048b835db316adcc9a33145692ce05da5e158a80cfe",
+   "records": 294,
+   "last_timestamp": "2026-10-09T04:13:49.272Z",
+   "description": "Drive 2056: new failures (11 HBM)"
+  },
+  {
+   "agent": "agent-ad472ddffa63a4b83",
+   "sha256": "444216d9dc84a83cc3b6cc087795fef73318aba66610e99edecc361d3bc7c25a",
+   "records": 514,
+   "last_timestamp": "2026-10-06T22:30:24.379Z",
+   "description": "DS combined L20 bench rerun"
+  },
+  {
+   "agent": "agent-ad485325ae542cff1",
+   "sha256": "9b6a77f962d3d72ce2c8d136a78c30cda2ace45f172cad5591cfc91d0aad3439",
+   "records": 125,
+   "last_timestamp": "2026-10-08T09:44:20.102Z",
+   "description": "Fleet viz v3: internal view"
+  },
+  {
+   "agent": "agent-ad56a94fa60964df5",
+   "sha256": "5cdc62da54ec5763ac72d760804e7c86ce6a745146060929075773d6aa17077c",
+   "records": 469,
+   "last_timestamp": "2026-10-06T21:57:42.285Z",
+   "description": "Qwen token + protected transport"
+  },
+  {
+   "agent": "agent-ad65053cb9acd97a5",
+   "sha256": "e48c08c442ec42d52b63bc8b1db08199b969cb8685b14f84a7316ce6e3da6384",
+   "records": 443,
+   "last_timestamp": "2026-10-08T22:03:38.415Z",
+   "description": "Orphan open blocks: structural redesign"
+  },
+  {
+   "agent": "agent-ad66e298a418bf9fa",
+   "sha256": "2070890cd434e53a52eb4725272f31c8676cb2133b6644e6374a3e6922b1cd25",
+   "records": 159,
+   "last_timestamp": "2026-10-08T18:40:56.811Z",
+   "description": "Sweep forwarded-clock blocks re-judge"
+  },
+  {
+   "agent": "agent-ad6f8b216bf572a08",
+   "sha256": "4979e473d9fd8d89b0072ca8102dee92372c0b27ab7a4eeff452e03b5e97c94a",
+   "records": 196,
+   "last_timestamp": "2026-10-09T02:07:10.592Z",
+   "description": "colt_lane + calibrate at route corner"
+  },
+  {
+   "agent": "agent-ad6fc70532fd0d054",
+   "sha256": "bcea0baec175850ab7386168f574b51a9bc7a3a5996a61d3394557ef31f03607",
+   "records": 230,
+   "last_timestamp": "2026-10-08T23:39:46.232Z",
+   "description": "BF: relaunch on fixed flow"
+  },
+  {
+   "agent": "agent-ad812d5c90dbe8cd1",
+   "sha256": "90f1aa4cdfd69b8d4bf83de3028c8210699b376867ccb0f7d73f8ac434adcf3a",
+   "records": 256,
+   "last_timestamp": "2026-10-09T05:00:30.645Z",
+   "description": "Re-price headline numbers with closure costs"
+  },
+  {
+   "agent": "agent-ad969f8741d7b5586",
+   "sha256": "5811c5844f263d424631a66473135a506d0241d4c9a09b6121c7f1ff20b75251",
+   "records": 246,
+   "last_timestamp": "2026-10-08T21:52:19.651Z",
+   "description": "S81 die view index vs closures"
+  },
+  {
+   "agent": "agent-ad9d963a105835e6b",
+   "sha256": "83eb5506c5176c2778af8919790ee37c93146b38254d6598dd48002cdbdc96d9",
+   "records": 703,
+   "last_timestamp": "2026-10-06T17:13:18.877Z",
+   "description": "Close DS fused head + glue"
+  },
+  {
+   "agent": "agent-ada2afdfab269fc31",
+   "sha256": "a92982165c05599aa7436775cea6c16d2f69f3b78e0ccdab3489c2b7d817c716",
+   "records": 568,
+   "last_timestamp": "2026-10-09T05:37:48.737Z",
+   "description": "HBM die: system/control gaps"
+  },
+  {
+   "agent": "agent-ada62f8c3e40d77ab",
+   "sha256": "57e87bd4729eb19c5eaea77721eb2c06bd5fb37dc34f5fc904934e34b493652e",
+   "records": 196,
+   "last_timestamp": "2026-10-08T10:38:20.680Z",
+   "description": "Fleet viz: record + replay"
+  },
+  {
+   "agent": "agent-adb5689f2d5174400",
+   "sha256": "5db37c60a22145cee4e3dbe917ebfe697fd75451759c2555a3e9b706bd4cccfc",
+   "records": 366,
+   "last_timestamp": "2026-10-08T07:42:55.062Z",
+   "description": "Regenerate deleted bench fixtures"
+  },
+  {
+   "agent": "agent-adb8f160bee58187f",
+   "sha256": "9a136b3158cf08fbcd15f46f77edd9dd10f20f4145d408de7d26ad5834ae2417",
+   "records": 105,
+   "last_timestamp": "2026-10-09T05:38:56.976Z",
+   "description": "Token-path re-export automation"
+  },
+  {
+   "agent": "agent-ade857f6be84b8c9d",
+   "sha256": "a52608e2a1616df0e3224ab7094c54dd734758bcae99ee6930564b4a68a5d5d4",
+   "records": 443,
+   "last_timestamp": "2026-10-09T03:02:41.959Z",
+   "description": "Chip Explorer on 8765: maps, cards, nav"
+  },
+  {
+   "agent": "agent-adea6f6f79f13d4a8",
+   "sha256": "56e2c453435d335ce0a4c7ded077792dec888925396f4c2c9c8fe07019a42b0a",
+   "records": 1261,
+   "last_timestamp": "2026-10-08T04:45:07.595Z",
+   "description": "S81 remaining blocks closure"
+  },
+  {
+   "agent": "agent-adf009792d80660e6",
+   "sha256": "e470de5d938b51ff6f4e6d0115767ceb869c2e70b5cfb73f8c4a7f105b37e289",
+   "records": 899,
+   "last_timestamp": "2026-10-07T15:14:11.687Z",
+   "description": "DS BF pair doubling plan + build"
+  },
+  {
+   "agent": "agent-adff3d1dda488d4ca",
+   "sha256": "8b019cf0d84a84ec79db81517b71369a1bed7ea8e4670b8e3344e92693b1fc92",
+   "records": 713,
+   "last_timestamp": "2026-10-06T22:28:37.253Z",
+   "description": "DS S81 die re-run continue"
+  },
+  {
+   "agent": "agent-ae12bbb7e27fed205",
+   "sha256": "aafda6261f6e6437f8d74644e62c8fd7565c28ca622377da7da2643a5a9a4182",
+   "records": 303,
+   "last_timestamp": "2026-10-08T15:59:16.250Z",
+   "description": "HBM norm engine: lane-group split"
+  },
+  {
+   "agent": "agent-ae13210d093dd8552",
+   "sha256": "b0f3762fc94ebbb73c374b9b0b196ad5f66a37d5bff8343a0a399649f8730705",
+   "records": 539,
+   "last_timestamp": "2026-10-09T04:02:41.636Z",
+   "description": "RESUME: hierarchical re-budgeting"
+  },
+  {
+   "agent": "agent-ae1f32496888b7c18",
+   "sha256": "3848729e936336254f660f18c084cfa16d9bd3d75566e84eeb75ad8c94e160a8",
+   "records": 381,
+   "last_timestamp": "2026-10-09T03:06:38.922Z",
+   "description": "S81 die generator regression + cfifo"
+  },
+  {
+   "agent": "agent-ae20b1596c2509520",
+   "sha256": "afcf06e1c8e1066bc3df87d4c8af569a2a10e10e5e35800c6bf8a8905ec5220b",
+   "records": 843,
+   "last_timestamp": "2026-10-06T22:29:33.502Z",
+   "description": "HBM SU ctl + attn Option B"
+  },
+  {
+   "agent": "agent-ae221f249fbfdd4e0",
+   "sha256": "b0739bde7228c0453d0addb722c4efcae7230295146e769d82ca94bbe5adb8e4",
+   "records": 110,
+   "last_timestamp": "2026-10-08T08:47:58.171Z",
+   "description": "Live fleet load visualizer (8765)"
+  },
+  {
+   "agent": "agent-ae29f7efccc21709e",
+   "sha256": "0e14ddf8b9160e7f2da5ce464d14f5432627454f6f610d928302be30c58ce886",
+   "records": 114,
+   "last_timestamp": "2026-10-09T03:44:33.608Z",
+   "description": "RESUME: floorplan margin lint (merge)"
+  },
+  {
+   "agent": "agent-ae397c90901c785b0",
+   "sha256": "6274565b96a2629bc22a075fe05c141abd8ef16ff37f1f5a8384bbc7b9a8e55d",
+   "records": 582,
+   "last_timestamp": "2026-10-09T05:46:58.846Z",
+   "description": "Qwen embedding \u2192 HBM: full design"
+  },
+  {
+   "agent": "agent-ae3cf239f73a2b228",
+   "sha256": "2340c4f76c9241375d13ea8c53a286c9ad13dc34dadb8f49bd44bd3f898fdd66",
+   "records": 294,
+   "last_timestamp": "2026-10-09T05:37:50.067Z",
+   "description": "HBM die: wire every functional port"
+  },
+  {
+   "agent": "agent-ae593331956ddc58e",
+   "sha256": "92a74d9bc62ee7d792102fdbe76c00a42bcf098dca392e0902a47ab36c379833",
+   "records": 79,
+   "last_timestamp": "2026-10-09T03:25:04.060Z",
+   "description": "RESUME: miss dossier for review"
+  },
+  {
+   "agent": "agent-ae5d3e408ca82e269",
+   "sha256": "713c5c26c56e83b2f74c894c451148ee88179c12ceb05591edcdf3dc9af07551",
+   "records": 640,
+   "last_timestamp": "2026-10-06T23:53:44.404Z",
+   "description": "Qwen die masters closure inventory + tile routes"
+  },
+  {
+   "agent": "agent-ae694ba2baeaab7df",
+   "sha256": "5a9d7903594712e95c771f2edfe6c3ebe9b81d305278862d044756c0542de3e8",
+   "records": 1206,
+   "last_timestamp": "2026-10-09T04:28:03.624Z",
+   "description": "Safe variants (reviewed): HBM"
+  },
+  {
+   "agent": "agent-ae8a3fd5bf8e9457b",
+   "sha256": "92d163aa805cd8f61720c609185acf72fb05ae2a858e0ba8122ee2d288a4cbc6",
+   "records": 1089,
+   "last_timestamp": "2026-10-08T06:40:30.152Z",
+   "description": "Qwen die-top + die signoff"
+  },
+  {
+   "agent": "agent-ae935634630caffdd",
+   "sha256": "bb702052ad353b71139b214faf94697a1cc8964ad6468c4007b8d562a1bc6297",
+   "records": 255,
+   "last_timestamp": "2026-10-09T01:38:19.867Z",
+   "description": "HBM die: region DRT + hold-pad fix"
+  },
+  {
+   "agent": "agent-ae9f822a0f4b4512c",
+   "sha256": "a14e05242f134d2dc6afa04b8419555e936c611c280be0246011d342c6bc6956",
+   "records": 468,
+   "last_timestamp": "2026-10-09T00:16:16.301Z",
+   "description": "S81 die-level timing: hold, relays, stations"
+  },
+  {
+   "agent": "agent-aeb1413ab7408775b",
+   "sha256": "a8edfc4f3dbc3ebbb3a7f9f7994223a699b8af23c8b130871e4b7faa74c33172",
+   "records": 312,
+   "last_timestamp": "2026-10-06T22:33:34.531Z",
+   "description": "Qwen full token with KV_MAP=1"
+  },
+  {
+   "agent": "agent-aec0c31c5b2376d4f",
+   "sha256": "55c0e71d8bb8a989f835ded685f0a1a15225164b05e50c8117362344fb37cb78",
+   "records": 1378,
+   "last_timestamp": "2026-10-07T15:49:37.725Z",
+   "description": "S81 die integration continue"
+  },
+  {
+   "agent": "agent-aecc569cda4560595",
+   "sha256": "df8bd135ab6492e74718fef59ddfe45ba35ac28c968b5876805c0c1fc39e13d7",
+   "records": 311,
+   "last_timestamp": "2026-10-08T22:58:32.586Z",
+   "description": "HBM VM8 nws spread: timing + DRC"
+  },
+  {
+   "agent": "agent-aecef3b3df7e49027",
+   "sha256": "9379b7a8fb5bb95af4acf7a26c5475f758bb186e68aa92399459eca5ac0f6717",
+   "records": 1346,
+   "last_timestamp": "2026-10-07T18:00:51.556Z",
+   "description": "HBM views phase 3"
+  },
+  {
+   "agent": "agent-aed6a51822cb75962",
+   "sha256": "20f0893d496af830c14e93e76b513a663fb7fb2255342b8e37cdfcd35008602a",
+   "records": 1085,
+   "last_timestamp": "2026-10-07T06:12:13.015Z",
+   "description": "DS PQ + WFC closure"
+  },
+  {
+   "agent": "agent-aedf0bcfcf831e5a7",
+   "sha256": "e29e999b52538877823a1253c7824bc55076c9bc41e9e47c585ee08c622149d6",
+   "records": 478,
+   "last_timestamp": "2026-10-09T05:25:26.963Z",
+   "description": "Audit die views for tied-off ports"
+  },
+  {
+   "agent": "agent-aee5f92cdfa42916b",
+   "sha256": "826d7acc3e01e104199190aaaa4d56cf45fb1bb9c0517f7a40a35838526833e6",
+   "records": 236,
+   "last_timestamp": "2026-10-08T13:56:43.723Z",
+   "description": "Drive 0602: Qwen core_kv_banked"
+  },
+  {
+   "agent": "agent-af105a305c38cfa4d",
+   "sha256": "e5adbd947fb081f9bee2f2f75dc89a935e828dc589594394de581220e79b0fe1",
+   "records": 111,
+   "last_timestamp": "2026-10-08T23:02:14.444Z",
+   "description": "Merge PQ root CAM round 2"
+  },
+  {
+   "agent": "agent-af21aae3a6c72e7f9",
+   "sha256": "7f5cb1224e1098c1994848fbcc7517beb68badd6e84bb2f45ff2a87fd30f1f25",
+   "records": 1391,
+   "last_timestamp": "2026-10-07T04:39:20.425Z",
+   "description": "HBM missing views: finish all"
+  },
+  {
+   "agent": "agent-af23d79c9388e815d",
+   "sha256": "9aa9254f2bd3bde9470ee18207f3123057cb859a534b7c889636cc6f2b4b63fe",
+   "records": 698,
+   "last_timestamp": "2026-10-08T05:51:03.619Z",
+   "description": "Qwen missing masters: RTL partition"
+  },
+  {
+   "agent": "agent-af35ac992fb5d7f71",
+   "sha256": "d4231671b8609356c2279684cde1c6f460ee43d996347882ce97694d2908fd14",
+   "records": 1055,
+   "last_timestamp": "2026-10-09T05:37:48.512Z",
+   "description": "MTP ROM: sequencer + draft dies design"
+  },
+  {
+   "agent": "agent-af3d2a051d60986db",
+   "sha256": "ea141c6fbd39f66c77dc9cc05cc36d205dfa678441db91b8951eca263e061bba",
+   "records": 798,
+   "last_timestamp": "2026-10-06T17:10:30.304Z",
+   "description": "Resume: DS softmax fusion"
+  },
+  {
+   "agent": "agent-af6bc72d6161a56d0",
+   "sha256": "0120c42a34949717bd09fad0c3a91df551dd6213bde58af62514be55f4b4ecfe",
+   "records": 57,
+   "last_timestamp": "2026-10-09T02:12:38.316Z",
+   "description": "Merge qfd_cst closure"
+  },
+  {
+   "agent": "agent-af735dd7cd01b9ec7",
+   "sha256": "4a293f9fd40c35086835c947b72f5aad28dd3ea6222c429029076cff9eec2a9f",
+   "records": 169,
+   "last_timestamp": "2026-10-09T01:04:31.960Z",
+   "description": "Die-level evidence report with error bars"
+  },
+  {
+   "agent": "agent-af9c179f8fa019d0e",
+   "sha256": "60bbd3aa077677e5804eb350851caec2dcc101a6d84877c62149d6a5c5ec54e2",
+   "records": 236,
+   "last_timestamp": "2026-10-08T14:46:12.420Z",
+   "description": "Merge all usable closures to main"
+  },
+  {
+   "agent": "agent-afc09c680f2ab16e6",
+   "sha256": "8f88d9d1c829959c112adfe20c2996b5ea6657192059569da0ff1c2fb2d7213f",
+   "records": 316,
+   "last_timestamp": "2026-10-09T03:50:13.172Z",
+   "description": "Drive 2041: unowned orphans + merge"
+  },
+  {
+   "agent": "agent-afc401c02b7bee14e",
+   "sha256": "649c80f98db70c1c62bcff989e7f5c1665523f630c02b05d8c11a437484bbe36",
+   "records": 1378,
+   "last_timestamp": "2026-10-08T05:33:48.183Z",
+   "description": "HBM die: index, relays, die route"
+  },
+  {
+   "agent": "agent-affdda96b93bb849b",
+   "sha256": "366f828f3e69db330a3dea719dca17db3add2b3e56bcc7f0ca630ffc8fada9f9",
+   "records": 78,
+   "last_timestamp": "2026-10-06T16:03:03.116Z",
+   "description": "Survey VM/gather/capture RTL"
+  },
+  {
+   "agent": "agent-affe34171b58920d1",
+   "sha256": "5eb16b7be32c2fc3a63057923d489d32aa3e6e669efecc7fae61b96eec869540",
+   "records": 760,
+   "last_timestamp": "2026-10-08T05:38:13.406Z",
+   "description": "Mass TT re-route of every element"
+  }
+ ],
+ "owner_overrides": {
+  "12960": {
+   "timestamp": "2026-10-08T03:09:51.451Z",
+   "role": "user",
+   "instruction": "We do not need the plus 15 margin. The plus 15 margin is for your design. Because this is just for your reference in your design, not the final closure. If it comes up with a root with less than 15, this kind of margin, I feel that it is acceptable."
+  },
+  "13104": {
+   "timestamp": "2026-10-08T03:19:43.460Z",
+   "role": "user",
+   "instruction": "Yes, go with option B and pause all the efforts to close at the current option A."
+  }
+ },
+ "scope": "Read-only recovery of recorded trajectories; process liveness and hardware completion require independent current-state checks. No credentials or raw transcripts copied."
+}

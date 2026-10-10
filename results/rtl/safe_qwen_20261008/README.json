@@ -1,0 +1,7 @@
+{
+ "schema": "opentallas.safe_qwen.evidence.v1",
+ "stream": "safe-qwen 2026-10-08 (REVIEW_20261008 A1-A6, D1, D2, X1-X3)",
+ "qfd_link_rx128_o302_hm10-440e36808-tc_resta": "routed DB of closure-loop job qfd_link_rx128_o302_hm10-440e36808-tc (localhost) re-timed by tools/w18/corner_sta_ref.py with physical/qwen_die_masters/signoff/qfd_link_rx128_o302.sdc (wclk / rclk bound; the route's own sign-off used the single-clock template on a non-existent port clk): TT -22.45 (5 endpoints, all g_af.u_af.rd_bin[1] -> od_q[*]), IO in +134.57 / out +131.57, FF hold -4.29 (1 input pin), SS -305.55 sensitivity; was TT -695.87 / FF -69.53",
+ "qfd_io_xfifo_p-3d5ad2a4ftt_cdc_check": "4_cts.odb of the hold-killed closure-loop job qfd_io_xfifo_p-3d5ad2a4ftt (ot-epyc4) at FF with its sign-off SDC (signoff/qfd_io_xfifo_p.sdc): every hold violation is same-clock (ck/cks/cku/ckd reg->port, od_q->odp, pin relay); no cross-clock (CDC) violation, so no async exception is missing",
+ "qfd_sp_constants_sequencer_fqh_txn": "tb_fqh_txn.sv (the generated sequencer bench with the reference controller at FQ_HEAD=0 and the master at FQ_HEAD=1, CYCLES=20000): per-type event streams; LD (decoded instruction words at load) 58 = 58 identical, SU issues 29 = 29 identical, ME / KV issues 0 (the random image issues none)"
+}

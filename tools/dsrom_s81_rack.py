@@ -68,6 +68,22 @@ GEOM = _AD.FIELD_GEOM
 _G = json.loads((ROOT / REPRICE).read_text())["geoms"][GEOM] if GEOM else {}
 STAGES = _G.get("stages", S81_STAGES)
 assert _G.get("layer_dies", STAGES * RANKS) == STAGES * RANKS, "re-price layer dies are not stages x TP4"
+# Array v2 (s81-dies 2026-10-08, tools/dsrom_array_v2.py): set_mapping() re-packs the rack at another stage count and
+# die counts (the 1,792 mapping: HALF_PHL 120 stages / 480 layer dies).  Default unset: this record stays the 85-stage
+# f183.60 geometry that tools/dsrom_1m_allmeasured.py composes (its per-hop cable classes and the extra-stage rule).
+COUNTS_OVERRIDE = None
+GEOM_OVERRIDE = None
+SCAN_STAGES_OVERRIDE = None  # array v2: the mapping's own scan service homes (its stage_map.json), not scaled S81 homes
+DIE_W_OVERRIDE = {}          # role -> W a die (array v2: per-die-type power; default the busiest-layer-die / C1 values)
+
+
+def set_mapping(stages, counts, geometry):
+    """re-pack at `stages` with explicit die counts (dict stages/layer/head/table/draft/dies/src) and a geometry note"""
+    global STAGES, COUNTS_OVERRIDE, GEOM_OVERRIDE
+    assert counts["layer"] == stages * RANKS and counts["stages"] == stages
+    STAGES, COUNTS_OVERRIDE, GEOM_OVERRIDE = stages, dict(counts), dict(geometry)
+
+
 PKG_PER_TRAY = 4                 # rack study: 1 OU liquid tray of four two-die packages
 RACK_PITCH_M = 0.6               # ORv3 frame width (Open Rack v3, 600 mm)
 REAR_LEG_M = 0.4                 # tray rear edge to the cable channel, each end (rack study adjacent-tray 0.798 m)
@@ -82,6 +98,8 @@ def sha(p):
 
 
 def counts():
+    if COUNTS_OVERRIDE:
+        return dict(COUNTS_OVERRIDE)
     hr = J(HEADREC)
     head = hr["verdict"]["recommended_head_dies"]
     total = next(v for v in hr["variants"] if v["NV"] == 5)["head_groups"][str(head)]["total_dies"]
@@ -107,6 +125,8 @@ def stacks(c):
     m81 = S81_STAGES - tail
     m = STAGES - tail
     scan_stages = [round(h * m / m81) for h in s81_homes]                  # identity at S81
+    if SCAN_STAGES_OVERRIDE:
+        scan_stages = list(SCAN_STAGES_OVERRIDE)
     assert len(set(scan_stages)) == len(s81_homes) and max(scan_stages) < m
     scan_dies = RANKS * len(scan_stages)
     per = dict(scan=4, layer=1, head=4, table=0, draft=0)
@@ -175,6 +195,10 @@ def build():
         return st["per_die"][p["r"]]
 
     def die_w(p):
+        if p["r"] in DIE_W_OVERRIDE:
+            return DIE_W_OVERRIDE[p["r"]]
+        if p["r"] == "stage" and DIE_W_OVERRIDE:
+            return DIE_W_OVERRIDE["scan" if p["s"] in scan else "layer"]
         return HT_W if p["r"] in ("head", "table") else LAYER_W
 
     def tray(kind, pks, label):
@@ -280,7 +304,7 @@ def build():
         decision_links="OWNER 2026-10-06: full RS(544,514) FEC on every off-package link (board, in-rack cable, rack "
                        "to rack) for both the DS ROM array and the HBM accelerator; light FEC is not used anywhere. "
                        "In-package UCIe keeps its own spec.",
-        geometry=dict(field_geom=GEOM, stages=STAGES, layer_dies=STAGES * RANKS, s81_stages=S81_STAGES,
+        geometry=dict(GEOM_OVERRIDE) if GEOM_OVERRIDE else dict(field_geom=GEOM, stages=STAGES, layer_dies=STAGES * RANKS, s81_stages=S81_STAGES,
                       extra_stages=STAGES - S81_STAGES, label=_G.get("label"),
                       pairs_per_layer_die=_G.get("pairs"),
                       src=f"{REPRICE} geoms['{GEOM}'] (default QELEM, owner go 3661e31c6)"),

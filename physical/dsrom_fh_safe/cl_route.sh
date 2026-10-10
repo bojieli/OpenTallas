@@ -119,10 +119,16 @@ python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "$
  --keep-workdir "$O/work" --nickname-tag $LBL --keep-heavy-artifacts --output "$O/physical.json" "$@" > $O/run.log 2>&1
 rc=$?; result_rc=$rc; echo "rc=$rc" > $O/exit
 if [ $rc = 0 ] && ! echo "$*" | grep -q -- --pnr-stop-after; then
- python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs "${MAC[@]}" --post-sdc $G/signoff_$V.sdc --output $O/corner_sta.json > $O/sta.log 2>&1
+ # Opt-in endpoint correction: real-clock IO delays need the routed insertion in
+ # each corner. io_ref_routed alone only moves virtual reference clocks.
+ POST=(--post-sdc "$G/signoff_$V.sdc")
+ if [ "$V" = ep ] && [ "${FH_ROUTED_BOUNDARY:-0}" = 1 ]; then
+  POST+=(--post-sdc physical/common_flow/io_ref_routed.sdc --post-sdc physical/dsrom_fh_safe/routed_boundary.sdc)
+ fi
+ python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs "${MAC[@]}" "${POST[@]}" --output $O/corner_sta.json > $O/sta.log 2>&1
  corner_rc=$?; echo "corner_rc=$corner_rc" >> $O/exit
  if [ "$corner_rc" -ne 0 ]; then result_rc=$corner_rc; fi
- python3 tools/w18/export_view.py --orfs-dir $O/work/orfs --name $TOP --post-sdc $G/signoff_$V.sdc "${MAC[@]}" --out $O/view > $O/export.log 2>&1
+ python3 tools/w18/export_view.py --orfs-dir $O/work/orfs --name $TOP "${POST[@]}" "${MAC[@]}" --out $O/view > $O/export.log 2>&1
  export_rc=$?; echo "export_rc=$export_rc" >> $O/exit
  if [ "$export_rc" -ne 0 ]; then result_rc=$export_rc; fi
 fi

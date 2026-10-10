@@ -1,0 +1,124 @@
+{
+ "name": "qfd_sp_res_ser_tsr41-a66978536-tc-bal32",
+ "block": "qfd_sp_res_ser",
+ "owner": "Codex:qwen-block-closure",
+ "purpose": "Approved geometry-only repair: actual full-shape pin-map gate 4982 pins PASS, no overlap/duplicate/outside original face, within12bits/um/layer. Uniform coordinates on original full-face region alternating32-pin M4/M6 or M5/M7. RTL byte-identical942f13c8a, inherited positive/negative exactness and A6 token gate preserved; no latency/frame delta. Previous failure preserved qfd_sp_res_ser_tsr41-942f13c8atc. safe-qwen 2026-10-08 (REVIEW_20261008, binding): S-A6 supply side (reviewer addendum ~21:20): res_ser_tsr with RS 40 -> 41 -- rok drops one burst earlier, i.e. the supply signals ready one edge earlier, covering the sequencer's me_mem_ok station (qfd_sp_constants_sequencer_fqs) | current flow: TC route (OT_ORFS_CORNER_OVERRIDE=TC, tt_overlay, CTS fix hooks), mm route hold repair at HM 10 with the HM guard, route-time FF hold at io_ref_routed (route-ff-ioref), early-fail gates; Qwen IO referenced in-run to the block's own propagated clock (io_ref_skew.sdc: the same variant's insertion; no calibrate) | SQ-9 requeue (reviewer ~22:20): same RTL, two-layer pin spread PIN_H='M4 M6' / PIN_V='M5 M7' (the previous route stopped at FLOORPLAN_MARGIN, 20.5-20.8 b/um on M4), 0 cycles",
+ "hosts": [
+  "ot-epyc4",
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "codex/qwen-hub-pin-groups-20261008",
+  "commit": "a66978536dd9aaf28beb9b9d2593c99d5b95016f"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "res_ports_s3",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GSEED=3 -GCYCLES=40000 -GTSR=1 --Mdir {RUN}/bench/res_ports_s3 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/res_ports_s3/Vtb_qfd_vm_bv_ports",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_vm_bv_ports"
+   },
+   {
+    "name": "res_ports_smut",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GSMUT=1 -GTSR=1 --Mdir {RUN}/bench/res_ports_smut rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/res_ports_smut/Vtb_qfd_vm_bv_ports",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_vm_bv_ports"
+   },
+   {
+    "name": "landed_exact",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_vm_me/run_spine_landed.sh {RUN}/bench/landed_exact -GCYCLES=40000 -GTSR=1 -GRSD=5",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_spine_landed"
+   },
+   {
+    "name": "landed_smut",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_vm_me/run_spine_landed.sh {RUN}/bench/landed_smut -GSMUT=1 -GTSR=1 -GRSD=5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_spine_landed"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+  },
+  "route": {
+   "cmd": "export OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_sp_res_ser_tsr41.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_res_ser_tsr41 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_res_ser --post-sdc physical/qwen_die_masters/signoff/qfd_sp_res_ser.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_sp_res_ser > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_sp_res_ser_tsr41.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+  "session": "mm"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_pin_balance_candidates/qfd_sp_res_ser_tsr41-a66978536-tc-bal32/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_hub_pin_groups_20261008/qfd_sp_res_ser_tsr41-a66978536-tc-bal32"
+  }
+ ],
+ "cycles_added": "0 cycles on the result path; one more burst of serializer room reserved (stall one burst earlier at full occupancy)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC"
+}

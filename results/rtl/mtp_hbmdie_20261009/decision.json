@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.mtp_hbmdie.decision.v1",
+ "stream": "mtp-lead (fork F), 2026-10-09",
+ "die": "R25G generic HBM die (hgi-takeover / hbm-forks); preset r25gm = R25G + mtp_master 'hgi_native'; R25G switches to it automatically when hgi_mtp_native and hfd_cmdproc_s_mtp_native_mx1 have CLOSED verdicts (tools/hbm_accel_die_fp.py _mtp_generic_closed)",
+ "master": {
+  "chosen": "hgi_mtp_native (rtl/hbm_accel/generic/hgi_mtp_native.sv) = hfd_mtp_x_cp_stop EXTERNAL_AM=1 (native full-context DSpark controller, gamma 5 / 40 layers / WR 256 / RLOG 16'h0111 / SR 10 / CKMAX 2^20 / XSEL / STOP+EOS) behind the 197/517 CP facade, without the 523-bit su_red logit group; CP south band = hfd_cmdproc_s_mtp_native_mx1 (MX1: transaction join, finite-8 emit queue, drained reset)",
+  "why": [
+   "On the generic die the argmax is a program record: ARGMAX.LOCAL in the ARGMAX unit (unit 7, ot_hgi_argmax18_m) + COLL.ARGMAX_MERGE.  The master must take the MERGED id from the CP (EXTERNAL_AM / CP-result form).  hfd_mtp (r25m) and hgi's ot_hgi_mtp_core18 both carry an internal shard argmax (AMF) fed by a 523-bit logit bus plus an am -> coll -> merged loop: a second argmax beside the ARGMAX unit.",
+   "core18 is the legacy x-master interface (16-bit prompt/forced addresses, no EOS/stop, no 1M-context counters); the cp_stop lineage has 20-bit positions, 21-bit counters, EOS / max-position stop and the checked CP-result input, and is already paired with the MX1 CP (t_mtp 197 / f_mtp 517 / f_am 18) and its connected closed-control bench.",
+   "Token width 17: DS vocab 129,280 < 2^17.  The generic interface's 18-bit ids are cp_vocab-checked by the CP before f_am (bit 17 is 0 for DS).  Qwen MTP is reserved (HBM_GENERIC_INTERFACE 10.3); if the owner enables it after tau, the 18-bit controller is hgi's core18 lineage or this master at TW 18 (ot_hfd_mtp_core_cp_stop is TW-parameterised; MX1 join / backend / queue are 17-bit literal and would need widening)."
+  ],
+  "rejected": {
+   "hfd_mtp / hfd_mtp_x_stop (r25m 126/320 + 657 su_red)": "internal argmax duplicate of the ARGMAX unit; 657-bit su_red bus; legacy 320/126 CP pair has no transaction identity",
+   "ot_hgi_mtp_core18 (hgi)": "same internal-argmax structure at TW 18; legacy address widths; no stop/EOS; kept as the Qwen-MTP candidate",
+   "MX1 alone": "MX1 is the CP-side half (cmdproc_s), not the controller; it is used as the CP band of the chosen master"
+  }
+ },
+ "bus_reconciliation": {
+  "cmdproc_s -> mtp (t_mtp / f_cmdproc)": 197,
+  "mtp -> cmdproc_s (t_cmdproc / f_mtp)": 517,
+  "router -> mtp (XSEL selections x_v, x_draft, x_ids 54, x_col 3)": 59,
+  "mtp -> router (t_v, t_ids 54, t_col 3)": 58,
+  "mtp -> coll (expert union u_v, u_id 9, u_mask 8, u_last)": 19,
+  "coll -> mtp (u_ready)": 1,
+  "hgi_argmax_cmd 683 / hgi_argmax_ret 3": "unchanged hgi_die_dispatch ARGMAX dispatch, from the MX1 band (cp_band_alias), to the ARGMAX unit in this slot",
+  "su_red -> mtp ARGMAX STREAM": 523,
+  "mtp -> VM ARGMAX O {value 32, id 18, nan, fault, range_fault}": 53,
+  "controller tracks": 851,
+  "r25m hfd_mtp tracks (replaced)": 1317,
+  "note": "the 683-bit argmax dispatch is the ARGMAX unit's normative record (header 128 + desc A/O 512 + n 42 + valid), not an MTP bus; the MTP master never sees it"
+ },
+ "evidence": {
+  "gate": "results/rtl/mtp_hbmdie_20261009/gate.json PASS: connected MX1 closed control with hgi_mtp_native (MX1 drained reset twice, 40-layer paired results, finite queue, 25,486 cycles) PASS + wrong-completion-job mutant FAIL; controller CP-result EOS / ngen / maxpos x reset-first 6/6 PASS",
+  "die_check": "results/rtl/mtp_hbmdie_20261009/die_check.json PASS 149 checks (bus widths = RTL ports both ends; contract contiguous and bound in the facade; MX1 ports.json = RTL; slot fits controller + ARGMAX unit); network_probe build (R25G retiled SM grid has no qualified full build)"
+ },
+ "open": {
+  "hgi_seq": "CTL.AMAX: read VM A[0] per verify row after COLL.ARGMAX_MERGE, cp_vocab check, drive MX1 f_am {valid, id[16:0]} (reserved op today, faults)",
+  "backend_translator": "generic backend: MX1 t_backend eng_cmd 201 {op, idx, ncol, pos, tok1, toks 8x17} + job/gen/sequence -> ot_hgi_seq doorbell {token, pos, job, gen, entry verify/draft, ncol} + per-slot TOKEN DYN banks; completions (CTL.END) -> f_backend {ready, cpl_v, job, gen, sequence, fault, drained}.  ot_hbm_native_mtp_operation_backend_mx1 is the DS full20 (kernel-PC launch) form, not the hgi sequencer form.",
+  "host_provider": "MX1 f_host 216 / t_host 5 / t_emit_host 100 / f_emit_host 2 / t_drained / t_abort (host doorbell + emit path); f_provider 179 / t_provider 43 / t_emit 38 (prompt / forced token reads, spec-state requests)",
+  "closed_view_pins": "router f_mtp 58 / t_mtp 59 (XSEL draft selections: functional router change, not pins only); coll f_mtp 19 / t_mtp 1 (union stream); su_red t_am_stream 523; VM se f_am_o 53; CP south hgi dispatch t_hgi_argmax 683 / f_hgi_argmax 3 (MX1 RTL has none)",
+  "argmax_unit_wrapper": "ot_hgi_argmax18_m + its dispatch binding (cfg_rank from DYN RANK, cfg_imm_a from the header) as the slot's second instance (hgi-takeover)"
+ },
+ "connected_die_bench_plan": [
+  "1. (exists, PASS) controller + MX1 join / backend(full20 form) / queue: tools/hgi_mtp_native_gate.py",
+  "2. replace the full20 backend by the generic backend translator + ot_hgi_seq running the DS manifest's entry_verify / entry_draft records with stub engines that return per-row logits from a golden trace; ARGMAX unit ot_hgi_argmax18_m on the STREAM; COLL.ARGMAX_MERGE as the existing coll merge model over 96 ranks (or 1 rank + offsets); CTL.AMAX -> f_am",
+  "3. golden: the round-1 HBM DSpark traces (results/rtl/mtp_exact_20261008/hbm forced / forced_w16 / dspark) - emitted tokens and accept counts must match cycle-independently; mutants: wrong slot order at AMAX, bit-17 id through cp_vocab, stale job at the backend, dropped union beat",
+  "4. lint the R25GM die top with die_top_lint once R25G has a full (non-probe) build"
+ ],
+ "update_2026_10_09_late": {
+  "controller": "hgi_mtp_native CLOSED (hgi_mtp_native-nreg-a-lvt-eaea6da41-tc TT +10.43 / FF +1.80, main 331227e92); view physical/hbm_accel_die_views/mtp_hgi (286.56 x 200.88, 853 pins)",
+  "argmax_unit": "ot_hgi_argmax18_m CLOSED (hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl TT +52.2 / FF +11.54 / DRC 0); view exported from its installed db: physical/hbm_accel_die_views/argmax_hgi (180 x 140, 604 pins, LEF == routed netlist)",
+  "slot": "two-instance MD-7 slot 466.56 x 200.88: hb_mtp hgi_mtp_native (west, 286.56 x 200.88) + hb_mtp_am ot_hgi_argmax18_m (east, 180 x 140), bottom-aligned, exactly fills the width (variant key spine_slot_split; dispatch unit block argmax -> mtp_am via hgi_unit_block)",
+  "argmax_buses_from_view": {
+   "su_red_to_am": "in_v 1 / in_last 1 / in_bias_en 1 / in_mask 8 / in_vals 256 / in_bias 256 = 523",
+   "am_to_vm_se": "out_v 1 / out_idx 18 / out_nan 1 / fault 1 / out_range_fault 1 / out_value 32 = 54 (was 53 in the outline model)",
+   "dispatch_driven": "cfg_rank 7 / cfg_imm_a 18 (adapter)"
+  },
+  "presets": {
+   "r25gm": "R25G (fmt3 retile, network probe only)",
+   "r25g4m": "R25G4 (qualified 4 x 2 SM grid, full network build)"
+  },
+  "auto_on": "R25G -> R25GM and R25G4 -> R25G4M when hgi_mtp_native-* and hfd_cmdproc_s_mtp_native_mx1[_*]-* both have CLOSED verdicts (job-name match now accepts the _rb suffix); today: controller CLOSED, MX1 not closed -> off",
+  "checks": {
+   "die_check_r25g4m": "PASS 165 (results/rtl/mtp_hbmdie_20261009/die_check_r25g4m.json)",
+   "die_check_r25gm": "PASS 165",
+   "die_top_lint": "r25g4m rc 0, 54 real instances; MTP findings = obligations only (results/rtl/mtp_hbmdie_20261009/die_lint_r25g4m.json)"
+  },
+  "hgi_cp_conflict": "hgi canonical variants with hgi_dispatch \"cp\" replace the hfd_cmdproc split by ONE ot_hgi_cp_die block (cmdproc_hgi view); then the MX1 band (t_mtp 197 / f_mtp 517 / f_am 18 + transaction join + emit queue) does not exist. For the MTP master on the HGI-CP die, ot_hgi_cp_die must carry the MX1 join (ot_hbm_native_mtp_transaction_cp_join_mx1 + emit queue) and those ports. r25gm / r25g4m therefore keep the MX1 split CP (no \"cp\" unit)."
+ }
+}

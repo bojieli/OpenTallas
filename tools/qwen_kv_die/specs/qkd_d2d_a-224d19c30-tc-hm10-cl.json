@@ -1,0 +1,111 @@
+{
+ "name": "qkd_d2d_a-224d19c30-tc-hm10-cl",
+ "block": "ot_qkvd_kv_end",
+ "owner": "Claude:kv-die",
+ "purpose": "kv-die 2026-10-09 (OWNER DECISION option 1a, ROM die + KV die): KV-die end of the ROM <-> KV link (ot_qkvd_kv_end: ot_qkvd_d2d NT3/NR4 + forwarded clock/reset bumps). Variant a: frame 777.6 x 259.2 um, PD 0.50 (small change: half the die frame). Safe-margin RTL: every face input captured at the pin, every output from a flop, FDI flop-to-macro; credit flow on every hop (CONTRACT.md). Exactness: the end-to-end attention layer step through the link is bit-exact vs tools/hdc_golden.py, mutants caught (results/arch/qwen_kv_die_20261009/bench.json). | resubmitted at 224d19c30: forwarded clock / reset now through the bump cells qkd_ckbump / qfd_ckbump (c063db3e9), so the link end is fully registered (the 3f5215478 job was REFUSED rtl_boundary: rst_fwd_pad / pll_fwd_pad combinational).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-die-20261009",
+  "commit": "224d19c30",
+  "required_files": [
+   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+   "physical/qwen_die_masters/cfg/qkd_d2d_a.env",
+   "physical/qwen_die_masters/signoff/qkd_d2d_a.sdc",
+   "results/arch/qwen_kv_die_20261009/bench.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_end rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "layer_step_exact_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/bench.json')); sys.exit(0 if d['cases']['typical']['exact_all'] else 1)\"",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "dropped_flit_mutant_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/bench.json')); sys.exit(1 if d['cases']['typical']['mutants']['mut3']['verdict'] == 'CAUGHT' else 0)\"",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_kv_end rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_d2d_a.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qkd_d2d_a {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_d2d_a --post-sdc physical/qwen_die_masters/signoff/qkd_d2d_a.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_d2d_a > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_d2d_a.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "current corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r22k budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_kv_die_20261009/qkd_d2d_a-224d19c30-tc-hm10-cl"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "new element (KV-die link end); adapter + PHY = 11 cycles typical a word (priced in reprice.json)",
+ "merge_target": "main"
+}

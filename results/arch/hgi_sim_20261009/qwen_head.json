@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.hgi_sim.qwen_proof.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T10:43:14Z",
+ "host": "ot-epyc1tb",
+ "snapshot": "b968826d9c46dd6066d109eabc6255188de91218",
+ "stage": "head",
+ "layer": 0,
+ "position": 8191,
+ "runs": [
+  {
+   "stage": "head",
+   "layer": 0,
+   "position": 8191,
+   "mutant": null,
+   "pass_": true,
+   "records": 7,
+   "image_bytes": 656,
+   "executed_records": 6,
+   "wall_s": 4.1,
+   "families": {
+    "head+head_scale": {
+     "checks": 4,
+     "exact": 4
+    }
+   },
+   "failures": [],
+   "record_families": [
+    "argmax_local",
+    "argmax_merge",
+    "end",
+    "head",
+    "head_scale",
+    "prenorm"
+   ],
+   "token": 46335
+  }
+ ],
+ "spec": "HGI-1 v0.9 (024fa2af1)",
+ "source_sha256": {
+  "hgi_sim/records.py": "93974eaa31e62a45973a742ed0f261184381033ce060664e48c367644659b1f6",
+  "hgi_sim/lib.py": "f17a3b8ffce378bec66c844dc0b074459b5189d7c69c93221408fa2829a6893a",
+  "hgi_sim/machine.py": "07515666126c5c513d4ca47c89ceeaf33ea100da8bacab50fe6d7f11b568f870",
+  "hgi_sim/qwen_compiler.py": "6ad9a747e1d4c6727cb2f4f5b46bd2837e9d0daedab31ee4deeaa57eea7dba2b",
+  "hgi_sim/qwen_proof.py": "e8040c3619d5b80ceaca5e74cf7fd2186206c98152b71700045bef78d2401404",
+  "qwen_r25_golden.py": "d6feb1247e08708a6f15a8e63ef4e2376d316dc04cd8ba06e4f298f058412439",
+  "hbm_generic_iface.py": "02d82eeaecf6937d0504382e542de90b809639c6b236ac061b8df96a25d0b826"
+ }
+}

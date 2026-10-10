@@ -1,0 +1,14 @@
+{"master": "dsfd_engram_lkp", "w_um": 324.0, "h_um": 216.0, "domain": "stream_1p2",
+ "ports": [
+  ["ck", 1, "input", "W", "M4", 1, 0.5], ["rst_n", 1, "input", "W", "M4", 1, 0.45],
+  ["cfg_layer", 1, "input", "W", "M4", 1, 0.40], ["cfg_rank", 2, "input", "W", "M4", 2, 0.35], ["fault", 1, "output", "W", "M4", 1, 0.60],
+  ["hq_v", 1, "output", "S", "M5", 1, 0.10], ["hq_atom", 31, "output", "S", "M5", 2, 0.16], ["hq_tag", 3, "output", "S", "M5", 2, 0.22],
+  ["hq_cred", 1, "input", "S", "M5", 1, 0.25],
+  ["hr_v", 1, "input", "S", "M5", 1, 0.30], ["hr_tag", 3, "input", "S", "M5", 2, 0.33], ["hr_idx", 4, "input", "S", "M5", 2, 0.36],
+  ["hr_d", 256, "input", "S", "M5", 3, 0.65],
+  ["win_v", 1, "input", "N", "M5", 1, 0.06], ["win_ids", 68, "input", "N", "M5", 2, 0.16], ["win_cred", 1, "output", "N", "M5", 1, 0.25],
+  ["rel", 4, "input", "N", "M5", 2, 0.28],
+  ["o_v", 1, "output", "N", "M5", 1, 0.32], ["o_col", 5, "output", "N", "M5", 2, 0.35], ["o_beat", 3, "output", "N", "M5", 2, 0.38],
+  ["o_slot", 3, "output", "N", "M5", 2, 0.40], ["o_d", 264, "output", "N", "M5", 3, 0.66], ["o_cred", 1, "input", "N", "M5", 1, 0.93],
+  ["st_v", 1, "output", "N", "M5", 1, 0.95], ["st_slot", 3, "output", "N", "M5", 2, 0.965], ["st_bad", 1, "output", "N", "M5", 1, 0.985]
+ ]}

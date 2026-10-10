@@ -133,3 +133,7 @@ foreach pin [get_pins -quiet -hierarchical -filter "direction==input"] {
 if {[llength $ot_lb_async]} { foreach {cn v} $ot_lb_vmap { set_false_path -from [get_clocks [lindex $v 0]] -to $ot_lb_async } }
 puts "OT_LINK_BUDGET ports $ot_lb_n async_pins_excluded [llength $ot_lb_async]"
 }
+# REBUDGET hook (2026-10-08, tools/budgets/rebudget.py): the block's re-derived per-port die-link budget (budget_rb<N>),
+# installed beside this file by the closure loop for new routes; it replaces this file's fixed split on the ports it covers
+set ot_rb_hook [file join [file dirname [info script]] rebudget_block.sdc]
+if {[file exists $ot_rb_hook]} { puts "OT_REBUDGET hook $ot_rb_hook"; source $ot_rb_hook }

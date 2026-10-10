@@ -1,0 +1,509 @@
+{
+ "schema": "opentallas.qwen-on-r25-plan.v1",
+ "date": "2026-10-08",
+ "stream": "qwen-hbm-unify",
+ "inputs": {
+  "coverage": "results/arch/coverage_20261008/T4.{md,json} @ cc14fb202 (branch claude/coverage-20261008)",
+  "die": "tools/hbm_accel_die_fp.py ADOPTED = R25 (check: 753.19 mm2, 30,590 x 24,622 um)",
+  "elements": "localhost:8765/api/elements 2026-10-08 ~21:50 PT",
+  "quality": "results/quality/qwen3_8b_weight_format_search.json"
+ },
+ "kind": "DESIGN STUDY: no routes, no RTL edits; every cycle figure here is an estimate unless marked measured",
+ "gaps": [
+  {
+   "id": "G1",
+   "gap": "SM weight dtype: no INT8 decode (fmt 0 BF16 / 1 FP8 block-dot / 2 FP4; tc16 BF16 lanes; bd_col E4M3 x E4M3 k32)",
+   "options": {
+    "a_program": {
+     "description": "Store each INT8 code widened to its exact BF16 value in HBM; run the BF16 x BF16 tc16 lanes; BF16 row scale applied after the FP32 sum by an SU multiply",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "weight bytes 2x: stream 645k -> 1,243k cycles a TP4 token (-48% tok/s)",
+     "schedule_risk": "none (program + image layout)",
+     "exactness": "EXACT to the INT8 contract values (INT8 is exact in BF16); same products and lane order as option c, so the same qwen_r25 golden",
+     "feasible": true
+    },
+    "b_numerics": {
+     "description": "Re-quantise Qwen to FP8 E4M3 (per-row or k32 block-scaled) and run the existing block-dot path, which also FP8-quantises activations (block 32, UE8M0)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~+3% bytes (block exponents) vs INT8; otherwise as c",
+     "schedule_risk": "quality contract W8A8-FP8 NOT RUN: harness has no activation-quant mode (tools/qwen3_deployment_quality.py); add it (~0.5 day) + one full contract run (~2.2 GPU-h, the e8 mode took 7,998 s)",
+     "exactness": "NEW numerics contract (W8A8): owner sign-off + PPL/MMLU pass required; FP8 per-row W8 with BF16 activations already PASSES (+0.51/+0.70% PPL, -0.3 MMLU) but that variant needs the same unpack hardware as c",
+     "feasible": true
+    },
+    "c_hardware": {
+     "description": "fmt 3 = INT8 -> BF16 unpack in ot_hbm_accel_smh_front_c stage A (sign-magnitude, 7-bit LZC, shift; exact), each 128-code line consumed in two BF16 beats (half-select in the issue) so HBM carries 1 B/weight",
+     "blocks_reopened": [],
+     "area_mm2": "~0.1 die total (estimate: ~10k cells per front_c x 32), inside the front_c strip if its utilisation allows",
+     "cycles": "+1 latency cycle per dependent SM op (registered converter stage; DS sees the same +1 unless the stage is bypass-matched); stream 645k cycles a TP4 token",
+     "schedule_risk": "front_c is OPEN (failed, re-running) -- the change rides its next variant; risk = delaying a DS-critical block. Mitigate: converter in its own registered stage (<=700 ps rule)",
+     "exactness": "EXACT, bit-identical to option a (same BF16 operands, same lane/tree order)",
+     "feasible": true
+    }
+   },
+   "recommended": "a now (bring-up, zero hardware, same golden) + c in front_c next variant; b only as fallback if front_c cannot take the change",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": [
+    "ot_hbm_accel_smh_front_c"
+   ]
+  },
+  {
+   "id": "G2",
+   "gap": "Token/index width 17 bits (argmax IW 17, dspark TW 17, accept NW 16/17, cmdproc20 TW 17); Qwen vocab 151,936 needs 18",
+   "options": {
+    "a_program": {
+     "description": "Shard the LM head: per-die argmax over <= 37,984 rows (TP4) fits IW 17; merge (value, die_base + idx) across dies with an all-gather + SU max program carrying the index as an exact FP32 integer (numpy lowest-index tie rule); MTP accept as an SU prefix-compare program on FP32-encoded ids (not dspark_ctl)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "merge ~0.5 us (all-gather ga_ha2hub 488 ns) + ~100 SU cycles a step; SU accept ~300 cycles a verify step (<0.05%)",
+     "schedule_risk": "low",
+     "exactness": "EXACT (integer ids < 2^24 are exact in FP32)",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "TW/IW = 18 everywhere (one universal build; DS vocab 129,280 unaffected): cmdproc20 TW, argmax IW, dspark_ctl TW, accept NW",
+     "blocks_reopened": [
+      "ot_dshbm_dspark_ctl (closed TT +28.49)",
+      "ot_hdc_accept (closed TT +113.91)"
+     ],
+     "area_mm2": "negligible (+1 bit on token registers)",
+     "cycles": "0",
+     "schedule_risk": "cmdproc (revoked, re-running) and argmax_m / hfd_mtp (first trial) are open: change now at zero reopen cost; dspark_ctl + accept are tiny closed blocks (~1-2 h routes)",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "cmdproc TW 18 now (open; needed for the host token and the embedding row id); head sharding + SU merge + SU accept (program) so dspark_ctl/accept stay closed; set IW 18 on the in-flight argmax_m variant only if TP1/TP2-single-pass is wanted",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": [
+    "hfd_cmdproc_n",
+    "hfd_cmdproc_s"
+   ]
+  },
+  {
+   "id": "G3",
+   "gap": "RoPE: DS adjacent-pair 64-dim tail (ROPE_PAIR 32, YaRN) vs Qwen rotate_half over 128 dims, theta 1e6",
+   "options": {
+    "a_program": {
+     "description": "Generic SU program: lane offsets are an affine sum over lane-index bits (vec_lane_c12 ld_c), so lane l reads l XOR 64 (rotate_half); y = x*cos + xr*sin_signed with the sign folded into the sin table (exact negation); tables are data (theta 1e6, 64 frequencies)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~60-120 SU cycles a layer (q 8 heads + k 2 heads x 128, one or two vectors)",
+     "schedule_risk": "medium: the XOR-64 offset program is unbenched",
+     "exactness": "EXACT to a golden that does mul, mul, add (RNE) in that order then BF16",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "ROPE mode (split-half, pair count 64) in the fused KV-norm+RoPE chain / qbank front",
+     "blocks_reopened": [
+      "none closed (fused SU chains live in hfd_su/hfd_sfu, open)"
+     ],
+     "area_mm2": "small",
+     "cycles": "saves ~50 cycles a layer",
+     "schedule_risk": "adds a mode to failing SU quarters",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G4",
+   "gap": "Attention GQA: tile broadcasts one KV row to H16 head lanes (DS MQA); Qwen TP4 die = 2 KV heads x 4 q heads -> 4 of 16 lanes",
+   "options": {
+    "a_program": {
+     "description": "Map 32 tiles per KV head, 4 q heads in lanes 0-3, rows split across tiles; MTP verify fills lanes (4 q heads x 4 positions = 16)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "AR: tile compute 36.9k cycles a token at 25% vs KV stream 1,325 cycles a layer (47.7k a token): KV-bandwidth-bound, lanes not binding; verify p=4: 100% lanes",
+     "schedule_risk": "low",
+     "exactness": "EXACT (chunk8 + pairwise per 64-slice, 2 slices per head) to the qwen_r25 golden",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Per-lane KV row select (GQA groups inside the tile)",
+     "blocks_reopened": [
+      "ot_attn_tile_m6h1q (closed TT era)"
+     ],
+     "area_mm2": "B-operand fan-out x4",
+     "cycles": "~0",
+     "schedule_risk": "reopens a closed hardened quad; no rate gain while KV-bound",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G5",
+   "gap": "QK-norm: no fused per-head (128) RMSNorm with gain",
+   "options": {
+    "a_program": {
+     "description": "Generic SU segmented reduction (slot size 128: ls/lvw slots), rsqrt on the side pipe, gain multiply",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~200-300 SU cycles a layer",
+     "schedule_risk": "low-medium (segmented reduction unbenched for Qwen)",
+     "exactness": "EXACT to the SU vred tree order (qwen_r25 golden)",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "applicable": false
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G6",
+   "gap": "Norm engine fixed at D5120 + hc_pre mix + FP8 act-quant out (Qwen: D4096, no mix, BF16)",
+   "options": {
+    "a_program": {
+     "description": "Run RMSNorm (x2 a layer + final) on the generic SU lanes; the fused engine stays DS-only",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~300-400 SU cycles a norm (vs fused ~100)",
+     "schedule_risk": "low",
+     "exactness": "EXACT to the SU vred tree order",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Second norm master D4096/HC0/QUANT0",
+     "blocks_reopened": [
+      "none closed (norm engine is open: view NEEDS_HUMAN, grp8/grp16 re-running)"
+     ],
+     "area_mm2": "a second 3.75-4.5M-cell engine -- rejected",
+     "cycles": "-200 cycles a norm",
+     "schedule_risk": "new hardened element",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G7",
+   "gap": "Softmax: fused su_softmax has a sink term and NVMAX 40 (T <= 640); Qwen needs no sink and T = 8,192",
+   "options": {
+    "a_program": {
+     "description": "Generic SU 3-pass softmax over 8 heads x 8,192 (64 vectors of 1,024): max, exp + sum, normalise the PV output; no sink term at all on this path (sink = -2^100 is an exact identity on the fused path but the fused path cannot hold 8K rows)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~300-600 SU cycles a layer",
+     "schedule_risk": "low",
+     "exactness": "EXACT to the SU order (exp correctly rounded, IEEE divide)",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Raise NVMAX to 512 + sink-disable bit in su_softmax",
+     "blocks_reopened": [
+      "none closed (open SU quarters)"
+     ],
+     "area_mm2": "row-sum counter + max state x12",
+     "cycles": "-300 cycles a layer",
+     "schedule_risk": "touches failing SU",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G8",
+   "gap": "SwiGLU fused chain clamps, multiplies by a route weight and FP8-quantises its output",
+   "options": {
+    "a_program": {
+     "description": "Generic SFU lanes: silu(g) * u in FP32, BF16 out; no clamp, no route weight, no quant (or fused chain with lim=+inf, ROUTED weight 1.0 but PUBLISH_QUANT forces FP8 -> not usable)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "~100-200 cycles a layer (3,072 elements a die)",
+     "schedule_risk": "low",
+     "exactness": "EXACT to the r25 SFU (correctly rounded exp + IEEE divide; no reciprocal-seed NaN defect)",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "applicable": false
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G9",
+   "gap": "Arithmetic order: r25 SM tree / attention chunk8 / SU vred / TU owner-order reduction differ from the W12 golden",
+   "options": {
+    "a_program": {
+     "description": "Write qwen_r25 golden (Qwen graph in r25 arithmetic, from tools/hdc_golden_v41.py R-ARITH + SM/SU/coll order) and bench every stage against it",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "0",
+     "schedule_risk": "medium: golden build ~3-5 days; the template is vehicle A",
+     "exactness": "NEW golden; bit-exact RTL vs qwen_r25",
+     "feasible": true
+    },
+    "b_numerics": {
+     "description": "Owner sign-off: the Qwen bit-exact reference becomes qwen_r25 (FP32 re-association only); confirm with one contract quality run in r25 order (~1-2 days harness + ~2.2 GPU-h)",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "0",
+     "schedule_risk": "low",
+     "exactness": "quality expected within noise (FP32 order only); must be run, not assumed",
+     "feasible": true
+    },
+    "c_hardware": {
+     "description": "W12-order modes in SM / attention / SU",
+     "blocks_reopened": [
+      "ot_attn_tile_m6h1q (closed)",
+      "svc/coll pieces as needed"
+     ],
+     "area_mm2": "large",
+     "cycles": "unknown",
+     "schedule_risk": "reopens closed quads; rejected",
+     "exactness": "EXACT to the W12 golden",
+     "feasible": true
+    }
+   },
+   "recommended": "a + b",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G10",
+   "gap": "No weight SRAM: LM head streams (155.6 MB a die at TP4) and no prefetch window to hide per-layer serial latency",
+   "options": {
+    "a_program": {
+     "description": "Stream the head from HBM; accept exposed serial latency; MTP verify and batching amortise both",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "head +49.1k cycles a token; exposed serial 248-320k cycles a token (estimate)",
+     "schedule_risk": "low (it is the default)",
+     "exactness": "EXACT",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Add weight SRAM (head + window)",
+     "blocks_reopened": [
+      "die recipe"
+     ],
+     "area_mm2": "~300 mm2 for the head alone -- exceeds the 105 mm2 reticle margin (r25 753.19 mm2); rejected",
+     "cycles": "-49k (head) and up to -300k (window) cycles",
+     "schedule_risk": "new die",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G11",
+   "gap": "Collective built for TP-96 through the Tomahawk Ultra tier",
+   "options": {
+    "a_program": {
+     "description": "TP4 group of 4 endpoints on the same TU tier (group membership is configuration); payload 4,096 FP32 = 256 words = the measured DS p1 case",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "AR 928 ns measured endpoint RTL (ar_matched_p1) + full-FEC ~0.2 us -> ~1.13 us (~1,350 cycles); 2 a layer: ~97k cycles a token if exposed",
+     "schedule_risk": "low (hfd_coll open anyway, T3)",
+     "exactness": "EXACT to the TU owner fixed-order reduction (in qwen_r25 golden)",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Direct die-to-die ring for TP4 (no switch)",
+     "blocks_reopened": [
+      "hfd_coll pieces (closed credit/idle/fifo)"
+     ],
+     "area_mm2": "0",
+     "cycles": "saves ~2 x 250 ns switch a AR (~50k cycles a token)",
+     "schedule_risk": "protocol change; rejected for now",
+     "exactness": "EXACT if order fixed",
+     "feasible": true
+    }
+   },
+   "recommended": "a",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  },
+  {
+   "id": "G12",
+   "gap": "No Qwen program / KV layout / host path / KV read path",
+   "options": {
+    "a_program": {
+     "description": "Program + layout: cmdproc LAUNCH list (36 layer kernels + head; NCMD 256 suffices at one launch per layer); per-die KV [layer][kvhead][K|V][pos][128] FP8 contiguous; append 144 posted writes of 128 B a token; cache-length via the tile pad bit; rollback by the dead-row invariant + cache-length register (bench it); host token in/out = cmdproc doorbell {token,pos} / completion token (TW 18); EOS and max length host-side; embedding table replicated in each die HBM (owner 10-08 decision) with SU dequant",
+     "blocks_reopened": [],
+     "area_mm2": 0.0,
+     "cycles": "embedding ~4 KB row fetch + dequant ~0.5k cycles a token",
+     "schedule_risk": "HIGH on one item: the r25 svc die view serves the tile KV port from ONE fixed pseudo-channel per stack (svc KV_PC parameter, closed segments) -- a Qwen dense 8K sweep (4.19 MB a die a layer) cannot reach the >=90% bandwidth rule through it. The DS functional model streams KV/index keys per-PC at full rate (dshbm_1m_allmeasured), so this is a die-view gap SHARED with T3; confirm before any Qwen attention bench",
+     "exactness": "EXACT",
+     "feasible": true
+    },
+    "b_numerics": {
+     "applicable": false
+    },
+    "c_hardware": {
+     "description": "Multi-PC KV striping in the svc tile path",
+     "blocks_reopened": [
+      "hfd_svc_* segments (closed TT era, 13+ masters)"
+     ],
+     "area_mm2": "small",
+     "cycles": "KV at full rate",
+     "schedule_risk": "reopens many closed segments -- only if T3 confirms the gap is real for DS too",
+     "exactness": "EXACT",
+     "feasible": true
+    }
+   },
+   "recommended": "a; escalate the KV_PC question to the T3 svc owner",
+   "closed_blocks_reopened": [],
+   "open_blocks_touched": []
+  }
+ ],
+ "tp_topology": {
+  "recommended": "TP4 = 4 r25 dies per Qwen instance (8 q / 2 KV heads, FFN 3,072 a die, 2 all-reduces a layer, head 37,984 rows a die, embedding replicated)",
+  "iso_rule": "Headline iso-die-count with the Qwen ROM (TP4, 4 dies): r25 logic 4 x 753.19 = 3,012.8 mm2 vs 4 Qwen ROM dies <= 858 mm2; report iso-total-silicon (logic + every HBM stack, ~1,000-1,300 mm2 a stack, owner 10-03) and iso-power alongside; TP8 only as a labelled scale-out sensitivity; TP2 = half the silicon"
+ },
+ "token_estimate": {
+  "basis": "TP4, P8191, AR, batch 1, 1.2 GHz; INT8 weights (option G1c or a); bytes a die a token = 36 layers 1,736.4 MB + head 155.6 MB + KV 151.0 MB = 2,043 MB; die sustained 3.80 TB/s (vehicle A measured 95% of 4.0 TB/s; r25 PHY peak may be higher); exposed serial latency estimated, not measured",
+  "stream_cycles": 645164,
+  "exposed_serial_cycles_per_layer": {
+   "allreduce_2x": 2700,
+   "su_programs": "2,000-3,500",
+   "matvec_first_access_and_attention_tail": 1700,
+   "die_wire_stages": "500-1,000",
+   "total": "6,900-8,900"
+  },
+  "scenarios": [
+   {
+    "name": "INT8 (G1c), latency fully hidden (vehicle-A-like; NOT available on r25 without a window)",
+    "cycles": 650500,
+    "tok_s": 1844.7,
+    "status": "upper bound"
+   },
+   {
+    "name": "INT8 (G1c), serial latency exposed",
+    "cycles": "898,500-970,500",
+    "tok_s": "1,236-1,336",
+    "status": "central estimate (model)"
+   },
+   {
+    "name": "BF16-widened (G1a), exposed",
+    "cycles": "1,496,000-1,568,000",
+    "tok_s": "765-802",
+    "status": "bring-up configuration (model)"
+   },
+   {
+    "name": "INT8, 1088-bit line costs 5 x 32 B sectors (80% payload)",
+    "cycles": "~1,048,000-1,120,000",
+    "tok_s": "~1,071-1,145",
+    "status": "risk to measure"
+   }
+  ],
+  "references": {
+   "vehicle_A_TP4_measured": 2154.2,
+   "vehicle_A_TP4_with_DSpark_p4": 5055,
+   "published_qwen_hdc_hbm_rate_model": 880.7,
+   "qwen_rom_published": 5537.3
+  }
+ },
+ "mtp": {
+  "status": "No owner decision for Qwen MTP on r25. Vehicle A adopted DSpark verify p=4 (TP4 5,055 tok/s = 2.28x, tau 3.0375 from the ROM record, drafter unvalidated); 2026-09-26/29 decisions named DFlash for Qwen on HBM. r25 hfd_mtp / dspark_ctl are DS-parameterised (B 5, PMAX 8, TW 17, NSLOT 8).",
+  "options": [
+   {
+    "name": "DSpark (Qwen DSpark drafter of the Qwen ROM record, block 4)",
+    "verify_p": 4,
+    "tau": "3.0375 (ROM record; NOT the 6-class blend -- re-measure)",
+    "draft_cycles_est": "30-60k",
+    "verify_factor_est": "1.1-1.35 x AR step",
+    "speedup_est": "2.2-2.7x",
+    "tok_s_est": "~2,700-3,450",
+    "hardware": "none if accept runs as an SU program; GQA lanes fill to 100% at p=4"
+   },
+   {
+    "name": "DFlash (z-lab/Qwen3-8B-DFlash-b16, 1.05 B params BF16, 5 layers), block capped at 8 by PMAX/NSLOT",
+    "verify_p": "<=8",
+    "tau": "~3.2 at block 8 (interpolated: 2.265 at b3, 3.656 at b16; measure)",
+    "draft_cycles_est": "~200k (2.1 GB drafter stream / 4 dies + exposed latency)",
+    "verify_factor_est": "1.35-1.6",
+    "speedup_est": "1.7-2.2x",
+    "hardware": "none at b<=8; b16 needs PMAX/NSLOT 16 (reopen dspark_ctl, accept)"
+   }
+  ],
+  "exactness": "drafter computed unchanged (released weights, released precision); greedy verify emits exactly the AR tokens; accept/commit/rollback bench with a negative mutant"
+ },
+ "recommended_package": {
+  "name": "P-min: zero closed blocks reopened",
+  "closed_blocks_reopened": [],
+  "open_blocks_changed": [
+   {
+    "block": "ot_hbm_accel_smh_front_c",
+    "change": "fmt 3 INT8->BF16 unpack + half-line issue",
+    "state": "failed, re-running",
+    "cycles": "+1 a dependent SM op"
+   },
+   {
+    "block": "hfd_cmdproc_n / hfd_cmdproc_s (ot_ds_hbm_cmdproc20)",
+    "change": "TW 17 -> 18 (and NCMD check)",
+    "state": "revoked, re-running",
+    "cycles": 0
+   }
+  ],
+  "program_and_golden": [
+   "qwen_r25 golden",
+   "Qwen r25 image (INT8 lines; BF16-widened for bring-up)",
+   "cmdproc launch list + SM/SU kernels",
+   "SU programs: RMSNorm, QK-norm, RoPE, softmax, SwiGLU, scale, residual, embedding dequant, argmax merge, MTP accept",
+   "KV layout/append/mask/rollback",
+   "TP4 TU group config",
+   "host doorbell/completion protocol, EOS host-side"
+  ],
+  "benches": [
+   "one exact stage per layer type + head at P8191 against qwen_r25 (owner rule), each with a negative mutant",
+   "KV sweep bandwidth >= 90% (blocked on the svc KV_PC question)"
+  ],
+  "not_in_package": [
+   "norm engine D4096 master",
+   "attention tile GQA mode",
+   "weight SRAM",
+   "direct TP ring",
+   "dspark_ctl/accept TW 18 (only if the owner prefers the DS MTP control path)"
+  ]
+ }
+}

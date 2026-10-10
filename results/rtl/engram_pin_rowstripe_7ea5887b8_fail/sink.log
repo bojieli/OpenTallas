@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/engram/pin-row-7ea5887b8/tools/engram_sink_pin_gate.py", line 8, in <module>
+    if not paths[2].exists():paths[2]=next(R.glob('rtl/**/ot_hdc_engram_e4m3_bf16.sv'))
+                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration

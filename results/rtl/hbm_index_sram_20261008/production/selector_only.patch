@@ -1,0 +1,27 @@
+--- a/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv
++++ b/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv
+@@ -134,6 +134,8 @@
+   parameter integer IK_CRED = 64, // production scorer FA6: line credits independent of64sector slots/PC
+   parameter integer IK_DEPTH = 64, // opt-in return retention; default retains measured64-slot implementation
+   parameter integer IKS = 0, // opt-in kind2 stripe: blocks chd[69:61], row0 chd[16:2], all32PCs
++  parameter integer IK_SRAM = 0, // opt-in protected native SRAM return store; DEPTH64 only
++  parameter integer IK_SRAM_ROTATE = 0, // opt-in structured gather remap, same bytes and pipeline
+   parameter integer IK_PREFETCH = 0, // dedicated already-protected decoded99 descriptor portal
+ 
+   parameter integer KNO = 15              // 4-sector reads outstanding per PC (60 of the controller's 64 queued beats)
+@@ -528,9 +530,15 @@
+       assign idx_data[ip*256+:256]=sectors[ip*269+13+:256];
+     end
+     if (IKS != 0) begin : gi
++    if (IK_SRAM != 0) begin : gsram
++    ot_hbm_index_lines_sram #(.ENABLE(IKS),.CRED(IK_CRED),.DEPTH(IK_DEPTH),.ROTATE_REMAP(IK_SRAM_ROTATE)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && launch_idx),
++      .blocks(launch_blocks),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
++      .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(index_data_fault),.retained(idx_busy),.corrected());
++    end else begin : gbehavioural
+     ot_hbm_index_lines #(.ENABLE(IKS),.CRED(IK_CRED),.DEPTH(IK_DEPTH)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && launch_idx),
+       .blocks(launch_blocks),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
+       .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(index_data_fault),.retained(idx_busy));
++    end
+     end else begin : gni
+       assign ik_lines=0;assign ik_done=0;assign index_data_fault=0;assign idx_busy=0;assign idx_pop=0;
+     end

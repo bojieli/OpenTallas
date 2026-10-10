@@ -1,0 +1,6 @@
+PASS paddedmask shardtail=0 row0=129264 valid=16 skipped=16 bestvalid=1
+PASS paddedmask shardtail=0 row0=129280 valid=0 skipped=32 bestvalid=0
+- /srv/opentallas-data/claude/md6-head-binding-r6/evidence_mask_r1/tb_mask.sv:41: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 14us; walltime 0.263 s; speed 51.678 us/s
+- Verilator: cpu 0.265 s on 1 threads; alloced 1018 MB

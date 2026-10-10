@@ -1,0 +1,34 @@
+{
+  "status": "proposal_unqualified",
+  "tiles": 192,
+  "icg_count": 192,
+  "hold_cycles": 64,
+  "wake_lead_cycles": 3,
+  "data_cycles_added": 0,
+  "raw_clock_state_bits": 1813,
+  "wake_root_crossings": 42,
+  "tile_lockup_bits": 420672,
+  "broadcast_bits_per_tile_hop": 1743,
+  "accumulate_bits_per_tile_hop": 448,
+  "wake_reset_bits_per_tile_hop": 2,
+  "lane_mac_cycles_unchanged": true,
+  "cycles_per_chain": 16,
+  "replica_fanout": "one gate per tile, one wake successor",
+  "tile_um": [
+    187.056,
+    164.16
+  ],
+  "quarter_um": [
+    1406.136,
+    5529.576
+  ],
+  "added_wake_boundary_bits": 1,
+  "power_saving_w": 0,
+  "power_note": "No savings adopted until real gated clock load closes and activity is measured",
+  "obligations": [
+    "matched-root TT/FF macro budgets including output lockups",
+    "192 real tile ICGs in quarter CTS, physical clock access",
+    "M7 over-macro/channel capacity and full interface route",
+    "qid static ownership straps at real E/M4 sites, timed capture"
+  ]
+}

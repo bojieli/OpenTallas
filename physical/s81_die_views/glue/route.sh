@@ -24,7 +24,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs \
   --orfs-var ADDER_MAP_FILE= \
   --step-tcl PRE_CTS=physical/s81_die_views/common/pre_cts_fclk_root_buf.tcl --step-tcl POST_CTS=${POSTCTS:-physical/s81_die_views/common/post_cts_vclk.tcl} \
   --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
-  --slew-margin-percent 60 --hold-margin-ns 0.030 --purpose signoff_target --nickname-tag s81g_$(echo $lab | tr -c "A-Za-z0-9_\n" _) \
+  --slew-margin-percent 60 --hold-margin-ns ${HM:-0.030} --purpose signoff_target --nickname-tag s81g_$(echo $lab | tr -c "A-Za-z0-9_\n" _) \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit

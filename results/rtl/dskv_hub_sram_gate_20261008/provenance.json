@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm_accel.kvwb_hub_sram_gate.provenance.v1",
+  "qualification_source_commit": "7acd0303f",
+  "recorded_source_commit": "238a54e71",
+  "explanation": "R2 recorded the earlier parent commit ID, but its immutable bundle contains the comment correction in 7acd0303f. Original records are preserved byte-identically. Compare source payload hashes; functional WB RTL is unchanged.",
+  "wb_source_path": "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv",
+  "wb_r1_sha256": "7cc1db03f780d2cbf42d8120bd2a8d50651acec757228f09ffc0f371a7b7bd3b",
+  "wb_r2_sha256": "4e0743719aa39291f3652a6db17d2fecf6c94b6c5a56f3ac6d07812d8cbd4f2b",
+  "wb_change_comment_only": true,
+  "wb_comment_diff": [
+    "--- r1/238a54e71",
+    "+++ r2/7acd0303f",
+    "@@ -17,7 +17,7 @@",
+    " //   kind 2 INDEX KEY of slot `slot`, owner die only: 68 B (64 B E2M1 + 4 UE8M0) packed back to back: key k at",
+    " //     die-local bytes 68k .. 68k+67; a KEY_BLOCK of 8 keys is 544 B = 17 whole sectors, so the block is sector",
+    " //     aligned.  HBM3 has no write data mask, so the unit keeps the owner's OPEN key block (<= 544 B a slot) in a",
+    "-//     shadow and writes the whole sectors covering the new key (2-3 sectors), the bytes of the block's earlier",
+    "+//     shadow and writes the whole sectors covering the new key (3 sectors for each 68-byte key), the bytes of the block's earlier",
+    " //     keys taken from the shadow.  The shadow is loaded (sh_v) when a block opens or at bring-up from HBM.",
+    " // PC-local sector j -> stream-PC address: bank {j[9:7], j[1:0]}, column j[6:2], row ROW0(kind) + slot *",
+    " // SLOT_ROWS + (j >> 10); the read stream (ot_hbm_accel_expert_stream_pc / ot_hbm_r14_stream_pc) reads the same"
+  ],
+  "gate_result": {
+    "r1": "FAIL",
+    "r2": "PASS"
+  },
+  "archive_pin_validation": {
+    "r1": true,
+    "r2": true
+  },
+  "immutable_files": {
+    "r1/result.json": "9470b2b3933905b00ea625d6733151af097d53085091aec49c61d88a44db4802",
+    "r1/source.tar": "0e43683d9d9aa010d9f03d6067ff5d875e77075209eb96d4909585d142cd7b06",
+    "r1/runner.log": "0470ddf5aae02dddd5c652b2fb7ee5f1817c0ae2403b9b59467bc085ef2afa56",
+    "r2/result.json": "91e2d05eaef16dfd387b9cd21d27a170444bb5d2c0eca7a3406577d9a3df7775",
+    "r2/source.tar": "c1a2e0ad83dfdbf92da83649c2125281898decc87830527eb6cbaa129f401234",
+    "r2/runner.log": "0652720f73542fe4c8527579706e437accd66bec9a44abe0449a8a348af46cf7"
+  },
+  "bulk_build_locations": {
+    "r1": "ot-epyc2:/srv/opentallas-data/codex/hub-sram-gate-r1/build",
+    "r2": "ot-epyc2:/srv/opentallas-data/codex/hub-sram-gate-r2/build"
+  }
+}

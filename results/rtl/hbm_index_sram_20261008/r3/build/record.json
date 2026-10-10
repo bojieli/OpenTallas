@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.hbm_index_sram_gate.v1",
+  "source_commit": "ccf038104",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "e37326f3e9d2221bc2117f369f6c44e31f34e119aa3c28c9e3465e755e11bb83",
+    "rtl/test/hbm_accel/tb_hbm_index_lines_sram.sv": "76b072b51dd110e5bfdd8e40fab79c63cfead9a95389a5c25e676ee6f3808015"
+  },
+  "verdict": "PASS",
+  "cases": [
+    {
+      "mode": 0,
+      "build_returncode": 0,
+      "runs": [
+        {
+          "blocks": 342,
+          "credit_delay": 1,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode0/blocks342_delay1.log",
+          "sha256": "52c7ebde3f8f34f10c005a01279613b7c1b83efdfb73c5a7ab7a6ad530938b51"
+        },
+        {
+          "blocks": 342,
+          "credit_delay": 23,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode0/blocks342_delay23.log",
+          "sha256": "057ae03486438d5c5b94f778d453e481dc8173b06e3217588c45ef6582c4b42c"
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "mode": 1,
+      "build_returncode": 0,
+      "runs": [
+        {
+          "blocks": 342,
+          "credit_delay": 1,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode1/blocks342_delay1.log",
+          "sha256": "473398c903adaa5b7ebe983afdba32b49a9edf1fefd27721c9f111796754a1ae"
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "mode": 2,
+      "build_returncode": 0,
+      "runs": [
+        {
+          "blocks": 342,
+          "credit_delay": 1,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode2/blocks342_delay1.log",
+          "sha256": "ddf66064a28283c123c7e310fd9bec7c458e0cde4ebee115390782bee475c6ff"
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "mode": 3,
+      "build_returncode": 0,
+      "runs": [
+        {
+          "blocks": 342,
+          "credit_delay": 1,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode3/blocks342_delay1.log",
+          "sha256": "6a8a24958155619fdca669c395ab3e186e993379ff6bc50a615dca2d03f988af"
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "mode": 4,
+      "build_returncode": 0,
+      "runs": [
+        {
+          "blocks": 342,
+          "credit_delay": 1,
+          "returncode": 0,
+          "gate_passed": true,
+          "raw_log": "mode4/blocks342_delay1.log",
+          "sha256": "fd9796f8276969441d4f42619b8db7cb5d5905fa205b19d3d86438fe9c98080b"
+        }
+      ],
+      "gate_passed": true
+    }
+  ],
+  "scope": "native macro ports+capture+SECDED+remap full component; not physical closure"
+}

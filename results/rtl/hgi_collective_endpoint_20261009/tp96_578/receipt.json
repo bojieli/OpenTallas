@@ -1,0 +1,13 @@
+{
+  "source_commit": "57814c941",
+  "endpoint_commit": "5159113a0",
+  "host": "ot-epyc3",
+  "launcher_pid": 1065869,
+  "overall_verdict": "FAIL",
+  "positive_cases": 970,
+  "positive_passes": 970,
+  "negative_cases": 7,
+  "preserved_failure": "Four GSZ-pad mutants time out without a consuming diagnostic; later source158cff53c rerun has PAD_PROGRESS consuming assertion. Original overall failure remains immutable.",
+  "sampled_peak_rss_bytes": 4329385984,
+  "resource_caveat": "2-second whole-descendant sampled peak; sampler began after initial frontend. Raw sampler reservation16 is stale label; actual admission declaration8GiB."
+}

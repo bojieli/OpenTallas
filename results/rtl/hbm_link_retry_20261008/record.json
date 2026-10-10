@@ -1,0 +1,74 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/tu/ot_hbm_link_retry.sv": "98b0a133e68544f430c700c66068c9c7dd8c953a57de769105c5717f073cd0d3",
+    "rtl/test/tb_hbm_link_retry.sv": "c1c61b118eaefbd11e01fe7891313f8dec12a24b8780c26afb1a756f8bb27fe5",
+    "tools/uarch_model.py": "73f863daea6eea6b3d68f488b72d3e5ec87abf9c5df6f3900e37cabbffc62a75",
+    "tools/hbm_link_retry_bench.py": "978a2b5f55b8a9084e5b7c54a4c30ff6738a4762f5460b5374718309965371a2"
+  },
+  "model": {
+    "candidate": "HBM_LINK_RETRY",
+    "default_enabled": false,
+    "payload_bits": 551,
+    "sequence_bits": 12,
+    "session_bits": 16,
+    "replicas": 8,
+    "macs_per_cycle": 0,
+    "compute_intensity": 0,
+    "communication_bits_per_cycle": 551,
+    "memory_write_bits_per_cycle": 551,
+    "memory_read_bits_per_cycle": 551,
+    "forward_bits_per_cycle": 579,
+    "reverse_bits_per_cycle": 29,
+    "replay_depth": 512,
+    "required_replay_depth": null,
+    "rtt_cycles": null,
+    "replay_payload_bits_per_die": 2256896,
+    "routing_tracks_needed": 608,
+    "channel_capacity": null,
+    "floorplan_slot_fit": null,
+    "area_um2": null,
+    "fault_free_added_cycles": 0,
+    "replay_mux_inputs": 2,
+    "descriptor_fanout": 8,
+    "capacity_qualified": false,
+    "physical_qualified": false,
+    "sram_secded_integrated": false,
+    "composed_token_latency_added_cycles": 0,
+    "adoption": "OPEN: physical RTT, protected SRAM, die ports, SS/FF route required"
+  },
+  "standalone_test": {
+    "payload_bits": 551,
+    "replay_depth": 16,
+    "sequence_bits": 8,
+    "flits_per_positive_scenario": 900,
+    "sequence_wraps": 3,
+    "positive_exit": 0,
+    "gate": "PASS",
+    "coverage": [
+      "full unchanged payload",
+      "receiver pressure",
+      "UE NAK go-back-N replay",
+      "stale reset session data and control",
+      "duplicate stale corrupt future ACK",
+      "bounded retries retain owned debt",
+      "full configured16-entry replay",
+      "duplicate stale NAK"
+    ]
+  },
+  "negative_control": {
+    "verdict": "EXPECTED_FAIL",
+    "source_scope": "historical bench preceding full-depth/duplicate-NAK addition; mechanism unchanged",
+    "final_source_rerun": "PENDING admitted remote host"
+  },
+  "open": [
+    "full512-entry production-depth gate on remote fleet",
+    "SECDED SRAM macro with real registered read timing",
+    "actual physical RTT and2RTT capacity",
+    "finite receiver landing-credit bridge across FEC boundary",
+    "TU generator and FEC integration",
+    "SS/FF physical closure and routing channels"
+  ],
+  "physical_qualified": false,
+  "die_integrated": false,
+  "adoptable": false
+}

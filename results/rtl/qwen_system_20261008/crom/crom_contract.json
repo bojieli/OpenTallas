@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.qwen_crom.v1",
+ "tp": 4,
+ "su_width": 64,
+ "tmax": 8192,
+ "layout": {
+  "QK0": 4096,
+  "POST0": 5376,
+  "QSCALE": 9472,
+  "ROPE0": 9473,
+  "OSC0": 533761,
+  "DSC0": 537857,
+  "END": 541953,
+  "LROWS": 148,
+  "FN_ROW0": 5328,
+  "NARROW_ROWS": 5392,
+  "WIDE_ROWS": 8192,
+  "macro": "ot_rom_4096x266_m8",
+  "wide": [
+   16,
+   2,
+   4
+  ],
+  "narrow": [
+   8,
+   2,
+   8
+  ],
+  "macros": 48
+ },
+ "program_instructions": {
+  "layer": 31,
+  "head": 8
+ },
+ "contract": {
+  "pass": true,
+  "violations": [],
+  "n_violations": 0,
+  "vector_reads_by_stage_region": {
+   "layer:QK": 600,
+   "layer:ROPE": 600,
+   "layer:QSCALE": 9576,
+   "layer:OSC": 1920,
+   "layer:DSC": 1920,
+   "head:FNORM": 640
+  },
+  "positions": [
+   0,
+   1,
+   63,
+   64,
+   255,
+   256,
+   4095,
+   4096,
+   8190,
+   8191
+  ]
+ }
+}

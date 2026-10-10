@@ -1,0 +1,61 @@
+{
+  "source_commit": "7202d4ec4",
+  "recipe": {
+    "top": "ot_hgi_quant_decode",
+    "sources": [
+      "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "rtl/hdc/ot_hdc_prefix.sv"
+    ],
+    "params": {},
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "cache_key": "773358cdd72abb0d883d1128",
+  "cache_entry": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 10,
+    "reg_to_out_max": 2,
+    "reg_to_out_example": "fault",
+    "cells": 629771,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "check_result": {
+    "in_to_out_bits": 0,
+    "in_to_out_max": -1,
+    "in_to_out_example": [],
+    "in_to_reg_max": 10,
+    "reg_to_out_max": 2,
+    "reg_to_out_example": "fault",
+    "cells": 629771,
+    "ctrl_ports": [
+      "clk",
+      "rst_n"
+    ],
+    "cached": true,
+    "top": "ot_hgi_quant_decode",
+    "levels": 16,
+    "strict": true,
+    "verdict": "PASS",
+    "message": "rtl_boundary ot_hgi_quant_decode: registered boundary (in->reg 10, reg->out 2 levels)"
+  },
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "cache_origin": "actual remote unbounded yosys_elab+techmap+analyse, recorded boundary_result.json and source_sha256; no fabricated PASS",
+  "yosys_version": "0.68 from actual boundary.log"
+}

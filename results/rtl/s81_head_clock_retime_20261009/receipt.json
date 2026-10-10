@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.s81.head.clock-retime.v1",
+  "die_source_commit": "0544fca2c",
+  "clock_family_source_commit": "98ffb2be2",
+  "retime_helper_source_commit": "e623e1b4d",
+  "remote_host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch/claude/s81-dies/clockfamily_gather/retime",
+  "original": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp",
+  "admission_GiB_each": 16,
+  "launcher_v1": {"TT_exit": 127, "FF_exit": 127, "failure": "Incorrect ORFS tool path; original failure logs preserved"},
+  "launcher_v2": {
+    "TT_exit": 0, "TT_setup_ps": -303.5, "TT_peak_RSS_kB": 14212960,
+    "FF_exit": 0, "FF_hold_ps": -341.5, "FF_peak_RSS_kB": 14211416
+  },
+  "unchanged": ["die netlist", "SPEF", "child views", "periods", "uncertainties", "in-block clock offsets"],
+  "clock_budget": {"max_inter_skew_ps": 106.8, "max_intra_skew_ps": 54.7, "violations": 0},
+  "independent_failures": ["hbglue xsa to A x transport, historical TT wire 977.5ps", "CF output to first column slot hold; matching cfifo-colck view needed"],
+  "qualification": "diagnostic only: old head kit marks hbglue and A views interim; no native child timing, actual clock tree, enlarged head, or adoption qualification"
+}

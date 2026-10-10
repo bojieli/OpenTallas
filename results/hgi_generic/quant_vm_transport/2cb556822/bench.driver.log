@@ -1,0 +1,26 @@
+tools/hgi_quant_vm_transport_bench.sh: line 7: 1166784 Aborted                    (core dumped) "$out/m$mutant.obj/sim" +VECTORS=results/hgi_generic/cf_qdq_891b4b555 > "$out/m$mutant.log" 2>&1
+tools/hgi_quant_vm_transport_bench.sh: line 7: 1168036 Aborted                    (core dumped) "$out/m$mutant.obj/sim" +VECTORS=results/hgi_generic/cf_qdq_891b4b555 > "$out/m$mutant.log" 2>&1
+tools/hgi_quant_vm_transport_bench.sh: line 7: 1170486 Aborted                    (core dumped) "$out/m$mutant.obj/sim" +VECTORS=results/hgi_generic/cf_qdq_891b4b555 > "$out/m$mutant.log" 2>&1
+	Command being timed: "bash tools/hgi_quant_vm_transport_bench.sh /srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/bench"
+	User time (seconds): 225.22
+	System time (seconds): 9.51
+	Percent of CPU this job got: 179%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:10.60
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 625396
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5285256
+	Voluntary context switches: 3299
+	Involuntary context switches: 1374
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1478944
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

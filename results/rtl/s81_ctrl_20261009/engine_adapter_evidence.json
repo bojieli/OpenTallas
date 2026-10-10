@@ -1,0 +1,36 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "host": "ot-agidock128",
+  "simulator": "Verilator5.032",
+  "source_parent": "7e9968685",
+  "sources_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "87cc81dad4b26c09510ed147a32e9df99eddddbffca2887553b540254086fadb",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_engine_adapter.sv": "11861574f6b5b4abead281d73609cdf7274c0145cd444e0887caeff4981057d0",
+    "rtl/dsrom_sys/s81_ctrl/test/run_engine_adapter.sh": "5501ed210311ee75909f3adb9eb8ee02039445df4a42b478b757638121cc40f0"
+  },
+  "model": "adapter_prebuild_model.json",
+  "checks": {
+    "native_command_bits": 84,
+    "completion_bits": 8,
+    "jobs": 64,
+    "max_outstanding": 8,
+    "max_overlapping": 5,
+    "async_1p2_to_0p9": "PASS",
+    "same_clock": "PASS",
+    "orphan_done": "REJECTED",
+    "ninth_credit": "REJECTED",
+    "reset_epoch": "PASS",
+    "context_corruption_mutant": "FAIL",
+    "completion_credit_mutant": "FAIL"
+  },
+  "measured_visibility_controller_cycles": {
+    "async_first_command": 8,
+    "async_max_done": 7,
+    "same_first_command": 7,
+    "same_max_done": 6
+  },
+  "qualification": "Measured mechanism visibility fits previous12cycles/direction stage-program budget; no physical closure or complete engine binding established.",
+  "reset_contract": "Both domains share reset epoch. Assertion of either reset flushes adapter; stage sequencer must also reset, because outstanding work was invalidated.",
+  "dispatch_contract": "e_cmd_v/e_cmd_ready handshake when e_inputs_present remains asserted until consumed; engine may overlap jobs, completion carries exact slot/op tag. A job completes no earlier than one engine edge after acceptance.",
+  "log": "engine_adapter_verdicts.log"
+}

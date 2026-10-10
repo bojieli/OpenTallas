@@ -118,6 +118,13 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="prompts per class (0: all)")
     ap.add_argument("--first", type=int, default=0, help="first prompt index per class")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--prompts-jsonl", type=Path, default=None,
+                    help="committed prompt set (results/speculative/raw/prompts.jsonl.gz): messages, tools, "
+                         "enable_thinking and max_new_tokens per prompt (capped by --max-new)")
+    ap.add_argument("--class-map", default=None,
+                    help="class=workload+workload,... : classes drawn from --prompts-jsonl; a class not mapped "
+                         "uses the built-in PROMPTS list")
+    ap.add_argument("--drafts", default="bf16,w8", help="drafter variants: bf16 (released weights), w8")
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
     sys.path.insert(0, str(a.deepspec))
@@ -148,13 +155,14 @@ def main():
         print(json.dumps({"fp32_check": fp32_check}), flush=True)
     target = AutoModelForCausalLM.from_pretrained(a.target, dtype=dt, attn_implementation="sdpa").to(dev).eval()
     drafts = {"bf16": Qwen3DSparkModel.from_pretrained(a.draft, dtype=dt, attn_implementation="sdpa").to(dev).eval()}
-    q = Qwen3DSparkModel.from_pretrained(a.draft, dtype=dt, attn_implementation="sdpa").to(dev).eval()
-    with torch.no_grad():
-        for name, mod in q.named_modules():
-            if isinstance(mod, torch.nn.Linear) and not name.startswith("lm_head"):
-                mod.weight.copy_(fake_w8(mod.weight))
-        q.markov_head.markov_w1.weight.copy_(fake_w8(q.markov_head.markov_w1.weight))
-    drafts["w8"] = q
+    if "w8" in a.drafts.split(","):
+        q = Qwen3DSparkModel.from_pretrained(a.draft, dtype=dt, attn_implementation="sdpa").to(dev).eval()
+        with torch.no_grad():
+            for name, mod in q.named_modules():
+                if isinstance(mod, torch.nn.Linear) and not name.startswith("lm_head"):
+                    mod.weight.copy_(fake_w8(mod.weight))
+            q.markov_head.markov_w1.weight.copy_(fake_w8(q.markov_head.markov_w1.weight))
+        drafts["w8"] = q
     layer_ids = drafts["bf16"].target_layer_ids
     mask_id = int(drafts["bf16"].mask_token_id)
     rec = {"schema": "opentallas.qwen-rom-dspark-tau.v1", "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
@@ -220,19 +228,51 @@ def main():
                                             temperature=0.0, hidden_states=hid[:, :S])
         return toks[0].tolist()
 
+    cmap = {}
+    if a.class_map:
+        for item in a.class_map.split(","):
+            c_, w_ = item.split("=")
+            cmap[c_] = w_.split("+")
+    pool = {}
+    if a.prompts_jsonl is not None:
+        import gzip
+        import ast
+        with gzip.open(a.prompts_jsonl, "rt") as fh:
+            for line in fh:
+                d = json.loads(line)
+                pool.setdefault(d["workload"], []).append(d)
+        rec["prompts_jsonl"] = {"path": str(a.prompts_jsonl), "sha256": sha(a.prompts_jsonl), "class_map": cmap}
+
+    def items(cls):
+        if cls not in cmap:
+            return [(i, cls, [{"role": "user", "content": p}], None, False, a.max_new, None)
+                    for i, p in enumerate(PROMPTS[cls])]
+        out = []
+        for wl in cmap[cls]:
+            for d in pool[wl]:
+                msgs, tools = d["messages"], d.get("tools")
+                msgs = ast.literal_eval(msgs) if isinstance(msgs, str) else msgs
+                tools = ast.literal_eval(tools) if isinstance(tools, str) else tools
+                th = d.get("enable_thinking")
+                th = (th == "True") if isinstance(th, str) else bool(th)
+                mn = min(int(d.get("max_new_tokens") or a.max_new), a.max_new)
+                out.append((len(out), wl, msgs, tools, th, mn, d.get("prompt_id")))
+        return out
+
     for cls in a.classes.split(","):
-        for i, prompt in list(enumerate(PROMPTS[cls]))[a.first:(a.first + a.limit) if a.limit else None]:
+        for i, wl, msgs, tools, think, max_new, pid in items(cls)[a.first:(a.first + a.limit) if a.limit else None]:
             t0 = time.time()
-            text = tok.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False,
-                                           add_generation_prompt=True, enable_thinking=False)
+            text = tok.apply_chat_template(msgs, tools=tools, tokenize=False, add_generation_prompt=True,
+                                           enable_thinking=think)
             inp = tok(text, return_tensors="pt").input_ids.to(dev)
             with torch.no_grad():
-                gen = target.generate(inp, max_new_tokens=a.max_new, do_sample=False, temperature=None, top_p=None, top_k=None)
+                gen = target.generate(inp, max_new_tokens=max_new, do_sample=False, temperature=None, top_p=None, top_k=None)
                 out = target(gen, output_hidden_states=True)
             feats = extract_context_feature(out.hidden_states, layer_ids)
             seq = gen[0].tolist()
             n0, n = inp.shape[1], len(seq)
-            res = {"class": cls, "prompt_index": i, "prompt_tokens": n0, "generated": n - n0}
+            res = {"class": cls, "workload": wl, "prompt_id": pid, "thinking": think, "prompt_index": i,
+                   "prompt_tokens": n0, "generated": n - n0}
             cache = {}
             ctxkvs = {dname: precompute_ctx(model, feats.to(model.dtype)) for dname, model in drafts.items()}
             chk = draft_ref(drafts["bf16"], feats.to(dt), seq, n0, 7)

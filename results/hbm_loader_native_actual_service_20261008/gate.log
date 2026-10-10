@@ -1,0 +1,50 @@
+	Command being timed: "iverilog -g2012 -s tb_loader_service_core_native -o out/core.vvp src/ot_hbm_svc_core.sv src/ot_hbm_accel_cdc_fifo.sv src/ot_hbm_write_source_pc.sv src/ot_hbm_kport_map.sv src/ot_hdc_v41x_idx_hbm.sv src/ot_hbm_loader_kport_address.sv src/ot_hbm_loader_native_endpoint.sv src/ot_hbm_loader_pc_service_lease.sv src/ot_hbm_loader_service_boundary.sv src/ot_hbm_svc_core_native.sv src/tb_loader_service_core_native.sv"
+	User time (seconds): 0.14
+	System time (seconds): 0.01
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 37032
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8238
+	Voluntary context switches: 13
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 5928
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+PASS actual32PC service mapper37 endpoint WB sourceACK controller write/read exact64 transactions cycles2245
+src/tb_loader_service_core_native.sv:52: $finish called at 2203136000 (1fs)
+	Command being timed: "vvp out/core.vvp"
+	User time (seconds): 1.88
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.89
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 17540
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3461
+	Voluntary context switches: 1
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+LOADER_KPORT_ADDRESS PASS canonical_cases=32768 stacks=4 address_bits=37
+src/tb_hbm_loader_kport_address.sv:28: $finish called at 32786000 (1ps)

@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.engram-boot-controller-api.v1",
+ "boundary": "real dsfd_ctrl rq packing and untagged wd-to-tag mapping; controller/PHY timing, shared runtime arbitration and die integration unqualified",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "6c273ffa8d077c49ffd2f35a2fe6292d421389a0cea870e7105a2b6e614a6eb8",
+  "rtl/test/tb_dsrom_engram_boot_ctrl_map.sv": "95a278d86d4ee8e020534078bf4a4e0c295313546ae0776591071f499c16b995",
+  "tools/uarch_model.py": "c198a7ce5539e0d2a1d2e19ed025071f215cad9eb73e74f5f044cc9d6f33e8f9",
+  "tools/engram_boot_ctrl_map_gate.py": "338940effbb22bcec10900f59e39fd6d4280ca3d721c47b9b91c1bbd563aea96",
+  "rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv": "6c745aba73a9cde8c5d57a27d3e8d6733c5eef6622708cecae5388b5caabd28c",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv": "8380fb0903f65d0bfdd8be5d109bd901a98edc21a525a5aea395f5e77ebad2a5"
+ },
+ "cases": {
+  "control": {
+   "returncode": 0,
+   "stdout": "ENGRAM_MAP PASS sectors=3 repeated_pc=1 controller_fields=1 completions=3\n/srv/opentallas-scratch/claude/engram/ctrl-map-bba1402b6/rtl/test/tb_dsrom_engram_boot_ctrl_map.sv:65: $finish called at 445000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "duplicate_wd": {
+   "returncode": 0,
+   "stdout": "ENGRAM_MAP NEG duplicate PC completion caught\n/srv/opentallas-scratch/claude/engram/ctrl-map-bba1402b6/rtl/test/tb_dsrom_engram_boot_ctrl_map.sv:59: $finish called at 315000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "wrong_pc_atom": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/ctrl-map-bba1402b6/rtl/test/tb_dsrom_engram_boot_ctrl_map.sv:27: wrong first PC atom\n       Time: 70000  Scope: tb_dsrom_engram_boot_ctrl_map\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

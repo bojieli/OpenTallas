@@ -1,0 +1,15 @@
+TB_S81_BOOT_SECDED mut=0 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=1024/1024 mismatch=0 ce=40/40 ue=6/6 hbm_fault=1 sram_single=576/576 sram_double=2556/2556 sram_err=0 PASS
+- /srv/opentallas-scratch/codex/ds-control/boot-fixed/tb_s81_boot_secded.sv:140: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 15us; walltime 1.239 s; speed 12.392 us/s
+- Verilator: cpu 1.209 s on 1 threads; alloced 1017 MB
+TB_S81_BOOT_SECDED neg=badsum boot_ok=0 fault=1 code=2 PASS
+- /srv/opentallas-scratch/codex/ds-control/boot-fixed/tb_s81_boot_secded.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 898ns; walltime 0.155 s; speed 13.184 us/s
+- Verilator: cpu 0.068 s on 1 threads; alloced 1017 MB
+TB_S81_BOOT_SECDED neg= short boot_ok=0 fault=1 code=1 PASS
+- /srv/opentallas-scratch/codex/ds-control/boot-fixed/tb_s81_boot_secded.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 897ns; walltime 0.082 s; speed 10.737 us/s
+- Verilator: cpu 0.084 s on 1 threads; alloced 1017 MB

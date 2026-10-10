@@ -1,0 +1,182 @@
+{
+ "id": "rope_ds_tail64",
+ "row": "CF-ROPE",
+ "mode": "DS",
+ "what": "DS adjacent-pair RoPE on the last 64 of a 512 row, BF16 out",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 1048575
+ },
+ "records_hex": "00000000000000000000007003000020400261011800000000000000000000000000000000000000000000000000000001c00100000040001000000000000000000000000000000000000000000000000100040000004000100000000000000000000000000000000000000000000000012004000000400010000000000000000000000000000000000000000000000001c00900000040001000000000000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000000007003000020400261011800000000000000000000000000000000000000000000000000000001c00100000040001000000000000000000000000000000000000000000000000100040000004000100000000000000000000000000000000000000000000000012004000000400010000000000000000000000000000000000000000000000001c0090000004000100000000000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "SU",
+   "op": "VOP",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": true,
+   "sut": {
+    "b_half": 1,
+    "c_pair": 1,
+    "m1": 1,
+    "qm": 3,
+    "ad": 1,
+    "rnd": 1,
+    "dst": 1
+   },
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 448,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "B": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 1024,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "D": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 1056,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 2496,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "rope_tail",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "bc15c2bfd9d02cbfc0d65e3ff77ecd3f5ef11bbf9533d1bf6ccde3bf3aa5563f235f1d3fa886583f4065da3fa1d5cc3f1c789ebecdf02f3fc98726bee24334bf2a7cafbe2f20883ef4a0a3bf02e5d83fc603a73f857d493e63cd08bf2d37a0bf4aa2d93f130ac63ffea8c4be8f969abfe9c60b3f69a66f3fcf76d93f9a434a3f52834b3f5e0255be26261bbfd4c98fbda6a3a63ee1625fbf3915193ed7b2cdbead504fbe2568f1beea420f3f0c2d89becf2caa3f64adbbbf972b173f437f3dbec182aebfed6a13bf02674e3f1bceabbfd74aecbe2add25c01538a2be332eafbfccd8903e3786ea3d35e5d63d8bb7e23e2425e4bedda0a5bd9ea153bfe55928bf1ec810bed83760bf6d6aef3f6a04eabf2b4264bfff56213e6dca523f48cfd8be5a80823f3fe613be926d21bf556f8e3faca51bbfb154cc3e8df4b93fc45f0d3ff43f9c3c8b893dbf4be584bf913b6abf6ce87cbfe2c3e63f3da8893fd83f0c3e0c01b93e043b5bbf937f4fbef19b92be5fef35bf7385573e384949bf5cce4b3f942637bfd428a4bf212c9e3f87bcd3be065d9abefa29d4bf3df99cbf1cca4bbf0ca1523f7c1ba3bf26f4cabf1b86453feb3a81be091cb33f5a213c3f0a5d183f0769f63edd51eb3ea635fabef6d9e83f1f79d03e63f4a53e493e6a3f9eaf6e3f3eeeafbeeff19fbd415039c09ed61cbfe656bfbfd764163fde50da3eb5f4e73eaf29dbbf761e7fbff00924bf1376c03f7023393f36eaa6bfd746133ff47d11bf03fb9a3f66f426bf3103343f015bedbfbf83a53fa154983f404008bed02250bedaff023f88c196bf24e76f3fe84c5a3e8995f73d47f8053f7792523e1b1f23bf905a783f5265ca3fe92ce33c36f4e73e8ecf533f760981bffbee0ebf35dea23e547e333e150b003f200cc0be1673edbe117860bf3bd1a0bfd53bf23ed7a2c6bf3e62203e6de46abf9d10523f40415c3ffbab2d3f7742083f43ea014034fbd23dbd829e3fb9278f3f5ef30440fe82343fabbd3bbec1b277bf42911fbef4a638bef72c15bffaf083bf4a0cd6bfc737973fa0939e3d99fbe43fe81e1e3fa8714ac0dcbee43fbdffa0bf2dd4c13fd23955bf544384bd0d67c53f4881f0becdac00bfb875863fe16e0a3fc748b6be4b47393f23f5be3f5133b4beb846c0be114a34bfa9547e3f0b3711c0fce2dc3d4ee7373f1d4414c096c3753f356874be8724b0bf326b93bf2dd209be401303bf8d03913e3040bf3f15c3efbd79b4ea3fee8a703f57f1b6bfd335bbbec7c153bf93bb4dbf75eb0ac071f58f3f50971fbed30c2a3e7eb3cfbfc7ad06bf34b6c1bf68b8253dd5386b3ffea90cc060a62dbf6740064024bbd2bf105de1be0233b5beb34901bf436ec53f598d56c0c2e078bfebddb6bf580bdbbe6960853f5ad376bef5b4bc3f84e414bea1f38bbfcc3b713e9580053d3732c2be5307383efc55d2bedcbcccbf209cd7be444d12bf4d3ec73f9c2e3c3f4299e23d23a341bf79a8104015a479be8222b83f4c37e03f7805e3bf0269a2bfe392b3bff8225abff96d8dbfa66c7dbf420d7d3f80e10e40ce9d1cbe2047133fac49613d8df7c63ca1291dbfe1399abe6ca657bf26e1b5be986bc13f227105bfa617cebfbfc7bfbe2e07dcbec84fb0be6a90a03fdd86e9be29cd073e1b79113e60ecfa3ffdb135be4b0737bdaf23043fc7ea04bf78611f3d4946fcbeee31033faf7207409ad419bf270fb53f4fa8683fdb0ef8bde5ccd93e8d2463bf8309e43c3920bdbf7f49ba3faf04e8be948494bdcaacd3bef1d71f40fd08a33fe08010bfacb4553f40e7ec3e18b707bf632bf53f6113d3bcfdaea5be4f849b3f4a1ea93ff7aa59bdb355313f24a4903f08e7793fb4134fbde44f883fca97473e6fcb03bebc2a5cbe6c70b13dbd87cd3e3eff9f3ef81142bffe5ce4be2853dabe2afc18bf708081be06f0dc3f2f00c6bec82ee23fdf00383fbdae78bdf11388be07c28e3dc7c8ce3e3e01acbda8c8cebd00eb873e2cb312c0e4bd4f3f4cfa88bfad6528bf20aa1ebee5a15a3f5e13763f00286abf524df63e9faf9a3e59ee90becb1907bffe638c3e04082bbf7e461dbe3d5613bfb07279be2e699cbcfd4a40bfa715433f36db3dbf753786bfc10160bd1563da3f5a331f3f428f87bf354dcb3f5d194dbf66216f3f111db7bdc9c0233f0a4041bf9dd2453f0ea01e3f02b468bff23e39bfce0dab3e7ccb14bf3c0e23bfe35643bd465eabbf2702c8bf94f98c3f633296bf698a2a3f42af3a3e594527bf240a823e700a953f97df8e3ecfae66beea37473db30c44bcb7798d3e0b040540fa721640cf497bbeb728d8beceb059bf6589e83f87a4a03daed920bfd202cebfe0fba2bef896f6bea637773fe43cbebf5ca180bf5d94aabc62f8eb3f4da30140213a473e0e6df23f1556ba3f504e87bfd09e10bf07ab543e51b5bbbf26b4673fb218003e0b13343f70f9a73e1583743f287ea8bfe00b49be1498ffbf869130bf6cf418bf2f07c13e38b752beb04b55bf3c2c493fa6ab90bed6e6733feba0b6be6cae793f574b0f3f970785bd00694ebf8ef2993f5bf4b0bd39384fbf6f4522bfa650853e417d1a40b57507be92dcdf3d21afac3d1ed0713dda6525bff8d2313fa18b893fcd3602bed38ebe3d9685d1bed675d3bfd2bb923fcdcfafbf3264bbbeccc9ee3e33f079bda34e663f683a5cbffebf833dcc571c3f82b111be9bc1213fc260613e29774dbd26d67d3fa45c8a3ed959a4bcebab143fcc1a3ac0a491e83e32efc9bd9adc24bf8681b73fa57cd0bebc89873f6f2d44bf212fcfbf72eca2bf08199d3fe3ec6abe332f64bf3ff8183f62bd2540362ef13e2922093f2d620cbf706ec93e8ae788bf11f0c83ec040483e8b5dc5bd"
+    ],
+    [
+     1024,
+     "45cbb9be83820ebfc6f858bfea92e33d26b292bdcf6855bf088399bd97a6ffbea4ae76bf23f3893d7e083d3fbfeb0c3f994c5f3f65f64d3ec8226dbfe62d8fbe50842e3fd914033f4de5e33ee84a633e573a1c3fac709bbe8a2471bfcfdd22be7eba5b3f603c703f4cb9123f5f772a3fa68c753fe17909bf18f911bf08e1d5becf4c94be7cdb5d3f40f53b3f5af42bbfb4f77bbf62959c3ee82222bfbdf6d33e90dbe0bea576013f4a7949bc0ff068bf964c373f7b1e353f91da063f25a20e3f28af64bfd4f0693f023675be2e2c983d8b1167bf0e9950bff9fb8cbe3d3d233fd0f8ebbe53b7bebe1ab9bd3e8fd69b3e98210c3f90ad723f53a25abffca748bf"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      2496,
+      "0000c23e000087be000026bf00005abf0000dabe0000ef3e0000383f00002d3f00004abf0000123e0000e63e0000d2be000088be0000c2bf0000b7bd00004e3b0000aebe0000193f0000febe0000d93e0000bebd0000903d0000ddbf000009bf0000fe3f0000c1be0000cfbe000029be0000d6be00005ebf0000523e0000ffbe0000943e000024bf0000fb3d0000313f00005c3e0000e83e00007c3d0000803c000011c0000013c000005fbe0000aebe0000803f000096bf00001cbf0000dbbe0000b4bf000085bf00003dbf0000d03f00004c3e000019bf0000c8be0000f43f0000223e0000463f0000a1bd00003bbf0000723f0000313f000021be0000e7bd"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "f1367e6ff1a2af7ef9ea356adcc170d6bb3addb859332c6d3ec93b8a2939ebe3"
+ },
+ "mutants": [
+  {
+   "name": "pair_xor32",
+   "defect": "pairs i, i + 32 (split-half)",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "7ac4f5c5d8fb7eecb4a2e6098116a12f67596594bb3b3cd37e87d9a011815ef5"
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-09T11:12:43.491982+00:00",
+  "name": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+  "source": {
+    "branch": "codex/w2-phase-seat-20261009",
+    "commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+    "required_files": [
+      "tools/w2_c1_eco_current/run.py",
+      "tools/w2_c1_eco_current/spec.json"
+    ],
+    "extra_paths": [
+      "tools/w2_c1_eco_current"
+    ]
+  },
+  "origin": "/home/ubuntu/wt/codex-w2-phase-seat/results/physical/w2_phase_seat_20261009/c1_eco_readiness/watched_job.json",
+  "watched_path": "/tmp/claude-review-20261003/closure_jobs/w2-c1-fec1faadd-tt25-existing-odb-eco.json",
+  "spec_sha256": "2dfed2cac6a78840917c4870776f7c1df9a94cf95ddc5e0f166f26f74924068f",
+  "source_validation": "/home/ubuntu/wt/codex-w2-phase-seat/results/physical/w2_phase_seat_20261009/c1_eco_readiness/source_pin_validation.json",
+  "dedupe": "NoexistingC1state/watch/activeC1family; originalfec NEEDS_RTL and no3FLOORPLAN retained",
+  "physical_scope": "Hashcheckedprivatecopy existingfec ODB/SPEF/currentTT25SDC +ECO only, noRTL/synthesis",
+  "resources": "32GiB conservativecapacity frommeasuredsameDRT26.98; not measuredECOgrowth or cap",
+  "original_immutable": true
+}

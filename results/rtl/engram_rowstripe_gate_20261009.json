@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.engram-rowstripe-gate.v1",
+ "boundary": "boot/loader mapping and capacity only; read service return stalls, shared controller arbitration and physical closure unqualified",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_path.sv": "a0f4a7f60bf5283e969147edba92214691cb3e2e26c7c1c2bdd50626445b8278",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_dispatch.sv": "06ee59aa5a7b3a822166b3f3686091434e1f42e3d906e28a462a75de5e35ca31",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "c7a59d41c293dcc23dc6f2a7b72f62bc52b8b47ce4d1c2ad0a4983fce10fda85",
+  "rtl/test/tb_dsrom_engram_boot_rowstripe.sv": "44a853ad638c36807830aad75391f566eaec31e22b646b5225187e41fbd03f76",
+  "tools/engram_boot_image.py": "f6c96ee8bfb5d5d0a3fbe13f884c8f1182e7a8c0d9508786b281ebc32f7ee1b3",
+  "tests/test_engram_boot_image.py": "4ecf7d0569efb430c107a8b802025aad7278b670deea47e03f1e66c6c17facdd",
+  "tools/uarch_model.py": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9",
+  "tools/engram_rowstripe_gate.py": "f45c7c658472724a20c8bb3011b49d110cc137764d2ff912b76ea133bff3c5a4"
+ },
+ "cases": {
+  "control": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_BOOT PASS atoms=576 rows=64 PCs=64 exact=1 stalls=1 completion=1\n/srv/opentallas-scratch/claude/engram/pin-row-successor/rtl/test/tb_dsrom_engram_boot_rowstripe.sv:59: $finish called at 25815000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "wrong_pc": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/pin-row-successor/rtl/test/tb_dsrom_engram_boot_rowstripe.sv:34: rowstripe PC/address identity\n       Time: 110000  Scope: tb_dsrom_engram_boot_rowstripe\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "loader": {
+   "returncode": 0,
+   "stdout": "....                                                                     [100%]\n4 passed in 0.42s\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

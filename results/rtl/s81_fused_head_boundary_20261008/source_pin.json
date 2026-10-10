@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.fh.routed_boundary_repair.v1",
+ "route_source_commit": "60f5a0a9050fcea5f5db815d4b72c04144730c70",
+ "tool_source_commit": "9b4eb6575162f7a1fe5e4b8c704fa9ee82046799",
+ "host": "ot-epyc4",
+ "route_files_sha256": {
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r6-60f5a0a90-tt/routes/dshead_ep_r6_60f5a0a90_tt/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.v": "16a456dd8f9d717561e35a8de385aac67e0cf01df54a34f393d71a4cd733efe3",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r6-60f5a0a90-tt/routes/dshead_ep_r6_60f5a0a90_tt/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.spef": "21626582ff4b39a01673c8fa981ae8be42ae2aa13fb1bc8e383c531c93c64362",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r6-60f5a0a90-tt/routes/dshead_ep_r6_60f5a0a90_tt/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.sdc": "15e1b921ab8ca72f1cb9a415e5e04ef05de88f8ac31b3b1aefc5480f171f67d0",
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ep-r6-60f5a0a90-tt/routes/dshead_ep_r6_60f5a0a90_tt/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_ep_view_asap7_dshead_ep_r6_60f5a0a90_tt/base/6_final.odb": "a03957baaf31a60fc4fb67273b9b5d7aa1e57510e19c952b6f55748c2e18ddbf"
+ },
+ "tool_files_sha256": {
+  "src/tools/closure_loop/hold_eco_sdc.py": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+  "src/tools/closure_loop/hold_eco_window.tcl": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+  "src/tools/closure_loop/hold_eco.sh": "df0c248e673c46d78b3fb014770aa67fbb2e2647cb8c87e5aa462a0321fc3cea",
+  "src/tools/closure_loop/hold_eco.tcl": "6d2026113acc0aa0459bed78412e1a0e4b76a223e73f063039d07fa3dee1f17b",
+  "src/tools/closure_loop/hold_eco_corner.tcl": "549caa13cf4be6b08be160d72de3df1043ca582a94f722d2e9390963fd72dead"
+ },
+ "boundary_sha256": "f7e5e11a0dab9172bcb4787935d421ee3a36a8349da034844b15639f951a41a8",
+ "cycles_added": 0,
+ "new_flops": 0,
+ "rtl_changed": false,
+ "uncertainty_ps": {
+  "setup": 60,
+  "hold": 25
+ },
+ "io_windows_ps": {
+  "setup": 250,
+  "sender_hold": 50,
+  "receiver_extra_hold": 0
+ },
+ "original_calibration_ps": {
+  "SS": 736,
+  "FF": 478
+ },
+ "route_period_ps": 833.333,
+ "exactness_binding": "results/rtl/dsrom_fh_redesign_20261006/gold4_fpipe3/clean_cf14728ff/harvest_validation.json",
+ "scope": "endpoint full shape FPIPE3; correction of real-clock IO insertion reference; postroute hold repair still required"
+}
