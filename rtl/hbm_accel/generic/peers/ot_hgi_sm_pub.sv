@@ -57,11 +57,8 @@ module ot_hgi_sm_pub #(
     always @* for (s = 0; s < NSM; s = s + 1) rdone[s] = (recv[s] == need[s]);
     // per (SM, slot): buffer, pending flush, STREAM entry (all statically indexed)
     reg [NB-1:0] bval, fv, sv;
-    reg [14:0] bsec [0:NB-1], fsec [0:NB-1];
-    reg [255:0] bdat [0:NB-1], fdat [0:NB-1];
-    reg [7:0] bmsk [0:NB-1], fmsk [0:NB-1];
-    reg [51:0] sent [0:NB-1][0:3];          // a 4-deep STREAM FIFO an entry (an SM may emit rows back to back)
-    reg [1:0] sw_ [0:NB-1], sr_ [0:NB-1]; reg [2:0] scnt [0:NB-1];
+    // the granted entry's pending flush / STREAM head, exported flat by every entry (its storage is local to it)
+    wire [NB*15-1:0] fsec_v; wire [NB*256-1:0] fdat_v; wire [NB*8-1:0] fmsk_v; wire [NB*52-1:0] shd_v;
     // the grant: the lowest pending entry, when the output FIFO has room
     reg [3:0] qn; reg [3:0] qh, qt;
     reg [14:0] qsec [0:QD-1]; reg [255:0] qdat [0:QD-1]; reg [7:0] qmsk [0:QD-1];
@@ -82,36 +79,41 @@ module ot_hgi_sm_pub #(
             wire [31:0] wd = {14'd0, ob} + gp * {14'd0, ost} + (MUT_ROW ? 32'd0 : gs * {19'd0, qq}) + {20'd0, rr_q[gs]};
             wire [19:0] gidx = gp * mm + (MUT_ROW ? 20'd0 : gs * {7'd0, qq}) + {8'd0, rr_q[gs]};
             wire tk = take && gk == K;
-            wire chg = res && !sm_m && bval[K] && bsec[K] != wd[17:3];
+            reg [14:0] bsec, fsec; reg [255:0] bdat, fdat; reg [7:0] bmsk, fmsk;
+            reg [51:0] sent [0:3];                      // a 4-deep STREAM FIFO (an SM may emit rows back to back)
+            reg [1:0] sw_, sr_; reg [2:0] scnt;
+            assign fsec_v[K*15 +: 15] = fsec; assign fdat_v[K*256 +: 256] = fdat; assign fmsk_v[K*8 +: 8] = fmsk;
+            assign shd_v[K*52 +: 52] = sent[sr_];
+            wire chg = res && !sm_m && bval[K] && bsec != wd[17:3];
             wire endf = busy && all_rows && !sm_m && bval[K] && !res && !fv[K];
             always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin bval[K] <= 1'b0; fv[K] <= 1'b0; sv[K] <= 1'b0; ovr[K] <= 1'b0; sw_[K] <= 2'd0;
-                                  sr_[K] <= 2'd0; scnt[K] <= 3'd0; end
+                if (!rst_n) begin bval[K] <= 1'b0; fv[K] <= 1'b0; sv[K] <= 1'b0; ovr[K] <= 1'b0; sw_ <= 2'd0;
+                                  sr_ <= 2'd0; scnt <= 3'd0; end
                 else begin
                     ovr[K] <= 1'b0;
                     if (tk && !sm_m) fv[K] <= 1'b0;
                     begin : sq
                         reg push, pop; reg [2:0] n;
-                        push = res && sm_m; pop = tk && sm_m; n = scnt[K];
+                        push = res && sm_m; pop = tk && sm_m; n = scnt;
                         if (push && n == 3'd4 && !pop) ovr[K] <= 1'b1;
-                        else if (push) begin sent[K][sw_[K]] <= {gidx, rd_q[gs][32*gp +: 32]}; sw_[K] <= sw_[K] + 2'd1; end
-                        if (pop) sr_[K] <= sr_[K] + 2'd1;
+                        else if (push) begin sent[sw_] <= {gidx, rd_q[gs][32*gp +: 32]}; sw_ <= sw_ + 2'd1; end
+                        if (pop) sr_ <= sr_ + 2'd1;
                         n = n + ((push && !(n == 3'd4 && !pop)) ? 3'd1 : 3'd0) - (pop ? 3'd1 : 3'd0);
-                        scnt[K] <= n; sv[K] <= (n != 3'd0);
+                        scnt <= n; sv[K] <= (n != 3'd0);
                     end
                     if (chg || endf) begin                          // the buffer -> its pending flush
                         if (fv[K] && !tk) ovr[K] <= 1'b1;
-                        fv[K] <= 1'b1; fsec[K] <= bsec[K]; fdat[K] <= bdat[K]; fmsk[K] <= bmsk[K];
+                        fv[K] <= 1'b1; fsec <= bsec; fdat <= bdat; fmsk <= bmsk;
                         if (endf) bval[K] <= 1'b0;
                     end
                     if (res && !sm_m) begin
                         if (chg || !bval[K]) begin
-                            bdat[K] <= {224'd0, rd_q[gs][32*gp +: 32]} << {wd[2:0], 5'd0}; bmsk[K] <= 8'd1 << wd[2:0];
+                            bdat <= {224'd0, rd_q[gs][32*gp +: 32]} << {wd[2:0], 5'd0}; bmsk <= 8'd1 << wd[2:0];
                         end else begin
-                            bdat[K] <= bdat[K] | ({224'd0, rd_q[gs][32*gp +: 32]} << {wd[2:0], 5'd0});
-                            bmsk[K] <= bmsk[K] | (8'd1 << wd[2:0]);
+                            bdat <= bdat | ({224'd0, rd_q[gs][32*gp +: 32]} << {wd[2:0], 5'd0});
+                            bmsk <= bmsk | (8'd1 << wd[2:0]);
                         end
-                        bsec[K] <= wd[17:3]; bval[K] <= 1'b1;
+                        bsec <= wd[17:3]; bval[K] <= 1'b1;
                     end
                 end
             end
@@ -142,8 +144,8 @@ module ot_hgi_sm_pub #(
             for (s = 0; s < NSM; s = s + 1) if (busy && rv_q[s]) recv[s] <= recv[s] + 20'd1;
             // the granted entry: a STREAM beat out, or a flush into the FIFO (one write an edge)
             if (take) begin
-                if (sm_m) begin s0_v <= 1'b1; {s0_idx, s0_data} <= sent[gk][sr_[gk]]; end
-                else begin qsec[qt] <= fsec[gk]; qdat[qt] <= fdat[gk]; qmsk[qt] <= fmsk[gk]; end
+                if (sm_m) begin s0_v <= 1'b1; {s0_idx, s0_data} <= shd_v[gk*52 +: 52]; end
+                else begin qsec[qt] <= fsec_v[gk*15 +: 15]; qdat[qt] <= fdat_v[gk*256 +: 256]; qmsk[qt] <= fmsk_v[gk*8 +: 8]; end
             end
             // drain: the lowest free client takes the head (one pop an edge)
             begin : dr
