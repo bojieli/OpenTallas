@@ -20,7 +20,7 @@ def model(m=18, row_words=9, group=96):
         pipeline_address_arithmetic='rank*pf then local /9,%9 or shift, then slot*G+rank; each boundary registered',
         estimated_new_cell_area_um2=16000, floorplan_slot_um=[600,240],
         area_fit_fraction=16000/(600*240),
-        delivery_added_cycles=4, launch_added_cycles=2,
+        delivery_added_cycles=4, launch_added_cycles=1, completion_added_cycles=5,
         gather_flits_per_rank=pf, endpoint_pfmax=512,
         delivery_service_floor_cycles=(group*pf+3)//4,
         software_slot_cycles=m*(768+633),
