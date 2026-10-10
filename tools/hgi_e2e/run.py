@@ -101,7 +101,8 @@ def prep(d: Path):
 def script(a):
     real = [x for x in a.real.split(",") if x]
     src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
-    gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g)
+    gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
+    gp += (" +define+E2E_COLL_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     tag = ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
     return f"""#!/bin/bash
