@@ -216,8 +216,20 @@ def _strip(t):
     return re.sub(r'^\s*`(ifdef|ifndef|else|endif|elsif)\b[^\n]*', '', t, flags=re.M)
 
 
+_TERN = re.compile(r'\(([^()?:]+)\?([^()?:]+):([^()?:]+)\)')
+
+
+def _untern(expr):
+    """parenthesised SV ternaries (a ? b : c) -> python ((b) if (a) else (c)), innermost first"""
+    while True:
+        e = _TERN.sub(lambda m: f'(({m.group(2)}) if ({m.group(1)}) else ({m.group(3)}))', expr)
+        if e == expr:
+            return e
+        expr = e
+
+
 def _eval(expr, env):
-    e = expr.replace('$clog2', 'clog2')
+    e = _untern(expr).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
@@ -274,7 +286,7 @@ def parse_module(path, module, params=None):
         if dm:
             cur_dir = dm.group(1)
             if dm.group(2):
-                hi, lo = dm.group(2)[1:-1].split(':')
+                hi, lo = _untern(dm.group(2)[1:-1]).split(':')     # a ternary in the range (vm_unit RP) is one term
                 cur_w = abs(_eval(hi, env) - _eval(lo, env)) + 1
             else:
                 cur_w = 1
