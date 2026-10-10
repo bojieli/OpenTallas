@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hgi.index_cp_lease.gate.v2",
+  "exact": "PASS cases24 real_native_control1; n0/40/4100/10944",
+  "mutant": "expected FAIL case2 stale full73 grant accepted when frame compare removed",
+  "default_enabled": false,
+  "provider_bound": false,
+  "physical_closed": false,
+  "performance_credit": 0,
+  "predecessor": {
+    "source": "574c446e9",
+    "eligibility": "REJECTED",
+    "reason": "single ceil(n/32) count incompatible with literal contiguous2736key quarters; n0 rejected"
+  },
+  "grant": "four explicit native99-kind2 quarter row0_15/exclusive_end16/count9 capabilities. Counts ceil(nq_of(n,q)/8); no mapping to EPS physical HBM row.",
+  "prefetch": "one request per nonempty quarter with held row0/count and quarter2; matching full73+quarter2 exactly-once acceptance; empty quarters skipped",
+  "acceptance": "actor cmd_v&&cmd_r captures real1819 record; upstream must pair exact CP dispatch with this handshake",
+  "native_binding": "native_rec bit0 is actual downstream command; hold record stable until native_r",
+  "receipt_semantics": "grant and key/query/prefetch/drain receipts are exactly-once pulses on actor clk; CDC endpoint supplies checked retained pulse",
+  "external_providers_open": [
+    "protected CP full73 owner acceptance",
+    "exclusive query/result and four quarter native99 key allocation owner",
+    "all-sector durable key SECDED commit ledger",
+    "prefetch fanout/admission joined to actual wide service",
+    "service reads-drained and native VM-ACK-drained receipts"
+  ],
+  "row_mapping": "provider certifies actual address domain/capacity/reservation;15bit extent checks only encodingbounds. No inferred layer->row or native99->EPS mapping."
+}
