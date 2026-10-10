@@ -1,0 +1,172 @@
+{
+ "name": "qfd_sp_tree_top_b_f1b-380999ce5-tc",
+ "block": "qfd_sp_tree_top_b_f1b",
+ "owner": "Claude:kv-die",
+ "purpose": "kv-die relay fix F1 (owner 10-09: build the four sequencer<->tree-top fixes): qfd_sp_tree_top_b with the ME issue / status pins in the bottom 1000 um of the E face (toward the VM / SU / sequencer through the r22k M|E relay channel). Same RTL as qfd_sp_tree_top_b; only the pin plan changes.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 128,
+ "source": {
+  "branch": "claude/kv-die-20261009",
+  "commit": "380999ce52f2d111b09b0ab366bb8b40d9580336"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "sb_exact",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_exact -GCYCLES=40000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_spine_band"
+   },
+   {
+    "name": "sb_link",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_link -GLNK=1 -GCLNK=2 -GCYCLES=40000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_spine_band"
+   },
+   {
+    "name": "sb_mut_band",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_mut_band -GBMUT=1 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_spine_band"
+   },
+   {
+    "name": "sb_mut_frame",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_mut_frame -GPBANDF=0 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_spine_band"
+   },
+   {
+    "name": "sb_qwen",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=16 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_qwen -GTCUT=7 -GSMAX=11 -GMAXT=2 -GMAXK=2 -GQB=10 -GCYCLES=240000",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_spine_band"
+   },
+   {
+    "name": "sb_mut_upper",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_mut_upper -GUMUT=2 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_spine_band"
+   },
+   {
+    "name": "sb_mut_clnk",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_band_integrate/run_spine_band.sh {RUN}/bench/sb_mut_clnk -GLNK=1 -GCLNK=2 -GDMUT=1 -GCYCLES=8000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_spine_band"
+   },
+   {
+    "name": "reg_landed",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_vm_me/run_spine_landed.sh {RUN}/bench/reg_landed -GCYCLES=30000 && grep -q '^PASS qfd_spine_landed' {RUN}/bench/reg_landed/result.txt",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_spine_landed"
+   },
+   {
+    "name": "reg_tree_top",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_rtl_finish/run_tree_top.sh {RUN}/bench/reg_tree_top 30000 && grep -q '\"mismatch_cycles\": 0,' {RUN}/bench/reg_tree_top/result.json && echo PASS qfd_tree_top",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_tree_top"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_sp_tree_top_b_f1b.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_tree_top_b_f1b {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 128
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_tree_top_b --post-sdc physical/qwen_die_masters/signoff/qfd_sp_tree_top_b_f1b.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_sp_tree_top_b > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_sp_tree_top_b_f1b.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "to": "physical/qwen_die_masters/views",
+   "from": "{RUN}/record/views"
+  },
+  {
+   "to": "results/rtl/qwen_band_integrate_20261008/routes/qfd_sp_tree_top_b-60ebc5345tt",
+   "from": "{RUN}/record/route"
+  }
+ ],
+ "cycles_added": "+5 + 2 LNK engine edges on every ME op result (band round trip; RX in the control element); LNK 0 / CLNK 0 in this master (die parameters)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}
