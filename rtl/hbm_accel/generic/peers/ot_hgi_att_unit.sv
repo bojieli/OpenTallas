@@ -31,6 +31,8 @@ module ot_hgi_att_unit #(
     parameter integer NL = 2,               // row lanes (D / (NL x S) <= 32: a tile's dims in one 32-dim group)
     parameter integer BLK = 512,
     parameter integer NOUT = 8,
+    parameter integer SELECTED_VM = 0, // direct handshaken selected C client; explicit scratch rebase
+    parameter integer SELECTED_C_ONLY = 1,
     parameter integer SECTOR_CAPTURE = 0, // opt-in codec output capture
     parameter integer MUT_RING = 0          // mutant: ring rows from slot 0
 ) (
@@ -44,16 +46,61 @@ module ot_hgi_att_unit #(
     output reg           rec_done,
     output reg           rec_fault,
     output wire          halted,
-    output reg  [337:0]  vmq,
+    output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
-    output reg           hq_v,
+    output wire          hq_v,
     input  wire          hq_rdy,
-    output reg  [34:0]   hq_addr,
-    output reg  [7:0]    hq_tag,
+    output wire [34:0]   hq_addr,
+    output wire [7:0]    hq_tag,
     input  wire          hr_v,
     input  wire [7:0]    hr_tag,
-    input  wire [255:0]  hr_data
+    input  wire [255:0]  hr_data,
+    output wire [337:0]  selected_vmq,
+    input  wire          selected_vmq_rdy,
+    input  wire [273:0]  selected_vmr
 );
+    reg [337:0] vmq_i; reg [15:0] main_seq;
+    assign vmq = SELECTED_VM ? {vmq_i[337:16],main_seq} : vmq_i;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) main_seq<=16'h4100; else if(SELECTED_VM && vmq_i[337]) main_seq<=main_seq+16'd1;
+    reg hq_v_i; reg [34:0] hq_addr_i; reg [7:0] hq_tag_i;
+    wire selected_row = SELECTED_VM && (!SELECTED_C_ONLY || row >= nb);
+    wire selected_hr_v, selected_fault, selected_rdy;
+    wire [7:0] selected_hr_tag; wire [255:0] selected_hr_data;
+    wire hq_rdy_i = selected_row ? selected_rdy : hq_rdy;
+    wire hr_v_i = selected_row ? selected_hr_v : hr_v;
+    wire [7:0] hr_tag_i = selected_row ? selected_hr_tag : hr_tag;
+    wire [255:0] hr_data_i = selected_row ? selected_hr_data : hr_data;
+    assign hq_v = hq_v_i && !selected_row;
+    assign hq_addr = hq_addr_i; assign hq_tag = hq_tag_i;
+    generate if(SELECTED_VM) begin : g_selected
+        ot_hgi_att_selected_bridge u_selected (.clk(clk),.rst_n(rst_n),.enable(selected_row),.allow_window(!SELECTED_C_ONLY && row<nb),
+            .rq_v(hq_v_i),.rq_rdy(selected_rdy),.rq_addr(hq_addr_i),.rq_tag(hq_tag_i),
+            .vmq(selected_vmq),.vmq_rdy(selected_vmq_rdy),.vmr(selected_vmr),
+            .hr_v(selected_hr_v),.hr_tag(selected_hr_tag),.hr_data(selected_hr_data),.fault(selected_fault));
+    end else begin : g_hbm_only
+        assign selected_vmq=338'd0;assign selected_rdy=1'b0;assign selected_hr_v=1'b0;
+        assign selected_hr_tag=8'd0;assign selected_hr_data=256'd0;assign selected_fault=1'b0;
+    end endgenerate
+    reg [15:0] main_tags [0:7]; reg [2:0] main_w, main_r; reg [3:0] main_n;
+    wire main_identity_fault = vr[273] && (main_n==0 || vr[256] || vr[272:257]!=main_tags[main_r]);
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin main_w<=0;main_r<=0;main_n<=0;end
+        else if(SELECTED_VM) begin
+            if(vmq_i[337]) begin main_tags[main_w]<=main_seq;main_w<=main_w+1'b1;end
+            if(vr[273]) main_r<=main_r+1'b1;
+            main_n<=main_n+(vmq_i[337]?4'd1:4'd0)-(vr[273]?4'd1:4'd0);
+        end
+    end
+    wire [63:0] a_end = {24'd0,mbase(da)} + ({59'd0,lanes}-1)*{32'd0,mst(da)} + (qk?{54'd0,hd}:{43'd0,tt});
+    wire [63:0] o_end = {24'd0,mbase(dout)} + ({59'd0,lanes}-1)*{32'd0,mst(dout)} +
+        (qk?({43'd0,tt}-1)*{48'd0,mist(dout)}+1:{54'd0,hd});
+    wire [63:0] b_end = {24'd0,bbase} + ((ring?{44'd0,bm}:{43'd0,nb})-1)*{32'd0,bstr} + ({54'd0,hd}<<es_b);
+    wire [63:0] c_end = {24'd0,cbase} + ({43'd0,nc}-1)*{32'd0,cstr} + ({54'd0,hd}<<es_b);
+    localparam [39:0] SCRATCH_FIRST = SELECTED_C_ONLY ? 40'd1048576 : 40'd1114112;
+    wire allocation_ok = mbase(da)>=SCRATCH_FIRST && mbase(dout)>=SCRATCH_FIRST &&
+        a_end<=64'd2097152 && o_end<=64'd2097152 && mst(da)<32'd2097152 && mst(dout)<32'd2097152 &&
+        (SELECTED_C_ONLY || (bbase>=40'd4194304 && b_end<=64'd4456448)) && (!hasc || nc==0 || c_end<=64'd4194304);
     localparam integer S = D / TD, NT = NL * S, DPT = D / NT, G = D / 32, R = TD / H, ROWW = G * 265;
     localparam integer SPR = D * 4 / 32;              // max sectors a row (FP32)
     // ---- record pin flops
@@ -73,7 +120,8 @@ module ot_hgi_att_unit #(
     wire hasc = opnd[2];
     // ---- decoded record
     reg qk; reg [4:0] lanes; reg [9:0] hd; reg ring; reg [20:0] tt; reg [1:0] bfmt, cfmt;
-    reg [17:0] abase, astr, obase, ostr, oist; reg [39:0] bbase, cbase; reg [31:0] bstr, cstr; reg [19:0] bm;
+    localparam integer VW = SELECTED_VM ? 21 : 18;
+    reg [VW-1:0] abase, astr, obase, ostr; reg [17:0] oist; reg [39:0] bbase, cbase; reg [31:0] bstr, cstr; reg [19:0] bm;
     // ---- the engine
     reg job_v; reg [15:0] job_t; wire job_ready;
     reg q_v; reg [D*16-1:0] q_w; wire q_ready; reg qload;
@@ -133,8 +181,8 @@ module ot_hgi_att_unit #(
     wire land_p = (st == S_PRD) && vr[273] && !vr[256];
     wire codec_v; wire [255:0] codec_codes; wire [31:0] codec_mask, codec_bad; wire [7:0] codec_addr;
     generate if (SECTOR_CAPTURE) begin : g_codec
-        ot_hgi_att_sector_codec u_codec (.clk(clk), .rst_n(rst_n), .in_v(hr_v), .in_data(hr_data),
-            .in_tag(hr_tag), .in_es(es_b), .out_v(codec_v), .out_codes(codec_codes),
+        ot_hgi_att_sector_codec u_codec (.clk(clk), .rst_n(rst_n), .in_v(hr_v_i), .in_data(hr_data_i),
+            .in_tag(hr_tag_i), .in_es(es_b), .out_v(codec_v), .out_codes(codec_codes),
             .out_mask(codec_mask), .out_bad(codec_bad), .out_addr(codec_addr));
     end else begin : g_no_codec
         assign codec_v = 1'b0; assign codec_codes = 256'd0; assign codec_mask = 32'd0;
@@ -142,7 +190,7 @@ module ot_hgi_att_unit #(
     end endgenerate
     wire response_land = SECTOR_CAPTURE ? codec_v : hr_vq;
     wire land_c = (st == S_KVC) && response_land;
-    wire [26:0] qbase = {9'd0, abase} + hq * {9'd0, astr};
+    wire [26:0] qbase = {{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr};
     wire [26:0] pbase = qbase + {6'd0, blk0};
     genvar gb, gh;
     generate for (gb = 0; gb < 8; gb = gb + 1) begin : g_qb
@@ -226,8 +274,8 @@ module ot_hgi_att_unit #(
     reg [4:0] st;
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg hr_vq; reg [7:0] hr_tq; reg [255:0] hr_dq;
-    always @(posedge clk) begin hr_tq <= hr_tag; hr_dq <= hr_data; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) hr_vq <= 1'b0; else hr_vq <= hr_v;
+    always @(posedge clk) begin hr_tq <= hr_tag_i; hr_dq <= hr_data_i; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) hr_vq <= 1'b0; else hr_vq <= hr_v_i;
     reg [20:0] blk0, tb; reg [3:0] jb;               // job's first row, rows, job index
     reg [4:0] hq; reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n;   // VM walk
     reg [20:0] row; reg [7:0] nsec, isec; reg [3:0] hout; reg [39:0] rbyte;
@@ -244,17 +292,18 @@ module ot_hgi_att_unit #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
-            vmq <= 338'd0; hq_v <= 1'b0; job_v <= 1'b0; q_v <= 1'b0; kv_v <= 1'b0; sc_cr <= 1'b0; p_v <= 1'b0;
+            vmq_i <= 338'd0; hq_v_i <= 1'b0; job_v <= 1'b0; q_v <= 1'b0; kv_v <= 1'b0; sc_cr <= 1'b0; p_v <= 1'b0;
             pv_cr <= 1'b0; flt <= 1'b0; vo_n <= 3'd0; sc_hold <= 1'b0; scn <= 21'd0; pvn <= 10'd0; ad_v <= 1'b0;
             sfw <= 5'd0; sfr <= 5'd0;
             aw <= 6'd0; ar <= 6'd0;
         end else begin
-            rec_done <= 1'b0; rec_fault <= 1'b0; vmq[337] <= 1'b0; job_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
+            rec_done <= 1'b0; rec_fault <= 1'b0; vmq_i[337] <= 1'b0; job_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
             ad_v <= 1'b0;
             if (|cflt) flt <= 1'b1;
+            if (SELECTED_VM && (selected_fault || main_identity_fault)) flt <= 1'b1;
             if (ad_o) begin ar <= ar + 6'd1; if (ad_e != 2'd0) flt <= 1'b1; end
             if (rec_v && rec_rdy) raw_v <= 1'b1;
-            if (hq_v && hq_rdy) hq_v <= 1'b0;
+            if (hq_v_i && hq_rdy_i) hq_v_i <= 1'b0;
             if (q_v && q_ready) q_v <= 1'b0;
             if (kv_v && kv_ready) kv_v <= 1'b0;
             if (p_v && p_ready) p_v <= 1'b0;
@@ -281,8 +330,8 @@ module ot_hgi_att_unit #(
                 else if (st == S_KVF || st == S_KVC || st == S_KVP || st == S_SCW) begin
                     if (vo_n < 3'd4) begin : scw
                         reg [31:0] wa;
-                        wa = {14'd0, obase} + sch * {14'd0, ostr} + (blk0 + scrow + scl) * {14'd0, oist};
-                        vmq <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{scy[32 * (scl * H + sch) +: 32]}}, 32'hF << (4 * wa[2:0]),
+                        wa = {{(32-VW){1'b0}}, obase} + sch * {{(32-VW){1'b0}}, ostr} + (blk0 + scrow + scl) * {14'd0, oist};
+                        vmq_i <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{scy[32 * (scl * H + sch) +: 32]}}, 32'hF << (4 * wa[2:0]),
                                 16'h4157};
                         if (sch == lanes - 1) begin sch <= 5'd0; scl <= scl + 4'd1; end else sch <= sch + 5'd1;
                     end
@@ -299,13 +348,13 @@ module ot_hgi_att_unit #(
                     hd <= (op == 6'd0) ? mn(da)[9:0] : mn(dout)[9:0];
                     tt <= nb + (hasc ? nc : 21'd0);
                     bfmt <= !db[4] ? db[3:2] : 2'd3; cfmt <= !dc[4] ? dc[3:2] : 2'd3;
-                    abase <= mbase(da)[17:0]; astr <= mst(da)[17:0]; obase <= mbase(dout)[17:0]; ostr <= mst(dout)[17:0];
+                    abase <= mbase(da)[VW-1:0]; astr <= mst(da)[VW-1:0]; obase <= mbase(dout)[VW-1:0]; ostr <= mst(dout)[VW-1:0];
                     oist <= {2'b00, mist(dout)}; bbase <= mbase(db); cbase <= mbase(dc); bstr <= mst(db); cstr <= mst(dc);
                     bm <= mm(db);
                     st <= S_CHK;
                 end
                 S_CHK: begin
-                    if (hdr[127:124] != 4'd5 || op > 6'd1 || !opnd[0] || !opnd[1] || !opnd[4] || da[1:0] != 2'd1 ||
+                    if ((SELECTED_VM && !allocation_ok) || hdr[127:124] != 4'd5 || op > 6'd1 || !opnd[0] || !opnd[1] || !opnd[4] || da[1:0] != 2'd1 ||
                         dout[1:0] != 2'd1 || db[1:0] != 2'd0 || (hasc && dc[1:0] != 2'd0) || bfmt == 2'd3 ||
                         (hasc && cfmt != bfmt) || hd == 0 || hd > D || hd[4:0] != 0 || tt == 0 ||
                         lanes > H || (ring && (bm == 0 || (bm & (bm - 1)) != 0 || {1'b0, bm} < nb)) ||
@@ -320,7 +369,7 @@ module ot_hgi_att_unit #(
                     if (job_ready && !job_v) begin
                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
                         st <= S_QRD; 
-                        sec <= abase >> 3; sec_end <= ({9'd0, abase} + {17'd0, hd} - 27'd1) >> 3;
+                        sec <= abase >> 3; sec_end <= ({{(27-VW){1'b0}}, abase} + {17'd0, hd} - 27'd1) >> 3;
                         rsec <= abase >> 3; vo_n <= 3'd0;
                     end
                 end
@@ -329,11 +378,11 @@ module ot_hgi_att_unit #(
                         if (!q_v || q_ready) begin q_v <= 1'b1; qload <= 1'b0; st <= S_QW; end
                     end else begin
                         if (vo_n < 3'd4 && sec <= sec_end) begin
-                            vmq <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4151}; sec <= sec + 27'd1;
+                            vmq_i <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4151}; sec <= sec + 27'd1;
                         end
                         if (vr[273] && !vr[256]) begin
                             for (q = 0; q < 8; q = q + 1) begin
-                                e2 = {rsec, q[2:0]} - ({9'd0, abase} + hq * {9'd0, astr});
+                                e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr});
                                 if (e2 >= 0 && e2 < hd && vr[32*q +: 16] != 16'd0) flt <= 1'b1;   // q is BF16
                             end
                             rsec <= rsec + 27'd1;
@@ -347,9 +396,9 @@ module ot_hgi_att_unit #(
                         if (hq == H - 1) begin row <= blk0; kl <= 4'd0; st <= S_KVF; vo_n <= 3'd0; end
                         else begin
                             hq <= hq + 5'd1; 
-                            sec <= ({9'd0, abase} + (hq + 1) * {9'd0, astr}) >> 3;
-                            rsec <= ({9'd0, abase} + (hq + 1) * {9'd0, astr}) >> 3;
-                            sec_end <= ({9'd0, abase} + (hq + 1) * {9'd0, astr} + {17'd0, hd} - 27'd1) >> 3;
+                            sec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr}) >> 3;
+                            rsec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr}) >> 3;
+                            sec_end <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {17'd0, hd} - 27'd1) >> 3;
                             st <= S_QRD;
                         end
                     end
@@ -369,10 +418,10 @@ module ot_hgi_att_unit #(
                     st <= S_KVC;
                 end
                 S_KVC: begin
-                    if ((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) begin
-                        hq_v <= 1'b1; hq_addr <= (rbyte >> 5) + isec; hq_tag <= isec; isec <= isec + 8'd1;
+                    if ((!hq_v_i || hq_rdy_i) && isec < nsec && hout < NOUT) begin
+                        hq_v_i <= 1'b1; hq_addr_i <= (rbyte >> 5) + isec; hq_tag_i <= isec; isec <= isec + 8'd1;
                     end
-                    hout <= hout + (((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (response_land ? 4'd1 : 4'd0);
+                    hout <= hout + (((!hq_v_i || hq_rdy_i) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (response_land ? 4'd1 : 4'd0);
                     if (isec == nsec && hout == 4'd0 && !response_land && (!kv_v || kv_ready)) begin
                         // the row -> staging slot kl; a beat leaves with NL rows (or the job's last rows)
                         kv_w[kl * ROWW +: ROWW] <= kv_row;
@@ -390,17 +439,17 @@ module ot_hgi_att_unit #(
                     hq <= 5'd0; pw_i <= 21'd0;
                     if (qk) st <= S_PW;
                     else begin
-                        sec <= ({9'd0, abase} + {6'd0, blk0}) >> 3; rsec <= ({9'd0, abase} + {6'd0, blk0}) >> 3;
-                        sec_end <= ({9'd0, abase} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3; st <= S_PRD;
+                        sec <= ({{(27-VW){1'b0}}, abase} + {6'd0, blk0}) >> 3; rsec <= ({{(27-VW){1'b0}}, abase} + {6'd0, blk0}) >> 3;
+                        sec_end <= ({{(27-VW){1'b0}}, abase} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3; st <= S_PRD;
                     end
                 end
                 S_PRD: begin                                        // p[hq][job rows] -> pb (PV)
                     if (vo_n < 3'd4 && sec <= sec_end) begin
-                        vmq <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4150}; sec <= sec + 27'd1;
+                        vmq_i <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4150}; sec <= sec + 27'd1;
                     end
                     if (vr[273] && !vr[256]) begin
                         for (q = 0; q < 8; q = q + 1) begin
-                            e2 = {rsec, q[2:0]} - ({9'd0, abase} + hq * {9'd0, astr} + {6'd0, blk0});
+                            e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr} + {6'd0, blk0});
                             if (e2 >= 0 && e2 < tb && vr[32*q +: 16] != 16'd0) flt <= 1'b1;   // p is BF16
                         end
                         rsec <= rsec + 27'd1;
@@ -410,9 +459,9 @@ module ot_hgi_att_unit #(
                         if (hq == lanes - 1) st <= S_PW;
                         else begin
                             hq <= hq + 5'd1;
-                            sec <= ({9'd0, abase} + (hq + 1) * {9'd0, astr} + {6'd0, blk0}) >> 3;
-                            rsec <= ({9'd0, abase} + (hq + 1) * {9'd0, astr} + {6'd0, blk0}) >> 3;
-                            sec_end <= ({9'd0, abase} + (hq + 1) * {9'd0, astr} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3;
+                            sec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0}) >> 3;
+                            rsec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0}) >> 3;
+                            sec_end <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3;
                         end
                     end
                 end
@@ -465,8 +514,8 @@ module ot_hgi_att_unit #(
                 S_OUT: begin                                        // O[h][d] = the merged root, one word a write
                     if (vo_n < 3'd4 && hq < lanes) begin : ow
                         reg [31:0] wa;
-                        wa = {14'd0, obase} + hq * {14'd0, ostr} + dq;
-                        vmq <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{ck_q}}, 32'hF << (4 * wa[2:0]),
+                        wa = {{(32-VW){1'b0}}, obase} + hq * {{(32-VW){1'b0}}, ostr} + dq;
+                        vmq_i <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{ck_q}}, 32'hF << (4 * wa[2:0]),
                                 16'h414F};
                         if (dq == hd - 1) begin dq <= 10'd0; hq <= hq + 5'd1; end else dq <= dq + 10'd1;
                     end

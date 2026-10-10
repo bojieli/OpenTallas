@@ -1,0 +1,13 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_selected_bridge.sv": "7e684a080d95679232d248e0074fab86fea0da3026edd19c1f0c4f7faf8204fc",
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv": "88065a2605d227d7a24a13d23056935f3da1ed62a97335973076ad7d78857f1d",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_selected_bridge.sv": "e6b583b621a469706707ab7719e734f9348f1af7099859ad1978e426a0b22630"
+  },
+  "bridge_gate": "PASS handshake,8credits,C/Bwindowbounds,wrongidentity,UE,duplicate",
+  "minimum_unit_elaboration": "H1 D64 NL2 BLK64 SELECTED_VM1 both-selected passed; allocated1.335GB; notproductiontiming",
+  "consumer_numeric_gate": "pending; criticalsource/golden scaledformat gap takespriority",
+  "adopted": false,
+  "default": "SPACE0 HBM/no selectedclient/18wordbits unchanged whenSELECTED_VM0",
+  "context": "nativeVM f7e07f1a7/59a9e0b4f actual16macroquad gate separate; directready mandatory, notvalidonlyshim"
+}

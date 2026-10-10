@@ -1,0 +1,591 @@
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:76:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   76 |     generate if(SELECTED_VM) begin : g_selected
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:100:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SELECTED_C_ONLY' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  100 |     localparam [39:0] SCRATCH_FIRST = SELECTED_C_ONLY ? 40'd1048576 : 40'd1114112;
+      |                                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:123:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  123 |     localparam integer VW = SELECTED_VM ? 21 : 18;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:183:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SECTOR_CAPTURE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  183 |     generate if (SECTOR_CAPTURE) begin : g_codec
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:306:42: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wbank' generates 2 bits.
+                                                                  : ... note: In instance 'ot_hgi_att_unit.u_eng.g_t[1].u_t.g_h[0].u_hdp'
+  306 |                     if (we[gk] && (wbank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+      |                                          ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:428:70: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'r_ld_grp' generates 8 bits.
+                                                                  : ... note: In instance 'ot_hgi_att_unit.u_eng.g_t[1].u_t'
+  428 |                     assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
+      |                                                                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:959:67: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'r_c' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng.g_tr[1].g_real.u_tr'
+  959 |             assign col[gs*18 +: 18] = tr[(r_half * TD + gs) * DPT + r_c];
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:306:62: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  306 |     wire        p_side = (ILV != 0) ? act_b : (act && (q_cnt == H));
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:310:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  310 |     wire [15:0] blk_rows0 = pl_blk * TD;                      
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:311:35: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'T_p' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  311 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:311:35: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk_rows0' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  311 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:311:68: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'T_p' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  311 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:311:68: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk_rows0' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  311 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:311:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  311 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:321:40: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  321 |             if (!held[ab] && (bcnt[ab] <= P_THR)) begin p_alloc = ab[BW-1:0]; p_alloc_ok = 1'b1; end
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:327:86: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  327 |     wire p_bank_ok = (ILV != 0) ? p_alloc_ok : (!held[next_bank] && (bcnt[next_bank] <= P_THR));
+      |                                                                                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:365:58: Operator ADD expects 32 or 16 bits on the LHS, but LHS's VARREF 'pl_word' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  365 |     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:365:95: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  365 |     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:367:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  367 |     assign q_ready = act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:379:99: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iss_c' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  379 |     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
+      |                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:382:46: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  382 |     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:383:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  383 |     wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && (sc_cred != 0) &&
+      |                                             ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:397:21: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'SC_CRED' generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  397 |             sc_cred <= SC_CRED; pv_cred <= PV_CRED;
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:397:41: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'PV_CRED' generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  397 |             sc_cred <= SC_CRED; pv_cred <= PV_CRED;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:405:63: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'job_rows' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  405 |                 act <= 1'b1; T <= job_rows; nblk <= (job_rows + TD - 1) / TD; phase_pv <= 1'b0;
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:405:50: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  405 |                 act <= 1'b1; T <= job_rows; nblk <= (job_rows + TD - 1) / TD; phase_pv <= 1'b0;
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:427:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'next_bank' generates 2 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  427 |                     next_bank <= (next_bank == NBANK - 1) ? {BW{1'b0}} : next_bank + 1'b1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:431:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wptr' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  431 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:431:61: Operator COND expects 32 bits on the Conditional False, but Conditional False's FUNCREF 'count_ones' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  431 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                                                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:431:29: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  431 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:433:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  433 |                 qk_row <= qk_row + NL;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:433:24: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  433 |                 qk_row <= qk_row + NL;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:434:30: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  434 |                 bcnt[q_bank] <= GUARD_Q + 1 + XD;
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:435:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  435 |                 if (qk_row + NL >= T) begin
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:448:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'next_bank' generates 2 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  448 |                     next_bank <= (next_bank == NBANK - 1) ? {BW{1'b0}} : next_bank + 1'b1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:454:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pl_word' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  454 |                     pl_word <= pl_word + PWORDS;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:454:29: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  454 |                     pl_word <= pl_word + PWORDS;
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:459:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'fl_cnt' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  459 |                 if (fl_cnt + 1 == FILLC) begin
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:466:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'fill_cnt_d' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  466 |             if (fill_wr && (fill_cnt_d + 1 == FILLC)) filled_upto <= fill_blk_d + 1'b1;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:469:32: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  469 |                 bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:470:27: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iss_c' generates 8 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  470 |                 if (iss_c + 1 == DPT) begin
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:530:35: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'qk_row' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  530 |     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:530:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  530 |     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:543:44: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'rd_row0' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  543 |     wire [15:0]   row_fl_c = (NSTAGE == 2) ? (fl_blk * TD + fl_cnt * NL) : rd_row0;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:543:28: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  543 |     wire [15:0]   row_fl_c = (NSTAGE == 2) ? (fl_blk * TD + fl_cnt * NL) : rd_row0;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:582:32: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                            : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  582 |         rq_r0 <= qk_row; rf_r0 <= fl_blk * TD + fl_cnt * NL;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:585:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_fl_c' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  585 |         for (pi2 = 0; pi2 < NL; pi2 = pi2 + 1) fpad_d1[pi2] <= (row_fl_c + pi2) >= T_p;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:633:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_qk_c' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  633 |             qpad_r[pi] <= (row_qk_c + pi) >= T;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn.sv:705:67: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r0_qk_s' generates 16 bits.
+                                                             : ... note: In instance 'ot_hgi_att_unit.u_eng'
+  705 |         for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk_s + li) < T;
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_selected_bridge.sv:18:63: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                     : ... note: In instance 'ot_hgi_att_unit.g_selected.u_selected'
+   18 |  assign vmq = {enable && rq_v && bounded && free_tag && count < OUT && !fault,
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_selected_bridge.sv:20:57: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                     : ... note: In instance 'ot_hgi_att_unit.g_selected.u_selected'
+   20 |  assign rq_rdy = enable && bounded && free_tag && count < OUT && vmq_rdy && !fault;
+      |                                                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:63:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   63 |     assign vmq = SELECTED_VM ? {vmq_i[337:16],main_seq} : vmq_i;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:65:60: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   65 |         if(!rst_n) main_seq<=16'h4100; else if(SELECTED_VM && vmq_i[337]) main_seq<=main_seq+16'd1;
+      |                                                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:67:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   67 |     wire selected_row = SELECTED_VM && (!SELECTED_C_ONLY || row >= nb);
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:67:41: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_C_ONLY' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   67 |     wire selected_row = SELECTED_VM && (!SELECTED_C_ONLY || row >= nb);
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:77:108: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_C_ONLY' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+   77 |         ot_hgi_att_selected_bridge u_selected (.clk(clk),.rst_n(rst_n),.enable(selected_row),.allow_window(!SELECTED_C_ONLY && row<nb),
+      |                                                                                                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:89:14: Logical operator IF expects 1 bit on the If, but If's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                         : ... note: In instance 'ot_hgi_att_unit'
+   89 |         else if(SELECTED_VM) begin
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:103:26: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_C_ONLY' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  103 |         (SELECTED_C_ONLY || (bbase>=40'd4194304 && b_end<=64'd4456448)) && (!hasc || nc==0 || c_end<=64'd4194304);
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:156:46: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  156 |             e = x[30:23]; m = x[22:0]; E = e - 127; sig = {1'b1, m[22:20]};
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:191:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SECTOR_CAPTURE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  191 |     wire response_land = SECTOR_CAPTURE ? codec_v : hr_vq;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:198:36: Operator SUB expects 30 bits on the RHS, but RHS's VARREF 'qbase' generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  198 |         wire [26:0] e = {rsec, qq} - qbase;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:198:23: Operator ASSIGNW expects 27 bits on the Assign RHS, but Assign RHS's SUB generates 30 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  198 |         wire [26:0] e = {rsec, qq} - qbase;
+      |                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:200:54: Bit extraction of array[7:0] requires 3 bit index, not 27 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  200 |         always @(posedge clk) if (land_q && e < hd) m[e >> 3] <= vr[32*qq + 16 +: 16];
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:200:47: Operator LT expects 27 bits on the RHS, but RHS's VARREF 'hd' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  200 |         always @(posedge clk) if (land_q && e < hd) m[e >> 3] <= vr[32*qq + 16 +: 16];
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:216:43: Operator SUB expects 32 bits on the LHS, but LHS's REPLICATE generates 30 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  216 |                         m[({rsec, x[2:0]} - pbase) / PB] <= vr[32*x + 16 +: 16];
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:216:43: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'pbase' generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  216 |                         m[({rsec, x[2:0]} - pbase) / PB] <= vr[32*x + 16 +: 16];
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:215:42: Operator SUB expects 32 bits on the LHS, but LHS's REPLICATE generates 30 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  215 |                     if ((({rsec, x[2:0]} - pbase) % PB) == gb && ({rsec, x[2:0]} - pbase) < tb)
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:215:42: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'pbase' generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  215 |                     if ((({rsec, x[2:0]} - pbase) % PB) == gb && ({rsec, x[2:0]} - pbase) < tb)
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:215:82: Operator SUB expects 30 bits on the RHS, but RHS's VARREF 'pbase' generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  215 |                     if ((({rsec, x[2:0]} - pbase) % PB) == gb && ({rsec, x[2:0]} - pbase) < tb)
+      |                                                                                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:215:91: Operator LT expects 30 bits on the RHS, but RHS's VARREF 'tb' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  215 |                     if ((({rsec, x[2:0]} - pbase) % PB) == gb && ({rsec, x[2:0]} - pbase) < tb)
+      |                                                                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:217:28: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  217 |             wire [20:0] r0 = pw_i * R;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:218:45: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'r0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  218 |             wire [20:0] jj = (gb + PB - (r0 % PB)) % PB;
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:218:28: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's MODDIV generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  218 |             wire [20:0] jj = (gb + PB - (r0 % PB)) % PB;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:220:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'jj' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  220 |             assign pb_ok[gh * PB + gb] = jj < R;
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:221:62: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  221 |             assign pb_val[(gh * PB + gb) * 16 +: 16] = m[(r0 + jj) / PB];
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:221:62: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'jj' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  221 |             assign pb_val[(gh * PB + gb) * 16 +: 16] = m[(r0 + jj) / PB];
+      |                                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:241:48: Bit extraction of array[1:0] requires 1 bit index, not 8 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  241 |                     if (codec_mask[gb]) begin m[codec_addr] <= codec_codes[8*gb +: 8]; cflt[gb] <= codec_bad[gb]; end
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:242:45: Bit extraction of array[1:0] requires 1 bit index, not 8 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  242 |                 end else if (es_b == 2'd0) m[hr_tq] <= hr_dq[8*gb +: 8];
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:243:70: Bit extraction of array[1:0] requires 1 bit index, not 8 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  243 |                 else if (es_b == 2'd1 && hr_tq[0] == gb / 16) begin m[hr_tq >> 1] <= c16[7:0]; cflt[gb] <= c16[8]; end
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:244:71: Bit extraction of array[1:0] requires 1 bit index, not 8 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  244 |                 else if (es_b == 2'd2 && hr_tq[1:0] == gb / 8) begin m[hr_tq >> 2] <= c32[7:0]; cflt[gb] <= c32[8]; end
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:244:53: Operator EQ expects 32 or 4 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  244 |                 else if (es_b == 2'd2 && hr_tq[1:0] == gb / 8) begin m[hr_tq >> 2] <= c32[7:0]; cflt[gb] <= c32[8]; end
+      |                                                     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:243:51: Operator EQ expects 32 or 5 bits on the LHS, but LHS's SEL generates 1 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  243 |                 else if (es_b == 2'd1 && hr_tq[0] == gb / 16) begin m[hr_tq >> 1] <= c16[7:0]; cflt[gb] <= c16[8]; end
+      |                                                   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:240:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'SECTOR_CAPTURE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  240 |                 if (SECTOR_CAPTURE) begin
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:244:53: Operator EQ expects 32 or 5 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  244 |                 else if (es_b == 2'd2 && hr_tq[1:0] == gb / 8) begin m[hr_tq >> 2] <= c32[7:0]; cflt[gb] <= c32[8]; end
+      |                                                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:255:24: Bit extraction of array[31:0] requires 5 bit index, not 8 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  255 |             if (pv_v) m[pv_c] <= pv_y[gb * 32 +: 32];
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:256:51: Bit extraction of array[31:0] requires 5 bit index, not 6 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  256 |             else if (ad_o && aq[ar][12:6] == gb) m[aq[ar][5:0]] <= ad_y;
+      |                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:257:40: Bit extraction of array[31:0] requires 5 bit index, not 6 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  257 |         assign ck_rd[gb * 32 +: 32] = m[ck_a];
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:263:27: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'ck_d' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  263 |     always @* ck_a = ck_d % DPT;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:263:20: Operator ASSIGN expects 6 bits on the Assign RHS, but Assign RHS's MODDIV generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  263 |     always @* ck_a = ck_d % DPT;
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:264:37: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'ck_d' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  264 |     wire [31:0] ck_q = ck_rd[((ck_d / DPT) * H + ck_h) * 32 +: 32];
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:264:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ck_h' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  264 |     wire [31:0] ck_q = ck_rd[((ck_d / DPT) * H + ck_h) * 32 +: 32];
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:291:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tt' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  291 |     wire [3:0] njobs = (tt + BLK - 1) / BLK;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:291:22: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  291 |     wire [3:0] njobs = (tt + BLK - 1) / BLK;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:303:29: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  303 |             if (SELECTED_VM && (selected_fault || main_identity_fault)) flt <= 1'b1;
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:313:53: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pv_c' generates 8 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  313 |                     if (!qk && j < lanes && k * DPT + pv_c < hd && pv_f[k * H + j]) flt <= 1'b1;
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:333:95: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'blk0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  333 |                         wa = {{(32-VW){1'b0}}, obase} + sch * {{(32-VW){1'b0}}, ostr} + (blk0 + scrow + scl) * {14'd0, oist};
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:333:95: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'scrow' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  333 |                         wa = {{(32-VW){1'b0}}, obase} + sch * {{(32-VW){1'b0}}, ostr} + (blk0 + scrow + scl) * {14'd0, oist};
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:333:103: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'scl' generates 4 bits.
+                                                                            : ... note: In instance 'ot_hgi_att_unit'
+  333 |                         wa = {{(32-VW){1'b0}}, obase} + sch * {{(32-VW){1'b0}}, ostr} + (blk0 + scrow + scl) * {14'd0, oist};
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:334:84: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'sch' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  334 |                         vmq_i <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{scy[32 * (scl * H + sch) +: 32]}}, 32'hF << (4 * wa[2:0]),
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:326:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scl' generates 4 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  326 |                 if (!qk || scl == NL || !scm[scl]) begin
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:326:45: Bit extraction of var[1:0] requires 1 bit index, not 4 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  326 |                 if (!qk || scl == NL || !scm[scl]) begin
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:341:55: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'scl' generates 4 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  341 |                 vo_n <= vo_n + ((qk && sc_hold && scl != NL && scm[scl] && vo_n < 3'd4) ? 3'd1 : 3'd0) -
+      |                                                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:341:67: Bit extraction of var[1:0] requires 1 bit index, not 4 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  341 |                 vo_n <= vo_n + ((qk && sc_hold && scl != NL && scm[scl] && vo_n < 3'd4) ? 3'd1 : 3'd0) -
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:357:38: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SELECTED_VM' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  357 |                     if ((SELECTED_VM && !allocation_ok) || hdr[127:124] != 4'd5 || op > 6'd1 || !opnd[0] || !opnd[1] || !opnd[4] || da[1:0] != 2'd1 ||
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:359:65: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'hd' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  359 |                         (hasc && cfmt != bfmt) || hd == 0 || hd > D || hd[4:0] != 0 || tt == 0 ||
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:360:31: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'lanes' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  360 |                         lanes > H || (ring && (bm == 0 || (bm & (bm - 1)) != 0 || {1'b0, bm} < nb)) ||
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:368:31: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tt' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  368 |                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:368:31: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  368 |                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:368:56: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tt' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  368 |                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:368:56: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  368 |                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:368:24: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  368 |                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:370:54: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tt' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  370 |                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:370:54: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  370 |                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:370:79: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tt' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  370 |                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:370:79: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk0' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  370 |                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:370:46: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  370 |                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:372:38: Operator SHIFTR expects 27 bits on the LHS, but LHS's VARREF 'abase' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  372 |                         sec <= abase >> 3; sec_end <= ({{(27-VW){1'b0}}, abase} + {17'd0, hd} - 27'd1) >> 3;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:373:39: Operator SHIFTR expects 27 bits on the LHS, but LHS's VARREF 'abase' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  373 |                         rsec <= abase >> 3; vo_n <= 3'd0;
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:385:53: Operator SUB expects 32 bits on the LHS, but LHS's REPLICATE generates 30 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  385 |                                 e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr});
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:385:81: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  385 |                                 e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr});
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:399:68: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  399 |                             sec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr}) >> 3;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:400:69: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  400 |                             rsec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr}) >> 3;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:401:72: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  401 |                             sec_end <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {17'd0, hd} - 27'd1) >> 3;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:396:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  396 |                         if (hq == H - 1) begin row <= blk0; kl <= 4'd0; st <= S_KVF; vo_n <= 3'd0; end
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:412:53: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_RING' generates 32 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  412 |                             slot = ring ? (MUT_RING ? t : ((pos1 - nb + t) & (bm - 1))) : t;
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:414:49: Operator SUB expects 40 bits on the LHS, but LHS's VARREF 't' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  414 |                         end else b = cbase + (t - nb) * cstr;
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:414:49: Operator SUB expects 40 bits on the RHS, but RHS's VARREF 'nb' generates 21 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  414 |                         end else b = cbase + (t - nb) * cstr;
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:417:26: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's SHIFTR generates 18 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  417 |                     nsec <= ({8'd0, hd} << es_b) >> 5; isec <= 8'd0; hout <= 4'd0;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:422:67: Operator ADD expects 40 bits on the RHS, but RHS's VARREF 'isec' generates 8 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  422 |                         hq_v_i <= 1'b1; hq_addr_i <= (rbyte >> 5) + isec; hq_tag_i <= isec; isec <= isec + 8'd1;
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:422:51: Operator ASSIGNDLY expects 35 bits on the Assign RHS, but Assign RHS's ADD generates 40 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  422 |                         hq_v_i <= 1'b1; hq_addr_i <= (rbyte >> 5) + isec; hq_tag_i <= isec; isec <= isec + 8'd1;
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:421:70: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'hout' generates 4 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  421 |                     if ((!hq_v_i || hq_rdy_i) && isec < nsec && hout < NOUT) begin
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:424:83: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'hout' generates 4 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  424 |                     hout <= hout + (((!hq_v_i || hq_rdy_i) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (response_land ? 4'd1 : 4'd0);
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:428:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'kl' generates 4 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  428 |                         if (kl == NL - 1 || row == blk0 + tb - 21'd1) begin
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:452:49: Operator SUB expects 32 bits on the LHS, but LHS's REPLICATE generates 30 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  452 |                             e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr} + {6'd0, blk0});
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:452:77: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 27 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  452 |                             e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr} + {6'd0, blk0});
+      |                                                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:452:108: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 27 bits.
+                                                                            : ... note: In instance 'ot_hgi_att_unit'
+  452 |                             e2 = {rsec, q[2:0]} - ({{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr} + {6'd0, blk0});
+      |                                                                                                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:462:68: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  462 |                             sec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0}) >> 3;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:463:69: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  463 |                             rsec <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0}) >> 3;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:464:72: Operator ADD expects 32 or 27 bits on the LHS, but LHS's VARREF 'hq' generates 5 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  464 |                             sec_end <= ({{(27-VW){1'b0}}, abase} + (hq + 1) * {{(27-VW){1'b0}}, astr} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:481:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pvn' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  481 |                 S_PVW: if (pvn == DPT) begin                         
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:487:32: Bit extraction of var[3:0] requires 2 bit index, not 3 bits.
+                                                                          : ... note: In instance 'ot_hgi_att_unit'
+  487 |                     else if (jb[ml]) begin mh <= 5'd0; md <= 10'd0; mout <= 12'd0; miss <= 1'b0; st <= S_MADD; end
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:493:71: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'md' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  493 |                         ad_v <= 1'b1; ad_a <= lvl[ml * H * D + mh * D + md]; ad_b <= ck_q;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:494:43: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'md' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  494 |                         aq[aw] <= {7'((md / DPT) * H + mh), 6'(md % DPT)}; aw <= aw + 6'd1; mout <= mout + 12'd1;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:494:32: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's REPLICATE generates 13 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  494 |                         aq[aw] <= {7'((md / DPT) * H + mh), 6'(md % DPT)}; aw <= aw + 6'd1; mout <= mout + 12'd1;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:502:45: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'md' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  502 |                     lvl[ml * H * D + mh * D + md] <= ck_q;
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv:517:86: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'dq' generates 10 bits.
+                                                                           : ... note: In instance 'ot_hgi_att_unit'
+  517 |                         wa = {{(32-VW){1'b0}}, obase} + hq * {{(32-VW){1'b0}}, ostr} + dq;
+      |                                                                                      ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.710 MB sources in 37 modules, into 36.557 MB in 44 C++ files needing 0.000 MB
+- Verilator: Walltime 7.047 s (elab=0.107, cvt=6.511, bld=0.000); cpu 7.047 s on 1 threads; allocated 1335.207 MB

@@ -1,0 +1,83 @@
+{
+  "scope": "source/golden production-contract counterexample, no actual checkpoint distribution measurement",
+  "source_sha256": {
+    "tools/hgi_sim/ds_native.py": "7fcc4725f1cc01c0641b28d8528c5b8ae99ce9438d120c55480428bfda6f6ebe",
+    "tools/hgi_sim/machine.py": "043dca7cfbd0a9f7a23f05c5575ba5c475f5e1db2cf4682e2a0fb576cab7eed2",
+    "tools/hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv": "88065a2605d227d7a24a13d23056935f3da1ed62a97335973076ad7d78857f1d",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+  },
+  "C_producer_chain": [
+    "FUSED.QDQ_FP4_E4M3 LR->CK BF16-valuedFP32",
+    "DMA.STORE CK->compressedrow HBM FP32",
+    "COLL.ROW_GATHER exact selectedFP32",
+    "ATT C FP32 loads goldenfloatvalues with no re-quantization"
+  ],
+  "B_producer_chain": [
+    "FUSED.QDQ_FP8 per32 UE8M0-scaled codes",
+    "KVWB_DS dequantFP32 windowrows",
+    "ATT B FP32"
+  ],
+  "counterexample": {
+    "quantizer": "hdc_golden_v41.qdq_fp4_e4m3",
+    "input_block": [
+      5.25,
+      2.625,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "output_block": [
+      5.25,
+      2.625,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "unscaled_E4M3_grid_membership": [
+      false,
+      false
+    ],
+    "current_HGI_unit_result": "fault, despite valid golden production quantizer output"
+  },
+  "existing_engine": "exact fmt0 UE8M0/FP8 and fmt1 twoE4M3scale/FP4 per265bitgroup, golden reduction order already implemented",
+  "successor_proposal": {
+    "default_on": false,
+    "required_producer": "preserve original quantizer codes/scales alongside dequantized FP32; no reconstruction/requantization",
+    "group_bits": 265,
+    "groups_D512": 16,
+    "row_bits": 4240,
+    "aligned_sectors": 17,
+    "aligned_row_bytes": 544,
+    "FP32_row_bytes": 2048,
+    "traffic_ratio": 3.764705882352941,
+    "engine_arithmetic_change": false,
+    "producer_sidecar_area_and_latency": "not yet sized; not ready to build/adopt",
+    "checkpoint_gate": "must measure actual released-checkpoint quantizer payload and golden exact dequant before promotion"
+  },
+  "current_selected_reader_gate": "E4M3-grid only explicitly restricted; not full production numeric closure"
+}
