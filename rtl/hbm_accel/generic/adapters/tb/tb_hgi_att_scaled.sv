@@ -6,11 +6,18 @@ module tb_hgi_att_scaled;
  wire vo,vold,fault,fold;wire[511:0] y,yold;wire[264:0] packed_word,off_word;
  reg[1023:0] im[0:N-1];reg[776:0] em[0:N-1];reg[31:0] sm[0:N-1];
  wire[511:0] decoded;wire[31:0] deq_fault;
+`ifdef WINDOW_FP8
+ wire[255:0] oq;wire signed[9:0] oe;
+ ot_hgi_att_fp8_provenance #(.ENABLE(1)) u(clk,rst_n,v,x,vo,y,fault,packed_word);
+ ot_hdc_actquant old(clk,rst_n,v,1'b0,x,vold,oq,oe,yold,fold);
+ assign off_word=0;
+`else
  ot_hgi_fp4qdq #(.PACKED(1)) u(clk,rst_n,v,x,vo,y,fault,packed_word);
  ot_hgi_fp4qdq old(clk,rst_n,v,x,vold,yold,fold,off_word);
+`endif
  genvar g;
  generate for(g=0;g<32;g=g+1)begin:d
-  wire[17:0] elem={1'b0,packed_word[264],4'd0,packed_word[4*g+:4],packed_word[128+8*(g/16)+:8]};
+  wire[17:0] elem=packed_word[264] ? {1'b0,1'b1,4'd0,packed_word[4*g+:4],packed_word[128+8*(g/16)+:8]} : {2'b00,packed_word[8*g+:8],packed_word[263:256]};
   ot_hdc_v41x_attn_deq deq(elem,decoded[16*g+:16],deq_fault[g]);
  end endgenerate
  reg ld=0,iv=0;reg[143:0] ib=0;wire ov;wire[31:0] oy;wire oflt;
@@ -29,7 +36,7 @@ module tb_hgi_att_scaled;
    if(!vold || y!==yold || fault!==fold || fault || y!==em[i][776:265] || packed_word!==em[i][264:0] ||
       decoded!==y || deq_fault!==0 || off_word!==0) $fatal(1,"producer/dequant block%0d mismatch",i);
    if(i==0)$display("counterexample exact BF16=%h,%h; producerlatency=%0d",decoded[15:0],decoded[31:16],producer_latency);
-   for(j=0;j<8;j=j+1) ib[18*j+:18]={1'b0,packed_word[264],4'd0,packed_word[4*j+:4],packed_word[135:128]};
+   for(j=0;j<8;j=j+1) ib[18*j+:18]=packed_word[264] ? {1'b0,1'b1,4'd0,packed_word[4*j+:4],packed_word[135:128]} : {2'b00,packed_word[8*j+:8],packed_word[263:256]};
 `ifdef MUT_SCALE
    ib[7:0]=8'h38;
 `endif

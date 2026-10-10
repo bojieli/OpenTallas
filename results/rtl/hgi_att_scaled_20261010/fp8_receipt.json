@@ -1,0 +1,18 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_att_fp8_provenance.sv": "cbb0ca54b6a0ff77be7d625a849e8de268c2b0577d1847226607f01fc09d0753",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_scaled.sv": "ce44592eb156e222cc4f983fd5a6f46fbfaaf08a7afa0d82b9472a38197f702f",
+    "tools/hgi_adapters/att_scaled_bench.py": "a6193856fea443c80c8c59c1de186ad0fa233425c6fa6341aa5b6f199362bff8"
+  },
+  "source_quantizer": "existingot_hdc_actquant fp4=0 outputs originalq/e/y",
+  "exact": "311blocks PASS originalBF16lockstep/packedgolden/actual32dequantizers/actualchunk8",
+  "added_register_bits": 0,
+  "added_cycles": 0,
+  "producer_cycles": 13,
+  "II": 1,
+  "negative": "MUT_SCALE actualchunk0 rejects metadata mutation",
+  "scope": "minimumactualcomponent arithmetic, no checkpointdistribution/full H16 timing/wholeATTunitphysicalclaim",
+  "default": "ENABLE0 leaveslegacyy/vo/fault andzerosidecar",
+  "raw_binding": "544byte row opaque; no reinterpretation"
+}
