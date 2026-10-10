@@ -1,4 +1,5 @@
 module tb_front_s;
+  parameter integer RV = 1;   // RV 0 = the released unqualified front (negative control: must FAIL)
   reg clk=0,rst_n=0;
   always #5 clk=~clk;
   reg [367:0] landing=0;
@@ -9,7 +10,7 @@ module tb_front_s;
   reg sticky=0;
   reg [267:0] data_pipe0=0,data_pipe1=0;
   integer checks=0,c;
-  ot_hbm_accel_smh_front_s #(.RESULT_VALID(1),.NC(8)) dut(
+  ot_hbm_accel_smh_front_s #(.RESULT_VALID(RV),.NC(8)) dut(
     .clk(clk),.rst_n(rst_n),.rv(rv),.fault(fault),.rrow(rrow),.rdata(rdata),.fsv(fsv));
   task tick(input [7:0] v,input [7:0] f,input [11:0] row);
     reg [255:0] expected_data;

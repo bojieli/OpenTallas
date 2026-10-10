@@ -1384,7 +1384,9 @@ module ot_hbm_accel_smh_front_c #(
 endmodule
 
 module ot_hbm_accel_smh_front_s #(
-    parameter integer RESULT_VALID = `ifdef OT_SMH_RESULT_VALID 1 `else 0 `endif,
+    // a gated build (OT_SMH_CG) always qualifies its results: a gated column's held {v, f, data} must never reach
+    // the consumer under column 0's valid (hgi-e2e audit 2026-10-10 03:59 (2)); ungated columns are lockstep
+    parameter integer RESULT_VALID = `ifdef OT_SMH_RESULT_VALID 1 `elsif OT_SMH_CG 1 `else 0 `endif,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
