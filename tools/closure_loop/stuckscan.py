@@ -774,13 +774,14 @@ def redundant(j, jobs, closed, any_variant=False):
 # DIE-RUN EXEMPTION (drive-0849 2026-10-09, coordinator URGENT): die-level routes (full-die GRT/DRT, hours per congestion
 # iteration with one log line each) are never killed, cancelled or early-failed by this scan.  "hung" stays a CPU-tick
 # judgement (tree_cpu over 5 s, HUNG_CPU) -- log silence alone never kills.
-DIE_RUN_RE = re.compile(r"^(qfd_dietop_|dieev_|de2_|die_|dsrom_s81.*_die|r25gp|hbm_r25gp|qwen_r22k)")
+DIE_RUN_RE = re.compile(cl.DIE_CONTAINER_RE)
+DIE_RUN_MOUNT_RE = re.compile(cl.DIE_MOUNT_RE)
 
 
 def is_die_run(j):
     sp = j.get("spec") or {}
     return bool(sp.get("die_level")) or bool(DIE_RUN_RE.search(j.get("name", ""))) or \
-        any(x in (j.get("run") or "") for x in ("/die-evidence", "/kv-die/"))
+        bool(DIE_RUN_MOUNT_RE.search(j.get("run") or ""))
 
 
 def diagnose(j, o, hist, jobs, closed, now):

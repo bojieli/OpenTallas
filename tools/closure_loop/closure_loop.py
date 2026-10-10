@@ -863,16 +863,17 @@ def report_stopped_waiters(host, rows):
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
 # host probe marks die-level containers (names / run mounts below) oom_score_adj -900: the kernel then picks a block
 # route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
-DIE_CONTAINER_RE = r"^/?(qfd_dietop_|dieev_|de2_|die_|dsrom_s81|s81_l1|r25gp|hbm_r25gp|qwen_r22k)"
+DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
                  "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 "for p in $(pgrep -f '/(die-evidence[^/ ]*|kv-die)/' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
-DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}}' $c | grep -qE '{DIE_CONTAINER_RE}' && continue; ")
+DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}} {{{{{{{{range .Mounts}}}}}}}}{{{{{{{{.Source}}}}}}}} {{{{{{{{end}}}}}}}}' $c "
+                      f"| grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
 
 
