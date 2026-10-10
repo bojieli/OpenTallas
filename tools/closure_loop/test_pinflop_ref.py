@@ -59,5 +59,22 @@ class PinflopRef(unittest.TestCase):
         self.assertIn("OPTOUT 0", out)
 
 
+class Overlay(unittest.TestCase):
+    def test_overlay_patches_old_snapshot_idempotently(self):
+        import sys
+        sys.path.insert(0, str(ROOT / "tools/closure_loop"))
+        import pinflop_overlay as po
+        import closure_loop as cl
+        procs = (D / "pinflop_ref.tcl").read_text()
+        head = "set ot_glob x\nunset_input_delay [all_inputs]\n"
+        new = po.patch(head + po.MAIN_OLD, procs)
+        self.assertIn("ot_pf_ref [all_inputs -no_clocks]", new)
+        self.assertIsNone(po.patch(new, procs))
+        kit = "# kit\nforeach {clk sk ins outs} {\n  ck 150 {a} {b}\n} {\n" + po.KIT_OLD + "  set_input_delay 1 [get_ports $ins]\n}\n"
+        self.assertIn("ot_pf_ref [get_ports $ins]", po.patch(kit, procs))
+        self.assertIn("pinflop_overlay.py", cl.HELPERS)
+        self.assertIn("pinflop_overlay.py", Path(cl.__file__).read_text())
+
+
 if __name__ == "__main__":
     unittest.main()

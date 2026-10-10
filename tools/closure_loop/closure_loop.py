@@ -1660,6 +1660,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
@@ -1961,6 +1962,12 @@ def launch_stage(j, st, cmd):
             env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
     if st["kind"] in ("calibrate", "route"):
         install_rebudget(j)
+        if j["spec"].get("pinflop_ref", True) is not False:
+            # PINFLOP-REF (drive-0849 2026-10-10): route-time IO reference = median input pin flop when no / an unmatched
+            # REFGLOB names one (main 6cd79a9f8); overlaid on the snapshot so requeues of older commits get it too
+            ship_helpers(j["host"], j["run"])
+            env += (f"python3 {j['run']}/cl/pinflop_overlay.py {j.get('stage_source', j['run'] + '/src')} "
+                    f"{j['run']}/cl/pinflop_ref.tcl || true\n")
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
