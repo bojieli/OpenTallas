@@ -33,7 +33,9 @@ if [ "${P2_PATH:-0}" = 1 ]; then
         --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv --source rtl/common/ot_sc_pfifo.sv)
  # (ot_sc_pfifo: REGB=1 pin FIFOs, mtp-lead p2fix 2026-10-09; unused when REGB=0)
  MPT=/src/physical/mtp_p2_transport/macro_place_grid.tcl; DW=${P2_W:-480}; DH=${P2_H:-400}; PARAMS=(--param ENABLE=1 --param ROOTPIPE=${P2_ROOTPIPE:-0})
- if [ "${P2_ROOTPIPE:-0}" = 1 ]; then EXTRA+=(--step-tcl POST_IO_PLACEMENT=physical/mtp_p2_transport/rootpipe_pin_place.tcl); fi
+ # fill-9 2026-10-10: P2_OLK=1 = falling-edge lockup on every output pin (ot_mtp_p2_prefix_path OLK), lockups anchored at the pins
+ if [ "${P2_OLK:-0}" = 1 ]; then PARAMS+=(--param OLK=1); EXTRA+=(--step-tcl POST_IO_PLACEMENT=physical/mtp_p2_transport/olk_pin_place.tcl)
+ elif [ "${P2_ROOTPIPE:-0}" = 1 ]; then EXTRA+=(--step-tcl POST_IO_PLACEMENT=physical/mtp_p2_transport/rootpipe_pin_place.tcl); fi
 fi
 args=(--source $P2SRC "${EXTRA[@]}"
  --source rtl/common/ot_secded.sv --source $MV/${M}_bb.v

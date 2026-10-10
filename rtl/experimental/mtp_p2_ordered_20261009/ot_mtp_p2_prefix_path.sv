@@ -14,7 +14,16 @@
 //  * fault / corrected outputs registered.
 // Context ownership is unchanged: start_r stays low from the accepted start through the last external out handshake.
 // REGB=0 is the original wiring.
-module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REGB=1, parameter integer ROOTPIPE=0, parameter integer MUT_COPY_FIRST=0, parameter integer MUT_ORDER=0)(
+// OLK=1 (fill-9 2026-10-10, REGB=1 only; route rb4-s 9dda063ff TT +9.66 / FF -25.69: every output pin flop -- the
+// anchored payload/valid station, in_ready, start_r, done, fault, corrected -- launches on the rising edge right at its
+// pin, so the die-link hold term (sender output min -(FF+50), rule H1) leaves ~25 ps short on 300+ output ports):
+// each output is re-launched by a falling-edge LOCKUP register of the same root (design standard 2026-10-09: lockups
+// on hops that cross clock roots; ot_hfd_oreg*_fc / hbm_hub_quarter_gen --xroot practice).  0 added cycles: a
+// consumer sampling on the rising edge sees the identical value; the internal handshake uses the rising-edge copies.
+// The link keeps T/2 - clk->q for its wire (416 ps at 1.2 GHz vs the 250 ps wire term of the budget model).
+// MUT_OLK=1 (bench mutant): the lockup on the rising edge instead (a one-cycle stale pin view) -> the bench must fail.
+module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REGB=1, parameter integer ROOTPIPE=0, parameter integer MUT_COPY_FIRST=0, parameter integer MUT_ORDER=0,
+ parameter integer OLK=0, parameter integer MUT_OLK=0)(
  input wire clk,rst_n,start_v,output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire [1:0] in_v,output wire [1:0] in_r,input wire [147:0] in_identity,
@@ -69,6 +78,8 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  end end
  end else begin: enabled
  reg busy,busy_copy,done_q,abort_q,sr_q,sv_q,fault_q,corrected_q;
+ // rising-edge (internal) views of the pin outputs; OLK drives the pins through falling-edge lockups
+ wire out_v_i;wire [1:0] in_r_i;wire [593:0] oq;
  reg [73:0] sid_q;reg [26:0] sids_q;
  wire tr_sr,ar_sr,tr_v,tr_r,tr_fault,ar_fault,pub_fault;
  wire [73:0] tr_id;wire [8:0] tr_expert;wire [6:0] tr_word;
@@ -81,15 +92,13 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  reg lost_q;
  wire fault_i=tr_fault||ar_fault||pub_fault||broken||lost_q;
  wire poison=abort_q||fault_i;
- assign start_r=sr_q;
  wire fire_ext=start_v&&sr_q;
  wire fire=sv_q;
- assign done=done_q;assign fault=fault_q;assign corrected=corrected_q;
  // ---- input lanes: pin FIFOs {identity74, expert9, shared, last, word7, data512} = 604
  wire [1:0] li_v,li_r;wire [603:0] li_d[0:1];
  for(genvar l=0;l<2;l=l+1)begin: lanes
  ot_sc_pfifo #(.W(604),.S(2),.G(32)) pin(.clk(clk),.rst_n(rst_n),
- .in_valid(in_v[l]),.in_ready(in_r[l]),
+ .in_valid(in_v[l]),.in_ready(in_r_i[l]),
  .in_data({in_identity[74*l+:74],in_expert[9*l+:9],in_shared[l],in_last[l],in_word[7*l+:7],in_data[512*l+:512]}),
  .out_valid(li_v[l]),.out_ready(li_r[l]),.out_data(li_d[l]));
  end
@@ -117,7 +126,7 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  .out_identity(ar_id),.out_word(ar_word),.out_last(ar_last),.out_secded(ar_code),
  .abort(poison),.done(),.fault(ar_fault),.corrected(ar_ce));
  // ---- publisher -> output pin FIFO {data512, identity74, word7, last} = 594
- wire po_v,po_r,po_last;wire [511:0] po_data;wire [73:0] po_id;wire [6:0] po_word;wire [593:0] oq;
+ wire po_v,po_r,po_last;wire [511:0] po_data;wire [73:0] po_id;wire [6:0] po_word;
  ot_mtp_p2_prefix_native #(.ENABLE(1),.BREG(1)) publisher(.clk(clk),.rst_n(rst_n),.abort(poison),
  .in_v(ar_v),.in_r(ar_r),.in_secded(ar_code),.in_identity(ar_id),
  .in_word(ar_word),.in_last(ar_last),.out_v(po_v),.out_r(po_r),
@@ -126,14 +135,27 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  if(ROOTPIPE)begin: root_output
  ot_mtp_p2_pin_output #(.W(594),.G(32)) opin(.clk(clk),.rst_n(rst_n),
  .in_valid(po_v),.in_ready(po_r),.in_data({po_data,po_id,po_word,po_last}),
- .out_valid(out_v),.out_ready(out_r),.out_data(oq));
+ .out_valid(out_v_i),.out_ready(out_r),.out_data(oq));
  end else begin: fifo_output
  ot_sc_pfifo #(.W(594),.S(2),.G(32)) opin(.clk(clk),.rst_n(rst_n),
  .in_valid(po_v),.in_ready(po_r),.in_data({po_data,po_id,po_word,po_last}),
- .out_valid(out_v),.out_ready(out_r),.out_data(oq));
+ .out_valid(out_v_i),.out_ready(out_r),.out_data(oq));
  end
- assign out_data=oq[593:82];assign out_identity=oq[81:8];assign out_word=oq[7:1];assign out_last=oq[0];
- wire last_pop=out_v&&out_r&&out_last&&!poison;
+ // pin outputs {out_v, payload594, in_r2, start_r, done, fault, corrected} = 601
+ wire [600:0] po_rise={out_v_i,oq,in_r_i,sr_q,done_q,fault_q,corrected_q};
+ wire [600:0] po_pin;
+ if(OLK)begin: olk
+ (* keep *) reg [600:0] lk;
+ if(MUT_OLK)begin: mut always @(posedge clk) lk<=po_rise; end
+ else begin: fall always @(negedge clk) lk<=po_rise; end
+ assign po_pin=lk;
+ end else begin: nolk
+ assign po_pin=po_rise;
+ end
+ assign out_v=po_pin[600];
+ assign out_data=po_pin[599:88];assign out_identity=po_pin[87:14];assign out_word=po_pin[13:7];assign out_last=po_pin[6];
+ assign in_r=po_pin[5:4];assign start_r=po_pin[3];assign done=po_pin[2];assign fault=po_pin[1];assign corrected=po_pin[0];
+ wire last_pop=out_v_i&&out_r&&oq[0]&&!poison;
  wire busy_nx=(busy||fire)&&!last_pop;
  always @(posedge clk)begin sid_q<=start_identity;sids_q<=start_ids;end   // free-running pin capture
  always @(posedge clk or negedge rst_n)begin
