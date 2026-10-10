@@ -128,12 +128,15 @@ module ot_s81ph_coll_core #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rank <= 0; eng_en <= 1'b0; end
         else if (fv && ftype == 2'd3) begin rank <= fdata[1:0]; eng_en <= fdata[2]; end
-    reg erst_n;                                            // engine reset: released one cycle after enable
+    // Preserve the release register as the physical contract names it.  Without keep, synthesis
+    // folds it into eg[0] (the same <= eng_en function), leaving the existing three-cycle
+    // release constraint with no source cell.  The canonicalize hook keeps its driving flop.
+    (* keep *) reg erst_n;                                 // engine reset: released one cycle after enable
     always @(posedge clk or negedge rst_n) if (!rst_n) erst_n <= 1'b0; else erst_n <= eng_en;
     // v4: erst_n fans out to every engine flop (v3 route s81ph-dsfd_coll_core-34b3e75dd post-CTS recovery -681 ps);
     // its release is a 3-cycle multicycle (physical/s81_ph_views/collective/core_tile.sdc, as rst_mcp2): the engine
     // takes no input until 3 cycles after the release (eg[3]), so no engine flop changes state in that window.
-    reg [3:0] eg;
+    (* keep *) reg [3:0] eg;                               // prevent eg[0] folding into the kept release flop
     always @(posedge clk or negedge rst_n) if (!rst_n) eg <= 4'd0; else eg <= {eg[2:0], eng_en};
 
     // ------------------------------------------------------------------ input queues (VM credits)
