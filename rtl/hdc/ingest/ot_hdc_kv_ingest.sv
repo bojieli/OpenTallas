@@ -74,6 +74,9 @@ module ot_hdc_kv_ingest #(
     //           group / stack / local / base first, then the pitch product and the IKEY sums: two bubble edges a row);
     //           n_sectors counts a REGISTERED write fire and done_v / done_tag leave one edge later, so every done word
     //           still carries the count that includes its own last sector.
+    //   APIPE = 3 (sys-takeover 2026-10-10, hing_pipec_a TT -114: st_d -> s_stk * stride -> ap1_rbase 31 levels): one
+    //           more stage in front (ap0_*: group / die / stack / local decomposition and the descriptor fields), then
+    //           ap1_rbase = base + stack * stride, then the pitch product / IKEY sums: three bubble edges a row.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0
 ) (
@@ -586,13 +589,37 @@ module ot_hdc_kv_ingest #(
     wire [31:0] a2_raddr = ap1_rbase + ap1_local * ap1_pitch;
     wire [31:0] a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
     wire [31:0] a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
+    // APIPE 3: stage A0 (ap0_*) = the decomposition and descriptor fields; ap1_rbase = base + stack * stride from it
+    reg         ap_ok0;
+    reg  [31:0] ap0_base, ap0_stride, ap0_local, ap0_gs, ap0_row;
+    reg  [2:0]  ap0_stk;
+    reg  [4:0]  ap0_pitch;
+    reg         ap0_mine, ap0_ringz;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ap_ok0 <= 1'b0;
+        else if (ap_inval) ap_ok0 <= 1'b0;
+        else ap_ok0 <= st_act;
+    end
+    always @(posedge clk) if (!ap_ok0) begin
+        ap0_base <= st_d[47:16]; ap0_stride <= st_d[79:48]; ap0_ringz <= (s_ring == 0); ap0_stk <= s_stk;
+        ap0_local <= s_local; ap0_gs <= s_gs; ap0_row <= st_row; ap0_pitch <= s_pitch; ap0_mine <= s_mine;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) ap_ok1 <= 1'b0;
         else if (ap_inval) ap_ok1 <= 1'b0;
-        else ap_ok1 <= st_act;
+`ifdef OT_ING_MUT_AP0SKIP
+        else ap_ok1 <= st_act;                                                     // mutant: stage A0 not waited for
+`else
+        else ap_ok1 <= (APIPE >= 3) ? (st_act && ap_ok0) : st_act;
+`endif
     end
     always @(posedge clk) if (!ap_ok1) begin
-        ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
+        if (APIPE >= 3) begin
+            ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
+            ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
+        end else begin
+            ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
+        end
     end
     always @(posedge clk) if (!ap_ok) begin
         if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end

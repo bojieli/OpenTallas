@@ -52,7 +52,11 @@ ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
 export SDC_NAME=${SDC_NAME:-6_final.sdc}
 [ -f "$OB/$SDC_NAME" ] || { echo "sign-off SDC $OB/$SDC_NAME missing"; exit 2; }
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
-SN=""; grep -q -- "--sdc-name" tools/w18/corner_sta.py && SN="--sdc-name $SDC_NAME"
+# CORNER-STA (drive-1010 2026-10-10): a pre option-B source snapshot has a corner_sta.py without setup_tt; the ECO then
+# failed every time ("corner_sta without setup_tt", vtswap exit 8 -> combo "no vtswap base" rc=3, selt_q r6 cx-f5-hm0).
+# Sign-off STA is the loop's, like the verdict re-STA: use the shipped helper copy when the snapshot's lacks setup_tt.
+CSTA=tools/w18/corner_sta.py; grep -q setup_tt "$CSTA" 2>/dev/null || { [ -f "$(dirname "$0")/corner_sta.py" ] && CSTA="$(cd "$(dirname "$0")" && pwd)/corner_sta.py"; }
+SN=""; grep -q -- "--sdc-name" "$CSTA" && SN="--sdc-name $SDC_NAME"
 seed_sdc() {  # the ECO base carries the sign-off SDC (also as 6_final.sdc: a corner_sta.py without --sdc-name reads it)
   cp "$OB/$SDC_NAME" "$EB/6_final.sdc"; [ "$SDC_NAME" = 6_final.sdc ] || cp "$OB/$SDC_NAME" "$EB/$SDC_NAME"
 }
@@ -139,10 +143,10 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
   grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
   seed_sdc   # the ECO may have rewritten the base's SDC
-  python3 tools/w18/corner_sta.py $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
+  python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
   if [ -n "${SETUP_POST_SDC:-}" ]; then   # setup corners re-timed with the measured neighbour clock (the route's own merge)
-    python3 tools/w18/corner_sta.py $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
+    python3 $CSTA $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
       --orfs-dir $P/orfs --output $P/corner_sta_setup_post.json > $P/corner_setup_post.log 2>&1 \
       || { echo "setup post-SDC corner_sta failed"; tail $P/corner_setup_post.log; exit 8; }
     cp $P/corner_sta.json $P/corner_sta_hold_model.json

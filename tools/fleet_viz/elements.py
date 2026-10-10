@@ -18,6 +18,15 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
                              non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
 
+Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
+  variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
+             regexes). kind 'alternative' (default; a/b cuts, wide fallbacks, a candidate successor still on trial):
+             any closure closes the element. kind 'instance' (parameter instances that are ALL instantiated, e.g. the
+             LANE0 taps): the element is closed only when every instance block has a closure of its own, otherwise it
+             takes the category of the unclosed instances' jobs.
+  owner_map  {owner prefix: owner}: re-owns rows whose owner string starts with the prefix (longest match wins).
+  owners     {element: owner}: per-element owner, applied last. The original owner stays in `owner_orig`.
+
 Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/closure_loop/option_b_status_*/status.json
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
 ~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
@@ -58,7 +67,8 @@ VARIANT = [(r'_signoff\d+$', '', True), (r'_(parent|retained)$', '', False), (r'
            (r'^(ot_qwen_stream4_cdc_pc)_.+$', r'\1', True), (r'^(ot_hbm_native_frame_station_rb_NO\d)_(HALF|SAFE)$', r'\1', True),
            (r'_c12[hs]$', '', True), (r'^(qfd_sysctl_stn)_pb2$', r'\1', True), (r'_halfwrite_distributed$', '_halfwrite', False), (r'_root_phase$', '', False)]
 
-def master(block, known):
+def master(block, known, vmap=None):
+    if vmap and block in vmap: return vmap[block]
     b = block
     for _ in range(6):
         for rx, rep, forced in VARIANT:
@@ -208,6 +218,9 @@ class Elements:
         self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {}); self.supk = (None, {})
         self.superseded_path = pathlib.Path(os.environ.get('FLEET_VIZ_SUPERSEDED', os.path.expanduser(
             '~/claude-takeover-20261007/superseded_elements.json')))
+        self.ovk = (None, {})
+        self.overrides_path = pathlib.Path(os.environ.get('FLEET_VIZ_OVERRIDES', os.path.expanduser(
+            '~/claude-takeover-20261007/element_overrides.json')))
         self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
             '~/claude-takeover-20261007/revoked_closures.json')))
         self.desc = Describer(repo, self.state / 'element_descriptions.json')
@@ -305,6 +318,30 @@ class Elements:
             self.supk = (key, d)
         return self.supk[1]
 
+    def overrides(self):
+        try: key = self.overrides_path.stat().st_mtime
+        except OSError: key = None
+        if key != self.ovk[0]:
+            d = dict(variants={}, owner_map={}, owners={})
+            if key is not None:
+                try:
+                    raw = json.loads(self.overrides_path.read_text())
+                    d['variants'] = {k: v for k, v in (raw.get('variants') or {}).items()
+                                     if isinstance(v, dict) and isinstance(v.get('of'), str) and v['of'] and v['of'] != k}
+                    for f in ('owner_map', 'owners'):
+                        d[f] = {k: v for k, v in (raw.get(f) or {}).items() if isinstance(v, str) and v}
+                except Exception as e: self.log('elements: overrides: %s' % e)
+            self.ovk = (key, d)
+        return dict(dict(variants={}, owner_map={}, owners={}), **self.ovk[1])
+
+    @staticmethod
+    def remap_owner(owner, ov):
+        best = None
+        for k in ov.get('owner_map', {}):
+            if owner == k or (owner.startswith(k) and not re.match(r'[A-Za-z0-9_-]', owner[len(k)])):
+                if best is None or len(k) > len(best): best = k
+        return ov['owner_map'][best] if best else owner
+
     def registry(self):
         """Read additive, committed implementation evidence; never infer physical closure."""
         history = collections.defaultdict(list); errors = []
@@ -347,18 +384,32 @@ class Elements:
     # ---- classification
     def compute(self):
         js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs(); sup = self.superseded()
+        ov = self.overrides() if hasattr(self, 'overrides_path') else dict(variants={}, owner_map={}, owners={})
         registry, registry_errors = self.registry()
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
+        vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
+        vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
+        instances = collections.defaultdict(set)
+        for b, v in ov['variants'].items():
+            if v.get('kind') == 'instance': instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
         groups = collections.defaultdict(list)
-        for j in js: groups[master(j['block'], known)].append(j)
+        for j in js: groups[master(j['block'], known, vmap)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)
-            groups.setdefault(master(b, known), [])
+            groups.setdefault(master(b, known, vmap), [])
         evidence = collections.defaultdict(list)
         for b, records in registry.items():
-            key = master(b, known); groups.setdefault(key, []); evidence[key].extend(records)
+            key = master(b, known, vmap); groups.setdefault(key, []); evidence[key].extend(records)
         rows = []
         for m, g in groups.items():
             r = self.element(m, g, ob, rest, rj)
+            if r['category'].startswith('closed') and instances.get(m):
+                closed_blocks = {j['block'] for j in g if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
+                missing = sorted(b for b in instances[m] if b not in closed_blocks)
+                if missing:   # an instance-variant element is closed only when every instance closed
+                    sub = [j for j in g if j['block'] in missing]
+                    r['category'] = self.element(m, sub, ob, rest, rj)['category'] if sub else CATS[7]
+                    r['closed_t'] = None
+                    r['via'] = 'instances not closed: %s' % ', '.join(missing)
             records = sorted(evidence[m], key=lambda x: (ts(x.get('recorded_at', '')), x['registry_path']))
             r['evidence_history'] = records
             r['qualification'] = records[-1] if records else None
@@ -368,6 +419,8 @@ class Elements:
                 r['purpose'] = q.get('description') or r['purpose']
                 if not g and m not in ob.get('closed', {}):
                     r['category'] = 'implementation recorded (no physical job)'
+            r['owner_orig'] = r['owner']
+            r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
             if sv and not r['category'].startswith('closed'):

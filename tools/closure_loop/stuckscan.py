@@ -509,6 +509,11 @@ def hopeless(b, j, now):
                                                f"({g['ioref']['source']}{'' if g['ioref']['ref_ps'] != g['ioref']['ref_ps'] else ' %.0f ps' % g['ioref']['ref_ps']})"
                                                if g.get("ioref") else "")))
     elapsed = now - step_start(b)
+    if stale_current_log(b, j):
+        # the running step's .tmp.log predates this launch: a resumed / relaunched stage has not written its own series
+        # yet, so the hold / GRT / DRT series below are the previous launch's (drive-1010: band_lanes_q4_a f6 hm25/hm40
+        # were EARLY_FAIL_HOLD 2-4 min after their HOLD-STOP resume on the identical pre-resume -11.4 ps series)
+        return out
     hd = b.get("hold") or {}
     if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
         hv = hold_verdict(hd, b, elapsed, bool(j and insertion_untrusted(j)))
@@ -709,6 +714,21 @@ def hold_buf_cap(inst, gain):
     floor = GATES["hold_buf_improve_min" if improving else "hold_buf_min"]
     cap = GATES["hold_buf_cap"]
     return min(cap, max(floor, frac * inst)) if inst else cap
+
+
+def stale_current_log(b, j):
+    """True when the newest .tmp.log (the running step's log) was last written before the job's current stage launch
+    (j['stage_started']), i.e. it is a previous launch's log left in a reused run directory."""
+    cur = (b or {}).get("current")
+    started = (j or {}).get("stage_started")
+    if not cur or not started:
+        return False
+    mt = next((m for n, m, _ in b.get("logs") or [] if n == cur), None)
+    try:
+        t0 = dt.datetime.fromisoformat(started).timestamp()
+    except (TypeError, ValueError):
+        return False
+    return mt is not None and mt < t0
 
 
 def step_start(b):
