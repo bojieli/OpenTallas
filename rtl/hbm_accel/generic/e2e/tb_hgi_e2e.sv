@@ -120,7 +120,8 @@ module tb_hgi_e2e;
         // per stack service model: one native read at a time (the endpoint's), answered FLAT cycles after issue with the
         // sector of the byte address the lane asked for (ND 1: at most one transaction in flight on the whole port)
         reg [36:0] last_a; longint tn2 = 0; longint due [0:3]; reg busy_s [0:3]; reg [4:0] pc_s [0:3]; reg [15:0] tag_s [0:3];
-        initial for (int i = 0; i < 4; i++) begin busy_s[i] = 0; due[i] = 0; end
+        integer fjit = 0;                                     // +FJIT=j: random 0..j extra cycles per fetch sector
+        initial begin void'($value$plusargs("FJIT=%d", fjit)); for (int i = 0; i < 4; i++) begin busy_s[i] = 0; due[i] = 0; end end
         always @(posedge clk) begin
             tn2 <= tn2 + 1;
             if (rst_n && m_req_v && k_req_rdy) last_a <= m_req_addr;
@@ -130,7 +131,8 @@ module tb_hgi_e2e;
                 automatic bit rd_v = q[292]; automatic bit rr = q[344];
                 if (!busy_s[st]) begin
                     lr[st*293 +: 293] <= 293'd1;                          // native_rdy
-                    if (rd_v) begin busy_s[st] <= 1; pc_s[st] <= q[297:293]; tag_s[st] <= q[343:328]; due[st] <= tn2 + FLAT - 1;
+                    if (rd_v) begin busy_s[st] <= 1; pc_s[st] <= q[297:293]; tag_s[st] <= q[343:328];
+                                    due[st] <= tn2 + FLAT - 1 + ((fjit > 0) ? $urandom_range(0, fjit) : 0);
                                     lr[st*293 +: 293] <= 293'd0; end
                 end else if (tn2 >= due[st]) begin
                     automatic bit [255:0] rdat;
@@ -436,16 +438,32 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
     input wire clk, input wire rst_n, input wire [337:0] q, output reg [273:0] r);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
                                                input bit [31:0] mask, output bit [255:0] rd);
-    reg [272:0] rq [0:15]; longint due [0:15]; integer h = 0, t = 0; longint c = 0;
+    // exactness audit (lead 10-10): +VJIT=j adds a random 0..j extra cycles per response (responses stay in order per
+    // client: a later request never overtakes); +VMAXOUT=n (default 4) faults a client with more than n outstanding;
+    // +MUTLAT=1 (mutant, must FAIL): the response carries the data of the client's previous response (a +-1 pairing slip)
+    reg [272:0] rq [0:15]; longint due [0:15]; integer h = 0, t = 0; longint c = 0; longint last_due = 0;
+    integer jit = 0, maxout = 4, mut = 0, seed = 1; reg [255:0] prev_d = '0;
+    initial begin
+        void'($value$plusargs("VJIT=%d", jit)); void'($value$plusargs("VMAXOUT=%d", maxout));
+        void'($value$plusargs("MUTLAT=%d", mut)); if ($value$plusargs("SEED=%d", seed)) ; seed = seed * 131 + UNIT;
+        void'($urandom(seed));
+    end
     always @(posedge clk) begin
         c <= c + 1;
         r[273] <= 1'b0;
         if (rst_n && q[337]) begin : acc
-            bit [255:0] rd;
+            bit [255:0] rd; longint d;
+            if (t - h >= maxout) $fatal(1, "E2E FAIL: VM packet client unit %0d: more than %0d requests outstanding", UNIT, maxout);
             e2e_vm_sector(UNIT, int'(q[335:304] >> 5), q[336], q[303:48], q[47:16], rd);
-            rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = c + LAT; t = t + 1;
+            d = c + LAT + ((jit > 0) ? $urandom_range(0, jit) : 0);
+            if (d < last_due) d = last_due;
+            last_due = d;
+            rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = d; t = t + 1;
         end
-        if (h < t && due[h % 16] <= c) begin r <= {1'b1, rq[h % 16]}; h = h + 1; end
+        if (h < t && due[h % 16] <= c) begin
+            r <= (mut != 0) ? {1'b1, rq[h % 16][272:256], prev_d} : {1'b1, rq[h % 16]};
+            prev_d = rq[h % 16][255:0]; h = h + 1;
+        end
     end
 endmodule
 
@@ -478,8 +496,10 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
                                                 input bit [31:0] strb, output bit [255:0] rd);
     reg [49:0] rq [0:3][0:15]; integer rh [0:3], rn [0:3], nx [0:3];
     reg [269:0] lb [0:31][0:1023]; longint lt_due [0:31][0:1023]; integer lh [0:31], lt [0:31], cr [0:31];
-    longint tn = 0;
+    longint tn = 0; integer sjit = 0; longint ldue [0:31];      // +KJIT=j: random 0..j extra cycles, in order per lane
     initial begin
+        void'($value$plusargs("KJIT=%d", sjit));
+        for (integer i = 0; i < 32; i = i + 1) ldue[i] = 0;
         for (integer s = 0; s < 4; s = s + 1) begin rh[s] = 0; rn[s] = 0; nx[s] = 0; end
         for (integer i = 0; i < 32; i = i + 1) begin lh[i] = 0; lt[i] = 0; cr[i] = 4; end
         dq_rdy = 4'd0; dd = '0;
@@ -495,7 +515,8 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
                     r = rq[s][rh[s] % 16];
                     e2e_hbm_sector({27'd0, r[36:0]} + 32 * nx[s], 1'b0, 256'd0, 32'd0, d);
                     l = s * 8 + nx[s] % 8;
-                    lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nx[s]), d}; lt_due[l][lt[l] % 1024] = tn + LAT; lt[l] = lt[l] + 1;
+                    lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nx[s]), d}; begin : jd longint d_; d_ = tn + LAT + ((sjit > 0) ? $urandom_range(0, sjit) : 0); if (d_ < ldue[l]) d_ = ldue[l]; ldue[l] = d_;
+                    lt_due[l][lt[l] % 1024] = d_; end lt[l] = lt[l] + 1;
                     nx[s] = nx[s] + 1;
                     if (nx[s] == int'(r[45:37])) begin nx[s] = 0; rh[s] = rh[s] + 1; rn[s] = rn[s] - 1; end
                 end
@@ -520,6 +541,8 @@ module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
     // hgi-takeover F5 / F6: the lane takes a request a cycle and answers IN ORDER LAT cycles later (the pipelined kport
     // lane); PIPE = 0 is the old one-transaction lane.  The memory is accessed at acceptance (program order).
     reg [255:0] qd [0:255]; reg qw [0:255]; longint qt [0:255]; integer qh = 0, qn = 0; longint tn = 0;
+    integer kjit = 0; longint dk, kl = 0;                     // +KJIT=j: random 0..j extra cycles, in order
+    initial void'($value$plusargs("KJIT=%d", kjit));
     always @(posedge clk) begin
         tn <= tn + 1;
         rsp_v <= 1'b0;
@@ -527,7 +550,8 @@ module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
         if (rst_n && req_v && req_rdy) begin : acc
             bit [255:0] rd;
             e2e_hbm_sector({27'd0, req_addr}, req_we, req_wd, req_ws, rd);
-            qd[(qh + qn) % 256] = rd; qw[(qh + qn) % 256] = req_we; qt[(qh + qn) % 256] = tn + LAT - 1; qn = qn + 1;
+            dk = tn + LAT - 1 + ((kjit > 0) ? $urandom_range(0, kjit) : 0); if (dk < kl) dk = kl; kl = dk;
+            qd[(qh + qn) % 256] = rd; qw[(qh + qn) % 256] = req_we; qt[(qh + qn) % 256] = dk; qn = qn + 1;
         end
         req_rdy <= rst_n && ((PIPE != 0) ? (qn < 200) : (qn == 0));
     end
