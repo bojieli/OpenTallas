@@ -243,6 +243,10 @@ def hgi_inverse_selected_model(**kwargs):
     from uarch_model_hgi_row_gather import inverse_selected_model
     return inverse_selected_model(**kwargs)
 
+def hgi_publisher_fifo_model():
+    from uarch_model_hgi_row_gather import publisher_fifo_model
+    return publisher_fifo_model()
+
 
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model

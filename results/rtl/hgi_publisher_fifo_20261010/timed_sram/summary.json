@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "default_enable": 0,
+  "minimum_component": "one128-entry lane instantiated with three real synchronous128x256 macro models;four lane replicas composed analytically",
+  "payload_bits": 544,
+  "encoded_bits": 663,
+  "total_capacity": 128,
+  "macro_count_per_lane": 3,
+  "first_head_latency_edges": 5,
+  "sustained_II_cycles": 1,
+  "fullrate_consecutive_flits": 128,
+  "bitexact_pop_checks": 623,
+  "positive_fault_checks": [
+    "SRAMsinglebitcorrect",
+    "SRAMdoublebitUEfailclosed",
+    "headsinglebitcorrect",
+    "headdoublebitUEfailclosed",
+    "pointercomplementfault",
+    "totalcountcomplementfault",
+    "overflow",
+    "underflow"
+  ],
+  "negative": "MUT1nocorrection fails actualSRAM corruptedpacket127",
+  "consumer_contract": "pop transfers to finite consumer; endpoint credit return remains outsidequeue untilbothsectorcommitACKs and orderedretire",
+  "remaining": [
+    "actualheadpin/decode route",
+    "sharedVM sinkfront integration",
+    "ordered protectedACKledger",
+    "physicalclosureincontext"
+  ],
+  "rate_credit": false
+}

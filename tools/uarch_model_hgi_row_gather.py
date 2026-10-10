@@ -8,7 +8,7 @@ def publisher_fifo_model():
     """Real synchronous SRAM, four prefetched encoded heads per delivery lane."""
     inverse = inverse_selected_model()
     lanes, words, coded, heads = 4, 17, 663, 4
-    ff = lanes * ((heads+2)*coded + 2*(8+7+7+3+2+2+3+8+1+1+1))
+    ff = lanes * ((heads+2)*coded + 2*(8+7+7+3+2+2+3+8+1+1+1)+1)
     return dict(schema='hgi.publisher-fifo.candidate.v1', default_enable=0,
         qualification='MODEL BEFORE RTL; no physical or rate credit',
         models=inverse['models'], replicas_per_die=1,
