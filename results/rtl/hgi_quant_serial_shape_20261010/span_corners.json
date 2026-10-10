@@ -1,0 +1,10 @@
+{
+  "gate": "PASS",
+  "cases": 32,
+  "reference": "independent unsigned64bit multiplication",
+  "coverage": "counts1/17/65537/1048575,columns32/512/65536/1048544,rowstrides0/1/2^31/2^32-1,inner0/1/2^15/2^16-1,broadcast0/1",
+  "scope": "span arithmetic only; decode is isolated stub; complete transport gate separately commits458cases+3mutants",
+  "tb_sha256": "87254c4ebfd2fa338f970aa77aaa788d6f6e5a53929ed40202f18cee966c1037",
+  "source_commit": "65f7752c5ca8c38c7d40fb350691c72c62fa7df7",
+  "reproduce": "iverilog -g2012 -s tb -o /tmp/qspan.vvp rtl/test/hbm_accel/generic/tb_hgi_quant_serial_span_corners.sv rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv && vvp /tmp/qspan.vvp"
+}
