@@ -41,6 +41,8 @@ module ot_hgi_dma_mover #(
     input  wire [226:0]  mv,
     output reg           mv_done,
     output reg           mv_fault,
+    output reg           mv_src,      // pulse: every source sector of the move has been read and landed (posted
+                                      // STORE / KVWB retire here; the VM / HBM source may be overwritten from now on)
     input  wire          fence_v,
     output wire          fence_rdy,
     output reg           fence_done,
@@ -87,7 +89,7 @@ module ot_hgi_dma_mover #(
         else begin kr_v <= k_rsp_v; vr_q <= vmr; end
     always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
     wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
-    reg  busy_f;                                                        // the sector engine owns the ports
+    reg  busy_f; reg src_sent;                                                        // the sector engine owns the ports
     reg  sel_s;                                                         // the serial engine owns the ports
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
@@ -280,15 +282,15 @@ module ot_hgi_dma_mover #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
-            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0;
+            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0; mv_src <= 1'b0; src_sent <= 1'b0;
             k_in <= 8'd0; v_in <= 3'd0; k_kind <= 256'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0; kq_n <= 2'd0; kq_h <= 1'b0; kq_t <= 1'b0;
             sf_h <= '0; sf_t <= '0; sf_n <= 9'd0; wq_h <= 3'd0; wq_t <= 3'd0; wq_n <= 4'd0; go_q3 <= 1'b0;
             p1_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pe_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
         end else begin
-            mv_done <= 1'b0; fence_done <= 1'b0;
+            mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
             // ---- the serial engine's completion and ports
-            if (s_mv_done) begin mv_done <= 1'b1; sel_s <= 1'b0; end
+            if (s_mv_done) begin mv_done <= 1'b1; mv_src <= 1'b1; sel_s <= 1'b0; end   // serial engine: source = done
             if (s_mv_fault) mv_fault <= 1'b1;
             cv_q <= 1'b0;
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
@@ -312,6 +314,8 @@ module ot_hgi_dma_mover #(
                     f_fault <= 1'b1; mv_fault <= 1'b1; busy_f <= 1'b0;
                 end
             end
+            if (go_f) src_sent <= 1'b0;
+            if (busy_f && go_q3 && !f_fault && r_done && rd_in == 9'd0 && !src_sent) begin mv_src <= 1'b1; src_sent <= 1'b1; end
             if (go_f) begin
                 r_o <= 20'd0; r_sec <= sbase[41:5]; r_done <= 1'b0;
                 r_nrow <= sbase + {8'd0, sstb}; r_end <= sbase + {18'd0, nnb} - 42'd1;
@@ -377,7 +381,7 @@ module ot_hgi_dma_mover #(
                     v_kind <= t;
                 end
                 rd_in <= rd_in + {8'd0, iss_kr | iss_vr} - {8'd0, k_rd_land | v_rd_land};
-                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wl_done & busy_f)};
+                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wl_done & busy_f & !dst_hbm)};
             end
             if (k_fault && busy_f) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
             // ---- landing

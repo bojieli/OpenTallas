@@ -11,6 +11,11 @@ module tb_hgi_row_gather_store;
 `else
     localparam integer VMUT = 0;
 `endif
+`ifdef NOPOST
+    localparam integer PO = 0;
+`else
+    localparam integer PO = 1;
+`endif
 `ifdef MUT_RNE
     localparam integer MR = 1;
 `else
@@ -32,18 +37,18 @@ module tb_hgi_row_gather_store;
     end
     integer errors = 0, seed = 5;
     reg rst_n = 0; reg [702:0] cur; reg rec_v = 0;
-    wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done;
+    wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault, mv_src, fence_v, fence_rdy, fence_done;
     wire [226:0] mv;
-    ot_hgi_dma_record u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_dma_record #(.POSTED(PO)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]), .rec_n_o(cur[681:661]),
         .rec_pos1(cur[702:682]), .rec_done(done), .rec_fault(fault), .halted(halted), .lg_mv_v(1'b0), .lg_mv_rdy(),
         .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
-        .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+        .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_done), .mv_fdone(1'b0), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [337:0] vmq; wire [273:0] vmr0, vmr1; reg [337:0] tq = 0;
     ot_hgi_dma_mover #(.MUT_RNE(MR)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
-        .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+        .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr0), .wl(wl), .wl_done(wl_done));
@@ -106,7 +111,14 @@ module tb_hgi_row_gather_store;
             end
             t = 0; while (k < nr && nf == 0 && 1) begin @(posedge clk); t = t + 1; end
             $display("STORE_MEASURE case=%0d records=%0d cycles=%0d accepted=%0d acked=%0d KLAT=%0d",c,nr,cycle-started,kaccepted,kacked,KLAT);
-            if (kaccepted!=kacked || kn!=0) $fatal(1,"completion before write visibility");
+            // hgi-1010/c: STORE retires posted (source consumed); a DMA.FENCE drains the writes before anything is checked
+            @(negedge clk); cur = 703'd0; cur[127:124] = 4'd8; cur[123:118] = 6'd2; rec_v = 1;
+            while (!rec_rdy) @(negedge clk);
+            @(posedge clk); #0.1 rec_v = 0;
+            while (k < nr + 1 && nf == 0) @(posedge clk);
+            $display("FENCE_MEASURE case=%0d cycles=%0d",c,cycle-started);
+            nr = nr + 1;
+            if (kaccepted!=kacked || kn!=0) $fatal(1,"fence retired before write visibility");
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
