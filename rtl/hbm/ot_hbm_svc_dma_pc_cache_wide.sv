@@ -28,7 +28,8 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
  (* keep="true", dont_touch="true" *) reg [8:0] st[0:3],st_inv[0:3];
  (* keep="true", dont_touch="true" *) reg [1:0] head,tail,head_inv,tail_inv;
  reg [1023:0] payload[0:3];
- reg [3:0] faults[0:3];
+ (* keep="true", dont_touch="true" *) reg [3:0] faults[0:3],faults_inv[0:3];
+ (* keep="true", dont_touch="true" *) reg metadata_fault_inv;
  wire [9:0] ai={alloc_bank,alloc_group}, ri={ret_bank,ret_group};
  wire a_bad=meta[ai] != ~meta_inv[ai];
  wire r_bad=meta[ri] != ~meta_inv[ri];
@@ -41,7 +42,7 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
      if(st[n0][0] && req[n0][7:0]==alloc_group &&
         (st[n0][1+alloc_bank] || st[n0][5+alloc_bank])) recycle_read_busy=1;
  end
- wire enabled=(ENABLE!=0) && rst_n && !metadata_fault;
+ wire enabled=(ENABLE!=0) && rst_n && !metadata_fault && metadata_fault_inv;
  // idx is the native transaction tag and stays in the native CAM; this cache
  // stores group/epoch ownership only. len validation prices no new tag SRAM.
  wire descriptor_ok=alloc_slot==alloc_group[7:2] && alloc_len!=0;
@@ -64,7 +65,8 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
  always @* begin
    brv=0;issue_found=0;publish_found=0;context_bad=0;fetch_meta_bad=0;
    for(n1=0;n1<4;n1=n1+1)
-     if(req[n1]!=~req_inv[n1] || st[n1]!=~st_inv[n1]) context_bad=1;
+     if(req[n1]!=~req_inv[n1] || st[n1]!=~st_inv[n1] ||
+        (st[n1][0] && faults[n1]!=~faults_inv[n1])) context_bad=1;
    for(lane=0;lane<4;lane=lane+1) begin
      issue_ctx[lane]=0;publish_ctx[lane]=0;brgroup[lane]=0;
      for(off=0;off<4;off=off+1) begin
@@ -94,7 +96,8 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
    (commit_v[2] && (commit_tail ^ commit_tail_inv)!=11'h7ff);
  wire [9:0] ci=commit_tail[9:0];
  wire [3:0] out_mask=req[head][12:9];
- assign out_v=enabled && st[head][0] && ((st[head][8:5]&out_mask)==out_mask);
+ assign out_v=enabled && !context_bad && head==~head_inv && tail==~tail_inv &&
+              st[head][0] && ((st[head][8:5]&out_mask)==out_mask);
  assign out_data=out_v ? payload[head] : 1024'b0;
  assign out_fault=out_v ? faults[head] : 4'b0;
  wire pop=out_v && out_rdy;
@@ -109,7 +112,7 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
  integer reset_i;
  always @(posedge clk or negedge rst_n) begin
    if(!rst_n) begin
-     metadata_fault<=0;head<=0;tail<=0;head_inv<=3;tail_inv<=3;
+     metadata_fault<=0;metadata_fault_inv<=1;head<=0;tail<=0;head_inv<=3;tail_inv<=3;
      commit_v<=0;commit_v_inv<=7;
      for(reset_i=0;reset_i<1024;reset_i=reset_i+1) begin meta[reset_i]<=0;meta_inv[reset_i]<=7;end
      for(reset_i=0;reset_i<4;reset_i=reset_i+1) begin
@@ -118,7 +121,8 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
      commit_tag<=0;commit_tag_inv<=33'h1ffffffff;
    end else begin
      if((alloc_v && a_bad) || (ret_v && r_bad) || context_bad || (|fetch_meta_bad) ||
-        commit_bad || head!=~head_inv || tail!=~tail_inv) metadata_fault<=1;
+        commit_bad || head!=~head_inv || tail!=~tail_inv || metadata_fault!=~metadata_fault_inv)
+        begin metadata_fault<=1;metadata_fault_inv<=0;end
      commit_v<={commit_v[1:0],write_take};
      commit_v_inv<=~{commit_v[1:0],write_take};
      commit_tag<={commit_tag[21:0],ret_epoch,ri};
@@ -144,11 +148,12 @@ module ot_hbm_svc_dma_pc_cache_wide #(parameter integer ENABLE=0,parameter integ
  end
  // Masked sectors are explicitly zero, avoiding exposure of previous context.
  always @(posedge clk) begin
-   if(f_take) begin payload[tail]<=0;faults[tail]<=0;end
+   if(f_take) begin payload[tail]<=0;faults[tail]<=0;faults_inv[tail]<=4'hf;end
    for(d_lane=0;d_lane<4;d_lane=d_lane+1)
      if(bov[d_lane] && enabled && publish_found[d_lane]) begin
        payload[publish_ctx[d_lane]][d_lane*256+:256]<=bod[d_lane];
        faults[publish_ctx[d_lane]][d_lane]<=bof[d_lane];
+       faults_inv[publish_ctx[d_lane]][d_lane]<=~bof[d_lane];
      end
  end
 endmodule

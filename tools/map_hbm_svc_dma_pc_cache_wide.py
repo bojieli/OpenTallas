@@ -27,6 +27,71 @@ def blocks(lib):
             end += 1
         yield m.group(1).strip('"'), lib[m.start():end]
 
+def liberty_pin_directions(body):
+    directions = {}
+    for match in re.finditer(r'\bpin\s*\(\s*(\S+?)\s*\)\s*\{', body):
+        level=1
+        end=match.end()
+        while level:
+            level+=(body[end]=='{')-(body[end]=='}')
+            end+=1
+        direction=re.search(r'\bdirection\s*:\s*(input|output)',body[match.end():end])
+        if direction:
+            directions[match.group(1).strip('"')]=direction.group(1)
+    return directions
+
+def metadata_pair_inventory(mod, library_directions):
+    drivers = {}
+    for name, cell in mod['cells'].items():
+        directions=cell.get('port_directions',library_directions.get(cell['type'],{}))
+        for port, direction in directions.items():
+            if direction == 'output':
+                for bit in cell['connections'][port]:
+                    drivers[bit] = (name, cell)
+    def ff_driver(bit):
+        visited = set()
+        while bit not in visited:
+            visited.add(bit)
+            if bit not in drivers:
+                return None
+            name, cell = drivers[bit]
+            if cell['type'].startswith('DFF'):
+                return name
+            if not cell['type'].startswith(('INV','BUF')):
+                return None
+            directions=cell.get('port_directions',library_directions.get(cell['type'],{}))
+            inputs = [b for p, d in directions.items() if d == 'input'
+                      for b in cell['connections'][p]]
+            if len(inputs) != 1:
+                return None
+            bit = inputs[0]
+        return None
+    sets = {'meta': set(), 'meta_inv': set()}
+    bits = {'meta': 0, 'meta_inv': 0}
+    unresolved = []
+    for name, wire in mod['netnames'].items():
+        match = re.fullmatch(r'(meta|meta_inv)\[(\d+)\]', name)
+        if not match:
+            continue
+        side = match.group(1)
+        for bit in wire['bits']:
+            bits[side] += 1
+            driver = ff_driver(bit)
+            if driver is None:
+                unresolved.append([name, bit])
+            else:
+                sets[side].add(driver)
+    shared = sets['meta'] & sets['meta_inv']
+    return {'verdict': 'PASS_distinct_physical_pairs' if bits == {'meta':3072,'meta_inv':3072}
+            and len(sets['meta'])==3072 and len(sets['meta_inv'])==3072 and not shared and not unresolved
+            else 'FAIL_pair_inventory',
+            'RTL_named_bits':bits,'primary_distinct_FF_cells':len(sets['meta']),
+            'complement_distinct_FF_cells':len(sets['meta_inv']),
+            'total_distinct_metadata_FF_cells':len(sets['meta']|sets['meta_inv']),
+            'shared_FF_count':len(shared),'unresolved_bits':unresolved,
+            'method':'trace every named meta[group]/meta_inv[group] bit through optional INV/BUF to physical mapped DFF output; require unique3072+3072 disjoint drivers',
+            'mapped_driver_name_sha256':hashlib.sha256('\n'.join(sorted(sets['meta']|sets['meta_inv'])).encode()).hexdigest()}
+
 def run(libdir):
     libs = sorted(libdir.glob('*asap7*RVT_SS*.lib'))
     assert len(libs) == 5, 'require all five ASAP7 RVT SS cell categories'
@@ -37,6 +102,7 @@ def run(libdir):
         cells.update(blocks(p.read_text()))
     areas = {name: float(re.search(r'\barea\s*:\s*([\d.]+)', body).group(1))
              for name, body in cells.items()}
+    library_directions={name:liberty_pin_directions(body) for name,body in cells.items()}
     with tempfile.TemporaryDirectory(prefix='hbm-wide-map-') as scratch:
         merged = Path(scratch) / 'merged.lib'
         merged.write_text(header+'\n'.join(cells.values())+'\n}\n')
@@ -58,11 +124,13 @@ def run(libdir):
             raise RuntimeError(proc.stdout[-4000:]+proc.stderr)
         mod = json.loads(netlist.read_text())['modules']['ot_hbm_svc_dma_pc_cache_wide']
         count = Counter(c['type'] for c in mod['cells'].values())
+        pairs = metadata_pair_inventory(mod,library_directions)
     unmapped = {k:v for k,v in count.items() if k not in areas and k != MACRO}
     area = sum(n*areas[k] for k,n in count.items() if k in areas)
     geo = json.loads((ROOT/(BASE+'.json')).read_text())['alignment_v2']['v2']
     evidence = {
-        'verdict': 'PASS_mapped_shape' if not unmapped and count[MACRO] == 4 else 'FAIL_unmapped_cells',
+        'verdict': 'PASS_mapped_shape' if not unmapped and count[MACRO] == 4 and pairs['verdict']=='PASS_distinct_physical_pairs' else 'FAIL_mapped_shape',
+        'metadata_physical_pairs': pairs,
         'mapped_cell_counts': dict(count), 'unmapped_cells': unmapped,
         'mapped_controller_area_um2_per_PC': area,
         'hard_bank_logic_area_um2_per_PC': 4*1563.29676,

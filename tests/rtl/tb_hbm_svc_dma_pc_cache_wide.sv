@@ -93,6 +93,14 @@ module tb_hbm_svc_dma_pc_cache_wide;
    for(b=0;b<4;b=b+1)respond(70,b,1,b==2);
    fetch(70,1,15,4);drain();
    if(metadata_fault)$fatal(1,"false control fault");
+   // Publication control faults must inhibit the interface immediately,
+   // before the next edge latches the sticky fault indication.
+   out_rdy=0;fetch(7,0,15,0);wait(out_v);
+   @(negedge clk);held=0;dut.faults[dut.head][0]=~dut.faults[dut.head][0];
+   #0.001;if(out_v)$fatal(1,"damaged publication control remained valid");
+   @(negedge clk);if(!metadata_fault)$fatal(1,"publication fault not detected");
+   rst_n=0;sent=seen;repeat(2)@(negedge clk);rst_n=1;out_rdy=1;
+   allocate(70,0,0);
    // Flip one mutable metadata bit: complement detects, fail closed.
    @(negedge clk);dut.meta[70][0]=~dut.meta[70][0];
    ret_group=70;ret_bank=0;ret_epoch=0;ret_v=1;
