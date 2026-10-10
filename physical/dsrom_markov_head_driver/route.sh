@@ -19,6 +19,17 @@ export OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245
 ISS=${CK_SS_MEAN:-500}; IFF=${CK_FF_MEAN:-300}; HMS=${HM:-0.035}
 SLOT_W=${SLOT_W:-600}; SLOT_H=${SLOT_H:-600}; CORE_X=$((SLOT_W-2)); CORE_Y=$((SLOT_H-2)); PIN_X=$((SLOT_W-30)); PIN_Y=$((SLOT_H-30))
 TOP=ot_dsrom_markov_head_driver
+TOP_PINS='^(head_bits.*|head_valid|head_fault|clk|rst_n)$'
+anchor_args=()
+if [ "${PINANCHOR:-0}" = 1 ]; then
+ # Owner physical standard: actual boundary registers beside their own pins.
+ # Interior paths retain full-cycle budgets; no clock or uncertainty changes.
+ TOP_PINS='^(head_bits.*|head_valid|head_fault|rst_n)$'
+ CLK_MID=$((SLOT_W/2))
+ anchor_args=(--pin-region "^clk$=top:$CLK_MID-$CLK_MID"
+  --orfs-var PRE_GLOBAL_PLACE_TCL=/src/physical/qwen_die_masters/io_flop_at_pins.tcl
+  --orfs-var PRE_DETAIL_PLACE_TCL=/src/physical/qwen_die_masters/out_flop_release.tcl)
+fi
 args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv
  --source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv
  --source physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v
@@ -30,9 +41,9 @@ args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv
  --core-utilization 55 --max-fanout 16 --routing-layers M2 M6
  --pin-region "^embed_data.*=left:30-$PIN_Y"
  --pin-region "^(embed_id.*|embed_beat.*|embed_last|embed_valid|transaction.*|row0.*|start)$=bottom:30-$PIN_X"
- --pin-region "^(head_bits.*|head_valid|head_fault|clk|rst_n)$=top:30-$PIN_X"
+ --pin-region "$TOP_PINS=top:30-$PIN_X"
  --pin-region "^(start_ready|embed_ready|head_go|joined_valid|joined_bits.*|joined_row.*|done|best_valid|best_row.*|best_bits.*|fault)$=right:30-$PIN_Y"
- --pin-regions-exhaustive)
+ --pin-regions-exhaustive "${anchor_args[@]}")
 MAC=(--macro physical/asap7_memory_macros/ot_rom_4096x274_m8); FP="set_false_path -from [get_ports rst_n]"; MC="set_multicycle_path -setup 2 -from [get_cells -hierarchical *weights.m?]
 set_multicycle_path -hold 1 -from [get_cells -hierarchical *weights.m?]"
 IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
