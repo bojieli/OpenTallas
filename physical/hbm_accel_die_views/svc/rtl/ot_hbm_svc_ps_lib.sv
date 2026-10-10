@@ -232,11 +232,13 @@ module ot_svs_grp #(parameter integer K = 0) (
       nc[p][ws[p]] <= sq[p*277+260+4];
     end
     if (any) begin asel <= sel; aslot <= rs[sel]; anc <= nc[sel][rs[sel]]; end
-    if (av) begin
+  end
+  // Boundary payloads remain defined during idle after reset, before the first row.
+  always @(posedge ck or negedge rn) if (!rn) begin od <= 1088'd0; ot <= 10'd0; end
+  else if (av) begin
       od <= {31'd0, lt, ix[asel][aslot], 5'(4 * K + asel), sm[asel][aslot], 10'd0,
              b[asel][aslot][3], b[asel][aslot][2], b[asel][aslot][1], b[asel][aslot][0]};
       ot <= rq[asel][aslot];
-    end
   end
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
   assign ks = {fck, fck, fck, od, ot, ov};
