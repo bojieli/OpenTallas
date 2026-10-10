@@ -2306,6 +2306,7 @@ ENG_BUSES = (
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
+HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
@@ -3129,7 +3130,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
@@ -4060,7 +4061,7 @@ def _hop_fix(m, P):
                         tt.append(f'g_{bid}_{e[0]}_{k}')
                 return pl, (cx, cy), dch, horiz, w_, h_, NR
 
-            def stations_at(path, n):
+            def stations_at(path, n, extra=0):
                 Lp = _poly_len(path)
                 # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
                 # segment) at each non-glue end, the span between them at the reach as before
@@ -4070,51 +4071,58 @@ def _hop_fix(m, P):
                     if (h0 or h1) and Lp > PIN_SEG:
                         s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
                         s1 = Lp - min(PIN_SEG - 10.0, Lp / 2) if h1 else Lp
-                        mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1)
+                        mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1) + extra
                         pos = ([s0] if h0 else []) + [s0 + (s1 - s0) * (k + 1) / (mid + 1) for k in range(mid)] \
                             + ([s1] if h1 and s1 > s0 + 1.0 else [])
                 return pos
 
             path = [a, (b[0], a[1]), b]
-            if PATH_PICK and reg is None:
+            extra = 0
+            if (PATH_PICK and reg is None) or HOP_EXTRA:
                 # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1) / s81-gen (--path-pick): a die-level hop whose stations
                 # do not all find a box on the default horizontal-first L (the 20.2 mm layer1 hw_SW host chain along
-                # y = 14724.7 through packed field frames: station 5 / 53) takes the first candidate on which every
-                # station places (dry run, no occupancy change): the other L, then corridor Z paths by corridor share
-                # (then length).  Hops that place on the default L are unchanged; the station count follows the path.
-                cands = _hop_paths(a, b, cor)
+                # y = 14724.7 through packed field frames: station 5 / 53) tries the other L, then corridor Z paths by
+                # corridor share (then length); the station count follows the path.  Dry runs, no occupancy change.
+                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
+                # stations fall behind the path; layer1e VM -> eng_SE ended 1,164 um short).
+                # --hop-extra N (s81-gen): a hop with no clean candidate also tries 1..N extra stations (+1 cycle each on
+                # that hop; qs5f frames: g_xb_*_7 -> bank 670 um with the planned count).  First clean (path, extra)
+                # wins; else the placeable one with the fewest relaxed stations (default L, no extra on ties).
+                cands = _hop_paths(a, b, cor) if (PATH_PICK and reg is None) else [path]
                 rects = list(cor.values())
                 order = [cands[0]] + sorted(cands[1:], key=lambda p_: (-round(_corr_frac(p_, rects), 2), _poly_len(p_)))
-                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
-                # stations fall behind the path, e.g. a vertical leg through the field where boxes exist only in the
-                # tier channels; layer1e VM -> eng_SE ended 1,164 um short).  First clean candidate wins; if none is
-                # clean, the placeable one with the fewest relaxed stations (default L on ties).
                 n0 = n
                 best = None
-                for j_, cand in enumerate(order):
-                    n_c = n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)
-                    pos_c = stations_at(cand, n_c)
-                    cur_, ok, rc_ = a, True, {}
-                    for k in range(len(pos_c)):
-                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
-                        if pl_ is None:
-                            ok = False
+                for x_ in range(HOP_EXTRA + 1):
+                    for j_, cand in enumerate(order):
+                        n_c = (n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)) + x_
+                        pos_c = stations_at(cand, n_c, x_)
+                        cur_, ok, rc_ = a, True, {}
+                        for k in range(len(pos_c)):
+                            pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
+                            if pl_ is None:
+                                ok = False
+                                break
+                            cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                        if not ok:
+                            continue
+                        bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
+                        if best is None or bad < best[0]:
+                            best = (bad, j_, cand, n_c, x_)
+                        if bad == 0:
                             break
-                        cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
-                    if not ok:
-                        continue
-                    bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
-                    if best is None or bad < best[0]:
-                        best = (bad, j_, cand, n_c)
-                    if bad == 0:
+                    if best is not None and best[0] == 0:
                         break
-                if best is not None and best[1]:
-                    _, j_, cand, n_c = best
+                if best is not None:
+                    _, j_, cand, n_c, extra = best
                     path, n = cand, n_c
-                    kind_ = 'vfirst' if len(cand) == 3 else 'z'
-                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if j_:
+                        kind_ = 'vfirst' if len(cand) == 3 else 'z'
+                        rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if extra:
+                        rec['hop_extra'][f'+{extra}'] = rec['hop_extra'].get(f'+{extra}', 0) + 1
             Lp = _poly_len(path)
-            pos = stations_at(path, n)
+            pos = stations_at(path, n, extra)
             n = len(pos)
             prev, cur = eps[0], a
             fprev = fdrv if fwd else None
@@ -5622,6 +5630,8 @@ def die_options(ap):
     ap.add_argument('--hop-r-cc', type=float, help='s81-gen 2026-10-09: common-clock hop reach in um (default 410; '
                     '= OT_S81_HOP_R_CC, which die_sta kit / extract_die re-runs lose; 500 <= the 504 um SS wire reach: '
                     'cont-takeover r4e passes the r4c rt_0_8a_y1 trap)')
+    ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
+                    'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
                     'Engram interfaces as forwarded lanes with meso / ratio-CDC end blocks (the common-clock hop-fix '
                     'chains crossed 6-8 clock regions: 322 ps inter-region skew); default off')
@@ -5707,7 +5717,8 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global CTRL_RQ, FWD_IFACE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA
+    HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
     if a.die == 'layer1e':
