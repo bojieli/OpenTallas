@@ -27,7 +27,9 @@
 //   6. payload registers (cq, response data, x, rd2) carry no reset: every one is qualified by a reset control valid.
 // Added latency: +1 edge a beat (launch), +1 edge per FIFO landing, +1 edge to the first request of a record.
 // MUTANT (bench): 1..4 as the historical module; 5 = launch not delayed (decoder samples x before R2 lands);
-// 6 = a stage does not wait for a fresh precompute (stale p_* after a stage); both must FAIL the exact gates.
+// 6 = the write precompute trusts the entry count instead of the landed FIFO head (queued != 0, head not yet read out
+// of the macro); both must FAIL the exact gates.  (A stage-validity mutant is not observable: the seat cannot restage
+// on the edge after a stage, so p_ok is always fresh -- kept as a structural guard.)
 module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
@@ -127,7 +129,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire wsel=pw_ok && (p_rdone || (reserved>=DEPTH && MUTANT!=3));
  wire rsel=!p_rdone && (p_r_part!=0 || (reserved<DEPTH || MUTANT==3));
  wire ctl_run=busy&&!validating&&!val_sum&&!val2&&!val3&&!val4;
- wire stage=ctl_run&&!bad&&!launch&&!launch_q&&(p_ok||MUTANT==6)&&(wsel||rsel)&&!seat_v&&pd_n<3'd4;
+ wire stage=ctl_run&&!bad&&!launch&&!launch_q&&p_ok&&(wsel||rsel)&&!seat_v&&pd_n<3'd4;
  wire stw=wsel;
  wire reserve_read=stage&&!stw&&p_r_part==0;
  wire retire_write=take_rsp&&reply_ok&&d_we&&d_lastw&&!bad;
@@ -183,7 +185,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    response_v<=rsp_v;
    cq_v<=ready&&cmd[0];
    // precompute validity: the stream state did not change at this edge
-   p_ok<=!stage&&!cq_v; pw_ok<=hv&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m;
+   p_ok<=!stage&&!cq_v; pw_ok<=(MUTANT==6?queued!=0||push:hv)&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m;
    if(cq_v)begin
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];
