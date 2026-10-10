@@ -97,7 +97,9 @@ def compact_hierarchy_model(height=220.32, hub_column_width=1080.):
         geo.BF_PER_REGION=2
         geo.PQ_PLACE=True
         geo.set_pairs(1792)
-        slot, capacity = geo.slot_geometry(frame_h,108.)
+        # The production plan reserves one 241.92um PQ root row in each tier channel.
+        geo.CHS = [geo.CH+geo.PQ_ROOT_ROW]*geo.TIERS+[geo.CH]
+        slot, capacity = geo.slot_geometry(frame_h,geo.PQ_FIELD_MARGIN)
         rows.append(dict(BF_frame_h_um=frame_h,slot_h_um=slot,slots_per_frame=capacity,
                          frame_h_um=geo.FRAME_H8,die_um=list(geo.DIE),pairs=geo.PAIRS,roots=geo.ROOTS))
     assert width+8.64 <= 1040.256
@@ -110,7 +112,9 @@ def compact_hierarchy_model(height=220.32, hub_column_width=1080.):
         hub_column_width_um=hub_column_width,hub_spine_extra_width_um=2*(hub_column_width-1015.2),
         hub_widening_uses_existing_die_horizontal_slack=True,
         full_generator_legal_plan='required; slot-capacity check alone is not placement qualification',
-        actual_generator_slot_capacity=rows,remaining_capacity='same9slots/frame and1792pairs; no PQrebinning',
+        actual_generator_slot_capacity=rows,remaining_capacity='same8slots/frame and1792pairs; no PQrebinning',
+        historical_2417_pair_cost=dict(full_layer_pairs=783108,layer_dies=438,baseline_layer_dies=324,extra_layer_dies=114),
+        current_selected_1792_pair_outline_cost_delta=0,
         MACs_per_cycle_peak=model()['MACs_per_cycle_peak'],
         memory_ports=model()['memory'],external_bits_delta=0,
         boundary_bits_per_column=776,replicas=dict(columns_per_pair=2,fronts_per_pair=1,pairs_per_die=1792),

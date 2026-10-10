@@ -32,8 +32,8 @@
     {
       "BF_frame_h_um": 198.72,
       "slot_h_um": 280.8,
-      "slots_per_frame": 9,
-      "frame_h_um": 2829.6,
+      "slots_per_frame": 8,
+      "frame_h_um": 2505.6,
       "die_um": [
         33000.0,
         26000.0
@@ -44,8 +44,8 @@
     {
       "BF_frame_h_um": 228.95999999999998,
       "slot_h_um": 311.04,
-      "slots_per_frame": 9,
-      "frame_h_um": 2890.08,
+      "slots_per_frame": 8,
+      "frame_h_um": 2566.08,
       "die_um": [
         33000.0,
         26000.0
@@ -54,7 +54,14 @@
       "roots": 128
     }
   ],
-  "remaining_capacity": "same9slots/frame and1792pairs; no PQrebinning",
+  "remaining_capacity": "same8slots/frame and1792pairs; no PQrebinning",
+  "historical_2417_pair_cost": {
+    "full_layer_pairs": 783108,
+    "layer_dies": 438,
+    "baseline_layer_dies": 324,
+    "extra_layer_dies": 114
+  },
+  "current_selected_1792_pair_outline_cost_delta": 0,
   "MACs_per_cycle_peak": {
     "FP4": 128,
     "FP8": 64,
