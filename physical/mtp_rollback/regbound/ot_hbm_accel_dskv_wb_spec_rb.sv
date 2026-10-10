@@ -11,6 +11,7 @@ module ot_hbm_accel_dskv_wb_spec #(
   parameter integer SLOT_ROWS = 2,
   parameter integer PIPE = 0                      // mtp-lead 2026-10-09: 1 = the ownership divide (pos -> q = b/96 -> own, k)
                                                  // in its own state S_OWN after the row capture (+1 cycle a row); 0 = as built
+                                                 // 2 = fully staged (see the PIPE 2 block): +3 cycles a row vs 0
 )(input wire clk, input wire rst_n, input wire [6:0] die, input wire [19:0] pos, input wire row_v, input wire [1:0] row_kind, input wire [5:0] row_slot, input wire row_r2, input wire [4351:0] row_data, output wire row_r, input wire sh_v, input wire [2:0] sh_slot, input wire [4351:0] sh_data, output wire wq_v, output wire [4:0] wq_pc, output wire [4:0] wq_bank, output wire [18:0] wq_row, output wire [4:0] wq_col, output wire [255:0] wq_data, input wire wq_r, input wire [5:0] ack_n, output wire [15:0] issued, output wire [15:0] acked, output wire fence_ok);
  // reset for the boundary FIFOs: synchronous use of the block's reset (held for several edges at POR)
  reg [6:0] q_die; always @(posedge clk) q_die <= die;
@@ -58,6 +59,7 @@ module ot_hbm_accel_dskv_wb_spec_core #(
   parameter integer SLOT_ROWS = 2,
   parameter integer PIPE = 0                      // mtp-lead 2026-10-09: 1 = the ownership divide (pos -> q = b/96 -> own, k)
                                                  // in its own state S_OWN after the row capture (+1 cycle a row); 0 = as built
+                                                 // 2 = fully staged (see the PIPE 2 block): +3 cycles a row vs 0
 )(
   input  wire          clk, rst_n,
   input  wire [6:0]    die,
@@ -78,6 +80,112 @@ module ot_hbm_accel_dskv_wb_spec_core #(
   generate if (!ENABLE) begin : off
     assign row_r = 0; assign wq_v = 0; assign wq_pc = 0; assign wq_bank = 0; assign wq_row = 0; assign wq_col = 0;
     assign wq_data = 0; assign issued = 0; assign acked = 0; assign fence_ok = 0;
+  end else if (PIPE >= 2) begin : on2
+    // mtp-lead 2026-10-09 PIPE 2: every stage runs from registers (route rb-2426c04bd EARLY_FAIL_SETUP post-CTS TT -500:
+    // s0 -> sector add -> ksec subtract -> 17 x 8 : 1 shadow mux -> wq, rst_n recovery into the 4,352 dat flops; the
+    // capture-cycle shadow merge decoded straight from the pin).  Transaction-identical to PIPE 0 (same sectors, same
+    // order, same data); latency +3 cycles a row (IDLE A B M PREP EMIT vs IDLE MAP EMIT), +1 a shadow bring-up load.
+    //   IDLE  capture the row (or the bring-up shadow row) into registers
+    //   SHL   bring-up load: shadow[slot] <= dat
+    //   A     q = (b >> 5) * 2731 >> 13; a key row merges its 68 B into shadow[slot] at field n[2:0] and dat takes the
+    //         merged row (the emit reads dat for every kind)
+    //   B     own = (b - 96 q)[6:0] == die, k = {q, n[2:0]}, 68 k, 9 k, 17 (k >> 3) (shift-add constants)
+    //   M     key: s0 = 68 k >> 5, ns; window / ckv: s0, ns; not owned (ckv / key) -> IDLE
+    //   PREP  registered sector address (S, window jj), row base, one-hot sector select, ns - 1
+    //   EMIT  one sector a cycle from registers (off-stack sectors skip), the select shifts with t
+    localparam [2:0] S_IDLE = 0, S_SHL = 1, S_A = 2, S_B = 3, S_M = 4, S_PREP = 5, S_EMIT = 6;
+    reg [2:0] st;
+    reg [1:0] kind; reg [5:0] slot; reg [4351:0] dat;
+    reg [4351:0] shadow [0:7];
+    reg [19:0] n; reg [16:0] b; reg [19:0] pos_q;
+    reg [10:0] q; reg own; reg [13:0] k;
+    reg [20:0] kx68, s0; reg [16:0] kb_s; reg [4:0] ns;
+    reg [20:0] S_r; reg [13:0] jw_r; reg [18:0] rbase_r; reg [16:0] sel; reg [4:0] t, nsm1;
+    reg [15:0] iss, ack;
+    reg sh_locked;
+    wire sh_go = sh_v && !(SH_LOCK != 0 && sh_locked);
+    wire [7:0]  wslot = 8'(pos_q & 20'(WIN_SLOTS - 1));
+    wire [6:0]  pcg = (kind == 2'd0) ? wslot[6:0] : S_r[6:0];
+    wire [13:0] jj = (kind == 2'd0) ? jw_r : 14'(S_r >> 7);
+    wire on_stack = (pcg[6:5] == 2'(STACK));
+    wire emit = (st == S_EMIT) && on_stack;
+    reg [255:0] sdat; integer si;
+    always @* begin
+      sdat = 256'd0;
+      for (si = 0; si < 17; si = si + 1) sdat = sdat | (dat[256*si +: 256] & {256{sel[si]}});
+    end
+    assign wq_v = emit; assign wq_pc = pcg[4:0]; assign wq_bank = {jj[9:7], jj[1:0]};
+    assign wq_row = rbase_r + 19'(jj >> 10); assign wq_col = jj[6:2]; assign wq_data = sdat;
+    assign row_r = (st == S_IDLE) && !sh_go;
+    assign issued = iss; assign acked = ack;
+    assign fence_ok = (st == S_IDLE) && !row_v && iss == ack;
+    wire [19:0] n_in = row_r2 ? {1'b0, pos[19:1]} : pos;
+    wire [4351:0] sh_row = shadow[slot[2:0]];
+    reg [4351:0] merged; integer mi;
+    always @* begin
+      merged = sh_row;
+      for (mi = 0; mi < 8; mi = mi + 1) if (n[2:0] == 3'(mi)) merged[544*mi +: 544] = dat[543:0];
+    end
+    wire [20:0] k21 = 21'({q, n[2:0]});
+    wire [20:0] s0_key = kx68 >> 5;
+    wire [20:0] s1_key = (kx68 + 21'd67) >> 5;
+    wire [20:0] ks0 = s0 - 21'(kb_s);
+    // control state (async reset)
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin
+        st <= S_IDLE; iss <= 0; ack <= 0; sh_locked <= 0;
+      end else begin
+        ack <= ack + 16'(ack_n);
+        if (wq_v && wq_r) iss <= iss + 1'b1;
+        case (st)
+          S_IDLE: if (sh_go) st <= S_SHL;
+                  else if (row_v) begin if (row_kind == 2'd2) sh_locked <= 1'b1; st <= S_A; end
+          S_SHL:  st <= S_IDLE;
+          S_A:    st <= S_B;
+          S_B:    st <= S_M;
+          S_M:    st <= (kind == 2'd0 || own) ? S_PREP : S_IDLE;
+          S_PREP: st <= S_EMIT;
+          default: if ((!on_stack || wq_r) && t == nsm1) st <= S_IDLE;     // S_EMIT
+        endcase
+      end
+    // datapath (no reset: every field is written before it is used)
+    always @(posedge clk) begin
+      case (st)
+        S_IDLE: if (sh_go) begin dat <= sh_data; slot <= 6'(sh_slot); end
+                else if (row_v) begin
+                  kind <= row_kind; slot <= row_slot; dat <= row_data; n <= n_in; b <= n_in[19:3]; pos_q <= pos;
+                end
+        S_SHL:  shadow[slot[2:0]] <= dat;
+        S_A: begin
+          q <= 11'((25'(b[16:5]) * 25'd2731) >> 13);
+          if (kind == 2'd2) begin shadow[slot[2:0]] <= merged; dat <= merged; end
+        end
+        S_B: begin
+          own <= ((b - ({6'd0, q} << 6) - ({6'd0, q} << 5)) & 17'h7f) == 17'(die);
+          k <= {q, n[2:0]};
+          kx68 <= (k21 << 6) + (k21 << 2);
+          kb_s <= ({6'd0, q} << 4) + {6'd0, q};
+          s0 <= (k21 << 3) + k21;                                  // ckv: 9 k
+        end
+        S_M: begin
+          case (kind)
+            2'd0: begin s0 <= 0; ns <= 5'd17; end
+            2'd1: ns <= 5'd9;
+            default: begin s0 <= s0_key; ns <= 5'(s1_key - s0_key + 21'd1); end
+          endcase
+        end
+        S_PREP: begin
+          t <= 0; nsm1 <= ns - 5'd1;
+          S_r <= s0;
+          jw_r <= wslot[7] ? 14'd17 : 14'd0;
+          rbase_r <= ((kind == 2'd0) ? 19'(WIN_ROW0) : (kind == 2'd1) ? 19'(CKV_ROW0) : 19'(KEY_ROW0))
+                     + 19'(slot) * 19'(SLOT_ROWS);
+          sel <= 17'd1 << ((kind == 2'd2) ? ks0[4:0] : 5'd0);
+        end
+        S_EMIT: if (!on_stack || wq_r) begin t <= t + 1'b1; S_r <= S_r + 1'b1; jw_r <= jw_r + 1'b1; sel <= sel << 1; end
+        default: ;
+      endcase
+    end
   end else begin : on
     localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2, S_OWN = 3;
     reg [1:0] st;
