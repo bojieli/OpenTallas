@@ -903,9 +903,19 @@ def schedule_layer(rank_recs, ops, L):
         x.reads, x.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))   # rank 0's own
         r0.append(x)
     opd = {f"{L}:{o.get('id')}": o for o in ops}
-    cf = NativeCost(opd, r0)
-    out, info = T.improve_order(r0, POS_DEFAULT[0], cost_fn=cf)
-    perm = [x._cid for x in out]
+    # layers of identical structure (same records, names and descriptor shapes) share one search (7 DS layer types)
+    sig = hashlib.sha256(json.dumps([[x.unit, x.op, x.tag, x.hz_reads, x.hz_writes, x.reads, x.writes,
+                                      {k: [d.space, d.n, d.m] for k, d in x.desc.items()}] for x in r0],
+                                    default=str).encode()).hexdigest()
+    if sig in SCHED_CACHE:
+        perm, info0 = SCHED_CACHE[sig]
+        info = dict(info0, reused_from_layer=info0.get("layer"))
+    else:
+        cf = NativeCost(opd, r0)
+        out, info = T.improve_order(r0, POS_DEFAULT[0], cost_fn=cf)
+        perm = [x._cid for x in out]
+        info = dict(info, layer=L)
+        SCHED_CACHE[sig] = (perm, info)
     assert sorted(perm) == list(range(len(r0)))
     res = []
     for recs in rank_recs:
@@ -921,6 +931,7 @@ def schedule_layer(rank_recs, ops, L):
 
 
 POS_DEFAULT = [0]
+SCHED_CACHE = {}
 
 
 def run_per_die(Mach, progs, units, pos, token, hook=None, trace=None):

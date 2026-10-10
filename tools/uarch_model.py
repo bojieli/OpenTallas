@@ -448,6 +448,12 @@ def hbm_ha2_fixedpin_model():
     return model()
 
 
+def hgi_ehash_binding_model():
+    """Approved HGI EHASH decode/history around immutable DS shipped hash."""
+    from hgi_ehash_model import model
+    return model()
+
+
 def mtp_hist_pipeline_contract_model():
     """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
     from mtp_hist_pipeline_model import model
@@ -15204,3 +15210,80 @@ def hgi_quant_decode_model():
         tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
         new_numerical_format=False, performance_gain_claim=None,
         adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')
+
+def hgi_token18_contract_model():
+    """HGI-1 token endpoints: size before build; estimated area, zero new cycles.
+
+    Wrapper on the released FAST1/PRL2 DS control. Acceptance uses the plain
+    NSLOT8 leaf, not the historical protected/leased accept implementation.
+    """
+    tw, slots = 18, 8
+    accept_inputs = 2 + 4 + 3 * tw + 3 * 3
+    accept_outputs = 2 * slots * tw + 2 + 3 + 4 + tw
+    extra_accept_ff = 2 * slots + 1  # one widened bit per slot + bonus
+    return dict(schema='opentallas.hgi_token18.v1', default_off=True,
+        model_scope=['DeepSeek-V4.1 HBM', 'Qwen3-8B HBM AR'],
+        qwen_rom_mtp=False, replicas_per_die=1, MACs_per_cycle=0,
+        memory_ports_bytes_per_cycle=0, memory_storage='none',
+        accept=dict(input_bits=accept_inputs, output_bits=accept_outputs,
+                    slot_count=slots, storage_bits=2*slots*tw+tw,
+                    extra_ff_vs_17=extra_accept_ff,
+                    latency_cycles=1, added_cycles_vs_DS17=0,
+                    comparators=slots-1, comparator_width=tw,
+                    mux_inputs=slots, mux_width=tw),
+        control=dict(qualified_FAST=1, qualified_PRL=2, token_width=tw,
+                     token_ports=['p_tok','f_tok','e_tok','cmd_tok1','am_idx','tw_tok'],
+                     operand_bus_bits=slots*tw, added_cycles_vs_DS17=0,
+                     added_boundary_bits=6+slots),
+        routing=dict(assumed_slot_um=[466.56,200.88],
+                     two_layer_pitch_um=.064, reserve_fraction=.30,
+                     channel_tracks=int(2*200.88/.064*.70),
+                     accept_boundary_tracks=accept_inputs+accept_outputs,
+                     extra_control_boundary_tracks=6+slots),
+        area=dict(estimated_accept_widening_um2=extra_accept_ff*DFF_UM2,
+                  slot_area_um2=466.56*200.88,
+                  estimate_only=True, route_required=True),
+        latency=dict(token_added_cycles=0, accept_cycles=1,
+                     control_read_wait_cycles=2),
+        fanout=dict(replica_mux_demux=0, token_bit_max_accept_compare_fanout=1),
+        exact_gate='DS17 lockstep + upper-bit mismatch + accept lengths0..7 + true mutants')
+
+
+def hgi_token18_accept_seat_model():
+    """Physical boundary repair, priced before RTL: parallel command pin seat."""
+    d=hgi_token18_contract_model()
+    seat_bits=4+3*18+3*3
+    d['accept'].update(pin_seat_bits=seat_bits, extra_ff_with_seat=17+seat_bits,
+                       latency_cycles=2, added_cycles_vs_DS17=1)
+    d['latency'].update(accept_cycles=2, token_added_cycles=1)
+    d['area'].update(estimated_accept_widening_um2=(17+seat_bits)*DFF_UM2)
+    d['physical_measured_base']=dict(stdcell_area_um2=263.752, cells=2137,
+        peak_floorplan_kib=322588, source='377249427', evidence='43b313543')
+    d['reason']='rtl_boundary actual source377 input->register34 levels; inputseat required'
+    return d
+
+
+def hgi_token18_fullcore_model():
+    """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
+    return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,
+        models=['DeepSeek-V4.1 HBM MTP'],replicas_per_die=1,
+        topology='qualified ot_hfd_mtp_core TW18 XSEL1',
+        MACs_per_cycle=0, fp32_bias_adds_per_cycle=8,
+        memory_ports_bytes_per_cycle=0, history_token_bits=16*18,
+        local_logit_input_bits_per_cycle=2*8*32+8+3,
+        command_operand_bits=8*18, token_port_bits=18,
+        source_selector_inputs=6*9, local_expert_selectors=0,
+        window_ring_slots=256, sliding_window_rows=128,
+        compressor_ring_slots=10, layers=40, model_maxpos=1048576,
+        added_cycles_vs_qualified_DS_core=0,
+        qualified_boundary_edges=4, qualified_prompt_read_wait=2,
+        added_token_cycles_vs_bare_controller=4,
+        slot_um=[466.56,200.88], area_slot_um2=466.56*200.88,
+        estimated_token_widening_ff=128,
+        estimated_width_area_um2=128*DFF_UM2,
+        routing_tracks_available=int(2*200.88/.064*.70),
+        routing_boundary_tracks_estimate=1200, macro_replicas=1,
+        replica_mux_demux=0, new_token_ff_fanout=1,
+        exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
+        physical_fit_measured=False, routes_required=2,
+        exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')

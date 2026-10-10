@@ -67,6 +67,11 @@ def main():
     tr, _ = C.qwen_dispatch()
     for d in [d for d in tr if C.unit_of(d) == 7]:
         A = d['eff'][0]
+        if C.fld(A, 'space') == 2:
+            # hbm-sim now streams the head logits (A = STREAM, SU -> ARGMAX): this adapter bench relays them through VM
+            # at base 0; the STREAM path itself is benched end to end by tb_hgi_su_stream (SM -> SU unit -> ARGMAX)
+            A = C.SV.mdesc(space=1, base=0, n=d['n'][0], m=1)
+            d = dict(d, eff=[A] + d['eff'][1:])
         n, ab, imm = d['n'][0], C.fld(A, 'base'), C.fld(d['hdr'], 'imm_a', C.UOP)
         w = [struct.unpack('<I', struct.pack('<f', rng.gauss(0, 4)))[0] for _ in range(n)]
         w[rng.randrange(n)] = w[rng.randrange(n)] = 0x41F00000            # ties at 30.0

@@ -52,7 +52,7 @@ module ot_hgi_cp_die #(
     wire cpl_tokx; wire cfg_loaded; wire [2:0] cfg_err; wire [63:0] cfg_cp_act;
     reg  [15:0] u_rdy, u_done, u_fault;
     reg  db_hold; reg [79:0] db_q;                       // one doorbell station
-    reg  fq_busy;                                        // fetch station: one request in flight until its sector returns
+    reg  [2:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
     reg  cpl_hold;                                       // completion station: waits for the loader's ack
     reg  vr_busy, vr_rv; reg [31:0] vr_rd; reg [2:0] vr_w;
     reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
@@ -64,7 +64,7 @@ module ot_hgi_cp_die #(
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
         .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]),
-        .f_req_v(f_req_v), .f_req_rdy(!fq_busy), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
+        .f_req_v(f_req_v), .f_req_rdy(fq_cr != 3'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
         .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault), .wr_quiet(wr_quiet),
@@ -90,7 +90,7 @@ module ot_hgi_cp_die #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0;
-            db_hold <= 1'b0; fq_busy <= 1'b0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
+            db_hold <= 1'b0; fq_cr <= 3'd4; fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
@@ -119,8 +119,14 @@ module ot_hgi_cp_die #(
             if (l_cpl_ack) cpl_hold <= 1'b0;
             // record-ring fetch station
             cpl[113] <= 1'b0;
-            if (f_req_v && !fq_busy) begin fq_busy <= 1'b1; cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
-            if (l_frsp_v) fq_busy <= 1'b0;                 // one fetch in flight end to end (in order)
+            // F5: a request leaves on a credit (the loader's queue slot), the slot returns on the loader's f_req_ack (the
+            // memory lane took it), not on the data; sectors return in order, at most 48 in flight (the sequencer's NOS)
+            begin : fetch
+                reg snd; snd = f_req_v && fq_cr != 3'd0 && fq_in < 7'd48;
+                if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
+                fq_cr <= fq_cr - {2'd0, snd} + {2'd0, l_freq_ack};
+                fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};
+            end
             cpl[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};
             // VM read client: one word, read as its sector
             vmq[337] <= 1'b0; vr_rv <= 1'b0;

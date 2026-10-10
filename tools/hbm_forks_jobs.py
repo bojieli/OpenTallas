@@ -42,12 +42,24 @@ def fc_cmd(c):
     """the --fc face-clock variant (gen_svc_seg.py --ps --fc): its own split / RTL / SDC dirs and the ck* clock ports"""
     c = (c.replace('OT_SVC_SPLIT=split_ps', 'OT_SVC_SPLIT=split_psfc').replace('/svc/split_ps/', '/svc/split_psfc/')
           .replace('/svc/rtl/seg_ps/', '/svc/rtl/seg_psfc/').replace('/svc/sdc_ps/', '/svc/sdc_psfc/'))
+    # coordinator 2026-10-09 (option 1): the face leaves carry the segment's calibrated interior insertion as SOURCE
+    # latency (the die tree delays ckw / cke by the same amount; the ETM's per-pin insertion carries it), so the face
+    # registers sit in the main skew group: TT for setup / route, FF in the FF hold scenes (calib.env, sourced before
+    # the route; the CTS-only calibrate uses the defaults)
+    lat = ('L_=physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc; '
+           'printf "%s\\n" "if {[llength [get_libs -quiet *_FF_*]]} { set ot_fcl ${CK_FF_MEAN:-400} } else { set ot_fcl ${CK_TT_MEAN:-480} }" '
+           '"set_clock_latency -source \\$ot_fcl [get_ports -quiet {ckw[0] cke[0]}]" > $L_; ')
+    c = c.replace("export OT_MM_FF_SDC='", lat + "export OT_MM_FF_SDC='physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ")
+    c = c.replace('POSTSDC="', 'POSTSDC="physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc ')
+    c = c.replace("--orfs-var GPL_ROUTABILITY_DRIVEN=0", "--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append physical/hbm_accel_die_views/svc/sdc_psfc/fclat.sdc")
     return c.replace('SRC="{SRC}" OUT=', "CKP='ck*' SRC=\"{SRC}\" OUT=")
 
 
-def spec(m, commit, hm, tag, fc=False):
-    name = f'hbm_svc_{m[8:]}_ps{"fc" if fc else ""}_{commit[:9]}_tc_{tag}-cl'
+def spec(m, commit, hm, tag, fc=False, pinreg=False):
+    name = f'hbm_svc_{m[8:]}_ps{"fc" if fc else ""}{"pr" if pinreg else ""}_{commit[:9]}_tc_{tag}-cl'
     cmd = stage_cmd(m, hm)
+    if pinreg:      # setup-failing faces: every pin-fed register beside its own pin (common/wire_stage_fence.tcl OT_WS_PINREG)
+        cmd = cmd.replace('--orfs-var GPL_ROUTABILITY_DRIVEN=0', '--orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_PINREG=1')
     if fc:
         cmd = fc_cmd(cmd)
     d_ = dict(
@@ -88,6 +100,8 @@ def spec(m, commit, hm, tag, fc=False):
                         .replace('seg_ps/', 'seg_psfc/').replace('sdc_ps/', 'sdc_psfc/').replace('split_psfcfc', 'split_psfc')
                         .replace('seg_psfcfc', 'seg_psfc').replace('sdc_psfcfc', 'sdc_psfc'))
         d_['purpose'] = d_['purpose'] + ' | FC: W / E face one-stage chains on face die clock leaves ckw / cke (gen_svc_seg.py --fc)'
+    if pinreg:
+        d_['purpose'] = d_['purpose'] + ' | PINREG: every input-pin-fed register placed beside its own pin (OT_WS_PINREG)'
     return name, d_
 
 

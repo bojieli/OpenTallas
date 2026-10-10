@@ -466,22 +466,22 @@
      "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json result (the bit-exact native HGI-1 program, rank 0, CP modelled; unit costs walk-priced, CP entries ESTIMATES)",
      "rule": "delta = simulated program time - its own in-order dataflow (S0), added to the token path; not in the headline until the sequencer (C2) costs are measured (simulator spec section 4: published numbers use measured entries only)",
      "native_stream": {
-      "cycles": 550388.2,
-      "tok_s": 2180.3,
+      "cycles": 543456.7,
+      "tok_s": 2208.1,
       "note": "the native HGI-1 program alone, as compiled (fused SU chains, CP-aware order)"
      },
      "mtp_as_emitted": {
-      "delta_cycles": 25823.0,
-      "MTP": 3630.4,
+      "delta_cycles": 24811.6,
+      "MTP": 3633.1,
       "note": "the same delta once per verify pass (records issue once a pass; the columns ride in each record); no native verify program is compiled yet"
      },
      "as_emitted": {
-      "delta_cycles": 25823.0,
-      "AR": 1655.2
+      "delta_cycles": 24811.6,
+      "AR": 1657.5
      },
      "compiler_list_scheduled": {
-      "delta_cycles": 84067.5,
-      "AR": 1532.1
+      "delta_cycles": 89987.6,
+      "AR": 1520.6
      }
     },
     "aggregate": {
@@ -1299,7 +1299,7 @@
   "results/arch/energy_silicon_measured/energy_silicon.json": "64277a21714921ee",
   "results/arch/engram_20261008/design.json": "3fcba3d9efed464c",
   "results/arch/hgi_sim_20261009/dflash/dflash_timing.json": "6dcf28d7dad75f95",
-  "results/arch/hgi_sim_20261009/ds_native_timing_1M.json": "db9e40f6e25ec661",
+  "results/arch/hgi_sim_20261009/ds_native_timing_1M.json": "e450ac5078c587a6",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
   "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c53ea9d94285f136",

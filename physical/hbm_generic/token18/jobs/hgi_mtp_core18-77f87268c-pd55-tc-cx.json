@@ -1,0 +1,75 @@
+{
+  "name": "hgi_mtp_core18-77f87268c-pd55-tc-cx",
+  "block": "ot_hgi_mtp_core18",
+  "owner": "Codex:generic_token18",
+  "purpose": "Owner-approved HGI-1 item4 full18-bitendpoint/currentflow variant; exact benches+genuine mutants gate adoption; no cmdproc design",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc3",
+    "ot-epyc2",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "codex/hgi-token18-20261009",
+    "commit": "77f87268c"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current route_master recomputes true corner reference at every route phase"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm; SRC={SRC} HM=0.025 NC=8 bash physical/qwen_die_masters/jobs/route_master.sh hgi_mtp_core18 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "merge_target": null,
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_core18-77f87268c-pd55-tc-cx"
+    }
+  ],
+  "admission_evidence": {
+    "status": "OWN_SYNTH_FP_MEASURED_FULL_ROUTE_ESTIMATE",
+    "claim_gib": 24,
+    "source_measured": "77f87268c",
+    "synthesis_peak_kib": 1391680,
+    "floorplan_peak_kib": 663628,
+    "mapped_cells": 71956,
+    "final_floorplan_cells": 76857,
+    "std_area_um2": 10400.5,
+    "macro_count": 0,
+    "rationale": "24GiB conservative route estimate, >18x measured own canonical synthesis1.33GiB; no fullcoreDRT measurement yet",
+    "evidence": "e75645e28"
+  },
+  "notes": "Latestowner routes-before-benches instruction: source-pinned forcedTW18XSEL1SPECF0 exact+rollback mutant already passed; additional conformance and facade replay proceed parallel and adoption blocked. Registered fullcore with qualified4boundaryedges, zero generic extraedges. PD48/55 fixed466.56x200.88 full40/max1m topology; TT>=0FF>=0DRC0 and electrical0. SPECF0 mandatory. Strict boundary receipt pending intake. Internal reset recovery remains timed. No cmdproc work.",
+  "rtl_boundary": {
+    "levels": 16
+  },
+  "registered_io": true,
+  "parallel_bench_evidence": {
+    "positive": "387c3396e:results/rtl/hgi_token18_20261009/fullcore_replay/forced_x18_positive.log",
+    "mutant": "a8c837332:results/rtl/hgi_token18_20261009/fullcore_replay/forced_x18_mut1.log",
+    "scope": "qualified native fullcore forced trace TW18/XSEL1/PRL2/SPECF0, reduced numeric trace NL40; wrapper facade reset release and hbm-sim conformance pending",
+    "adoption": "BLOCKED until bench bindings+mutants+die facade gates pass"
+  }
+}

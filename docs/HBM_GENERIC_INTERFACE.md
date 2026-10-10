@@ -136,6 +136,8 @@ A record names each operand by a **memory descriptor** whose `space` field selec
 
 STREAM operands implement the project's dataflow rule that a value returns to shared memory only when another lane, unit or die needs it (AGENTS.md dataflow level 2).
 
+**How engines reach VM.** VM is one shared, banked memory with variable latency: its clients send request packets and receive responses in order, with up to 4 requests outstanding each. The stream unit, the special-function unit, the fused paths, the attention controller and the hyper-connection unit have fixed-latency, no-stall operand ports, so they do not read VM directly. Each keeps its own local operand memory, as on r25. The unit's record adapter **stages** the record's VM operands into that local memory and **drains** the results back to VM, both through VM's packet interface. The local memory is double-buffered, so staging the next record overlaps the current record's compute. The record retires when its last result is drained, so ordering and exactness (§4) stay at record level, and the program sees one VM. VM itself does not become fixed-latency. The simulator charges the stage and drain traffic of every record against VM's bandwidth.
+
 ### 2.5 Data flow through a token
 
 For one token, data moves in a fixed pattern:
@@ -579,7 +581,7 @@ Bit 7 and bits 255:239 are reserved.
 
 | Stream id | Producer | Consumer | Use |
 |---|---|---|---|
-| 0 | SM (`SM.MATVEC` O) | SU lanes (`SU.VOP` A) | LM-head rows into the row scale (Qwen, DFlash) |
+| 0 | SM (`SM.MATVEC` O) | SU lanes (`SU.VOP` A) | LM-head rows into the row scale (Qwen, DFlash); the SU's STREAM input port |
 | 1 | SU reduction output | ARGMAX (`ARGMAX.LOCAL` A) | scaled head logits into the argmax |
 | 2 | SM (`SM.MATVEC` O) | ARGMAX (`ARGMAX.LOCAL` A) | LM head straight into the argmax (DS) |
 
@@ -747,6 +749,7 @@ The acceptance test is identical tokens and per-unit outputs against the existin
 | Window ring plus selected rows in one attention | ATT C operand and `ring` flag | **Small hardware:** the ATT row-fetch front end takes a second row list and wraps a power-of-two ring counter |
 | Engram hash ids | `IDX.EHASH` | Existing DS Engram hash engine behind IDX. Until it is wired, the host writes the ids into an HBM table before the doorbell and a `DMA.LOAD` stages them; the rest of the program is identical |
 | Exact gathers and merges | `COLL.ALL_GATHER`, `COLL.TOPK_MERGE`, `COLL.ARGMAX_MERGE`, `COLL.ROW_GATHER` | **Small hardware:** a gather bypass mode on the collective endpoint: each rank's flits are multicast unchanged (no adder, no BF16 packing) on the existing links, credits and delivery lanes, so −0 and NaN payloads survive; completion checks the count, sum and xor of the delivered indices (a duplicate or a loss faults) |
+| Engine operands from the shared VM | Every unit's VM operands (§2.4) | **Small hardware, per unit:** the record adapter stages VM operands into the unit's existing local fixed-latency operand memory (double-buffered) and drains results back, through VM's packet interface with up to 4 requests outstanding; VM stays variable-latency. The stream unit also gets the STREAM input port of stream id 0 (SM → SU) |
 | Selected compressed rows from owner dies | `COLL.ROW_GATHER` | Software (G21): `IDX.OWNED` computes this rank's owned rows (padded to the group's largest count M) and the list-order table; then per slot an indexed `DMA.LOAD`, one exact `COLL.ALL_GATHER` and a `DMA.STORE` to rows r · M + j. The only hardware is the OWNED op in the IDX unit; no HBM ports on the collective, no reorder window |
 
 ### 7.2 Qwen3-8B: the 28 families

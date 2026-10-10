@@ -169,8 +169,10 @@ module tb_hgi_coll_bypass;
                 if (amx != 0) begin h[123:118] = 6'd3;
                     rec = {8'(die), 21'd0, 21'd1, 21'd2, 256'd0, md(3'd6, 40'h2000, 20'd1), md(3'd0, 40'h1000, 20'd2), h, 1'b1}; end
                 else
-                rec = {8'(die), 21'd0, 21'(pf * 16), 21'(pf * 16), 256'd0, md(3'd0, 40'h2000, 20'(pf * 16)),
-                       md(3'd0, 40'h1000, 20'(pf * 16)), h, 1'b1}; end
+                // A / O BF16 (n = 32 pf): the whole-row bypass path; a 32-bit ALL_GATHER is SLICED (F3, covered by the
+                // die-level hgi-e2e bench), its delivered flits carry {lanes, word offset}
+                rec = {8'(die), 21'd0, 21'(pf * 32), 21'(pf * 32), 256'd0, md(3'd1, 40'h2000, 20'(pf * 32)),
+                       md(3'd1, 40'h1000, 20'(pf * 32)), h, 1'b1}; end
             @(negedge clk); rec[0] = 0;
             if (pf2 == 0) $fatal(1, "unused");
 `else

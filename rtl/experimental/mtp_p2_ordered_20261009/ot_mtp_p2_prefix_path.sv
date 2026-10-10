@@ -9,7 +9,7 @@
 //    start_identity / start_ids, the inner start fires one cycle later; each input lane and the output go through an
 //    ot_sc_pfifo pin FIFO (registered in_r / out_v, no pin bit on a data enable);
 //  * transport -> arithmetic channel through an ot_sc_pfifo (cuts read pointer -> 8:1 queue mux -> SECDED syndrome);
-//  * transport SB_REG / ACC_REG, arithmetic and publisher BREG (registered duplicate-state gating, registered accept);
+//  * transport SB_REG / ACC_REG / PRE_DEC (per-lane registered target + identity/expert decode), arithmetic and publisher BREG (registered duplicate-state gating, registered accept);
 //  * fault / corrected outputs registered.
 // Context ownership is unchanged: start_r stays low from the accepted start through the last external out handshake.
 // REGB=0 is the original wiring.
@@ -92,7 +92,7 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  .in_data({in_identity[74*l+:74],in_expert[9*l+:9],in_shared[l],in_last[l],in_word[7*l+:7],in_data[512*l+:512]}),
  .out_valid(li_v[l]),.out_ready(li_r[l]),.out_data(li_d[l]));
  end
- ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.MUT_ORDER(MUT_ORDER)) transport(
+ ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.PRE_DEC(1),.MUT_ORDER(MUT_ORDER)) transport(
  .clk(clk),.rst_n(rst_n),.start_v(fire),.start_r(tr_sr),
  .start_identity(sid_q),.start_ids(sids_q),
  .in_v(li_v),.in_r(li_r),.in_identity({li_d[1][603:530],li_d[0][603:530]}),

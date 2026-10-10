@@ -117,7 +117,7 @@ def pin_tcl(pins):
     return "\n".join(out) + "\n"
 
 
-def tile_pins(w, h, variant):
+def tile_pins(w, h, variant, cg=False):
     ys = tile_edge_slots(h)
     xin, xout = (0.0, w) if variant == "toE" else (w, 0.0)
     pins = []
@@ -134,7 +134,7 @@ def tile_pins(w, h, variant):
     xs = sorted(gx.values())
     k = 0
     others = (bits("xs_a1", P["RPT"] * P["A1B"]) + bits("xs_g1", P["RPT"] * 5) + bits("xs_a2", P["RPT"] * P["A2B"])
-              + bits("xs_g2", P["RPT"] * 5) + ["rst_n"])
+              + bits("xs_g2", P["RPT"] * 5) + ["rst_n"] + (["cgi", "cgo"] if cg else []))
     xo = round(xs[-1] + 2.0, 3)
     for nme in others:
         pins.append((nme, "M5", "", round(xo + k * 0.48, 3), h)); k += 1
@@ -142,7 +142,7 @@ def tile_pins(w, h, variant):
     return pins
 
 
-def be_pins(w, h, variant):
+def be_pins(w, h, variant, cg=False):
     gx = lane_slots(w, P["SUB"], P["GLW"])
     pins = [(f"gin[{ln * P['GLW'] + i}]", "M5", "", x, h) for (ln, i), x in gx.items()]
     ys = be_edge_slots(h, P["NH"], P["QLW"])
@@ -153,6 +153,9 @@ def be_pins(w, h, variant):
             pins.append((f"qin[{ln * P['QLW'] + i}]", "M4", "", xin, y))
     xs = sorted(gx.values())
     pins.append(("rst_n", "M5", "", round(xs[-1] + 2.0, 3), h))
+    if cg:                                          # redesign-hbm --cg: the wake pins beside rst_n
+        pins.append(("cgi", "M5", "", round(xs[-1] + 2.48, 3), h))
+        pins.append(("cgo", "M5", "", round(xs[-1] + 2.96, 3), h))
     pins.append(("clk", "M5", "", round(xs[0] - 4.008, 3), h))
     return pins
 
@@ -1109,9 +1112,9 @@ def cmd_block(a):
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
-        pins = tile_pins(w, h, a.variant)
+        pins = tile_pins(w, h, a.variant, cg=a.cg)
         macros = [SRAM_X]
-        name = "ot_hbm_accel_smh_tile_" + ("e" if a.variant == "toE" else "w")
+        name = "ot_hbm_accel_smh_tile_" + ("e" if a.variant == "toE" else "w") + ("g" if a.cg else "")
         # the 2 x 4 x-store macros: leaf 0 upper half, leaf 1 lower half, a 2 x 2 block each, centred
         mw, mh = 94.824, 41.04
         xs = [round(w / 2 - mw - 2.16, 3), round(w / 2 + 2.16, 3)]
@@ -1132,15 +1135,16 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref,
+                        nbr_in="rin* bin* gin*" + (" cgi" if a.cg else ""))
     elif a.piece == "be":
         w, h = g.get("be_w", g["tile_w"]), g["be_h"]
-        pins = be_pins(w, h, a.variant)
+        pins = be_pins(w, h, a.variant, cg=a.cg)
         macros = []
-        name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
+        name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w") + ("g" if a.cg else "")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*" + (" cgi" if a.cg else ""), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     elif a.piece in STRIPS:
         pos, die, hcore = floorplan(g)
         pins, h = strip_pins(g, hcore, a.piece)
@@ -1227,6 +1231,17 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv\n"
                     "export VERILOG_DEFINES += -DOT_SMH_RCH_NONEMPTY\n")
+    if getattr(a, "cg", False):
+        if a.piece not in ("tile", "be"):
+            raise ValueError("--cg applies to tile / be")
+        pre = ["# redesign-hbm --cg: ICG push-down (one clone per sink cluster) before CTS"]
+        if "PRE_CTS_TCL" in extra:
+            pre.append("source " + extra["PRE_CTS_TCL"])
+        pre.append("source /src/physical/common_flow/cg_pushdown.tcl")
+        (work / "pre_cts_cg.tcl").write_text("\n".join(pre) + "\n")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
+                    "export PRE_CTS_TCL = /work/pre_cts_cg.tcl\n")
     int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
     if int8_enabled:
         if a.piece != "front_c":
@@ -1372,6 +1387,9 @@ def main(argv=None):
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
     b.add_argument("--hold-mm", action="store_true", help="opt-in SS setup/FF hold multi-mode flow repair")
     b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
+    b.add_argument("--cg", action="store_true", help="tile / be: the COARSE CLOCK-GATED master (redesign-hbm 2026-10-09): "
+                   "ot_hbm_accel_smh_{tile,be}_{w,e}g = the same netlist on one ICG (ot_cg_tile) + wake pins cgi / cgo; "
+                   "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
