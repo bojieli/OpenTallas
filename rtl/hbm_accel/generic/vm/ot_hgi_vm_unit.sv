@@ -9,14 +9,26 @@
 // status = {proto_fault, mask_fault, ue, ce[15:0]} (19 b) to the command processor (UE / faults halt the CP).
 module ot_hgi_vm_unit #(
     parameter integer NC = 1,
+    parameter integer WP = 1,            // wide write lanes (the DMA streaming port, 32 B a lane a cycle)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire [NC*338-1:0] cq,         // per client {v, req 337}
     output reg  [NC*274-1:0] cr,         // per client {v, rsp 273}
-    output reg  [18:0]       status
+    output reg  [18:0]       status,
+    // wide write port, per lane {v, sector 15, wdata 256, word mask 8} (280 b), pin-flopped here; done per lane
+    input  wire [WP*280-1:0] wq,
+    output wire [WP-1:0]     wq_done
 );
+    reg [WP*280-1:0] wq_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*280{1'b0}}; else wq_r <= wq;
+    wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;
+    genvar gp;
+    for (gp = 0; gp < WP; gp = gp + 1) begin : g_wl
+        assign wl_m[gp*8 +: 8] = wq_r[gp*280 +: 8]; assign wl_d[gp*256 +: 256] = wq_r[gp*280 + 8 +: 256];
+        assign wl_sec[gp*15 +: 15] = wq_r[gp*280 + 264 +: 15]; assign wl_v[gp] = wq_r[gp*280 + 279];
+    end
     reg  [336:0] sq [0:NC-1][0:3];
     reg  [1:0]   sh [0:NC-1];
     reg  [1:0]   stl [0:NC-1];
@@ -28,9 +40,10 @@ module ot_hgi_vm_unit #(
     wire [NC*273-1:0] rsp;
     wire [15:0] ce; wire ue, mask_fault;
     reg proto;
-    ot_hgi_vm_core #(.NC(NC), .OUT(4), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
+    ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
         .rsp_v(rsp_v), .rsp_r({NC{1'b1}}), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault),
-        .inj_v(1'b0), .inj_bank(5'd0), .inj_word(3'd0), .inj_mask(39'd0));
+        .inj_v(1'b0), .inj_bank(5'd0), .inj_word(3'd0), .inj_mask(39'd0),
+        .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wq_done), .wl_conflict(wl_conflict));
     integer c;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
@@ -48,7 +61,7 @@ module ot_hgi_vm_unit #(
                 sn[c] <= sn[c] + {2'd0, push && !(sn[c] == 3'd4 && !pop)} - {2'd0, pop};
                 cr[c*274 +: 274] <= {rsp_v[c], rsp[c*273 +: 273]};
             end
-            status <= {proto, mask_fault, ue, ce};
+            status <= {proto | wl_conflict, mask_fault, ue, ce};
         end
 endmodule
 `default_nettype wire

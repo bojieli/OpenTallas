@@ -19,8 +19,10 @@
 module ot_hgi_vm_core #(
     parameter integer NC = 2,
     parameter integer OUT = 4,         // requests a client may have outstanding (VM fast path, review ~16:40); 1 = v1
+    parameter integer WP = 1,          // wide write lanes (DMA streaming port, coordinator 2026-10-10: up to ~1 KB / cycle)
     parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
-                                       //   3 write responses skip the read pipeline (out of order: must FAIL)
+                                       //   3 write responses skip the read pipeline (out of order: must FAIL),
+                                       //   4 the wide port ignores its word mask
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -33,6 +35,16 @@ module ot_hgi_vm_core #(
     output reg  [15:0]       ce,
     output reg               ue,
     output reg               mask_fault,
+    // WIDE WRITE PORT (hgi-takeover 2026-10-10): WP lanes, each one whole-word-masked sector write a cycle
+    //   {v, sector 15, wdata 256, word mask 8}; lanes of one cycle must address distinct banks (consecutive sectors do).
+    //   Always accepted: a wide lane takes its bank's write port before any client (a client write to that bank waits
+    //   one cycle); wl_done[p] pulses when lane p's write is in the macro (2 edges), so the writer can retire on it.
+    input  wire [WP-1:0]     wl_v,
+    input  wire [WP*15-1:0]  wl_sec,
+    input  wire [WP*256-1:0] wl_d,
+    input  wire [WP*8-1:0]   wl_m,
+    output reg  [WP-1:0]     wl_done,
+    output reg               wl_conflict,  // two lanes on one bank in a cycle (producer bug): sticky
     // fault injection (bench only; tie 0): flip bit b of word w of bank k on its next write
     input  wire              inj_v,
     input  wire [4:0]        inj_bank,
@@ -106,12 +118,25 @@ module ot_hgi_vm_core #(
     reg [NC-1:0] gr_r [0:NB-1];
     reg [NC-1:0] gr_w [0:NB-1];
     integer b, c;
+    // wide lanes per bank
+    reg [NB-1:0] wb_hit; reg [4:0] wb_lane [0:NB-1]; reg [NB-1:0] wb_dup;
+    always @* begin
+        wb_hit = {NB{1'b0}}; wb_dup = {NB{1'b0}};
+        for (integer ab = 0; ab < NB; ab = ab + 1) begin
+            wb_lane[ab] = 5'd0;
+            for (integer ap = WP - 1; ap >= 0; ap = ap - 1)
+                if (wl_v[ap] && wl_sec[ap*15 +: 5] == 5'(ab)) begin
+                    if (wb_hit[ab]) wb_dup[ab] = 1'b1;
+                    wb_hit[ab] = 1'b1; wb_lane[ab] = 5'(ap);
+                end
+        end
+    end
     always @* begin
         for (integer ab = 0; ab < NB; ab = ab + 1) begin
             gr_r[ab] = {NC{1'b0}}; gr_w[ab] = {NC{1'b0}};
             for (integer ac = NC - 1; ac >= 0; ac = ac - 1) begin
                 if (req_v[ac] && !busy[ac] && c_bank[ac] == ab && !c_we[ac]) gr_r[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
-                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac]) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
+                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac] && !wb_hit[ab]) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
             end
         end
     end
@@ -131,10 +156,19 @@ module ot_hgi_vm_core #(
     reg  [NB-1:0] word_ok;
     integer w;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin m_re <= {NB{1'b0}}; m_we <= {NB{1'b0}}; mask_fault <= 1'b0; end
+        if (!rst_n) begin m_re <= {NB{1'b0}}; m_we <= {NB{1'b0}}; mask_fault <= 1'b0; wl_conflict <= 1'b0; end
         else begin
+            if (|wb_dup) wl_conflict <= 1'b1;
             for (b = 0; b < NB; b = b + 1) begin
-                m_re[b] <= |gr_r[b]; m_we[b] <= |gr_w[b];
+                m_re[b] <= |gr_r[b]; m_we[b] <= |gr_w[b] | wb_hit[b];
+                if (wb_hit[b]) begin : wide
+                    integer lp; lp = wb_lane[b];
+                    m_wa[b] <= wl_sec[lp*15 + 5 +: 10];
+                    for (w = 0; w < 8; w = w + 1) begin
+                        m_wd[b][w*39 +: 39] <= enc(wl_d[lp*256 + w*32 +: 32]);
+                        m_wm[b][w*39 +: 39] <= {39{wl_m[lp*8 + w] | (MUT == 4)}};   // MUT 4: the word mask ignored
+                    end
+                end
                 for (c = 0; c < NC; c = c + 1) begin
                     if (gr_r[b][c]) m_ra[b] <= c_sec[c][14:5];
                     if (gr_w[b][c]) begin
@@ -229,6 +263,10 @@ module ot_hgi_vm_core #(
             if (ue_n) ue <= 1'b1;
         end
     end
+    reg [WP-1:0] wl_d1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wl_d1 <= {WP{1'b0}}; wl_done <= {WP{1'b0}}; end
+        else begin wl_d1 <= wl_v; wl_done <= wl_d1; end
     // capture the macro output of the client's bank one edge after the access (rd_out is valid after the access edge)
     always @(posedge clk)
         for (integer pc = 0; pc < NC; pc = pc + 1)
