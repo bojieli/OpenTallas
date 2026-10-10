@@ -15667,3 +15667,9 @@ def hbm_su_tiled_gating_sizing():
                              '192 real tile ICGs in quarter CTS, physical clock access',
                              'M7 over-macro/channel capacity and full interface route',
                              'qid static ownership straps at real E/M4 sites, timed capture'])
+
+
+def s81_bf_tcg_pinlat_model():
+    """Size the exact clock-lockup + tile-clock full-rate BF combination."""
+    from uarch_model_s81_bf_pinlat import model
+    return model()
