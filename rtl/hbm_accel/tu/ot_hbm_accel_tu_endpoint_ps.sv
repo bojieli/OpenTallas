@@ -208,7 +208,7 @@ module ot_hbm_accel_tu_endpoint_ps #(
 `endif
         for (genvar p = 0; p < NPT; p = p + 1) begin : g_port
             // the slice is ONE hardened view: instantiated at its defaults (a hard macro takes no parameters)
-            ot_hcoll_port u_port (.clk(clk), .rst_n(rst_n),
+            ot_hcoll_port u_port (.clk(clk), .ckf(clk), .rst_n(rst_n),
                 .qp_push(qp_push_q[p]), .qp_din(qp_din_q[p]), .qr_push(qr_push_q[p]), .qr_din(qr_din_q[p]),
                 .sw_cr_ret(sw_cr_ret[p]), .ph_tx_v(ph_tx_v[p]), .ph_tx_flit(ph_tx_flit[p*PWT +: PWT]),
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),

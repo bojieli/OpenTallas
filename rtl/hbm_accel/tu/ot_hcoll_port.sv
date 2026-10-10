@@ -20,9 +20,11 @@ module ot_hcoll_port #(
     parameter integer PWB = 545,
     parameter integer SWCRED = 256,
     parameter integer K = 8,
-    parameter integer PAYLOAD_ECC = 0
+    parameter integer PAYLOAD_ECC = 0,
+    parameter integer FACE_CK = 0       // 1: the RX pin flops run on the face clock tap ckf
 ) (
     input  wire           clk,
+    input  wire           ckf,          // face clock tap (die leaf at the PHY face, option-1 source latency); tie to clk when FACE_CK = 0
     input  wire           rst_n,
     input  wire           qp_push,
     input  wire [PWT-1:0] qp_din,
@@ -44,10 +46,15 @@ module ot_hcoll_port #(
     // ---- input flops ----
     reg cr_p, rxv_p, rbcr_p;
     reg [PWT-1:0] rxf_p;
+    // hgi-takeover (route e21dc1395 TT -158 / FF -80: rxf_p at the PHY face hung off a late in-block leaf, ~500 ps behind
+    // the RX wire stage): with FACE_CK the RX pin flops run on the face tap ckf, a die clock leaf at the PHY face whose
+    // option-1 source latency (face_ck.sdc: the block's interior insertion) aligns them with the interior registers
+    wire ckr = (FACE_CK != 0) ? ckf : clk;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cr_p <= 1'b0; rxv_p <= 1'b0; rbcr_p <= 1'b0; end
-        else begin cr_p <= sw_cr_ret; rxv_p <= ph_rx_v; rbcr_p <= rb_cr; end
-    always @(posedge clk) rxf_p <= ph_rx_flit;
+        if (!rst_n) begin cr_p <= 1'b0; rbcr_p <= 1'b0; end
+        else begin cr_p <= sw_cr_ret; rbcr_p <= rb_cr; end
+    always @(posedge ckr or negedge rst_n) if (!rst_n) rxv_p <= 1'b0; else rxv_p <= ph_rx_v;
+    always @(posedge ckr) rxf_p <= ph_rx_flit;
     // ---- transmit queues + arbiter + switch-ingress credit ----
     wire [4:0] ce, ue, drop;
     // Two independent RX stores can retire corrupt words in the same cycle.
