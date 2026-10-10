@@ -24,7 +24,7 @@ module tb_hfd_cmdproc_s_mtp_native_mx1_regb #(parameter integer MUT=0, parameter
  wire abort,drained;
  reg [17:0] am=0;
  wire[826:0] cSE,cSW;wire[63:0] suSE,suSW;wire[146:0] xl;wire[15:0] xt;
- hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(1),.MUT(MUT)) dut(.cSE(cSE),.cSW(cSW),.ck(clk),.rst(rst),
+ hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(1),.MUT(MUT)) dut(.cSE(cSE),.cSW(cSW),.ck(clk),.cks(clk),.ckn(clk),.cke(clk),.ckw(clk),.rst(rst),
  .f_loader(341'b0),.f_router(64'b0),.t_su_SE(suSE),.t_su_SW(suSW),.xb(16'b0),.xl(xl),.xt(xt),
  .f_mtp(mtp),.t_mtp(to_mtp),.f_host(host),.t_host(status),.f_provider(provider),
  .t_emit(emitted),.t_provider(addresses),.f_emit_host(emit_accept),.t_emit_host(emit_host),

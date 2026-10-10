@@ -44,9 +44,16 @@
 // Cost: record +3 cycles (T, M, B) +1 (flopped ready); retire +3.  Flops: 3 x 682 + ~12.
 // The job pin ready also carries a registered admission-open bit: no job is parked in the pin FIFO while admission
 // is closed (the held native done lasts until the drained reset, which would discard it).
-module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
+// mtp-lead 2026-10-10 (r6, FC=1 default): FACE CLOCK TAPS (design standard 2026-10-09 ~20:30 PT).  The AR band is
+// hfd_cmdproc_s_fc (physical/hbm_cp_mtp_native/gen_ar_fc.py): its pin flops run on the die clock leaf of their face --
+// cks (S), ckn (N), cke (E), ckw (W) -- with falling-edge lockups on every zero-logic hop to the core root (0 cycles;
+// lockstep-equal to hfd_cmdproc_s, tb_hfd_cmdproc_s_fc_lockstep).  The taps are die clock leaves balanced by the die tree
+// (tools/hbm_accel_die_fp.py: they ride the band's ck net, clock_leaf_offsets).  FC=0: the adopted hfd_cmdproc_s.
+module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0,
+ parameter integer FC=1)(
  inout wire [826:0] cSE,cSW,
  input wire [0:0] ck,rst,
+ input wire [0:0] cks,ckn,cke,ckw,
  input wire [340:0] f_loader,input wire [63:0] f_router,
  output wire [63:0] t_su_SE,t_su_SW,
  input wire [15:0] xb,output wire [146:0] xl,output wire [15:0] xt,
@@ -62,9 +69,15 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  input wire [682:0] x_hgi_argmax_rec,output wire [2:0] x_hgi_argmax_ret,
  output wire [682:0] t_hgi_argmax,input wire [2:0] f_hgi_argmax
 );
+ generate if (FC == 1) begin: g_ar_fc
+ hfd_cmdproc_s_fc ar(.cks(cks),.ckn(ckn),.cke(cke),.ckw(ckw),.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
+  .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
+  .xb(xb),.xl(xl),.xt(xt));
+ end else begin: g_ar
  hfd_cmdproc_s ar(.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
   .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
   .xb(xb),.xl(xl),.xt(xt));
+ end endgenerate
  generate if (REGB == 0) begin: g_direct
   assign t_hgi_argmax=x_hgi_argmax_rec;assign x_hgi_argmax_ret=f_hgi_argmax;
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(ck[0]),.rst(rst[0]),
