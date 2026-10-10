@@ -53,5 +53,14 @@
     "option1_die_source_qualified": false,
     "final_obligation": "Attach actual balanced die-tree tap source latency and parent clock-root/lockup context before native adoption; re-STA actual corner arrival and boundary budgets. A block-only pass does not establish die option-1 compliance."
   },
-  "geometry_basis": "Parent head631 directed routes: capture5/6, collective6/7, VM-to-MTP9/MTP-to-VM10"
+  "geometry_basis": "Parent head631 directed routes: capture5/6, collective6/7, VM-to-MTP9/MTP-to-VM10",
+  "legacy_native_current": {
+    "fifo_depth": 4,
+    "grant_history_cycles": 3,
+    "safe_for_actual_relays": false,
+    "exact_failure_evidence": "physical/mtp_link_rtt/native_legacy_failure/record.json",
+    "binding_receipt_commit": "904003986543ede4108e28090fe67252eeae9c32",
+    "binding_receipt": "results/rtl/mtp_takeover_20261010/head631_native_binding_verified.json",
+    "remaining": "Native wrappers stay ENABLE_RTT=0 until successor qualifies against actual parent die-clock tap, corner timing and directed station bindings; current legacy default is therefore an unresolved native correctness blocker, not a safe integrated design."
+  }
 }

@@ -17,6 +17,9 @@ set_clock_latency $L [get_clocks {core_clk vclk}]
 # Source0 is provisional, not option-1 die clock qualification. Before native
 # adoption attach the actual balanced die-tree tap source latency and recheck
 # boundary timing/lockups against the parent clock plan and corner budgets.
+# Binding obligation: head631_native_binding_verified.json at904003986 records
+# actual 5/6,6/7,9/10 stations. Native legacy D4/history3 is unsafe there;
+# wrappers remain default-off pending this successor plus die-clock qualification.
 set_clock_latency -source 0 [get_clocks core_clk]
 set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock core_clk \$ot_in
