@@ -1,0 +1,130 @@
+{
+ "dma_load_to_vm": {
+  "INT8": {
+   "n": 1,
+   "hbm_B": 4096,
+   "vm_words": 4096,
+   "max_hbm_B": 4096,
+   "misaligned_n": 0,
+   "misaligned_hbm_B": 0
+  },
+  "BF16": {
+   "n": 146,
+   "hbm_B": 1218754,
+   "vm_words": 609377,
+   "max_hbm_B": 75968,
+   "misaligned_n": 0,
+   "misaligned_hbm_B": 0
+  },
+  "FP32": {
+   "n": 2,
+   "hbm_B": 516,
+   "vm_words": 129,
+   "max_hbm_B": 512,
+   "misaligned_n": 0,
+   "misaligned_hbm_B": 0
+  }
+ },
+ "units": {
+  "SU.VOP": {
+   "rd_words": 8764800,
+   "wr_words": 5414464
+  },
+  "FUSED.ROW_NORM": {
+   "rd_words": 345088,
+   "wr_words": 345088
+  },
+  "SM.MATVEC": {
+   "rd_words": 446464,
+   "wr_words": 571392
+  },
+  "DMA.STORE": {
+   "rd_words": 18432,
+   "wr_words": 0
+  },
+  "ATT.QK": {
+   "rd_words": 36864,
+   "wr_words": 2359296
+  },
+  "ATT.PV": {
+   "rd_words": 2359296,
+   "wr_words": 36864
+  },
+  "COLL.ALL_REDUCE_SUM": {
+   "rd_words": 294912,
+   "wr_words": 294912
+  },
+  "SFU.GLU": {
+   "rd_words": 331776,
+   "wr_words": 110592
+  },
+  "ARGMAX.LOCAL": {
+   "rd_words": 0,
+   "wr_words": 2
+  },
+  "COLL.ARGMAX_MERGE": {
+   "rd_words": 2,
+   "wr_words": 1
+  },
+  "CTL.END": {
+   "rd_words": 1,
+   "wr_words": 0
+  }
+ },
+ "largest_loads": [
+  {
+   "hbm_B": 75968,
+   "fmt": "BF16",
+   "tag": "head_scale.load",
+   "count": 1
+  },
+  {
+   "hbm_B": 12288,
+   "fmt": "BF16",
+   "tag": "row_scale_gu.load",
+   "count": 36
+  },
+  {
+   "hbm_B": 8192,
+   "fmt": "BF16",
+   "tag": "row_scale_o.load",
+   "count": 36
+  },
+  {
+   "hbm_B": 8192,
+   "fmt": "BF16",
+   "tag": "row_scale_down.load",
+   "count": 36
+  },
+  {
+   "hbm_B": 4096,
+   "fmt": "INT8",
+   "tag": "embedding.codes",
+   "count": 1
+  },
+  {
+   "hbm_B": 3072,
+   "fmt": "BF16",
+   "tag": "row_scale_qkv.load",
+   "count": 36
+  },
+  {
+   "hbm_B": 512,
+   "fmt": "FP32",
+   "tag": "rope.table_row",
+   "count": 1
+  },
+  {
+   "hbm_B": 4,
+   "fmt": "FP32",
+   "tag": "swiglu.route_one",
+   "count": 1
+  },
+  {
+   "hbm_B": 2,
+   "fmt": "BF16",
+   "tag": "embedding.scale",
+   "count": 1
+  }
+ ]
+}

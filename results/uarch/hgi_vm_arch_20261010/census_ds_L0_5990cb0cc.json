@@ -1,0 +1,100 @@
+{
+ "dma_load_to_vm": {
+  "FP32": {
+   "n": 6,
+   "hbm_B": 8968,
+   "vm_words": 2242,
+   "max_hbm_B": 5120,
+   "misaligned_n": 1,
+   "misaligned_hbm_B": 4
+  }
+ },
+ "units": {
+  "FUSED.HC_PRE_NORM": {
+   "rd_words": 40968,
+   "wr_words": 10240
+  },
+  "SM.MATVEC": {
+   "rd_words": 113170,
+   "wr_words": 2318
+  },
+  "COLL.ALL_GATHER": {
+   "rd_words": 28544,
+   "wr_words": 28544
+  },
+  "SU.VOP": {
+   "rd_words": 52086,
+   "wr_words": 44505
+  },
+  "FUSED.QDQ_FP8": {
+   "rd_words": 512,
+   "wr_words": 512
+  },
+  "DMA.KVWB_DS": {
+   "rd_words": 512,
+   "wr_words": 0
+  },
+  "ATT.QK": {
+   "rd_words": 512,
+   "wr_words": 128
+  },
+  "ATT.PV": {
+   "rd_words": 128,
+   "wr_words": 512
+  },
+  "COLL.GROUP_REDUCE_MCAST": {
+   "rd_words": 1024,
+   "wr_words": 12288
+  },
+  "HC.HC_MIX": {
+   "rd_words": 40960,
+   "wr_words": 48
+  },
+  "FUSED.HC_POST": {
+   "rd_words": 51240,
+   "wr_words": 40960
+  },
+  "IDX.TOPK": {
+   "rd_words": 384,
+   "wr_words": 6
+  }
+ },
+ "largest_loads": [
+  {
+   "hbm_B": 5120,
+   "fmt": "FP32",
+   "tag": "q_norm.gain",
+   "count": 1
+  },
+  {
+   "hbm_B": 2048,
+   "fmt": "FP32",
+   "tag": "kv_norm.gain",
+   "count": 1
+  },
+  {
+   "hbm_B": 1536,
+   "fmt": "FP32",
+   "tag": "route.bias",
+   "count": 1
+  },
+  {
+   "hbm_B": 256,
+   "fmt": "FP32",
+   "tag": "kv_rope.table",
+   "count": 1
+  },
+  {
+   "hbm_B": 4,
+   "fmt": "FP32",
+   "tag": "route.one",
+   "count": 1
+  },
+  {
+   "hbm_B": 4,
+   "fmt": "FP32",
+   "tag": "attend.sink_table",
+   "count": 1
+  }
+ ]
+}
