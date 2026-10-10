@@ -66,18 +66,27 @@ module ot_hgi_dma_mover #(
     assign k_req_tag = 16'h4D56;
     assign k_rsp_rdy = 1'b1;
     // ================================================================ dispatch: sector engine or serial engine
-    wire fast_cmd = (mv[92:77] == 16'd1) && (mv[185:170] == 16'd1);     // src istride 1 and dst istride 1
+    // registered boundary (submit lint: input -> register <= 16 levels): a command station, pin flops on the lane and
+    // VM responses (+1 cycle each), and the lane request issues only from an empty request register (k_req_rdy only
+    // clears it)
+    reg cv_q; reg [226:0] cm_q;
+    reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin kr_v <= 1'b0; vr_q <= 274'd0; end
+        else begin kr_v <= k_rsp_v; vr_q <= vmr; end
+    always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
+    wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
     reg  busy_f;                                                        // the sector engine owns the ports
     reg  sel_s;                                                         // the serial engine owns the ports
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
-    assign mv_rdy = !busy_f && s_mv_rdy && !f_fault;
-    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && mv_rdy && !fast_cmd),
-        .mv_rdy(s_mv_rdy), .mv(mv), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
+    assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
+    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rst_n), .mv_v(cv_q && !fast_cmd),
+        .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
         .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(k_req_rdy && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
-        .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(k_rsp_v && sel_s), .k_rsp_rdy(s_krr),
-        .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(k_fault && sel_s), .vmq(s_vmq), .vmr(sel_s ? vmr : 274'd0));
+        .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
+        .k_rsp_we(kr_we), .k_rsp_data(kr_d), .k_fault(k_fault && sel_s), .vmq(s_vmq), .vmr(sel_s ? vr_q : 274'd0));
     assign fence_rdy = !busy_f && s_mv_rdy && s_fence_rdy;
     // ================================================================ sector engine
     function automatic [2:0] esz(input [2:0] f);
@@ -215,14 +224,14 @@ module ot_hgi_dma_mover #(
     always @* begin
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q2 && !f_fault) begin
-            if (wq_n != 3'd0 && dst_hbm && k_in < 4'(KOUT) && (!f_kv || k_req_rdy)) iss_kw = 1'b1;
-            else if (!r_done && src_hbm && k_in < 4'(KOUT) && (!f_kv || k_req_rdy) && ({1'b0, sf_n} + rd_in) < 6'(SFD)) iss_kr = 1'b1;
+            if (wq_n != 3'd0 && dst_hbm && k_in < 4'(KOUT) && !f_kv) iss_kw = 1'b1;
+            else if (!r_done && src_hbm && k_in < 4'(KOUT) && !f_kv && ({1'b0, sf_n} + rd_in) < 6'(SFD)) iss_kr = 1'b1;
             if (wq_n != 3'd0 && !dst_hbm && v_in < 3'd4) iss_vw = 1'b1;
             else if (!r_done && !src_hbm && v_in < 3'd4 && ({1'b0, sf_n} + rd_in) < 6'(SFD)) iss_vr = 1'b1;
         end
     end
     // ---- response routing (in order per port)
-    wire k_rv = k_rsp_v && busy_f, v_rv = vmr[273] && busy_f;
+    wire k_rv = kr_v && busy_f, v_rv = vr_q[273] && busy_f;
     wire k_rd_land = k_rv && !k_kind[0], k_wr_ack = k_rv && k_kind[0];
     wire v_rd_land = v_rv && !v_kind[0], v_wr_ack = v_rv && v_kind[0];
     always @(posedge clk or negedge rst_n) begin
@@ -239,20 +248,22 @@ module ot_hgi_dma_mover #(
             // ---- the serial engine's completion and ports
             if (s_mv_done) begin mv_done <= 1'b1; sel_s <= 1'b0; end
             if (s_mv_fault) mv_fault <= 1'b1;
-            if (mv_v && mv_rdy && !fast_cmd) sel_s <= 1'b1;
+            cv_q <= 1'b0;
+            if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
+            if (cv_q && !fast_cmd) sel_s <= 1'b1;
             // ---- accept a sector-engine command
             go_f <= 1'b0; go_q2 <= go_f | (go_q2 && busy_f);           // go_q2: the command fields have settled (level while busy)
-            if (mv_v && mv_rdy && fast_cmd) begin
+            if (cv_q && fast_cmd) begin
                 busy_f <= 1'b1; go_f <= 1'b1;
-                ssp <= mv[1:0]; sf <= mv[4:2]; sst <= mv[76:45]; dsp <= mv[94:93]; df <= mv[97:95]; dst <= mv[169:138];
-                sstb <= (mv[1:0] == 2'd1) ? {mv[76:45], 2'b00} : {2'd0, mv[76:45]};
-                dstb <= (mv[94:93] == 2'd1) ? {mv[169:138], 2'b00} : {2'd0, mv[169:138]};
-                mm <= mv[205:186]; nn <= mv[226:206];
-                ses <= (mv[1:0] == 2'd1) ? 3'd4 : esz(mv[4:2]); des <= (mv[94:93] == 2'd1) ? 3'd4 : esz(mv[97:95]);
-                sbase <= (mv[1:0] == 2'd1) ? {mv[44:5], 2'b00} : {2'd0, mv[44:5]};
-                dbase <= (mv[94:93] == 2'd1) ? {mv[137:98], 2'b00} : {2'd0, mv[137:98]};
-                if ((mv[1:0] > 2'd1) || (mv[94:93] > 2'd1) || mv[4:2] == 3'd3 || mv[4:2] == 3'd6 || mv[97:95] == 3'd3 ||
-                    mv[97:95] == 3'd6 || mv[97:95] == 3'd4 || mv[205:186] == 20'd0 || mv[226:206] == 21'd0) begin
+                ssp <= cm_q[1:0]; sf <= cm_q[4:2]; sst <= cm_q[76:45]; dsp <= cm_q[94:93]; df <= cm_q[97:95]; dst <= cm_q[169:138];
+                sstb <= (cm_q[1:0] == 2'd1) ? {cm_q[76:45], 2'b00} : {2'd0, cm_q[76:45]};
+                dstb <= (cm_q[94:93] == 2'd1) ? {cm_q[169:138], 2'b00} : {2'd0, cm_q[169:138]};
+                mm <= cm_q[205:186]; nn <= cm_q[226:206];
+                ses <= (cm_q[1:0] == 2'd1) ? 3'd4 : esz(cm_q[4:2]); des <= (cm_q[94:93] == 2'd1) ? 3'd4 : esz(cm_q[97:95]);
+                sbase <= (cm_q[1:0] == 2'd1) ? {cm_q[44:5], 2'b00} : {2'd0, cm_q[44:5]};
+                dbase <= (cm_q[94:93] == 2'd1) ? {cm_q[137:98], 2'b00} : {2'd0, cm_q[137:98]};
+                if ((cm_q[1:0] > 2'd1) || (cm_q[94:93] > 2'd1) || cm_q[4:2] == 3'd3 || cm_q[4:2] == 3'd6 || cm_q[97:95] == 3'd3 ||
+                    cm_q[97:95] == 3'd6 || cm_q[97:95] == 3'd4 || cm_q[205:186] == 20'd0 || cm_q[226:206] == 21'd0) begin
                     f_fault <= 1'b1; mv_fault <= 1'b1; busy_f <= 1'b0;
                 end
             end
@@ -317,7 +328,7 @@ module ot_hgi_dma_mover #(
             begin : land
                 reg push_, pop_;
                 push_ = k_rd_land || v_rd_land; pop_ = u_go && u_pop;
-                if (push_) begin sfd[sf_t[2:0] % SFD] <= k_rd_land ? k_rsp_data : vmr[255:0]; sf_t <= sf_t + 4'd1; end
+                if (push_) begin sfd[sf_t[2:0] % SFD] <= k_rd_land ? kr_d : vr_q[255:0]; sf_t <= sf_t + 4'd1; end
                 if (pop_) sf_h <= sf_h + 4'd1;
                 sf_n <= sf_n + {4'd0, push_} - {4'd0, pop_};
             end
