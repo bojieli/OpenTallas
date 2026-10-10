@@ -20,7 +20,7 @@
 // Transactions are exactly those of the separately benched elements: no logic sits between them.
 // ---------------------------------------------------------------------------
 module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
-                      parameter integer VWA = 15) (
+                      parameter integer VWA = 15, parameter bit VM_LINK = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
@@ -42,6 +42,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
     wire [9:0] cfg_users; wire [NW-1:0] cfg_plen, cfg_glen;
+    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [VWA-1:0] x_srd;
     wire [FLIT:0] dw; wire vc_ret, lnk_ft, tok_ft, vmx_ft;
     ot_dsrom_wfc_tokpipe_src #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(1), .XWORDS(41), .RXWORDS(41), .REC_SRAM(1),
@@ -66,8 +67,23 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     dsfd_wfc_vmx #(.XWORDS(41), .RQFREE(2)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
-        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
+        .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),
         .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_ft(vmx_ft));
+    // VM request channels (serial domain).  VM_LINK 0: the vmx skids' valid / ready straight to the die (exact only
+    // with the VM abutting).  VM_LINK 1 (mtp-wfc 2026-10-10, lat-audit "WFC VM read over 13/13 hub stages + CDC"):
+    // the registered grant protocol of the closed link pair (ot_dsrom_mtp_ltx here; the VM side receives with an
+    // ot_dsrom_mtp_lrx_rtt sized for the hub relay round trip), so a request is launched only against a grant and
+    // no relay station can drop one.  The read response f_srq and the write ACK f_swa are push-only and already
+    // safe: the vmx issues a read only with response-queue space (rq_n + r_out < RQ).
+    generate if (VM_LINK) begin : g_vm_link
+        ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_swv), .c_ready(x_swr),
+            .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
+        ot_dsrom_mtp_ltx #(.W(VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
+            .c_data(x_srd), .l_valid(t_srv[0]), .l_ready(f_srr[0]), .l_data(t_srd));
+    end else begin : g_vm_direct
+        assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;
+        assign t_srv = x_srv; assign t_srd = x_srd; assign x_srr = f_srr;
+    end endgenerate
     // committed-token egress and faults leave from flops (registered die boundary)
     reg [USER_W+2*NW:0] tok_q; reg [3:0] ft_q;
     always @(posedge clk) begin
@@ -78,7 +94,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
 endmodule
 
 module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
-                      parameter integer VWA = 15, parameter integer LAG = 0) (
+                      parameter integer VWA = 15, parameter integer LAG = 0, parameter bit VM_LINK = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
@@ -96,6 +112,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     wire pr_re; wire [USER_W-1:0] pr_user; wire [NW-1:0] pr_pos; wire [3:0] pr_blk;
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
+    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [VWA-1:0] x_srd;
     wire [FLIT:0] dw; wire vc_ret, lnk_ft, vmx_ft;
     ot_dsrom_wfc_tokpipe_stg #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(0), .XWORDS(46), .RXWORDS(41),
@@ -118,8 +135,23 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     dsfd_wfc_vmx #(.XWORDS(46), .RQFREE(2), .LAG(LAG)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
-        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
+        .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),
         .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_ft(vmx_ft));
+    // VM request channels (serial domain).  VM_LINK 0: the vmx skids' valid / ready straight to the die (exact only
+    // with the VM abutting).  VM_LINK 1 (mtp-wfc 2026-10-10, lat-audit "WFC VM read over 13/13 hub stages + CDC"):
+    // the registered grant protocol of the closed link pair (ot_dsrom_mtp_ltx here; the VM side receives with an
+    // ot_dsrom_mtp_lrx_rtt sized for the hub relay round trip), so a request is launched only against a grant and
+    // no relay station can drop one.  The read response f_srq and the write ACK f_swa are push-only and already
+    // safe: the vmx issues a read only with response-queue space (rq_n + r_out < RQ).
+    generate if (VM_LINK) begin : g_vm_link
+        ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_swv), .c_ready(x_swr),
+            .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
+        ot_dsrom_mtp_ltx #(.W(VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
+            .c_data(x_srd), .l_valid(t_srv[0]), .l_ready(f_srr[0]), .l_data(t_srd));
+    end else begin : g_vm_direct
+        assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;
+        assign t_srv = x_srv; assign t_srd = x_srd; assign x_srr = f_srr;
+    end endgenerate
     reg [3:0] ft_q; always @(posedge clk) ft_q <= {proto_fault, lnk_ft, 1'b0, vmx_ft};
     assign t_ft = ft_q;
 endmodule
