@@ -17,9 +17,19 @@ import threading
 import time
 
 CHANNELS = 8
+# Bulk transfers (source sync tarballs, 100s of MB) never ride the shared mux master: on a lossy path
+# (localhost -> ot-epyc3 2026-10-10: 190 ms RTT, 20-40 % loss, ~200 KB/s up) one master's TCP send queue
+# filled with tar data (Send-Q 1.98 MB) and every probe/poll multiplexed behind it timed out, while six
+# 1800 s syncs held six of the eight channel leases and the main thread waited forever for a seventh.
+BULK_CHANNELS = 2
 _LOCAL = {"local", "localhost"}
 _REGISTRY_LOCK = threading.Lock()
 _SEMAPHORES = {}
+_BULK_SEMAPHORES = {}
+
+
+class LeaseTimeout(subprocess.TimeoutExpired):
+    """No channel lease within the caller's deadline; no remote command was started."""
 
 
 def _directory():
@@ -76,21 +86,41 @@ def _ensure_master(host, root, key):
 
 
 @contextmanager
-def command(host, bulk=False):
+def command(host, *, wait_s=None, bulk=False):
     """Lease one remote session and yield its argv prefix, or a local shell prefix.
 
-    bulk=True (drive-1010 2026-10-10): a bulk stream (source tar, record rsync, checkpoint migration) runs on its own
-    fresh connection, still under one channel lease.  Through the shared ControlMaster six source tars to EPYC3 stalled
-    for 20+ min at 27-42 MB each (git/gzip blocked in write, remote tar idle, the master still serving small ops):
-    one mux connection carries every channel's flow-control window, so bulk channels starve behind it."""
+    wait_s bounds the wait for a lease (None = unbounded); on expiry LeaseTimeout (a subprocess.TimeoutExpired) is
+    raised before any remote command starts, so every caller's transient-ssh handling applies (FLEET r1 2026-10-10:
+    the main thread parked 20+ min in write_status() on an EPYC3 pool held by six source syncs).
+
+    bulk=True (drive-1010 2026-10-10): a bulk stream (source tar, record rsync, checkpoint migration) leases one of
+    BULK_CHANNELS per host and runs on its own fresh connection.  Through the shared ControlMaster six source tars to
+    EPYC3 (190 ms RTT, 20-40 % loss) moved 27-44 MB in 25 min and the master's Send-Q head-of-line blocked every
+    probe and poll multiplexed behind them."""
     if host in _LOCAL:
         yield ["bash", "-c"]
         return
+    deadline = None if wait_s is None else time.monotonic() + wait_s
+
+    def remaining():
+        return None if deadline is None else max(0.0, deadline - time.monotonic())
     root = _directory()
+    if bulk:
+        with _REGISTRY_LOCK:
+            sem = _BULK_SEMAPHORES.setdefault((str(root), host), threading.BoundedSemaphore(BULK_CHANNELS))
+        if not sem.acquire(timeout=remaining()):
+            raise LeaseTimeout(["ssh", host, "<bulk lease>"], wait_s)
+        try:
+            yield direct_command(host)
+        finally:
+            sem.release()
+        return
     key = hashlib.sha256(host.encode()).hexdigest()[:20]
     with _REGISTRY_LOCK:
         sem = _SEMAPHORES.setdefault((str(root), host), threading.BoundedSemaphore(CHANNELS))
-    with sem:
+    if not sem.acquire(timeout=remaining()):
+        raise LeaseTimeout(["ssh", host, "<channel lease>"], wait_s)
+    try:
         lease = None
         try:
             while lease is None:
@@ -104,8 +134,12 @@ def command(host, bulk=False):
                         lease = candidate
                         break
                 if lease is None:
+                    if deadline is not None and time.monotonic() >= deadline:
+                        raise LeaseTimeout(["ssh", host, "<file lease>"], wait_s)
                     time.sleep(0.05)
-            yield direct_command(host) if bulk else _ensure_master(host, root, key)
+            yield _ensure_master(host, root, key)
         finally:
             if lease is not None:
                 lease.close()
+    finally:
+        sem.release()

@@ -67,7 +67,7 @@ class CheckpointAffinity(unittest.TestCase):
 
     def transfer(self,result):
         @contextmanager
-        def command(host,bulk=False):yield ['ssh',host]
+        def command(host, **kwargs):yield ['ssh',host]
         def remote(host,script,**kw):
             if 'resume_check.sh' in script:return result
             return subprocess.CompletedProcess([],0,'','')

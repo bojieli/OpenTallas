@@ -171,7 +171,10 @@ def ssh(host, script, timeout=120, check=False, input=None):
             return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
     try:
-        with transport_command(host) as base:
+        # The lease wait counts against the caller's timeout: a host whose channels are all held
+        # (slow transfers, a wedged master) fails this call as a TimeoutExpired instead of parking
+        # the caller -- the main thread in write_status() waited 20+ min on 2026-10-10.
+        with transport_command(host, wait_s=timeout) as base:
             remote = "bash -s" if input is None else script
             payload = script if input is None else input
             # Inspect only a completed SSH result.  Timeouts/disconnects may have executed
@@ -1641,7 +1644,7 @@ def sync_source(j):
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
                   f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-        with transport_command(host, bulk=True) as base:
+        with transport_command(host, bulk=True, wait_s=600) as base:
             if verified_tar is not None:
                 # Transfer this exact validated tar, not a second git archive.
                 with verified_tar.open("rb") as stream:
@@ -2516,7 +2519,7 @@ def ledger(j, text):
                   + "".join(f"    {x}\n" for x in rest if x))
 
 
-def write_status(fleet_note=""):
+def write_status(fleet_note="", fleet=None):
     rows = all_jobs()
     act = [r for r in rows if r["status"] not in TERMINAL]
     done = [r for r in rows if r["status"] in TERMINAL][-25:]
@@ -2538,10 +2541,16 @@ def write_status(fleet_note=""):
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
           "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
+        # Status reporting reads the admission probe the job threads already took; the main thread
+        # never opens ssh (it blocked tick() on an exhausted EPYC3 lease pool 2026-10-10 06:03-06:2x).
+        good = getattr(fleet, "last_good", {}).get(h["name"]) if fleet is not None else None
         try:
-            r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
-            v = r.stdout.split() if r.returncode == 0 else []
-            ld = float(v[0]) if len(v) == 2 else None
+            if good is not None and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                v, ld = ["", str(good[1]["mem_gb"])], float(good[1]["load1"])
+            else:   # no fresh probe: a bounded read (lease wait included), never an unbounded park
+                r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
+                v = r.stdout.split() if r.returncode == 0 else []
+                ld = float(v[0]) if len(v) == 2 else None
         except (subprocess.TimeoutExpired, OSError, ValueError):
             # Fleet reporting must never terminate the coordinator or prevent
             # the next intake tick because one SSH peer is unavailable.
@@ -5246,7 +5255,7 @@ def tick(fleet):
                 continue
             _INFLIGHT.add(x["name"])
         _POOL.submit(_advance_and_release, x["name"], fleet)
-    write_status()
+    write_status(fleet=fleet)
 
 
 _RECOVERY_POOL = None
