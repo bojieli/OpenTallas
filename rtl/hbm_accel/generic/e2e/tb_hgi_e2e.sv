@@ -57,15 +57,15 @@ module tb_hgi_e2e;
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
     reg [31:0] s_wdata = 0; wire s_awready, s_wready, s_bvalid, s_arready, s_rvalid; wire [31:0] s_rdata;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
-    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
+    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
     wire lfault;
-    ot_hgi_loader_cp ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(1)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),
         .c_wdata(c_wdata), .c_wstrb(c_wstrb), .c_bvalid(1'b0), .c_bready(c_bready), .c_arvalid(c_arvalid), .c_arready(1'b0),
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
-        .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
+        .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_req_len(m_req_len), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
     wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
@@ -73,7 +73,7 @@ module tb_hgi_e2e;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
     wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE
     wire [690:0] am_rec; wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
-    ot_hgi_cp_die #(.USE_MACRO(0)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
+    ot_hgi_cp_die #(.USE_MACRO(0), .FQCR(16)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
         .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
@@ -107,42 +107,54 @@ module tb_hgi_e2e;
                 m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
             end
             if (rst_n && m_req_v && m_req_rdy) begin
-                fq_a[(fq_h + fq_n) % 256] = m_req_addr; fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1; fq_n = fq_n + 1;
+                for (int b = 0; b < int'(m_req_len); b++) begin fq_a[(fq_h + fq_n) % 256] = m_req_addr + 37'(32 * b); fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1 + b; fq_n = fq_n + 1; end
             end
         end
     end else begin : g_fetch_real
-        // lane 1 of the die's loader memory port (ot_hfd_loader_hgi: kport ND 3, lane 1 = CP record-ring fetch)
-        wire [4*346-1:0] lq; reg [4*293-1:0] lr;
-        wire k_rsp_v, k_rsp_we, k_fault; wire [15:0] k_rsp_tag; wire [255:0] k_rsp_data; wire k_req_rdy;
-        ot_hfd_loader_kport #(.ENABLE(1), .ND(1)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(m_req_v), .req_rdy(k_req_rdy),
-            .req_we(1'b0), .req_addr(m_req_addr), .req_wdata(256'd0), .req_wstrb(32'd0), .req_tag(16'hf000),
-            .rsp_v(k_rsp_v), .rsp_rdy(1'b1), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data), .lq(lq), .lr(lr),
-            .fault(k_fault));
+        // lane 1 of the die's loader memory port (ot_hfd_loader_hgi: kport ND 3, BURST 1, lane 1 = CP record-ring fetch)
+        wire [4*350-1:0] lq; reg [4*293-1:0] lr = '0;
+        wire k_rsp_v, k_rsp_we, k_fault, k_last; wire [15:0] k_rsp_tag; wire [255:0] k_rsp_data; wire k_req_rdy;
+        ot_hfd_loader_kport #(.ENABLE(1), .ND(1), .BURST(1)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(m_req_v), .req_rdy(k_req_rdy),
+            .req_we(1'b0), .req_addr(m_req_addr), .req_wdata(256'd0), .req_wstrb(32'd0), .req_tag(16'hf000), .req_len(m_req_len),
+            .rsp_v(k_rsp_v), .rsp_rdy(1'b1), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data), .rsp_last(k_last),
+            .lq(lq), .lr(lr), .fault(k_fault));
         always @* m_req_rdy = k_req_rdy;
         always @* begin m_rsp_v = k_rsp_v; m_rsp_data = k_rsp_data; end
-        // per stack service model: one native read at a time (the endpoint's), answered FLAT cycles after issue with the
-        // sector of the byte address the lane asked for (ND 1: at most one transaction in flight on the whole port)
-        reg [36:0] last_a; longint tn2 = 0; longint due [0:3]; reg busy_s [0:3]; reg [4:0] pc_s [0:3]; reg [15:0] tag_s [0:3];
-        integer fjit = 0;                                     // +FJIT=j: random 0..j extra cycles per fetch sector
-        initial begin void'($value$plusargs("FJIT=%d", fjit)); for (int i = 0; i < 4; i++) begin busy_s[i] = 0; due[i] = 0; end end
+        // stack-service model (svc native read protocol of ot_hbm_svc_core_native as the kport drives it): a native
+        // transaction = an rd_go pulse {len, tag, sector, pc}; one queue credit (native_rdy pulse) returns the next edge;
+        // its len beats {beat, tag, data} come back FLAT cycles later (+FJIT random, in order), one beat a cycle a stack.
+        // Data: the lane's requests are byte addresses; the kport splits each into chunks in order, so the model keeps
+        // the accepted requests as a sector FIFO and each chunk takes the next len sectors of it.
+        integer fjit = 0; longint tn2 = 0;
+        reg [36:0] sq [0:1023]; integer sh = 0, sn = 0;               // sector byte addresses in request order
+        reg [255:0] bd [0:3][0:255]; reg [15:0] bt_ [0:3][0:255]; reg [3:0] bb [0:3][0:255]; reg [4:0] bp [0:3][0:255];
+        longint bdue [0:3][0:255]; integer bh [0:3], bn [0:3]; longint ldue [0:3];
+        initial begin void'($value$plusargs("FJIT=%d", fjit)); for (int i = 0; i < 4; i++) begin bh[i] = 0; bn[i] = 0; ldue[i] = 0; end end
         always @(posedge clk) begin
             tn2 <= tn2 + 1;
-            if (rst_n && m_req_v && k_req_rdy) last_a <= m_req_addr;
-            if (rst_n && k_fault) begin $display("E2E FAIL: loader kport fault"); end
+            if (rst_n && k_fault) $display("E2E FAIL: loader kport fault");
+            if (rst_n && m_req_v && k_req_rdy) for (int b = 0; b < int'(m_req_len); b++) begin sq[(sh + sn) % 1024] = m_req_addr + 37'(32 * b); sn = sn + 1; end
             for (int st = 0; st < 4; st++) begin
-                automatic bit [345:0] q = lq[st*346 +: 346];
-                automatic bit rd_v = q[292]; automatic bit rr = q[344];
-                if (!busy_s[st]) begin
-                    lr[st*293 +: 293] <= 293'd1;                          // native_rdy
-                    if (rd_v) begin busy_s[st] <= 1; pc_s[st] <= q[297:293]; tag_s[st] <= q[343:328];
-                                    due[st] <= tn2 + FLAT - 1 + ((fjit > 0) ? $urandom_range(0, fjit) : 0);
-                                    lr[st*293 +: 293] <= 293'd0; end
-                end else if (tn2 >= due[st]) begin
-                    automatic bit [255:0] rdat;
-                    e2e_hbm_sector({27'd0, last_a}, 1'b0, 256'd0, 32'd0, rdat);
-                    lr[st*293 +: 293] <= {1'b0, 8'd0, 1'b0, rdat, 4'd0, tag_s[st], pc_s[st], 1'b1, 1'b0};
-                    if (lr[st*293 + 1] && rr) begin busy_s[st] <= 0; lr[st*293 +: 293] <= 293'd1; end
+                automatic bit [349:0] q = lq[st*350 +: 350];
+                automatic bit [292:0] o = 293'd0;
+                if (rst_n && q[292]) begin : issue
+                    longint d0; int len; len = int'(q[349:346]);
+                    d0 = tn2 + FLAT + ((fjit > 0) ? $urandom_range(0, fjit) : 0); if (d0 < ldue[st]) d0 = ldue[st];
+                    for (int b = 0; b < len; b++) begin
+                        automatic bit [255:0] rd_;
+                        e2e_hbm_sector({27'd0, sq[sh % 1024]}, 1'b0, 256'd0, 32'd0, rd_); sh = sh + 1; sn = sn - 1;
+                        bd[st][(bh[st] + bn[st]) % 256] = rd_; bt_[st][(bh[st] + bn[st]) % 256] = q[343:328];
+                        bb[st][(bh[st] + bn[st]) % 256] = 4'(b); bp[st][(bh[st] + bn[st]) % 256] = q[297:293];
+                        bdue[st][(bh[st] + bn[st]) % 256] = d0 + b; bn[st] = bn[st] + 1;
+                    end
+                    ldue[st] = d0 + len;
+                    o[0] = 1'b1;                                         // the request left the svc queue: one credit back
                 end
+                if (bn[st] > 0 && bdue[st][bh[st] % 256] <= tn2) begin
+                    o[1] = 1'b1; o[6:2] = bp[st][bh[st] % 256]; o[22:7] = bt_[st][bh[st] % 256]; o[26:23] = bb[st][bh[st] % 256];
+                    o[282:27] = bd[st][bh[st] % 256]; bh[st] = bh[st] + 1; bn[st] = bn[st] - 1;
+                end
+                lr[st*293 +: 293] <= o;
             end
         end
     end endgenerate
