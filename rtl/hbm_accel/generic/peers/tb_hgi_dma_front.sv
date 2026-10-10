@@ -101,7 +101,7 @@ module tb_hgi_dma_front;
         integer es, t0, o, i, e0; longint a; reg [31:0] want;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
-            for (i = 0; i < 262144; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
+            for (i = 0; i < VM_WORDS; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
             mv = 0; mv[1:0] = 0; mv[4:2] = f; mv[44:5] = 40'(sbase); mv[76:45] = 32'(sstr); mv[92:77] = 1;
             mv[94:93] = 1; mv[97:95] = 0; mv[137:98] = 40'(dbase); mv[169:138] = 32'(dstr); mv[185:170] = 1;
             mv[205:186] = 20'(m); mv[226:206] = 21'(n);
