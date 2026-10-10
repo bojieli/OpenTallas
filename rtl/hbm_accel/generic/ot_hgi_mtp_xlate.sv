@@ -56,6 +56,8 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
     output wire [3:0]    db_gen,
     output wire [1:0]    db_entry,
     output reg  [31:0]   db_off,
+    output reg  [3:0]    db_kind,               // the sequencer's G23 kernel index (it adds the entry itself)
+    output reg  [31:0]   db_loff,               // G26: L' x kstride for kinds 3 / 7 / 8, else 0
     input  wire          c_v,
     output wire          c_rdy,
     input  wire [17:0]   c_token,
@@ -138,7 +140,7 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE; cursor <= 0; total <= 0; fault <= 0; am_v <= 0; am_idx <= 0; raw <= 0; db_v <= 0;
-            db_token <= 0; db_pos <= 0; db_off <= 0; kind_q <= 0; loff <= 0;
+            db_token <= 0; db_pos <= 0; db_off <= 0; kind_q <= 0; loff <= 0; db_kind <= 0; db_loff <= 0;
         end else begin
             am_v <= 1'b0;
             if (cmd_v && cmd_ready) begin
@@ -153,6 +155,7 @@ module ot_hgi_mtp_xlate #(parameter integer MUT = 0) (
                 SELECT: if (kofs == 32'd0) begin fault <= 1; state <= CPL; end           // kernel absent from the image
                     else begin
                         db_v <= 1'b1; db_token <= {1'b0, token}; db_pos <= position; db_off <= kofs; kind_q <= kind;
+                        db_kind <= kind; db_loff <= (per_layer && MUT != 2) ? loff : 32'd0;
                         if (kind == 4'd0) loff <= lsel * kstride;
                         state <= DB;
                     end
