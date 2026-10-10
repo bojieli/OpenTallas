@@ -52,3 +52,9 @@ def hbm_smh_result_valid_model(columns=8, row_bits=12):
         added_cycles=0, token_latency_added_ns=0.0,
         correctness="fault only with own-column valid; row retires only with all columns valid; any partial valid vector raises fault",
         physical_gate="refresh full NC8 front_s timing/DRC with RESULT_VALID=1; unchanged BE/tile closures do not qualify it")
+
+
+def hbm_visibility_fence_pin_return_model():
+    """Default-off output registers with registered accepted-beat credit return."""
+    from tools.hbm_fence_pin_return_model import model
+    return model()
