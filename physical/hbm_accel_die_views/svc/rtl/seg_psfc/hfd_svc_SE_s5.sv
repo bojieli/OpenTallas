@@ -22,6 +22,8 @@ module hfd_svc_SE_s5 (
   wire cw = ckw[0];                // W-face die clock leaf: one-stage W-face chain portions (--fc)
   wire ce = cke[0];                // E-face die clock leaf: one-stage E-face chain portions (--fc)
   ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));
+  wire rnw; ot_svs_rsync u_rsw (.ck(cw), .rst(rst[0]), .rn(rnw));   // tap-local reset release
+  wire rne; ot_svs_rsync u_rse (.ck(ce), .rst(rst[0]), .rn(rne));   // tap-local reset release
   ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));
   wire ar6_sv, ar6_take, ar6_kcv, ar6_kt, ar6_icv, ar6_it; wire [41:0] ar6_sd; wire [39:0] ar6_kcd, ar6_icd; wire [3:0] ar6_iv; wire [203:0] ar6_id;
   wire dn24_o;
@@ -104,10 +106,10 @@ module hfd_svc_SE_s5 (
   assign ar6_sd = c_rq6_0_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_tb6_0 (.ck(c), .rst_n(rn), .v(ar6_take), .d(1'b0), .qv(c_tb6_0_v), .q(c_tb6_0_d));
   assign sp6_tk = c_tb6_0_v;
-  ot_svc_vpipe #(.W(51), .N(1)) c_is22_1 (.ck(cw), .rst_n(rn), .v(wi[63]), .d(wi[114:64]), .qv(c_is22_1_v), .q(c_is22_1_d));
+  ot_svc_vpipe #(.W(51), .N(1)) c_is22_1 (.ck(cw), .rst_n(rnw), .v(wi[63]), .d(wi[114:64]), .qv(c_is22_1_v), .q(c_is22_1_d));
   assign pc22_iv = c_is22_1_v;
   assign pc22_id = c_is22_1_d;
-  ot_svc_vpipe #(.W(277), .N(1)) c_rs22_0 (.ck(cw), .rst_n(rn), .v(pc22_bv), .d({pc22_bt, pc22_bb, pc22_bd}), .qv(c_rs22_0_v), .q(c_rs22_0_d));
+  ot_svc_vpipe #(.W(277), .N(1)) c_rs22_0 (.ck(c), .rst_n(rn), .v(pc22_bv), .d({pc22_bt, pc22_bb, pc22_bd}), .qv(c_rs22_0_v), .q(c_rs22_0_d));
   assign wo[279:2] = {c_rs22_0_d, c_rs22_0_v};
   ot_svc_vpipe #(.W(51), .N(2)) c_is23_1 (.ck(c), .rst_n(rn), .v(wi[115]), .d(wi[166:116]), .qv(c_is23_1_v), .q(c_is23_1_d));
   assign pc23_iv = c_is23_1_v;
@@ -130,16 +132,16 @@ module hfd_svc_SE_s5 (
   assign rs25_d = c_rs25_0_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_dn25_0 (.ck(c), .rst_n(rn), .v(as6_kt[1]), .d(1'b0), .qv(c_dn25_0_v), .q(c_dn25_0_d));
   assign dn25_o = c_dn25_0_v;
-  ot_svc_vpipe #(.W(51), .N(1)) c_is26_0 (.ck(ce), .rst_n(rn), .v(ar6_iv[2]), .d(ar6_id[152:102]), .qv(c_is26_0_v), .q(c_is26_0_d));
+  ot_svc_vpipe #(.W(51), .N(1)) c_is26_0 (.ck(c), .rst_n(rn), .v(ar6_iv[2]), .d(ar6_id[152:102]), .qv(c_is26_0_v), .q(c_is26_0_d));
   assign eo[114:63] = {c_is26_0_d, c_is26_0_v};
-  ot_svc_vpipe #(.W(277), .N(1)) c_rs26_1 (.ck(ce), .rst_n(rn), .v(ei[2]), .d(ei[279:3]), .qv(c_rs26_1_v), .q(c_rs26_1_d));
+  ot_svc_vpipe #(.W(277), .N(1)) c_rs26_1 (.ck(ce), .rst_n(rne), .v(ei[2]), .d(ei[279:3]), .qv(c_rs26_1_v), .q(c_rs26_1_d));
   assign rs26_v = c_rs26_1_v;
   assign rs26_d = c_rs26_1_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_dn26_0 (.ck(c), .rst_n(rn), .v(as6_kt[2]), .d(1'b0), .qv(c_dn26_0_v), .q(c_dn26_0_d));
   assign dn26_o = c_dn26_0_v;
-  ot_svc_vpipe #(.W(51), .N(1)) c_is27_0 (.ck(ce), .rst_n(rn), .v(ar6_iv[3]), .d(ar6_id[203:153]), .qv(c_is27_0_v), .q(c_is27_0_d));
+  ot_svc_vpipe #(.W(51), .N(1)) c_is27_0 (.ck(c), .rst_n(rn), .v(ar6_iv[3]), .d(ar6_id[203:153]), .qv(c_is27_0_v), .q(c_is27_0_d));
   assign eo[166:115] = {c_is27_0_d, c_is27_0_v};
-  ot_svc_vpipe #(.W(277), .N(1)) c_rs27_1 (.ck(ce), .rst_n(rn), .v(ei[280]), .d(ei[557:281]), .qv(c_rs27_1_v), .q(c_rs27_1_d));
+  ot_svc_vpipe #(.W(277), .N(1)) c_rs27_1 (.ck(ce), .rst_n(rne), .v(ei[280]), .d(ei[557:281]), .qv(c_rs27_1_v), .q(c_rs27_1_d));
   assign rs27_v = c_rs27_1_v;
   assign rs27_d = c_rs27_1_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_dn27_0 (.ck(c), .rst_n(rn), .v(as6_kt[3]), .d(1'b0), .qv(c_dn27_0_v), .q(c_dn27_0_d));
@@ -153,10 +155,10 @@ module hfd_svc_SE_s5 (
   assign eo[442:171] = {c_wl7_4_d, c_wl7_4_v};
   ot_svc_vpipe #(.W(1), .N(4)) c_wd7_2 (.ck(c), .rst_n(rn), .v(ei[558]), .d(ei[559:559]), .qv(c_wd7_2_v), .q(c_wd7_2_d));
   assign wo[561:560] = {c_wd7_2_d, c_wd7_2_v};
-  ot_svc_vpipe #(.W(62), .N(1)) c_sd22_1 (.ck(cw), .rst_n(rn), .v(wi[0]), .d(wi[62:1]), .qv(c_sd22_1_v), .q(c_sd22_1_d));
+  ot_svc_vpipe #(.W(62), .N(1)) c_sd22_1 (.ck(cw), .rst_n(rnw), .v(wi[0]), .d(wi[62:1]), .qv(c_sd22_1_v), .q(c_sd22_1_d));
   assign pc22_div = c_sd22_1_v;
   assign pc22_did = c_sd22_1_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd22_0 (.ck(cw), .rst_n(rn), .v(pc22_dnook), .d(pc22_dnoph), .qv(c_dd22_0_v), .q(c_dd22_0_d));
+  ot_svc_vpipe #(.W(1), .N(1)) c_dd22_0 (.ck(c), .rst_n(rn), .v(pc22_dnook), .d(pc22_dnoph), .qv(c_dd22_0_v), .q(c_dd22_0_d));
   assign wo[1:0] = {c_dd22_0_d, c_dd22_0_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd23_0 (.ck(c), .rst_n(rn), .v(pc22_dov), .d(pc22_dod), .qv(c_sd23_0_v), .q(c_sd23_0_d));
   assign pc23_div = c_sd23_0_v;
@@ -176,12 +178,12 @@ module hfd_svc_SE_s5 (
   ot_svc_vpipe #(.W(1), .N(1)) c_dd25_0 (.ck(c), .rst_n(rn), .v(pc25_dnook), .d(pc25_dnoph), .qv(c_dd25_0_v), .q(c_dd25_0_d));
   assign pc24_dniok = c_dd25_0_v;
   assign pc24_dniph = c_dd25_0_d;
-  ot_svc_vpipe #(.W(62), .N(1)) c_sd26_0 (.ck(ce), .rst_n(rn), .v(pc25_dov), .d(pc25_dod), .qv(c_sd26_0_v), .q(c_sd26_0_d));
+  ot_svc_vpipe #(.W(62), .N(1)) c_sd26_0 (.ck(c), .rst_n(rn), .v(pc25_dov), .d(pc25_dod), .qv(c_sd26_0_v), .q(c_sd26_0_d));
   assign eo[62:0] = {c_sd26_0_d, c_sd26_0_v};
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd26_1 (.ck(ce), .rst_n(rn), .v(ei[0]), .d(ei[1:1]), .qv(c_dd26_1_v), .q(c_dd26_1_d));
+  ot_svc_vpipe #(.W(1), .N(1)) c_dd26_1 (.ck(ce), .rst_n(rne), .v(ei[0]), .d(ei[1:1]), .qv(c_dd26_1_v), .q(c_dd26_1_d));
   assign pc25_dniok = c_dd26_1_v;
   assign pc25_dniph = c_dd26_1_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_cr22_1 (.ck(cw), .rst_n(rn), .v(wi[167]), .d(wi[168:168]), .qv(c_cr22_1_v), .q(c_cr22_1_d));
+  ot_svc_vpipe #(.W(1), .N(1)) c_cr22_1 (.ck(cw), .rst_n(rnw), .v(wi[167]), .d(wi[168:168]), .qv(c_cr22_1_v), .q(c_cr22_1_d));
   assign pc22_crv = c_cr22_1_v;
   ot_svc_vpipe #(.W(1), .N(2)) c_cr23_1 (.ck(c), .rst_n(rn), .v(wi[169]), .d(wi[170:170]), .qv(c_cr23_1_v), .q(c_cr23_1_d));
   assign pc23_crv = c_cr23_1_v;

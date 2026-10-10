@@ -47,7 +47,7 @@ SEGD, SPLD, SDCD, STG = ((('rtl/seg_psfc', 'split_psfc', 'sdc_psfc', 'seg_stages
 # in these segments only INBOUND one-stage portions (pin -> unit, the face-input hold class the taps were made for) sit
 # on the face tap; outbound portions stay on the in-block leaf c with their launching unit, and the tap stages take
 # their reset from a synchroniser on their own tap (ot_svs_rsync on cw / ce), so no hop or reset crosses tap <-> leaf.
-FC_INB = {'hfd_svc_SW_s6'}
+FC_INB = {'hfd_svc_SW_s6', 'hfd_svc_SE_s5'}   # SE_s5 psfcpr hm10: GRT hold -70 on the E-tap stages, crashed twice
 
 
 def fc_face(po, x0, x1, name=None):
