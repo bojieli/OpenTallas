@@ -1,0 +1,157 @@
+{
+ "schema": "opentallas.hgi_sim.e2e_calibration.v1",
+ "generated_utc": "2026-10-10T04:53:32Z",
+ "reports": [
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_COLL_PFMAX512_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_dma_idx_quant_sfu_su_COLL_PFMAX512_f40k40_685ae3/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_dma_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_fused_quant_f40k40_b77cab/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_idx_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_quant_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_sfu_su_f40k40_685ae3/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_stubs_f104k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_stubs_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/ds_L0_stubs_f8k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_COLL_PFMAX512_COLL_BF160_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_dma_fused_sfu_su_COLL_PFMAX512_COLL_BF160_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_dma_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_fused_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_sfu_su_f40k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_stubs_f104k40/report.json",
+  "results/rtl/hgi_e2e_20261009/runs/qwen_L0_stubs_f40k40/report.json"
+ ],
+ "result": {
+  "runs": {
+   "ds_L0": {
+    "run": "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_dma_idx_quant_sfu_su_COLL_PFMAX512_f40k40_685ae3/report.json",
+    "cycles": 86320,
+    "real_records": 56
+   },
+   "qwen_L0": {
+    "run": "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_dma_fused_sfu_su_COLL_PFMAX512_COLL_BF160_f40k40/report.json",
+    "cycles": 216474,
+    "real_records": 26
+   }
+  },
+  "per_unit": {
+   "FUSED": {
+    "ds_L0": {
+     "rtl_busy": 2127,
+     "sim_cost": 1768.0,
+     "ratio": 1.203,
+     "real": 1,
+     "exact": 1
+    },
+    "qwen_L0": {
+     "rtl_busy": 68674,
+     "sim_cost": 600.0,
+     "ratio": 114.457,
+     "real": 4,
+     "exact": 4
+    }
+   },
+   "COLL": {
+    "ds_L0": {
+     "rtl_busy": 50570,
+     "sim_cost": 5317.1,
+     "ratio": 9.511,
+     "real": 13,
+     "exact": 13
+    },
+    "qwen_L0": {
+     "rtl_busy": 2458,
+     "sim_cost": 2700.0,
+     "ratio": 0.91,
+     "real": 2,
+     "exact": 2
+    }
+   },
+   "SU": {
+    "ds_L0": {
+     "rtl_busy": 2909,
+     "sim_cost": 3230.0,
+     "ratio": 0.901,
+     "real": 33,
+     "exact": 33
+    },
+    "qwen_L0": {
+     "rtl_busy": 6062,
+     "sim_cost": 1336.0,
+     "ratio": 4.537,
+     "real": 10,
+     "exact": 10
+    }
+   },
+   "DMA": {
+    "ds_L0": {
+     "rtl_busy": 29761,
+     "sim_cost": 746.8,
+     "ratio": 39.851,
+     "real": 8,
+     "exact": 8
+    },
+    "qwen_L0": {
+     "rtl_busy": 131864,
+     "sim_cost": 754.3,
+     "ratio": 174.816,
+     "real": 9,
+     "exact": 9
+    }
+   },
+   "IDX": {
+    "ds_L0": {
+     "rtl_busy": 1267,
+     "sim_cost": 283.0,
+     "ratio": 4.477,
+     "real": 1,
+     "exact": 1
+    }
+   },
+   "SFU": {
+    "qwen_L0": {
+     "rtl_busy": 150,
+     "sim_cost": 60.0,
+     "ratio": 2.5,
+     "real": 1,
+     "exact": 1
+    }
+   }
+  },
+  "open_defects": {
+   "COLL": "F3 whole-row gathers + F4 PFMAX 64 (die build faults; PFMAX 512 what-if measured)",
+   "DMA": "F6 mover boot-path rate (one element / 4 edges + a kport round trip a sector miss)",
+   "CP": "F5 one 32 B fetch sector in flight"
+  },
+  "sensitivity": {
+   "ds_1M": {
+    "scale": {
+     "FUSED": 1.203,
+     "COLL": 9.511,
+     "SU": 0.901,
+     "DMA": 39.851,
+     "IDX": 4.477
+    },
+    "fixed_rtl_cycles": 543456.7,
+    "fixed_rtl_tok_s": 2208.1,
+    "current_rtl_cycles": 3162462.9,
+    "current_rtl_tok_s": 379.5
+   },
+   "qwen_P8191": {
+    "scale": {
+     "FUSED": 114.457,
+     "COLL": 0.91,
+     "SU": 4.537,
+     "DMA": 174.816,
+     "SFU": 2.5
+    },
+    "fixed_rtl_cycles": 1258136.1,
+    "fixed_rtl_tok_s": 953.8,
+    "current_rtl_cycles": 6303212.7,
+    "current_rtl_tok_s": 190.4
+   }
+  },
+  "reading": "ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM rates published by reprice assume the FIXED RTL (simulator tables); 'current_rtl' is what the token would cost with today's RTL units (open defects listed)"
+ }
+}
