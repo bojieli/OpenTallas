@@ -42,8 +42,12 @@ def liberty_pin_directions(body):
 
 def metadata_pair_inventory(mod, library_directions):
     drivers = {}
+    ff_data_consumers={}
     for name, cell in mod['cells'].items():
         directions=cell.get('port_directions',library_directions.get(cell['type'],{}))
+        if cell['type'].startswith('DFF'):
+            for bit in cell['connections']['D']:
+                ff_data_consumers.setdefault(bit,[]).append(name)
         for port, direction in directions.items():
             if direction == 'output':
                 for bit in cell['connections'][port]:
@@ -71,25 +75,40 @@ def metadata_pair_inventory(mod, library_directions):
     unresolved = []
     for name, wire in mod['netnames'].items():
         match = re.fullmatch(r'(meta|meta_inv)\[(\d+)\]', name)
+        d_match=re.fullmatch(r'\$0\\(meta|meta_inv)\[(\d+)\]\[2:0\]',name)
+        if d_match:
+            match=d_match
         if not match:
             continue
         side = match.group(1)
         for bit in wire['bits']:
             bits[side] += 1
-            driver = ff_driver(bit)
+            if d_match:
+                consumers=ff_data_consumers.get(bit,[])
+                driver=consumers[0] if len(consumers)==1 else None
+            else:
+                driver = ff_driver(bit)
             if driver is None:
                 unresolved.append([name, bit])
             else:
                 sets[side].add(driver)
     shared = sets['meta'] & sets['meta_inv']
+    q_bits=[]
+    for cellname in sets['meta']|sets['meta_inv']:
+        cell=mod['cells'][cellname]
+        directions=cell.get('port_directions',library_directions.get(cell['type'],{}))
+        q_bits.extend(bit for port,direction in directions.items() if direction=='output'
+                      for bit in cell['connections'][port])
     return {'verdict': 'PASS_distinct_physical_pairs' if bits == {'meta':3072,'meta_inv':3072}
             and len(sets['meta'])==3072 and len(sets['meta_inv'])==3072 and not shared and not unresolved
+            and len(q_bits)==6144 and len(set(q_bits))==6144 and all(isinstance(bit,int) for bit in q_bits)
             else 'FAIL_pair_inventory',
             'RTL_named_bits':bits,'primary_distinct_FF_cells':len(sets['meta']),
             'complement_distinct_FF_cells':len(sets['meta_inv']),
             'total_distinct_metadata_FF_cells':len(sets['meta']|sets['meta_inv']),
             'shared_FF_count':len(shared),'unresolved_bits':unresolved,
-            'method':'trace every named meta[group]/meta_inv[group] bit through optional INV/BUF to physical mapped DFF output; require unique3072+3072 disjoint drivers',
+            'distinct_physical_Q_bits':len(set(q_bits)),
+            'method':'Yosys clean drops unpacked memory Q aliases; trace preserved $0\\meta[group][2:0]/meta_inv process D bits to unique physical DFF D pins, require3072+3072 disjoint cells and6144 distinct nonconstant physical Q output nets; resolve pin directions from pinned Liberty',
             'mapped_driver_name_sha256':hashlib.sha256('\n'.join(sorted(sets['meta']|sets['meta_inv'])).encode()).hexdigest()}
 
 def run(libdir):
@@ -154,8 +173,31 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--lib-dir', required=True,type=Path)
     parser.add_argument('--output', required=True,type=Path)
+    parser.add_argument('--audit-netlist',type=Path)
+    parser.add_argument('--area-record',type=Path)
     args=parser.parse_args()
-    evidence=run(args.lib_dir)
+    if args.audit_netlist:
+        if not args.area_record:
+            parser.error('--audit-netlist requires --area-record')
+        evidence=json.loads(args.area_record.read_text())
+        mod=json.loads(args.audit_netlist.read_text())['modules']['ot_hbm_svc_dma_pc_cache_wide']
+        definitions={}
+        for p in sorted(args.lib_dir.glob('*asap7*RVT_SS*.lib')):
+            definitions.update(blocks(p.read_text()))
+        directions={name:liberty_pin_directions(body) for name,body in definitions.items()}
+        pairs=metadata_pair_inventory(mod,directions)
+        evidence['metadata_physical_pairs']=pairs
+        unchanged=all(hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==digest
+                      for p,digest in evidence['RTL_source_sha256'].items())
+        evidence['verdict']='PASS_mapped_shape' if pairs['verdict']=='PASS_distinct_physical_pairs' and unchanged and not evidence['unmapped_cells'] else 'FAIL_mapped_shape'
+        evidence['audit_provenance']={
+            'prior_record':str(args.area_record),'prior_record_sha256':hashlib.sha256(args.area_record.read_bytes()).hexdigest(),
+            'mapped_netlist_sha256':hashlib.sha256(args.audit_netlist.read_bytes()).hexdigest(),
+            'RTL_unchanged_since_mapping':unchanged,
+            'mapper_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'method':'reuse completed mapped netlist, resolve custom cell port directions from same pinned Liberty definitions; no resynthesis'}
+    else:
+        evidence=run(args.lib_dir)
     with args.output.open('x') as f:
         json.dump(evidence,f,indent=2); f.write('\n')
     print(json.dumps(evidence,indent=2))
