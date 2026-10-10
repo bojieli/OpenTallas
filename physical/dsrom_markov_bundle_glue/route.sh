@@ -23,6 +23,11 @@ ISS=${CK_SS_MEAN:-500}; IFF=${CK_FF_MEAN:-300}; HMS=${HM:-0.035}
 SLOT_W=${SLOT_W:-600}; SLOT_H=${SLOT_H:-200}; CORE_X=$((SLOT_W-2)); CORE_Y=$((SLOT_H-2)); PX=$((SLOT_W-20)); PY=$((SLOT_H-20))
 TOP=ot_dsrom_markov_bundle_glue
 CLK_MID=$((SLOT_W/2)); CLK_LO=$((CLK_MID-1)); CLK_HI=$((CLK_MID+1))
+# fill-8 2026-10-10: the south signal group used to span 20-$PX THROUGH the clock window; the IO placer packed that
+# 588-pin group (fallback mode) over every slot of 299-301 first, leaving 0 positions for clk (PPL-0093 at
+# 3_2_place_iop, mkglue-a/s-75ccbb9b3 calibrate). The south face is now two groups (go/xa/start/row0/embed/rst 277
+# west of the clock, xb + status outputs 311 east) with a CLK_KEEP um keep-out on each side of the face-mid clock pin.
+CLK_KEEP=${CLK_KEEP:-5}
 anchor_args=()
 if [ "${PINANCHOR:-1}" = 1 ]; then
  anchor_args=(--orfs-var PRE_GLOBAL_PLACE_TCL=/src/physical/qwen_die_masters/io_flop_at_pins.tcl
@@ -33,7 +38,8 @@ args=(--source rtl/hdc/ot_hdc_delay_ring.sv --source rtl/dsrom_sys/mtp/ot_dsrom_
  --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var "SYNTH_SLANG_ARGS=--unroll-limit 8192" --die-area 0 0 $SLOT_W $SLOT_H --core-area 2 2 $CORE_X $CORE_Y
  --core-utilization 40 --max-fanout 16 --routing-layers M2 M6
  --pin-region "^clk\$=bottom:$CLK_LO-$CLK_HI"
- --pin-region "^(go|xa.*|xb.*|start|start_ready|row0.*|embed_valid|mg_all|mg_any|done|best_valid|best_row.*|best_bits.*|fault|rst_n)\$=bottom:20-$PX"
+ --pin-region "^(go|xa.*|start|row0.*|embed_valid|rst_n)\$=bottom:20-$((CLK_LO-CLK_KEEP))"
+ --pin-region "^(xb.*|start_ready|mg_all|mg_any|done|best_valid|best_row.*|best_bits.*|fault)\$=bottom:$((CLK_HI+CLK_KEEP))-$PX"
  --pin-region "^(b_go|b_x.*|b_o_v|b_o_d.*|b_fault)\$=left:20-$PY"
  --pin-region "^(a_go.*|a_row.*|a_x.*|a_bv.*|a_bd.*|a_fault.*)\$=top:20-$PX"
  --pin-region "^(d_.*)\$=right:20-$PY"
