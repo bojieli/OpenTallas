@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_cdc1024_a-1a9caff1a-tc/routes/qfd_cdc1024_a_1a9caff1a_tc/work/orfs",
+ "extra_sdc": "# safe-qwen S-A4 (2026-10-08): the o302 kits had NO signoff/<cfg>.sdc, so route_master.sh generated the single-clock template\n# (core_clk on a non-existent port clk, OT_REF_GLOB *od_q*): the IO numbers of every o302 route (TT -695.9) were timed\n# against no real clock.  This is signoff/qfd_link_rx128.sdc (wclk / rclk bound, per-domain die-context boundary).\n# qfd_link_rx128 sign-off at 833.333 ps (jobs/mk_mc_kit.py)\ncreate_clock -name wclk -period 833.333 [get_ports {wclk}]\ncreate_clock -name rclk -period 833.333 [get_ports {rclk}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_propagated_clock [all_clocks]\n# unrelated-clock crossings: one period minus the setup uncertainty, both directions; hold: non-negative\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks wclk] -to [get_clocks rclk]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks wclk] -to [get_clocks rclk]\nset_max_delay -ignore_clock_latency 773.333 -from [get_clocks rclk] -to [get_clocks wclk]\nset_min_delay -ignore_clock_latency 0 -from [get_clocks rclk] -to [get_clocks wclk]\nset ::env(OT_IO_HOLD_SKEW) 50\n# die-context boundary per domain, referenced to the propagated arrival L at a register of that domain's tree:\n# 0.2 T outside + 150 ps (die wire to another region; 90 ps for the --intra domains), hold allowance 50 ps\nset ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]\nsta::worst_slack_cmd max\nunset_input_delay [all_inputs]\nunset_output_delay [all_outputs]\nforeach {clk sk ins outs} {\n  wclk 150 {i_v i_d[*]} {i_cr w_fault}\n  rclk 150 {o_cr} {o_v o_d[*] r_fault}\n} {\n  set ref [lindex [all_registers -clock $clk -clock_pins] 0]\n  set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]\n  set T [get_property [get_clocks $clk] period]\n  puts \"QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $sk\"\n  if {[llength $ins]} {\n    set_input_delay  [expr {0.2*$T + $lmax + $sk}] -max -clock $clk [get_ports $ins]\n    set_input_delay  [expr {$lmin - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}]       -min -clock $clk [get_ports $ins] }\n  if {[llength $outs]} {\n    set_output_delay [expr {0.2*$T - $lmax + $sk}] -max -clock $clk [get_ports $outs]\n    set_output_delay [expr {-$lmin - $ot_hk}]      -min -clock $clk [get_ports $outs] }\n}\nset_false_path -from [get_ports {wrst_n rrst_n}]\n",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 127.06,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 127.06,
+  "worst_reg_to_reg_slack_ps": 127.06,
+  "worst_input_to_reg_slack_ps": 332.09,
+  "worst_output_port_slack_ps": 303.6,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "32edb67460e06e1ad843e166da2b7c1c167d1548b8dfa9a8a5ef27212289ce59",
+  "spef_sha256": "35e79393da158d1ab75e4c72e3ddf7e1198944693a5279c39c9a9f2f36e3a513",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "2cd48e9043c87902ea9d1e3d66b0269d2a337309c5928344dd088a27cfb44022"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -119.61,
+  "tns_ps": -142285.1,
+  "worst_register_d_slack_ps": -119.61,
+  "worst_reg_to_reg_slack_ps": -119.61,
+  "worst_input_to_reg_slack_ps": 277.42,
+  "worst_output_port_slack_ps": 222.42,
+  "violating_d_pins": 3496,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "32edb67460e06e1ad843e166da2b7c1c167d1548b8dfa9a8a5ef27212289ce59",
+  "spef_sha256": "35e79393da158d1ab75e4c72e3ddf7e1198944693a5279c39c9a9f2f36e3a513",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "2cd48e9043c87902ea9d1e3d66b0269d2a337309c5928344dd088a27cfb44022"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 1.16,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 1.16,
+  "worst_reg_to_reg_slack_ps": 1.16,
+  "worst_input_to_reg_slack_ps": 11.12,
+  "worst_output_port_slack_ps": 6.5,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "32edb67460e06e1ad843e166da2b7c1c167d1548b8dfa9a8a5ef27212289ce59",
+  "spef_sha256": "35e79393da158d1ab75e4c72e3ddf7e1198944693a5279c39c9a9f2f36e3a513",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "2cd48e9043c87902ea9d1e3d66b0269d2a337309c5928344dd088a27cfb44022"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -119.61,
+ "closes_signoff": true
+}

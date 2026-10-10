@@ -33,7 +33,11 @@ endmodule
 // OREG=1: the landing FIFO drains into a two-entry output skid, so o_valid / o_data leave flops (no FIFO read
 // mux in front of the consumer's logic: HC join -lk TT -107 = rp -> 8:1 landing mux -> SECDED encode -> wd_q).  The
 // credit is returned when a beat leaves the FIFO; the skid adds 2 slots beyond DEPTH and 1 cycle of latency.
-module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0)(
+// WFREE=1 (redesign-ds 2026-10-10): the landing write does not wait for a pop (wr = the landed beat): credits already
+// guarantee a free slot, so the consumer's o_ready reaches only the read pointer / count / credit flops, never a W-bit
+// write or load enable (coll split3 ce pre-route -832 = consumer ready -> skid 553-bit enables).  Use with OREG=0: o_data
+// is the DEPTH:1 read mux of the landing flops.  A beat landing on a full FIFO is still a sticky fault.
+module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0, WFREE=0)(
     input wire clk, rst_n,
     input wire l_valid, input wire [W-1:0] l_data, output reg l_credit,
     output wire o_valid, input wire o_ready, output wire [W-1:0] o_data,
@@ -64,7 +68,7 @@ module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0)(
     assign f_data = mem[rp];
     wire pop = f_valid && f_ready;
     wire full = n == CW'(DEPTH);
-    wire wr = v_q && (!full || pop);
+    wire wr = WFREE ? (v_q && !full) : (v_q && (!full || pop));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin v_q <= 1'b0; wp <= 0; rp <= 0; n <= 0; l_credit <= 1'b0; fault <= 1'b0; end
         else begin

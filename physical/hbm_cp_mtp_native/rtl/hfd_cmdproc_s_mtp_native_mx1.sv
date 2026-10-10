@@ -48,9 +48,9 @@
 // hfd_cmdproc_s_fc (physical/hbm_cp_mtp_native/gen_ar_fc.py): its pin flops run on the die clock leaf of their face --
 // cks (S), ckn (N), cke (E), ckw (W) -- with falling-edge lockups on every zero-logic hop to the core root (0 cycles;
 // lockstep-equal to hfd_cmdproc_s, tb_hfd_cmdproc_s_fc_lockstep).  The taps are die clock leaves balanced by the die tree
-// (tools/hbm_accel_die_fp.py: they ride the band's ck net, clock_leaf_offsets).  FC=0: the adopted hfd_cmdproc_s.
-module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0,
- parameter integer FC=1)(
+// (tools/hbm_accel_die_fp.py: they ride the band's ck net, clock_leaf_offsets).  The AR instance stays `ar` (no generate
+// wrapper): its macro ar.u_cpS.g_on.u_cmem keeps the name macro_place.tcl places (fc6/fc7 died on g_ar_fc.ar...).
+module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
  inout wire [826:0] cSE,cSW,
  input wire [0:0] ck,rst,
  input wire [0:0] cks,ckn,cke,ckw,
@@ -69,15 +69,9 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  input wire [682:0] x_hgi_argmax_rec,output wire [2:0] x_hgi_argmax_ret,
  output wire [682:0] t_hgi_argmax,input wire [2:0] f_hgi_argmax
 );
- generate if (FC == 1) begin: g_ar_fc
  hfd_cmdproc_s_fc ar(.cks(cks),.ckn(ckn),.cke(cke),.ckw(ckw),.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
   .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
   .xb(xb),.xl(xl),.xt(xt));
- end else begin: g_ar
- hfd_cmdproc_s ar(.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
-  .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
-  .xb(xb),.xl(xl),.xt(xt));
- end endgenerate
  generate if (REGB == 0) begin: g_direct
   assign t_hgi_argmax=x_hgi_argmax_rec;assign x_hgi_argmax_ret=f_hgi_argmax;
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(ck[0]),.rst(rst[0]),

@@ -57,11 +57,31 @@ proc ot_pf_ref {ports} {
   puts "QDM PINFLOP reference: [llength $pf] input pin flops, median arrival [lindex $m 0] (range [lindex [lindex $pf 0] 0] .. [lindex [lindex $pf end] 0])"
   return [lindex $m 1]
 }
+# GLOB-MEDIAN (drive-0849 2026-10-10): a matching REFGLOB names a register GROUP (usually the input pin flops); the
+# reference is its member of median clock arrival, not the first match (an arbitrary tree position).
+proc ot_pf_median {pins label} {
+  catch {sta::worst_slack_cmd max}
+  set pf {}
+  foreach p $pins {
+    set a [get_property $p arrival_max_rise]
+    if {[string is double -strict $a]} { lappend pf [list $a $p] }
+  }
+  if {![llength $pf]} { return {} }
+  set pf [lsort -real -index 0 $pf]
+  set m [lindex $pf [expr {[llength $pf] / 2}]]
+  puts "QDM $label reference: [llength $pf] registers, median arrival [lindex $m 0] (range [lindex [lindex $pf 0] 0] .. [lindex [lindex $pf end] 0])"
+  return [lindex $m 1]
+}
 set qdm_ref {}
 if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default
+  set ot_gm {}
   foreach c [get_cells -quiet -hierarchical $ot_glob] {
     set p [get_pins -quiet "[get_full_name $c]/CLK"]
-    if {[llength $p]} { set qdm_ref $p; break }
+    if {[llength $p]} { lappend ot_gm $p }
+  }
+  if {[llength $ot_gm]} {
+    if {[info exists ::env(OT_REF_PINFLOP)] && $::env(OT_REF_PINFLOP) eq "0"} { set qdm_ref [lindex $ot_gm 0] } else {
+      set qdm_ref [ot_pf_median $ot_gm "REFGLOB $ot_glob"] }
   }
 }
 if {[llength $qdm_ref] == 0} { set qdm_ref [ot_pf_ref [all_inputs -no_clocks]] }
