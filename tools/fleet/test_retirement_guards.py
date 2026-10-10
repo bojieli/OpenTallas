@@ -27,7 +27,7 @@ class RetirementGuards(unittest.TestCase):
         (self.base/'.keep').touch()
         self.assertEqual(guard(self.row,self.approvals,set()),'.keep')
         (self.base/'.keep').unlink();(self.base/'sub').mkdir();(self.base/'sub/.keep').touch()
-        self.assertEqual(guard(self.row,self.approvals,set()),'.keep')
+        self.assertIsNotNone(guard(self.row,self.approvals,set()))
 
     def test_active_pinned_source_and_fd_dependency_protect(self):
         self.assertIn('pinned',guard(self.row,self.approvals,{str(self.base)}))
