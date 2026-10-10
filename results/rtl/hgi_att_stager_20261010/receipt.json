@@ -11,5 +11,5 @@
   "negative": "MUT_ADDR1 rejected sector0 wrongsectoridentity",
   "unit_integration": "opt-in SECTOR_CAPTURE default0; full transaction gate pending",
   "physical": "standalone actual sector codec; not ATT engine qualification",
-  "unit_cycles": "adds one response pipeline stage and delays last-sector drain one edge/row; actual record delta pending"
+  "unit_cycles": "adds one response pipeline stage; last response completion and finite NOUT8 credit availability can add bubbles; conservative bound one edge per fetched sector, actual record delta pending"
 }
