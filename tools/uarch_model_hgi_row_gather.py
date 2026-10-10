@@ -50,6 +50,7 @@ def inverse_selected_model(k=512, group=96, row_words=32):
         credit_register_bits=replicas*8*2+1,
         credit_control_protection='8b remaining count and its complement per lane; mismatch blocks reservation combinationally and latches fault',
         credit_added_pipeline_cycles=0,
+        credit_epoch_completion='opt-in DELCRED waits all128 credits per lane returned before next epoch or done; alwaysaccept transport measurements excluded this drain',
         credit_round_trip_basis='35 forward wire +35 return wire +8 lookup +2 VM acknowledgement =80 cycles before arbitration; actual arbitration may extend it and stalls must be measured',
         fifo_macro_count=fifo_macros, fifo_macro_area_um2=fifo_macros*macro_area,
         fifo_protection='512b payload as sixteen SECDED39 records +48b protected identity =672b; three256b macros per lane,128 entries',

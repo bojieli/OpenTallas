@@ -9,6 +9,7 @@
 //   +GN=1|2|4|8|96 +RANK=r +PF=p +SEED=s   (GN = 96: mcast_all outer group)
 module tb_hgi_coll_row_native;
     parameter integer MUT_MULTI = 0, MUT_TIE = 0, MUT_ORDER = 0;
+    parameter integer DELCRED=0;
     localparam integer NC = 8, NOG = 12, PFMAX = 512, STOREMAX=1024, LANES = 16, NPT = 8, INJ = 2, DEL = 4, RXAW = 8;
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
     integer gn, rank, pf, pf2, seed, base, lat, dupe, peer, die, amx = 0; reg [31:0] exp_tok;
@@ -21,12 +22,18 @@ module tb_hgi_coll_row_native;
     reg [NPT-1:0] crr = 0, rxv = 0; reg [NPT*PWT-1:0] rxf = 0;
     wire [DEL-1:0] dv; wire [DEL*PWT-1:0] dfl; wire flt, start_ready, done_valid; wire [31:0] cst;
     always @(ii or rank or load_row or rst_n) for (integer i = 0; i < INJ; i = i + 1) idata[FW*i +: FW] = part[rank * STOREMAX + integer'(ii[16*i +: 16])+integer'(load_row)*words];
-    ot_hgi_coll_row_native #(.ENABLE(1),.MUT_ORDER(MUT_ORDER),.PFMAX(PFMAX),.NPT(NPT),.INJ(INJ),.DEL(DEL)) dut(
+    reg[DEL-1:0] ackdelay[0:199];
+    wire[DEL-1:0] sink_return=ackdelay[199];
+    always @(posedge clk)begin
+      if(!rst_n)for(integer a=0;a<200;a=a+1)ackdelay[a]<=0;
+      else begin ackdelay[0]<=mv;for(integer a=1;a<200;a=a+1)ackdelay[a]<=ackdelay[a-1];end
+    end
+    ot_hgi_coll_row_native #(.ENABLE(1),.DELCRED(DELCRED),.MUT_ORDER(MUT_ORDER),.PFMAX(PFMAX),.NPT(NPT),.INJ(INJ),.DEL(DEL)) dut(
       .clk(clk),.rst_n(rst_n),.rank(8'(rank)),.group_size(8'(gn)),.destinations(8'(gn)),
       .slots(16'(pf/words)),.row_words(words),.load_v(load_v),.load_r(1'b1),.load_row(load_row),.load_rows(load_rows),.start(go),.ready(start_ready),.done(done_valid),
       .inj_idx(ii),.inj_rd(ir),.inj_data(idata),.ph_tx_v(txv),.ph_tx_flit(txf),.sw_cr_ret(crr),
       .ph_rx_v(rxv),.ph_rx_flit(rxf),.rx_credit(rxc),.out_v(mv),.out_data(md),.out_row(mr),.out_word(mw),
-      .fault(flt),.stat_credit_stall(cst));
+      .fault(flt),.stat_credit_stall(cst),.sink_return(sink_return));
     assign dv=dut.dv;assign dfl=dut.df;
 
     wire [DEL-1:0] mv; wire [DEL*FW-1:0] md; wire [DEL*20-1:0] mr; wire [DEL*16-1:0] mw; wire map_done,map_fault;
@@ -171,6 +178,9 @@ module tb_hgi_coll_row_native;
             end
             if (mapped != gn*pf || got != gn * pf || mism != 0 || ndep != pf)
                 $fatal(1, "BYP_COUNT got=%0d want=%0d mism=%0d ndep=%0d", got, gn * pf, mism, ndep);
+            if(DELCRED!=0&&(dut.credits!={DEL{8'd128}}||dut.publisher_stalls==0))
+              $fatal(1,"publisher credits not drained or stall not exercised");
+            if(DELCRED!=0)$display("PUBLISH_CREDIT stalls=%0d credits=%h",dut.publisher_stalls,dut.credits);
             $display("BYP_RUN gn=%0d rank=%0d base=%0d pf=%0d delivered=%0d cycles=%0d", gn, rank, base, pf, got, t);
             @(negedge clk);
         end
