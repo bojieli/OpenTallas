@@ -51,7 +51,7 @@ def command(a):
     cmd += ['--clock-uncertainty-ns', '.060', '--clock-uncertainty-hold-ns', '.025', '--orfs-corner', 'WC',
             '--stages', 'pnr', '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--core-utilization', '45', '--place-density', '.60', '--max-transition-ns', '.25',
-            '--orfs-var', 'NUM_CORES=16', '--orfs-var', 'ADDER_MAP_FILE=', '--orfs-var', 'OT_BF_HIER=1',
+            '--orfs-var', 'NUM_CORES=16', '--orfs-var', 'ADDER_MAP_FILE=', '--orfs-var', 'OT_BF_HIER=1', '--orfs-var', 'OT_BF_RECUT=1',
             '--orfs-var', 'SYNTH_SCRIPT=/src/physical/s81_native_bf/synth.tcl',
             '--orfs-var', 'PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
             '--keep-heavy-artifacts', '--nickname-tag', a.tag, '--keep-workdir', str(a.work), '--output', str(a.output)]
