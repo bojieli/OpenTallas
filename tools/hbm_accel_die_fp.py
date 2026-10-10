@@ -1749,6 +1749,13 @@ def apply_splits(m, specs, lattice=None):
                     ck_centre(mst, sp_)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
+        # mtp-lead 2026-10-10 (design standard 2026-10-09, svc --fc practice): a band's face clock taps (cks / ckn / cke /
+        # ckw in its own pin record) ride the parent's ck net: die clock leaves balanced by the die tree.  The offset each
+        # leaf needs (the band's tap source latency) is recorded in m['clock_leaf_offsets'] (from <record dir>/fc_taps.json
+        # when the band's route has measured it, else PENDING), as for the svc segments.
+        fc_taps_ = {bn: [p_ for p_ in ('cks', 'ckn', 'cke', 'ckw') if p_ in recs[bn]['ports']] for bn, _ in bands}
+        fct_ = (ROOT / rel).parent / 'fc_taps.json'
+        fc_off_ = json.loads(fct_.read_text()) if fct_.exists() else {}
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
         # mtp-lead 2026-10-09: a band's own new ports (e.g. MX1 f_am) can carry a die bus addressed to the parent
         owner.update({pn_: bn for bn, b in bands for pn_ in b.get('new_ports', {}) if pn_ not in ('ck', 'rst')})
@@ -1790,6 +1797,8 @@ def apply_splits(m, specs, lattice=None):
                     e2.append((inst, port))
                 elif port in ('ck', 'rst'):
                     e2 += [(repl[inst][bn], port) for bn, _ in bands]
+                    if port == 'ck':
+                        e2 += [(repl[inst][bn], tp) for bn, _ in bands for tp in fc_taps_[bn]]
                 else:
                     assert port in owner, (parent, port)
                     e2.append((repl[inst][owner[port]], port))
@@ -1805,6 +1814,15 @@ def apply_splits(m, specs, lattice=None):
             if getattr(v_, 'name', None) in repl:
                 hub[k_] = next(i for i in new_insts if i.name == repl[v_.name][bands[-1][0]])
         m.setdefault('splits', {})[parent] = dict(record=rel, bands=[bn for bn, _ in bands], instances=sorted(repl))
+        for pin_, names in repl.items():
+            for bn, nm in names.items():
+                for tp in fc_taps_[bn]:
+                    o_ = (fc_off_.get(bn) or {}).get(tp)
+                    net_ = next((b_[0] for b_ in nb if (nm, 'ck') in b_[3]), None)
+                    m.setdefault('clock_leaf_offsets', []).append(dict(
+                        net=net_, inst=nm, master=bn, pin=tp, ref_pin='ck', offset_ps=o_['ps'] if o_ else None,
+                        source=o_['source'] if o_ else None, status='resolved' if o_ else
+                        'PENDING: tap source latency not measured yet (band route not closed)'))
 
 
 def _bundle_pack(mst, sp_, order, k):
@@ -2030,7 +2048,7 @@ def apply_splits_x(m, rel):
                                   status='resolved' if lat else 'PENDING: no set_clock_latency -source on this pin in the '
                                   'segment timing model yet (segment not closed)'))
     if rows_:
-        m['clock_leaf_offsets'] = rows_
+        m.setdefault('clock_leaf_offsets', []).extend(rows_)   # mtp-lead: keep the cmdproc bands' rows
 
 
 # ------------------------------------------------------------------------------------------------ station masters

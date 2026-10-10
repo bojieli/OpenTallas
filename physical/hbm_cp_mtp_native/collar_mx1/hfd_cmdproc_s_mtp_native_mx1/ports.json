@@ -43985,6 +43985,98 @@
           701.976
         ]
       ]
+    },
+    "cks": {
+      "bits": 1,
+      "layer": "M5",
+      "face": "S",
+      "direction": "input",
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "pins": [
+        [
+          "cks[0]",
+          "M5",
+          754.944,
+          0.0,
+          754.968,
+          0.192
+        ]
+      ]
+    },
+    "ckn": {
+      "bits": 1,
+      "layer": "M5",
+      "face": "N",
+      "direction": "input",
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "pins": [
+        [
+          "ckn[0]",
+          "M5",
+          744.0,
+          701.784,
+          744.024,
+          701.976
+        ]
+      ]
+    },
+    "cke": {
+      "bits": 1,
+      "layer": "M4",
+      "face": "E",
+      "direction": "input",
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "pins": [
+        [
+          "cke[0]",
+          "M4",
+          1399.464,
+          351.024,
+          1399.656,
+          351.048
+        ]
+      ]
+    },
+    "ckw": {
+      "bits": 1,
+      "layer": "M4",
+      "face": "W",
+      "direction": "input",
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "pins": [
+        [
+          "ckw[0]",
+          "M4",
+          0.0,
+          351.024,
+          0.192,
+          351.048
+        ]
+      ]
     }
   },
   "generator": {

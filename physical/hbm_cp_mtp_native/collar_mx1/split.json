@@ -194,6 +194,30 @@
           "direction": "input",
           "edge": "bottom",
           "role": "die bus hgi_argmax_ret from hb_mtp_am"
+        },
+        "cks": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "S-face die clock leaf (face clock tap, design standard 2026-10-09): rides the band ck net; AR pin flops of this face"
+        },
+        "ckn": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "top",
+          "role": "N-face die clock leaf (face clock tap, design standard 2026-10-09): rides the band ck net; AR pin flops of this face"
+        },
+        "cke": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "right",
+          "role": "E-face die clock leaf (face clock tap, design standard 2026-10-09): rides the band ck net; AR pin flops of this face"
+        },
+        "ckw": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "left",
+          "role": "W-face die clock leaf (face clock tap, design standard 2026-10-09): rides the band ck net; AR pin flops of this face"
         }
       },
       "source_port_record": "physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/ports.json"

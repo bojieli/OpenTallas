@@ -1,5 +1,3 @@
-# die-context boundary per domain, referenced to the propagated arrival L at a register of that domain's tree:
-# 0.2 T outside + 150 ps (die wire to another region; 90 ps for the --intra domains), hold allowance 50 ps
 # PINFLOP-REF (drive-0849 2026-10-10, coordinator class-1 fix: 39 hold floods at CTS/GRT): the IO reference register used
 # to be the FIRST register of the design / clock (an arbitrary tree position), so the input min delay sat far from the
 # capture flops' clock and CTS / GRT hold repair flooded (ehash / core18 / kvwq closed only after naming the input pin
@@ -48,24 +46,3 @@ proc ot_pf_ref {ports} {
   puts "QDM PINFLOP reference: [llength $pf] input pin flops, median arrival [lindex $m 0] (range [lindex [lindex $pf 0] 0] .. [lindex [lindex $pf end] 0])"
   return [lindex $m 1]
 }
-set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
-sta::worst_slack_cmd max
-unset_input_delay [all_inputs]
-unset_output_delay [all_outputs]
-foreach {clk sk ins outs} {
-  clk 150 {cmd_v cmd[*] read_credit s_v s_we s_bank[*] s_col[*] s_row[*]} {cmd_credit row_v row_op[*] row_bank[*] row_row[*] col_v col_we col_bank[*] col_col[*] col_sr s_cr busy fault}
-} {
-  set ref {}
-  if {[llength $ins]} { set ref [ot_pf_ref [get_ports $ins]] }
-  if {![llength $ref]} { set ref [lindex [all_registers -clock $clk -clock_pins] 0] }
-  set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]
-  set T [get_property [get_clocks $clk] period]
-  puts "QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $sk"
-  if {[llength $ins]} {
-    set_input_delay  [expr {0.2*$T + $lmax + $sk}] -max -clock $clk [get_ports $ins]
-    set_input_delay  [expr {$lmin - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}]       -min -clock $clk [get_ports $ins] }
-  if {[llength $outs]} {
-    set_output_delay [expr {0.2*$T - $lmax + $sk}] -max -clock $clk [get_ports $outs]
-    set_output_delay [expr {-$lmin - $ot_hk}]      -min -clock $clk [get_ports $outs] }
-}
-set_false_path -from [get_ports {rst_n}]

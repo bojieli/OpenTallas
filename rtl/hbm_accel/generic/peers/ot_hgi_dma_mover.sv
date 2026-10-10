@@ -66,13 +66,17 @@ module ot_hgi_dma_mover #(
     assign k_req_tag = 16'h4D56;
     assign k_rsp_rdy = 1'b1;
     // ================================================================ dispatch: sector engine or serial engine
+    // registered reset (async assert, release two edges after rst_n): the port reset no longer reaches the D / recovery
+    // pins of the whole mover (route 00007e219 IO paths rst_n -> f_vmq / u_ser.i)
+    reg [1:0] rq; always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 2'b00; else rq <= {rq[0], 1'b1};
+    wire rn = rq[1];
     // registered boundary (submit lint: input -> register <= 16 levels): a command station, pin flops on the lane and
     // VM responses (+1 cycle each), and the lane request issues only from an empty request register (k_req_rdy only
     // clears it)
     reg cv_q; reg [226:0] cm_q;
     reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin kr_v <= 1'b0; vr_q <= 274'd0; end
+    always @(posedge clk or negedge rn)
+        if (!rn) begin kr_v <= 1'b0; vr_q <= 274'd0; end
         else begin kr_v <= k_rsp_v; vr_q <= vmr; end
     always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
     wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
@@ -82,7 +86,7 @@ module ot_hgi_dma_mover #(
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
     assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
-    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rst_n), .mv_v(cv_q && !fast_cmd),
+    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_q && !fast_cmd),
         .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
         .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(k_req_rdy && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
         .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
@@ -167,6 +171,7 @@ module ot_hgi_dma_mover #(
     // ---- pipeline registers
     reg        p1_v; reg [3:0] p1_k; reg [255:0] p1_sec; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
+    reg        p3_v; reg [255:0] p3_d; reg [31:0] p3_s; reg [36:0] p3_dsec; reg p3_fl, p3_keep;   // encode registered (route 00007e219 TT -304)
     reg [255:0] db_dat; reg [31:0] db_strb; reg db_dirty;
     // ---- source sector issue
     wire src_hbm = (ssp == 2'd0), dst_hbm = (dsp == 2'd0);
@@ -188,7 +193,7 @@ module ot_hgi_dma_mover #(
     end
     reg go_q2;                                                         // the command fields are settled
     // the write queue must hold the flushes the pipe may still produce (p1 + p2 + this): keep 3 slots free
-    wire wq_room = (wq_n + {2'd0, p1_v & p1_fl} + {2'd0, p2_v & p2_fl}) < 3'd3;
+    wire wq_room = (wq_n + {2'd0, p1_v & p1_fl} + {2'd0, p2_v & p2_fl} + {2'd0, p3_v & p3_fl}) < 3'd3;
     // ---- decode (p1 -> p2) / encode + merge (p2)
     reg [255:0] dec_w; integer j;
     always @* begin
@@ -234,13 +239,13 @@ module ot_hgi_dma_mover #(
     wire k_rv = kr_v && busy_f, v_rv = vr_q[273] && busy_f;
     wire k_rd_land = k_rv && !k_kind[0], k_wr_ack = k_rv && k_kind[0];
     wire v_rd_land = v_rv && !v_kind[0], v_wr_ack = v_rv && v_kind[0];
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
             mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_kv <= 1'b0; f_vmq <= 338'd0;
             k_in <= 4'd0; v_in <= 3'd0; k_kind <= 16'd0; v_kind <= 8'd0; rd_in <= 5'd0; wr_in <= 5'd0;
             sf_h <= 4'd0; sf_t <= 4'd0; sf_n <= 5'd0; wq_h <= 2'd0; wq_t <= 2'd0; wq_n <= 3'd0;
-            p1_v <= 1'b0; p2_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
+            p1_v <= 1'b0; p2_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
             f_kwe <= 1'b0; f_ka <= 37'd0; f_kd <= 256'd0; f_ks <= 32'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0;
@@ -353,20 +358,24 @@ module ot_hgi_dma_mover #(
             p2_v <= p1_v;
             if (p1_v) begin p2_k <= p1_k; p2_w <= dec_w; p2_dp <= p1_dp; p2_dsec <= p1_dsec; p2_fl <= p1_fl; end
             // ---- encode + merge (p2) and flush into the write queue
-            if (p2_v) begin
-                if (p2_fl && !(MUT == 2 && p2_dp + 6'(p2_k) * des != 6'd32)) begin
-                    wq_d[wq_t] <= ((db_dirty ? db_dat : 256'd0) & ~mk(put_s)) | put_d;
-                    wq_s[wq_t] <= (db_dirty ? db_strb : 32'd0) | put_s; wq_a[wq_t] <= p2_dsec; wq_t <= wq_t + 2'd1;
+            // encode (p2 -> p3, registered), then merge (p3)
+            p3_v <= p2_v;
+            if (p2_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= p2_dsec; p3_fl <= p2_fl;
+                            p3_keep <= !(MUT == 2 && p2_dp + 6'(p2_k) * des != 6'd32); end
+            if (p3_v) begin
+                if (p3_fl && p3_keep) begin
+                    wq_d[wq_t] <= ((db_dirty ? db_dat : 256'd0) & ~mk(p3_s)) | p3_d;
+                    wq_s[wq_t] <= (db_dirty ? db_strb : 32'd0) | p3_s; wq_a[wq_t] <= p3_dsec; wq_t <= wq_t + 2'd1;
                     db_dirty <= 1'b0;
-                end else if (p2_fl) db_dirty <= 1'b0;                          // MUT 2: the partial sector is lost
+                end else if (p3_fl) db_dirty <= 1'b0;                          // MUT 2: the partial sector is lost
                 else begin
-                    db_dat <= ((db_dirty ? db_dat : 256'd0) & ~mk(put_s)) | put_d;
-                    db_strb <= (db_dirty ? db_strb : 32'd0) | put_s; db_dirty <= 1'b1;
+                    db_dat <= ((db_dirty ? db_dat : 256'd0) & ~mk(p3_s)) | p3_d;
+                    db_strb <= (db_dirty ? db_strb : 32'd0) | p3_s; db_dirty <= 1'b1;
                 end
             end
-            wq_n <= wq_n + {2'd0, p2_v && p2_fl && !(MUT == 2 && p2_dp + 6'(p2_k) * des != 6'd32)} - {2'd0, iss_kw | iss_vw};
+            wq_n <= wq_n + {2'd0, p3_v && p3_fl && p3_keep} - {2'd0, iss_kw | iss_vw};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q2 && !f_fault && u_done && r_done && !p1_v && !p2_v && wq_n == 3'd0 && wr_in == 5'd0 &&
+            if (busy_f && go_q2 && !f_fault && u_done && r_done && !p1_v && !p2_v && !p3_v && wq_n == 3'd0 && wr_in == 5'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 5'd0 && sf_n == 5'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end
