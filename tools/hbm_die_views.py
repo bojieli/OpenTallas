@@ -44,7 +44,7 @@ KIND_OF = {      # master prefix -> view kind directory
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
-    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab'}
+    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab', 'hfd_mtp': 'mtp'}
 
 
 def kind_of(master):
