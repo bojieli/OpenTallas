@@ -9,7 +9,7 @@ VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 [ -x "$VL" ] || VL=verilator
 SRC="$W/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv $W/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv $W/hdc/kv/ot_qwen_stream4_cdc_pc.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_dist.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_tiles.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_tiles_top.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_leaves_binary.sv $W/hdc/ot_hdc_delay.sv $W/test/qwen_kv_die/tb_qkvd_kv_wq_binary.sv"
 run() { local n=$1; shift
-  $VL --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_qkvd_kv_wq_binary -GDIST=3 -GFLANE_BINARY=${FLANE_BINARY:-1} -GRLY=${RLY:-1} "$@" $SRC \
+  $VL --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_qkvd_kv_wq_binary -GDIST=3 -GFLANE_BINARY=${FLANE_BINARY:-1} -GHEAD_PIPE=${HEAD_PIPE:-0} -GRLY=${RLY:-1} "$@" $SRC \
       --Mdir $O/obj_$n -o Vtb > $O/build_$n.log 2>&1 || { echo "BUILD_FAIL $n"; return 2; }
   $O/obj_$n/Vtb 2>/dev/null | grep '"mut"' | tee $O/$n.json
 }
