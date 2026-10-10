@@ -311,7 +311,8 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
       set owners [lsort -unique $owners]
       if {[llength $owners] == 1} {set bn [lindex $owners 0]}
     }
-    if {$bn eq ""} {
+    # Output placement is a separate proposal, never implied by input anchoring.
+    if {$bn eq "" && [info exists ::env(OT_WS_OUTPUT_PINREG)] && $::env(OT_WS_OUTPUT_PINREG) eq "1"} {
       set qit [$i findITerm QN]
       if {$qit eq "NULL"} { set qit [$i findITerm Q] }
       if {$qit ne "NULL" && [$qit getNet] ne "NULL"} {

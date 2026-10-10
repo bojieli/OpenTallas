@@ -28,7 +28,7 @@ export OT_MM_FF_SDC="$G/signoff.sdc"
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag sut_$lab \
-  --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
+  --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
