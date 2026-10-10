@@ -21,7 +21,10 @@
 module ot_hgi_idx_topk #(
  parameter bit ENABLE=0, parameter integer MAX_K=2048,
  parameter bit MUTANT_TIE=0,
- parameter integer EL=3, parameter integer EF=8, parameter integer NT=64,   // enable-tree depth, FIFO depth, cells per leaf
+ parameter integer EL=3, parameter integer EF=8,                           // enable-tree depth, FIFO depth
+ // cells per shift-enable leaf.  FILL-9 2026-10-10: sys1 reg2reg worst = se2 leaf -> c_key (-317 ps preroute): one leaf flop
+ // drives NT cells x 85 b = 5,440 loads at NT 64; OT_TOPK_SYS_NT (opt-in define) narrows it (NT 4: 340 loads, 512 leaves).
+ parameter integer NT=`ifdef OT_TOPK_SYS_NT `OT_TOPK_SYS_NT `else 64 `endif,
  parameter integer TS=`ifdef OT_TOPK_SYS_TS2 2 `else 1 `endif,              // cells a key crosses per edge (travelling regs every TS cells)
  parameter integer MUT_SYS=`ifdef OT_TOPK_SYS_MUT_DRAIN 1 `else 0 `endif,  // 1: no drain (shifts start while the last waves are in flight: bench mutant)
  // RESET-APPLY (drive-1010 2026-10-10, opt-in, default 0 = historical): rst_n is already a synchronous-release relay copy
