@@ -1,0 +1,11 @@
+
+-- Running command `read_verilog -sv -Irtl/common rtl/common/ot_secded.sv rtl/hbm/hbm_svc_dma_sram_bank.sv; read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v; hierarchy -check -top hbm_svc_dma_sram_bank; synth -top hbm_svc_dma_sram_bank -flatten; stat; write_json /tmp/hbm_dma_bank_synth.json' --
+
+1. Executing Verilog-2005 frontend: rtl/common/ot_secded.sv
+Parsing SystemVerilog input from `rtl/common/ot_secded.sv' to AST representation.
+Generating RTLIL representation for module `\ot_secded_enc'.
+Generating RTLIL representation for module `\ot_secded_dec'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm/hbm_svc_dma_sram_bank.sv
+rtl/hbm/hbm_svc_dma_sram_bank.sv:50: ERROR: syntax error, unexpected TOK_INTEGER, expecting TOK_ID or '{'

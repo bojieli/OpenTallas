@@ -33,10 +33,11 @@ module hbm_svc_dma_sram_bank #(parameter integer ECC_MUT = 0) (
   assign rd_rdy = rst_n && !rp && reserved < 4 &&
                   !(wp != 0 && rd_addr == wa) &&
                   !(commit && rd_addr == commit_addr) &&
-                  !(wr_v && wr_rdy && rd_addr == wr_addr);
+                  !(wr_v && rd_addr == wr_addr);
 
   wire [71:0] encoded [0:3];
   genvar g;
+  integer j;
   generate for (g=0; g<4; g=g+1) begin: ecc
     ot_secded_enc #(.K(64), .R(8), .MUT(ECC_MUT)) enc (
       .clk(clk), .d(wr_data[g*64 +: 64]), .q(encoded[g]));
@@ -47,7 +48,7 @@ module hbm_svc_dma_sram_bank #(parameter integer ECC_MUT = 0) (
     if (w_take) begin wa <= wr_addr; wf <= wr_fault; end
     if (wp == 1) begin
       waddr <= {2'b00, wa};
-      for (integer j=0; j<4; j=j+1) begin
+      for (j=0; j<4; j=j+1) begin
         wd[j*64 +: 64] <= encoded[j][63:0];
         parity_hold[j*8 +: 8] <= encoded[j][71:64];
       end

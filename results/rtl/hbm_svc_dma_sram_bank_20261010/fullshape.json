@@ -1,0 +1,46 @@
+{
+  "verdict": "PASS_shape_only",
+  "macro_count": 1,
+  "generic_cells": {
+    "$_ANDNOT_": 1273,
+    "$_NOT_": 1072,
+    "$_NOR_": 86,
+    "$_ORNOT_": 69,
+    "$_OAI4_": 3,
+    "$_XNOR_": 69,
+    "$_XOR_": 2124,
+    "$_OR_": 112,
+    "$_AOI3_": 79,
+    "$_NAND_": 31,
+    "$_AND_": 83,
+    "$_OAI3_": 24,
+    "$_MUX_": 2468,
+    "$_AOI4_": 1,
+    "$_DFF_P_": 2442,
+    "$_DFF_PN0_": 57,
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+  },
+  "generic_total_cells": 9994,
+  "data_and_control_flipflops": 2499,
+  "inferred_memories": 0,
+  "latches": 0,
+  "yosys_check_zero_problems": true,
+  "macro_LEF": {
+    "size_um": [
+      94.824,
+      41.064
+    ],
+    "signal_clock_repair_pin_rectangles": 819,
+    "all_rectangles_in_macro": true,
+    "same_layer_overlaps": []
+  },
+  "area_scope": "generic gate inventory; mapped area not established",
+  "physical_scope": "LEF rectangle fit only; routed pin accessibility/timing not established",
+  "source_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/hbm/hbm_svc_dma_sram_bank.sv": "5cc58f48b1a61eab53e970e7108df3fd9004e15db75b1f14dac04ef6ad0f3e9f",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+  }
+}

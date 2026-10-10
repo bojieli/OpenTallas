@@ -1,0 +1,33 @@
+{
+  "scope": "one bank, one real 128x256 macro model; CPU, no full-array simulation",
+  "macro_initialization": "disabled; absent rows never publish uninitialized data",
+  "physical_signoff": "not established by this bench",
+  "source_sha256": {
+    "tests/rtl/tb_hbm_svc_dma_sram_bank.sv": "8b02863d334484707e1759d88f01650f5ef6e9987789832c1a442f9e2a88cd15",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm/hbm_svc_dma_sram_bank.sv": "8f33395e6a8bf6defe636575c7d3bce87a8fe13e8757198db1dbd0edff6ad626",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_svc_dma_sram_bank_model.py": "197bfac1ca1705fb79886b53d0bfeb9f5c9955f6572412403d950e43f6156096",
+    "tools/run_hbm_svc_dma_sram_bank_bench.py": "5bffa7db211a2acd7cfaafdb0b263fd80edc1f2eef39d662c21298f7cd62c132"
+  },
+  "records": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "stdout": "MEASURE read_visible_cycles=5 read_transfer_cycles=6 read_II=2 write_II=2\nPASS transactions=401 payload_single=256 parity_single=32 double=4 metadata=14 no_init=32 concurrent_ports=16\n",
+      "stderr": "",
+      "expected_outcome": "PASS",
+      "gate_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "stdout": "FATAL: tests/rtl/tb_hbm_svc_dma_sram_bank.sv:43: record 32 mismatch expected=00123456789abcdeffedcba987654321055aa55aa3cc3c33c55aa00ff01010101 actual=10000000000000000000000000000000000000000000000000000000000000000\n       Time: 124683000 Scope: tb_hbm_svc_dma_sram_bank\n",
+      "stderr": "",
+      "expected_outcome": "FAIL_wrong_ECC_column",
+      "gate_pass": true
+    }
+  ],
+  "verdict": "PASS"
+}
