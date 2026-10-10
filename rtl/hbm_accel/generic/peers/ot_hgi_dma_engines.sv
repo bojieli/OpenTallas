@@ -7,7 +7,7 @@
 //                     whole sectors (base / stride multiples of 8 words), formats FP32 / U32 / BF16 / FP8E4M3 / INT8:
 //                     the svc DMA stream (per-stack requests, 4 x 8 data lanes) -> the 32 VM wide write lanes;
 //   ot_hgi_dma_mover  the rest (STORE, VM -> VM, strided, unaligned, KV ops) on its kport lane + VM client; its one
-//                     VM wide lane rides on lane 0 (the engines never run together: one move outstanding).
+//                     VM wide lane goes out on its bank's lane (the engines never run together: one move outstanding).
 // FRONT = 0 sends every move to the mover (the comparison point).  Fence: the mover's (the front is idle at a fence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_engines #(
@@ -67,11 +67,15 @@ module ot_hgi_dma_engines #(
     end else begin : g_nofront
         assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign dq = '0; assign dd_cr = '0; assign f_wl = '0;
     end endgenerate
-    assign wl = f_wl | {{(31*280){1'b0}}, m_wl};
+    // the mover's lane goes out on the lane of its sector's bank (the VM takes lane b into bank b); its done pulses come
+    // one a cycle at most, so any lane's done is the mover's while the front is idle
+    reg [32*280-1:0] m_wlx;
+    always @* begin m_wlx = '0; if (m_wl[279]) m_wlx[m_wl[268:264]*280 +: 280] = m_wl; end
+    assign wl = f_wl | m_wlx;
     ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && !to_f), .mv_rdy(m_rdy), .mv(mv), .mv_done(m_done),
         .mv_fault(m_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr), .wl(m_wl), .wl_done(wl_done[0]));
+        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr), .wl(m_wl), .wl_done(|wl_done));
 endmodule
 `default_nettype wire

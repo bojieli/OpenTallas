@@ -20,6 +20,8 @@ module ot_hgi_vm_core #(
     parameter integer NC = 2,
     parameter integer OUT = 4,         // requests a client may have outstanding (VM fast path, review ~16:40); 1 = v1
     parameter integer WP = 1,          // wide write lanes (DMA streaming port, coordinator 2026-10-10: up to ~1 KB / cycle)
+    parameter integer WDIRECT = 0,     // 1 (WP = 32): lane b writes bank b only (the DMA front routes by bank); a lane
+                                       // whose sector is in another bank is dropped and latches wl_conflict
     parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
                                        //   3 write responses skip the read pipeline (out of order: must FAIL),
                                        //   4 the wide port ignores its word mask
@@ -124,6 +126,13 @@ module ot_hgi_vm_core #(
         wb_hit = {NB{1'b0}}; wb_dup = {NB{1'b0}};
         for (integer ab = 0; ab < NB; ab = ab + 1) begin
             wb_lane[ab] = 5'd0;
+            if (WDIRECT != 0) begin
+                if (ab < WP) begin
+                    wb_lane[ab] = 5'(ab);
+                    wb_hit[ab] = wl_v[ab] && wl_sec[ab*15 +: 5] == 5'(ab);
+                    wb_dup[ab] = wl_v[ab] && wl_sec[ab*15 +: 5] != 5'(ab);
+                end
+            end else
             for (integer ap = WP - 1; ap >= 0; ap = ap - 1)
                 if (wl_v[ap] && wl_sec[ap*15 +: 5] == 5'(ab)) begin
                     if (wb_hit[ab]) wb_dup[ab] = 1'b1;

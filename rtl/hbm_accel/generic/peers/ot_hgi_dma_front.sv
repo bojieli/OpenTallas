@@ -251,9 +251,22 @@ module ot_hgi_dma_front #(
                 integer nd; nd = 0;
                 for (t = 0; t < 32; t = t + 1) if (wl_done[t]) nd = nd + 1;
                 if (busy && r_done && wrote + 32'(nd) == issued) begin busy <= 1'b0; mv_done <= 1'b1; wrote <= 32'd0; end
-                else wrote <= wrote + 32'(nd);
+                else wrote <= busy ? wrote + 32'(nd) : 32'd0;    // (idle: the mover's acknowledgements)
             end
         end
     end
+`ifndef SYNTHESIS
+    // +DMA_TRACE: each move taken, each request, each done (bench / e2e debugging)
+    reg trc; initial trc = $test$plusargs("DMA_TRACE");
+    always @(posedge clk) if (trc && rst_n) begin
+        if (cv_q) $display("FRONT move sf %0d src %h sst %0d dst %0d dstr %0d m %0d n %0d", cm_q[4:2], cm_q[44:5], cm_q[76:45],
+                           cm_q[137:98], cm_q[169:138], cm_q[205:186], cm_q[226:206]);
+        for (integer q = 0; q < NS; q = q + 1)
+            if (dq[q*51 + 50] && dq_rdy[q]) $display("FRONT   req stack %0d tag %0d nsec %0d addr %h dsec %0d", q, dq[q*51 + 46 +: 4],
+                                                  dq[q*51 + 37 +: 9], dq[q*51 +: 37], tg_dsec[dq[q*51 + 46 +: 4]]);
+        if (mv_done) $display("FRONT done issued %0d", issued);
+        if (mv_fault) $display("FRONT FAULT");
+    end
+`endif
 endmodule
 `default_nettype wire
