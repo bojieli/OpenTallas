@@ -2662,6 +2662,8 @@ def bword_stages(v, m, pitch=None):
                    if bid.startswith('pword_') and '__r' not in bid}
         fragment = {eps[0][0]: bid for bid, eps in buses.items()
                     if bid.startswith('pfrag_') and '__r' not in bid}
+        band_input = {eps[0][0]: bid for bid, eps in buses.items()
+                      if re.fullmatch(r'tw_\d+', bid)}
         totals = []
         for bid in buses:
             if not re.fullmatch(r'bword_\d+', bid):
@@ -2678,6 +2680,10 @@ def bword_stages(v, m, pitch=None):
                 leg = fragment[slab]
                 total += count(leg)
                 slab = destination(leg)
+            if slab in band_input:
+                leg = band_input[slab]
+                total += count(leg)
+                slab = destination(leg)
             total += count(primary[slab])
             totals.append(total)
         return dict(pitch_um=pitch, words=len(totals), max=max(totals),
@@ -2685,12 +2691,14 @@ def bword_stages(v, m, pitch=None):
                     basis='implemented relay-stage counts, including waypoint and fragment legs')
     by = {i.name: i for i in m['insts']}
     d = lambda a, b: abs(by[a].cx - by[b].cx) + abs(by[a].cy - by[b].cy)
-    prim, frag = {}, {}
+    prim, frag, band_input = {}, {}, {}
     for bid, cl, bits, eps in m['buses']:
         if bid.startswith('pword_'):
             prim[eps[0][0]] = eps[1][0]
         if bid.startswith('pfrag_'):
             frag[eps[0][0]] = eps[1][0]
+        if re.fullmatch(r'tw_\d+', bid):
+            band_input[eps[0][0]] = eps[1][0]
     per = []
     seg = {bid: eps for bid, cl, bits, eps in m['buses'] if bid.startswith(('bword_', 'bwseg_'))}
     for bid, cl, bits, eps in m['buses']:
@@ -2707,6 +2715,9 @@ def bword_stages(v, m, pitch=None):
         if slab in frag:
             legs.append((slab, frag[slab]))
             slab = frag[slab]
+        if slab in band_input:
+            legs.append((slab, band_input[slab]))
+            slab = band_input[slab]
         legs.append((slab, prim[slab]))
         per.append(sum(math.ceil(d(a, b) / pitch) for a, b in legs))
     return dict(pitch_um=pitch, words=len(per), max=max(per), mean=round(sum(per) / len(per), 2), min=min(per))

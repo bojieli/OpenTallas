@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen.split_io_cdc.summary_failure.v1",
+  "source_commit": "3fc33c145",
+  "failure": "KeyError: sp_port_tiles_0: r21m pword source is band_lanes, with an intervening tw_N bus from the slab",
+  "stage": "analytical relay placement complete; summary failed",
+  "fix": "follow tw_N between primary slab and band lanes before pword_N",
+  "regression_gate": {
+    "bword": 3,
+    "band_input": 2,
+    "pword": 4,
+    "total": 9,
+    "result": "PASS"
+  },
+  "headline_credit": 0
+}

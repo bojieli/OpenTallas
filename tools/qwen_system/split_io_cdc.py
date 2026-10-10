@@ -30,6 +30,9 @@ def sizing():
                 pipeline=2, cycles_added_vs_pipe2_predecessor=0,
                 cycles_added_vs_pipe0_predecessor=2,
                 credit_initial=4,
+                cdc_parameters=dict(W=1024, IBUF=4, OCRED=4, AD=8, PIPE=2),
+                collective_parameters=dict(WSQ=546, WCQ=516, N=4, MB=513, CQ_AD=64, PIPE=0),
+                collective_initial_forward_credits=4, collective_engine_ib_required=4,
                 qualification='child TT/FF/DRC and exactness qualified; die routing, reset/fault integration and relay cost remain separate gates')
 
 
@@ -109,6 +112,15 @@ def integrate(v, m):
                  clock_map=ckmap, records=[CDC_RECORD, COLL_RECORD],
                  physical_ports={'i': {'i_d': 1024, 'i_v': 1, 'i_cr': 1},
                                  'o': {'o_d': 1024, 'o_v': 1, 'o_cr': 1}},
+                 physical_group_maps={
+                     'qfd_cdc1024': {
+                         'i': [(0, 1024, 'i_d', 'input'), (1024, 1, 'i_v', 'input'), (1025, 1, 'i_cr', 'output')],
+                         'o': [(0, 1024, 'o_d', 'output'), (1024, 1, 'o_v', 'output'), (1025, 1, 'o_cr', 'input')]},
+                     'qfd_coll_xfifo_b': {
+                         'i_seq_coll': [(0, 546, 'i_seq_coll', 'input'), (546, 1, 'i_seq_coll_v', 'input'), (547, 1, 'i_seq_coll_cr', 'output')],
+                         'o_seq_coll': [(0, 546, 'o_seq_coll', 'output'), (546, 1, 'o_seq_coll_v', 'output'), (547, 1, 'o_seq_coll_cr', 'input')],
+                         'i_coll_seq': [(0, 516, 'i_coll_seq', 'input'), (516, 1, 'i_coll_seq_v', 'input')],
+                         'o_coll_seq': [(0, 516, 'o_coll_seq', 'output'), (516, 1, 'o_coll_seq_v', 'output'), (517, 1, 'o_coll_seq_cr', 'input')]}},
                  reset_fault_gate='unconnected on predecessor floorplan as well; bind all wrst_n/rrst_n and sticky faults in the production netlist before adoption')
     m['split_io_cdc'] = model
     base = v.masters
