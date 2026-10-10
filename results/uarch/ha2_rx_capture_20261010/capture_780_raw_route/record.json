@@ -1,0 +1,13 @@
+{
+  "source_commit": "78092c7157ffd6745d285a446587ea3077334203",
+  "job": "ha2_rxs_c-78092c715-tc-rvt-hm10-cl",
+  "adopted": false,
+  "corner_record": "Runner corner STA; final loop routed IO reference recheck pending",
+  "original_macro_read_capture_failure_removed": true,
+  "unclosed_paths": [
+    "macro write input transport",
+    "capture to raw transport",
+    "send data output pins",
+    "return tag output pins"
+  ]
+}
