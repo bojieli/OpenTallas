@@ -16,7 +16,7 @@
         ]
       },
       "implementation": {
-        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged."
+        "status": "Opt-in full8792bit native score input and610bit output wrapper: four L4 FA6 CRED128 taps plus finite atomic join. Historical L16 native_grid and native pin contracts remain unchanged. Optional R25G4T4 geometry generator uses full2800.128x3000.264 slot and source-owned legal clock32 selector pins."
       },
       "model": {
         "status": "Prebuild sized, no rate credit",
@@ -32,7 +32,14 @@
           360
         ],
         "extra_query_cycles_last_tap": 9,
-        "join_min_cycles": 2
+        "join_min_cycles": 2,
+        "composed_native_slot_um": [
+          2800.128,
+          3000.264
+        ],
+        "occupied_outline_growth_mm2_per_die": 9.600460766208004,
+        "actual_die_growth_mm2": 0,
+        "geometry_evidence": "results/uarch/hbm_indexer_t4_20261010/geometry.json"
       },
       "exactness": {
         "positive": {
@@ -88,8 +95,8 @@
         "Qualify four LANE0 variants or prove/prior-size a shared runtime lane identity implementation; one LANE0=0 tap is insufficient physical evidence",
         "Full T4 arithmetic exact/negative gate still required; minimum join gate covers only join mechanism",
         "Clock-root lockups and actual two-stage query hops must be implemented and physically qualified",
-        "Native score-grid slot must grow from2000.16x3000.264 to at least2800x2500 plus420x360 join; actual die overlap/reticle/routing gate required",
-        "Native producer fs90/qb1048/qbr1/kin345 and consumer to612/toc1/co72/coc1/ev2/4xst4/co_quarter_last joins remain unresolved"
+        "Native producer fs90/qb1048/qbr1/kin345 and consumer to612/toc1/co72/coc1/ev2/4xst4/co_quarter_last joins remain unresolved",
+        "R25G4T4 abstract geometry has0 overlaps/outside/pin clashes and0 reach violations; actual hub layer GRT capacity and real ETM assembly remain unqualified"
       ],
       "integration": {
         "status": "No silent binding to selector-only or L4-only closure. Aggregate remains open and owned until real complete successor geometry, clocking and join are qualified."

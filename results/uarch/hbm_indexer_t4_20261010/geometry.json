@@ -1,0 +1,106 @@
+{
+  "scope": "Abstract geometry and stage reach only; actual hardened ETMs, clock-root crossings, real native endpoint joins and routed hub layer capacity unqualified",
+  "variant": "R25G4T4",
+  "geometry": {
+    "instances": 1040,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 0,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "pin_clashes": 0,
+  "margin_lint": {
+    "mode": "chains",
+    "chains": 1772,
+    "reach_um": 504.0,
+    "reach_violations": 0,
+    "far_side_relays": 0,
+    "reach_examples": [],
+    "far_side_examples": [],
+    "verdict": "PASS"
+  },
+  "die_um": [
+    30590.352,
+    25732.08
+  ],
+  "die_mm2": 787.15338489216,
+  "native": [
+    {
+      "instance": "idx_score_SW",
+      "master": "hfd_idx_score_native_t4",
+      "xy": [
+        10732.608,
+        1596.24
+      ],
+      "wh": [
+        2800.128,
+        3000.264
+      ],
+      "orientation": "R0"
+    },
+    {
+      "instance": "idx_score_SE",
+      "master": "hfd_idx_score_native_t4",
+      "xy": [
+        16194.912,
+        1596.24
+      ],
+      "wh": [
+        2800.128,
+        3000.264
+      ],
+      "orientation": "MY"
+    },
+    {
+      "instance": "idx_score_NW",
+      "master": "hfd_idx_score_native_t4",
+      "xy": [
+        10732.608,
+        21135.6
+      ],
+      "wh": [
+        2800.128,
+        3000.264
+      ],
+      "orientation": "MX"
+    },
+    {
+      "instance": "idx_score_NE",
+      "master": "hfd_idx_score_native_t4",
+      "xy": [
+        16194.912,
+        21135.6
+      ],
+      "wh": [
+        2800.128,
+        3000.264
+      ],
+      "orientation": "R180"
+    },
+    {
+      "instance": "idx_selector",
+      "master": "hfd_idx_sel_native_qend",
+      "xy": [
+        14164.416,
+        17529.84
+      ],
+      "wh": [
+        1399.656,
+        844.56
+      ],
+      "orientation": "R0"
+    }
+  ],
+  "source_sha256": {
+    "tools/hbm_accel_die_fp.py": "52710dd8c42d5e78a5de6ec487f4d1d315a456779cc32a94fc6fbd3e0159df77",
+    "tools/hbm_indexer_die_topology.py": "f0b5fefb3a2963bdf5317816c3c2467badc1fb53a538f80312973df31ea5aea9",
+    "tools/hbm_indexer_r25i_model.py": "f4560dcda69cd9f5ceb928ac8e561e016012c7d01268e6373c016c3fff2d7171",
+    "physical/hbm_accel_die_views/index/native_t4/hfd_idx_score_native_t4/ports.json": "02e77255e04434c542e023b8e4362499596552e03bd188c84eb0cf444cc8ccae",
+    "physical/hbm_accel_die_views/index/native_clock32/hfd_idx_sel_native_qend/ports.json": "e0f052a9f87aaa767b8f94789079fa00c407a627169ba6355f2730dec357e4e9"
+  },
+  "verdict": "PASS_ABSTRACT_ONLY",
+  "adopted": false
+}
