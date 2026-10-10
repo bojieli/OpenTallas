@@ -153,6 +153,7 @@ module ot_hgi_hc_unit #(
                      S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
                      S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
                      S_LDA = 23;
+    reg wpre, wst;   // wpre: start the first row's windows next edge (boff settled); wst: they are started
     reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n; reg flt;
@@ -170,9 +171,10 @@ module ot_hgi_hc_unit #(
             st <= S_IDLE; job_rdy <= 1'b1; job_done <= 1'b0; job_fault <= 1'b0; vmq <= 338'd0; w_start <= 1'b0;
             w_rel <= 1'b0; h_cv <= 1'b0; p_req <= 1'b0; mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
             sk_req <= 1'b0; mw <= 0; mr <= 0; aw <= 0; ar <= 0; ew <= 0; er <= 0; dw <= 0; drp <= 0; outst <= 0;
-            flt <= 1'b0; vo_n <= 3'd0; p_got <= 4'd0;
+            flt <= 1'b0; vo_n <= 3'd0; p_got <= 4'd0; wpre <= 1'b0; wst <= 1'b0;
         end else begin
             job_done <= 1'b0; job_fault <= 1'b0; vmq[337] <= 1'b0; w_start <= 1'b0; w_rel <= 1'b0;
+            if (wpre) begin wpre <= 1'b0; w_start <= 1'b1; wst <= 1'b1; end
             mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
             if (p_iss) p_req <= 1'b0;
             // parameter sectors
@@ -213,6 +215,7 @@ module ot_hgi_hc_unit #(
                 end
                 S_PAR: begin
                     for (q = 0; q < 8; q = q + 1) boff[q] <= rs * q;
+                    wpre <= (op != 2'd2);                            // the first row's weights stream during x staging
                     p_req <= (op != 2'd1); p_got <= 4'd0;
                     sec <= xbase >> 3; rsec <= xbase >> 3; sec_end <= ({9'd0, xbase} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
                     vo_n <= 3'd0; st <= (op == 2'd2) ? S_LDA : S_STAGE;
@@ -250,7 +253,7 @@ module ot_hgi_hc_unit #(
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
                     if (rsec > sec_end && vo_n == 3'd0) begin row <= row0; st <= S_ROW; end   // lanes past K / 8: HCP-masked
                 end
-                S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= 1'b1; st <= S_RW; end
+                S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= !wst; wst <= 1'b0; st <= S_RW; end
                 S_RW: if (&w_rdy && h_cr) begin h_cv <= 1'b1; st <= S_RC; end
                 S_RC: begin
                     if (h_cv && h_cr) h_cv <= 1'b0;
