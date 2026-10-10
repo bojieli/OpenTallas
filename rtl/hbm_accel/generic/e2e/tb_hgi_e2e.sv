@@ -301,7 +301,7 @@ module tb_hgi_e2e;
         begin @(negedge clk); s_arvalid = 1; s_araddr = a; @(posedge clk); while (!s_arready) @(posedge clk);
             @(negedge clk); s_arvalid = 0; while (!s_rvalid) @(negedge clk); rd = s_rdata; end
     endtask
-    longint t_db, t_cpl;
+    longint t_db, t_cpl, t_drain;
     always @(posedge clk) if (rst_n && cpd.u_cp.cpl_v && t_cpl == 0) t_cpl = cyc;
     integer w, n_rec, c_tok, c_st, c_cyc, fin, cfgfix;
     initial begin
@@ -340,8 +340,13 @@ module tb_hgi_e2e;
         end else begin
             axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
         end
+        // END's wait mask may be 0 (the Qwen layer program): the completion can precede the last records' writes;
+        // drain every unit (the sequencer's busy = a job runs or a unit has work outstanding) before the final checks
+        w = 0; while (cpd.u_cp.u_seq.busy && w < 2000000) begin @(negedge clk); w = w + 1; end
+        t_drain = cyc;
         repeat (20) @(negedge clk);
         fin = e2e_finish(t_cpl - t_db, c_tok, c_st);
+        $display("E2E drained %0d cycles after the doorbell (completion %0d)", t_drain - t_db, t_cpl - t_db);
         $display("E2E completion token %0d (golden %0d) status %0d cp_cycles %0d doorbell->completion %0d", c_tok, host[66], c_st, c_cyc, t_cpl - t_db);
         $display("E2E real-unit records %0d, mismatching %0d", real_recs, real_bad);
         if (c_tok != host[66] || c_st != 0) errs = errs + 1;
