@@ -2,6 +2,10 @@
 `default_nettype none
 // CP ABI is existing337/273 sector path; rsp[256] is WRITE_ECHO, NOT fault.
 // Native bypass is separate, byte/cycle unchanged; ENABLE=0 has no requests.
+// hgi-takeover 2026-10-09 (VM fast path): up to 4 requests in flight.  A request's address / lane bookkeeping advances
+// when it is staged; a 4-deep descriptor FIFO {write, step, lane, part, last read, last write, final, tag} pairs the
+// in-order responses with their requests.  Every response is accepted the cycle it arrives (rsp_r = 1).
+// MUTANT 4 (ordering): responses are paired with the NEWEST descriptor instead of the oldest -> must FAIL.
 module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
@@ -14,7 +18,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [255:0] ca=cmd[385+:256],co=cmd[1153+:256];
  reg [255:0] a,o;reg validating;
  wire [127:0] ch=header;
- reg busy,bad,pending,pending_write;
+ reg busy,bad;
  reg seat_v;reg [336:0] seat;
  reg response_v;reg [272:0] response;
  reg [127:0] header;
@@ -52,6 +56,10 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  (same_geometry || ({24'd0,a[47:8]}+aspan<o[47:8]) ||
  ({24'd0,o[47:8]}+ospan<a[47:8]));
  assign ready=ENABLE&&rst_n&&!busy;
+ // ---------------------------------------------------------------- in-flight descriptors (in request order)
+ localparam integer DW=1+4+3+6+1+1+1+16;
+ reg [DW-1:0] pd [0:3]; reg [1:0] pd_h,pd_t; reg [2:0] pd_n; reg [DW-1:0] seat_d;
+ wire pending=pd_n!=0;
  assign drained=!busy&&!pending&&reserved==0;
  wire reads_done=read_row==m;
  wire write_offer=queued!=0 && (reads_done || (reserved>=DEPTH && MUTANT!=3));
@@ -70,27 +78,34 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  end
  wire [31:0] write_mask=burst_write?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
  assign req=seat;
- assign rsp_r=ENABLE&&rst_n&&pending&&!response_v;
+ assign rsp_r=ENABLE&&rst_n;                     // never back-pressured: one response a cycle is processed
  wire take_req=req_v&&req_r,take_rsp=response_v;
- wire reply_ok=response[272:257]==pending_tag && response[256]==pending_write;
- wire last_read=(read_part+pending_step==32 || read_col+pending_step==n);
- wire last_write=(write_part+pending_step==32 || write_col+pending_step==n);
- wire reserve_read=take_req&&!req[336]&&read_part==0;
- wire retire_write=take_rsp&&reply_ok&&pending_write&&last_write&&!bad;
+ // the descriptor this response belongs to (MUTANT 4: the newest one)
+ wire [DW-1:0] dsc=(MUTANT==4)?pd[pd_t-2'd1]:pd[pd_h];
+ wire d_we=dsc[DW-1]; wire [3:0] d_step=dsc[DW-2-:4]; wire [2:0] d_lane=dsc[DW-6-:3]; wire [5:0] d_part=dsc[DW-9-:6];
+ wire d_lastr=dsc[18]; wire d_lastw=dsc[17]; wire d_final=dsc[16]; wire [15:0] d_tag=dsc[15:0];
+ wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
+ // staging the next request (the seat is free, or is being taken this cycle) while fewer than 4 are in flight
+ wire stage=busy&&!validating&&!bad&&!launch&&(write_offer||read_offer)&&(!seat_v||take_req)&&
+             (pd_n+{2'd0,take_req})<3'd4;          // after this edge: in flight + the new seat <= 4
+ wire s_last_read=!write_offer&&(read_part+offer_step==32 || read_col+offer_step==n);
+ wire s_last_write=write_offer&&(write_part+offer_step==32 || write_col+offer_step==n);
+ wire s_final=s_last_write&&write_row+1==m&&write_col+offer_step==n;
+ wire reserve_read=stage&&!write_offer&&read_part==0;
+ wire retire_write=take_rsp&&reply_ok&&d_we&&d_lastw&&!bad;
  wire [PW-1:0] head_next=head==DEPTH-1?0:head+1;
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   a<=0;o<=0;validating<=0;busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
+   a<=0;o<=0;validating<=0;busy<=0;bad<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
    abase<=0;obase<=0;read_row<=0;read_col<=0;write_row<=0;write_col<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    seat_step<=0;pending_step<=0;seat_lane<=0;pending_lane<=0;launched<=0;returned<=0;finished<=0;
    read_part<=0;write_part<=0;next_tag<=0;pending_tag<=0;
-   launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;
+   launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
   end else begin
    done<=0;launch<=0;
-   if(rsp_v&&rsp_r)begin response_v<=1;response<=rsp;end
-   if(take_rsp)response_v<=0;
+   response_v<=rsp_v; if(rsp_v) response<=rsp;
    if(ready&&cmd[0])begin
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];abase<=ca[39:8];obase<=co[39:8];
@@ -106,35 +121,40 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     if(!shape_ok)begin bad<=1;fault<=1;busy<=0;done<=1;end
    end
    if(busy&&!validating)begin
-    if(!bad&&!pending&&!seat_v&&!launch&&(write_offer||read_offer))begin
-     seat_v<=1;seat<={write_offer,{word_addr[29:3],5'd0},write_offer?wd:256'd0,write_offer?write_mask:32'hffffffff,next_tag};
-     seat_step<=offer_step;seat_lane<=word_addr[2:0];
-    end
+    if(take_req&&!stage)seat_v<=0;
     if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end
-    if(take_req)begin
-     seat_v<=0;
-     pending_step<=seat_step;pending_lane<=seat_lane;
-     pending<=1;pending_write<=req[336];pending_tag<=next_tag;next_tag<=next_tag+1;end
-    if(take_rsp)begin
-     pending<=0;
-     if(!reply_ok)begin bad<=1;fault<=1;end
-     else if(!bad)begin
-      if(pending_write)begin
-       if(last_write)begin finished<=finished+1;head<=head_next;write_part<=0;end
-       else write_part<=write_part+pending_step;
-       if(write_col+pending_step==n)begin
-        write_row<=write_row+1;write_col<=0;write_rowbase<=write_rowbase+ws;write_addr<=write_rowbase+ws;
-       end else begin write_col<=write_col+pending_step;write_addr<=write_addr+pending_step*wi;end
-      end else begin
-       if(read_col+pending_step==n)begin
-        read_row<=read_row+1;read_col<=0;read_rowbase<=read_rowbase+rs;read_addr<=read_rowbase+rs;
-       end else begin read_col<=read_col+pending_step;read_addr<=read_addr+pending_step*ri;end
-       if(last_read)begin launch<=1;launched<=launched+1;read_part<=0;end
-       else read_part<=read_part+pending_step;
-      end
+    // ---- stage the next request and advance its stream at once
+    if(stage)begin
+     seat_v<=1;seat<={write_offer,{word_addr[29:3],5'd0},write_offer?wd:256'd0,write_offer?write_mask:32'hffffffff,next_tag};
+     next_tag<=next_tag+1;
+     seat_d<={write_offer,offer_step,word_addr[2:0],write_offer?write_part:read_part,s_last_read,s_last_write,s_final,next_tag};
+     if(write_offer)begin
+      if(s_last_write)begin head<=head_next;write_part<=0;end
+      else write_part<=write_part+offer_step;
+      if(write_col+offer_step==n)begin
+       write_row<=write_row+1;write_col<=0;write_rowbase<=write_rowbase+ws;write_addr<=write_rowbase+ws;
+      end else begin write_col<=write_col+offer_step;write_addr<=write_addr+offer_step*wi;end
+     end else begin
+      if(read_col+offer_step==n)begin
+       read_row<=read_row+1;read_col<=0;read_rowbase<=read_rowbase+rs;read_addr<=read_rowbase+rs;
+      end else begin read_col<=read_col+offer_step;read_addr<=read_addr+offer_step*ri;end
+      if(s_last_read)read_part<=0; else read_part<=read_part+offer_step;
      end
     end
+    // ---- responses, in request order
+    if(take_rsp)begin
+     pd_h<=pd_h+2'd1;
+     if(!reply_ok)begin bad<=1;fault<=1;end
+     else if(!bad)begin
+      if(d_we)begin
+       if(d_lastw)finished<=finished+1;
+      end else if(d_lastr)begin launch<=1;launched<=launched+1;end
+     end
+    end
+    // a request enters the in-flight FIFO when the station takes it (a seat dropped by a fault never does)
+    if(take_req)begin pd[pd_t]<=seat_d;pd_t<=pd_t+2'd1;end
+    pd_n<=pd_n+{2'd0,take_req}-{2'd0,take_rsp};
     if(vo)begin
      returned<=returned+1;
      if(!bad && MUTANT!=1)begin
@@ -147,28 +167,31 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
      case({reserve_read,retire_write})
       2'b10:reserved<=reserved+1;2'b01:reserved<=reserved-1;
      endcase
-     case({vo&&MUTANT!=1,retire_write})
+     case({vo&&MUTANT!=1,stage&&s_last_write})
       2'b10:queued<=queued+1;2'b01:queued<=queued-1;
      endcase
     end
-    if(bad&&!pending&&!launch&&returned==launched)begin
+    if(bad&&!pending&&!seat_v&&!launch&&returned==launched)begin
      busy<=0;reserved<=0;queued<=0;done<=1;fault<=1;
-    end else if(!bad && take_rsp&&reply_ok&&pending_write&&last_write &&
-      (write_row+1==m && write_col+pending_step==n || MUTANT==2))begin busy<=0;done<=1;end
+    end else if(!bad && take_rsp&&reply_ok&&d_we&&d_lastw&&(d_final || MUTANT==2))begin busy<=0;done<=1;end
    end
   end
  end
  // Independent lane capture prevents Yosys variable-LHS priority mux chains
  // from carrying raw cmd.valid through all1024 input assembly bits.
+ // A beat's first read response clears the lanes it does not write (the next beat's reads may be in flight while the
+ // previous beat is being launched: the clear happens at the response, never at the request).
  for(genvar lane=0;lane<32;lane=lane+1)begin:g_input_lane
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)x[lane*32+:32]<=0;
-   else if((ready&&cmd[0])||(take_req&&!req[336]&&read_part==0))x[lane*32+:32]<=0;
-   else if(take_rsp&&reply_ok&&!pending_write&&!bad)begin
-    if(pending_step==8 && lane>=read_part && lane<read_part+8)
-      x[lane*32+:32]<=response[(lane-read_part)*32+:32];
-    else if(pending_step==1 && lane==read_part)
-      x[lane*32+:32]<=response[pending_lane*32+:32];
+   else if(ready&&cmd[0])x[lane*32+:32]<=0;
+   else if(take_rsp&&reply_ok&&!d_we&&!bad)begin
+    if(d_step==8 && lane>=d_part && lane<d_part+8)
+      x[lane*32+:32]<=response[(lane-d_part)*32+:32];
+    else if(d_step==1 && lane==d_part)
+      x[lane*32+:32]<=response[d_lane*32+:32];
+    else if(d_part==0)
+      x[lane*32+:32]<=0;
    end
   end
  end
