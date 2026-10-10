@@ -68,6 +68,26 @@ def main():
                         nh = sum(p["count"] for p in v["parts"] if p["part"] == "attn_hgrp")
                         hg = d["blocks"]["attn_hgrp"]["w"]["a00"]
                         idle = (v["w_each"]["a00"] - nh * hg + nh * meas["attn_hgrp"]["gated_idle_w"]) * v["n"]
+                    if scen != "none" and v["kind"] == "sm":
+                        # SM parts have independent ICGs. Use each measured floor where available;
+                        # unmeasured gated tiles retain the residual bracket, fronts stay clocked.
+                        aliases = {"sm_tile_w": "sm_tile_wg", "sm_tile_e": "sm_tile_eg",
+                                   "sm_be_w": "sm_be_wg", "sm_be_e": "sm_be_eg"}
+                        if any(key in meas for key in aliases.values()):
+                            idle_each = v["w_each"]["a00"]
+                            for part in v["parts"]:
+                                key = aliases.get(part["part"])
+                                if key is None:
+                                    continue
+                                block = d["blocks"][part["part"]]
+                                old_idle = block["w"]["a00"]
+                                measured = meas.get(key)
+                                floor = (measured["gated_idle_w"] if measured else
+                                         r * old_idle + (block.get("leak_w") or 0.0))
+                                idle_each += part["count"] * (floor - old_idle)
+                                if measured and "a20_w" in measured:
+                                    a20 += v["n"] * part["count"] * (measured["a20_w"] - part["w_each_a20"])
+                            idle = idle_each * v["n"]
                     tot += dt * a20 + (1 - dt) * idle
                 tot += d["relay_stations"]["w"]["a00"] + mix.get("wire_w", 0.0)
                 res[f"{scen}_r{int(r*100):02d}"] = round(tot, 1)
