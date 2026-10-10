@@ -29,7 +29,7 @@ module tb_loader_service_core_native;
  .w_rdy(1'b1),.w_room(8'hff),.wr_v(8'b0),.wr_tag(80'b0),.wr_beat(40'b0),.wr_data(2048'b0),
  .wq_d({wr_packet,wr_v}),.wq_fclk(clk),.wq_source(2'd2),.wq_source_g(wq_source_g),.wq_source_fault(wq_source_fault),.wq_source_busy(wq_source_busy),.wq_pending(wq_pending),.k_wr_done(k_wr_done),.phy_rst_n(phy_rst_n),
  .outer_write_pending(endpoint_busy&&req_we&&!rsp_v),
- .native_v(rd_v),.native_rdy(rd_rdy),.native_pc(rd_pc),.native_addr(rd_addr),.native_tag(rd_tag),
+ .native_v(rd_v),.native_rdy(rd_rdy),.native_pc(rd_pc),.native_addr(rd_addr),.native_tag(rd_tag),.native_len(4'd1),
  .native_rsp_v(rd_rsp_v),.native_rsp_rdy(rd_rsp_rdy),.native_rsp_pc(rd_rsp_pc),.native_rsp_tag(rd_rsp_tag),.native_rsp_beat(rd_rsp_beat),.native_rsp_data(rd_rsp_data),.native_fault(native_fault));
  // Actual refresh-aware controller timing and backing memory, minimum one stack.
  ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(0))phy(

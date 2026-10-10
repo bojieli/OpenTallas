@@ -1,0 +1,40 @@
+{
+  "scope": "native service burst lease before RTL; no physical/token claim",
+  "default_enable_native_burst": 0,
+  "sectors_min": 1,
+  "sectors_max": 8,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "bytes_per_response_cycle": 32,
+  "bytes_per_burst_max": 256,
+  "request_bits": 51,
+  "response_bits": 277,
+  "replicas_per_stack": 32,
+  "stacks_per_die": 4,
+  "mux_demux": "existing one-active-PC stack response mux; one local length check per PC",
+  "register_bits_per_PC": 329,
+  "incremental_register_bits_per_PC": 13,
+  "normal_added_cycles": 0,
+  "latency": {
+    "request_capture": 1,
+    "first_response_capture": 1,
+    "one_burst_minimum_cycles": "sectors + 3 without downstream PHY wait",
+    "lease_released": "final response consumer acceptance",
+    "system_composition": "256 sectors at length8: 32 command admissions plus same 256 data cycles; downstream wait and dispatcher must be composed"
+  },
+  "elastic_response_depth": 1,
+  "backpressure": "PHY advances only when register empty or consumer accepts current beat",
+  "identity": "native tag and sequential beat 0..length-1 checked before PHY acceptance",
+  "routing": {
+    "request_incremental_tracks": 4,
+    "response_incremental_tracks": 0,
+    "channel_capacity": null,
+    "admitted": false
+  },
+  "area": {
+    "incremental_FF_per_die": 1664,
+    "slot_fit": "actual lease element measurement required"
+  },
+  "token_credit": false,
+  "physical_admitted": false
+}

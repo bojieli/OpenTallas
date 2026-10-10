@@ -1,6 +1,6 @@
 `default_nettype none
 module ot_hbm_svc_core_native #(
-  parameter integer NATIVE=0, NSM = 8, NPC = 32,
+  parameter integer NATIVE=0, ENABLE_NATIVE_BURST=0, NSM = 8, NPC = 32,
   parameter [NSM*5-1:0] SM_PC0 = 0,       // first of SM i's four K pseudo-channels
   parameter [NPC*4-1:0] RSP_ST = 0,       // wire stages, PC p response ingress -> its SM's assembler
   parameter [NSM*4-1:0] REQ_ST = 0,       // wire stages, SM i request port -> its PCs
@@ -50,7 +50,7 @@ module ot_hbm_svc_core_native #(
   output wire [NPC*269-1:0] kvs, output wire kvs_done,
   input wire [7:0] ik_credit, output wire [8791:0] ik_lines, output wire ik_done,ik_fault,
  input wire outer_write_pending,
- input wire native_v,output wire native_rdy,input wire[4:0]native_pc,input wire[29:0]native_addr,input wire[15:0]native_tag,
+ input wire native_v,output wire native_rdy,input wire[4:0]native_pc,input wire[29:0]native_addr,input wire[15:0]native_tag,input wire[3:0]native_len,
  output wire native_rsp_v,input wire native_rsp_rdy,output wire[4:0]native_rsp_pc,output wire[15:0]native_rsp_tag,
  output wire[3:0]native_rsp_beat,output wire[255:0]native_rsp_data,output wire native_fault
 );
@@ -122,9 +122,9 @@ module ot_hbm_svc_core_native #(
  .ik_credit(ik_credit),
  .ik_lines(ik_lines),
  .ik_done(ik_done));
- ot_hbm_loader_service_boundary #(.ENABLE(NATIVE),.NPC(NPC)) u_native(
+ ot_hbm_loader_service_boundary #(.ENABLE(NATIVE),.ENABLE_NATIVE_BURST(ENABLE_NATIVE_BURST),.NPC(NPC)) u_native(
  .clk(ck),.rst_n(phy_rst_n),.normal_pending_write({NPC{outer_write_pending||n_pending}}|n_busy),
- .native_v(native_v),.native_rdy(native_rdy),.native_pc(native_pc),.native_addr(native_addr),.native_tag(native_tag),
+ .native_v(native_v),.native_rdy(native_rdy),.native_pc(native_pc),.native_addr(native_addr),.native_tag(native_tag),.native_len(native_len),
  .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_pc(native_rsp_pc),.native_rsp_tag(native_rsp_tag),
  .native_rsp_beat(native_rsp_beat),.native_rsp_data(native_rsp_data),.native_busy(native_busy),.fault(native_fault),
  .normal_v(n_k_v),.k_v(k_v),
