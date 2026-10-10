@@ -1,0 +1,42 @@
+{
+  "source": "a17b274374b6f92a9f8753633fbbbbe599c10b15",
+  "job": "s81ph-dsfd_coll_ce-split3crb-a17b27437-tc-rd",
+  "host": "ot-epyc4",
+  "container": "3d7910c9f7dbdefa3e768753cfee5f432c4c0cf9b3effd5aada90fa6fce5d538",
+  "openroad": "26Q3-1510-g6cb3f2b704",
+  "resizer_source": "https://github.com/The-OpenROAD-Project/OpenROAD/blob/6cb3f2b704604a8961573218e1c8adaae9fe9937/src/rsz/src/policy/SetupLegacyPolicy.cc",
+  "scope": "isolated synthesis DB recovery STA; not routed signoff",
+  "observations": {
+    "release_driver": "u_core.eg[0]$_DFF_PN0_",
+    "reset_final_inverter_fanout": 3776,
+    "reset_final_inverter_cap_ff": 2796.36,
+    "reset_slew_ps": 24295.48,
+    "unrepaired_wireload_recovery_slack_ps": -13735.87,
+    "baseline_flops": 4,
+    "keep_release_only_flops": 4,
+    "keep_release_and_eg_flops": 5,
+    "added_latency_cycles": 0,
+    "model_area_allowance_um2": 5
+  },
+  "constraint_policy": "Existing 3-cycle release/setup 2-cycle hold selection by *erst_n* is preserved; no relaxation or new exception",
+  "gates_pending": [
+    "fullshape canonical cell name and SDC selected cell count",
+    "fullshape CR exact positive and both credit mutants",
+    "routed TT/FF physical successor and contextual final closure"
+  ],
+  "files": {
+    "ce_b_reset_diagnostic.tcl": "1de54cee69d98357ae6e10212e33b81e31b320397781aea1bc722a94dfbfdfb1",
+    "kept_both.json": "56591525456228d1e2bafc02ce94ab6c0619921c7d4bf3b533d211c937aa80cb",
+    "kept_both.sv": "e8634fa995509157d6eedd43c9789cbacb48345e4ed15666d20848e1a008c842",
+    "folded.json": "547942a61fe4e4311d5da719e313b4c46dfac6eda9f2e751b6127b90bec4bcf7",
+    "kept.json": "6545099da044504d1c89c7028cb9ec9f65f3ad1f69d868ac934a7c1d7af99a2e",
+    "folded.log": "32753a7750bbe05d7d6e045b6979896278c5980cc1efeb9c31ef0f91b66d2b7b",
+    "source_artifacts.sha256": "3a8e19a17e59cbd2fd23f87f9c1902d580b1e3ff4b98d574ac42877b91d5a775",
+    "1_synth.sdc": "3d9f5d75e52ec6e8ce81e8015c9b9a8e714ffcb88ac944e8e02fdca91a84417b",
+    "kept.log": "ef3db93b769974bf4cfa3f6b239520a4430f55792f507c641cfd983c8bd1a550",
+    "kept_both.log": "dce73ee27d678f707a8fd9a341e45355f552a6b7388393618b233b3a9c5dfb37",
+    "folded.sv": "35422db6aff0e422dd23bfd6cd595dad8ec55f838071b9cbbe562f20de73f515",
+    "kept.sv": "967a71860a37e3c773c1ee78154a16124d16582fe42377c89b839fa7cdae98e7",
+    "ce_b_reset_diagnostic.log": "7b49ab4a6a92eb53e003f4a9f62dcd498429899cbf7db8effd1e6a940bcd5055"
+  }
+}
