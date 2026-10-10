@@ -21,12 +21,7 @@ module dsfd_vm_bg #(
     parameter integer QD = 4,
     parameter integer RQ = 8,
     parameter integer MACRO = 1,
-    parameter integer DW = 512,         // CLAUDE s81-blocks: row slice width (256: dsfd_vm_bgh bit-sliced half tile)
-    // struct-close 2026-10-09 (vm_bgq grid10 -b): GREP = 1: per-bank registered bank ids in the core (see ot_s81ph_vm_mem)
-    // AND the forward request registers f_v / f_we / f_row / f_mask are keep_hierarchy flops of their own: the plain
-    // f_row <= p_row was opt-merged with the core's identical a_rg stage, so one flop drove every bank's compare AND the
-    // output pin (f_row[111]: 313 ps of pin wire behind the internal fanout, -404).  0 cycles.
-    parameter integer GREP = 0
+    parameter integer DW = 512          // CLAUDE s81-blocks: row slice width (256: dsfd_vm_bgh bit-sliced half tile)
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rs,        // async reset (active low), synchronised in the tile
@@ -62,37 +57,15 @@ module dsfd_vm_bg #(
     reg [NP-1:0] p_v, p_we; reg [NP*RA-1:0] p_row; reg [NP*(DW/32)-1:0] p_mask; reg [NP*DW-1:0] p_d;
     reg [NP-1:0] q_v; reg [NP*DW-1:0] q_d; reg [3:0] q_f; reg [OW-1:0] q_o;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin p_v <= 0; q_v <= 0; q_f <= 0; q_o <= 0; end
-        else begin p_v <= i_v; q_v <= r_v; q_f <= r_f; q_o <= r_o; end
-    wire [NP-1:0] f_v_w, f_we_w; wire [NP*RA-1:0] f_row_w; wire [NP*(DW/32)-1:0] f_mask_w;
-    genvar gf;
-    generate
-        if (GREP != 0) begin : g_fk
-            for (gf = 0; gf < NP; gf = gf + 1) begin : g_v
-                (* keep_hierarchy *) ot_sc_rep_ff u_v (.clk(clk), .rst_n(rst_n), .d(p_v[gf]), .q(f_v_w[gf]));
-                (* keep_hierarchy *) ot_sc_rep_ff u_w (.clk(clk), .rst_n(1'b1), .d(p_we[gf]), .q(f_we_w[gf]));
-            end
-            for (gf = 0; gf < NP*RA; gf = gf + 1) begin : g_r
-                (* keep_hierarchy *) ot_sc_rep_ff u_r (.clk(clk), .rst_n(1'b1), .d(p_row[gf]), .q(f_row_w[gf]));
-            end
-            for (gf = 0; gf < NP*(DW/32); gf = gf + 1) begin : g_m
-                (* keep_hierarchy *) ot_sc_rep_ff u_m (.clk(clk), .rst_n(1'b1), .d(p_mask[gf]), .q(f_mask_w[gf]));
-            end
-        end else begin : g_fp
-            reg [NP-1:0] fv_r, fwe_r; reg [NP*RA-1:0] frow_r; reg [NP*(DW/32)-1:0] fmask_r;
-            always @(posedge clk or negedge rst_n) if (!rst_n) fv_r <= 0; else fv_r <= p_v;
-            always @(posedge clk) begin fwe_r <= p_we; frow_r <= p_row; fmask_r <= p_mask; end
-            assign f_v_w = fv_r; assign f_we_w = fwe_r; assign f_row_w = frow_r; assign f_mask_w = fmask_r;
-        end
-    endgenerate
-    always @* begin f_v = f_v_w; f_we = f_we_w; f_row = f_row_w; f_mask = f_mask_w; end
+        if (!rst_n) begin p_v <= 0; f_v <= 0; q_v <= 0; q_f <= 0; q_o <= 0; end
+        else begin p_v <= i_v; f_v <= p_v; q_v <= r_v; q_f <= r_f; q_o <= r_o; end
     always @(posedge clk) begin
         p_we <= i_we; p_row <= i_row; p_mask <= i_mask; p_d <= i_d;
-        f_d <= p_d;
+        f_we <= p_we; f_row <= p_row; f_mask <= p_mask; f_d <= p_d;
         q_d <= r_d;
     end
     wire [NP-1:0] m_v; wire [NP*DW-1:0] m_d; wire m_f; wire [2:0] m_c; wire [OW-1:0] m_o;
-    ot_s81ph_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ), .MACRO(MACRO), .NBL(NBL), .DW(DW), .GREP(GREP)) u_mem (.clk(clk), .rst_n(rst_n),
+    ot_s81ph_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ), .MACRO(MACRO), .NBL(NBL), .DW(DW)) u_mem (.clk(clk), .rst_n(rst_n),
         .grp(grp), .i_v(p_v), .i_we(p_we), .i_row(p_row), .i_mask(p_mask), .i_d(p_d), .o_v(m_v), .o_d(m_d),
         .fault(m_f), .fault_code(m_c), .max_occ(m_o));
     always @(posedge clk or negedge rst_n)
@@ -185,11 +158,7 @@ module dsfd_vm_mem_s #(parameter integer NS = 2, parameter integer NP = 8, param
                 .f_v(cv[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cmask[t+1]), .f_d(cd[t+1]),
                 .r_v(ov[t]), .r_d(od[t]), .r_f(of[t]), .r_o(oo[t]), .o_v(ov[t+1]), .o_d(od[t+1]), .o_f(of[t+1]), .o_o(oo[t+1]));
             end else begin : g_bgq
-`ifdef OT_VM_GREP
-            dsfd_vm_bgq #(.NP(NP), .NB(NB), .NBL(NBL), .QD(QD), .RQ(RQ), .MACRO(MACRO), .GREP(1)) u_bg (
-`else
-            dsfd_vm_bgq #(.NP(NP), .NB(NB), .NBL(NBL), .QD(QD), .RQ(RQ), .MACRO(MACRO)) u_bg (
-`endif.ck(clk), .rs(rst_n), .grp(gid),
+            dsfd_vm_bgq #(.NP(NP), .NB(NB), .NBL(NBL), .QD(QD), .RQ(RQ), .MACRO(MACRO)) u_bg (.ck(clk), .rs(rst_n), .grp(gid),
                 .i_v(cv[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cmask[t]), .i_d(cd[t]),
                 .f_v(cv[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cmask[t+1]), .f_d(cd[t+1]),
                 .r_v(ov[t]), .r_d(od[t]), .r_f(of[t]), .r_o(oo[t]), .o_v(ov[t+1]), .o_d(od[t+1]), .o_f(of[t+1]), .o_o(oo[t+1]));
@@ -211,7 +180,7 @@ endmodule
 
 // dsfd_vm_bgq: quarter slice (128 b of every row: 8 macros, 253.794 x 500.04 um), as dsfd_vm_bgh
 module dsfd_vm_bgq #(parameter integer NP = 8, parameter integer NB = 32, parameter integer NBL = 8,
-                     parameter integer QD = 4, parameter integer RQ = 8, parameter integer MACRO = 1, parameter integer GREP = 0) (
+                     parameter integer QD = 4, parameter integer RQ = 8, parameter integer MACRO = 1) (
     input  wire [0:0] ck, input wire [0:0] rs, input wire [$clog2(NB/NBL)-1:0] grp,
     input  wire [NP-1:0] i_v, input wire [NP-1:0] i_we, input wire [NP*($clog2(NB)+9)-1:0] i_row,
     input  wire [NP*4-1:0] i_mask, input wire [NP*128-1:0] i_d,
@@ -220,7 +189,7 @@ module dsfd_vm_bgq #(parameter integer NP = 8, parameter integer NB = 32, parame
     input  wire [NP-1:0] r_v, input wire [NP*128-1:0] r_d, input wire [3:0] r_f, input wire [$clog2(QD):0] r_o,
     output wire [NP-1:0] o_v, output wire [NP*128-1:0] o_d, output wire [3:0] o_f, output wire [$clog2(QD):0] o_o
 );
-    dsfd_vm_bg #(.NP(NP), .NB(NB), .NBL(NBL), .QD(QD), .RQ(RQ), .MACRO(MACRO), .DW(128), .GREP(GREP)) u (.ck(ck), .rs(rs), .grp(grp),
+    dsfd_vm_bg #(.NP(NP), .NB(NB), .NBL(NBL), .QD(QD), .RQ(RQ), .MACRO(MACRO), .DW(128)) u (.ck(ck), .rs(rs), .grp(grp),
         .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d), .f_v(f_v), .f_we(f_we), .f_row(f_row),
         .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o), .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));
 endmodule

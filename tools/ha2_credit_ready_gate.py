@@ -14,15 +14,12 @@ import argparse
 import hashlib
 import itertools
 import json
-import os
 from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 D = 'rtl/hbm_accel/ha2_ar/'
 LIBS = [D+n+'.sv' for n in ('ot_ha2_prims', 'ot_ha2_parent_quiet_prims', 'ot_ha2_truecredit', 'ot_ha2_truecredit_rxp')]
-# struct-close 2026-10-09: OT_HA2_RXP_FILE swaps the receiver_p source (e.g. ot_ha2_truecredit_rxph.sv, HP=1)
-LIBS = [os.environ.get('OT_HA2_RXP_FILE', l) if l.endswith('ot_ha2_truecredit_rxp.sv') else l for l in LIBS]
 TB = D+'tb_ha2_truecredit_cr.sv'
 TBR = D+'tb_ha2_truecredit_cr_reset.sv'
 ENDPOINT = 'rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner_truecredit.sv'

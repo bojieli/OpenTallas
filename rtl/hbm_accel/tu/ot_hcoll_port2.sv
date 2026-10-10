@@ -8,8 +8,7 @@
 // Every input lands in a flop and every output leaves a flop (inside ot_hcoll_port).
 // ---------------------------------------------------------------------------
 module ot_hcoll_port2 #(
-    parameter integer PWT = 545,
-    parameter integer RXPIN = `ifdef OT_HCOLL_RXPIN 1 `else 0 `endif   // struct-close: see ot_hcoll_port RXPIN
+    parameter integer PWT = 545
 ) (
     input  wire             clk,
     input  wire             rst_n,
@@ -29,7 +28,7 @@ module ot_hcoll_port2 #(
     output wire [1:0]       fault
 );
     for (genvar h = 0; h < 2; h = h + 1) begin : g_h
-        ot_hcoll_port #(.PWT(PWT), .RXPIN(RXPIN)) u_port (.clk(clk), .rst_n(rst_n),
+        ot_hcoll_port #(.PWT(PWT)) u_port (.clk(clk), .rst_n(rst_n),
             .qp_push(qp_push[h]), .qp_din(qp_din[h*PWT +: PWT]), .qr_push(qr_push[h]), .qr_din(qr_din[h*PWT +: PWT]),
             .sw_cr_ret(sw_cr_ret[h]), .ph_tx_v(ph_tx_v[h]), .ph_tx_flit(ph_tx_flit[h*PWT +: PWT]),
             .ph_rx_v(ph_rx_v[h]), .ph_rx_flit(ph_rx_flit[h*PWT +: PWT]),
