@@ -20,7 +20,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 D = 'rtl/hbm_accel/ha2_ar/'
 MACRO = 'physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v'
-LIBS = [D+n+'.sv' for n in ('ot_ha2_prims', 'ot_ha2_parent_quiet_prims', 'ot_ha2_truecredit', 'ot_ha2_truecredit_rxs')]+[MACRO]
+LIBS = [D+n+'.sv' for n in ('ot_ha2_prims', 'ot_ha2_parent_quiet_prims', 'ot_ha2_truecredit', __import__('os').environ.get('OT_HA2_RXS', 'ot_ha2_truecredit_rxs'))]+[MACRO]   # redesign-hbm: OT_HA2_RXS=ot_ha2_truecredit_rxs_rr
 TB = D+'tb_ha2_truecredit_cr.sv'
 TBR = D+'tb_ha2_truecredit_cr_reset.sv'
 
@@ -78,7 +78,8 @@ def main():
                             (3, 'corrupt_forward_id', 'TRUECREDIT_FAULT'), (4, 'read_addr_off_by_one', 'TRUECREDIT_FAULT tx=0 rx=1'),
                             (5, 'credit_over_issue', 'TRUECREDIT_CONSUMER_OVF'),
                             (6, 'spurious_credit_overflow', 'TRUECREDIT_FAULT tx=0 rx=1'),
-                            (7, 'read_overtakes_wreg_write', 'TRUECREDIT_FAULT tx=0 rx=1'),
+                            *([(9, 'deliver_skips_rreg_stage', 'TRUECREDIT_FAULT')] if __import__('os').environ.get('OT_HA2_RXS', '').endswith('_rr') else
+                              [(7, 'read_overtakes_wreg_write', 'TRUECREDIT_FAULT tx=0 rx=1')]),   # rr: the RREG read cannot overtake by construction
                             (8, 'credit_return_dropped', 'TRUECREDIT_TIMEOUT')]:
         rc, text = icarus(out, 'tb_ha2_truecredit_cr', 'mut_'+name, dict(MUTANT=m), LIBS+[tb])
         good = rc != 0 and marker in text

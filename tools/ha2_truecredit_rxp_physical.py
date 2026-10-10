@@ -25,7 +25,7 @@ def main():
     model=json.loads((HERE/'model.json').read_text());part=model['parts'][a.part]
     part=dict(part,top=f'ot_ha2_truecredit_rx_{a.variant}_phys')
     if a.variant=='s':part['macros']=['ot_sram_1r1w_64x512_m1_r2c2']
-    manifest=dict(variant=f'rx_{a.variant}',sources=(HERE/f'rx_{a.variant}_sources.txt').read_text().splitlines())
+    manifest=dict(variant=f'rx_{a.variant}',sources=(HERE/__import__('os').environ.get('HA2_RX_SOURCES', f'rx_{a.variant}_sources.txt')).read_text().splitlines())
     # hbm-blocks 2026-10-07: the CTS-only calibration run has no measurement yet; vclk latency 0 there made CTS repair
     # an input hold of -(insertion) on every data pin (rx/tx d7a64a321: hold -583, setup -1,281, 73,998 violators) and
     # the calibration never finished.  Calibrate against a nominal leaf insertion; the route uses the measured mean.
@@ -47,7 +47,7 @@ set_output_delay -min 0 -clock vclk [all_outputs]
 set_input_transition 150 $ot_in
 set_load 4 [all_outputs]
 ''')
-    sources=(HERE/f'rx_{a.variant}_sources.txt').read_text().splitlines()
+    sources=(HERE/__import__('os').environ.get('HA2_RX_SOURCES', f'rx_{a.variant}_sources.txt')).read_text().splitlines()
     cmd=['python3','tools/run_abi3_physical.py','--view','asap7','--top',part['top']]
     for source in sources:cmd+=['--source',source]
     w,h=part['width_um'],part['height_um']
