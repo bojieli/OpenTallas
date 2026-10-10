@@ -62,7 +62,10 @@ QUARTERS = {
                inj_gate=dict(out='t_coll', ctl='f_coll', rd=578, idx=546, lanes=2, strap='qid',
                              strap_pins=[('qid[0]', 1406.04, 4450.716), ('qid[1]', 1406.04, 4450.812)])),
     'sfu': dict(master='hfd_sfu', lane='ot_su12_sfu', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
-                C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48)),
+                C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48),
+                # fill-8 2026-10-10 (--tiled, opt-in): FACED tile hfd_sfu_tile (see emit_tile_faced): pin flops at both
+                # faces + negedge face lockups, a lane-input pin bank; lane origin y on the M4 track lattice (0 mod 0.048)
+                tile=dict(name='hfd_sfu_tile', style='faced', lane_y=1.056)),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 7, 'AL': 6},
                per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1, lane_wh=(85.32, 115.02)),
     # safe-hbm 2026-10-08 (REVIEW_20261008 C1, S-C1): the HC quarter around the PIN-REGISTERED lane
@@ -86,8 +89,9 @@ def lane_ports(q):
 class Plan:
     """The mapping, shared by the RTL emitter and the reference model."""
 
-    def __init__(self, q, ports):
+    def __init__(self, q, ports, half=False):
         self.q = q
+        self.S = 1 if half else 2           # columns per pair (fill-8 --half-width: ONE tile column per pair)
         self.din = [(p, v['bits']) for p, v in sorted(ports['ports'].items())
                     if v['direction'] == 'input' and p not in ('ck', 'rst', 'cg_en', q.get('inj_gate', {}).get('strap')) and not re.fullmatch(r'ck\d+', p)]
         self.dout = [(p, v['bits']) for p, v in sorted(ports['ports'].items()) if v['direction'] == 'output']
@@ -107,12 +111,12 @@ class Plan:
         self.LO = sum(w for _, w in self.outs)
         self.C2, self.G, self.L = q['C2'], q['G'], q['L']
         self.K = self.C2 * 2                 # chains: (pair, half)
-        self.N = self.K * self.G * 2 * self.L
+        self.N = self.K * self.G * self.S * self.L
         self.WC = -(-self.WOm // self.K)     # accumulator width of one chain
         # tiled (su, hbm-forks 2026-10-10): one chain per COLUMN (pair, half, side): KC chains of NT tiles; accumulate
         # width WCT a chain; broadcast rotation RB / accumulate rotation RA per tile hop
         self.tiled = False
-        self.KC, self.NT = 2 * self.K, self.G * self.L
+        self.KC, self.NT = self.S * self.K, self.G * self.L
         self.WCT = -(-self.WOm // self.KC)
         self.RB = 37
         self.RA = (self.LO % self.WCT) or 1
@@ -146,7 +150,7 @@ class Plan:
         j = 0
         for k in range(self.K):
             for g in range(self.G):
-                for s in range(2):
+                for s in range(self.S):
                     for i in range(self.L):
                         yield j, k, g, s, i
                         j += 1
@@ -242,7 +246,7 @@ class Plan:
             ks = self.end_chains(side)
             eb = [b for p, _ in self.end_bits(side, self.din) for b in d[p]]
             for u, b in enumerate(eb):
-                key = (ks[u % len(ks)] * 2, (u // len(ks)) % self.WCT)
+                key = (ks[u % len(ks)] * self.S, (u // len(ks)) % self.WCT)
                 einj[key] = einj.get(key, 0) ^ b
         heads, fars = [], {}
         for c in range(self.KC):
@@ -267,7 +271,7 @@ class Plan:
             ks = self.end_chains(side)
             t = 0
             for p, w in self.end_bits(side, self.dout):
-                outd[p] = [fars[ks[tt % len(ks)] * 2][(tt // len(ks)) % self.LB] for tt in range(t, t + w)]
+                outd[p] = [fars[ks[tt % len(ks)] * self.S][(tt // len(ks)) % self.LB] for tt in range(t, t + w)]
                 t += w
         return [b for p, _ in self.dout for b in outd[p]]
 
@@ -324,6 +328,8 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
     m = q['master']
     nck = len(P.cks)
     seg_h = (P.H / nck) if nck else 0.0
+    faced = P.tiled and q.get('tile', {}).get('style') == 'faced'
+    tname = q.get('tile', {}).get('name', 'hfd_su_tile')
 
     def ck(y):
         """the clock net of a register at height y: one die clock pin per segment (r24 multi-ck) or the single ck"""
@@ -403,11 +409,11 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
         bc_ = ck(band_y)
         L_.append(f'    (* keep *) reg cg_q; always @(posedge {bc_}) cg_q <= cg_en[0];')
         for chain in range(P.KC):
-            k, side = divmod(chain, 2)
+            k, side = divmod(chain, P.S)
             pn, rn, pc = 'cg_q', 'rst_q[1]', bc_
             for r in range(P.NT):
                 g, i = divmod(r, P.L)
-                j = ((k * P.G + g) * 2 + side) * P.L + i
+                j = ((k * P.G + g) * P.S + side) * P.L + i
                 c_ = ck(P.lane_y.get(j, band_y))
                 src, rsrc = pn, rn
                 if pc != c_:
@@ -428,7 +434,7 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
             L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {c_}) {p_}_i{s_} <= {src};')
             R(f'{p_}_i{s_}', w, c_)
     # xroot: one broadcast source per destination root (each operand through its lockup copy when the roots differ)
-    bdst = (sorted({ck(P.lane_y.get((k * P.G * 2 + side) * P.L, band_y)) for k in range(P.K) for side in range(2)}) if P.tiled else sorted({ck(gy[(k, 0)]) for k in range(P.K)}) ) if xroot and nck else [None]
+    bdst = (sorted({ck(P.lane_y.get((k * P.G * P.S + side) * P.L, band_y)) for k in range(P.K) for side in range(P.S)}) if P.tiled else sorted({ck(gy[(k, 0)]) for k in range(P.K)}) ) if xroot and nck else [None]
     for d in bdst:
         sfx = f'_{d}' if d else ''
         L_.append(f'    wire [{P.WIm - 1}:0] din_q{sfx} = {{' + ', '.join(X(f'{p_}_i{P.dp[p_] - 1}', d) for p_, _ in reversed(P.din_m)) + '};')
@@ -449,37 +455,49 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
             u = 0
             for p_, w in P.end_bits(side, P.din):
                 for b in range(w):
-                    einj.setdefault((ks[u % len(ks)] * 2, (u // len(ks)) % P.WCT), []).append((f'{p_}_i{P.dp[p_] - 1}', b))
+                    einj.setdefault((ks[u % len(ks)] * P.S, (u // len(ks)) % P.WCT), []).append((f'{p_}_i{P.dp[p_] - 1}', b))
                     u += 1
         for c in range(P.KC):
-            k, s_ = divmod(c, 2)
+            k, s_ = divmod(c, P.S)
             L_.append(' '.join(f'wire [{P.LB}:0] tb_{c}_{r};' for r in range(P.NT + 1)))
             L_.append(' '.join(f'wire [{P.WCT - 1}:0] ta_{c}_{r};' for r in range(P.NT + 1)))
-            hj = (k * P.G * 2 + s_) * P.L
+            hj = (k * P.G * P.S + s_) * P.L
             hc = ck(P.lane_y.get(hj, band_y))
             bs = 'bsrc' + (f'_{hc}' if bdst != [None] else '')
             rc_ = (11 * c) % P.LB          # per-chain head rotation of the broadcast word (distinct chains)
             if neg and c == 0:
-                L_.append(f'    assign tb_{c}_0 = {{{bs}[{P.LB}], {bs}[{P.LB - 1}:1], ~{bs}[0]}};   // NEGATIVE CONTROL: chain 0 bit 0 inverted')
+                e0, cm_ = f'{{{bs}[{P.LB}], {bs}[{P.LB - 1}:1], ~{bs}[0]}}', '   // NEGATIVE CONTROL: chain 0 bit 0 inverted'
             elif rc_:
-                L_.append(f'    assign tb_{c}_0 = {{{bs}[{P.LB}], {bs}[{P.LB - 1 - rc_}:0], {bs}[{P.LB - 1}:{P.LB - rc_}]}};')
+                e0, cm_ = f'{{{bs}[{P.LB}], {bs}[{P.LB - 1 - rc_}:0], {bs}[{P.LB - 1}:{P.LB - rc_}]}}', ''
             else:
-                L_.append(f'    assign tb_{c}_0 = {bs};')
+                e0, cm_ = bs, ''
+            if faced:      # head-in register on the head tile's root, beside the head tile's band-side face
+                L_.append(f'    (* keep *) reg [{P.LB}:0] bh_{c};  always @(posedge {hc}) bh_{c} <= {e0};{cm_}')
+                L_.append(f'    assign tb_{c}_0 = bh_{c};')
+                R(f'bh_{c}', P.LB + 1, hc)
+            else:
+                L_.append(f'    assign tb_{c}_0 = {e0};{cm_}')
             ein = ['1\'b0'] * P.WCT
             for x in range(P.WCT):
                 if (c, x) in einj:
-                    fj = ((k * P.G + P.G - 1) * 2 + s_) * P.L + P.L - 1
+                    fj = ((k * P.G + P.G - 1) * P.S + s_) * P.L + P.L - 1
                     fc = ck(P.lane_y.get(fj, band_y))
                     ein[x] = ' ^ '.join(f'{X(n_, fc)}[{b_}]' for n_, b_ in einj[(c, x)])
             L_.append(f'    assign ta_{c}_{P.NT} = {{' + ', '.join(reversed(ein)) + '};')
             for r in range(P.NT):
                 g, i = divmod(r, P.L)
-                j = ((k * P.G + g) * 2 + s_) * P.L + i
+                j = ((k * P.G + g) * P.S + s_) * P.L + i
                 tc = gkt.get(j, ck(P.lane_y.get(j, band_y)))
-                tm = 'hfd_su_tile_xl' if xroot else 'hfd_su_tile'
+                tm = tname if faced else ('hfd_su_tile_xl' if xroot else 'hfd_su_tile')
                 L_.append(f'    {tm} u_tile_{j} (.clk({tc}), .bc_in(tb_{c}_{r}), .bc_out(tb_{c}_{r + 1}), '
                           f'.acc_in(ta_{c}_{r + 1}), .acc_out(ta_{c}_{r}));')
-        L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'ta_{c}_0' for c in reversed(range(P.KC))) + '};')
+            if faced:      # head-out register on the head tile's root: captures the head tile's negedge face lockup
+                L_.append(f'    (* keep *) reg [{P.WCT - 1}:0] hq_{c};  always @(posedge {hc}) hq_{c} <= ta_{c}_0;')
+                R(f'hq_{c}', P.WCT, hc)
+        if faced:
+            L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'hq_{c}' for c in reversed(range(P.KC))) + '};')
+        else:
+            L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'ta_{c}_0' for c in reversed(range(P.KC))) + '};')
     else:
         for k in range(P.K):
             for g in range(P.G):
@@ -554,13 +572,14 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
 
     def heads(d):
         """the chain heads as read by a register on clock d (xroot: through the heads' lockup copies)"""
-        if P.tiled:
+        if P.tiled and not faced:
             return 'heads'
-        if not xroot or not nck or all(cw[f'acc_{k}_0'][0] == d for k in range(P.K)):
+        hn = [f'hq_{c}' for c in range(P.KC)] if P.tiled else [f'acc_{k}_0' for k in range(P.K)]
+        if not xroot or not nck or all(cw[n_][0] == d for n_ in hn):
             return 'heads'
         if d not in hd:
             hd[d] = f'heads_{d}'
-            L_.append(f'    wire [{P.K * P.WC - 1}:0] heads_{d} = {{' + ', '.join(X(f'acc_{k}_0', d) for k in reversed(range(P.K))) + '};')
+            L_.append(f'    wire [{len(hn) * cw[hn[0]][1] - 1}:0] heads_{d} = {{' + ', '.join(X(n_, d) for n_ in reversed(hn)) + '};')
         return hd[d]
     # face chains: the last output stage at the pin (per-port depth dp)
     ob = 0
@@ -573,7 +592,7 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
         t = 0
         for p_, w in P.end_bits(side, P.dout):
             if P.tiled:
-                srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'tb_{ks[tt % len(ks)] * 2}_{P.NT}[{(tt // len(ks)) % P.LB}]' for tt in reversed(range(t, t + w))) + '}')
+                srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'tb_{ks[tt % len(ks)] * P.S}_{P.NT}[{(tt // len(ks)) % P.LB}]' for tt in reversed(range(t, t + w))) + '}')
             else:
                 srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'{X(f"bc_{ks[tt % len(ks)]}_{P.G - 1}", d)}[{(tt // len(ks)) % P.LB}]'
                                                                     for tt in reversed(range(t, t + w))) + '}')
@@ -702,6 +721,141 @@ def emit_tile_io(P, tw, th):
     return '\n'.join(L_) + '\n'
 
 
+def tile_strip_w(P):
+    """faced tile: the register strip width that carries one face's pins (bc + acc) over the strip alone, M5 every other
+    0.048 track (0.096) + M7 on every 0.064 track (a 0.032 pin, 0.032 space: each face pin meets its partner on the
+    abutting tile straight across the 0.54 um gap), 1 um clear at the strip's outer edge, on the 0.432 grid.  A wider
+    strip would push the in-tile crossing (tile height + strip width) past the 480 um stage rule."""
+    nb = P.LB + 1 + P.WCT
+    return round(math.ceil((nb / (1 / 0.096 + 1 / 0.064) + 4.0) / 0.432) * 0.432, 3)
+
+
+def emit_tile_faced(P):
+    """hfd_sfu_tile (fill-8 2026-10-10, Tensix-style tile that owns its registers): one closed lane + its register strip.
+    Every tile pin is a register pin (no logic between a pin and its flop):
+      band-side face (S in R0): bc_in -> bcq (pin flops);  acc_out <- negedge face lockup of acco
+      outer face     (N in R0): acc_in -> accq (pin flops); bc_out  <- negedge face lockup of bco
+    bcq -> bco (rotation by RB, posedge, the S -> N tile crossing, <= tile height + strip width) -> negedge lockup;
+    bcq -> lin (lane-input pin bank beside the lane's W-edge pins: broadcast fields in order, per-lane fields at the
+    fixed taps of tile_inputs, the reset bit -> the lane's rst_n: a per-tile registered reset copy) -> lane -> lq
+    (capture beside the lane's output pins);  accq -> acco = rotl(accq, RA) ^ lq (posedge, the N -> S crossing) ->
+    negedge lockup.  A neighbour's lockup -> this tile's pin flop is an abutted hop (half a cycle plus inter-root skew;
+    T/2 of hold margin), so tiles on different clock roots chain without hold buffers.  Steady-state function = the
+    hfd_su_tile function (Plan.model_tiled): bc 2 edges a tile, acc 2 edges a tile, lane path +2 (lin, lq)."""
+    q = P.q
+    LB, W, LO = P.LB, P.WCT, P.LO
+    tn = q['tile']['name']
+    LI = sum(w for _, w in P.ins)
+    L_ = ['`timescale 1ns/1ps',
+          f'// tools/hbm_hub_quarter_gen.py --quarter {[k for k, v in QUARTERS.items() if v is q][0]} --tiled: {tn} = one '
+          f'{q["lane"]} + its face pin flops, face lockups, lane-input bank, output capture and accumulate registers',
+          f'// LB {LB} broadcast bits + reset, LI {LI} lane input bits, LO {LO} lane output bits, WCT {W} accumulate bits, RB {P.RB}, RA {P.RA}',
+          '// mutants (bench only): OT_SFU_TILE_MUT_ROT (bc forward rotation RB+1), OT_SFU_TILE_MUT_TAP (one per-lane',
+          '// field bit from the next tap), OT_SFU_TILE_MUT_ACC (lane output bit 0 dropped from the accumulate)',
+          f'module {tn} (',
+          '    input  wire clk,',
+          f'    input  wire [{LB}:0] bc_in,',
+          f'    output reg  [{LB}:0] bc_out,',
+          f'    input  wire [{W - 1}:0] acc_in,',
+          f'    output reg  [{W - 1}:0] acc_out',
+          ');',
+          '`ifdef OT_SFU_TILE_MUT_ROT',
+          f'    localparam integer P_RB = {P.RB + 1};',
+          '`else',
+          f'    localparam integer P_RB = {P.RB};',
+          '`endif',
+          f'    (* keep *) reg [{LB}:0] bcq;  always @(posedge clk) bcq <= bc_in;            // band-side face pin flops',
+          f'    (* keep *) reg [{W - 1}:0] accq;  always @(posedge clk) accq <= acc_in;         // outer face pin flops',
+          f'    wire [{LB - 1}:0] bcd = bcq[{LB - 1}:0];',
+          f'    wire [{2 * LB - 1}:0] bcdd = {{bcd, bcd}};',
+          f'    wire [{LB - 1}:0] bcr = bcdd[{2 * LB - 1} - P_RB -: {LB}];                 // rotl(bcd, P_RB)',
+          f'    (* keep *) reg [{LB}:0] bco;  always @(posedge clk) bco <= {{bcq[{LB}], bcr}};   // S -> N crossing',
+          '    always @(negedge clk) bc_out <= bco;                                      // outer face lockup']
+    # lane-input bank: broadcast fields in order, per-lane fields at the fixed taps, reset bit last
+    taps = []
+    bi = pi = 0
+    for n, w in P.ins:
+        if n in q['per_lane']:
+            taps.append((n, [((pi + t) * 7 + 3) % LB for t in range(w)]))
+            pi += w
+        else:
+            taps.append((n, list(range(bi, bi + w))))
+            bi += w
+    L_.append(f'    (* keep *) reg [{LI}:0] lin;                                        // lane-input pin bank (+ reset copy)')
+    L_.append('    always @(posedge clk) begin')
+    # the TAP mutant moves the first per-lane field bit the bench's lane stand-in observes (stub_out reads lane input
+    # bits (13t + 5) % LI and (7t + 1) % LI only)
+    seen = {(t * 13 + 5) % LI for t in range(LO)} | {(t * 7 + 1) % LI for t in range(LO)}
+    o, mut_at = 0, None
+    for n, bits in taps:
+        if n in q['per_lane'] and mut_at is None:
+            mut_at = next((o + t for t in range(len(bits)) if o + t in seen), None)
+        o += len(bits)
+    assert mut_at is not None
+    o = 0
+    offs = {}
+    for n, bits in taps:
+        offs[n] = o
+        for t, x in enumerate(bits):
+            if o + t == mut_at:
+                L_.append('`ifdef OT_SFU_TILE_MUT_TAP')
+                L_.append(f'        lin[{o + t}] <= bcq[{(x + 1) % LB}];')
+                L_.append('`else')
+                L_.append(f'        lin[{o + t}] <= bcq[{x}];')
+                L_.append('`endif')
+            else:
+                L_.append(f'        lin[{o + t}] <= bcq[{x}];')
+        o += len(bits)
+    L_.append(f'        lin[{LI}] <= bcq[{LB}];')
+    L_.append('    end')
+    L_.append(f'    wire [{LO - 1}:0] lo;')
+    conns = ['.clk(clk)', f'.rst_n(~lin[{LI}])']
+    for n, w in P.ins:
+        conns.append(f'.{n}(lin[{offs[n] + w - 1}:{offs[n]}])')
+    ob = 0
+    for n, w in P.outs:
+        conns.append(f'.{n}(lo[{ob + w - 1}:{ob}])')
+        ob += w
+    prm = ('#(' + ', '.join(f'.{a}({v})' for a, v in q['params'].items()) + ') ') if q['params'] else ''
+    L_.append(f'    {q["lane"]} {prm}u_lane (' + ', '.join(conns) + ');')
+    L_ += [f'    (* keep *) reg [{LO - 1}:0] lq;  always @(posedge clk) lq <= lo;            // lane output capture',
+           '`ifdef OT_SFU_TILE_MUT_ACC',
+           f'    wire [{LO - 1}:0] lqa = {{lq[{LO - 1}:1], 1\'b0}};',
+           '`else',
+           f'    wire [{LO - 1}:0] lqa = lq;',
+           '`endif',
+           f'    wire [{W - 1}:0] acc_r = {{accq[{W - 1 - P.RA}:0], accq[{W - 1}:{W - P.RA}]}};',
+           f'    (* keep *) reg [{W - 1}:0] acco;  always @(posedge clk) acco <= acc_r ^ {{{W - LO}\'d0, lqa}};   // N -> S crossing',
+           '    always @(negedge clk) acc_out <= acco;                                    // band-side face lockup',
+           'endmodule', '']
+    return '\n'.join(L_)
+
+
+def emit_tile_io_faced(P, tw, th, sw):
+    """faced tile pins, all over the register strip (x < sw; nothing behind the lane): band-side edge (y = 0): bc_in
+    then acc_out; outer edge (y = th): bc_out then acc_in, each bit at the SAME x as its partner pin on the abutting
+    tile (bc_out[b] over the next tile's bc_in[b], acc_out[b] under the previous tile's acc_in[b]); clk on the strip's
+    outer (W) edge at mid height (M4)"""
+    L_ = [f'# tools/hbm_hub_quarter_gen.py --tiled: {P.q["tile"]["name"]} pins (faced tile, strip {sw} um)']
+    m5 = [round(0.528 + 0.096 * k, 4) for k in range(int((sw - 1.0) / 0.096))]
+    m7 = [round(0.64 + 0.064 * k, 4) for k in range(int((sw - 1.3) / 0.064))]
+    slots = [('M5', x) for x in m5] + [('M7', x) for x in m7]
+    nb = P.LB + 1
+    assert len(slots) >= nb + P.WCT, (len(slots), nb + P.WCT)
+    for edge, ports in ((0, (('bc_in', nb), ('acc_out', P.WCT))), (1, (('bc_out', nb), ('acc_in', P.WCT)))):
+        k = 0
+        yy = 0.096 if edge == 0 else round(th - 0.096, 4)
+        for port, n in ports:
+            for b in range(n):
+                ly, x = slots[k]
+                k += 1
+                sz = '0.0240 0.1920' if ly == 'M5' else '0.0320 0.1920'
+                L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{sz}}}')
+    cy = round(round(th / 2 / 0.048) * 0.048 + 0.012, 4)
+    L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {cy:.4f}}} -pin_size {{0.1920 0.0240}}')
+    return '\n'.join(L_) + '\n'
+
+
 def emit_tile_xl(p):
     s=emit_tile(p).replace('module hfd_su_tile (','module hfd_su_tile_xl (')
     s=s.replace(f'output wire [{p.LB}:0] bc_out',f'output reg  [{p.LB}:0] bc_out')
@@ -765,6 +919,8 @@ def emit_tb(P, nvec, seed, out, cg=False):
     q = P.q
     m = q['master']
     hold = (2 * P.NT + 2 * P.DMAX + 20) if P.tiled else (2 * P.G + 2 * P.DMAX + 14)   # tiled: 16 broadcast + 16 accumulate tile hops
+    if P.tiled and q.get('tile', {}).get('style') == 'faced':
+        hold = 4 * P.NT + 2 * P.DMAX + 24     # faced tiles: 2 edges a tile each way, + head in / out, lin / lq
     cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
@@ -832,7 +988,7 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     e = up_(edge, GX)
     gp = up_(gap, GX)
     c = dn((Wq - 2 * e - 2 * C2 * w - (C2 - 1) * gp) / C2, GX)
-    assert c >= 30.0 - 1e-6, ('channel narrower than 30 um', c)
+    assert P.S == 1 or c >= 30.0 - 1e-6, ('channel narrower than 30 um', c)
     py = h + GY
     n = P.G * P.L                                   # lanes per half column
     band = Hq - 2 * edge - 2 * n * py
@@ -840,7 +996,12 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     blo = up_(edge + n * py, GY)
     bhi = dn(blo + band, GY)
     xs = []
-    if two_sided:
+    if P.S == 1:      # fill-8 --half-width: one tile column per pair, pairs side by side, centred
+        c = 0.0
+        x0 = dn((Wq - C2 * w - (C2 - 1) * gp) / 2, GX)
+        assert x0 >= e - 1e-6, ('half-width quarter narrower than its tile column', x0)
+        xs = [(x0 + pr * (w + gp),) for pr in range(C2)]
+    elif two_sided:
         c = dn((Wq - 2 * C2 * w) / (2 * C2 + 1), GX)
         assert c >= 30.0 - 1e-6, ('channel narrower than 30 um', c)
         e = gp = c
@@ -863,10 +1024,12 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
         assert 0 <= x and x + w <= Wq + 1e-6 and 0 <= y and y + h <= Hq + 1e-6, (j, x, y)
         if P.tiled:      # a tile's broadcast enters on its band-side edge: north tiles R0 / MY, south tiles MX / R180
             o = ('MY' if s == 0 else 'R0') if half == 1 else ('R180' if s == 0 else 'MX')
+            if P.S == 1:   # one column: the strip (and its clk pin) on the W side, toward the die clock pins
+                o = 'R0' if half == 1 else 'MX'
         L_.append(f'place_macro -macro_name {{{mname}_{j}}} -location {{{x:.3f} {y:.3f}}} -orientation {o}')
         rec.append([j, round(x, 3), y, o])
     fp = dict(lane_w=w, lane_h=h, two_sided=two_sided, quarter=[Wq, Hq], edge=e, gap=gp, channel=round(c, 3), band=[round(blo, 3), round(bhi, 3)],
-              column_x=[[round(a, 3), round(b, 3)] for a, b in xs], lanes=rec)
+              column_x=[[round(a, 3) for a in x_] for x_ in xs], lanes=rec)
     return '\n'.join(L_) + '\n', fp
 
 
@@ -882,20 +1045,38 @@ def main():
     ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
     ap.add_argument('--tiled', action='store_true', help='su: one hfd_su_tile hard macro per lane (lane + its boundary '
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
+    ap.add_argument('--half-width', action='store_true', help='fill-8 2026-10-10 (Option A, SFU half width): ONE tile column '
+                    'per pair (half the lanes) in a quarter of half the width (E-face pins moved onto the new E edge); '
+                    'needs --tiled')
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
-    P = Plan(q, json.loads(Path(a.ports).read_text()))
-    P.tiled = a.tiled
+    pj = json.loads(Path(a.ports).read_text())
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if a.half_width:
+        assert a.tiled, '--half-width needs --tiled'
+        W0 = pj['w_um']
+        Wh = round(math.ceil(W0 / 2 / GX - 1e-9) * GX, 3)
+        for v in pj['ports'].values():           # E-face pins onto the half-width quarter's E edge
+            for pp in v.get('pins') or []:
+                if pp[2] > W0 / 2:
+                    pp[2], pp[4] = round(pp[2] - (W0 - Wh), 4), round(pp[4] - (W0 - Wh), 4)
+        pj['w_um'] = Wh
+        pj['half_width_of'] = W0
+        (out / 'ports_half.json').write_text(json.dumps(pj, indent=1) + '\n')
+    P = Plan(q, pj, half=a.half_width)
+    P.tiled = a.tiled
     m = q['master']
-    pj = json.loads(Path(a.ports).read_text())
+    faced = a.tiled and q.get('tile', {}).get('style') == 'faced'
     if not a.lane_size and q.get('lane_wh'):
         a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
-    if a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
+    if faced:       # the faced tile footprint: [register strip SW | lane], lane at (SW, lane_y on the M4 lattice)
+        SW = tile_strip_w(P)
+        a.lane_size = [round(SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]
+    elif a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
         a.lane_size = [round(TILE_SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
         tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
@@ -924,7 +1105,28 @@ def main():
     (out / f'{m}.sv').write_text(emit_rtl(P, xroot=xr, cg=a.cg))
     (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True, xroot=xr, cg=a.cg))
     (out / f'{q["lane"]}_simstub.sv').write_text(emit_stub(P))
-    if a.tiled:
+    if faced:
+        tn, ly = q['tile']['name'], q['tile']['lane_y']
+        tw, th = a.lane_size
+        assert abs(ly / 0.048 - round(ly / 0.048)) < 1e-6 and ly >= 1.04 and ly + q['lane_wh'][1] + 0.5 <= th - 0.54, ly
+        (out / f'{tn}.sv').write_text(emit_tile_faced(P))
+        td = out / 'tile'
+        td.mkdir(exist_ok=True)
+        (td / 'io_place.tcl').write_text(emit_tile_io_faced(P, tw, th, SW))
+        (td / 'macro_place.tcl').write_text(f'place_macro -macro_name {{u_lane}} -location {{{SW:.3f} {ly:.3f}}} -orientation R0 -exact\n')
+        # register-to-register hops of the tiled quarter (Manhattan um, owner rule <= HOP):
+        #   in-tile crossings (bcq -> bco, accq -> acco, bcq -> lin, lq -> acco): <= tile height + strip width;
+        #   tile -> tile: the abutment gap; band centre (din_q / head registers) -> the head tile's band-side face
+        cx, cy = pj['w_um'] / 2, pj['h_um'] / 2
+        band_hop = max(abs(cy - (r[2] + (th if r[3] in ('MX', 'R180') else 0.0))) + abs(cx - (r[1] + SW / 2))
+                       for r in fp['lanes'] if any(r[0] == ((k * P.G) * P.S + s_) * P.L for k in range(P.K) for s_ in range(P.S)))
+        hops = dict(in_tile=round(th + SW, 3), tile_to_tile=round(GY, 3), band_to_head_tile=round(band_hop, 3), limit=HOP)
+        print(f'faced tile hops {hops}', file=sys.stderr)
+        assert max(hops['in_tile'], hops['band_to_head_tile']) <= HOP, hops
+        (td / 'tile.json').write_text(json.dumps(dict(master=tn, w_um=tw, h_um=th, strip_w=SW, lane=q['lane'],
+                                                      lane_xy=[SW, ly], LB=P.LB, WCT=P.WCT, RB=P.RB, RA=P.RA, LO=P.LO,
+                                                      LI=sum(w for _, w in P.ins), style='faced', hops_um=hops), indent=1) + '\n')
+    elif a.tiled:
         (out / 'hfd_su_tile.sv').write_text(emit_tile(P))
         if xr:
             (out / 'hfd_su_tile_xl.sv').write_text(emit_tile_xl(P))
@@ -940,8 +1142,11 @@ def main():
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out, cg=a.cg))
     if a.tiled:
         tiled_info = dict(tiles=P.N, chains=P.KC, tiles_per_chain=P.NT, acc_bits_per_chain=P.WCT,
-                          flops_in_tiles=P.N * (P.LB + 1 + P.LO + P.WCT + ((P.LB + 1 + P.WCT) if xr else 0)),
+                          **({} if faced else dict(flops_in_tiles=P.N * (P.LB + 1 + P.LO + P.WCT + ((P.LB + 1 + P.WCT) if xr else 0)))),
                           lockup_bits=P.N * (P.LB + 1 + P.WCT) if xr else 0,
+                          **({} if not faced else dict(flops_in_tiles=P.N * (3 * (P.LB + 1) + sum(w for _, w in P.ins) + 1 + P.LO + 3 * P.WCT),
+                                  face_lockup_bits=P.N * (P.LB + 1 + P.WCT), head_regs=P.KC * (P.LB + 1 + P.WCT),
+                                  tile=json.loads((out / 'tile' / 'tile.json').read_text()))),
                           clock_gates=P.N if a.cg else 0, wake_lead_cycles=3 if a.cg else 0,
                           flops_in_top=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2))
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
