@@ -23,7 +23,10 @@
 //   Fault (sticky until reset): a request run crossing a stack or ending beyond STACK_BYTES, an svc fault beat, a beat without a credit.
 // Rate: NS x NL source sectors a cycle in (the svc lane rate), NB destination sectors a cycle out (the VM port).
 // INDEXED ROW STREAM (spec 3.3, hgi-1010/c 2026-10-10; ROW_GATHER's list-order load, Engram rows, verify embeddings):
-//   ix_cmd {cnt 20, dstride 32, dbase 32, n 21, dyn_mul 27, abase 40, fmt 3} (175 b: fmt [2:0], abase [42:3], dyn_mul [69:43], n [90:70], dbase [122:91], dstride [154:123], cnt [174:155]) + the id list on id_v / id_rdy / id 32
+//   ix_cmd {rebase 1, cnt 20, dstride 32, dbase 32, n 21, dyn_mul 27, abase 40, fmt 3} (176 b: fmt [2:0], abase [42:3],
+//   dyn_mul [69:43], n [90:70], dbase [122:91], dstride [154:123], cnt [174:155], rebase [175]) + the id list on id_v /
+//   id_rdy / id 32.  rebase 1: abase is the CP's EFFECTIVE base, which already holds id_0 x dyn_mul (spec 3.3 with
+//   X = U32(VM[I + L])), so row e reads abase + (id_e - id_0) x dyn_mul
 //   (list order, exactly cnt ids; the DMA unit reads them from the I table).  Row e = the A row of id_e: source byte address
 //   abase + id_e x dyn_mul (n elements of fmt, whole sectors), lands at VM word dbase + e x dstride.  The id pipeline: id
 //   pin flop -> two 16 x 27 partial products (registered) -> address add (registered, alignment / 37-bit range check) -> a
@@ -34,7 +37,7 @@
 //   a non-sector n).
 // MUT (bench): 1 BF16 halves mirrored within the sector: must FAIL; 2 a tag freed 8 beats early: must FAIL;
 //   3 the id's high partial product dropped (ids >= 2^16 alias): must FAIL; 4 the destination row pointer advances on
-//   every second row only: must FAIL.
+//   every second row only: must FAIL; 5 the rebase (id_0 x dyn_mul) not removed: must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_front #(
     parameter integer NS = 4,
@@ -57,7 +60,7 @@ module ot_hgi_dma_front #(
     // indexed row stream command + id list
     input  wire                  ix_v,
     output wire                  ix_rdy,
-    input  wire [174:0]          ix_cmd,
+    input  wire [175:0]          ix_cmd,
     input  wire                  id_v,
     output wire                  id_rdy,
     input  wire [31:0]           id,
@@ -114,19 +117,21 @@ module ot_hgi_dma_front #(
     reg [31:0] issued, wrote;                               // destination sectors requested / acknowledged
     assign mv_rdy = !busy && !cv_q && !ixc_q && !mv_fault;
     // ---------------------------------------------------------------- indexed row stream state
-    reg ixc_q; reg [174:0] ixm_q;                           // command station
+    reg ixc_q; reg [175:0] ixm_q;                           // command station
     reg ixm;                                                // the running move is an indexed stream
     reg [39:0] ix_ab; reg [26:0] ix_mul; reg [19:0] ids_left;
     reg [31:0] ix_dp; reg [31:0] ix_ds;                     // the next row's VM word address, the row stride
     reg [1:0] ix_par;                                       // MUT 4
     reg i1_v; reg [31:0] i1_id;                             // id pin flop
     reg i2_v; reg [42:0] i2_lo, i2_hi; reg [31:0] i2_dw;    // partial products, the row's VM word address
-    reg i3_v; reg [37:0] i3_a; reg [31:0] i3_dw;           // address
+    reg i3_v; reg [59:0] i3_p; reg [31:0] i3_dw;           // the product id x dyn_mul
+    reg i4_v; reg [37:0] i4_a; reg [31:0] i4_dw;           // address
+    reg ix_rb, ix_first; reg [59:0] ix_p0;                 // rebase: the first row's product
     reg [36:0] rq_a [0:3]; reg [17:0] rq_ds [0:3];          // row queue {address, first VM sector}
     reg [1:0] rq_h, rq_t; reg [2:0] rq_n;
-    wire [2:0] ix_inflight = rq_n + {2'd0, i1_v} + {2'd0, i2_v} + {2'd0, i3_v};
+    wire [3:0] ix_inflight = {1'b0, rq_n} + {3'd0, i1_v} + {3'd0, i2_v} + {3'd0, i3_v} + {3'd0, i4_v};
     assign ix_rdy = !busy && !cv_q && !ixc_q && !mv_fault;
-    assign id_rdy = busy && ixm && !mv_fault && ids_left != 20'd0 && ix_inflight < 3'd4;
+    assign id_rdy = busy && ixm && !mv_fault && ids_left != 20'd0 && ix_inflight < 4'd4;
     wire id_take = id_v && id_rdy;
     // ---------------------------------------------------------------- tags
     reg [15:0] tag_busy;
@@ -215,7 +220,7 @@ module ot_hgi_dma_front #(
             cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; dd_cr <= '0; wl <= '0;
             dd_r <= '0; tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1; cur_v <= '0;
             issued <= 32'd0; wrote <= 32'd0;
-            ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0;
+            ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
             rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0;
             for (i = 0; i < NIN; i = i + 1) begin lq_h[i] <= '0; lq_t[i] <= '0; lq_n[i] <= '0; ov[i] <= 4'd0; end
         end else begin
@@ -233,7 +238,7 @@ module ot_hgi_dma_front #(
                 ks <= (f == 3'd0 || f == 3'd5) ? 2'd0 : (f == 3'd1) ? 2'd1 : 2'd2;
                 rsec <= (f == 3'd0 || f == 3'd5) ? 24'(n >> 3) : (f == 3'd1) ? 24'(n >> 4) : 24'(n >> 5);
                 ix_ab <= ixm_q[42:3]; ix_mul <= ixm_q[69:43];
-                ix_dp <= ixm_q[122:91]; ix_ds <= ixm_q[154:123]; ids_left <= ixm_q[174:155]; ix_par <= 2'd0;
+                ix_dp <= ixm_q[122:91]; ix_ds <= ixm_q[154:123]; ids_left <= ixm_q[174:155]; ix_par <= 2'd0; ix_rb <= ixm_q[175]; ix_first <= 1'b1; ix_p0 <= 60'd0;
                 r_off <= 24'd0; r_done <= (ixm_q[174:155] == 20'd0) || (n == 21'd0);
                 issued <= 32'd0; wrote <= 32'd0;
                 if (ixm_q[7:3] != 5'd0 || ixm_q[47:43] != 5'd0 ||
@@ -250,17 +255,19 @@ module ot_hgi_dma_front #(
                 if (MUT != 4 || ix_par[0]) ix_dp <= ix_dp + ix_ds;
             end
             i3_v <= i2_v;
-            if (i2_v) begin
-                begin : asum
-                    reg [59:0] sm;
-                    sm = {20'd0, ix_ab} + {17'd0, i2_lo} + ({17'd0, i2_hi} << 16);
-                    i3_a <= {|sm[59:37], sm[36:0]};                  // [37]: beyond the 37-bit die space (range fault)
-                end
-                i3_dw <= i2_dw;
+            if (i2_v) begin i3_p <= {17'd0, i2_lo} + ({17'd0, i2_hi} << 16); i3_dw <= i2_dw; end
+            i4_v <= i3_v;
+            if (i3_v) begin : asum
+                reg [59:0] p0, sm;
+                p0 = (MUT == 5) ? 60'd0 : (ix_rb && !ix_first) ? ix_p0 : (ix_rb ? i3_p : 60'd0);   // MUT 5: rebase ignored
+                if (ix_first) begin ix_p0 <= i3_p; ix_first <= 1'b0; end
+                sm = {20'd0, ix_ab} + i3_p - p0;                            // two's complement: a rebased row below
+                i4_a <= {|sm[59:37], sm[36:0]};                             // id_0 wraps to [59:37] != 0 -> range fault
+                i4_dw <= i3_dw;
             end
-            if (i3_v) begin
-                if (i3_a[37]) mv_fault <= 1'b1;
-                else begin rq_a[rq_t] <= i3_a[36:0]; rq_ds[rq_t] <= 18'(i3_dw >> 3); rq_t <= rq_t + 2'd1; end
+            if (i4_v) begin
+                if (i4_a[37]) mv_fault <= 1'b1;
+                else begin rq_a[rq_t] <= i4_a[36:0]; rq_ds[rq_t] <= 18'(i4_dw >> 3); rq_t <= rq_t + 2'd1; end
             end
             if (cv_q) begin
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
@@ -287,7 +294,7 @@ module ot_hgi_dma_front #(
                     if (!ix_pop) r_off <= r_off + {15'd0, ix_rn};
                     else begin
                         r_off <= 24'd0; rq_h <= rq_h + 2'd1;
-                        if (ids_left == 20'd0 && rq_n == 3'd1 && !i1_v && !i2_v && !i3_v) r_done <= 1'b1;
+                        if (ids_left == 20'd0 && rq_n == 3'd1 && !i1_v && !i2_v && !i3_v && !i4_v) r_done <= 1'b1;
                     end
                 end
             end
@@ -322,7 +329,7 @@ module ot_hgi_dma_front #(
             end
             begin : rqcnt
                 reg psh, pp;
-                psh = i3_v && !i3_a[37];
+                psh = i4_v && !i4_a[37];
                 pp = ix_go && ix_pop;
                 rq_n <= rq_n + {2'd0, psh} - {2'd0, pp};
             end
@@ -381,7 +388,7 @@ module ot_hgi_dma_front #(
             if (dq[q*51 + 50] && dq_rdy[q]) $display("FRONT   req stack %0d tag %0d nsec %0d addr %h dsec %0d", q, dq[q*51 + 46 +: 4],
                                                   dq[q*51 + 37 +: 9], dq[q*51 +: 37], tg_dsec[dq[q*51 + 46 +: 4]]);
         if (mv_done) $display("FRONT done issued %0d", issued);
-        if (mv_fault && !mv_fault_d) $display("FRONT FAULT ixm %0d ix_bad %0d i3 %0d/%h rq_n %0d", ixm, ix_bad, i3_v, i3_a, rq_n);
+        if (mv_fault && !mv_fault_d) $display("FRONT FAULT ixm %0d ix_bad %0d i4 %0d/%h rq_n %0d", ixm, ix_bad, i4_v, i4_a, rq_n);
     end
 `endif
 endmodule

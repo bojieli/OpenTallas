@@ -18,7 +18,7 @@ module tb_hgi_dma_front;
     localparam integer SBIT = 20; localparam longint SB = 1048576;   // 1 MiB stacks in the bench
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault;
-    reg ix_v = 0; reg [174:0] ix_cmd = 0; wire ix_rdy; reg id_v = 0; reg [31:0] id = 0; wire id_rdy;
+    reg ix_v = 0; reg [175:0] ix_cmd = 0; wire ix_rdy; reg id_v = 0; reg [31:0] id = 0; wire id_rdy;
     wire [NS*51-1:0] dq; reg [NS-1:0] dq_rdy = 0; reg [NIN*270-1:0] dd_m = 0; wire [NIN*270-1:0] dd; wire [NIN-1:0] dd_cr;
     wire [NB*280-1:0] wl; reg [NB-1:0] wl_done = 0;
     ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
@@ -112,7 +112,7 @@ module tb_hgi_dma_front;
             mv = 0; mv[1:0] = 0; mv[4:2] = f; mv[44:5] = 40'(sbase); mv[76:45] = 32'(sstr); mv[92:77] = 1;
             mv[94:93] = 1; mv[97:95] = 0; mv[137:98] = 40'(dbase); mv[169:138] = 32'(dstr); mv[185:170] = 1;
             mv[205:186] = 20'(m); mv[226:206] = 21'(n);
-            @(negedge clk); mv_v = 1; while (!mv_rdy) @(negedge clk); @(negedge clk); mv_v = 0; t0 = cyc;
+            @(negedge clk); mv_v = 1; t0 = cyc; while (!mv_rdy) begin @(negedge clk); if (cyc - t0 > 50000) $fatal(1, "FATAL front never ready (previous load stuck)"); end @(negedge clk); mv_v = 0; t0 = cyc;
             while (!mv_done && !mv_fault && cyc - t0 < 50000) @(negedge clk);
             if (!mv_done) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
             else begin
@@ -148,7 +148,7 @@ module tb_hgi_dma_front;
     // ---- indexed row stream: ids_t[0..cnt-1] sent with random gaps while the move runs
     reg [31:0] ids_t [0:4095];
     task automatic iload(input [2:0] f, input longint abase, input longint mul, input integer n, input integer dbase,
-                         input integer dstr, input integer cnt, input longint idmax);
+                         input integer dstr, input integer cnt, input longint idmax, input integer rb);
         integer es, t0, o, i, e0, k; longint a; reg [31:0] want;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
@@ -158,8 +158,9 @@ module tb_hgi_dma_front;
                 if (i > 0 && ($urandom % 8) == 0) ids_t[i] = ids_t[i - 1];           // duplicates
                 if (i == 0) ids_t[i] = 32'(idmax - 1);                              // the largest id
             end
-            ix_cmd = {20'(cnt), 32'(dstr), 32'(dbase), 21'(n), 27'(mul), 40'(abase), f};
-            @(negedge clk); ix_v = 1; while (!ix_rdy) @(negedge clk); @(negedge clk); ix_v = 0; t0 = cyc;
+            // rb: the CP's effective base (abase + id_0 x dyn_mul) with rebase set
+            ix_cmd = {1'(rb), 20'(cnt), 32'(dstr), 32'(dbase), 21'(n), 27'(mul), 40'(rb ? abase + longint'(ids_t[0]) * mul : abase), f};
+            @(negedge clk); ix_v = 1; t0 = cyc; while (!ix_rdy) begin @(negedge clk); if (cyc - t0 > 50000) $fatal(1, "FATAL front never ready (previous load stuck)"); end @(negedge clk); ix_v = 0; t0 = cyc;
             k = 0;
             while (!mv_done && !mv_fault && cyc - t0 < 50000) begin
                 id_v = (k < cnt) && (full || ($urandom % 3) != 0); id = ids_t[k];
@@ -197,11 +198,11 @@ module tb_hgi_dma_front;
     endtask
     initial begin
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
-        iload(0, 64'h40, 32, 8, 3000, 8, 400, 120000);                   // 1-sector FP32 rows, ids up to 2^17 (all stacks)
-        iload(1, 64'h0, 128, 64, 20000, 64, 300, 32768);                  // BF16 4-sector rows
-        iload(2, 64'h400, 1024, 512, 60000, 512, 96, 4000);               // FP8 16-sector rows -> 4 x 16 VM sectors
-        iload(0, 64'h0, 16384, 4096, 100000, 4096, 12, 256);              // FP32 512-sector rows: two runs each
-        iload(4, 64'h0, 2048, 2048, 160000, 2048, 40, 2000);              // INT8 64-sector rows
+        iload(0, 64'h40, 32, 8, 3000, 8, 400, 120000, 0);                   // 1-sector FP32 rows, ids up to 2^17 (all stacks)
+        iload(1, 64'h0, 128, 64, 20000, 64, 300, 32768, 1);                  // BF16 4-sector rows
+        iload(2, 64'h400, 1024, 512, 60000, 512, 96, 4000, 0);               // FP8 16-sector rows -> 4 x 16 VM sectors
+        iload(0, 64'h0, 16384, 4096, 100000, 4096, 12, 256, 1);              // FP32 512-sector rows: two runs each
+        iload(4, 64'h0, 2048, 2048, 160000, 2048, 40, 2000, 1);             // INT8 64-sector rows
         load(0, 64'h0000, 2048, 1024, 512, 4, 512);                      // FP32 rows, one stack
         load(1, 64'h1000, 8192, 8192, 4096, 3, 4096);                    // BF16
         load(2, 64'h4000, 4096, 40000, 4096, 2, 4096);                   // FP8
@@ -211,7 +212,7 @@ module tb_hgi_dma_front;
         load(0, 64'h2000, 32, 250000, 8, 64, 8);                         // 64 one-sector rows
         load(0, 64'h0, 64'(SB), 0, 16384, 4, 16384);                    // FP32 striped, 4 x 64 KB (steady state)
         load(1, 64'h0, 64'(SB), 100000, 32768, 4, 32768);               // BF16 striped, 4 x 64 KB raw -> 512 KB VM
-        iload(0, 64'h0, 4096, 1024, 0, 1024, 256, 1024);                  // FP32 4 KB rows by id (steady-state indexed rate)
+        iload(0, 64'h0, 4096, 1024, 0, 1024, 256, 1024, 0);                  // FP32 4 KB rows by id (steady-state indexed rate)
         if (errs == 0) $display("PASS HGI_DMA_FRONT %0d B in %0d cycles (%0.1f B / cycle overall)", tbytes, tcyc, (1.0 * tbytes) / tcyc);
         else $display("FATAL HGI_DMA_FRONT errors=%0d", errs);
         $finish;

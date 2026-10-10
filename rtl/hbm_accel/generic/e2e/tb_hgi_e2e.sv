@@ -25,6 +25,7 @@ module tb_hgi_e2e;
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -137,7 +138,7 @@ module tb_hgi_e2e;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
         wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done; wire [226:0] mv;
-        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
+        ot_hgi_dma_record #(.LEGACY(0), .POSTED(DMA_POSTED)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
             .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
             .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),

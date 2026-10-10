@@ -67,7 +67,7 @@ module ot_hgi_dma_engines #(
     generate if (FRONT != 0) begin : g_front
         ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f),
             .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault),
-            .ix_v(1'b0), .ix_rdy(), .ix_cmd(175'd0), .id_v(1'b0), .id_rdy(), .id(32'd0),   // indexed stream: wired by the next step (DMA unit I-list reader)
+            .ix_v(1'b0), .ix_rdy(), .ix_cmd(176'd0), .id_v(1'b0), .id_rdy(), .id(32'd0),   // indexed stream: OPEN (needs the CP's I-list address + an I-list reader; hgi-1010/c)
             .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
             .wl(f_wl), .wl_done(wl_done));
     end else begin : g_nofront
