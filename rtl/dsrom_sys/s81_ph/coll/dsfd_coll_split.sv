@@ -33,8 +33,28 @@ module ot_s81ph_relay2 #(parameter integer W = 8) (
     ot_s81ph_skid2 #(.W(W)) u_b (.clk(clk), .rst_n(rst_n), .in_v(m_v), .in_r(m_r), .in_d(m_d), .out_v(out_v), .out_r(out_r), .out_d(out_d));
 endmodule
 
+// ---- credit relay (redesign-ds 2026-10-10, split3 CR mode): link -> credit rx (pin flops + FIFO + OREG) -> credit tx -> link
+module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8) (
+    input  wire clk, input wire rst_n,
+    input  wire i_v, output wire i_cr, input wire [W-1:0] i_d,     // upstream link (valid / data in, credit pulse out)
+    output wire o_v, input wire o_cr, output wire [W-1:0] o_d      // downstream link (valid / data out, credit pulse in)
+);
+    wire m_v, m_r, f; wire [W-1:0] m_d;
+    ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(i_v), .l_data(i_d), .l_credit(i_cr),
+        .o_valid(m_v), .o_ready(m_r), .o_data(m_d), .fault(f));
+`ifdef OT_S81PH_MUT_CR_CRED
+    localparam integer CX = D + 8;   // negative control: the sender believes in 8 more landing slots than exist
+`else
+    localparam integer CX = D;
+`endif
+    ot_link_credit_tx #(.W(W), .CRED(CX)) u_tx (.clk(clk), .rst_n(rst_n), .i_valid(m_v), .i_ready(m_r), .i_data(m_d),
+        .l_valid(o_v), .l_data(o_d), .l_credit(o_cr));
+endmodule
+
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
-module dsfd_coll_cb #(parameter integer OD = 16) (
+module dsfd_coll_cb #(parameter integer OD = 16,
+    parameter integer CR = 0   // redesign-ds: 1 = every lane / seam stream is a credit link (ot_s81ph_cr_relay), see ot_link_credit
+) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
     // S face: the slab VM interface
@@ -69,7 +89,13 @@ module dsfd_coll_cb #(parameter integer OD = 16) (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv_r <= 0; fvm_u <= 0; ts_r <= 0; flt_r <= 0; flt_u <= 0; end
         else begin fv_r <= f_vm; fvm_u <= fv_r; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
-    // lane relays (lane-face skid + seam-face skid)
+    // lane relays (lane-face skid + seam-face skid; CR: credit relays, the *_r pins carry credit pulses)
+    generate if (CR != 0) begin : g_cr
+    ot_s81ph_cr_relay #(.W(553)) u_lo0 (.clk(clk), .rst_n(rst_n), .i_v(lo0_v), .i_cr(lo0_r), .i_d(lo0_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
+    ot_s81ph_cr_relay #(.W(553)) u_li0 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li0_v), .o_cr(li0_r), .o_d(li0_d));
+    ot_s81ph_cr_relay #(.W(553)) u_lo4 (.clk(clk), .rst_n(rst_n), .i_v(lo4_v), .i_cr(lo4_r), .i_d(lo4_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
+    ot_s81ph_cr_relay #(.W(553)) u_li4 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li4_v), .o_cr(li4_r), .o_d(li4_d));
+    end else begin : g_sk
     ot_s81ph_relay2 #(.W(553)) u_lo0 (.clk(clk), .rst_n(rst_n), .in_v(lo0_v), .in_r(lo0_r), .in_d(lo0_d), .out_v(wlo_v), .out_r(wlo_r), .out_d(wlo_d));
     ot_s81ph_relay2 #(.W(553)) u_li0 (.clk(clk), .rst_n(rst_n), .in_v(wli_v), .in_r(wli_r), .in_d(wli_d), .out_v(li0_v), .out_r(li0_r), .out_d(li0_d));
 `ifdef OT_S81PH_MUT_SPLIT_LO4FLIP
@@ -79,6 +105,7 @@ module dsfd_coll_cb #(parameter integer OD = 16) (
     ot_s81ph_relay2 #(.W(553)) u_lo4 (.clk(clk), .rst_n(rst_n), .in_v(lo4_v), .in_r(lo4_r), .in_d(lo4_d), .out_v(elo_v), .out_r(elo_r), .out_d(elo_d));
 `endif
     ot_s81ph_relay2 #(.W(553)) u_li4 (.clk(clk), .rst_n(rst_n), .in_v(eli_v), .in_r(eli_r), .in_d(eli_d), .out_v(li4_v), .out_r(li4_r), .out_d(li4_d));
+    end endgenerate
     // packer word: seam pin register, then the output queue (sliced, push replicated per slice; OD 16 = the local
     // queue's 4 + the credit loop: push issue -> ce reg -> pin reg -> queue -> pop -> bw_cr -> ce cred = 6 edges, + margin)
     reg          bw_vq; reg [2099:1] bw_dq;
@@ -114,7 +141,8 @@ module dsfd_coll_ce #(
 `else
     parameter integer QPIPE = 0,
 `endif
-    parameter integer OD = 16
+    parameter integer OD = 16,
+    parameter integer CR = 0   // redesign-ds: 1 = every lane / seam face is a credit link (lane tile LCR, cb / ct CR)
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,
@@ -178,10 +206,18 @@ module dsfd_coll_ce #(
         assign f_li_v[5 + l] = eli_v[l]; assign eli_r[l] = f_li_r[5 + l]; assign f_li_d[5 + l] = eli_d[l*553 +: 553];
     end endgenerate
     generate for (l = 0; l < 8; l = l + 1) begin : g_l
+      if (CR != 0) begin : g_cr
+        wire f;
+        ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(clk), .rst_n(rst_n), .i_valid(x_lo_v[l]), .i_ready(x_lo_r[l]),
+            .i_data({x_lo_l[l], x_lo_d[l*552 +: 552]}), .l_valid(f_lo_v[l]), .l_data(f_lo_d[l]), .l_credit(f_lo_r[l]));
+        ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(1)) u_si (.clk(clk), .rst_n(rst_n), .l_valid(f_li_v[l]), .l_data(f_li_d[l]),
+            .l_credit(f_li_r[l]), .o_valid(x_li_v[l]), .o_ready(x_li_r[l]), .o_data({x_li_l[l], x_li_d[l*552 +: 552]}), .fault(f));
+      end else begin : g_sk
         ot_s81ph_skid2 #(.W(553)) u_so (.clk(clk), .rst_n(rst_n), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),
             .in_d({x_lo_l[l], x_lo_d[l*552 +: 552]}), .out_v(f_lo_v[l]), .out_r(f_lo_r[l]), .out_d(f_lo_d[l]));
         ot_s81ph_skid2 #(.W(553)) u_si (.clk(clk), .rst_n(rst_n), .in_v(f_li_v[l]), .in_r(f_li_r[l]), .in_d(f_li_d[l]),
             .out_v(x_li_v[l]), .out_r(x_li_r[l]), .out_d({x_li_l[l], x_li_d[l*552 +: 552]}));
+      end
     end endgenerate
     wire c_bw_v; wire [2099:1] c_bw_d;
     ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD)) u_core (.clk(clk), .rst_n(rst_n),
@@ -255,7 +291,8 @@ module dsfd_coll_ct #(
     // LR (redesign-ds 2026-10-10, ct-split3b): 1 = the lane-facing ends are ot_s81ph_send_lr (registered lane ready, one beat
     // every 2 cycles toward the lane) and ot_s81ph_land_rx (landing register + FIFO from the lane, full rate), so no lane
     // pin drives a 553-bit enable; 0 = the 2-skid relays of ct-split3a.
-    parameter integer LR = 0
+    parameter integer LR = 0,
+    parameter integer CR = 0   // redesign-ds: 1 = credit relays on both faces (needs the lane tile LCR and ce CR)
 ) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
@@ -280,7 +317,12 @@ module dsfd_coll_ct #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin flt_r <= 0; flt_d <= 0; end
         else begin flt_r <= {eflt, wflt}; flt_d <= flt_r; end
-    generate if (LR != 0) begin : g_lr
+    generate if (CR != 0) begin : g_cr
+        ot_s81ph_cr_relay #(.W(553)) u_lo3 (.clk(clk), .rst_n(rst_n), .i_v(lo3_v), .i_cr(lo3_r), .i_d(lo3_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
+        ot_s81ph_cr_relay #(.W(553)) u_li3 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li3_v), .o_cr(li3_r), .o_d(li3_d));
+        ot_s81ph_cr_relay #(.W(553)) u_lo7 (.clk(clk), .rst_n(rst_n), .i_v(lo7_v), .i_cr(lo7_r), .i_d(lo7_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
+        ot_s81ph_cr_relay #(.W(553)) u_li7 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li7_v), .o_cr(li7_r), .o_d(li7_d));
+    end else if (LR != 0) begin : g_lr
         // seam-side skid (u_a) + lane-facing sender / receiver
         wire a3v, a3r, a7v, a7r, b3v, b3r, b7v, b7r; wire [552:0] a3d, a7d, b3d, b7d;
         ot_s81ph_skid2 #(.W(553)) u_lo3a (.clk(clk), .rst_n(rst_n), .in_v(lo3_v), .in_r(lo3_r), .in_d(lo3_d), .out_v(a3v), .out_r(a3r), .out_d(a3d));

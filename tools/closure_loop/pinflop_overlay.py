@@ -16,10 +16,15 @@ foreach c [get_cells -quiet -hierarchical $ot_glob] {
 if {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }
 '''
 MAIN_NEW = '''set qdm_ref {}
-if {$ot_glob ne ""} {
+if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default
+  set ot_gm {}
   foreach c [get_cells -quiet -hierarchical $ot_glob] {
     set p [get_pins -quiet "[get_full_name $c]/CLK"]
-    if {[llength $p]} { set qdm_ref $p; break }
+    if {[llength $p]} { lappend ot_gm $p }
+  }
+  if {[llength $ot_gm]} {
+    if {[info exists ::env(OT_REF_PINFLOP)] && $::env(OT_REF_PINFLOP) eq "0"} { set qdm_ref [lindex $ot_gm 0] } else {
+      set qdm_ref [ot_pf_median $ot_gm "REFGLOB $ot_glob"] }
   }
 }
 if {[llength $qdm_ref] == 0} { set qdm_ref [ot_pf_ref [all_inputs -no_clocks]] }
@@ -30,11 +35,24 @@ KIT_NEW = ('  set ref {}\n  if {[llength $ins]} { set ref [ot_pf_ref [get_ports 
            '  if {![llength $ref]} { set ref [lindex [all_registers -clock $clk -clock_pins] 0] }\n')
 
 
+GLOB_OLD = 'if {$ot_glob ne ""} {\n'
+GLOB_NEW = 'if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP default\n'
+
+
+FALLBACK = "if {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }"
+
+
 def patch(text, procs):
+    lines = text.split("\n")
+    if "proc ot_pf_median" not in text and "set qdm_ref {}" in lines and FALLBACK in lines:
+        # the main die-master SDC, any generation (original / 6cd79a9f8 / e353cae1b): replace everything from the
+        # PINFLOP-REF comment (or the reference selection) to the first-register fallback with the current procs +
+        # selection (glob median, '*' = no reference, pin-flop default)
+        a = next((i for i, l in enumerate(lines) if l.startswith("# PINFLOP-REF (drive")), lines.index("set qdm_ref {}"))
+        b = lines.index(FALLBACK)
+        return "\n".join(lines[:a] + procs.rstrip("\n").split("\n") + MAIN_NEW.rstrip("\n").split("\n") + lines[b + 1:])
     if "proc ot_pf_ref" in text:
         return None
-    if text.count(MAIN_OLD) == 1:
-        return text.replace(MAIN_OLD, procs + MAIN_NEW, 1)
     if text.count(KIT_OLD) == 1 and "$ins" in text:
         lines = text.split("\n")
         i = next(i for i, l in enumerate(lines) if not l.startswith("#"))
