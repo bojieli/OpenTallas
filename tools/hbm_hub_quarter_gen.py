@@ -737,13 +737,23 @@ def emit_tile_io(P, tw, th):
     return '\n'.join(L_) + '\n'
 
 
+FACED_PIN_PITCH = (('M3', 0.516, 0.144), ('M5', 0.528, 0.144), ('M7', 0.64, 0.128))   # layer, first x, pitch
+FACED_E_PAD = 8.208      # um east of the lane (19 x 0.432): [sfu] 2026-10-10 the 271.944-um tile measured std 3,566 +
+#                          lane 52,824 um2 = 62.5 % (fp lint gate 60 %); with the widest strip the 480-um rule allows
+#                          and this pad the tile is 314.928 um wide: 54.0 %
+
+
 def tile_strip_w(P):
-    """faced tile: the register strip width that carries one face's pins (bc + acc) over the strip alone, M5 every other
-    0.048 track (0.096) + M7 on every 0.064 track (a 0.032 pin, 0.032 space: each face pin meets its partner on the
-    abutting tile straight across the 0.54 um gap), 1 um clear at the strip's outer edge, on the 0.432 grid.  A wider
-    strip would push the in-tile crossing (tile height + strip width) past the 480 um stage rule."""
+    """faced tile: the register strip, as wide as the in-tile crossing rule allows (tile height + strip width <= HOP),
+    on the 0.432 grid.  It carries one face's pins (bc + acc) over the strip alone on three vertical layers at <= 7.8
+    pins / um each (fp lint pin density: fail > 12, target 6; [sfu] 2026-10-10: M5 0.096 + M7 0.064 was 15.6 b/um on
+    M7): M3 every 4th track (0.144), M5 every 3rd (0.144), M7 every 2nd (0.128); each face pin meets its partner on the
+    abutting tile straight across the 0.54 um gap."""
+    th = P.q['lane_wh'][1] + 2.16
+    sw = round(math.floor((HOP - th) / 0.432 + 1e-9) * 0.432, 3)
     nb = P.LB + 1 + P.WCT
-    return round(math.ceil((nb / (1 / 0.096 + 1 / 0.064) + 4.0) / 0.432) * 0.432, 3)
+    assert sum(int((sw - x0 - 0.5) / pt) + 1 for _, x0, pt in FACED_PIN_PITCH) >= nb, ('faced strip too narrow', sw, nb)
+    return sw
 
 
 def emit_tile_faced(P):
@@ -853,9 +863,8 @@ def emit_tile_io_faced(P, tw, th, sw):
     tile (bc_out[b] over the next tile's bc_in[b], acc_out[b] under the previous tile's acc_in[b]); clk on the strip's
     outer (W) edge at mid height (M4)"""
     L_ = [f'# tools/hbm_hub_quarter_gen.py --tiled: {P.q["tile"]["name"]} pins (faced tile, strip {sw} um)']
-    m5 = [round(0.528 + 0.096 * k, 4) for k in range(int((sw - 1.0) / 0.096))]
-    m7 = [round(0.64 + 0.064 * k, 4) for k in range(int((sw - 1.3) / 0.064))]
-    slots = [('M5', x) for x in m5] + [('M7', x) for x in m7]
+    slots = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in FACED_PIN_PITCH
+                    for k in range(int((sw - x0 - 0.5) / pt) + 1)), key=lambda t: (t[1], t[0]))   # x order: even spread
     nb = P.LB + 1
     assert len(slots) >= nb + P.WCT, (len(slots), nb + P.WCT)
     for edge, ports in ((0, (('bc_in', nb), ('acc_out', P.WCT))), (1, (('bc_out', nb), ('acc_in', P.WCT)))):
@@ -865,7 +874,7 @@ def emit_tile_io_faced(P, tw, th, sw):
             for b in range(n):
                 ly, x = slots[k]
                 k += 1
-                sz = '0.0240 0.1920' if ly == 'M5' else '0.0320 0.1920'
+                sz = {'M3': '0.0180 0.1920', 'M5': '0.0240 0.1920'}.get(ly, '0.0320 0.1920')
                 L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{sz}}}')
     cy = round(round(th / 2 / 0.048) * 0.048 + 0.012, 4)
     L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {cy:.4f}}} -pin_size {{0.1920 0.0240}}')
@@ -1039,7 +1048,7 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
         nseg = -(-P.NT // P.fold)
         ncol = P.KC * nseg
         gx = dn((Wq - ncol * w) / (ncol + 1), GX)
-        assert gx >= 30.0 - 1e-6, ('fold: column gap narrower than 30 um', gx)
+        assert gx >= 10.0 - 1e-6, ('fold: column gap narrower than 10 um (the tile clk pin access on its W edge)', gx)
         y0 = up_(max(edge, Hq - edge - P.fold * py - 30.0), GY)   # rows packed to the top, the band below them
         assert y0 >= 30.0 and y0 + P.fold * py <= Hq + 1e-6, ('fold: column taller than the quarter', y0)
         xs = [(gx + cc * (w + gx),) for cc in range(ncol)]
@@ -1124,7 +1133,7 @@ def main():
         a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
     if faced:       # the faced tile footprint: [register strip SW | lane], lane at (SW, lane_y on the M4 lattice)
         SW = tile_strip_w(P)
-        a.lane_size = [round(SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]
+        a.lane_size = [round(SW + a.lane_size[0] + FACED_E_PAD, 3), round(a.lane_size[1] + 2.16, 3)]
     elif a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
         a.lane_size = [round(TILE_SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
