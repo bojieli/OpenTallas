@@ -23,7 +23,7 @@ Measured on the calibrate (CTS-only) run of the same job: <cal-base>/4_1_cts.odb
     mx1_fclat.py --cal-base '<RUN>/routes/<LABEL>_cal/work/orfs/results/asap7/*/base' \
                  --tt-ref $CK_TT_MEAN --ff-ref $CK_FF_MEAN --out-dir physical/hbm_cp_mtp_native/collar_mx1 --record R.json
 """
-import argparse, glob, json, statistics, subprocess, sys, tempfile
+import argparse, glob, json, statistics, subprocess, sys, tempfile, time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -88,9 +88,18 @@ def main():
     ap.add_argument("--record", type=Path, required=True)
     ap.add_argument("--macros", default=None, help="host dir with <macro>_tt.lib / _ff.lib")
     ap.add_argument("--image", default="openroad/orfs:latest")
+    ap.add_argument("--wait-s", type=int, default=3 * 3600, help="wait this long for a parallel calibrate's 4_1_cts.odb")
     a = ap.parse_args()
-    bases = sorted(glob.glob(a.cal_base))
-    bases = [b for b in bases if (Path(b) / "4_1_cts.odb").exists()]
+    # The closure loop may start the route beside a still-running calibrate (parallel calibrate): wait for its CTS db.
+    deadline = time.time() + a.wait_s
+    while True:
+        bases = sorted(glob.glob(a.cal_base))
+        bases = [b for b in bases if (Path(b) / "4_1_cts.odb").exists()]
+        if bases or time.time() > deadline:
+            break
+        time.sleep(60)
+    if bases:
+        time.sleep(30)   # let ORFS finish writing the odb
     if len(bases) != 1:
         sys.exit(f"mx1_fclat: need exactly one calibrate base with 4_1_cts.odb, found {bases} for {a.cal_base}")
     base = Path(bases[0]).resolve()
