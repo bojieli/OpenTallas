@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL",
+  "source_commit": "a60b4664f",
+  "vehicle": "actual G96 rank77 M18 W32 endpoint, DELCRED1, synthetic200edge downstream ACK",
+  "delivered_before_fault": 237,
+  "exit_code": 1,
+  "failure": "native map fault / BYP_FAULT",
+  "root_cause_status": "unconfirmed: delivery stalls while unstalled own injection continues through HUBW into128 own queue; diagnostic source-source fault probe and reservation fix NOT implemented",
+  "adoption": "No native integrated credit/rate qualification",
+  "remote": "/srv/opentallas-scratch/codex-hgi-row-credit-a60b4664f",
+  "host": "ot-epyc3"
+}
