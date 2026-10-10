@@ -1,0 +1,6 @@
+OT_ECO pre_ws ss 49.496185 ff -5.49516
+OT_WIN pre endpoints_below_hm 53 fixable 53 tight 0 infeasible 0 nodata 0 (hm 4.0 filt 40 accept_ss 0 accept_ff 0 r 2.4)
+OT_WIN_CLASS fixable|pin:rq[*]$_DFF_P_ -> port:rq[*] n=43 worst_hold=-0.2 worst_setup=156.8 best_window=162.0
+OT_WIN_CLASS fixable|pin:u_ib.u_core.rq[*]$_DFFE_PN0P_ -> pin:rq[*]$_DFF_P_/D n=8 worst_hold=-5.5 worst_setup=656.4 best_window=669.1
+OT_WIN_CLASS fixable|pin:u_ib.u_core.src_rdata[*]$_DFFE_PP_ -> pin:src_rdata[*]$_DFF_P_/D n=2 worst_hold=1.4 worst_setup=676.2 best_window=682.3
+[INFO RSZ-0032] Inserted 53 hold buffers.
