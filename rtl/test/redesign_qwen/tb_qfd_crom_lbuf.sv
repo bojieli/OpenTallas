@@ -26,24 +26,25 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
         else if (a < OSC0) V = {h32(a ^ 32'h5a5a5a5a), h32(a)};
         else V = 64'd0;
     endfunction
-    // DUT
+    // DUT (st_rdy is qualified by the stage it reports, as the SU-side controller does)
+    wire st_rdy = st_rdy0 && (st_rdy_stage == stage);
     reg  [SW-1:0] re; reg [SW*AW-1:0] addr; reg [LW-1:0] cst, stage; reg tok_start; reg [NW-1:0] tpos;
-    wire [SW*64-1:0] q; wire st_rdy, fault; wire [1:0] fcode;
+    wire [SW*64-1:0] q; wire st_rdy0, fault; wire [LW-1:0] st_rdy_stage; wire [1:0] fcode;
     wire [SW-1:0] f_re; wire [SW*AW-1:0] f_addr; wire [LW-1:0] f_stage; reg [SW*64-1:0] f_q;
     generate if (GRPS == 0) begin : g_one
     ot_qfd_crom_lbuf #(.FLP(FLP), .MUT(MUT), .SRAM(SRAM)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(cst),
-        .crom_q(q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .lane_base(24'd0), .st_rdy(st_rdy), .f_re(f_re), .f_addr(f_addr),
+        .crom_q(q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .lane_base(24'd0), .st_rdy(st_rdy0), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr),
         .f_stage(f_stage), .f_q(f_q), .f_fault(1'b0), .fault(fault), .fault_code(fcode));
     end else begin : g_grps
-        wire [7:0] rdy, flt; wire [15:0] fc; wire [8*LW-1:0] fst;
+        wire [7:0] rdy, flt; wire [15:0] fc; wire [8*LW-1:0] fst, rst_g;
         genvar gg;
         for (gg = 0; gg < 8; gg = gg + 1) begin : g_g
             ot_qfd_crom_lbuf #(.SW(8), .FLP(FLP), .MUT(MUT), .SRAM(SRAM)) u (.clk(clk), .rst_n(rst_n), .crom_re(re[8*gg +: 8]),
                 .crom_addr(addr[8*gg*AW +: 8*AW]), .crom_stage(cst), .crom_q(q[8*gg*64 +: 8*64]), .stage(stage), .tok_start(tok_start),
-                .tpos(tpos), .lane_base(24'(8*gg)), .st_rdy(rdy[gg]), .f_re(f_re[8*gg +: 8]), .f_addr(f_addr[8*gg*AW +: 8*AW]),
+                .tpos(tpos), .lane_base(24'(8*gg)), .st_rdy(rdy[gg]), .st_rdy_stage(rst_g[gg*LW +: LW]), .f_re(f_re[8*gg +: 8]), .f_addr(f_addr[8*gg*AW +: 8*AW]),
                 .f_stage(fst[gg*LW +: LW]), .f_q(f_q[8*gg*64 +: 8*64]), .f_fault(1'b0), .fault(flt[gg]), .fault_code(fc[2*gg +: 2]));
         end
-        assign st_rdy = &rdy; assign fault = |flt; assign fcode = fc[1:0]; assign f_stage = fst[LW-1:0];
+        assign st_rdy0 = &rdy; assign st_rdy_stage = rst_g[LW-1:0]; assign fault = |flt; assign fcode = fc[1:0]; assign f_stage = fst[LW-1:0];
     end endgenerate
     // far ROM: answers FLP edges after the strobe (registered pipeline)
     reg [SW*64-1:0] fpipe [0:31];

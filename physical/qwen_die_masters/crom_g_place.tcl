@@ -15,7 +15,7 @@ set x [expr {round(($W - $MW - 10.8) / 0.054) * 0.054}]
 set i 0
 foreach nm $order {
   if {![dict exists $ot_lut $nm]} { error "crom_g_place: no macro $nm" }
-  set y [expr {round((50.0 + $i * ($MH + 8.64)) / 0.27) * 0.27}]
+  set y [expr {round((48.0 + $i * ($MH + 13.5)) / 0.27) * 0.27}]
   place_macro -macro_name [dict get $ot_lut $nm] -location [list $x $y] -orientation R0
   incr i
 }

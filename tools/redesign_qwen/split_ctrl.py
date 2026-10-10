@@ -50,7 +50,7 @@ import emit_partition as P  # noqa: E402
 
 BASE_EMIT = F.EMIT.emit
 SPLIT_RTL = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv"
-CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24)
+CFG = dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37, su_ml=7, xmut=0, xw=24, chl=0, chl_d=2, xreg=0)
 OPTS = {  # r22k: seq <-> TT 37 stations a way, seq <-> SU 7; SU <-> TT 21 (centre to centre, 430.56-um pitch + pins)
     "3": dict(dcu_s=7, duc_s=7, dcu_m=2, duc_m=2, x_m2s=37, x_s2m=44, dstart=37),
     "4": dict(dcu_s=2, duc_s=2, dcu_m=2, duc_m=2, x_m2s=21, x_s2m=21, dstart=37),
@@ -68,7 +68,8 @@ def ctrl_x(ctrl: str) -> str:
     t = ctrl.replace("module ot_qwen_rom_core_ctrl #(", "module ot_qwen_rom_core_ctrl_x #(\n"
                      "    parameter integer OWN = 2,        // redesign-qwen: this controller's unit (1 ME, 2 SU)\n"
                      "    parameter integer XW = 24,        // other-unit op counter width\n"
-                     "    parameter integer XMUT = 0,       // negative controls (split_ctrl.py MUT)", 1)
+                     "    parameter integer XMUT = 0,       // negative controls (split_ctrl.py MUT)\n"
+                     "    parameter integer XREG = 0,       // 1: the snapshot comparisons registered (o_cnt next vs the snapshot; 1 edge later)", 1)
     t = one(t, "    output wire [1-1:0] po_su_asrc_raw\n);",
             "    output wire [1-1:0] po_su_asrc_raw,\n"
             "    // -- redesign-qwen two-controller ports --\n"
@@ -88,8 +89,13 @@ def ctrl_x(ctrl: str) -> str:
             "    wire own = (d_unit == OWN[1:0]);\n"
             "    wire oth = (d_unit != 2'd0) && !own;\n"
             "    wire [XW-1:0] o_dif = x_oacc - o_cnt;\n"
-            "    wire osync = (o_dif == {XW{1'b0}});        // the other unit accepted exactly its earlier ops\n"
-            "    wire opast = !osync && !o_dif[XW-1];       // ... and the one at NEXT\n"
+            "    wire osync_c = (o_dif == {XW{1'b0}});      // the other unit accepted exactly its earlier ops\n"
+            "    wire opast_c = !osync_c && !o_dif[XW-1];   // ... and the one at NEXT\n"
+            "    //: XREG: compare the snapshot with the NEXT edge's count, registered (the snapshot only climbs toward the count while\n"
+            "    //: a dependent instruction waits, so a one-edge-old snapshot is conservative)\n"
+            "    reg osync_r, opast_r;\n"
+            "    wire osync = (XREG != 0) ? osync_r : osync_c;\n"
+            "    wire opast = (XREG != 0) ? opast_r : opast_c;\n"
             "    wire own_idle = (OWN == 1) ? me_idle : su_idle;\n"
             "    wire o_drained = osync && x_oidle;\n"
             "    wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);\n"
@@ -116,7 +122,11 @@ def ctrl_x(ctrl: str) -> str:
             "    assign o_fin = fin_seen;\n"
             "    always @(posedge clk or negedge rst_n)\n"
             "        if (!rst_n) o_cnt <= {XW{1'b0}};\n"
-            "        else if (skip) o_cnt <= o_cnt + 1'b1;\n")
+            "        else if (skip) o_cnt <= o_cnt + 1'b1;\n"
+            "    wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end\n"
+            "        else begin osync_r <= (o_dif_n == {XW{1'b0}}); opast_r <= (o_dif_n != {XW{1'b0}}) && !o_dif_n[XW-1]; end\n")
     t = one(t, "&& (!nx_v || issue);", "&& (!nx_v || issue || skip);")
     t = one(t, "                    if (issue) pc <= pc + 1'b1;\n                    if (load) nx_v <= 1'b1;\n"
                "                    else if (issue) nx_v <= 1'b0;",
@@ -169,7 +179,7 @@ def emit_part_x(core: str, c: dict) -> str:
           "    wire [15:0] s_me_progress, s_su_progress, s_su_progress_rows;",
           "    wire m_fin, s_fin; wire [NW-1:0] m_fidx, s_fidx; wire [31:0] m_fval, s_fval;",
           "    wire [XW-1:0] xs_acc, xm_acc; wire xs_idle, xm_idle, xm_fin; wire [15:0] xs_prog, xs_rows, xm_prog;",
-          "    wire [NW-1:0] xm_fidx; wire [31:0] xm_fval;",
+          "    wire [NW-1:0] xm_fidx; wire [31:0] xm_fval; wire [15:0] xl_prog;",
           "    wire s_fault, m_fault;"]
     dir_ports = {ex.split("[")[0] for _, ex, k, _ in P.ME + P.SU if k in ("dir_o", "dir_i")}
     own = {"kv_we", "va_re", "va_addr", "embed_code_re", "embed_code_addr", "vw_me_we", "vw_mx_we"}
@@ -210,13 +220,13 @@ def emit_part_x(core: str, c: dict) -> str:
                     cc.append(f".pi_{unit}_{p}({'d_su_kv_we' if mine else chr(39) + '0'})")
         cc.append(f".po_su_asrc_raw({'c_su_asrc_raw' if side == 'su' else ''})")
         if side == "su":
-            cc += [".x_oacc(xm_acc)", ".x_oidle(xm_idle)", ".x_oprog(xm_prog)", ".x_orows(16'd0)", ".x_ofin(xm_fin)",
+            cc += [".x_oacc(xm_acc)", ".x_oidle(xm_idle)", ".x_oprog((CHL != 0) ? xl_prog : xm_prog)", ".x_orows(16'd0)", ".x_ofin(xm_fin)",
                    ".x_fidx(xm_fidx)", ".x_fval(xm_fval)", ".o_fin(s_fin)", ".o_fidx(s_fidx)", ".o_fval(s_fval)"]
         else:
             cc += [".x_oacc(xs_acc)", ".x_oidle(xs_idle)", ".x_oprog(xs_prog)", ".x_orows(xs_rows)", ".x_ofin(1'b1)",
                    ".x_fidx('0)", ".x_fval('0)", ".o_fin(m_fin)", ".o_fidx(m_fidx)", ".o_fval(m_fval)"]
         own_n = 1 if side == "me" else 2
-        return (f"    ot_qwen_rom_core_ctrl_x #(.OWN({own_n}), .XW(XW), .XMUT(XMUT), "
+        return (f"    ot_qwen_rom_core_ctrl_x #(.OWN({own_n}), .XW(XW), .XMUT(XMUT), .XREG(XREG), "
                 + ", ".join(f".{p}({p})" for p in pnames) + f") u_ctrl{'_me' if side == 'me' else ''} (\n        "
                 + ",\n        ".join(cc) + ");")
     # the ME-side controller's token start: the start / token / pos relayed to the tree-top tile
@@ -269,6 +279,11 @@ def emit_part_x(core: str, c: dict) -> str:
           # ME -> SU side: the unit's count / idle / progress, plus the ME-side controller's END and its fold result
           "    ot_hdc_delay #(.W(XW + 1 + 16 + 1), .D(X_M2S), .RESET(1)) u_xm (.clk(clk), .rst_n(rst_n),",
           "        .d({me_acc, u_me_idle, u_me_progress, m_fin}), .q({xm_acc, xm_idle, xm_prog, xm_fin}));",
+          "    // CHL (chase-local): the SU side reads the ME's landed progress where the results land (the vector memory, next to",
+          "    // the SU: land_cnt - the op's start mark, the mark crossing early with the snapshot) CHL_D edges after the engine",
+          "    // computes it, instead of the X_M2S-station snapshot.  Valid for the chase: the hold rule keeps the engine on the op",
+          "    // whose progress a pending SU sample reads.",
+          "    ot_hdc_delay #(.W(16), .D(CHL_D), .RESET(1)) u_xl (.clk(clk), .rst_n(rst_n), .d(u_me_progress), .q(xl_prog));",
           "    ot_hdc_delay #(.W(NW + 32), .D(X_M2S)) u_xmf (.clk(clk), .rst_n(rst_n), .d({m_fidx, m_fval}), .q({xm_fidx, xm_fval}));",
           "    ot_hdc_delay #(.W(XW + 1 + 32), .D(X_S2M), .RESET(1)) u_xs (.clk(clk), .rst_n(rst_n),",
           "        .d({su_acc, u_su_idle, u_su_progress, u_su_progress_rows}), .q({xs_acc, xs_idle, xs_prog, xs_rows}));"]
@@ -352,7 +367,7 @@ def main():
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--opt", choices=sorted(OPTS), default="4")
-    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut"):
+    for k in ("dcu_s", "duc_s", "dcu_m", "duc_m", "x_m2s", "x_s2m", "dstart", "su_ml", "xmut", "chl", "chl_d", "xreg"):
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
     ap.add_argument("--max-cycles", type=int, default=0)
     ap.add_argument("--out", type=Path, help="emit: write the generated core here")
@@ -512,7 +527,7 @@ def emit_tt_ctlm() -> str:
                     cc.append(f".pi_me_{p}(c_me_{p})")
     cc += [".po_su_asrc_raw()", ".x_oacc(q_x_oacc)", ".x_oidle(q_x_oidle)", ".x_oprog(q_x_oprog)", ".x_orows(q_x_orows)",
            ".x_ofin(1'b1)", ".x_fidx('0)", ".x_fval('0)", ".o_fin(m_fin)", ".o_fidx(m_fidx)", ".o_fval(m_fval)"]
-    L.append(f"    ot_qwen_rom_core_ctrl_x #(.OWN(1), .XW(XW), .XMUT(0), .{cpar}) u_ctrl_me (\n        "
+    L.append(f"    ot_qwen_rom_core_ctrl_x #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .{cpar}) u_ctrl_me (\n        "
              + ",\n        ".join(cc) + ");")
     L += ["    ot_qfd_issue_shell #(.RT_ME(DCU_M + DUC_M), .RT_SU(0), .COMP(1)) u_shell_me (.clk(clk), .rst_n(rs),",
           "        .me_go(c_me_go), .su_go(1'b0), .me_en(me_clk_en), .su_sfu(3'd0), .me_amax(c_me_i_amax),",
@@ -641,7 +656,7 @@ def emit_seq_su() -> str:
                     cc.append(f".pi_su_{p}(q_pi_su_{p})")
     cc += [".po_su_asrc_raw(b_su_asrc)", ".x_oacc(q_x_oacc)", ".x_oidle(q_x_oidle)", ".x_oprog(q_x_oprog)",
            ".x_orows(16'd0)", ".x_ofin(q_x_ofin)", ".x_fidx(q_x_fidx)", ".x_fval(q_x_fval)", ".o_fin()", ".o_fidx()", ".o_fval()"]
-    L.append(f"    ot_qwen_rom_core_ctrl_x #(.OWN(2), .XW(24), .XMUT(0), .{cpar}) u_ctrl (\n        " + ",\n        ".join(cc) + ");")
+    L.append(f"    ot_qwen_rom_core_ctrl_x #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .{cpar}) u_ctrl (\n        " + ",\n        ".join(cc) + ");")
     L += ["    ot_qwen_tp_seq_w12 #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),",
           "        .QWEN_FULLSHAPE(%d), .ENABLE_AR256(%d)) u_seq (" % (sp["QWEN_FULLSHAPE"], sp["ENABLE_AR256"]),
           "        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),",
