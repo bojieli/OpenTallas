@@ -1,0 +1,88 @@
+{
+  "name": "hgi_cp-fetchpin-2c4729bfe-tc-hm10-cl",
+  "block": "ot_hgi_cp",
+  "owner": "Codex:cp_closure",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "codex/cp-pin-standard-20261010",
+    "commit": "2c4729bfe8de71047e7bf23f043d4ef02a6ca5e5",
+    "extra_paths": [
+      "results/arch/qwen_on_r25_20261008/fmt3_physical_candidate"
+    ]
+  },
+  "purpose": "CP structural fetch output fix: two elastic slots, front address+valid registered at their own pins. +1 fetch hop; II1. Best predecessor output FF -1.65, macro-aware ring-write FF -8.03: new route/ECO must include SRAM FF hold view.",
+  "stages": {
+    "bench": [
+      {
+        "name": "cp_fetch_pin_exact",
+        "cmd": "bash physical/hgi_cp_pin_boundary/bench.sh exact",
+        "expect": "pass",
+        "pass_regex": "HGI_SEQ PASS",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "cp_fetch_pin_conformance",
+        "cmd": "bash physical/hgi_cp_pin_boundary/bench.sh conformance",
+        "expect": "pass",
+        "pass_regex": "HGI_SEQ PASS",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "cp_fetch_pin_mutant",
+        "cmd": "bash physical/hgi_cp_pin_boundary/bench.sh mutant",
+        "expect": "fail",
+        "fail_regex": "HGI_SEQ FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_cp --source rtl/hbm_accel/generic/ot_hgi_cfg.sv --source rtl/hbm_accel/generic/ot_hgi_seq.sv --source rtl/hbm_accel/generic/ot_hgi_cp.sv --param USE_MACRO=1 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 6 6 --die-area 0 0 420 420 --core-area 10.8 10.8 409.2 409.2 $CL_STOP_AFTER --param FETCH_PIN_FIFO=1 --step-tcl PRE_GLOBAL_PLACE=physical/hgi_cp_pin_boundary/place_fetch_pin.tcl",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 8,
+      "peak_ram_gb": 24
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_cp --source rtl/hbm_accel/generic/ot_hgi_cfg.sv --source rtl/hbm_accel/generic/ot_hgi_seq.sv --source rtl/hbm_accel/generic/ot_hgi_cp.sv --param USE_MACRO=1 --clock-port clk --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 --macro-place-halo 6 6 --die-area 0 0 420 420 --core-area 10.8 10.8 409.2 409.2 --param FETCH_PIN_FIFO=1 --step-tcl PRE_GLOBAL_PLACE=physical/hgi_cp_pin_boundary/place_fetch_pin.tcl",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "route_hold_margin_ns": 0.01,
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "cycles_added": 1,
+  "merge_target": null
+}

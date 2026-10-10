@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hgi_cp_fetch_pin_exact.v1",
+  "source_commit": "2c4729bfe8de71047e7bf23f043d4ef02a6ca5e5",
+  "mode": "FETCH_PIN_FIFO=1 USE_MACRO=1",
+  "cp38": "PASS cases=38 dispatches=2582",
+  "conformance66": "PASS cases=66 dispatches=100",
+  "tokx_mutant": "FAIL20 (expected)",
+  "physical_status": "pending",
+  "adoption_enabled": false,
+  "latency_note": "one registered fetch hop, steady request II1; case0 measured67691 cycles, case1 67187; final integrated model must use current whole-program composition",
+  "sha256": {
+    "rtl/hbm_accel/generic/ot_hgi_cp.sv": "2bdb5a69562bad3cf22510244a1b9e575300aba733690e1569e9de1596fd0d70",
+    "rtl/hbm_accel/generic/ot_hgi_seq.sv": "edf45ff50172324dd1da6886f75ef63824d83db04ae0607d94fe862db7b3b44e",
+    "rtl/hbm_accel/generic/tb/tb_hgi_seq.sv": "35bd418e7642635042808ddfcc19807899e96281c860c63c94f1bcf1a51710c7",
+    "results/rtl/hgi_cp_fetch_pin_20261010/cp38.log": "30a24422a3866c4b4389f3b9f7bf4e316f8e4afd202a188a350e5d3b12606721",
+    "results/rtl/hgi_cp_fetch_pin_20261010/cp66.log": "ce3263bf7a6ce00b1f34266f80b925d83c77eccf7b5190a549c04d9257146fbd",
+    "results/rtl/hgi_cp_fetch_pin_20261010/mut_tokx.log": "669ea78a751aa32b264fcff6f34c1d5806b6cc7dd499505f543b30977d4ec82c"
+  }
+}
