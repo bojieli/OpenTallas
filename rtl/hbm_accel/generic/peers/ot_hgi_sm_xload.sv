@@ -42,12 +42,12 @@ module ot_hgi_sm_xload #(
     output reg  [6:0]         xw_addr,
     output reg  [6:0]         xw_grp,
     output reg  [2047:0]      xw_data,
-    output reg  [NXC*338-1:0] vmq,
+    output wire [NXC*338-1:0] vmq,   // {v, payload 337}: v from a reset flop, payload from a data flop
     input  wire [NXC*274-1:0] vmr
 );
     localparam integer XC = 3152, XOFF = 2128;
     reg busy; reg [17:0] base; reg [20:0] kk; reg [3:0] pp; reg [17:0] st;
-    reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [9:0] outst; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
+    reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
     // write request at the macro pins (registered; per-quarter data copies bound the fanout to 16 slices)
     reg wq_v; reg [1:0] wq_q; reg [3:0] wq_a; reg [3:0] wq_l; reg [127:0] wq_d [0:3];
     // read request at the macro pins (registered): s1 = address at the pins, s2 = macro output valid, s3 = rw valid
@@ -76,10 +76,8 @@ module ot_hgi_sm_xload #(
     end
     wire [10:0] got_n = got;
     reg [1:0] ph;                          // 0 read, 1 emit, 2 done
-    assign x_rdy = !busy;
     reg [273:0] vr [0:NXC-1];
-    integer c;
-    always @(posedge clk) for (c = 0; c < NXC; c = c + 1) vr[c] <= vmr[c*274 +: 274];
+    always @(posedge clk) for (integer cv = 0; cv < NXC; cv = cv + 1) vr[cv] <= vmr[cv*274 +: 274];
     reg [NXC-1:0] cbusy;
     function automatic [15:0] bf16(input [31:0] x);
         reg [31:0] r;
@@ -123,70 +121,94 @@ module ot_hgi_sm_xload #(
         integer x; in_slot = 1'b0;
         for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0 && bslot(x) < np) in_slot = 1'b1;
     endfunction
-    integer w;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0;
-                          hv <= 0; wq_v <= 1'b0; s1_v <= 1'b0; s2_v <= 1'b0; s3_v <= 1'b0; end
+    // ---- reset: the port drives only the relay (design standard); control flops reset from rst_c, data flops never
+    wire rst_c;
+    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_c));
+    // ---- command pin flop (FILL-9: the x_* decode no longer runs from the pins): +1 edge a command
+    reg cmd_v; reg [39:0] c_base; reg [20:0] c_n; reg [3:0] c_p; reg [31:0] c_stride; reg [1:0] c_space, c_fmt;
+    assign x_rdy = !busy && !cmd_v;
+    always @(posedge clk) if (x_v && x_rdy) begin
+        c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt;
+    end
+    wire c_bad = c_fmt == 2'd1 || c_fmt == 2'd2 || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX ||
+                 c_p == 4'd0;
+    wire start = cmd_v && !c_bad;
+    // ---- VM packet requests: valid (reset) + payload (data)
+    reg [NXC-1:0] vq_v; reg [336:0] vq_d [0:NXC-1];
+    genvar gc;
+    generate for (gc = 0; gc < NXC; gc = gc + 1) begin : g_vq
+        assign vmq[gc*338 +: 338] = {vq_v[gc], vq_d[gc]};
+    end endgenerate
+    // ---- shared decisions
+    reg found; integer cf; reg [31:0] wd;
+    always @* begin
+        found = 1'b0; cf = 0;
+        for (integer cc = NXC - 1; cc >= 0; cc = cc - 1) if (!cbusy[cc]) begin found = 1'b1; cf = cc; end
+        wd = {14'd0, base} + p_rd * {14'd0, st} + {g, 9'd0} + {j_rd, 3'd0};
+    end
+    wire rd_ph = busy && ph == 2'd0, em_ph = busy && ph == 2'd1;
+    wire issue = rd_ph && found && p_rd < pp;
+    reg [NXC-1:0] take;
+    always @* for (integer ct = 0; ct < NXC; ct = ct + 1) take[ct] = rd_ph && cbusy[ct] && !hv[ct] && vr[ct][273] && !vr[ct][256];
+    wire land = rd_ph && lsel_v;
+    wire to_emit = rd_ph && got_n == {pp, 6'd0};
+    wire last_b = b == nb - 7'd1, last_bt = last_b && t == 4'd7, last_g = g == gn - 8'd1;
+    wire fin = busy && ph == 2'd2 && !s1_v && !s2_v && !s3_v;      // last beat out
+    // ---- control (reset)
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin cmd_v <= 1'b0; busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vq_v <= 0;
+                          cbusy <= 0; ph <= 0; hv <= 0; wq_v <= 1'b0; s1_v <= 1'b0; s2_v <= 1'b0; s3_v <= 1'b0; end
         else begin
-            x_done <= 1'b0; xw_en <= 1'b0; wq_v <= 1'b0; s1_v <= 1'b0;
-            // read pipeline: s1 (pins) -> s2 (macro edge) -> s3 (rw: t-select) -> the beat
-            s2_v <= s1_v; s2_t <= s1_t; s2_addr <= s1_addr; s2_b <= s1_b; s2_ok <= s1_ok;
-            s3_v <= s2_v; s3_addr <= s2_addr; s3_b <= s2_b; s3_ok <= s2_ok;
-            if (s2_v) begin : tsel
-                integer qq; for (qq = 0; qq < 4; qq = qq + 1) rw[256 * qq +: 256] <= rd[{s2_t, 2'(qq)}];
-            end
-            if (s3_v) begin xw_en <= 1'b1; xw_addr <= s3_addr; xw_grp <= s3_b; xw_data <= s3_ok ? beat : 2048'd0; end
-            for (c = 0; c < NXC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
-            if (x_v && x_rdy) begin
-                if (x_fmt == 2'd1 || x_fmt == 2'd2 || x_space != 2'd1 || |x_base[2:0] || |x_stride[2:0] || x_p > PMAX ||
-                    x_p == 4'd0) x_fault <= 1'b1;
-                else begin
-                    busy <= 1'b1; base <= x_base[17:0]; kk <= x_n; pp <= x_p; st <= x_stride[17:0];
-                    gn <= ((x_n - 21'd1) >> 9) + 8'd1; g <= 8'd0; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0; ph <= 2'd0;
-                    nb <= ({12'd0, x_p} * 16'd3152 + 16'd2047) >> 11;    // 16 b: P x XC reaches 25,216
-                end
-            end
-            if (busy && ph == 2'd0) begin
-                // issue: one sector read a cycle on the lowest free client; lanes j, then columns p
-                begin : iss
-                    reg found; integer cf; reg [31:0] wd;
-                    found = 1'b0; cf = 0;
-                    for (c = NXC - 1; c >= 0; c = c - 1) if (!cbusy[c]) begin found = 1'b1; cf = c; end
-                    wd = {14'd0, base} + p_rd * {14'd0, st} + {g, 9'd0} + {j_rd, 3'd0};
-                    if (found && p_rd < pp) begin
-                        vmq[cf*338 +: 338] <= {1'b1, 1'b0, wd[29:3], 5'd0, 256'd0, 32'd0, {5'd0, p_rd, j_rd}};
-                        cbusy[cf] <= 1'b1;
-                        if (j_rd == 7'd63) begin j_rd <= 7'd0; p_rd <= p_rd + 4'd1; end else j_rd <= j_rd + 7'd1;
-                    end
-                end
-                for (c = 0; c < NXC; c = c + 1)                                  // hold every arriving response
-                    if (cbusy[c] && !hv[c] && vr[c][273] && !vr[c][256]) begin hv[c] <= 1'b1; hdat[c] <= vr[c]; end
-                if (lsel_v) begin : land                                        // land one held sector an edge
-                    reg [3:0] lp; reg [6:0] lj; reg [15:0] v [0:7];
-                    lp = hdat[lsel][267:264]; lj = hdat[lsel][263:257];      // tag [272:257] = {p 4, j 7} low bits
-                    for (w = 0; w < 8; w = w + 1)
-                        v[w] = (({13'd0, g, 9'd0} + {lj, 3'd0} + w) < kk) ? bf16(hdat[lsel][32*w +: 32]) : 16'd0;
-                    wq_v <= 1'b1; wq_q <= lj[5:4]; wq_a <= lp; wq_l <= lj[3:0];
-                    for (w = 0; w < 4; w = w + 1) wq_d[w] <= {v[7], v[6], v[5], v[4], v[3], v[2], v[1], v[0]};
-                    hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0;
-                end
-                if (got_n == {pp, 6'd0}) begin ph <= 2'd1; t <= 4'd0; b <= 7'd0; end
-            end
-            if (busy && ph == 2'd0) got <= got + {7'd0, nland};
-            if (busy && ph == 2'd1) begin                                     // emission stage 1: read bank t
-                s1_v <= 1'b1; s1_t <= tt[2:0]; s1_sp <= slot_of(b);
-                s1_addr <= {g[3:0], t[2:0]}; s1_b <= b; s1_ok <= in_slot(b, pp);
-                if (b == nb - 7'd1) begin
-                    b <= 7'd0;
-                    if (t == 4'd7) begin
-                        if (g == gn - 8'd1) begin ph <= 2'd2; end
-                        else begin g <= g + 8'd1; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0; ph <= 2'd0; end
-                    end
-                    t <= t + 4'd1;
-                end else b <= b + 7'd1;
-            end
-            if (busy && ph == 2'd2 && !s1_v && !s2_v && !s3_v) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end   // last beat out
+            x_done <= fin; xw_en <= s3_v; wq_v <= land; s1_v <= em_ph; s2_v <= s1_v; s3_v <= s2_v;
+            cmd_v <= (x_v && x_rdy) ? 1'b1 : 1'b0;
+            if (cmd_v && c_bad) x_fault <= 1'b1;
+            if (start) begin busy <= 1'b1; ph <= 2'd0; end
+            vq_v <= {NXC{1'b0}};
+            if (issue) begin vq_v[cf] <= 1'b1; cbusy[cf] <= 1'b1; end
+            for (integer ch = 0; ch < NXC; ch = ch + 1) if (take[ch]) hv[ch] <= 1'b1;
+            if (land) begin hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0; end
+            if (to_emit) ph <= 2'd1;
+            if (em_ph && last_bt) ph <= last_g ? 2'd2 : 2'd0;
+            if (fin) begin busy <= 1'b0; ph <= 2'd0; end
         end
+    end
+    // ---- data (no reset)
+    always @(posedge clk) begin
+        if (start) begin
+            base <= c_base[17:0]; kk <= c_n; pp <= c_p; st <= c_stride[17:0];
+            gn <= ((c_n - 21'd1) >> 9) + 8'd1; g <= 8'd0; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0;
+            nb <= ({12'd0, c_p} * 16'd3152 + 16'd2047) >> 11;    // 16 b: P x XC reaches 25,216
+        end
+        if (issue) begin
+            vq_d[cf] <= {1'b0, wd[29:3], 5'd0, 256'd0, 32'd0, {5'd0, p_rd, j_rd}};
+            if (j_rd == 7'd63) begin j_rd <= 7'd0; p_rd <= p_rd + 4'd1; end else j_rd <= j_rd + 7'd1;
+        end
+        for (integer cd = 0; cd < NXC; cd = cd + 1) if (take[cd]) hdat[cd] <= vr[cd];
+        if (land) begin : landd                                  // land one held sector an edge
+            reg [3:0] lp; reg [6:0] lj; reg [15:0] v [0:7];
+            lp = hdat[lsel][267:264]; lj = hdat[lsel][263:257];      // tag [272:257] = {p 4, j 7} low bits
+            for (integer wv = 0; wv < 8; wv = wv + 1)
+                v[wv] = (({13'd0, g, 9'd0} + {lj, 3'd0} + wv) < kk) ? bf16(hdat[lsel][32*wv +: 32]) : 16'd0;
+            wq_q <= lj[5:4]; wq_a <= lp; wq_l <= lj[3:0];
+            for (integer wc = 0; wc < 4; wc = wc + 1) wq_d[wc] <= {v[7], v[6], v[5], v[4], v[3], v[2], v[1], v[0]};
+        end
+        if (rd_ph) got <= got + {7'd0, nland};
+        if (to_emit) begin t <= 4'd0; b <= 7'd0; end
+        // read pipeline: s1 (macro pins) -> s2 (macro edge) -> s3 (rw: t-select) -> the beat
+        if (em_ph) begin
+            s1_t <= tt[2:0]; s1_sp <= slot_of(b); s1_addr <= {g[3:0], t[2:0]}; s1_b <= b; s1_ok <= in_slot(b, pp);
+            if (last_b) begin
+                b <= 7'd0;
+                if (t == 4'd7 && !last_g) begin g <= g + 8'd1; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0; end
+                t <= t + 4'd1;
+            end else b <= b + 7'd1;
+        end
+        s2_t <= s1_t; s2_addr <= s1_addr; s2_b <= s1_b; s2_ok <= s1_ok;
+        s3_addr <= s2_addr; s3_b <= s2_b; s3_ok <= s2_ok;
+        if (s2_v) begin : tsel
+            integer qq; for (qq = 0; qq < 4; qq = qq + 1) rw[256 * qq +: 256] <= rd[{s2_t, 2'(qq)}];
+        end
+        if (s3_v) begin xw_addr <= s3_addr; xw_grp <= s3_b; xw_data <= s3_ok ? beat : 2048'd0; end
     end
 endmodule
 `default_nettype wire
