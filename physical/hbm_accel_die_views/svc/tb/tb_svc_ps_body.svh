@@ -60,6 +60,7 @@
   always @(posedge pclk) begin
     for (pc = 0; pc < 32; pc = pc + 1) begin
       if (k_v[pc] && k_rdy[pc]) begin
+        if ($test$plusargs("SVC_TRACE") && k_tag[pc*17+15 +: 2]==0) $display("KREAD PC=%0d SM=%0d TAG=%0d",pc,k_tag[pc*17+12 +: 3],k_tag[pc*17 +: 10]);
         if (k_we[pc]) begin err = err + 1; $display("ERR write on PC %0d", pc); end
         qa[pc][(qh[pc]+qn[pc]) % 16] = k_addr[pc*30 +: 30]; ql[pc][(qh[pc]+qn[pc]) % 16] = k_len[pc*4 +: 4];
         qt[pc][(qh[pc]+qn[pc]) % 16] = k_tag[pc*17 +: 17]; qn[pc] = qn[pc] + 1;
@@ -67,6 +68,7 @@
       k_rdy[pc] <= ($urandom % 4) != 0 && qn[pc] < 14;
       // response engine: one beat at a time per PC, in order, random gaps; kr_v held until kr_rdy
       if (kr_v[pc] && kr_rdy[pc]) begin
+        if ($test$plusargs("SVC_TRACE") && kr_tag[pc*17+15 +: 2]==0) $display("KBEAT PC=%0d SM=%0d TAG=%0d BEAT=%0d",pc,kr_tag[pc*17+12 +: 3],kr_tag[pc*17 +: 10],bcount[pc]);
         kr_v[pc] <= 1'b0; bcount[pc] = bcount[pc] + 1;
         if (bcount[pc] == ql[pc][qh[pc]]) begin bcount[pc] = 0; qh[pc] = (qh[pc] + 1) % 16; qn[pc] = qn[pc] - 1;
           lat[pc] = 2 + ($urandom % 8); end
@@ -117,6 +119,7 @@
   always @(posedge ck) begin
     for (k = 0; k < 8; k = k + 1) if (ln[k][0]) begin : chk
       reg [9:0] t; t = ln[k][10:1];
+      if ($test$plusargs("SVC_TRACE")) $display("LINE SM=%0d TAG=%0d",k,t);
       if (!exp_on[k][t]) begin err = err + 1; $display("ERR SM %0d unexpected line tag %0d", k, t); end
       else begin
         if (ln[k][1098:11] !== (exp_w[k][t] ? lineof(exp_a[k][t] ^ W_SALT) : lineof(exp_a[k][t]))) begin
@@ -202,7 +205,7 @@
   reg [9:0] ntag [0:7];
   integer sent [0:7];
   task automatic expect_line(input integer s, input [9:0] t, input [31:0] a, input w);
-    begin exp_a[s][t] = a; exp_w[s][t] = w; exp_on[s][t] = 1'b1; outst[s] = outst[s] + 1; want_lines = want_lines + 1; end
+    begin if ($test$plusargs("SVC_TRACE")) $display("EXPECT SM=%0d TAG=%0d W=%0d",s,t,w); exp_a[s][t] = a; exp_w[s][t] = w; exp_on[s][t] = 1'b1; outst[s] = outst[s] + 1; want_lines = want_lines + 1; end
   endtask
   // row-0 SMs: valid/ready on ck
   genvar gk;
@@ -307,6 +310,8 @@
           ps_want, ps_kd, ps_busy); err = err + 1; disable wait_done; end
     join
 `endif
+    if ($test$plusargs("SVC_TRACE")) for (k=0;k<8;k=k+1) for (j=0;j<1024;j=j+1)
+      if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");
