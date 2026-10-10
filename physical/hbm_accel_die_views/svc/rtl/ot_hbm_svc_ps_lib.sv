@@ -42,10 +42,12 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   wire [1:0] kind = ed[1:0];
   wire strm = ed[126] && (kind == 2'd1 || kind == 2'd2);
   reg [2:0] pend; reg spend, ph, kdv;
+  // The second stream owns a separate pending slot: its wait must not block unrelated legacy commands.
+  reg spq_v; reg [126:0] spq_d;
 `ifdef OT_PS_MUT_CONC
   wire e_re = !e_empty && ((kind == 2'd3) || (strm ? 1'b1 : !pend[kind]));   // NEGATIVE CONTROL: streams overlap
 `else
-  wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spend : !pend[kind]));
+  wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spq_v : !pend[kind]));
 `endif
   ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_wck), .wrst_n(rst), .we(e_f[0]), .wdata(e_f[127:1]),
     .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
@@ -53,17 +55,26 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   assign ok_v = e_re && (kind == 2'd1) && !strm;
   assign oi_v = e_re && (kind == 2'd2) && !strm;
   assign o_d = {ed[47:38], ed[31:2]};           // {tag10, addr30}
+`ifdef OT_PS_MUT_CONC
+  wire launch_q = 1'b0, queue_stream = 1'b0;
   wire launch = e_re && strm;
-  wire idx = (kind == 2'd2);
-  wire [11:0] nsec_i = 12'(((17 * {3'd0, ed[69:61]}) + 12'd31) >> 5);   // IK: ceil(17 blocks / 32) sectors a PC
+`else
+  wire launch_q = spq_v && !spend;
+  wire queue_stream = e_re && strm && spend;
+  wire launch = launch_q || (e_re && strm && !spend && !spq_v);
+`endif
+  wire [126:0] stream_d = launch_q ? spq_d : ed;
+  wire idx = (stream_d[1:0] == 2'd2);
+  wire [11:0] nsec_i = 12'(((17 * {3'd0, stream_d[69:61]}) + 12'd31) >> 5);   // IK: ceil(17 blocks / 32) sectors a PC
   // done: both chains report every PC finished in the current phase (a side without PCs is always done)
   wire w_done = (WEMPTY != 0) || (dw_ok && dw_ph == ph);
   wire e_done = (EEMPTY != 0) || (de_ok && de_ph == ph);
   reg [3:0] hold;                                // the descriptor needs >= 1 cycle to leave before a done can count
   always @(posedge ck or negedge rn)
-    if (!rn) begin pend <= 3'b000; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; sg_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
+    if (!rn) begin pend <= 3'b000; spq_v <= 1'b0; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; sg_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
     else begin
       sd_v <= launch; sg_v <= launch; kdv <= 1'b0;
+      if (queue_stream) spq_v <= 1'b1; else if (launch_q) spq_v <= 1'b0;
       if (ow_v) pend[0] <= 1'b1; else if (bw) pend[0] <= 1'b0;
       if (ok_v) pend[1] <= 1'b1; else if (bk) pend[1] <= 1'b0;
       if (oi_v) pend[2] <= 1'b1; else if (bi) pend[2] <= 1'b0;
@@ -71,9 +82,10 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
       else if (hold != 0) hold <= hold - 4'd1;
       else if (spend && w_done && e_done) begin spend <= 1'b0; kdv <= 1'b1; end
     end
-  always @(posedge ck) if (launch) sg_d <= ed[83:71];
+  always @(posedge ck) if (queue_stream) spq_d <= ed;
+  always @(posedge ck) if (launch) sg_d <= stream_d[83:71];
   always @(posedge ck) if (launch)
-    sd_d <= {~ph, idx, ed[125], ed[16:2], idx ? nsec_i : ed[28:17], idx ? 32'hFFFF_FFFF : ed[60:29]};
+    sd_d <= {~ph, idx, stream_d[125], stream_d[16:2], idx ? nsec_i : stream_d[28:17], idx ? 32'hFFFF_FFFF : stream_d[60:29]};
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
   assign kd = {fck, kdv};
 endmodule

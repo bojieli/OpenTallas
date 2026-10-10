@@ -15728,3 +15728,13 @@ def hgi_att_scaled_model():
 def hbm_svc_reset_boundary_model():
     from hbm_svc_reset_boundary_model import model
     return model()
+
+
+def hgi_dma_credit_model(**kwargs):
+    from hgi_dma_credit_model import model
+    return model(**kwargs)
+
+
+def hbm_svc_eps_queue_model():
+    from hbm_svc_eps_queue_model import model
+    return model()
