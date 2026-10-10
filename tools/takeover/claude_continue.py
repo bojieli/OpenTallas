@@ -106,6 +106,8 @@ def tick(stamp=None, capture_fn=None, load_fn=None, run_fn=None):
         state = json.loads(STATE.read_text()) if STATE.exists() else {}
     except (OSError, ValueError):
         return record('STATE_UNREADABLE', stamp)
+    if not isinstance(handoff, dict) or not isinstance(state, dict):
+        return record('STATE_UNREADABLE', stamp)
     if stamp.astimezone(H.PACIFIC) < H.RESET:
         return record('BEFORE_NOON_RESET', stamp)
     status = handoff.get('status')

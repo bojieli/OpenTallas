@@ -92,8 +92,9 @@ class ContinueTests(unittest.TestCase):
         self.assertEqual(self.tick(load_fn=fail)['outcome'],'DELIVERY_UNCERTAIN_RESERVED')
         self.assertFalse(self.calls)
     def test_malformed_state_fails_closed(self):
-        C.STATE.write_text('{')
-        self.assertEqual(self.tick()['outcome'],'STATE_UNREADABLE')
+        for content in ('{','[]','null','1'):
+            C.STATE.write_text(content)
+            self.assertEqual(self.tick()['outcome'],'STATE_UNREADABLE')
         self.assertFalse(self.loaded)
     def test_evidence_ready_status_is_eligible(self):
         self.handoff['status']='takeover_evidence_ready_for_coordinator'
