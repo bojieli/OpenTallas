@@ -1,0 +1,78 @@
+{
+  "scope": "one protected DMA landing lane,256initialcredits; modelbeforeRTL",
+  "default_ENABLE": 0,
+  "MACs_per_cycle": 0,
+  "replicas": 128,
+  "ports": {
+    "input_bytes_per_cycle": 32,
+    "input_sector_bits": 18,
+    "input_valid_bits": 1,
+    "output_bytes_per_cycle": 32,
+    "output_sector_bits": 18,
+    "output_valid_ready_bits": 2,
+    "credit_bits": 1,
+    "II_target": 1
+  },
+  "storage": {
+    "depth": 256,
+    "prefetch": 8,
+    "output_slots": 1,
+    "maximum_held_beats": 265,
+    "payload_phase": "entryindexbit0",
+    "macro_row": "entryindexbits7:1;zeroextend7bits tobankrow8",
+    "physical_banks_per_lane": 2,
+    "macro_count_per_lane": 4,
+    "macro_count_fleet": 512,
+    "macro_rows": 256,
+    "useful_rows_per_phase": 128,
+    "useful_raw_bytes_per_lane": 8192,
+    "physical_macro_bytes_per_lane": 32768,
+    "metadata_mirrored_FF_per_lane": 9216,
+    "metadata_mirrored_FF_fleet": 1179648,
+    "allocation_publication_rails_bits": 1024,
+    "prefetch_payload_mirrored_bits": 4096,
+    "prefetch_metadata_mirrored_bits": 288,
+    "prefetch_identity_mirrored_bits": 320,
+    "prefetch_valid_reservation_rails_bits": 32,
+    "output_mirrored_bits": 550,
+    "protection": "qualifiedgolden39,32SECDEDpayload;keep/dont_touch distinctcomplement metadata/control/data rails; mappinggatepending"
+  },
+  "latency": {
+    "write_ACK_inclusive_edges": 5,
+    "write_ACK_elapsed_cycles": 4,
+    "corrected_read_inclusive_edges": 6,
+    "corrected_read_elapsed_cycles": 5,
+    "lane_publication_observation_cycles": 1,
+    "read_issue_after_publication_cycles": 1,
+    "corrected_capture_cycles": 1,
+    "output_pin_capture_cycles": 1,
+    "minimum_input_to_credit_elapsed_cycles": 12,
+    "minimum_input_to_consumer_elapsed_cycles": 14,
+    "read_reservation_to_prefetch_release_elapsed_cycles": 7,
+    "prefetch8_hides_read_loop_for_II1": true
+  },
+  "admission": {
+    "initial_credits": 256,
+    "credit_return": "only matchedcorrectedreadcapturedinreservedprefetchslot",
+    "unpublished_read_forbidden": true,
+    "overflow": "stickyfault,nosuccesscredit",
+    "UE": "stickyfault,nosuccesscredit",
+    "reserve_before_read": true
+  },
+  "physical": {
+    "macro_area_per_lane_um2": 28366.848,
+    "macro_area_all_lanes_mm2": 3.630956544,
+    "macro_dimensions_um": [
+      172.8,
+      41.04
+    ],
+    "floorplan_fit": "fourmacros+mirroredmetadata/control/registerbuffers requiremappedlane slot;notyetqualified",
+    "routes": "raw274bits+validinput/output;local two-phasepayloadports",
+    "channel_capacity": null,
+    "mapped_FF_area": null,
+    "admitted": false
+  },
+  "macro_sha256": "f0e8d51af00ec806eddea2f031e4ecaab6316557c9c4a78c00827dc84323d2c5",
+  "HBM90pct_proven": false,
+  "adopted": false
+}

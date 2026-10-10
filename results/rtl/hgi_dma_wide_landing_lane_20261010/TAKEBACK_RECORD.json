@@ -1,0 +1,68 @@
+{
+  "status": "OWNER_TAKEBACK_PRESERVATION_ONLY",
+  "scope": "minimumactual4SRAMlane; no newengineering/builds aftertakeback; notadopted",
+  "ready_ancestors": [
+    "05741fa52",
+    "59a9e0b4f",
+    "32bb86468"
+  ],
+  "primitive": "59a9e0b4f",
+  "completed_gate": {
+    "D16": {
+      "sent": 80,
+      "got": 80,
+      "credits": 80,
+      "continuousII1run": 64
+    },
+    "D256": {
+      "sent": 1280,
+      "got": 1280,
+      "credits": 1280,
+      "continuousII1run": 1024
+    },
+    "cold_credit_producer_sample_elapsed": 13,
+    "cold_output_consumer_elapsed": 14,
+    "mutants": {
+      "1": "EARLY_CREDIT_ACTUAL_CAPTURE",
+      "2": "UNPUBLISHED_READ",
+      "3": "LANDING_EXACT"
+    },
+    "singleCE_actualmacro": "PASScorrectedcapture",
+    "doubleUE_actualmacro": "PASSnocredit/nopublication",
+    "metadata_complementflip": "PASSfailclosed",
+    "overflow": "PASSfailclosed",
+    "defaultOFF_noX": "PASS"
+  },
+  "remaining": {
+    "nativefrontbinding": "notimplementedhere",
+    "modelprice": "dedicatedmodelwrittenfirst,actualcredit_sample13needsnativewidecomposition",
+    "physical": "distinctmappedrailtrace/SSFFcontext unqualified",
+    "HBM90pct": "unproven"
+  },
+  "live_jobs": [],
+  "scratch": [
+    "/tmp/hgi-landing-lane-wt4gkpdf",
+    "/tmp/codex-svc-pcs-control"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_dma_wide_landing_lane.sv": "b798a0318e015cbacc8de040fc76c18dc062c11d9a0e1a7cf11f16bcf4a31c4d",
+    "rtl/hbm_accel/generic/peers/tb_hgi_dma_wide_landing_lane.sv": "dbf49336beacff935ab5cbb5969c3e5663a94f7fcbf21ccc34a0dc3cf43d637d",
+    "tools/hgi_dma_wide_landing_lane_model.py": "aecfa323fc16a0576b0f265f2580fe704206208b27999785f142f8cf50ac8567"
+  },
+  "files": {
+    "build0d16.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run3d16.log": "3dc57f1601edd38801343f9e90b7d93278687b016c67975e753633cf44809bfe",
+    "run0d256.log": "5c074f58678b7d8034fba7fcdade7a88faeff0126896352ddfaf6356a30fbe7a",
+    "build2d16.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "landing_lint_initial.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "landing_r1.log": "5c074f58678b7d8034fba7fcdade7a88faeff0126896352ddfaf6356a30fbe7a",
+    "build1d16.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run0d16.log": "d9ce2df84e1b59e2a0e14963bcffde5e317bbfeac770da57551cfa8c97607ad9",
+    "run2d16.log": "72e94700bd130c3c8f007534400958bc33090c9277c4b3a8e315ca44a8120147",
+    "build0d256.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "landing_initial.log": "138fca0a1ebbd29a9b15f245340e1ced7811fcdadd46d3470a4368e0b1703b74",
+    "run1d16.log": "ef2d914d6c9218982d9a184c9ea2daf0ed113a6308a268f3df9fe2bef2ec5a4c",
+    "build3d16.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model/model_before_rtl.json": "1e71da373d0c9c0b75a838f7b75f55acd628df66c349fcd692828b47d5bc5ebb"
+  }
+}
