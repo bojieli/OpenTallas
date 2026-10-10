@@ -835,6 +835,9 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     gp = up_(gap, GX)
     c = dn((Wq - 2 * e - 2 * C2 * w - (C2 - 1) * gp) / C2, GX)
     if FOLD > 1:
+        # [cg-hc] 2026-10-10 r2: the inter-pair gap holds standard-cell rows between two lane macros; below 12 um it is an
+        # unusable sliver (floorplan lint, hcq r25gq: 32 gaps of 10.37 um) -> >= 12 um, taken from the channel (pitch kept)
+        gp = max(gp, up_(12.0, GX))
         # [cg-hc] 2026-10-10: the pair pitch carries the chain hop between folded columns (serpentine: outer -> outer),
         # so it stays <= HOP - 10; the spare width goes to the two edge strips (face chains / die pins)
         c = min(c, dn(HOP - 10.0 - 2 * w - gp, GX))
