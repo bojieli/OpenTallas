@@ -53,6 +53,19 @@ module ot_hgi_vm_wide #(
  if(iv_n[p]!=~iv[p] || native_rr_n[p]!=~native_rr[p])healthy=0;
  for(s=0;s<5;s=s+1)if(im_n[p][s]!=~im[p][s])healthy=0;
  end
+ // Inspect only touched allocation rows, preserving distributed metadata fanout.
+ for(c=0;c<NC;c=c+1)if(req_v[c])begin
+ q=req[c*337+:337];sec=q[309+:SB];p=2*int'(sec[LB-1:0])+int'(sec[LB]);
+ if(allocated_n[p][sec[LB+1+:8]]!=~allocated[p][sec[LB+1+:8]])healthy=0;
+ end
+ for(l=0;l<CW;l=l+1)begin
+ n=coll[l*(DW+16)+:DW+16];sec=n[280+:SB];p=2*int'(sec[LB-1:0])+int'(sec[LB]);
+ if(n[DW+15] && allocated_n[p][sec[LB+1+:8]]!=~allocated[p][sec[LB+1+:8]])healthy=0;
+ end
+ for(b=0;b<NB;b=b+1)begin
+ d=dma[b*DW+:DW];sec=d[264+:SB];p=2*int'(sec[LB-1:0])+int'(sec[LB]);
+ if(d[DW-1] && allocated_n[p][sec[LB+1+:8]]!=~allocated[p][sec[LB+1+:8]])healthy=0;
+ end
  dma_ready=0;coll_ready=0;req_r=0;rsp_v=0;rsp=0;wv=0;rv=0;selected_w=0;selected_r=0;
  for(p=0;p<PB;p=p+1)begin wa[p]=0;ra[p]=0;wm[p]=0;data[p]=0;wt[p]=0;rt[p]=0;end
  // Packet responses retire in client order despite different read/write publication.
@@ -122,9 +135,9 @@ module ot_hgi_vm_wide #(
  im[k][0]<={wa[k],wm[k]};im_n[k][0]<=~{wa[k],wm[k]};
  if(iv[k][4])begin
  if(allocated_n[k][im[k][4][15:8]]!=~allocated[k][im[k][4][15:8]])bad=1;
- allocated[k][im[k][4][15:8]]<=allocated[k][im[k][4][15:8]]|im[k][4][7:0];
+ else begin allocated[k][im[k][4][15:8]]<=allocated[k][im[k][4][15:8]]|im[k][4][7:0];
  allocated_n[k][im[k][4][15:8]]<=~(allocated[k][im[k][4][15:8]]|im[k][4][7:0]);
- end
+ end end
  if(wd[k])begin
  o=wtag[k][19:16];t=wtag[k][15:0];
  if(o==8)begin if(t>=NB || k/2!=t)bad=1;else dma_done[t]<=1;end
