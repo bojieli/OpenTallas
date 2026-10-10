@@ -12,11 +12,15 @@ import dsrom_s81_fulldie as F
 ap = F.die_options(argparse.ArgumentParser())
 F.apply_options(ap.parse_args(['--gen', 'r8', '--die', 'layer1', '--coll-split3-cr']))
 assert F.COLL_SPLIT3_CR and F.COLL_SPLIT3
+assert F.collective_variant_binding()['coll_split3_cr'] is True
+assert F.collective_variant_binding()['collective_composition'].endswith('composition_split3cr.json')
 manifest = json.loads((F.ROOT / F.COLL_SPLIT3_COMP).read_text())
 assert 'OT_S81PH_COLL_CR' in manifest['core_rtl_defines']
 assert 'OT_S81PH_LANE_CR' in manifest['lane_rtl_defines']
 F.apply_options(ap.parse_args(['--gen', 'r8', '--die', 'layer1']))
 assert not F.COLL_SPLIT3_CR and not F.COLL_SPLIT3
+assert F.collective_variant_binding()['coll_split3_cr'] is False
+assert F.collective_variant_binding()['collective_composition'] is None
 assert F.COLL_SPLIT3_COMP.endswith('composition_split3.json')
 
 F.Q_X1B = True
