@@ -60,5 +60,17 @@
   }
  },
  "mutant_expect": "mut1-5, 7 inexact; mut6, mut8 exact",
- "ok": true
+ "ok": true,
+ "hmut": {
+  "what": "decision word one edge late in the head tiles (KVD_HMUT)",
+  "exact": false,
+  "mismatches": 1024,
+  "verdict": "CAUGHT"
+ },
+ "phy_cases": {
+  "best": 1804,
+  "typical": 1806,
+  "worst": 1818
+ },
+ "adopted": true
 }
