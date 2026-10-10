@@ -1,0 +1,92 @@
+{
+ "name": "hbm-norm-mem1-pm1400-6fa903259-tc-cl-f9a",
+ "block": "ot_hbm_norm_engine_view",
+ "owner": "Claude:hgi-1010",
+ "purpose": "FILL-9 2026-10-10 (hgi-1010): root cause of every MEM1 route so far = N-face pin density (in_x 8,192 b on the 1,100 um top edge: 16.9-17.3 b/um/layer measured, target <= 6) + 4 macros abutting pin faces. ONE knob vs codex_norm_mem1_pinmargin_8bbd0820a: outline 1,100 -> 1,400 um square (27% longer every edge: in_x 2.9 b/um/layer over M5/M7 if spread; ~62% more core around the 10 macros), same RTL / pins faces / inset16 / halo8 / balanced layers. Die area not scarce (owner). Lockstep MEM1 vs MEM0 bench + addr / late mutants in spec.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 80,
+ "source": {
+  "branch": "claude/fill-9-20261010-nc",
+  "commit": "6fa903259e2de7e91b699e61c78e6d34d3d721e9",
+  "extra_paths": [
+   "results/rtl/hbm_norm_engine_view_mem1_20261007/recovery_20261007",
+   "results/rtl/hbm_norm_engine_view_20261006/gold"
+  ]
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H=\"M4 M6\" OT_PIN_BALANCE_V=\"M5 M7\" DIEW=1400 DIEH=1400 CORE_INSET=16 MACRO_HALO=8 SYNTH_HIER=1 KEEP=200 OUT={RUN}/routes SRC={SRC} CORES=16 NEED=80 bash physical/hbm_norm_engine_view_mem1_20261007/run_route.sh {LABEL}${CL_LABEL_SUFFIX} --step-tcl PRE_GLOBAL_PLACE=physical/hbm_norm_engine_view_mem1_20261007/pinmargin_floorplan.tcl --pin-region '^in_x\\[=top' --pin-region '^wl_d\\[=bottom' --pin-region '^(y|q_y|q_codes|q_e|ro)\\[=right' --pin-region '^(clk|rst_n|go|in_v|pre|n_f|eps|wl_v|wl_i|cos_t|sin_t|y_v|y_i|r_v|r|q_v|q_i|ro_v|fault)(\\[|$)=left' --pin-regions-exhaustive $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk",
+   "sdc_cmd": "python3 physical/hbm_norm_engine_view_mem1_20261007/make_sdc.py --l-ss-max $CK_SS_MAX --l-ss-min $CK_SS_MIN --l-ff-min $CK_FF_MIN --l-ff-max $CK_FF_MAX --out {RUN}/routes/io.sdc",
+   "threads": 16,
+   "peak_ram_gb": 80
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H=\"M4 M6\" OT_PIN_BALANCE_V=\"M5 M7\" DIEW=1400 DIEH=1400 CORE_INSET=16 MACRO_HALO=8 SYNTH_HIER=1 KEEP=200 OUT={RUN}/routes SRC={SRC} CORES=16 NEED=80 bash physical/hbm_norm_engine_view_mem1_20261007/run_route.sh {LABEL} --step-tcl PRE_GLOBAL_PLACE=physical/hbm_norm_engine_view_mem1_20261007/pinmargin_floorplan.tcl --pin-region '^in_x\\[=top' --pin-region '^wl_d\\[=bottom' --pin-region '^(y|q_y|q_codes|q_e|ro)\\[=right' --pin-region '^(clk|rst_n|go|in_v|pre|n_f|eps|wl_v|wl_i|cos_t|sin_t|y_v|y_i|r_v|r|q_v|q_i|ro_v|fault)(\\[|$)=left' --pin-regions-exhaustive",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 physical/hbm_norm_engine_view_mem1_20261007/signoff.py --run {RUN}/routes/{LABEL}",
+   "ok": "test -s {RUN}/routes/{LABEL}/signoff.json"
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/signoff.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  },
+  "bench": [
+   {
+    "name": "norm_mem1_lockstep",
+    "cmd": "bash physical/hbm_norm_engine_view_mem1_20261007/run_lockstep.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "(?m)^PASS",
+    "threads": 16,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "norm_mem1_mut_addr",
+    "cmd": "bash physical/hbm_norm_engine_view_mem1_20261007/run_lockstep.sh {RUN}/bench/addr addr",
+    "expect": "fail",
+    "fail_regex": "(?m)^FAIL",
+    "threads": 16,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "norm_mem1_mut_late",
+    "cmd": "bash physical/hbm_norm_engine_view_mem1_20261007/run_lockstep.sh {RUN}/bench/late late",
+    "expect": "fail",
+    "fail_regex": "(?m)^FAIL",
+    "threads": 16,
+    "peak_ram_gb": 24
+   }
+  ]
+ },
+ "verdict": {
+  "metrics_cmd": "python3 -c \"import json;print(json.dumps(json.load(open('{RUN}/routes/{LABEL}/signoff.json'))['metrics']))\"",
+  "checks": []
+ },
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ },
+ "merge_target": null,
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/variant_fill/hbm-norm-mem1-pm1400-6fa903259-tc-cl-f9a/route"
+  }
+ ]
+}
