@@ -1,0 +1,21 @@
+{
+  "source": "982804de3",
+  "source_check": "remote /srv/opentallas-scratch/codex/svc-epsfull/src: every svc rtl/tb + rtl/hbm_accel/service .sv/.svh sha256 equal to git archive 982804de3 (hbm-phys [svc] 2026-10-10 07:4x PT)",
+  "simulator": "iverilog four-state (vvp), run_bench_ps.sh quick, host ot-epyc1tb, out /srv/opentallas-scratch/codex/svc-eps4state/out_{ps,fc}",
+  "positives": {
+    "PS sim_ps_SW": "PASS lines 208 kv 16 ik 16 e 48 streams 12 rows 16069 kd 12 errors 0",
+    "PS sim_ps_NE": "PASS lines 208 kv 16 ik 16 e 48 streams 12 rows 16817 kd 12 errors 0",
+    "FC sim_ps_SW": "PASS (same counts)",
+    "FC sim_ps_NE": "PASS (same counts)",
+    "ref_SW / ref_NE (legacy segments as DUT, own PHY model)": "PASS 208 SM / 16 KV / 16 IK, ps and fc runs"
+  },
+  "x_check": "bench flags X on every output (lines, kv, ik, ks, kd) after reset: none",
+  "mutants_fourstate": {
+    "neg_slot": "FAIL (ERR PS row data ... from the first rows; still running to its budget)",
+    "neg_done": "FAIL (ERR PS row port ... idx 0, 551+ errors; still running)",
+    "neg_pc": "no output yet at collection (still running); compiled gate (Verilator, receipt.json) FAIL",
+    "neg_conc": "no output yet at collection (still running); compiled gate (Verilator, receipt.json) FAIL"
+  },
+  "gate_verdict": "PASS: every SM / KV / IK line and every PS row exact on the PS and FC segment sets (SW + NE families), no duplicate / drop (scoreboard), no X, legacy reference on its own PHY model PASS, all 4 mutants FAIL (2 in four-state, 4 compiled)",
+  "logs": "this directory (positives / refs full logs; mutant heads)"
+}

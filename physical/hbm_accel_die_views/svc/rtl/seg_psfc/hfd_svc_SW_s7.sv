@@ -77,7 +77,7 @@ module hfd_svc_SW_s7 (
   assign gp7_sv[1] = rs29_v && (rs29_d[276:275] == 2'b11); assign gp7_sq[553:277] = rs29_d;
   assign gp7_sv[2] = rs30_v && (rs30_d[276:275] == 2'b11); assign gp7_sq[830:554] = rs30_d;
   assign gp7_sv[3] = rs31_v && (rs31_d[276:275] == 2'b11); assign gp7_sq[1107:831] = rs31_d;
-  ot_svs_grp #(.K(7)) u_gp7 (.ck(c), .rst(rst[0]), .rn(rn), .sv(gp7_sv), .sq(gp7_sq), .kq(kq7), .sg_v(gp7_sgv), .sg_d(gp7_sgd), .cr(gp7_cr), .ks(ks7), .ovf(gp7_ovf));
+  ot_svs_grp #(.K(7)) u_gp7 (.ck(c), .rst(rst[0]), .rn(rn), .sv_i(gp7_sv), .sq_i(gp7_sq), .kq(kq7), .sg_v(gp7_sgv), .sg_d(gp7_sgd), .cr(gp7_cr), .ks(ks7), .ovf(gp7_ovf));
   ot_svs_pcs #(.PCID(28), .END(0)) u_pc28 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc28_iv), .iss_d(pc28_id), .k_v(pc28_k_v), .k_rdy(pc28_k_rdy), .k_addr(pc28_k_addr), .k_len(pc28_k_len), .k_tag(pc28_k_tag), .kr_v(pc28_kr_v), .kr_tag(pc28_kr_tag), .kr_beat(pc28_kr_beat), .kr_data(pc28_kr_data), .b_v(pc28_bv), .b_t(pc28_bt), .b_b(pc28_bb), .b_d(pc28_bd), .di_v(pc28_div), .di_d(pc28_did), .do_v(pc28_dov), .do_d(pc28_dod), .dni_ok(pc28_dniok), .dni_ph(pc28_dniph), .dno_ok(pc28_dnook), .dno_ph(pc28_dnoph), .cr_v(pc28_crv));
   ot_svs_pcs #(.PCID(29), .END(0)) u_pc29 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc29_iv), .iss_d(pc29_id), .k_v(pc29_k_v), .k_rdy(pc29_k_rdy), .k_addr(pc29_k_addr), .k_len(pc29_k_len), .k_tag(pc29_k_tag), .kr_v(pc29_kr_v), .kr_tag(pc29_kr_tag), .kr_beat(pc29_kr_beat), .kr_data(pc29_kr_data), .b_v(pc29_bv), .b_t(pc29_bt), .b_b(pc29_bb), .b_d(pc29_bd), .di_v(pc29_div), .di_d(pc29_did), .do_v(pc29_dov), .do_d(pc29_dod), .dni_ok(pc29_dniok), .dni_ph(pc29_dniph), .dno_ok(pc29_dnook), .dno_ph(pc29_dnoph), .cr_v(pc29_crv));
   ot_svs_pcs #(.PCID(30), .END(0)) u_pc30 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc30_iv), .iss_d(pc30_id), .k_v(pc30_k_v), .k_rdy(pc30_k_rdy), .k_addr(pc30_k_addr), .k_len(pc30_k_len), .k_tag(pc30_k_tag), .kr_v(pc30_kr_v), .kr_tag(pc30_kr_tag), .kr_beat(pc30_kr_beat), .kr_data(pc30_kr_data), .b_v(pc30_bv), .b_t(pc30_bt), .b_b(pc30_bb), .b_d(pc30_bd), .di_v(pc30_div), .di_d(pc30_did), .do_v(pc30_dov), .do_d(pc30_dod), .dni_ok(pc30_dniok), .dni_ph(pc30_dniph), .dno_ok(pc30_dnook), .dno_ph(pc30_dnoph), .cr_v(pc30_crv));
@@ -504,7 +504,7 @@ module hfd_svc_SW_s7 (
   assign phy[340] = 1'b0;
   assign phy[341] = 1'b0;
   assign pc28_kr_v = phy[343];
-  assign phy[344] = rdy_q;
+  ot_svs_rdyp u_rdyp344 (.ck(c), .rn(rn), .q(phy[344]));
   assign pc28_kr_tag[0] = phy[345];
   assign pc28_kr_tag[1] = phy[346];
   assign pc28_kr_tag[2] = phy[347];
@@ -1125,7 +1125,7 @@ module hfd_svc_SW_s7 (
   assign phy[962] = 1'b0;
   assign phy[963] = 1'b0;
   assign pc29_kr_v = phy[965];
-  assign phy[966] = rdy_q;
+  ot_svs_rdyp u_rdyp966 (.ck(c), .rn(rn), .q(phy[966]));
   assign pc29_kr_tag[0] = phy[967];
   assign pc29_kr_tag[1] = phy[968];
   assign pc29_kr_tag[2] = phy[969];
@@ -1746,7 +1746,7 @@ module hfd_svc_SW_s7 (
   assign phy[1584] = 1'b0;
   assign phy[1585] = 1'b0;
   assign pc30_kr_v = phy[1587];
-  assign phy[1588] = rdy_q;
+  ot_svs_rdyp u_rdyp1588 (.ck(c), .rn(rn), .q(phy[1588]));
   assign pc30_kr_tag[0] = phy[1589];
   assign pc30_kr_tag[1] = phy[1590];
   assign pc30_kr_tag[2] = phy[1591];
@@ -2367,7 +2367,7 @@ module hfd_svc_SW_s7 (
   assign phy[2206] = 1'b0;
   assign phy[2207] = 1'b0;
   assign pc31_kr_v = phy[2209];
-  assign phy[2210] = rdy_q;
+  ot_svs_rdyp u_rdyp2210 (.ck(c), .rn(rn), .q(phy[2210]));
   assign pc31_kr_tag[0] = phy[2211];
   assign pc31_kr_tag[1] = phy[2212];
   assign pc31_kr_tag[2] = phy[2213];

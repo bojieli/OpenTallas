@@ -41,6 +41,8 @@ module ot_hgi_dma_mover #(
     input  wire [226:0]  mv,
     output reg           mv_done,
     output reg           mv_fault,
+    output reg           mv_src,      // pulse: every source sector of the move has been read and landed (posted
+                                      // STORE / KVWB retire here; the VM / HBM source may be overwritten from now on)
     input  wire          fence_v,
     output wire          fence_rdy,
     output reg           fence_done,
@@ -82,12 +84,14 @@ module ot_hgi_dma_mover #(
     // clears it)
     reg cv_q; reg [226:0] cm_q;
     reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
+    reg wld_q; always @(posedge clk) wld_q <= wl_done;     // wide-port done pin flop (hgi-1010/c: wl_done -> wr_in was 17 levels)
     always @(posedge clk or negedge rn)
         if (!rn) begin kr_v <= 1'b0; vr_q <= 274'd0; end
         else begin kr_v <= k_rsp_v; vr_q <= vmr; end
     always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
     wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
-    reg  busy_f;                                                        // the sector engine owns the ports
+    reg  busy_f; reg src_sent;
+    wire ko_ld;                                                         // the lane output register takes a request                                                        // the sector engine owns the ports
     reg  sel_s;                                                         // the serial engine owns the ports
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
@@ -95,7 +99,7 @@ module ot_hgi_dma_mover #(
     assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
     ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_q && !fast_cmd),
         .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
-        .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(k_req_rdy && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
+        .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(ko_ld && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
         .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
         .k_rsp_we(kr_we), .k_rsp_data(kr_d), .k_fault(k_fault && sel_s), .vmq(s_vmq), .vmr(sel_s ? vr_q : 274'd0));
     assign fence_rdy = !busy_f && s_mv_rdy && s_fence_rdy;
@@ -192,6 +196,10 @@ module ot_hgi_dma_mover #(
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
     reg        pe_v; reg [7:0] pe_lv; reg [255:0] pe_e; reg [5:0] pe_dp; reg [36:0] pe_dsec; reg pe_fl, pe_keep;
     reg        p3_v; reg [255:0] p3_d; reg [31:0] p3_s; reg [36:0] p3_dsec; reg p3_fl, p3_keep;
+    // hgi-1010/c (route bf6565982 TT -107 / -168, SS -570: dl2 / pe_dp -> p3_d, 23-25 levels = per-element variable
+    // placement): PACK (pe -> pk, registered: the k encoded elements contiguous from byte 0, by dl2) then SHIFT (pk -> p3:
+    // one 32-byte barrel shift by pe_dp and the byte mask with it).  +1 cycle in the pipe.
+    reg        pk_v; reg [255:0] pk_d; reg [31:0] pk_s; reg [5:0] pk_dp; reg [36:0] pk_dsec; reg pk_fl, pk_keep;
     reg [255:0] db_dat; reg [31:0] db_strb; reg db_dirty;
     // ---- source sector issue
     wire src_hbm = (ssp == 2'd0), dst_hbm = (dsp == 2'd0);
@@ -210,7 +218,7 @@ module ot_hgi_dma_mover #(
     reg go_q3;                                                         // one more setup edge: the row-end registers settle
     reg go_q2;                                                         // the command fields are settled
     // the write queue (8) must hold the flushes the pipe may still produce (p1, px, p2, pe, p3 + this one)
-    wire wq_room = (wq_n + {3'd0, p1_v & p1_fl} + {3'd0, px_v & px_fl} + {3'd0, p2_v & p2_fl} + {3'd0, pe_v & pe_fl} +
+    wire wq_room = (wq_n + {3'd0, p1_v & p1_fl} + {3'd0, px_v & px_fl} + {3'd0, p2_v & p2_fl} + {3'd0, pe_v & pe_fl} + {3'd0, pk_v & pk_fl} +
                     {3'd0, p3_v & p3_fl}) < 4'd7;
     // ---- extract (p1 -> px): lane j's raw element, right-aligned (word / half / byte at offset sp + j << sl2)
     reg [255:0] ext_r;
@@ -251,17 +259,19 @@ module ot_hgi_dma_mover #(
         end
     end
     // ---- place (pe -> p3): lane j at byte dp + j << dl2 of the destination sector
-    reg [255:0] put_d; reg [31:0] put_s;
+    // pack: element j of the k at byte j << dl2 (contiguous from byte 0)
+    reg [255:0] pack_d; reg [31:0] pack_s;
     always @* begin
-        put_d = 256'd0; put_s = 32'd0;
-        for (integer j = 0; j < 8; j = j + 1) if (pe_lv[j]) begin : el
-            reg [5:0] o_; reg [31:0] x;
-            o_ = pe_dp + (6'(j) << dl2); x = pe_e[32*j +: 32];
-            if (dl2 == 2'd2) begin put_d[{o_[4:0], 3'd0} +: 32] = x; put_s[o_[4:0] +: 4] = 4'hF; end
-            else if (dl2 == 2'd1) begin put_d[{o_[4:0], 3'd0} +: 16] = x[15:0]; put_s[o_[4:0] +: 2] = 2'b11; end
-            else begin put_d[{o_[4:0], 3'd0} +: 8] = x[7:0]; put_s[o_[4:0]] = 1'b1; end
+        pack_d = 256'd0; pack_s = 32'd0;
+        for (integer j = 0; j < 8; j = j + 1) if (pe_lv[j]) begin
+            if (dl2 == 2'd2) begin pack_d[32*j +: 32] = pe_e[32*j +: 32]; pack_s[4*j +: 4] = 4'hF; end
+            else if (dl2 == 2'd1) begin pack_d[16*j +: 16] = pe_e[32*j +: 16]; pack_s[2*j +: 2] = 2'b11; end
+            else begin pack_d[8*j +: 8] = pe_e[32*j +: 8]; pack_s[j] = 1'b1; end
         end
     end
+    // shift: the packed elements to the destination byte offset (a run never crosses the sector: d_room bounds k)
+    wire [255:0] put_d = pk_d << {pk_dp[4:0], 3'd0};
+    wire [31:0]  put_s = pk_s << pk_dp[4:0];
     // ---- port issue selection
     reg iss_kw, iss_kr, iss_vw, iss_vr;
     always @* begin
@@ -280,15 +290,15 @@ module ot_hgi_dma_mover #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
-            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0;
+            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0; mv_src <= 1'b0; src_sent <= 1'b0;
             k_in <= 8'd0; v_in <= 3'd0; k_kind <= 256'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0; kq_n <= 2'd0; kq_h <= 1'b0; kq_t <= 1'b0;
             sf_h <= '0; sf_t <= '0; sf_n <= 9'd0; wq_h <= 3'd0; wq_t <= 3'd0; wq_n <= 4'd0; go_q3 <= 1'b0;
-            p1_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pe_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
+            p1_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
         end else begin
-            mv_done <= 1'b0; fence_done <= 1'b0;
+            mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
             // ---- the serial engine's completion and ports
-            if (s_mv_done) begin mv_done <= 1'b1; sel_s <= 1'b0; end
+            if (s_mv_done) begin mv_done <= 1'b1; mv_src <= 1'b1; sel_s <= 1'b0; end   // serial engine: source = done
             if (s_mv_fault) mv_fault <= 1'b1;
             cv_q <= 1'b0;
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
@@ -312,6 +322,8 @@ module ot_hgi_dma_mover #(
                     f_fault <= 1'b1; mv_fault <= 1'b1; busy_f <= 1'b0;
                 end
             end
+            if (go_f) src_sent <= 1'b0;
+            if (busy_f && go_q3 && !f_fault && r_done && rd_in == 9'd0 && !src_sent) begin mv_src <= 1'b1; src_sent <= 1'b1; end
             if (go_f) begin
                 r_o <= 20'd0; r_sec <= sbase[41:5]; r_done <= 1'b0;
                 r_nrow <= sbase + {8'd0, sstb}; r_end <= sbase + {18'd0, nnb} - 42'd1;
@@ -338,8 +350,8 @@ module ot_hgi_dma_mover #(
                     kq_we[kq_t] <= 1'b0; kq_a[kq_t] <= {r_sec[31:0], 5'd0}; kpush = 1'b1;
                 end
                 if (kpush) kq_t <= ~kq_t;
-                if (kq_n != 2'd0 && k_req_rdy && !sel_s) kq_h <= ~kq_h;
-                kq_n <= kq_n + {1'b0, kpush} - {1'b0, kq_n != 2'd0 && k_req_rdy && !sel_s};
+                if (kq_n != 2'd0 && ko_ld && !sel_s) kq_h <= ~kq_h;
+                kq_n <= kq_n + {1'b0, kpush} - {1'b0, kq_n != 2'd0 && ko_ld && !sel_s};
                 wl[279] <= 1'b0;
                 if (iss_vw) begin : wide
                     reg [7:0] wm; integer t;
@@ -377,7 +389,7 @@ module ot_hgi_dma_mover #(
                     v_kind <= t;
                 end
                 rd_in <= rd_in + {8'd0, iss_kr | iss_vr} - {8'd0, k_rd_land | v_rd_land};
-                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wl_done & busy_f)};
+                wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, k_wr_ack | v_wr_ack | (wld_q & busy_f & !dst_hbm)};
             end
             if (k_fault && busy_f) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
             // ---- landing
@@ -418,8 +430,10 @@ module ot_hgi_dma_mover #(
                 for (integer q = 0; q < 8; q = q + 1) pe_lv[q] <= q < p2_k;
                 pe_keep <= !(MUT == 2 && p2_dp + (6'(p2_k) << dl2) != 6'd32);
             end
-            p3_v <= pe_v;
-            if (pe_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= pe_dsec; p3_fl <= pe_fl; p3_keep <= pe_keep; end
+            pk_v <= pe_v;
+            if (pe_v) begin pk_d <= pack_d; pk_s <= pack_s; pk_dp <= pe_dp; pk_dsec <= pe_dsec; pk_fl <= pe_fl; pk_keep <= pe_keep; end
+            p3_v <= pk_v;
+            if (pk_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= pk_dsec; p3_fl <= pk_fl; p3_keep <= pk_keep; end
             if (p3_v) begin
                 if (p3_fl && p3_keep) begin
                     wq_d[wq_t] <= ((db_dirty ? db_dat : 256'd0) & ~mk(p3_s)) | p3_d;
@@ -433,7 +447,7 @@ module ot_hgi_dma_mover #(
             end
             wq_n <= wq_n + {3'd0, p3_v && p3_fl && p3_keep} - {3'd0, iss_kw | iss_vw};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q3 && !f_fault && u_done && r_done && !p1_v && !px_v && !p2_v && !pe_v && !p3_v && wq_n == 4'd0 && wr_in == 9'd0 &&
+            if (busy_f && go_q3 && !f_fault && u_done && r_done && !p1_v && !px_v && !p2_v && !pe_v && !pk_v && !p3_v && wq_n == 4'd0 && wr_in == 9'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0 && kq_n == 2'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end
@@ -450,9 +464,20 @@ module ot_hgi_dma_mover #(
         integer t; begin mk = 256'd0; for (t = 0; t < 32; t = t + 1) if (s[t]) mk[8*t +: 8] = 8'hFF; end
     endfunction
     // ---- port muxing with the serial engine (it drives the ports while it owns them)
-    assign k_req_v = sel_s ? s_kv : f_kv;   assign k_req_we = sel_s ? s_kwe : f_kwe;
-    assign k_req_addr = sel_s ? s_ka : f_ka; assign k_req_wdata = sel_s ? s_kd : f_kd;
-    assign k_req_wstrb = sel_s ? s_ks : f_ks; assign vmq = sel_s ? s_vmq : f_vmq;
+    assign ko_ld = !ko_v || k_req_rdy;
+    // hgi-1010/c: the lane request leaves an OUTPUT REGISTER (route bf6565982: sel_s / kq_h -> k_req_wdata / k_req_addr
+    // through the engine mux to the pins, -352 ps): the register loads the selected engine's request whenever it is
+    // empty or the lane takes its content (bubble-free); an engine's request counts as taken when the register loads it
+    reg ko_v, ko_we; reg [36:0] ko_a; reg [255:0] ko_d; reg [31:0] ko_s;
+    always @(posedge clk or negedge rn)
+        if (!rn) ko_v <= 1'b0;
+        else if (ko_ld) begin
+            ko_v <= sel_s ? s_kv : f_kv;
+            ko_we <= sel_s ? s_kwe : f_kwe; ko_a <= sel_s ? s_ka : f_ka;
+            ko_d <= sel_s ? s_kd : f_kd; ko_s <= sel_s ? s_ks : f_ks;
+        end
+    assign k_req_v = ko_v; assign k_req_we = ko_we; assign k_req_addr = ko_a; assign k_req_wdata = ko_d; assign k_req_wstrb = ko_s;
+    assign vmq = sel_s ? s_vmq : f_vmq;
     wire unused_ok = &{1'b0, s_kt, s_krr, s_fence_done};
 endmodule
 `default_nettype wire

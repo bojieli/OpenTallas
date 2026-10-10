@@ -28,6 +28,7 @@ module tb_hgi_e2e;
     parameter integer REAL_FETCH = 1;  // 1: the record-ring fetch goes through the REAL ot_hfd_loader_kport (lane 1: one
                                        // transaction outstanding per lane, native endpoint) to a stack-service model at
                                        // FLAT cycles; 0: the FPIPE lane model (FPIPE 1 hides the CP fetch gap)
+    parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
@@ -69,6 +70,7 @@ module tb_hgi_e2e;
     wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
+    wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE
     wire [690:0] am_rec; wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     ot_hgi_cp_die #(.USE_MACRO(0)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
@@ -77,7 +79,7 @@ module tb_hgi_e2e;
         .sm_rec(sm_rec), .sm_ret({ux_fault[1], ux_done[1], ux_rdy[1]}), .su_rec(su_rec), .su_ret({ux_fault[2], ux_done[2], ux_rdy[2]}),
         .sfu_rec(sfu_rec), .sfu_ret({ux_fault[3], ux_done[3], ux_rdy[3]}), .att_rec(att_rec), .att_ret({ux_fault[5], ux_done[5], ux_rdy[5]}),
         .dma_rec(dma_rec), .dma_ret({ux_fault[8], ux_done[8], ux_rdy[8]}), .hc_rec(hc_rec), .hc_ret({ux_fault[10], ux_done[10], ux_rdy[10]}),
-        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .cfg_bus(cfg_bus), .ux_v(ux_v_raw), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(dma_wq));   // CTL.FENCE drains posted DMA writes
     // hgi-takeover (DIE GAP closed): units 1-10 have die record buses; real slots take the payload from the bus (no
     // internal tap); the handshake fields {fault, done, ready} are the harness's per-unit ux_* values
     wire [15:0] ux_v = ux_v_raw | {5'd0, hc_rec[0], 1'b0, dma_rec[0], am_rec[0], 1'b0, att_rec[0], 1'b0, sfu_rec[0], su_rec[0], sm_rec[0], 1'b0};
@@ -178,19 +180,20 @@ module tb_hgi_e2e;
     wire dma_rdy, dma_done, dma_fault;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
     generate if (REAL_DMA) begin : g_dma
-        wire mv_v, mv_rdy, mv_done, mv_fault, fence_v, fence_rdy, fence_done; wire [226:0] mv;
-        ot_hgi_dma_record #(.LEGACY(0)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
+        wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done; wire [226:0] mv;
+        ot_hgi_dma_record #(.LEGACY(0), .POSTED(DMA_POSTED)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(dma_rdy),
             .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
-            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(),
+            .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_done(dma_done), .rec_fault(dma_fault), .halted(), .wr_quiet(dma_wq),
             .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
             .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
-            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+            .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
         wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
         // the VM wide write port (32 lanes) + the svc DMA stream (hgi-takeover 2026-10-10); DMA_FRONT 0 = mover only
         wire [32*280-1:0] wl; wire [31:0] wl_done; wire [4*51-1:0] dq; wire [3:0] dq_rdy; wire [32*270-1:0] dd; wire [31:0] dd_cr;
         ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
-            .mv_done(mv_done), .mv_fault(mv_fault), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+            .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
+            .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
             .k_rsp_data(k_rd), .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
@@ -200,7 +203,7 @@ module tb_hgi_e2e;
             .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
         hgi_e2e_vmc #(.UNIT(8), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
     end else begin : g_dma_stub
-        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0;
+        assign dma_rdy = 1'b0; assign dma_done = 1'b0; assign dma_fault = 1'b0; assign dma_wq = 1'b1;
     end endgenerate
     // QUANT (unit 4, QDQ ops) behind the harness's unit-4 split (or behind the FUSED front when REAL_FUSED)
     reg  [682:0] q_rec;                 // to the real quant unit

@@ -436,86 +436,61 @@
   "name": "HBM accelerator (one generic die, R25G, for DeepSeek-V4.1 and Qwen3-8B)",
   "targets": [
    {
-    "id": "hbm_ds",
+    "id": "hbm_gen_ds",
     "model": "DeepSeek-V4.1-Flash",
     "context": "1M (position 1,048,575)",
     "modes": [
      "AR",
      "MTP"
     ],
-    "graph": "hbm_ds.json",
-    "graph_mtp": "hbm_ds_mtp.json",
-    "graph_note": "Historical unified composition retained; current AR uses the approved G20/G21/G22 record-path price. MTP adds that path's delta once to the charged historical verify-step composition.",
+    "graph": "hbm_gen_ds.json",
+    "graph_mtp": null,
+    "rate_label": "simulator table rate; RTL-calibrated rate pending unit fixes",
+    "graph_note": "The generic die's compiled HGI-1 program (rank 0), one token-path node per executed record, timed by the hgi_sim schedule S2 on the simulator cost tables.",
     "per_user": {
      "AR": {
-      "value": 1747.5,
+      "value": 2185.3,
       "unit": "tok/s",
       "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22.tok_s",
-      "note": "approved G20/G21 gather path (2 slots per gather) and G22 row-sharded HC; modelled on the fixed RTL. Today's RTL service-time ratios give 1279.3 tok/s at full DMA bandwidth; the hardware bandwidth implementation remains required. The separate token graph retains the historical unified composition."
+      "source": "results/arch/token_path_20261009/hbm_gen_ds.json headline.tok_s",
+      "note": "simulator table rate; RTL-calibrated rate pending unit fixes; 549,130.8 cycles a token"
      },
      "MTP": {
-      "value": 3344.8,
+      "value": null,
       "unit": "tok/s",
       "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles",
-      "note": "DSpark gamma 5, tau 4.159; approved gather delta 143235.0 cycles charged once per verify pass on the charged composition 1348890.6 cycles; modelled on the fixed RTL. Today's RTL ratios give 2862.6 tok/s. No native verify program is compiled."
+      "source": "pending",
+      "note": "pending (generic-die MTP program not yet compiled)",
+      "status": "pending"
      }
     },
     "rtl_calibration": {
      "grade": "modelled",
-     "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json; results/arch/hgi_sim_20261009/e2e_calibration.json",
-     "note": "Partial component sensitivity; DS SU/SFU remain uncalibrated, and calibrated peers are bench vehicles. No full-token RTL measurement. DMA is priced at full bandwidth, with >=90% bandwidth an implementation acceptance gate.",
+     "source": "results/arch/hgi_sim_20261009/e2e_calibration.json",
+     "note": "Partial component sensitivity of the native program (bench service-time ratios); DS SU/SFU remain uncalibrated; no full-token RTL measurement. RTL-calibrated rate pending unit fixes.",
      "AR": {
-      "value": 1279.3,
-      "unit": "tok/s",
-      "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22_current_rtl_ratios.tok_s"
-     },
-     "MTP": {
-      "value": 2862.6,
-      "unit": "tok/s",
-      "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22_current_rtl_ratios.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles"
-     },
-     "charged_mtp_basis_cycles": 1348890.6,
-     "approved_delta_per_verify": 143235.0,
-     "calibrated_delta_per_verify": 394546.2,
-     "native_AR": {
       "value": 1508.9,
       "unit": "tok/s",
       "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/e2e_calibration.json result.sensitivity.ds_1M.current_rtl_dma_full_bw_tok_s",
-      "note": "original native program; does not implement the approved gather path"
+      "source": "results/arch/hgi_sim_20261009/e2e_calibration.json result.sensitivity.ds_1M.current_rtl_dma_full_bw_tok_s"
      },
-     "ratios": {
-      "COLL.ALL_GATHER": 2.26,
-      "FUSED.QDQ_FP8": 15.875,
-      "COLL.GROUP_REDUCE_MCAST": 0.909,
-      "IDX.TOPK": 4.477
+     "MTP": {
+      "value": null,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "pending",
+      "note": "pending (generic-die MTP program not yet compiled)",
+      "status": "pending"
      }
     },
     "sequencer_retiming": {
      "grade": "modelled",
      "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json result (the bit-exact native HGI-1 program, rank 0, CP modelled; unit costs walk-priced, CP entries ESTIMATES)",
-     "rule": "delta = simulated program time - its own in-order dataflow (S0), added to the token path; not in the headline until the sequencer (C2) costs are measured (simulator spec section 4: published numbers use measured entries only)",
-     "native_stream": {
+     "committed_timing_record": {
       "cycles": 543456.7,
       "tok_s": 2208.1,
-      "note": "the native HGI-1 program alone, as compiled (fused SU chains, CP-aware order)"
-     },
-     "mtp_as_emitted": {
-      "delta_cycles": 24811.6,
-      "MTP": 3633.1,
-      "note": "the same delta once per verify pass (records issue once a pass; the columns ride in each record); no native verify program is compiled yet"
-     },
-     "as_emitted": {
-      "delta_cycles": 24811.6,
-      "AR": 1657.5
-     },
-     "compiler_list_scheduled": {
-      "delta_cycles": 89987.6,
-      "AR": 1520.6
+      "S0_cycles": 518645.1,
+      "note": "the committed ds_native_timing record of the same program (S2); the token path re-times it with the simulator at HEAD"
      }
     },
     "aggregate": {
@@ -530,7 +505,7 @@
       "value": 96,
       "unit": "dies",
       "grade": "derived",
-      "source": "TP-96 (hbm_ds token path)"
+      "source": "TP-96 (hbm_gen_ds token path)"
      },
      "die_mm2": {
       "value": 798.49,
@@ -601,38 +576,41 @@
      },
      "batch1_w": {
       "AR": {
-       "value": 11921.5,
+       "value": 12561.3,
        "unit": "W",
        "grade": "modelled",
        "source": "static + switches + dyn x per-user"
       },
       "MTP": {
-       "value": 12344.9,
+       "value": null,
        "unit": "W",
        "grade": "modelled",
-       "source": "static + switches + dyn x per-user"
+       "source": "pending",
+       "note": "pending (generic-die MTP program not yet compiled)",
+       "status": "pending"
       }
      },
      "wall_w": {
-      "value": 15312.9,
+      "value": 15581.3,
       "unit": "W",
       "grade": "derived",
-      "source": "MTP batch-1 W x wall factor 1.2404"
+      "source": "AR batch-1 W x wall factor 1.2404"
      }
     },
     "efficiency": {
      "per_user_tok_s_per_kw": {
       "AR": {
-       "value": 146.58,
+       "value": 173.97,
        "unit": "tok/s per kW",
        "grade": "modelled",
        "source": "per-user / batch1_w"
       },
       "MTP": {
-       "value": 270.95,
+       "value": null,
        "unit": "tok/s per kW",
        "grade": "modelled",
-       "source": "per-user / batch1_w"
+       "source": "pending",
+       "status": "pending"
       }
      },
      "aggregate_tok_s_per_w": {
@@ -651,12 +629,12 @@
       "unit": "USD per instance [low, high]",
       "grade": "assumed",
       "source": "results/uarch/economics.json cost_inputs (package $25,000 iso-package, mask set $15,000,000, ROM coding 10%, 1000 units) + configs/hardware/architectures.json (lifetime 4.0 y, utilisation 0.7, $0.08/kWh, PUE 1.15)",
-      "note": "48 packages x $25,000 + 0 ROM mask sets / 1000 units (low: coding layers only; high: full mask sets); switch chips not priced"
+      "note": "48 packages x $25,000 + 0 ROM mask sets / 1000 units (low: coding layers only; high: full mask sets); switch chips not priced; AR rate (MTP pending)"
      },
      "usd_per_user_tok_s": {
       "value": [
-       358.77,
-       358.77
+       549.12,
+       549.12
       ],
       "unit": "USD per (tok/s) at batch 1",
       "grade": "assumed",
@@ -1146,9 +1124,9 @@
    ],
    "gpu": 1175,
    "served": 55,
+   "gpu_same_mode": 230,
    "vs_gpu_batch1": 4.09,
    "vs_served_median": 87.5,
-   "gpu_same_mode": 230,
    "vs_gpu_same_mode": 20.92
   },
   {
@@ -1167,9 +1145,9 @@
    ],
    "gpu": 873.63,
    "served": 88.5,
+   "gpu_same_mode": 203,
    "vs_gpu_batch1": 1.66,
    "vs_served_median": 16.4,
-   "gpu_same_mode": 203,
    "vs_gpu_same_mode": 7.13
   },
   {
@@ -1188,52 +1166,55 @@
    ],
    "gpu": 873.63,
    "served": 88.5,
+   "gpu_same_mode": 873.63,
    "vs_gpu_batch1": 4.85,
    "vs_served_median": 47.9,
-   "gpu_same_mode": 873.63,
    "vs_gpu_same_mode": 4.85
   },
   {
    "target": "HBM accelerator (generic die)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "AR",
-   "per_user": 1747.5,
+   "per_user": 2185.3,
    "aggregate": null,
    "dies": 96,
    "stacks": 384,
-   "power_w": 11921.5,
-   "tok_s_per_kw_b1": 146.58,
+   "power_w": 12561.3,
+   "tok_s_per_kw_b1": 173.97,
    "capex": [
     1200000,
     1200000
    ],
    "gpu": 873.63,
    "served": 88.5,
-   "vs_gpu_batch1": 2.0,
-   "vs_served_median": 19.7,
+   "rate_label": "simulator table rate; RTL-calibrated rate pending unit fixes",
    "gpu_same_mode": 203,
-   "vs_gpu_same_mode": 8.61
+   "vs_gpu_batch1": 2.5,
+   "vs_served_median": 24.7,
+   "vs_gpu_same_mode": 10.77
   },
   {
    "target": "HBM accelerator (generic die)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "MTP",
-   "per_user": 3344.8,
+   "per_user": null,
    "aggregate": null,
    "dies": 96,
    "stacks": 384,
-   "power_w": 12344.9,
-   "tok_s_per_kw_b1": 270.95,
+   "power_w": null,
+   "tok_s_per_kw_b1": null,
    "capex": [
     1200000,
     1200000
    ],
    "gpu": 873.63,
    "served": 88.5,
-   "vs_gpu_batch1": 3.83,
-   "vs_served_median": 37.8,
+   "rate_label": "simulator table rate; RTL-calibrated rate pending unit fixes",
    "gpu_same_mode": 873.63,
-   "vs_gpu_same_mode": 3.83
+   "status": "pending (generic-die MTP program not yet compiled)",
+   "vs_gpu_batch1": null,
+   "vs_served_median": null,
+   "vs_gpu_same_mode": null
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -1254,9 +1235,10 @@
    ],
    "gpu": 1175,
    "served": 55,
+   "rate_label": "simulator table rate; RTL-calibrated rate pending unit fixes",
+   "gpu_same_mode": 230,
    "vs_gpu_batch1": 0.81,
    "vs_served_median": 17.3,
-   "gpu_same_mode": 230,
    "vs_gpu_same_mode": 4.15
   },
   {
@@ -1275,9 +1257,10 @@
    ],
    "gpu": 1175,
    "served": 55,
+   "rate_label": "simulator table rate; RTL-calibrated rate pending unit fixes",
+   "gpu_same_mode": 1175,
    "vs_gpu_batch1": 1.52,
    "vs_served_median": 32.6,
-   "gpu_same_mode": 1175,
    "vs_gpu_same_mode": 1.52
   }
  ],
@@ -1302,7 +1285,7 @@
   },
   {
    "item": "HBM generic die",
-   "effect": "Qwen3-8B on r25 TP4 INT8: 953.8 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS uses the approved gather + G22 path; partial measured-unit sensitivity is recorded separately; DMA stays at full bandwidth",
+   "effect": "Qwen3-8B on r25 TP4 INT8: 953.8 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS = the generic die's compiled HGI-1 program (hbm_gen_ds, simulator table rate; RTL-calibrated rate pending unit fixes; DS MTP pending (generic-die MTP program not yet compiled))",
    "grade": "modelled",
    "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json; results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json; results/arch/hgi_sim_20261009/e2e_calibration.json"
   },
@@ -1320,7 +1303,7 @@
   },
   {
    "item": "MTP block cycles charged",
-   "effect": "DS ROM 4,351.6 -> 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 -> 3,699.9 tok/s (+131 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
+   "effect": "DS ROM 4,351.6 -> 4,238.4 tok/s (+30,632 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
    "grade": "measured",
    "source": "results/arch/mtp_step_20261009 (tools/mtp_step_charges.py)"
   },
