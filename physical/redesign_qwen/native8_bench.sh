@@ -1,4 +1,5 @@
 #!/bin/bash
+# STRAP=1 (env, qwen-1010/c): all 8 groups are the strap tile ot_qfd_crom_gs (crom_lb = 8 g); MUT 5 = one wrong strap.
 set -u
 mut=$1
 out=$(mkdir -p "$2" && readlink -f "$2")
@@ -15,7 +16,7 @@ for n in names:
         for row in range(512): f.write('%0532x\n' % random.getrandbits(2128))
 PY
 "$v" --binary -j 4 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME \
- -Wno-INITIALDLY -Wno-TIMESCALEMOD -GMUT="$mut" --top-module tb_qfd_crom_native8 \
+ -Wno-INITIALDLY -Wno-TIMESCALEMOD -GMUT="$mut" -GSTRAP="${STRAP:-0}" --top-module tb_qfd_crom_native8 \
  -Mdir "$out/obj" rtl/qwen_sys/system_20261008/ot_qfd_crom.sv rtl/hdc/ot_hdc_delay.sv \
  rtl/qwen_sys/redesign_qwen/ot_qfd_crom_native8.sv \
  physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v \

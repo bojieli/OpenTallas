@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_qfd_crom_native8 #(parameter integer MUT=0,N=6000);
+module tb_qfd_crom_native8 #(parameter integer MUT=0,N=6000,STRAP=0);
  reg clk=0,rst_n=0;
  reg [63:0] re=0;
  reg [1535:0] addr=0;
@@ -9,7 +9,7 @@ module tb_qfd_crom_native8 #(parameter integer MUT=0,N=6000);
  wire [1:0] cr,cd;
  ot_qfd_crom ref_(.clk(clk),.rst_n(rst_n),.crom_re(re),.crom_addr(addr),
   .crom_stage(st),.crom_q(qr),.fault(fr),.fault_code(cr));
- ot_qfd_crom_native8 #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.crom_re(re),
+ ot_qfd_crom_native8 #(.MUT(MUT),.STRAP(STRAP)) dut(.clk(clk),.rst_n(rst_n),.crom_re(re),
   .crom_addr(addr),.crom_stage(st),.crom_q(qd),.fault(fd),.fault_code(cd));
  integer checks=0,qscale=0,head=0,episodes=0,cycle=0,l,n,k,r,s,e;
  reg [31:0] rs=32'h13579bdf;

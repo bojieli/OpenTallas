@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // Opt-in functional binding. The original closed group0 executable is untouched.
 // Other lane bases and the new fault collector require physical qualification.
-module ot_qfd_crom_native8 #(parameter integer MUT=0)(
+// STRAP = 1 (qwen-1010/c 2026-10-10): all eight groups are the ONE strap tile ot_qfd_crom_gs with crom_lb = 8 g (MUT 1:
+// every strap tied 0; MUT 5: group 3's strap tied to group 2's base), so the closure of one tile covers the composition.
+module ot_qfd_crom_native8 #(parameter integer MUT=0, parameter integer STRAP=0)(
  input wire clk,rst_n,
  input wire [63:0] crom_re,
  input wire [1535:0] crom_addr,
@@ -14,7 +16,12 @@ module ot_qfd_crom_native8 #(parameter integer MUT=0)(
  wire [15:0] gc;
  genvar g;
  generate for(g=0;g<8;g=g+1) begin: groups
-  if(g==0) begin: closed_group0
+  if(STRAP!=0) begin: strap_group
+   ot_qfd_crom_gs #(.IMG_LB(8*g),.MUT(MUT==2&&g==7?1:0)) u(.clk(clk),.rst_n(rst_n),.crom_re(crom_re[8*g+:8]),
+    .crom_addr(crom_addr[192*g+:192]),.crom_stage(crom_stage),
+    .crom_lb(MUT==1?6'd0:(MUT==5&&g==3)?6'd16:6'(8*g)),
+    .crom_q(crom_q[512*g+:512]),.fault(gf[g]),.fault_code(gc[2*g+:2]));
+  end else if(g==0) begin: closed_group0
    ot_qfd_crom_g u(.clk(clk),.rst_n(rst_n),.crom_re(crom_re[8*g+:8]),
     .crom_addr(crom_addr[192*g+:192]),.crom_stage(crom_stage),
     .crom_q(crom_q[512*g+:512]),.fault(gf[g]),.fault_code(gc[2*g+:2]));
