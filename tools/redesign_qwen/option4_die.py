@@ -46,8 +46,13 @@ import split_ctrl as S  # noqa: E402
 
 F, P = S.F, S.P
 S4 = F.S4
-CTLM = ROOT / "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm.sv"
-SEQB = ROOT / "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_boundary.sv"
+RQ = ROOT / "rtl/qwen_sys/redesign_qwen"
+# master variants: (file, module, emitter)
+CTLMS = {"ctlm": (RQ / "ot_qfd_tt_ctlm.sv", "ot_qfd_tt_ctlm", S.emit_tt_ctlm),
+         "i": (RQ / "ot_qfd_tt_ctlm_i.sv", "ot_qfd_tt_ctlm_i", S.emit_tt_ctlm_i)}
+SEQS = {"boundary": (RQ / "ot_qfd_seq_su_boundary.sv", "ot_qfd_seq_su_boundary", lambda: S.emit_seq_su(boundary=True)),
+        "bi": (RQ / "ot_qfd_seq_su_bi.sv", "ot_qfd_seq_su_bi", S.emit_seq_su_bi)}
+VAR = dict(ctlm="ctlm", seq="boundary")
 SPM = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv"
 # die relay stations between the masters' pin flops (r22ko4 counts replace these defaults)
 CFG = dict(x_s2m=15, x_m2s=15, dst=15, dcu_s=0, duc_s=0, su_ml=7, xmut=0)
@@ -67,13 +72,14 @@ def cut_between(t, start, end):
 
 
 def ctlm_xme(xmut: int = 0) -> str:
-    """the committed ot_qfd_tt_ctlm with its tt_ctl instance cut out (its nets as ports xme_*)"""
-    text = CTLM.read_text()
-    if text != S.emit_tt_ctlm():
-        raise SystemExit("committed ot_qfd_tt_ctlm.sv is stale against split_ctrl.emit_tt_ctlm()")
-    k = text.index("module ot_qfd_tt_ctlm #(")
+    """the committed ctlm master (VAR ctlm) with its tt_ctl instance cut out (its nets as ports xme_*)"""
+    path, mod, emitter = CTLMS[VAR["ctlm"]]
+    text = path.read_text()
+    if text != emitter():
+        raise SystemExit(f"committed {path.name} is stale against its emitter")
+    k = text.index(f"module {mod} #(")
     ctrl, m = text[:k], text[k:]
-    m = one(m, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_xme #(")
+    m = one(m, f"module {mod} #(", "module ot_qfd_tt_ctlm_xme #(")
     ports = []
     for p, ex, kind, w in P.ME:
         if p == "clk":
@@ -185,7 +191,7 @@ def compose(core: str, c: dict) -> str:
     for p, ex, k, w in P.SU:
         if k in ("in", "dir_ok") and not P._local("su", p):
             L.append(f"    wire [{w}-1:0] d_su_{p};")
-    L.append("    ot_qfd_seq_su_boundary #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SW(SW), .LV(LV), .D(4), .SMIN(SMIN),"
+    L.append(f"    {SEQS[VAR['seq']][1]} #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SW(SW), .LV(LV), .D(4), .SMIN(SMIN),"
              " .SMAX(SMAX), .TCUT(TCUT), .IS(1), .OS(1), .RT(4 + DCU_S + DUC_S)) u_seq_su (\n        "
              + ",\n        ".join(sq) + ");")
     # taps for the vehicle die (KV-service layer start, cycles, program base): the sequencer's own nets
@@ -305,9 +311,10 @@ def patch_die(t: str) -> str:
     return t
 
 
-PUB = ['public_flat_rw -module "ot_qfd_seq_su_boundary" -var "prog_mem"',
-       'public_flat_rw -module "ot_qfd_seq_su_boundary" -var "desc_mem"',
-       'public_flat_rw -module "ot_qfd_tt_ctlm_xme" -var "prog_mem"']
+def pub():
+    s = SEQS[VAR["seq"]][1]
+    return [f'public_flat_rw -module "{s}" -var "prog_mem"', f'public_flat_rw -module "{s}" -var "desc_mem"',
+            'public_flat_rw -module "ot_qfd_tt_ctlm_xme" -var "prog_mem"']
 
 
 def proxy_access(hpp: Path, header: Path):
@@ -339,9 +346,10 @@ def proxy_access(hpp: Path, header: Path):
 
 
 def extras(c: dict, core: str) -> str:
-    seqb = SEQB.read_text()
-    if seqb != S.emit_seq_su(boundary=True):
-        raise SystemExit("committed ot_qfd_seq_su_boundary.sv is stale against split_ctrl.emit_seq_su(boundary=True)")
+    path, mod, emitter = SEQS[VAR["seq"]]
+    seqb = path.read_text()
+    if seqb != emitter():
+        raise SystemExit(f"committed {path.name} is stale against its emitter")
     return "\n".join([rst_stn(), S.SPLIT_RTL.read_text(), ctlm_xme(c["xmut"]), seqb, compose(core, c)])
 
 
@@ -356,7 +364,10 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     for k in CFG:
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
+    ap.add_argument("--ctlm", choices=sorted(CTLMS), default="ctlm")
+    ap.add_argument("--seq", choices=sorted(SEQS), default="boundary")
     a = ap.parse_args()
+    VAR.update(ctlm=a.ctlm, seq=a.seq)
     for k in CFG:
         if getattr(a, k) is not None:
             CFG[k] = getattr(a, k)
@@ -370,7 +381,7 @@ def main():
         a.out.mkdir(parents=True, exist_ok=True)
         (a.out / "ot_qwen_rom_core.sv").write_text(core + "\n" + ext)
         (a.out / F.TOP_SV.name).write_text(die_text)
-        (a.out / "public.vlt").write_text(S4.VLT + "\n".join(PUB) + "\n")
+        (a.out / "public.vlt").write_text(S4.VLT + "\n".join(pub()) + "\n")
         print(a.out)
         return
     bld = a.build.resolve()
@@ -380,7 +391,7 @@ def main():
     F.EMIT.emit = lambda text: base_emit(text) + "\n" + ext
     orig = F.die_sources
     F.die_sources = lambda: [gen / F.TOP_SV.name if f == F.TOP_SV else f for f in orig()]
-    S4.VLT = S4.VLT + "\n".join(PUB) + "\n"
+    S4.VLT = S4.VLT + "\n".join(pub()) + "\n"
     orig_link = F.link
 
     def link(b, steps, prefixes=("die", "coll", "tile")):
@@ -388,8 +399,8 @@ def main():
         return orig_link(b, steps, prefixes)
     F.link = link
     F.build(bld, a.jobs)
-    (bld / "O4DIE.json").write_text(json.dumps(dict(CFG, ctlm=str(CTLM.relative_to(ROOT)),
-                                                    seq_su=str(SEQB.relative_to(ROOT))), indent=1) + "\n")
+    (bld / "O4DIE.json").write_text(json.dumps(dict(CFG, ctlm=str(CTLMS[VAR["ctlm"]][0].relative_to(ROOT)),
+                                                    seq_su=str(SEQS[VAR["seq"]][0].relative_to(ROOT))), indent=1) + "\n")
 
 
 if __name__ == "__main__":

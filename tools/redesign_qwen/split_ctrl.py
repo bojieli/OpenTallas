@@ -139,6 +139,69 @@ def ctrl_x(ctrl: str) -> str:
     return t
 
 
+def ctrl_icut(t: str) -> str:
+    """qwen-1010/a ICUT for the two-controller ctrl_x (the struct-close ICUT of ot_qfd_sp_constants_sequencer_sys,
+    ported): the seq_su routes fail post-CTS at -434 .. -870 ps on ONE cone -- the issue: the SU status input stations
+    -> issue shell (ready from inflight) -> unit_ready / own_idle -> issue -> load -> the 1,024-b head / decode enables
+    (and d_chase_n -> chase compare -> issue -> hq).  ICUT = 1: the whole readiness of the op that holds NEXT after this
+    edge is a REGISTER (ready_q), evaluated one edge ahead (the head word's fields when loading) against the status
+    predicted after the edge: the own unit issued on this edge reads busy (idle / ready 0, kv_write_drained 0 for an SU
+    issue); the other unit's snapshot is taken with the NEXT edge's count (o_dif_n, as XREG) -- the hold rule keeps the
+    other unit from accepting a later op while this op reads its status, so its status only improves.  ready_q implies
+    the live issue condition (assertion off SYNTHESIS); an issue can be one edge later than live, never earlier.  Op
+    order unchanged.  me_en / kv_gate / w_gate stay live.  Needs XREG 1."""
+    t = re.sub(r"(    parameter integer XREG = 0,[^\n]*\n)", r"\1    parameter integer ICUT = 0,       // qwen-1010/a: registered readiness (ctrl_icut)\n", t, count=1)
+    t = one(t, "    wire issue = (st == S_RUN) && nx_v && own && xdep_ok\n                 && unit_ready && kv_gate && w_gate;\n",
+            "    wire issue_live = (st == S_RUN) && nx_v && own && xdep_ok\n                 && unit_ready && kv_gate && w_gate;\n"
+            "    reg ready_q;\n"
+            "    wire issue = (ICUT == 0) ? issue_live :\n"
+            "                 ((st == S_RUN) && nx_v && own && ready_q && (d_unit != 2'd1 || me_en) && kv_gate && w_gate);\n")
+    t = one(t, "    wire push = (st == S_RUN) && pend1;\n",
+            "    wire push = (st == S_RUN) && pend1;\n"
+            "    // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge\n"
+            "    wire own_ready = (OWN == 1) ? me_ready : su_ready;\n"
+            "    wire own_idle_n = own_idle && !issue;\n"
+            "    wire own_ready_n = own_ready && !issue;\n"
+            "    wire kd_n = kv_write_drained && !(issue && OWN == 2);\n"
+            "    wire osync_n = (o_dif_n == {XW{1'b0}});\n"
+            "    wire o_drained_n = osync_n && x_oidle;\n"
+            "    function automatic rdy_x(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu);\n"
+            "        reg chd, wo, wu, xd;\n"
+            "        begin\n"
+            "            chd = osync_n && ((OWN == 1 && chr) ? (x_orows >= chn) : (x_oprog >= chn));\n"
+            "            wo = (OWN == 1) ? wsu : wme;\n"
+            "            wu = (OWN == 1) ? wme : wsu;\n"
+            "            xd = (XMUT == 1 && OWN == 1) ? 1'b1 :\n"
+            "                 (bar ? (own_idle_n && o_drained_n && (!KV_VEC_WRITE_BRIDGE || kd_n)) :\n"
+            "                        ((!ch || chd) && (!wu || own_idle_n) && (!wo || o_drained_n)));\n"
+            "            rdy_x = (u == OWN[1:0]) && xd &&\n"
+            "                    ((OWN == 1) ? own_ready_n : (own_ready_n && (!KV_VEC_WRITE_BRIDGE || (own_idle_n && kd_n))));\n"
+            "        end\n"
+            "    endfunction\n"
+            "    generate if (ICUT != 0) begin : g_icut\n"
+            "`ifdef OT_ICUT_MUT_NOPRED\n"
+            "        // mutant: the own unit's status NOT predicted (it still reads ready / idle after its own go)\n"
+            "        wire r_load = rdy_x(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU)) ||\n"
+            "                      ((`F(UNIT) == OWN[1:0]) && issue);\n"
+            "`else\n"
+            "        wire r_load = rdy_x(`F(UNIT), `F(BARRIER), `F(CHASE), `F(CHASE_ROWS), `F(CHASE_N), `F(WAIT_ME), `F(WAIT_SU));\n"
+            "`endif\n"
+            "        wire r_hold = rdy_x(d_unit, d_barrier, d_chase, d_chase_rows, d_chase_n, d_wait_me, d_wait_su);\n"
+            "        always @(posedge clk or negedge rst_n)\n"
+            "            if (!rst_n) ready_q <= 1'b0;\n"
+            "            else ready_q <= load ? r_load : r_hold;\n"
+            "`ifndef SYNTHESIS\n"
+            "        always @(posedge clk) if (rst_n && issue && !issue_live) begin\n"
+            "            $display(\"ICUT_ILLEGAL_ISSUE t=%0t own=%0d\", $time, OWN);\n"
+            "            $fatal(1, \"ICUT issue without the live issue condition\");\n"
+            "        end\n"
+            "`endif\n"
+            "    end else begin : g_noicut\n"
+            "        always @(posedge clk) ready_q <= 1'b0;\n"
+            "    end endgenerate\n")
+    return t
+
+
 def ctrl_ports(core: str):
     """(direction, name) of the core's ports (the controller has the same set, then its partition ports)"""
     params, port_text = P.header(core)
@@ -360,7 +423,8 @@ def patch_die(t: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=("build", "run", "emit", "emit-tile", "emit-seq-su", "emit-seq-su-boundary"))
+    ap.add_argument("phase", choices=("build", "run", "emit", "emit-tile", "emit-seq-su", "emit-seq-su-boundary",
+                                      "emit-seq-su-bi", "emit-tile-i"))
     ap.add_argument("--build", type=Path)
     ap.add_argument("--work", type=Path)
     ap.add_argument("--stages", choices=("L0", "L3", "full"), default="L3")
@@ -384,6 +448,12 @@ def main():
         return
     if a.phase == "emit-tile":
         a.out.write_text(emit_tt_ctlm())
+        return
+    if a.phase == "emit-seq-su-bi":
+        a.out.write_text(emit_seq_su_bi())
+        return
+    if a.phase == "emit-tile-i":
+        a.out.write_text(emit_tt_ctlm_i())
         return
     if a.phase in ("emit-seq-su", "emit-seq-su-boundary"):
         a.out.write_text(emit_seq_su(boundary=a.phase == "emit-seq-su-boundary"))
@@ -695,6 +765,28 @@ def emit_seq_su(boundary: bool = False) -> str:
             stage = "IS" if name.startswith("pi_") else "OS"
             text = re.sub(r"(\.D\("+stage+r"\))(\) u_[io]_"+name+r"\b)", r"\1, .RESET(1)\2", text)
     return text
+
+
+# qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
+# above stay byte-identical.
+def emit_seq_su_bi() -> str:
+    """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
+    (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
+    t = ctrl_icut(emit_seq_su(boundary=True))
+    t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
+    t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
+    t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .W(W)")
+    t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
+    return t
+
+
+def emit_tt_ctlm_i() -> str:
+    """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
+    t = ctrl_icut(emit_tt_ctlm())
+    t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
+    t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
+    t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .W(16)")
+    return t
 
 
 if __name__ == "__main__":
