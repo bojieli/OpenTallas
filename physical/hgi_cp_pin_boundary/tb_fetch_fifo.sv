@@ -1,10 +1,13 @@
 `timescale 1ns/1ps
+`ifndef FETCH_SOURCE_SEAT
+`define FETCH_SOURCE_SEAT 0
+`endif
 module tb_fetch_fifo;
   reg clk=0; always #1 clk=~clk;
   reg rst_n=0, iv=0, ready=0;
   reg [39:0] addr=0;
   wire ov; wire [39:0] oa;
-  ot_hgi_cp #(.USE_MACRO(0), .FETCH_PIN_FIFO(1)) dut
+  ot_hgi_cp #(.USE_MACRO(0), .FETCH_PIN_FIFO(1), .FETCH_SOURCE_SEAT(`FETCH_SOURCE_SEAT)) dut
     (.clk(clk), .rst_n(rst_n), .cmd_we(1'b0), .cmd_addr(6'b0), .cmd_wdata(64'b0),
      .units_busy(1'b0), .rank(8'b0), .db_v(1'b0), .db_token(18'b0), .db_pos(20'b0),
      .db_job(32'b0), .db_gen(4'b0), .db_entry(2'b0), .db_ncol(4'b0), .db_kernel(4'b0),

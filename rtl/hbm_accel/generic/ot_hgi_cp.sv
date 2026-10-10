@@ -11,7 +11,9 @@ module ot_hgi_cp #(
     parameter integer SETTLE = 64,
     parameter integer RW = 512,
     parameter integer USE_MACRO = 1,
-    parameter integer FETCH_PIN_FIFO = 0
+    parameter integer FETCH_PIN_FIFO = 0,
+    // Root-local request-mux capture before the physical pin FIFO. Opt-in only.
+    parameter integer FETCH_SOURCE_SEAT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -95,9 +97,24 @@ module ot_hgi_cp #(
     generate if (FETCH_PIN_FIFO) begin : g_fetch_pin
         (* keep = 1 *) reg [39:0] front_addr, back_addr;
         (* keep = 1 *) reg front_v, back_v;
-        wire take_in = sf_v && sf_rdy;
+        wire input_v,input_rdy;wire[39:0]input_addr;
+        assign input_rdy=!back_v;
+        if(FETCH_SOURCE_SEAT)begin:g_source_seat
+            (* keep = 1 *) reg[39:0]source_addr;
+            (* keep = 1 *) reg source_v;
+            wire source_rdy=!source_v||input_rdy;
+            assign sf_rdy=source_rdy;
+            assign input_v=source_v;assign input_addr=source_addr;
+            always@(posedge clk or negedge rst_n)
+                if(!rst_n)source_v<=0;
+                else if(source_rdy)source_v<=sf_v;
+            always@(posedge clk)if(source_rdy&&sf_v)source_addr<=sf_addr;
+        end else begin:g_no_source_seat
+            assign sf_rdy=input_rdy;
+            assign input_v=sf_v;assign input_addr=sf_addr;
+        end
+        wire take_in = input_v && input_rdy;
         wire take_out = front_v && f_req_rdy;
-        assign sf_rdy = !back_v;
         assign f_req_v = front_v;
         assign f_req_addr = front_addr;
         always @(posedge clk or negedge rst_n)
@@ -113,8 +130,8 @@ module ot_hgi_cp #(
             end
         always @(posedge clk) begin
             if (take_out && back_v) front_addr <= back_addr;
-            else if (take_in && (!front_v || take_out)) front_addr <= sf_addr;
-            if (take_in && front_v && !take_out) back_addr <= sf_addr;
+            else if (take_in && (!front_v || take_out)) front_addr <= input_addr;
+            if (take_in && front_v && !take_out) back_addr <= input_addr;
         end
     end else begin : g_fetch_legacy
         assign f_req_v = sf_v;

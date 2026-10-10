@@ -4,11 +4,11 @@ mode=${1:-exact}
 benchdir=rtl/hbm_accel/generic/tb
 scratch=$(mktemp -d /tmp/hgi-cp-fetch-pin.XXXXXX)
 trap 'rm -rf "$scratch"' EXIT
-python3 - "$benchdir/tb_hgi_seq.sv" "$scratch/tb.sv" <<'PY'
+python3 - "$benchdir/tb_hgi_seq.sv" "$scratch/tb.sv" "${SOURCE_SEAT:-0}" <<'PY'
 from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text()
-s=s.replace('ot_hgi_cp #(.USE_MACRO(', 'ot_hgi_cp #(.FETCH_PIN_FIFO(1), .USE_MACRO(')
+s=s.replace('ot_hgi_cp #(.USE_MACRO(', 'ot_hgi_cp #(.FETCH_PIN_FIFO(1), .FETCH_SOURCE_SEAT('+sys.argv[3]+'), .USE_MACRO(')
 Path(sys.argv[2]).write_text(s)
 PY
 case "$mode" in exact) extra=();; conformance) extra=(-DSEQ_CONF);; mutant) extra=(-DOT_HGI_SEQ_MUT_TOKX);; *) exit 2;; esac

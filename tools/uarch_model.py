@@ -15314,3 +15314,20 @@ def hgi_index_cp_lease_model():
     """Opt-in dispatch lease actor; real grant/service providers remain OPEN."""
     from tools.hgi_index_cp_lease_model import model
     return model()
+
+
+def hgi_cp_fetch_source_seat_model(fetch_sectors_per_token=0):
+    """Root-local mux capture before existing physically anchored pin FIFO."""
+    d=hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token)
+    d.update(schema='opentallas.hgi_cp_fetch_source_seat.v1',
+        added_storage_ff_bits=123, queue_depth=3,
+        added_first_fetch_latency_cycles=2,
+        conservative_serial_token_added_cycles=2*fetch_sectors_per_token,
+        estimated_added_area_um2=123*DFF_UM2,
+        source_seat='41 FF capture actual rqf[rqh] address/valid locally; pin FIFO receives only source-seat registered data',
+        source_ready='!source_valid || !back_valid; never combinational external output-ready',
+        routing_tracks_added=41, source_to_pin_hops=1,
+        token_latency_composition='two extra cycles per dependent fetch; source-seat -> pin FIFO streamingII1; actual CP38/66 and FIFO500 gates required',
+        predecessor='b529 anchored pin FIFO input D setup−97ps at GRT pathfinding; source mux capture was missing, final predecessor verdict pending',
+        physical_qualified=False)
+    return d
