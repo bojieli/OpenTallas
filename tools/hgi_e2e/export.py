@@ -299,7 +299,10 @@ def export_ds(a):
         r.layer = lay["layer"]
         recs.append(r)
     assert encode_program(recs) == st["image"], "program dump != rank 0 image"
-    cf = NativeCost(d["ops"], recs)
+    from hgi_sim import ds_native_timing as DT
+    rg = {x["layer"]: s_ for x in run["results"] for s_ in (x.get("row_gather") or [])}
+    DT.apply_dyn_counts(recs, rg)                    # G24: LOOP counts read from VM -> the run's row-gather rounds
+    cf = NativeCost(d["ops"], recs, row_gather=rg)
     sch = T.schedule(recs, st["pos"], "S2", cost_fn=cf)
     sch_nw = T.schedule(recs, st["pos"], "S2", cost_fn=cf, wires=False)
     j = 0

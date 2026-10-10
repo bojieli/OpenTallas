@@ -130,7 +130,7 @@ class DGeom:
         phase([("QB", B * self.nq * HD), ("ATTN", B * self.nq * HD)], at=live0)
         phase([("HF", PH * H), ("LOG", PH * self.hrows)])
         fcp = [(f"FCP{j}", P * HT) for j in range(nf)]
-        phase([("FIN", P * H)] + fcp + [("FCG", TP * P * HT), ("HC", P * H), ("DKV", P * 2 * self.nk * HD),
+        phase([("FIN", P * H)] + fcp + [("FCG", TP * P * HT), ("FCR", P * H), ("HC", P * H), ("DKV", P * 2 * self.nk * HD),
                                          ("DKN", P * self.nk * HD), ("DKR", P * self.nk * HD)])
         self.vm_end = ubase + max(uses.values())
         assert self.vm_end <= 1 << 18, f"DFlash VM map needs {self.vm_end} words (> 262,144)"
@@ -323,8 +323,13 @@ def step_program(g: DGeom, md, timing_pos=None):
         e.rec("COLL", "ALL_GATHER", ["FCG"], ["FCG"], f"draft_ctx.gather.c{c0}", "draft_fc", desc=dict(
             A=V("FCG", TP * P * HT), O=V("FCG", TP * P * HT)))
         for c in range(pp):
-            e.norm(f"draft_ctx.hidden_norm.c{c0 + c}", "draft_ctx", V("FCG", HT, m=TP, stride=P * HT, off=c * HT),
-                   e.Hb("DWEIGHTS", g.dhn, "BF16", H), V("HC", H, off=c * H, fmt="BF16"), 0, ["FCG"], ["HC"])
+            # the gathered row of slot c is TP rank slices P*HT apart: one SU re-layout to a contiguous H-vector
+            # (the FUSED norm takes one contiguous A; hgi-1010/b: 2-D A stays a defined refusal)
+            e.su(f"draft_ctx.fc_row.c{c0 + c}", "draft_ctx", dict(
+                A=V("FCG", HT, m=TP, stride=P * HT, off=c * HT), O=V("FCR", HT, m=TP, stride=HT, off=c * H)),
+                ["FCG"], ["FCR"], m1=I.M1_BYP)
+            e.norm(f"draft_ctx.hidden_norm.c{c0 + c}", "draft_ctx", V("FCR", H, off=c * H),
+                   e.Hb("DWEIGHTS", g.dhn, "BF16", H), V("HC", H, off=c * H, fmt="BF16"), 0, ["FCR"], ["HC"])
         e.rec("CTL", "LOOP", [], [], "draft_ctx.layers", "", param=g.nD)
         e.sm(f"draft_ctx.kv.c{c0}", "draft_ctx", V("HC", H, m=pp, stride=H),
              dW("qkv", "BF16", H, 2 * nk * HD, H * 2, off=nq * HD * H * 2), V("DKV", 2 * nk * HD, m=pp, stride=2 * nk * HD),
