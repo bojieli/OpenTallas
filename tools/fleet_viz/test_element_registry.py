@@ -109,4 +109,24 @@ class RegistryTest(unittest.TestCase):
             self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
 
 
+class SupersededInstanceFoldTest(unittest.TestCase):
+    def test_instance_fold_into_superseded_parent_does_not_break_compute(self):
+        """fill-9 2026-10-10: an 'instance' fold whose parent is superseded froze /api/elements (KeyError)."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td)
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {'parent_elem': dict(by='child_blk', reason='adopted')}
+            model.overrides = lambda: dict(variants={'child_blk': dict(of='parent_elem', kind='instance')},
+                                           owner_map={}, owners={})
+            model.overrides_path = model.repo / 'overrides'
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='child_blk-0123456789-tc', status='CLOSED',
+                spec=dict(block='child_blk'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertIn('child_blk', rows)
+
+
 if __name__ == '__main__': unittest.main()

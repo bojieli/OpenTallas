@@ -126,27 +126,7 @@
    "t_mtpk": [
     120,
     "W",
-    "inout"
-   ],
-   "f_mtp_q": [
-    517,
-    "W",
-    "inout"
-   ],
-   "t_mtp_q": [
-    197,
-    "W",
-    "inout"
-   ],
-   "cSW": [
-    827,
-    "W",
-    "inout"
-   ],
-   "att_rec_SW": [
-    1250,
-    "W",
-    "inout"
+    "output"
    ],
    "f_hgi_sfu": [
     3,
@@ -157,6 +137,11 @@
     1174,
     "W",
     "output"
+   ],
+   "cSW": [
+    827,
+    "W",
+    "inout"
    ],
    "f_hgi_hc": [
     3,
@@ -170,11 +155,6 @@
    ],
    "cNW": [
     827,
-    "W",
-    "inout"
-   ],
-   "att_rec_NW": [
-    1250,
     "W",
     "inout"
    ],
@@ -193,18 +173,8 @@
     "E",
     "inout"
    ],
-   "att_rec_SE": [
-    1250,
-    "E",
-    "inout"
-   ],
    "cNE": [
     827,
-    "E",
-    "inout"
-   ],
-   "att_rec_NE": [
-    1250,
     "E",
     "inout"
    ],
@@ -378,6 +348,51 @@
    ],
    "t_hgi_vmq": [
     338,
+    "N",
+    "output"
+   ],
+   "f_sel_co": [
+    72,
+    "N",
+    "input"
+   ],
+   "f_sel_ev": [
+    2,
+    "N",
+    "input"
+   ],
+   "f_sel_qbr": [
+    1,
+    "N",
+    "input"
+   ],
+   "f_sel_to": [
+    612,
+    "N",
+    "input"
+   ],
+   "t_sel_coc": [
+    1,
+    "N",
+    "output"
+   ],
+   "t_sel_fs": [
+    90,
+    "N",
+    "output"
+   ],
+   "t_sel_kin": [
+    345,
+    "N",
+    "output"
+   ],
+   "t_sel_qb": [
+    1048,
+    "N",
+    "output"
+   ],
+   "t_sel_toc": [
+    1,
     "N",
     "output"
    ],
