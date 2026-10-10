@@ -25,6 +25,7 @@
 //   contiguous, segment not dividing A, B.n != d, d or nseg >= 2^16.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_fused_record #(
+    parameter integer PAYLOAD_RESET = 1,
     parameter integer MUT_SEG = 0,         // mutant: one segment of the whole row (seg ignored)
     parameter integer UNIT = 0,            // 1: the D1 die body: the micro-ops run on an internal ot_hgi_su_unit (stage /
                                            //    vec / drain through the vmq / vmr VM client); 0: the vec op port (op_*)
@@ -115,7 +116,7 @@ module ot_hgi_fused_record #(
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
     generate if (UNIT) begin : g_unit
-        ot_hgi_su_unit #(.N(UN), .M(UM), .LV(ULV)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
+        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
             .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
             .vmq(vmq), .vmr(vmr));

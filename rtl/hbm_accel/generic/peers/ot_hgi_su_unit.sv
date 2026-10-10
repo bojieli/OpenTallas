@@ -23,6 +23,7 @@
 module ot_hgi_su_ctl #(
     parameter integer N = 16, M = 8, LV = 6,
     parameter integer LWB = 17,           // log2 local words (the Qwen head: 37,984 B + O + the stream region)
+    parameter integer PAYLOAD_RESET = 1,
     parameter integer GLU = 0,            // 1: the SFU die body (SFU.GLU records; ot_hgi_su_record GLU mode)
     parameter integer SLB = 16,           // log2 words of the stream-0 landing region (top of the local memory)
     parameter integer MUT_DIRTY = 0       // mutant: drain whole sectors (overwrites words the op did not write)
@@ -72,7 +73,7 @@ module ot_hgi_su_ctl #(
     // ---- the record adapter (decode) and the op it issues
     wire op_v; reg op_rdy_r; wire [669:0] op_w; reg su_idle_r, su_fault_r;
     wire [1:0] strm;
-    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(!GLU)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(!GLU), .PAYLOAD_RESET(PAYLOAD_RESET)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a), .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o),
         .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted),
         .drained(), .op_strm(strm), .lg_v(1'b0), .lg_rdy(), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy_r), .op_w(op_w),
@@ -373,6 +374,7 @@ endmodule
 module ot_hgi_su_unit #(
     parameter integer N = 16, M = 8, LV = 6,
     parameter integer LWB = 17,
+    parameter integer PAYLOAD_RESET = 1,
     parameter integer GLU = 0,
     parameter integer SLB = 16,
     parameter integer MUT_DIRTY = 0
@@ -400,7 +402,7 @@ module ot_hgi_su_unit #(
     wire go, ready, idle, vfault, ofault, ro; wire [669:0] wl;
     wire sl_v, sw_v, dc_v, sr_v; wire [LWB-1:0] sl_addr; wire [31:0] sl_data; wire [LWB-4:0] sw_sec, dc_sec, sr_sec;
     wire [255:0] sw_data, sr_data; wire [7:0] sr_dm;
-    ot_hgi_su_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY)) u_ctl (.clk(clk),
+    ot_hgi_su_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET)) u_ctl (.clk(clk),
         .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
