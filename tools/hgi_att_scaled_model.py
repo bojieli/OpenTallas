@@ -2,7 +2,7 @@
 import json
 
 def model():
-    return dict(default_on=False,producer='ot_hgi_fp4qdq block16, two blocks/edge',
+    return dict(window_FP8=dict(producer='ot_hdc_actquant fp4=0',existing_outputs='q256,e10,y512 alignedvo',packed_group='{fmt0,UE8M0(e+127),q256}',added_register_bits=0,added_cycles=0,latency_cycles=13,II=1,raw_ROW_D512_bytes=544,adopted=False),default_on=False,producer='ot_hgi_fp4qdq block16, two blocks/edge',
         source_quantizer='hdc_golden_v41.qdq_fp4_e4m3 SATFINITE scale448',
         original_values='BF16-valued FP32; no unscaled E4M3 requirement in golden',
         proposal='preserve existing S5 sign/code/n/qs directly at S6, aligned with unchanged BF16 y and vo',
