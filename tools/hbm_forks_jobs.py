@@ -80,7 +80,7 @@ def main():
     commit = sys.argv[1]
     out = []
     for m in MASTERS:
-        for hm, tag in (('0.010', 'hm10'), ('0.025', 'hm25')):
+        for hm, tag in (('0.010', 'hm10'), ('0.000', 'hm0')):   # coordinator 2026-10-09: hm0 + post-route hold ECO, not hm25
             n, s = spec(m, commit, hm, tag)
             out.append(n)
             if '--write' in sys.argv:
