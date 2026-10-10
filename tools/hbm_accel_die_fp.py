@@ -479,8 +479,9 @@ R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True)
 # die-evidence-2 2026-10-09 18:00 PT: R25GP = R25G on the CLOSING attention / svc views: the PS halves (half_ps: PS entry
 # ks port, attn_entry8) with the hi half widened to 689.04 um (hbm-forks 11c7e95b3 --hi-channel-rows 7), slot
 # 814.32 + 689.04 = 1,503.36 um (+15.12 vs R25S), the hub band grown by the same 2 x 4 x 15.12 um; svc split_ps segments.
-# DOES NOT GENERATE YET (18:05 PT): with split_ps the svc SE_s7 ki7 pin finds no free N-face span (apply_splits_x) on
-# the R25G outline; R25SPS at 1,503.36 fails 'no room for station of ks5_SW' -- the PS entry ks chains need hub room.
+# GENERATES (hgi-takeover 2026-10-09 evening): the SE_s7 ki7 span is fixed (hbm-forks 65d804e91) and the plan record
+# serialises through plan_json (tuple-keyed pin_centre); plan --ds-var r25gp: 31,734.288 x 25,282.8 um, 802.33 mm2,
+# 1,245 instances, 0 overlaps / 0 outside, die lint rc 0.  (R25SPS at 1,503.36 still fails 'no room for station of ks5_SW'.)
 R25GP = dict(R25G, attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True,
              split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
              attn_tile_h_um=1503.36, hub_h=R25G['hub_h'] + 2 * 4 * (1503.36 - 1488.24))
@@ -1064,6 +1065,12 @@ def _jsonable(o):
     if isinstance(o, (list, tuple, set)):
         return [_jsonable(v) for v in o]
     return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
+
+
+def plan_json(rec):
+    """floorplan.json text: the record through _jsonable, so a variant's tuple-keyed dicts (pin_centre from the r23 /
+    R25 presets, corner rules) serialise as 'master|port' keys instead of failing json.dumps."""
+    return json.dumps(_jsonable(rec), indent=1)
 
 
 # index_q bands are NOT in the list (r16b a_real, measured + derived): they are placed both R0 and x-mirrored (MY /
@@ -1858,8 +1865,10 @@ def apply_splits_x(m, rel):
                         extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
                         new_owner[(inst, port)] = bn
                         break
+    fc_taps = {}     # hbm-forks --fc (split_psfc): face clock taps ckw / cke ride the band's ck net (balanced die leaves)
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+        fc_taps[bn] = [p_ for p_ in ('ckw', 'cke') if p_ in rec['ports']]
         spec, order = _xy_or_split_spec(rec['ports'])
         for pn_, t_ in extra_x.get(bn, {}).items():
             # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
@@ -1941,6 +1950,8 @@ def apply_splits_x(m, rel):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(nm, port) for nm in repl[inst].values()]
+                if port == 'ck':
+                    e2 += [(nm, tp) for bn_, nm in repl[inst].items() for tp in fc_taps[bn_]]
             elif (inst, port) in new_owner:
                 e2.append((repl[inst][new_owner[(inst, port)]], port))
             else:
@@ -4539,7 +4550,7 @@ def main(argv=None):
         rec = plan_record_qwen(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg', scale=0.03)
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc_qwen(out / 'domains.sdc')
@@ -4566,12 +4577,13 @@ def main(argv=None):
         print(' '.join(ir_windows(m)))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT
+        # --out: write the plan elsewhere (a variant build must not overwrite the committed default-die record)
+        out = a.out.resolve() if a.out else ROOT / OUT
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg')
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc(out / 'domains.sdc', m)
