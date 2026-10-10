@@ -310,7 +310,7 @@ def strip_pins(g, hcore, strip):
     return pins, h
 
 
-def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50):
+def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50, io_ref=False):
     """Strip constraints: element pins carry the die budget (as the m2 front), face and tile-facing ports the abutting
     budget (300 ps outside + the intra-element skew), the ring multicycle on front_c."""
     elem = {"front_n": ("start op_* xw_* release_in", "start_ready busy arrive released"),
@@ -320,7 +320,7 @@ def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io
            "front_c": ("fs_v fs_d* fx_b* fr_rl fd_v fd_d* fq_ret fp_* fsv", "rout_* bout_* fs_ret fo_* fd_ret fq_v fq_d*"),
            "front_s": ("qin_* fd_ret fq_v fq_d* fi_*", "rout_* fd_v fd_d* fq_ret fp_* fsv")}[strip]
     base = sdc_block(lat, element_io=False, ring=(strip == "front_c"), nbr_in=nbr[0], lat_ff=lat_ff, period=period,
-                     skew=skew, die_skew=die_skew, hold_io=hold_io)
+                     skew=skew, die_skew=die_skew, hold_io=hold_io, io_ref=io_ref)
     base = base.replace("set nbr_out [all_outputs]", f"set nbr_out [get_ports {{{nbr[1]}}}]")
     if elem[0]:
         add = ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min) plus the die term, referenced",
@@ -422,7 +422,13 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "# clock pin of this block (-reference_pin: the propagated arrival at that pin, per corner) instead of nbr_clk",
               "# with the SS insertion as a fixed source latency: the latter made FF input hold optimistic by lat - lat_ff and",
               "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
-              "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
+              "# hbm-phys-1010 [att] PINFLOP-REF: the reference is the input pin flop of median clock arrival (pinflop_ref.tcl,",
+              "# the loop's route-time default) when the procs are shipped; else the first register (m2g).",
+              "set refpin {}",
+              "if {[file exists /src/physical/qwen_die_masters/pinflop_ref.tcl]} {",
+              "  catch { source /src/physical/qwen_die_masters/pinflop_ref.tcl; set refpin [ot_pf_ref $nbr_in] }",
+              "}",
+              "if {![llength $refpin]} { set refpin [lindex [all_registers -clock_pins -edge_triggered] 0] }",
               "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
               "set_input_delay -min 30 -clock core_clk -reference_pin $refpin $nbr_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
@@ -1166,7 +1172,7 @@ def cmd_block(a):
                    f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
         hops = STRIP_HOPS[a.piece]
         if g.get("front_channel_um", 120.0) != 120.0:
             if a.piece == "front_c":
