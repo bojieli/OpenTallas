@@ -12,7 +12,10 @@ def normalize(source, out):
         raise ValueError('refuse to overwrite derived evidence')
     out.mkdir(parents=True)
     originals, files = {}, {}
-    for suffix in ('.lef', '_ss.lib', '_ff.lib'):
+    suffixes = ['.lef', '_ss.lib', '_ff.lib']
+    if (source / 'qfd_link_rx128_tt.lib').exists():
+        suffixes.append('_tt.lib')
+    for suffix in suffixes:
         src = source / ('qfd_link_rx128' + suffix)
         raw = src.read_bytes()
         text = raw.decode()
@@ -30,6 +33,7 @@ def normalize(source, out):
                   rtl_module='ot_qwen_die_cdc_ch', parameters=dict(W=1024, IBUF=4, OCRED=4, AD=8, PIPE=2),
                   source_record='results/closure_loop/qfd_cdc1024_a-1a9caff1a-tc/verdict.json',
                   original_sha256=originals, files=files,
+                  tt_library_exported='_tt.lib' in suffixes,
                   changes='library/cell/macro identifiers only; timing, pins and geometry retained byte-for-byte otherwise',
                   setup_corner='TT', tt_setup_ps=127.06, ff_hold_ps=1.16, drc=0,
                   ss_sensitivity_ps=-119.61, qualification='owner option B; SS sensitivity fails')

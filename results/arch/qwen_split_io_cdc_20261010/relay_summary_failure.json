@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.qwen.split_io_cdc.summary_failure.v1",
+  "command": "python3 tools/qwen_rom_fulldie_b3r2.py plan --recipe r21c --native-coll --split-io-cdc --out /tmp/qwen-splitio-plan-test",
+  "source_commit": "8ab941dbd plus uncommitted split feature",
+  "failure": "KeyError: rly_bword_0_0 in bword_stages: first destination after relay insertion is a relay, not a slab",
+  "stage": "analytical relay-placement complete; plan summary failed",
+  "overwritten": false,
+  "fix": "resolve original bus last hop with r21_stage_of; sum actual relay stage counts including waypoints and fragments",
+  "regression_gate": {
+    "relayed_bword": 3,
+    "waypoint": 2,
+    "fragment": 2,
+    "primary": 4,
+    "total": 11,
+    "result": "PASS"
+  }
+}

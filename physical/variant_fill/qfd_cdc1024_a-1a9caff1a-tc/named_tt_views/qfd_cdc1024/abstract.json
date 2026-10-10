@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.derived_hard_view_identity.v1",
+  "name": "qfd_cdc1024",
+  "rtl_module": "ot_qwen_die_cdc_ch",
+  "parameters": {
+    "W": 1024,
+    "IBUF": 4,
+    "OCRED": 4,
+    "AD": 8,
+    "PIPE": 2
+  },
+  "source_record": "results/closure_loop/qfd_cdc1024_a-1a9caff1a-tc/verdict.json",
+  "original_sha256": {
+    "qfd_link_rx128.lef": "25ddf7734aa8499d1ee5fdad245d184c94d236df439cc0f16548ddf037a19e8c",
+    "qfd_link_rx128_ss.lib": "4b6b05e9c1afe02b62edf58b4deddf6308920379288850ffc3eb18de03091dd5",
+    "qfd_link_rx128_ff.lib": "19bd188eede729b4cd0bd82069efbd65c368b69ac8548d3bf0791942b129c27b",
+    "qfd_link_rx128_tt.lib": "36851dec0e08bb8f4fdc1507c9226fd6c9d091a6cc36d86fbf518134d88754cc"
+  },
+  "files": {
+    "qfd_cdc1024.lef": "11abba0fe03456fedb590b1223c30bc5ee9bd6767449dbcd725c6d4065c9394b",
+    "qfd_cdc1024_ss.lib": "a42c07619b864d21f7c74288be0f5e449df3db5447b297406f4c7ee8dc4de037",
+    "qfd_cdc1024_ff.lib": "7e896c4a12e827f3ce13eec65275820a166e54e9624fc27ec1ab23bb37ccf766",
+    "qfd_cdc1024_tt.lib": "8f4ec636851edbed7de42c47089bd0293f26a4568607d1d3a9a0923dfe268c8b"
+  },
+  "tt_library_exported": true,
+  "changes": "library/cell/macro identifiers only; timing, pins and geometry retained byte-for-byte otherwise",
+  "setup_corner": "TT",
+  "tt_setup_ps": 127.06,
+  "ff_hold_ps": 1.16,
+  "drc": 0,
+  "ss_sensitivity_ps": -119.61,
+  "qualification": "owner option B; SS sensitivity fails",
+  "source_export_record": "results/arch/qwen_split_io_cdc_20261010/tt_export/abstract.json"
+}

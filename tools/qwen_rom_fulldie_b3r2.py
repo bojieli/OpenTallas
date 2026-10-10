@@ -2649,6 +2649,40 @@ def bword_stages(v, m, pitch=None):
     """Registered stages on each block word's path to the tree top: block root -> its slab (-> band primary when
     it lands on a fragment) -> tree top, rectilinear centre distance at the link stage pitch (430.56 um)."""
     pitch = pitch or v.LINK_STAGE_UM
+    if 'r21_stage_of' in m:
+        # Relay insertion replaces each original bus by its first hop and
+        # __r1..__rN legs.  Its first destination is a relay, not the slab.
+        buses = {bid: eps for bid, cls, bits, eps in m['buses']}
+        stages = m['r21_stage_of']
+        count = lambda bid: stages.get(bid, 1)
+        def destination(bid):
+            last = f'{bid}__r{count(bid) - 1}' if count(bid) > 1 else bid
+            return buses[last][1][0]
+        primary = {eps[0][0]: bid for bid, eps in buses.items()
+                   if bid.startswith('pword_') and '__r' not in bid}
+        fragment = {eps[0][0]: bid for bid, eps in buses.items()
+                    if bid.startswith('pfrag_') and '__r' not in bid}
+        totals = []
+        for bid in buses:
+            if not re.fullmatch(r'bword_\d+', bid):
+                continue
+            slab, total = destination(bid), count(bid)
+            word = bid[len('bword_'):]
+            n = 1
+            while f'bwseg_{word}_{n}' in buses:
+                leg = f'bwseg_{word}_{n}'
+                total += count(leg)
+                slab = destination(leg)
+                n += 1
+            if slab in fragment:
+                leg = fragment[slab]
+                total += count(leg)
+                slab = destination(leg)
+            total += count(primary[slab])
+            totals.append(total)
+        return dict(pitch_um=pitch, words=len(totals), max=max(totals),
+                    mean=round(sum(totals) / len(totals), 2), min=min(totals),
+                    basis='implemented relay-stage counts, including waypoint and fragment legs')
     by = {i.name: i for i in m['insts']}
     d = lambda a, b: abs(by[a].cx - by[b].cx) + abs(by[a].cy - by[b].cy)
     prim, frag = {}, {}

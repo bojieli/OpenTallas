@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen.cdc1024.tt_export.v1",
+  "export_source_commit": "8e594b310",
+  "host": "ot-agidock128",
+  "host_guard": "/srv/opentallas-scratch/admit.sh 24",
+  "measured_headroom": {
+    "mem_available_mib": 32361,
+    "disk_available_gb": 110
+  },
+  "exporter_sha256": "e4f43434734b64b8d3a99770dbf0c673f4985d39c9ab8a70987d6b21abf3eee4",
+  "corner_sta_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+  "ss_ff_lef_reexport_byte_identity": "PASS",
+  "actual_tt_library": true,
+  "child_leaf_metrics": {
+    "tt_setup_ps": 127.06,
+    "ff_hold_ps": 1.16,
+    "drc": 0,
+    "ss_sensitivity_ps": -119.61
+  },
+  "new_leaf_verdict": false,
+  "adoption_gate": "production reset/fault wiring and die relay evidence unresolved",
+  "named_view": "physical/variant_fill/qfd_cdc1024_a-1a9caff1a-tc/named_tt_views/qfd_cdc1024"
+}
