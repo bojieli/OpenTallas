@@ -4,7 +4,7 @@
 // NF is the count of physical forward relay stations. Each station captures
 // data/valid once and credit twice; this verifies that distinction in real RTL.
 module tb_qwen_native_credit_rtt;
-    parameter integer NF=1, WORDS=32, EARLY_RST=0;
+    parameter integer NF=1, WORDS=32, EARLY_RST=0, ELASTIC=0;
     reg ck=0, ckd=0, rst_n=0, go=0;
     always #0.416667 ck=~ck;
     always #0.555556 ckd=~ckd;
@@ -14,9 +14,17 @@ module tb_qwen_native_credit_rtt;
     assign forward[0]={iv,id};
     genvar j;
     generate for(j=0;j<NF;j=j+1) begin:g_relay
+        if (ELASTIC) begin:g_elastic
+            wire relay_fault;
+            ot_qwen_native_elastic_relay #(.W(546),.DEPTH(4),.OCRED(4),.ENABLE(1)) station(
+                .clk(ckd),.rst_n(rst_n),.i_v(forward[j][546]),.i_d(forward[j][545:0]),.i_cr(credit[j]),
+                .o_v(forward[j+1][546]),.o_d(forward[j+1][545:0]),.o_cr(credit[j+1]),.fault(relay_fault));
+            always @(posedge ckd) if(go && relay_fault) $fatal(1,"elastic relay fault");
+        end else begin:g_legacy
         ot_qwen_die_station #(.DW(547),.TAP(0)) station(
             .clk(ckd),.rst_n(rst_n),.a_d(forward[j]),.a_r(credit[j]),
             .b_d(forward[j+1]),.b_r(credit[j+1]),.t_d(),.t_r(1'b1),.c_d(),.c_r(1'b1));
+        end
     end endgenerate
     wire ov, cv, fck, fckd; wire [545:0] od; wire [515:0] cd;
     reg ocr=0, cv_in=0, ccr=0; reg [515:0] cd_in=0;
@@ -69,7 +77,7 @@ module tb_qwen_native_credit_rtt;
         repeat(20) @(negedge ckd);
         if(sent!=WORDS || recv!=WORDS || bad!=0 || fck || fckd)
             $fatal(1,"native credit mismatch sent=%0d recv=%0d bad=%0d faults=%b%b",sent,recv,bad,fck,fckd);
-        $display("PASS native_credit_rtt relays=%0d words=%0d first_rtt_ckd=%0d launch_window_ckd=%0d returned=%0d",NF,WORDS,first_credit-first_send,last_send-first_send+1,returned);
+        $display("PASS native_credit_rtt elastic=%0d relays=%0d words=%0d first_rtt_ckd=%0d launch_window_ckd=%0d returned=%0d",ELASTIC,NF,WORDS,first_credit-first_send,last_send-first_send+1,returned);
         $finish;
     end
 endmodule

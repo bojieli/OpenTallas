@@ -1,0 +1,52 @@
+{
+  "source_commit": "10fceb665 + committed successor bench",
+  "closed_native_cdc_source": "66fd85cda",
+  "closed_cdc_sha256": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+  "serial_GHz": 0.9,
+  "stream_GHz": 1.2,
+  "initial_credits": 4,
+  "DEPTH": 4,
+  "OCRED": 4,
+  "local_no_stall": [
+    {
+      "relays": 1,
+      "words": 256,
+      "first_credit_cycles": 3,
+      "launch_window": 382
+    },
+    {
+      "relays": 2,
+      "words": 256,
+      "first_credit_cycles": 3,
+      "launch_window": 382
+    }
+  ],
+  "native_no_stall": {
+    "sq_relays": 2,
+    "words": 256,
+    "first_source_credit_cycles": 3,
+    "launch_window_cycles": 441
+  },
+  "production_gate": "No rate substitution. Price phase/burst/CQ amplification through actual target schedule, plus471cycle emptyroundtrip; hardware and production reset/fault closure pending.",
+  "native_finite_sink": [
+    {
+      "AG": 0,
+      "sq_relays": 2,
+      "cq_relays": 2,
+      "input_words": 256,
+      "output_words": 256,
+      "first_source_credit_cycles": 3,
+      "launch_window_cycles": 442
+    },
+    {
+      "AG": 1,
+      "sq_relays": 2,
+      "cq_relays": 2,
+      "input_words": 64,
+      "output_words": 256,
+      "first_source_credit_cycles": 3,
+      "launch_window_cycles": 366
+    }
+  ],
+  "native_finite_sink_contract": "Minimal engine IB4 consumes each input once, emits1 orN4 returns in order without output backpressure; sequencer sink4 stalls11 of31serialcycles, exact counts/order and all native/relay/sink faults checked."
+}

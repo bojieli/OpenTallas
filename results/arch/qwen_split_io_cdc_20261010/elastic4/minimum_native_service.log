@@ -1,0 +1,5 @@
+PASS elastic width=546 relays=1 words=256 first_credit_cycles=3 launch_window=382
+PASS elastic width=546 relays=2 words=256 first_credit_cycles=3 launch_window=382
+PASS native_credit_rtt elastic=1 relays=2 words=256 first_rtt_ckd=3 launch_window_ckd=441 returned=256
+PASS native_elastic_collective AG=1 SQrelays=2 CQrelays=2 sent=64 received=256 firstcredit=3 launch_window=366
+PASS native_elastic_collective AG=0 SQrelays=2 CQrelays=2 sent=256 received=256 firstcredit=3 launch_window=442
