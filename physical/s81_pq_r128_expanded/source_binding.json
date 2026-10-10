@@ -82,26 +82,34 @@
     {
       "path": "physical/s81_pq_r128_expanded/io_budget_r128.sdc",
       "original_path": "physical/dsrom_field_spine/io_budget_r128.sdc",
-      "sha256": "7ef643d22b52b116a67bfe4d7a906b93ea051a4a7b354e1186a5d2ddff2a83a4",
-      "role": "constraint"
+      "sha256": "70f92f07ac9aba83a8adf940f7e0394099aa76ddd0bbaf6de4ada8031e38d2c5",
+      "role": "constraint",
+      "sha256_pre_h1": "7ef643d22b52b116a67bfe4d7a906b93ea051a4a7b354e1186a5d2ddff2a83a4",
+      "rebound": "ds-1010 2026-10-10: rule H1 (edefa5bcb) receiver input min -50 -> 0 is the only change; pin rebound to the in-tree H1 file"
     },
     {
       "path": "physical/s81_pq_r128_expanded/io_ref_pre.tcl",
       "original_path": "physical/dsrom_field_spine/io_ref_pre.tcl",
-      "sha256": "8ea1c733b98c72138f53c56a76ac661c2ef24d02fbdb30e1e1429b6d018ca4e4",
-      "role": "constraint"
+      "sha256": "92d56fd096c7503d05c14c3b7539063ebed580afd34ba0416681094d63551bb6",
+      "role": "constraint",
+      "sha256_pre_h1": "8ea1c733b98c72138f53c56a76ac661c2ef24d02fbdb30e1e1429b6d018ca4e4",
+      "rebound": "ds-1010 2026-10-10: rule H1 (edefa5bcb) receiver input min -50 -> 0 is the only change; pin rebound to the in-tree H1 file"
     },
     {
       "path": "physical/s81_pq_r128_expanded/io_ref_post.tcl",
       "original_path": "physical/dsrom_field_spine/io_ref_post.tcl",
-      "sha256": "303cc303c432c73c214b91e91fd7cce73877dbfbde27754d351cefc0b9b53bc3",
-      "role": "constraint"
+      "sha256": "5a1317c3efa6ba55c341d0de5e653b385742ed9eb50da98294d48f8ef7571ab4",
+      "role": "constraint",
+      "sha256_pre_h1": "303cc303c432c73c214b91e91fd7cce73877dbfbde27754d351cefc0b9b53bc3",
+      "rebound": "ds-1010 2026-10-10: rule H1 (edefa5bcb) receiver input min -50 -> 0 is the only change; pin rebound to the in-tree H1 file"
     },
     {
       "path": "physical/s81_pq_r128_expanded/signoff_r128.sdc",
       "original_path": "physical/dsrom_field_spine/signoff_r128.sdc",
-      "sha256": "b05c69429e58984b00767d523f71574b6776ca923e00219d896650d9a09df9b8",
-      "role": "constraint"
+      "sha256": "a3c36985946b10bb611954b4fe447eba0e893dd2691e8729f67161dfc62779b2",
+      "role": "constraint",
+      "sha256_pre_h1": "b05c69429e58984b00767d523f71574b6776ca923e00219d896650d9a09df9b8",
+      "rebound": "ds-1010 2026-10-10: rule H1 (edefa5bcb) receiver input min -50 -> 0 is the only change; pin rebound to the in-tree H1 file"
     },
     {
       "path": "physical/s81_pq_r128_expanded/baseline_6_report.json",
