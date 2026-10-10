@@ -3,7 +3,7 @@ import importlib.util
 import math
 from pathlib import Path
 
-def svc_dma_model(initial_credits=64, window=1024):
+def svc_dma_model(initial_credits=256, window=1024):
     root = Path(__file__).resolve().parents[1]
     src=root/'physical/hbm_accel_die_views/svc/gen_svc_seg.py'
     spec=importlib.util.spec_from_file_location('svc_dma_geometry',src)
@@ -38,6 +38,9 @@ def svc_dma_model(initial_credits=64, window=1024):
         stacks=4,pcs_per_stack=32,lanes_per_stack=8,payload_bytes_per_cycle=1024,
         request_bits_per_stack_per_cycle=51,response_bits_per_stack_per_cycle=2160,
         credit_bits_per_stack_per_cycle=8,native_max_contiguous_same_pc_sectors=4,
+        native_outstanding_bursts_per_pc=16,
+        native_response_latency_sweep_cycles=[54,104],
+        latency_basis='SourceT_RCD19;54/104areexplicit conservative validation scenarios, not measuredPHYtiming',
         pc_map='s[6:2] XOR s[11:7] XOR s[16:12]; s=byte_address[34:5]',
         reorder_sector_window=window,descriptor_queue_depth=4,storage_bits_per_stack=storage,
         area_assumed_flop_um2_per_bit=2.0,storage_only_area_um2=2*storage,
@@ -46,7 +49,7 @@ def svc_dma_model(initial_credits=64, window=1024):
         fanout='descriptor distributed to32 PC controllers; reset and ready local registered',
         families=families,
         adoption_gate='Exact RTL + sustained >=90%BW including physical relay credits + fit + in-context timing',
-        qualification='64 credits provisional; no fullrate claim until front geometry fixes actual RTT')
+        qualification='256 credits provisional; pin helper composed148/184cycleRTT, no fullrateclaim until physicallyreserved')
 
 if __name__=='__main__':
     import json

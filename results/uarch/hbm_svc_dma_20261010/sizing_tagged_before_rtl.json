@@ -1,0 +1,484 @@
+{
+  "schema": 1,
+  "verdict": "SIZED_NOT_PHYSICALLY_QUALIFIED",
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity_payload_fraction": 0.9481481481481482,
+  "stacks": 4,
+  "pcs_per_stack": 32,
+  "lanes_per_stack": 8,
+  "payload_bytes_per_cycle": 1024,
+  "request_bits_per_stack_per_cycle": 51,
+  "response_bits_per_stack_per_cycle": 2160,
+  "credit_bits_per_stack_per_cycle": 8,
+  "native_max_contiguous_same_pc_sectors": 4,
+  "native_outstanding_bursts_per_pc": 16,
+  "native_response_latency_sweep_cycles": [
+    54,
+    104
+  ],
+  "latency_basis": "SourceT_RCD19;54/104areexplicit conservative validation scenarios, not measuredPHYtiming",
+  "pc_map": "s[6:2] XOR s[11:7] XOR s[16:12]; s=byte_address[34:5]",
+  "reorder_sector_window": 1024,
+  "descriptor_queue_depth": 4,
+  "storage_bits_per_stack": 277448,
+  "area_assumed_flop_um2_per_bit": 2.0,
+  "storage_only_area_um2": 554896,
+  "area_status": "HOLD: storage estimate excludes mux/control/relay and existing service cell usage",
+  "multiplexer_cost": "8 lanes, each selects 32 PC sector responses; local partition required",
+  "fanout": "descriptor distributed to32 PC controllers; reset and ready local registered",
+  "families": {
+    "SW": {
+      "physical_source": "physical/hbm_accel_die_views/svc/gen_svc_seg.py",
+      "stack_service_um": [
+        8500.032,
+        259.176
+      ],
+      "descriptor_origin_um": [
+        4376.892000000002,
+        254.0
+      ],
+      "pc_xy_um": [
+        [
+          49.5,
+          5.0
+        ],
+        [
+          315.1,
+          5.0
+        ],
+        [
+          580.6,
+          5.0
+        ],
+        [
+          846.2,
+          5.0
+        ],
+        [
+          1111.8,
+          5.0
+        ],
+        [
+          1377.4,
+          5.0
+        ],
+        [
+          1643.0,
+          5.0
+        ],
+        [
+          1908.6,
+          5.0
+        ],
+        [
+          2174.1,
+          5.0
+        ],
+        [
+          2439.7,
+          5.0
+        ],
+        [
+          2705.3,
+          5.0
+        ],
+        [
+          2970.9,
+          5.0
+        ],
+        [
+          3236.5,
+          5.0
+        ],
+        [
+          3502.1,
+          5.0
+        ],
+        [
+          3767.7,
+          5.0
+        ],
+        [
+          4033.2,
+          5.0
+        ],
+        [
+          4298.8,
+          5.0
+        ],
+        [
+          4564.4,
+          5.0
+        ],
+        [
+          4830.0,
+          5.0
+        ],
+        [
+          5095.6,
+          5.0
+        ],
+        [
+          5361.2,
+          5.0
+        ],
+        [
+          5626.7,
+          5.0
+        ],
+        [
+          5892.3,
+          5.0
+        ],
+        [
+          6157.9,
+          5.0
+        ],
+        [
+          6423.5,
+          5.0
+        ],
+        [
+          6689.1,
+          5.0
+        ],
+        [
+          6954.7,
+          5.0
+        ],
+        [
+          7220.2,
+          5.0
+        ],
+        [
+          7485.8,
+          5.0
+        ],
+        [
+          7751.4,
+          5.0
+        ],
+        [
+          8017.0,
+          5.0
+        ],
+        [
+          8282.6,
+          5.0
+        ]
+      ],
+      "manhattan_pc_to_service_endpoint_um": [
+        4576.392000000002,
+        4310.792000000001,
+        4045.2920000000017,
+        3779.692000000002,
+        3514.0920000000015,
+        3248.4920000000016,
+        2982.8920000000016,
+        2717.2920000000017,
+        2451.7920000000017,
+        2186.192000000002,
+        1920.5920000000015,
+        1654.9920000000016,
+        1389.3920000000016,
+        1123.7920000000017,
+        858.1920000000018,
+        592.6920000000018,
+        327.09200000000146,
+        436.507999999998,
+        702.1079999999984,
+        967.7079999999987,
+        1233.3079999999982,
+        1498.8079999999982,
+        1764.4079999999985,
+        2030.007999999998,
+        2295.6079999999984,
+        2561.2079999999987,
+        2826.807999999998,
+        3092.307999999998,
+        3357.9079999999985,
+        3623.507999999998,
+        3889.1079999999984,
+        4154.707999999999
+      ],
+      "hop_um": 380.0,
+      "local_request_or_response_cycles": [
+        15,
+        14,
+        13,
+        12,
+        12,
+        11,
+        10,
+        10,
+        9,
+        8,
+        8,
+        7,
+        6,
+        5,
+        5,
+        4,
+        3,
+        4,
+        4,
+        5,
+        6,
+        6,
+        7,
+        8,
+        9,
+        9,
+        10,
+        11,
+        11,
+        12,
+        13,
+        13
+      ],
+      "minimum_internal_credit_roundtrip_cycles": 32,
+      "credits4_utilization_upper_bound": 0.125,
+      "credits8_utilization_upper_bound": 0.25,
+      "endpoint_front_roundtrip_cycles": null,
+      "initial_credits": 256,
+      "remaining_front_roundtrip_budget_cycles": 224,
+      "existing_cross_face_bits_max": 2397,
+      "added_cross_face_bits": 2220,
+      "total_cross_face_bits_bound": 4617,
+      "two_layer_raw_capacity_tracks": 5316,
+      "raw_face_fit": true,
+      "route_track_fit": "HOLD: power/keepouts and actual new pins not assigned",
+      "latency_to_first_sector_lower_bound_cycles": 17,
+      "fixed_window_latency_cycles": 32,
+      "sustained_payload_bytes_per_cycle_per_stack": 256
+    },
+    "SE": {
+      "physical_source": "physical/hbm_accel_die_views/svc/gen_svc_seg.py",
+      "stack_service_um": [
+        8500.032,
+        259.176
+      ],
+      "descriptor_origin_um": [
+        4729.884000000001,
+        254.0
+      ],
+      "pc_xy_um": [
+        [
+          49.5,
+          5.0
+        ],
+        [
+          315.1,
+          5.0
+        ],
+        [
+          580.6,
+          5.0
+        ],
+        [
+          846.2,
+          5.0
+        ],
+        [
+          1111.8,
+          5.0
+        ],
+        [
+          1377.4,
+          5.0
+        ],
+        [
+          1643.0,
+          5.0
+        ],
+        [
+          1908.6,
+          5.0
+        ],
+        [
+          2174.1,
+          5.0
+        ],
+        [
+          2439.7,
+          5.0
+        ],
+        [
+          2705.3,
+          5.0
+        ],
+        [
+          2970.9,
+          5.0
+        ],
+        [
+          3236.5,
+          5.0
+        ],
+        [
+          3502.1,
+          5.0
+        ],
+        [
+          3767.7,
+          5.0
+        ],
+        [
+          4033.2,
+          5.0
+        ],
+        [
+          4298.8,
+          5.0
+        ],
+        [
+          4564.4,
+          5.0
+        ],
+        [
+          4830.0,
+          5.0
+        ],
+        [
+          5095.6,
+          5.0
+        ],
+        [
+          5361.2,
+          5.0
+        ],
+        [
+          5626.7,
+          5.0
+        ],
+        [
+          5892.3,
+          5.0
+        ],
+        [
+          6157.9,
+          5.0
+        ],
+        [
+          6423.5,
+          5.0
+        ],
+        [
+          6689.1,
+          5.0
+        ],
+        [
+          6954.7,
+          5.0
+        ],
+        [
+          7220.2,
+          5.0
+        ],
+        [
+          7485.8,
+          5.0
+        ],
+        [
+          7751.4,
+          5.0
+        ],
+        [
+          8017.0,
+          5.0
+        ],
+        [
+          8282.6,
+          5.0
+        ]
+      ],
+      "manhattan_pc_to_service_endpoint_um": [
+        4929.384000000001,
+        4663.784000000001,
+        4398.284000000001,
+        4132.684000000001,
+        3867.0840000000007,
+        3601.484000000001,
+        3335.884000000001,
+        3070.284000000001,
+        2804.784000000001,
+        2539.184000000001,
+        2273.5840000000007,
+        2007.9840000000008,
+        1742.384000000001,
+        1476.784000000001,
+        1211.184000000001,
+        945.6840000000011,
+        680.0840000000007,
+        414.4840000000013,
+        349.1159999999991,
+        614.7159999999994,
+        880.3159999999989,
+        1145.815999999999,
+        1411.4159999999993,
+        1677.0159999999987,
+        1942.615999999999,
+        2208.2159999999994,
+        2473.815999999999,
+        2739.315999999999,
+        3004.9159999999993,
+        3270.5159999999987,
+        3536.115999999999,
+        3801.7159999999994
+      ],
+      "hop_um": 380.0,
+      "local_request_or_response_cycles": [
+        15,
+        15,
+        14,
+        13,
+        13,
+        12,
+        11,
+        11,
+        10,
+        9,
+        8,
+        8,
+        7,
+        6,
+        6,
+        5,
+        4,
+        4,
+        3,
+        4,
+        5,
+        6,
+        6,
+        7,
+        8,
+        8,
+        9,
+        10,
+        10,
+        11,
+        12,
+        13
+      ],
+      "minimum_internal_credit_roundtrip_cycles": 32,
+      "credits4_utilization_upper_bound": 0.125,
+      "credits8_utilization_upper_bound": 0.25,
+      "endpoint_front_roundtrip_cycles": null,
+      "initial_credits": 256,
+      "remaining_front_roundtrip_budget_cycles": 224,
+      "existing_cross_face_bits_max": 2352,
+      "added_cross_face_bits": 2220,
+      "total_cross_face_bits_bound": 4572,
+      "two_layer_raw_capacity_tracks": 5316,
+      "raw_face_fit": true,
+      "route_track_fit": "HOLD: power/keepouts and actual new pins not assigned",
+      "latency_to_first_sector_lower_bound_cycles": 17,
+      "fixed_window_latency_cycles": 32,
+      "sustained_payload_bytes_per_cycle_per_stack": 256
+    }
+  },
+  "adoption_gate": "Exact RTL + sustained >=90%BW including physical relay credits + fit + in-context timing",
+  "qualification": "256 credits provisional; pin helper composed148/184cycleRTT, no fullrateclaim until physicallyreserved"
+}
