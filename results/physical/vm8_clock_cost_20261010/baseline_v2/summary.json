@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.vm8-clock-cost.v2",
+  "source_commit": "2a2afc38711028e1c32126e2d67e7f9b8cb6f987",
+  "scope": "TT CTS, placement parasitics; actual clock buffers, excluding sequential cells; not die power signoff",
+  "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8vt_sew_2a2afc387-tc-lvt-cl/routes/hbm_vm8vt_sew_2a2afc387_tc_lvt_cl_cal/work/orfs/results/asap7/opentallas_hfd_vm_se_w_asap7_hv_hbm_vm8vt_sew_2a2afc387_tc_lvt_cl_cal/base",
+  "artifact_sha256": {
+    "4_1_cts.odb": "96396f33df040f0a4d300933f34af42049179b6e2884d314e6c2812e42d318d9",
+    "4_cts.sdc": "d7ebe24bc09452c765e791b23cb98820e6daaf1c516001a3ee72c7915ad69a1e"
+  },
+  "reporter_sha256": "454a462354bd6505291e9296021b4e39471ad207924c81fc517a0c96826baaad",
+  "per_tap": {
+    "ck": {
+      "buffers": 455,
+      "area_um2": 192.20813999999893
+    },
+    "cke0": {
+      "buffers": 45,
+      "area_um2": 19.099800000000005
+    },
+    "cke1": {
+      "buffers": 61,
+      "area_um2": 22.788540000000015
+    },
+    "cke2": {
+      "buffers": 121,
+      "area_um2": 49.192919999999894
+    },
+    "cke3": {
+      "buffers": 91,
+      "area_um2": 39.540959999999956
+    },
+    "ckn0": {
+      "buffers": 120,
+      "area_um2": 44.396099999999876
+    },
+    "ckn1": {
+      "buffers": 35,
+      "area_um2": 15.425640000000005
+    },
+    "ckw0": {
+      "buffers": 304,
+      "area_um2": 118.12715999999953
+    },
+    "ckw1": {
+      "buffers": 216,
+      "area_um2": 91.27079999999958
+    },
+    "ckw2": {
+      "buffers": 135,
+      "area_um2": 44.22113999999984
+    },
+    "ckw3": {
+      "buffers": 77,
+      "area_um2": 33.009119999999996
+    }
+  },
+  "clock_buffer_count": 1660,
+  "clock_buffer_area_um2": 669.2803199999977,
+  "clock_buffer_power_w": 0.03452510752459995,
+  "mapped_vt": {
+    "R": {
+      "cells": 135745,
+      "area_um2": 22254.6932999754
+    }
+  },
+  "mapped_lvt_fraction": 0.0,
+  "notes": "Component power uses default data activity; clock-buffer power uses defined clocks. Final die clock drops and routed capacitance remain required."
+}
