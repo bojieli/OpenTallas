@@ -15,7 +15,7 @@
     "concurrencyFAIL"
   ],
   "minimum_EPS_four_state": "PASS_with4mutantsFAIL",
-  "full_four_state": "RUNNING_source982804de3",
+  "full_four_state": "Independent PHY refs SW/NE PASS208SM16KV16IK noX; PS/FC positives+mutants stilllive",
   "physical_adoption": "HOLD_new_reset_and_EPS_context_closure_required",
   "remote": "/srv/opentallas-scratch/codex/svc-epsfull",
   "logs": {
@@ -28,8 +28,11 @@
     "eps_fourstate_mutants.log": "b10548b871a7ba2271ab17b4cd9ef74b6491c6582e9d05a4c1d3e4cc0d799678",
     "synth_local_yosys09_FAIL.log": "b5511166d72994b1e1f865dd35b4e1a2d68b6abe4d4f66b607b3540c52b8995b",
     "synth_missing_dep_FAIL.log": "e75efb175e2af148f9d861a958726c7a9397d72907e7491459cc71129ece079c",
-    "synth_eps_complete_PASS.log": "60d59f42af52c7c63ef7187962ed3096de541380b0f80e1b44c6a4881ad4040b"
+    "synth_eps_complete_PASS.log": "60d59f42af52c7c63ef7187962ed3096de541380b0f80e1b44c6a4881ad4040b",
+    "ref_NE_fourstate_PASS.log": "a66e688df4a48d5d81cf2753e44946578e38ade069d2d1ee88dca8968bb46b28",
+    "ref_SW_fourstate_PASS.log": "1dd395bfefa27df6266ba444192a7090ee78727accf1885817dd027d5dd8657d"
   },
   "synthesis": "Yosys0.52 hierarchy/proc/flatten/check-assert PASS no memories/processes;132generic vector cells,not mapped area",
-  "synthesis_failure_history": "LocalYosys0.9 parserunsupported;initialremoteLIBomittedfclk_buf;both logs preserved"
+  "synthesis_failure_history": "LocalYosys0.9 parserunsupported;initialremoteLIBomittedfclk_buf;both logs preserved",
+  "obsolete_jobs": "24ownedvvp stopped only after preserved sourcepinned failurelogs and14successorlive jobs verified; root authorized"
 }
